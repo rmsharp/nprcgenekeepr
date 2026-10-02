@@ -99,10 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 862 Did
-**Deliverable:** header sweep of `docs/planning/` (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** header sweep of `docs/planning/`; docs only, no code, no tests (TDD phases N/A). Claim `b651541d4`; banners `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432` (22 `issue*` plans), `f35538868`, `93670ec95` (9 non-issue plans); the close-out commit holds `docs/planning/README.md`, the BACKLOG update and records.
+**Done:** a `Status banner (S862...)` after the H1 of 31 plans: the 11 status-less (`issue119`, `125`-`130`, `152`, `168`, `30`, `76`, `9`), 10 stale-header `issue*` (`118`, `13`, `133`, `136`, `143`, `148`, `150`, `153`, `2`, `73`) and 9 non-issue plans (module conversion, Document 2, extdata, five pedigree-diagram plans). With S861's five, every plan on the S860 report's sweep list is bannered.
+**Method:** 3 read-only subagents (one per group) gathered issue state, commits and artifacts; I re-checked every hash they cited (`git log -1`), the issue states (`gh issue view`), `inst/application` gone, `inst/extdata` listing, `R/` artifacts, and `.deCollideIndividualPoints` gone. Unverified points are said in the banner (`issue9` slices, `issue13` closing commit, `issue73` slice count, `issue153` last slice, sibling-width asymmetry, duplicate-proximity supersession link, fidelity 7b).
+**Slips:** one agent cite widened (#131-#139 to #145) before I caught it; my first commit loop failed twice (zsh does not word-split; used `bash -c`). Nothing was committed wrongly.
+**Not done:** the 8+ other non-issue plans the audit did not name, `docs/research/` and older `docs/audits/` headers; no tests/lint/CI (no `.R` or build-included file changed; `docs` is `.Rbuildignore`d, skip-CI rule applies).
+**Reduction:** removed the S806 evaluation and S807 record (git and CHANGELOG keep them).
+
+**Self-assessment: 8/10.** + Every banner traced to a command I (or an agent I re-checked) ran; hedges kept where unverified; under the 5-file cap; stayed in scope. - Agents' evidence for `issue9`, `13`, `73` is thin; a few slice session numbers are agent-read only.
+
+**Next steps:** (A) Owner decision: `getProductionStatus` 0 dams green vs grey (then strict TDD). (B) Owner decisions: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; the duplicated gate code is READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Master is about 20 commits ahead of origin; push only on the owner's say-so (count it at Orient).
+
+**Key files:** `docs/planning/README.md`; `BACKLOG.md:149` (audit item); `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table).
+
+**Gotchas:** banners carry "S862" and say a later note was added; `ban.py`-style insertion must go after the first `# ` line (`issue168` has a license header first). Plans without a banner are unswept, not current (the README says so). zsh does not split unquoted variables; use `bash -c` for loops.
+
+### Session 861 Handoff Evaluation (by Session 862)
+**Score: 8/10.** **Helped:** exact plan lists for the sweep (11 status-less, 14+ stale) and the banner-wording gotcha saved a pass; "insert after the H1" was needed for `issue168`. **Wrong/missing:** it listed `issue167` among the status-less plans' set in one place and not another (167 was already bannered); said master 9 ahead, measured 11 at Orient; no per-file issue states, so I had to look them up. **ROI:** high.
 
 ### What Session 861 Did
 **Deliverable, DONE:** slice 7c docs fixes from the S860 audit report; docs only, no code, no tests. Claim `1e0295d5b`; fixes `1754691e1` (banners), `a1cbfde13` (in-place), `f6ae48446` (BACKLOG).
@@ -452,126 +465,3 @@ birth date) and D13 (accepted values: TRUE/FALSE spellings, 1/0, blank), both pl
 4. `test_getFocalAnimalPed.R:112` runs only for the owner's user name (`skip_if_not`); it pins 11 fields.
 5. `devtools::check()` builds vignettes; the suite does not (Learning 824).
 6. STANDING SET unchanged from S790-807.
-
-### Session 806 Handoff Evaluation (by Session 807)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontier = HEAD
-`0fc874f9`, 0 undocumented; the S806 receipt `status: complete`, its `quality_ratchet` citation
-matching `.quality-gates-results.json` (results `3749928c8792`); 4 unpushed; the 7 untracked files
-unchanged. Next step (A) was exact: the 4 decisions with recommendations, then Slice 1's files and
-the 3 moved tests at the right lines (`R/autoIdFormat.R:109-111`, `test_autoIdFormat.R:58`,
-`test_modPedigree.R:113-169`, `test_obfuscateId.R:31`), and "1,470 ids, only `U1` changes"
-re-measured identically. Gotcha 5 (the local-only pkgdown failure) saved a diagnosis. **Missing:**
-the plan's Slice 1 did not check what sets `obfuscateId()`'s `size`; the app's alias-length box
-allows 4, where the tighter rule makes the export stop (found here before RED, D10). Nor did it
-check which formats `setAutoIdFormat()` accepts (D11). **Wrong:** nothing. **ROI:** high.
-
-### What Session 807 Did
-**Deliverable, DONE:** Slice 1 of `docs/planning/unknown-parent-placeholder-marking-plan.md`
-(strict TDD, every gate an `AskUserQuestion`): a real animal whose id merely starts with `U`
-(`U1`, `U123`, `Uma`) is no longer taken for a stand-in for an unknown parent. A placeholder is
-now the prefix followed by at least as many capital letters/digits as the format's number prints
-(`getAutoIdWidth()`, 4 for `"U%04d"`). The shipped ancestry example now counts its founder `U1`
-(4 female founders, not 3).
-**Owner decisions (AskUserQuestion), all as recommended:** D1 column `placeholder`; D3 the
-tighter rule, as Slice 1; D5 a bad value stops QC; D6 shipped data unmarked (plan §11). Found
-before RED and ratified: **D10**, the De-identified Export allows alias length 4, and with the
-tighter rule `obfuscatePed(qcPed, size = 4L)` stopped (measured), so placeholder aliases are now
-lengthened to `max(size, prefix + W)`; **D11**, `setAutoIdFormat()` now refuses formats whose ids
-the rule cannot read (`"U%04x"`, `"U%4d"`, `"U%-4d"`). Owner chose a docs-only REFACTOR.
-**Commits:**
-- claim `0647abea`
-- decisions `95a4e5fa` (plan §11)
-- RED `9b8431dd` (4 files, 10 failing plus 5 guards), `9dd49380` (4 files, 6 failing)
-- GREEN `aeccac96` (`R/autoIdFormat.R`, `R/obfuscateId.R`)
-- REFACTOR docs `9e89cd3d` (roxygen + man: `setAutoIdFormat`, `obfuscateId`, the predicate),
-  `32cae6cc` (`removeAutoGenIds` roxygen + man, app help text, `_pedigree_browser.Rmd:38`),
-  `93640b3f` (`NEWS.Rmd` General Fixes entry)
-- plan/backlog `f673d78d`
-- NEWS spelling fix `02a83f49` ("unticked" -> "turned off")
-- records (this)
-
-**Verification:**
-- The 16 RED tests failed on the old behavior (every message read), then passed.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`), twice: 357 files, 2,809 tests, 0 errors.
-  After GREEN, 1 failure: the known local-only `test_pkgdown_reference_config.R`. After the docs,
-  a second failure in `test_wordlist_coverage.R` ("unticked"), fixed in `02a83f49`; that test and
-  `test_newsReleaseState.R` then passed.
-- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes, both the owner's untracked
-  `suggested_NEWS_entry` drafts. It ran before `02a83f49`, which touches only the build-ignored
-  `NEWS.Rmd` (`.Rbuildignore:37`).
-- Lint 0 on the 4 touched R files (`.lintr` excludes `tests/`).
-- Runtime smoke: `runGeneKeepR(port = 6099L)` served HTTP 200 with the new help text and without
-  the old, and logged no errors. The filter and export behavior were verified with `testServer` on
-  the real module servers (`test_modPedigree.R:176`, `test_modDeidentifiedExport.R:189`), not by
-  clicking in a browser.
-- `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4e12678a802c · manifest aa983075d6a2`
-  (3,594,042 B at `02a83f49`, +4,313 B over S806).
-- `obfuscateId()` on 10,000 real ids: 1.35 s (0.87 s with the old rule).
-**Learnings:** 823.
-**Reduction:** `BACKLOG.md`'s placeholder item is 320 B shorter (54,517 B). Nothing else was
-removed; these notes grow `SESSION_NOTES.md`, which stays under its 65,536 B ceiling.
-
-**Self-assessment: 8/10.**
-- \+ Re-measured the plan's key number before putting it to the owner.
-- \+ Inventoried the generators paired with the predicate before RED, which found D10 and D11
-  instead of shipping a new failure at alias length 4.
-- \+ Read every RED failure message, not just the counts.
-- \+ Kept every commit at 5 files or fewer, with one ledger entry each.
-- \+ Ran the whole suite again after the docs step, which caught the spelling guard.
-- \- The docs-3 step ran only the 3 `NEWS.Rmd`-reading tests, not `test_wordlist_coverage.R`, so
-  "unticked" needed a follow-up commit.
-- \- One Python quoting slip (no file changed) and one scratch-script type error.
-- \- `getAutoIdWidth()` has no guard for a format with no conversion set directly via `options()`
-  (gotcha 1); untested edge, not fixed.
-
-**Next steps:**
-- (A) Slice 2 of the plan (strict TDD; plan §5 "Slice 2"):
-  - First, `addUIds()` skips ids used only as a sire or dam (`existingIds <- ped$id`,
-    `R/addUIds.R:46`; plan M11 has the 3-row repro).
-  - Then `qcStudbook()` writes the logical `placeholder` column after `addUIds()`/`addParents()`
-    (`R/qcStudbook.R:231-232`), keeps a user's `TRUE`/`FALSE`, stops on a bad value (D5, a new
-    `errorLst` entry), and fills blanks with the Slice 1 rule.
-  - `isGeneratedUnknownId(id, format, ped = NULL)` reads the mark when `ped` has it (D4), and
-    `removeAutoGenIds()` passes `ped`.
-  - Pins that move: `test_qcStudbook.R:105` (`expect_named`, adds `placeholder`); must stay:
-    `test_getPotentialParents.R:452` (1587).
-  - Re-run the plan §2 grep commands before RED (line numbers drift).
-- (B) Other items: the documentation audit's next slice; "Display Unknown IDs" breaking
-  `reportGV()`; recorded dam never listed; jmac.
-- (C) Carried:
-  - 15 unpushed after this records commit (4 from S806, 11 from S807). This push changes `R/`, so
-    all 4 workflows will run for real; pushing is the owner's call.
-  - residue: 7 untracked files
-  - the `CHANGELOG.md`/`HANDOFFS.md` trims (the owner runs the forced write)
-
-**Key files:**
-- `R/autoIdFormat.R:116` (`getAutoIdWidth()`), `:143` (`isGeneratedUnknownId()`), `:75`
-  (`setAutoIdFormat()` probe)
-- `R/obfuscateId.R:40` (`placeholderSize`), `R/modPedigree.R:110` (help text)
-- `tests/testthat/test_autoIdFormat.R:84`, `:120`, `:140`; `test_reportGV.R:870`;
-  `test_modPedigree.R:176`; `test_modDeidentifiedExport.R:189`
-- `docs/planning/unknown-parent-placeholder-marking-plan.md` §5 Slice 1 DONE note, §11 D10/D11
-- `R/addUIds.R:46`, `R/qcStudbook.R:231` (Slice 2's start); `PROJECT_LEARNINGS.md` Learning 823
-
-**Gotchas:**
-1. `getAutoIdWidth()` errors ("invalid 'pattern' argument") if the option is set directly with
-   `options(nprcgenekeepr.autoIdFormat = "ABC")` (no conversion); before S807 that degraded to a
-   prefix match. `setAutoIdFormat()` refuses such formats, so only a direct `options()` call
-   reaches it. Untested.
-2. `test_wordlist_coverage.R` runs only in the full suite (`skip_on_cran()`, needs
-   `NOT_CRAN=true`); run it after any `NEWS.Rmd`/roxygen/vignette wording change.
-3. `obfuscateId()`'s random stream changed for real ids at small `size`: a short `U`-leading
-   alias (`"UA1"` at size 3) is now accepted instead of redrawn. No test pins such aliases today.
-4. `isGeneratedUnknownId()` recomputes the width on every call; hoist it if Slice 2 calls the
-   predicate per row in a loop.
-5. The full suite's known local-only failure (`test_pkgdown_reference_config.R`) and `check`'s 2
-   notes are the owner's untracked `suggested_NEWS_entry` drafts.
-6. STANDING SET unchanged from S790-806.
-
-**Owner-directed after close-out (2026-09-29 ~03:35 UTC):**
-- **Pushed** the 15 commits: `origin/master` `e5e007f8` -> `1d93590d`, a fast-forward (0 behind after a
-  fresh fetch). This push changes `R/`, so all 4 workflows were awaited, found by commit sha (the plain
-  `gh run list --branch master` returned stale S680 runs at first): lint (36517811103), pkgdown
-  (36517811074), test-coverage (36517811115) and R-CMD-check (36517811053) all green, R-CMD-check on
-  all 5 legs (macos, windows, ubuntu release/devel/oldrel-1); the Pages deploy (36518278161) succeeded.
-  This push-record commit stays local.

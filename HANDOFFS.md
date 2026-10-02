@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S862
 date: 2026-10-02
-status: pending
-active_task: header sweep of docs/planning (docs only)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- header sweep of docs/planning (docs only): status banners on 31 plans plus docs/planning/README.md; BACKLOG audit item updated
+what_was_done: claim b651541d4; banners c5c15b6ee, fdb24ef30, 5fed0fb1a, 026fbf102, c2a1ec432 (22 issue plans), f35538868, 93670ec95 (9 non-issue plans); close-out commit holds README, BACKLOG and records. 3 read-only subagents gathered evidence; I re-checked every cited hash, issue state and key artifact; unverified points are hedged in the banners.
+next_steps: (A) Owner: getProductionStatus 0 dams green vs grey, then strict TDD. (B) Owner: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; duplicated gate code READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) master is ahead of origin by about 20 commits; push only on owner say-so.
+key_files: docs/planning/README.md; BACKLOG.md:149 (audit item); docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md (sweep table)
+gotchas: banners say S862 and a later note; plans with no banner are unswept, not current; insert after the first "# " line (issue168 has a license header); zsh does not word-split variables, use bash -c for loops; agent evidence for issue9/13/73 was thin.
+runtime_smoke: n/a -- docs only. quality_ratchet: not run (no code change).
+changelog_ref: S862 close-out entry
+commit: the close-out commit that carries this receipt; claim b651541d4
 ```
 
 ```handoff
