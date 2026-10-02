@@ -99,10 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 855 Did
-**Deliverable:** record the release-number decision (owner: 3.0.0) and align version metadata (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+**Deliverable, DONE:** recorded the owner's release-number decision (next release is **3.0.0**) and aligned the version files. Metadata and docs only, so no TDD phase applies.
+Claim `2d7189745`; edits and records in the close-out commit.
+**Changed:** `DESCRIPTION` 2.0.0.9000 -> **2.99.0.9000** (the owner chose "bump now"; 3.0.0.9000 would mean "after 3.0.0 ships", so I used the 2.99 pre-release form;
+it becomes 3.0.0 on release day); `NEWS.Rmd` and `NEWS.md` dev heading now "2.99.0.9000 (development version; releases as 3.0.0)"; `README.md` version line; `ROADMAP.md` (2 cites);
+`BACKLOG.md` (removed the "Decide the release number" item; updated the paper-dependency cite).
+**Verified by me:** `test_appUI_version`, `test_newsReleaseState`, `test_wordlist_coverage` and the three snapshot tests that carry a `packageVersion` fixture pass under `load_all()`.
+**Not run:** full suite, `devtools::check()`, lint (no `.R` changed). The snapshot tests' "2.0.0.9000" strings are fixture data and were left alone on purpose.
+**Slip caught:** my picker option said DESCRIPTION would become 3.0.0.9000, which is the wrong dev number for an unreleased 3.0.0; I told the owner and re-asked.
+**Reduction:** none this session (`SESSION_NOTES.md` is 50 KB of 65 KB).
+
+**Self-assessment: 8/10.** + Caught and corrected my own wrong version suggestion before editing; kept the change to 6 files. - Skipped the full suite and `R CMD check` on a `DESCRIPTION` change.
+
+**Next steps:** (A) Owner picks another decision: PED_GV items, mate-pair guardrails residue, male-left placement, CV1/CV2. (B) At release prep: set `DESCRIPTION` to 3.0.0, retitle the `NEWS` block "3.0.0",
+re-render `README` (reinstall the package first; Learning 376). (C) Master is 15 ahead of origin after the close-out commit (13 at Orient plus the claim, plus this one); push only on the owner's say-so.
+
+**Key files:** `DESCRIPTION:4`, `NEWS.Rmd:14`, `NEWS.md:5`, `README.md:8`, `ROADMAP.md:11,34`.
+
+**Gotchas:** `README.md` was edited by hand (its date, 2026-09-28, is unchanged); a re-render takes the *installed* version. `NEWS.md` was edited by hand too, not re-knit.
+
+### Session 854 Handoff Evaluation (by Session 855)
+**Score: 8/10.** **Helped:** the picker-ready list of open decisions and the BACKLOG item for the release number got me to the work in one read. **Missing:** nothing material for this task.
+**Wrong:** the "13 ahead" count was 12 in the note; `git status -sb` gave 13 at Orient (the close-out commit adds one). **ROI:** high.
 
 ### What Session 854 Did
 **Deliverable, DONE:** `convertDate()` now numbers an invalid date by its row in the pedigree passed in, so an "added" record ahead of an original no longer

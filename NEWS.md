@@ -2,7 +2,7 @@ NEWS
 ================
 R. Mark Sharp, Ph.D.
 
-# nprcgenekeepr 2.0.0.9000 (development version)
+# nprcgenekeepr 2.99.0.9000 (development version; releases as 3.0.0)
 
 This release expands `nprcgenekeepr` beyond pedigree management and
 genetic value analysis. It adds interactive pedigree diagrams,

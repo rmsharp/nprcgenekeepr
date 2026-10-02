@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S855
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- release-number decision (owner chose 3.0.0); align version metadata
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- owner chose 3.0.0 for the next release; DESCRIPTION set to 2.99.0.9000 (pre-release form), NEWS.Rmd/NEWS.md heading, README.md, ROADMAP.md and BACKLOG.md aligned
+what_was_done: claim 2d7189745; version edits (6 files) and records in the close-out commit. Version-related tests pass under load_all; full suite, check and lint not run (no R code changed)
+next_steps: (A) Owner picks another decision (PED_GV items, mate-pair residue, male-left placement, CV1/CV2). (B) Release prep: DESCRIPTION to 3.0.0, retitle NEWS block, re-render README after reinstalling. (C) Master 15 ahead of origin; push only on owner say-so
+key_files: DESCRIPTION:4, NEWS.Rmd:14, NEWS.md:5, README.md:8, ROADMAP.md:11,34
+gotchas: README.md and NEWS.md were edited by hand, not re-rendered; snapshot tests' 2.0.0.9000 strings are fixtures, left alone on purpose
 ```
 
 ```handoff
