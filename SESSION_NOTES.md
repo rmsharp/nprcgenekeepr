@@ -107,7 +107,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 **Self-assessment: 7/10.** + Read the pinned guard checks before writing; showed the result and waited for approval. - My first pass was too timid (25%), and my first word count mixed in old text.
 
-**Next steps:** (A) Owner compares `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd`. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 22 ahead of origin after this commit (20 at last close-out, plus claim and close-out); push only on the owner's say-so.
+**Next steps:** (A) Owner compares `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd`. (B) Slice 7b docs audit (READY, Effort L). (C) Master was pushed at the owner's say-so (origin `bd6783a3a`); CI was running, check `gh run list`.
 
 **Key files:** `NEWS.Rmd:14-354`, `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
 
