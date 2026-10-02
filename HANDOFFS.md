@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S855
+date: 2026-10-02
+status: pending
+active_task: IN PROGRESS -- release-number decision (owner chose 3.0.0); align version metadata
+```
+
+```handoff
 session: S854
 date: 2026-10-02
 status: complete

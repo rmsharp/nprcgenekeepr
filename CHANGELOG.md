@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S855 claim: record the owner's release-number decision (3.0.0) and align the version metadata (in progress). Docs and metadata only.
+
 ### 2026-10-02 · [ad hoc] S854 close-out: `convertDate()` invalid-date row numbers (the `reportErrors = TRUE` vector and the `stop()` message) now count positions in the pedigree passed in, so an added record ahead of an original no longer shifts them (owner chose fix over document-only). 5 tests in `test_convertDate.R`, `R/convertDate.R` (3 lines), roxygen and `man/convertDate.Rd`; completed BACKLOG item removed. Full suite 0 failed/0 error, lint clean. Claim `a06651046`.
 
 ### 2026-10-02 · [ad hoc] S854 claim: settle the owner decision on `convertDate(reportErrors = TRUE)` invalid-date row numbering when an added row precedes an original (in progress). Strict TDD.

@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 855 Did
+**Deliverable:** record the release-number decision (owner: 3.0.0) and align version metadata (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+
 ### What Session 854 Did
 **Deliverable, DONE:** `convertDate()` now numbers an invalid date by its row in the pedigree passed in, so an "added" record ahead of an original no longer
 shifts the number (a bad date on row 3 was reported as row 2). Strict TDD, all gates asked. Claim `a06651046`; fix and tests in the close-out commit.
