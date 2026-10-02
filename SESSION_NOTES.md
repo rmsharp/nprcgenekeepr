@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 856 Did
+**Deliverable:** find the cause of the 2 one-mate `rhesusPedigree` male-on-the-right pairs (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+
 ### What Session 855 Did
 **Deliverable, DONE:** recorded the owner's release-number decision (next release is **3.0.0**) as a pre-release BACKLOG item. Docs only, so no TDD phase applies.
 Claim `2d7189745`; edits and records in the close-out commit.
