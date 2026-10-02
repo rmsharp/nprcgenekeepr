@@ -1213,7 +1213,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## (ties by id, radix):
   ##   * side -- one unit: the side of the unit's own children's mean
   ##     relative to the anchor (falling back to the existing sex rule,
-  ##     female anchor + male mate renders left, on an exact tie); two
+  ##     female anchor + male mate renders left, on an exact tie), except
+  ##     that a unit the S666 pass handled always takes the sex rule (the
+  ##     sweep after that pass can push the anchor past its children in
+  ##     a crowded row, which would flip the children's-mean side, S856); two
   ##     units: leftmost-children unit left, the other right (kinship2's
   ##     lspouse/rspouse split); 3+ units: first two as above, extras
   ##     keep their Tier 2/Tier 3 fallback seeds (the design's disclosed
@@ -1259,11 +1262,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
         1.0
       }
       side <- if (length(us) == 1L) {
-        ## A unit the S666 pass handled keeps the sex rule: the sweep
-        ## after that pass can push the anchor past its children in a
-        ## crowded row (S856), which would flip the side the children's
-        ## mean implies.
         childSide <- sign(unitX[[u]] - tier1X[[a]])
+        ## correctableUnitIds: see the side bullet above (S856).
         if (u %in% correctableUnitIds || childSide == 0.0) {
           sexSide
         } else {
