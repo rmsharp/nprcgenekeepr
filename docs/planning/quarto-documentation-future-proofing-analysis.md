@@ -1,5 +1,13 @@
 # Quarto vs. R Markdown — Documentation Future-Proofing Analysis
 
+> **Status banner (S861, 2026-10-02; the body is the original S104 analysis).** The Hybrid decision below is still
+> the live policy (`ROADMAP.md:20`). Three facts in section 1 drifted and are corrected in place: the tutorial is the
+> build-ignored `vignettes/_ColonyManagerTutorial.Rmd` (not a CRAN vignette), `gvaConvergence.Rmd` is a CRAN
+> vignette the table omitted (the count of four CRAN vignettes still holds), and the developer docs moved from
+> `inst/extdata/` to `dev/extdata-scratch/`. The "no documents have been converted" line is also stale: slice 1
+> (`meeting_notes.qmd`) is done, slice 4 (manual leaves CRAN) is not. Package versions and the `rmarkdown`/`knitr`
+> numbers quoted below are June 2026 snapshots; third-party quotes and URLs were not re-checked.
+
 **Status:** **ADOPTED — Option B, Hybrid (decided by the owner, 2026-06-17, Session 105).**
 The §6.3 manual sub-decision is resolved to **(b): reposition the manual onto the Quarto
 website**, dropping it from the CRAN vignette set. This document is now the project's
@@ -42,13 +50,14 @@ refute it (high confidence) — see §8.
 
 | Surface | Files | Engine today | Built by CRAN? |
 |---|---|---|---|
-| CRAN vignette — tutorial | `vignettes/ColonyManagerTutorial.Rmd` | `knitr::rmarkdown_notangle` | Yes (but all chunks `eval=FALSE` — screenshots only) |
+| Tutorial (S861 correction: no longer a CRAN vignette) | `vignettes/_ColonyManagerTutorial.Rmd` | `knitr::rmarkdown_notangle` | No (build-ignored, `.Rbuildignore:30`; all chunks `eval=FALSE`) |
+| CRAN vignette — convergence | `vignettes/gvaConvergence.Rmd` | `knitr::rmarkdown_notangle` | Yes (S861: missing from the original table) |
 | CRAN vignette — interactive | `vignettes/a2interactive.Rmd` | `knitr::rmarkdown_notangle` | Yes (runs real analysis) |
 | CRAN vignette — manual | `vignettes/a3manual.Rmd` + 13 `manual_components/_*.Rmd` children | `knitr::knitr` | Yes (assembles child docs) |
 | CRAN vignette — simulation | `vignettes/simulatedKValues.Rmd` | `knitr::rmarkdown_notangle` | Yes (gene-drop sim at n=10/100/1000) |
 | Website | pkgdown site (rmsharp.github.io/nprcgenekeepr) | pkgdown + knitr | No |
 | Repo docs | `README.Rmd`, `NEWS.Rmd` | knitr → github_document | No |
-| Dev docs | `inst/extdata/claude_code.qmd`, `inst/extdata/software_design_doc.qmd`, `inst/extdata/meeting_notes.Rmd` | **already Quarto** (2) + 1 Rmd | No (build-ignored) |
+| Dev docs (S861: now under `dev/extdata-scratch/`, not `inst/extdata/`) | `claude_code.qmd`, `software_design_doc.qmd`, `meeting_notes.qmd` | **all Quarto** (the third was converted in slice 1, S106) | No (build-ignored) |
 
 `DESCRIPTION`: `VignetteBuilder: knitr`; `Suggests` includes `knitr`, `rmarkdown`, `markdown`;
 **no Quarto dependency anywhere.** There is no precompute pattern: the `.html`/`.R`/`.md`

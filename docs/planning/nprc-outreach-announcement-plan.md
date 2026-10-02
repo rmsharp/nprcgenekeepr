@@ -1,5 +1,13 @@
 # NPRC Outreach & Announcement Plan — nprcgenekeepr 2.0.0
 
+> **Status banner (S861, 2026-10-02).** Still a live DRAFT, nothing in it has been sent. Before any send: (1) the
+> text and the Appendix B feature table pitch **2.0.0** ("reached a major release"), which CRAN published on
+> 2026-07-26; the next release is **3.0.0** (`BACKLOG.md:93`; `DESCRIPTION` is `2.0.0.9000`), so refresh the
+> version and the feature list; (2) the contact roster is "as of 2026-07-28" and roles change, so re-verify it as the
+> plan's own section 8.2 requires (not re-checked this session: it needs outside research); (3) the CHANGELOG
+> session-number cites near the top are not in the ledger's current format and were not re-checked. The two article
+> URLs were confirmed to return 200 on 2026-10-02 audit (S860).
+
 **Status:** DRAFT — Phase 1 (contact roster) complete; awaiting owner review & sign-off
 (Phase 2) before any correspondence is sent
 **Owner:** R. Mark Sharp, Ph.D. (package maintainer)

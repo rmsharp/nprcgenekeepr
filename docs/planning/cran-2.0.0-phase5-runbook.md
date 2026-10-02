@@ -1,5 +1,15 @@
 # CRAN 2.0.0 — Phase 5 cross-platform-check runbook (owner-run)
 
+> **Status banner (S861, 2026-10-02).** This runbook was written for the 2.0.0 submission, which CRAN
+> **accepted on 2026-07-26** (tag and GitHub release `v2.0.0` done 2026-07-28). Treat sections 1-4 as the
+> reusable checklist for the **3.0.0** release: read every `2.0.0` below as the version being released, and
+> re-verify every "verified/installed/in sync" statement, because each is a snapshot from June-July 2026.
+> Known differences today: `DESCRIPTION` is `2.0.0.9000`; the `rhub` package is **not** installed in this renv
+> library (`requireNamespace("rhub")` is FALSE; `devtools`, `gitcreds` and `usethis` are present); local
+> `master` is ahead of `origin/master`; and `cran-comments.md` holds the finished 2.0.0 text with no
+> "to be run before submission" markers, so it needs a 3.0.0 rewrite (it is no longer a resubmission of an
+> archived package). Section 5 (Phase 6) is **done for 2.0.0**.
+
 **Companion to** `docs/planning/cran-2.0.0-submission-plan.md` Phase 5 + §7, and the
 rewritten `cran-comments.md`. Authored by Session 135 (2026-06-18); **refreshed by
 Session 242 (2026-06-29)** — submission tooling is now present (was "absent"); the R-hub
@@ -134,8 +144,8 @@ maintainer-email confirmation click remain the owner's next action.
 **outward-facing** (they upload the package to external services), need **network**
 access and your **GitHub token**, and return results **asynchronously** (win-builder by
 email, ~30 min per run; R-hub via GitHub Actions). Per SAFEGUARDS these are yours to
-trigger. `devtools` / `rhub` / `gitcreds` are now **installed** in the renv library
-(§0; they were absent when this runbook was first written). The **final CRAN upload is
+trigger. `devtools` and `gitcreds` are installed in the renv library; **`rhub` is not**
+(checked S861), so install it first (§0). The **final CRAN upload is
 also yours** (HARD STOP at the end — plan decision #3).
 
 Run these from the package root, in an R session with network access.
@@ -149,19 +159,19 @@ run-list. No `git push` is in this list because R-hub checks **`master`**, which
 in sync with `origin/master` (see step 3).
 
 ```r
-# one-time -- devtools/rhub/gitcreds are PRESENT as of S242 (install only on a fresh clone):
+# one-time -- as of S861 `rhub` is NOT installed here (devtools and gitcreds are); install what is missing:
 # install.packages(c("devtools", "rhub", "gitcreds"))
 gitcreds::gitcreds_set()                 # paste a GitHub PAT (repo + workflow scopes)
 
 # build the artifact win-builder and CRAN receive:
-devtools::build()                        # -> nprcgenekeepr_2.0.0.tar.gz
+devtools::build()                        # -> nprcgenekeepr_<version>.tar.gz (3.0.0 for the next release)
 
 # cross-platform checks (results arrive async: win-builder by email, R-hub on GitHub):
 devtools::check_win_devel()              # ~30 min each, emails rmsharp@me.com
 devtools::check_win_release()
 devtools::check_win_oldrelease()
 rhub::rhub_doctor()                      # verify PAT + setup
-rhub::rhub_check(platforms = c("linux", "windows", "macos"))   # checks master (2.0.0, in sync w/ origin) -- no push needed
+rhub::rhub_check(platforms = c("linux", "windows", "macos"))   # checks what is on GitHub, so push master first if it is ahead of origin
 
 # only after ALL results are in and clean, and folded into cran-comments.md (step 4):
 devtools::submit_cran()                  # HARD STOP -- owner only; then click the email confirmation link
@@ -198,11 +208,11 @@ Notes:
 ## 1. Build the final source tarball (for win-builder + the submission)
 
 ```r
-devtools::build()               # or: R CMD build .   -> nprcgenekeepr_2.0.0.tar.gz
+devtools::build()               # or: R CMD build .   -> nprcgenekeepr_<version>.tar.gz
 ```
 
 This is the artifact win-builder checks and the artifact you upload to CRAN. Confirm it
-is named `nprcgenekeepr_2.0.0.tar.gz`.
+is named `nprcgenekeepr_<version>.tar.gz` for the version being released.
 
 > The local `--as-cran` gate is **GREEN** on the current `master`: Session 240 (2026-06-29)
 > re-ran `R CMD build .` + `R CMD check --as-cran --timings` on the 2.0.0 tarball after dozens
@@ -243,7 +253,8 @@ rhub::rhub_check(platforms = c("linux", "windows", "macos"))
 
 * `.github/workflows/rhub.yaml` already exists (it ran for the 1.0.8 submission), so
   `rhub_setup()` is **not** needed again.
-* **BRANCH STATE (verified — Session 242, 2026-06-29).** R-hub v2 checks the code that is
+* **BRANCH STATE (a June 2026 snapshot; re-run the commands before relying on it. At S861 `DESCRIPTION` was
+  `2.0.0.9000` and local `master` was ahead of `origin/master`, so push first).** *Original S242 note:* R-hub v2 checks the code that is
   **on GitHub**, not your local working tree. The 2.0.0 package code now lives on **`master`**,
   the repo's default branch, which is **in sync with `origin/master`** — verified this session:
   `git status` = "up to date with 'origin/master'"; `git rev-list --left-right --count
@@ -267,8 +278,9 @@ rhub::rhub_check(platforms = c("linux", "windows", "macos"))
 
 ## 4. Fold the results into `cran-comments.md`, then submit (HARD STOP)
 
-1. Edit `cran-comments.md` `## Test environments`: replace each
-   `-- to be run before submission` marker with the actual summarized result, e.g.
+1. Edit `cran-comments.md` `## Test environments`: for 2.0.0 this meant replacing each
+   `-- to be run before submission` marker; the file no longer has those markers (it is the finished 2.0.0
+   text), so for 3.0.0 write the section fresh with the actual summarized results, e.g.
 
    ```
    * win-builder R-devel:        0 errors | 0 warnings | 1 note (incoming feasibility)
@@ -305,7 +317,7 @@ the maintainer's action and cannot be delegated.
 
 ---
 
-## 5. After CRAN accepts → Phase 6
+## 5. After CRAN accepts → Phase 6 (done for 2.0.0; reuse as the 3.0.0 checklist)
 
 Tag the release, publish the GitHub release, bump to the dev version — see plan Phase 6
 (`usethis::use_github_release()`, `usethis::use_dev_version()`). Do this only after the
