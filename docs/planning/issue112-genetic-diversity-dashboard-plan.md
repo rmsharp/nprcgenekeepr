@@ -1,5 +1,7 @@
 # Issue #112 — Genetic Diversity Dashboard: Design & Implementation Plan
 
+> **Status banner (S861, 2026-10-02; a later note, the body below is the original record).** **Slices S1-S4 shipped** (`5667f9c8c`, `2b11f1125`, `cb7eb1a6a`, `7d4104680`) and #112 is closed. The "DRAFT, no code written" line below is out of date. The dead `makeGeneticDiversityDashboard.R` is deleted, `getGeneticDiversityStats()` now takes `(groups, ped, geneticValues, kmat, housing, currentDate)`, `getProductionStatus()` uses `minDamAge`, and a housing selector answers Q2. Slice S5 is the open issue #116. Do not copy the plan's old `!grepl("test-app-|test-e2e-", file)` test filter: `CLAUDE.md` removed it in S624. Plan headers lag the work: `CHANGELOG.md` is the authority for what shipped.
+
 **Issue:** #112 "finish development of the genetic diversity heatmap or dashboard" (enhancement)
 **Authored:** Session 279 (2026-07-05)
 **Status:** DRAFT plan (design deliverable). **No code written.** Implementation happens in the separate, per-slice sessions defined in §7. Owner-ratification points are marked **[RATIFY]**.

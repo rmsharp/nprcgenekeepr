@@ -1,5 +1,7 @@
 # Issue #123 (XARCH-5) — String-column-keyed pipeline: architecture plan
 
+> **Status banner (S861, 2026-10-02; a later note, the body below is the original record).** **Partly shipped.** Phase 1 shipped in S386 (`8a5465d88`): `R/columnSchema.R` and `R/assertRequiredColsPresent.R` exist, the getters return the `.nprcColumnSchema` vectors, and the validator is wired into `reportGV.R`, `qcStudbook.R` and `gvaConvergence.R`. Issue #123 stays **open on purpose** for the residuals. The "not implemented" line below, the 24-element `getPossibleCols()` count (it is now 26), and every `file:line` anchor are out of date. The print-method wrinkle (now near `reportGV.R:353`) is still true. Plan headers lag the work: `CHANGELOG.md` is the authority for what shipped.
+
 **Status:** PLAN (not implemented). Written Session 385, 2026-07-15, HEAD `b534e08d`.
 **Issue:** https://github.com/rmsharp/nprcgenekeepr/issues/123
 **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`

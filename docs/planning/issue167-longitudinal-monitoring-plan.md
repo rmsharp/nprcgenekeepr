@@ -3,6 +3,8 @@
 
 # Issue #167 Plan — Longitudinal Genetic-Health Monitoring (Colony Snapshots and Trend Reporting)
 
+> **Status banner (S861, 2026-10-02; a later note, the body below is the original record).** **Slices 1-4 shipped and issue #167 is closed (2026-09-22).** The "gated on ratification" and "stays intentionally open" wording below is out of date. Two signatures changed: `modSnapshotTrendsServer(id, snapshotSource)` (`R/modSnapshotTrends.R:142`), and `createColonySnapshot()` also requires `guIter` and `guThresh`. The app now has 16 top-level tabs. Slice 5 (retrospective backfill) is the only open part; its caveats are in D5 and section 5 Slice 5, not "section 7 Dragon 1". `CHANGELOG.md` is the authority for what shipped.
+
 **Session:** S756 (2026-09-21) · **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
 · **Type:** design/architecture document, matching the #133/#136/#137/#145/#146/#147/#149/#150/#151/#152/#153
 precedent — **zero `R/`/`tests/`/`man/` changes this session.** This plan answers the nine open

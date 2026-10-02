@@ -1,5 +1,7 @@
 # Issue #122 (XARCH-2) — Module contract: architecture plan
 
+> **Status banner (S861, 2026-10-02; a later note, the body below is the original record).** **Fully shipped** (all five phases, S373-S377; #122 closed 2026-07-14). The "PLAN (not implemented)" line below is out of date. The problems described in section 2 (the rename closure, dead writes, blanket `tryCatch`, the `modBreedingGroups` kinship-reuse branch) no longer exist as written; `docs/architecture/module-contract.md` is the live statement of the contract. Plan headers lag the work: `CHANGELOG.md` is the authority for what shipped.
+
 **Status:** PLAN (not implemented). Written Session 372, 2026-07-12.
 **Issue:** https://github.com/rmsharp/nprcgenekeepr/issues/122
 **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`

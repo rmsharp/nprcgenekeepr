@@ -1,6 +1,6 @@
 ---
 title: "Pedigree Diagram: kinship2 Reference Comparison"
-subtitle: "Decision-support research for issues #142 (rectilinear mate-line/sibship-bar style, shipped), #143/#144 (founder-positioning fixes, shipped), and #145 (sire/dam left-right ordering, open) -- not a package vignette, not shipped"
+subtitle: "Decision-support research for issues #142 (rectilinear mate-line/sibship-bar style, shipped), #143/#144 (founder-positioning fixes, shipped), and #145 (sire/dam left-right ordering, since closed) -- a point-in-time record, not a package vignette, not shipped"
 date: today
 format:
   html:
@@ -8,6 +8,8 @@ format:
     toc: true
     df-print: kable
 ---
+
+> **Status note, S861 (2026-10-02):** the "current" statements below predate issues #133, #136, #137 and #141-#145, all now closed. Affected-status and twin/zygosity encoding shipped, male-left ordering shipped (S500, S859), and `edgeStyle` defaults to `"rectilinear"`. Counts of duplicate nodes and the claim that individual 113 is "never silently dropped" were measured before the layout rewrite and no longer hold. Treat this file as history.
 
 > **Owner correction, 2026-08-25 (S631): the "matches kinship2" claims throughout this document
 > are stale and not to be trusted as current.** This document's examples were generated 2026-08-08,
