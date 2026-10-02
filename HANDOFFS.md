@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S861
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- slice 7c docs fixes: banners on shipped plans, in-place edits to runbook/outreach/Quarto docs, three BACKLOG pointers; docs only
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- slice 7c docs fixes (banners on 5 plans + reference qmd, in-place edits to runbook/outreach/Quarto docs, 3 BACKLOG pointers); header sweep remains
+what_was_done: claim 1e0295d5b; banners 1754691e1; runbook/outreach/Quarto fixes a1cbfde13; BACKLOG pointers and audit-item status f6ae48446; close-out commit holds records. Re-checked rhub, cran-comments markers, versions, paths before writing; fixed two wrong cites caught on re-check.
+next_steps: (A) Header sweep, docs only: one-line status for the 11 status-less plans and the 14+ stale-header plans in the S860 report, plus docs/planning/README (CHANGELOG is the authority). (B) Owner: getProductionStatus 0 dams green vs grey. (C) PED_GV decisions, mate-pair residue, 3.0.0 release prep. (D) master 11 ahead of origin; push only if the owner says.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md (sweep table); BACKLOG.md:149 (audit item); docs/planning/cran-2.0.0-phase5-runbook.md:3-11 (banner)
+gotchas: banners are later notes, bodies untouched; insert after the H1 (issue167 has a license header first); 36 of 53 moderates were agent-only, so re-check before editing; BSD sed needs -i ''.
+runtime_smoke: n/a -- docs only. quality_ratchet: not run (no code change).
+changelog_ref: S861 close-out entry
+commit: the close-out commit that carries this receipt; claim 1e0295d5b
 ```
 
 ```handoff

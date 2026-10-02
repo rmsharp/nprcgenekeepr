@@ -99,10 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 861 Did
-**Deliverable:** slice 7c docs fixes from the S860 audit report (banners, in-place edits, 3 BACKLOG pointers); docs only (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+**Deliverable, DONE:** slice 7c docs fixes from the S860 audit report; docs only, no code, no tests. Claim `1e0295d5b`; fixes `1754691e1` (banners), `a1cbfde13` (in-place), `f6ae48446` (BACKLOG).
+**Done:** status banners on the #112, #122, #123, #144, #167 plans and a status note plus subtitle fix on the reference qmd; the CRAN runbook, outreach plan and Quarto analysis fixed in place; 3 BACKLOG pointers fixed (Dragon 1 -> D5, qmd refresh marked done S484, #123 residuals now tracked); the audit item in `BACKLOG.md` marked "Slice 7c FIXED S861".
+**Re-checked first-hand before editing:** `rhub` not installed (devtools, gitcreds, usethis are); `cran-comments.md` has 0 markers; `DESCRIPTION` 2.0.0.9000; release `v2.0.0` 2026-07-28; `docs/architecture/module-contract.md` (the report cited a bare name, I fixed the path); `getGeneticDiversityStats.R:58`; vignette and `dev/extdata-scratch/` file lists. Not re-checked: outreach roster, third-party quotes, plan bodies.
+**Not done:** the header sweep (one-line status on 11 status-less and 14+ stale-header plans, `docs/planning/README`); recorded as the remaining part in the BACKLOG audit item. Tests/lint: none run (no `.R`, test or build-included file changed; skip-CI rule applies).
+**Slips:** I first cited `docs/conventions/module-contract.md` and "S857" in banners from the report; caught both on re-check and fixed before commit.
+**Reduction:** removed the S841 record (git and CHANGELOG keep it); the budget hook refused the commit 209 tokens over its ceiling. The 4 over-long lines it flags are older records, left alone.
+
+**Self-assessment: 7/10.** + Re-verified agent claims before writing them; banners not rewrites; kept to the cluster list; 3 commits under the 5-file cap. - Header sweep left; only spot re-checks of the 36 agent-only moderates; wrote two wrong cites first.
+
+**Next steps:** (A) Header sweep, docs only: one-line status for the 11 status-less plans (`issue119`, `125`-`130`, `152`, `168`, `30`, `76`, `9`) and the 14+ stale-header plans listed in the S860 report, plus `docs/planning/README`. (B) Owner decision: `getProductionStatus` 0 dams green vs grey. (C) Open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep (the runbook and outreach plan now say what to refresh). (D) Master is 9 commits ahead of origin after close-out; push only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table); `BACKLOG.md:149` (audit item); `docs/planning/cran-2.0.0-phase5-runbook.md:3-11`.
+
+**Gotchas:** banners say a later note was added and point at `CHANGELOG.md` as authority; keep that wording for the sweep. Banner-adding scripts must insert after the H1 line (issue167 has a license header first). BSD sed needs `-i ''`.
+
+### Session 860 Handoff Evaluation (by Session 861)
+**Score: 8/10.** **Helped:** the report's tables had file:line and a "Check" column, so I knew which claims were first-hand; "Recommended fixes" mapped directly to the work; the scope (A) was exact. **Wrong/missing:** it said master is 5 ahead of origin; measured 6 at Orient. The report cites `module-contract.md` with no directory (it is `docs/architecture/`) and the key-files list gave no line for the 7c fix targets beyond the runbook. **ROI:** high.
 
 ### What Session 860 Did
 **Deliverable, DONE:** docs-staleness audit slice 7c, scoped by the owner to live plans only. Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md`; no code changed; the docs themselves are not fixed. Claim `2c2d1aaea`.
@@ -232,30 +245,6 @@ can be off (RE4 was); grep for the text. Do NOT use `echo ====` in the Bash tool
 ### Session 841 Handoff Evaluation (by Session 842)
 **Score: 8/10.** Orient measurements held: both ledger frontiers at HEAD, 46 ahead, one untracked file, 126 pages left. Step (A) gave the exact recipe (`comm -13` of the "Items audited" ids against `ls man`) and it produced 126. **Wrong:** none. **Missing:**
 it did not say that SESSION_NOTES.md was at the token ceiling, so the claim commit was refused and needed a trim (the dashboard showed it). It re-asked about `suggested_NEWS_entry.md` although S805 says not to carry it. **ROI:** high.
-
-### What Session 841 Did
-**Deliverable, DONE:** fixed all 42 slice-6d docs-staleness findings (RA1-RA13 except the non-findings, RB1-RB11, RC1-RC10, RD1-RD9) in the roxygen of 15 `R/*.R` files and regenerated `man/` (`devtools::document()`, then
-`git checkout man/nprcgenekeepr-package.Rd`). Docs only: no code or test change, so no TDD phase applies. The 22 code candidates are untouched; the docs state today's behavior.
-**Commits:** claim `c33cfd543`; fixes `8b2e51b54` (RA, 4 files), `9b66199cd` (RB, 3 files), `53409c805` (RC, 4 files), `21d33c54f` (RD, 4 files), `fd573b5c8` (wordlist rewording); records in the close-out commit.
-**Verified:** `lintr::lint_package()` 0 lints after each group; `test_wordlist_coverage.R` passes (it caught "unflagged" and "upload's"; reworded, not added); `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`),
-examples OK; the top-level tab count (16, 15 without ORIP) read from `appUI.R` titles; the RA1 fix read in the generated Rd (paragraph now outside `\item{twinRelations}`); each option bullet I wrote for `modBreedingGroupsServer` and the `geneticValues` wording
-checked against `R/modBreedingGroups.R:545-600` and the UI controls.
-**Not verified:** the minors' new wording rests on the audit's own checks plus my source read (RA13, RC6, RC9, RC10, RD4, RD7 were not re-run); not run: the full test suite, a live Shiny launch.
-**NEWS.Rmd:** none. **Reduction:** removed the S839 handoff evaluation and the S839 record (in git and their receipts).
-**Slips caught:** my first `geneticValues` wording said group formation always halts without it; the code needs it only for "Top ranked" or the genetic-value floor, and I corrected it. My first option list said "exhaustive mode forms one group"; the UI offers
-it only when groups = 1 and sex ratio = "none". Two wordlist failures from new words.
-
-**Self-assessment: 8/10.** + One deliverable; five commits, each group linted and regenerated; two of my own wrong claims caught against the code before commit; all gates run. - Minors' wording not re-run; several audit "Location" line numbers (RB2, RB3)
-pointed at code, not the roxygen, so I found the text by grep.
-
-**Next steps:** (A) slice 6e audit (READY, Effort L): 126 `man/` pages left (`obfuscate*`, pedigree-tree and getters, `get*`/`calc*`/`check*` helpers, datasets); list = `comm -13` of the slice 6a-6d reports' "Items audited" ids against `ls man`. (B) Owner
-decisions on code: the 22 slice-6d candidates (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6), the 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3; then reword their docs (RA3/RA4/RA6, RA8, RB10, RC7 first). (C) `suggested_NEWS_entry.md` commit or
-drop (asked at Orient again; not answered). (D) Master is 46 ahead of origin with the close-out commit; push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md` (the code candidates), `R/modBreedingGroups.R:205-290`, `R/modPedigree.R:190-250`, `R/modSummaryStats.R:235-310`, `R/runGenekeepr.R:1-40`, `BACKLOG.md:197`.
-
-**Gotchas:** same as S837-S840 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; `lint_package()` after joined roxygen lines; reword rather than add words to `inst/WORDLIST`). `R/runGenekeepr.R` (lowercase k) holds `runGeneKeepR`. A blank-line
-paragraph after a `@param` folds into it, so put prose before the first `@param`. Do NOT use `echo ====` in the Bash tool (zsh `=` expansion errors).
 
 ### What Session 810 Did
 **Deliverable, DONE:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD, every
