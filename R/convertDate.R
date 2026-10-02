@@ -21,8 +21,9 @@
 #' every date column is scanned and the converted pedigree is not returned;
 #' instead the result is a sorted character vector of the row numbers with an
 #' invalid date (a row is repeated once for each column in which it has one),
-#' or \code{NULL} when there are none. The row numbers count only the records
-#' that are not marked \code{"added"}, not the positions in the input.
+#' or \code{NULL} when there are none. Row numbers, here and in the error
+#' message, are positions in \code{ped} as passed in, so records marked
+#' \code{"added"} count toward the numbering wherever they sit.
 #' @return A dataframe with an updated table with date columns converted from
 #' \code{character} data type to \code{Date} data type. A date must be in the
 #' form \code{YYYY-MM-DD} (month and day may have one digit), or
@@ -109,10 +110,12 @@ convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
   ## Ignore records added because of unknown parents. Only "added" records are
   ## set aside; an NA or unrecognized status is a real animal, and an NA in a
   ## row subscript would return an all-NA phantom row, so mask explicitly.
+  pedRows <- seq_len(nrow(ped))
   if (any("recordStatus" %in% names(ped))) {
     isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"
     addedPed <- ped[isAdded, ]
     ped <- ped[!isAdded, ]
+    pedRows <- pedRows[!isAdded]
     if (nrow(ped) == 0L) {
       return(rbind(ped, addedPed))
     }
@@ -159,13 +162,11 @@ convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
       if (reportErrors) {
         invalid_date_rows <- c(
           invalid_date_rows,
-          seq_along(originalDates)[originalDates == "bad"]
+          pedRows[originalDates == "bad"]
         )
         next
       }
-      rowNums <- get_and_or_list(
-        seq_along(originalDates)[originalDates == "bad"], "and"
-      )
+      rowNums <- get_and_or_list(pedRows[originalDates == "bad"], "and")
       stop(
         "Column '", header, "' has invalid dates on row(s) ",
         rowNums, "."

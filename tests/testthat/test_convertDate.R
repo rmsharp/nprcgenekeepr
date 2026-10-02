@@ -134,6 +134,51 @@ test_that(paste0(
   badAddedPed$birth[6L] <- "04-08-2004"
   expect_null(convertDate(badAddedPed, reportErrors = TRUE))
 })
+## Invalid-date row numbers are positions in the pedigree the caller passed in,
+## including any "added" records, in whichever order they sit.
+addedFirstPed <- data.frame(
+  id = c("x1", "a", "b", "c"),
+  birth = c(NA, "2001-01-05", "02-06-2002", "2003-03-07"),
+  recordStatus = c("added", "original", "original", "original"),
+  stringsAsFactors = FALSE
+)
+test_that(paste0(
+  "convertDate with error flag numbers an invalid date by its row in the ",
+  "full pedigree when an added record comes first"
+), {
+  expect_identical(convertDate(addedFirstPed, reportErrors = TRUE), "3")
+})
+test_that(paste0(
+  "convertDate with error flag numbers an invalid date by its row in the ",
+  "full pedigree when an added record sits between originals"
+), {
+  addedMiddlePed <- addedFirstPed[c(2L, 1L, 3L, 4L), ]
+  expect_identical(convertDate(addedMiddlePed, reportErrors = TRUE), "3")
+})
+test_that(paste0(
+  "convertDate with error flag numbers an invalid date the same whether the ",
+  "added record is first or last"
+), {
+  addedLastPed <- addedFirstPed[c(2L, 3L, 4L, 1L), ]
+  expect_identical(convertDate(addedLastPed, reportErrors = TRUE), "2")
+})
+test_that(paste0(
+  "convertDate with error flag numbers invalid dates in every date column by ",
+  "full-pedigree row when an added record comes first"
+), {
+  twoColPed <- addedFirstPed
+  twoColPed$death <- c(NA, "2010-01-01", "2011-01-01", "01-01-2012")
+  expect_identical(
+    sort(as.integer(convertDate(twoColPed, reportErrors = TRUE))),
+    c(3L, 4L)
+  )
+})
+test_that(paste0(
+  "convertDate stop message numbers an invalid date by its row in the full ",
+  "pedigree when an added record comes first"
+), {
+  expect_error(convertDate(addedFirstPed), "invalid dates on row\\(s\\) 3\\.")
+})
 test_that("convertDate fails when date column class is real", {
   ped5 <- ped3
   ped5$birth <- rnorm(10L, 10L, 100L)

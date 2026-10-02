@@ -22,8 +22,9 @@ date stops with an error naming the column and the rows. If \code{TRUE},
 every date column is scanned and the converted pedigree is not returned;
 instead the result is a sorted character vector of the row numbers with an
 invalid date (a row is repeated once for each column in which it has one),
-or \code{NULL} when there are none. The row numbers count only the records
-that are not marked \code{"added"}, not the positions in the input.}
+or \code{NULL} when there are none. Row numbers, here and in the error
+message, are positions in \code{ped} as passed in, so records marked
+\code{"added"} count toward the numbering wherever they sit.}
 }
 \value{
 A dataframe with an updated table with date columns converted from
