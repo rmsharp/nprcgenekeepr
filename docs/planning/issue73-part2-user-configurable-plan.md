@@ -1,5 +1,7 @@
 # Issue #73 Part 2 Plan — User-configurable species reproductive-parameter overrides (config file)
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** (S186-S189; PRs #78 and #79; `R/loadSpeciesOverrides.R`); #73 closed 2026-06-24. The "ready to RED" wording below is out of date. Whether the plan had more than two slices was not traced here. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status: RATIFIED (Session 185, 2026-06-23) -- ready to RED.** Session 184 drafted this plan; Session 185 verified the load-bearing claims (D1/D4/R2) firsthand and the owner ratified all open decisions via `AskUserQuestion` (Ratification record below). Implementation is a separate strict-TDD session per slice -- do NOT bundle ratification with implementation, nor Slice 1 with Slice 2 (FM #18/#25). Slice 1 may now declare RED.
 
 **Ratification record (Session 185, 2026-06-23 -- owner, via `AskUserQuestion`; all decisions ratified as recommended):**

@@ -3,6 +3,8 @@
 
 # Issue #168 Plan — Ancestry Guardrails for Breeding-Group Formation
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** (slices S763-S769; Slice 4b `b21bbcdd5`); #168 closed 2026-09-23 as completed (`R/reportAncestryViolations.R`). Follow-ups are tracked in `BACKLOG.md`. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Session:** S762 (2026-09-22) · **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
 · **Type:** design/architecture document, matching the #133/#136/#137/#145/#146/#147/#149/#150/
 #151/#152/#153/#167 precedent — **zero `R/`/`tests/`/`man/` changes this session.** This plan

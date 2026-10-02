@@ -1,5 +1,7 @@
 # Issue #2 Plan -- Evidence-based advice on the number of gene-drop iterations for the Genetic Value Analysis
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** in three slices (S197-S202; Slice 3 via PR #85, `ddad211d5`); #2 closed 2026-06-25 (`R/gvaConvergence.R`). The "OPEN since 2020" wording below is out of date. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** PLAN -- **Section 8 RATIFIED (Session 196, 2026-06-25).** Implementation slices are separate later
 sessions (FM #18). **Slice 1 is unblocked.** All six §8 owner decisions are resolved (§8); the S195 empirical
 claims were re-established firsthand in S196, correcting three factual errors (§2C, Findings 3-4) -- see

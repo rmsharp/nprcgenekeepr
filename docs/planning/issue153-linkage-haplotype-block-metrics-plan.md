@@ -3,6 +3,8 @@
 
 # Issue #153 — Linkage-Aware and Haplotype-Block Metrics for Marker Data
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** in five slices (from S520); #153 closed 2026-08-12. The "stays open, design ratified not implemented" wording below is out of date. The last slice's session number was not traced here. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** Pre-RED design/architecture document. Design-only session (Session 519,
 2026-08-11) — zero `R/`/`tests/`/`man/` changes. Matches the #133/#136/#137/#145/
 #146/#147/#149/#150/#151/#152 precedent: a design document is written and ratified
