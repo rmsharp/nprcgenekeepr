@@ -31,9 +31,18 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ````
 ```handoff
 session: S859
-date: 2026-10-01
-status: pending
-active_task: IN PROGRESS -- try male-left for couples whose mate is drawn as a duplicate node; owner's rule: no dogleg or shift without a visual and readability purpose (strict TDD)
+date: 2026-10-02
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: DONE -- one-mate-each couples whose mate is a duplicate node draw male-left (`|| qualifies(u)`, R/makePedigreeDiagramData.R:1267); strict TDD, all gates asked; owner accepted the fix after app-proportion figures; BACKLOG item removed.
+what_was_done: claim f46ce6de3; RED ca0ee89ac; GREEN+REFACTOR 82e020669 (1 R line, header comment, generic test file, 6 pins in 3 files); close-out commit holds records and BACKLOG removal. Full suite 364 files / 2,907 tests, lint 0.
+next_steps: (A) Nothing owed on this item. Male-left for multi-mate couples would be a new plan (issue #145 D5/D9, new machinery) only if the owner asks. (B) Open: PED_GV decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep: BACKLOG "Move the version to 3.0.0". (D) Push only on the owner's say-so.
+key_files: R/makePedigreeDiagramData.R:1213-1222,1267; tests/testthat/test_maleLeftDuplicateMate.R; test_makePedigreeMatingLayout.R:745,774; test_addRectilinearWaypoints.R:797-798; test_resolveEdgeNodeCollisions.R:721-722
+gotchas: any layout change moves 6 pins in 3 files; render owner figures via the app's visNetwork settings with fixed moveTo zoom after a warm-up navigate; couple 2 keeps an ~8 px step (jog-free needs a solver change); crossings not recounted this session (S858: 1702 to 1700, 1542 to 1544).
+runtime_smoke: layout function output rendered through visNetwork + chromote; no live Shiny launch. quality_ratchet: not run (no .quality-gates results cited).
+changelog_ref: S859 close-out entry
+commit: the close-out commit that carries this receipt; claim f46ce6de3
 ```
 
 ```handoff

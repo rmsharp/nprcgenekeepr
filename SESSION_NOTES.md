@@ -99,10 +99,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 859 Did
-**Deliverable:** try male-left for the 2 couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`); accept only if it adds no dogleg or shift without a visual/readability purpose (owner's words, S859) (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. PRE-RED: next is the PRE-RED gate.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+**Deliverable, DONE:** the 2 `rhesusPedigree` couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) now draw male-left, by a general rule: every one-mate-each
+couple takes the sex rule (`R/makePedigreeDiagramData.R:1267`, `|| qualifies(u)`). Strict TDD, all gates asked (PRE-RED scope, PRE-RED, RED, GREEN, REFACTOR). Claim `f46ce6de3`; RED `ca0ee89ac`; GREEN+REFACTOR `82e020669`.
+**Owner's rule (S859):** "Try male left, but do not add doglegs just to save horizontal space ... do not add a dogleg or a shift without a visual and readability purpose." Acceptance: pictures decide. Owner verdict after
+the app-proportion figures: "The current fix is fine"; they expect the rule to hold for all couples where possible, and the plan's multi-mate exclusion (issue #145 D5/D9) is unchanged, so multi-mate couples are still tree-placed.
+**Measured by me:** same one-line change as S858 (its RED file restored). Rectilinear nodes 1456 to 1460, jog nodes 186 to 190, direct unchanged (782). Couple 1 (4CHDK1): parents' connector is the same bus shape,
+about 135 px shorter, no new bend (the extra jog nodes are the same bend stored differently). Couple 2 (V1X2X3): about 8 px step just above him (parents' union 10426, box 10418); a jog-free version needs a solver-weight or post-pass change, not done.
+**Tests:** `test_maleLeftDuplicateMate.R` rewritten generic (every one-mate-each couple on rhesusPedigree, qcPed, pedWithGenotype, smallPed, both edge styles; plus duplicate-mate couples on rhesusPedigree, > 15 so it cannot
+pass vacuously); fails 4 times on the old code, passes on the new. Pins moved: `test_makePedigreeMatingLayout.R` 1456 to 1460 and 186 to 190, `test_addRectilinearWaypoints.R` 97 to 98 (x2), and
+`test_resolveEdgeNodeCollisions.R:721-722` 93 to 95 and 205 to 207 (not in the S858 list; found by the full suite).
+**Verified by me:** full unfiltered suite 364 files, 2,907 tests, 1 file failed (the resolveEdgeNodeCollisions pins, then fixed; that file re-ran green); lint_package(): 0. **Not re-run:** the full suite after the last pin edit (that file only);
+edge crossings (S858 measured 1702 to 1700 rectilinear, 1542 to 1544 direct for this same change); `devtools::check()`; a live Shiny launch. **NEWS.Rmd:** none (`:59` "in most cases" stays true).
+**Slips:** my first figures were base graphics with the wrong scale and a window that cut the couple off; the next set failed to zoom and I opened it anyway (the owner saw one wrong figure); I reported a "135 px dogleg" that
+the matched figures did not show, and retracted it; my first tests named animals instead of testing the rule. **Reduction:** removed the S857 record and the completed BACKLOG item.
+
+**Self-assessment: 6/10.** + Rule shipped generally with the owner's acceptance; blast radius and pins measured; generic tests shown to fail without the fix. - Four rounds of wrong or unclear figures and questions cost the owner time;
+one wrong claim to retract; pair-specific tests first.
+
+**Next steps:** (A) Nothing owed on this item; the BACKLOG item is removed. If the owner wants male-left for multi-mate couples, that is a new plan (issue #145 D5/D9: new placement machinery). (B) Still open: PED_GV
+decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep: BACKLOG "Move the version to 3.0.0". (D) Master is 3 commits ahead of origin after the close-out commit; push only on the owner's say-so.
+
+**Key files:** `R/makePedigreeDiagramData.R:1267` and header `:1213-1222`; `tests/testthat/test_maleLeftDuplicateMate.R`; pins at `test_makePedigreeMatingLayout.R:745,774`, `test_addRectilinearWaypoints.R:797-798`,
+`test_resolveEdgeNodeCollisions.R:721-722`.
+
+**Gotchas:** show the owner figures drawn through the app's own visNetwork pipeline (`visNetwork(nodes, edges)` + `visPhysics(enabled = FALSE)`), fixed `moveTo` zoom and centre, after a warm-up navigate to `about:blank`
+(the first page of a chromote session ignores the zoom); scripts are in the S859 scratchpad. Any layout change moves 6 pins in 3 test files, not 4.
+
+### Session 858 Handoff Evaluation (by Session 859)
+**Score: 8/10.** **Helped:** the BACKLOG item held the owner's words, the files and lines, the rejected RED file's git hash and the warning not to infer a rule; Orient measurements held. **Wrong/missing:** the pin list
+named 4 pins in 2 files; the full suite found 2 more in `test_resolveEdgeNodeCollisions.R:721-722`. Master was in sync with origin, not ahead (the owner pushed). **ROI:** high.
 
 ### What Session 858 Did
 **Deliverable:** the cause of the 2 duplicate-mate male-right couples, a fix tried and rejected by the owner, and a corrected BACKLOG item. Strict TDD began (PRE-RED, RED, GREEN gates asked); the
@@ -132,35 +157,6 @@ file (`open`); a figure I read is not a figure they saw. Measure scripts must be
 ### Session 857 Handoff Evaluation (by Session 858)
 **Score: 8/10.** **Helped:** the BACKLOG item named both couples, the measuring helper and the files; Orient measurements all held (frontiers at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause
 line said only the female has a parent edge; both parents do. **Missing:** which census pins move under any layout change. **ROI:** high.
-
-### What Session 857 Did
-**Deliverable, DONE:** the diagram layout keeps the male-left rule for the two squeezed `rhesusPedigree` couples (`QL6GH4` x `3PD3U5`, `BM40IX` x `MTSHHY`) and for every one-mate, non-duplicate couple
-the S666 pass handles. Strict TDD, all three gates asked. Claim `acc020703`; RED `62cac01de`; GREEN `c4b383978`; REFACTOR (comments only) and records in the close-out commit.
-**RED:** `tests/testthat/test_maleLeftSweepSurvival.R`, 6 tests (the two named pairs, every simple pair, a pin that the other simple pairs stay male-left; both edge styles). 4 failed
-for the stated reason (male x >= female x, 6 failure lines); the 2 pins passed. **GREEN:** `R/makePedigreeDiagramData.R:1261-1271`: for a unit in `correctableUnitIds` the single-unit mate side is the sex rule, not the
-children's mean (the sweep after the S666 pass can push the anchor past its children). All 6 pass. **REFACTOR:** comments only (header bullet `:1213-1219` updated; note moved beside the condition).
-**Verified by me:** full unfiltered suite on the GREEN code: 363 files, 2,897 tests, 0 failed, 0 error, 187 skipped (S854: 362 / 2,891; +6 = the new tests). After the comment/format edits I re-ran only the 6 related layout files
-(`maleLeftSweepSurvival`, `positionMatingUnitForest`, `makePedigreeMatingLayout`, `makePedigreeDiagramData`, `comparePedigreeStructure`, `addRectilinearWaypoints`): all pass. `lintr::lint_package()`: 0 lints (GREEN code), the edited file re-linted clean.
-**Blast radius, old vs new code on 11 bundled pedigrees x 2 edge styles (22 layouts):** 14 layouts unchanged (smallPed and the 6 example CSVs). Changed: `rhesusPedigree` (31 of 375 animals move, mostly a 120 swap plus
-re-centering of -19..-6), `qcPed` and `pedWithGenotype` (8 couples swap, plus a uniform 1e-4 solver drift on most nodes), `obfuscated_rhesus_mhc_ped` (1 couple swaps; a 56-node block shifts 120). Identical old vs new: edge
-crossings (e.g. 1702, 1542), minimum row gaps, the 72-collision warning on `rhesusPedigree`. Coincident positions are only `__bar`/`__drop` pairs (no two animals share a spot). The drawn parent-child edges (502) and mate pairs
-(237) of `rhesusPedigree` equal the data (also `smallPed`, `qcPed`); one zero-length bar-drop connector in the MHC pedigree flipped direction. Male-right units on `rhesusPedigree`: 30 to 28 of 237; one-mate non-duplicate: 2 to 0.
-**Pictures:** `img/draw_coupleA.png`, `img/draw_coupleB.png` in the session scratchpad (before/after, couple highlighted); chromote screenshots raced visNetwork's auto-fit, so I drew the same coordinates with base graphics.
-**New finding, in BACKLOG (DECISION NEEDED):** 2 one-mate couples whose mate is drawn as a duplicate node stay male-right on `rhesusPedigree` (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`); S789 excluded duplicates, so they are outside this item.
-**Not run:** `devtools::check()`; a live Shiny launch (the function output was rendered instead; the committed shinytest2 e2e files ran in the suite). **NEWS.Rmd:** none (`:59` "in most cases" stays true). Issue #145 was already closed.
-**Reduction:** removed the S853 evaluation and record; wrapped the 4 over-long lines the dashboard flagged.
-**Slips caught:** my first measuring script dropped `__dup_` nodes (64 units, against S789's 237), found by comparing with S789; the first full-suite monitor fired on a Shiny traceback in the log, not on completion (waited for `full.rds`).
-
-**Self-assessment: 8/10.** + All three gates asked; cause traced before fixing; blast radius measured on 22 layouts, with pictures; two further exceptions reported, not buried. - Two rounds lost to chromote screenshots; the full suite
-was not re-run after the comment-only REFACTOR edits (targeted files were).
-
-**Next steps:** (A) Owner decides the duplicate-mate item (BACKLOG "Male-on-the-left for couples whose mate is drawn as a duplicate node"): extend the sex rule (strict TDD) or reword the roxygen. (B) Still open: PED_GV
-decisions, mate-pair residue, CV1/CV2. (C) At release prep: BACKLOG "Move the version to 3.0.0 just before release". (D) Master is 23 ahead of origin after the close-out commit (22 from `git rev-list` plus this one); push only on the owner's say-so.
-
-**Key files:** `R/makePedigreeDiagramData.R:1213-1219,1261-1272`, `tests/testthat/test_maleLeftSweepSurvival.R` (`.maleFemaleUnitX()` helper), `BACKLOG.md:101`.
-
-**Gotchas:** `.maleFemaleUnitX()` traces back through `__jog_` nodes and keeps `__dup_` nodes (dropping them gives a wrong count). Never compare layout x with `==` across code versions: the QP drifts by 1e-4. Full-suite logs hold Shiny tracebacks, so
-wait for the saved results file, not for a non-empty log. To compare old and new code, parse `git show HEAD:R/makePedigreeDiagramData.R` and `assignInNamespace(".positionMatingUnitForest", ...)`.
 
 ### Session 855 Handoff Evaluation (by Session 856)
 **Score: 8/10.** **Helped:** the BACKLOG male-left item named the measurement method and the two-pair count, so I reproduced it in one script. **Missing:** which node types appear as edge sources

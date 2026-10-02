@@ -98,30 +98,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
       released 3.0.0.
 
-- [ ] **Placement of couples whose mate is drawn as a duplicate node (found S857, tried and
-      rejected S858, 2026-10-02; DECISION NEEDED -- needs the owner's rule and its own session,
-      Effort M)** -- on `rhesusPedigree` two couples render the male right of the female:
-      `D0Z114` (M) x `4CHDK1` (F) and `V1X2X3` (M) x `SH0L6S` (F). **Measured S858:** in both,
-      BOTH parents have parents of their own (no free-pass mate), so `qualifies()` is TRUE
-      but the mate is not in `b1Ids`; `correctableUnitIds` (the S666 filter) skips the unit and
-      the Decision-1 seeding (`R/makePedigreeDiagramData.R:1265`) takes the children's-mean side.
-      **Tried, not kept:** adding `qualifies(u)` to that condition flipped exactly these two
-      (male-right 28 to 26 of 237; crossings 1702 to 1700 rectilinear, 1542 to 1544 direct; no
-      other bundled pedigree moved; 6 new tests passed) but changed 4 census pins (nodes 1456 to
-      1460, jog nodes 186 to 190, bar hits 97 to 98 twice) and added a small step in the parents'
-      connector. **Owner's verdict, in the owner's words (S858):** "There is no reason to move
-      the two second generation matings to the left. They could comfortably go directly below
-      and centered on the initial descender from the mating pairs. The little doglegs to the
-      left in the NEW: V1X2X3 (M, blue) x SH0L6S (F, red) drawing is unsightly and provides no
-      benefit." **No rule has been decided:** the owner said an inference from this feedback
-      is not accepted; the next session must ask the owner what the rule is (for example,
-      whether male-left applies to these couples at all) and not derive one from the quote.
-      The change was reverted and its RED test file removed (git `8aeef0da2` has them).
-      `makePedigreeMatingLayout()`'s roxygen (`:1604`) and `NEWS.Rmd:59` ("in most cases") are
-      unchanged. The other male-right couples (26 of 177 on `rhesusPedigree`) are multi-mate,
-      which the issue #145 plan leaves to the tree structure on purpose
-      (`docs/planning/issue145-sire-dam-left-right-placement-plan.md`, D5/D9).
-
 - [ ] **Audit the internal and user-facing documentation for stale information and stale
       diagrams** (owner-requested 2026-09-26; READY, Effort L -- one audit report per session, so
       expect several slices) -- the owner noticed that `vignettes/articles/pedigree-diagram.pdf`
