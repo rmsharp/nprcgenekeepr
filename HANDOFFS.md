@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S850
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: brevity pass on the NEWS.Rmd dev block (condense toward suggested_NEWS_entry.md style, keep limits and caveats), owner reviews
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- brevity pass on the NEWS.Rmd dev block (about 4,460 to 2,500 words, Major/Minor lists kept), owner reviewed and approved. Docs only, no TDD phase.
+what_was_done: claim eae700925; close-out commit. Merged related Minor bullets, trimmed Major bullets, kept every limit, default and caveat; issue numbers kept because the guard test needs one #168 mention. NEWS.md re-rendered; guard and wordlist tests pass.
+next_steps: (A) Owner compares suggested_NEWS_entry.md with the shortened NEWS.Rmd. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 22 ahead after this commit.
+key_files: NEWS.Rmd:14-354, tests/testthat/test_newsReleaseState.R:473-690 (pinned wording).
+gotchas: Diagram section must keep the 400/750 cap once, one shading entry, one "male parent on the left", and the 113 count with "duplicate node" and "bundled". Re-render NEWS.md, then run the guard test.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+changelog_ref: S850 close-out entry
+commit: the close-out commit that carries this receipt; claim eae700925
 ```
 
 ```handoff

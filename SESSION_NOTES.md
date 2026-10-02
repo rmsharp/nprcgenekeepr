@@ -99,10 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 850 Did
-**Deliverable:** brevity pass on the `NEWS.Rmd` dev block (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+**Deliverable, DONE:** brevity pass on the `NEWS.Rmd` dev block; owner reviewed and approved. Docs only, so no TDD phase applies. Claim `eae700925`; edits in the close-out commit.
+**Result:** dev block 4,457 to about 2,500 words (-44%); Major/Minor lists and all 11 sections kept. Related Minor bullets merged (script functions; the "added record" fixes, as S793 advised). Issue numbers kept: the guard test needs exactly one `#168` mention.
+**Verified by me:** `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after re-render. First pass cut only 25%, so I condensed harder; one pinned phrase ("male parent on the left") had to be restored.
+**Dropped on purpose:** the `makePedigreeDiagramData()` note, sibling-bar and curve-height sentences, several "includes" asides. **Not verified:** full suite and lint (no `.R` changed); condensed sentences not re-checked against code.
+**Reduction:** removed the S847 evaluation and record.
+
+**Self-assessment: 7/10.** + Read the pinned guard checks before writing; showed the result and waited for approval. - My first pass was too timid (25%), and my first word count mixed in old text.
+
+**Next steps:** (A) Owner compares `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd`. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 22 ahead of origin after this commit (20 at last close-out, plus claim and close-out); push only on the owner's say-so.
+
+**Key files:** `NEWS.Rmd:14-354`, `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
+
+**Gotchas:** the Diagram section must keep: the 400/750 cap once, one shading entry, one "male parent on the left", the 113 count with "duplicate node" and "bundled". Re-render `NEWS.md` after edits, then run the guard test.
+
+### Session 849 Handoff Evaluation (by Session 850)
+**Score: 9/10.** **Helped:** the parser note (reads `## ` and `- ` only) and the pointer to pinned wording. **Missing:** the exactly-one `#168` rule, which constrained the pass. **Wrong:** nothing found. **ROI:** high.
 
 ### What Session 849 Did
 **Deliverable, DONE:** labeled the `NEWS.Rmd` dev block: every section now has a bold **Major** list then a bold **Minor** list. Docs only, so no TDD phase applies. Claim `8415e4fab`; edits in the close-out commit.
@@ -139,32 +151,6 @@ claim and close-out); push only on the owner's say-so.
 **Key files:** `NEWS.Rmd:105-120, 132-165`, `docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`, `BACKLOG.md` (rewritten draft item).
 
 **Gotchas:** `NEWS.Rmd` has a pre-existing over-80 line in the Ancestry bullet. Re-render `NEWS.md` after any text edit, then run the guard test. Keep `SESSION_NOTES.md` lines at or under 280 B.
-
-### Session 847 Handoff Evaluation (by Session 848)
-**Score: 8/10.** **Helped:** the (A)-(D) next steps and the untracked-file question were exact; the 16-ahead count held. **Missing:** it did not say S793 had already reviewed the draft, nor that the `.Rmd` copy was gone. **Wrong:** nothing else found. **ROI:** good.
-
-### What Session 847 Did
-**Deliverable, DONE:** rewrote the `NEWS.Rmd` "Pedigree Diagram" section (S845 audit NA2-NA4) as a new feature described against kinship2, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
-**Commits:** claim `de5191418`; the rewrite, BACKLOG item and records in the close-out commit.
-**How:** the owner rejected my first plan (merge bullets) and redirected to "a new feature that provides most of kinship2's drawing conventions and adds ...". About 40 bullets became 13; no issue numbers, no before/after figures, no "now"/"no longer".
-**Verified by me:** no deceased marker exists and `affected` is one logical column (`R/makePedigreeDiagramData.R:73-85`), so the text says "most of" and names both gaps. Re-ran
-`makePedigreeMatingLayout()` on `obfuscated_rhesus_mhc_ped.csv`: 113 individuals are drawn more than once (170 duplicate markers). `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass.
-**Not verified:** the kinship2-parity wording rests on the fidelity article's own scope (same individuals and relationships, layouts not identical); I did not re-run that comparison. Full suite and
-lint not run (no `.R` changed). The PNG-export bullet rests on `R/modPedigree.R:715-720`, not a run of the app.
-**BACKLOG:** added "Two kinship2 drawing features the Diagram tab still lacks" (deceased marker; several affected conditions; DECISION NEEDED, Effort M each). Slice-7a entry updated.
-**NEWS.Rmd:** this was the deliverable. **Reduction:** removed the S844 evaluation and record.
-
-**Self-assessment: 8/10.** + One deliverable; the 113 and the two gaps were checked first-hand; each step showed the change and waited. - My first plan merged bullets, the wrong altitude (the owner
-had to redirect); I drafted before reading the guard test's phrase-pinned checks, so it failed 4 ways until I reworded.
-
-**Next steps:** (A) slice 7b: audit the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`), READY, Effort L. (B) Owner decisions on the audit code candidates and on the two new Diagram
-features. (C) The untracked `suggested_NEWS_entry.md` (dated 2026-09-25): commit, move or drop? Asked at Orient; not answered. (D) Master is 16 ahead of origin with this close-out commit (14 at Orient
-plus the claim and close-out); push only on the owner's say-so.
-
-**Key files:** `NEWS.Rmd:16-105` (new section), `tests/testthat/test_newsReleaseState.R:197-200, 515-600` (phrase checks), `BACKLOG.md` (new Diagram-gaps item), `vignettes/articles/kinship2-fidelity-validation.qmd:151-166` (what "matches" means).
-
-**Gotchas:** `test_newsReleaseState.R` pins wording: the male-left bullet needs "male parent on the left"; the duplicate bullet needs "duplicate node" and "bundled" with the measured count; any bullet
-about mating-symbol placement may not contain "every", "all", "always" or "each <word>". Re-render `NEWS.md` after the text, then run the test. Do NOT use `echo ====` in the Bash tool (zsh).
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about

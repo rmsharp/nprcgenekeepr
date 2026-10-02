@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S850 close-out: brevity pass on the `NEWS.Rmd` dev block, owner-approved: about 4,460 to 2,500 words, Major/Minor lists kept, limits, defaults and caveats kept, related Minor bullets merged, issue numbers kept (guard test needs one `#168`). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `eae700925`. Docs only.
+
 ### 2026-10-01 · [ad hoc] S850 claim: brevity pass on the `NEWS.Rmd` dev block, condensing toward the style of the owner's `suggested_NEWS_entry.md` while keeping limits, defaults and caveats; owner reviews before commit (in progress).
 
 ### 2026-10-01 · [ad hoc] S849 close-out: labeled the `NEWS.Rmd` dev block with a Major list then a Minor list in each of 11 sections (sorting owner-approved first); 75 bullets moved whole, three "above" references changed to "below"; `NEWS.md` re-rendered; guard and wordlist tests pass. Brevity pass left for a later session. Claim `8415e4fab`. Docs only.
