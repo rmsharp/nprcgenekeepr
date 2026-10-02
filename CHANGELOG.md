@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S854 close-out: `convertDate()` invalid-date row numbers (the `reportErrors = TRUE` vector and the `stop()` message) now count positions in the pedigree passed in, so an added record ahead of an original no longer shifts them (owner chose fix over document-only). 5 tests in `test_convertDate.R`, `R/convertDate.R` (3 lines), roxygen and `man/convertDate.Rd`; completed BACKLOG item removed. Full suite 0 failed/0 error, lint clean. Claim `a06651046`.
+
 ### 2026-10-02 · [ad hoc] S854 claim: settle the owner decision on `convertDate(reportErrors = TRUE)` invalid-date row numbering when an added row precedes an original (in progress). Strict TDD.
 
 ### 2026-10-01 · [ad hoc] S853 close-out: applied 33 of the 35 slice-7b docs-staleness findings: `ROADMAP.md` (alias direction, 2.0.0 shipped, done audit follow-ups, articles, paths), `CLAUDE.md` (dev-only package list, upstream `bin/sync`, per-line budget case), `docs/architecture/module-contract.md`, `docs/conventions/` (launcher name, archive size), and `BACKLOG.md` (code cites re-read, PDF state, regrowth 378 to 599). Left: CV1/CV2 (code decisions); RO8 and the other RO3 ids reworded as not re-checked. Claim `144d140cb`, fixes `61577e834`. Wordlist and rbuildignore tests pass; docs only, full suite and lint not run.

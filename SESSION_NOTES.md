@@ -99,10 +99,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 854 Did
-**Deliverable:** settle `convertDate(reportErrors = TRUE)` row numbering for invalid dates when an added row precedes an original (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+**Deliverable, DONE:** `convertDate()` now numbers an invalid date by its row in the pedigree passed in, so an "added" record ahead of an original no longer
+shifts the number (a bad date on row 3 was reported as row 2). Strict TDD, all gates asked. Claim `a06651046`; fix and tests in the close-out commit.
+**RED:** 5 tests in `tests/testthat/test_convertDate.R` (added first, added between, added last pin, two date columns, `stop()` message); 4 failed for the
+right reason, the added-last pin passed. **GREEN:** `R/convertDate.R` keeps `pedRows` (the original row positions) and uses it in both the `reportErrors = TRUE`
+vector and the `stop()` message (3 lines); roxygen `@return` for `reportErrors` and `man/convertDate.Rd` corrected. **REFACTOR:** reviewed, no change.
+**Owner decision taken:** option (1) of the BACKLOG item, fix the number; the `stop()` message shared the same defect so it was fixed too.
+**Verified by me:** full unfiltered suite 362 files, 2,891 tests, 0 failed, 0 error (187 skipped); `lintr::lint` clean on both files; the downstream
+`getDateErrorsAndConvertDatesInPed` and `qcStudbook` tests pass. **Not run:** `devtools::check()`; runtime smoke n/a (no startup/wiring change).
+**Side effect:** `getDateErrorsAndConvertDatesInPed()` feeds these numbers to `sb[-invalidAndAdded, ]`, so it now drops the right row when an added row comes first (before, it dropped the wrong one); no test pins that path yet.
+**Reduction:** removed the S851 evaluation and record, and the completed BACKLOG item; fixed the `convertDate.R:113` cite to `:115` in the `isAddedRecord()` item.
+
+**Self-assessment: 8/10.** + Found the `stop()` message shared the defect; reverted the unrelated `nprcgenekeepr-package.Rd` roxygen drift instead of folding it in;
+all four gates asked. - Did not add a test for the `getDateErrorsAndConvertDatesInPed` consequence; did not run `devtools::check()`.
+
+**Next steps:** (A) Owner picks another PED_GV decision (BACKLOG "PED_GV audit follow-through"): `isAddedRecord()` helper, sex-code adoption, `getPotentialParents` split.
+(B) Optional small TDD slice: pin `getDateErrorsAndConvertDatesInPed()` with an added row first. (C) Still open: release number, CV1/CV2, male-left placement. (D) Master is
+12 ahead of origin after this commit (count from `git rev-list origin/master..HEAD`); push only on the owner's say-so.
+
+**Key files:** `R/convertDate.R:109-120,160-170`, `tests/testthat/test_convertDate.R:140-185`, `R/getDateErrorsAndConvertDatesInPed.R:33-45`.
+
+**Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (roxygenise regenerates it with extra tab text); I reverted it, so the next roxygenise
+will show that diff again. Not in scope here; commit it deliberately in a docs pass.
+
+### Session 853 Handoff Evaluation (by Session 854)
+**Score: 8/10.** **Helped:** the explicit "owner decisions still open" list and the BACKLOG grep strings got me to the item in one read; the `Reduction:` line
+showed what to trim. **Missing:** which owner decisions were smallest (I picked by size). **Wrong:** the "Master 10 ahead" count was approximate (labelled so). **ROI:** high.
 
 ### What Session 853 Did
 **Deliverable, DONE:** applied the slice-7b docs-staleness findings (33 of 35). Docs only, so no TDD phase applies. Claim `144d140cb`; fixes
@@ -154,32 +176,6 @@ Owner decisions still open: release number (3.0.0 vs 2.0.0.9000). (D) Master is 
 **Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md` (finding ids RO/CL/BA/BB/AR/CV), `BACKLOG.md:133-181` (docs-audit item), `BACKLOG.md:448` (regrowth figure), `ROADMAP.md:6-34`.
 
 **Gotchas:** BACKLOG line numbers in the report are approximate for the first half (BA ids); re-locate by item name before editing. Fixing BA1/BB1 means editing the same BACKLOG item the next session uses as its hand-off; do it last.
-
-### Session 851 Handoff Evaluation (by Session 852)
-**Score: 8/10.** **Helped:** next step (B) named slice 7b exactly, and the "push only on the owner's say-so" line. **Missing:** slice 7b's real size (about 55,000 lines of internal docs); I had to ask the owner to scope it.
-**Wrong:** "Master is 3 ahead of origin"; `git rev-list origin/master..HEAD` gave 5 at Orient. **ROI:** high.
-
-
-### What Session 851 Did
-**Deliverable, DONE:** adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, section by section, each shown before/after and approved. Docs only, so no TDD phase applies. Claim `b9c019c5b`; edits in the close-out commit.
-**Adopted:** (1) the draft's opening summary paragraph; (2) the marker-genotype export session-crash fix, restored (S846 had removed it, reason not checked); (3) a plainer pass in all 11 sections: long bullets split to one idea each, nothing dropped.
-**Result:** 2,629 words (was about 2,500), 80 bullets, 11 Major and 11 Minor labels. The draft's 3.0.0 heading was not adopted; the version stays 2.0.0.9000.
-**Verified by me:** `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after each re-render. First pass of the diagram wording broke the pinned phrase "male parent on the left"; restored.
-**Not verified:** full suite and lint (no `.R` changed); the draft's claims against code.
-**Reduction:** removed the S848 evaluation and record.
-
-**Self-assessment: 8/10.** + Compared the two files and traced the one real gap through git; showed each section before applying. - The guard test caught a pinned phrase I had reworded, and the first approval question was larger than needed.
-
-**Next steps:** (A) Owner decision left in BACKLOG: the 3.0.0 vs 2.0.0.9000 number. The two draft files were deleted at the owner's request. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 3 ahead of origin after this commit; push only on the owner's say-so.
-
-**Key files:** `NEWS.Rmd:14-390` (dev block), `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
-
-**Gotchas:** pinned phrases must stay verbatim: "male parent on the left", the 400/750 cap once, the 113 count with "duplicate node" and "bundled", one `#168` entry. Re-render `NEWS.md`, then run the guard test.
-
-### Session 842 Handoff Evaluation (by Session 843)
-**Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about
-`suggested_NEWS_entry.md`" pointer. **Missing:** it did not say the dashboard would flag SESSION_NOTES.md as OVER on line length, which was the cheapest thing to fix. **Wrong:** its "47 ahead of origin" was not re-checked, and CI was already running on the
-close-out commit. **ROI:** high.
 
 ### What Session 842 Did
 **Deliverable, DONE:** docs-staleness audit slice 6e, the last 126 `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): 26 moderate, 69 minor, 46 code candidates; all 267 pages now audited. Read-only; no code or tests, so no TDD phase applies.

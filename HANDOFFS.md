@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S854
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- convertDate(reportErrors = TRUE) row numbering decision (PED_GV owner decisions item)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- convertDate() invalid-date row numbers (reportErrors = TRUE vector and stop() message) now count positions in the pedigree passed in, so an added record ahead of an original no longer shifts them. Owner chose fix over document-only. Strict TDD RED/GREEN/REFACTOR, every gate asked.
+what_was_done: claim a06651046; fix, 5 tests, roxygen/Rd and BACKLOG item removal in the close-out commit. Full unfiltered suite 362 files / 2891 tests, 0 failed, 0 error; lintr clean on the two changed files.
+next_steps: (A) Owner picks another PED_GV decision from BACKLOG (isAddedRecord helper, sex-code adoption, getPotentialParents split). (B) Optional small slice: pin getDateErrorsAndConvertDatesInPed() with an added row first. (C) Open: release number, CV1/CV2, male-left placement. (D) Master 12 ahead of origin; push only on owner's say-so.
+key_files: R/convertDate.R:109-120,160-170; tests/testthat/test_convertDate.R:140-185; R/getDateErrorsAndConvertDatesInPed.R:33-45; BACKLOG.md PED_GV item.
+gotchas: man/nprcgenekeepr-package.Rd is stale against DESCRIPTION; roxygenise regenerates it and I reverted it, so the diff reappears next run. getDateErrorsAndConvertDatesInPed now drops the right row for an added-first pedigree but no test pins that. devtools::check() not run.
+runtime_smoke: n/a -- no startup/wiring change; unit and full-suite tests only. quality_ratchet: no gates declared/not re-run.
+changelog_ref: S854 close-out entry
+commit: the close-out commit that carries this receipt; claim a06651046
 ```
 
 ```handoff
