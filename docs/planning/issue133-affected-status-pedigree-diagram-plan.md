@@ -1,5 +1,7 @@
 # Issue #133 Plan — Affected/Phenotype/Genotype Status Encoding for the Pedigree Diagram
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped**: Slice 1 (data model and rendering, S486, `dede1a60`) and Slice 2 (legend and docs, S487); #133 closed 2026-08-08. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** Design/scoping document (Pre-RED) — no `R/`/`tests/`/`man/` content changes this session.
 **Session:** S485 (2026-08-08).
 **Origin:** GitHub issue #133 ("Add affected/phenotype/genotype status encoding to the pedigree

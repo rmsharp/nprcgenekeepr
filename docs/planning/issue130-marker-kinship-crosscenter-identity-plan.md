@@ -1,5 +1,7 @@
 # Issue #130 Plan — Marker-based kinship/heterozygosity/parentage-verification + cross-center identity resolution
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** in five slices (S442-S447; Slice 5 `0f730a547`): marker kinship, cross-center ID resolution and Fst (`R/markerKinship.R`, `R/resolveCrossCenterIds.R`); #130 closed 2026-08-02. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **[#130](https://github.com/rmsharp/nprcgenekeepr/issues/130)**
 (filed S422, 2026-07-29, from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimensions 5 &

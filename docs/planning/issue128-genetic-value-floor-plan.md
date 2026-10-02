@@ -1,5 +1,7 @@
 # Issue #128 Plan — Genetic-value floor as an alternative breeding-group inclusion criterion
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** S427 (`d575bae32`): genetic-value-floor `inclusionCriterion` for breeding groups (`R/modBreedingGroups.R`); #128 closed 2026-07-29. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **#128** (filed S422, 2026-07-29, from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimension 2 / the
 audit's Summary item #8). Distinct from issue #125 (ranking-priority scheme + multiple

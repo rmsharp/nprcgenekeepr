@@ -1,5 +1,7 @@
 # Issue #129 Plan — Pedigree-diagram/tree visualization (currently table-only)
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped**: Slice 1 (Diagram view, S433) and Slice 2 (click-to-navigate, S434); #129 closed 2026-07-30. Later diagram work was tracked in separate issues (#131-#139). Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **[#129](https://github.com/rmsharp/nprcgenekeepr/issues/129)**
 (filed S422, 2026-07-29, from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimension 7).

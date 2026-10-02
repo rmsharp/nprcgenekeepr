@@ -1,5 +1,7 @@
 # Issue #13 Plan — Assign kinship coefficients into the kinship matrix from outside information
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** (merged via PRs #93 and #94; `R/applyKinshipOverrides.R`); #13 closed 2026-06-28. The "ready for Slice-1 RED" wording below is out of date. The closing commit was not traced here. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **#13** ("Assign kinship coefficients into the kinship coefficient matrix based on outside information"). Filed 2020-11-20 with an **empty body** (title only); classified "genuinely open, large" in the S62/S95 backlog audits. Part of the older external-data cluster (#10/#11/#12/#28) but mechanically distinct: #13 *injects known kinship*, it does not pull from an external system.
 
 **Authored:** Session 213 (2026-06-27), **planning/design session**. The owner picked this as the session deliverable. The TDD code-phases (RED / GREEN / REFACTOR) are **inapplicable to this document** — it is a design doc, not code. Each implementation slice in §4 is its own strict-TDD session (RED → GREEN → REFACTOR), one slice per session (FM #18/#25: do not bundle plan + implementation, do not bundle slices).
