@@ -35,7 +35,8 @@ Rules, in the order they bind:
    dead weight -- delete it or wire it. "Consumer" includes the test suite, not
    only `appServer` (see `PROJECT_LEARNINGS.md` Learning 347(a): `modSummaryStats`'
    12 reactives were nearly deleted as "unread" because only `appServer`'s wiring
-   was checked -- ~53 real test assertions across 4 files read them).
+   was checked -- Learning 347 counted about 53 real test assertions across 4 files
+   reading them; that figure was not re-counted).
 5. **Upstream absence is `req()`; upstream *malformedness* is an error that
    surfaces.** A blanket `tryCatch(..., error = function(e) NULL)` at the seam
    between modules is forbidden -- it makes a shape mismatch look like "no data
@@ -59,10 +60,11 @@ both re-verify-before-touching:
   See `docs/planning/issue122-module-contract-plan.md` section 10, open decision
   3. The guard test (below) carves this module out explicitly rather than
   silently.
-- **`gestationTable` is passed into `modPotentialParentsServer` as a bare
-  `reactiveValues` read**, not wrapped in `reactive()` (`R/appServer.R`:
-  `gestationTable = shared$speciesOverrides$gestationTable`) -- violating rule 1
-  literally. This is correct *only* because of R's lazy-argument semantics: the
+- **`gestationTable` and `gestationDefault` are passed into
+  `modPotentialParentsServer` as bare `reactiveValues` reads**, not wrapped in
+  `reactive()` (`R/appServer.R`: `gestationTable = shared$speciesOverrides$gestationTable`,
+  `gestationDefault = shared$speciesOverrides$gestationDefault`) -- violating
+  rule 1 literally. This is correct *only* because of R's lazy-argument semantics: the
   read is deferred until the promise is forced inside a reactive context, after
   boot has populated it (`R/modPotentialParents.R` documents this). **Do not
   "tidy" this into an eager `reactive()` wrapper** -- a promise forces once;
@@ -76,5 +78,5 @@ both re-verify-before-touching:
 `shiny::testServer()`, with arguments mirroring `R/appServer.R`'s real call
 sites, and asserts rule 2 (named list of reactives; every element
 `is.function()`) for every module except the declared `modGvAndBgDescServer`
-exception above. It does not mechanically check rules 1, 3, 5, or 6 -- those
+exception above. It does not mechanically check rules 1 or 3-6 -- those
 remain a review-time discipline, not a test.

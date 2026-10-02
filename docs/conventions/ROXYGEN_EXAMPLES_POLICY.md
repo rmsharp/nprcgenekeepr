@@ -28,7 +28,7 @@ build UI:
 | Shiny module UI/server | `mod*UI`, `mod*Server` (e.g. `modInputUI`, `modInputServer`) | Only meaningful inside a running app / `moduleServer` session. |
 | App entry points | `appUI`, `appServer` | Build/serve the app; require a live Shiny session. |
 | Pure-UI tab builders | `getChangedColsTab`, `getErrorTab` | Return a Shiny UI object (`tabPanel()`); nothing to demonstrate standalone. |
-| Deprecated aliases | `makeGrpNum` | Defer to the canonical function; an example would advertise deprecated use. A deprecated *launcher* (`runGeneKeepR`) may still show a guarded launch pattern. |
+| Deprecated aliases | `makeGrpNum` | Defer to the canonical function; an example would advertise deprecated use. A deprecated *launcher* (`runModularApp`) may still show a guarded launch pattern. |
 
 **Not exempt just because the name looks UI-ish.** A function is exempt only
 when its body genuinely builds Shiny UI or requires a session. Two functions
