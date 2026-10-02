@@ -50,8 +50,11 @@
 #' is either \emph{"shelter_pens"} or \emph{"corral"}.
 #' @param currentDate Date to be used for calculating age. Defaults to
 #'        \code{Sys.Date()}.
-#' @return \code{production} -- Ratio of the number of births that lived at
-#' least 30 days to the number of females >= \code{minDamAge} years of age.
+#' @return A list with \code{production} -- ratio of the number of births that
+#' lived at least 30 days to the number of females >= \code{minDamAge} years of
+#' age -- plus \code{color} and \code{colorIndex}. When the group has no such
+#' females the ratio is undefined: all three are \code{NA} (deliberately not
+#' green, to avoid reporting missing data as a healthy condition).
 #'
 #' @importFrom lubridate as.duration ddays interval mdy year
 #' @importFrom lifecycle deprecated is_present deprecate_warn
@@ -99,7 +102,10 @@ getProductionStatus <- function(ped, minDamAge = 3L,
   }
 
   if (housing == "shelter_pens") {
-    if (is.na(production) || production > 0.63) {
+    if (is.na(production)) {
+      color <- NA_character_
+      colorIndex <- NA_integer_
+    } else if (production > 0.63) {
       color <- "green"
       colorIndex <- 3L
     } else if (production < 0.6) {
@@ -110,7 +116,10 @@ getProductionStatus <- function(ped, minDamAge = 3L,
       colorIndex <- 2L
     }
   } else if (housing == "corral") {
-    if (is.na(production) || production > 0.53) {
+    if (is.na(production)) {
+      color <- NA_character_
+      colorIndex <- NA_integer_
+    } else if (production > 0.53) {
       color <- "green"
       colorIndex <- 3L
     } else if (production < 0.5) {

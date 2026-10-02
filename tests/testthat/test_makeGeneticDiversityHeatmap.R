@@ -114,9 +114,28 @@ test_that("makeGeneticDiversityHeatmap rejects indices outside 1:3", {
   bad <- data.frame(group = c("Group_1", "Group_2"),
                     Value = c(1, 4), stringsAsFactors = FALSE)
   expect_error(makeGeneticDiversityHeatmap(bad), "colorIndex")
+  zero <- data.frame(group = c("Group_1", "Group_2"),
+                     Value = c(1, 0), stringsAsFactors = FALSE)
+  expect_error(makeGeneticDiversityHeatmap(zero), "colorIndex")
+})
+
+test_that("makeGeneticDiversityHeatmap draws an NA index grey, not an error", {
+  ## An undefined metric (e.g. Production with no dams) is NA, not a verdict.
   withNA <- data.frame(group = c("Group_1", "Group_2"),
-                       Value = c(1, NA), stringsAsFactors = FALSE)
-  expect_error(makeGeneticDiversityHeatmap(withNA), "colorIndex")
+                       Value = c(1, NA), Production = c(NA, 3),
+                       stringsAsFactors = FALSE)
+  p <- expect_no_error(makeGeneticDiversityHeatmap(withNA))
+  tiles <- ggplot2::layer_data(p, 1L)
+  expect_equal(nrow(tiles), 4L)
+  expect_equal(sum(tiles$fill == "grey"), 2L)
+  expect_setequal(unique(tiles$fill), c("red", "green", "grey"))
+})
+
+test_that("makeGeneticDiversityHeatmap accepts an all-NA metric column", {
+  allNA <- data.frame(group = c("G1", "G2"), Production = c(NA_integer_, NA),
+                      stringsAsFactors = FALSE)
+  p <- expect_no_error(makeGeneticDiversityHeatmap(allNA))
+  expect_true(all(ggplot2::layer_data(p, 1L)$fill == "grey"))
 })
 
 test_that("makeGeneticDiversityHeatmap rejects non-data-frame input", {

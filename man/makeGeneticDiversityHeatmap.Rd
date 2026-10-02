@@ -9,18 +9,21 @@ makeGeneticDiversityHeatmap(stats)
 \arguments{
 \item{stats}{A data frame with one row per breeding group. The first
 column holds the group label; every remaining column is a metric whose
-values are color indices in \code{c(1, 2, 3)}.}
+values are color indices in \code{c(1, 2, 3)} or \code{NA}.}
 }
 \value{
 A \code{ggplot} object: a \code{\link[ggplot2]{geom_tile}} heat
 map with metric headers across the top and group labels down the left,
-filled red/yellow/green from the color indices.
+filled red/yellow/green (gray for \code{NA}) from the color indices.
 }
 \description{
 Renders a red/yellow/green stoplight heat map of breeding-group genetic
 diversity metrics. Each row is a breeding group and each column is a
 metric; every cell is colored by its color index, where 1 is red (the
-problem condition), 2 is yellow (watch), and 3 is green (healthy).
+problem condition), 2 is yellow (watch), and 3 is green (healthy). A
+metric that is undefined for a group (an \code{NA} index, such as
+Production for a group with no breeding-age females) is drawn gray, never
+as a verdict.
 }
 \details{
 This function is agnostic to the number of metric columns: it draws one

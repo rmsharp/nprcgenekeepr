@@ -52,25 +52,33 @@ test_that("getProductionStatus calculates correctly", {
 })
 noDamsPed <- pedWith71[!pedWith71$id %in% ped$id[ped$sex == "F" &
   ped$age >= minDamAge], ]
-test_that("getProductionStatus detects no dams", {
-  status <- getProductionStatus(
-    noDamsPed,
-    minDamAge = minDamAge, maxOffspringAge = NULL,
-    housing = "shelter_pens",
-    currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
+## No breeding-age females: production is undefined, so the status is NA
+## (grey), never green -- the same contract as getKinshipWithMaleStatus().
+for (housingType in c("shelter_pens", "corral")) {
+  test_that(paste("getProductionStatus reports NA, not green, with no dams:",
+                  housingType), {
+    status <- getProductionStatus(
+      noDamsPed,
+      minDamAge = minDamAge, maxOffspringAge = NULL,
+      housing = housingType,
+      currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
+    )
+    expect_identical(names(status), c("production", "color", "colorIndex"))
+    expect_true(is.na(status$production))
+    expect_true(is.na(status$color))
+    expect_identical(status$colorIndex, NA_integer_)
+  })
+}
+test_that("getProductionStatus still rejects an unknown housing with no dams", {
+  expect_error(
+    getProductionStatus(
+      noDamsPed,
+      minDamAge = minDamAge, maxOffspringAge = NULL,
+      housing = "kennel",
+      currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
+    ),
+    "Undefined housing type"
   )
-  expect_true(is.na(status$production))
-  expect_equal(status$color, "green")
-})
-test_that("getProductionStatus detects no dams", {
-  status <- getProductionStatus(
-    noDamsPed,
-    minDamAge = minDamAge, maxOffspringAge = NULL,
-    housing = "corral",
-    currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
-  )
-  expect_true(is.na(status$production))
-  expect_equal(status$color, "green")
 })
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
@@ -152,7 +160,7 @@ test_that("getProductionStatus minDamAge drives the dam filter", {
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
   expect_true(is.na(status$production))
-  expect_equal(status$color, "green")
+  expect_true(is.na(status$color))
 })
 test_that("getProductionStatus minParentAge alias warns, keeps result", {
   ## Back-compat: the deprecated scalar sets the dam floor and still warns.
