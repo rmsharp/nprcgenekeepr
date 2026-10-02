@@ -1259,8 +1259,16 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
         1.0
       }
       side <- if (length(us) == 1L) {
+        ## A unit the S666 pass handled keeps the sex rule: the sweep
+        ## after that pass can push the anchor past its children in a
+        ## crowded row (S856), which would flip the side the children's
+        ## mean implies.
         childSide <- sign(unitX[[u]] - tier1X[[a]])
-        if (childSide == 0.0) sexSide else childSide
+        if (u %in% correctableUnitIds || childSide == 0.0) {
+          sexSide
+        } else {
+          childSide
+        }
       } else if (k == 1L) {
         -1.0
       } else if (k == 2L) {
