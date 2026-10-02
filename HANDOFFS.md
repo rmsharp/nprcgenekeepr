@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S864
+date: 2026-10-02
+status: pending
+active_task: zero-rule ancestry table reads as inactive in .buildAncestryOverrideManifest() (Download Audit Manifest on Mate Pair and Breeding Groups); strict TDD
+```
+
+```handoff
 session: S863
 date: 2026-10-02
 status: complete

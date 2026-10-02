@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 864 Did
+**Deliverable:** zero-rule ancestry table reads as inactive in `.buildAncestryOverrideManifest()` (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Owner chose: zero-rule table = "no rules in effect", manifest builds and says so. Strict TDD, PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
+### Session 863 (previous) follows
+
 ### What Session 863 Did
 **Deliverable, DONE:** `getProductionStatus()` with 0 breeding-age females returns NA production/colour/index (was green); the heat map draws NA gray. Strict TDD. Claim `1bcc1f76e`; GREEN `317d61687`; the close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG and records.
 **Owner decisions (asked in plain words):** gray over green or red; scope = producer plus heat map (the sibling `getKinshipWithMaleStatus()` already returned NA, and the heat map errored on any NA index, so producer-only would have crashed the dashboard).
