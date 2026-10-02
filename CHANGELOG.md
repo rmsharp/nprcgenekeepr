@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S862 claim: header sweep of `docs/planning/` (one-line status on the status-less and stale-header plans, plus a `docs/planning/README`) (in progress). Docs only, no code.
+
 ### 2026-10-02 · [ad hoc] S861 close-out: slice 7c docs-staleness fixes, docs only. Status banners on the #112/#122/#123/#144/#167 plans and the reference qmd (`1754691e1`); in-place fixes to the CRAN runbook, outreach plan and Quarto analysis (`a1cbfde13`); three `BACKLOG.md` pointers fixed and the audit item updated (`f6ae48446`). Header sweep still open. Claim `1e0295d5b`. Model: Claude Sonnet 5.5; no non-commit actions (no push).
 
 ### 2026-10-02 · [ad hoc] S861 claim: apply the slice 7c docs-staleness fixes (banners on shipped plans, in-place edits to the CRAN runbook, outreach plan and Quarto analysis, three BACKLOG pointers) (in progress). Docs only, no code.

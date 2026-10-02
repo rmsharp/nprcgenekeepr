@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 862 Did
+**Deliverable:** header sweep of `docs/planning/` (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 861 Did
 **Deliverable, DONE:** slice 7c docs fixes from the S860 audit report; docs only, no code, no tests. Claim `1e0295d5b`; fixes `1754691e1` (banners), `a1cbfde13` (in-place), `f6ae48446` (BACKLOG).
 **Done:** status banners on the #112, #122, #123, #144, #167 plans and a status note plus subtitle fix on the reference qmd; the CRAN runbook, outreach plan and Quarto analysis fixed in place; 3 BACKLOG pointers fixed (Dragon 1 -> D5, qmd refresh marked done S484, #123 residuals now tracked); the audit item in `BACKLOG.md` marked "Slice 7c FIXED S861".
