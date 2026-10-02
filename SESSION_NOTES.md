@@ -99,10 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 863 Did
-**Deliverable:** `getProductionStatus()` 0-dam status -> NA/grey, plus heat map draws NA grey (IN PROGRESS; strict TDD)
-**Started:** 2026-10-02
-**Status:** Session claimed. Owner chose grey and producer + heatmap scope. PRE-RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** `getProductionStatus()` with 0 breeding-age females returns NA production/colour/index (was green); the heat map draws NA gray. Strict TDD. Claim `1bcc1f76e`; GREEN `317d61687`; the close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG and records.
+**Owner decisions (asked in plain words):** gray over green or red; scope = producer plus heat map (the sibling `getKinshipWithMaleStatus()` already returned NA, and the heat map errored on any NA index, so producer-only would have crashed the dashboard).
+**RED:** 4 failing producer tests (both housings), 4 failing heat map tests; two guard tests (unknown housing, value 0) passed by design. **GREEN:** `R/getProductionStatus.R` (NA branch before each ladder, roxygen), `R/makeGeneticDiversityHeatmap.R` (NA allowed, `na.value = "grey"`, roxygen), `man/makeGeneticDiversityHeatmap.Rd`. REFACTOR skipped by owner choice.
+**Slips:** one test pinning the old green (`minDamAge = 100`, `test_getProductionStatus.R:163`) was missed in RED and fixed in GREEN, stated to the owner; the prose "grey" failed `test_wordlist_coverage.R` (use "gray" in docs; the code value `"grey"` is not spell-checked); `devtools::document()` also rewrote `man/nprcgenekeepr-package.Rd` from a DESCRIPTION drift, which I reverted.
+**Verified:** full unfiltered suite had 1 failed (the wordlist one, since fixed) / 0 error; the four affected files, `test_wordlist_coverage.R` and `lintr::lint_package()` re-run green after the fix. Not re-run: the whole suite after the spelling fix; no CI watched; no app launch (the dashboard heat map was exercised through tests only).
+**Reduction:** none this session (no mandated-read file shrank); `SESSION_NOTES.md` still has 14 lines over 280 B (S862 report; not touched).
+
+**Self-assessment: 8/10.** + owner questions led with consequences; scope question came from reading a sibling's contract; guard tests added. - missed a pinned-green test in RED; ran the full suite before checking the spelling guard; no runtime check.
+
+**Next steps:** (A) Optional: launch `runGeneKeepR()` with a group that has no dams and look at the heat map (never done). (B) Owner decisions: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; duplicated gate code READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) master is about 22 commits ahead of origin (count at Orient); push only on the owner's say-so. (E) Watch CI on `317d61687` (R files changed, so the skip-CI rule does not apply).
+
+**Key files:** `R/getProductionStatus.R:93-120` (colour ladders), `R/makeGeneticDiversityHeatmap.R:44-47,66`, `tests/testthat/test_getProductionStatus.R:55-85,163-175`, `tests/testthat/test_makeGeneticDiversityHeatmap.R:105-140`.
+
+**Gotchas:** `getGeneticDiversityStats()` now emits an NA Production cell for a no-dam group; the dashboard path is tested but the modules' own UI text for an NA cell was not inspected. `devtools::document()` churns `man/nprcgenekeepr-package.Rd`; revert it unless DESCRIPTION changed on purpose.
+
+### Session 862 Handoff Evaluation (by Session 863)
+**Score: 8/10.** **Helped:** next steps named the exact owner decision (0 dams green vs grey) and the backlog line; the 20-ahead count was right. **Missing:** it did not say the sibling metric already returned NA, nor that the heat map rejects NA, which decided the scope. **Wrong:** nothing found. **ROI:** high.
 
 ### What Session 862 Did
 **Deliverable, DONE:** header sweep of `docs/planning/`; docs only, no code, no tests (TDD phases N/A). Claim `b651541d4`; banners `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432` (22 `issue*` plans), `f35538868`, `93670ec95` (9 non-issue plans); the close-out commit holds `docs/planning/README.md`, the BACKLOG update and records.

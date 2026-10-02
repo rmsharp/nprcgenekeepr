@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S863
 date: 2026-10-02
-status: pending
-active_task: getProductionStatus 0-dam NA/grey + heatmap NA grey (strict TDD)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- getProductionStatus 0 dams now NA (was green) and the Genetic Diversity heat map draws NA gray; strict TDD, REFACTOR skipped by owner
+what_was_done: claim 1bcc1f76e; GREEN 317d61687 (R/getProductionStatus.R, R/makeGeneticDiversityHeatmap.R, man, 2 test files); close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG, records. Owner chose gray and producer + heat map scope. Full suite 1 failed (wordlist "grey") fixed, then re-run files green; lint clean.
+next_steps: (A) Optional: run the app with a no-dam group and look at the heat map. (B) Owner: PED_GV leftovers, mate-pair residue, CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on owner's say-so (about 22 ahead). (E) Watch CI on 317d61687.
+key_files: R/getProductionStatus.R:93-120; R/makeGeneticDiversityHeatmap.R:44-47,66; tests/testthat/test_getProductionStatus.R:55-85,163-175; tests/testthat/test_makeGeneticDiversityHeatmap.R:105-140
+gotchas: use "gray" in prose (wordlist guard flags "grey"); devtools::document() churns man/nprcgenekeepr-package.Rd, revert it; one test pinning old green was missed in RED; modules' UI text for an NA cell not inspected.
+runtime_smoke: not done -- heat map exercised through tests only, no app launch (stated as a gap). quality_ratchet: not run (no .quality-gates.json run this session).
+changelog_ref: S863 DONE entry
+commit: the close-out commit that carries this receipt; claim 1bcc1f76e; GREEN 317d61687
 ```
 
 ```handoff

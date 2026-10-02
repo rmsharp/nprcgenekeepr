@@ -315,6 +315,11 @@ longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- Fixed: a breeding group with no breeding-age females was shown as a green
+  Production cell in the Genetic Diversity dashboard, as healthy as a group
+  that meets its birth target. Production cannot be calculated for such a
+  group, so its cell is now gray, as the Inbreeding cell already was.
+
 - Fixed: a real animal whose id starts with a capital U (such as `U1`, `U123`
   or `Uma`) was mistaken for a stand-in for an unknown parent, so it was left
   out of founder and breeder counts, hidden when "Display Unknown IDs" was
