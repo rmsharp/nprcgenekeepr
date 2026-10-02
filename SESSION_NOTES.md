@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 858 Did
+**Deliverable:** male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX, strict TDD, a gate per phase) (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. PRE-RED: cause of the 2 couples (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) not yet traced.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+
 ### What Session 857 Did
 **Deliverable, DONE:** the diagram layout keeps the male-left rule for the two squeezed `rhesusPedigree` couples (`QL6GH4` x `3PD3U5`, `BM40IX` x `MTSHHY`) and for every one-mate, non-duplicate couple
 the S666 pass handles. Strict TDD, all three gates asked. Claim `acc020703`; RED `62cac01de`; GREEN `c4b383978`; REFACTOR (comments only) and records in the close-out commit.

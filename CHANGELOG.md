@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S858 claim: male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX) (in progress). Strict TDD.
+
 ### 2026-10-02 · [ad hoc] S857 close-out: fixed the male-left placement (owner chose FIX): in the Decision-1 seeding a unit the S666 pass handled now takes the sex rule, so `sweepMinSepBackstop()` can no longer put the male right of the female. Strict TDD: RED `62cac01de` (`tests/testthat/test_maleLeftSweepSurvival.R`, 6 tests), GREEN `c4b383978`, REFACTOR comments only. Full unfiltered suite 363 files / 2,897 tests, 0 failed, 0 error; `lint_package()` 0. Measured old vs new on 22 layouts: edge crossings, row gaps and drawn relations unchanged; 31 of 375 `rhesusPedigree` animals move; male-right one-mate non-duplicate couples 2 to 0. New finding recorded in BACKLOG: 2 couples with a duplicate-node mate stay male-right. Completed BACKLOG male-left item removed.
 
 ### 2026-10-02 · [ad hoc] S857 ledger: Model: Claude Sonnet 5.5; no non-commit actions (issue #145 was already closed; no push).

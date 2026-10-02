@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S858
+date: 2026-10-02
+status: pending
+active_task: IN PROGRESS -- male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX, strict TDD)
+```
+
+```handoff
 session: S857
 date: 2026-10-02
 status: complete
