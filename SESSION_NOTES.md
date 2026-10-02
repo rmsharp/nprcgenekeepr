@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 859 Did
+**Deliverable:** try male-left for the 2 couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`); accept only if it adds no dogleg or shift without a visual/readability purpose (owner's words, S859) (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. PRE-RED: next is the PRE-RED gate.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+
 ### What Session 858 Did
 **Deliverable:** the cause of the 2 duplicate-mate male-right couples, a fix tried and rejected by the owner, and a corrected BACKLOG item. Strict TDD began (PRE-RED, RED, GREEN gates asked); the
 owner rejected the result after seeing figures, so the layout code is unchanged. Claim `88f283ea6`; RED `8aeef0da2` (test file removed in the close-out commit).

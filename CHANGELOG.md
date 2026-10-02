@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S859 claim: try male-left placement for couples whose mate is drawn as a duplicate node, with no dogleg or shift lacking a visual/readability purpose (BACKLOG item; owner's rule given at S859 Orient) (in progress). Strict TDD.
+
 ### 2026-10-02 · [ad hoc] S858 close-out: traced why 2 `rhesusPedigree` couples with a duplicate-node mate stay male-right (both parents have parents, so the S666 filter skips the unit); tried `|| qualifies(u)` in the seeding (RED `8aeef0da2`, 6 tests; GREEN measured: flips exactly the 2 couples, 4 census pins move, extra connector step); owner rejected it after seeing figures; reverted, RED test file removed, BACKLOG item rewritten with the owner's words and no rule decided. `R/` unchanged. Model: Claude Sonnet 5.5; no non-commit actions (no push).
 
 ### 2026-10-02 · [ad hoc] S858 claim: male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX) (in progress). Strict TDD.
