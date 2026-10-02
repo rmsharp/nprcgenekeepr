@@ -48,45 +48,50 @@
   out
 }
 
-.duplicateMatePairs <- data.frame(
-  male = c("D0Z114", "V1X2X3"), female = c("4CHDK1", "SH0L6S"),
-  stringsAsFactors = FALSE)
+## The rule is general, so the checks run over several bundled pedigrees, not
+## named animals (owner, S859): every mating where each parent has exactly one
+## mate renders male-left, whether or not a partner is a duplicate node.
+.bundledPedigrees <- list(
+  rhesusPedigree = nprcgenekeepr::rhesusPedigree,
+  qcPed = nprcgenekeepr::qcPed,
+  pedWithGenotype = nprcgenekeepr::pedWithGenotype,
+  smallPed = nprcgenekeepr::smallPed)
 
+for (pedName in names(.bundledPedigrees)) {
+  for (style in c("rectilinear", "direct")) {
+    local({
+      nm <- pedName
+      edgeStyle <- style
+      ped <- .bundledPedigrees[[nm]]
+      skip_if_not_installed("quadprog")
+      units <- .maleFemaleX(ped, edgeStyle)
+      one <- units[units$oneMateEach, ]
+
+      test_that(paste0("every one-mate-each mating on ", nm,
+                       " renders male-left (", edgeStyle, ")"), {
+        expect_gt(nrow(one), 0L)
+        expect_true(all(one$maleX < one$femaleX),
+                    info = paste("male-right:", toString(
+                      paste(one$maleReal, one$femaleReal)[
+                        one$maleX >= one$femaleX])))
+      })
+    })
+  }
+}
+
+## The case that motivated the rule: a mating whose mate is drawn as a
+## duplicate node (both partners have parents). rhesusPedigree has such
+## matings; the check fails if none is found, so it cannot pass vacuously.
 for (style in c("rectilinear", "direct")) {
   local({
     edgeStyle <- style
     skip_if_not_installed("quadprog")
     units <- .maleFemaleX(nprcgenekeepr::rhesusPedigree, edgeStyle)
-
-    test_that(paste0("the two duplicate-mate rhesusPedigree pairs render ",
+    test_that(paste0("one-mate-each matings with a duplicate-node mate render ",
                      "male-left (", edgeStyle, ")"), {
-      for (i in seq_len(nrow(.duplicateMatePairs))) {
-        row <- units[units$maleReal == .duplicateMatePairs$male[i] &
-                       units$femaleReal == .duplicateMatePairs$female[i], ]
-        expect_equal(nrow(row), 1L)
-        expect_true(row$duplicated)
-        expect_lt(row$maleX, row$femaleX)
-      }
-    })
-
-    test_that(paste0("every one-mate-each rhesusPedigree mating renders ",
-                     "male-left, duplicate mate or not (", edgeStyle, ")"), {
-      one <- units[units$oneMateEach, ]
-      expect_gt(nrow(one), 55L)
-      expect_true(all(one$maleX < one$femaleX),
-                  info = paste("male-right:", toString(
-                    paste(one$maleReal, one$femaleReal)[
-                      one$maleX >= one$femaleX])))
-    })
-
-    test_that(paste0("duplicate-mate matings already male-left stay so (",
-                     edgeStyle, ")"), {
-      key <- paste(units$maleReal, units$femaleReal)
-      excluded <- paste(.duplicateMatePairs$male, .duplicateMatePairs$female)
-      others <- units[units$oneMateEach & units$duplicated &
-                        !key %in% excluded, ]
-      expect_gt(nrow(others), 15L)
-      expect_true(all(others$maleX < others$femaleX))
+      dup <- units[units$oneMateEach & units$duplicated, ]
+      expect_gt(nrow(dup), 15L)
+      expect_true(all(dup$maleX < dup$femaleX))
     })
   })
 }

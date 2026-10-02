@@ -741,8 +741,10 @@ test_that(
   ## around -- jog repairs 95 -> 93 (190 -> 186 waypoints):
   ## 375 + 237 + 170 + 251 + 237 + 0 + 186 = 1456. Every other
   ## component count unchanged (the reorder adds or removes no node).
+  ## CHANGED S859 to 1460L -- male-left for a one-mate-each couple whose mate
+  ## is a duplicate node (4 more jog nodes; 2 repairs x 2 waypoints).
   ## Re-measured live, never hand-derived.
-  expect_equal(nrow(result$nodes), 1456L)
+  expect_equal(nrow(result$nodes), 1460L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -771,7 +773,8 @@ test_that(
   ## (S683 spouse-duplicate term-4 skip: 95 jog repairs x 2 waypoints).
   ## CHANGED AGAIN to 186L -- same cause as the node-count change above
   ## (S690 root-subtree ordering: 93 jog repairs x 2 waypoints).
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 186L)
+  ## CHANGED AGAIN to 190L -- S859 male-left for duplicate-node mates.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 190L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

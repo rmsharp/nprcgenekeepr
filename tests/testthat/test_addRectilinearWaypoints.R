@@ -794,8 +794,9 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## review, not an invariant (bars are not same-row edges; the
   ## jog-repair layer never sees them). Re-measured live, never
   ## hand-derived.
-  expect_equal(oldHits, 97L)
-  expect_equal(newHits, 97L)
+  ## CHANGED S859 to 98L/98L -- male-left for duplicate-node mates.
+  expect_equal(oldHits, 98L)
+  expect_equal(newHits, 98L)
   expect_true(newHits <= oldHits)
 })
 

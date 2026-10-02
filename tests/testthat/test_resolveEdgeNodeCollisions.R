@@ -718,8 +718,10 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## edge-vs-node pair count, not an edge count; order-sensitive,
   ## disclosed). Still resolved to 0 same-row residual by this
   ## unchanged repair pass. Re-measured live, never hand-derived.
-  expect_equal(nrow(baselineEdges), 93L)
-  expect_equal(nrow(baseline), 205L)
+  ## CHANGED S859 to 95 edges / 207 pairs -- male-left for duplicate-node
+  ## mates (same 2 extra jog repairs as the census's 186 -> 190 jog nodes).
+  expect_equal(nrow(baselineEdges), 95L)
+  expect_equal(nrow(baseline), 207L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)
