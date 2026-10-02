@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 852 Did
+**Deliverable:** docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`), one report under `docs/audits/` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning. Scope chosen by the owner: living docs only; `docs/planning/`, `docs/research/` and older audit records are a later slice.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 851 Did
 **Deliverable, DONE:** adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, section by section, each shown before/after and approved. Docs only, so no TDD phase applies. Claim `b9c019c5b`; edits in the close-out commit.
 **Adopted:** (1) the draft's opening summary paragraph; (2) the marker-genotype export session-crash fix, restored (S846 had removed it, reason not checked); (3) a plainer pass in all 11 sections: long bullets split to one idea each, nothing dropped.
