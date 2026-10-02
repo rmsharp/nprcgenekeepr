@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 860 Did
+**Deliverable:** docs-staleness audit slice 7c, live plans only in `docs/planning/` (owner's scope pick, S860); one report under `docs/audits/`, no code (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+
 ### What Session 859 Did
 **Deliverable, DONE:** the 2 `rhesusPedigree` couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) now draw male-left, by a general rule: every one-mate-each
 couple takes the sex rule (`R/makePedigreeDiagramData.R:1267`, `|| qualifies(u)`). Strict TDD, all gates asked (PRE-RED scope, PRE-RED, RED, GREEN, REFACTOR). Claim `f46ce6de3`; RED `ca0ee89ac`; GREEN+REFACTOR `82e020669`.
