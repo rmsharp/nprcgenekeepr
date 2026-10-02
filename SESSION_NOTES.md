@@ -99,10 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 852 Did
-**Deliverable:** docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`), one report under `docs/audits/` (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning. Scope chosen by the owner: living docs only; `docs/planning/`, `docs/research/` and older audit records are a later slice.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`). Report:
+`docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md`. Read-only audit, docs only, so no TDD phase applies. Claim `9ab55d5df`; report in the close-out commit.
+**Scope:** the owner chose "living docs only"; `docs/planning/` (84 files), `docs/research/` and older `docs/audits/` are a later slice (7c).
+**Result:** 35 findings, 10 moderate and 25 minor, from about 270 claims. Moderates: `ROADMAP.md` has the launcher alias reversed, a CRAN "planned" item that has shipped, two done audit follow-ups still listed, and "four articles"
+(there are 10); `BACKLOG.md` docs-audit item still says both PDFs are untracked (one is tracked, one was removed S831), has a stale `modPedigree.R` line cite, a regrowth figure of 378 lines (now 599), a "fix below" that does not
+exist, and out-of-range `shrinkPedigree.R` cites. `labkey-authentication.md`: no discrepancy.
+**Method:** four read-only subagents, then I re-ran or re-read 9 of the 10 moderates and most minors (marked S in the report); the second BACKLOG agent's line numbers were off by about 45, so only my own re-reads carry line cites I trust.
+**Not applied:** no finding was fixed (one audit report per session). **Not verified:** CRAN acceptance of 2.0.0, Quarto slices 3-4 status, PED_GV tallies (list in the report).
+**Reduction:** removed the S849 evaluation and record; that also removed the one over-length line in this file (the dashboard's per-line finding).
+
+**Self-assessment: 8/10.** + Asked the owner to scope a 55,000-line target before spawning; re-checked agent claims first-hand and caught the second agent's offset line numbers. - Two of my own verification greps were sloppy (a
+`DESCRIPTION` grep that matched `RoxygenNote`), redone properly.
+
+**Next steps:** (A) Apply the 35 slice-7b findings: separate docs-only session, `BACKLOG.md` last. (B) Slice 7c: `docs/planning/`, `docs/research/`, older `docs/audits/` (scope with the owner first; they are dated records). (C)
+Owner decisions still open: release number (3.0.0 vs 2.0.0.9000). (D) Master is 7 ahead of origin after this commit (5 at Orient, plus claim and close-out; computed with `git rev-list`); push only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md` (finding ids RO/CL/BA/BB/AR/CV), `BACKLOG.md:133-181` (docs-audit item), `BACKLOG.md:448` (regrowth figure), `ROADMAP.md:6-34`.
+
+**Gotchas:** BACKLOG line numbers in the report are approximate for the first half (BA ids); re-locate by item name before editing. Fixing BA1/BB1 means editing the same BACKLOG item the next session uses as its hand-off; do it last.
+
+### Session 851 Handoff Evaluation (by Session 852)
+**Score: 8/10.** **Helped:** next step (B) named slice 7b exactly, and the "push only on the owner's say-so" line. **Missing:** slice 7b's real size (about 55,000 lines of internal docs); I had to ask the owner to scope it.
+**Wrong:** "Master is 3 ahead of origin"; `git rev-list origin/master..HEAD` gave 5 at Orient. **ROI:** high.
+
 
 ### What Session 851 Did
 **Deliverable, DONE:** adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, section by section, each shown before/after and approved. Docs only, so no TDD phase applies. Claim `b9c019c5b`; edits in the close-out commit.
@@ -137,24 +157,6 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Key files:** `NEWS.Rmd:14-354`, `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
 
 **Gotchas:** the Diagram section must keep: the 400/750 cap once, one shading entry, one "male parent on the left", the 113 count with "duplicate node" and "bundled". Re-render `NEWS.md` after edits, then run the guard test.
-
-### Session 849 Handoff Evaluation (by Session 850)
-**Score: 9/10.** **Helped:** the parser note (reads `## ` and `- ` only) and the pointer to pinned wording. **Missing:** the exactly-one `#168` rule, which constrained the pass. **Wrong:** nothing found. **ROI:** high.
-
-### What Session 849 Did
-**Deliverable, DONE:** labeled the `NEWS.Rmd` dev block: every section now has a bold **Major** list then a bold **Minor** list. Docs only, so no TDD phase applies. Claim `8415e4fab`; edits in the close-out commit.
-**How:** the owner chose the format (two lists), delayed the brevity pass, and approved my sorting table ("go"). A script moved bullets whole; no wording changed except three "above" references that became "below" (Marker Genetics x2, Mate Pair).
-**Verified by me:** 75 bullets before and after; 11 Major and 11 Minor labels in `NEWS.md`; `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after re-render.
-**Not verified:** full suite and lint not run (no `.R` changed).
-**Reduction:** removed the S846 evaluation and record.
-
-**Self-assessment: 8/10.** + Proposed first, applied only after "go"; found the directional-wording trap before the owner did. - A BSD `sed -i` failure went unnoticed for one step (caught by a count check).
-
-**Next steps:** (A) Brevity pass on `NEWS.Rmd`, to follow the owner's comparison with the draft; the guard test pins wording in the Diagram and Ancestry entries, so add checks first. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 20 ahead of origin after this commit (18 at last close-out, plus claim and close-out); push only on the owner's say-so.
-
-**Key files:** `NEWS.Rmd:14-470` (Major/Minor lists), `tests/testthat/test_newsReleaseState.R:96-163` (parser reads `## ` and `- ` only).
-
-**Gotchas:** on macOS use Python, not `sed -i`, for in-place edits. New bullets go under the right Major or Minor label. Re-render `NEWS.md`, then run the guard test.
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about

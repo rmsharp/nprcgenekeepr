@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S852
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS -- docs-staleness audit slice 7b, the living internal docs (ROADMAP.md, CLAUDE.md, BACKLOG.md, docs/architecture, docs/conventions, docs/setup); one report under docs/audits/
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- docs-staleness audit slice 7b (living internal docs, owner-scoped); report docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md, 35 findings (10 moderate, 25 minor), none fixed
+what_was_done: claim 9ab55d5df; close-out commit. Four read-only subagents, then 9 of 10 moderates re-checked first-hand. BACKLOG docs-audit item updated; S849 record removed from SESSION_NOTES (also clears the per-line finding).
+next_steps: (A) Apply the 35 findings, docs only, BACKLOG.md last. (B) Slice 7c: docs/planning, docs/research, older docs/audits (scope with owner). (C) Owner: release number 3.0.0 vs 2.0.0.9000. (D) Master 7 ahead of origin after this commit; push only on owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md; BACKLOG.md docs-audit item (grep "Slice 7b AUDITED"); BACKLOG.md regrowth figure (grep "Regrowth check"); ROADMAP.md:6-34.
+gotchas: BACKLOG line cites in the report are approximate for the BA ids, re-locate by item name; the second BACKLOG agent's line numbers were off by about 45. Edit BACKLOG.md last when applying fixes.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run.
+changelog_ref: S852 close-out entry
+commit: the close-out commit that carries this receipt; claim 9ab55d5df
 ```
 
 ```handoff
