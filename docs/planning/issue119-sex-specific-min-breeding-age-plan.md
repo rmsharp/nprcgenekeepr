@@ -1,5 +1,7 @@
 # Issue #119 Plan — Replace scalar `minParentAge` with sex-specific, table-backed `minSireAge` / `minDamAge`
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** in five slices (S303-S307; last `c3c2ef67e`); #119 closed 2026-07-08. `minParentAge` is deprecated in favour of `minSireAge`/`minDamAge` (`R/getPotentialParents.R`). Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Issue:** #119 — "Use of `minParentAge` seems to conflict with newer sex specific
 minimum reproductive ages"
 **Type:** Implementation plan (multi-slice, strict TDD). **This document is the

@@ -1,5 +1,7 @@
 # Issue #125 Plan — Configurable genetic-value ranking-priority scheme + surface multiple breeding-group candidates
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped**: Slice 1 (ranking scheme, S424) and Slice 2 (multiple breeding-group candidates, S425, `3e5dc35f2`); #125 closed 2026-07-29. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **#125** (filed S422, 2026-07-29, from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimensions 1 & 2 / the
 audit's Recommendation #1). Distinct from issue #128 (breeding-group top-N-vs-value-floor

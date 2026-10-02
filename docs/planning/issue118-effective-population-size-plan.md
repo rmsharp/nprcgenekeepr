@@ -1,5 +1,7 @@
 # Issue #118 -- Effective population size (Ne) estimates
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped**: E1 gene diversity, E2 sex-ratio Ne and E3 variance Ne (S310-S313; `4d164a994`, `547908200`); #118 closed 2026-07-08. E4 (rate-of-coancestry Ne) was deliberately deferred. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** PLAN (Session 309, 2026-07-07). Owner scope decisions were gathered
 *this* session (Section 5.1) via `AskUserQuestion`; a small set of sub-decisions
 (Section 5.2) remain to ratify at the Slice-1 gate. The deliverable of a planning

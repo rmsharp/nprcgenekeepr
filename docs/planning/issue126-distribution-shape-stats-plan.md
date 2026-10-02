@@ -1,5 +1,7 @@
 # Issue #126 Plan — Kinship/genome-uniqueness distribution-shape statistics
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** S429 (`e64b7fe3d`): `calcSkewness()`/`calcKurtosis()` (`R/calcSkewness.R`); #126 closed 2026-07-30. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **[#126](https://github.com/rmsharp/nprcgenekeepr/issues/126)**
 (filed S422, 2026-07-29, from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimension 3 /

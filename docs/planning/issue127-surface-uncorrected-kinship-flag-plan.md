@@ -1,5 +1,7 @@
 # Issue #127 Plan — Surface `correctUnknownParentMeanKinship()`'s silently-dropped `flagged` list
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** S431 (`426962900`): `reportGV()` surfaces the `flagged` uncorrected-animal list; #127 closed 2026-07-30. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **[#127](https://github.com/rmsharp/nprcgenekeepr/issues/127)**
 (filed S422, 2026-07-29, from
 `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md` Dimension 4 /
