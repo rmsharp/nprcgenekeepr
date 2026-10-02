@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S853
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS -- apply the 35 slice-7b docs-staleness findings (ROADMAP.md, CLAUDE.md, docs/architecture, docs/conventions, docs/setup; BACKLOG.md last). Docs only, no TDD phase.
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- applied 33 of 35 slice-7b docs-staleness findings (ROADMAP.md, CLAUDE.md, module-contract.md, CLOSEOUT_CHECKLISTS.md, ROXYGEN_EXAMPLES_POLICY.md, BACKLOG.md). Docs only, no TDD phase. CV1/CV2 left as code decisions.
+what_was_done: claim 144d140cb; fixes 61577e834; close-out commit (BACKLOG.md and records). Every changed cite re-read against code; wordlist and rbuildignore tests pass; context budget OK.
+next_steps: (A) Slice 7c: docs/planning (84 files), docs/research, older docs/audits; scope with owner first. (B) Owner: release number 3.0.0 vs 2.0.0.9000; CV1/CV2; male-left placement. (C) Master 10 ahead of origin after this commit; push only on owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md; BACKLOG.md docs-audit item (grep "Slice 7b AUDITED") and regrowth check (grep "Regrowth check (S853)"); ROADMAP.md.
+gotchas: BACKLOG.md is 599 lines and regrowing (docs-audit and chromote items are the next cuts). ROADMAP.md keeps two "not re-checked" statements (Quarto slices 3-4; five audit ids), not verified claims.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run.
+changelog_ref: S853 close-out entry
+commit: the close-out commit that carries this receipt; claim 144d140cb
 ```
 
 ```handoff

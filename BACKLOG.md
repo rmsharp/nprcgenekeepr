@@ -21,7 +21,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       ruled out).
       **Open, all owner decisions:** (a) the overhaul roots,
       none urgent -- sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in 10 files
-      remain), the error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents`
+      remained when measured S781; a broader grep in S852 found 32 in 13), the error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents`
       (PED-4, NEW-54, and NEW-55 -- labelling whether a dam list came from proven breeders or the
       fallback, which the owner did not take at S798's F3 decision), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
       driver (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57) and the founder
@@ -34,7 +34,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --
       the mask is written inline four times, all meaning "only the exact status `"added"` is
       special; an `NA`, blank or unrecognized status is a real animal": `convertDate()`
-      (`R/convertDate.R:103`) and `removeDuplicates()` (`R/removeDuplicates.R:46`) as
+      (`R/convertDate.R:113`) and `removeDuplicates()` (`R/removeDuplicates.R:48`) as
       `!is.na(x) & x == "added"`, `removeUnknownAnimals()` (`R/removeUnknownAnimals.R:31`) as its
       complement, and `correctParentSex()` (`R/correctParentSex.R`, `isAdded`, which also answers
       a `NULL` status with "no added rows"). One helper would put that contract in one place; the
@@ -52,8 +52,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `qcStudbook()` are unaffected; only a script that puts an added row ahead of an original can
       see it. `R/convertDate.R` numbers `seq_along(originalDates)` after the added records are set
       aside, and `getDateErrorsAndConvertDatesInPed()` copies those numbers into
-      `errorLst$invalidDateRows` (`R/getDateErrorsAndConvertDatesInPed.R:36`), the list the user
-      reads, and uses them as full-pedigree row numbers in `sb[-invalidAndAdded, ]` (`:37-41`).
+      `errorLst$invalidDateRows` (`R/getDateErrorsAndConvertDatesInPed.R:38`), the list the user
+      reads, and uses them as full-pedigree row numbers in `sb[-invalidAndAdded, ]` (`:39-43`).
       **Decision for the owner:** (1) map the reported numbers back to full-pedigree rows inside
       `convertDate()` (`which(!isAdded)[rows]`; one line plus a test; changes the numbers a script
       sees only in that order); or (2) document the numbering in `@return` and leave it. The test
@@ -135,8 +135,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       expect several slices) -- the owner noticed that `vignettes/articles/pedigree-diagram.pdf`
       and `vignettes/articles/kinship2-fidelity-validation.pdf` show stale figures. Measured
       2026-09-26 (the staleness itself is the owner's observation, not yet re-checked): both PDFs
-      are UNTRACKED renders dated 2026-08-25 (`.gitignore:21` ignores `vignettes/*.pdf` but not
-      `vignettes/articles/*.pdf`), while their `.qmd` sources were last edited 2026-09-17/18; the
+      were renders dated 2026-08-25 (`.gitignore:21` ignores `vignettes/*.pdf` but not
+      `vignettes/articles/*.pdf`). **Corrected S853:** `kinship2-fidelity-validation.pdf` is TRACKED
+      (`git ls-files`), and `pedigree-diagram.pdf` was untracked by `3a8c026bb` (S831) and is gone from
+      disk. Their their `.qmd` sources were last edited 2026-09-17/18; the
       tracked static image files sit under `vignettes/articles/pedigree-diagram-img/` (5),
       `vignettes/articles/kinship2-fidelity-validation-img/` (8) and
       `vignettes/articles/shiny_app_use/` (50). **First question for the pickup:** is the
@@ -151,9 +153,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       diagram against today's code or output (regenerate the figure from the current source and
       compare; count, don't recall); list each stale item with its source path; fix it or file it.
       **Found S789, for this audit:** the user manual
-      (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words the Diagram limit as "750 animals
-      ... the limit drops to 400 when the Rectilinear edge style is selected", which reads
-      misleadingly since Rectilinear is the default (the default limit is 400); the roxygen point in
+      (`vignettes/manual_components/_pedigree_browser.Rmd`) worded the Diagram limit as "750 animals
+      ... the limit drops to 400 when the Rectilinear edge style is selected", which read
+      misleadingly since Rectilinear is the default (the default limit is 400); fixed S828. The roxygen point in
       the male-left item above is the same kind of finding. **Measured S805, for this audit:** the
       5 classic-structure figures under `vignettes/articles/pedigree-diagram-img/` are current (2
       re-rendered and committed S805; the other 3 differ from a fresh
@@ -165,9 +167,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Slice 1 DONE S820** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`): the staleness is in both
       the local PDFs (rendered 2026-08-25, carry since-retracted claims) and the committed images (1 of 8
       `kinship2-fidelity-validation-img/` is stale: `trackC-nprc-rectilinear.png`; the other 7 are current). **Open
-      from slice 1:** owner decides delete-or-ignore for the two PDFs; regenerate `trackC-nprc-rectilinear.png`
+      from slice 1:** owner decides delete-or-ignore for the one remaining PDF, the tracked `kinship2-fidelity-validation.pdf` (S853 correction); regenerate `trackC-nprc-rectilinear.png`
       (`data-raw/kinship2FidelityValidation.R`; look at the fresh arc touching the `W` square first); fix the stale "defaulting to direct"
-      comment at `R/modPedigree.R:440-443` (the `_pedigree_browser.Rmd` wording was fixed S828). **Slice 2 DONE S821** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`): 31 of 38
+      comment at `R/modPedigree.R:459-461` (the `_pedigree_browser.Rmd` wording was fixed S828). **Slice 2 DONE S821** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`): 31 of 38
       regenerable `shiny_app_use/` images differ from the app (Pedigree Browser family +147 px; Home, Input, Summary
       Statistics, Breeding Groups, GVA); the colony script's tail fails identically every run (diagnose first, then
       regenerate by module); 12 images have no generator; `pb_unknown_displayed.png` is an orphan. **Slice 3 DONE S822** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`): the 11 articles' prose has
@@ -176,7 +178,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `breeding-group-formation` `minAge`/`threshold`/`ignore`); no broken chunk, link or function name. **Fixed S823:** all 29
       findings, plus the `orderReport`/`qcStudbook`/`hasInvalidIdChar` roxygen. **Slice 4 DONE S824** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`): the 16 `manual_components`, 8
       `ui_guidance` pages and README have 33 moderate and 44 minor findings (breeding-group and genetic-value pages describe an
-      earlier UI; stale defaults; `birth` is a required column). **Cluster 1 FIXED S825** (all 17 findings in `input_format.html`, `_input.Rmd`; orphan `_database_access.Rmd` deleted). **Cluster 2 FIXED S826** (breeding-group pages: BA1-BA16, BA30-31, UG11-UG21 in `_breeding_group_formation.Rmd`, `_breeding_group_algorithm.Rmd`, `_gv_and_bg_desc.Rmd`, `group_formation.html`, `gvAndBgDesc.html`; the `groupAddAssign` roxygen "average"/"or younger" wording stays with the code-defect decisions). **Cluster 3 FIXED S827** (genetic-value pages: BA17-BA22, UG12 second half, UG24, UG25 in `_genetic_value_analysis.Rmd`, `_genome_uniqueness_algorithm.Rmd`, `genetic_value.html`, `population_genetics_terms.html`, `summary_stats.html`; the R `helpText` at `R/modGeneticValue.R:88` still says "Summary Statistics relationship table"). **Cluster 4 FIXED S828** (BB1-BB17, UG22, UG23, RM1-RM4: `_pedigree_browser.Rmd`, `_summary_statistics.Rmd`, `_orip_reporting.Rmd`, `_summary_of_major_functions.Rmd`, `_software_development.Rmd`, `_introduction.Rmd`, `_online_documentation.Rmd`, `pedigree_browser.html`, `pyramidPlot.html`, README re-rendered; the `test_modPedigree.R` and `test-e2e-pyramid-detailed.R` page-text assertions were updated). **Slice 4 is done.** One leftover, an owner decision: `DESCRIPTION` and the `_pkgdown.yml` home text still say the application "supports five groups of functions" (BB14), while the app has 14 analysis tabs; they match each other and the CRAN description, so the choice is whether to reword both. **Slice 5 (a2interactive.Rmd) AUDITED S832** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`): 12 moderate, 18 minor (AI1-AI30), **all FIXED S833** in `vignettes/a2interactive.Rmd` (knit clean; `devtools::check()` and the spelling test pass). No code defects. **Slice 6a AUDITED S834** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`): 36 genetic-value/kinship `man/` pages, 9 moderate, 45 minor (MA/MB/MC/MD ids); **52 of the 54 FIXED S835** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test and `devtools::check(--no-tests)` pass). Still open, both owner decisions about code (their doc wording waits on the decision): MC1 (`filterKinMatrix` lacks `drop = FALSE`) and MB3 (unknown-sex founder kinship). MA3/MB14 now cite only `e1071` for `type = 2`; neither `moments` nor `e1071` is installed here, so that is from recall, not a run. **Slice 6b AUDITED S836** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md`): 36 pedigree QC and curation `man/` pages, 20 moderate, 37 minor (PA/PB/PC/PD ids), all 20 moderates re-run first-hand; **54 of the 57 FIXED S837** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test, examples and `devtools::check(--no-tests)` pass). Still open, owner decisions about code: PB4, PB7, PB11 (their docs untouched); PB13, PA4, PD12, PD1 are code candidates too, and S837 documented today's behavior for them, so reword if the code changes. **Slice 6c AUDITED S838** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md`): 35 marker-genetics, genotype and MHC `man/` pages, 4 moderate, 25 minor (QA/QB/QC/QD ids), all 4 moderates re-run first-hand; **all 29 FIXED S839** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test, examples and `devtools::check(--no-tests)` pass), documenting today's behavior. Still open, owner decisions about code (the 8 candidates in the report; reword the docs if the code changes): `markerExpectedHeterozygosity` He = 1.0 for an all-NA locus, `computeGenomicROH` silent locus drop, `hasGenotype` `First`/`Second`, `checkSequenceGenotypeFile` sidecar not reconciled, plus candidates 5-8. **Slice 6d AUDITED S840** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`): 34 Shiny app and module `man/` pages (the Server and UI page of 15 modules, `appServer`, `appUI`, `runGeneKeepR`, `runModularApp`), 8 moderate, 34 minor (RA/RB/RC/RD ids) plus 22 code candidates; the 8 moderates were re-read in the source, RA8 and CA4 re-run. **All 42 FIXED S841** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test, examples and `devtools::check(--no-tests)` pass), documenting today's behavior. Still open, owner decisions about code (the 22 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 in the report; reword the docs if the code changes, esp. RA3/RA4/RA6 (CA1, CA3), RA8 (CA2), RB10 (CB1), RC7 (CC1)). **Slice 6e AUDITED S842** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): the last 126 `man/` pages, so all 267 are now audited; 26 moderate, 69 minor (RE-RL ids) plus 46 code candidates (CE-CL); 23 of the 26 moderates re-run or re-read first-hand (not RF2, RH2, RJ3). **All 95 slice-6e findings FIXED S844** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test and `devtools::check(--no-tests)` pass), documenting today's behavior; the 46 code candidates (CE-CL) are owner decisions, reword the docs if the code changes; leftovers: `R/makeGroupNum.R` still says `numGp` "Default is 1", and the examples in `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated `minParentAge`. **Slice 7a AUDITED S845** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`): `NEWS.Rmd` and `NEWS.md`, 3 moderate (NC1, NC2: "Fixed" bullets for a tab and a file that never shipped in 2.0.0; NE1: `NEWS.md` 37 commits stale), 16 minor; **all FIXED S846** except NA2-NA4, **FIXED S847** (the Diagram section rewritten as a new feature described against kinship2; `NEWS.md` re-rendered; NB5/NB7 were dropped by S845). **Slice 7b AUDITED S852** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md`): the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`), 10 moderate, 25 minor (RO/CL/BA/BB/AR/CV ids); 9 of the 10 moderates re-checked first-hand; **none fixed yet**. **Next in this item:** (1) apply the 35 findings (docs only; edit `BACKLOG.md` last, it includes its own docs-audit item and the 378-vs-599-line regrowth figure); (2) slice 7c, `docs/planning/` (84 files), `docs/research/` and older `docs/audits/` (dated records; scope with the owner first). Two code candidates, owner decisions: `getGeneticDiversityStats()` exports with no `@examples`, and the `savePlotToFile` example uses `\dontrun`. Four likely code defects the audit found
+      earlier UI; stale defaults; `birth` is a required column). **Cluster 1 FIXED S825** (all 17 findings in `input_format.html`, `_input.Rmd`; orphan `_database_access.Rmd` deleted). **Cluster 2 FIXED S826** (breeding-group pages: BA1-BA16, BA30-31, UG11-UG21 in `_breeding_group_formation.Rmd`, `_breeding_group_algorithm.Rmd`, `_gv_and_bg_desc.Rmd`, `group_formation.html`, `gvAndBgDesc.html`; the `groupAddAssign` roxygen "average"/"or younger" wording stays with the code-defect decisions). **Cluster 3 FIXED S827** (genetic-value pages: BA17-BA22, UG12 second half, UG24, UG25 in `_genetic_value_analysis.Rmd`, `_genome_uniqueness_algorithm.Rmd`, `genetic_value.html`, `population_genetics_terms.html`, `summary_stats.html`; the R `helpText` at `R/modGeneticValue.R:88` still says "Summary Statistics relationship table"). **Cluster 4 FIXED S828** (BB1-BB17, UG22, UG23, RM1-RM4: `_pedigree_browser.Rmd`, `_summary_statistics.Rmd`, `_orip_reporting.Rmd`, `_summary_of_major_functions.Rmd`, `_software_development.Rmd`, `_introduction.Rmd`, `_online_documentation.Rmd`, `pedigree_browser.html`, `pyramidPlot.html`, README re-rendered; the `test_modPedigree.R` and `test-e2e-pyramid-detailed.R` page-text assertions were updated). **Slice 4 is done.** One leftover, an owner decision: `DESCRIPTION` and the `_pkgdown.yml` home text still say the application "supports five groups of functions" (BB14), while the app has 14 analysis tabs; they match each other and the CRAN description, so the choice is whether to reword both. **Slice 5 (a2interactive.Rmd) AUDITED S832** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`): 12 moderate, 18 minor (AI1-AI30), **all FIXED S833** in `vignettes/a2interactive.Rmd` (knit clean; `devtools::check()` and the spelling test pass). No code defects. **Slice 6a AUDITED S834** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`): 36 genetic-value/kinship `man/` pages, 9 moderate, 45 minor (MA/MB/MC/MD ids); **52 of the 54 FIXED S835** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test and `devtools::check(--no-tests)` pass). Still open, both owner decisions about code (their doc wording waits on the decision): MC1 (`filterKinMatrix` lacks `drop = FALSE`) and MB3 (unknown-sex founder kinship). MA3/MB14 now cite only `e1071` for `type = 2`; neither `moments` nor `e1071` is installed here, so that is from recall, not a run. **Slice 6b AUDITED S836** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md`): 36 pedigree QC and curation `man/` pages, 20 moderate, 37 minor (PA/PB/PC/PD ids), all 20 moderates re-run first-hand; **54 of the 57 FIXED S837** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test, examples and `devtools::check(--no-tests)` pass). Still open, owner decisions about code: PB4, PB7, PB11 (their docs untouched); PB13, PA4, PD12, PD1 are code candidates too, and S837 documented today's behavior for them, so reword if the code changes. **Slice 6c AUDITED S838** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md`): 35 marker-genetics, genotype and MHC `man/` pages, 4 moderate, 25 minor (QA/QB/QC/QD ids), all 4 moderates re-run first-hand; **all 29 FIXED S839** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test, examples and `devtools::check(--no-tests)` pass), documenting today's behavior. Still open, owner decisions about code (the 8 candidates in the report; reword the docs if the code changes): `markerExpectedHeterozygosity` He = 1.0 for an all-NA locus, `computeGenomicROH` silent locus drop, `hasGenotype` `First`/`Second`, `checkSequenceGenotypeFile` sidecar not reconciled, plus candidates 5-8. **Slice 6d AUDITED S840** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`): 34 Shiny app and module `man/` pages (the Server and UI page of 15 modules, `appServer`, `appUI`, `runGeneKeepR`, `runModularApp`), 8 moderate, 34 minor (RA/RB/RC/RD ids) plus 22 code candidates; the 8 moderates were re-read in the source, RA8 and CA4 re-run. **All 42 FIXED S841** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test, examples and `devtools::check(--no-tests)` pass), documenting today's behavior. Still open, owner decisions about code (the 22 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 in the report; reword the docs if the code changes, esp. RA3/RA4/RA6 (CA1, CA3), RA8 (CA2), RB10 (CB1), RC7 (CC1)). **Slice 6e AUDITED S842** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): the last 126 `man/` pages, so all 267 are now audited; 26 moderate, 69 minor (RE-RL ids) plus 46 code candidates (CE-CL); 23 of the 26 moderates re-run or re-read first-hand (not RF2, RH2, RJ3). **All 95 slice-6e findings FIXED S844** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling test and `devtools::check(--no-tests)` pass), documenting today's behavior; the 46 code candidates (CE-CL) are owner decisions, reword the docs if the code changes; leftovers: `R/makeGroupNum.R` still says `numGp` "Default is 1", and the examples in `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated `minParentAge`. **Slice 7a AUDITED S845** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`): `NEWS.Rmd` and `NEWS.md`, 3 moderate (NC1, NC2: "Fixed" bullets for a tab and a file that never shipped in 2.0.0; NE1: `NEWS.md` 37 commits stale), 16 minor; **all FIXED S846** except NA2-NA4, **FIXED S847** (the Diagram section rewritten as a new feature described against kinship2; `NEWS.md` re-rendered; NB5/NB7 were dropped by S845). **Slice 7b AUDITED S852** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md`): the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`), 10 moderate, 25 minor (RO/CL/BA/BB/AR/CV ids); 9 of the 10 moderates re-checked first-hand; **33 of 35 FIXED S853** (docs only). Left: CV1 and CV2 (code decisions, below); RO8 (Quarto slices 3-4 status) and the other ids in RO3 (not checkable here) were reworded to say "not recorded" / "not re-checked", not settled; AR3's "about 53" is now attributed to Learning 347 and not re-counted. **Next in this item:** slice 7c, `docs/planning/` (84 files), `docs/research/` and older `docs/audits/` (dated records; scope with the owner first). Two code candidates, owner decisions: `getGeneticDiversityStats()` exports with no `@examples`, and the `savePlotToFile` example uses `\dontrun`. Four likely code defects the audit found
       (candidate "Upload list" uploads nothing; no-op GU/MK checkboxes; `groupAddAssign` roxygen; silent `allele_1/2` genotype
       drop) are owner decisions, DECISION NEEDED, Effort S each, not part of the doc fixes.
 
@@ -297,17 +299,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the primary goal** (i.e. plan a sibling product first, not an extraction nprcgenekeepr
       must immediately depend on). **Ratified scope (S742, so the plan session doesn't
       re-derive):** drawing surface IN — lift the module-bound decorations
-      (`R/modPedigree.R:675-790`: legend/image-export/tooltips) into a script-callable
+      (`R/modPedigree.R`, about `:689-890`: legend, image export, tooltips) into a script-callable
       visNetwork renderer (the unique value per the gap doc's ecosystem observation; the one
       substantive new-work item); parity closers IN — export the shrink helpers + `bitSize`
-      (tested internals, `R/shrinkPedigree.R:227-380`), port `familycheck` + `ibdMatrix`
+      (tested internals in `R/shrinkPedigree.R`: `.bitSizeOf`, `.findUnavailable`, `.findAvailAffected`), port `familycheck` + `ibdMatrix`
       (the two full absences), and user-suppliable layout hints (autohint's override half —
       real engine-surface design); OUT — block-sparse `makekinship` (dense whole-colony
       matrices are current practice); API shape (data-frame-as-is vs kinship2-compat layer)
       DELIBERATELY OPEN — decide at plan time with a prototype in hand. When unblocked, the
       pickup is a planning session (package boundary/plan doc in `docs/planning/`,
       evidence-based inventory); step 0's prep is complete — D-1 landed S744:
-      `makePedigreeMatingLayout(kinshipMatrix = )` (`R/makePedigreeDiagramData.R:1685`)
+      `makePedigreeMatingLayout(kinshipMatrix = )` (`R/makePedigreeDiagramData.R:1661`)
       is exactly the injectable boundary the package needs; D-2 landed S745: no test
       file outside the layout core's own reaches `.buildMatingUnitForest()` any more
       (the two `test_modPedigree.R` reaches now derive union/duplicate ids from the
@@ -324,7 +326,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own
       session) -- `inst/doc/` is 4.38 MB uncompressed = 86% of CRAN's 5 MB documentation
       guideline and 38% of the tarball; `a2interactive`/`gvaConvergence`/`simulatedKValues`
-      declare `output: html_document` (`vignettes/a2interactive.Rmd:4-7`,
+      declare `output: html_document` (`vignettes/a2interactive.Rmd:4-6`,
       `gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Est. 0.4-0.9 MB compressed saved
       — an ESTIMATE needing its own before/after clean-export build measurement
       (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` Finding 3 + §7 recipe); `df_print: paged`
@@ -342,7 +344,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       release tarballs from a clean export, never the working tree.
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
-      the chromote CDP-timeout fallback fix below, READY, Effort M -- research only, not
+      the chromote CDP-timeout fallback fix (see `CHANGELOG.md`), READY (optional), Effort M -- research only, not
       required) -- the practical problem is FULLY resolved: `macos-latest` reverts to ambient/
       unpinned Chrome (`R-CMD-check.yaml`, `if: matrix.config.os != 'macos-latest'` on the 3
       Chrome-provisioning steps), verified green on real CI. What remains unexplained: raising
@@ -395,8 +397,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the `SRF_RED` decision's own scope, per `PROJECT_LEARNINGS.md` Learning 382's "report,
       don't fix mid-session" precedent). A future session could measure the actual
       housekeeping-vs-deliverable entry-byte split and decide whether a norm analogous to
-      the canonical design's own deferred H4 remedy (`docs/planning/ledger-trimmer-design.md`
-      §10.2, "the lever is receipt size, and the mechanism would be a norm plus a check, not
+      the canonical design's own deferred H4 remedy (recorded as `docs/planning/ledger-trimmer-design.md`
+      §10.2, a file that is not in this repo; "the lever is receipt size, and the mechanism would be a norm plus a check, not
       an archiver") is worth adopting for `CHANGELOG.md` specifically.
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
@@ -407,7 +409,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       only... for history see `CHANGELOG.md`"). Sections **regrow** as later sessions append their
       own progress narrative (S606 found the S531 "fully RESOLVED" claim was only a snapshot), so
       this is a recurring maintenance pass, never a one-time fix.
-      **Pass history** (per-pass detail in `CHANGELOG.md`): S529 Housekeeping section (263 lines
+      **Pass history** (per-pass detail in `CHANGELOG.md` and `docs/archive/CHANGELOG-through-*.md`): S529 Housekeeping section (263 lines
       removed; its inventory found 2 items with NO ledger entry -- the `inst/extdata/` reorg
       S415-418 and the non-portable-filename fix S497, a real FM #27 gap -- and both were
       backfilled before compressing); S530 "Pedigree diagram vs kinship2" (896->286 lines); S531
@@ -443,10 +445,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       replace whole line ranges mechanically (Learning 537: a partial `old_string` leaves later
       paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
       re-read the compressed result end to end.
-      **Candidates for the next pass (measured 2026-09-24; re-grep, sizes not anchors):** none --
-      no resolved-narrative section or stub remains, and every remaining `##` section holds open
-      items. Regrowth check: 378 lines now; the file was 480 lines after S752 and 561 before this
-      pass. The next pass is a regrowth check, not a known cut.
+      **Candidates for the next pass (measured 2026-09-24; re-grep, sizes not anchors):** none then --
+      no resolved-narrative section or stub remained, and every remaining `##` section held open
+      items. Regrowth check (S853): 599 lines now, up from 378 on 2026-09-24 (the file was 480 lines after S752 and 561 before that
+      pass); the long narrative items, the docs-audit item and the chromote item, are the likely next cuts. The next pass should compress those two.
 
 - [ ] **Two kinship2 drawing features the Diagram tab still lacks (found S847, 2026-10-01; DECISION
       NEEDED -- which pedigree column marks "deceased", Effort M for each; strict TDD for both)**
@@ -458,8 +460,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       is one logical column (`R/makePedigreeDiagramData.R:73-85`, one fill color); kinship2 shades
       up to four conditions per animal as separate sections of the symbol, with a matching legend.
       The decision is the input shape (several logical columns, or a matrix) and the legend text.
-      Each is its own session; the Diagram section of `NEWS.Rmd` says "most of kinship2's
-      conventions" until both ship.
+      Each is its own session; the Diagram section of `NEWS.Rmd` (lines 33-35) says "A deceased marker and more than one affected
+      condition are not drawn" until both ship.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing

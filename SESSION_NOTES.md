@@ -99,10 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 853 Did
-**Deliverable:** apply the 35 slice-7b docs-staleness findings (IN PROGRESS). Docs only, so no TDD phase applies.
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** applied the slice-7b docs-staleness findings (33 of 35). Docs only, so no TDD phase applies. Claim `144d140cb`; fixes
+`61577e834` (ROADMAP, CLAUDE.md, module-contract, conventions) and the close-out commit (`BACKLOG.md`, records).
+**Fixed:** all of RO1-RO10 (`ROADMAP.md`: alias direction, shipped 2.0.0, done audit follow-ups, articles list, stale paths), CL1-CL3, AR1-AR3, CV3,
+CV4, and every BA/BB id in `BACKLOG.md` (re-located by name, each cite re-checked against code; PDF state and regrowth figure 378 to 599 corrected).
+**Not fixed, on purpose:** CV1 and CV2 (code decisions: add an `@examples` to `getGeneticDiversityStats()`, fix the `savePlotToFile` example). RO8
+(Quarto slices 3-4) and the other ids in RO3 could not be checked, so the text now says "not recorded" / "not re-checked". AR3's "about 53" is
+attributed to Learning 347, not re-counted.
+**Verified by me:** every changed cite re-read against the code; `test_wordlist_coverage.R` and `test_rbuildignore.R` pass; `context_budget.py` OK.
+**Not run:** full suite, lint (no `.R` changed). I introduced and fixed one typo ("their their") in `CLAUDE.md`.
+**Reduction:** removed the S850 evaluation and record.
+
+**Self-assessment: 8/10.** + Re-verified each BACKLOG cite instead of trusting the report's numbers (the `modPedigree.R` legend range needed a fresh
+look); kept `CLAUDE.md` growth to 180 B. - Said "status not recorded" for RO8 where a quick git search of Quarto slice commits might have settled it.
+
+**Next steps:** (A) Slice 7c: `docs/planning/` (84 files), `docs/research/`, older `docs/audits/` (dated records; scope with the owner first). (B)
+Owner decisions still open: release number (3.0.0 vs 2.0.0.9000); CV1/CV2; the male-left placement item. (C) Master is 10 ahead of origin after the
+close-out commit (9 at this writing plus close-out; from `git rev-list`); push only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md` (finding ids), `BACKLOG.md` docs-audit item (grep "Slice 7b AUDITED"),
+`BACKLOG.md` regrowth check (grep "Regrowth check (S853)").
+
+**Gotchas:** `BACKLOG.md` is 599 lines and regrowing; the docs-audit and chromote items are the next compression candidates. `ROADMAP.md` still has
+two "not re-checked" statements (Quarto slices 3-4, five audit ids); do not read them as verified.
+
+### Session 852 Handoff Evaluation (by Session 853)
+**Score: 8/10.** **Helped:** the finding ids with evidence and the "edit BACKLOG last" warning; the "Check" column (S vs A) told me which cites to
+re-read. **Missing:** which of RO3's ids were open (none are; grep found them nowhere in BACKLOG). **Wrong:** nothing material; BA2's `:458-461` was
+right (code comment at `:459-461`). **ROI:** high.
 
 ### What Session 852 Did
 **Deliverable, DONE:** docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`). Report:
@@ -145,24 +169,6 @@ Owner decisions still open: release number (3.0.0 vs 2.0.0.9000). (D) Master is 
 **Key files:** `NEWS.Rmd:14-390` (dev block), `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
 
 **Gotchas:** pinned phrases must stay verbatim: "male parent on the left", the 400/750 cap once, the 113 count with "duplicate node" and "bundled", one `#168` entry. Re-render `NEWS.md`, then run the guard test.
-
-### Session 850 Handoff Evaluation (by Session 851)
-**Score: 9/10.** **Helped:** the pinned-phrase gotchas (one of them fired) and the plain account of what was dropped. **Missing:** nothing found. **Wrong:** nothing found. **ROI:** high.
-
-### What Session 850 Did
-**Deliverable, DONE:** brevity pass on the `NEWS.Rmd` dev block; owner reviewed and approved. Docs only, so no TDD phase applies. Claim `eae700925`; edits in the close-out commit.
-**Result:** dev block 4,457 to about 2,500 words (-44%); Major/Minor lists and all 11 sections kept. Related Minor bullets merged (script functions; the "added record" fixes, as S793 advised). Issue numbers kept: the guard test needs exactly one `#168` mention.
-**Verified by me:** `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after re-render. First pass cut only 25%, so I condensed harder; one pinned phrase ("male parent on the left") had to be restored.
-**Dropped on purpose:** the `makePedigreeDiagramData()` note, sibling-bar and curve-height sentences, several "includes" asides. **Not verified:** full suite and lint (no `.R` changed); condensed sentences not re-checked against code.
-**Reduction:** removed the S847 evaluation and record.
-
-**Self-assessment: 7/10.** + Read the pinned guard checks before writing; showed the result and waited for approval. - My first pass was too timid (25%), and my first word count mixed in old text.
-
-**Next steps:** (A) Owner compares `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd`. (B) Slice 7b docs audit (READY, Effort L). (C) Master was pushed at the owner's say-so (origin `bd6783a3a`); CI was running, check `gh run list`.
-
-**Key files:** `NEWS.Rmd:14-354`, `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
-
-**Gotchas:** the Diagram section must keep: the 400/750 cap once, one shading entry, one "male parent on the left", the 113 count with "duplicate node" and "bundled". Re-render `NEWS.md` after edits, then run the guard test.
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about

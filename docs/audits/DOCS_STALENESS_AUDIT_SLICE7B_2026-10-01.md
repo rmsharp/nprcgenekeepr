@@ -92,3 +92,5 @@ Read-only audit. Nothing in the repo was changed except this report and the sess
 Slice 7b audited. Fixes are not applied in this session (the item is one audit report per session). Next: apply the
 35 findings (separate session, docs only; BACKLOG.md edits last, since it is also the hand-off ledger), then slice 7c
 (`docs/planning/`, `docs/research/`, older `docs/audits/`).
+
+**Fixes applied S853:** 33 of 35 (all but CV1 and CV2, which are code decisions). RO8 and the other ids in RO3 were reworded as not recorded / not re-checked, not settled. AR3's figure is attributed to Learning 347, not re-counted.
