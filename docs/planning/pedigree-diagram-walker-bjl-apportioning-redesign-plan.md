@@ -1,5 +1,7 @@
 # Pedigree Diagram D3 Layout: Complete Walker/Buchheim–Jünger–Leipert Redesign — Architecture & Migration Plan
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Fully executed**: Phases 1a-4 shipped (1a `8ac50a4e6`, cutover `b013c009d`, Phase 4 close-out `909dad20f`); #141 closed 2026-08-21. Later layout work is recorded in other plans. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Suggested path:** `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`
 **Status:** PLANNING ONLY. No production code touched. Implementation begins in a separate future session (Phase 1 below). **This is the critique-repaired final version.** The first draft went through this session's own 3-lens adversarial critique (correctness/failure-mode, migration/blast-radius/TDD, algorithm-fidelity) before publication — see "This plan's own adversarial critique," immediately below, for what it found and how this version responds, matching this project's own established transparency precedent for algorithm-level planning documents.
 **Supersedes/completes:** GitHub issue #141; closes the redirect recorded in `docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md` §11.

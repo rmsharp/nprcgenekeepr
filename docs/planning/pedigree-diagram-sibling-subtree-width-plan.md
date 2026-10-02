@@ -1,5 +1,7 @@
 # Pedigree Diagram: sibling subtree-width asymmetry
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Not implemented as written; superseded.** Its non-rigid-layout spikes (S589, S590; `691071a03`, `f34927198`) found the approach not feasible, and the layout was rebuilt on Walker/BJL apportioning (#141, cutover `b013c009d`) and later a joint QP solver. Whether this plan's asymmetry is resolved was not checked. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** DESIGN, session S588 (2026-08-15). **Decision: COMMIT to a redesign -- recommend
 replacing the current rigid-subtree layout paradigm with a non-rigid/constraint-aware one, scoped as
 a dedicated follow-up effort (§6, §9). This session ships no code -- the plan is the deliverable, per

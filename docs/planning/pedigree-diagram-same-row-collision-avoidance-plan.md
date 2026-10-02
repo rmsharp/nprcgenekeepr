@@ -1,5 +1,7 @@
 # Pedigree Diagram: Same-Row Collision-Avoidance Architecture
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Implemented**: Track 1 (`71ce091c9`), Track 2 (`c7bdbe4bc`) and Track 3 (`da6307bc3`) shipped; #160 and #161 are closed. Track 3's parent-span clamp was later removed when the Walker/BJL layout replaced the old positioning code (`b013c009d`; per the roxygen in `R/makePedigreeDiagramData.R`, not re-checked in code). Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** DESIGN, session S592 (2026-08-15). Not yet implemented — this document is the
 deliverable; implementation is 3+ separate sessions (§6).
 

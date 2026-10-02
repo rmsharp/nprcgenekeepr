@@ -1,5 +1,7 @@
 # Plan — Completing the Shiny-Module Conversion (XARCH-1 / issue #27)
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Fully executed.** All nine phases shipped (S22-S35); the legacy monolith (`inst/application`) was deleted in `24992e0bd` and #27 closed 2026-06-06. `runGeneKeepR()` launches the modular app. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** PLAN (deliverable of Session 21, 2026-06-02). Not yet executed. Implementation happens in later sessions, one phase per session.
 **Author decision basis:** Session 21 `AskUserQuestion` (scope, ORIP/Settings, GU threshold — see §3).
 **Related:** GitHub issue **#27** (Modularize code using shiny modules), issue **#39** (Complete & validate the shinytest2 E2E suite), issue **#34** (Integrate `qcStudbook()` in modInput — *now stale, see §6*), audit findings **XARCH-1/2/7**, **APP-3/7/8/13/14/16/17**, **MISC-9** in `TECH_DEBT_AUDIT_2026-05-30.md`.
