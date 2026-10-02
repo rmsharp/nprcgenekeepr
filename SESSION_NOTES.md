@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 851 Did
+**Deliverable:** compare `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd` and settle what to adopt (IN PROGRESS). Docs only, no TDD phase.
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 850 Did
 **Deliverable, DONE:** brevity pass on the `NEWS.Rmd` dev block; owner reviewed and approved. Docs only, so no TDD phase applies. Claim `eae700925`; edits in the close-out commit.
 **Result:** dev block 4,457 to about 2,500 words (-44%); Major/Minor lists and all 11 sections kept. Related Minor bullets merged (script functions; the "added record" fixes, as S793 advised). Issue numbers kept: the guard test needs exactly one `#168` mention.

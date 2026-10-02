@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S851 claim: compare the owner's `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd` and settle what to adopt (in progress). Docs only.
+
 ### 2026-10-01 · [ad hoc] S850 push: pushed master to origin, `c0632d61d..bd6783a3a` (22 commits, owner-directed; includes the docs-staleness `man/*.Rd` edits and the `NEWS.Rmd` work). CI on `bd6783a3a`: pkgdown, R-CMD-check, test-coverage and lint all completed success.
 
 ### 2026-10-01 · [ad hoc] S850 close-out: brevity pass on the `NEWS.Rmd` dev block, owner-approved: about 4,460 to 2,500 words, Major/Minor lists kept, limits, defaults and caveats kept, related Minor bullets merged, issue numbers kept (guard test needs one `#168`). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `eae700925`. Docs only.

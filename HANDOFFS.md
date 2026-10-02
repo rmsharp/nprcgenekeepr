@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S851
+date: 2026-10-01
+status: pending
+active_task: compare suggested_NEWS_entry.md with the shortened NEWS.Rmd and settle what to adopt (IN PROGRESS). Docs only, no TDD phase.
+```
+
+```handoff
 session: S850
 date: 2026-10-01
 status: complete
