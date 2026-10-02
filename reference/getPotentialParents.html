@@ -71,8 +71,9 @@
 
 <dl><dt id="arg-ped">ped<a class="anchor" aria-label="anchor" href="#arg-ped"></a></dt>
 <dd><p>the pedigree information in data.frame format. Pedigree
-(req. fields: id, sire, dam, gen, population).
-This requires complete pedigree information.</p></dd>
+(req. fields: id, sire, dam, sex, birth, exit, fromCenter; the
+<code>species</code> field is optional). The <code>gen</code> and <code>population</code>
+fields are not used. This requires complete pedigree information.</p></dd>
 
 
 <dt id="arg-minsireage">minSireAge<a class="anchor" aria-label="anchor" href="#arg-minsireage"></a></dt>
@@ -95,7 +96,8 @@ overrides that floor for all female candidates.</p></dd>
 <dt id="arg-minparentage">minParentAge<a class="anchor" aria-label="anchor" href="#arg-minparentage"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated scalar
 minimum parent age. Supplying it sets both <code>minSireAge</code> and
-<code>minDamAge</code>; use those sex-specific parameters instead.</p></dd>
+<code>minDamAge</code>; use those sex-specific parameters instead. Supplying
+<code>NULL</code> disables the age check entirely.</p></dd>
 
 
 <dt id="arg-maxgestationalperiod">maxGestationalPeriod<a class="anchor" aria-label="anchor" href="#arg-maxgestationalperiod"></a></dt>
@@ -135,7 +137,9 @@ and present at the birth instead. Either way, a female who delivered
 another offspring within <code>maxGestationalPeriod</code> days of the focal
 birth is never listed. Candidates are listed only for the parent that is
 missing: when an animal's dam is recorded its <code>dams</code> is empty, and
-when its sire is recorded its <code>sires</code> is empty.</p>
+when its sire is recorded its <code>sires</code> is empty. <code>NULL</code> (not a
+list) is returned when no animal has an unknown parent with a candidate
+and when <code>ped</code> has no <code>fromCenter</code> column.</p>
     </div>
 
     <div class="section level2">

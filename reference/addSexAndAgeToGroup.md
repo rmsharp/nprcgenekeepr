@@ -20,7 +20,9 @@ addSexAndAgeToGroup(ids, ped)
 
 ## Value
 
-Dataframe with Id, Sex, and Current Age
+A data frame with columns `ids`, `sex` and `age` (current age). Every id
+must occur exactly once in `ped$id`; an id that is missing from or
+duplicated in `ped` causes an error rather than an `NA`.
 
 ## Details
 
@@ -37,10 +39,10 @@ data("qcPed")
 df <- addSexAndAgeToGroup(ids = qcBreeders, ped = qcPed)
 head(df)
 #>           ids sex      age
-#> Q0RGP7 Q0RGP7   F 21.63176
-#> C1ICXL C1ICXL   F 10.60917
-#> J3D3N5 J3D3N5   M 25.68104
-#> VFS0XB VFS0XB   M 20.67625
-#> HP3E04 HP3E04   M 19.52361
-#> 2KULR3 2KULR3   F 13.28679
+#> Q0RGP7 Q0RGP7   F 21.63450
+#> C1ICXL C1ICXL   F 10.61191
+#> J3D3N5 J3D3N5   M 25.68378
+#> VFS0XB VFS0XB   M 20.67899
+#> HP3E04 HP3E04   M 19.52635
+#> 2KULR3 2KULR3   F 13.28953
 ```

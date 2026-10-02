@@ -1,9 +1,11 @@
 # Trim a pedigree to a group's ancestors
 
-Filters a pedigree down to only the ancestors of the provided group,
-removing unnecessary individuals from the studbook. This version builds
-the pedigree back in time starting from a group of probands, then moves
-back down the tree trimming off uninformative ancestors.
+Filters a pedigree down to the provided group (the probands) and all of
+their ancestors, removing unnecessary individuals from the studbook. By
+default only that filtering is done. Uninformative founders are removed
+only when `removeUninformative = TRUE`, and single parents are added
+back only when both `removeUninformative` and `addBackParents` are
+`TRUE`.
 
 ## Usage
 
@@ -26,7 +28,7 @@ trimPedigree(
 - ped:
 
   datatable that is the `Pedigree`. It contains pedigree information.
-  The fields `sire` and `dam` are required.
+  The fields `id`, `sire` and `dam` are required.
 
 - removeUninformative:
 
@@ -40,16 +42,19 @@ trimPedigree(
 - addBackParents:
 
   logical defaults to `FALSE`. If set to `TRUE`, the function adds back
-  single parents to the `p` dataframe when one parent is known. The
-  function `addBackSecondParents` uses the `ped` dataframe, which has
-  full complement of parents and the `p` dataframe, which has all
+  single parents to the `p` dataframe when one parent is known. It is
+  ignored unless `removeUninformative = TRUE`. The function
+  `addBackSecondParents` uses the `ped` dataframe, which has full
+  complement of parents and the `p` dataframe, which has all
   uninformative parents removed to add back single parents to the `p`
   dataframe.
 
 ## Value
 
-A pedigree that has been trimmed, had uninformative founders removed and
-single parents added back.
+A pedigree containing the probands and all of their ancestors.
+Uninformative founders are removed only when `removeUninformative` is
+`TRUE`, and single parents are added back only when `addBackParents` is
+also `TRUE`.
 
 ## Examples
 
@@ -57,7 +62,8 @@ single parents added back.
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2,
+  minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

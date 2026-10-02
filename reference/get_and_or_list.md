@@ -21,10 +21,12 @@ get_and_or_list(c_vector, conjunction = "and")
 
 ## Value
 
-A character vector of length one containing the a single correctly
-punctuated character string that list each element in the first
-arguments vector with commas between if there are more than two elements
-with the last two elements joined by the selected conjunction.
+A character vector of length one containing a single correctly
+punctuated character string that lists each element in the first
+argument vector with commas between if there are more than two elements
+with the last two elements joined by the selected conjunction. A
+zero-length input returns an empty string and a single element is
+returned unchanged.
 
 ## Examples
 

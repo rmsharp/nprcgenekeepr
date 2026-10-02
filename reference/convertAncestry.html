@@ -64,7 +64,12 @@
 
 <dl><dt id="arg-ancestry">ancestry<a class="anchor" aria-label="anchor" href="#arg-ancestry"></a></dt>
 <dd><p>character vector or NA with free-form text providing
-information about the geographic population of origin.</p></dd>
+information about the geographic population of origin. Matching ignores
+case and looks for text inside each value: a value containing "chin" but
+not "ind" is CHINESE, one containing "ind" but not "chin" is INDIAN, one
+containing both, or "hyb", is HYBRID, and one containing "jap" is
+JAPANESE. <code>NA</code> is UNKNOWN and anything else is OTHER. For example,
+"Indonesian" is INDIAN.</p></dd>
 
 </dl></div>
     <div class="section level2">

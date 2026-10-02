@@ -23,7 +23,8 @@ filterPairs(
 
   Dataframe of pedigree information that must contain an `id` column and
   a `sex` column. The `id` values should include the animals referenced
-  in `kin`.
+  in `kin`. Pairs involving an animal with a missing sex, or one absent
+  from `ped`, can be silently removed from the result.
 
 - ignore:
 

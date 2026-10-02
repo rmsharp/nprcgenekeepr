@@ -1,6 +1,7 @@
 # Map IDs to Obfuscated IDs
 
-This is not robust as it fails if all IDs are found not within `map`.
+This is not robust: it stops with an error if any ID in `ids` is not one
+of the names of `map`.
 
 ## Usage
 

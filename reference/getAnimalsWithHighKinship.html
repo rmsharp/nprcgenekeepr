@@ -80,34 +80,38 @@ ignored.</p></dd>
 <dt id="arg-currentgroups">currentGroups<a class="anchor" aria-label="anchor" href="#arg-currentgroups"></a></dt>
 <dd><p>list of character vectors of IDs of animals currently
 assigned
-to the group. Defaults to character(0) assuming no groups are existent.</p></dd>
+to the group. Required (no default); use <code>character(0L)</code> when
+no groups exist.</p></dd>
 
 
 <dt id="arg-ignore">ignore<a class="anchor" aria-label="anchor" href="#arg-ignore"></a></dt>
 <dd><p>list of character vectors representing the sex combinations
 to be ignored. If provided, the vectors in the list specify if pairwise
-kinship should be ignored between certain sexes.
-Default is to ignore all pairwise kinship between females.</p></dd>
+kinship should be ignored between certain sexes. Required (no default);
+<code><a href="filterPairs.html">filterPairs()</a></code> itself ignores female-female pairs when called
+directly.</p></dd>
 
 
 <dt id="arg-minage">minAge<a class="anchor" aria-label="anchor" href="#arg-minage"></a></dt>
 <dd><p>integer value indicating the minimum age to consider in group
-formation. Pairwise kinships involving an animal of this age or younger will
-be ignored. Default is 1 year.</p></dd>
+formation. Required (no default). Pairwise kinships involving an animal
+younger than this age are ignored; animals of exactly this age or with a
+missing age are retained.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of named character vectors where each name is an animal Id
-and the character vectors are made up of animals sharing a kinship value
-greater than our equal to the <code>threshold</code> value.</p>
+    <p>A one-dimensional array of mode list (from <code><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply()</a></code>), not a
+plain list. Its names are animal IDs, and each element is a character
+vector of animals sharing a kinship value greater than or equal to the
+<code>threshold</code> value. <code><a href="https://rdrr.io/r/base/names.html" class="external-link">names()</a></code> and <code>[[</code> work as for a list.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">qcPed</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcPed.html">qcPed</a></span></span></span>
 <span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">qcPed</span>,</span></span>
-<span class="r-in"><span>  minParentAge <span class="op">=</span> <span class="fl">2L</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  minSireAge <span class="op">=</span> <span class="fl">2L</span>, minDamAge <span class="op">=</span> <span class="fl">2L</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>

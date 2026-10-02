@@ -93,6 +93,36 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · \[ad hoc\] S850 close-out: brevity pass on the `NEWS.Rmd` dev block, owner-approved: about 4,460 to 2,500 words, Major/Minor lists kept, limits, defaults and caveats kept, related Minor bullets merged, issue numbers kept (guard test needs one `#168`). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `eae700925`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S850 claim: brevity pass on the `NEWS.Rmd` dev block, condensing toward the style of the owner’s `suggested_NEWS_entry.md` while keeping limits, defaults and caveats; owner reviews before commit (in progress).
+
+### 2026-10-01 · \[ad hoc\] S849 close-out: labeled the `NEWS.Rmd` dev block with a Major list then a Minor list in each of 11 sections (sorting owner-approved first); 75 bullets moved whole, three “above” references changed to “below”; `NEWS.md` re-rendered; guard and wordlist tests pass. Brevity pass left for a later session. Claim `8415e4fab`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S849 claim: label the `NEWS.Rmd` dev-block bullets as a Major list then a Minor list in each section; owner approves the sorting before any edit; brevity pass is a later session (in progress).
+
+### 2026-10-01 · \[ad hoc\] S848 close-out: made `NEWS.Rmd` complete and accurate before the owner’s comparison with `suggested_NEWS_entry.md`: named nine post-2.0.0 exports it lacked (marker genotype check/matrix, heterozygosity, parentage exclusion, Fst, twin-file read/check/obfuscate) in five bullets; checked cap, default style, PNG export, kinship2-parity wording; `NEWS.md` re-rendered; guard test passes. BACKLOG draft item rewritten; S845 record trimmed. Claim `82a5dc655`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S848 claim: scope the 3.0.0 NEWS consolidation (owner’s `suggested_NEWS_entry.md` draft vs. the finished `NEWS.Rmd` dev block); scoping only, no NEWS edits (in progress).
+
+### 2026-10-01 · \[ad hoc\] S847 close-out: rewrote the `NEWS.Rmd` Pedigree Diagram section (S845 audit NA2-NA4) as a new feature described against kinship2, about 40 bullets to 13, `NEWS.md` re-rendered; added a BACKLOG item for the two kinship2 features the Diagram lacks (deceased marker, several affected conditions). Claim `de5191418`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S847 claim: condense the Pedigree Diagram section of `NEWS.Rmd` (S845 audit findings NA2-NA4), owner-reviewed in rounds (in progress).
+
+### 2026-10-01 · \[ad hoc\] S846 close-out: fixed the slice-7a `NEWS.Rmd` audit findings (NC1-NC5, NB1-NB4, NB6, ND1-ND3, NA1) in three owner-reviewed rounds; 2.0.0 heading date set to 20260721, `## Package` section and YAML date removed; `NEWS.md` re-rendered; guard test passes. Commit `54130dfe1`, claim `40a1e529f`. NA2-NA4 left for a staged pass. Removed the resolved BACKLOG `## Package` item. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S846 claim: fix the `NEWS.Rmd` docs-staleness audit findings (S845 slice 7a), owner-reviewed in rounds (in progress).
+
+### 2026-10-01 · \[ad hoc\] S845 close-out: docs-staleness audit slice 7a, `NEWS.Rmd` and `NEWS.md` (report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`: 3 moderate, 16 minor, no fixes). Claim `34cf56826`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S845 claim: docs-staleness audit slice 7, `NEWS.Rmd` (in progress); audit report only, no fixes.
+
+### 2026-10-01 · \[ad hoc\] S844 close-out: fixed all 95 slice-6e docs-staleness findings (26 moderate, 69 minor) in `R/*.R` roxygen, 67 files, `man/` regenerated; commits `54c2f64e5`, `ff8f3c941`, `52335a523`, `9c650237f`. Claim `56668e779`. Also records S843’s follow-up `47992f6ae` (re-wrapped three `SESSION_NOTES.md` lines). Docs only; lint 0, wordlist test, `devtools::check(--no-tests)` 0/0/1. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S843 close-out: split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (re-wrap only, no word changed); `context_budget.py` OVER to OK. Claim `f407e5a1c`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S843 claim: trim `SESSION_NOTES.md` long lines (superseded by the close-out entry above).
+
 ### 2026-10-01 · \[ad hoc\] S842 close-out: docs-staleness audit slice 6e, the last 126 `man/` pages (all 267 now audited): 26 moderate, 69 minor, 46 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`; BACKLOG docs-audit item updated (next: fix the 95 findings). Read-only; 23 of 26 moderates re-checked first-hand. Model: Claude Sonnet 5.5.
 
 ### 2026-10-01 · \[ad hoc\] S842 claim: docs-staleness audit slice 6e (superseded by the close-out entry above).

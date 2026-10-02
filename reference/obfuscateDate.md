@@ -1,8 +1,8 @@
 # Obfuscate dates with a random day offset
 
-Get the base_date add a random number of days taken from a uniform
-distribution bounded by -max_delta and max_delta. Insure the resulting
-date is as least as large as the min_date.
+Get the `baseDate` and add a random number of days taken from a uniform
+distribution bounded by -`maxDelta` and `maxDelta`. Insure the resulting
+date is as least as large as the `minDate`.
 
 ## Usage
 
@@ -14,16 +14,19 @@ obfuscateDate(baseDate, minDate, maxDelta = 30L)
 
 - baseDate:
 
-  list of Date objects with dates to be obfuscated
+  vector of Date values with dates to be obfuscated
 
 - minDate:
 
-  list object of Date objects that has the lower bound of resulting
-  obfuscated dates
+  optional vector of Date values, the same length as `baseDate`, that
+  has the lower bound of resulting obfuscated dates. When missing, the
+  lower bound is each `baseDate` minus its `maxDelta`, so the bound
+  never binds.
 
 - maxDelta:
 
-  integer vector that is used to create min and max arguments to `runif`
+  integer vector of length 1 or the same length as `baseDate` that is
+  used to create min and max arguments to `runif`
   (`runif(n, min = 0, max = 1)`)
 
 ## Value

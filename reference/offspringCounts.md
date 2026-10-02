@@ -17,19 +17,22 @@ offspringCounts(probands, ped, considerPop = FALSE)
 - ped:
 
   the pedigree information in datatable format. Pedigree (req. fields:
-  id, sire, dam, gen, population). This is the complete pedigree.
+  id, sire, dam; `population` is also read when `considerPop` is
+  `TRUE`). This is the complete pedigree.
 
 - considerPop:
 
   logical value indication whether or not the number of offspring that
   are part of the focal population are to be counted? Default is
-  `FALSE`.
+  `FALSE`. If `ped` has no `population` column, `considerPop` has no
+  effect and only `totalOffspring` is returned.
 
 ## Value
 
 A dataframe containing the column `totalOffspring` (and
-`livingOffspring` when `considerPop` is `TRUE`), with the animal ids as
-the data frame row names.
+`livingOffspring` when `considerPop` is `TRUE` and `ped` has a
+`population` column). The animal ids are the data frame row names when
+`probands` are unique; duplicated `probands` give sequential row names.
 
 ## Examples
 
@@ -37,7 +40,8 @@ the data frame row names.
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2,
+  minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

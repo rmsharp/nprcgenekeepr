@@ -17,7 +17,9 @@ headerDisplayNames(headers)
 
 ## Value
 
-Updated list of column names
+A character vector the same length as `headers` with the display name
+for each header. The lookup is case sensitive, and a header with no
+display name gives `NA`.
 
 ## Examples
 

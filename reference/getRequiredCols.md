@@ -23,7 +23,7 @@ The required columns are as follows:
 
 - `sex` – factor (levels: "M", "F", "U") Sex specifier for an individual
 
-- `birth` – Date or `NA` (optional) with the individual's birth date
+- `birth` – Date or `NA` with the individual's birth date
 
 ## Examples
 

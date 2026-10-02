@@ -18,13 +18,13 @@ findOffspring(probands, ped)
 - ped:
 
   the pedigree information in datatable format. Pedigree (req. fields:
-  id, sire, dam, gen, population). This requires complete pedigree
-  information.
+  id, sire, dam). This requires complete pedigree information.
 
 ## Value
 
-A named vector containing the offspring counts for each animal in
-`probands`. Rownames are set to the IDs from `probands`.
+A named integer vector containing the offspring counts for each animal
+in `probands`. The names are set to the IDs from `probands`, and an ID
+that is not a parent in `ped` gets 0.
 
 ## Examples
 
@@ -32,7 +32,8 @@ A named vector containing the offspring counts for each animal in
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2,
+  minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

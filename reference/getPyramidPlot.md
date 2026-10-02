@@ -25,7 +25,8 @@ getPyramidPlot(
 
 - binWidth:
 
-  numeric bin width for age groups (default 2).
+  numeric bin width for age groups (default 2). The value is truncated
+  to a whole number and is at least 1, so 0.5 gives 1 and 2.9 gives 2.
 
 - ageUnit:
 
@@ -47,6 +48,15 @@ getPyramidPlot(
 ## Value
 
 The return value of par("mar") when the function was called.
+
+## Details
+
+Only living animals are plotted: when `ped` has an `exit` column,
+animals with a non-`NA` `exit` are dropped, and only animals with sex
+"M" or "F" are counted. The age axis is, however, sized from the oldest
+animal in `ped`, including deceased ones. When `ped` is `NULL` (the
+default), the packaged `qcPed` example data are used. An unrecognized
+`colorScheme` silently falls back to "default".
 
 ## Examples
 

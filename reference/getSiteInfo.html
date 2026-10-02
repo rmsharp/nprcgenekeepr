@@ -69,18 +69,32 @@ configuration is looked for. Default value is <code>TRUE</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of site specific information used by the application.</p>
-<p>Currently this returns the following character strings in a named list.</p><ol><li><p><code>center</code> – One of "SNPRC" or "ONPRC"</p></li>
-<li><p><code>baseUrl</code> – If <code>center</code> is "SNPRC", baseUrl is one of
-"https://boomer.txbiomed.local:8080/labkey" or
-"https://vger.txbiomed.local:8080/labkey".
-To allow testing, if <code>center</code> is "ONPRC" baseUrl is
-"https://boomer.txbiomed.local:8080/labkey".</p></li>
-<li><p><code>schemaName</code> – If <code>center</code> is "SNPRC", schemaName is
-"study". If <code>center</code> is "ONPRC", schemaName is "study"</p></li>
-<li><p><code>folderPath</code> – If <code>center</code> is "SNPRC", folderPath is
-"/SNPRC". If <code>center</code> is "ONPRC", folderPath is "/ONPRC"</p></li>
-<li><p><code>queryName</code> – is "demographics"</p></li>
+    <p>A named list of 20 elements of site specific information used by
+the application.</p>
+<p>The first seven elements (<code>center</code>, <code>baseUrl</code>,
+<code>schemaName</code>, <code>folderPath</code>, <code>queryName</code>,
+<code>lkPedColumns</code> and <code>mapPedColumns</code>) are read from the
+configuration file when one exists. A configuration file that lacks one of
+these keys causes an error ("Could not find ..."). When no configuration
+file exists, the defaults for the ONPRC are returned instead: center
+"ONPRC", baseUrl <code>"https://primeuat.ohsu.edu"</code>, schemaName "study",
+folderPath "/ONPRC/EHR" and queryName "demographics". A warning is
+signaled for the missing file only when <code>expectConfigFile</code> is
+<code>TRUE</code>.</p>
+<p>The returned list contains the following elements.</p><ol><li><p><code>center</code> – center name, such as "ONPRC" or "SNPRC"</p></li>
+<li><p><code>baseUrl</code> – base URL of the LabKey server</p></li>
+<li><p><code>schemaName</code> – LabKey schema name</p></li>
+<li><p><code>folderPath</code> – LabKey folder path</p></li>
+<li><p><code>queryName</code> – LabKey query name, "demographics" by default</p></li>
+<li><p><code>lkPedColumns</code> – LabKey column names for the pedigree</p></li>
+<li><p><code>mapPedColumns</code> – the package column names that
+<code>lkPedColumns</code> are renamed to</p></li>
+<li><p><code>sysname</code>, <code>release</code>, <code>version</code>,
+<code>nodename</code>, <code>machine</code>, <code>login</code>, <code>user</code> and
+<code>effective_user</code> – character strings from <code><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info()</a></code></p></li>
+<li><p><code>homeDir</code> and <code>configFile</code> – the home directory and
+the expected configuration file path, from
+<code><a href="getConfigFileName.html">getConfigFileName</a></code></p></li>
 <li><p><code>requiredCols</code> – the required studbook columns, from
 <code><a href="getRequiredCols.html">getRequiredCols</a></code></p></li>
 <li><p><code>possibleCols</code> – the possible studbook columns, from

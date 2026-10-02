@@ -36,8 +36,11 @@ drawn at random from each of the two animals is identical by descent),
 **not** the coefficient of relatedness *r* (= 2*f* for non-inbred
 animals). Supplying *r* – e.g. 0.25 for half-sibs whose true *f* is
 0.125 – silently corrupts the matrix, so an off-diagonal value above 0.5
-(the maximum for a non-inbred pair) draws a warning here. The exact
-positive-semi-definiteness bound is enforced by
+(the maximum for a non-inbred pair) draws a warning here. It also
+[`stop()`](https://rdrr.io/r/base/stop.html)s on a missing (`NA`) or
+negative `kinship`, on a row whose `id1` equals its `id2`, and on a
+duplicated unordered pair. The exact positive-semi-definiteness bound is
+enforced by
 [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
 once the matrix diagonal is known.
 

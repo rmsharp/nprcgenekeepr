@@ -5,7 +5,8 @@ computed kinship matrix, replacing the pedigree-derived value for the
 named pairs. Each `(id1, id2, kinship)` row sets both `kmat[id1, id2]`
 and its symmetric twin `kmat[id2, id1]`; all other cells are unchanged.
 This is a direct cell replacement – it does not propagate to descendant
-rows.
+rows. A successful call reports the number of overrides applied with a
+[`message()`](https://rdrr.io/r/base/message.html).
 
 ## Usage
 

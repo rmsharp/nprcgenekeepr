@@ -80,7 +80,10 @@ birthdate can be shifted (<code>maxDelta</code>).</p>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
-<dd><p>integer value indicating number of characters in alias IDs</p></dd>
+<dd><p>integer value indicating number of characters in alias IDs.
+IDs that stand for unknown parents get longer aliases when <code>size</code> is
+too short to keep them recognizable as placeholders (see
+<code><a href="obfuscateId.html">obfuscateId</a></code>).</p></dd>
 
 
 <dt id="arg-maxdelta">maxDelta<a class="anchor" aria-label="anchor" href="#arg-maxdelta"></a></dt>
@@ -113,7 +116,17 @@ behavior).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An obfuscated pedigree</p>
+    <p>An obfuscated pedigree: IDs aliased, <code>name</code> set to <code>NA</code>,
+Date columns shifted and <code>age</code> recomputed. With <code>map = TRUE</code>, a
+list holding that pedigree and the alias map.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Any <code>name</code> column is overwritten with <code>NA</code>. Every Date column
+(e.g. <code>birth</code>, <code>exit</code>, <code>death</code>) is shifted, not only the
+birthdate. When the <code>age</code>, <code>birth</code> and <code>exit</code> columns are
+all present and <code>birth</code> is a Date, <code>age</code> is recomputed from the
+shifted dates.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

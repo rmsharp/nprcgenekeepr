@@ -66,13 +66,14 @@ converting columns <code>id</code>, <code>sire</code>, and <code>dam</code>.</p>
 
 
 <dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>a dataframe where the first three columns can be coerced to
+<dd><p>a dataframe. Columns named in <code>headers</code> are converted to
 character.</p></dd>
 
 
 <dt id="arg-headers">headers<a class="anchor" aria-label="anchor" href="#arg-headers"></a></dt>
-<dd><p>character vector with the columns to be converted to
-character class. Defaults to <code>c("id", "sire", "dam")</code>/</p></dd>
+<dd><p>character vector with the names of the columns to be
+converted to character class. Names that are not columns of <code>df</code> are
+skipped silently. Defaults to <code>c("id", "sire", "dam")</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -29,8 +29,11 @@ create_wkbk(file, df_list, sheetnames, replace = FALSE)
 
 ## Value
 
-TRUE if the Excel file was successfully created. FALSE if any errors
-occurred.
+`TRUE` if the Excel file was successfully created. `FALSE`, with a
+warning, if the file already exists and `replace` is `FALSE`. Other
+problems are signaled as errors rather than returned as `FALSE`;
+examples are a number of `sheetnames` that differs from the length of
+`df_list` and an invalid worksheet name.
 
 ## Examples
 
@@ -52,16 +55,16 @@ make_df_list <- function(size) {
 }
 df_list <- make_df_list(3)
 sheetnames <- names(df_list)
-if (any(file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx")))) {
-  file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
-  create_wkbk(
-    file = file.path(tempdir(), "example_excel_wkbk.xlsx"),
-    df_list = df_list,
-    sheetnames = sheetnames,
-    replace = FALSE
-  )
+wkbkFile <- file.path(tempdir(), "example_excel_wkbk.xlsx")
+create_wkbk(
+  file = wkbkFile,
+  df_list = df_list,
+  sheetnames = sheetnames,
+  replace = FALSE
+)
+#> [1] TRUE
+if (file.exists(wkbkFile)) {
+  file.remove(wkbkFile)
 }
-if (any(file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx")))) {
-  file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
-}
+#> [1] TRUE
 ```

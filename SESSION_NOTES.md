@@ -168,6 +168,142 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 850 Did
+
+**Deliverable, DONE:** brevity pass on the `NEWS.Rmd` dev block; owner
+reviewed and approved. Docs only, so no TDD phase applies. Claim
+`eae700925`; edits in the close-out commit. **Result:** dev block 4,457
+to about 2,500 words (-44%); Major/Minor lists and all 11 sections kept.
+Related Minor bullets merged (script functions; the “added record”
+fixes, as S793 advised). Issue numbers kept: the guard test needs
+exactly one `#168` mention. **Verified by me:**
+`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after
+re-render. First pass cut only 25%, so I condensed harder; one pinned
+phrase (“male parent on the left”) had to be restored. **Dropped on
+purpose:** the
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+note, sibling-bar and curve-height sentences, several “includes” asides.
+**Not verified:** full suite and lint (no `.R` changed); condensed
+sentences not re-checked against code. **Reduction:** removed the S847
+evaluation and record.
+
+**Self-assessment: 7/10.** + Read the pinned guard checks before
+writing; showed the result and waited for approval. - My first pass was
+too timid (25%), and my first word count mixed in old text.
+
+**Next steps:** (A) Owner compares `suggested_NEWS_entry.md` with the
+shortened `NEWS.Rmd`. (B) Slice 7b docs audit (READY, Effort L). (C)
+Master is 22 ahead of origin after this commit (20 at last close-out,
+plus claim and close-out); push only on the owner’s say-so.
+
+**Key files:** `NEWS.Rmd:14-354`,
+`tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
+
+**Gotchas:** the Diagram section must keep: the 400/750 cap once, one
+shading entry, one “male parent on the left”, the 113 count with
+“duplicate node” and “bundled”. Re-render `NEWS.md` after edits, then
+run the guard test.
+
+### Session 849 Handoff Evaluation (by Session 850)
+
+**Score: 9/10.** **Helped:** the parser note (reads `##` and `-` only)
+and the pointer to pinned wording. **Missing:** the exactly-one `#168`
+rule, which constrained the pass. **Wrong:** nothing found. **ROI:**
+high.
+
+### What Session 849 Did
+
+**Deliverable, DONE:** labeled the `NEWS.Rmd` dev block: every section
+now has a bold **Major** list then a bold **Minor** list. Docs only, so
+no TDD phase applies. Claim `8415e4fab`; edits in the close-out commit.
+**How:** the owner chose the format (two lists), delayed the brevity
+pass, and approved my sorting table (“go”). A script moved bullets
+whole; no wording changed except three “above” references that became
+“below” (Marker Genetics x2, Mate Pair). **Verified by me:** 75 bullets
+before and after; 11 Major and 11 Minor labels in `NEWS.md`;
+`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after
+re-render. **Not verified:** full suite and lint not run (no `.R`
+changed). **Reduction:** removed the S846 evaluation and record.
+
+**Self-assessment: 8/10.** + Proposed first, applied only after “go”;
+found the directional-wording trap before the owner did. - A BSD
+`sed -i` failure went unnoticed for one step (caught by a count check).
+
+**Next steps:** (A) Brevity pass on `NEWS.Rmd`, to follow the owner’s
+comparison with the draft; the guard test pins wording in the Diagram
+and Ancestry entries, so add checks first. (B) Slice 7b docs audit
+(READY, Effort L). (C) Master is 20 ahead of origin after this commit
+(18 at last close-out, plus claim and close-out); push only on the
+owner’s say-so.
+
+**Key files:** `NEWS.Rmd:14-470` (Major/Minor lists),
+`tests/testthat/test_newsReleaseState.R:96-163` (parser reads `##` and
+`-` only).
+
+**Gotchas:** on macOS use Python, not `sed -i`, for in-place edits. New
+bullets go under the right Major or Minor label. Re-render `NEWS.md`,
+then run the guard test.
+
+### Session 848 Handoff Evaluation (by Session 849)
+
+**Score: 9/10.** **Helped:** the next steps and the note that the
+Breeding Group and Mate Pair splitting was the owner’s call.
+**Missing:** nothing found. **Wrong:** nothing found. **ROI:** high.
+
+### What Session 848 Did
+
+**Deliverable, DONE:** made `NEWS.Rmd` complete and accurate before the
+owner compares it with `suggested_NEWS_entry.md`. Docs only, so no TDD
+phase applies. Claim `82a5dc655`; edits in the close-out commit.
+**Scoping finding:** S793 already reviewed the draft
+(`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`); I did not
+redo it. The `.Rmd` copy no longer exists; only the `.md` remains
+untracked. **Verified by me:** the 400/750 display cap and Rectilinear
+default are in the S847 text; PNG export = `visExport` in
+`R/modPedigree.R`; `test_comparePedigreeStructure.R` and
+`test_newsReleaseState.R` pass. **Gap found and fixed:** 9 exports added
+after v2.0.0 were never named in NEWS (`checkMarkerGenotypeFile`,
+`buildMarkerGenotypeMatrix`, `markerObserved/ExpectedHeterozygosity`,
+`markerParentageExclusion`, `markerFst`,
+`read/check/obfuscateTwinRelations`). Added them to five existing
+bullets (NEWS.Rmd:105-120, 132-165); re-rendered `NEWS.md`; guard and
+wordlist tests pass. The module UI/server exports were left out as
+internal. **Left on purpose:** splitting the long Breeding Group and
+Mate Pair paragraphs (S793 findings S7/S8) is the owner’s call after
+comparing with the draft. BACKLOG item rewritten. **Not verified:** full
+suite and lint not run (no `.R` changed). The “default 2” for
+`maxExclusions` is from roxygen, not a run.
+
+**Self-assessment: 7/10.** + Found a real completeness gap by diffing
+`NAMESPACE` against the v2.0.0 tag. + Reused S793 instead of redoing
+it. - I opened with a menu pick and a scoping reading that S793’s
+Learning 807 warns against; the owner’s question redirected me.
+
+**Next steps:** (A) Owner compares the draft with `NEWS.Rmd` and decides
+what to adopt. (B) Slice 7b internal-docs audit (READY, Effort L). (C)
+Diagram feature decisions. (D) Master is 18 ahead of origin after this
+commit (16 at Orient, plus claim and close-out); push only on the
+owner’s say-so.
+
+**Key files:** `NEWS.Rmd:105-120, 132-165`,
+`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`, `BACKLOG.md`
+(rewritten draft item).
+
+**Gotchas:** `NEWS.Rmd` has a pre-existing over-80 line in the Ancestry
+bullet. Re-render `NEWS.md` after any text edit, then run the guard
+test. Keep `SESSION_NOTES.md` lines at or under 280 B.
+
+### Session 842 Handoff Evaluation (by Session 843)
+
+**Score: 8/10.** Orient measurements held: both ledger frontiers were at
+HEAD, the untracked file was the one it named, and the next-step recipe
+was exact. **What helped:** the explicit ordered options (A)-(C) and the
+“do not ask about `suggested_NEWS_entry.md`” pointer. **Missing:** it
+did not say the dashboard would flag SESSION_NOTES.md as OVER on line
+length, which was the cheapest thing to fix. **Wrong:** its “47 ahead of
+origin” was not re-checked, and CI was already running on the close-out
+commit. **ROI:** high.
+
 ### What Session 842 Did
 
 **Deliverable, DONE:** docs-staleness audit slice 6e, the last 126
@@ -287,19 +423,6 @@ words to `inst/WORDLIST`). `R/runGenekeepr.R` (lowercase k) holds
 `runGeneKeepR`. A blank-line paragraph after a `@param` folds into it,
 so put prose before the first `@param`. Do NOT use `echo ====` in the
 Bash tool (zsh `=` expansion errors).
-
-### Session 809 Handoff Evaluation (by Session 810)
-
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and
-`HANDOFFS.md` frontiers at HEAD, the S809 receipt `status: complete`,
-the 7 untracked files unchanged. Next step (A) was exact: the filter sat
-at `R/modPedigree.R:363`, `headerDisplayNames.R` and the §2.5 documents
-where it said, and the plan §5 Slice 4 list was complete. **Missing:**
-it did not say the Pedigree Browser table shows raw column names (`DT`
-gets the data frame directly), so the “display name” only reaches
-[`headerDisplayNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/headerDisplayNames.md)
-callers such as `a2interactive`; and it did not say `summary_stats.html`
-needs no change. **Wrong:** nothing. **ROI:** high.
 
 ### What Session 810 Did
 
@@ -735,136 +858,3 @@ all 4 workflows were awaited, found by commit sha (the plain
 R-CMD-check (36517811053) all green, R-CMD-check on all 5 legs (macos,
 windows, ubuntu release/devel/oldrel-1); the Pages deploy (36518278161)
 succeeded. This push-record commit stays local.
-
-### Session 805 Handoff Evaluation (by Session 806)
-
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
-= HEAD `abd82c92`, 0 undocumented; the S805 receipt `status: complete`,
-its `quality_ratchet` citation matching `.quality-gates-results.json`
-(results `5deafc2db4bb`, 3,589,736 B); 1 unpushed (the push record); the
-7 untracked files unchanged. The push note was exact, and gotcha 5
-(query runs by id) was used: the 2 runs still going at Orient
-(R-CMD-check 36492193844, test-coverage 36492193789 on `e5e007f8`) were
-re-read at close-out, both green, all 5 R-CMD-check legs. Next step (B)
-listed this session’s item among the owner decisions, accurately.
-**Missing:** nothing S805 could have known; the backlog item’s option
-(2) (from S797) did not say it would miss the one real case in the
-shipped data (`U1`). **ROI:** high.
-
-### What Session 806 Did
-
-**Deliverable, DONE:** a plan, not code:
-`docs/planning/unknown-parent-placeholder-marking-plan.md` for the
-`BACKLOG.md` item “Real animal ids that start with the placeholder
-prefix … are treated as stand-ins for unknown parents” (PED_GV F2 /
-NEW-38, the other half). A planning session (no TDD phase), following
-`ARCHITECTURE_WORKSTREAM.md`. **Owner decisions (AskUserQuestion):** -
-The pick: this item. - The approach, from 4 measured options: “Mark ids
-when they are made” (record which ids the package made, instead of
-guessing from the id’s shape). Rejected: the tighter rule; digits only
-plus new example data; keep the rule and fix the example and help. - The
-scope: write the plan this session. Rejected: a first slice now; the
-tighter rule now. **Measured (plan §1.3, M1-M11):** - The shipped
-`example_ancestry_pedigree.csv` has a real founder `U1`. Today
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-counts 3 female founders instead of 4, and
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-drops it. - The shipped data holds 1,470 distinct `U` ids; every
-stand-in is `U` + 4-5 capitals/digits. I first told the owner “2,934”, a
-figure I had not counted; I corrected it before the owner’s scope
-decision. - The tighter rule (“prefix + at least 4 capitals/digits”)
-changes only `U1`. A full-suite trial with it patched in moved 3
-tests. - `recordStatus` is rebuilt on every QC run, and an attribute is
-lost by [`merge()`](https://rdrr.io/r/base/merge.html)/CSV. A column
-survives CSV, QC, trimming and obfuscation. Adding the column alone
-moved 1 test (`test_qcStudbook.R:105`); a second failure was a trial
-artifact. - Downstream modules get the filtered pedigree
-(`R/appServer.R:312`). **Found, recorded in `BACKLOG.md`:** - (1) New
-item: with “Display Unknown IDs” unticked,
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-stops (“sire and dam must have had alleles assigned”) on `qcPed`, after
-the Genetic Value module’s own steps. - (2)
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-can reuse another animal’s recorded sire id when that sire has no row
-(`R/addUIds.R:46`), making false half-sibs. Added to the placeholder
-item and the PED_GV item; it is the plan’s Slice 2 first fix. - The
-placeholder item now points at the plan and lists the 4 owner decisions
-still needed (D1, D3, D5, D6). **Commits:** - claim `cb4601aa` - plan +
-backlog `2d327d7f` - records (this) **Verification:** - Every claim in
-the plan was printed by a command this session. The two pinned numbers
-it cites exist (`test_getPotentialParents.R:452` 1587,
-`test_calcNeVariance.R:146` 26.405868). - `docs/` and `BACKLOG.md` are
-build-ignored (`.Rbuildignore:15`, `:75`), and no test reads them (grep:
-comment mentions only), so the suite was not run for the commit; the two
-trial runs used the whole suite. -
-`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3749928c8792 · manifest aa983075d6a2`
-(3,589,729 B, measured at `2d327d7f`). - CI on `e5e007f8` (S805’s push,
-`in_progress` at Orient): R-CMD-check green on all 5 legs, test-coverage
-green. **Learnings:** 822. **Reduction:** the owner ran the forced trim
-(`methodology_trim.py --file SESSION_NOTES.md --budget-bytes 65536 --cut 4 --force --write`),
-because these notes put the file at 62,232 B, about 27,414 tokens, over
-the 25,000-token read ceiling, so the pre-commit hook refused the
-records commit. 10 records went to
-`docs/archive/SESSION_NOTES-through-2026-09-28-2.md`; live 62,232 B to
-25,099 B. Its verify script flags only the S806 claim stub (the BL-27
-finalize pattern); checked by hand, the other 12 records in HEAD are
-verbatim in the live file or the shard.
-
-**Self-assessment: 8/10.** - + Measured the shipped data against each
-candidate rule before asking, and so found the real `U1` case. - + Ran
-full-suite trials, so each option came with a test count. - + Checked
-the side finding through the module’s own steps instead of assuming. - +
-Found the
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-reuse by testing a claim I had just written into the plan. - - The
-“2,934” count reached the owner unmeasured (corrected, but it should
-have been counted first). - - One wasted trial run (a sanity check on a
-dataset with no sex/birth columns). - - Two scratch-script slips (a zsh
-glob, an R string escape). - - The planning protocol asks for maximum
-reasoning depth, which I cannot set myself; I told the owner
-`/effort max` exists.
-
-**Next steps:** - (A) The plan’s 4 owner decisions (§11): D1 the column
-name, D3 the fallback rule, D5 bad values, D6 shipped data. Ask them
-first, in plain words, with the plan’s recommendations. If D3 = the
-tighter rule, implement Slice 1 (strict TDD): -
-`R/autoIdFormat.R:109-111`, and
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)’s
-alias length (`R/obfuscateId.R:38-46`) - the 3 moved tests:
-`test_autoIdFormat.R:58`, `test_modPedigree.R:113-169`,
-`test_obfuscateId.R:31` - a `NEWS.Rmd` entry Otherwise start at Slice 2
-(plan §5). - (B) Other items: - the documentation audit’s next slice
-(`BACKLOG.md` “Audit the internal and user-facing documentation”) - the
-new “Display Unknown IDs” /
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-item - jmac, recorded dam, PED_GV roots - (C) Carried: - the
-`CHANGELOG.md`/`HANDOFFS.md` trims (the owner runs the forced write) -
-residue: 7 untracked files - 4 unpushed after this records commit
-(`abd82c92`, claim, plan, records); pushing is the owner’s call; all
-build-ignored
-
-**Key files:** -
-`docs/planning/unknown-parent-placeholder-marking-plan.md` (§1.3
-measurements, §2 inventory with the grep commands, §5 slices, §11
-decisions) - `R/autoIdFormat.R:109-111`, `R/addUIds.R:46`,
-`R/qcStudbook.R:231-232` and `:324-325` - `R/addParents.R:43-44`,
-`R/modPedigree.R:359-361`, `R/appServer.R:312` -
-`tests/testthat/test_qcStudbook.R:105`, `PROJECT_LEARNINGS.md` Learning
-822
-
-**Gotchas:** 1. To trial a rule across the suite, swap the function into
-`asNamespace("nprcgenekeepr")` and
-`as.environment("package:nprcgenekeepr")` (after `load_all`). A wrapper
-around
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-makes `test_qcStudbook.R:443` fail spuriously
-([`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) stubs the
-wrapper). 2. `recordStatus` is rebuilt on every QC run; never read the
-mark from it. 3.
-[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
-rewrites `ego` to `id` anywhere in a header, and lowercases camelCase
-names. 4. `BACKLOG.md` is 54,837 B, 1,913 B under the dashboard’s 56,750
-B read cap. The next few items may push it over (HIGH, with no trim
-remedy: S803 gotcha 2). 5. The full suite’s 1 known failure is
-local-only (the owner’s untracked `vignettes/suggested_NEWS_entry.Rmd`).
-6. STANDING SET unchanged from S790-805.

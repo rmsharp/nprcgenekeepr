@@ -38,6 +38,119 @@ Minimum Handoff Requirements (`SESSION_RUNNER.md` §3D).
 ## Format — a fenced `handoff` block
 
     ```handoff
+    session: S850
+    date: 2026-10-01
+    status: complete
+    self_score: 7
+    predecessor_score: 9
+    active_task: DONE -- brevity pass on the NEWS.Rmd dev block (about 4,460 to 2,500 words, Major/Minor lists kept), owner reviewed and approved. Docs only, no TDD phase.
+    what_was_done: claim eae700925; close-out commit. Merged related Minor bullets, trimmed Major bullets, kept every limit, default and caveat; issue numbers kept because the guard test needs one #168 mention. NEWS.md re-rendered; guard and wordlist tests pass.
+    next_steps: (A) Owner compares suggested_NEWS_entry.md with the shortened NEWS.Rmd. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 22 ahead after this commit.
+    key_files: NEWS.Rmd:14-354, tests/testthat/test_newsReleaseState.R:473-690 (pinned wording).
+    gotchas: Diagram section must keep the 400/750 cap once, one shading entry, one "male parent on the left", and the 113 count with "duplicate node" and "bundled". Re-render NEWS.md, then run the guard test.
+    runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+    changelog_ref: S850 close-out entry
+    commit: the close-out commit that carries this receipt; claim eae700925
+    ```
+
+    ```handoff
+    session: S849
+    date: 2026-10-01
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- labeled the NEWS.Rmd dev block with a Major list then a Minor list in each of 11 sections, sorting approved by the owner first. Docs only, no TDD phase. Brevity pass deliberately not done.
+    what_was_done: claim 8415e4fab; close-out commit. Moved 75 bullets whole (wording unchanged), fixed three "above" references to "below", re-rendered NEWS.md, guard and wordlist tests pass.
+    next_steps: (A) Brevity pass after the owner's comparison with suggested_NEWS_entry.md; add guard checks first because the Diagram and Ancestry wording is pinned. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 20 ahead after this commit.
+    key_files: NEWS.Rmd:14-470, tests/testthat/test_newsReleaseState.R:96-163 (parser reads "## " and "- " only).
+    gotchas: Use Python, not macOS sed -i, for in-place edits. New bullets go under the right Major or Minor label. Re-render NEWS.md after any edit, then run the guard test.
+    runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+    changelog_ref: S849 close-out entry
+    commit: the close-out commit that carries this receipt; claim 8415e4fab
+    ```
+
+    ```handoff
+    session: S848
+    date: 2026-10-01
+    status: complete
+    self_score: 7
+    predecessor_score: 8
+    active_task: DONE -- made NEWS.Rmd complete and accurate before the owner compares it with suggested_NEWS_entry.md. Docs only, no TDD phase. S793 had already reviewed the draft, so no new scoping document was written.
+    what_was_done: claim 82a5dc655; close-out commit. Verified display cap, Rectilinear default, PNG export and the kinship2-parity wording (structure test and guard test pass). Found 9 post-2.0.0 exports absent from NEWS and added them to five existing bullets; NEWS.md re-rendered; BACKLOG draft item rewritten.
+    next_steps: (A) Owner compares the draft with NEWS.Rmd and decides what to adopt. (B) Slice 7b internal-docs audit, READY, Effort L. (C) Owner decisions on the two missing Diagram features. Push only on the owner's say-so; master is 18 ahead after this commit.
+    key_files: NEWS.Rmd:105-120 and 132-165 (new text), docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md, BACKLOG.md (draft item).
+    gotchas: Re-render NEWS.md after any NEWS.Rmd edit, then run test_newsReleaseState.R. One pre-existing over-80 line sits in the Ancestry bullet. The splitting of the Breeding Group and Mate Pair paragraphs was left for the owner.
+    runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+    changelog_ref: S848 close-out entry
+    commit: the close-out commit that carries this receipt; claim 82a5dc655
+    ```
+
+    ```handoff
+    session: S847
+    date: 2026-10-01
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE: rewrote the NEWS.Rmd Pedigree Diagram section (S845 audit NA2-NA4) as a new feature described against kinship2; NEWS.md re-rendered; docs only
+    what_was_done: Claim de5191418; rewrite, BACKLOG item (deceased marker, several affected conditions) and records in the close-out commit. About 40 bullets to 13, no issue numbers. Measured 113 individuals drawn more than once on the 375-animal example (170 markers). Guard and wordlist tests pass
+    next_steps: Slice 7b internal-docs audit (READY, Effort L); or owner decisions on audit code candidates and the two Diagram feature gaps; owner to decide on untracked suggested_NEWS_entry.md. Master 16 ahead of origin, push only on the owner's say-so
+    key_files: NEWS.Rmd:16-105; tests/testthat/test_newsReleaseState.R:197-200,515-600; BACKLOG.md (Diagram-gaps item); vignettes/articles/kinship2-fidelity-validation.qmd:151-166
+    gotchas: test_newsReleaseState.R pins wording (male parent on the left; duplicate node + bundled + count; no every/all/always/each in placement bullets). Re-render NEWS.md after the text, then run the test. Kinship2-parity wording rests on the fidelity article scope, not a re-run
+    ```
+
+    ```handoff
+    session: S846
+    date: 2026-10-01
+    status: complete
+    self_score: 9
+    predecessor_score: 9
+    active_task: DONE: fixed the slice-7a NEWS.Rmd audit findings (owner-reviewed in 3 rounds), NEWS.md re-rendered; docs only
+    what_was_done: Claim 40a1e529f; fixes and re-render 54130dfe1; records in close-out commit. Fixed NC1-NC5, NB1-NB4, NB6, ND1-ND3, NA1; 2.0.0 heading date 20260721, Package section and YAML date removed. Guard test passes. NA2-NA4 not done.
+    next_steps: Condense the Pedigree Diagram section NA2-NA4 in its own staged pass (READY, Effort M); or slice 7b internal-docs audit (READY, Effort L); or owner decisions on audit code candidates. Owner to decide on untracked suggested_NEWS_entry.md. Master 13 ahead of origin at close-out start; push only on owner say-so.
+    key_files: NEWS.Rmd:21-195 (Diagram section); docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md; tests/testthat/test_newsReleaseState.R; R/appServer.R:114 (lead)
+    gotchas: Re-render NEWS.md last after any NEWS.Rmd text change, then run the guard test; check wraps with awk length>80; keep SESSION_NOTES.md lines at or under 280 B.
+    ```
+
+    ```handoff
+    session: S845
+    date: 2026-10-01
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE: docs-staleness audit slice 7a, NEWS.Rmd and NEWS.md; report only (3 moderate, 16 minor); no fixes, no code
+    what_was_done: Claim 34cf56826; report docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md plus records in the close-out commit. Four read-only subagents by line range; moderates and several minors re-checked first-hand (v2.0.0 tag file checks, Rscript run for ND3).
+    next_steps: Fix the NEWS.Rmd findings (delete NC1 and NC2, reword the minors, owner confirms 2.0.0 date), then re-render NEWS.md last (READY, Effort S). Or condense the Pedigree Diagram section (NA2-NA4); or slice 7b internal docs (READY, Effort L). Push of 10 local commits only on the owner's say-so.
+    key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md; NEWS.Rmd:462-468 and 545-550 (NC1, NC2), 311-314 (NB4), 732-734 (ND3), 552 (ND2); R/appServer.R:114 (lead)
+    gotchas: Re-render NEWS.md after the text fixes, not before. Dev-section edits follow the release-state rule. Minor findings NB2, NB6, NC5, NC6, NA1-NA4 rest on agent reads only. Keep SESSION_NOTES.md lines at or under 280 B.
+    ```
+
+    ```handoff
+    session: S844
+    date: 2026-10-01
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE: fixed all 95 slice-6e docs-staleness findings in R/*.R roxygen (67 files), man/ regenerated; docs only, code candidates untouched
+    what_was_done: Claim 56668e779; fixes 54c2f64e5 (RE+RF), ff8f3c941 (RG+RH), 52335a523 (RI+RJ), 9c650237f (RK+RL). Four subagents on disjoint files. Only #' lines changed (diff-checked); lint 0; wordlist test pass; devtools::check(--no-tests) 0/0/1 note. Full suite not run.
+    next_steps: Owner decisions on the audit code candidates (46 slice-6e CE-CL, 22 slice-6d, 8 slice-6c, older). Or docs-audit slice 7: NEWS.Rmd then internal docs (READY, Effort L). Push of 8 local commits only on the owner's say-so.
+    key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md; BACKLOG.md:197; R/makeGroupNum.R (numGp "Default is 1" still stale); R/fillGroupMembersWithSexRatio.R:37 and R/groupAddAssign.R:128 (deprecated minParentAge in examples)
+    gotchas: zsh arrays are 1-indexed (a commit loop mislabeled messages; reset and redone). After document() restore man/nprcgenekeepr-package.Rd. Reword rather than extend inst/WORDLIST. Keep SESSION_NOTES.md lines at or under 280 B. Per-finding wording rests on the agents' source reads.
+    ```
+
+    ```handoff
+    session: S843
+    date: 2026-10-01
+    status: complete
+    self_score: 9
+    predecessor_score: 8
+    active_task: DONE: split the 10 SESSION_NOTES.md lines over the 280 B per-line ceiling; context_budget.py now OK; docs only
+    what_was_done: Claim f407e5a1c; the line split, records and ledger in the close-out commit. Re-wrapped at word boundaries outside backtick spans, no word changed.
+    next_steps: Fix the 95 slice-6e findings in R/*.R roxygen, then devtools::document() and git checkout man/nprcgenekeepr-package.Rd (READY, Effort M). Or owner decisions on the audit code candidates.
+    key_files: SESSION_NOTES.md (former S842/S841 long paragraphs); context_budget.py; .context-budget.json
+    gotchas: Keep every SESSION_NOTES.md line at or under 280 B (awk 'length($0)>280' SESSION_NOTES.md). Master may be ahead of origin; S842's 47-ahead figure was not re-checked.
+    ```
+
+    ```handoff
     session: S842
     date: 2026-10-01
     status: complete

@@ -28,7 +28,10 @@ findPedigreeNumber(id, sire, dam)
 
 Integer vector indicating the pedigree (family group) number for each
 id. Ids that are connected through parent-offspring links share the same
-number; numbering starts at 1.
+number; numbering starts at 1. Numbering starts from ids with both
+parents unknown (`NA`), so an id that cannot be reached from such an id,
+for example one whose only parent is absent from `id`, or one in a
+cycle, is returned as `NA`.
 
 ## Examples
 

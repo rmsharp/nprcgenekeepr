@@ -398,7 +398,7 @@ Funtions designed for interactive use
 - [`getIdsWithOneParent()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIdsWithOneParent.md)
   : Get ids of animals with only one parent
 - [`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
-  : Get the superset of columns that can be in a pedigree file
+  : Get the superset of report-inclusion columns
 - [`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md)
   : Get the direct ancestors of selected animals
 - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
@@ -486,8 +486,7 @@ Funtions designed for interactive use
 - [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
   : Convert a pedigree data frame into visNetwork-ready diagram data
 - [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-  : Combine the Option 2 mating-unit forest into visNetwork-ready
-  diagram data
+  : Combine the mating-unit forest into visNetwork-ready diagram data
 - [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)
   : Make a relation classes table from kinship pairs
 - [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)

@@ -25,7 +25,10 @@ obfuscatePed(
 
 - size:
 
-  integer value indicating number of characters in alias IDs
+  integer value indicating number of characters in alias IDs. IDs that
+  stand for unknown parents get longer aliases when `size` is too short
+  to keep them recognizable as placeholders (see
+  [`obfuscateId`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)).
 
 - maxDelta:
 
@@ -57,7 +60,16 @@ obfuscatePed(
 
 ## Value
 
-An obfuscated pedigree
+An obfuscated pedigree: IDs aliased, `name` set to `NA`, Date columns
+shifted and `age` recomputed. With `map = TRUE`, a list holding that
+pedigree and the alias map.
+
+## Details
+
+Any `name` column is overwritten with `NA`. Every Date column (e.g.
+`birth`, `exit`, `death`) is shifted, not only the birthdate. When the
+`age`, `birth` and `exit` columns are all present and `birth` is a Date,
+`age` is recomputed from the shifted dates.
 
 ## See also
 

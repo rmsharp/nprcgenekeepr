@@ -71,7 +71,8 @@ A list with two data.frames:
 A rule listed in `overriddenRules` still reports its violating pairs –
 with `status` `"overridden"` rather than `"violation"`, never silently
 absent. An `overriddenRules` row that matches no rule in `rules` is an
-error, so a typo cannot silently disable nothing.
+error, so a typo cannot silently disable nothing. Any id in `groups`
+that is absent from `ped$id` stops the function with an error.
 
 ## Examples
 
@@ -84,7 +85,7 @@ ped <- qcStudbook(
     ),
     stringsAsFactors = FALSE, na.strings = c("", "NA")
   ),
-  minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE, reportErrors = FALSE
 )
 rules <- checkAncestryRules(readAncestryRules(
   system.file("extdata", "examples", "example_ancestry_rules.csv",

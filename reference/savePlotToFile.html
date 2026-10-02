@@ -78,7 +78,8 @@ dimensions and resolution.</p>
 
 
 <dl><dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
-<dd><p>A ggplot2 plot object to save. If NULL, returns FALSE.</p></dd>
+<dd><p>A ggplot2 plot object to save. If NULL or not a ggplot2 object,
+returns FALSE.</p></dd>
 
 
 <dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
@@ -86,9 +87,10 @@ dimensions and resolution.</p>
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p>character. Output format: "png", "pdf", or "svg".
-Defaults to "png". If not specified, format is inferred from file
-extension.</p></dd>
+<dd><p>character. Output format, such as "png", "pdf", "svg",
+<code>"jpg"</code>, <code>"jpeg"</code>, or "tiff". Defaults to <code>NULL</code>, in
+which case the format is inferred from the file extension, falling
+back to "png" when the extension is not recognized.</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>

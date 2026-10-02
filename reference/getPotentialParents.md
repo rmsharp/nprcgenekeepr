@@ -20,8 +20,9 @@ getPotentialParents(
 - ped:
 
   the pedigree information in data.frame format. Pedigree (req. fields:
-  id, sire, dam, gen, population). This requires complete pedigree
-  information.
+  id, sire, dam, sex, birth, exit, fromCenter; the `species` field is
+  optional). The `gen` and `population` fields are not used. This
+  requires complete pedigree information.
 
 - minSireAge:
 
@@ -46,7 +47,7 @@ getPotentialParents(
 
   **\[deprecated\]** Deprecated scalar minimum parent age. Supplying it
   sets both `minSireAge` and `minDamAge`; use those sex-specific
-  parameters instead.
+  parameters instead. Supplying `NULL` disables the age check entirely.
 
 - maxGestationalPeriod:
 
@@ -89,7 +90,9 @@ way, a female who delivered another offspring within
 `maxGestationalPeriod` days of the focal birth is never listed.
 Candidates are listed only for the parent that is missing: when an
 animal's dam is recorded its `dams` is empty, and when its sire is
-recorded its `sires` is empty.
+recorded its `sires` is empty. `NULL` (not a list) is returned when no
+animal has an unknown parent with a candidate and when `ped` has no
+`fromCenter` column.
 
 ## Examples
 

@@ -47,10 +47,11 @@ checkCrossCenterMapping(pedA, pedB, mapping)
 A data.frame of every domain problem found, with columns `type`
 (`"existence"`, `"uniqueness"`, `"collision"`, or `"conflict"`), `ids`
 (the offending id(s), as a single comma-separated string), and `message`
-(a human-readable description). Zero rows means the mapping is clean,
-and
+(a human-readable description). Zero rows means none of these four kinds
+of problem was found.
 [`resolveCrossCenterIds`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
-can be called on the same inputs without error.
+can still stop on conflicting values in other columns shared by both
+pedigrees (e.g. `sex`), which this function does not check.
 
 ## Details
 

@@ -27,33 +27,40 @@ getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 - currentGroups:
 
   list of character vectors of IDs of animals currently assigned to the
-  group. Defaults to character(0) assuming no groups are existent.
+  group. Required (no default); use `character(0L)` when no groups
+  exist.
 
 - ignore:
 
   list of character vectors representing the sex combinations to be
   ignored. If provided, the vectors in the list specify if pairwise
-  kinship should be ignored between certain sexes. Default is to ignore
-  all pairwise kinship between females.
+  kinship should be ignored between certain sexes. Required (no
+  default);
+  [`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)
+  itself ignores female-female pairs when called directly.
 
 - minAge:
 
   integer value indicating the minimum age to consider in group
-  formation. Pairwise kinships involving an animal of this age or
-  younger will be ignored. Default is 1 year.
+  formation. Required (no default). Pairwise kinships involving an
+  animal younger than this age are ignored; animals of exactly this age
+  or with a missing age are retained.
 
 ## Value
 
-A list of named character vectors where each name is an animal Id and
-the character vectors are made up of animals sharing a kinship value
-greater than our equal to the `threshold` value.
+A one-dimensional array of mode list (from
+[`tapply()`](https://rdrr.io/r/base/tapply.html)), not a plain list. Its
+names are animal IDs, and each element is a character vector of animals
+sharing a kinship value greater than or equal to the `threshold` value.
+[`names()`](https://rdrr.io/r/base/names.html) and `[[` work as for a
+list.
 
 ## Examples
 
 ``` r
 qcPed <- nprcgenekeepr::qcPed
 ped <- qcStudbook(qcPed,
-  minParentAge = 2L, reportChanges = FALSE,
+  minSireAge = 2L, minDamAge = 2L, reportChanges = FALSE,
   reportErrors = FALSE
 )
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)

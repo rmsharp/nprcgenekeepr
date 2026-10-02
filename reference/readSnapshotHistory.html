@@ -5,13 +5,21 @@ history is the single CSV a colony manager keeps between analyses: one row
 per recorded snapshot in the 27-column version-1 schema (see
 checkSnapshotHistory for the column groups). Excel
 (.xls/.xlsx) and delimited text (.csv/.txt)
-files are both accepted, mirroring readKinshipOverrides."><meta property="og:description" content="Reads a user-maintained longitudinal colony snapshot history (issue #167)
+files are both accepted, mirroring readKinshipOverrides.
+Excel files are read with every column as text, so the numeric columns
+(e.g. schemaVersion) must be converted before
+checkSnapshotHistory will accept them. Delimited text files
+need no such conversion."><meta property="og:description" content="Reads a user-maintained longitudinal colony snapshot history (issue #167)
 from a file into a data frame for checkSnapshotHistory. The
 history is the single CSV a colony manager keeps between analyses: one row
 per recorded snapshot in the 27-column version-1 schema (see
 checkSnapshotHistory for the column groups). Excel
 (.xls/.xlsx) and delimited text (.csv/.txt)
-files are both accepted, mirroring readKinshipOverrides."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+files are both accepted, mirroring readKinshipOverrides.
+Excel files are read with every column as text, so the numeric columns
+(e.g. schemaVersion) must be converted before
+checkSnapshotHistory will accept them. Delimited text files
+need no such conversion."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -68,7 +76,11 @@ history is the single CSV a colony manager keeps between analyses: one row
 per recorded snapshot in the 27-column version-1 schema (see
 <code><a href="checkSnapshotHistory.html">checkSnapshotHistory</a></code> for the column groups). Excel
 (<code>.xls</code>/<code>.xlsx</code>) and delimited text (<code>.csv</code>/<code>.txt</code>)
-files are both accepted, mirroring <code><a href="readKinshipOverrides.html">readKinshipOverrides</a></code>.</p>
+files are both accepted, mirroring <code><a href="readKinshipOverrides.html">readKinshipOverrides</a></code>.
+Excel files are read with every column as text, so the numeric columns
+(e.g. <code>schemaVersion</code>) must be converted before
+<code><a href="checkSnapshotHistory.html">checkSnapshotHistory</a></code> will accept them. Delimited text files
+need no such conversion.</p>
     </div>
 
     <div class="section level2">
@@ -87,7 +99,8 @@ upload, or a path the user's own scripts maintain).</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
-<dd><p>column separator for delimited text files (default <code>","</code>).</p></dd>
+<dd><p>column separator for delimited text files (default <code>","</code>).
+Ignored for Excel files.</p></dd>
 
 </dl></div>
     <div class="section level2">

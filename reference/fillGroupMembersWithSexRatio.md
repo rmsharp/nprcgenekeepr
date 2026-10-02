@@ -1,6 +1,7 @@
 # Form breeding groups to match a target sex ratio
 
-The sex ratio is the ratio of females to males.
+The sex ratio is the number of non-males (females and animals of other
+or unknown sex) per male.
 
 ## Usage
 
@@ -30,8 +31,9 @@ fillGroupMembersWithSexRatio(
 
 - grpNum:
 
-  is a list `numGp` long with each member an integer vector of
-  `1:numGp`.
+  is a list `numGp` long with each member a single integer group number,
+  `1` through `numGp`, as made by
+  [`makeGroupNum`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md).
 
 - kin:
 
@@ -46,24 +48,25 @@ fillGroupMembersWithSexRatio(
 - minAge:
 
   integer value indicating the minimum age to consider in group
-  formation. Pairwise kinships involving an animal of this age or
-  younger will be ignored. Default is 1 year.
+  formation. Pairwise kinships involving an animal younger than this age
+  are ignored; an animal exactly this old is not ignored. There is no
+  default.
 
 - numGp:
 
   integer value indicating the number of groups that should be formed
-  from the list of IDs. Default is 1.
+  from the list of IDs. There is no default.
 
 - sexRatio:
 
-  numeric value indicating the ratio of females to males x from 0.5 to
-  20 by increments of 0.5.
+  numeric value indicating the number of non-males per male. Values from
+  0.5 to 20 in steps of 0.5 are typical, but the range is not enforced.
 
 ## Value
 
-A list containing one character vector of animal IDs such that the sex
-ratio of the group is as close as possible to the ratio specified by
-`sexRatio`.
+The `groupMembers` list, with one character vector of animal IDs per
+group (`numGp` groups), each filled so that its sex ratio is as close as
+possible to the ratio specified by `sexRatio`.
 
 ## Examples
 

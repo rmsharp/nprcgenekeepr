@@ -24,7 +24,8 @@ appendColonySnapshot(history, snapshot)
 - snapshot:
 
   one-row data.frame holding the new snapshot, in the same schema as the
-  history.
+  history. The row count and columns are not checked; rows are bound to
+  the history as given.
 
 ## Value
 

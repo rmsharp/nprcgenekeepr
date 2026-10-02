@@ -78,6 +78,14 @@ are <code>birth</code>, <code>death</code>, and <code>departure</code>.</p></dd>
     <p>A dataframe with an updated pedigree with exit dates specified based
 on date information that was available.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>An <code>exit</code> column is added only when the pedigree has a <code>birth</code>
+column and no <code>exit</code> column. When both <code>death</code> and
+<code>departure</code> are present the exit is the earlier of the two; it is
+<code>NA</code> if neither column exists. A pedigree without a <code>birth</code>
+column, or with no rows, is returned unchanged.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

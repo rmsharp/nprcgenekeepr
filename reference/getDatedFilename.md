@@ -16,13 +16,16 @@ getDatedFilename(filename)
 
 ## Value
 
-A character string with a file name prepended with the date and time in
-YYYY-MM-DD_hh_mm_ss_basename format.
+A character string with `filename` prepended with the current date and
+time. The prefix is
+[`as.character()`](https://rdrr.io/r/base/character.html) of the current
+time with spaces and colons replaced by underscores; it can include
+fractional seconds, for example `2026-10-01_15_39_25.959408_testName`.
 
 ## Examples
 
 ``` r
 library(nprcgenekeepr)
 getDatedFilename("testName")
-#> [1] "2026-10-01_20_54_18.81611_testName"
+#> [1] "2026-10-02_00_37_15.568818_testName"
 ```

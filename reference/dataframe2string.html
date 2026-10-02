@@ -63,11 +63,12 @@
 
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>dataframe</p></dd>
+<dd><p>dataframe
+Rows are joined with newline characters, so the result is one string.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>optional arguments to print or plot methods.</p></dd>
+<dd><p>currently unused; accepted for compatibility with print methods.</p></dd>
 
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
@@ -76,14 +77,16 @@ see print.default.</p></dd>
 
 
 <dt id="arg-addrownames">addRowNames<a class="anchor" aria-label="anchor" href="#arg-addrownames"></a></dt>
-<dd><p>logical (or character vector), indicating whether
-(or what) row names should be printed.</p></dd>
+<dd><p>single logical value. If <code>TRUE</code> (the default), the
+row names of the data frame are printed. Any other value, including a
+character vector, is treated as <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A character vector representation of the data.frame provided to the
-function.</p>
+    <p>A character vector of length one holding the text representation of
+the data.frame provided to the function, with rows separated by newline
+characters.</p>
     </div>
 
     <div class="section level2">

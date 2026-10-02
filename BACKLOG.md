@@ -153,35 +153,21 @@ shared shape is a choices builder plus a modal constructor taking the
 warning text and the namespace. **Known, accepted:** an unhandled
 click-time error ends the Shiny session (Learning 786).
 
-**Decide whether/how to adopt the owner’s
-`suggested_NEWS_entry.md`/`.Rmd` 3.0.0 consolidation draft (raised S791,
-2026-09-27; DECISION NEEDED, Effort M – its own scoping session first)**
-– untracked owner drafts (dated 2026-09-25) propose consolidating the
-WHOLE `NEWS.Rmd` dev-block – every section, not just Pedigree Diagram –
-into short, user-facing feature-group bullets for the eventual 3.0.0
-release note, explicitly replacing the issue-by-issue development
-history the now-complete `NEWS.Rmd` release-state sweep (S788-S792, see
-`CHANGELOG.md`) restated piece by piece. Owner-ratified S791
-disposition: the sweep continued piece by piece as scoped rather than
-merging the draft in; the draft’s own “Rationale” text names connector
-routing, duplicate-node placement, spacing, and mating-symbol
-positioning as content it would condense. Now that the sweep has closed,
-this decision is unblocked: whether to adopt the draft’s consolidated
-style for the actual 3.0.0 release note, when (at release, or before),
-and how it relates to the detailed dev-block entries the sweep just
-finished restating. Files: `suggested_NEWS_entry.md`,
-`vignettes/suggested_NEWS_entry.Rmd` (both untracked, the owner’s own).
-
-**(Optional, owner decision) `NEWS.Rmd`’s `## Package` entry reports the
-PRIOR release, not a change in this one (found S791, 2026-09-27, Effort
-S, low priority)** – `NEWS.Rmd:18`, “CRAN accepted the 2.0.0 submission
-(tagged `v2.0.0`); published 2026-07-26,” describes 2.0.0 itself, not
-anything new in the 2.0.0.9000 development version. Decide: keep it as
-historical context at the top of the dev-block, or delete it now that
-the release-state sweep (S788-S792) has restated every other section’s
-entries as finished-state claims about THIS release. `NEWS.md` was last
-re-rendered S716, so it lags `NEWS.Rmd` and needs a render at the next
-actual release regardless.
+**Owner compares `suggested_NEWS_entry.md` with `NEWS.Rmd` and decides
+what to adopt (DECISION NEEDED – the owner’s own comparison, Effort S-M
+after that)** – S793 already judged the draft idea by idea
+(`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`: 8 adopt, 5
+modify, 1 reject). S848 brought `NEWS.Rmd` up to date first (nine
+post-2.0.0 exports it never named are now covered; display cap, default
+style, parity wording checked), so the comparison starts from a complete
+file; S849 then split each section into Major and Minor lists. S850 then
+shortened the dev block by about 44%. Compare against the shortened
+file. Still open for the owner: split the long Breeding Group and Mate
+Pair paragraphs into bullets (review S7/S8, restore the harem-sire
+caveat, fix the draft’s `candidates` mislabel); use the draft as the
+3.0.0 release-note template (add default style, display cap, twin
+consistency, the bug-fix list); decide whether the draft file is
+committed. Only the `.md` remains, untracked.
 
 **Male-on-the-left placement is stricter in the code’s documentation
 than in real layouts (found S789, 2026-09-27, DECISION NEEDED, Effort S
@@ -348,13 +334,25 @@ code changes, esp. RA3/RA4/RA6 (CA1, CA3), RA8 (CA2), RB10 (CB1), RC7
 (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): the last 126
 `man/` pages, so all 267 are now audited; 26 moderate, 69 minor (RE-RL
 ids) plus 46 code candidates (CE-CL); 23 of the 26 moderates re-run or
-re-read first-hand (not RF2, RH2, RJ3). **Next in this item: fix the 95
-slice-6e findings in `R/*.R` roxygen + `devtools::document()` (READY,
-Effort M; one session, as S835/S837/S839/S841 did).** Then **slice 7:**
-`NEWS.Rmd`, then the internal docs. Four likely code defects the audit
-found (candidate “Upload list” uploads nothing; no-op GU/MK checkboxes;
-`groupAddAssign` roxygen; silent `allele_1/2` genotype drop) are owner
-decisions, DECISION NEEDED, Effort S each, not part of the doc fixes.
+re-read first-hand (not RF2, RH2, RJ3). **All 95 slice-6e findings FIXED
+S844** in the `R/*.R` roxygen + `devtools::document()` (lint 0, spelling
+test and `devtools::check(--no-tests)` pass), documenting today’s
+behavior; the 46 code candidates (CE-CL) are owner decisions, reword the
+docs if the code changes; leftovers: `R/makeGroupNum.R` still says
+`numGp` “Default is 1”, and the examples in
+`R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass
+deprecated `minParentAge`. **Slice 7a AUDITED S845**
+(`docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`): `NEWS.Rmd`
+and `NEWS.md`, 3 moderate (NC1, NC2: “Fixed” bullets for a tab and a
+file that never shipped in 2.0.0; NE1: `NEWS.md` 37 commits stale), 16
+minor; **all FIXED S846** except NA2-NA4, **FIXED S847** (the Diagram
+section rewritten as a new feature described against kinship2; `NEWS.md`
+re-rendered; NB5/NB7 were dropped by S845). **Next in this item: slice
+7b:** the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`,
+`BACKLOG.md`). Four likely code defects the audit found (candidate
+“Upload list” uploads nothing; no-op GU/MK checkboxes; `groupAddAssign`
+roxygen; silent `allele_1/2` genotype drop) are owner decisions,
+DECISION NEEDED, Effort S each, not part of the doc fixes.
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
@@ -700,6 +698,23 @@ anchors):** none – no resolved-narrative section or stub remains, and
 every remaining `##` section holds open items. Regrowth check: 378 lines
 now; the file was 480 lines after S752 and 561 before this pass. The
 next pass is a regrowth check, not a known cut.
+
+**Two kinship2 drawing features the Diagram tab still lacks (found S847,
+2026-10-01; DECISION NEEDED – which pedigree column marks “deceased”,
+Effort M for each; strict TDD for both)** – checked in the source S847
+(`R/makePedigreeDiagramData.R`, `R/modPedigree.R`): (1) **Deceased
+marker:** no diagonal slash is drawn over a deceased animal’s symbol, as
+kinship2 does for a deceased `status`. The pedigree already carries
+`death`, `exit` and `status` columns, so the decision is which of them
+(or a new one) marks an animal deceased, and whether `exit` for a
+transfer must be told apart from death. (2) **More than one affected
+condition:** `affected` is one logical column
+(`R/makePedigreeDiagramData.R:73-85`, one fill color); kinship2 shades
+up to four conditions per animal as separate sections of the symbol,
+with a matching legend. The decision is the input shape (several logical
+columns, or a matrix) and the legend text. Each is its own session; the
+Diagram section of `NEWS.Rmd` says “most of kinship2’s conventions”
+until both ship.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 

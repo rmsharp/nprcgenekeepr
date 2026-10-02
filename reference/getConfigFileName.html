@@ -68,7 +68,11 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Character vector with expected configuration file</p>
+    <p>A named character vector of length two: <code>homeDir</code> is the
+user's home directory and <code>configFile</code> is the expected configuration
+file path. Only <code>sysInfo[["sysname"]]</code> is used, to choose the file
+name (<code>_nprcgenekeepr_config</code> on Windows, otherwise
+<code>.nprcgenekeepr_config</code>).</p>
     </div>
 
     <div class="section level2">

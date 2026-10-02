@@ -16,7 +16,11 @@ print(x, ...)
 
 - x:
 
-  object of class summary.nprcgenekeeprErr and class list
+  object of class summary.nprcgenekeeprErr (from
+  [`summary()`](https://rdrr.io/r/base/summary.html) of a studbook error
+  list) or summary.nprcgenekeeprGV (from
+  [`summary()`](https://rdrr.io/r/base/summary.html) of a genetic value
+  report)
 
 - ...:
 
@@ -26,9 +30,9 @@ print(x, ...)
 
 ## Value
 
-An object to send to the generic print function
+The summary object, returned invisibly after it is printed.
 
-object to send to generic print function
+The summary object, returned invisibly after it is printed.
 
 ## Examples
 

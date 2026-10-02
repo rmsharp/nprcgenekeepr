@@ -20,8 +20,10 @@ calcAge(birth, exit)
 
 ## Value
 
-A numeric vector (`NA` allowed) indicating age in decimal years from
-"birth" to "exit" or the current date if "exit" is NA.
+A numeric vector (`NA` allowed) indicating age in years, rounded to one
+decimal place, from "birth" to "exit" or the current date if "exit" is
+NA. If `birth` has length zero, it is returned unchanged (a `Date`, not
+numeric, vector).
 
 ## Details
 

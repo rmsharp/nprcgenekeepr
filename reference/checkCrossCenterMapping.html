@@ -122,9 +122,10 @@ row per curator-proposed cross-center identity link.</p></dd>
 <code>type</code> (<code>"existence"</code>, <code>"uniqueness"</code>, <code>"collision"</code>,
 or <code>"conflict"</code>), <code>ids</code> (the offending id(s), as a single
 comma-separated string), and <code>message</code> (a human-readable
-description). Zero rows means the mapping is clean, and
-<code><a href="resolveCrossCenterIds.html">resolveCrossCenterIds</a></code> can be called on the same inputs
-without error.</p>
+description). Zero rows means none of these four kinds of problem was
+found. <code><a href="resolveCrossCenterIds.html">resolveCrossCenterIds</a></code> can still stop on conflicting
+values in other columns shared by both pedigrees (e.g. <code>sex</code>), which
+this function does not check.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

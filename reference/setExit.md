@@ -26,6 +26,14 @@ setExit(ped, timeOrigin = as.Date("1970-01-01"))
 A dataframe with an updated pedigree with exit dates specified based on
 date information that was available.
 
+## Details
+
+An `exit` column is added only when the pedigree has a `birth` column
+and no `exit` column. When both `death` and `departure` are present the
+exit is the earlier of the two; it is `NA` if neither column exists. A
+pedigree without a `birth` column, or with no rows, is returned
+unchanged.
+
 ## Examples
 
 ``` r

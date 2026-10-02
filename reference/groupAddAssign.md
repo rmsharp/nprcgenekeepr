@@ -48,8 +48,8 @@ groupAddAssign(
 - currentGroups:
 
   List of character vectors of IDs of animals currently assigned to
-  groups. Defaults to a list with character(0) in each sublist element
-  (one for each group being formed) assuming no groups are prepopulated.
+  groups. Defaults to `list(character(0L))`, a list with a single empty
+  element regardless of `numGp`, assuming no groups are prepopulated.
 
 - threshold:
 
@@ -67,8 +67,9 @@ groupAddAssign(
 - minAge:
 
   Integer value indicating the minimum age to consider in group
-  formation. Pairwise kinships involving an animal of this age or
-  younger will be ignored. Default is 1 year.
+  formation. Pairwise kinships involving an animal younger than this age
+  (by the `age` column of `ped`) are ignored; an animal exactly this old
+  is not ignored. Default is 1 year.
 
 - iter:
 
@@ -87,8 +88,9 @@ groupAddAssign(
 
 - sexRatio:
 
-  Numeric value indicating the ratio of females to males x from 0.5 to
-  20 by increments of 0.5.
+  Numeric value indicating the number of non-males (females and animals
+  of other or unknown sex) per male. Values from 0.5 to 20 in steps of
+  0.5 are typical, but the range is not enforced.
 
 - withKin:
 
@@ -159,17 +161,20 @@ groupAddAssign(
 A list with list items `group`, `score`, `candidates` and optionally
 `groupKin`. The list item `group` contains a list of the best group(s)
 produced during the simulation (an alias for `candidates[[1]]$group`,
-kept for backward compatibility). The list item `score` provides the
-score associated with the group(s) (an alias for
-`candidates[[1]]$score`). The list item `candidates` is a list of up to
-`maxCandidates` distinct candidate solutions (default 5; issue \#125,
-configurable per issue \#146 Slice 1), each a list with its own `group`,
-`score` and, when `withKin = TRUE`, `groupKin`, ordered best-scoring
-first. Candidates are deduplicated by partition content, not by score –
-two trials with the same score but different membership both count as
-distinct candidates; two trials with identical membership count once.
-The list item `groupKin` contains the subset of the kinship matrix that
-is specific for each group formed in the best candidate (an alias for
+kept for backward compatibility). It has `numGp` groups plus a final
+element holding the IDs of the unused candidates, or a bare `NA` if none
+remain. The same holds for each `candidates[[i]]$group`. The list item
+`score` provides the score associated with the group(s) (an alias for
+`candidates[[1]]$score`); it ignores that final element. The list item
+`candidates` is a list of up to `maxCandidates` distinct candidate
+solutions (default 5; issue \#125, configurable per issue \#146 Slice
+1), each a list with its own `group`, `score` and, when
+`withKin = TRUE`, `groupKin`, ordered best-scoring first. Candidates are
+deduplicated by partition content, not by score – two trials with the
+same score but different membership both count as distinct candidates;
+two trials with identical membership count once. The list item
+`groupKin` contains the subset of the kinship matrix that is specific
+for each group formed in the best candidate (an alias for
 `candidates[[1]]$groupKin`). When `exhaustive = TRUE` was requested
 (issue \#146 Slice 2), three additional top-level items are present –
 absent entirely, not merely `NULL`, when `exhaustive = FALSE` (the

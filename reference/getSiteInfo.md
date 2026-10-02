@@ -17,33 +17,51 @@ getSiteInfo(expectConfigFile = TRUE)
 
 ## Value
 
-A list of site specific information used by the application.
+A named list of 20 elements of site specific information used by the
+application.
 
-Currently this returns the following character strings in a named list.
+The first seven elements (`center`, `baseUrl`, `schemaName`,
+`folderPath`, `queryName`, `lkPedColumns` and `mapPedColumns`) are read
+from the configuration file when one exists. A configuration file that
+lacks one of these keys causes an error ("Could not find ..."). When no
+configuration file exists, the defaults for the ONPRC are returned
+instead: center "ONPRC", baseUrl `"https://primeuat.ohsu.edu"`,
+schemaName "study", folderPath "/ONPRC/EHR" and queryName
+"demographics". A warning is signaled for the missing file only when
+`expectConfigFile` is `TRUE`.
 
-1.  `center` – One of "SNPRC" or "ONPRC"
+The returned list contains the following elements.
 
-2.  `baseUrl` – If `center` is "SNPRC", baseUrl is one of
-    "https://boomer.txbiomed.local:8080/labkey" or
-    "https://vger.txbiomed.local:8080/labkey". To allow testing, if
-    `center` is "ONPRC" baseUrl is
-    "https://boomer.txbiomed.local:8080/labkey".
+1.  `center` – center name, such as "ONPRC" or "SNPRC"
 
-3.  `schemaName` – If `center` is "SNPRC", schemaName is "study". If
-    `center` is "ONPRC", schemaName is "study"
+2.  `baseUrl` – base URL of the LabKey server
 
-4.  `folderPath` – If `center` is "SNPRC", folderPath is "/SNPRC". If
-    `center` is "ONPRC", folderPath is "/ONPRC"
+3.  `schemaName` – LabKey schema name
 
-5.  `queryName` – is "demographics"
+4.  `folderPath` – LabKey folder path
 
-6.  `requiredCols` – the required studbook columns, from
+5.  `queryName` – LabKey query name, "demographics" by default
+
+6.  `lkPedColumns` – LabKey column names for the pedigree
+
+7.  `mapPedColumns` – the package column names that `lkPedColumns` are
+    renamed to
+
+8.  `sysname`, `release`, `version`, `nodename`, `machine`, `login`,
+    `user` and `effective_user` – character strings from
+    [`Sys.info()`](https://rdrr.io/r/base/Sys.info.html)
+
+9.  `homeDir` and `configFile` – the home directory and the expected
+    configuration file path, from
+    [`getConfigFileName`](https://github.com/rmsharp/nprcgenekeepr/reference/getConfigFileName.md)
+
+10. `requiredCols` – the required studbook columns, from
     [`getRequiredCols`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)
 
-7.  `possibleCols` – the possible studbook columns, from
+11. `possibleCols` – the possible studbook columns, from
     [`getPossibleCols`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
 
-8.  `includeColumns` – the superset of report-inclusion columns, from
+12. `includeColumns` – the superset of report-inclusion columns, from
     [`getIncludeColumns`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
 
 ## Examples

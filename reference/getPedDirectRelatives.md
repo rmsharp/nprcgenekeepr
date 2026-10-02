@@ -1,7 +1,9 @@
 # Get the direct relatives of selected animals from a pedigree
 
-Gets the direct relatives (ancestors and descendants) of the selected
-animals from the supplied pedigree (`ped`).
+Gets the full connected pedigree component reachable from the selected
+animals in the supplied pedigree (`ped`). The result includes ancestors,
+descendants, and collaterals such as siblings and mates. A `NULL` `ped`
+returns `NULL`.
 
 ## Usage
 
@@ -24,12 +26,15 @@ getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 
   logical vector when `FALSE` the unrelated parents of offspring do not
   get a record as an ego; when `TRUE` they get a place holder record as
-  an ego in which the parent (`sire`, `dam`) IDs are set to `NA`.
+  an ego in which the parent (`sire`, `dam`) IDs are set to `NA`. Place
+  holder records are made for every collected ID that is absent from
+  `ped$id`, including a selected ID that is not in the pedigree.
 
 ## Value
 
-A data.frame of pedigree records for the selected animals and their
-direct relatives (ancestors and descendants) in `ped`.
+A data.frame of pedigree records for the selected animals and the full
+connected pedigree component (ancestors, descendants, siblings and
+mates) in `ped`, or `NULL` when `ped` is `NULL`.
 
 ## See also
 

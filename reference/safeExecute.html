@@ -105,6 +105,13 @@ to the user. Defaults to FALSE.</p></dd>
 error occurs.</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>A warning is also caught. It is logged (unless <code>silent</code> is TRUE) and
+<code>expr</code> is then evaluated a second time with warnings suppressed, so
+<code>expr</code> runs twice when it signals a warning. The value from the
+second evaluation is returned.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="logModuleEvent.html">logModuleEvent</a></code> for logging</p></div>
     </div>
@@ -117,12 +124,12 @@ error occurs.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Returns NULL and logs error</span></span></span>
 <span class="r-in"><span><span class="fu">safeExecute</span><span class="op">(</span><span class="op">{</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Error!"</span><span class="op">)</span> <span class="op">}</span>, module <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-10-01 20:55:09] [ERROR] [test] Error: Error!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-10-02 00:37:50] [ERROR] [test] Error: Error!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Returns custom default on error</span></span></span>
 <span class="r-in"><span><span class="fu">safeExecute</span><span class="op">(</span><span class="op">{</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Error!"</span><span class="op">)</span> <span class="op">}</span>, module <span class="op">=</span> <span class="st">"test"</span>, default <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-10-01 20:55:09] [ERROR] [test] Error: Error!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-10-02 00:37:50] [ERROR] [test] Error: Error!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

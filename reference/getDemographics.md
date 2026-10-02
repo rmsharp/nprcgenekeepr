@@ -1,6 +1,13 @@
 # Get demographic data
 
-This is a thin wrapper around `labkey.selectRows()`.
+This is a thin wrapper around `labkey.selectRows()`. It uses the site
+configuration from
+[`getSiteInfo`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+(the configuration file, or the defaults plus a warning when there is no
+file) and sets the LabKey credentials with
+[`setLabKeyDefaults`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md).
+All columns are returned, including hidden ones, when `colSelect` is
+`NULL`.
 
 ## Usage
 

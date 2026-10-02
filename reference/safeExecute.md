@@ -45,6 +45,13 @@ safeExecute(
 
 The result of evaluating `expr`, or `default` if an error occurs.
 
+## Details
+
+A warning is also caught. It is logged (unless `silent` is TRUE) and
+`expr` is then evaluated a second time with warnings suppressed, so
+`expr` runs twice when it signals a warning. The value from the second
+evaluation is returned.
+
 ## See also
 
 [`logModuleEvent`](https://github.com/rmsharp/nprcgenekeepr/reference/logModuleEvent.md)
@@ -59,11 +66,11 @@ safeExecute({ 2 + 2 }, module = "test")
 
 # Returns NULL and logs error
 safeExecute({ stop("Error!") }, module = "test")
-#> [2026-10-01 20:55:09] [ERROR] [test] Error: Error!
+#> [2026-10-02 00:37:50] [ERROR] [test] Error: Error!
 #> NULL
 
 # Returns custom default on error
 safeExecute({ stop("Error!") }, module = "test", default = data.frame())
-#> [2026-10-01 20:55:09] [ERROR] [test] Error: Error!
+#> [2026-10-02 00:37:50] [ERROR] [test] Error: Error!
 #> data frame with 0 columns and 0 rows
 ```

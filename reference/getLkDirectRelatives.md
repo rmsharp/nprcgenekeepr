@@ -31,7 +31,8 @@ getLkDirectRelatives(ids, unrelatedParents = FALSE)
 
 A data.frame with pedigree structure containing all direct relatives –
 the full connected pedigree component (ancestors, descendants, and
-collaterals) – for the Ids provided.
+collaterals) – for the Ids provided. `NULL` is returned when the LabKey
+data cannot be fetched.
 
 ## See also
 

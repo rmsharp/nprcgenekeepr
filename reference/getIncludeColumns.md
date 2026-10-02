@@ -1,4 +1,4 @@
-# Get the superset of columns that can be in a pedigree file
+# Get the superset of report-inclusion columns
 
 Part of Genetic Value Functions
 
@@ -10,7 +10,11 @@ getIncludeColumns()
 
 ## Value
 
-Superset of columns that can be in a pedigree file.
+A character vector of the ten columns kept in genetic-value reports
+(`id`, `sex`, `age`, `birth`, `exit`, `population`, `condition`,
+`origin`, `first_name` and `second_name`). It is not the set of columns
+a pedigree file may contain; that is returned by
+[`getPossibleCols`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md).
 
 ## Details
 

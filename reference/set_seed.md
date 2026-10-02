@@ -1,8 +1,13 @@
 # Set a reproducible RNG seed across R versions
 
-The change in how `set.seed` works in R 3.6 prompted the creation of
-this R version agnostic replacement to get unit test code to work on
-multiple versions of R in a CICD test build.
+R 3.6 changed how `set.seed` and `sample` work. For R 3.6 and later this
+function calls `set.seed(seed, sample.kind = "Rounding")`, which
+restores the earlier [`sample()`](https://rdrr.io/r/base/sample.html)
+behavior, so results of [`sample()`](https://rdrr.io/r/base/sample.html)
+differ from those after a plain `set.seed(seed)`. For earlier versions
+of R it calls `set.seed(seed)`. This lets unit tests give the same
+results on multiple versions of R in a CICD test build. Messages and
+warnings from `set.seed` are suppressed.
 
 ## Usage
 
@@ -19,12 +24,6 @@ set_seed(seed = 1L)
 ## Value
 
 NULL, invisibly.
-
-## Details
-
-It seems `RNGkind(sample.kind="Rounding")` does not work prior to
-version 3.6 so I resorted to using version dependent construction of the
-argument list to set.seed() in do.call().
 
 ## Examples
 

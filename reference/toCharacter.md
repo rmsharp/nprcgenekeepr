@@ -13,12 +13,13 @@ toCharacter(df, headers = c("id", "sire", "dam"))
 
 - df:
 
-  a dataframe where the first three columns can be coerced to character.
+  a dataframe. Columns named in `headers` are converted to character.
 
 - headers:
 
-  character vector with the columns to be converted to character class.
-  Defaults to `c("id", "sire", "dam")`/
+  character vector with the names of the columns to be converted to
+  character class. Names that are not columns of `df` are skipped
+  silently. Defaults to `c("id", "sire", "dam")`.
 
 ## Value
 

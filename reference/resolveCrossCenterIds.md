@@ -38,7 +38,9 @@ resolveCrossCenterIds(pedA, pedB, mapping)
 
 A single merged pedigree data.frame over the union of `pedA`'s and
 `pedB`'s columns, with one row per distinct animal (mapped pairs
-collapsed to their canonical `idA` id).
+collapsed to their canonical `idA` id). Rows are ordered as the `pedA`
+rows not in the mapping, then the merged mapped pairs, then the `pedB`
+rows not in the mapping.
 
 ## Details
 

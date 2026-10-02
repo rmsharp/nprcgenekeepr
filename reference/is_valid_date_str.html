@@ -84,8 +84,11 @@ Defaults to FALSE.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A logical value or <code>NA</code> indicating whether or not the provided
-character vector represented a valid date string.</p>
+    <p>A logical vector with one element per element of <code>date_str</code>
+(zero-length input gives a zero-length result) indicating whether or not
+each string is a valid date. Elements are <code>NA</code> instead of
+<code>FALSE</code> when <code>optional</code> is <code>TRUE</code>. Numeric input is never
+treated as a date and always gives <code>FALSE</code>.</p>
     </div>
 
     <div class="section level2">

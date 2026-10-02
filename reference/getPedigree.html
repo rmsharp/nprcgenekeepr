@@ -67,12 +67,15 @@
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
-<dd><p>column separator in CSV file</p></dd>
+<dd><p>column separator in CSV file. It is ignored for Excel (xls and
+xlsx) files.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A pedigree file compatible with others in this package.</p>
+    <p>A data.frame of the pedigree as read from the file, with no
+quality control applied (see <code><a href="qcStudbook.html">qcStudbook</a></code>). Every column read
+from an Excel file is returned as character.</p>
     </div>
 
     <div class="section level2">

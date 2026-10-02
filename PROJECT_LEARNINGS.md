@@ -12689,3 +12689,17 @@ always), and “Exhaustive enumeration mode” is offered only when groups =
 roxygen sat near `:362-415`. Also, `test_wordlist_coverage.R` flags new
 words (“unflagged”, “upload’s”) in roxygen: reword rather than extend
 `inst/WORDLIST`.
+
+#### Learning 838
+
+**Describe a new feature against its closest reference, not as a
+changelog of its own development, and read the guard test before
+drafting NEWS text.** (S847, 2026-10-01.) The Pedigree Diagram section
+had grown to about 40 bullets of fix-by-fix history for a feature that
+did not exist in 2.0.0; merging bullets (my first plan) kept that
+altitude. The owner’s reframe (what it matches in kinship2, what it
+adds, what it lacks) cut it to 13 bullets. `test_newsReleaseState.R`
+pins phrases (“male parent on the left”; “duplicate node” with “bundled”
+and the measured count; no “every/all/always/each”) and failed four ways
+on a draft written without reading it. The 113 held when re-run: it
+counts distinct individuals (170 duplicate markers).

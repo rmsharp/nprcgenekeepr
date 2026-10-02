@@ -72,8 +72,10 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A numeric vector (<code>NA</code> allowed) indicating age in decimal years
-from "birth" to "exit" or the current date if "exit" is NA.</p>
+    <p>A numeric vector (<code>NA</code> allowed) indicating age in years,
+rounded to one decimal place, from "birth" to "exit" or the current date if
+"exit" is NA. If <code>birth</code> has length zero, it is returned unchanged
+(a <code>Date</code>, not numeric, vector).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

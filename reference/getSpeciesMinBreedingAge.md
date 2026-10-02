@@ -10,8 +10,10 @@ sex that is not `"M"` or `"F"` – falls back to `default` (2 years, the
 legacy package-wide minimum parent age). Used by the Genetic Value
 Analysis unknown-parent mean-kinship correction to form a focal animal's
 contemporaneous breeding-age peer cohort. The bundled table is populated
-for the common colony NHP species; the user-configurable override path
-is a separate feature.
+for the common colony NHP species; a user's overrides, merged onto the
+bundled table by
+[`loadSpeciesOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md),
+are supplied through `breedingTable` and `default`.
 
 ## Usage
 

@@ -14,7 +14,7 @@ addUIds(ped, format = getAutoIdFormat())
 - ped:
 
   datatable that is the `Pedigree`. It contains pedigree information.
-  The fields `sire` and `dam` are required.
+  The fields `id`, `sire` and `dam` are required.
 
 - format:
 

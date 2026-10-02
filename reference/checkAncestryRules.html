@@ -84,14 +84,15 @@ is acceptable. An empty table (zero rules) is valid.</p>
 <dd><p>data.frame with columns <code>ancestry1</code> and <code>ancestry2</code>
 (standardized ancestry levels) and <code>severity</code> (<code>"block"</code> or
 <code>"flag"</code>); each row is one unordered level pair. Any extra columns
-are ignored.</p></dd>
+are kept in the returned table.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The validated <code>rules</code> data.frame with <code>ancestry1</code> and
 <code>ancestry2</code> coerced to uppercase character and <code>severity</code> to
-lowercase character.</p>
+lowercase character. Leading and trailing white space is trimmed from
+these three columns.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

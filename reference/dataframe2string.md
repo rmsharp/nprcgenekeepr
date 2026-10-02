@@ -12,11 +12,12 @@ dataframe2string(object, ..., digits = NULL, addRowNames = TRUE)
 
 - object:
 
-  dataframe
+  dataframe Rows are joined with newline characters, so the result is
+  one string.
 
 - ...:
 
-  optional arguments to print or plot methods.
+  currently unused; accepted for compatibility with print methods.
 
 - digits:
 
@@ -25,13 +26,15 @@ dataframe2string(object, ..., digits = NULL, addRowNames = TRUE)
 
 - addRowNames:
 
-  logical (or character vector), indicating whether (or what) row names
-  should be printed.
+  single logical value. If `TRUE` (the default), the row names of the
+  data frame are printed. Any other value, including a character vector,
+  is treated as `FALSE`.
 
 ## Value
 
-A character vector representation of the data.frame provided to the
-function.
+A character vector of length one holding the text representation of the
+data.frame provided to the function, with rows separated by newline
+characters.
 
 ## Examples
 

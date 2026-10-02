@@ -1,6 +1,8 @@
 # Summarize a studbook quality-control error list
 
-Summarize a studbook quality-control error list
+Summarizes either a studbook quality-control error list (class
+`nprcgenekeeprErr`) or a genetic value report (class `nprcgenekeeprGV`);
+this page covers both methods.
 
 ## Usage
 
@@ -16,23 +18,27 @@ summary(object, ...)
 
 - object:
 
-  object of class nprcgenekeeprErr and class list
+  object of class nprcgenekeeprErr or nprcgenekeeprGV
 
 - ...:
 
-  additional arguments for the `summary.default` statement
+  currently unused by either method
 
 ## Value
 
-Object of class summary.nprcgenekeeprErr
+For an error list, an object of class summary.nprcgenekeeprErr. It is a
+list with the elements `txt` (a character string describing the problems
+found) and `sp` (the data frame of suspicious parents).
 
-object of class summary.nprcgenekeeprGV
+For a genetic value report, a character vector of class
+summary.nprcgenekeeprGV
 
 ## Examples
 
 ``` r
 errorList <- qcStudbook(nprcgenekeepr::pedOne,
-  minParentAge = 0,
+  minSireAge = 0,
+  minDamAge = 0,
   reportChanges = TRUE,
   reportErrors = TRUE
 )
@@ -60,7 +66,8 @@ summary(errorList)
 #> 4 2015-09-16   -0.18   -9.4
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2L,
+  minSireAge = 2L,
+  minDamAge = 2L,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

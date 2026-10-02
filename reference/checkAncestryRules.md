@@ -22,12 +22,14 @@ checkAncestryRules(rules)
 
   data.frame with columns `ancestry1` and `ancestry2` (standardized
   ancestry levels) and `severity` (`"block"` or `"flag"`); each row is
-  one unordered level pair. Any extra columns are ignored.
+  one unordered level pair. Any extra columns are kept in the returned
+  table.
 
 ## Value
 
 The validated `rules` data.frame with `ancestry1` and `ancestry2`
 coerced to uppercase character and `severity` to lowercase character.
+Leading and trailing white space is trimmed from these three columns.
 
 ## Details
 

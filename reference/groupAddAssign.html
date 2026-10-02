@@ -100,8 +100,8 @@ information including the IDs listed in <code>ids</code>.</p></dd>
 <dt id="arg-currentgroups">currentGroups<a class="anchor" aria-label="anchor" href="#arg-currentgroups"></a></dt>
 <dd><p>List of character vectors of IDs of animals currently
 assigned to groups.
-Defaults to a list with character(0) in each sublist element (one for each
-group being formed) assuming no groups are prepopulated.</p></dd>
+Defaults to <code>list(character(0L))</code>, a list with a single empty
+element regardless of <code>numGp</code>, assuming no groups are prepopulated.</p></dd>
 
 
 <dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
@@ -119,8 +119,9 @@ Default is to ignore all pairwise kinship between females.</p></dd>
 
 <dt id="arg-minage">minAge<a class="anchor" aria-label="anchor" href="#arg-minage"></a></dt>
 <dd><p>Integer value indicating the minimum age to consider in group
-formation. Pairwise kinships involving an animal of this age or younger will
-be ignored. Default is 1 year.</p></dd>
+formation. Pairwise kinships involving an animal younger than this age
+(by the <code>age</code> column of <code>ped</code>) are ignored; an animal exactly
+this old is not ignored. Default is 1 year.</p></dd>
 
 
 <dt id="arg-iter">iter<a class="anchor" aria-label="anchor" href="#arg-iter"></a></dt>
@@ -139,8 +140,9 @@ have a single male at least <code>minAge</code> old.</p></dd>
 
 
 <dt id="arg-sexratio">sexRatio<a class="anchor" aria-label="anchor" href="#arg-sexratio"></a></dt>
-<dd><p>Numeric value indicating the ratio of females to males x
-from 0.5 to 20 by increments of 0.5.</p></dd>
+<dd><p>Numeric value indicating the number of non-males (females
+and animals of other or unknown sex) per male. Values from 0.5 to 20 in
+steps of 0.5 are typical, but the range is not enforced.</p></dd>
 
 
 <dt id="arg-withkin">withKin<a class="anchor" aria-label="anchor" href="#arg-withkin"></a></dt>
@@ -210,9 +212,11 @@ will be called during each iteration to update a
 and optionally <code>groupKin</code>.
 The list item <code>group</code> contains a list of the best group(s) produced
 during the simulation (an alias for <code>candidates[[1]]$group</code>, kept for
-backward compatibility).
+backward compatibility). It has <code>numGp</code> groups plus a final element
+holding the IDs of the unused candidates, or a bare <code>NA</code> if none
+remain. The same holds for each <code>candidates[[i]]$group</code>.
 The list item <code>score</code> provides the score associated with the group(s)
-(an alias for <code>candidates[[1]]$score</code>).
+(an alias for <code>candidates[[1]]$score</code>); it ignores that final element.
 The list item <code>candidates</code> is a list of up to <code>maxCandidates</code>
 distinct candidate solutions (default 5; issue #125, configurable per
 issue #146 Slice 1), each a list with its own <code>group</code>, <code>score</code>

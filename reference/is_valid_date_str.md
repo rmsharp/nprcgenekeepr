@@ -31,8 +31,11 @@ is_valid_date_str(
 
 ## Value
 
-A logical value or `NA` indicating whether or not the provided character
-vector represented a valid date string.
+A logical vector with one element per element of `date_str` (zero-length
+input gives a zero-length result) indicating whether or not each string
+is a valid date. Elements are `NA` instead of `FALSE` when `optional` is
+`TRUE`. Numeric input is never treated as a date and always gives
+`FALSE`.
 
 ## Examples
 

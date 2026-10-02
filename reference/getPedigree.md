@@ -16,11 +16,15 @@ getPedigree(fileName, sep = ",")
 
 - sep:
 
-  column separator in CSV file
+  column separator in CSV file. It is ignored for Excel (xls and xlsx)
+  files.
 
 ## Value
 
-A pedigree file compatible with others in this package.
+A data.frame of the pedigree as read from the file, with no quality
+control applied (see
+[`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)).
+Every column read from an Excel file is returned as character.
 
 ## Examples
 

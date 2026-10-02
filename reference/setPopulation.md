@@ -24,7 +24,7 @@ setPopulation(ped, ids)
 
 An updated pedigree with the `population` column added or updated by
 being set to `TRUE` for the animal IDs in `ped$id` and `FALSE`
-otherwise.
+otherwise. If `ids` is empty, all animals are flagged `TRUE`.
 
 ## Examples
 

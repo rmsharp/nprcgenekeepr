@@ -75,25 +75,31 @@ per known dam, pointing from parent to child.</p>
 <dd><p>data frame with <code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>,
 and <code>gen</code> columns (<code>sire</code>/<code>dam</code> <code>NA</code> for unknown
 parents; <code>gen</code> an integer generation number, 0 for founders, as
-produced by <code><a href="findGeneration.html">findGeneration</a></code>).</p></dd>
+produced by <code><a href="findGeneration.html">findGeneration</a></code>). Two optional columns are
+used when present: a logical <code>affected</code> column, which adds an
+affected-status line to <code>title</code> and fills affected nodes with
+<code>color.background</code> <code>"#CC79A7"</code> (all other nodes are white,
+<code>"#FFFFFF"</code>); and a character <code>name</code> column, which is shown
+in <code>label</code> (long names are truncated) and in <code>title</code>.</p></dd>
 
 
 <dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
 <dd><p>optional data.frame with columns <code>id1</code>,
-<code>id2</code>, <code>code</code> (see <code><a href="checkTwinRelations.html">checkTwinRelations</a></code>) –
-issue #137 D1/D6. Not validated here; validate with
-<code><a href="checkTwinRelations.html">checkTwinRelations</a></code> first. <code>NULL</code> (default) adds no
-connector edges and leaves <code>edges</code> unchanged from the pre-#137
-contract (<code>from</code>, <code>to</code> only).</p></dd>
+<code>id2</code>, <code>code</code> (see <code><a href="checkTwinRelations.html">checkTwinRelations</a></code>). Not
+validated here; validate with <code><a href="checkTwinRelations.html">checkTwinRelations</a></code> first.
+<code>NULL</code> (default) adds no connector edges, so <code>edges</code> has
+only <code>from</code> and <code>to</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with two data frames: <code>nodes</code> (<code>id</code>, <code>label</code>,
-<code>shape</code>, <code>level</code>, <code>title</code>) and <code>edges</code> (<code>from</code>,
-<code>to</code>, plus <code>dashes</code>/<code>label</code>/<code>color</code> when
-<code>twinRelations</code> is supplied). <code>title</code> is an HTML hover-tooltip
-string (issue #135) giving ID, sex, generation, sire, and dam.</p>
+<code>shape</code>, <code>level</code>, <code>title</code>, <code>color.background</code>)
+and <code>edges</code> (<code>from</code>, <code>to</code>, plus
+<code>dashes</code>/<code>label</code>/<code>color</code> when <code>twinRelations</code> is
+supplied). <code>title</code> is an HTML hover-tooltip string giving ID, sex,
+generation, sire, and dam (and affected status and name when those
+optional columns are present).</p>
     </div>
 
     <div class="section level2">

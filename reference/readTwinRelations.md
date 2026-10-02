@@ -26,7 +26,8 @@ readTwinRelations(fileName, sep = ",")
 
 - sep:
 
-  column separator for delimited text files (default `","`).
+  column separator for delimited text files (default `","`). Ignored for
+  Excel files.
 
 ## Value
 

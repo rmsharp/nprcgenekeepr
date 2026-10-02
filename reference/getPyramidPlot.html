@@ -80,7 +80,9 @@ are provided by the nprcgenekeepr package.</p>
 
 
 <dt id="arg-binwidth">binWidth<a class="anchor" aria-label="anchor" href="#arg-binwidth"></a></dt>
-<dd><p>numeric bin width for age groups (default 2).</p></dd>
+<dd><p>numeric bin width for age groups (default 2). The value is
+truncated to a whole number and is at least 1, so 0.5 gives 1 and 2.9
+gives 2.</p></dd>
 
 
 <dt id="arg-ageunit">ageUnit<a class="anchor" aria-label="anchor" href="#arg-ageunit"></a></dt>
@@ -104,6 +106,16 @@ are provided by the nprcgenekeepr package.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The return value of par("mar") when the function was called.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Only living animals are plotted: when <code>ped</code> has an <code>exit</code>
+column, animals with a non-<code>NA</code> <code>exit</code> are dropped, and only
+animals with sex "M" or "F" are counted. The age axis is, however, sized
+from the oldest animal in <code>ped</code>, including deceased ones. When
+<code>ped</code> is <code>NULL</code> (the default), the packaged <code>qcPed</code> example
+data are used. An unrecognized <code>colorScheme</code> silently falls back to
+"default".</p>
     </div>
 
     <div class="section level2">

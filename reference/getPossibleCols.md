@@ -96,6 +96,40 @@ The possible columns are as follows:
   animal where `NA` indicates an intact animal and all other values
   indicate surgical alteration.
 
+- death:
+
+  – Date or `NA` (optional) with the individual's death date.
+
+- departure:
+
+  – Date or `NA` (optional) with the individual's departure date.
+
+- first:
+
+  – character vector or `NA` (optional) with the first value of a
+  genotype pair. The name is reserved; genotype files may not use it.
+
+- second:
+
+  – character vector or `NA` (optional) with the second value of a
+  genotype pair. The name is reserved; genotype files may not use it.
+
+- first_name:
+
+  – character vector or `NA` (optional) with the first value of a
+  genotype pair in the single-locus genotype format.
+
+- second_name:
+
+  – character vector or `NA` (optional) with the second value of a
+  genotype pair in the single-locus genotype format.
+
+- recordStatus:
+
+  – character vector with value `"original"` for records that were in
+  the input and `"added"` for records added for parents that had no
+  record of their own.
+
 - pedNum:
 
   – integer vector indicating generation numbers for each id, starting

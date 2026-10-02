@@ -80,7 +80,10 @@ individual's mother (<code>NA</code> if unknown).</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Integer vector indicating the pedigree (family group) number for
 each id. Ids that are connected through parent-offspring links share the
-same number; numbering starts at 1.</p>
+same number; numbering starts at 1. Numbering starts from ids with both
+parents unknown (<code>NA</code>), so an id that cannot be reached from such an
+id, for example one whose only parent is absent from <code>id</code>, or one in
+a cycle, is returned as <code>NA</code>.</p>
     </div>
 
     <div class="section level2">

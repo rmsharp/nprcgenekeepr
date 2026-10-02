@@ -23,7 +23,8 @@ savePlotToFile(
 
 - plot:
 
-  A ggplot2 plot object to save. If NULL, returns FALSE.
+  A ggplot2 plot object to save. If NULL or not a ggplot2 object,
+  returns FALSE.
 
 - file:
 
@@ -31,8 +32,10 @@ savePlotToFile(
 
 - format:
 
-  character. Output format: "png", "pdf", or "svg". Defaults to "png".
-  If not specified, format is inferred from file extension.
+  character. Output format, such as "png", "pdf", "svg", `"jpg"`,
+  `"jpeg"`, or "tiff". Defaults to `NULL`, in which case the format is
+  inferred from the file extension, falling back to "png" when the
+  extension is not recognized.
 
 - width:
 

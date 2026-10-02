@@ -11,9 +11,11 @@ ages. Rhesus gestation is 210 days (the historical conservative bound;
 typical rhesus gestation is about 165 days, per Vinson &amp;amp; Raboin 2015), and
 rhesus minimum breeding ages are male = 4, female = 2.5. The table is
 populated for the common colony NHP species, with gestation
-values as conservative upper bounds; making the values user-configurable is
-a separate planned enhancement. Extend or adjust it by editing
-data-raw/speciesGestation.R and re-running that script.
+values as conservative upper bounds. A user can override the values
+through a species overrides file named in the site configuration file;
+loadSpeciesOverrides merges that file onto this table.
+To change the bundled table itself, edit
+data-raw/speciesGestation.R and re-run that script.
 species
 – character species name (e.g. "RHESUS").
 
@@ -43,9 +45,11 @@ ages. Rhesus gestation is 210 days (the historical conservative bound;
 typical rhesus gestation is about 165 days, per Vinson &amp;amp; Raboin 2015), and
 rhesus minimum breeding ages are male = 4, female = 2.5. The table is
 populated for the common colony NHP species, with gestation
-values as conservative upper bounds; making the values user-configurable is
-a separate planned enhancement. Extend or adjust it by editing
-data-raw/speciesGestation.R and re-running that script.
+values as conservative upper bounds. A user can override the values
+through a species overrides file named in the site configuration file;
+loadSpeciesOverrides merges that file onto this table.
+To change the bundled table itself, edit
+data-raw/speciesGestation.R and re-run that script.
 species
 – character species name (e.g. "RHESUS").
 
@@ -126,9 +130,11 @@ ages. Rhesus gestation is 210 days (the historical conservative bound;
 typical rhesus gestation is about 165 days, per Vinson &amp; Raboin 2015), and
 rhesus minimum breeding ages are male = 4, female = 2.5. The table is
 populated for the common colony NHP species, with gestation
-values as conservative upper bounds; making the values user-configurable is
-a separate planned enhancement. Extend or adjust it by editing
-<code>data-raw/speciesGestation.R</code> and re-running that script.</p><dl><dt>species</dt>
+values as conservative upper bounds. A user can override the values
+through a species overrides file named in the site configuration file;
+<code><a href="loadSpeciesOverrides.html">loadSpeciesOverrides</a></code> merges that file onto this table.
+To change the bundled table itself, edit
+<code>data-raw/speciesGestation.R</code> and re-run that script.</p><dl><dt>species</dt>
 <dd><p>– character species name (e.g. "RHESUS").</p></dd>
 
 <dt>gestation</dt>

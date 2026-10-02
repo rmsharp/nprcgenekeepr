@@ -70,7 +70,10 @@ not the animal is from the center.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A logical vector specifying TRUE if an animal
-is from the center otherwise FALSE.</p>
+is from the center otherwise FALSE. An <code>NA</code> input stays <code>NA</code>.
+Any other value that is not recognized as a yes or a no (including numbers
+such as <code>1L</code> and empty strings), or that matches both, stops with an
+error naming the offending rows.</p>
     </div>
 
     <div class="section level2">

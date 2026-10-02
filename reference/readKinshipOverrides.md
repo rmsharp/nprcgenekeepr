@@ -12,6 +12,12 @@ export the current matrix, edit a few rows, and feed it back. Excel
 (`.xls`/`.xlsx`) and delimited text (`.csv`/`.txt`) files are both
 accepted, mirroring
 [`getGenotypes`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md).
+Excel files are read with every column as text, so after reading one,
+convert `kinship` with
+[`as.numeric()`](https://rdrr.io/r/base/numeric.html) before calling
+[`checkKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md),
+which requires a numeric column. Delimited text files need no such
+conversion.
 
 ## Usage
 
@@ -28,7 +34,8 @@ readKinshipOverrides(fileName, sep = ",")
 
 - sep:
 
-  column separator for delimited text files (default `","`).
+  column separator for delimited text files (default `","`). Ignored for
+  Excel files.
 
 ## Value
 

@@ -34,6 +34,17 @@ logModuleEvent(module, message, level = "INFO", ...)
 
 Invisible NULL. Called for side effect of logging.
 
+## Details
+
+`"WARN"` and `"ERROR"` entries are always emitted with
+[`message()`](https://rdrr.io/r/base/message.html). `"INFO"` entries are
+written to standard output with
+[`cat()`](https://rdrr.io/r/base/cat.html) only when
+`options(nprcgenekeepr.verbose = TRUE)` is set. `"DEBUG"` entries are
+written the same way only when `options(nprcgenekeepr.debug = TRUE)` is
+set. Otherwise those two levels produce no output. An unrecognized level
+is treated as `"INFO"`.
+
 ## See also
 
 [`safeExecute`](https://github.com/rmsharp/nprcgenekeepr/reference/safeExecute.md)
@@ -45,5 +56,5 @@ for error-safe execution with logging
 logModuleEvent("modInput", "File uploaded successfully")
 logModuleEvent("modPedigree", "Processing %d animals", level = "DEBUG", 100)
 logModuleEvent("modGeneticValue", "Calculation failed", level = "ERROR")
-#> [2026-10-01 20:54:49] [ERROR] [modGeneticValue] Calculation failed
+#> [2026-10-02 00:37:29] [ERROR] [modGeneticValue] Calculation failed
 ```

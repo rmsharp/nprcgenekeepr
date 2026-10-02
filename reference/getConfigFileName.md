@@ -16,7 +16,10 @@ getConfigFileName(sysInfo)
 
 ## Value
 
-Character vector with expected configuration file
+A named character vector of length two: `homeDir` is the user's home
+directory and `configFile` is the expected configuration file path. Only
+`sysInfo[["sysname"]]` is used, to choose the file name
+(`_nprcgenekeepr_config` on Windows, otherwise `.nprcgenekeepr_config`).
 
 ## Examples
 

@@ -12,11 +12,11 @@ chooseDate(d1, d2, earlier = TRUE)
 
 - d1:
 
-  `Date` vector with the first of two dates to compare.
+  single `Date` value, the first of two dates to compare.
 
 - d2:
 
-  `Date` vector with the second of two dates to compare.
+  single `Date` value, the second of two dates to compare.
 
 - earlier:
 
@@ -25,7 +25,9 @@ chooseDate(d1, d2, earlier = TRUE)
 
 ## Value
 
-`Date` vector of chosen dates or `NA` where neither is provided
+A single `Date` value, the chosen date, or `NA` where neither is
+provided. Vectors longer than one are not supported; use `pmin` or
+`pmax`, or `mapply`, for vectors.
 
 ## Details
 
