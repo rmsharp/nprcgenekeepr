@@ -98,30 +98,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
       released 3.0.0.
 
-- [ ] **Male-on-the-left placement: fix the layout so the rule survives the min-separation sweep
-      (cause found S856, owner chose FIX 2026-10-02, READY, Effort M; strict TDD, and the fix
-      REQUIRES full regression testing elsewhere: the whole suite plus the diagram fidelity
-      checks and the placement-sensitive snapshots)** -- the roxygen of `makePedigreeMatingLayout()`
-      (`R/makePedigreeDiagramData.R`, "Male-left/female-right ordering (issue #145) ... is now
-      unconditional") says every simple two-parent mating renders the male on the left. S789
-      measured 227 of 257 mixed-sex units male-left (most exceptions are multi-mate pairs, left to
-      the tree structure on purpose by the issue #145 plan, D5/D9). **Cause of the two one-mate
-      exceptions on `rhesusPedigree` (S856, reproduced; units `__union_28` = BM40IX male x MTSHHY
-      female, and `__union_126` = QL6GH4 male x 3PD3U5 female):** both pass `qualifies()` and are in
-      the S666 correction pass (`R/makePedigreeDiagramData.R:1086-1118`), which does set the right
-      side (after the loop BM40IX 31 / child P2VQJR 31.5; 3PD3U5 59.75 / child V1X2X3 59.25). Then
-      `sweepMinSepBackstop()` (`:1025`, called at `:1119`) enforces the row's minimum separation:
-      the gen-0 row has EZ97J5 30, R3BBV1 30.5, BM40IX 31 (gaps of 0.5 < minSep 1) and the gen-3 row
-      has YJXSIZ 58.75 next to V1X2X3 59.25, so the sweep pushes BM40IX to 32 and V1X2X3 to 60.25,
-      past the child's x. The Decision-1 seeding then reads the side from the children's mean
-      relative to the anchor (`:1263-1266`, the sex rule is only the tie-break), so it puts the
-      mate on the opposite side from the one the correction chose. **To do (a fix session):** RED:
-      a failing test on these two units (the rule held after the sweep), plus a small synthetic
-      fixture with a crowded row; GREEN: make the seeding (or the sweep) keep the sex rule for
-      `qualifies()` units; REFACTOR; then the full unfiltered suite, the diagram fidelity checks
-      and a re-measure of the 227 of 257 figure. Watch for crossing connector lines (the QP keeps
-      each row's rank as a hard constraint), and for the 30 other male-right units, which are
-      multi-mate and out of scope.
+- [ ] **Male-on-the-left for couples whose mate is drawn as a duplicate node (found S857,
+      2026-10-02; DECISION NEEDED, Effort S to find, M to fix)** -- S857 fixed the one-mate,
+      non-duplicate couples (the S666 pass plus the seeding now keep the sex rule through the
+      min-separation sweep). Measured after that fix on `rhesusPedigree` (both edge styles): of 60
+      couples where each parent has exactly one mate, 2 are still male-right, and both are among
+      the 26 whose mate is drawn as a duplicate node: `D0Z114` (M) x `4CHDK1` (F, gen 2, has her
+      own parents `KUENM8` x `E2D59U`) and `V1X2X3` (M) x `SH0L6S` (F, gen 1, has her own parents
+      `L31S6S` x `GYQNV5`). Likely cause (a reading of the code, not traced as S856 did for the first two): the female mate has a parent edge, so she
+      is not a free-pass point and `correctableUnitIds` (`R/makePedigreeDiagramData.R`, the
+      `qualifies(u) && nonAnchorOf[[u]] %in% b1Ids` filter) skips the unit; the seeding then takes
+      the children's-mean side. `makePedigreeMatingLayout()`'s roxygen (`:1604`, "each parent has
+      exactly one mate") covers these; `NEWS.Rmd:59` already says "in most cases". **Decide:** (1)
+      extend the sex rule to the duplicate-mate seeding (a placement change: strict TDD, full
+      suite, diagram fidelity checks, and a before/after comparison of node positions, edge
+      crossings and drawn relations; `.maleFemaleUnitX()` in
+      `tests/testthat/test_maleLeftSweepSurvival.R` is the measuring helper); or (2) reword the
+      roxygen to say the rule covers couples where neither parent is drawn twice. The other male-right couples (26 of 177 on
+      `rhesusPedigree`) are multi-mate, which the issue #145 plan leaves to the tree structure on
+      purpose (`docs/planning/issue145-sire-dam-left-right-placement-plan.md`, D5/D9).
 
 - [ ] **Audit the internal and user-facing documentation for stale information and stale
       diagrams** (owner-requested 2026-09-26; READY, Effort L -- one audit report per session, so

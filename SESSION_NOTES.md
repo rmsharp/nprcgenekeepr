@@ -99,10 +99,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 857 Did
-**Deliverable:** fix male-left placement for qualifying one-mate pairs squeezed by the min-separation sweep (IN PROGRESS). Strict TDD.
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+**Deliverable, DONE:** the diagram layout keeps the male-left rule for the two squeezed `rhesusPedigree` couples (`QL6GH4` x `3PD3U5`, `BM40IX` x `MTSHHY`) and for every one-mate, non-duplicate couple
+the S666 pass handles. Strict TDD, all three gates asked. Claim `acc020703`; RED `62cac01de`; GREEN `c4b383978`; REFACTOR (comments only) and records in the close-out commit.
+**RED:** `tests/testthat/test_maleLeftSweepSurvival.R`, 6 tests (the two named pairs, every simple pair, a pin that the other simple pairs stay male-left; both edge styles). 4 failed
+for the stated reason (male x >= female x, 6 failure lines); the 2 pins passed. **GREEN:** `R/makePedigreeDiagramData.R:1261-1271`: for a unit in `correctableUnitIds` the single-unit mate side is the sex rule, not the
+children's mean (the sweep after the S666 pass can push the anchor past its children). All 6 pass. **REFACTOR:** comments only (header bullet `:1213-1219` updated; note moved beside the condition).
+**Verified by me:** full unfiltered suite on the GREEN code: 363 files, 2,897 tests, 0 failed, 0 error, 187 skipped (S854: 362 / 2,891; +6 = the new tests). After the comment/format edits I re-ran only the 6 related layout files
+(`maleLeftSweepSurvival`, `positionMatingUnitForest`, `makePedigreeMatingLayout`, `makePedigreeDiagramData`, `comparePedigreeStructure`, `addRectilinearWaypoints`): all pass. `lintr::lint_package()`: 0 lints (GREEN code), the edited file re-linted clean.
+**Blast radius, old vs new code on 11 bundled pedigrees x 2 edge styles (22 layouts):** 14 layouts unchanged (smallPed and the 6 example CSVs). Changed: `rhesusPedigree` (31 of 375 animals move, mostly a 120 swap plus
+re-centering of -19..-6), `qcPed` and `pedWithGenotype` (8 couples swap, plus a uniform 1e-4 solver drift on most nodes), `obfuscated_rhesus_mhc_ped` (1 couple swaps; a 56-node block shifts 120). Identical old vs new: edge
+crossings (e.g. 1702, 1542), minimum row gaps, the 72-collision warning on `rhesusPedigree`. Coincident positions are only `__bar`/`__drop` pairs (no two animals share a spot). The drawn parent-child edges (502) and mate pairs
+(237) of `rhesusPedigree` equal the data (also `smallPed`, `qcPed`); one zero-length bar-drop connector in the MHC pedigree flipped direction. Male-right units on `rhesusPedigree`: 30 to 28 of 237; one-mate non-duplicate: 2 to 0.
+**Pictures:** `img/draw_coupleA.png`, `img/draw_coupleB.png` in the session scratchpad (before/after, couple highlighted); chromote screenshots raced visNetwork's auto-fit, so I drew the same coordinates with base graphics.
+**New finding, in BACKLOG (DECISION NEEDED):** 2 one-mate couples whose mate is drawn as a duplicate node stay male-right on `rhesusPedigree` (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`); S789 excluded duplicates, so they are outside this item.
+**Not run:** `devtools::check()`; a live Shiny launch (the function output was rendered instead; the committed shinytest2 e2e files ran in the suite). **NEWS.Rmd:** none (`:59` "in most cases" stays true). Issue #145 was already closed.
+**Reduction:** removed the S853 evaluation and record; wrapped the 4 over-long lines the dashboard flagged.
+**Slips caught:** my first measuring script dropped `__dup_` nodes (64 units, against S789's 237), found by comparing with S789; the first full-suite monitor fired on a Shiny traceback in the log, not on completion (waited for `full.rds`).
+
+**Self-assessment: 8/10.** + All three gates asked; cause traced before fixing; blast radius measured on 22 layouts, with pictures; two further exceptions reported, not buried. - Two rounds lost to chromote screenshots; the full suite
+was not re-run after the comment-only REFACTOR edits (targeted files were).
+
+**Next steps:** (A) Owner decides the duplicate-mate item (BACKLOG "Male-on-the-left for couples whose mate is drawn as a duplicate node"): extend the sex rule (strict TDD) or reword the roxygen. (B) Still open: PED_GV
+decisions, mate-pair residue, CV1/CV2. (C) At release prep: BACKLOG "Move the version to 3.0.0 just before release". (D) Master is 23 ahead of origin after the close-out commit (22 from `git rev-list` plus this one); push only on the owner's say-so.
+
+**Key files:** `R/makePedigreeDiagramData.R:1213-1219,1261-1272`, `tests/testthat/test_maleLeftSweepSurvival.R` (`.maleFemaleUnitX()` helper), `BACKLOG.md:101`.
+
+**Gotchas:** `.maleFemaleUnitX()` traces back through `__jog_` nodes and keeps `__dup_` nodes (dropping them gives a wrong count). Never compare layout x with `==` across code versions: the QP drifts by 1e-4. Full-suite logs hold Shiny tracebacks, so
+wait for the saved results file, not for a non-empty log. To compare old and new code, parse `git show HEAD:R/makePedigreeDiagramData.R` and `assignInNamespace(".positionMatingUnitForest", ...)`.
+
+### Session 856 Handoff Evaluation (by Session 857)
+**Score: 9/10.** **Helped:** the BACKLOG item named the cause with line cites that all held (`:1086-1118`, `:1025`, `:1263-1266`) and the RED/GREEN plan was the one that worked; the Gotchas on `__jog_` and `__dup_` nodes saved a debugging round.
+**Missing:** that the same defect shows in other pedigrees (8 couples in `qcPed`, 1 in the MHC pedigree) and that duplicate-mate couples are a separate case. **Wrong:** "Master 17 ahead" (it was 18 at the next Orient). **ROI:** high.
 
 ### What Session 856 Did
 **Deliverable, DONE:** found the cause of the 2 one-mate `rhesusPedigree` male-on-the-right pairs (BACKLOG male-left item). Read-only investigation; no code or tests changed, so no TDD phase applies. Claim `996cd9d40`; records in the close-out commit.
@@ -113,9 +140,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Not verified:** that fixing these two does not move other diagrams (that is the fix session's regression gate); the 30 male-right units were not individually classified beyond S789's multi-mate explanation.
 **Reduction:** removed the S852 evaluation and record.
 
-**Self-assessment: 8/10.** + Traced to the exact line pair with measurements, not inference; my first analysis script wrongly dropped duplicate nodes and I caught it by the count mismatch against S789. - Several debug rounds; could have printed tier1X before and after the sweep at once.
+**Self-assessment: 8/10.** + Traced to the exact line pair with measurements, not inference; my first analysis script wrongly dropped duplicate nodes
+and I caught it by the count mismatch against S789. - Several debug rounds; could have printed tier1X before and after the sweep at once.
 
-**Next steps:** (A) Fix session (strict TDD, ask each gate): BACKLOG "Male-on-the-left placement: fix the layout", READY, Effort M. (B) Still open: CV1/CV2, PED_GV decisions, mate-pair residue. (C) Master is 17 ahead of origin after the close-out commit (16 at the last count plus claim plus this); push only on the owner's say-so.
+**Next steps:** (A) Fix session (strict TDD, ask each gate): BACKLOG "Male-on-the-left placement: fix the layout", READY, Effort M. (B) Still open:
+CV1/CV2, PED_GV decisions, mate-pair residue. (C) Master is 17 ahead of origin after the close-out commit (16 at the last count plus claim plus this);
+push only on the owner's say-so.
 
 **Key files:** `R/makePedigreeDiagramData.R:951-969` (`qualifies`), `:1086-1118` (S666 correction), `:1025,1119` (`sweepMinSepBackstop`), `:1263-1266` (seeding side), `tests/testthat/test_positionMatingUnitForest.R`.
 
@@ -128,7 +158,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ### What Session 855 Did
 **Deliverable, DONE:** recorded the owner's release-number decision (next release is **3.0.0**) as a pre-release BACKLOG item. Docs only, so no TDD phase applies.
 Claim `2d7189745`; edits and records in the close-out commit.
-**Changed:** only `BACKLOG.md`. The owner chose 3.0.0; I wrongly also bumped `DESCRIPTION` (an option I invented), and the owner corrected it. All version files were reverted to 2.0.0.9000; the "Decide the release number" item became "Move the version to 3.0.0 just before release".
+**Changed:** only `BACKLOG.md`. The owner chose 3.0.0; I wrongly also bumped `DESCRIPTION` (an option I invented), and the owner corrected it. All
+version files were reverted to 2.0.0.9000; the "Decide the release number" item became "Move the version to 3.0.0 just before release".
 **Verified by me:** `git diff 2d7189745 -- DESCRIPTION NEWS.Rmd NEWS.md README.md ROADMAP.md` is empty (versions back to the claim state).
 **Not run:** full suite, `devtools::check()`, lint (no `.R` changed). The snapshot tests' "2.0.0.9000" strings are fixture data and were left alone on purpose.
 **Slip (mine):** my follow-up question offered "Bump DESCRIPTION now", which the owner never asked for; I acted on it. Reverted at the owner's direction.
@@ -136,7 +167,9 @@ Claim `2d7189745`; edits and records in the close-out commit.
 
 **Self-assessment: 8/10.** + Reverted cleanly and fast. - Invented an option the owner had not asked for and edited 6 files on it; the deliverable was a one-line decision record.
 
-**Next steps:** (A) Owner picks another decision: PED_GV items, mate-pair guardrails residue, male-left placement, CV1/CV2. (B) At release prep: the new BACKLOG item "Move the version to 3.0.0 just before release". (C) Master is 16 ahead of origin after the close-out commit (13 at Orient plus the claim, plus this one); push only on the owner's say-so.
+**Next steps:** (A) Owner picks another decision: PED_GV items, mate-pair guardrails residue, male-left placement, CV1/CV2. (B) At release prep: the
+new BACKLOG item "Move the version to 3.0.0 just before release". (C) Master is 16 ahead of origin after the close-out commit (13 at Orient plus the
+claim, plus this one); push only on the owner's say-so.
 
 **Key files:** `BACKLOG.md` (grep "Move the version to 3.0.0").
 
@@ -169,35 +202,6 @@ all four gates asked. - Did not add a test for the `getDateErrorsAndConvertDates
 
 **Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (roxygenise regenerates it with extra tab text); I reverted it, so the next roxygenise
 will show that diff again. Not in scope here; commit it deliberately in a docs pass.
-
-### Session 853 Handoff Evaluation (by Session 854)
-**Score: 8/10.** **Helped:** the explicit "owner decisions still open" list and the BACKLOG grep strings got me to the item in one read; the `Reduction:` line
-showed what to trim. **Missing:** which owner decisions were smallest (I picked by size). **Wrong:** the "Master 10 ahead" count was approximate (labelled so). **ROI:** high.
-
-### What Session 853 Did
-**Deliverable, DONE:** applied the slice-7b docs-staleness findings (33 of 35). Docs only, so no TDD phase applies. Claim `144d140cb`; fixes
-`61577e834` (ROADMAP, CLAUDE.md, module-contract, conventions) and the close-out commit (`BACKLOG.md`, records).
-**Fixed:** all of RO1-RO10 (`ROADMAP.md`: alias direction, shipped 2.0.0, done audit follow-ups, articles list, stale paths), CL1-CL3, AR1-AR3, CV3,
-CV4, and every BA/BB id in `BACKLOG.md` (re-located by name, each cite re-checked against code; PDF state and regrowth figure 378 to 599 corrected).
-**Not fixed, on purpose:** CV1 and CV2 (code decisions: add an `@examples` to `getGeneticDiversityStats()`, fix the `savePlotToFile` example). RO8
-(Quarto slices 3-4) and the other ids in RO3 could not be checked, so the text now says "not recorded" / "not re-checked". AR3's "about 53" is
-attributed to Learning 347, not re-counted.
-**Verified by me:** every changed cite re-read against the code; `test_wordlist_coverage.R` and `test_rbuildignore.R` pass; `context_budget.py` OK.
-**Not run:** full suite, lint (no `.R` changed). I introduced and fixed one typo ("their their") in `CLAUDE.md`.
-**Reduction:** removed the S850 evaluation and record.
-
-**Self-assessment: 8/10.** + Re-verified each BACKLOG cite instead of trusting the report's numbers (the `modPedigree.R` legend range needed a fresh
-look); kept `CLAUDE.md` growth to 180 B. - Said "status not recorded" for RO8 where a quick git search of Quarto slice commits might have settled it.
-
-**Next steps:** (A) Slice 7c: `docs/planning/` (84 files), `docs/research/`, older `docs/audits/` (dated records; scope with the owner first). (B)
-Owner decisions still open: release number (3.0.0 vs 2.0.0.9000); CV1/CV2; the male-left placement item. (C) Master is 10 ahead of origin after the
-close-out commit (9 at this writing plus close-out; from `git rev-list`); push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md` (finding ids), `BACKLOG.md` docs-audit item (grep "Slice 7b AUDITED"),
-`BACKLOG.md` regrowth check (grep "Regrowth check (S853)").
-
-**Gotchas:** `BACKLOG.md` is 599 lines and regrowing; the docs-audit and chromote items are the next compression candidates. `ROADMAP.md` still has
-two "not re-checked" statements (Quarto slices 3-4, five audit ids); do not read them as verified.
 
 ### What Session 842 Did
 **Deliverable, DONE:** docs-staleness audit slice 6e, the last 126 `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): 26 moderate, 69 minor, 46 code candidates; all 267 pages now audited. Read-only; no code or tests, so no TDD phase applies.

@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S857
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- male-left placement fix (strict TDD): keep the sex rule through sweepMinSepBackstop()
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- male-left placement fix (strict TDD, three gates asked): in the Decision-1 seeding a unit the S666 pass handled takes the sex rule, so the min-separation sweep can no longer flip the mate side; the 2 squeezed rhesusPedigree couples (and 8 in qcPed, 1 in the MHC pedigree) now draw male-left
+what_was_done: claim acc020703; RED 62cac01de (test_maleLeftSweepSurvival.R, 6 tests, 4 failing as designed); GREEN c4b383978 (R/makePedigreeDiagramData.R seeding, 5 lines); REFACTOR comments and records in the close-out commit. Full unfiltered suite 363 files / 2897 tests, 0 failed, 0 error; lint_package 0; blast radius measured on 22 layouts (crossings, row gaps, drawn relations unchanged); pictures in the scratchpad
+next_steps: (A) Owner decides the BACKLOG duplicate-mate item (2 rhesusPedigree couples with a duplicate-node mate stay male-right): extend the rule (strict TDD) or reword roxygen. (B) Open: PED_GV decisions, mate-pair residue, CV1/CV2. (C) Release prep: BACKLOG item Move the version to 3.0.0. (D) Master 23 ahead of origin; push only on owner say-so
+key_files: R/makePedigreeDiagramData.R:1213-1219,1261-1272; tests/testthat/test_maleLeftSweepSurvival.R; BACKLOG.md:101
+gotchas: .maleFemaleUnitX() must trace through __jog_ and keep __dup_ nodes; never compare layout x with == across versions (QP drift 1e-4); full-suite logs contain Shiny tracebacks, wait for the results file; devtools::check() and a live app launch not run
 ```
 
 ```handoff
