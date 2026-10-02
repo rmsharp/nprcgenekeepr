@@ -60,7 +60,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-02 · [ad hoc] S855 close-out: owner decided the next release is 3.0.0; `DESCRIPTION` set to 2.99.0.9000, `NEWS.Rmd`/`NEWS.md` heading, `README.md`, `ROADMAP.md` aligned; the BACKLOG decision item removed. Metadata only.
+### 2026-10-02 · [ad hoc] S855 close-out: owner decided the next release is 3.0.0; recorded as BACKLOG item "Move the version to 3.0.0 just before release". A version bump I made beyond that was reverted at the owner's direction; version files unchanged.
 
 ### 2026-10-02 · [ad hoc] S855 claim: record the owner's release-number decision (3.0.0) and align the version metadata (in progress). Docs and metadata only.
 

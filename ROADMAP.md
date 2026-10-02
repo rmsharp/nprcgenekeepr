@@ -8,7 +8,7 @@ The modular architecture — `modInput`, `modPedigree`, `modPyramid`, `modGeneti
 files), with `appServer`/`appUI` orchestrating module communication — is now
 canonical, and the legacy monolith has been retired: `inst/application/` is deleted and
 `runModularApp()` is a deprecated alias for `runGeneKeepR()`. Version 2.0.0 is tagged
-(`v2.0.0`); the package is now at 2.99.0.9000 (releases as 3.0.0). Remaining work is integration testing
+(`v2.0.0`); the package is now at 2.0.0.9000. Remaining work is integration testing
 (see Planned) and any CRAN follow-up.
 
 ## Planned
@@ -31,7 +31,7 @@ canonical, and the legacy monolith has been retired: `inst/application/` is dele
   the set has since grown (see `vignettes/articles/` for the current list). Adding more is a
   drop-in `.qmd` (no new config), each verified the same way.
   **Slices 3 and 4** (the manual leaving the CRAN vignette set): status not recorded here; the
-  manual is still a CRAN vignette (`a3manual.Rmd`) at 2.99.0.9000 (releases as 3.0.0).
+  manual is still a CRAN vignette (`a3manual.Rmd`) at 2.0.0.9000.
 - **Audit follow-ups** (full findings in `PED_GV_AUDIT_2026-05-30.md`; the judged status of each
   id is in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`, and what is still open is in the
   PED_GV item of `BACKLOG.md`). The earlier list here (NEW-53, NEW-20 and the

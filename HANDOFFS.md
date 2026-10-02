@@ -35,11 +35,11 @@ date: 2026-10-02
 status: complete
 self_score: 8
 predecessor_score: 8
-active_task: DONE -- owner chose 3.0.0 for the next release; DESCRIPTION set to 2.99.0.9000 (pre-release form), NEWS.Rmd/NEWS.md heading, README.md, ROADMAP.md and BACKLOG.md aligned
-what_was_done: claim 2d7189745; version edits (6 files) and records in the close-out commit. Version-related tests pass under load_all; full suite, check and lint not run (no R code changed)
-next_steps: (A) Owner picks another decision (PED_GV items, mate-pair residue, male-left placement, CV1/CV2). (B) Release prep: DESCRIPTION to 3.0.0, retitle NEWS block, re-render README after reinstalling. (C) Master 15 ahead of origin; push only on owner say-so
-key_files: DESCRIPTION:4, NEWS.Rmd:14, NEWS.md:5, README.md:8, ROADMAP.md:11,34
-gotchas: README.md and NEWS.md were edited by hand, not re-rendered; snapshot tests' 2.0.0.9000 strings are fixtures, left alone on purpose
+active_task: DONE -- owner chose 3.0.0 for the next release; recorded as BACKLOG item "Move the version to 3.0.0 just before release". Version files unchanged (2.0.0.9000); an over-reach bump to 2.99.0.9000 was made then reverted at the owner's direction
+what_was_done: claim 2d7189745; BACKLOG item and records in the close-out commits; version edits reverted (diff vs claim empty)
+next_steps: (A) Owner picks another decision (PED_GV items, mate-pair residue, male-left placement, CV1/CV2). (B) At release prep do the new BACKLOG item. (C) Master 16 ahead of origin; push only on owner say-so
+key_files: BACKLOG.md (item Move the version to 3.0.0)
+gotchas: version files intentionally still say 2.0.0.9000
 ```
 
 ```handoff

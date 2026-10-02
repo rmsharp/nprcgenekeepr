@@ -90,6 +90,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Known, accepted:** an unhandled click-time error ends the Shiny session
       (Learning 786).
 
+- [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
+      the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
+      `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.
+      At release prep: set `DESCRIPTION` to 3.0.0, retitle the `NEWS.Rmd` dev block to 3.0.0 and
+      re-knit `NEWS.md`, reinstall the package and re-render `README` (Learning 376), and update
+      the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
+      released 3.0.0.
+
 - [ ] **Male-on-the-left placement is stricter in the code's documentation than in real layouts
       (found S789, 2026-09-27, DECISION NEEDED, Effort S to find the cause, more to fix)** --
       the roxygen of `makePedigreeMatingLayout()` (`R/makePedigreeDiagramData.R`, "Male-left/
@@ -576,5 +584,5 @@ section's live work.*
       and what is new in 3.0 relative to the published reference (Vinson & Raboin 2015, *JAALAS*
       54(6):700-707, the package's key reference in `CLAUDE.md`, whose Project Overview also holds
       the NIH grant acknowledgment). Natural dependencies, the owner's call: a released 3.0.0 to
-      cite (`DESCRIPTION` reads 2.99.0.9000 today, the pre-release number for 3.0.0) and the documentation audit above, so the
+      cite (`DESCRIPTION` reads 2.0.0.9000 today) and the documentation audit above, so the
       papers' figures match the software.
