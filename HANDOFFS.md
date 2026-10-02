@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S858
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX, strict TDD)
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: DONE (no code kept) -- cause of the 2 duplicate-mate male-right couples measured; `|| qualifies(u)` fix tried and rejected by the owner after figures; R/ unchanged; BACKLOG item rewritten with the owner's words and no decided rule
+what_was_done: claim 88f283ea6; RED 8aeef0da2 (test file removed in close-out); close-out commit holds BACKLOG, records, test removal. Fix reverted before commit.
+next_steps: (A) New session: ask the owner what the placement rule is for these couples (BACKLOG "Placement of couples whose mate is drawn as a duplicate node"); do not infer it from the quoted feedback. (B) Open: PED_GV decisions, mate-pair residue, CV1/CV2, slice-6e doc fixes.
+key_files: R/makePedigreeDiagramData.R:1262-1272,1075-1080; BACKLOG.md:101; git show 8aeef0da2 (rejected RED test)
+gotchas: census pins that move with any layout change: test_makePedigreeMatingLayout.R:745,774; test_addRectilinearWaypoints.R:797-798. Open figures for the owner with `open`; do not turn owner feedback into a rule.
+runtime_smoke: n/a -- no code kept. quality_ratchet: not run (no code change).
+changelog_ref: S858 close-out entry
+commit: the close-out commit that carries this receipt; claim 88f283ea6
 ```
 
 ```handoff

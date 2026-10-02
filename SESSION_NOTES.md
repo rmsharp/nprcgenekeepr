@@ -99,10 +99,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 858 Did
-**Deliverable:** male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX, strict TDD, a gate per phase) (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. PRE-RED: cause of the 2 couples (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) not yet traced.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+**Deliverable:** the cause of the 2 duplicate-mate male-right couples, a fix tried and rejected by the owner, and a corrected BACKLOG item. Strict TDD began (PRE-RED, RED, GREEN gates asked); the
+owner rejected the result after seeing figures, so the layout code is unchanged. Claim `88f283ea6`; RED `8aeef0da2` (test file removed in the close-out commit).
+**Measured:** in both couples (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) both parents have parents, so `qualifies()` is TRUE but the mate is not in `b1Ids` and `correctableUnitIds` skips the unit; the
+seeding (`R/makePedigreeDiagramData.R:1265`) then takes the children's-mean side. The S857 BACKLOG reading ("the female has a parent edge") was half right: the male has parents too.
+**Tried:** `|| qualifies(u)` in that condition. Flipped exactly the 2 couples; 6 RED tests passed; crossings and every other bundled pedigree unchanged; but 4 census pins moved (nodes 1456 to 1460,
+jog nodes 186 to 190, bar hits 97 to 98 x2) and the parents' connector gained a step.
+**Owner verdict:** reject (quoted in BACKLOG). I then wrongly turned the feedback into a proposed "centered pair, male left" rule; the owner said inferred rules are not accepted. Reverted `R/`,
+removed the RED file, BACKLOG now records the owner's words and says no rule is decided.
+**Verified by me:** old vs new on 8 bundled pedigrees x 2 edge styles (script and `s858_couples_old_vs_new.png` in the session scratchpad); the 6 new tests and the layout test files after the edit.
+**Not run:** full suite, lint, `devtools::check()` (no code kept; `R/` identical to S857 close-out). **NEWS.Rmd:** none.
+**Slips:** I showed myself a figure and described it as if you had seen it (the owner could not see it; fixed by opening the file); I proposed pin updates before showing the picture; I inferred a rule from feedback.
+**Reduction:** removed the S856 evaluation and record.
+
+**Self-assessment: 6/10.** + Cause traced with measurements; blast radius measured; no code change left behind. - Three process slips above; no deliverable code; the owner's time went to a fix they did not want.
+
+**Next steps:** (A) A new session: ask the owner for the rule on these couples (BACKLOG "Placement of couples whose mate is drawn as a duplicate node"); do not infer it. (B) Still open: PED_GV
+decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep: BACKLOG "Move the version to 3.0.0". (D) Master is 26 ahead of origin after the close-out commit; push only on the
+owner's say-so.
+
+**Key files:** `R/makePedigreeDiagramData.R:1262-1272` (seeding side), `:1075-1080` (`correctableUnitIds`), `BACKLOG.md:101`; the rejected RED test is `git show 8aeef0da2:tests/testthat/test_maleLeftDuplicateMate.R`.
+
+**Gotchas:** pins that move with any layout change on `rhesusPedigree`: `test_makePedigreeMatingLayout.R:745,774` and `test_addRectilinearWaypoints.R:797-798`. Show the owner figures by opening the
+file (`open`); a figure I read is not a figure they saw. Measure scripts must be run per pedigree with a timeout (`ExamplePedigree.csv` did not finish in 240 s).
+
+### Session 857 Handoff Evaluation (by Session 858)
+**Score: 8/10.** **Helped:** the BACKLOG item named both couples, the measuring helper and the files; Orient measurements all held (frontiers at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause
+line said only the female has a parent edge; both parents do. **Missing:** which census pins move under any layout change. **ROI:** high.
 
 ### What Session 857 Did
 **Deliverable, DONE:** the diagram layout keeps the male-left rule for the two squeezed `rhesusPedigree` couples (`QL6GH4` x `3PD3U5`, `BM40IX` x `MTSHHY`) and for every one-mate, non-duplicate couple
@@ -132,30 +155,6 @@ decisions, mate-pair residue, CV1/CV2. (C) At release prep: BACKLOG "Move the ve
 
 **Gotchas:** `.maleFemaleUnitX()` traces back through `__jog_` nodes and keeps `__dup_` nodes (dropping them gives a wrong count). Never compare layout x with `==` across code versions: the QP drifts by 1e-4. Full-suite logs hold Shiny tracebacks, so
 wait for the saved results file, not for a non-empty log. To compare old and new code, parse `git show HEAD:R/makePedigreeDiagramData.R` and `assignInNamespace(".positionMatingUnitForest", ...)`.
-
-### Session 856 Handoff Evaluation (by Session 857)
-**Score: 9/10.** **Helped:** the BACKLOG item named the cause with line cites that all held (`:1086-1118`, `:1025`, `:1263-1266`) and the RED/GREEN plan was the one that worked; the Gotchas on `__jog_` and `__dup_` nodes saved a debugging round.
-**Missing:** that the same defect shows in other pedigrees (8 couples in `qcPed`, 1 in the MHC pedigree) and that duplicate-mate couples are a separate case. **Wrong:** "Master 17 ahead" (it was 18 at the next Orient). **ROI:** high.
-
-### What Session 856 Did
-**Deliverable, DONE:** found the cause of the 2 one-mate `rhesusPedigree` male-on-the-right pairs (BACKLOG male-left item). Read-only investigation; no code or tests changed, so no TDD phase applies. Claim `996cd9d40`; records in the close-out commit.
-**Result:** reproduced S789 (30 of 237 units male-right, Rectilinear; the 2 one-mate non-duplicate exceptions are `__union_28` BM40IX x MTSHHY and `__union_126` QL6GH4 x 3PD3U5). Both pass `qualifies()` and the S666 correction pass sets the right side, then
-`sweepMinSepBackstop()` pushes BM40IX 31 to 32 and V1X2X3 59.25 to 60.25 (neighbours 0.5 apart in the row), and the Decision-1 seeding (`:1263-1266`) reads the side from the children's mean, so the mate lands on the wrong side.
-**Owner decision:** FIX the layout, with full regression testing elsewhere. The BACKLOG item now holds the cause and the RED/GREEN plan (READY, Effort M).
-**Verified by me:** debug prints in a scratch copy of `.positionMatingUnitForest()` (qualifies, b1, correctable for both units; tier1X before and after the sweep; the crowded row neighbours). Not committed; scratch files only in the scratchpad.
-**Not verified:** that fixing these two does not move other diagrams (that is the fix session's regression gate); the 30 male-right units were not individually classified beyond S789's multi-mate explanation.
-**Reduction:** removed the S852 evaluation and record.
-
-**Self-assessment: 8/10.** + Traced to the exact line pair with measurements, not inference; my first analysis script wrongly dropped duplicate nodes
-and I caught it by the count mismatch against S789. - Several debug rounds; could have printed tier1X before and after the sweep at once.
-
-**Next steps:** (A) Fix session (strict TDD, ask each gate): BACKLOG "Male-on-the-left placement: fix the layout", READY, Effort M. (B) Still open:
-CV1/CV2, PED_GV decisions, mate-pair residue. (C) Master is 17 ahead of origin after the close-out commit (16 at the last count plus claim plus this);
-push only on the owner's say-so.
-
-**Key files:** `R/makePedigreeDiagramData.R:951-969` (`qualifies`), `:1086-1118` (S666 correction), `:1025,1119` (`sweepMinSepBackstop`), `:1263-1266` (seeding side), `tests/testthat/test_positionMatingUnitForest.R`.
-
-**Gotchas:** edges into a `__union_` node can come from `__jog_*` connector nodes, not only parents, so trace back through them; keep `__dup_` nodes when mapping with `duplicateToReal`. The sweep runs per component, so debug prints fire once per component.
 
 ### Session 855 Handoff Evaluation (by Session 856)
 **Score: 8/10.** **Helped:** the BACKLOG male-left item named the measurement method and the two-pair count, so I reproduced it in one script. **Missing:** which node types appear as edge sources
