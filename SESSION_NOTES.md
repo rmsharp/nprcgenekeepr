@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 861 Did
+**Deliverable:** slice 7c docs fixes from the S860 audit report (banners, in-place edits, 3 BACKLOG pointers); docs only (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+
 ### What Session 860 Did
 **Deliverable, DONE:** docs-staleness audit slice 7c, scoped by the owner to live plans only. Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md`; no code changed; the docs themselves are not fixed. Claim `2c2d1aaea`.
 **Measured:** 9 live `docs/planning/` docs (those an open issue or BACKLOG/ROADMAP item points at) audited by 4 read-only subagents; 53 moderate findings (ids XA-XI). I re-checked 18 first-hand (rhub missing, cran-comments marker absent, #145/#154/#167 closed, `getPossibleCols()` 26 not 24, `effGenOf` gone, signature of `modSnapshotTrendsServer`, and more); 36 rest on one agent's read. Header sweep of all 84: 37 of 38 `issue*` plans have a CLOSED issue; 14+ headers still say DRAFT/not implemented; 11 have no status line.

@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S861
+date: 2026-10-02
+status: pending
+active_task: IN PROGRESS -- slice 7c docs fixes: banners on shipped plans, in-place edits to runbook/outreach/Quarto docs, three BACKLOG pointers; docs only
+```
+
+```handoff
 session: S860
 date: 2026-10-02
 status: complete

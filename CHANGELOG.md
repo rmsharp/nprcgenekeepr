@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S861 claim: apply the slice 7c docs-staleness fixes (banners on shipped plans, in-place edits to the CRAN runbook, outreach plan and Quarto analysis, three BACKLOG pointers) (in progress). Docs only, no code.
+
 ### 2026-10-02 · [ad hoc] S860 close-out: docs-staleness audit slice 7c, live `docs/planning/` plans only (owner-scoped). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md`: 9 live docs + header sweep of 84, 53 moderate findings, 18 re-checked first-hand; no code changed, docs not yet fixed. `BACKLOG.md` audit item updated. Claim `2c2d1aaea`.
 
 ### 2026-10-02 · [ad hoc] S859 close-out: one-mate-each couples whose mate is a duplicate node (2 on `rhesusPedigree`) now draw male-left, by a general rule (`|| qualifies(u)` in the seeding, `R/makePedigreeDiagramData.R:1267`). Strict TDD: RED `ca0ee89ac`, GREEN+REFACTOR `82e020669`; tests made generic (4 bundled pedigrees x 2 edge styles); 6 census pins moved in 3 files. Owner accepted after app-proportion figures; couple 2 keeps an ~8 px step; multi-mate couples unchanged (issue #145 D5/D9). Full suite 364 files / 2,907 tests (1 file of pins fixed, re-run green), `lint_package()` 0. Completed BACKLOG item removed. Model: Claude Sonnet 5.5; no non-commit actions (no push).
