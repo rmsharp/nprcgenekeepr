@@ -1,5 +1,7 @@
 # Issue #150 Plan — De-Identified Pedigree Export Workflow for Approved Data Sharing
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped**: Slice 1 (`obfuscatePed()` `linkedDateShift`, S515) and Slice 2 (De-Identified Export module, S516); #150 closed 2026-08-11. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** Design/architecture only. No `R/`/`tests/`/`man/` content changed this session,
 matching the #133/#136/#137/#145/#146/#147/#149/#151 precedent. Ratified via `AskUserQuestion`
 (Session 514, 2026-08-10) — see §11.

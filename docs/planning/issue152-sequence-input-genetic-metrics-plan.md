@@ -1,5 +1,7 @@
 # Issue #152 Plan — Whole-Genome/Whole-Exome Sequence Input + Sequence-Based Genetic Metrics
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** in five slices (S525-S535; Slice 5 `4d05bf17b`); #152 closed 2026-08-12 as implemented (`R/checkSequenceGenotypeFile.R`). The "design only" wording below describes the planning session (S517). Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Session:** S517 (2026-08-11) · **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
 · **Type:** design/architecture document, matching the #133/#136/#137/#145/#146/#147/#149/#150/#151
 precedent — **zero `R/`/`tests/`/`man/` changes this session.**

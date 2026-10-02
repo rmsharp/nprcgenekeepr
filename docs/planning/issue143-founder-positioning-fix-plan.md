@@ -1,5 +1,7 @@
 # Issue #143 Plan — Founder-positioning defect fix (non-anchor occurrence row assignment)
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** S472 (S471 ratification; both edits in one commit in `R/makePedigreeDiagramData.R`); #143 closed 2026-08-04. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **[#143](https://github.com/rmsharp/nprcgenekeepr/issues/143)** (filed
 S470, 2026-08-03, from `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`).
 

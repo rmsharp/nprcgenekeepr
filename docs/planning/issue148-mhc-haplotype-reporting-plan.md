@@ -3,6 +3,8 @@
 
 # Issue #148 — MHC Haplotype Reporting: Design Plan
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** in four slices (S705-S708): file check, frequency and carrier reports, de-identification, and the MHC Haplotype Reporting tab; #148 closed 2026-09-18. A separate scoping record sits beside it. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** Pre-RED design/architecture document. Design-only session (Session 704,
 2026-09-17) — zero `R/`/`tests/`/`man/` changes. Matches the #133/#136/#137/#145/#146/
 #147/#149/#150/#151/#152/#153 precedent: a design document is written and ratified first;

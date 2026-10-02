@@ -1,5 +1,7 @@
 # Issue #136 Plan — Name (non-ID) Node Labels for the Pedigree Diagram
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** by S490 (both slices: name column, then the off-by-default "Show Names on Diagram" toggle); #136 closed 2026-08-09. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** Design/scoping document (Pre-RED) — no `R/`/`tests/`/`man/` content changes this session.
 **Session:** S488 (2026-08-08).
 **Origin:** GitHub issue #136 ("Show names (not just ID) as Pedigree Diagram node labels
