@@ -99,10 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 856 Did
-**Deliverable:** find the cause of the 2 one-mate `rhesusPedigree` male-on-the-right pairs (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+**Deliverable, DONE:** found the cause of the 2 one-mate `rhesusPedigree` male-on-the-right pairs (BACKLOG male-left item). Read-only investigation; no code or tests changed, so no TDD phase applies. Claim `996cd9d40`; records in the close-out commit.
+**Result:** reproduced S789 (30 of 237 units male-right, Rectilinear; the 2 one-mate non-duplicate exceptions are `__union_28` BM40IX x MTSHHY and `__union_126` QL6GH4 x 3PD3U5). Both pass `qualifies()` and the S666 correction pass sets the right side, then
+`sweepMinSepBackstop()` pushes BM40IX 31 to 32 and V1X2X3 59.25 to 60.25 (neighbours 0.5 apart in the row), and the Decision-1 seeding (`:1263-1266`) reads the side from the children's mean, so the mate lands on the wrong side.
+**Owner decision:** FIX the layout, with full regression testing elsewhere. The BACKLOG item now holds the cause and the RED/GREEN plan (READY, Effort M).
+**Verified by me:** debug prints in a scratch copy of `.positionMatingUnitForest()` (qualifies, b1, correctable for both units; tier1X before and after the sweep; the crowded row neighbours). Not committed; scratch files only in the scratchpad.
+**Not verified:** that fixing these two does not move other diagrams (that is the fix session's regression gate); the 30 male-right units were not individually classified beyond S789's multi-mate explanation.
+**Reduction:** removed the S852 evaluation and record.
+
+**Self-assessment: 8/10.** + Traced to the exact line pair with measurements, not inference; my first analysis script wrongly dropped duplicate nodes and I caught it by the count mismatch against S789. - Several debug rounds; could have printed tier1X before and after the sweep at once.
+
+**Next steps:** (A) Fix session (strict TDD, ask each gate): BACKLOG "Male-on-the-left placement: fix the layout", READY, Effort M. (B) Still open: CV1/CV2, PED_GV decisions, mate-pair residue. (C) Master is 17 ahead of origin after the close-out commit (16 at the last count plus claim plus this); push only on the owner's say-so.
+
+**Key files:** `R/makePedigreeDiagramData.R:951-969` (`qualifies`), `:1086-1118` (S666 correction), `:1025,1119` (`sweepMinSepBackstop`), `:1263-1266` (seeding side), `tests/testthat/test_positionMatingUnitForest.R`.
+
+**Gotchas:** edges into a `__union_` node can come from `__jog_*` connector nodes, not only parents, so trace back through them; keep `__dup_` nodes when mapping with `duplicateToReal`. The sweep runs per component, so debug prints fire once per component.
+
+### Session 855 Handoff Evaluation (by Session 856)
+**Score: 8/10.** **Helped:** the BACKLOG male-left item named the measurement method and the two-pair count, so I reproduced it in one script. **Missing:** which node types appear as edge sources
+(`__jog_*`), which cost me one wrong count. **Wrong:** nothing material. **ROI:** high.
 
 ### What Session 855 Did
 **Deliverable, DONE:** recorded the owner's release-number decision (next release is **3.0.0**) as a pre-release BACKLOG item. Docs only, so no TDD phase applies.
@@ -177,32 +192,6 @@ close-out commit (9 at this writing plus close-out; from `git rev-list`); push o
 
 **Gotchas:** `BACKLOG.md` is 599 lines and regrowing; the docs-audit and chromote items are the next compression candidates. `ROADMAP.md` still has
 two "not re-checked" statements (Quarto slices 3-4, five audit ids); do not read them as verified.
-
-### Session 852 Handoff Evaluation (by Session 853)
-**Score: 8/10.** **Helped:** the finding ids with evidence and the "edit BACKLOG last" warning; the "Check" column (S vs A) told me which cites to
-re-read. **Missing:** which of RO3's ids were open (none are; grep found them nowhere in BACKLOG). **Wrong:** nothing material; BA2's `:458-461` was
-right (code comment at `:459-461`). **ROI:** high.
-
-### What Session 852 Did
-**Deliverable, DONE:** docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`). Report:
-`docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md`. Read-only audit, docs only, so no TDD phase applies. Claim `9ab55d5df`; report in the close-out commit.
-**Scope:** the owner chose "living docs only"; `docs/planning/` (84 files), `docs/research/` and older `docs/audits/` are a later slice (7c).
-**Result:** 35 findings, 10 moderate and 25 minor, from about 270 claims. Moderates: `ROADMAP.md` has the launcher alias reversed, a CRAN "planned" item that has shipped, two done audit follow-ups still listed, and "four articles"
-(there are 10); `BACKLOG.md` docs-audit item still says both PDFs are untracked (one is tracked, one was removed S831), has a stale `modPedigree.R` line cite, a regrowth figure of 378 lines (now 599), a "fix below" that does not
-exist, and out-of-range `shrinkPedigree.R` cites. `labkey-authentication.md`: no discrepancy.
-**Method:** four read-only subagents, then I re-ran or re-read 9 of the 10 moderates and most minors (marked S in the report); the second BACKLOG agent's line numbers were off by about 45, so only my own re-reads carry line cites I trust.
-**Not applied:** no finding was fixed (one audit report per session). **Not verified:** CRAN acceptance of 2.0.0, Quarto slices 3-4 status, PED_GV tallies (list in the report).
-**Reduction:** removed the S849 evaluation and record; that also removed the one over-length line in this file (the dashboard's per-line finding).
-
-**Self-assessment: 8/10.** + Asked the owner to scope a 55,000-line target before spawning; re-checked agent claims first-hand and caught the second agent's offset line numbers. - Two of my own verification greps were sloppy (a
-`DESCRIPTION` grep that matched `RoxygenNote`), redone properly.
-
-**Next steps:** (A) Apply the 35 slice-7b findings: separate docs-only session, `BACKLOG.md` last. (B) Slice 7c: `docs/planning/`, `docs/research/`, older `docs/audits/` (scope with the owner first; they are dated records). (C)
-Owner decisions still open: release number (3.0.0 vs 2.0.0.9000). (D) Master is 7 ahead of origin after this commit (5 at Orient, plus claim and close-out; computed with `git rev-list`); push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md` (finding ids RO/CL/BA/BB/AR/CV), `BACKLOG.md:133-181` (docs-audit item), `BACKLOG.md:448` (regrowth figure), `ROADMAP.md:6-34`.
-
-**Gotchas:** BACKLOG line numbers in the report are approximate for the first half (BA ids); re-locate by item name before editing. Fixing BA1/BB1 means editing the same BACKLOG item the next session uses as its hand-off; do it last.
 
 ### What Session 842 Did
 **Deliverable, DONE:** docs-staleness audit slice 6e, the last 126 `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): 26 moderate, 69 minor, 46 code candidates; all 267 pages now audited. Read-only; no code or tests, so no TDD phase applies.

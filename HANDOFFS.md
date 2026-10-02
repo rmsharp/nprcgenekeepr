@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S856
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- male-left placement: find why 2 one-mate rhesusPedigree pairs render male-on-the-right
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- cause of the 2 one-mate rhesusPedigree male-right pairs found: the S666 correction sets the right side, then sweepMinSepBackstop() pushes the couple past the child's x in a crowded row and the Decision-1 seeding reads the side from the children's mean. Owner chose FIX; BACKLOG item rewritten as a READY strict-TDD fix with the cause
+what_was_done: claim 996cd9d40; read-only investigation (scratch debug copies in the scratchpad, nothing committed but BACKLOG and records) in the close-out commit
+next_steps: (A) Fix session, strict TDD with a gate per phase: BACKLOG item "Male-on-the-left placement: fix the layout" (READY, Effort M); full unfiltered suite plus diagram fidelity checks required. (B) Open: CV1/CV2, PED_GV decisions, mate-pair residue. (C) Master 17 ahead of origin; push only on owner say-so
+key_files: R/makePedigreeDiagramData.R:951-969,1025,1086-1119,1263-1266; tests/testthat/test_positionMatingUnitForest.R
+gotchas: edge sources into __union_ can be __jog_* nodes (trace back); keep __dup_ nodes when mapping with duplicateToReal; sweep runs per component
 ```
 
 ```handoff

@@ -98,24 +98,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
       released 3.0.0.
 
-- [ ] **Male-on-the-left placement is stricter in the code's documentation than in real layouts
-      (found S789, 2026-09-27, DECISION NEEDED, Effort S to find the cause, more to fix)** --
-      the roxygen of `makePedigreeMatingLayout()` (`R/makePedigreeDiagramData.R`, "Male-left/
-      female-right ordering (issue #145) ... is now unconditional") says every simple two-parent
-      mating renders the male on the left. Measured S789 over every mixed-sex mating unit (the
-      two parents of each `__union_` node read from `layout$edges`, duplicates mapped through
-      `layout$duplicateToReal`, x from `layout$nodes`; the 5 example pedigrees, `rhesusPedigree`
-      and `smallPed`): 227 of 257 (88.3%) have the male on the left in the Rectilinear style
-      (`rhesusPedigree`: 29 of 231 on the right; `smallPed`: 1 of 6; the Direct style: 30 of 237
-      and 1 of 6). Most exceptions are pairs where a parent has several mates, which the issue
-      #145 plan leaves to the tree structure on purpose
-      (`docs/planning/issue145-sire-dam-left-right-placement-plan.md`, D5/D9); but 2 of 34 pairs
-      on `rhesusPedigree` where each parent has exactly one mate and neither is a duplicate are
-      also on the right, and neither parent has a child of unknown parentage, so the plan's own
-      exclusion does not explain them (cause not chased). **Decide:** (1) find the two and fix
-      the layout (a placement change, so a re-run of the diagram fidelity checks); or (2) correct
-      the roxygen to say the rule covers simple pairs "in most cases" and leave the layout alone.
-      The release note already says "in most cases" (S789).
+- [ ] **Male-on-the-left placement: fix the layout so the rule survives the min-separation sweep
+      (cause found S856, owner chose FIX 2026-10-02, READY, Effort M; strict TDD, and the fix
+      REQUIRES full regression testing elsewhere: the whole suite plus the diagram fidelity
+      checks and the placement-sensitive snapshots)** -- the roxygen of `makePedigreeMatingLayout()`
+      (`R/makePedigreeDiagramData.R`, "Male-left/female-right ordering (issue #145) ... is now
+      unconditional") says every simple two-parent mating renders the male on the left. S789
+      measured 227 of 257 mixed-sex units male-left (most exceptions are multi-mate pairs, left to
+      the tree structure on purpose by the issue #145 plan, D5/D9). **Cause of the two one-mate
+      exceptions on `rhesusPedigree` (S856, reproduced; units `__union_28` = BM40IX male x MTSHHY
+      female, and `__union_126` = QL6GH4 male x 3PD3U5 female):** both pass `qualifies()` and are in
+      the S666 correction pass (`R/makePedigreeDiagramData.R:1086-1118`), which does set the right
+      side (after the loop BM40IX 31 / child P2VQJR 31.5; 3PD3U5 59.75 / child V1X2X3 59.25). Then
+      `sweepMinSepBackstop()` (`:1025`, called at `:1119`) enforces the row's minimum separation:
+      the gen-0 row has EZ97J5 30, R3BBV1 30.5, BM40IX 31 (gaps of 0.5 < minSep 1) and the gen-3 row
+      has YJXSIZ 58.75 next to V1X2X3 59.25, so the sweep pushes BM40IX to 32 and V1X2X3 to 60.25,
+      past the child's x. The Decision-1 seeding then reads the side from the children's mean
+      relative to the anchor (`:1263-1266`, the sex rule is only the tie-break), so it puts the
+      mate on the opposite side from the one the correction chose. **To do (a fix session):** RED:
+      a failing test on these two units (the rule held after the sweep), plus a small synthetic
+      fixture with a crowded row; GREEN: make the seeding (or the sweep) keep the sex rule for
+      `qualifies()` units; REFACTOR; then the full unfiltered suite, the diagram fidelity checks
+      and a re-measure of the 227 of 257 figure. Watch for crossing connector lines (the QP keeps
+      each row's rank as a hard constraint), and for the 30 other male-right units, which are
+      multi-mate and out of scope.
 
 - [ ] **Audit the internal and user-facing documentation for stale information and stale
       diagrams** (owner-requested 2026-09-26; READY, Effort L -- one audit report per session, so
