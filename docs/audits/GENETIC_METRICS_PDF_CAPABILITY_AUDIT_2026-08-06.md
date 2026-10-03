@@ -1,5 +1,7 @@
 # Genetic Metrics PDF Capability Gap Analysis
 
+> **Status as of 2026-10-02 (S870):** Every row of its priority gap analysis now has a closed issue (#147-#153, #167, #168), so the "Missing" and "Partial" rows (ancestry mixing, longitudinal snapshots, parentage ranking, mate-pair tables) describe 2026-08-06, not today. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-08-06  
 **Reference:** `inst/extdata/reference/Master_Genetic_metrics_2_14_15.pdf`  
 **Scope:** Fresh comparison of the PDF's desirable colony-management capabilities with the current `nprcgenekeepr` source, exports, Shiny UI, manual pages, and focused tests. This is a capability assessment, not a defect or implementation plan.

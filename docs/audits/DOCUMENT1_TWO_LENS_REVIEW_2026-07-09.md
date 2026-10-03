@@ -1,5 +1,7 @@
 # Document 1 -- Two-Lens Adversarial Review (CLOSED -- 2026-07-09, Session 342)
 
+> **Status as of 2026-10-02 (S870):** All 15 confirmed findings were fixed in S343 (commit `98db4ff7e`), so "still unfixed" and the next-steps section are done. The line references into `engineering-the-2.0.0-release.qmd` are stale (the file is now 796 lines). The body below is the dated record as written; it was not edited.
+
 **Target:** `vignettes/articles/engineering-the-2.0.0-release.qmd` ("Engineering
 nprcgenekeepr 2.0.0"), Document 1 of the two-document plan in
 `docs/planning/v2-transformation-article-plan.md` (Session 330).

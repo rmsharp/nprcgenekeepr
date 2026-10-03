@@ -1,5 +1,7 @@
 # kinship2 Supplementary-Material Reproducibility Audit
 
+> **Status as of 2026-10-02 (S870):** Findings 1, 2 and 4 are resolved: `kinship()` now takes `twinRelations` and `chrtype` (X-chromosome kinship, issue #156, closed), and consanguineous marker color and width carry onto the rectilinear diagram (issue #158, closed). "Grepped, zero matches" below was true on 2026-08-13 only. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-08-13 · **Session:** S549 · **Type:** capability-comparison / reproducibility
 audit (not a code-defect audit — no severity ratings; findings carry a **gap direction**
 instead, matching the `ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` precedent)

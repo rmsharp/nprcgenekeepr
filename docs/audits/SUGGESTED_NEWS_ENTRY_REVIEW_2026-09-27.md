@@ -1,5 +1,7 @@
 # Review: `suggested_NEWS_entry.md` / `vignettes/suggested_NEWS_entry.Rmd` against `NEWS.Rmd`
 
+> **Status as of 2026-10-02 (S870):** The two draft files this review examines were removed in S831 (`3a8c026bb`), and `NEWS.Rmd` was restructured since (its dev block is now lines 14-384, and there is no `## Package` section), so every `NEWS.Rmd:NNN` cite is as of 2026-09-27. Whether the review's moderate recommendations were applied by the later NEWS sweep was not checked. The body below is the dated record as written; it was not edited.
+
 **Session:** S793, 2026-09-27. **Workstream:** `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`
 (no TDD phase gates — this session produces a review document only; no `NEWS.Rmd`, code, or test
 change).

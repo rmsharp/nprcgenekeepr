@@ -1,5 +1,7 @@
 # Pedigree Diagram (issue #129) vs. kinship2 Feature Comparison
 
+> **Status as of 2026-10-02 (S870):** Findings 1, 3, 5, 6 and 8 and recommendation 8 have shipped: loop verification (#134), image export (#131), legend (#132), affected status (#133), hover and search (#135), names (#136) and twins (#137) are all closed. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-07-30 · **Session:** S435 · **Type:** capability-comparison audit (not a
 code-defect audit — no severity ratings; findings carry a **gap direction** instead)
 
