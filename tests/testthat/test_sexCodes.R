@@ -101,6 +101,12 @@ test_that("no bare sex-code literals remain in the stage 3 files", {
   ))
 })
 
+test_that("no bare sex-code literals remain in the stage 4 files", {
+  expectNoBareSexCodeLiterals(c(
+    "correctParentSex.R", "addParents.R", "modORIPReporting.R"
+  ))
+})
+
 test_that("the guard flags each bare-literal form it claims to catch", {
   tmp <- tempfile(fileext = ".R")
   on.exit(unlink(tmp))
