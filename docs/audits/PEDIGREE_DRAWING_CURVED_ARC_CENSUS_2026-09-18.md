@@ -1,5 +1,7 @@
 # Curved duplicate-connector arc census — replacing the 1,668-chord upper bound (S714, 2026-09-18)
 
+> **Status as of 2026-10-02 (S870):** Its recommendation (replace the blind +0.3 bump) was implemented in S715 (`691529998`, a roundness ladder in `R/makePedigreeDiagramData.R`); the post-fix re-run dropped the c-arc-inside rows from 587 to 149 (`PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_postfix_findings.csv`). The body below is the dated record as written; it was not edited.
+
 **Scope:** every curved duplicate-connector edge the current engine draws, across all 7
 census fixtures (Track B full/shrunk, Track C, Real 375, D1–D3) — 173 curved edges
 total (170 Real 375 + 3 Track C; the other fixtures have no duplicates).

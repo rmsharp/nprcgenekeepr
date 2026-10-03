@@ -1,5 +1,7 @@
 # Pedigree-Drawing Error Census — Every Fixture, Six Error Classes
 
+> **Status as of 2026-10-02 (S870):** Superseded: the A-versus-C decision was made (the QP joint solver, S673-S697) and the 2026-09-18 curved-arc census shows classes a, c2 and e at zero on all 7 fixtures. The findings CSV beside this report was regenerated under later engines and holds 1,678 rows, not 2,734, so it is no longer this report's data, and `data-raw/pedigreeDrawingErrorCensus.R` now writes a different file and will not reproduce these numbers. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-09-02 · **Session:** S668 · **Type:** measurement audit (no code changes to the
 package; a new `data-raw/` scoreboard script and this report)
 

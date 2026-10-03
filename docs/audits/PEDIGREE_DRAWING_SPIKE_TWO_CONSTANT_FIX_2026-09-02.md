@@ -1,5 +1,7 @@
 # Pedigree-drawing spike: does the two-constant fix resolve (a)/(b) without cascading?
 
+> **Status as of 2026-10-02 (S870):** The open A-versus-C decision it feeds was made (the QP joint solver, S673-S697), and its BACKLOG item no longer exists. The census findings CSV it calls the BEFORE reference was regenerated after this spike (see the 2026-09-02 error census banner), so it is no longer the BEFORE state. The body below is the dated record as written; it was not edited.
+
 **Session:** S669 (2026-09-02). **Feeds:** `BACKLOG.md` Up Next item 1 (owner's A-vs-C
 decision). **Status:** measurement only -- no production code changed, no decision made.
 
