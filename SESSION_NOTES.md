@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 882 Did
+**Deliverable:** docs staleness audit leftover: fix the stale "defaulting to direct" comment at `R/modPedigree.R:459-461` and correct BACKLOG's stale BB14 note (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 881 Did
 **Deliverable, DONE:** split `getPotentialParents()` into five internal helpers (PED-4, NEW-54), plan-mode approval first, strict TDD (each phase gated by `AskUserQuestion`).
 Claim `d5ccda82c`; RED `b446143ac` + `8509d4b7d`; GREEN `5d9dbbfa9`; REFACTOR `8add079bb`; records in the close-out commit.

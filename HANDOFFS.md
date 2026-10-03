@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S882
+date: 2026-10-03
+status: pending
+active_task: Docs staleness audit leftover: fix the stale "defaulting to direct" comment at R/modPedigree.R:459-461; correct BACKLOG's stale BB14 note
+```
+
+```handoff
 session: S881
 date: 2026-10-03
 status: complete
