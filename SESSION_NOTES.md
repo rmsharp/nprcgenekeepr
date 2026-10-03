@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 876 Did
+**Deliverable:** `sexCodes` adoption stage 3 of 6 (`getPotentialParents`, `reportGV`, `modPyramid`,
+`correctUnknownParentMeanKinship`), strict TDD (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 875 Did
 **Deliverable, DONE:** `sexCodes` adoption stage 2 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
 gated by `AskUserQuestion`). Claim `b7f865a4c`; RED `672d2d5dd`; GREEN `0ac3b7858`; records in the close-out commit.
