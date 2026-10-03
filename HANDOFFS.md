@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S865
 date: 2026-10-02
-status: pending
-active_task: share the duplicated ancestry-override gate code (choices builder + confirm modal) between modBreedingGroups.R and modMatePair.R; strict TDD
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the duplicated ancestry-override gate code (choices builder + confirm modal) in modBreedingGroups.R and modMatePair.R is shared as .ancestryOverrideChoices() and .ancestryOverrideModal(); behaviour unchanged; strict TDD
+what_was_done: claim dfd40047d; RED+GREEN adb5d2991 (R/ancestryOverrides.R, test_ancestryOverrides.R, 8 new tests); REFACTOR 4ba8138f2 (both modules); close-out commit holds BACKLOG, CHANGELOG, records. Owner picked the item and the narrow scope (choices builder + modal only).
+next_steps: (A) Owner: Excluded-tab export DECISION NEEDED; PED_GV leftovers; CV1/CV2. (B) Optional READY follow-up: share the overrideConfirm observer and overrideStatus sentence. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on owner's say-so.
+key_files: R/ancestryOverrides.R:92-139 (helpers); R/modMatePair.R:336-353; R/modBreedingGroups.R:456-474; tests/testthat/test_ancestryOverrides.R (last 8 tests)
+gotchas: helpers rely on the package-wide importFrom(shiny,...) in NAMESPACE (roxygen not re-run, NAMESPACE unchanged and already complete); modal helper takes session$ns the function; test_markerParentageLikelihood.R benchmark can flake under load (passed both full runs)
+runtime_smoke: not done -- no manual app launch; behaviour covered by module testServer tests and e2e files in the full suite (2922 tests, 0 failed, 0 error, before and after REFACTOR); lint clean. quality_ratchet: not run (no .quality-gates.json run this session).
+changelog_ref: S865 DONE entry
+commit: the close-out commit that carries this receipt; claim dfd40047d; RED+GREEN adb5d2991; REFACTOR 4ba8138f2
 ```
 
 ```handoff

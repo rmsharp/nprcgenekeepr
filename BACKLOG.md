@@ -74,17 +74,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       those. Not done: it edits CI config, which the owner has not asked for.
 
 - [ ] **Mate-pair ancestry guardrails -- residue after issue #169 (found S776-S777,
-      2026-09-24; DECISION NEEDED -- the owner picks which to pursue, each Effort S)**
+      2026-09-24; DECISION NEEDED -- the owner decides whether to build it, Effort S)**
       -- #169 shipped and closed S777 (kernel, module, override gate, Ancestry tab,
-      committed e2e, article). Two small things it left, none started (a third, the
-      zero-rule table, was fixed S864: it now reads as "no rules in effect"):
-      (1) **The Excluded tab has no export (DECISION NEEDED)** -- plan section 7
-      dragon 8: a curator cannot get the list of blocked pairs as a file (the manifest
-      carries per-rule COUNTS only). (2) **Duplicated gate code (READY refactor)** -- the
-      override select-choices builder and the confirm-gate modal are duplicated between
-      `R/modBreedingGroups.R` and `R/modMatePair.R` (S776's REFACTOR shared only
-      `.emptyAncestryOverrides()` and `.overridableAncestryRules()`); the shared shape is a
-      choices builder plus a modal constructor taking the warning text and the namespace.
+      committed e2e, article). One small thing it left, not started (the zero-rule
+      table was fixed S864: it reads as "no rules in effect"; the duplicated override
+      select-choices builder and confirm modal were shared S865 as
+      `.ancestryOverrideChoices()` / `.ancestryOverrideModal()` in
+      `R/ancestryOverrides.R`): **the Excluded tab has no export (DECISION NEEDED)** --
+      plan section 7 dragon 8: a curator cannot get the list of blocked pairs as a file
+      (the manifest carries per-rule COUNTS only). **Near-duplicates that remain, not
+      in scope of the S865 share:** the `overrideConfirm` observer and the
+      `overrideStatus` sentence in both modules (they differ only in "on this tab").
       **Known, accepted:** an unhandled click-time error ends the Shiny session
       (Learning 786).
 

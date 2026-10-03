@@ -99,48 +99,68 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 865 Did
-**Deliverable:** share the duplicated ancestry-override gate code between `R/modBreedingGroups.R` and `R/modMatePair.R` (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Owner picked this item at Orient. Strict TDD, PRE-RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** the duplicated ancestry-override gate code in `R/modBreedingGroups.R` and
+`R/modMatePair.R` is now shared. Strict TDD, all three phases, each gated by an `AskUserQuestion`.
+Claim `dfd40047d`; RED+GREEN `adb5d2991`; REFACTOR `4ba8138f2`; the close-out commit holds
+BACKLOG, CHANGELOG, records. No NEWS entry (internal, no user-visible change).
+**Owner decisions (plain words):** picked this item at Orient; scope = the select-choices builder
+and the confirm modal only (the owner was offered widening to the confirm observer and status text
+and went with the narrow scope).
+**RED:** 8 new tests at the end of `tests/testthat/test_ancestryOverrides.R`, all erroring only
+because the helpers did not exist; the 19 older tests in the file passed.
+**GREEN:** `R/ancestryOverrides.R` only: `.ancestryOverrideChoices(ovr)` (named vector: values =
+pair keys, names = "A x B"; `character(0)` for NULL/zero rows) and `.ancestryOverrideModal(ns,
+warningText)`.
+**REFACTOR:** both modules' `observe()` choices block and `showModal(modalDialog(...))` replaced by
+one call each; the diff is 9 insertions, 42 deletions across the two modules plus the helpers file.
+**Verified:** the 4 ancestry/module test files pass; full unfiltered suite 2922 tests, 0 failed,
+0 error, run before and after the REFACTOR; `lintr::lint_package()` 0 findings (it caught an
+81-byte `@importFrom` line I added, fixed before close-out).
+**Not done:** no CI watched (R files changed, not pushed); no manual app launch (behaviour is
+covered by the module `testServer` tests and the e2e files in the suite, not by eyes on the UI);
+not pushed.
+**Reduction:** the pre-commit budget hook refused my first close-out (24,581 -> 26,037 tok vs the
+25,000 ceiling), so I condensed the S863 and S864 sections (about -4.5 KB, 59,105 -> 54,655 B, now
+under the ceiling). `methodology_trim.py --budget-bytes 65536` does not fire below 65,536 B, so it
+could not help. Lines over 280 B remain.
 
-### Session 864 (previous) follows
+**Self-assessment: 8/10.** + each gate asked in plain words with the exact next actions; the
+existing module tests were the behaviour net and the full suite ran on both sides of the
+refactor. - no app launch; I did not diff-check the two modules' rendered modal HTML before and
+after (the tests pin the strings, not the whole markup).
 
-### What Session 864 Did
-**Deliverable, DONE:** a valid zero-rule ancestry table no longer breaks Download Audit Manifest.
-`.buildAncestryOverrideManifest()` returns one inactive row instead of stopping. Strict TDD.
-Claim `a66e2e4bb`; GREEN `38c38ee90`; the close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG, records.
-**Owner decisions (plain words):** scope = zero-rule table only (not the Excluded export or the
-duplicated gate code); behavior = "inactive" (manifest builds and says so), not a clearer error.
-**Manifest shape:** 1 row; ancestry1/ancestry2/severity/reason NA; overridden FALSE; nPairs 0;
-summary "No ancestry rules were in effect for this run."; census and warning text kept.
-**RED:** 4 failing (3 in `test_ancestryOverrides.R`, 1 in `test_matePairAncestryManifest.R`); the
-old "stops on zero rules" assertion was removed; one guard (override on a zero-rule table) passed
-by design but for the wrong reason, so GREEN pinned its message ("not present in rules").
-**GREEN:** `R/ancestryOverrides.R` only (stop removed, zero-rule row branch, summary, roxygen).
-REFACTOR skipped by owner choice.
-**Verified:** the 4 ancestry test files pass; full unfiltered suite 0 error / 1 failed
-(`test_markerParentageLikelihood.R` runtime benchmark, passes alone, unrelated); lint clean.
-**Not done:** no CI watched (R files changed); no app launch; module-level test of the download
-button not added (both modules call the one builder, covered at unit level); not pushed.
-**Reduction:** none (no mandated-read file shrank); `SESSION_NOTES.md` still has lines over 280 B.
+**Next steps:** (A) Owner decisions: Excluded-tab export (DECISION NEEDED, Effort S); PED_GV
+leftovers; CV1/CV2. (B) Optional READY follow-up: share the `overrideConfirm` observer and the
+`overrideStatus` sentence (they differ only in "on this tab"); not started, not in this scope.
+(C) 3.0.0 release prep needs its own scoping session. (D) master is ahead of origin (count at
+Orient); push only on the owner's say-so.
 
-**Self-assessment: 8/10.** + plain-words owner questions; design pinned before RED; checked the
-guard's error source instead of trusting a green. - no module-level or app check; the full suite
-hit a timing flake I only re-ran in isolation.
+**Key files:** `R/ancestryOverrides.R:92-139` (the two helpers), `R/modMatePair.R:336-353`,
+`R/modBreedingGroups.R:456-474` (the call sites), `tests/testthat/test_ancestryOverrides.R` (last
+8 tests).
 
-**Next steps:** (A) Owner decisions: PED_GV leftovers; mate-pair residue now two items (Excluded-tab
-export DECISION NEEDED; duplicated gate code READY refactor); CV1/CV2. (B) 3.0.0 release prep needs
-its own scoping session. (C) master is 25 commits ahead of origin (count at Orient); push only on
-the owner's say-so. (D) Optional: watch CI on `38c38ee90`.
+**Gotchas:** both helpers rely on the package-wide `importFrom(shiny, ...)` entries already in
+`NAMESPACE`; I added matching `@importFrom shiny` roxygen lines to the modal helper but did not
+re-run roxygen, so `NAMESPACE` is unchanged (every named import already existed there). The
+modal helper takes `session$ns` (the function), not a module id. `test_markerParentageLikelihood.R`
+has a runtime benchmark that can fail under load; it passed in both full runs this session.
 
-**Key files:** `R/ancestryOverrides.R:212-290` (builder), `tests/testthat/test_ancestryOverrides.R`
-(zero-rule tests near the end of the manifest block), `tests/testthat/test_matePairAncestryManifest.R`.
+### Session 864 Handoff Evaluation (by Session 865)
+**Score: 9/10.** **Helped:** next steps named the duplicated gate code as a READY refactor and said
+exactly which two shared helpers S776 had already extracted, so I knew what was left to share;
+key files had line ranges that still matched. **Missing:** nothing that cost time (it did not list
+the confirm observer and status text as further near-duplicates; I found them by diffing).
+**Wrong:** nothing found ("25 ahead" was 26 at Orient because the close-out commit followed).
+**ROI:** high.
 
-**Gotchas:** the modules (`R/modMatePair.R:562`, `R/modBreedingGroups.R:889`) pass any non-NULL
-rules table to the builder, so a zero-rule run now yields a 1-row CSV; the UI text around the
-download was not inspected. `test_markerParentageLikelihood.R` has a runtime benchmark that can
-fail under load; re-run it alone before treating it as a regression.
+### What Session 864 Did (condensed S865; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** a valid zero-rule ancestry table no longer breaks Download Audit Manifest;
+`.buildAncestryOverrideManifest()` returns one inactive row. Strict TDD; claim `a66e2e4bb`, GREEN
+`38c38ee90`, close-out `dce846d5c`. Full suite then: 0 error / 1 failed
+(`test_markerParentageLikelihood.R` runtime benchmark, passes alone). Self-score 8/10.
+**Gotcha kept:** the modules (`R/modMatePair.R:562`, `R/modBreedingGroups.R:889`) pass any non-NULL
+rules table to the builder, so a zero-rule run yields a 1-row CSV; the UI text around the download
+button was not inspected.
 
 ### Session 863 Handoff Evaluation (by Session 864)
 **Score: 8/10.** **Helped:** next steps named the three mate-pair leftovers with their DECISION/READY
@@ -148,21 +168,14 @@ tags, which made the scope question easy to pose. **Missing:** it did not say bo
 manifest through one builder, nor what a zero-rule manifest should look like. **Wrong:** nothing
 found (the "22 ahead" count was 23 at Orient because the close-out commit followed). **ROI:** high.
 
-### What Session 863 Did
-**Deliverable, DONE:** `getProductionStatus()` with 0 breeding-age females returns NA production/colour/index (was green); the heat map draws NA gray. Strict TDD. Claim `1bcc1f76e`; GREEN `317d61687`; the close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG and records.
-**Owner decisions (asked in plain words):** gray over green or red; scope = producer plus heat map (the sibling `getKinshipWithMaleStatus()` already returned NA, and the heat map errored on any NA index, so producer-only would have crashed the dashboard).
-**RED:** 4 failing producer tests (both housings), 4 failing heat map tests; two guard tests (unknown housing, value 0) passed by design. **GREEN:** `R/getProductionStatus.R` (NA branch before each ladder, roxygen), `R/makeGeneticDiversityHeatmap.R` (NA allowed, `na.value = "grey"`, roxygen), `man/makeGeneticDiversityHeatmap.Rd`. REFACTOR skipped by owner choice.
-**Slips:** one test pinning the old green (`minDamAge = 100`, `test_getProductionStatus.R:163`) was missed in RED and fixed in GREEN, stated to the owner; the prose "grey" failed `test_wordlist_coverage.R` (use "gray" in docs; the code value `"grey"` is not spell-checked); `devtools::document()` also rewrote `man/nprcgenekeepr-package.Rd` from a DESCRIPTION drift, which I reverted.
-**Verified:** full unfiltered suite had 1 failed (the wordlist one, since fixed) / 0 error; the four affected files, `test_wordlist_coverage.R` and `lintr::lint_package()` re-run green after the fix. Not re-run: the whole suite after the spelling fix; no CI watched; no app launch (the dashboard heat map was exercised through tests only).
-**Reduction:** none this session (no mandated-read file shrank); `SESSION_NOTES.md` still has 14 lines over 280 B (S862 report; not touched).
-
-**Self-assessment: 8/10.** + owner questions led with consequences; scope question came from reading a sibling's contract; guard tests added. - missed a pinned-green test in RED; ran the full suite before checking the spelling guard; no runtime check.
-
-**Next steps:** (A) Optional: launch `runGeneKeepR()` with a group that has no dams and look at the heat map (never done). (B) Owner decisions: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; duplicated gate code READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) master is about 22 commits ahead of origin (count at Orient); push only on the owner's say-so. (E) Watch CI on `317d61687` (R files changed, so the skip-CI rule does not apply).
-
-**Key files:** `R/getProductionStatus.R:93-120` (colour ladders), `R/makeGeneticDiversityHeatmap.R:44-47,66`, `tests/testthat/test_getProductionStatus.R:55-85,163-175`, `tests/testthat/test_makeGeneticDiversityHeatmap.R:105-140`.
-
-**Gotchas:** `getGeneticDiversityStats()` now emits an NA Production cell for a no-dam group; the dashboard path is tested but the modules' own UI text for an NA cell was not inspected. `devtools::document()` churns `man/nprcgenekeepr-package.Rd`; revert it unless DESCRIPTION changed on purpose.
+### What Session 863 Did (condensed S865; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** `getProductionStatus()` with 0 breeding-age females returns NA production/colour/index
+(was green); the heat map draws NA gray. Strict TDD; claim `1bcc1f76e`, GREEN `317d61687`.
+Self-score 8/10. Slips: a test pinning the old green was missed in RED; prose "grey" failed
+`test_wordlist_coverage.R` (use "gray" in docs).
+**Gotchas kept:** `getGeneticDiversityStats()` now emits an NA Production cell for a no-dam group;
+the modules' own UI text for an NA cell was not inspected. `devtools::document()` churns
+`man/nprcgenekeepr-package.Rd`; revert it unless DESCRIPTION changed on purpose.
 
 ### Session 862 Handoff Evaluation (by Session 863)
 **Score: 8/10.** **Helped:** next steps named the exact owner decision (0 dams green vs grey) and the backlog line; the 20-ahead count was right. **Missing:** it did not say the sibling metric already returned NA, nor that the heat map rejects NA, which decided the scope. **Wrong:** nothing found. **ROI:** high.
