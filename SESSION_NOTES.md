@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 869 Did
+**Deliverable:** wrap the 15 `SESSION_NOTES.md` lines over 280 B so `context_budget.py` has no per-line finding (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning. Docs only; no TDD phase applies.
+**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+
 ### What Session 868 Did
 **Deliverable, DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`:
 `docs/research/` (5) and 41 older `docs/audits/` files. 42 moderate, 62 minor, no code defects.
