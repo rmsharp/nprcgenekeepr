@@ -67,8 +67,7 @@ selectPotentialSires <- function(ba, focalBirth, mgp) {
   exit <- id <- sex <- NULL
   ba[
     sex == sexCodes[["male"]] &
-      (is.na(ba$exit) |
-        exit >= (focalBirth - mgp)),
+      (is.na(exit) | exit >= (focalBirth - mgp)),
     id
   ]
 }
@@ -91,8 +90,7 @@ selectPotentialDams <- function(ba, focalBirth, mgp, ped) {
   birth <- exit <- id <- sex <- NULL
   dYear <- 365L # used for number of days in a year
   potentialDams <- ba[sex == sexCodes[["female"]] &
-    (is.na(ba$exit) |
-      exit >= focalBirth), ]
+    (is.na(exit) | exit >= focalBirth), ]
 
   ## Females who delivered another offspring within one gestational period of
   ## the focal birth: a female bears one offspring at a time, so she cannot have
