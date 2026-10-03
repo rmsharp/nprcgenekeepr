@@ -98,7 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 867 Did
+### What Session 868 Did
+**Deliverable:** docs-staleness audit slice 8 -- `docs/research/` (5 files) and the older
+`docs/audits/` reports, one audit report under `docs/audits/` (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning. Owner picked the item and the scope at Orient.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
+### What Session 867 Did (condensed S868; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **Deliverable, DONE:** the last near-duplicates of the Breeding Groups / Mate Pair ancestry-override
 code are shared in `R/ancestryOverrides.R`: `.ancestryOverrideStatusText(ov, onThisTab)`,
 `.ancestryOverrideStatusUI(txt)`, `.ancestryOverrideApply(current, ovr, ruleKey, reason)` (the confirm
