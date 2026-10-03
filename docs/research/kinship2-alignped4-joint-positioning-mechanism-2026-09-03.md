@@ -1,5 +1,7 @@
 # Research: kinship2's `align.pedigree()` joint-positioning mechanism, and what porting it would cost
 
+> **Status as of 2026-10-02 (S870):** This report informed the A-versus-C joint-positioning decision, and option (C) was adopted and built (`.solveJointQP()`, S673-S697; plan `docs/planning/pedigree-diagram-joint-qp-solver-plan.md`). `quadprog` is now in `DESCRIPTION` Imports (added S673), so "absent from DESCRIPTION" no longer holds. File and line cites into `R/makePedigreeDiagramData.R` are as of S670 (the file is now 3,095 lines); do not use them to navigate. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-09-03 (Session 670)
 **Trigger:** `BACKLOG.md` Up Next item "Research: characterize kinship2's `align.pedigree()`
 joint-positioning mechanism (`alignped4.R`) to quantify the (C) joint-solver option"

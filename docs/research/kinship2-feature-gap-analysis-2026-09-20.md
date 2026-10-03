@@ -1,5 +1,7 @@
 # kinship2 Feature-Gap Analysis — nprcgenekeepr Coverage of kinship2's Exported Surface
 
+> **Status as of 2026-10-02 (S870):** Issues #131-#137 and #143-#145 named here are closed, and the BACKLOG standalone-package item's prep steps D-1, D-2 and D-3 are done (S744-S746), so "queued" or "remain" wording below is out of date. The `file:line` cites (`R/`, `BACKLOG.md`, `NEWS.Rmd`) are as of 2026-09-20 and mostly land elsewhere now; find the function by name instead. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-09-20 · **Session:** S741 · **Type:** capability-gap analysis (step 1 of the
 S739 BACKLOG item "Discuss making a kinship2-similar standalone package from code within
 this repository," `BACKLOG.md:95`; step 2 — the owner discussion — is out of scope here)

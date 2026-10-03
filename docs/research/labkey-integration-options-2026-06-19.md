@@ -1,5 +1,7 @@
 # LabKey Integration Options for nprcgenekeepr
 
+> **Status as of 2026-10-02 (S870):** Recommendations 1-5 are implemented (`Rlabkey (>= 3.2.0)` in `DESCRIPTION`, `defaultSiteParams()`, optional API-key authentication, the `getPedigreeSource()` adapter, `getLkDirectRelatives()` delegating to it); see the BACKLOG item "Act on the LabKey integration research recommendations" for what remains. The "CRAN-archived 2025-07-29, working toward re-submission" wording is as of 2026-06-19; the scoping report of 2026-09-02 says 2.0.0 is on CRAN (published 2026-07-26), which was not re-checked against CRAN here. The body below is the dated record as written; it was not edited.
+
 *A research/evaluation of how nprcgenekeepr connects to LabKey EHR servers today, what the underlying schema contract actually is across the three primate centers, and what (if anything) to change before CRAN re-submission.*
 
 **Status / date / scope:** Research document, as of 2026-06-19. Scope = the LabKey/`Rlabkey` data-source integration of nprcgenekeepr v2.0.0 (CRAN-archived 2025-07-29, working toward re-submission). Covers `Rlabkey` API/auth/version risk, the EHR-module schema ground truth (base `LabKey/ehrModules`, plus `onprcEHRModules`, `snprcEHRModules`, `nircEHRModules`), and architectural alternatives. Out of scope: the genetic-analysis math, the Shiny app, and any non-LabKey data path. Audience: the maintainer (R. Mark Sharp) and future contributors. All time-relative claims are stamped "(as of 2026-06-19)".

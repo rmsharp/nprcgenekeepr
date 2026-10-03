@@ -1,5 +1,7 @@
 # Scoping: factoring the pedigree-diagram layout code into a separate R package
 
+> **Status as of 2026-10-02 (S870):** The "STANDING TOP PRIORITY (S643)" described here was retired by the owner's sign-off on 2026-09-17 (S699), so revisit condition 1 is met in its first half. Prep steps D-1, D-2 and D-3 (Option D) are DONE (S744-S746). The live revisit conditions are in the BACKLOG standalone-package item (disposition S738 and S742). The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-09-02 (Session 667)
 **Trigger:** `BACKLOG.md` Up Next item "Investigate factoring out the pedigree-diagram drawing
 functionality into a separate R package that `nprcgenekeepr` depends on" (found 2026-08-19,
