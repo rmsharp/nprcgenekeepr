@@ -117,9 +117,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       from slice 1:** owner decides delete-or-ignore for the one remaining PDF, the tracked `kinship2-fidelity-validation.pdf` (S853 correction); regenerate `trackC-nprc-rectilinear.png`
       (`data-raw/kinship2FidelityValidation.R`; look at the fresh arc touching the `W` square first); the third, the stale "defaulting to direct"
       comment at `R/modPedigree.R:459-461`, was **FIXED S882** (it now says `"rectilinear"`, the default since S574; the parsed code is unchanged), as the `_pedigree_browser.Rmd` wording was S828.
-      **Found S882, same kind, still open (READY, Effort S, comment only):** the `@noRd` roxygen of `.addRectilinearWaypoints()`
-      (`R/makePedigreeDiagramData.R:2110-2113`) calls `"direct"` `makePedigreeMatingLayout()`'s own default and says the function
-      "has no call site yet"; the default is `"rectilinear"` (`:1675`) and the call site is `:2070`. **Slice 2 DONE S821** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`): 31 of 38
+      **Found S882, same kind, FIXED S883 (comment only; parsed code identical):** the `@noRd` roxygen of `.addRectilinearWaypoints()`
+      (`R/makePedigreeDiagramData.R:2110-2113`) called `"direct"` `makePedigreeMatingLayout()`'s own default and said the function
+      "has no call site yet"; the default is `"rectilinear"` (`:1675`) and the call site is `:2070`; the block now says so. **Slice 2 DONE S821** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`): 31 of 38
       regenerable `shiny_app_use/` images differ from the app (Pedigree Browser family +147 px; Home, Input, Summary
       Statistics, Breeding Groups, GVA); the colony script's tail fails identically every run (diagnose first, then
       regenerate by module); 12 images have no generator; `pb_unknown_displayed.png` is an orphan. **Slice 3 DONE S822** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`): the 11 articles' prose has

@@ -2106,11 +2106,11 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 #' \code{\link{.positionMatingUnitForest}}'s coordinates, and returns a new
 #' node/edge pair with invisible waypoint nodes inserted so every mate-line
 #' and sibship-bar edge routes as a strict right angle instead of a direct
-#' diagonal/straight segment. No change to \code{.buildMatingUnitForest()},
-#' \code{.positionMatingUnitForest()}, or \code{makePedigreeMatingLayout()}'s
-#' own default ("direct") behavior -- this function has no call site yet
-#' (Migration Path step 1; the \code{edgeStyle} parameter wiring and
-#' \code{R/modPedigree.R} UI control are a later implementation slice).
+#' diagonal/straight segment. No change to \code{.buildMatingUnitForest()}
+#' or \code{.positionMatingUnitForest()}.
+#' \code{\link{makePedigreeMatingLayout}} calls this function, then
+#' \code{.resolveEdgeNodeCollisions()}, when \code{edgeStyle} is
+#' \code{"rectilinear"} (its default since S574); \code{"direct"} skips it.
 #'
 #' A node with vis.js's own \code{hidden = TRUE} option suppresses every
 #' edge connected to it, regardless of the edge's own \code{hidden} setting
