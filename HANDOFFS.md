@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S866
+date: 2026-10-02
+status: pending
+active_task: Excluded-tab export for mate-pair ancestry guardrails (curator can download the blocked-pairs list); strict TDD
+```
+
+```handoff
 session: S865
 date: 2026-10-02
 status: complete

@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 866 Did
+**Deliverable:** Excluded-tab export for mate-pair ancestry guardrails (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Owner picked this item at Orient. Strict TDD, PRE-RED; scope questions pending.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
+### Session 865 (previous) follows
+
 ### What Session 865 Did
 **Deliverable, DONE:** the duplicated ancestry-override gate code in `R/modBreedingGroups.R` and
 `R/modMatePair.R` is now shared. Strict TDD, all three phases, each gated by an `AskUserQuestion`.
