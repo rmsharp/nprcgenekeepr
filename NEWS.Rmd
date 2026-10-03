@@ -315,6 +315,12 @@ longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- Fixed: loading an ancestry rules table that is valid but has no rules made
+  Download Audit Manifest fail with an error on both the Mate Pair and Breeding
+  Groups tabs. A table with no rules now counts as no rules in effect: the
+  download works, and its single row says that no ancestry rules were in effect
+  for the run.
+
 - Fixed: a breeding group with no breeding-age females was shown as a green
   Production cell in the Genetic Diversity dashboard, as healthy as a group
   that meets its birth target. Production cannot be calculated for such a

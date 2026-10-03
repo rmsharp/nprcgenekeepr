@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S864
 date: 2026-10-02
-status: pending
-active_task: zero-rule ancestry table reads as inactive in .buildAncestryOverrideManifest() (Download Audit Manifest on Mate Pair and Breeding Groups); strict TDD
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- a valid zero-rule ancestry table now gives a 1-row inactive audit manifest instead of an error (Mate Pair and Breeding Groups); strict TDD, REFACTOR skipped by owner
+what_was_done: claim a66e2e4bb; GREEN 38c38ee90 (R/ancestryOverrides.R, test_ancestryOverrides.R, test_matePairAncestryManifest.R); close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG, records. Owner chose scope = zero-rule only and behavior = inactive.
+next_steps: (A) Owner: PED_GV leftovers; mate-pair residue (Excluded-tab export DECISION NEEDED; duplicated gate code READY refactor); CV1/CV2. (B) 3.0.0 release prep needs its own scoping session. (C) Push only on owner's say-so (about 25 ahead). (D) Optional: watch CI on 38c38ee90.
+key_files: R/ancestryOverrides.R:212-290; tests/testthat/test_ancestryOverrides.R (zero-rule tests); tests/testthat/test_matePairAncestryManifest.R; R/modMatePair.R:562; R/modBreedingGroups.R:889
+gotchas: modules pass any non-NULL rules table to the builder so a zero-rule run yields a 1-row CSV (download UI text not inspected); test_markerParentageLikelihood.R runtime benchmark flakes under load, re-run alone; guard test pinned to "not present in rules" so it cannot pass via the old stop
+runtime_smoke: not done -- no app launch, no module-level test; builder covered at unit level only (stated as a gap). quality_ratchet: not run (no .quality-gates.json run this session).
+changelog_ref: S864 DONE entry
+commit: the close-out commit that carries this receipt; claim a66e2e4bb; GREEN 38c38ee90
 ```
 
 ```handoff
