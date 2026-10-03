@@ -1,5 +1,7 @@
 # Pedigree Diagram Backlog Sequencing Audit
 
+> **Status as of 2026-10-02 (S870):** The ratified order was executed (Tier 1 in S481-S484, Tier 2 in S485-S500). Of the issues it lists only #138 is still open. Finding 1 (no sex-based ordering) is out of date because #145 shipped in S500. The `BACKLOG.md` line numbers in its table point at a file that is now shorter; use the item names. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-08-08 · **Session:** S480 · **Type:** capability-informed sequencing audit (not a
 defect audit — recommends an implementation *order* for already-filed items; files no new issues
 itself, per the established "audit recommends, a later session files" precedent set by

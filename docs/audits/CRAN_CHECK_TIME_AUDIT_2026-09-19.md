@@ -1,5 +1,7 @@
 # CRAN Check-Time Audit — 2026-09-19 (Session 730)
 
+> **Status as of 2026-10-02 (S870):** RESOLVED in S732 (`ba088d0dc`): the `makePedigreeMatingLayout` example now uses `smallPed` (17 rows, 0.03 s, down from `examplePedigree`, 3,694 rows, 734 s), so Finding 1 and Recommendations 1-2 are done. The body below is the dated record as written; it was not edited.
+
 **One example is the entire problem.** A full `R CMD check --timings` of the clean-export
 tarball, run on the CRAN-visible surface (no `NOT_CRAN`), completes **Status: OK in 1,037 s
 wall / 1,032 s CPU (17.3 min)** — and **734 s (71 %) of it is the single

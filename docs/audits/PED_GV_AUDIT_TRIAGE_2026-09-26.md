@@ -1,5 +1,7 @@
 # PED + GV Audit Triage (Session 781)
 
+> **Status as of 2026-10-02 (S870):** Findings F1-F4 are fixed (S782, S783, S797 with S808-S811, S798), so Recommendation 1 would redo finished work; `BACKLOG.md` (the PED_GV item) holds what is open. The table's PRESENT verdict is also out of date for NEW-14, PED-11, NEW-56, NEW-63 and PED-10/NEW-43, fixed in S795 (`926cc907b`), which `BACKLOG.md` does not list; NEW-62 is still present. The body below is the dated record as written; it was not edited.
+
 **Question answered:** of the findings in `PED_GV_AUDIT_2026-05-30.md` that the ledger does not
 record as fixed, which are still present in today's code, which were fixed under another name,
 and which never were defects? "Ledger-absent" is not "unresolved" (Learning 791), so each id was
