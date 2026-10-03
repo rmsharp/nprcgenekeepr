@@ -99,6 +99,13 @@
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
 #' those founders), and \code{total} (the total number of known founders).
+#' The founder lists hold only \emph{known} founders: an animal with both
+#' parents unknown whose id was generated to stand in for an unknown parent is
+#' left out, because that placeholder may be a known founder, another animal
+#' in the population, or an animal outside it. \code{fe} and \code{fg}, by
+#' contrast, count every animal with both parents unknown as a separate,
+#' unrelated founder (see \code{\link{calcFEFG}}), so they can differ from
+#' \code{total}.
 #' \code{report} also carries a \code{flagged} column (issue #127):
 #' \code{TRUE} for a one-unknown-parent animal left uncorrected by
 #' \code{correctUnknownParentMeanKinship()} for lack of an eligible

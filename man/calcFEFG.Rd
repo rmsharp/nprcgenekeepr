@@ -11,7 +11,15 @@ calcFEFG(ped, alleles)
 (req. fields: id, sire, dam, gen, population).
 
 The pedigree must have no partial parentage (every animal has both parents
-known or both unknown); \code{calcFEFG} stops with an error otherwise.}
+known or both unknown); \code{calcFEFG} stops with an error otherwise.
+
+Every animal with both parents unknown is treated as a separate, unrelated
+founder, including an animal whose id was generated to stand in for an
+unknown parent. Such a placeholder may in fact be a known founder, another
+animal in the population, or an animal outside it, so the unrelated-founder
+assumption can overstate \code{FE} and \code{FG} when placeholders are
+common. \code{\link{reportGV}} lists only the \emph{known} founders, so its
+founder counts can be smaller than the founder set used here.}
 
 \item{alleles}{dataframe contains an \code{AlleleTable}. This is a
 table of allele information produced by \code{geneDrop()}.}
