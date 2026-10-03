@@ -15,33 +15,29 @@ library(testthat)
 
 findBareSexCodeLiterals <- function(file_path) {
   lines <- readLines(file_path, warn = FALSE)
-  comparisonPattern <- '(==|!=)\\s*"[MFHU]"'
+  q <- "[\"'][MFHU][\"']"
+  # S874 (sexCodes adoption plan, docs/planning/sexcodes-adoption-plan.md):
+  # widened from `==`/`!=` to also catch a letter on the left of the
+  # operator, `%in%` sets and `identical()` calls.
+  comparisonPattern <- paste0("(==|!=)\\s*", q, "|", q, "\\s*(==|!=)")
+  membershipPattern <- paste0("%in%\\s*(c\\()?\\s*", q)
+  identicalPattern <- paste0("identical\\([^)]*", q)
   pairPattern <- 'c\\(\\s*"[MFHU]"\\s*,\\s*"[MFHU]"\\s*\\)'
   offenders <- integer(0)
   for (i in seq_along(lines)) {
     line <- lines[[i]]
-    if (grepl("^\\s*#'", line)) {
+    if (grepl("^\\s*#", line)) {
       next
     }
-    if (grepl(comparisonPattern, line) || grepl(pairPattern, line)) {
+    if (grepl(comparisonPattern, line) || grepl(membershipPattern, line) ||
+          grepl(identicalPattern, line) || grepl(pairPattern, line)) {
       offenders <- c(offenders, i)
     }
   }
   offenders
 }
 
-test_that("sexCodes defines the four canonical values", {
-  expect_identical(sexCodes[["male"]], "M")
-  expect_identical(sexCodes[["female"]], "F")
-  expect_identical(sexCodes[["hermaphrodite"]], "H")
-  expect_identical(sexCodes[["unknown"]], "U")
-})
-
-test_that("no bare sex-code literals remain in the 6 XARCH-4 files", {
-  files <- c(
-    "getPotentialSires.R", "calculateSexRatio.R", "fillBins.R",
-    "filterPairs.R", "modBreedingGroups.R", "modSummaryStats.R"
-  )
+expectNoBareSexCodeLiterals <- function(files) {
   offenders <- character(0)
   for (f in files) {
     src <- testthat::test_path("..", "..", "R", f)
@@ -58,4 +54,45 @@ test_that("no bare sex-code literals remain in the 6 XARCH-4 files", {
       paste(offenders, collapse = "\n")
     )
   )
+}
+
+test_that("sexCodes defines the four canonical values", {
+  expect_identical(sexCodes[["male"]], "M")
+  expect_identical(sexCodes[["female"]], "F")
+  expect_identical(sexCodes[["hermaphrodite"]], "H")
+  expect_identical(sexCodes[["unknown"]], "U")
+})
+
+test_that("no bare sex-code literals remain in the 6 XARCH-4 files", {
+  expectNoBareSexCodeLiterals(c(
+    "getPotentialSires.R", "calculateSexRatio.R", "fillBins.R",
+    "filterPairs.R", "modBreedingGroups.R", "modSummaryStats.R"
+  ))
+})
+
+# Sex-code adoption (docs/planning/sexcodes-adoption-plan.md): each stage
+# adds its files here, then converts them. Stage 6 replaces this list with a
+# scan of every R/*.R file minus an allowlist.
+test_that("no bare sex-code literals remain in the stage 1 files", {
+  expectNoBareSexCodeLiterals(c(
+    "calcNeSexRatio.R", "createColonySnapshot.R",
+    "getSexRatioWithAdditions.R", "getProductionStatus.R"
+  ))
+})
+
+test_that("the guard flags each bare-literal form it claims to catch", {
+  tmp <- tempfile(fileext = ".R")
+  on.exit(unlink(tmp))
+  writeLines(c(
+    "x <- sex == \"M\"",
+    "x <- sex != 'F'",
+    "x <- \"H\" == sex",
+    "x <- sex %in% c(\"U\", \"M\")",
+    "x <- identical(sexOf[[p]], \"M\")",
+    "x <- sex == sexCodes[[\"male\"]]",
+    "#' sex == \"M\" in roxygen",
+    "# sex == \"M\" in a comment",
+    "x <- convert == \"MALE\""
+  ), tmp)
+  expect_identical(findBareSexCodeLiterals(tmp), 1:5)
 })

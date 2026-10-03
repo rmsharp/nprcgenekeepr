@@ -39,8 +39,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       suggested RED: a guard test that scans `R/` for a quoted sex letter next to `==`, `!=`,
       `%in%` or `identical` outside `sexCodes.R` and `convertSexCodes.R`'s level list. Needs
       staged commits (5-file cap) and plan-mode approval, since `SAFEGUARDS.md` treats a
-      cross-file refactor as Architect Mode. Close PED-2, NEW-29, PED-7 in the triage report
-      when it ships.
+      cross-file refactor as Architect Mode. **Stage 1 of 6 shipped S874** (guard widened; 4 files);
+      next is stage 2 (plan section 4). Close PED-2, NEW-29, PED-7 in the triage report
+      when the last stage ships.
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --

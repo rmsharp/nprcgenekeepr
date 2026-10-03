@@ -51,8 +51,8 @@
 calcNeSexRatio <- function(ped) {
   breeders <- getLivingBreeders(ped)
   sex <- ped$sex[match(breeders, ped$id)]
-  nMale <- sum(sex == "M", na.rm = TRUE)
-  nFemale <- sum(sex == "F", na.rm = TRUE)
+  nMale <- sum(sex == sexCodes[["male"]], na.rm = TRUE)
+  nFemale <- sum(sex == sexCodes[["female"]], na.rm = TRUE)
   if (nMale == 0L || nFemale == 0L) {
     return(0.0)
   }

@@ -99,33 +99,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 874 Did
-**Deliverable:** `sexCodes` adoption, stage 1 of 6 (IN PROGRESS), strict TDD.
-**Started:** 2026-10-02. **Status:** Session claimed; PRE-RED.
-**Ledger:** `CHANGELOG: pending`
+**Deliverable, DONE:** `sexCodes` adoption stage 1 of 6, strict TDD (RED, GREEN, REFACTOR gated by
+`AskUserQuestion`). Claim `cc22c5ce6`; code in the close-out commit.
+**Done:** guard in `tests/testthat/test_sexCodes.R` widened (`==`/`!=` both sides, `%in%`,
+`identical()`, single quotes, `#` comments skipped) with a self-test and a stage-1 file list; new
+`test_getSexRatioWithAdditions.R` (5 cases, passes on old and new code). 7 bare letters in
+`calcNeSexRatio`, `createColonySnapshot`, `getSexRatioWithAdditions`, `getProductionStatus` now use
+`sexCodes[["male"]]`/`[["female"]]`; REFACTOR found nothing to change.
+**Verified by me:** 7 test files pass; `lint_package()` 0 lints; full `test_dir` 0 failed, 0 error
+(187 skipped, 365 files). Not run: `devtools::check()` (plan: stage 6), shinytest2 (no module touched).
 
-### What Session 873 Did
-**Deliverable, DONE:** the scoping plan for the `sexCodes` adoption: `docs/planning/sexcodes-adoption-plan.md`.
-Planning only, no `R/` or test file changed, no TDD phase. Claim `6a84d5abe`; plan in the close-out commit.
-**Plan in brief:** 17 files in scope (43 code lines: 37 comparisons, 3 assignments, 3 argument literals);
-6 staged sessions (4 R files + the guard test each); the guard test grows a per-stage file list so the
-suite stays green, then flips to a full `R/` scan with an allowlist in stage 6.
-**Verified by me:** the inventory, by grep of `R/*.R` plus reading each hit. `getSexRatioWithAdditions`
-has no direct test (0 test files); stage 1 adds one. Not run: tests, lint (no `.R` changed).
-**Needs the owner (plan section 5):** keep or change the exported `groupAddAssign` default (the man page
-would show `sexCodes[["female"]]`); confirm leaving `convertSexCodes.R` and the two fixtures alone.
+**Handoff evaluation of S873 (by S874): 9/10.** Helped: per-stage file list and guard design were
+usable as written; the owner answers were already in the plan. Missing: stage-1 line count (7, not
+the 6 I first assumed); no warning that the commit hook caps `SESSION_NOTES.md` in tokens (25,000).
 
-**Handoff evaluation of S872 (by S873): 9/10.** Helped: its BACKLOG item and the gotchas (level list,
-roxygen hits) shaped the guard design directly. Wrong/missing: its "40 lines in 16 files" mixed forms; I
-re-split it (43 lines in 17 files by form, comparisons alone 37 in 13).
+**Self-assessment: 8/10.** + One deliverable; RED proved on exactly the expected lines; behavior
+preserved (NA-sex case reasoned through). - The claim commit was refused by the token ceiling and
+`methodology_trim.py` had nothing to do, so I condensed the S872 record by hand (a detour).
 
-**Self-assessment: 8/10.** + One deliverable; evidence-based inventory; per-stage criteria with surface.
-- Did not run any test to confirm today's baseline is green (plan assumes it).
+**Next steps:** stage 2: `getSpeciesMinBreedingAge`, `resolveBreedingAge`, `checkParentAge`,
+`getKinshipWithMaleStatus` (plan section 4; `checkParentAge.R:148,151` are argument literals, form C).
+RED = add them to a stage-2 list in `test_sexCodes.R`; the guard regexes need an `"M",` argument form.
+**Gotchas:** macOS `sed -i` needs `-i ''`. `test_createColonySnapshot.R` emits two gene-drop
+warnings outside `test_that()` (unrelated). Reduction this session: S872 and S873 records condensed.
 
-**Next steps:** (A) owner answers plan section 5, then stage 1 (RED: guard list + `getSexRatioWithAdditions`
-test). (B) other open owner decisions. (C) 3.0.0 release prep. (D) push only on the owner's say-so.
-**Gotchas:** single-bracket `sexCodes["male"]` is named and breaks `identical()`; `.shapeForVec` at
-`makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`. No reduction possible this session
-beyond keeping this record short.
+### What Session 873 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** scoping plan `docs/planning/sexcodes-adoption-plan.md` (43 code lines, 17 files, six
+staged sessions); owner approved it (literal `groupAddAssign` default kept and allowlisted;
+`convertSexCodes.R` and two fixtures left). Planning only. Claim `6a84d5abe`. Self 8/10.
+**Gotchas kept:** single-bracket `sexCodes["male"]` is named and breaks `identical()`; `.shapeForVec`
+at `makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`.
 
 ### What Session 872 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** owner decision recorded: every direct sex letter in `R/` goes through `sexCodes`

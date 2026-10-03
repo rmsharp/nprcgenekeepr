@@ -151,8 +151,8 @@ createColonySnapshot <- function(ped, geneticValue, membershipRule,
     guIter = guIter,
     guThresh = guThresh,
     nAnimals = nrow(report),
-    nMales = sum(report$sex == "M", na.rm = TRUE),
-    nFemales = sum(report$sex == "F", na.rm = TRUE),
+    nMales = sum(report$sex == sexCodes[["male"]], na.rm = TRUE),
+    nFemales = sum(report$sex == sexCodes[["female"]], na.rm = TRUE),
     ## colony scalars, verbatim from the reportGV object (as.numeric() only
     ## pins the schema's numeric type; a degenerate all-NA scalar would
     ## otherwise arrive as logical NA and fail checkSnapshotHistory())

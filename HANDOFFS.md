@@ -32,8 +32,15 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S874
 date: 2026-10-02
-status: pending
-active_task: sexCodes adoption stage 1 of 6 (calcNeSexRatio, createColonySnapshot, getSexRatioWithAdditions, getProductionStatus); strict TDD
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- sexCodes adoption stage 1 of 6 (calcNeSexRatio, createColonySnapshot, getSexRatioWithAdditions, getProductionStatus); stages 2-6 remain
+what_was_done: claim cc22c5ce6; guard in test_sexCodes.R widened (both-side ==/!=, %in%, identical, single quotes) with a self-test and stage-1 list; new test_getSexRatioWithAdditions.R; 7 bare letters in 4 R files now use sexCodes[["male"]]/[["female"]]; code and records in the close-out commit
+next_steps: stage 2 of docs/planning/sexcodes-adoption-plan.md section 4: getSpeciesMinBreedingAge, resolveBreedingAge, checkParentAge (lines 148,151 are argument literals), getKinshipWithMaleStatus; RED = add a stage-2 file list to test_sexCodes.R and extend the guard for the "M", argument form; estimate: 4 R files + the guard test = 5 files
+key_files: tests/testthat/test_sexCodes.R (findBareSexCodeLiterals, expectNoBareSexCodeLiterals, stage-1 test); tests/testthat/test_getSexRatioWithAdditions.R; R/getSexRatioWithAdditions.R:20-24; R/calcNeSexRatio.R:54-55; R/createColonySnapshot.R:154-155; R/getProductionStatus.R:83
+gotchas: SESSION_NOTES.md has a 25,000-token commit ceiling (a claim stub was refused; methodology_trim.py had nothing to do, so condense an older record); macOS sed needs -i ''; getSexRatioWithAdditions counts every non-M (incl. U, H, NA) as female, pinned by the new test; test_createColonySnapshot.R warns about gene-drop outside test_that (unrelated)
+runtime_smoke: 7 touched test files pass; lintr::lint_package() 0 lints; full test_dir 0 failed 0 error 187 skipped over 365 files; no Shiny module touched so no shinytest2 run. quality_ratchet: not run (no .quality-gates.json check performed).
 ```
 
 ```handoff

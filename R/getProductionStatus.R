@@ -80,7 +80,7 @@ getProductionStatus <- function(ped, minDamAge = 3L,
     missingCol <- expectedCols[!expectedCols %in% names(ped)]
     stop("ped is missing: ", missingCol)
   }
-  nDam <- nrow(ped[ped$sex == "F" & ped$age >= minDamAge, ])
+  nDam <- nrow(ped[ped$sex == sexCodes[["female"]] & ped$age >= minDamAge, ])
   if (is.null(maxOffspringAge)) {
     # nolint start: nonportable_path_linter
     maxOffspringAge <- mdy(paste0("1/1/", year(currentDate) - 2L))

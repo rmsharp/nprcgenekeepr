@@ -18,6 +18,7 @@
 #' @noRd
 getSexRatioWithAdditions <- function(ids, ped, additionalMales,
                                      additionalFemales) {
-  (length(ped$sex[ped$id %in% ids & ped$sex != "M"]) + additionalFemales) /
-    (length(ped$sex[ped$id %in% ids & ped$sex == "M"]) + additionalMales)
+  isMale <- ped$sex == sexCodes[["male"]]
+  (length(ped$sex[ped$id %in% ids & !isMale]) + additionalFemales) /
+    (length(ped$sex[ped$id %in% ids & isMale]) + additionalMales)
 }
