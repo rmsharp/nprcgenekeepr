@@ -99,10 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 873 Did
-**Deliverable:** plan for adopting `sexCodes` in every direct sex-letter use in `R/` (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning. Planning only; no code.
-**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+**Deliverable, DONE:** the scoping plan for the `sexCodes` adoption: `docs/planning/sexcodes-adoption-plan.md`.
+Planning only, no `R/` or test file changed, no TDD phase. Claim `6a84d5abe`; plan in the close-out commit.
+**Plan in brief:** 17 files in scope (43 code lines: 37 comparisons, 3 assignments, 3 argument literals);
+6 staged sessions (4 R files + the guard test each); the guard test grows a per-stage file list so the
+suite stays green, then flips to a full `R/` scan with an allowlist in stage 6.
+**Verified by me:** the inventory, by grep of `R/*.R` plus reading each hit. `getSexRatioWithAdditions`
+has no direct test (0 test files); stage 1 adds one. Not run: tests, lint (no `.R` changed).
+**Needs the owner (plan section 5):** keep or change the exported `groupAddAssign` default (the man page
+would show `sexCodes[["female"]]`); confirm leaving `convertSexCodes.R` and the two fixtures alone.
+
+**Handoff evaluation of S872 (by S873): 9/10.** Helped: its BACKLOG item and the gotchas (level list,
+roxygen hits) shaped the guard design directly. Wrong/missing: its "40 lines in 16 files" mixed forms; I
+re-split it (43 lines in 17 files by form, comparisons alone 37 in 13).
+
+**Self-assessment: 8/10.** + One deliverable; evidence-based inventory; per-stage criteria with surface.
+- Did not run any test to confirm today's baseline is green (plan assumes it).
+
+**Next steps:** (A) owner answers plan section 5, then stage 1 (RED: guard list + `getSexRatioWithAdditions`
+test). (B) other open owner decisions. (C) 3.0.0 release prep. (D) push only on the owner's say-so.
+**Gotchas:** single-bracket `sexCodes["male"]` is named and breaks `identical()`; `.shapeForVec` at
+`makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`. No reduction possible this session
+beyond keeping this record short.
 
 ### What Session 872 Did
 **Deliverable, DONE:** the owner's PED-2 / NEW-29 / PED-7 decision, recorded. Docs only, no TDD phase.

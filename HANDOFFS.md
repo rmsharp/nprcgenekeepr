@@ -32,8 +32,15 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S873
 date: 2026-10-02
-status: pending
-active_task: plan-mode scoping of the sexCodes adoption (PED-2/NEW-29/PED-7); plan document only
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- scoping plan for the sexCodes adoption written (docs/planning/sexcodes-adoption-plan.md); no code touched
+what_was_done: claim 6a84d5abe; plan document with grep inventory (43 code lines, 17 files), 6 staged sessions, guard-test design; BACKLOG item updated; records in the close-out commit
+next_steps: owner answers plan section 5 (groupAddAssign default; leave convertSexCodes.R and fixtures), then stage 1 of the plan under strict TDD: RED = add the 4 stage-1 files to the guard list in tests/testthat/test_sexCodes.R plus a direct getSexRatioWithAdditions test. Push only on owner say-so
+key_files: docs/planning/sexcodes-adoption-plan.md; tests/testthat/test_sexCodes.R:12-25 (guard helper); R/sexCodes.R:13; R/groupAddAssign.R:179; man/groupAddAssign.Rd:13; R/makePedigreeDiagramData.R:965,1090,1262,1840
+gotchas: sexCodes["male"] (single bracket) is named and breaks identical(); .shapeForVec param named sexCodes shadows the constant; getSexRatioWithAdditions has no direct test; non-sex quoted letters at convertFromCenter:28, convertStatusCodes:40, obfuscateId:53-54, qcStudbook:412
+runtime_smoke: not applicable -- planning/docs only; no tests or lint run (no .R file changed). quality_ratchet: not run.
 ```
 
 ```handoff
