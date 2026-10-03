@@ -77,38 +77,88 @@ test_that("no bare sex-code literals remain in the 6 XARCH-4 files", {
   ))
 })
 
-# Sex-code adoption (docs/planning/sexcodes-adoption-plan.md): each stage
-# adds its files here, then converts them. Stage 6 replaces this list with a
-# scan of every R/*.R file minus an allowlist.
-test_that("no bare sex-code literals remain in the stage 1 files", {
-  expectNoBareSexCodeLiterals(c(
-    "calcNeSexRatio.R", "createColonySnapshot.R",
-    "getSexRatioWithAdditions.R", "getProductionStatus.R"
-  ))
+# Sex-code adoption, stage 6 (docs/planning/sexcodes-adoption-plan.md section
+# 4): the per-stage file lists are replaced by a scan of every R/*.R file, so a
+# new bare sex letter anywhere in R/ fails here. Exempt: whole files that
+# legitimately hold the letters (`convertSexCodes.R` defines the vocabulary,
+# `createPedOne.R` and `createPedSix.R` are example data), and single lines
+# that are not sex codes or are an owner-approved literal, matched by exact
+# trimmed text so a new letter in the same file is still caught.
+sexCodeAllowedFiles <- c(
+  "sexCodes.R", "convertSexCodes.R", "createPedOne.R", "createPedSix.R"
+)
+sexCodeAllowedLines <- c(
+  # "F" is FALSE, not female
+  'falseValues <- c("N", "NO", "F", "FALSE")',
+  'mark[text %in% c("FALSE", "false", "False", "F", "0")] <- FALSE',
+  # "U" is the first letter of UNKNOWN
+  'status[status %in% c("UNKNOWN", "U", "4")] <- "UNKNOWN"',
+  # alphabet used to build obfuscated ids
+  '"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",',
+  '"M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",',
+  # owner kept the literal default of the exported groupAddAssign() (S873)
+  'threshold = 0.015625, ignore = list(c("F", "F")),'
+)
+
+scanForBareSexCodeLiterals <- function(rDir, allowedFiles, allowedLines) {
+  offenders <- character(0)
+  for (f in setdiff(list.files(rDir, pattern = "\\.[Rr]$"), allowedFiles)) {
+    path <- file.path(rDir, f)
+    lines <- readLines(path, warn = FALSE)
+    hits <- findBareSexCodeLiterals(path)
+    hits <- hits[!(trimws(lines[hits]) %in% allowedLines)]
+    if (length(hits) > 0L) {
+      offenders <- c(offenders, paste0(f, ":", toString(hits)))
+    }
+  }
+  offenders
+}
+
+test_that("no bare sex-code literals remain anywhere in R/ outside the allowlist", {
+  rDir <- testthat::test_path("..", "..", "R")
+  skip_if(!dir.exists(rDir), "R/ source not available (installed package)")
+  offenders <- scanForBareSexCodeLiterals(
+    rDir, sexCodeAllowedFiles, sexCodeAllowedLines
+  )
+  expect_identical(
+    offenders, character(0),
+    info = paste0(
+      "Bare sex-code literal(s) in R/; route through sexCodes instead:\n",
+      paste(offenders, collapse = "\n")
+    )
+  )
 })
 
-test_that("no bare sex-code literals remain in the stage 2 files", {
-  expectNoBareSexCodeLiterals(c(
-    "getSpeciesMinBreedingAge.R", "resolveBreedingAge.R",
-    "checkParentAge.R", "getKinshipWithMaleStatus.R"
+test_that("every allowlisted file and line still exists in R/", {
+  rDir <- testthat::test_path("..", "..", "R")
+  skip_if(!dir.exists(rDir), "R/ source not available (installed package)")
+  expect_true(all(file.exists(file.path(rDir, sexCodeAllowedFiles))))
+  allLines <- unlist(lapply(
+    list.files(rDir, pattern = "\\.[Rr]$", full.names = TRUE),
+    function(f) trimws(readLines(f, warn = FALSE))
   ))
+  expect_identical(
+    setdiff(sexCodeAllowedLines, allLines), character(0),
+    info = "An allowlisted line no longer exists; remove it from the allowlist."
+  )
 })
 
-test_that("no bare sex-code literals remain in the stage 3 files", {
-  expectNoBareSexCodeLiterals(c(
-    "getPotentialParents.R", "reportGV.R", "modPyramid.R",
-    "correctUnknownParentMeanKinship.R"
-  ))
-})
-
-test_that("no bare sex-code literals remain in the stage 4 files", {
-  expectNoBareSexCodeLiterals(c(
-    "correctParentSex.R", "addParents.R", "modORIPReporting.R"
-  ))
-})
-
-test_that("no bare sex-code literals remain in the stage 5 file", {
-  expectNoBareSexCodeLiterals("makePedigreeDiagramData.R")
+test_that("the R/ scan flags a new letter, honours the allowlist, skips comments", {
+  d <- tempfile("rdir")
+  dir.create(d)
+  on.exit(unlink(d, recursive = TRUE))
+  writeLines('x <- sex == "M"', file.path(d, "newCode.R"))
+  writeLines(c("# sex == \"M\"", "x <- sexCodes[[\"male\"]]"),
+             file.path(d, "clean.R"))
+  writeLines(c('y <- c("F", "FALSE")', 'z <- sex == "F"'),
+             file.path(d, "mixed.R"))
+  writeLines('w <- sex == "U"', file.path(d, "whole.R"))
+  expect_identical(
+    scanForBareSexCodeLiterals(
+      d, allowedFiles = "whole.R", allowedLines = 'y <- c("F", "FALSE")'
+    ),
+    c("mixed.R:2", "newCode.R:1")
+  )
 })
 
 test_that("the guard flags each bare-literal form it claims to catch", {
