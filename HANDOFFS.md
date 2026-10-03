@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S872
 date: 2026-10-02
-status: pending
-active_task: PED_GV owner decisions (pick one open decision, read code, ask in plain words, record)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- owner decision on PED-2/NEW-29/PED-7 recorded (adopt sexCodes everywhere); no code touched; docs only
+what_was_done: claim bbe315dfa; BACKLOG item "Adopt sexCodes for every direct sex letter"; triage report Decision record 3 (ids stay open); records in the close-out commit
+next_steps: (A) plan-mode scoping of the sexCodes adoption, then strict TDD in staged commits, first RED a guard test scanning R/ for quoted sex letters in comparisons. (B) other owner decisions: PED-5/6, PED-3/NEW-42, sim driver, constants/HTML builders. (C) find or drop "four likely code defects". (D) 3.0.0 scoping. (E) push only on owner say-so
+key_files: R/sexCodes.R:13; R/convertSexCodes.R:56; R/addParents.R:54,62; R/makePedigreeDiagramData.R:965-1262; R/modORIPReporting.R (8 hits); BACKLOG.md (new sexCodes item); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Decision record 3)
+gotchas: count is 40 comparison lines in 16 files by grep, not the old 28/10; convertSexCodes level list and sexCodes.R itself are legitimate literals; roxygen examples also contain letters
+runtime_smoke: not applicable -- docs only; no tests or lint run (no .R file changed). quality_ratchet: not run.
+changelog_ref: S872 DONE entry
+commit: the close-out commit that carries this receipt; claim bbe315dfa
 ```
 
 ```handoff

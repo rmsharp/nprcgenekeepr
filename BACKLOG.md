@@ -29,6 +29,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 
+- [ ] **Adopt `sexCodes` for every direct sex letter in `R/` (owner decided S872, 2026-10-02;
+      READY after a plan-mode scoping step, Effort M)** -- covers PED-2, NEW-29, PED-7. Owner
+      chose "all" over "some" or "none". S872 measured 40 comparison lines in 16 files (see
+      the triage report's Decision record 3), plus assignments (`addParents.R:54,62`) and
+      `identical(sexOf[[p]], "M")` forms (`makePedigreeDiagramData.R:965-1262`). Strict TDD;
+      suggested RED: a guard test that scans `R/` for a quoted sex letter next to `==`, `!=`,
+      `%in%` or `identical` outside `sexCodes.R` and `convertSexCodes.R`'s level list. Needs
+      staged commits (5-file cap) and plan-mode approval, since `SAFEGUARDS.md` treats a
+      cross-file refactor as Architect Mode. Close PED-2, NEW-29, PED-7 in the triage report
+      when it ships.
+
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --
       the mask is written inline four times, all meaning "only the exact status `"added"` is

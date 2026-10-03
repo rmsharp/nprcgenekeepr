@@ -174,6 +174,14 @@ overhaul roots and small no-behavior-change items in Recommendations 2 and 3.
 
 Open after this closure: **31 ids**.
 
+### Decision record 3 (owner decision 2026-10-02, S872) -- not a closure
+
+| id | decided |
+|---|---|
+| PED-2, NEW-29, PED-7 | ADOPT EVERYWHERE: every direct `"M"`/`"F"`/`"U"`/`"H"` comparison or assignment in `R/` should go through `sexCodes`. Work not started; the ids stay open until it ships. S872 measured 40 comparison lines in 16 files (a grep of `==`, `!=`, `%in%` against a quoted letter, comment lines excluded; assignments like `addParents.R:54,62` and `identical(sexOf[[p]], "M")` in `makePedigreeDiagramData.R` are extra). |
+
+Still **31 ids** open.
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

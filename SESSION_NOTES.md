@@ -99,69 +99,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 872 Did
-**Deliverable:** PED_GV owner decisions: one open decision, code read first, plain-words
-question, answer recorded (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+**Deliverable, DONE:** the owner's PED-2 / NEW-29 / PED-7 decision, recorded. Docs only, no TDD phase.
+**Owner decision (plain words):** picked "PED_GV owner decisions", then "Sex-code letters". After I
+explained it (the shared `sexCodes` list exists; about 40 comparison lines still type the letter) the
+owner chose option 1, "all": every direct sex letter in `R/` should go through `sexCodes`.
+**Done:** claim `bbe315dfa`; BACKLOG item "Adopt `sexCodes` for every direct sex letter" (READY after
+plan-mode scoping, Effort M, suggested RED guard test); "Decision record 3" in
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (ids stay open, 31). Records in the close-out commit.
+**Verified by me:** the count, by grep of `R/*.R` (40 comparison lines, 16 files, comments excluded);
+assignments and `identical()` forms are extra and not counted. Not run: tests, lint (no `.R` changed).
+**Not done:** no code edit, by design (cross-file refactor, needs plan mode); not pushed.
 
-### What Session 871 Did
-**Deliverable, DONE:** the owner's NEW-61 decision, recorded and documented. Docs only, no TDD phase.
-**Owner decision (plain words):** picked "PED_GV owner decisions", then clarified that known founders and
-unknown founders are different things (an unknown founder may be a known founder, another animal in the
-population, or an animal outside it). Chose "Keep both, document it": `reportGV` lists only known founders,
-`calcFEFG` counts every both-parents-unknown animal as a separate unrelated founder.
-**Done:** roxygen paragraphs in `R/calcFEFG.R` and `R/reportGV.R` (Rd regenerated, the unrelated
-`nprcgenekeepr-package.Rd` churn reverted) incl. the caveat that FE/FG can be overstated when placeholders
-are common; a "Closure record 2" in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (31 ids now open);
-BACKLOG item updated. Claim `f00361217`; docs `5f6ba3c0b`; records in the close-out commit.
-**Verified by me:** `lintr::lint` on both R files: no lints; `test_wordlist_coverage.R` passes.
-**Not done:** full test suite and CI not run (roxygen text only; no code or test touched); not pushed.
+**Handoff evaluation of S871 (by S872): 8/10.** Helped: its next steps listed the open decision
+areas, and the triage table rows (PED-2 at line 57) gave file and line for each. Missing: still no
+list of "the four likely code defects" (S871 asked to find or drop it; I did neither).
 
-**Handoff evaluation of S870 (by S871): 7/10.** Helped: the banner record and BACKLOG were accurate and
-the item list matched. Missing: "the four likely code defects" is named in S870's next steps but I found no
-list of them (grepped `BACKLOG.md`, `SESSION_NOTES.md`, `docs/audits`; only slice 8 mentions defects of old
-reports), so the pick was built from the triage report's Recommendation 3 instead.
+**Self-assessment: 8/10.** + One deliverable; read the code before explaining; recorded the decision
+without editing code. - My first picker used terms the owner asked me to explain, and the first
+count (28 lines, 10 files) came from the old report; I re-measured (40, 16).
 
-**Self-assessment: 8/10.** + One deliverable; the first question was rejected as jargon-heavy and the
-reworked one, grounded in the code after the owner's clarification, got a clean answer; lint run.
-- I asked a decision question before checking what the two code sites did, so the owner had to correct it.
+**Next steps:** (A) Scope the `sexCodes` adoption in plan mode, then strict TDD in staged commits
+(first RED: the guard test named in BACKLOG). (B) Other owner decisions still open: PED-5/6 error
+contract, PED-3/NEW-42 walk helpers, sim driver, constants/HTML builders. (C) Find or drop "four
+likely code defects". (D) 3.0.0 release prep scoping. (E) Push only on the owner's say-so.
+**Gotchas:** `convertSexCodes.R:56` lists the letters as factor levels and `sexCodes.R` defines them;
+neither should be flagged by a guard test. Many hits in `R/` are roxygen examples (`#'`), not code.
+Reduction: condensed the S870 and S871 records (git keeps both) to get back under the token ceiling.
 
-**Next steps:** (A) Owner decisions still open: sex-code constants (PED-2), error/return contract
-(PED-5/6), walk helpers (PED-3, NEW-42), sim driver, constants/HTML builders; ask each as a plain-words
-question after reading the code first. (B) Find or drop "the four likely code defects" from the
-handoff language. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on the owner's say-so.
-**Gotchas:** `roxygen2::roxygenise()` also rewrites `man/nprcgenekeepr-package.Rd` (one line, unrelated);
-revert it. It prints two `@inheritParams` errors (`addParents`, `removeUninformativeFounders`) that predate
-this session. Reduction: condensed the S869 record and removed the S868 evaluation (git keeps both); the
-file went over its token ceiling after the S871 write and is back under (56.7 KB of 65.5 KB).
+### What Session 871 Did (condensed S872; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** NEW-61 decision recorded and documented: `reportGV` lists known founders only; `calcFEFG`
+counts every both-parents-unknown animal as an unrelated founder. Roxygen in both files; triage
+Closure record 2. Docs only. Claim `f00361217`; docs `5f6ba3c0b`. Self 8/10.
+**Gotchas kept:** `roxygen2::roxygenise()` also rewrites `man/nprcgenekeepr-package.Rd` (revert it)
+and prints two old `@inheritParams` errors (`addParents`, `removeUninformativeFounders`).
 
-### What Session 870 Did
-**Deliverable, DONE:** the banner pass from the slice 8 report. A "Status as of 2026-10-02 (S870)" blockquote
-under the title of 26 dated files (4 in `docs/research/`, 22 in `docs/audits/`), each naming what superseded
-the report; bodies untouched except two numbers (census CSV 2,734 -> 1,678 rows; tarball "0 gates" -> 1).
-Docs only: no `.R`, no tests, no TDD phase. Claim `99631c962`; six banner commits `42d617267`..`19e8f917c`,
-number fixes `89e3fc7c9`; BACKLOG slice 8 note, records and receipt are in the close-out commit.
-**Owner decision (plain words):** picked "banner pass on old audits" at Orient.
-**Verified by me:** `git diff --numstat` over the banner commits is 26 files, +52 -0 (additions only); no test
-reads `docs/audits` or `docs/research` outside comments; the banner facts come from the slice 8 report's
-first-hand rows (issue states, hashes, `DESCRIPTION`, file existence), not re-run this session.
-**Not done:** files with only minor findings got no banner; no lint/tests/CI (docs only, `docs` is
-`.Rbuildignore`d); not pushed (master 49 ahead of origin after this close-out).
-
-**Self-assessment: 8/10.** + One deliverable, additive and checked, 5-file cap kept with checkpoint commits.
-- Banner wording rests on the agents' tables, which I spot-checked only where I wrote a number; "S673-S697"
-  for the QP solver merges two ids in the report (S673 and S674) into one range.
-
-**Next steps:** (A) Owner decisions: PED_GV leftovers and the four likely code defects (Effort S each, strict
-TDD), CV1/CV2. (B) 3.0.0 release prep needs its own scoping session. (C) Push only on the owner's say-so.
-(D) Optional: replace stale `file:line` cites in the plans and gap analysis with function names.
-
-**Key files:** `BACKLOG.md` (slice 8 note in the docs-staleness item, "Banner pass DONE S870");
-`docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md` (the source of every banner).
-
-**Gotchas:** banners say "S870" and "2026-10-02", so a later fix to a banner's subject makes it stale again; the
-census scripts still overwrite tracked CSVs if run.
+### What Session 870 Did (condensed S872; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** a "Status as of 2026-10-02 (S870)" banner on 26 dated audit/research files, plus two number
+fixes in them. Docs only. Claim `99631c962`; banners `42d617267`..`19e8f917c`. Self 8/10.
+**Gotcha kept:** a banner goes stale if its subject changes later; it rests on the slice 8 report.
 
 ### Session 869 Handoff Evaluation (by Session 870)
 **Score 9/10.** Helped: next step (A) named the banner pass with its Effort M tag, and the slice 8 report's
