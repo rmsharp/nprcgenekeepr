@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 870 Did
+**Deliverable:** banner pass on the dated `docs/research/` and older `docs/audits/` files (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning. Docs only: no `.R`, no tests, no TDD phase.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+
 ### What Session 869 Did
 **Deliverable, DONE:** the 15 `SESSION_NOTES.md` lines over 280 B (records S859-S862, lines 194-250) are
 re-wrapped at spaces; `context_budget.py` no longer reports a per-line finding. Docs only: no `.R`, no
