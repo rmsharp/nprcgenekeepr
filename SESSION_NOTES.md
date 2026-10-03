@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 872 Did
+**Deliverable:** PED_GV owner decisions: one open decision, code read first, plain-words
+question, answer recorded (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+
 ### What Session 871 Did
 **Deliverable, DONE:** the owner's NEW-61 decision, recorded and documented. Docs only, no TDD phase.
 **Owner decision (plain words):** picked "PED_GV owner decisions", then clarified that known founders and
