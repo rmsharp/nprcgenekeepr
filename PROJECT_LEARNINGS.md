@@ -2366,3 +2366,6 @@ Verified: `devtools::check()` 0 errors / 0 [tracked-repo] WARNINGs / 0 [tracked-
 
 #### Learning 842
 **When a source guard grows a new form, scan all of `R/` with the new pattern before the final stage, so the allowlist is known early.** (S875, 2026-10-02.) The stage-2 argument-form pattern `[(,]\s*"X"\s*[,)]` was run over every `R/*.R` file: it hit only files the sexCodes plan already names (converter vocabulary, fixtures, the non-sex `F`/`U` lines, `groupAddAssign:179`, `correctParentSex`, `makePedigreeDiagramData`). A pattern that hit an unplanned file would have meant a plan change; knowing it at stage 2 costs one script, finding it at stage 6 costs a replan.
+
+#### Learning 843
+**A guard pattern for `if (x) "M" else "F"` must key on `else`/`)`/`<-` before the quote, and a membership set inside `[...] <-` assignments is caught by the assignment form too.** (S876, 2026-10-02.) The stage-2 argument pattern missed `correctUnknownParentMeanKinship:172`; the new `(<-|\belse\b|\))\s*"X"` pattern catches it. Scanning all of `R/` with it hit only stage 4 files (`addParents:54,62`, `correctParentSex:97,98`) and the allowlisted `convertSexCodes.R:45-55`, so the stage 6 allowlist still needs no surprise entries.

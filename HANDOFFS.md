@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S876
 date: 2026-10-02
-status: pending
-active_task: sexCodes adoption stage 3 of 6 (getPotentialParents, reportGV, modPyramid, correctUnknownParentMeanKinship) -- IN PROGRESS
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- sexCodes adoption stage 3 of 6 (getPotentialParents, reportGV, modPyramid, correctUnknownParentMeanKinship); stages 4-6 remain
+what_was_done: claim f4a645440; RED 6fafbcd30 (assignmentPattern, self-test lines, stage-3 list in test_sexCodes.R; failed on exactly the 7 expected lines); GREEN 01600af88 (7 bare letters now use sexCodes[["male"]]/[["female"]]); REFACTOR nothing to change; close-out commit carries records
+next_steps: stage 4 of docs/planning/sexcodes-adoption-plan.md section 4: correctParentSex (97,98,108,109), addParents (54,62), modORIPReporting; RED = stage-4 file list in test_sexCodes.R; GREEN also runs tests/testthat/test-e2e-orip-module.R
+key_files: tests/testthat/test_sexCodes.R (findBareSexCodeLiterals, assignmentPattern, stage-3 test); R/getPotentialParents.R:164,171; R/reportGV.R:293,295; R/modPyramid.R:121,122; R/correctUnknownParentMeanKinship.R:172
+gotchas: correctParentSex:97,98 use c("H","U","M") inside %in%, so confirm RED flags them; assignment scan of all R/ hits only stage 4 files and allowlisted convertSexCodes; macOS sed -i needs -i ''; wrap at 80 columns
+runtime_smoke: 6 related test files pass; lintr::lint_package() 0 lints; full test_dir 365 files 0 failed 0 error 187 skipped; no shinytest2 run (modPyramid changed only sum() tests); devtools::check() not run (plan: stage 6)
+changelog_ref: S876 DONE entry
+commit: the close-out commit that carries this receipt; claim f4a645440
 ```
 
 ```handoff

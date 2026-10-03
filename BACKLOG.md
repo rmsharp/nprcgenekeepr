@@ -39,9 +39,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       suggested RED: a guard test that scans `R/` for a quoted sex letter next to `==`, `!=`,
       `%in%` or `identical` outside `sexCodes.R` and `convertSexCodes.R`'s level list. Needs
       staged commits (5-file cap) and plan-mode approval, since `SAFEGUARDS.md` treats a
-      cross-file refactor as Architect Mode. **Stages 1-2 of 6 shipped (S874, S875)** (guard widened, argument-form
-      pattern added; 8 files);
-      next is stage 3 (plan section 4; `correctUnknownParentMeanKinship:172` is an assignment, so RED needs an assignment-form pattern). Close PED-2, NEW-29, PED-7 in the triage report
+      cross-file refactor as Architect Mode. **Stages 1-3 of 6 shipped (S874-S876)** (guard widened, argument-form
+      and assignment-form patterns added; 12 files);
+      next is stage 4 (plan section 4: `correctParentSex`, `addParents`, `modORIPReporting`; GREEN also runs `test-e2e-orip-module.R`). Close PED-2, NEW-29, PED-7 in the triage report
       when the last stage ships.
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask

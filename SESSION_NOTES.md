@@ -99,41 +99,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 876 Did
-**Deliverable:** `sexCodes` adoption stage 3 of 6 (`getPotentialParents`, `reportGV`, `modPyramid`,
-`correctUnknownParentMeanKinship`), strict TDD (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** `sexCodes` adoption stage 3 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
+gated by `AskUserQuestion`). Claim `f4a645440`; RED `6fafbcd30`; GREEN `01600af88`; records in the close-out commit.
+**Done:** `test_sexCodes.R` gets an `assignmentPattern` (a letter after `<-`, `else` or `)`), three self-test
+lines and a stage-3 file list. 7 bare letters in `getPotentialParents` (164,171), `reportGV` (293,295),
+`modPyramid` (121,122) and `correctUnknownParentMeanKinship` (172) now use `sexCodes[["male"]]`/`[["female"]]`.
+REFACTOR found nothing to change.
+**Verified by me:** RED failed on exactly those 7 lines and nothing else; the 6 related test files pass;
+`lint_package()` 0 lints; full `test_dir` 365 files, 0 failed, 0 error, 187 skipped. Not run: `devtools::check()`
+(plan: stage 6), shinytest2/e2e (stage 4 runs `test-e2e-orip-module.R`; `modPyramid` changed only its `sum()` tests).
+**Assignment-form scan of all `R/` (mine):** hits only `addParents:54,62`, `correctParentSex:97,98` (stage 4) and
+`convertSexCodes:45-55` (allowlisted), so stage 6's allowlist needs no surprise entries.
 
-### What Session 875 Did
-**Deliverable, DONE:** `sexCodes` adoption stage 2 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
-gated by `AskUserQuestion`). Claim `b7f865a4c`; RED `672d2d5dd`; GREEN `0ac3b7858`; records in the close-out commit.
-**Done:** `tests/testthat/test_sexCodes.R` gets a stage-2 file list and an `argumentPattern`
-(`[(,]\s*"X"\s*[,)]`, a letter passed as a call argument) with two self-test lines. 8 bare letters in
-`getSpeciesMinBreedingAge`, `resolveBreedingAge`, `checkParentAge`, `getKinshipWithMaleStatus` now use
-`sexCodes[["male"]]`/`[["female"]]`; 3 lines wrapped for the 80-column lint. REFACTOR found nothing to change.
-**Verified by me:** RED failed on exactly the 8 expected lines (57,58; 35,38; 148,151; 51,52) and nothing
-else; the 5 touched test files pass; `lint_package()` 0 lints; full `test_dir` 0 failed, 0 error (187 skipped,
-365 files). Not run: `devtools::check()` (plan: stage 6), shinytest2 (no module touched).
-**Argument-form scan of all `R/` (mine):** the new pattern hits only files the plan already names:
-`convertFromCenter:28`, `convertSexCodes:45-56`, `convertStatusCodes:40`, `correctParentSex:97,98,108,109`,
-`createPedOne:19`, `createPedSix:47`, `groupAddAssign:179`, `makePedigreeDiagramData` (6 lines),
-`obfuscateId:53-54`, `qcStudbook:412`. So stage 6's allowlist needs no surprise entries.
+**Handoff evaluation of S875 (by S876): 9/10.** Helped: the next step named the four functions and warned the
+argument pattern would not catch line 172, which fixed the RED shape; the 80-column gotcha saved a lint pass (no
+line needed wrapping this time). Missing: nothing that cost time. Wrong: nothing found.
 
-**Handoff evaluation of S874 (by S875): 9/10.** Helped: the next step named the four functions, the
-`checkParentAge.R:148,151` argument-literal form and the exact RED shape; the 25,000-token ceiling gotcha
-meant the claim commit went through first time. Missing: nothing that cost time. Wrong: nothing found.
+**Self-assessment: 8/10.** + One deliverable; every gate asked; RED proved on exactly the expected lines; full
+suite and lint run before commit; scan done early. - The full suite was started in the background and a
+`sleep` was blocked once (used the monitor instead).
 
-**Self-assessment: 8/10.** + One deliverable; every gate asked; RED proved on exactly the expected lines;
-the full suite and lint run before commit. - Three lines hit the lint 80-column limit and were wrapped after
-the first GREEN run (a quick length check before running would have saved a pass).
+**Next steps:** stage 4 (plan section 4): `correctParentSex` (lines 97,98 assignments; 108,109 argument form),
+`addParents` (54,62 assignments), `modORIPReporting`. RED = stage-4 file list in `test_sexCodes.R` (the guard
+already catches these forms); GREEN also runs `test-e2e-orip-module.R`. Re-run the plan section 2 greps first.
+**Gotchas:** `correctParentSex:97` is `c("H", "U", "M")` inside `%in%`, a set of letters the membership pattern
+matches only after `%in%\s*c(` plus its first element, so check RED really flags 97 and 98; macOS `sed -i` needs
+`-i ''`; wrap new lines at 80 columns. Reduction this session: S875 record condensed, S870 record and the S869
+evaluation removed (git and `CHANGELOG.md` keep them).
 
-**Next steps:** stage 3 (plan section 4): `getPotentialParents`, `reportGV`, `modPyramid`,
-`correctUnknownParentMeanKinship` (the last is form B, an assigned value at line 172; check the guard
-covers `<- "X"`: the argument pattern does not, so RED needs an assignment-form pattern). Re-run the plan
-section 2 greps first. **Gotchas:** `argumentPattern` also matches `correctParentSex:108-109` (stage 4);
-macOS `sed -i` needs `-i ''`; wrap new lines at 80 columns for lint. Reduction this session: S867 and S868
-records and the S866 evaluation removed (git and `CHANGELOG.md` keep them).
+### What Session 875 Did (condensed S876; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** `sexCodes` adoption stage 2 of 6: argument-form pattern added to the guard; 8 bare letters in 4 R
+files converted. Claim `b7f865a4c`; close-out `ed93a7182`. Self 8/10.
+**Gotchas kept:** `argumentPattern` also matches `correctParentSex:108-109`; macOS `sed -i` needs `-i ''`.
 
 ### What Session 874 Did (condensed S875; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** `sexCodes` adoption stage 1 of 6: guard widened (`==`/`!=` both sides, `%in%`, `identical()`),
@@ -162,16 +159,6 @@ counts every both-parents-unknown animal as an unrelated founder. Roxygen in bot
 Closure record 2. Docs only. Claim `f00361217`; docs `5f6ba3c0b`. Self 8/10.
 **Gotchas kept:** `roxygen2::roxygenise()` also rewrites `man/nprcgenekeepr-package.Rd` (revert it)
 and prints two old `@inheritParams` errors (`addParents`, `removeUninformativeFounders`).
-
-### What Session 870 Did (condensed S872; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** a "Status as of 2026-10-02 (S870)" banner on 26 dated audit/research files, plus two number
-fixes in them. Docs only. Claim `99631c962`; banners `42d617267`..`19e8f917c`. Self 8/10.
-**Gotcha kept:** a banner goes stale if its subject changes later; it rests on the slice 8 report.
-
-### Session 869 Handoff Evaluation (by Session 870)
-**Score 9/10.** Helped: next step (A) named the banner pass with its Effort M tag, and the slice 8 report's
-Recommendation listed the candidate files by group. Missing: nothing that cost time. Wrong: "master 39 ahead"
-measured 40 at Orient (the S869 close-out commit is not counted). ROI: high.
 
 ### What Session 869 Did (condensed S871; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** the 15 `SESSION_NOTES.md` lines over 280 B re-wrapped (text unchanged, proved by `diff`); the
