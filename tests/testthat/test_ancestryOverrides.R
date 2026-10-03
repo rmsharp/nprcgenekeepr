@@ -495,3 +495,75 @@ test_that(".ancestryOverrideModal carries the real warning texts verbatim", {
     fixed = TRUE
   )
 })
+
+# ---- S867: the remaining near-duplicates, shared (owner-approved REFACTOR) --
+# - .ancestryOverrideStatusText(ov, onThisTab): NULL for no overrides, else
+#   the pinned "N block rule(s) overridden [on this tab ]this session: ...".
+# - .ancestryOverrideStatusUI(txt): NULL for NULL, else the dark-orange <p>.
+# - .ancestryOverrideApply(current, ovr, ruleKey, reason): `current` plus
+#   the chosen rule with the trimmed reason; NULL when the reason is blank.
+# - .rowsAfterFilter(tbl, rowsAll): the rows DT left after its filter, all
+#   rows when no filter has been set (NULL).
+
+test_that(".ancestryOverrideStatusText is NULL when nothing is overridden", {
+  expect_null(.ancestryOverrideStatusText(.emptyAncestryOverrides()))
+  expect_null(.ancestryOverrideStatusText(.emptyAncestryOverrides(), TRUE))
+})
+
+test_that(".ancestryOverrideStatusText gives the pinned sentence", {
+  ov <- data.frame(
+    ancestry1 = c("INDIAN", "CHINESE"),
+    ancestry2 = c("CHINESE", "CHINESE-INDIAN"),
+    reason = c("a", "b"), stringsAsFactors = FALSE
+  )
+  keys <- toString(sort(.ancestryPairKey(ov$ancestry1, ov$ancestry2)))
+  expect_identical(
+    .ancestryOverrideStatusText(ov),
+    sprintf("2 block rule(s) overridden this session: %s.", keys)
+  )
+  expect_identical(
+    .ancestryOverrideStatusText(ov, onThisTab = TRUE),
+    sprintf("2 block rule(s) overridden on this tab this session: %s.", keys)
+  )
+})
+
+test_that(".ancestryOverrideStatusUI is NULL for NULL and a darkorange p", {
+  expect_null(.ancestryOverrideStatusUI(NULL))
+  html <- aoModalHtml(.ancestryOverrideStatusUI("hello"))
+  expect_match(html, "<p", fixed = TRUE)
+  expect_match(html, "hello", fixed = TRUE)
+  expect_match(html, "color: darkorange;", fixed = TRUE)
+})
+
+test_that(".ancestryOverrideApply appends the chosen rule with a trimmed reason", {
+  ovr <- aoOverridable()
+  key <- .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)[2L]
+  out <- .ancestryOverrideApply(.emptyAncestryOverrides(), ovr, key,
+                                "  because  ")
+  expect_identical(names(out), c("ancestry1", "ancestry2", "reason"))
+  expect_identical(out$ancestry1, "CHINESE")
+  expect_identical(out$ancestry2, "CHINESE-INDIAN")
+  expect_identical(out$reason, "because")
+  again <- .ancestryOverrideApply(
+    out, ovr, .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)[1L], "r2"
+  )
+  expect_identical(nrow(again), 2L)
+  expect_identical(again$reason, c("because", "r2"))
+})
+
+test_that(".ancestryOverrideApply refuses a blank, whitespace or NULL reason", {
+  ovr <- aoOverridable()
+  key <- .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)[1L]
+  cur <- .emptyAncestryOverrides()
+  expect_null(.ancestryOverrideApply(cur, ovr, key, ""))
+  expect_null(.ancestryOverrideApply(cur, ovr, key, "   "))
+  expect_null(.ancestryOverrideApply(cur, ovr, key, NULL))
+})
+
+test_that(".rowsAfterFilter exports all rows for NULL and the kept rows otherwise", {
+  tbl <- data.frame(a = 1:4, b = letters[1:4], stringsAsFactors = FALSE)
+  expect_identical(.rowsAfterFilter(tbl, NULL), tbl)
+  expect_identical(.rowsAfterFilter(tbl, c(3L, 1L)), tbl[c(3L, 1L), ])
+  expect_identical(nrow(.rowsAfterFilter(tbl, integer(0L))), 0L)
+  expect_identical(names(.rowsAfterFilter(tbl, integer(0L))), c("a", "b"))
+})

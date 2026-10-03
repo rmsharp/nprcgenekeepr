@@ -476,28 +476,19 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     observeEvent(input$overrideConfirm, {
       ovr <- overridableRules()
       req(!is.null(ovr), nrow(ovr) > 0L)
-      keys <- .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)
-      req(input$overrideRule %in% keys)
-      reason <- if (is.null(input$overrideReason)) {
-        ""
-      } else {
-        trimws(input$overrideReason)
-      }
-      if (!nzchar(reason)) {
+      req(input$overrideRule %in%
+            .ancestryPairKey(ovr$ancestry1, ovr$ancestry2))
+      updated <- .ancestryOverrideApply(
+        ancestryOverridesRV(), ovr, input$overrideRule, input$overrideReason
+      )
+      if (is.null(updated)) {
         showNotification(
           "An override needs a non-empty reason.",
           type = "error", duration = 10L
         )
         return()
       }
-      row <- ovr[keys == input$overrideRule, , drop = FALSE]
-      ancestryOverridesRV(rbind(
-        ancestryOverridesRV(),
-        data.frame(
-          ancestry1 = row$ancestry1, ancestry2 = row$ancestry2,
-          reason = reason, stringsAsFactors = FALSE
-        )
-      ))
+      ancestryOverridesRV(updated)
       removeModal()
     })
 
@@ -507,15 +498,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
     # NULL when no overrides are active; otherwise the pinned one-liner.
     overrideStatusText <- reactive({
-      ov <- ancestryOverridesRV()
-      if (nrow(ov) == 0L) {
-        return(NULL)
-      }
-      sprintf(
-        "%d block rule(s) overridden this session: %s.",
-        nrow(ov),
-        toString(sort(.ancestryPairKey(ov$ancestry1, ov$ancestry2)))
-      )
+      .ancestryOverrideStatusText(ancestryOverridesRV())
     })
 
     # Runs groupAddAssign() once per "Form Groups" click and stores the full
@@ -833,11 +816,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     # Issue #168 Slice 4b (D8): the active-overrides status inside the
     # guardrails section -- an override is never silent.
     output$overrideStatus <- renderUI({
-      txt <- overrideStatusText()
-      if (is.null(txt)) {
-        return(NULL)
-      }
-      shiny::p(txt, style = "color: darkorange;")
+      .ancestryOverrideStatusUI(overrideStatusText())
     })
 
     # The displayed run's violations + coverage (D3/D4): the selected

@@ -138,6 +138,82 @@
   )
 }
 
+#' The status sentence for the active ancestry overrides
+#'
+#' Shared by the Breeding Groups and Mate Pair modules; the Mate Pair wording
+#' adds "on this tab" because its overrides do not carry over.
+#'
+#' @param ov the session's override table (\code{ancestry1}, \code{ancestry2},
+#' \code{reason}).
+#' @param onThisTab \code{TRUE} to say the override applies to this tab only.
+#' @return \code{NULL} when no override is active, else one sentence.
+#' @noRd
+.ancestryOverrideStatusText <- function(ov, onThisTab = FALSE) {
+  if (nrow(ov) == 0L) {
+    return(NULL)
+  }
+  sprintf(
+    "%d block rule(s) overridden %sthis session: %s.",
+    nrow(ov),
+    if (onThisTab) "on this tab " else "",
+    toString(sort(.ancestryPairKey(ov$ancestry1, ov$ancestry2)))
+  )
+}
+
+#' The status paragraph shown in the guardrails section
+#'
+#' @param txt the text from \code{.ancestryOverrideStatusText()}.
+#' @return \code{NULL} for \code{NULL}, else a dark-orange paragraph, so an
+#' override is never silent.
+#' @importFrom shiny p
+#' @noRd
+.ancestryOverrideStatusUI <- function(txt) {
+  if (is.null(txt)) {
+    return(NULL)
+  }
+  p(txt, style = "color: darkorange;")
+}
+
+#' Add one confirmed override to the session's override table
+#'
+#' @param current the session's override table.
+#' @param ovr the overridable rules the curator chose from.
+#' @param ruleKey the chosen rule's unordered pair key.
+#' @param reason the curator's free-text reason (may be \code{NULL}).
+#' @return \code{current} plus the chosen rule and the trimmed reason, or
+#' \code{NULL} when the reason is empty (an override needs one).
+#' @noRd
+.ancestryOverrideApply <- function(current, ovr, ruleKey, reason) {
+  reason <- if (is.null(reason)) "" else trimws(reason)
+  if (!nzchar(reason)) {
+    return(NULL)
+  }
+  keys <- .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)
+  row <- ovr[keys == ruleKey, , drop = FALSE]
+  rbind(
+    current,
+    data.frame(
+      ancestry1 = row$ancestry1, ancestry2 = row$ancestry2,
+      reason = reason, stringsAsFactors = FALSE
+    )
+  )
+}
+
+#' The rows of a table left after the curator's filter, for CSV export
+#'
+#' @param tbl the full table.
+#' @param rowsAll DT's \code{<table>_rows_all} vector (row positions that
+#' survive the active search/filter), or \code{NULL} when no filter has been
+#' set yet.
+#' @return \code{tbl}, or its \code{rowsAll} rows.
+#' @noRd
+.rowsAfterFilter <- function(tbl, rowsAll) {
+  if (is.null(rowsAll)) {
+    return(tbl)
+  }
+  tbl[rowsAll, , drop = FALSE]
+}
+
 #' Validate the ancestry-rule overrides for one formation run
 #'
 #' Each override names one \code{block} rule present in \code{rules}

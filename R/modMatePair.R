@@ -359,28 +359,19 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
     observeEvent(input$overrideConfirm, {
       ovr <- overridableRules()
       req(!is.null(ovr), nrow(ovr) > 0L)
-      keys <- .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)
-      req(input$overrideRule %in% keys)
-      reason <- if (is.null(input$overrideReason)) {
-        ""
-      } else {
-        trimws(input$overrideReason)
-      }
-      if (!nzchar(reason)) {
+      req(input$overrideRule %in%
+            .ancestryPairKey(ovr$ancestry1, ovr$ancestry2))
+      updated <- .ancestryOverrideApply(
+        ancestryOverridesRV(), ovr, input$overrideRule, input$overrideReason
+      )
+      if (is.null(updated)) {
         showNotification(
           "An override needs a non-empty reason.",
           type = "error", duration = 10L
         )
         return()
       }
-      row <- ovr[keys == input$overrideRule, , drop = FALSE]
-      ancestryOverridesRV(rbind(
-        ancestryOverridesRV(),
-        data.frame(
-          ancestry1 = row$ancestry1, ancestry2 = row$ancestry2,
-          reason = reason, stringsAsFactors = FALSE
-        )
-      ))
+      ancestryOverridesRV(updated)
       removeModal()
     })
 
@@ -391,23 +382,11 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
     # NULL when no overrides are active; otherwise the pinned one-liner, which
     # says the override applies to this tab.
     overrideStatusText <- reactive({
-      ov <- ancestryOverridesRV()
-      if (nrow(ov) == 0L) {
-        return(NULL)
-      }
-      sprintf(
-        "%d block rule(s) overridden on this tab this session: %s.",
-        nrow(ov),
-        toString(sort(.ancestryPairKey(ov$ancestry1, ov$ancestry2)))
-      )
+      .ancestryOverrideStatusText(ancestryOverridesRV(), onThisTab = TRUE)
     })
 
     output$overrideStatus <- renderUI({
-      txt <- overrideStatusText()
-      if (is.null(txt)) {
-        return(NULL)
-      }
-      shiny::p(txt, style = "color: darkorange;")
+      .ancestryOverrideStatusUI(overrideStatusText())
     })
 
     observeEvent(input$analyze, {
@@ -501,12 +480,7 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
         # `pairsTable_rows_all` is DT's row-position vector for every row
         # surviving the active search/filter, populated identically under
         # server = TRUE. NULL (no filter active yet) exports the full table.
-        rowsAll <- input$pairsTable_rows_all
-        tbl <- if (is.null(rowsAll)) {
-          res$pairs
-        } else {
-          res$pairs[rowsAll, , drop = FALSE]
-        }
+        tbl <- .rowsAfterFilter(res$pairs, input$pairsTable_rows_all)
         write.csv(tbl, file, na = "", row.names = FALSE)
       }
     )
@@ -516,12 +490,7 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
       content = function(file) {
         res <- matchResults()
         req(res)
-        rowsAll <- input$excludedTable_rows_all
-        tbl <- if (is.null(rowsAll)) {
-          res$excluded
-        } else {
-          res$excluded[rowsAll, , drop = FALSE]
-        }
+        tbl <- .rowsAfterFilter(res$excluded, input$excludedTable_rows_all)
         write.csv(tbl, file, na = "", row.names = FALSE)
       }
     )
