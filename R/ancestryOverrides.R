@@ -89,6 +89,53 @@
   blocks
 }
 
+#' Select choices for the "Block rule to override:" control
+#'
+#' Shared by \code{\link{modBreedingGroupsServer}} and
+#' \code{\link{modMatePairServer}}, which each keep the override select in
+#' step with the rules a curator can still override.
+#'
+#' @param ovr the overridable rules (see \code{.overridableAncestryRules()}),
+#' or \code{NULL}.
+#' @return a named character vector: values are the unordered pair keys
+#' (\code{.ancestryPairKey()}), names the "A x B" labels; \code{character(0)}
+#' for \code{NULL} or zero rows.
+#' @noRd
+.ancestryOverrideChoices <- function(ovr) {
+  if (is.null(ovr) || nrow(ovr) == 0L) {
+    return(character(0L))
+  }
+  stats::setNames(
+    .ancestryPairKey(ovr$ancestry1, ovr$ancestry2),
+    sprintf("%s x %s", ovr$ancestry1, ovr$ancestry2)
+  )
+}
+
+#' The confirm-gate dialog for overriding one ancestry block rule
+#'
+#' The warning text verbatim, a required free-text reason, and explicit
+#' Cancel / Confirm buttons. Shared by the Breeding Groups and Mate Pair
+#' modules, which differ only in the warning text and the namespace.
+#'
+#' @param ns the module namespace function (\code{session$ns}).
+#' @param warningText the verbatim confirmation warning for the calling tab.
+#' @return a \code{\link[shiny]{modalDialog}}, for \code{showModal()}.
+#' @noRd
+.ancestryOverrideModal <- function(ns, warningText) {
+  modalDialog(
+    title = "Override Ancestry Rule",
+    p(warningText),
+    textAreaInput(ns("overrideReason"),
+                  "Reason for override (required):",
+                  value = "", rows = 3L),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton(ns("overrideConfirm"), "Confirm Override",
+                   class = "btn-warning")
+    )
+  )
+}
+
 #' Validate the ancestry-rule overrides for one formation run
 #'
 #' Each override names one \code{block} rule present in \code{rules}

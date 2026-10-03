@@ -400,3 +400,98 @@ test_that("override -> enforcement -> report -> manifest works end to end withou
   expect_identical(row$nPairs, 1L)
   expect_identical(m$warningText[1L], .ancestryOverrideWarningText)
 })
+
+# S865 (RED): the override-gate pieces Mate Pair and Breeding Groups each
+# carried a copy of, shared as two internals. Owner-approved scope: the
+# select-choices builder and the confirm-gate modal constructor only.
+# - .ancestryOverrideChoices(ovr): the named character vector for the
+#   "Block rule to override:" select -- values are the unordered pair keys,
+#   names the "A x B" labels; character(0) for NULL or zero rows.
+# - .ancestryOverrideModal(ns, warningText): the "Override Ancestry Rule"
+#   dialog -- the warning text verbatim, a required-reason box and Cancel /
+#   Confirm buttons, with the two inputs namespaced through `ns`.
+
+aoOverridable <- function() {
+  data.frame(
+    ancestry1 = c("INDIAN", "CHINESE"),
+    ancestry2 = c("CHINESE", "CHINESE-INDIAN"),
+    severity = c("block", "block"),
+    stringsAsFactors = FALSE
+  )
+}
+
+aoModalHtml <- function(modal) {
+  as.character(htmltools::renderTags(modal)$html)
+}
+
+test_that(".ancestryOverrideChoices is empty for NULL rules", {
+  expect_identical(.ancestryOverrideChoices(NULL), character(0L))
+})
+
+test_that(".ancestryOverrideChoices is empty for a zero-row table", {
+  expect_identical(
+    .ancestryOverrideChoices(aoOverridable()[0L, , drop = FALSE]),
+    character(0L)
+  )
+})
+
+test_that(".ancestryOverrideChoices values are the pair keys, names the labels", {
+  ovr <- aoOverridable()
+  ch <- .ancestryOverrideChoices(ovr)
+  expect_type(ch, "character")
+  expect_identical(
+    unname(ch), .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)
+  )
+  expect_identical(
+    names(ch), c("INDIAN x CHINESE", "CHINESE x CHINESE-INDIAN")
+  )
+})
+
+test_that(".ancestryOverrideChoices keeps one entry for a single rule", {
+  ch <- .ancestryOverrideChoices(aoOverridable()[1L, , drop = FALSE])
+  expect_length(ch, 1L)
+  expect_identical(names(ch), "INDIAN x CHINESE")
+})
+
+test_that(".ancestryOverrideModal builds the Override Ancestry Rule dialog", {
+  html <- aoModalHtml(.ancestryOverrideModal(shiny::NS("mp"), "Be careful."))
+  expect_match(html, "Override Ancestry Rule", fixed = TRUE)
+  expect_match(html, "Be careful.", fixed = TRUE)
+  expect_match(html, "Reason for override (required):", fixed = TRUE)
+  expect_match(html, "Cancel", fixed = TRUE)
+  expect_match(html, "Confirm Override", fixed = TRUE)
+})
+
+test_that(".ancestryOverrideModal namespaces the reason box and confirm button", {
+  html <- aoModalHtml(.ancestryOverrideModal(shiny::NS("bg"), "w"))
+  expect_match(html, "bg-overrideReason", fixed = TRUE)
+  expect_match(html, "bg-overrideConfirm", fixed = TRUE)
+  html2 <- aoModalHtml(.ancestryOverrideModal(shiny::NS("mp"), "w"))
+  expect_false(grepl("bg-override", html2, fixed = TRUE))
+  expect_match(html2, "mp-overrideReason", fixed = TRUE)
+})
+
+test_that(".ancestryOverrideModal shows whichever warning text it is given", {
+  a <- aoModalHtml(.ancestryOverrideModal(shiny::NS("x"), "Text A."))
+  b <- aoModalHtml(.ancestryOverrideModal(shiny::NS("x"), "Text B."))
+  expect_match(a, "Text A.", fixed = TRUE)
+  expect_false(grepl("Text B.", a, fixed = TRUE))
+  expect_match(b, "Text B.", fixed = TRUE)
+})
+
+test_that(".ancestryOverrideModal carries the real warning texts verbatim", {
+  expect_match(
+    aoModalHtml(.ancestryOverrideModal(
+      shiny::NS("x"), .matePairAncestryOverrideWarningText
+    )),
+    htmltools::htmlEscape(.matePairAncestryOverrideWarningText),
+    fixed = TRUE
+  )
+  expect_match(
+    aoModalHtml(.ancestryOverrideModal(
+      shiny::NS("x"), .ancestryOverrideWarningText
+    )),
+    htmltools::htmlEscape(.ancestryOverrideWarningText),
+    fixed = TRUE
+  )
+})
