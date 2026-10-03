@@ -99,44 +99,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 868 Did
-**Deliverable:** docs-staleness audit slice 8 -- `docs/research/` (5 files) and the older
-`docs/audits/` reports, one audit report under `docs/audits/` (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning. Owner picked the item and the scope at Orient.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`:
+`docs/research/` (5) and 41 older `docs/audits/` files. 42 moderate, 62 minor, no code defects.
+Claim `0754aa0c5`; close-out commit holds the report, BACKLOG and records. Docs only: no R code, no tests.
+**Finding:** no dated record has a "status as of" banner, and the work they recommended all shipped
+(#109, #118-#120, #143-#153, #156, #158, #167, #168, QP solver). Nothing applied; the banner pass is an owner decision.
+**Owner decisions (plain words):** picked this item at Orient; chose "audit `docs/research` + old audits".
+**Method:** four read-only subagents (A-D); I re-ran headline claims (issue states, hashes, DESCRIPTION, file
+existence, counts, CSV rows). Not run: census scripts (they overwrite tracked CSVs), CRAN state, timings.
+**Not done:** no app launch (docs only); no CI watched; not pushed (master ahead of origin by 36).
 
-### What Session 867 Did (condensed S868; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**Deliverable, DONE:** the last near-duplicates of the Breeding Groups / Mate Pair ancestry-override
-code are shared in `R/ancestryOverrides.R`: `.ancestryOverrideStatusText(ov, onThisTab)`,
-`.ancestryOverrideStatusUI(txt)`, `.ancestryOverrideApply(current, ovr, ruleKey, reason)` (the confirm
-step; NULL on a blank reason) and `.rowsAfterFilter(tbl, rowsAll)` (both Mate Pair CSV downloads).
-Claim `1f4ac9b75`; REFACTOR `f5e833df9` (helper tests first, 6 new in `test_ancestryOverrides.R`,
-failing as "function not found", then helpers + both modules rewired); close-out commit holds records.
-**Owner decisions (plain words):** picked this item at Orient; approved the full scope (all four
-helpers) at the PRE-RED gate; behavior unchanged.
-**Verified:** full unfiltered suite 9283 expectations, 0 failed, 0 error (187 skipped);
-`lintr::lint_package()` 0 findings. **Not done:** no app launch (e2e files skip without a browser);
-no CI watched; not pushed (master ahead of origin by 35 after close-out). No NEWS entry (internal).
-**BACKLOG:** the mate-pair residue block is removed (all of it done).
+**Self-assessment: 7/10.** + scope question asked before spawning; every agent claim I spot-checked held.
+- most minor findings and the agents' tables are included unedited, not re-checked by me; one `git cat-file`
+  call of mine failed on a syntax error and was re-run.
 
-**Self-assessment: 8/10.** + helper tests written before the helpers; one full-suite run covered all
-three touched files; message wording of the notification and sentences kept byte-identical.
-- no app launch, so the live click path is covered only by the existing `testServer` tests; the
-  helpers were added with their tests in one REFACTOR phase, not a separate RED.
-
-**Next steps:** (A) Docs-staleness audit next slice (READY, Effort L). (B) `BACKLOG.md` /
-`SESSION_NOTES.md` housekeeping (READY, recurring; 15 `SESSION_NOTES.md` lines exceed 280 B).
-(C) Owner decisions: PED_GV leftovers; CV1/CV2. (D) 3.0.0 release prep needs its own scoping session.
+**Next steps:** (A) Owner: banner pass on ~30 audit/research files (READY once decided, Effort M).
+(B) `SESSION_NOTES.md` housekeeping (READY, Effort S; 15 lines over 280 B, context-budget OVER).
+(C) Owner decisions: PED_GV leftovers, CV1/CV2. (D) 3.0.0 release prep needs its own scoping session.
 (E) Push only on the owner's say-so.
 
-**Key files:** `R/ancestryOverrides.R:~130-205` (four new helpers), `R/modMatePair.R:~359-375`
-(confirm observer), `R/modMatePair.R:~490-510` (downloads), `R/modBreedingGroups.R:~476-495`,
-`tests/testthat/test_ancestryOverrides.R:~535-590` (new tests).
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md` (Recommendation section at top;
+agents' tables below), `BACKLOG.md:~118` (slice 8 note).
 
-**Gotchas:** the helpers' `onThisTab` only changes the sentence wording ("on this tab "); Breeding
-Groups passes nothing. `.ancestryOverrideApply()` assumes the caller already checked the rule key is
-in the overridable set (both observers `req()` it first). A stack trace prints when
-`test_modMatePair.R` runs; the file still passes.
+**Gotchas:** the agents' tables carry ids A1-D24+ and are unedited; D could not verify F3 by hand (read by commit
+only). Tracked CSV regeneration by the census scripts would overwrite the 09-02 reference CSVs.
+
+### Session 867 Handoff Evaluation (by Session 868)
+**Score 8/10.** Helped: key-file line ranges and the "(A) docs audit next slice" pointer. Missing: BACKLOG said
+`docs/research`/older audits were "only if the owner wants them", so (A) was not READY as written and cost a scope
+question. Wrong: nothing found ("35 ahead" matched; I count 36 now with my claim commit). ROI: high.
+
+### What Session 867 Did (condensed S868; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** Breeding Groups and Mate Pair share four ancestry-override helpers in `R/ancestryOverrides.R`
+(`.ancestryOverrideStatusText`, `.ancestryOverrideStatusUI`, `.ancestryOverrideApply`, `.rowsAfterFilter`);
+behavior unchanged. Claim `1f4ac9b75`; REFACTOR `f5e833df9`. Full suite 0 failed, 0 error; lint 0. Self 8/10.
+**Gotcha:** `.ancestryOverrideApply()` assumes callers `req()` the rule key first. Key files:
+`R/ancestryOverrides.R:~130-205`, `R/modMatePair.R:~359-375`, `R/modBreedingGroups.R:~476-495`.
 
 ### Session 866 Handoff Evaluation (by Session 867)
 **Score 9/10.** Helped: next step (A) named exactly the three near-duplicates and the key-file line

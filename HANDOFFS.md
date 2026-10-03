@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S868
 date: 2026-10-02
-status: pending
-active_task: docs-staleness audit slice 8 -- docs/research/ and older docs/audits/ (IN PROGRESS)
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- docs-staleness audit slice 8 (docs/research, 41 older docs/audits files): 42 moderate, 62 minor, no code defects; report only, nothing applied
+what_was_done: claim 0754aa0c5; close-out commit holds docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md, BACKLOG slice 8 note, CHANGELOG, SESSION_NOTES, this receipt. Four read-only subagents; headline claims re-run first-hand
+next_steps: (A) Owner decision: banner pass on ~30 dated reports (Effort M). (B) SESSION_NOTES.md housekeeping (15 lines over 280 B). (C) Owner decisions: PED_GV leftovers, CV1/CV2. (D) 3.0.0 scoping session. (E) Push only on owner's say-so
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md (Recommendation at top, agent tables A-D below); BACKLOG.md slice 8 note in the docs-staleness item
+gotchas: agent tables are unedited and carry minors I did not re-check; census scripts overwrite tracked CSVs so D did not run them; PED_GV triage needs a banner most (926cc907b not listed in BACKLOG)
+runtime_smoke: not applicable -- docs only, no runtime change; no tests or lint run (no .R file changed). quality_ratchet: not run.
+changelog_ref: S868 DONE entry
+commit: the close-out commit that carries this receipt; claim 0754aa0c5
 ```
 
 ```handoff
