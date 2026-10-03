@@ -169,7 +169,7 @@ correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
   corrected <- indivMeanKin
   for (i in which(oneU)) {
     focalId <- candidateIds[i]
-    missingSex <- if (sireMiss[i]) "M" else "F"
+    missingSex <- if (sireMiss[i]) sexCodes[["male"]] else sexCodes[["female"]]
     cohort <- getBreedingPeerCohort(
       focalBirth = candPed$birth[i],
       focalSpecies = spp[i],

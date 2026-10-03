@@ -290,9 +290,9 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # dereferenced until founders$sex immediately below.
   assertRequiredColsPresent(names(ped), c("id", "sex"), "reportGV(ped)")
   founders <- ped[isFounder(ped), ]
-  males <- founders[(founders$sex == "M") &
+  males <- founders[(founders$sex == sexCodes[["male"]]) &
     !isGeneratedUnknownId(founders$id, ped = ped), ]
-  females <- founders[(founders$sex == "F") &
+  females <- founders[(founders$sex == sexCodes[["female"]]) &
     !isGeneratedUnknownId(founders$id, ped = ped), ]
 
   # Issue #9 Slice 3: classify each proband's parentage (U-id aware) so the

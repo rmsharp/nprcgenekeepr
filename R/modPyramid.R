@@ -118,8 +118,8 @@ modPyramidServer <- function(id, pedigreeData) {
       data.frame(
         Metric = c("Total", "Males", "Females"),
         Value = c(nrow(ped),
-                  sum(ped$sex == "M", na.rm = TRUE),
-                  sum(ped$sex == "F", na.rm = TRUE)),
+                  sum(ped$sex == sexCodes[["male"]], na.rm = TRUE),
+                  sum(ped$sex == sexCodes[["female"]], na.rm = TRUE)),
         stringsAsFactors = FALSE
       )
     })

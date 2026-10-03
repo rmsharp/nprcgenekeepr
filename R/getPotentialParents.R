@@ -161,14 +161,14 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
       j <- j + 1L
       ## Selecting sires
       potentialSires <- ba[
-        sex == "M" &
+        sex == sexCodes[["male"]] &
           (is.na(ba$exit) |
             exit >= (pUnknown$birth[i] - mgp)),
         id
       ]
 
       ## Selecting dams
-      potentialDams <- ba[sex == "F" &
+      potentialDams <- ba[sex == sexCodes[["female"]] &
         (is.na(ba$exit) |
           exit >= pUnknown$birth[i]), ]
 
