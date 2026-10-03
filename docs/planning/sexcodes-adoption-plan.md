@@ -3,8 +3,9 @@
 *Session 873, 2026-10-02. Planning only: no `R/` or test file was changed. Owner decision (S872):
 "all", meaning every direct sex letter in `R/` goes through the internal `sexCodes` constant
 (`R/sexCodes.R`). Closes PED-2, NEW-29, PED-7 in
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` when the last stage ships. DRAFT until the owner
-approves the open points in section 5.*
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` when the last stage ships. Owner answered section 5 on
+2026-10-02 (S873 follow-up): keep the literal `groupAddAssign` default and exempt that one line; leave
+`convertSexCodes.R` and the two fixtures alone. Plan is now approved.*
 
 ## 1. What changes and why it is safe
 
@@ -79,11 +80,11 @@ Every stage's DONE criteria (surface = local machine; CI is the second surface):
   does not prove a module renders, so stage 4 runs `test-e2e-orip-module.R`.
 - No NEWS entry (internal refactor, no user-visible change); no `_pkgdown.yml` change (no new export).
 
-## 5. Open points for the owner (before stage 1)
+## 5. Owner answers (2026-10-02, both recorded)
 
-1. Decision 3: change the exported `groupAddAssign` default (man page shows `sexCodes[["female"]]`) or
-   keep the literal and allowlist that one line?
-2. Confirm decisions 1 and 2 (leave `convertSexCodes.R` and the two fixtures alone).
+1. Decision 3: **keep the literal** `groupAddAssign` default and allowlist that one line by exact text. So
+   stage 6 has no roxygen or `man/` change; its scope shrinks to the guard flip and the closures.
+2. Decisions 1 and 2: **accepted** (leave `convertSexCodes.R` and the two fixtures alone).
 
 ## 6. Gotchas for the implementer
 

@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S873 follow-up: owner answered the plan's two open points (keep literal `groupAddAssign` default and allowlist it; leave `convertSexCodes.R` and fixtures); plan approved, recorded in the plan and BACKLOG. Docs only.
+
 ### 2026-10-02 · [ad hoc] S873 DONE: plan for the `sexCodes` adoption written: `docs/planning/sexcodes-adoption-plan.md` (grep inventory of 43 code lines in 17 files, six staged TDD sessions, per-stage guard test, two owner points). BACKLOG item updated. Planning only; no code. Claim `6a84d5abe`.
 
 ### 2026-10-02 · [ad hoc] S872 DONE: owner decision on PED-2, NEW-29 and PED-7 recorded: every direct sex letter in `R/` should go through `sexCodes` (40 comparison lines in 16 files measured). BACKLOG item added, triage Decision record 3 written; ids stay open. Docs only, no code; claim `bbe315dfa`.

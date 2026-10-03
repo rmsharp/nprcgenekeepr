@@ -30,9 +30,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       report's table, not the old 41-id list.
 
 - [ ] **Adopt `sexCodes` for every direct sex letter in `R/` (owner decided S872, 2026-10-02;
-      plan written S873: `docs/planning/sexcodes-adoption-plan.md`, six staged sessions; READY after
-      the owner answers its section 5 (the exported `groupAddAssign` default, and leaving
-      `convertSexCodes.R` and two fixtures alone), Effort M)** -- covers PED-2, NEW-29, PED-7. Owner
+      plan written S873 and approved the same day: `docs/planning/sexcodes-adoption-plan.md`, six staged
+      sessions; owner kept the literal `groupAddAssign` default (allowlisted) and left
+      `convertSexCodes.R` and two fixtures alone; READY, Effort M)** -- covers PED-2, NEW-29, PED-7. Owner
       chose "all" over "some" or "none". S872 measured 40 comparison lines in 16 files (see
       the triage report's Decision record 3), plus assignments (`addParents.R:54,62`) and
       `identical(sexOf[[p]], "M")` forms (`makePedigreeDiagramData.R:965-1262`). Strict TDD;
