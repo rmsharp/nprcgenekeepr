@@ -107,6 +107,10 @@ test_that("no bare sex-code literals remain in the stage 4 files", {
   ))
 })
 
+test_that("no bare sex-code literals remain in the stage 5 file", {
+  expectNoBareSexCodeLiterals("makePedigreeDiagramData.R")
+})
+
 test_that("the guard flags each bare-literal form it claims to catch", {
   tmp <- tempfile(fileext = ".R")
   on.exit(unlink(tmp))
