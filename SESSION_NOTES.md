@@ -99,10 +99,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 870 Did
-**Deliverable:** banner pass on the dated `docs/research/` and older `docs/audits/` files (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning. Docs only: no `.R`, no tests, no TDD phase.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+**Deliverable, DONE:** the banner pass from the slice 8 report. A "Status as of 2026-10-02 (S870)" blockquote
+under the title of 26 dated files (4 in `docs/research/`, 22 in `docs/audits/`), each naming what superseded
+the report; bodies untouched except two numbers (census CSV 2,734 -> 1,678 rows; tarball "0 gates" -> 1).
+Docs only: no `.R`, no tests, no TDD phase. Claim `99631c962`; six banner commits `42d617267`..`19e8f917c`,
+number fixes `89e3fc7c9`; BACKLOG slice 8 note, records and receipt are in the close-out commit.
+**Owner decision (plain words):** picked "banner pass on old audits" at Orient.
+**Verified by me:** `git diff --numstat` over the banner commits is 26 files, +52 -0 (additions only); no test
+reads `docs/audits` or `docs/research` outside comments; the banner facts come from the slice 8 report's
+first-hand rows (issue states, hashes, `DESCRIPTION`, file existence), not re-run this session.
+**Not done:** files with only minor findings got no banner; no lint/tests/CI (docs only, `docs` is
+`.Rbuildignore`d); not pushed (master 49 ahead of origin after this close-out).
+
+**Self-assessment: 8/10.** + One deliverable, additive and checked, 5-file cap kept with checkpoint commits.
+- Banner wording rests on the agents' tables, which I spot-checked only where I wrote a number; "S673-S697"
+  for the QP solver merges two ids in the report (S673 and S674) into one range.
+
+**Next steps:** (A) Owner decisions: PED_GV leftovers and the four likely code defects (Effort S each, strict
+TDD), CV1/CV2. (B) 3.0.0 release prep needs its own scoping session. (C) Push only on the owner's say-so.
+(D) Optional: replace stale `file:line` cites in the plans and gap analysis with function names.
+
+**Key files:** `BACKLOG.md` (slice 8 note in the docs-staleness item, "Banner pass DONE S870");
+`docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md` (the source of every banner).
+
+**Gotchas:** banners say "S870" and "2026-10-02", so a later fix to a banner's subject makes it stale again; the
+census scripts still overwrite tracked CSVs if run.
+
+### Session 869 Handoff Evaluation (by Session 870)
+**Score 9/10.** Helped: next step (A) named the banner pass with its Effort M tag, and the slice 8 report's
+Recommendation listed the candidate files by group. Missing: nothing that cost time. Wrong: "master 39 ahead"
+measured 40 at Orient (the S869 close-out commit is not counted). ROI: high.
 
 ### What Session 869 Did
 **Deliverable, DONE:** the 15 `SESSION_NOTES.md` lines over 280 B (records S859-S862, lines 194-250) are
@@ -129,31 +155,10 @@ leftovers, CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Pu
 and the count matched `context_budget.py`. Missing: nothing that cost time. Wrong: "master ahead by 36"
 measured 38 at Orient (S868 close-out commit not counted). ROI: high.
 
-### What Session 868 Did
-**Deliverable, DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`:
-`docs/research/` (5) and 41 older `docs/audits/` files. 42 moderate, 62 minor, no code defects.
-Claim `0754aa0c5`; close-out commit holds the report, BACKLOG and records. Docs only: no R code, no tests.
-**Finding:** no dated record has a "status as of" banner, and the work they recommended all shipped
-(#109, #118-#120, #143-#153, #156, #158, #167, #168, QP solver). Nothing applied; the banner pass is an owner decision.
-**Owner decisions (plain words):** picked this item at Orient; chose "audit `docs/research` + old audits".
-**Method:** four read-only subagents (A-D); I re-ran headline claims (issue states, hashes, DESCRIPTION, file
-existence, counts, CSV rows). Not run: census scripts (they overwrite tracked CSVs), CRAN state, timings.
-**Not done:** no app launch (docs only); no CI watched; not pushed (master ahead of origin by 36).
-
-**Self-assessment: 7/10.** + scope question asked before spawning; every agent claim I spot-checked held.
-- most minor findings and the agents' tables are included unedited, not re-checked by me; one `git cat-file`
-  call of mine failed on a syntax error and was re-run.
-
-**Next steps:** (A) Owner: banner pass on ~30 audit/research files (READY once decided, Effort M).
-(B) `SESSION_NOTES.md` housekeeping (READY, Effort S; 15 lines over 280 B, context-budget OVER).
-(C) Owner decisions: PED_GV leftovers, CV1/CV2. (D) 3.0.0 release prep needs its own scoping session.
-(E) Push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md` (Recommendation section at top;
-agents' tables below), `BACKLOG.md:~118` (slice 8 note).
-
-**Gotchas:** the agents' tables carry ids A1-D24+ and are unedited; D could not verify F3 by hand (read by commit
-only). Tracked CSV regeneration by the census scripts would overwrite the 09-02 reference CSVs.
+### What Session 868 Did (condensed S870; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`: `docs/research/`
+(5) and 41 older `docs/audits/` files, 42 moderate, 62 minor, no code defects. Claim `0754aa0c5`. Self 7/10.
+**Gotcha kept:** the agents' tables (ids A1-D24+) are unedited; the census scripts overwrite tracked CSVs.
 
 ### Session 867 Handoff Evaluation (by Session 868)
 **Score 8/10.** Helped: key-file line ranges and the "(A) docs audit next slice" pointer. Missing: BACKLOG said

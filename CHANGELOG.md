@@ -60,7 +60,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-02 · [ad hoc] S870 (in progress): banner pass on the dated `docs/research/` and older `docs/audits/` files named in the slice 8 report; docs only. Phase 3F records the rest.
+### 2026-10-02 · [ad hoc] S870 DONE: banner pass from the slice 8 audit: a "Status as of 2026-10-02 (S870)" banner on 26 dated files (4 in `docs/research/`, 22 in `docs/audits/`) naming what superseded each, bodies unedited except two numbers (census CSV row count, tarball gate count); BACKLOG slice 8 note updated. Docs only, no tests or lint run. Claim `99631c962`; banners `42d617267`..`19e8f917c`; numbers `89e3fc7c9`.
 
 ### 2026-10-02 · [ad hoc] S869 DONE: `SESSION_NOTES.md` per-line budget finding cleared: the 15 lines over 280 B (S859-S862 records) re-wrapped at spaces, text unchanged modulo whitespace; also removed the S842 record and S841 evaluation. Docs only; claim `cb178a6ef`.
 

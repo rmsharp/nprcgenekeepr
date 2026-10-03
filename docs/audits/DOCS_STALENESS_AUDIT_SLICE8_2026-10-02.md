@@ -29,6 +29,8 @@ Read-only audit. Nothing in the repo was changed except this report and the sess
 
 ## Recommendation (nothing applied this session)
 
+> **Update S870 (2026-10-02):** recommendations 1 and 2 were applied: a status banner on the 26 files with a moderate finding (4 in `docs/research/`, 22 in `docs/audits/`) and the two numbers corrected inline. Recommendations 3-4 are still open.
+
 1. Add a one-line "Status as of 2026-10-02" banner, naming what superseded the report, to the files with a moderate
    finding. Leave the bodies as dated records. Candidates by group:
    - **A:** `kinship2-alignped4-joint-positioning-mechanism` (A4, A5), `labkey-integration-options` (A13),

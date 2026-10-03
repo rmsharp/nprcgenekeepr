@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S870
 date: 2026-10-02
-status: pending
-active_task: banner pass on dated docs/research and older docs/audits files (IN PROGRESS)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- status banners on the 26 dated docs/research and docs/audits files with a moderate slice 8 finding, plus two inline number corrections; docs only
+what_was_done: claim 99631c962; banner commits 42d617267..19e8f917c (26 files, +52 -0); number fixes 89e3fc7c9; close-out commit holds the BACKLOG slice 8 note, slice 8 report update note, SESSION_NOTES, CHANGELOG and this receipt
+next_steps: (A) Owner decisions: PED_GV leftovers and the four likely code defects (Effort S each, strict TDD), CV1/CV2. (B) 3.0.0 release prep scoping session. (C) Push only on the owner's say-so. (D) Optional: replace stale file:line cites in plans and gap analysis with function names
+key_files: BACKLOG.md (slice 8 note, "Banner pass DONE S870"); docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md (source of every banner)
+gotchas: banners rest on the slice 8 agents' tables spot-checked only where a number was written; "S673-S697" merges the report's S673 and S674 ids; a later change to a banner's subject makes it stale again
+runtime_smoke: not applicable -- docs only; no tests or lint run (no .R file changed; docs/ is .Rbuildignore'd). quality_ratchet: not run.
+changelog_ref: S870 DONE entry
+commit: the close-out commit that carries this receipt; claim 99631c962
 ```
 
 ```handoff
