@@ -551,3 +551,61 @@ test_that("a stand-in dam (placeholder TRUE) is not a recorded dam, so dams is l
   e <- entryFor(recordedParentPp(), "K_STAND")
   expect_true(all(c("F1", "F2") %in% e$dams))
 })
+
+## PED_GV NEW-55 (owner decision S880) ---------------------------------------
+## Each entry says which tier its dam list came from: "provenBreeder" (a
+## female with an offspring 0.5-1.5 y from the focal birth), "eligibleFemale"
+## (the fallback: every female old enough, present, and not ruled out by
+## gestation), or NA when no dam is listed (recorded dam, or no candidate).
+## id, sires and dams are unchanged.
+test_that("damBasis is 'provenBreeder' when a proven breeder supplies the dams (NEW-55)", {
+  ## PROVEN's other offspring is 400 d after the focal birth: outside the
+  ## 210 d gestation window, inside the 0.5-1.5 y band.
+  pp <- getPotentialParents(
+    ped = fallbackPed(c(PROVEN = 400L)), minSireAge = 2, minDamAge = 2,
+    maxGestationalPeriod = 210L
+  )
+  expect_identical(pp[[1L]]$dams, "PROVEN")
+  expect_identical(pp[[1L]]$damBasis, "provenBreeder")
+})
+
+test_that("damBasis is 'eligibleFemale' when the fallback supplies the dams (NEW-55)", {
+  ## F_AFTER is ruled out by gestation; F_OPEN has no offspring, so only the
+  ## fallback offers her. (fallbackPed needs one female with an offspring.)
+  pp <- getPotentialParents(
+    ped = fallbackPed(c(F_OPEN = NA, F_AFTER = 59L)), minSireAge = 2,
+    minDamAge = 2, maxGestationalPeriod = 210L
+  )
+  expect_identical(pp[[1L]]$dams, "F_OPEN")
+  expect_identical(pp[[1L]]$damBasis, "eligibleFemale")
+})
+
+test_that("damBasis is NA when the dam is already recorded (NEW-55)", {
+  e <- entryFor(recordedParentPp(), "K_DAMREC")
+  expect_identical(e$dams, character(0L))
+  expect_identical(e$damBasis, NA_character_)
+})
+
+test_that("damBasis is NA when no candidate dam remains (NEW-55)", {
+  ## F1 delivered 59 d after the focal birth, so gestation rules her out and
+  ## the entry is still emitted, with sires and no dams.
+  pp <- getPotentialParents(
+    ped = fallbackPed(c(F1 = 59L)), minSireAge = 2, minDamAge = 2,
+    maxGestationalPeriod = 210L
+  )
+  expect_identical(pp[[1L]]$dams, character(0L))
+  expect_identical(pp[[1L]]$damBasis, NA_character_)
+})
+
+test_that("every entry carries exactly id, sires, dams, damBasis with a length-1 damBasis (NEW-55)", {
+  pp <- recordedParentPp()
+  for (e in pp) {
+    expect_identical(names(e), c("id", "sires", "dams", "damBasis"))
+    expect_length(e$damBasis, 1L)
+    expect_true(is.character(e$damBasis))
+    expect_true(is.na(e$damBasis) ||
+      e$damBasis %in% c("provenBreeder", "eligibleFemale"))
+    ## the label is NA exactly when no dam is listed
+    expect_identical(is.na(e$damBasis), length(e$dams) == 0L)
+  }
+})
