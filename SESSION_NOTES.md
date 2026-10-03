@@ -99,33 +99,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 878 Did
-**Deliverable:** `sexCodes` adoption stage 5 of 6 -- `makePedigreeDiagramData.R` (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** `sexCodes` adoption stage 5 of 6, strict TDD (each phase gated by `AskUserQuestion`).
+Claim `4ea9aed71`; RED `40a8e53de`; GREEN `b3f3a3ad5`; records in the close-out commit.
+**Done:** `test_sexCodes.R` gets a stage-5 test. In `R/makePedigreeDiagramData.R`, `male`/`female` are set once
+from `sexCodes` after `sexOf` (line 901, inside `.positionMatingUnitForest`) and replace the 6 bare letters
+(965-966, 1090-1091, 1262-1263 before; now shifted by 2). REFACTOR found nothing to change.
+**Verified by me:** RED failed on exactly those 6 lines; `test_sexCodes.R` green after; before/after snapshot of
+`makePedigreeDiagramData()` + `makePedigreeMatingLayout()` on `examplePedigree`, `qcPed`, `pedWithGenotype`
+(first 400 rows) is `identical()`; lint 0; full `test_dir` 365 files, 0 failed, 0 error, 187 skipped.
+Not run: `devtools::check()` (plan: stage 6). The other 5 data sets in my snapshot script failed on missing columns
+before and after, so they prove nothing.
 
-### What Session 877 Did
-**Deliverable, DONE:** `sexCodes` adoption stage 4 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
-gated by `AskUserQuestion`). Claim `df4767656`; RED `4295ec5b4`; GREEN `3040c6d8a`; records in the close-out commit.
-**Done:** `test_sexCodes.R` gets a stage-4 list. 14 bare letters in `correctParentSex` (97,98,108,109),
-`addParents` (54,62) and `modORIPReporting` (210,211,216,217,312,313,359,360) now use `sexCodes`; the H/U
-exemption sets are two locals, `keepAsSire`/`keepAsDam`. REFACTOR found nothing to change.
-**Verified by me:** RED failed on exactly those 14 lines; stage-4 guard plus `test_addParents`,
-`test_correctParentSex`, `test_modORIPReporting(_server)` pass; `test-e2e-orip-module.R` run with
-`NPRC_RUN_E2E=true` (without it the file skips): 9 pass; `lint_package()` 0; full `test_dir` 365 files, 0 failed,
-0 error, 187 skipped. Not run: `devtools::check()` (plan: stage 6).
+**Handoff evaluation of S877: 9/10.** Helped: the next step named the file, the hoist, the `.shapeForVec` trap and
+the before/after requirement; the line numbers were exact. Missing: the plan's "9 pedigree-diagram test files" is
+not a list anywhere (26 files mention the functions; I ran them all via the full suite). Wrong: nothing found.
 
-**Handoff evaluation of S876 (by S877): 9/10.** Helped: next step named all three functions and the e2e file;
-the plan-section-2 grep reproduced the line numbers exactly. Missing: that the e2e file is opt-in
-(`NPRC_RUN_E2E=true`), so a plain run reports it skipped. Wrong: nothing found.
+**Self-assessment: 8/10.** + One deliverable; baseline captured before RED; every gate asked; identical output proven.
+- The first snapshot script covered only `makePedigreeDiagramData()`, which has no x/y positions, so I redid it with the layout; a macOS `sed -i` slip cost one call.
 
-**Self-assessment: 8/10.** + One deliverable; every gate asked; RED proved on exactly the expected lines; full
-suite, lint and e2e run before commit. - Wasted a placeholder monitor call while the suite ran.
+**Next steps:** stage 6 (plan section 4, owner answer 1): `groupAddAssign` keeps its literal default, allowlisted by
+exact text. Replace the stage lists in `test_sexCodes.R` with a scan of every `R/*.R` minus the allowlist
+(`sexCodes.R`, `convertSexCodes.R`, `createPedOne.R`, `createPedSix.R`, the five non-sex lines by exact text),
+then close PED-2, NEW-29, PED-7 in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`, remove the BACKLOG block, run
+`devtools::check()`. Re-run the plan section 2 greps first.
 
-**Next steps:** stage 5 (plan section 4): `makePedigreeDiagramData.R` (`identical(sexOf[[p]], "M")` forms around
-965-1262); hoist `male <- sexCodes[["male"]]` out of the loops at 965/1090/1262; do not use `sexCodes` inside
-`.shapeForVec` (parameter of that name, ~1840). DONE also needs the 9 pedigree-diagram test files green and
-rendered output identical on a fixed pedigree before and after. Re-run the plan section 2 greps first.
+### What Session 877 Did (condensed S878; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`sexCodes` adoption stage 4 of 6 shipped: 14 bare letters in 3 R files; claim `df4767656`, RED `4295ec5b4`,
+GREEN `3040c6d8a`. Handoff evaluation of S876: 9/10. Self-score 8/10.
 
 ### What Session 876 Did (condensed S877; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `sexCodes` adoption stage 3 of 6 shipped: 7 bare letters in 4 R files; claim `f4a645440`, RED `6fafbcd30`,

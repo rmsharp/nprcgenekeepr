@@ -2372,3 +2372,6 @@ Verified: `devtools::check()` 0 errors / 0 [tracked-repo] WARNINGs / 0 [tracked-
 
 #### Learning 844
 **`test-e2e-orip-module.R` skips unless `NPRC_RUN_E2E=true`, so a plain `test_file` run of it proves nothing.** (S877, 2026-10-02.) The stage-4 plan says GREEN runs it; run bare, it reports 4 skips with "End-to-end Shiny tests are opt-in". With the variable set it ran 9 expectations and passed. Any stage that touches a Shiny module and cites the e2e file must set the variable and read the pass count, not just the absence of failures.
+
+#### Learning 845
+**A before/after render check must run the layer that produces positions, not just the data builder.** (S878, 2026-10-02.) `makePedigreeDiagramData()` returns nodes with `level` only; x/y come from `makePedigreeMatingLayout()`, which is where `.positionMatingUnitForest()` (the function holding the sex comparisons) runs. A snapshot of only the first would have passed trivially. The snapshot script lives in the session scratchpad (not the repo): it saved both for `examplePedigree`, `qcPed` and `pedWithGenotype` before the edit and compared with `identical()` after. Five other data sets failed on missing columns both times, so check the snapshot actually contains results.

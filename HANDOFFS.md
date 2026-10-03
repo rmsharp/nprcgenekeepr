@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S878
 date: 2026-10-02
-status: pending
-active_task: sexCodes adoption stage 5 of 6 (makePedigreeDiagramData)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- sexCodes adoption stage 5 of 6 (makePedigreeDiagramData); stage 6 remains
+what_was_done: claim 4ea9aed71; RED 40a8e53de (stage-5 test in test_sexCodes.R; failed on exactly the 6 expected lines); GREEN b3f3a3ad5 (male/female locals from sexCodes at line 901, 6 bare letters replaced); REFACTOR nothing to change; close-out commit carries records
+next_steps: stage 6 of docs/planning/sexcodes-adoption-plan.md section 4: replace the stage lists in test_sexCodes.R with a scan of every R/*.R minus the allowlist (sexCodes.R, convertSexCodes.R, createPedOne.R, createPedSix.R, the five non-sex lines and groupAddAssign:179 by exact text); close PED-2, NEW-29, PED-7 in docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md; remove the BACKLOG block; run devtools::check()
+key_files: tests/testthat/test_sexCodes.R (stage-5 test); R/makePedigreeDiagramData.R:901-902 (locals), 967-968, 1092-1093, 1264-1265 (uses); PROJECT_LEARNINGS.md Learning 845
+gotchas: allowlist the five non-sex lines by exact trimmed text, never whole files (qcStudbook.R especially); groupAddAssign keeps its literal default per owner answer 1; makePedigreeDiagramData.R:.shapeForVec still has a parameter named sexCodes, harmless but a future use inside it would break
+runtime_smoke: before/after snapshot of diagram data and mating layout on 3 pedigrees identical(); full test_dir 365 files 0 failed 0 error 187 skipped; lintr::lint_package() 0 lints; devtools::check() not run (plan: stage 6); quality_ratchet: not run
+changelog_ref: S878 DONE entry
+commit: the close-out commit that carries this receipt; claim 4ea9aed71
 ```
 
 ```handoff

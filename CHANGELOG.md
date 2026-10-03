@@ -66,6 +66,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ### 2026-10-02 · [ad hoc] S877 RED: `test_sexCodes.R` gets a stage-4 file list (correctParentSex, addParents, modORIPReporting); fails on exactly the 14 expected lines (correctParentSex 97,98,108,109; addParents 54,62; modORIPReporting 210,211,216,217,312,313,359,360).
 
+### 2026-10-02 · [ad hoc] S878 DONE: `sexCodes` adoption stage 5 of 6 (claim `4ea9aed71`, RED `40a8e53de`, GREEN `b3f3a3ad5`): 6 bare sex letters in `makePedigreeDiagramData.R` now use `male`/`female` locals set once from `sexCodes`. Internal, no behavior change (diagram data and mating layout identical before and after on 3 pedigrees; full suite 0 failed, 0 error; lint clean). BACKLOG item updated; Learning 845. Stage 6 remains.
+
+### 2026-10-02 · [ad hoc] S878 GREEN: `male`/`female` locals in `.positionMatingUnitForest` replace 6 bare letters; before/after layout snapshot identical; 365 files 0 failed 0 error 187 skipped; `lint_package()` 0.
+
+### 2026-10-02 · [ad hoc] S878 RED: `test_sexCodes.R` gets a stage-5 test for `makePedigreeDiagramData.R`; failed on exactly lines 965, 966, 1090, 1091, 1262, 1263.
+
 ### 2026-10-02 · [ad hoc] S878 claim: `sexCodes` adoption stage 5 of 6 (makePedigreeDiagramData) -- in progress.
 
 ### 2026-10-02 · [ad hoc] S877 claim: `sexCodes` adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting) -- in progress.
