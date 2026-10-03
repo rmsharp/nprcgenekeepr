@@ -346,6 +346,11 @@ longitudinal monitoring of colony genetic health.
   for the missing parent: an animal with a recorded dam and no sire gets
   candidate sires, and the reverse. Before, a recorded dam was ruled out of
   her own animal's list, so those dam lists were never useful.
+- New: each Potential Parents result (`getPotentialParents()`) now says where
+  its dam list came from: `damBasis` is `"provenBreeder"` for females who gave
+  birth near the animal's birth, `"eligibleFemale"` when there were none and
+  every female old enough and present is listed instead, and blank when no dam
+  is listed. The sire and dam lists themselves are unchanged.
 - Fixed: a sire or dam whose sex was blank, misspelled or space-padded (such
   as `"M "`) was reported as a "female sire" or "male dam" and stopped the
   upload. Spaces are ignored, and a blank or unreadable sex is read as

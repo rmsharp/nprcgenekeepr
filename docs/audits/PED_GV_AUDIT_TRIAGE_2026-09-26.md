@@ -192,6 +192,16 @@ Still **31 ids** open.
 
 Open after this closure: **29 ids** (31 minus PED-2 and NEW-29).
 
+### Decision record 5 (owner decision 2026-10-03, S880)
+
+| id | decided |
+|---|---|
+| NEW-55 | CLOSED, SHIPPED: each `getPotentialParents()` entry now carries `damBasis` (`"provenBreeder"`, `"eligibleFemale"`, or `NA` when `dams` is empty); `id`, `sires`, `dams` unchanged (tests in `test_getPotentialParents.R`, GREEN `ed344a83a`). |
+| PED-4, NEW-54 | STAY OPEN: the owner chose to split the 150-line function in its own later session (plan-mode approval first). |
+
+NEW-56's `pUnknown$id[i][1L]` is no longer in the file (verified S880), but it was not recounted.
+Open after this closure: **28 ids** (29 minus NEW-55).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S880
 date: 2026-10-03
-status: pending
-active_task: PED_GV owner decision on dam-list confidence (getPotentialParents: NEW-55, NEW-35, PED-4, NEW-54, NEW-56)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- PED_GV dam-list confidence: damBasis label shipped (NEW-55 closed); function split deferred to its own session
+what_was_done: claim 9dbf45d61; RED a0388e5f6 (5 tests for damBasis, all failing on the missing field); GREEN ed344a83a (R/getPotentialParents.R, man/getPotentialParents.Rd); REFACTOR none needed; NEWS.Rmd/NEWS.md entry, triage Decision record 5, BACKLOG split item, Learning 847 in the close-out commit
+next_steps: pick from BACKLOG: split getPotentialParents (PED-4, NEW-54; needs plan-mode approval first, Effort M), other PED_GV owner decisions (error/return contract, walk helpers, sim driver, constants/HTML builders), docs-staleness leftovers, getAncestors absent id, isAddedRecord helper. Push only on owner say-so (master about 82 ahead of origin)
+key_files: R/getPotentialParents.R:156-231 (tier tracking and entry list); tests/testthat/test_getPotentialParents.R:555-615 (damBasis tests); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Decision record 5); BACKLOG.md:8-42; PROJECT_LEARNINGS.md Learning 847
+gotchas: fallbackPed() needs at least one female with an offspring (paste0("KID_", character(0)) gives "KID_"); devtools::document() rewrites man/nprcgenekeepr-package.Rd from DESCRIPTION (stale "five groups" text) -- I reverted that unrelated change, so it is still stale; NEWS.md re-knit also pulled in about 24 lines that were already stale
+runtime_smoke: full test_dir 365 files 0 failed 0 error 187 skipped; lintr::lint_package() 0 lints; devtools::check() 0 errors 0 warnings 0 notes; Shiny tab not launched (the tab does not read damBasis); quality_ratchet: not run
+changelog_ref: S880 DONE entry
+commit: the close-out commit that carries this receipt; claim 9dbf45d61
 ```
 
 ```handoff

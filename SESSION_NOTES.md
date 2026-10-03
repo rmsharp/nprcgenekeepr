@@ -99,41 +99,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 880 Did
-**Deliverable:** PED_GV owner decision on dam-list confidence (NEW-55/NEW-35/PED-4/NEW-54/NEW-56), strict TDD (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** PED_GV owner decision on dam-list confidence, strict TDD (each phase gated by `AskUserQuestion`).
+Claim `9dbf45d61`; RED `a0388e5f6`; GREEN `ed344a83a`; REFACTOR (none needed) and records in the close-out commit.
+**Done:** owner chose to label the tier: `getPotentialParents()` entries carry `damBasis` (`"provenBreeder"`,
+`"eligibleFemale"`, `NA` when `dams` is empty); additive, roxygen and NEWS entry written. NEW-55 closed (29 to 28
+open ids). Owner also chose to split the function later: new BACKLOG item (PED-4, NEW-54 stay open).
+**Verified by me:** 5 RED tests failed only on the missing field; GREEN passes them and the makeSimPed,
+markerParentageLikelihood, modPotentialParents* and modMarkerGenetics files; full `test_dir` 365 files, 0 failed,
+0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0. Not run: push or CI (about 82 ahead of origin).
 
-### What Session 879 Did
-**Deliverable, DONE:** `sexCodes` adoption stage 6 of 6, strict TDD (each phase gated by `AskUserQuestion`).
-Claim `e9823c856`; RED `2ea50611a`; GREEN `9c6c034a6`; REFACTOR and records in the close-out commit.
-**Done:** `test_sexCodes.R` now scans every `R/*.R` minus an allowlist (`sexCodes.R`, `convertSexCodes.R`,
-`createPedOne.R`, `createPedSix.R` whole; six lines by exact trimmed text), with a stale-allowlist test and a
-planted-file self-test. The five per-stage tests, the six-file XARCH-4 test and its helper are gone (the scan
-covers them). PED-2, NEW-29, PED-7 closed in the triage report (Closure record 4; open ids 31 to 29, since
-PED-7 was already counted closed S818); the BACKLOG block is removed. No `R/` file changed.
-**Verified by me:** the scan passes on today's code, so RED could not fail honestly (I said so at the gate);
-instead a planted `sex == "M"` in `calcNeSexRatio.R` failed it at line 62, file restored. Full `test_dir`
-365 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0.
-Not run: a push or CI (nothing pushed; master is 79 ahead of origin by my count at close-out).
+**Handoff evaluation of S879: 8/10.** Helped: it named the BACKLOG choices and the PED_GV owner-decision list.
+Missing: the triage table's line numbers and NEW-35/NEW-55 text predate F3, so the dam question was already
+narrower than the table says (NEW-56 is gone from the file). Wrong: nothing found.
 
-**Handoff evaluation of S878: 9/10.** Helped: next steps named the exact allowlist, the triage ids and the
-`devtools::check()` step; the plan section 2 inventory re-ran identically. Missing: it did not say stage 6
-changes no `R/` code, so RED and GREEN have nothing to fail or fix. Wrong: nothing found.
+**Self-assessment: 8/10.** + One deliverable; scope and design asked in plain words; RED checked per-test.
+- First fixture hit a `paste0` zero-length trap; `/background` estimate question not answered in the file.
 
-**Self-assessment: 8/10.** + One deliverable; every gate asked; mutation check shows the guard can fail;
-count change (31 to 29, not 28) traced to the S818 record. - First fixture put a flagged line in "ok.R"; two
-mutation attempts failed to load before one worked.
+**Next steps:** pick from BACKLOG: split `getPotentialParents` (needs plan-mode approval), another PED_GV owner
+decision, docs-staleness leftovers. Push only on the owner's say-so.
 
-**Next steps:** nothing owed on `sexCodes`. Pick from BACKLOG: docs staleness audit next slice (READY, L), or an
-owner decision (PED_GV roots, `isAddedRecord()` helper). Push only on the owner's say-so (79 ahead).
+**Key files:** `R/getPotentialParents.R:156-231`; `tests/testthat/test_getPotentialParents.R:555-615`; triage
+report Decision record 5; `PROJECT_LEARNINGS.md` Learning 847.
 
-**Key files:** `tests/testthat/test_sexCodes.R` (scan, allowlist, self-test); triage report Closure record 4;
-`PROJECT_LEARNINGS.md` Learning 846.
+**Gotchas:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (stale vs `DESCRIPTION`); I reverted it.
+`fallbackPed()` needs one female with an offspring.
 
-**Gotchas:** a new bare letter in `R/` now fails `test_sexCodes.R`; allowlist entries match trimmed line text,
-so reflowing an allowlisted line fails the stale-allowlist test. A mutation test must plant the letter inside
-a function body (`load_all` evaluates top-level code).
+### What Session 879 Did (condensed S880; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`sexCodes` adoption stage 6 of 6 shipped: `test_sexCodes.R` scans every `R/*.R` minus an allowlist; PED-2, NEW-29,
+PED-7 closed. Claim `e9823c856`, RED `2ea50611a`, GREEN `9c6c034a6`. Handoff evaluation of S878: 9/10. Self 8/10.
+**Gotchas kept:** a new bare letter in `R/` fails `test_sexCodes.R`; allowlist entries match trimmed line text.
 
 ### What Session 878 Did (condensed S879; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `sexCodes` adoption stage 5 of 6 shipped: 6 bare letters in `makePedigreeDiagramData.R`; claim `4ea9aed71`, RED
