@@ -54,8 +54,8 @@ getSpeciesMinBreedingAge <- function(species, sex, breedingTable = NULL,
   maleAge <- as.numeric(breedingTable$minMaleBreedingAge)[idx]
   femaleAge <- as.numeric(breedingTable$minFemaleBreedingAge)[idx]
   out <- rep(default, n)
-  isM <- !is.na(sexKey) & sexKey == "M" & !is.na(maleAge)
-  isF <- !is.na(sexKey) & sexKey == "F" & !is.na(femaleAge)
+  isM <- !is.na(sexKey) & sexKey == sexCodes[["male"]] & !is.na(maleAge)
+  isF <- !is.na(sexKey) & sexKey == sexCodes[["female"]] & !is.na(femaleAge)
   out[isM] <- maleAge[isM]
   out[isF] <- femaleAge[isF]
   out

@@ -145,10 +145,10 @@ checkParentAge <- function(sb,
     sireSpecies <- rep(NA_character_, nrow(sb))
     damSpecies <- rep(NA_character_, nrow(sb))
   }
-  sireFloor <- resolveBreedingAge(sireSpecies, "M",
+  sireFloor <- resolveBreedingAge(sireSpecies, sexCodes[["male"]],
     minSireAge = minSireAge, minDamAge = minDamAge
   )
-  damFloor <- resolveBreedingAge(damSpecies, "F",
+  damFloor <- resolveBreedingAge(damSpecies, sexCodes[["female"]],
     minSireAge = minSireAge, minDamAge = minDamAge
   )
   sb <- sb[(sb$sireAge < sireFloor & !is.na(sb$sireBirth)) |

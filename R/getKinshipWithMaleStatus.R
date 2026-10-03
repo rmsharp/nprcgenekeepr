@@ -48,8 +48,9 @@ getKinshipWithMaleStatus <- function(group, kmat, minFemaleAge = 3L,
     stop("kmat is missing kinship for group member(s): ",
          toString(missingId))
   }
-  females <- group$id[group$sex == "F" & group$age >= minFemaleAge]
-  males <- group$id[group$sex == "M" & group$age >= minMaleAge]
+  females <- group$id[group$sex == sexCodes[["female"]] &
+                        group$age >= minFemaleAge]
+  males <- group$id[group$sex == sexCodes[["male"]] & group$age >= minMaleAge]
   if (length(females) == 0L) {
     return(list(fraction = NA_real_, color = NA_character_,
                 colorIndex = NA_integer_))

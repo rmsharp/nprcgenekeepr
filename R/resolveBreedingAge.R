@@ -32,10 +32,12 @@ resolveBreedingAge <- function(species, sex,
   )
   sexKey <- rep_len(toupper(trimws(as.character(sex))), length(floors))
   if (!is.null(minSireAge)) {
-    floors[!is.na(sexKey) & sexKey == "M"] <- as.numeric(minSireAge)
+    floors[!is.na(sexKey) & sexKey == sexCodes[["male"]]] <-
+      as.numeric(minSireAge)
   }
   if (!is.null(minDamAge)) {
-    floors[!is.na(sexKey) & sexKey == "F"] <- as.numeric(minDamAge)
+    floors[!is.na(sexKey) & sexKey == sexCodes[["female"]]] <-
+      as.numeric(minDamAge)
   }
   floors
 }
