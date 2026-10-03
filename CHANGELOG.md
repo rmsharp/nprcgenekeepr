@@ -66,6 +66,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ### 2026-10-02 · [ad hoc] S877 RED: `test_sexCodes.R` gets a stage-4 file list (correctParentSex, addParents, modORIPReporting); fails on exactly the 14 expected lines (correctParentSex 97,98,108,109; addParents 54,62; modORIPReporting 210,211,216,217,312,313,359,360).
 
+### 2026-10-02 · [ad hoc] S878 claim: `sexCodes` adoption stage 5 of 6 (makePedigreeDiagramData) -- in progress.
+
 ### 2026-10-02 · [ad hoc] S877 claim: `sexCodes` adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting) -- in progress.
 
 ### 2026-10-02 · [ad hoc] S876 DONE: `sexCodes` adoption stage 3 of 6 (claim `f4a645440`, RED `6fafbcd30`, GREEN `01600af88`): 7 bare sex letters in 4 R files now use `sexCodes`; guard gets an assignment-form pattern and a stage-3 list. Internal, no behavior change (full suite 0 failed, 0 error; lint clean). BACKLOG item updated; Learning 843. Stages 4-6 remain.
