@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S867
+date: 2026-10-02
+status: pending
+active_task: share the near-duplicate ancestry-override code (status sentence, confirm handler, filtered CSV body) between Breeding Groups and Mate Pair; REFACTOR, behavior unchanged
+```
+
+```handoff
 session: S866
 date: 2026-10-02
 status: complete

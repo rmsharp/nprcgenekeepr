@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 867 Did
+**Deliverable:** share the near-duplicate ancestry-override code between Breeding Groups and Mate Pair (status sentence, confirm-handler body, filter-then-write.csv body) (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 866 Did
 **Deliverable, DONE:** the Mate Pair **Excluded** tab now has an **Export Excluded Pairs** CSV button
 (`downloadExcluded`), the last item of the #169 residue the owner had to decide. Strict TDD, all
