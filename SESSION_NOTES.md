@@ -99,35 +99,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 875 Did
-**Deliverable:** `sexCodes` adoption stage 2 of 6 (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+**Deliverable, DONE:** `sexCodes` adoption stage 2 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
+gated by `AskUserQuestion`). Claim `b7f865a4c`; RED `672d2d5dd`; GREEN `0ac3b7858`; records in the close-out commit.
+**Done:** `tests/testthat/test_sexCodes.R` gets a stage-2 file list and an `argumentPattern`
+(`[(,]\s*"X"\s*[,)]`, a letter passed as a call argument) with two self-test lines. 8 bare letters in
+`getSpeciesMinBreedingAge`, `resolveBreedingAge`, `checkParentAge`, `getKinshipWithMaleStatus` now use
+`sexCodes[["male"]]`/`[["female"]]`; 3 lines wrapped for the 80-column lint. REFACTOR found nothing to change.
+**Verified by me:** RED failed on exactly the 8 expected lines (57,58; 35,38; 148,151; 51,52) and nothing
+else; the 5 touched test files pass; `lint_package()` 0 lints; full `test_dir` 0 failed, 0 error (187 skipped,
+365 files). Not run: `devtools::check()` (plan: stage 6), shinytest2 (no module touched).
+**Argument-form scan of all `R/` (mine):** the new pattern hits only files the plan already names:
+`convertFromCenter:28`, `convertSexCodes:45-56`, `convertStatusCodes:40`, `correctParentSex:97,98,108,109`,
+`createPedOne:19`, `createPedSix:47`, `groupAddAssign:179`, `makePedigreeDiagramData` (6 lines),
+`obfuscateId:53-54`, `qcStudbook:412`. So stage 6's allowlist needs no surprise entries.
 
-### What Session 874 Did
-**Deliverable, DONE:** `sexCodes` adoption stage 1 of 6, strict TDD (RED, GREEN, REFACTOR gated by
-`AskUserQuestion`). Claim `cc22c5ce6`; code in the close-out commit.
-**Done:** guard in `tests/testthat/test_sexCodes.R` widened (`==`/`!=` both sides, `%in%`,
-`identical()`, single quotes, `#` comments skipped) with a self-test and a stage-1 file list; new
-`test_getSexRatioWithAdditions.R` (5 cases, passes on old and new code). 7 bare letters in
-`calcNeSexRatio`, `createColonySnapshot`, `getSexRatioWithAdditions`, `getProductionStatus` now use
-`sexCodes[["male"]]`/`[["female"]]`; REFACTOR found nothing to change.
-**Verified by me:** 7 test files pass; `lint_package()` 0 lints; full `test_dir` 0 failed, 0 error
-(187 skipped, 365 files). Not run: `devtools::check()` (plan: stage 6), shinytest2 (no module touched).
+**Handoff evaluation of S874 (by S875): 9/10.** Helped: the next step named the four functions, the
+`checkParentAge.R:148,151` argument-literal form and the exact RED shape; the 25,000-token ceiling gotcha
+meant the claim commit went through first time. Missing: nothing that cost time. Wrong: nothing found.
 
-**Handoff evaluation of S873 (by S874): 9/10.** Helped: per-stage file list and guard design were
-usable as written; the owner answers were already in the plan. Missing: stage-1 line count (7, not
-the 6 I first assumed); no warning that the commit hook caps `SESSION_NOTES.md` in tokens (25,000).
+**Self-assessment: 8/10.** + One deliverable; every gate asked; RED proved on exactly the expected lines;
+the full suite and lint run before commit. - Three lines hit the lint 80-column limit and were wrapped after
+the first GREEN run (a quick length check before running would have saved a pass).
 
-**Self-assessment: 8/10.** + One deliverable; RED proved on exactly the expected lines; behavior
-preserved (NA-sex case reasoned through). - The claim commit was refused by the token ceiling and
-`methodology_trim.py` had nothing to do, so I condensed the S872 record by hand (a detour).
+**Next steps:** stage 3 (plan section 4): `getPotentialParents`, `reportGV`, `modPyramid`,
+`correctUnknownParentMeanKinship` (the last is form B, an assigned value at line 172; check the guard
+covers `<- "X"`: the argument pattern does not, so RED needs an assignment-form pattern). Re-run the plan
+section 2 greps first. **Gotchas:** `argumentPattern` also matches `correctParentSex:108-109` (stage 4);
+macOS `sed -i` needs `-i ''`; wrap new lines at 80 columns for lint. Reduction this session: S867 and S868
+records and the S866 evaluation removed (git and `CHANGELOG.md` keep them).
 
-**Next steps:** stage 2: `getSpeciesMinBreedingAge`, `resolveBreedingAge`, `checkParentAge`,
-`getKinshipWithMaleStatus` (plan section 4; `checkParentAge.R:148,151` are argument literals, form C).
-RED = add them to a stage-2 list in `test_sexCodes.R`; the guard regexes need an `"M",` argument form.
-**Gotchas:** macOS `sed -i` needs `-i ''`. `test_createColonySnapshot.R` emits two gene-drop
-warnings outside `test_that()` (unrelated). Reduction this session: S872 and S873 records condensed.
+### What Session 874 Did (condensed S875; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** `sexCodes` adoption stage 1 of 6: guard widened (`==`/`!=` both sides, `%in%`, `identical()`),
+new `test_getSexRatioWithAdditions.R`, 7 bare letters in 4 R files converted. Claim `cc22c5ce6`;
+close-out `878c89851`. Self 8/10.
+**Gotchas kept:** the commit hook caps `SESSION_NOTES.md` at 25,000 tokens; `test_createColonySnapshot.R`
+emits two gene-drop warnings outside `test_that()` (unrelated).
 
 ### What Session 873 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** scoping plan `docs/planning/sexcodes-adoption-plan.md` (43 code lines, 17 files, six
@@ -164,23 +170,6 @@ measured 40 at Orient (the S869 close-out commit is not counted). ROI: high.
 **DONE:** the 15 `SESSION_NOTES.md` lines over 280 B re-wrapped (text unchanged, proved by `diff`); the
 S842 record and S841 evaluation removed. Docs only. Claim `cb178a6ef`. Self 8/10.
 **Gotcha kept:** wrap new records at about 110 columns or the 280 B per-line check trips again.
-
-### What Session 868 Did (condensed S870; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`: `docs/research/`
-(5) and 41 older `docs/audits/` files, 42 moderate, 62 minor, no code defects. Claim `0754aa0c5`. Self 7/10.
-**Gotcha kept:** the agents' tables (ids A1-D24+) are unedited; the census scripts overwrite tracked CSVs.
-
-### What Session 867 Did (condensed S868; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** Breeding Groups and Mate Pair share four ancestry-override helpers in `R/ancestryOverrides.R`
-(`.ancestryOverrideStatusText`, `.ancestryOverrideStatusUI`, `.ancestryOverrideApply`, `.rowsAfterFilter`);
-behavior unchanged. Claim `1f4ac9b75`; REFACTOR `f5e833df9`. Full suite 0 failed, 0 error; lint 0. Self 8/10.
-**Gotcha:** `.ancestryOverrideApply()` assumes callers `req()` the rule key first. Key files:
-`R/ancestryOverrides.R:~130-205`, `R/modMatePair.R:~359-375`, `R/modBreedingGroups.R:~476-495`.
-
-### Session 866 Handoff Evaluation (by Session 867)
-**Score 9/10.** Helped: next step (A) named exactly the three near-duplicates and the key-file line
-ranges, so I went straight to the code. Missing: nothing that cost time. Wrong: nothing found
-("33 ahead" matched). ROI: high.
 
 ### What Session 866 Did (condensed S867; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** Mate Pair Excluded tab gets an Export Excluded Pairs CSV button (`downloadExcluded`,

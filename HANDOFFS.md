@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S875
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- sexCodes adoption stage 2 of 6 (getSpeciesMinBreedingAge, resolveBreedingAge, checkParentAge, getKinshipWithMaleStatus)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- sexCodes adoption stage 2 of 6 (getSpeciesMinBreedingAge, resolveBreedingAge, checkParentAge, getKinshipWithMaleStatus); stages 3-6 remain
+what_was_done: claim b7f865a4c; RED 672d2d5dd (stage-2 list and argumentPattern in test_sexCodes.R, self-test lines); GREEN 0ac3b7858 (8 bare letters in 4 R files now use sexCodes[["male"]]/[["female"]]); records in the close-out commit
+next_steps: stage 3 of docs/planning/sexcodes-adoption-plan.md section 4: getPotentialParents, reportGV, modPyramid, correctUnknownParentMeanKinship; RED = stage-3 file list in test_sexCodes.R plus an assignment-form pattern (correctUnknownParentMeanKinship:172 assigns a letter); re-run plan section 2 greps first; estimate: 4 R files + the guard test = 5 files
+key_files: tests/testthat/test_sexCodes.R (findBareSexCodeLiterals, argumentPattern, stage-2 test); R/getSpeciesMinBreedingAge.R:57-58; R/resolveBreedingAge.R:35-40; R/checkParentAge.R:148-153; R/getKinshipWithMaleStatus.R:51-53; PROJECT_LEARNINGS.md Learning 842
+gotchas: argumentPattern also matches correctParentSex:108-109 (stage 4 scope) and the known non-sex lines (convertFromCenter:28, convertStatusCodes:40, obfuscateId:53-54, qcStudbook:412); new lines must stay within 80 columns for lint; macOS sed needs -i ''
+runtime_smoke: 5 touched test files pass; lintr::lint_package() 0 lints; full test_dir 0 failed 0 error 187 skipped over 365 files; no Shiny module touched so no shinytest2 run; devtools::check() not run (plan: stage 6). quality_ratchet: not run.
+changelog_ref: S875 DONE entry
+commit: the close-out commit that carries this receipt; claim b7f865a4c
 ```
 
 ```handoff
