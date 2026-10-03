@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S869
 date: 2026-10-02
-status: pending
-active_task: wrap the 15 SESSION_NOTES.md lines over 280 B (IN PROGRESS)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- 15 SESSION_NOTES.md lines over 280 B re-wrapped; context_budget.py per-line finding cleared; docs only
+what_was_done: claim cb178a6ef; close-out commit holds the wrapped SESSION_NOTES.md (text identical modulo whitespace, checked by diff), CHANGELOG entry, this receipt; removed the S842 record and S841 evaluation
+next_steps: (A) Owner decision: banner pass on ~30 dated audit/research files (Effort M). (B) Owner decisions: PED_GV leftovers, CV1/CV2. (C) 3.0.0 release prep scoping. (D) Push only on the owner's say-so
+key_files: SESSION_NOTES.md (records S859-S862 re-wrapped); python3 context_budget.py
+gotchas: new long lines will trip the 280 B per-line check; wrap at about 110 columns. Master is 39 ahead of origin before the close-out commit
+runtime_smoke: not applicable -- docs only; no tests or lint run (no .R file changed). quality_ratchet: not run.
+changelog_ref: S869 DONE entry
+commit: the close-out commit that carries this receipt; claim cb178a6ef
 ```
 
 ```handoff

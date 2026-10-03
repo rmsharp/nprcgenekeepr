@@ -99,10 +99,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 869 Did
-**Deliverable:** wrap the 15 `SESSION_NOTES.md` lines over 280 B so `context_budget.py` has no per-line finding (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning. Docs only; no TDD phase applies.
-**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+**Deliverable, DONE:** the 15 `SESSION_NOTES.md` lines over 280 B (records S859-S862, lines 194-250) are
+re-wrapped at spaces; `context_budget.py` no longer reports a per-line finding. Docs only: no `.R`, no
+tests, no TDD phase. Claim `cb178a6ef`; the wrap, receipt and ledger are in the close-out commit.
+**Verified by me:** the text is identical to the claim commit once whitespace is collapsed (`diff` of
+`tr -s ' \n'` output); `awk` finds 0 lines over 280 B; no wrapped line starts like a list item or heading.
+**Reduction:** removed the S842 record and the S841 evaluation (git, `CHANGELOG.md` and `HANDOFFS.md` keep them).
+**Not done:** no lint/tests/CI (docs only); not pushed (master 39 ahead of origin with this commit's claim).
+
+**Self-assessment: 8/10.** + One deliverable, content proved unchanged, reduction made. - The picker was
+rejected once because my option text was not clear enough; I should have said which files "old audits" meant.
+
+**Next steps:** (A) Owner: banner pass on ~30 audit/research files (Effort M). (B) Owner decisions: PED_GV
+leftovers, CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on the owner's say-so.
+
+**Key files:** `SESSION_NOTES.md` (re-wrapped records S859-S862); `python3 context_budget.py`.
+
+**Gotchas:** long lines in new records will trip the 280 B per-line check again; wrap at about 110 columns.
+`SESSION_NOTES.md` is still the fullest resident file (about 55 KB of 65.5 KB).
+
+### Session 868 Handoff Evaluation (by Session 869)
+**Score 9/10.** Helped: next step (B) named the exact problem (15 lines over 280 B) and its READY/Effort S tag,
+and the count matched `context_budget.py`. Missing: nothing that cost time. Wrong: "master ahead by 36"
+measured 38 at Orient (S868 close-out commit not counted). ROI: high.
 
 ### What Session 868 Did
 **Deliverable, DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`:
@@ -197,63 +216,110 @@ the modules' own UI text for an NA cell was not inspected. `devtools::document()
 `man/nprcgenekeepr-package.Rd`; revert it unless DESCRIPTION changed on purpose.
 
 ### Session 862 Handoff Evaluation (by Session 863)
-**Score: 8/10.** **Helped:** next steps named the exact owner decision (0 dams green vs grey) and the backlog line; the 20-ahead count was right. **Missing:** it did not say the sibling metric already returned NA, nor that the heat map rejects NA, which decided the scope. **Wrong:** nothing found. **ROI:** high.
+**Score: 8/10.** **Helped:** next steps named the exact owner decision (0 dams green vs grey) and the backlog
+line; the 20-ahead count was right. **Missing:** it did not say the sibling metric already returned NA, nor
+that the heat map rejects NA, which decided the scope. **Wrong:** nothing found. **ROI:** high.
 
 ### What Session 862 Did
-**Deliverable, DONE:** header sweep of `docs/planning/`; docs only, no code, no tests (TDD phases N/A). Claim `b651541d4`; banners `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432` (22 `issue*` plans), `f35538868`, `93670ec95` (9 non-issue plans); the close-out commit holds `docs/planning/README.md`, the BACKLOG update and records.
-**Done:** a `Status banner (S862...)` after the H1 of 31 plans: the 11 status-less (`issue119`, `125`-`130`, `152`, `168`, `30`, `76`, `9`), 10 stale-header `issue*` (`118`, `13`, `133`, `136`, `143`, `148`, `150`, `153`, `2`, `73`) and 9 non-issue plans (module conversion, Document 2, extdata, five pedigree-diagram plans). With S861's five, every plan on the S860 report's sweep list is bannered.
-**Method:** 3 read-only subagents (one per group) gathered issue state, commits and artifacts; I re-checked every hash they cited (`git log -1`), the issue states (`gh issue view`), `inst/application` gone, `inst/extdata` listing, `R/` artifacts, and `.deCollideIndividualPoints` gone. Unverified points are said in the banner (`issue9` slices, `issue13` closing commit, `issue73` slice count, `issue153` last slice, sibling-width asymmetry, duplicate-proximity supersession link, fidelity 7b).
+**Deliverable, DONE:** header sweep of `docs/planning/`; docs only, no code, no tests (TDD phases N/A). Claim
+`b651541d4`; banners `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432` (22 `issue*` plans),
+`f35538868`, `93670ec95` (9 non-issue plans); the close-out commit holds `docs/planning/README.md`, the
+BACKLOG update and records.
+**Done:** a `Status banner (S862...)` after the H1 of 31 plans: the 11 status-less (`issue119`, `125`-`130`,
+`152`, `168`, `30`, `76`, `9`), 10 stale-header `issue*` (`118`, `13`, `133`, `136`, `143`, `148`, `150`,
+`153`, `2`, `73`) and 9 non-issue plans (module conversion, Document 2, extdata, five pedigree-diagram plans).
+With S861's five, every plan on the S860 report's sweep list is bannered.
+**Method:** 3 read-only subagents (one per group) gathered issue state, commits and artifacts; I re-checked
+every hash they cited (`git log -1`), the issue states (`gh issue view`), `inst/application` gone,
+`inst/extdata` listing, `R/` artifacts, and `.deCollideIndividualPoints` gone. Unverified points are said in
+the banner (`issue9` slices, `issue13` closing commit, `issue73` slice count, `issue153` last slice,
+sibling-width asymmetry, duplicate-proximity supersession link, fidelity 7b).
 **Slips:** one agent cite widened (#131-#139 to #145) before I caught it; my first commit loop failed twice (zsh does not word-split; used `bash -c`). Nothing was committed wrongly.
 **Not done:** the 8+ other non-issue plans the audit did not name, `docs/research/` and older `docs/audits/` headers; no tests/lint/CI (no `.R` or build-included file changed; `docs` is `.Rbuildignore`d, skip-CI rule applies).
 **Reduction:** removed the S806 evaluation and S807 record (git and CHANGELOG keep them).
 
 **Self-assessment: 8/10.** + Every banner traced to a command I (or an agent I re-checked) ran; hedges kept where unverified; under the 5-file cap; stayed in scope. - Agents' evidence for `issue9`, `13`, `73` is thin; a few slice session numbers are agent-read only.
 
-**Next steps:** (A) Owner decision: `getProductionStatus` 0 dams green vs grey (then strict TDD). (B) Owner decisions: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; the duplicated gate code is READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Master is about 20 commits ahead of origin; push only on the owner's say-so (count it at Orient).
+**Next steps:** (A) Owner decision: `getProductionStatus` 0 dams green vs grey (then strict TDD). (B) Owner
+decisions: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; the duplicated gate code
+is READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Master is about 20 commits ahead
+of origin; push only on the owner's say-so (count it at Orient).
 
 **Key files:** `docs/planning/README.md`; `BACKLOG.md:149` (audit item); `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table).
 
-**Gotchas:** banners carry "S862" and say a later note was added; `ban.py`-style insertion must go after the first `# ` line (`issue168` has a license header first). Plans without a banner are unswept, not current (the README says so). zsh does not split unquoted variables; use `bash -c` for loops.
+**Gotchas:** banners carry "S862" and say a later note was added; `ban.py`-style insertion must go after the
+first `# ` line (`issue168` has a license header first). Plans without a banner are unswept, not current (the
+README says so). zsh does not split unquoted variables; use `bash -c` for loops.
 
 ### Session 861 Handoff Evaluation (by Session 862)
-**Score: 8/10.** **Helped:** exact plan lists for the sweep (11 status-less, 14+ stale) and the banner-wording gotcha saved a pass; "insert after the H1" was needed for `issue168`. **Wrong/missing:** it listed `issue167` among the status-less plans' set in one place and not another (167 was already bannered); said master 9 ahead, measured 11 at Orient; no per-file issue states, so I had to look them up. **ROI:** high.
+**Score: 8/10.** **Helped:** exact plan lists for the sweep (11 status-less, 14+ stale) and the banner-wording
+gotcha saved a pass; "insert after the H1" was needed for `issue168`. **Wrong/missing:** it listed `issue167`
+among the status-less plans' set in one place and not another (167 was already bannered); said master 9 ahead,
+measured 11 at Orient; no per-file issue states, so I had to look them up. **ROI:** high.
 
 ### What Session 861 Did
 **Deliverable, DONE:** slice 7c docs fixes from the S860 audit report; docs only, no code, no tests. Claim `1e0295d5b`; fixes `1754691e1` (banners), `a1cbfde13` (in-place), `f6ae48446` (BACKLOG).
-**Done:** status banners on the #112, #122, #123, #144, #167 plans and a status note plus subtitle fix on the reference qmd; the CRAN runbook, outreach plan and Quarto analysis fixed in place; 3 BACKLOG pointers fixed (Dragon 1 -> D5, qmd refresh marked done S484, #123 residuals now tracked); the audit item in `BACKLOG.md` marked "Slice 7c FIXED S861".
-**Re-checked first-hand before editing:** `rhub` not installed (devtools, gitcreds, usethis are); `cran-comments.md` has 0 markers; `DESCRIPTION` 2.0.0.9000; release `v2.0.0` 2026-07-28; `docs/architecture/module-contract.md` (the report cited a bare name, I fixed the path); `getGeneticDiversityStats.R:58`; vignette and `dev/extdata-scratch/` file lists. Not re-checked: outreach roster, third-party quotes, plan bodies.
+**Done:** status banners on the #112, #122, #123, #144, #167 plans and a status note plus subtitle fix on the
+reference qmd; the CRAN runbook, outreach plan and Quarto analysis fixed in place; 3 BACKLOG pointers fixed
+(Dragon 1 -> D5, qmd refresh marked done S484, #123 residuals now tracked); the audit item in `BACKLOG.md`
+marked "Slice 7c FIXED S861".
+**Re-checked first-hand before editing:** `rhub` not installed (devtools, gitcreds, usethis are);
+`cran-comments.md` has 0 markers; `DESCRIPTION` 2.0.0.9000; release `v2.0.0` 2026-07-28;
+`docs/architecture/module-contract.md` (the report cited a bare name, I fixed the path);
+`getGeneticDiversityStats.R:58`; vignette and `dev/extdata-scratch/` file lists. Not re-checked: outreach
+roster, third-party quotes, plan bodies.
 **Not done:** the header sweep (one-line status on 11 status-less and 14+ stale-header plans, `docs/planning/README`); recorded as the remaining part in the BACKLOG audit item. Tests/lint: none run (no `.R`, test or build-included file changed; skip-CI rule applies).
 **Slips:** I first cited `docs/conventions/module-contract.md` and "S857" in banners from the report; caught both on re-check and fixed before commit.
 **Reduction:** removed the S841 record (git and CHANGELOG keep it); the budget hook refused the commit 209 tokens over its ceiling. The 4 over-long lines it flags are older records, left alone.
 
 **Self-assessment: 7/10.** + Re-verified agent claims before writing them; banners not rewrites; kept to the cluster list; 3 commits under the 5-file cap. - Header sweep left; only spot re-checks of the 36 agent-only moderates; wrote two wrong cites first.
 
-**Next steps:** (A) Header sweep, docs only: one-line status for the 11 status-less plans (`issue119`, `125`-`130`, `152`, `168`, `30`, `76`, `9`) and the 14+ stale-header plans listed in the S860 report, plus `docs/planning/README`. (B) Owner decision: `getProductionStatus` 0 dams green vs grey. (C) Open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep (the runbook and outreach plan now say what to refresh). (D) Master is 9 commits ahead of origin after close-out; push only on the owner's say-so.
+**Next steps:** (A) Header sweep, docs only: one-line status for the 11 status-less plans (`issue119`,
+`125`-`130`, `152`, `168`, `30`, `76`, `9`) and the 14+ stale-header plans listed in the S860 report, plus
+`docs/planning/README`. (B) Owner decision: `getProductionStatus` 0 dams green vs grey. (C) Open: PED_GV
+decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep (the runbook and outreach plan now say what to
+refresh). (D) Master is 9 commits ahead of origin after close-out; push only on the owner's say-so.
 
 **Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table); `BACKLOG.md:149` (audit item); `docs/planning/cran-2.0.0-phase5-runbook.md:3-11`.
 
 **Gotchas:** banners say a later note was added and point at `CHANGELOG.md` as authority; keep that wording for the sweep. Banner-adding scripts must insert after the H1 line (issue167 has a license header first). BSD sed needs `-i ''`.
 
 ### Session 860 Handoff Evaluation (by Session 861)
-**Score: 8/10.** **Helped:** the report's tables had file:line and a "Check" column, so I knew which claims were first-hand; "Recommended fixes" mapped directly to the work; the scope (A) was exact. **Wrong/missing:** it said master is 5 ahead of origin; measured 6 at Orient. The report cites `module-contract.md` with no directory (it is `docs/architecture/`) and the key-files list gave no line for the 7c fix targets beyond the runbook. **ROI:** high.
+**Score: 8/10.** **Helped:** the report's tables had file:line and a "Check" column, so I knew which claims
+were first-hand; "Recommended fixes" mapped directly to the work; the scope (A) was exact. **Wrong/missing:**
+it said master is 5 ahead of origin; measured 6 at Orient. The report cites `module-contract.md` with no
+directory (it is `docs/architecture/`) and the key-files list gave no line for the 7c fix targets beyond the
+runbook. **ROI:** high.
 
 ### What Session 860 Did
 **Deliverable, DONE:** docs-staleness audit slice 7c, scoped by the owner to live plans only. Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md`; no code changed; the docs themselves are not fixed. Claim `2c2d1aaea`.
-**Measured:** 9 live `docs/planning/` docs (those an open issue or BACKLOG/ROADMAP item points at) audited by 4 read-only subagents; 53 moderate findings (ids XA-XI). I re-checked 18 first-hand (rhub missing, cran-comments marker absent, #145/#154/#167 closed, `getPossibleCols()` 26 not 24, `effGenOf` gone, signature of `modSnapshotTrendsServer`, and more); 36 rest on one agent's read. Header sweep of all 84: 37 of 38 `issue*` plans have a CLOSED issue; 14+ headers still say DRAFT/not implemented; 11 have no status line.
+**Measured:** 9 live `docs/planning/` docs (those an open issue or BACKLOG/ROADMAP item points at) audited by
+4 read-only subagents; 53 moderate findings (ids XA-XI). I re-checked 18 first-hand (rhub missing,
+cran-comments marker absent, #145/#154/#167 closed, `getPossibleCols()` 26 not 24, `effGenOf` gone, signature
+of `modSnapshotTrendsServer`, and more); 36 rest on one agent's read. Header sweep of all 84: 37 of 38
+`issue*` plans have a CLOSED issue; 14+ headers still say DRAFT/not implemented; 11 have no status line.
 **Tests/lint:** none run (docs only). **Not done:** fixing any of the findings; `docs/research/` and older audits.
 **Slips:** my first sed used GNU syntax (BSD needs `-i ''`); my first AskUserQuestion call had malformed JSON; both retried at once.
 **Reduction:** removed the S858 record (git and CHANGELOG keep it); the hook had refused the commit 137 tokens over its ceiling.
 
-**Self-assessment: 7/10.** + Asked the scope question before starting; objective definition of "live"; agent claims spot-checked before reporting; limits of checking stated. - Only 18 of 53 moderates re-checked; no fixes landed; the last two agent results arrived late and I wrote the report from them in one pass.
+**Self-assessment: 7/10.** + Asked the scope question before starting; objective definition of "live"; agent
+claims spot-checked before reporting; limits of checking stated. - Only 18 of 53 moderates re-checked; no
+fixes landed; the last two agent results arrived late and I wrote the report from them in one pass.
 
-**Next steps:** (A) slice 7c fixes, docs only: banners on the shipped plans, in-place edits to the runbook, outreach plan and Quarto analysis, three BACKLOG pointers (report "Recommended fixes"). (B) Owner decision: `getProductionStatus` 0 dams -> green vs grey. (C) Open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep. (D) Master is 5 commits ahead of origin after close-out; push only on the owner's say-so.
+**Next steps:** (A) slice 7c fixes, docs only: banners on the shipped plans, in-place edits to the runbook,
+outreach plan and Quarto analysis, three BACKLOG pointers (report "Recommended fixes"). (B) Owner decision:
+`getProductionStatus` 0 dams -> green vs grey. (C) Open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0
+release prep. (D) Master is 5 commits ahead of origin after close-out; push only on the owner's say-so.
 
 **Key files:** the 7c report; `BACKLOG.md:100-160,224,445`; `docs/planning/cran-2.0.0-phase5-runbook.md:137,246-259,270-281`.
 
 **Gotchas:** re-check an agent-only finding before editing the doc. Plans are dated records: banner, do not rewrite bodies. Plan headers lag; `CHANGELOG.md` is the authority.
 
 ### Session 859 Handoff Evaluation (by Session 860)
-**Score: 8/10.** **Helped:** the Next steps and the BACKLOG list were accurate; the gotcha about pins and figures was not needed but the "push only on owner's say-so" and "ahead of origin" note was true (4 ahead at Orient, 3 plus the close-out). **Wrong/missing:** it said "3 commits ahead", measured 4. The BACKLOG docs-audit item named slice 7c as next but its scope was undecided; I had to ask. **ROI:** high.
+**Score: 8/10.** **Helped:** the Next steps and the BACKLOG list were accurate; the gotcha about pins and
+figures was not needed but the "push only on owner's say-so" and "ahead of origin" note was true (4 ahead at
+Orient, 3 plus the close-out). **Wrong/missing:** it said "3 commits ahead", measured 4. The BACKLOG
+docs-audit item named slice 7c as next but its scope was undecided; I had to ask. **ROI:** high.
 
 ### What Session 859 Did
 **Deliverable, DONE:** the 2 `rhesusPedigree` couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) now draw male-left, by a general rule: every one-mate-each
@@ -341,30 +407,6 @@ all four gates asked. - Did not add a test for the `getDateErrorsAndConvertDates
 
 **Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (roxygenise regenerates it with extra tab text); I reverted it, so the next roxygenise
 will show that diff again. Not in scope here; commit it deliberately in a docs pass.
-
-### What Session 842 Did
-**Deliverable, DONE:** docs-staleness audit slice 6e, the last 126 `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): 26 moderate, 69 minor, 46 code candidates; all 267 pages now audited. Read-only; no code or tests, so no TDD phase applies.
-**Commits:** claim `89042b761`; report, BACKLOG and records in the close-out commit.
-**Verified:** re-ran in R or re-read in source 23 of the 26 moderates (all but RF2, RH2, RJ3; listed in the report's "Verified by me"); two agent claims corrected (RE4 line cites, RJ4 narrower: extra columns are dropped, not an error).
-**Not verified:** RF2, RH2, RJ3, all 69 minors and all 46 code candidates rest on the agents' own checks; not run: `lint_package()` (no `.R` changed), full suite, `devtools::check`.
-**NEWS.Rmd:** none. **Reduction:** removed the S804 evaluation and S805 record at claim, and the S840 evaluation and record at close-out (in git and receipts).
-**Slips caught:** the claim commit was refused by the context-budget hook (SESSION_NOTES over its token ceiling); trimmed with the owner's OK. My first RG1 re-run used an id not in `examplePedigree` and proved nothing; fixed. One agent ran `roxygenise()` by
-mistake and restored `man/` (git status clean).
-
-**Self-assessment: 8/10.** + One deliverable; every set covered, 126 of 126 pages from a computed list; moderates checked first-hand before the report. - Minors and code candidates unverified; RF2/RH2/RJ3 not re-checked.
-
-**Next steps:** (A) fix the 95 slice-6e findings (26 + 69) in `R/*.R` roxygen, then `devtools::document()` and `git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); document today's behavior, as S839/S841 did. (B) Owner decisions on code: 46 slice-6e
-candidates (CE-CL), 22 slice-6d, 8 slice-6c, and the older PB/PA/PD/MC/MB items. (C) Master is 47 ahead of origin after the close-out commit; push only on the owner's say-so. The `suggested_NEWS_entry.md` question was asked at Orient and S805 already says do
-not carry it.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md` (findings by set), `BACKLOG.md:197`, `R/trimPedigree.R`, `R/getAnimalsWithHighKinship.R:5-42`, `R/readKinshipOverrides.R`, `R/getPotentialParents.R`.
-
-**Gotchas:** same as S837-S841 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; `lint_package()` after joined roxygen lines; reword rather than add to `inst/WORDLIST`; prose after a `@param` folds into it). The report's "Location" line numbers
-can be off (RE4 was); grep for the text. Do NOT use `echo ====` in the Bash tool.
-
-### Session 841 Handoff Evaluation (by Session 842)
-**Score: 8/10.** Orient measurements held: both ledger frontiers at HEAD, 46 ahead, one untracked file, 126 pages left. Step (A) gave the exact recipe (`comm -13` of the "Items audited" ids against `ls man`) and it produced 126. **Wrong:** none. **Missing:**
-it did not say that SESSION_NOTES.md was at the token ceiling, so the claim commit was refused and needed a trim (the dashboard showed it). It re-asked about `suggested_NEWS_entry.md` although S805 says not to carry it. **ROI:** high.
 
 ### What Session 810 Did
 **Deliverable, DONE:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD, every

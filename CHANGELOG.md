@@ -60,7 +60,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-02 · [ad hoc] S869 claim (in progress): wrap the 15 `SESSION_NOTES.md` lines over 280 B; Phase 3F records the outcome.
+### 2026-10-02 · [ad hoc] S869 DONE: `SESSION_NOTES.md` per-line budget finding cleared: the 15 lines over 280 B (S859-S862 records) re-wrapped at spaces, text unchanged modulo whitespace; also removed the S842 record and S841 evaluation. Docs only; claim `cb178a6ef`.
 
 ### 2026-10-02 · [ad hoc] S868 DONE: docs-staleness audit slice 8 (`docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`): `docs/research/` (5) and 41 older `docs/audits/` files, 42 moderate and 62 minor findings, no code defects; the shared cause is no "status as of" banner on dated records whose follow-on work shipped. Report only, nothing applied; the banner pass is an owner decision (BACKLOG). Claim `0754aa0c5`. Docs only, no tests or lint run.
 
