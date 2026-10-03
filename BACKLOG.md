@@ -20,29 +20,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `getPotentialParents()` dam fallback no longer re-admits a female the gestation window
       ruled out).
       **Open, all owner decisions:** (a) the overhaul roots,
-      none urgent -- sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in 10 files
-      remained when measured S781; a broader grep in S852 found 32 in 13), the error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents`
+      none urgent -- the error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents`
       (PED-4, NEW-54, and NEW-55 -- labelling whether a dam list came from proven breeders or the
       fallback, which the owner did not take at S798's F3 decision), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
       driver (NEW-50/51) and constants and HTML builders (NEW-18/19/21/26/57); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority). **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
-      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), so 31 remain (the report's two "Closure record" sections list them). **Trap:** an id grep of the ledger
+      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), and **PED-2 and NEW-29 were closed S879** (sex-code adoption shipped, S874-S879; PED-7 was already counted closed S818), so 29 remain (the report's "Closure record" sections list them). **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
-
-- [ ] **Adopt `sexCodes` for every direct sex letter in `R/` (owner decided S872, 2026-10-02;
-      plan written S873 and approved the same day: `docs/planning/sexcodes-adoption-plan.md`, six staged
-      sessions; owner kept the literal `groupAddAssign` default (allowlisted) and left
-      `convertSexCodes.R` and two fixtures alone; READY, Effort M)** -- covers PED-2, NEW-29, PED-7. Owner
-      chose "all" over "some" or "none". S872 measured 40 comparison lines in 16 files (see
-      the triage report's Decision record 3), plus assignments (`addParents.R:54,62`) and
-      `identical(sexOf[[p]], "M")` forms (`makePedigreeDiagramData.R:965-1262`). Strict TDD;
-      suggested RED: a guard test that scans `R/` for a quoted sex letter next to `==`, `!=`,
-      `%in%` or `identical` outside `sexCodes.R` and `convertSexCodes.R`'s level list. Needs
-      staged commits (5-file cap) and plan-mode approval, since `SAFEGUARDS.md` treats a
-      cross-file refactor as Architect Mode. **Stages 1-5 of 6 shipped (S874-S878)** (guard widened, argument-form
-      and assignment-form patterns added; 16 files);
-      next is stage 6 (plan section 4: flip the guard to a full `R/` scan with the allowlist). Close PED-2, NEW-29, PED-7 in the triage report
-      when the last stage ships.
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --

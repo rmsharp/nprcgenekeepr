@@ -64,6 +64,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ### 2026-10-03 · [ad hoc] S879 RED: `test_sexCodes.R` swaps the five per-stage file lists for a scan of every `R/*.R` minus an allowlist (3 whole files, 6 lines by exact text), a stale-allowlist test and a planted-file self-test. The scan passes on today's code (stages 1-5 already converted everything); a planted `sex == "M"` in `calcNeSexRatio.R` made it fail at line 62, then the file was restored.
 
+### 2026-10-03 · [ad hoc] S879 GREEN: no `R/` change needed (stages 1-5 had converted every file). PED-2, NEW-29 and PED-7 closed in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (Closure record 4; open ids 31 to 29, PED-7 was already counted closed S818); the sexCodes block is removed from `BACKLOG.md`. Full suite 365 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0 errors, 0 warnings, 0 notes.
+
 ### 2026-10-02 · [ad hoc] S877 DONE: `sexCodes` adoption stage 4 of 6 (claim `df4767656`, RED `4295ec5b4`, GREEN `3040c6d8a`): 14 bare sex letters in `correctParentSex`, `addParents`, `modORIPReporting` now use `sexCodes`. Internal, no behavior change (full suite 0 failed, 0 error; lint clean; ORIP e2e 9 pass). BACKLOG item updated; Learning 844. Stages 5-6 remain.
 
 ### 2026-10-02 · [ad hoc] S877 GREEN: 14 bare sex letters in `correctParentSex`, `addParents`, `modORIPReporting` now use `sexCodes` (H/U exemption sets via `keepAsSire`/`keepAsDam`). Stage-4 guard and 5 related test files pass, ORIP e2e (NPRC_RUN_E2E=true) 9 pass, `lint_package()` 0, full suite 365 files, 0 failed, 0 error, 187 skipped.

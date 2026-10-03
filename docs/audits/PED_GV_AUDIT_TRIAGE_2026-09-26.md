@@ -182,6 +182,16 @@ Open after this closure: **31 ids**.
 
 Still **31 ids** open.
 
+### Closure record 4 (S879, 2026-10-03) -- decision record 3 shipped
+
+| id | closed because |
+|---|---|
+| PED-2 | SHIPPED: every direct sex letter in `R/` goes through `sexCodes` (stages 1-6, S874-S879). `tests/testthat/test_sexCodes.R` scans every `R/*.R`; exempt are `convertSexCodes.R`, `createPedOne.R`, `createPedSix.R` (whole files) and six lines by exact text (four non-sex uses, the owner-kept `groupAddAssign()` default). |
+| NEW-29 | SHIPPED with PED-2; the `reportGV.R` sex literals now use `sexCodes` (S876). The `^U` half was resolved earlier. |
+| PED-7 | SHIPPED with PED-2 (`addParents.R`, S877). It was already counted closed in the S818 record (with NEW-39); decision record 3 only held it open for this work, so it does not lower the count again. |
+
+Open after this closure: **29 ids** (31 minus PED-2 and NEW-29).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
