@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 881 Did
+**Deliverable:** Plan for splitting `getPotentialParents()` (PED-4, NEW-54); plan-mode approval first, no code until approved (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 880 Did
 **Deliverable, DONE:** PED_GV owner decision on dam-list confidence, strict TDD (each phase gated by `AskUserQuestion`).
 Claim `9dbf45d61`; RED `a0388e5f6`; GREEN `ed344a83a`; REFACTOR (none needed) and records in the close-out commit.

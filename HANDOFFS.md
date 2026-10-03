@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S881
+date: 2026-10-03
+status: pending
+active_task: Plan for splitting getPotentialParents() (PED-4, NEW-54), plan-mode approval first
+```
+
+```handoff
 session: S880
 date: 2026-10-03
 status: complete

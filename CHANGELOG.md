@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-03 · [ad hoc] S881 claim: plan for splitting `getPotentialParents()` (PED-4, NEW-54), plan-mode approval before any code -- in progress.
+
 ### 2026-10-03 · [ad hoc] S880 DONE: PED_GV owner decision on dam-list confidence (claim `9dbf45d61`, RED `a0388e5f6`, GREEN `ed344a83a`). Owner chose to label the dam tier: `getPotentialParents()` entries now carry `damBasis` (`"provenBreeder"` / `"eligibleFemale"` / `NA`), additive, with roxygen and a `NEWS.Rmd` entry. NEW-55 closed (open ids 29 to 28); owner chose to split the function in a later session (new BACKLOG item; PED-4, NEW-54 stay open). Full suite 365 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0. Learning 847.
 
 ### 2026-10-03 · [ad hoc] S880 GREEN: `R/getPotentialParents.R` records which tier supplied the dams and adds `damBasis` to each entry; `man/getPotentialParents.Rd` regenerated. The 5 RED tests pass; makeSimPed, markerParentageLikelihood and modPotentialParents* test files unchanged and green.
