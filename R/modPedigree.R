@@ -457,9 +457,9 @@ modPedigreeServer <- function(id, studbook) {
     pedigreeDiagramMaxNodesRectilinear <- 400L
 
     # Issue #142 Slice 2: which edge style is currently selected, defaulting
-    # to "direct" before the style toggle below has ever rendered (so the
-    # very first render is byte-identical to pre-issue-142 behavior), and
-    # the node cap that applies to it.
+    # to "rectilinear" (the default since S574, matching
+    # makePedigreeMatingLayout()'s own edgeStyle default) before the style
+    # toggle below has ever rendered, and the node cap that applies to it.
     .currentEdgeStyle <- function() {
       if (is.null(input$pedigreeEdgeStyle)) {
         "rectilinear"
