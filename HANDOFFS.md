@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S865
+date: 2026-10-02
+status: pending
+active_task: share the duplicated ancestry-override gate code (choices builder + confirm modal) between modBreedingGroups.R and modMatePair.R; strict TDD
+```
+
+```handoff
 session: S864
 date: 2026-10-02
 status: complete

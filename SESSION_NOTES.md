@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 865 Did
+**Deliverable:** share the duplicated ancestry-override gate code between `R/modBreedingGroups.R` and `R/modMatePair.R` (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Owner picked this item at Orient. Strict TDD, PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
+### Session 864 (previous) follows
+
 ### What Session 864 Did
 **Deliverable, DONE:** a valid zero-rule ancestry table no longer breaks Download Audit Manifest.
 `.buildAncestryOverrideManifest()` returns one inactive row instead of stopping. Strict TDD.
