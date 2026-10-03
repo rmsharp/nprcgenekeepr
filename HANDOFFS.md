@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S879
+date: 2026-10-03
+status: pending
+active_task: sexCodes adoption stage 6 of 6 (full R/ scan with allowlist; close PED-2, NEW-29, PED-7)
+```
+
+```handoff
 session: S878
 date: 2026-10-02
 status: complete
