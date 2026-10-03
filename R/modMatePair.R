@@ -335,16 +335,8 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
 
     # Keep the override select in step with the overridable set.
     observe({
-      ovr <- overridableRules()
-      choices <- if (is.null(ovr) || nrow(ovr) == 0L) {
-        character(0L)
-      } else {
-        stats::setNames(
-          .ancestryPairKey(ovr$ancestry1, ovr$ancestry2),
-          sprintf("%s x %s", ovr$ancestry1, ovr$ancestry2)
-        )
-      }
-      updateSelectInput(session, "overrideRule", choices = choices)
+      updateSelectInput(session, "overrideRule",
+                        choices = .ancestryOverrideChoices(overridableRules()))
     })
 
     # The confirm gate (the #150 / #168 mold): the verbatim Mate Pair
@@ -355,17 +347,8 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
       req(!is.null(ovr), nrow(ovr) > 0L)
       req(input$overrideRule %in%
             .ancestryPairKey(ovr$ancestry1, ovr$ancestry2))
-      showModal(modalDialog(
-        title = "Override Ancestry Rule",
-        p(.matePairAncestryOverrideWarningText),
-        textAreaInput(session$ns("overrideReason"),
-                      "Reason for override (required):",
-                      value = "", rows = 3L),
-        footer = tagList(
-          modalButton("Cancel"),
-          actionButton(session$ns("overrideConfirm"), "Confirm Override",
-                       class = "btn-warning")
-        )
+      showModal(.ancestryOverrideModal(
+        session$ns, .matePairAncestryOverrideWarningText
       ))
     })
 

@@ -120,6 +120,8 @@
 #' @param ns the module namespace function (\code{session$ns}).
 #' @param warningText the verbatim confirmation warning for the calling tab.
 #' @return a \code{\link[shiny]{modalDialog}}, for \code{showModal()}.
+#' @importFrom shiny modalDialog modalButton textAreaInput actionButton p
+#' @importFrom shiny tagList
 #' @noRd
 .ancestryOverrideModal <- function(ns, warningText) {
   modalDialog(
