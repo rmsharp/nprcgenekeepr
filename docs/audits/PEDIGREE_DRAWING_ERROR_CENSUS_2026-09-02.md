@@ -17,7 +17,7 @@ not made here** (Recommendations, below).
 
 **How to reproduce:** `Rscript data-raw/pedigreeDrawingErrorCensus.R` from the package root.
 It prints the scoreboard and every per-fixture table below and writes every finding row —
-2,734 of them, with ids — to
+2,734 of them [S870: the CSV now holds 1,678 rows, regenerated under later engines], with ids — to
 [`PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv`](PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv)
 beside this report. It needs no Chrome; kinship2 (installed locally, never a dependency) is
 optional and only feeds the baseline section.

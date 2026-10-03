@@ -162,7 +162,7 @@ only place a meaningful size remedy exists. `tests/` is 99% `.R` source (2.37 MB
   default; local builds have been leaking `scratchpad/` since it appeared (~2026-08-17, about
   a month), the resulting check NOTE was carried as "known clutter" from S721 on, and the size
   was caught only when the owner happened to look at the file. `.quality-gates.json`
-  declares 0 gates.
+  declares 0 gates [S870: it now declares one, `tarball_size_clean_export`].
 - **Recommendation:** per `AUDIT_WORKSTREAM.md` anti-pattern 10 (a mechanical invariant is a
   gate, not prose), declare one gate: clean-export tarball size ≤ a ceiling (suggest 5 MB — 43%
   above today, half of CRAN's line). Cheap form: a CI step after `R CMD build` that fails on
