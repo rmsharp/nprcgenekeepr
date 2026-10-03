@@ -25,6 +25,9 @@ findBareSexCodeLiterals <- function(file_path) {
   # S875 (stage 2): a letter passed as a call argument, as in
   # `resolveBreedingAge(species, "M", ...)`.
   argumentPattern <- paste0("[(,]\\s*", q, "\\s*[,)]")
+  # S876 (stage 3): a letter as an assigned or returned value, as in
+  # `missingSex <- if (miss) "M" else "F"`: after `<-`, `else` or `)`.
+  assignmentPattern <- paste0("(<-|\\belse\\b|\\))\\s*", q)
   pairPattern <- 'c\\(\\s*"[MFHU]"\\s*,\\s*"[MFHU]"\\s*\\)'
   offenders <- integer(0)
   for (i in seq_along(lines)) {
@@ -34,7 +37,7 @@ findBareSexCodeLiterals <- function(file_path) {
     }
     if (grepl(comparisonPattern, line) || grepl(membershipPattern, line) ||
           grepl(identicalPattern, line) || grepl(pairPattern, line) ||
-          grepl(argumentPattern, line)) {
+          grepl(argumentPattern, line) || grepl(assignmentPattern, line)) {
       offenders <- c(offenders, i)
     }
   }
@@ -91,6 +94,13 @@ test_that("no bare sex-code literals remain in the stage 2 files", {
   ))
 })
 
+test_that("no bare sex-code literals remain in the stage 3 files", {
+  expectNoBareSexCodeLiterals(c(
+    "getPotentialParents.R", "reportGV.R", "modPyramid.R",
+    "correctUnknownParentMeanKinship.R"
+  ))
+})
+
 test_that("the guard flags each bare-literal form it claims to catch", {
   tmp <- tempfile(fileext = ".R")
   on.exit(unlink(tmp))
@@ -102,11 +112,14 @@ test_that("the guard flags each bare-literal form it claims to catch", {
     "x <- identical(sexOf[[p]], \"M\")",
     "x <- resolveBreedingAge(species, \"M\", 3)",
     "x <- f(a, 'F')",
+    "m <- if (miss) \"M\" else \"F\"",
+    "x <- \"U\"",
+    "x <- if (a) sexCodes[[\"male\"]] else sexCodes[[\"female\"]]",
     "x <- sex == sexCodes[[\"male\"]]",
     "x <- f(species, sexCodes[[\"male\"]], 3)",
     "#' sex == \"M\" in roxygen",
     "# sex == \"M\" in a comment",
     "x <- convert == \"MALE\""
   ), tmp)
-  expect_identical(findBareSexCodeLiterals(tmp), c(1:5, 6L, 7L))
+  expect_identical(findBareSexCodeLiterals(tmp), c(1:5, 6L, 7L, 8L, 9L))
 })

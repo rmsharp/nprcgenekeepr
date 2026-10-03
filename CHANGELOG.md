@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S876 RED: `test_sexCodes.R` gets an assignment-form pattern (`<-`/`else`/`)` before a letter), self-test lines, and a stage-3 file list; fails on exactly the 7 expected lines (getPotentialParents 164,171; reportGV 293,295; modPyramid 121,122; correctUnknownParentMeanKinship 172).
+
 ### 2026-10-02 · [ad hoc] S876 claim: `sexCodes` adoption stage 3 of 6 (in progress); Phase 3F records the outcome.
 
 ### 2026-10-02 · [ad hoc] S875 DONE: `sexCodes` adoption stage 2 of 6 (claim `b7f865a4c`, RED `672d2d5dd`, GREEN `0ac3b7858`): 8 bare sex letters in 4 R files now use `sexCodes`; guard gets a stage-2 list and an argument-form pattern. Internal, no behavior change (full suite 0 failed, 0 error; lint clean). BACKLOG item updated; Learning 842. Stages 3-6 remain.
