@@ -1,5 +1,7 @@
 # roxygen2 Documentation Harmonization — Analysis & Recommendation
 
+> **Status as of 2026-10-02 (S870):** Implemented through issue #103 (closed; the eight-stage roadmap finished at Stage 8) and issue #102 (closed). Defects D1-D8 and the roadmap in Section 6 are done, not open. The body below is the dated record as written; it was not edited.
+
 **Issue:** #102 (analysis / assessment — **not** the edits)
 **Date:** 2026-06-29 (Session 244)
 **Scope:** all 226 `R/*.R` source files

@@ -1,5 +1,7 @@
 # Backlog Staleness Audit — Open GitHub Issues
 
+> **Status as of 2026-10-02 (S870):** Historical: it covers the 21 open issues of 2026-06-12. Today only #5, #10, #11, #12, #28, #36 and #37 of them are still open; the rest are closed, so its close/leave-open recommendations and its "does not exist" gap findings (`setAutoIdFormat()`, `getAutoIdFormat()`, `makeGroupNum()`, the `R/fillBins.R` and `R/getPotentialParents.R` TODOs) are done or reversed. Use `gh issue list` for current state. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-06-12 · **Session:** 62 · **Branch:** `add-methodology`
 **Workstream:** `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`
 **Auditor:** Claude (24-agent classify→adversarial-verify workflow; all close-relevant calls re-verified firsthand by the session)

@@ -1,5 +1,7 @@
 # Issue #109 — Documentation-Error Audit (roxygen2 / man pages)
 
+> **Status as of 2026-10-02 (S870):** Issue #109 is closed. The 38 findings were fixed (37 in S274 `3b5b1a996`, finding #9 in S275 `600a1a0bb`, the `geneDrop` column-order reconcile in S278 `1be687ae9`); "fixes are a separate, owner-gated follow-on" is no longer true. The body below is the dated record as written; it was not edited.
+
 **Issue:** #109 ("roxygen2 errors in functions within R"), second clause — *"Audit the code for similar documentation errors."*
 **Date:** 2026-07-04 (Session 273)
 **Scope:** all 203 `man/*.Rd` man pages and their `R/*.R` roxygen sources.

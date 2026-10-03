@@ -1,5 +1,7 @@
 # Issue #118 Triage — "Add the effective population size estimate"
 
+> **Status as of 2026-10-02 (S870):** Issue #118 is closed and the work shipped (S310-S313; plan `docs/planning/issue118-effective-population-size-plan.md`; `calcGeneDiversity()`, `calcNeSexRatio()`, `calcNeVariance()`, `getLivingBreeders()`). "OPEN, untriaged", "no prior Ne work exists" and the Section 6 option list are decided. The body below is the dated record as written; it was not edited.
+
 **Issue:** #118 — "Add the effective population size estimate"
 **Date:** 2026-07-07 (Session 308)
 **Type:** Triage / scoping (analysis only — no code changed)
