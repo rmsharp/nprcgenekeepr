@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S883
+date: 2026-10-03
+status: pending
+active_task: Fix the stale @noRd roxygen of .addRectilinearWaypoints() at R/makePedigreeDiagramData.R:2109-2113 (says the default is "direct" and "no call site yet"); comment only
+```
+
+```handoff
 session: S882
 date: 2026-10-03
 status: complete

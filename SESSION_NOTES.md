@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 883 Did
+**Deliverable:** fix the stale `@noRd` roxygen of `.addRectilinearWaypoints()` at `R/makePedigreeDiagramData.R:2109-2113` (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 882 Did
 **Deliverable, DONE:** docs staleness audit leftover (the owner picked 1 of 3): the stale "defaulting to direct" comment
 in `R/modPedigree.R` is fixed and BACKLOG's stale BB14 note is corrected. Comment and docs only, so no TDD phase applied.
