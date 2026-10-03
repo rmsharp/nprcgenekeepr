@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 873 Did
+**Deliverable:** plan for adopting `sexCodes` in every direct sex-letter use in `R/` (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning. Planning only; no code.
+**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+
 ### What Session 872 Did
 **Deliverable, DONE:** the owner's PED-2 / NEW-29 / PED-7 decision, recorded. Docs only, no TDD phase.
 **Owner decision (plain words):** picked "PED_GV owner decisions", then "Sex-code letters". After I

@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S873 (in progress): plan-mode scoping of the `sexCodes` adoption (PED-2/NEW-29/PED-7): evidence-based inventory, staged-commit plan, RED guard-test design. Plan document only, no code.
+
 ### 2026-10-02 · [ad hoc] S872 DONE: owner decision on PED-2, NEW-29 and PED-7 recorded: every direct sex letter in `R/` should go through `sexCodes` (40 comparison lines in 16 files measured). BACKLOG item added, triage Decision record 3 written; ids stay open. Docs only, no code; claim `bbe315dfa`.
 
 ### 2026-10-02 · [ad hoc] S871 DONE: owner decision on NEW-61 recorded and documented: known and unknown founders stay counted differently (`reportGV` lists known founders only; `calcFEFG` treats every both-parents-unknown animal as an unrelated founder), explained in the roxygen of `calcFEFG()` and `reportGV()` with the caveat that FE/FG can be overstated when placeholders are common. Triage report Closure record 2; BACKLOG updated (31 ids open). Docs only; lint clean, wordlist test passes. Claim `f00361217`; docs `5f6ba3c0b`.
