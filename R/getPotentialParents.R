@@ -79,21 +79,16 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
                                 minParentAge = lifecycle::deprecated(),
                                 maxGestationalPeriod = NULL,
                                 gestationTable = NULL) {
-  birth <- exit <- fromCenter <- id <- sex <- NULL
+  birth <- fromCenter <- NULL
   if (lifecycle::is_present(minParentAge)) {
     lifecycle::deprecate_warn(
       when = "2.0.0",
       what = "getPotentialParents(minParentAge)",
       details = "Use minSireAge and minDamAge instead."
     )
-    if (is.null(minParentAge)) {
-      ## Legacy: minParentAge = NULL disabled the age check entirely.
-      minSireAge <- -Inf
-      minDamAge <- -Inf
-    } else {
-      if (is.null(minSireAge)) minSireAge <- minParentAge
-      if (is.null(minDamAge)) minDamAge <- minParentAge
-    }
+    minAges <- resolveMinParentAges(minSireAge, minDamAge, minParentAge)
+    minSireAge <- minAges$minSireAge
+    minDamAge <- minAges$minDamAge
   }
 
   ped <- data.table::as.data.table(ped)
@@ -132,16 +127,7 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
   ## is supplied it is used for every animal (historical behavior); when NULL it
   ## is keyed to each focal animal's species, falling back to 210 days when the
   ## species column is absent, missing, or unrecognized.
-  if (is.null(maxGestationalPeriod)) {
-    speciesVec <- if ("species" %in% names(pUnknown)) {
-      pUnknown$species
-    } else {
-      rep(NA_character_, nrow(pUnknown))
-    }
-    mgpVec <- getSpeciesGestation(speciesVec, gestationTable = gestationTable)
-  } else {
-    mgpVec <- rep(as.integer(maxGestationalPeriod), nrow(pUnknown))
-  }
+  mgpVec <- gestationWindows(pUnknown, maxGestationalPeriod, gestationTable)
 
   dYear <- 365L # used for number of days in a year
 
@@ -162,69 +148,11 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
         next
       }
       j <- j + 1L
-      ## Selecting sires
-      potentialSires <- ba[
-        sex == sexCodes[["male"]] &
-          (is.na(ba$exit) |
-            exit >= (pUnknown$birth[i] - mgp)),
-        id
-      ]
-
-      ## Selecting dams
-      potentialDams <- ba[sex == sexCodes[["female"]] &
-        (is.na(ba$exit) |
-          exit >= pUnknown$birth[i]), ]
-
-      ## Females who delivered another offspring within one gestational period
-      ## of the focal birth: a female bears one offspring at a time, so she
-      ## cannot have gestated the focal animal as well (see the dam exclusion
-      ## below). The window is gestation-derived (maxGestationalPeriod) rather
-      ## than the former fixed half-year.
-      births <-
-        ped[birth >= pUnknown$birth[i] - mgp &
-          birth <= pUnknown$birth[i] + mgp, ]
-
-      ## Females who had an offspring in the year prior or year after
-      births_plus_minus_one <-
-        ped[(
-          birth <= pUnknown$birth[i] + (dYear * 1.5) &
-            birth > pUnknown$birth[i] + (dYear / 2L)
-        ) |
-          (
-            birth >= pUnknown$birth[i] - (dYear * 1.5) &
-              birth < pUnknown$birth[i] - (dYear / 2L)
-          ), ]
-      births_plus_minus_one <-
-        births_plus_minus_one[!duplicated(births_plus_minus_one$dam), ]
-
-
-      ## Remove from consideration dams who gave birth within one gestational
-      ## period (maxGestationalPeriod) of the focal birth: bearing one offspring
-      ## at a time, such a female cannot also have gestated the focal animal.
-      ## (#31 -- replaces the former fixed half-year window with this
-      ## gestation-derived one, driven by the existing maxGestationalPeriod.)
-      eligibleDams <- potentialDams[!id %in% births$dam, ]
-      ## Preferrentially accept dams that are proven breeders near the time of
-      ## the birth.
-      potentialDams <- eligibleDams[id %in% births_plus_minus_one$dam, ]
-      damBasis <- "provenBreeder"
-      ## If no proven breeder remains, accept every eligible female: old enough
-      ## to be the dam and present at the birth, but never one the gestation
-      ## window above has already ruled out (PED_GV F3, NEW-35).
-      if (nrow(potentialDams) == 0L) {
-        potentialDams <- eligibleDams
-        damBasis <- "eligibleFemale"
-      }
-
-      ## Candidates are listed only for the parent that is missing; a recorded
-      ## parent is never re-listed.
-      dams <- if (is.na(pUnknown$dam[i])) potentialDams$id else character(0L)
-      potentialParents[[j]] <- list(
-        id = pUnknown$id[i],
-        sires = if (is.na(pUnknown$sire[i])) potentialSires else character(0L),
-        dams = dams,
-        damBasis = if (length(dams) > 0L) damBasis else NA_character_
-      )
+      focal <- pUnknown[i, ]
+      sires <- selectPotentialSires(ba, focal$birth, mgp)
+      dams <- selectPotentialDams(ba, focal$birth, mgp, ped)
+      potentialParents[[j]] <-
+        buildParentEntry(focal, sires, dams$ids, dams$basis)
     }
   }
   if (j > 0L) {
