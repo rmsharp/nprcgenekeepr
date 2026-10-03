@@ -2369,3 +2369,6 @@ Verified: `devtools::check()` 0 errors / 0 [tracked-repo] WARNINGs / 0 [tracked-
 
 #### Learning 843
 **A guard pattern for `if (x) "M" else "F"` must key on `else`/`)`/`<-` before the quote, and a membership set inside `[...] <-` assignments is caught by the assignment form too.** (S876, 2026-10-02.) The stage-2 argument pattern missed `correctUnknownParentMeanKinship:172`; the new `(<-|\belse\b|\))\s*"X"` pattern catches it. Scanning all of `R/` with it hit only stage 4 files (`addParents:54,62`, `correctParentSex:97,98`) and the allowlisted `convertSexCodes.R:45-55`, so the stage 6 allowlist still needs no surprise entries.
+
+#### Learning 844
+**`test-e2e-orip-module.R` skips unless `NPRC_RUN_E2E=true`, so a plain `test_file` run of it proves nothing.** (S877, 2026-10-02.) The stage-4 plan says GREEN runs it; run bare, it reports 4 skips with "End-to-end Shiny tests are opt-in". With the variable set it ran 9 expectations and passed. Any stage that touches a Shiny module and cites the e2e file must set the variable and read the pass count, not just the absence of failures.

@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S877
 date: 2026-10-02
-status: pending
-active_task: sexCodes adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- sexCodes adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting); stages 5-6 remain
+what_was_done: claim df4767656; RED 4295ec5b4 (stage-4 list in test_sexCodes.R; failed on exactly the 14 expected lines); GREEN 3040c6d8a (14 bare letters now use sexCodes; keepAsSire/keepAsDam locals); REFACTOR nothing to change; close-out commit carries records
+next_steps: stage 5 of docs/planning/sexcodes-adoption-plan.md section 4: makePedigreeDiagramData.R, hoist male/female <- sexCodes[[...]] out of loops at ~965/1090/1262; RED = add the file to the guard list; DONE needs the 9 pedigree-diagram test files green and rendered output identical on a fixed pedigree before and after
+key_files: tests/testthat/test_sexCodes.R (stage-4 test); R/correctParentSex.R:82-90,97-98,110-111; R/addParents.R:54,62; R/modORIPReporting.R:210-218,312-313,359-360; PROJECT_LEARNINGS.md Learning 844
+gotchas: makePedigreeDiagramData.R has a parameter named sexCodes in .shapeForVec (~1840) that shadows the constant, so do not use it there; identical(sexOf[[p]], ...) keeps [[ ]] access; stage 5 changes drawn output, so capture a before-render first; e2e needs NPRC_RUN_E2E=true
+runtime_smoke: e2e-orip-module with NPRC_RUN_E2E=true 9 pass; 5 related test files pass; lintr::lint_package() 0 lints; full test_dir 365 files 0 failed 0 error 187 skipped; devtools::check() not run (plan: stage 6); quality_ratchet: not run
+changelog_ref: S877 DONE entry
+commit: the close-out commit that carries this receipt; claim df4767656
 ```
 
 ```handoff

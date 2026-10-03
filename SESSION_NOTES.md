@@ -99,39 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 877 Did
-**Deliverable:** `sexCodes` adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting), strict TDD (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. PRE-RED: re-running plan section 2 greps.
-**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until Phase 3F.
+**Deliverable, DONE:** `sexCodes` adoption stage 4 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
+gated by `AskUserQuestion`). Claim `df4767656`; RED `4295ec5b4`; GREEN `3040c6d8a`; records in the close-out commit.
+**Done:** `test_sexCodes.R` gets a stage-4 list. 14 bare letters in `correctParentSex` (97,98,108,109),
+`addParents` (54,62) and `modORIPReporting` (210,211,216,217,312,313,359,360) now use `sexCodes`; the H/U
+exemption sets are two locals, `keepAsSire`/`keepAsDam`. REFACTOR found nothing to change.
+**Verified by me:** RED failed on exactly those 14 lines; stage-4 guard plus `test_addParents`,
+`test_correctParentSex`, `test_modORIPReporting(_server)` pass; `test-e2e-orip-module.R` run with
+`NPRC_RUN_E2E=true` (without it the file skips): 9 pass; `lint_package()` 0; full `test_dir` 365 files, 0 failed,
+0 error, 187 skipped. Not run: `devtools::check()` (plan: stage 6).
 
-### What Session 876 Did
-**Deliverable, DONE:** `sexCodes` adoption stage 3 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
-gated by `AskUserQuestion`). Claim `f4a645440`; RED `6fafbcd30`; GREEN `01600af88`; records in the close-out commit.
-**Done:** `test_sexCodes.R` gets an `assignmentPattern` (a letter after `<-`, `else` or `)`), three self-test
-lines and a stage-3 file list. 7 bare letters in `getPotentialParents` (164,171), `reportGV` (293,295),
-`modPyramid` (121,122) and `correctUnknownParentMeanKinship` (172) now use `sexCodes[["male"]]`/`[["female"]]`.
-REFACTOR found nothing to change.
-**Verified by me:** RED failed on exactly those 7 lines and nothing else; the 6 related test files pass;
-`lint_package()` 0 lints; full `test_dir` 365 files, 0 failed, 0 error, 187 skipped. Not run: `devtools::check()`
-(plan: stage 6), shinytest2/e2e (stage 4 runs `test-e2e-orip-module.R`; `modPyramid` changed only its `sum()` tests).
-**Assignment-form scan of all `R/` (mine):** hits only `addParents:54,62`, `correctParentSex:97,98` (stage 4) and
-`convertSexCodes:45-55` (allowlisted), so stage 6's allowlist needs no surprise entries.
-
-**Handoff evaluation of S875 (by S876): 9/10.** Helped: the next step named the four functions and warned the
-argument pattern would not catch line 172, which fixed the RED shape; the 80-column gotcha saved a lint pass (no
-line needed wrapping this time). Missing: nothing that cost time. Wrong: nothing found.
+**Handoff evaluation of S876 (by S877): 9/10.** Helped: next step named all three functions and the e2e file;
+the plan-section-2 grep reproduced the line numbers exactly. Missing: that the e2e file is opt-in
+(`NPRC_RUN_E2E=true`), so a plain run reports it skipped. Wrong: nothing found.
 
 **Self-assessment: 8/10.** + One deliverable; every gate asked; RED proved on exactly the expected lines; full
-suite and lint run before commit; scan done early. - The full suite was started in the background and a
-`sleep` was blocked once (used the monitor instead).
+suite, lint and e2e run before commit. - Wasted a placeholder monitor call while the suite ran.
 
-**Next steps:** stage 4 (plan section 4): `correctParentSex` (lines 97,98 assignments; 108,109 argument form),
-`addParents` (54,62 assignments), `modORIPReporting`. RED = stage-4 file list in `test_sexCodes.R` (the guard
-already catches these forms); GREEN also runs `test-e2e-orip-module.R`. Re-run the plan section 2 greps first.
-**Gotchas:** `correctParentSex:97` is `c("H", "U", "M")` inside `%in%`, a set of letters the membership pattern
-matches only after `%in%\s*c(` plus its first element, so check RED really flags 97 and 98; macOS `sed -i` needs
-`-i ''`; wrap new lines at 80 columns. Reduction this session: S875 record condensed, S870 record and the S869
-evaluation removed (git and `CHANGELOG.md` keep them).
+**Next steps:** stage 5 (plan section 4): `makePedigreeDiagramData.R` (`identical(sexOf[[p]], "M")` forms around
+965-1262); hoist `male <- sexCodes[["male"]]` out of the loops at 965/1090/1262; do not use `sexCodes` inside
+`.shapeForVec` (parameter of that name, ~1840). DONE also needs the 9 pedigree-diagram test files green and
+rendered output identical on a fixed pedigree before and after. Re-run the plan section 2 greps first.
+
+### What Session 876 Did (condensed S877; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`sexCodes` adoption stage 3 of 6 shipped: 7 bare letters in 4 R files; claim `f4a645440`, RED `6fafbcd30`,
+GREEN `01600af88`. Handoff evaluation of S875: 9/10. Self-score 8/10.
 
 ### What Session 875 Did (condensed S876; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** `sexCodes` adoption stage 2 of 6: argument-form pattern added to the guard; 8 bare letters in 4 R
