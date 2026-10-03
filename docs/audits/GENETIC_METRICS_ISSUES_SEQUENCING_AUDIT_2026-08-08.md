@@ -1,5 +1,7 @@
 # Genetic Metrics Issues (#146-153) Sequencing Audit
 
+> **Status as of 2026-10-02 (S870):** The ratified order is fully done: issues #146-#153 are all closed (2026-08-10 to 2026-09-18). The Finding 1 gaps were filed as #167 (longitudinal monitoring) and #168 (ancestry guardrails), both closed. The body below is the dated record as written; it was not edited.
+
 **Date:** 2026-08-08 · **Session:** S483 · **Type:** capability-informed sequencing audit (not a
 defect audit — recommends an implementation *order* for already-filed items; files no new issues
 itself, per the established "audit recommends, a later session files" precedent set by

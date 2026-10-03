@@ -1,5 +1,7 @@
 # Issue #119 Triage — `minParentAge` vs. sex-specific minimum reproductive ages
 
+> **Status as of 2026-10-02 (S870):** Issue #119 is closed and resolved (S302-S307; plan `docs/planning/issue119-sex-specific-min-breeding-age-plan.md`). `minParentAge` is now deprecated in favor of `minSireAge` and `minDamAge`, so the decision-site line numbers and the default table (2 versus 3) below no longer describe the code. The body below is the dated record as written; it was not edited.
+
 **Issue:** #119 — "Use of `minParentAge` seems to conflict with newer sex specific minimum reproductive ages"
 **Date:** 2026-07-07 (Session 301)
 **Type:** Triage / scoping (analysis only — no code changed)

@@ -1,5 +1,7 @@
 # Issue #120 — Citation Coverage Audit (computed quantities / statistics / estimators)
 
+> **Status as of 2026-10-02 (S870):** Issue #120 is closed and the findings were addressed (checked by counting `@references` in the cited functions and by the removed `_bg_algorithm.Rmd` and `_bg_formation.Rmd`); "fixes are a separate, owner-gated follow-on" is no longer true. The body below is the dated record as written; it was not edited.
+
 **Issue:** #120 ("Audit: are there reference citations for each calculation in the package?")
 **Date:** 2026-07-08 (Session 315)
 **Scope gate (owner):** Broad — classify all 50 candidate files (the issue's 8 named

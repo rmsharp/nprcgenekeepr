@@ -1,5 +1,7 @@
 # XARCH Tracker Reconciliation Audit
 
+> **Status as of 2026-10-02 (S870):** The two issues this report says were filed are #122 (XARCH-2, module contract; closed, S377) and #123 (XARCH-5, string-keyed pipeline; still open after a partial closure, S387). XARCH-4's sex-code constant now exists (`R/sexCodes.R`, S367) and the column vectors share one schema (`R/columnSchema.R`), so those two "unchanged" claims are out of date. BACKLOG no longer mentions XARCH items, so "tracked in BACKLOG" no longer holds. The body below is the dated record as written; it was not edited.
+
 **BACKLOG item:** "Tracker reconciliation (DECISION NEEDED, Effort S) — The remaining
 audit follow-ups (XARCH-2..8) are not GitHub issues; the live tracker is #1–#39.
 Decide whether to file the remaining XARCH items as issues or keep them here."
