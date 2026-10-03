@@ -99,10 +99,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 871 Did
-**Deliverable:** record the owner's NEW-61 decision (keep both founder definitions) and document it (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning. Docs only, no TDD phase.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** the owner's NEW-61 decision, recorded and documented. Docs only, no TDD phase.
+**Owner decision (plain words):** picked "PED_GV owner decisions", then clarified that known founders and
+unknown founders are different things (an unknown founder may be a known founder, another animal in the
+population, or an animal outside it). Chose "Keep both, document it": `reportGV` lists only known founders,
+`calcFEFG` counts every both-parents-unknown animal as a separate unrelated founder.
+**Done:** roxygen paragraphs in `R/calcFEFG.R` and `R/reportGV.R` (Rd regenerated, the unrelated
+`nprcgenekeepr-package.Rd` churn reverted) incl. the caveat that FE/FG can be overstated when placeholders
+are common; a "Closure record 2" in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (31 ids now open);
+BACKLOG item updated. Claim `f00361217`; docs `5f6ba3c0b`; records in the close-out commit.
+**Verified by me:** `lintr::lint` on both R files: no lints; `test_wordlist_coverage.R` passes.
+**Not done:** full test suite and CI not run (roxygen text only; no code or test touched); not pushed.
+
+**Handoff evaluation of S870 (by S871): 7/10.** Helped: the banner record and BACKLOG were accurate and
+the item list matched. Missing: "the four likely code defects" is named in S870's next steps but I found no
+list of them (grepped `BACKLOG.md`, `SESSION_NOTES.md`, `docs/audits`; only slice 8 mentions defects of old
+reports), so the pick was built from the triage report's Recommendation 3 instead.
+
+**Self-assessment: 8/10.** + One deliverable; the first question was rejected as jargon-heavy and the
+reworked one, grounded in the code after the owner's clarification, got a clean answer; lint run.
+- I asked a decision question before checking what the two code sites did, so the owner had to correct it.
+
+**Next steps:** (A) Owner decisions still open: sex-code constants (PED-2), error/return contract
+(PED-5/6), walk helpers (PED-3, NEW-42), sim driver, constants/HTML builders; ask each as a plain-words
+question after reading the code first. (B) Find or drop "the four likely code defects" from the
+handoff language. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on the owner's say-so.
+**Gotchas:** `roxygen2::roxygenise()` also rewrites `man/nprcgenekeepr-package.Rd` (one line, unrelated);
+revert it. It prints two `@inheritParams` errors (`addParents`, `removeUninformativeFounders`) that predate
+this session. Reduction: condensed the S869 record and removed the S868 evaluation (git keeps both); the
+file went over its token ceiling after the S871 write and is back under (56.7 KB of 65.5 KB).
 
 ### What Session 870 Did
 **Deliverable, DONE:** the banner pass from the slice 8 report. A "Status as of 2026-10-02 (S870)" blockquote
@@ -136,40 +161,15 @@ census scripts still overwrite tracked CSVs if run.
 Recommendation listed the candidate files by group. Missing: nothing that cost time. Wrong: "master 39 ahead"
 measured 40 at Orient (the S869 close-out commit is not counted). ROI: high.
 
-### What Session 869 Did
-**Deliverable, DONE:** the 15 `SESSION_NOTES.md` lines over 280 B (records S859-S862, lines 194-250) are
-re-wrapped at spaces; `context_budget.py` no longer reports a per-line finding. Docs only: no `.R`, no
-tests, no TDD phase. Claim `cb178a6ef`; the wrap, receipt and ledger are in the close-out commit.
-**Verified by me:** the text is identical to the claim commit once whitespace is collapsed (`diff` of
-`tr -s ' \n'` output); `awk` finds 0 lines over 280 B; no wrapped line starts like a list item or heading.
-**Reduction:** removed the S842 record and the S841 evaluation (git, `CHANGELOG.md` and `HANDOFFS.md` keep them).
-**Not done:** no lint/tests/CI (docs only); not pushed (master 39 ahead of origin with this commit's claim).
-
-**Self-assessment: 8/10.** + One deliverable, content proved unchanged, reduction made. - The picker was
-rejected once because my option text was not clear enough; I should have said which files "old audits" meant.
-
-**Next steps:** (A) Owner: banner pass on ~30 audit/research files (Effort M). (B) Owner decisions: PED_GV
-leftovers, CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on the owner's say-so.
-
-**Key files:** `SESSION_NOTES.md` (re-wrapped records S859-S862); `python3 context_budget.py`.
-
-**Gotchas:** long lines in new records will trip the 280 B per-line check again; wrap at about 110 columns.
-`SESSION_NOTES.md` is still the fullest resident file (about 55 KB of 65.5 KB).
-
-### Session 868 Handoff Evaluation (by Session 869)
-**Score 9/10.** Helped: next step (B) named the exact problem (15 lines over 280 B) and its READY/Effort S tag,
-and the count matched `context_budget.py`. Missing: nothing that cost time. Wrong: "master ahead by 36"
-measured 38 at Orient (S868 close-out commit not counted). ROI: high.
+### What Session 869 Did (condensed S871; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** the 15 `SESSION_NOTES.md` lines over 280 B re-wrapped (text unchanged, proved by `diff`); the
+S842 record and S841 evaluation removed. Docs only. Claim `cb178a6ef`. Self 8/10.
+**Gotcha kept:** wrap new records at about 110 columns or the 280 B per-line check trips again.
 
 ### What Session 868 Did (condensed S870; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** docs-staleness audit slice 8, `docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md`: `docs/research/`
 (5) and 41 older `docs/audits/` files, 42 moderate, 62 minor, no code defects. Claim `0754aa0c5`. Self 7/10.
 **Gotcha kept:** the agents' tables (ids A1-D24+) are unedited; the census scripts overwrite tracked CSVs.
-
-### Session 867 Handoff Evaluation (by Session 868)
-**Score 8/10.** Helped: key-file line ranges and the "(A) docs audit next slice" pointer. Missing: BACKLOG said
-`docs/research`/older audits were "only if the owner wants them", so (A) was not READY as written and cost a scope
-question. Wrong: nothing found ("35 ahead" matched; I count 36 now with my claim commit). ROI: high.
 
 ### What Session 867 Did (condensed S868; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** Breeding Groups and Mate Pair share four ancestry-override helpers in `R/ancestryOverrides.R`

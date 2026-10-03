@@ -24,9 +24,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       remained when measured S781; a broader grep in S852 found 32 in 13), the error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents`
       (PED-4, NEW-54, and NEW-55 -- labelling whether a dam list came from proven breeders or the
       fallback, which the owner did not take at S798's F3 decision), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
-      driver (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57) and the founder
-      definition (NEW-61); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority). **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
-      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, so 32 remain (the report's "Closure record" lists them). **Trap:** an id grep of the ledger
+      driver (NEW-50/51) and constants and HTML builders (NEW-18/19/21/26/57); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority). **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
+      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), so 31 remain (the report's two "Closure record" sections list them). **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 

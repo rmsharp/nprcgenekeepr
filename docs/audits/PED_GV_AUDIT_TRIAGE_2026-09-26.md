@@ -166,6 +166,14 @@ changes no code, and the table above is left as the frozen S781 reading.
 Open after closure: 43 - 11 = **32 ids**, of which NEW-24 is issue #123 and the rest are the
 overhaul roots and small no-behavior-change items in Recommendations 2 and 3.
 
+### Closure record 2 (owner decision 2026-10-02, S871)
+
+| id | closed because |
+|---|---|
+| NEW-61 | INTENDED: known founders and unknown founders are different things (an unknown founder may be a known founder, another animal in the population, or an animal outside it). `reportGV` lists only known founders; `calcFEFG` counts every both-parents-unknown animal as a separate, unrelated founder. Both stay; the difference is now documented in the roxygen of `calcFEFG()` and `reportGV()` (`5f6ba3c0b`), including that the unrelated-founder assumption can overstate FE and FG when placeholders are common. |
+
+Open after this closure: **31 ids**.
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

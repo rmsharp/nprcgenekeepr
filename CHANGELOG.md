@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S871 DONE: owner decision on NEW-61 recorded and documented: known and unknown founders stay counted differently (`reportGV` lists known founders only; `calcFEFG` treats every both-parents-unknown animal as an unrelated founder), explained in the roxygen of `calcFEFG()` and `reportGV()` with the caveat that FE/FG can be overstated when placeholders are common. Triage report Closure record 2; BACKLOG updated (31 ids open). Docs only; lint clean, wordlist test passes. Claim `f00361217`; docs `5f6ba3c0b`.
+
 ### 2026-10-02 · [ad hoc] S871 (in progress): record the owner decision on NEW-61 (keep both founder definitions) and document it. Docs only.
 
 ### 2026-10-02 · [ad hoc] S870 DONE: banner pass from the slice 8 audit: a "Status as of 2026-10-02 (S870)" banner on 26 dated files (4 in `docs/research/`, 22 in `docs/audits/`) naming what superseded each, bodies unedited except two numbers (census CSV row count, tarball gate count); BACKLOG slice 8 note updated. Docs only, no tests or lint run. Claim `99631c962`; banners `42d617267`..`19e8f917c`; numbers `89e3fc7c9`.

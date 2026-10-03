@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S871
 date: 2026-10-02
-status: pending
-active_task: record owner decision on NEW-61 (known vs unknown founders; keep both definitions) and document it; docs only
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- NEW-61 decision recorded (keep both founder definitions) and documented in calcFEFG/reportGV roxygen; docs only
+what_was_done: claim f00361217; roxygen docs 5f6ba3c0b (R/calcFEFG.R, R/reportGV.R, two Rd); triage report Closure record 2 and BACKLOG update in the close-out commit
+next_steps: (A) remaining owner decisions: PED-2 sex-code constants, PED-5/6 error contract, PED-3/NEW-42 walk helpers, sim driver, constants/HTML builders; read the code, then ask in plain words. (B) 3.0.0 release prep scoping. (C) Push only on the owner's say-so.
+key_files: R/calcFEFG.R:1-20 (new founder paragraph); R/reportGV.R:97-108; docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record 2); BACKLOG.md:8-31
+gotchas: roxygenise() also rewrites man/nprcgenekeepr-package.Rd (revert it); "four likely code defects" in S870's handoff has no findable list; 31 triage ids open
+runtime_smoke: not applicable -- roxygen text only; lintr clean on both files, test_wordlist_coverage.R passes; full suite not run. quality_ratchet: not run.
+changelog_ref: S871 DONE entry
+commit: the close-out commit that carries this receipt; claim f00361217
 ```
 
 ```handoff
