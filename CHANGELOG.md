@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-03 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `188af9077` -- S881's close-out (2/2) records commit (completed the S881 `HANDOFFS.md` receipt to `status: complete` and rewrote the `SESSION_NOTES.md` handoff; no `R/`, test or build-included file changed); the S881 DONE entry below already ledgers the session's work. Backfilled by the next session's Phase 0 (S882).
+
 ### 2026-10-03 · [ad hoc] S881 DONE: split `getPotentialParents()` (PED-4, NEW-54), owner-chosen at S880 and approved in plan mode first. Claim `d5ccda82c`, RED `b446143ac` + `8509d4b7d`, GREEN `5d9dbbfa9`, REFACTOR `8add079bb`. Output unchanged (5 pinned outputs identical); PED-4 and NEW-54 closed (open ids 28 to 26), BACKLOG split item removed, triage Closure record 6, Learning 848. Full `test_dir` 366 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0 (run before the REFACTOR; the one-line-pair REFACTOR re-ran the full `test_dir` and lint, not `check`). No NEWS entry: no user-visible change. Not pushed.
 
 ### 2026-10-03 · [ad hoc] S881 REFACTOR: `R/getPotentialParentsHelpers.R` uses `is.na(exit)` beside `exit` instead of `is.na(ba$exit)`; no behavior change.
