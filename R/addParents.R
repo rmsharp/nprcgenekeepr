@@ -51,7 +51,7 @@ addParents <- function(ped) {
   if (nrow(a1) > 0L) {
     a1$sire <- NA
     a1$dam <- NA
-    a1$sex <- "M"
+    a1$sex <- sexCodes[["male"]]
     a1$recordStatus <- "added"
     ped <- rbindFill(ped, a1)
   }
@@ -59,7 +59,7 @@ addParents <- function(ped) {
   if (nrow(a2) > 0L) {
     a2$sire <- NA
     a2$dam <- NA
-    a2$sex <- "F"
+    a2$sex <- sexCodes[["female"]]
     a2$recordStatus <- "added"
     ped <- rbindFill(ped, a2)
   }

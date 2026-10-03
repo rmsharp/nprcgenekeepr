@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S877 GREEN: 14 bare sex letters in `correctParentSex`, `addParents`, `modORIPReporting` now use `sexCodes` (H/U exemption sets via `keepAsSire`/`keepAsDam`). Stage-4 guard and 5 related test files pass, ORIP e2e (NPRC_RUN_E2E=true) 9 pass, `lint_package()` 0, full suite 365 files, 0 failed, 0 error, 187 skipped.
+
 ### 2026-10-02 · [ad hoc] S877 RED: `test_sexCodes.R` gets a stage-4 file list (correctParentSex, addParents, modORIPReporting); fails on exactly the 14 expected lines (correctParentSex 97,98,108,109; addParents 54,62; modORIPReporting 210,211,216,217,312,313,359,360).
 
 ### 2026-10-02 · [ad hoc] S877 claim: `sexCodes` adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting) -- in progress.

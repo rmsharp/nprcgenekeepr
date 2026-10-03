@@ -83,6 +83,9 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
   sires <- sires[!is.na(sires)]
   dams <- unique(dam)
   dams <- dams[!is.na(dams)]
+  # Sexes a parent may carry without being "corrected" (H and U are exempt)
+  keepAsSire <- sexCodes[c("hermaphrodite", "unknown", "male")]
+  keepAsDam <- sexCodes[c("hermaphrodite", "unknown", "female")]
 
   # Check if any ids are listed in both the sire and dam columns (error)
   sireAndDam <- intersect(sires, dams)
@@ -94,8 +97,8 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
     # (which exempts H/U via `!sex %in% c("H", "U", "M")`): only correct true
     # female-sires (F -> M) and male-dams (M -> F). Hermaphrodite ("H") and
     # unknown-sex ("U") parents keep their recorded sex (NEW-37).
-    sex[((id %in% sires) & !(sex %in% c("H", "U", "M")))] <- "M"
-    sex[((id %in% dams) & !(sex %in% c("H", "U", "F")))] <- "F"
+    sex[((id %in% sires) & !(sex %in% keepAsSire))] <- sexCodes[["male"]]
+    sex[((id %in% dams) & !(sex %in% keepAsDam))] <- sexCodes[["female"]]
     return(sex)
   }
   # Only "added" records are set aside: an NA, blank or unrecognised status is
@@ -105,8 +108,8 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
   } else {
     !is.na(recordStatus) & recordStatus == "added"
   }
-  femaleSires <- id[(id %in% sires) & (!sex %in% c("H", "U", "M")) & !isAdded]
-  maleDams <- id[(id %in% dams) & (!sex %in% c("H", "U", "F")) & !isAdded]
+  femaleSires <- id[(id %in% sires) & (!sex %in% keepAsSire) & !isAdded]
+  maleDams <- id[(id %in% dams) & (!sex %in% keepAsDam) & !isAdded]
   if (length(femaleSires) == 0L) {
     femaleSires <- NULL
   }

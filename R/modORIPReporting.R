@@ -207,14 +207,16 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
 
       # Calculate colony statistics
       nTotal <- nrow(ped)
-      nMales <- sum(ped$sex == "M", na.rm = TRUE)
-      nFemales <- sum(ped$sex == "F", na.rm = TRUE)
+      nMales <- sum(ped$sex == sexCodes[["male"]], na.rm = TRUE)
+      nFemales <- sum(ped$sex == sexCodes[["female"]], na.rm = TRUE)
       nUnknown <- nTotal - nMales - nFemales
 
       # Founders (animals with no known parents)
       nFounders <- sum(isFounder(ped))
-      nMaleFounders <- sum(isFounder(ped) & ped$sex == "M", na.rm = TRUE)
-      nFemaleFounders <- sum(isFounder(ped) & ped$sex == "F", na.rm = TRUE)
+      nMaleFounders <- sum(isFounder(ped) & ped$sex == sexCodes[["male"]],
+                           na.rm = TRUE)
+      nFemaleFounders <- sum(isFounder(ped) & ped$sex == sexCodes[["female"]],
+                             na.rm = TRUE)
 
       data.frame(
         Metric = c("Total Animals", "Males", "Females", "Unknown Sex",
@@ -309,8 +311,8 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
             Metric = c("Total Animals", "Males", "Females"),
             Value = c(
               as.character(nrow(ped)),
-              as.character(sum(ped$sex == "M", na.rm = TRUE)),
-              as.character(sum(ped$sex == "F", na.rm = TRUE))
+              as.character(sum(ped$sex == sexCodes[["male"]], na.rm = TRUE)),
+              as.character(sum(ped$sex == sexCodes[["female"]], na.rm = TRUE))
             ),
             stringsAsFactors = FALSE
           ))
@@ -356,8 +358,8 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
         ped <- pedigree()
         list(
           nTotal = nrow(ped),
-          nMales = sum(ped$sex == "M", na.rm = TRUE),
-          nFemales = sum(ped$sex == "F", na.rm = TRUE),
+          nMales = sum(ped$sex == sexCodes[["male"]], na.rm = TRUE),
+          nFemales = sum(ped$sex == sexCodes[["female"]], na.rm = TRUE),
           nFounders = sum(isFounder(ped))
         )
       })
