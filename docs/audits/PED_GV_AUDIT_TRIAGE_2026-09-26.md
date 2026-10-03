@@ -202,6 +202,15 @@ Open after this closure: **29 ids** (31 minus PED-2 and NEW-29).
 NEW-56's `pUnknown$id[i][1L]` is no longer in the file (verified S880), but it was not recounted.
 Open after this closure: **28 ids** (29 minus NEW-55).
 
+### Closure record 6 (S881, 2026-10-03) -- decision record 5's split shipped
+
+| id | closed because |
+|---|---|
+| PED-4 | SHIPPED: `getPotentialParents()` now delegates to five internal helpers in `R/getPotentialParentsHelpers.R` (`resolveMinParentAges`, `gestationWindows`, `selectPotentialSires`, `selectPotentialDams`, `buildParentEntry`); output pinned unchanged by `test_getPotentialParentsHelpers.R` (RED `b446143ac`, `8509d4b7d`; GREEN `5d9dbbfa9`; REFACTOR `8add079bb`). |
+| NEW-54 | SHIPPED with PED-4: the sire and dam selection now use bare column names inside the data.table calls (`is.na(exit)`), not `ba$exit` beside `exit`. |
+
+Open after this closure: **26 ids** (28 minus PED-4 and NEW-54).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

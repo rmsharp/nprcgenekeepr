@@ -60,6 +60,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-03 · [ad hoc] S881 DONE: split `getPotentialParents()` (PED-4, NEW-54), owner-chosen at S880 and approved in plan mode first. Claim `d5ccda82c`, RED `b446143ac` + `8509d4b7d`, GREEN `5d9dbbfa9`, REFACTOR `8add079bb`. Output unchanged (5 pinned outputs identical); PED-4 and NEW-54 closed (open ids 28 to 26), BACKLOG split item removed, triage Closure record 6, Learning 848. Full `test_dir` 366 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0 (run before the REFACTOR; the one-line-pair REFACTOR re-ran the full `test_dir` and lint, not `check`). No NEWS entry: no user-visible change. Not pushed.
+
+### 2026-10-03 · [ad hoc] S881 REFACTOR: `R/getPotentialParentsHelpers.R` uses `is.na(exit)` beside `exit` instead of `is.na(ba$exit)`; no behavior change.
+
+### 2026-10-03 · [ad hoc] S881 GREEN: new `R/getPotentialParentsHelpers.R` with five internal `@noRd` helpers (`resolveMinParentAges`, `gestationWindows`, `selectPotentialSires`, `selectPotentialDams`, `buildParentEntry`); `getPotentialParents()` delegates to them. The 12 helper tests pass; the pinned outputs are identical; timing 0.437 s vs 0.450 s for 5 runs on `rhesusPedigree`.
+
+### 2026-10-03 · [ad hoc] S881 RED: `test_getPotentialParentsHelpers.R` (5 characterization tests that pass on the pre-split code, 12 helper tests that fail with "could not find function") and 5 pinned `.rds` fixtures in `tests/testthat/fixtures/`, generated from the unmodified code. Two commits because of the 5-file cap.
+
 ### 2026-10-03 · [ad hoc] S881 claim: plan for splitting `getPotentialParents()` (PED-4, NEW-54), plan-mode approval before any code -- in progress.
 
 ### 2026-10-03 · [ad hoc] S880 DONE: PED_GV owner decision on dam-list confidence (claim `9dbf45d61`, RED `a0388e5f6`, GREEN `ed344a83a`). Owner chose to label the dam tier: `getPotentialParents()` entries now carry `damBasis` (`"provenBreeder"` / `"eligibleFemale"` / `NA`), additive, with roxygen and a `NEWS.Rmd` entry. NEW-55 closed (open ids 29 to 28); owner chose to split the function in a later session (new BACKLOG item; PED-4, NEW-54 stay open). Full suite 365 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0. Learning 847.
