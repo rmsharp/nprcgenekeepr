@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S867
 date: 2026-10-02
-status: pending
-active_task: share the near-duplicate ancestry-override code (status sentence, confirm handler, filtered CSV body) between Breeding Groups and Mate Pair; REFACTOR, behavior unchanged
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- Breeding Groups and Mate Pair share the override status sentence/paragraph, the confirm step and the filtered-rows-for-CSV helper in R/ancestryOverrides.R; behavior unchanged; strict-TDD REFACTOR
+what_was_done: claim 1f4ac9b75; REFACTOR f5e833df9 (6 helper tests in tests/testthat/test_ancestryOverrides.R, helpers in R/ancestryOverrides.R, R/modMatePair.R and R/modBreedingGroups.R rewired); close-out commit holds BACKLOG removal and records. Full suite 9283 expectations 0 failed 0 error; lint 0
+next_steps: (A) Docs-staleness audit next slice (READY, Effort L). (B) BACKLOG.md / SESSION_NOTES.md housekeeping (READY; 15 SESSION_NOTES lines over 280 B). (C) Owner decisions: PED_GV leftovers, CV1/CV2. (D) 3.0.0 release prep needs a scoping session. (E) Push only on the owner's say-so
+key_files: R/ancestryOverrides.R:~130-205 (four helpers); R/modMatePair.R:~359-375 and ~490-510; R/modBreedingGroups.R:~476-495; tests/testthat/test_ancestryOverrides.R:~535-590
+gotchas: onThisTab only changes the sentence wording; .ancestryOverrideApply() relies on callers req()-ing the rule key first; no app launch this session (e2e files skip without a browser); a stack trace prints when test_modMatePair.R runs but the file passes
 ```
 
 ```handoff

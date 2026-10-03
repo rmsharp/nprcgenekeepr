@@ -73,17 +73,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `test_shinytest2_workflow_coverage.R` read the workflow files), so the list must exclude
       those. Not done: it edits CI config, which the owner has not asked for.
 
-- [ ] **Mate-pair ancestry guardrails -- residue after issue #169 (found S776-S777,
-      2026-09-24; READY, optional refactor, Effort S)** -- #169 shipped and closed S777.
-      Its leftovers are done: the zero-rule table (S864), the shared override
-      select-choices builder and confirm modal (S865, `.ancestryOverrideChoices()` /
-      `.ancestryOverrideModal()` in `R/ancestryOverrides.R`) and the Excluded-tab export
-      (S866, `downloadExcluded` in `R/modMatePair.R`). **Near-duplicates that remain:**
-      the `overrideConfirm` observer and the `overrideStatus` sentence in both modules
-      (they differ only in "on this tab"), and the filter-then-`write.csv` body now
-      shared in shape by `downloadPairs` and `downloadExcluded`. **Known, accepted:** an
-      unhandled click-time error ends the Shiny session (Learning 786).
-
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
       `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.

@@ -60,7 +60,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-02 · [ad hoc] S867 claim: share the near-duplicate ancestry-override code between Breeding Groups and Mate Pair (mate-pair residue item; owner picked it at Orient) (in progress). REFACTOR, behavior unchanged.
+### 2026-10-02 · [ad hoc] S867 DONE: Breeding Groups and Mate Pair share the ancestry-override status text/paragraph, confirm step and filtered-rows-for-CSV body as internal helpers (`.ancestryOverrideStatusText()`, `.ancestryOverrideStatusUI()`, `.ancestryOverrideApply()`, `.rowsAfterFilter()` in `R/ancestryOverrides.R`); behavior unchanged; full suite 0 failed, lint 0; mate-pair residue BACKLOG block removed.
 
 ### 2026-10-02 · [ad hoc] S866 DONE: Mate Pair Excluded tab gets an Export Excluded Pairs CSV button (`downloadExcluded` in `R/modMatePair.R`); the CSV holds the rows left after the curator's filter on the Excluded table (all if none), like Eligible Pairs. Owner decisions: rows-shown scope, button on Excluded tab only. Strict TDD: RED (5 failing in `test_modMatePair.R`), GREEN `6c72dd8e6`, REFACTOR skipped by owner choice. Full suite 2927 tests, 0 failed/0 error; lint clean. NEWS.Rmd bullet and `colony-manager-guide.qmd` updated; BACKLOG mate-pair item reduced to the optional refactor leftovers. Claim `2b777576a`. Not CI-verified; not pushed. **Model:** Sonnet 5.5.
 

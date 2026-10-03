@@ -99,43 +99,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 867 Did
-**Deliverable:** share the near-duplicate ancestry-override code between Breeding Groups and Mate Pair (status sentence, confirm-handler body, filter-then-write.csv body) (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** the last near-duplicates of the Breeding Groups / Mate Pair ancestry-override
+code are shared in `R/ancestryOverrides.R`: `.ancestryOverrideStatusText(ov, onThisTab)`,
+`.ancestryOverrideStatusUI(txt)`, `.ancestryOverrideApply(current, ovr, ruleKey, reason)` (the confirm
+step; NULL on a blank reason) and `.rowsAfterFilter(tbl, rowsAll)` (both Mate Pair CSV downloads).
+Claim `1f4ac9b75`; REFACTOR `f5e833df9` (helper tests first, 6 new in `test_ancestryOverrides.R`,
+failing as "function not found", then helpers + both modules rewired); close-out commit holds records.
+**Owner decisions (plain words):** picked this item at Orient; approved the full scope (all four
+helpers) at the PRE-RED gate; behavior unchanged.
+**Verified:** full unfiltered suite 9283 expectations, 0 failed, 0 error (187 skipped);
+`lintr::lint_package()` 0 findings. **Not done:** no app launch (e2e files skip without a browser);
+no CI watched; not pushed (master ahead of origin by 35 after close-out). No NEWS entry (internal).
+**BACKLOG:** the mate-pair residue block is removed (all of it done).
 
-### What Session 866 Did
-**Deliverable, DONE:** the Mate Pair **Excluded** tab now has an **Export Excluded Pairs** CSV button
-(`downloadExcluded`), the last item of the #169 residue the owner had to decide. Strict TDD, all
-phases gated by `AskUserQuestion`; REFACTOR skipped by owner choice. Claim `2b777576a`; RED+GREEN
-`6c72dd8e6` (tests and `R/modMatePair.R`); the close-out commit holds NEWS.Rmd, the guide, BACKLOG, records.
-**Owner decisions (plain words):** picked this item at Orient; the CSV holds the rows left after the
-curator's filter on the Excluded table (all rows if none), like Eligible Pairs; button on the Mate Pair
-Excluded tab only (Breeding Groups has no Excluded tab).
-**RED:** 5 new tests at `tests/testthat/test_modMatePair.R:449` onward (button in UI; full export;
-filtered export; empty-filter header-only; zero-excluded header-only), failing only because the output
-did not exist; the 14 older tests passed. **GREEN:** `R/modMatePair.R` only (button under the table;
-handler mirrors `downloadPairs`, reading `input$excludedTable_rows_all`).
-**Verified:** full unfiltered suite 2927 tests, 0 failed, 0 error (187 skipped); `lintr::lint_package()`
-0 findings. **Not done:** no app launch (the two e2e files skip without a browser); no CI watched;
-not pushed (master ahead of origin by 33 commits after close-out).
-**Docs:** NEWS.Rmd bullet (Mate Pair Analysis, Major); `colony-manager-guide.qmd` Excluded paragraph.
+**Self-assessment: 8/10.** + helper tests written before the helpers; one full-suite run covered all
+three touched files; message wording of the notification and sentences kept byte-identical.
+- no app launch, so the live click path is covered only by the existing `testServer` tests; the
+  helpers were added with their tests in one REFACTOR phase, not a separate RED.
 
-**Self-assessment: 8/10.** + scope asked in plain words, RED verified per-test for the right reason
-(including that fixture-sanity guards passed); full suite before close-out. - no app launch, so the
-button's look is unseen; the CSV content is pinned by `testServer` tests, not by a real download.
+**Next steps:** (A) Docs-staleness audit next slice (READY, Effort L). (B) `BACKLOG.md` /
+`SESSION_NOTES.md` housekeeping (READY, recurring; 15 `SESSION_NOTES.md` lines exceed 280 B).
+(C) Owner decisions: PED_GV leftovers; CV1/CV2. (D) 3.0.0 release prep needs its own scoping session.
+(E) Push only on the owner's say-so.
 
-**Next steps:** (A) Optional READY refactor: share the `overrideConfirm` observer and `overrideStatus`
-sentence, and/or the filter-then-write body of the two downloads (BACKLOG mate-pair item). (B) Owner
-decisions: PED_GV leftovers; CV1/CV2. (C) Docs-staleness audit next slice (READY, Effort L). (D) 3.0.0
-release prep needs its own scoping session. (E) Push only on the owner's say-so.
+**Key files:** `R/ancestryOverrides.R:~130-205` (four new helpers), `R/modMatePair.R:~359-375`
+(confirm observer), `R/modMatePair.R:~490-510` (downloads), `R/modBreedingGroups.R:~476-495`,
+`tests/testthat/test_ancestryOverrides.R:~535-590` (new tests).
 
-**Key files:** `R/modMatePair.R:121-125` (button), `R/modMatePair.R:~509-523` (handler),
-`tests/testthat/test_modMatePair.R:449-570` (new tests).
+**Gotchas:** the helpers' `onThisTab` only changes the sentence wording ("on this tab "); Breeding
+Groups passes nothing. `.ancestryOverrideApply()` assumes the caller already checked the rule key is
+in the overridable set (both observers `req()` it first). A stack trace prints when
+`test_modMatePair.R` runs; the file still passes.
 
-**Gotchas:** `output$excludedTable` is client-side `renderDT`; `excludedTable_rows_all` is still set by
-DT in that mode (the existing Eligible table is `server = TRUE`). `NEWS.md` is not re-knit here (S864
-did not either). A stack trace prints when `test_modMatePair.R` runs; the file still reports 19/19.
+### Session 866 Handoff Evaluation (by Session 867)
+**Score 9/10.** Helped: next step (A) named exactly the three near-duplicates and the key-file line
+ranges, so I went straight to the code. Missing: nothing that cost time. Wrong: nothing found
+("33 ahead" matched). ROI: high.
+
+### What Session 866 Did (condensed S867; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** Mate Pair Excluded tab gets an Export Excluded Pairs CSV button (`downloadExcluded`,
+`R/modMatePair.R`), holding the rows left after the curator's filter. Claim `2b777576a`; RED+GREEN
+`6c72dd8e6`. Full suite 2927 tests, 0 failed. Self-score 8/10. Gotcha kept: `excludedTable_rows_all`
+is still set by DT although the Excluded table is client-side `renderDT`.
 
 ### Session 865 Handoff Evaluation (by Session 866)
 **Score 9/10.** Helped: the exact next-step list with the Excluded-tab export marked DECISION NEEDED,
