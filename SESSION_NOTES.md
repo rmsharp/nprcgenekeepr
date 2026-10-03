@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 877 Did
+**Deliverable:** `sexCodes` adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting), strict TDD (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. PRE-RED: re-running plan section 2 greps.
+**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until Phase 3F.
+
 ### What Session 876 Did
 **Deliverable, DONE:** `sexCodes` adoption stage 3 of 6, strict TDD (PRE-RED, RED, GREEN, REFACTOR each
 gated by `AskUserQuestion`). Claim `f4a645440`; RED `6fafbcd30`; GREEN `01600af88`; records in the close-out commit.
