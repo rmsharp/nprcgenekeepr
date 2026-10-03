@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-03 · [ad hoc] S880 claim: PED_GV owner decision on dam-list confidence (`getPotentialParents()`: NEW-55, NEW-35, PED-4, NEW-54, NEW-56) -- in progress.
+
 ### 2026-10-03 · [ad hoc] S879 claim: `sexCodes` adoption stage 6 of 6 (full `R/` scan with allowlist; close PED-2, NEW-29, PED-7) -- in progress.
 
 ### 2026-10-03 · [ad hoc] S879 RED: `test_sexCodes.R` swaps the five per-stage file lists for a scan of every `R/*.R` minus an allowlist (3 whole files, 6 lines by exact text), a stale-allowlist test and a planted-file self-test. The scan passes on today's code (stages 1-5 already converted everything); a planted `sex == "M"` in `calcNeSexRatio.R` made it fail at line 62, then the file was restored.
