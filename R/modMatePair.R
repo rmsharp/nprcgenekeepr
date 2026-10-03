@@ -118,7 +118,11 @@ modMatePairUI <- function(id) {
                  DT::DTOutput(ns("pairsTable")), br(),
                  downloadButton(ns("downloadPairs"), "Export Eligible Pairs")
                ),
-               tabPanel("Excluded", br(), DT::DTOutput(ns("excludedTable"))),
+               tabPanel(
+                 "Excluded", br(),
+                 DT::DTOutput(ns("excludedTable")), br(),
+                 downloadButton(ns("downloadExcluded"), "Export Excluded Pairs")
+               ),
                # Issue #169 Slice 3a (D9): the coverage summary and the run's
                # audit manifest. No violations table -- the inline columns of
                # Eligible Pairs and the Excluded tab are the list.
@@ -502,6 +506,21 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
           res$pairs
         } else {
           res$pairs[rowsAll, , drop = FALSE]
+        }
+        write.csv(tbl, file, na = "", row.names = FALSE)
+      }
+    )
+
+    output$downloadExcluded <- downloadHandler(
+      filename = function() getDatedFilename("ExcludedPairs.csv"),
+      content = function(file) {
+        res <- matchResults()
+        req(res)
+        rowsAll <- input$excludedTable_rows_all
+        tbl <- if (is.null(rowsAll)) {
+          res$excluded
+        } else {
+          res$excluded[rowsAll, , drop = FALSE]
         }
         write.csv(tbl, file, na = "", row.names = FALSE)
       }

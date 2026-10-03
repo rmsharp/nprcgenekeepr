@@ -446,6 +446,134 @@ test_that("downloadPairs exports only the DT-filtered rows (Dragon 4)", {
   )
 })
 
+## S866 RED: the Excluded tab gets an "Export Excluded Pairs" button
+## (downloadExcluded), mirroring downloadPairs: the CSV holds exactly the rows
+## surviving the curator's filter on the Excluded table (all rows if none).
+test_that("modMatePairUI has a namespaced Excluded-pairs export button", {
+  ui_html <- as.character(modMatePairUI("mp"))
+
+  expect_true(grepl("mp-downloadExcluded", ui_html))
+})
+
+test_that("downloadExcluded exports the full excluded table when no DT filter is active", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      # allAlive includes M3 (age 0.5), so under-age exclusions exist.
+      session$setInputs(populationSource = "allAlive", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      excluded <- session$getReturned()$excluded()
+      stopifnot(nrow(excluded) >= 2L) # fixture sanity
+      df <- utils::read.csv(output$downloadExcluded, stringsAsFactors = FALSE)
+      expect_identical(nrow(df), nrow(excluded))
+      expect_identical(names(df), names(excluded))
+      expect_setequal(pairKey(df), pairKey(excluded))
+      expect_identical(df$reason, excluded$reason)
+    }
+  )
+})
+
+test_that("downloadExcluded exports only the DT-filtered rows", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "allAlive", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      excluded <- session$getReturned()$excluded()
+      stopifnot(nrow(excluded) >= 2L) # fixture sanity
+
+      session$setInputs(excludedTable_rows_all = 2L)
+
+      df <- utils::read.csv(output$downloadExcluded, stringsAsFactors = FALSE)
+      expect_identical(nrow(df), 1L)
+      expect_identical(pairKey(df), pairKey(excluded[2L, , drop = FALSE]))
+    }
+  )
+})
+
+test_that("downloadExcluded writes a header-only CSV when the filter matches no row", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "allAlive", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      excluded <- session$getReturned()$excluded()
+      stopifnot(nrow(excluded) >= 1L) # fixture sanity
+
+      session$setInputs(excludedTable_rows_all = integer(0))
+
+      df <- utils::read.csv(output$downloadExcluded, stringsAsFactors = FALSE)
+      expect_identical(nrow(df), 0L)
+      expect_identical(names(df), names(excluded))
+    }
+  )
+})
+
+test_that("downloadExcluded writes a header-only CSV when no pair was excluded", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      # minAge = 0 lets M3 (age 0.5) through, so nothing is excluded.
+      session$setInputs(populationSource = "allAlive", minAge = 0)
+      session$setInputs(analyze = 1)
+
+      excluded <- session$getReturned()$excluded()
+      stopifnot(nrow(excluded) == 0L) # fixture sanity
+
+      df <- utils::read.csv(output$downloadExcluded, stringsAsFactors = FALSE)
+      expect_identical(nrow(df), 0L)
+      expect_identical(names(df), names(excluded))
+    }
+  )
+})
+
 test_that("a population scope with zero eligible individuals renders an empty, non-crashing result", {
   skip_if_not_installed("shiny")
 
