@@ -99,36 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 881 Did
-**Deliverable:** Plan for splitting `getPotentialParents()` (PED-4, NEW-54); plan-mode approval first, no code until approved (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** split `getPotentialParents()` into five internal helpers (PED-4, NEW-54), plan-mode approval first, strict TDD (each phase gated by `AskUserQuestion`).
+Claim `d5ccda82c`; RED `b446143ac` + `8509d4b7d`; GREEN `5d9dbbfa9`; REFACTOR `8add079bb`; records in the close-out commit.
+**Done:** `R/getPotentialParentsHelpers.R` holds `resolveMinParentAges`, `gestationWindows`, `selectPotentialSires`,
+`selectPotentialDams`, `buildParentEntry`; output unchanged (5 pinned outputs identical). PED-4 and NEW-54 closed (open ids 28 to 26).
+**Verified by me:** pinned tests pass before and after; 12 helper tests failed only on missing functions; full `test_dir`
+366 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0; e2e potential-parents with
+`NPRC_RUN_E2E=true` 4 passed. Not run: push or CI (about 88 ahead of origin).
 
-### What Session 880 Did
-**Deliverable, DONE:** PED_GV owner decision on dam-list confidence, strict TDD (each phase gated by `AskUserQuestion`).
-Claim `9dbf45d61`; RED `a0388e5f6`; GREEN `ed344a83a`; REFACTOR (none needed) and records in the close-out commit.
-**Done:** owner chose to label the tier: `getPotentialParents()` entries carry `damBasis` (`"provenBreeder"`,
-`"eligibleFemale"`, `NA` when `dams` is empty); additive, roxygen and NEWS entry written. NEW-55 closed (29 to 28
-open ids). Owner also chose to split the function later: new BACKLOG item (PED-4, NEW-54 stay open).
-**Verified by me:** 5 RED tests failed only on the missing field; GREEN passes them and the makeSimPed,
-markerParentageLikelihood, modPotentialParents* and modMarkerGenetics files; full `test_dir` 365 files, 0 failed,
-0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0. Not run: push or CI (about 82 ahead of origin).
+**Handoff evaluation of S880: 9/10.** Helped: the BACKLOG split item named the right tests and the plan-mode rule; line ranges were accurate.
+Missing: no mention that the e2e potential-parents file is opt-in (Learning 844). Wrong: nothing found.
 
-**Handoff evaluation of S879: 8/10.** Helped: it named the BACKLOG choices and the PED_GV owner-decision list.
-Missing: the triage table's line numbers and NEW-35/NEW-55 text predate F3, so the dam question was already
-narrower than the table says (NEW-56 is gone from the file). Wrong: nothing found.
+**Self-assessment: 8/10.** + Plan approved first time; pins checked to discriminate; scope held to one deliverable.
+- First "no species" pin was a duplicate of another; one full run hit a Chrome-startup error; my first background run died (nested `&`).
 
-**Self-assessment: 8/10.** + One deliverable; scope and design asked in plain words; RED checked per-test.
-- First fixture hit a `paste0` zero-length trap; `/background` estimate question not answered in the file.
+**Next steps:** pick from BACKLOG: docs staleness audit slice (READY), or a PED_GV owner decision. Push only on the owner's say-so.
 
-**Next steps:** pick from BACKLOG: split `getPotentialParents` (needs plan-mode approval), another PED_GV owner
-decision, docs-staleness leftovers. Push only on the owner's say-so.
+**Key files:** `R/getPotentialParentsHelpers.R`; `R/getPotentialParents.R:78-150`; `tests/testthat/test_getPotentialParentsHelpers.R`;
+`tests/testthat/fixtures/gpp_pinned_*.rds`; triage Closure record 6; `PROJECT_LEARNINGS.md` Learning 848.
 
-**Key files:** `R/getPotentialParents.R:156-231`; `tests/testthat/test_getPotentialParents.R:555-615`; triage
-report Decision record 5; `PROJECT_LEARNINGS.md` Learning 847.
+**Gotchas:** never regenerate the pinned fixtures from post-split code; name helper parameters unlike any column.
 
-**Gotchas:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (stale vs `DESCRIPTION`); I reverted it.
-`fallbackPed()` needs one female with an offspring.
+### What Session 880 Did (condensed S881; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`getPotentialParents()` entries now carry `damBasis` (NEW-55 closed); owner chose to split the function later. Claim `9dbf45d61`,
+RED `a0388e5f6`, GREEN `ed344a83a`. Handoff evaluation of S879: 8/10. Self 8/10.
+**Gotchas kept:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (stale vs `DESCRIPTION`); revert it. `fallbackPed()` needs one female with an offspring.
 
 ### What Session 879 Did (condensed S880; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `sexCodes` adoption stage 6 of 6 shipped: `test_sexCodes.R` scans every `R/*.R` minus an allowlist; PED-2, NEW-29,

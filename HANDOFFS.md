@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S881
 date: 2026-10-03
-status: pending
-active_task: Plan for splitting getPotentialParents() (PED-4, NEW-54), plan-mode approval first
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- getPotentialParents() split into five internal helpers (PED-4, NEW-54 closed); nothing owed on it
+what_was_done: claim d5ccda82c; plan approved in plan mode; RED b446143ac + 8509d4b7d (5 pinned fixtures; 5 characterization tests pass pre-split, 12 helper tests fail on missing functions); GREEN 5d9dbbfa9 (R/getPotentialParentsHelpers.R new, R/getPotentialParents.R delegates); REFACTOR 8add079bb (is.na(exit) consistency); BACKLOG item removed, triage Closure record 6, Learning 848 in the close-out commit
+next_steps: pick from BACKLOG: docs staleness audit next slice (READY, Effort L, one report per session) or an owner decision (PED_GV overhaul roots: error/return contract, walk helpers, sim driver, constants/HTML builders; getAncestors absent id; isAddedRecord helper). Push only on owner say-so (master about 88 ahead of origin; computed from git rev-list at close-out)
+key_files: R/getPotentialParentsHelpers.R (five helpers); R/getPotentialParents.R:78-150 (loop now calls them); tests/testthat/test_getPotentialParentsHelpers.R; tests/testthat/fixtures/gpp_pinned_*.rds; docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record 6); PROJECT_LEARNINGS.md Learning 848
+gotchas: pinned fixtures were saved from the pre-split code, so regenerating them from today's code would erase the check; helper params must not share a column name (focalBirth, not birth) inside data.table calls; test-e2e-potential-parents-module.R needs NPRC_RUN_E2E=true to run (4 tests, passed); one full run hit a Chrome-startup error in test_positionMatingUnitForest.R:1971 that did not repeat
+runtime_smoke: full test_dir 366 files 0 failed 0 error 187 skipped (after REFACTOR); lintr::lint_package() 0 lints; devtools::check() 0/0/0 (before REFACTOR); e2e potential-parents with NPRC_RUN_E2E=true 4 tests 0 failed; Shiny tab not launched by hand; quality_ratchet: not run
+changelog_ref: S881 DONE entry
+commit: the close-out commit that carries this receipt; claim d5ccda82c
 ```
 
 ```handoff
