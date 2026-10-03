@@ -99,33 +99,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 882 Did
-**Deliverable:** docs staleness audit leftover: fix the stale "defaulting to direct" comment at `R/modPedigree.R:459-461` and correct BACKLOG's stale BB14 note (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** docs staleness audit leftover (the owner picked 1 of 3): the stale "defaulting to direct" comment
+in `R/modPedigree.R` is fixed and BACKLOG's stale BB14 note is corrected. Comment and docs only, so no TDD phase applied.
+Phase 0 backfill `9a1224603`; claim `1cd71ab9c`; deliverable `67c83def8` (`R/modPedigree.R`, `BACKLOG.md`); records in the
+close-out commit.
+**Orient:** S881's records-only close-out (2/2) commit sat past the ledger frontier (backfilled, `9a1224603`); CI green on
+origin/master by head sha (the plain `gh run list --branch master` returned September rows).
+**Done:** `R/modPedigree.R:459-462` now says the style defaults to "rectilinear" (since S574, `cb5141f75`; it matches
+`makePedigreeMatingLayout()`'s own default) and drops the "first render byte-identical to pre-issue-142" reason, which stopped
+being true at that flip. BACKLOG: BB14 marked FIXED S830 (it still read as open), the comment marked FIXED S882, and one more
+stale statement of the same kind recorded as open (`R/makePedigreeDiagramData.R:2110-2113`).
+**Verified by me:** parsed code identical before and after (`identical(parse(keep.source = FALSE))` on `HEAD` vs the edited
+file: TRUE; 3 comment lines changed); `lint_package()` 0; the 7 test files that name `modPedigree.R` or scan `R/` (sexCodes,
+modPedigree, modPedigree_coverage, modPedigree_processing, newsReleaseState, wordlist, twinRelations): 127 tests, 0 failed,
+0 error; wordlist, newsReleaseState and sexCodes re-run after the BACKLOG edit.
+**Not run:** full `test_dir`, `devtools::check()`, runtime smoke (comment-only and parse-identical, so nothing changes at
+runtime), push or CI. **Reduction:** removed the S808, S809 and S810 records and the S807 and S808 evaluations (receipts in
+`HANDOFFS.md`, entries in `CHANGELOG.md`, the S808 push record in `CHANGELOG.md`).
 
-### What Session 881 Did
-**Deliverable, DONE:** split `getPotentialParents()` into five internal helpers (PED-4, NEW-54), plan-mode approval first, strict TDD (each phase gated by `AskUserQuestion`).
-Claim `d5ccda82c`; RED `b446143ac` + `8509d4b7d`; GREEN `5d9dbbfa9`; REFACTOR `8add079bb`; records in the close-out commit.
-**Done:** `R/getPotentialParentsHelpers.R` holds `resolveMinParentAges`, `gestationWindows`, `selectPotentialSires`,
-`selectPotentialDams`, `buildParentEntry`; output unchanged (5 pinned outputs identical). PED-4 and NEW-54 closed (open ids 28 to 26).
-**Verified by me:** pinned tests pass before and after; 12 helper tests failed only on missing functions; full `test_dir`
-366 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0; e2e potential-parents with
-`NPRC_RUN_E2E=true` 4 passed. Not run: push or CI (about 88 ahead of origin).
+**Handoff evaluation of S881: 7/10.** Helped: clean tree, receipt `status: complete`, and the health, CI and PED_GV pointers
+held at Orient. Missing: no note that the split close-out's records-only commit would sit past the ledger frontier.
+Wrong: "docs staleness audit next slice (READY)": the item's own last sentence says slice 8 closed the audit and nothing further
+is scoped, so only three small leftovers remained and I had to find them; "about 88 ahead" measured 90 at Orient.
 
-**Handoff evaluation of S880: 9/10.** Helped: the BACKLOG split item named the right tests and the plan-mode rule; line ranges were accurate.
-Missing: no mention that the e2e potential-parents file is opt-in (Learning 844). Wrong: nothing found.
+**Self-assessment: 8/10.** + Checked which leftovers were still open before asking, which exposed the stale BB14 note; proved
+the edit comment-only by parse identity; caught my own wrong line cite (2111 for 2110) before it was committed; recorded the
+second stale statement instead of fixing it (scope held).
+- Offered the item at Phase 0 on its READY tag without checking it, which cost a second question round; one long silent
+stretch of tool calls.
 
-**Self-assessment: 8/10.** + Plan approved first time; pins checked to discriminate; scope held to one deliverable.
-- First "no species" pin was a duplicate of another; one full run hit a Chrome-startup error; my first background run died (nested `&`).
+**Next steps:** (A) The same-kind stale roxygen at `R/makePedigreeDiagramData.R:2110-2113` (READY, Effort S, comment only; the
+block is `@noRd` and `man/` has no page for it, so nothing regenerates). (B) Remaining slice-1 leftovers, owner decisions:
+delete or ignore the tracked `kinship2-fidelity-validation.pdf`; regenerate `trackC-nprc-rectilinear.png` (the owner should
+look at the new arc first). (C) PED_GV decisions and the other DECISION NEEDED items in BACKLOG. (D) Master is 94 ahead of
+origin after this commit (`git rev-list --count origin/master..HEAD`); push only on the owner's say-so.
 
-**Next steps:** pick from BACKLOG: docs staleness audit slice (READY), or a PED_GV owner decision. Push only on the owner's say-so.
+**Key files:** `R/modPedigree.R:459-462`; `R/makePedigreeDiagramData.R:2110-2113` (stale), `:1675` (real default), `:2070`
+(call site); `BACKLOG.md` docs-audit item (grep "FIXED S882"); `PROJECT_LEARNINGS.md` Learning 849.
 
-**Key files:** `R/getPotentialParentsHelpers.R`; `R/getPotentialParents.R:78-150`; `tests/testthat/test_getPotentialParentsHelpers.R`;
-`tests/testthat/fixtures/gpp_pinned_*.rds`; triage Closure record 6; `PROJECT_LEARNINGS.md` Learning 848.
+**Gotchas:** the BACKLOG docs-audit item is one very long line per cluster: edit it with short single-line `old_string`s. A
+single-line grep for "default ... direct" misses comments that wrap (the fixed one did); read the comment lines that name the
+old value. Plain `gh run list --branch master` still returns stale September rows; use `gh run list --commit <sha>`.
 
-**Gotchas:** never regenerate the pinned fixtures from post-split code; name helper parameters unlike any column.
-
+### What Session 881 Did (condensed S882; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`getPotentialParents()` split into five internal helpers in `R/getPotentialParentsHelpers.R` (PED-4, NEW-54 closed; output
+unchanged, 5 pinned fixtures). Claim `d5ccda82c`, RED `b446143ac` + `8509d4b7d`, GREEN `5d9dbbfa9`, REFACTOR `8add079bb`.
+Handoff evaluation of S880: 9/10. Self 8/10.
+**Gotchas kept:** never regenerate `gpp_pinned_*.rds` from post-split code; name helper parameters unlike any column.
 ### What Session 880 Did (condensed S881; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `getPotentialParents()` entries now carry `damBasis` (NEW-55 closed); owner chose to split the function later. Claim `9dbf45d61`,
 RED `a0388e5f6`, GREEN `ed344a83a`. Handoff evaluation of S879: 8/10. Self 8/10.
@@ -427,204 +447,3 @@ all four gates asked. - Did not add a test for the `getDateErrorsAndConvertDates
 
 **Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (roxygenise regenerates it with extra tab text); I reverted it, so the next roxygenise
 will show that diff again. Not in scope here; commit it deliberately in a docs pass.
-
-### What Session 810 Did
-**Deliverable, DONE:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD, every
-gate an `AskUserQuestion`). The Pedigree Browser's "Display Unknown IDs" filter now reads the `placeholder`
-mark (a real `U1234` marked FALSE stays; a stand-in marked TRUE is hidden whatever its id looks like; an
-unmarked row is read by its id shape); `headerDisplayNames("placeholder")` is "Generated Unknown ID"; the help
-text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd` and `NEWS.Rmd` say what the column is. Both exports
-already carried the column; two round-trip guard tests now pin it. No new owner decisions.
-**Commits:** claim `27510590b`; RED `056bceda4` (`tests/testthat/test_placeholderMarkDisplay.R`, 10 tests,
-5 failing, 5 guards); GREEN `83dbbee34` (`R/modPedigree.R`, `R/headerDisplayNames.R`); docs `b406e7ead`;
-records (this).
-**Verification:**
-- The 5 RED tests failed on the old behavior, then passed; `test_modPedigree.R` (70), `test_modPedigree_coverage.R`
-  and `test_headerDisplayNames.R` still pass.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`) after GREEN: 360 files, 2,854 tests, 0 errors, 1 failure,
-  the known local-only `test_pkgdown_reference_config.R`. After the docs: `test_newsReleaseState.R` and
-  `test_wordlist_coverage.R` pass.
-- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes (the owner's untracked drafts).
-- Lint 0 on `R/modPedigree.R`, `R/headerDisplayNames.R` and the new test file.
-- Runtime smoke: `runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The filter itself was verified with
-  `testServer` on `modPedigreeServer`, not by clicking in a browser.
-- CI: Phase 0 `gh run list --branch master`: all four workflows and the scheduled shinytest2 green on the last
-  pushed commit; nothing pushed this session.
-**Learnings:** 826.
-**Reduction:** nothing removed; `BACKLOG.md`'s placeholder item is about the same size; these notes stay under
-the 65,536 B ceiling (checked below).
-
-**Self-assessment: 9/10.**
-- \+ Read every RED failure message; caught a help-text test that passed by accident (the HTML `placeholder`
-  attribute) before GREEN; every commit at 5 files or fewer.
-- \+ Ran the full suite, `devtools::check`, lint and the smoke test before close-out.
-- \- Left one garbled expectation in the first draft of the RED file (fixed before running).
-- \- No browser click-through of the unticked box; `testServer` only.
-
-**Next steps:**
-- (A) Slice 5 of the plan (strict TDD; plan §5 "Slice 5"): de-identification (`obfuscateId()` gets an optional
-  `placeholder` vector that `obfuscatePed()` fills from the column) and the cross-center merge
-  (`R/resolveCrossCenterIds.R:17-26`, NA-fills the unmarked side). Re-run the plan §2 greps first.
-- (B) Other items: "Display Unknown IDs" breaking `reportGV()` (DECISION NEEDED; Slice 4 fixed which rows are
-  hidden but not the dangling sire/dam ids); documentation audit's next slice; `a2interactive` demonstration
-  for `reportMatePairs`; Potential Parents own-dam; jmac.
-- (C) Carried: 8 unpushed commits before this session plus this session's 5 (pushing is the owner's call; the
-  push changes `R/`, so all 4 workflows run); 7 untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
-
-**Key files:** `R/modPedigree.R:361-364` (filter), `R/modPedigree.R:107-120` (help text),
-`R/headerDisplayNames.R:56-57`, `tests/testthat/test_placeholderMarkDisplay.R`; plan §5 Slice 4 DONE note;
-`PROJECT_LEARNINGS.md` Learning 826.
-
-**Gotchas:**
-1. The unticked box still leaves children naming a hidden stand-in as sire/dam, so the Genetic Value module
-   still receives that filtered pedigree (`R/appServer.R:312`); that is the separate DECISION NEEDED item.
-2. The browser table shows raw column names, so a display name in `headerDisplayNames()` does not change it.
-3. A test that greps rendered UI html for a word (`placeholder`) can match an HTML attribute; grep a phrase.
-4. STANDING SET unchanged from S790-809.
-
-### Session 808 Handoff Evaluation (by Session 809)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier one docs-only commit behind
-HEAD (`f443b6d93`, ledgered this session), the S808 receipt `status: complete`, the 7 untracked files
-unchanged, dashboard 96/100. Next step (A) was exact: `R/reportGV.R:283-286` and `:292`,
-`R/gvaConvergence.R:175`, `R/getLivingBreeders.R:26` and `R/correctUnknownParentMeanKinship.R:155` all sat
-where it said, and the 26.405868 pin was right. **Missing:** (A) named `classifyParentage`'s callers but
-not `gvaConvergence()` as a function to pass `ped` (the plan §5 has it); it also did not say the shipped
-data is unmarked, so no shipped pedigree can show a mark changing an answer (a fixture must be built).
-**Wrong:** nothing. **ROI:** high.
-
-### What Session 809 Did
-**Deliverable, DONE:** Slice 3 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`). `reportGV()` (founder counts, parentage), `classifyParentage(ped =)`,
-`correctUnknownParentMeanKinship()` (whole `ped`, not the proband subset), `getLivingBreeders()` (so
-`calcNeSexRatio()`/`calcNeVariance()`) and `gvaConvergence()` (parentage) now read the `placeholder` mark;
-an id with no row in the pedigree is read by its shape (D4). No new owner decisions.
-**Commits:** claim `8164ed80a`; RED `deb75ec4f` (`tests/testthat/test_placeholderMarkReaders.R`, 14 tests,
-11 failing, 2 guards); GREEN `03c455a73`, `4802843c6`; docs `cc1eca898` (NEWS.Rmd, plan, BACKLOG); records (this).
-**Verification:**
-- The 11 RED tests failed on the old behavior (every message read), then passed; the older tests of every
-  touched function still pass.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`), after GREEN: 359 files, 2,844 tests, 0 errors,
-  1 failure, the known local-only `test_pkgdown_reference_config.R`. After the docs, `test_newsReleaseState.R`
-  and `test_wordlist_coverage.R` pass.
-- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes (the owner's untracked drafts).
-- Lint 0 on the 5 touched R files.
-- Runtime smoke: `runGeneKeepR(port = 6097L)` HTTP 200, no log errors. The module behavior was verified with
-  `testServer` on `modGeneticValueServer`, not by clicking in a browser.
-- `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4f4491dfc876 · manifest aa983075d6a2`.
-- CI: not checked at Phase 0 (`gh run list` timed out, TLS handshake); nothing pushed this session.
-**Learnings:** 825.
-**Reduction:** nothing removed; `BACKLOG.md`'s placeholder item is about 60 B shorter net; these notes stay
-under the 65,536 B ceiling.
-
-**Self-assessment: 8/10.**
-- \+ Read every RED failure message; controls that pass before and after; every commit at 5 files or fewer.
-- \+ Ran the full suite, `devtools::check`, lint and the smoke test before close-out.
-- \+ Found the whole-`ped` trap in `correctUnknownParentMeanKinship()` before writing GREEN (Learning 825).
-- \- First lint call passed a vector to `lintr::lint()` (one file per call); two background waits hit their limit.
-- \- Phase 0 CI check failed on a network timeout and was reported, not retried.
-
-**Next steps:**
-- (A) Slice 4 of the plan (strict TDD; plan §5 "Slice 4"): the "Display Unknown IDs" filter
-  (`R/modPedigree.R:363`, `ped[!isGeneratedUnknownId(ped$id), ]`) passes `ped`; the column's display name
-  (`R/headerDisplayNames.R`); help text and the §2.5 documents (`vignettes/articles/colony-manager-guide.qmd`,
-  `vignettes/manual_components/_pedigree_browser.Rmd`); `summary_stats.html`; exports round-trip the mark
-  (D8). RED: the filter hides marked rows only (a real `U1` stays); round trips of the cleaned-studbook and
-  Pedigree Browser exports keep the marks. Re-run the plan §2 greps first.
-- (B) Other items: "Display Unknown IDs" breaking `reportGV()`; documentation audit's next slice; Potential
-  Parents own-dam; jmac.
-- (C) Carried: 22 unpushed commits after this records commit (pushing is the owner's call; this push changes
-  `R/`, so all 4 workflows run); 7 untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
-
-**Key files:** `R/classifyParentage.R:20`, `R/getLivingBreeders.R:26`,
-`R/correctUnknownParentMeanKinship.R:155-157`, `R/reportGV.R:282-293`, `R/gvaConvergence.R:175-176`,
-`tests/testthat/test_placeholderMarkReaders.R`; plan §5 Slice 3 DONE note; `PROJECT_LEARNINGS.md` Learning 825.
-
-**Gotchas:**
-1. Until Slice 4, the "Display Unknown IDs" filter (`R/modPedigree.R:363`) still uses the id shape, so a real
-   `U1234` marked FALSE is hidden when it is turned off.
-2. The shipped data is unmarked; only a fixture with a mark shows a changed answer (`makeMarkedPed()` in the
-   new test file is reusable).
-3. `gh run list --branch master` can return stale runs or time out; find runs by head sha.
-4. STANDING SET unchanged from S790-808.
-
-**Owner-directed after close-out (2026-09-29):**
-- **Pushed** 17 commits: `origin/master` `1d93590d` -> `16da1062`, a fast-forward. Runs found by head sha:
-  lint (36617669752), pkgdown (36617669607), test-coverage (36617669621) and R-CMD-check (36617669618)
-  all green, R-CMD-check on all 5 legs. The Pages deploy also succeeded (owner-confirmed; run id not
-  checked here). This push-record commit stays local.
-
-### Session 807 Handoff Evaluation (by Session 808)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD, 0 undocumented; the
-S807 receipt `status: complete` with a `quality_ratchet` citation matching the results file; the 7
-untracked files unchanged; CI green on all 4 workflows. Next step (A) was exact: `R/addUIds.R:46`,
-`R/qcStudbook.R:231`, the `test_qcStudbook.R:105` pin and the 1,587 pin all sat where it said. Gotcha 4
-(hoist the width if the predicate is called per row) was right to raise; Slice 2 calls it on whole
-vectors, so it did not bite. **Missing:** the plan did not check what `getPotentialParents()` drops
-before it reads ids (animals with no birth date, D12), which cost an owner decision; it also did not
-list `a2interactive.Rmd`'s error-type table among the places that enumerate `getEmptyErrorLst()`
-fields (found by `devtools::check`). **Wrong:** nothing. **ROI:** high.
-
-### What Session 808 Did
-**Deliverable, DONE:** Slice 2 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`). `qcStudbook()` now writes a logical `placeholder` column (stand-ins it
-made TRUE; a user's TRUE/FALSE/1/0 kept; every other row by id shape). `isGeneratedUnknownId(ped =)` and
-`removeAutoGenIds()` read it, so a real `U1234` marked FALSE is kept as an animal and as a parent.
-`addUIds()` no longer reuses an id used only as a sire or dam. A value the column does not accept
-stops QC (production) or is listed in `errorLst$invalidPlaceholderRows` (11th field).
-**Owner decisions:** D12 (`getPotentialParents()` reads the mark before setting aside animals with no
-birth date) and D13 (accepted values: TRUE/FALSE spellings, 1/0, blank), both plan §11.
-**Commits:** claim `a0e687f7`; decisions `2c82c8a8`; RED `98720bf2`, `b6f050a1`, `84382fa1`; GREEN
-`bac494e0` (id level), `410273d5` (QC), `9a4dee7c` (error reporting), `cd19fbab` (lint); docs
-`ec2c4d14`, `d830034e`, `34fcc801`, `ef91c4b1`, `904d9ff2`; records (this).
-**Verification:**
-- 23 new tests failed on the old behavior (every message read), then passed; all older tests in the
-  touched files kept passing, including the 1,587 pin.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`), after the docs: 358 files, 2,830 tests, 0 errors,
-  1 failure, the known local-only `test_pkgdown_reference_config.R`.
-- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes (the owner's untracked drafts).
-  Its first run failed building `a2interactive.Rmd` (11 fields, 10 descriptions); fixed `904d9ff2`.
-- Lint 0 on the 9 touched R files (3 findings fixed in `cd19fbab`).
-- Runtime smoke: `runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The upload and Potential Parents
-  behavior was verified with `testServer` on the real module servers
-  (`test_modInput_placeholder.R`), not by clicking in a browser.
-- `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 44ec6f035883 · manifest aa983075d6a2`.
-**Learnings:** 824.
-**Reduction:** nothing removed; `BACKLOG.md` grew 112 B (54,629 B) and these notes stay under the
-65,536 B ceiling.
-
-**Self-assessment: 8/10.**
-- \+ Read every RED failure message; every commit at 5 files or fewer with its own ledger entry.
-- \+ Read the QC error-list path end to end before RED, so D5's error entry touched all 5 places.
-- \+ Ran `devtools::check()` and re-ran the full suite after the docs, which caught the vignette.
-- \- The RED-1 ledger line said "9 failing, 1 guard"; the real count was 8 (corrected in the next entry).
-- \- The a2interactive table was missed until `check`; a grep for a neighbouring field name before the
-  docs step would have found it (Learning 824).
-- \- One of two tool results carried a fake "attribution" reminder; ignored, but it cost a turn.
-
-**Next steps:**
-- (A) Slice 3 of the plan (strict TDD; plan §5 "Slice 3"): `reportGV()` founders (`R/reportGV.R:283-286`),
-  `classifyParentage()` gains an optional `ped` (callers `R/reportGV.R:292`, `R/gvaConvergence.R:175`),
-  `correctUnknownParentMeanKinship()` (`:134`, `:155`), `getLivingBreeders()` (`R/getLivingBreeders.R:26`)
-  pass `ped`. RED: a marked real `U1234` founder is counted and its offspring "known"; a parent whose
-  placeholder row was filtered away still counts as unknown (D4); `qcPed`'s `calcNeVariance()` stays
-  26.405868. Re-run the plan §2 greps first.
-- (B) Other items: "Display Unknown IDs" breaking `reportGV()`; documentation audit's next slice;
-  Potential Parents own-dam; jmac.
-- (C) Carried: 15 unpushed commits after this records commit (pushing is the owner's call; this push
-  changes `R/`, so all 4 workflows run); 7 untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
-
-**Key files:** `R/qcStudbook.R:207-240` (parse and validate), `:370-420` (`readPlaceholderMark()`,
-`addPlaceholderMark()`); `R/autoIdFormat.R:143` (`isGeneratedUnknownId`); `R/removeAutoGenIds.R:25`;
-`R/getPotentialParents.R:90-98`; `R/addUIds.R:46`; `tests/testthat/test_modInput_placeholder.R`;
-`test_qcStudbook.R:495-600`; plan §5 Slice 2 DONE note, §11 D12/D13; `PROJECT_LEARNINGS.md` Learning 824.
-
-**Gotchas:**
-1. Until Slice 3, `reportGV()`, `classifyParentage()`, `correctUnknownParentMeanKinship()` and
-   `getLivingBreeders()` still use the id shape: a real `U1234` marked FALSE is still misread there.
-2. The Pedigree Browser table shows the new `placeholder` column under its raw name until Slice 4
-   (`R/headerDisplayNames.R`); the "Display Unknown IDs" filter (`R/modPedigree.R:363`) is unchanged.
-3. `readPlaceholderMark()` numbers invalid rows by the uploaded file's rows before `unknown2NA()` drops
-   any `UNKNOWN`-id rows.
-4. `test_getFocalAnimalPed.R:112` runs only for the owner's user name (`skip_if_not`); it pins 11 fields.
-5. `devtools::check()` builds vignettes; the suite does not (Learning 824).
-6. STANDING SET unchanged from S790-807.

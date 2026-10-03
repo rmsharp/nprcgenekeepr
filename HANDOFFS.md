@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S882
 date: 2026-10-03
-status: pending
-active_task: Docs staleness audit leftover: fix the stale "defaulting to direct" comment at R/modPedigree.R:459-461; correct BACKLOG's stale BB14 note
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- docs staleness audit leftover (owner picked 1 of 3): stale "defaulting to direct" comment in R/modPedigree.R fixed; BACKLOG's stale BB14 note corrected; nothing owed on it
+what_was_done: Phase 0 ledger backfill 9a1224603 (S881 2/2 records commit 188af9077); claim 1cd71ab9c; deliverable 67c83def8 (R/modPedigree.R:459-462 now says "rectilinear", the default since S574 cb5141f75, and drops the pre-issue-142 byte-identical reason; BACKLOG marks BB14 FIXED S830, the comment FIXED S882, and records one more stale statement at R/makePedigreeDiagramData.R:2110-2113); close-out commit holds Learning 849, records, and removal of the S808-S810 SESSION_NOTES records
+next_steps: (A) same-kind stale roxygen at R/makePedigreeDiagramData.R:2110-2113 (READY, Effort S, comment only; @noRd, no man page); (B) remaining slice-1 leftovers, owner decisions: delete or ignore tracked kinship2-fidelity-validation.pdf, regenerate trackC-nprc-rectilinear.png (owner looks at the new arc first); (C) PED_GV and other DECISION NEEDED BACKLOG items. Push only on owner say-so (master 94 ahead of origin, from git rev-list --count origin/master..HEAD)
+key_files: R/modPedigree.R:459-462; R/makePedigreeDiagramData.R:2110-2113 (stale), :1675 (real default), :2070 (call site); BACKLOG.md docs-audit item (grep "FIXED S882"); PROJECT_LEARNINGS.md Learning 849
+gotchas: BACKLOG docs-audit item is one very long line per cluster, so edit it with short single-line old_strings; a single-line grep for "default ... direct" misses comments that wrap (the fixed one did), read the comment lines naming the old value; plain gh run list --branch master returns stale September rows, use gh run list --commit <sha>; the docs-audit item was tagged READY but its own last sentence says nothing further is scoped
+runtime_smoke: none -- comment-only change, parsed code identical before and after (identical(parse(keep.source = FALSE)) TRUE, 3 comment lines changed); lintr::lint_package() 0 lints; 7 test files naming modPedigree.R or scanning R/ 127 tests 0 failed 0 error; full test_dir and devtools::check() not run; Shiny not launched (nothing changes at runtime); quality_ratchet: not run
+changelog_ref: S882 DONE entry
+commit: the close-out commit that carries this receipt; claim 1cd71ab9c
 ```
 
 ```handoff
