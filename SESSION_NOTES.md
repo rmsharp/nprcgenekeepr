@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 871 Did
+**Deliverable:** record the owner's NEW-61 decision (keep both founder definitions) and document it (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning. Docs only, no TDD phase.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 870 Did
 **Deliverable, DONE:** the banner pass from the slice 8 report. A "Status as of 2026-10-02 (S870)" blockquote
 under the title of 26 dated files (4 in `docs/research/`, 22 in `docs/audits/`), each naming what superseded

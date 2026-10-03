@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S871
+date: 2026-10-02
+status: pending
+active_task: record owner decision on NEW-61 (known vs unknown founders; keep both definitions) and document it; docs only
+```
+
+```handoff
 session: S870
 date: 2026-10-02
 status: complete
