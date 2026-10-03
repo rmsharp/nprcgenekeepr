@@ -46,16 +46,19 @@
 #' @return a list of list with each internal list being made up of an animal
 #' id (\code{id}), a vector of possible sires (\code{sires}) and a vector of
 #' possible dams (\code{dams}). The \code{id} must be defined while the
-#' vectors \code{sires} and \code{dams} can be empty. Candidate dams are
-#' females who gave birth near the time of the focal birth (proven
-#' breeders); when there are none, \code{dams} lists every female old enough
-#' and present at the birth instead. Either way, a female who delivered
-#' another offspring within \code{maxGestationalPeriod} days of the focal
-#' birth is never listed. Candidates are listed only for the parent that is
-#' missing: when an animal's dam is recorded its \code{dams} is empty, and
-#' when its sire is recorded its \code{sires} is empty. \code{NULL} (not a
-#' list) is returned when no animal has an unknown parent with a candidate
-#' and when \code{ped} has no \code{fromCenter} column.
+#' vectors \code{sires} and \code{dams} can be empty. A fourth element,
+#' \code{damBasis}, is a single string saying where \code{dams} came from:
+#' \code{"provenBreeder"} when the candidates are females who gave birth
+#' near the time of the focal birth, \code{"eligibleFemale"} when there were
+#' none and \code{dams} lists every female old enough and present at the
+#' birth instead, and \code{NA} when \code{dams} is empty. In both tiers, a
+#' female who delivered another offspring within \code{maxGestationalPeriod}
+#' days of the focal birth is never listed. Candidates are listed only for
+#' the parent that is missing: when an animal's dam is recorded its
+#' \code{dams} is empty, and when its sire is recorded its \code{sires} is
+#' empty. \code{NULL} (not a list) is returned when no animal has an unknown
+#' parent with a candidate and when \code{ped} has no \code{fromCenter}
+#' column.
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
@@ -204,19 +207,23 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
       ## Preferrentially accept dams that are proven breeders near the time of
       ## the birth.
       potentialDams <- eligibleDams[id %in% births_plus_minus_one$dam, ]
+      damBasis <- "provenBreeder"
       ## If no proven breeder remains, accept every eligible female: old enough
       ## to be the dam and present at the birth, but never one the gestation
       ## window above has already ruled out (PED_GV F3, NEW-35).
       if (nrow(potentialDams) == 0L) {
         potentialDams <- eligibleDams
+        damBasis <- "eligibleFemale"
       }
 
       ## Candidates are listed only for the parent that is missing; a recorded
       ## parent is never re-listed.
+      dams <- if (is.na(pUnknown$dam[i])) potentialDams$id else character(0L)
       potentialParents[[j]] <- list(
         id = pUnknown$id[i],
         sires = if (is.na(pUnknown$sire[i])) potentialSires else character(0L),
-        dams = if (is.na(pUnknown$dam[i])) potentialDams$id else character(0L)
+        dams = dams,
+        damBasis = if (length(dams) > 0L) damBasis else NA_character_
       )
     }
   }
