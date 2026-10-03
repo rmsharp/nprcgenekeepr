@@ -22,6 +22,9 @@ findBareSexCodeLiterals <- function(file_path) {
   comparisonPattern <- paste0("(==|!=)\\s*", q, "|", q, "\\s*(==|!=)")
   membershipPattern <- paste0("%in%\\s*(c\\()?\\s*", q)
   identicalPattern <- paste0("identical\\([^)]*", q)
+  # S875 (stage 2): a letter passed as a call argument, as in
+  # `resolveBreedingAge(species, "M", ...)`.
+  argumentPattern <- paste0("[(,]\\s*", q, "\\s*[,)]")
   pairPattern <- 'c\\(\\s*"[MFHU]"\\s*,\\s*"[MFHU]"\\s*\\)'
   offenders <- integer(0)
   for (i in seq_along(lines)) {
@@ -30,7 +33,8 @@ findBareSexCodeLiterals <- function(file_path) {
       next
     }
     if (grepl(comparisonPattern, line) || grepl(membershipPattern, line) ||
-          grepl(identicalPattern, line) || grepl(pairPattern, line)) {
+          grepl(identicalPattern, line) || grepl(pairPattern, line) ||
+          grepl(argumentPattern, line)) {
       offenders <- c(offenders, i)
     }
   }
@@ -80,6 +84,13 @@ test_that("no bare sex-code literals remain in the stage 1 files", {
   ))
 })
 
+test_that("no bare sex-code literals remain in the stage 2 files", {
+  expectNoBareSexCodeLiterals(c(
+    "getSpeciesMinBreedingAge.R", "resolveBreedingAge.R",
+    "checkParentAge.R", "getKinshipWithMaleStatus.R"
+  ))
+})
+
 test_that("the guard flags each bare-literal form it claims to catch", {
   tmp <- tempfile(fileext = ".R")
   on.exit(unlink(tmp))
@@ -89,10 +100,13 @@ test_that("the guard flags each bare-literal form it claims to catch", {
     "x <- \"H\" == sex",
     "x <- sex %in% c(\"U\", \"M\")",
     "x <- identical(sexOf[[p]], \"M\")",
+    "x <- resolveBreedingAge(species, \"M\", 3)",
+    "x <- f(a, 'F')",
     "x <- sex == sexCodes[[\"male\"]]",
+    "x <- f(species, sexCodes[[\"male\"]], 3)",
     "#' sex == \"M\" in roxygen",
     "# sex == \"M\" in a comment",
     "x <- convert == \"MALE\""
   ), tmp)
-  expect_identical(findBareSexCodeLiterals(tmp), 1:5)
+  expect_identical(findBareSexCodeLiterals(tmp), c(1:5, 6L, 7L))
 })

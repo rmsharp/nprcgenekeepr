@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S875 RED: stage-2 file list and an argument-form pattern (`f(x, "M", ...)`) added to the `test_sexCodes.R` guard, with self-test lines; the stage-2 test fails on exactly the 8 known lines. No `R/` change.
+
 ### 2026-10-02 · [ad hoc] S875 claim (in progress): `sexCodes` adoption stage 2 of 6 (`getSpeciesMinBreedingAge`, `resolveBreedingAge`, `checkParentAge`, `getKinshipWithMaleStatus`); strict TDD. Phase 3F records the rest.
 
 ### 2026-10-02 · [ad hoc] S874 DONE: `sexCodes` adoption stage 1 of 6: 7 bare sex letters in `calcNeSexRatio`, `createColonySnapshot`, `getSexRatioWithAdditions`, `getProductionStatus` now use `sexCodes`; guard in `test_sexCodes.R` widened with a stage-1 list and self-test; new `test_getSexRatioWithAdditions.R`. Internal, no behavior change (full suite 0 failed, 0 error; lint clean). Stages 2-6 remain. Claim `cc22c5ce6`.
