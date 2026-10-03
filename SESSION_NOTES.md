@@ -98,6 +98,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 874 Did
+**Deliverable:** `sexCodes` adoption, stage 1 of 6 (IN PROGRESS), strict TDD.
+**Started:** 2026-10-02. **Status:** Session claimed; PRE-RED.
+**Ledger:** `CHANGELOG: pending`
+
 ### What Session 873 Did
 **Deliverable, DONE:** the scoping plan for the `sexCodes` adoption: `docs/planning/sexcodes-adoption-plan.md`.
 Planning only, no `R/` or test file changed, no TDD phase. Claim `6a84d5abe`; plan in the close-out commit.
@@ -122,33 +127,12 @@ test). (B) other open owner decisions. (C) 3.0.0 release prep. (D) push only on 
 `makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`. No reduction possible this session
 beyond keeping this record short.
 
-### What Session 872 Did
-**Deliverable, DONE:** the owner's PED-2 / NEW-29 / PED-7 decision, recorded. Docs only, no TDD phase.
-**Owner decision (plain words):** picked "PED_GV owner decisions", then "Sex-code letters". After I
-explained it (the shared `sexCodes` list exists; about 40 comparison lines still type the letter) the
-owner chose option 1, "all": every direct sex letter in `R/` should go through `sexCodes`.
-**Done:** claim `bbe315dfa`; BACKLOG item "Adopt `sexCodes` for every direct sex letter" (READY after
-plan-mode scoping, Effort M, suggested RED guard test); "Decision record 3" in
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (ids stay open, 31). Records in the close-out commit.
-**Verified by me:** the count, by grep of `R/*.R` (40 comparison lines, 16 files, comments excluded);
-assignments and `identical()` forms are extra and not counted. Not run: tests, lint (no `.R` changed).
-**Not done:** no code edit, by design (cross-file refactor, needs plan mode); not pushed.
-
-**Handoff evaluation of S871 (by S872): 8/10.** Helped: its next steps listed the open decision
-areas, and the triage table rows (PED-2 at line 57) gave file and line for each. Missing: still no
-list of "the four likely code defects" (S871 asked to find or drop it; I did neither).
-
-**Self-assessment: 8/10.** + One deliverable; read the code before explaining; recorded the decision
-without editing code. - My first picker used terms the owner asked me to explain, and the first
-count (28 lines, 10 files) came from the old report; I re-measured (40, 16).
-
-**Next steps:** (A) Scope the `sexCodes` adoption in plan mode, then strict TDD in staged commits
-(first RED: the guard test named in BACKLOG). (B) Other owner decisions still open: PED-5/6 error
-contract, PED-3/NEW-42 walk helpers, sim driver, constants/HTML builders. (C) Find or drop "four
-likely code defects". (D) 3.0.0 release prep scoping. (E) Push only on the owner's say-so.
-**Gotchas:** `convertSexCodes.R:56` lists the letters as factor levels and `sexCodes.R` defines them;
-neither should be flagged by a guard test. Many hits in `R/` are roxygen examples (`#'`), not code.
-Reduction: condensed the S870 and S871 records (git keeps both) to get back under the token ceiling.
+### What Session 872 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** owner decision recorded: every direct sex letter in `R/` goes through `sexCodes`
+(PED-2, NEW-29, PED-7; ids stay open). BACKLOG item and triage Decision record 3. Docs only.
+Claim `bbe315dfa`; close-out `9d811590d`. Self 8/10.
+**Gotchas kept:** `convertSexCodes.R:56` lists the letters as factor levels and `sexCodes.R`
+defines them; the guard must not flag either. Many `R/` hits are roxygen (`#'`), not code.
 
 ### What Session 871 Did (condensed S872; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 **DONE:** NEW-61 decision recorded and documented: `reportGV` lists known founders only; `calcFEFG`
