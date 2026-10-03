@@ -99,53 +99,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 883 Did
-**Deliverable:** fix the stale `@noRd` roxygen of `.addRectilinearWaypoints()` at `R/makePedigreeDiagramData.R:2109-2113` (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** the stale `@noRd` roxygen of `.addRectilinearWaypoints()` is fixed (the owner picked it from the
+Phase 0 list; it was S882's next step A). Comment only, so no TDD phase applied.
+Claim `5fa503303`; deliverable `13ab22bc1` (`R/makePedigreeDiagramData.R`, `BACKLOG.md`); records in the close-out commit.
+**Orient:** no ledger gap (CHANGELOG and HANDOFFS frontiers at HEAD `b3caf68db`), so no backfill; tree clean; master 94
+ahead of origin (`f0bcb9f48`, the S858 close-out). CI: the plain `gh run list --branch master --limit 10` gave 10 rows, all
+`completed success` (the S858 push runs plus two scheduled shinytest2 runs, latest 2026-10-03). Quality ratchet 1/1 pass.
+**Done:** `R/makePedigreeDiagramData.R:2109-2113` now says `makePedigreeMatingLayout()` calls the function, then
+`.resolveEdgeNodeCollisions()`, when `edgeStyle` is `"rectilinear"` (its default since S574) and `"direct"` skips it. It
+drops "own default ("direct")", "no call site yet" and the "Migration Path step 1 ... later implementation slice" clause
+(the `edgeStyle` wiring and the `R/modPedigree.R` control have shipped: `modPedigree.R:682` passes
+`edgeStyle = .currentEdgeStyle()`). BACKLOG docs-audit item: the S882-found straggler marked FIXED S883.
+**Verified by me:** parsed code identical before and after (`identical(parse(keep.source = FALSE))` on a saved copy of
+`HEAD` vs the edited file: TRUE; 5 comment lines replaced by 5); `lint_package()` 0 lints; 12 test files that name the
+file or scan `R/` (addRectilinearWaypoints, makePedigreeMatingLayout, modPedigree, modPedigree_coverage,
+modPedigree_processing, modPedigree_twinRelations, newsReleaseState, positionMatingUnitForest, comparePedigreeStructure,
+positionTreeApportion, sexCodes, wordlist_coverage): 1,084 tests, 0 failed, 0 error; wordlist, newsReleaseState and
+sexCodes re-run after the BACKLOG edit; `quality_ratchet.py --run` 1/1 pass. I also read every comment line in `R/` that
+names `"direct"` in quotes (6): the other 5 are accurate (`comparePedigreeStructure()` really does need
+`edgeStyle = "direct"`; the exported roxygen already says `"rectilinear"` is the default), so none is a straggler.
+**Not run:** full `test_dir`, `devtools::check()`, runtime smoke (comment-only, parse-identical, `@noRd` so no `man/`
+page), push or CI. **Reduction:** removed the S854 record and its evaluation (receipt in `HANDOFFS.md`, entries in
+`CHANGELOG.md`); condensed the S882 record. No new learning: Learning 849 already names this block and the method.
 
-### What Session 882 Did
-**Deliverable, DONE:** docs staleness audit leftover (the owner picked 1 of 3): the stale "defaulting to direct" comment
-in `R/modPedigree.R` is fixed and BACKLOG's stale BB14 note is corrected. Comment and docs only, so no TDD phase applied.
-Phase 0 backfill `9a1224603`; claim `1cd71ab9c`; deliverable `67c83def8` (`R/modPedigree.R`, `BACKLOG.md`); records in the
-close-out commit.
-**Orient:** S881's records-only close-out (2/2) commit sat past the ledger frontier (backfilled, `9a1224603`); CI green on
-origin/master by head sha (the plain `gh run list --branch master` returned September rows).
-**Done:** `R/modPedigree.R:459-462` now says the style defaults to "rectilinear" (since S574, `cb5141f75`; it matches
-`makePedigreeMatingLayout()`'s own default) and drops the "first render byte-identical to pre-issue-142" reason, which stopped
-being true at that flip. BACKLOG: BB14 marked FIXED S830 (it still read as open), the comment marked FIXED S882, and one more
-stale statement of the same kind recorded as open (`R/makePedigreeDiagramData.R:2110-2113`).
-**Verified by me:** parsed code identical before and after (`identical(parse(keep.source = FALSE))` on `HEAD` vs the edited
-file: TRUE; 3 comment lines changed); `lint_package()` 0; the 7 test files that name `modPedigree.R` or scan `R/` (sexCodes,
-modPedigree, modPedigree_coverage, modPedigree_processing, newsReleaseState, wordlist, twinRelations): 127 tests, 0 failed,
-0 error; wordlist, newsReleaseState and sexCodes re-run after the BACKLOG edit.
-**Not run:** full `test_dir`, `devtools::check()`, runtime smoke (comment-only and parse-identical, so nothing changes at
-runtime), push or CI. **Reduction:** removed the S808, S809 and S810 records and the S807 and S808 evaluations (receipts in
-`HANDOFFS.md`, entries in `CHANGELOG.md`, the S808 push record in `CHANGELOG.md`).
+**Handoff evaluation of S882: 9/10.** Helped: next step A gave the exact lines (`:2110-2113` stale, `:1675` default,
+`:2070` call site), the READY/S/comment-only tag and that the block is `@noRd` with no `man/` page, so I knew nothing
+regenerates; the parse-identity recipe and the scanner-test list carried over; the long-line BACKLOG gotcha was needed
+(short single-line `old_string`s worked); "94 ahead" measured 94. Missing: the stale sentence starts at `:2109`, and the
+block's last clause ("Migration Path step 1 ... later implementation slice") was a second stale claim in the same passage;
+its test list said `twinRelations`, which is `test_modPedigree_twinRelations.R`. Wrong: "plain `gh run list --branch
+master` still returns stale September rows" did not hold at Orient (it returned the 2026-10-02/03 rows).
 
-**Handoff evaluation of S881: 7/10.** Helped: clean tree, receipt `status: complete`, and the health, CI and PED_GV pointers
-held at Orient. Missing: no note that the split close-out's records-only commit would sit past the ledger frontier.
-Wrong: "docs staleness audit next slice (READY)": the item's own last sentence says slice 8 closed the audit and nothing further
-is scoped, so only three small leftovers remained and I had to find them; "about 88 ahead" measured 90 at Orient.
+**Self-assessment: 8/10.** + Used the Phase 0 picker; re-read the target lines before the edit; checked every new claim
+(default, call site, the S574 commit, `modPedigree.R:682`, what runs after the call) before writing it; proved the edit
+comment-only by parse identity; left the neighboring "(direct style)" `@param` lines alone after reading them (still
+accurate); scope held, and the straggler grep was read-only.
+- Orient was a long silent stretch of tool calls; my first test run silently dropped a mislabeled file (`file.exists`
+filter on `test_twinRelations.R`), caught by the file count and fixed; no full suite or `devtools::check()`.
 
-**Self-assessment: 8/10.** + Checked which leftovers were still open before asking, which exposed the stale BB14 note; proved
-the edit comment-only by parse identity; caught my own wrong line cite (2111 for 2110) before it was committed; recorded the
-second stale statement instead of fixing it (scope held).
-- Offered the item at Phase 0 on its READY tag without checking it, which cost a second question round; one long silent
-stretch of tool calls.
+**Next steps:** (A) Remaining slice-1 leftovers, owner decisions (DECISION NEEDED, Effort S): delete or git-ignore the
+tracked `vignettes/articles/kinship2-fidelity-validation.pdf`; regenerate `trackC-nprc-rectilinear.png`
+(`data-raw/kinship2FidelityValidation.R`; the owner should look at the new arc touching the `W` square first). (B) PED_GV
+decisions (28 ids) and the other DECISION NEEDED items in BACKLOG, incl. the two missing kinship2 drawing features (which
+column marks "deceased"). (C) `BACKLOG.md` compression pass (READY, Effort L, recurring; 57 KB at Orient). (D) Master is 97
+ahead of origin after this commit (94 at Orient plus claim, deliverable and close-out); push only on the owner's say-so.
 
-**Next steps:** (A) The same-kind stale roxygen at `R/makePedigreeDiagramData.R:2110-2113` (READY, Effort S, comment only; the
-block is `@noRd` and `man/` has no page for it, so nothing regenerates). (B) Remaining slice-1 leftovers, owner decisions:
-delete or ignore the tracked `kinship2-fidelity-validation.pdf`; regenerate `trackC-nprc-rectilinear.png` (the owner should
-look at the new arc first). (C) PED_GV decisions and the other DECISION NEEDED items in BACKLOG. (D) Master is 94 ahead of
-origin after this commit (`git rev-list --count origin/master..HEAD`); push only on the owner's say-so.
+**Key files:** `R/makePedigreeDiagramData.R:2097-2113` (the fixed block), `:1675` (real default), `:2069-2070` (call site);
+`BACKLOG.md` docs-audit item (grep "FIXED S883"); `PROJECT_LEARNINGS.md` Learning 849.
 
-**Key files:** `R/modPedigree.R:459-462`; `R/makePedigreeDiagramData.R:2110-2113` (stale), `:1675` (real default), `:2070`
-(call site); `BACKLOG.md` docs-audit item (grep "FIXED S882"); `PROJECT_LEARNINGS.md` Learning 849.
+**Gotchas:** the BACKLOG docs-audit item is one very long line per cluster: edit it with short single-line `old_string`s.
+The Phase 0 picker listed 4 of 7 numbered items; the other 3 (BACKLOG compression, 3.0.0 release prep, snapshot backfill)
+were prose-only.
 
-**Gotchas:** the BACKLOG docs-audit item is one very long line per cluster: edit it with short single-line `old_string`s. A
-single-line grep for "default ... direct" misses comments that wrap (the fixed one did); read the comment lines that name the
-old value. Plain `gh run list --branch master` still returns stale September rows; use `gh run list --commit <sha>`.
+### What Session 882 Did (condensed S883; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Stale "defaulting to direct" comment in `R/modPedigree.R:459-462` fixed (parsed code identical) and BACKLOG's stale BB14 note
+corrected. Phase 0 backfill `9a1224603`; claim `1cd71ab9c`; deliverable `67c83def8`. Handoff evaluation of S881: 7/10. Self 8/10.
+**Gotchas kept:** a single-line grep for "default ... direct" misses comments that wrap; read the comment lines that name the old value.
 
 ### What Session 881 Did (condensed S882; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `getPotentialParents()` split into five internal helpers in `R/getPotentialParentsHelpers.R` (PED-4, NEW-54 closed; output
@@ -425,31 +434,3 @@ claim, plus this one); push only on the owner's say-so.
 **Key files:** `BACKLOG.md` (grep "Move the version to 3.0.0").
 
 **Gotchas:** version files intentionally still say 2.0.0.9000.
-
-### Session 854 Handoff Evaluation (by Session 855)
-**Score: 8/10.** **Helped:** the picker-ready list of open decisions and the BACKLOG item for the release number got me to the work in one read. **Missing:** nothing material for this task.
-**Wrong:** the "13 ahead" count was 12 in the note; `git status -sb` gave 13 at Orient (the close-out commit adds one). **ROI:** high.
-
-### What Session 854 Did
-**Deliverable, DONE:** `convertDate()` now numbers an invalid date by its row in the pedigree passed in, so an "added" record ahead of an original no longer
-shifts the number (a bad date on row 3 was reported as row 2). Strict TDD, all gates asked. Claim `a06651046`; fix and tests in the close-out commit.
-**RED:** 5 tests in `tests/testthat/test_convertDate.R` (added first, added between, added last pin, two date columns, `stop()` message); 4 failed for the
-right reason, the added-last pin passed. **GREEN:** `R/convertDate.R` keeps `pedRows` (the original row positions) and uses it in both the `reportErrors = TRUE`
-vector and the `stop()` message (3 lines); roxygen `@return` for `reportErrors` and `man/convertDate.Rd` corrected. **REFACTOR:** reviewed, no change.
-**Owner decision taken:** option (1) of the BACKLOG item, fix the number; the `stop()` message shared the same defect so it was fixed too.
-**Verified by me:** full unfiltered suite 362 files, 2,891 tests, 0 failed, 0 error (187 skipped); `lintr::lint` clean on both files; the downstream
-`getDateErrorsAndConvertDatesInPed` and `qcStudbook` tests pass. **Not run:** `devtools::check()`; runtime smoke n/a (no startup/wiring change).
-**Side effect:** `getDateErrorsAndConvertDatesInPed()` feeds these numbers to `sb[-invalidAndAdded, ]`, so it now drops the right row when an added row comes first (before, it dropped the wrong one); no test pins that path yet.
-**Reduction:** removed the S851 evaluation and record, and the completed BACKLOG item; fixed the `convertDate.R:113` cite to `:115` in the `isAddedRecord()` item.
-
-**Self-assessment: 8/10.** + Found the `stop()` message shared the defect; reverted the unrelated `nprcgenekeepr-package.Rd` roxygen drift instead of folding it in;
-all four gates asked. - Did not add a test for the `getDateErrorsAndConvertDatesInPed` consequence; did not run `devtools::check()`.
-
-**Next steps:** (A) Owner picks another PED_GV decision (BACKLOG "PED_GV audit follow-through"): `isAddedRecord()` helper, sex-code adoption, `getPotentialParents` split.
-(B) Optional small TDD slice: pin `getDateErrorsAndConvertDatesInPed()` with an added row first. (C) Still open: release number, CV1/CV2, male-left placement. (D) Master is
-12 ahead of origin after this commit (count from `git rev-list origin/master..HEAD`); push only on the owner's say-so.
-
-**Key files:** `R/convertDate.R:109-120,160-170`, `tests/testthat/test_convertDate.R:140-185`, `R/getDateErrorsAndConvertDatesInPed.R:33-45`.
-
-**Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (roxygenise regenerates it with extra tab text); I reverted it, so the next roxygenise
-will show that diff again. Not in scope here; commit it deliberately in a docs pass.

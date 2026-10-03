@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S883
 date: 2026-10-03
-status: pending
-active_task: Fix the stale @noRd roxygen of .addRectilinearWaypoints() at R/makePedigreeDiagramData.R:2109-2113 (says the default is "direct" and "no call site yet"); comment only
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- stale @noRd roxygen of .addRectilinearWaypoints() fixed (owner picked it at Phase 0; S882's next step A); nothing owed on it
+what_was_done: claim 5fa503303; deliverable 13ab22bc1 (R/makePedigreeDiagramData.R:2109-2113 now says makePedigreeMatingLayout() calls .addRectilinearWaypoints(), then .resolveEdgeNodeCollisions(), when edgeStyle is "rectilinear" (default since S574) and "direct" skips it; the "own default direct", "no call site yet" and "Migration Path step 1" wording is gone; BACKLOG docs-audit item marks the S882-found straggler FIXED S883); records in the close-out commit; Phase 0 found no ledger gap (frontiers at HEAD b3caf68db) so no backfill; read-only grep of every quoted "direct" comment in R/ found no further straggler
+next_steps: (A) remaining slice-1 leftovers, owner decisions (DECISION NEEDED, Effort S): delete or git-ignore the tracked vignettes/articles/kinship2-fidelity-validation.pdf; regenerate trackC-nprc-rectilinear.png (data-raw/kinship2FidelityValidation.R; owner looks at the new arc touching the W square first); (B) PED_GV decisions (28 ids) and the other DECISION NEEDED items in BACKLOG, incl. the two missing kinship2 drawing features (which column marks deceased); (C) BACKLOG.md compression pass (READY, Effort L, recurring; 57 KB at Orient); (D) master is 97 ahead of origin after this commit (94 at Orient plus claim, deliverable, close-out); push only on the owner's say-so
+key_files: R/makePedigreeDiagramData.R:2097-2113 (fixed block), :1675 (real default), :2069-2070 (call site); R/modPedigree.R:682 (edgeStyle wiring); BACKLOG.md docs-audit item (grep "FIXED S883"); PROJECT_LEARNINGS.md Learning 849
+gotchas: BACKLOG docs-audit item is one very long line per cluster, so edit it with short single-line old_strings; the Phase 0 picker showed 4 of 7 numbered items (BACKLOG compression, 3.0.0 release prep, snapshot backfill were prose-only); S882's note that plain gh run list returns stale September rows did not hold at this Orient
+runtime_smoke: none -- comment-only change, parsed code identical before and after (identical(parse(keep.source = FALSE)) TRUE, 5 comment lines replaced by 5); lintr::lint_package() 0 lints; 12 test files naming the file or scanning R/ 1,084 tests 0 failed 0 error; full test_dir and devtools::check() not run; Shiny not launched (nothing changes at runtime); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 688b57f32a9a · manifest aa983075d6a2
+changelog_ref: S883 DONE entry
+commit: the close-out commit that carries this receipt; claim 5fa503303, deliverable 13ab22bc1
 ```
 
 ```handoff
