@@ -263,6 +263,9 @@ longitudinal monitoring of colony genetic health.
   Pairs, marked "overridden".
 - The **Ancestry** tab shows coverage, and **Download Audit Manifest** saves
   the rules, overrides with reasons, pair counts and the confirmation warning.
+- The **Excluded** tab has an **Export Excluded Pairs** button that saves the
+  blocked pairs, with their reasons, as a CSV file. Like the Eligible Pairs
+  export, it holds exactly the rows left after any search or filter.
 - Script users: `reportMatePairs()` takes `ancestryRules` and
   `overriddenRules`. Without rules or an ancestry column, nothing changes.
 

@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S866
 date: 2026-10-02
-status: pending
-active_task: Excluded-tab export for mate-pair ancestry guardrails (curator can download the blocked-pairs list); strict TDD
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the Mate Pair Excluded tab has an Export Excluded Pairs CSV button (downloadExcluded) holding the rows left after the curator's filter; strict TDD, REFACTOR skipped by owner
+what_was_done: claim 2b777576a; RED+GREEN 6c72dd8e6 (tests/testthat/test_modMatePair.R 5 new tests, R/modMatePair.R); close-out commit holds NEWS.Rmd, colony-manager-guide.qmd, BACKLOG, CHANGELOG, records. Owner chose rows-shown scope and Excluded-tab-only button.
+next_steps: (A) Optional READY refactor: share overrideConfirm observer and overrideStatus sentence, and the filter-then-write body of the two downloads. (B) Owner: PED_GV leftovers; CV1/CV2. (C) Docs-staleness audit next slice. (D) 3.0.0 release prep needs its own scoping session. (E) Push only on owner's say-so.
+key_files: R/modMatePair.R:121-125 (button), R/modMatePair.R:~509-523 (handler); tests/testthat/test_modMatePair.R:449-570 (new tests)
+gotchas: excludedTable is client-side renderDT but excludedTable_rows_all is still set by DT; NEWS.md not re-knit (S864 did not either); a stack trace prints when test_modMatePair.R runs though it reports 19/19.
+runtime_smoke: not done -- no app launch; behaviour covered by testServer tests; full suite 2927 tests, 0 failed, 0 error; lint clean. quality_ratchet: not run.
+changelog_ref: S866 DONE entry
+commit: the close-out commit that carries this receipt; claim 2b777576a; RED+GREEN 6c72dd8e6
 ```
 
 ```handoff

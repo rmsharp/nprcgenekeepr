@@ -99,59 +99,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 866 Did
-**Deliverable:** Excluded-tab export for mate-pair ancestry guardrails (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Owner picked this item at Orient. Strict TDD, PRE-RED; scope questions pending.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** the Mate Pair **Excluded** tab now has an **Export Excluded Pairs** CSV button
+(`downloadExcluded`), the last item of the #169 residue the owner had to decide. Strict TDD, all
+phases gated by `AskUserQuestion`; REFACTOR skipped by owner choice. Claim `2b777576a`; RED+GREEN
+`6c72dd8e6` (tests and `R/modMatePair.R`); the close-out commit holds NEWS.Rmd, the guide, BACKLOG, records.
+**Owner decisions (plain words):** picked this item at Orient; the CSV holds the rows left after the
+curator's filter on the Excluded table (all rows if none), like Eligible Pairs; button on the Mate Pair
+Excluded tab only (Breeding Groups has no Excluded tab).
+**RED:** 5 new tests at `tests/testthat/test_modMatePair.R:449` onward (button in UI; full export;
+filtered export; empty-filter header-only; zero-excluded header-only), failing only because the output
+did not exist; the 14 older tests passed. **GREEN:** `R/modMatePair.R` only (button under the table;
+handler mirrors `downloadPairs`, reading `input$excludedTable_rows_all`).
+**Verified:** full unfiltered suite 2927 tests, 0 failed, 0 error (187 skipped); `lintr::lint_package()`
+0 findings. **Not done:** no app launch (the two e2e files skip without a browser); no CI watched;
+not pushed (master ahead of origin by 33 commits after close-out).
+**Docs:** NEWS.Rmd bullet (Mate Pair Analysis, Major); `colony-manager-guide.qmd` Excluded paragraph.
 
-### Session 865 (previous) follows
+**Self-assessment: 8/10.** + scope asked in plain words, RED verified per-test for the right reason
+(including that fixture-sanity guards passed); full suite before close-out. - no app launch, so the
+button's look is unseen; the CSV content is pinned by `testServer` tests, not by a real download.
 
-### What Session 865 Did
-**Deliverable, DONE:** the duplicated ancestry-override gate code in `R/modBreedingGroups.R` and
-`R/modMatePair.R` is now shared. Strict TDD, all three phases, each gated by an `AskUserQuestion`.
-Claim `dfd40047d`; RED+GREEN `adb5d2991`; REFACTOR `4ba8138f2`; the close-out commit holds
-BACKLOG, CHANGELOG, records. No NEWS entry (internal, no user-visible change).
-**Owner decisions (plain words):** picked this item at Orient; scope = the select-choices builder
-and the confirm modal only (the owner was offered widening to the confirm observer and status text
-and went with the narrow scope).
-**RED:** 8 new tests at the end of `tests/testthat/test_ancestryOverrides.R`, all erroring only
-because the helpers did not exist; the 19 older tests in the file passed.
-**GREEN:** `R/ancestryOverrides.R` only: `.ancestryOverrideChoices(ovr)` (named vector: values =
-pair keys, names = "A x B"; `character(0)` for NULL/zero rows) and `.ancestryOverrideModal(ns,
-warningText)`.
-**REFACTOR:** both modules' `observe()` choices block and `showModal(modalDialog(...))` replaced by
-one call each; the diff is 9 insertions, 42 deletions across the two modules plus the helpers file.
-**Verified:** the 4 ancestry/module test files pass; full unfiltered suite 2922 tests, 0 failed,
-0 error, run before and after the REFACTOR; `lintr::lint_package()` 0 findings (it caught an
-81-byte `@importFrom` line I added, fixed before close-out).
-**Not done:** no CI watched (R files changed, not pushed); no manual app launch (behaviour is
-covered by the module `testServer` tests and the e2e files in the suite, not by eyes on the UI);
-not pushed.
-**Reduction:** the pre-commit budget hook refused my first close-out (24,581 -> 26,037 tok vs the
-25,000 ceiling), so I condensed the S863 and S864 sections (about -4.5 KB, 59,105 -> 54,655 B, now
-under the ceiling). `methodology_trim.py --budget-bytes 65536` does not fire below 65,536 B, so it
-could not help. Lines over 280 B remain.
+**Next steps:** (A) Optional READY refactor: share the `overrideConfirm` observer and `overrideStatus`
+sentence, and/or the filter-then-write body of the two downloads (BACKLOG mate-pair item). (B) Owner
+decisions: PED_GV leftovers; CV1/CV2. (C) Docs-staleness audit next slice (READY, Effort L). (D) 3.0.0
+release prep needs its own scoping session. (E) Push only on the owner's say-so.
 
-**Self-assessment: 8/10.** + each gate asked in plain words with the exact next actions; the
-existing module tests were the behaviour net and the full suite ran on both sides of the
-refactor. - no app launch; I did not diff-check the two modules' rendered modal HTML before and
-after (the tests pin the strings, not the whole markup).
+**Key files:** `R/modMatePair.R:121-125` (button), `R/modMatePair.R:~509-523` (handler),
+`tests/testthat/test_modMatePair.R:449-570` (new tests).
 
-**Next steps:** (A) Owner decisions: Excluded-tab export (DECISION NEEDED, Effort S); PED_GV
-leftovers; CV1/CV2. (B) Optional READY follow-up: share the `overrideConfirm` observer and the
-`overrideStatus` sentence (they differ only in "on this tab"); not started, not in this scope.
-(C) 3.0.0 release prep needs its own scoping session. (D) master is ahead of origin (count at
-Orient); push only on the owner's say-so.
+**Gotchas:** `output$excludedTable` is client-side `renderDT`; `excludedTable_rows_all` is still set by
+DT in that mode (the existing Eligible table is `server = TRUE`). `NEWS.md` is not re-knit here (S864
+did not either). A stack trace prints when `test_modMatePair.R` runs; the file still reports 19/19.
 
-**Key files:** `R/ancestryOverrides.R:92-139` (the two helpers), `R/modMatePair.R:336-353`,
-`R/modBreedingGroups.R:456-474` (the call sites), `tests/testthat/test_ancestryOverrides.R` (last
-8 tests).
+### Session 865 Handoff Evaluation (by Session 866)
+**Score 9/10.** Helped: the exact next-step list with the Excluded-tab export marked DECISION NEEDED,
+the key-files line numbers for the shared helpers, and the clean-tree/ahead note. Missing: the
+Excluded tab's own code location (I grepped for it). Wrong: nothing found. ROI: high.
 
-**Gotchas:** both helpers rely on the package-wide `importFrom(shiny, ...)` entries already in
-`NAMESPACE`; I added matching `@importFrom shiny` roxygen lines to the modal helper but did not
-re-run roxygen, so `NAMESPACE` is unchanged (every named import already existed there). The
-modal helper takes `session$ns` (the function), not a module id. `test_markerParentageLikelihood.R`
-has a runtime benchmark that can fail under load; it passed in both full runs this session.
+### What Session 865 Did (condensed S866; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+**DONE:** the ancestry-override select-choices builder and confirm modal in `R/modBreedingGroups.R` and
+`R/modMatePair.R` are shared as `.ancestryOverrideChoices()` and `.ancestryOverrideModal()` in
+`R/ancestryOverrides.R`. Claim `dfd40047d`; RED+GREEN `adb5d2991`; REFACTOR `4ba8138f2`. Full suite 2922
+tests, 0 failed; lint clean. Self-score 8/10. Gotcha: the modal helper takes `session$ns` (the function).
 
 ### Session 864 Handoff Evaluation (by Session 865)
 **Score: 9/10.** **Helped:** next steps named the duplicated gate code as a READY refactor and said
