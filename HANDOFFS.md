@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S879
 date: 2026-10-03
-status: pending
-active_task: sexCodes adoption stage 6 of 6 (full R/ scan with allowlist; close PED-2, NEW-29, PED-7)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- sexCodes adoption stage 6 of 6 (full R/ scan with allowlist; PED-2, NEW-29, PED-7 closed); nothing owed on sexCodes
+what_was_done: claim e9823c856; RED 2ea50611a (test_sexCodes.R scans every R/*.R minus allowlist; passes on current code, proved able to fail by a planted letter at calcNeSexRatio.R:62); GREEN 9c6c034a6 (triage Closure record 4, BACKLOG block removed, no R/ change); REFACTOR removed the six-file test and helper now covered by the scan; records in the close-out commit
+next_steps: pick from BACKLOG: docs staleness audit next slice (READY, Effort L, one report per session) or an owner decision (PED_GV overhaul roots, isAddedRecord() helper). Push only on owner say-so (master about 79 ahead of origin)
+key_files: tests/testthat/test_sexCodes.R (scanForBareSexCodeLiterals, sexCodeAllowedFiles, sexCodeAllowedLines, self-test); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record 4); BACKLOG.md:8-28 (PED_GV item, open ids now 29); PROJECT_LEARNINGS.md Learning 846
+gotchas: allowlist lines match trimmed text, so reflowing one fails the stale-allowlist test; a mutation check must put the letter inside a function body or load_all fails; open-id count went 31 to 29 because PED-7 was already counted closed in S818
+runtime_smoke: full test_dir 365 files 0 failed 0 error 187 skipped; lintr::lint_package() 0 lints; devtools::check() 0 errors 0 warnings 0 notes; no runtime change (tests and docs only); quality_ratchet: not run
+changelog_ref: S879 DONE entry
+commit: the close-out commit that carries this receipt; claim e9823c856
 ```
 
 ```handoff

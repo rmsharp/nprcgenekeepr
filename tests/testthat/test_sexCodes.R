@@ -11,6 +11,7 @@
 ## sexCodes constant instead. Roxygen `#'` lines (prose, @examples) are
 ## skipped -- user-facing documentation legitimately shows literal "M"/"F"
 ## values to illustrate the API, and is out of this item's scope.
+## Since S879 the scan covers every R/*.R file minus an allowlist (below).
 library(testthat)
 
 findBareSexCodeLiterals <- function(file_path) {
@@ -44,37 +45,11 @@ findBareSexCodeLiterals <- function(file_path) {
   offenders
 }
 
-expectNoBareSexCodeLiterals <- function(files) {
-  offenders <- character(0)
-  for (f in files) {
-    src <- testthat::test_path("..", "..", "R", f)
-    skip_if(!file.exists(src), "R/ source not available (installed package)")
-    hits <- findBareSexCodeLiterals(src)
-    if (length(hits) > 0L) {
-      offenders <- c(offenders, paste0(f, ":", toString(hits)))
-    }
-  }
-  expect_identical(
-    offenders, character(0),
-    info = paste0(
-      "Bare sex-code literal(s) remain; route through sexCodes instead:\n",
-      paste(offenders, collapse = "\n")
-    )
-  )
-}
-
 test_that("sexCodes defines the four canonical values", {
   expect_identical(sexCodes[["male"]], "M")
   expect_identical(sexCodes[["female"]], "F")
   expect_identical(sexCodes[["hermaphrodite"]], "H")
   expect_identical(sexCodes[["unknown"]], "U")
-})
-
-test_that("no bare sex-code literals remain in the 6 XARCH-4 files", {
-  expectNoBareSexCodeLiterals(c(
-    "getPotentialSires.R", "calculateSexRatio.R", "fillBins.R",
-    "filterPairs.R", "modBreedingGroups.R", "modSummaryStats.R"
-  ))
 })
 
 # Sex-code adoption, stage 6 (docs/planning/sexcodes-adoption-plan.md section

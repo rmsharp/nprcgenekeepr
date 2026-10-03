@@ -99,35 +99,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 879 Did
-**Deliverable:** `sexCodes` adoption stage 6 of 6, strict TDD (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** `sexCodes` adoption stage 6 of 6, strict TDD (each phase gated by `AskUserQuestion`).
+Claim `e9823c856`; RED `2ea50611a`; GREEN `9c6c034a6`; REFACTOR and records in the close-out commit.
+**Done:** `test_sexCodes.R` now scans every `R/*.R` minus an allowlist (`sexCodes.R`, `convertSexCodes.R`,
+`createPedOne.R`, `createPedSix.R` whole; six lines by exact trimmed text), with a stale-allowlist test and a
+planted-file self-test. The five per-stage tests, the six-file XARCH-4 test and its helper are gone (the scan
+covers them). PED-2, NEW-29, PED-7 closed in the triage report (Closure record 4; open ids 31 to 29, since
+PED-7 was already counted closed S818); the BACKLOG block is removed. No `R/` file changed.
+**Verified by me:** the scan passes on today's code, so RED could not fail honestly (I said so at the gate);
+instead a planted `sex == "M"` in `calcNeSexRatio.R` failed it at line 62, file restored. Full `test_dir`
+365 files, 0 failed, 0 error, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0.
+Not run: a push or CI (nothing pushed; master is 79 ahead of origin by my count at close-out).
 
-### What Session 878 Did
-**Deliverable, DONE:** `sexCodes` adoption stage 5 of 6, strict TDD (each phase gated by `AskUserQuestion`).
-Claim `4ea9aed71`; RED `40a8e53de`; GREEN `b3f3a3ad5`; records in the close-out commit.
-**Done:** `test_sexCodes.R` gets a stage-5 test. In `R/makePedigreeDiagramData.R`, `male`/`female` are set once
-from `sexCodes` after `sexOf` (line 901, inside `.positionMatingUnitForest`) and replace the 6 bare letters
-(965-966, 1090-1091, 1262-1263 before; now shifted by 2). REFACTOR found nothing to change.
-**Verified by me:** RED failed on exactly those 6 lines; `test_sexCodes.R` green after; before/after snapshot of
-`makePedigreeDiagramData()` + `makePedigreeMatingLayout()` on `examplePedigree`, `qcPed`, `pedWithGenotype`
-(first 400 rows) is `identical()`; lint 0; full `test_dir` 365 files, 0 failed, 0 error, 187 skipped.
-Not run: `devtools::check()` (plan: stage 6). The other 5 data sets in my snapshot script failed on missing columns
-before and after, so they prove nothing.
+**Handoff evaluation of S878: 9/10.** Helped: next steps named the exact allowlist, the triage ids and the
+`devtools::check()` step; the plan section 2 inventory re-ran identically. Missing: it did not say stage 6
+changes no `R/` code, so RED and GREEN have nothing to fail or fix. Wrong: nothing found.
 
-**Handoff evaluation of S877: 9/10.** Helped: the next step named the file, the hoist, the `.shapeForVec` trap and
-the before/after requirement; the line numbers were exact. Missing: the plan's "9 pedigree-diagram test files" is
-not a list anywhere (26 files mention the functions; I ran them all via the full suite). Wrong: nothing found.
+**Self-assessment: 8/10.** + One deliverable; every gate asked; mutation check shows the guard can fail;
+count change (31 to 29, not 28) traced to the S818 record. - First fixture put a flagged line in "ok.R"; two
+mutation attempts failed to load before one worked.
 
-**Self-assessment: 8/10.** + One deliverable; baseline captured before RED; every gate asked; identical output proven.
-- The first snapshot script covered only `makePedigreeDiagramData()`, which has no x/y positions, so I redid it with the layout; a macOS `sed -i` slip cost one call.
+**Next steps:** nothing owed on `sexCodes`. Pick from BACKLOG: docs staleness audit next slice (READY, L), or an
+owner decision (PED_GV roots, `isAddedRecord()` helper). Push only on the owner's say-so (79 ahead).
 
-**Next steps:** stage 6 (plan section 4, owner answer 1): `groupAddAssign` keeps its literal default, allowlisted by
-exact text. Replace the stage lists in `test_sexCodes.R` with a scan of every `R/*.R` minus the allowlist
-(`sexCodes.R`, `convertSexCodes.R`, `createPedOne.R`, `createPedSix.R`, the five non-sex lines by exact text),
-then close PED-2, NEW-29, PED-7 in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`, remove the BACKLOG block, run
-`devtools::check()`. Re-run the plan section 2 greps first.
+**Key files:** `tests/testthat/test_sexCodes.R` (scan, allowlist, self-test); triage report Closure record 4;
+`PROJECT_LEARNINGS.md` Learning 846.
+
+**Gotchas:** a new bare letter in `R/` now fails `test_sexCodes.R`; allowlist entries match trimmed line text,
+so reflowing an allowlisted line fails the stale-allowlist test. A mutation test must plant the letter inside
+a function body (`load_all` evaluates top-level code).
+
+### What Session 878 Did (condensed S879; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`sexCodes` adoption stage 5 of 6 shipped: 6 bare letters in `makePedigreeDiagramData.R`; claim `4ea9aed71`, RED
+`40a8e53de`, GREEN `b3f3a3ad5`. Handoff evaluation of S877: 9/10. Self-score 8/10.
 
 ### What Session 877 Did (condensed S878; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `sexCodes` adoption stage 4 of 6 shipped: 14 bare letters in 3 R files; claim `df4767656`, RED `4295ec5b4`,
