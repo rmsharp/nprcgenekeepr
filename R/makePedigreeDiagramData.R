@@ -898,6 +898,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   sireOf <- stats::setNames(as.character(ped$sire), realIds)
   damOf <- stats::setNames(as.character(ped$dam), realIds)
   sexOf <- stats::setNames(as.character(ped$sex), realIds)
+  male <- sexCodes[["male"]]
+  female <- sexCodes[["female"]]
   anchorOf <- stats::setNames(matingUnits$anchor, unitIds)
   nonAnchorOf <- stats::setNames(matingUnits$nonAnchor, unitIds)
 
@@ -962,8 +964,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
     mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
     unambiguousOppositeSex <-
-      (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
-      (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
+      (identical(sexOf[[p]], male) && identical(sexOf[[m]], female)) ||
+      (identical(sexOf[[p]], female) && identical(sexOf[[m]], male))
     mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
       unambiguousOppositeSex
   }
@@ -1087,8 +1089,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   for (u in correctionOrder) {
     p <- anchorOf[[u]]
     m <- nonAnchorOf[[u]]
-    sign <- if (identical(sexOf[[p]], "F") &&
-                  identical(sexOf[[m]], "M")) -1L else 1L
+    sign <- if (identical(sexOf[[p]], female) &&
+                  identical(sexOf[[m]], male)) -1L else 1L
     kids <- childEdges$to[childEdges$from == u]
     if (hasParentEdge(p)) {
       ## Non-root anchor (already positioned as someone else's real
@@ -1259,8 +1261,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       u <- us[k]
       m <- nonAnchorOf[[u]]
       nn <- if (!is.na(m)) resolveNnode(m, u) else NA_character_
-      sexSide <- if (identical(sexOf[[a]], "F") && !is.na(m) &&
-                       m %in% realIds && identical(sexOf[[m]], "M")) {
+      sexSide <- if (identical(sexOf[[a]], female) && !is.na(m) &&
+                       m %in% realIds && identical(sexOf[[m]], male)) {
         -1.0
       } else {
         1.0
