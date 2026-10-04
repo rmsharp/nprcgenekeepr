@@ -317,6 +317,21 @@ the same script gives 13 on the S887 report): NEW-24 (issue #123, tracked), NEW-
 decisions, the walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57)
 and the repeated `updateProgress` null checks (NEW-62; 3 blocks).
 
+### Closure record 11 (S889, 2026-10-03) -- decision record 10's NEW-28 shipped
+
+| id | closed because |
+|---|---|
+| NEW-28 | SHIPPED: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` as its first statement (one `assertRequiredColsPresent()` call in `R/reportGV.R`) and names every missing one in one message, before `kinship()`; the late `sex`-only check is deleted. Missing columns only, as decided: a pedigree with every column but nothing the gene drop needs (`smallPed`) still stops with "sire and dam must have had alleles assigned". RED `22cc2f63f` and `e86e68b4e`, GREEN `7f6216876`, REFACTOR `67b8afd21`. |
+
+One consequence the owner chose on purpose (S889): a pedigree missing `sex` that also has an animal with one known parent
+now gets the missing-column message, not `calcFEFG()`'s partial-parentage one. `test_calcFEFG.R` gives its pedigree a `sex`
+column for that reason (`lacy1989Ped` has none).
+
+Open after this closure: **9 ids** (10 minus NEW-28; by a counting script rebuilt S889 and validated first on the unchanged
+report, where it gave 43 ids, 33 closed, 10 open, the same open set as Decision record 10): NEW-24 (issue #123, tracked) and
+8 owner decisions, the walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, NEW-19, NEW-21, NEW-26,
+NEW-57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
