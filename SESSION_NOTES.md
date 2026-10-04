@@ -99,71 +99,71 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 887 Did
-**Deliverable:** share the one-simulation step between `createSimKinships()` and `cumulateSimKinships()` (NEW-50;
-`BACKLOG.md:29`; READY, Effort S, strict TDD) (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning at PRE-RED: the scope question is asked first, then the PRE-RED->RED gate.
+**Deliverable, DONE:** NEW-50 shipped: `createSimKinships()` and `cumulateSimKinships()` call one internal
+`.simulateKinship()` (`R/simulateKinship.R`), which runs `makeSimPed()` then `kinship()`; each keeps its own loop. No
+change for users. Strict TDD, owner approved each gate through `AskUserQuestion`: claim `c7873ece6`, RED `b96bbb45f`,
+GREEN `de45c8928`, REFACTOR `38c3f713c`, closure `0261cc214`; the records are in the close-out commit.
 **Orient:** no ledger gap (frontiers at HEAD `fc850aad8`); tree clean; master 107 ahead of origin; CI 10/10 success;
-ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md 59,274 B); context budget OK; `CHANGELOG.md` 229,408 B and
-`HANDOFFS.md` 238,600 B. Both sequencing audits are fully executed (only #138 open, low priority).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md size); context budget OK; both sequencing audits fully executed.
+**RED:** `tests/testthat/test_simulateKinship.R`, 9 tests: 5 error on the missing helper, 2 fail on the delegation
+assertions (`mockery` stub: call count, `verbose` and `twinRelations` passed by name, one-time data.table conversion in
+`createSimKinships()`), 2 pass by design (no helper call at `n = 0`; same seed, `cumulateSimKinships()`'s mean, min and
+max equal those of `createSimKinships()`'s matrices, 25 simulations on `smallPed`).
+**GREEN:** new `R/simulateKinship.R` and one call site in each function (3 files). **REFACTOR:** two comments reworded;
+parsed code identical to GREEN (`deparse(parse())` compared against `HEAD`).
+**Verified:** the new file and `test_createSimKinships.R`, `test_cumulateSimKinships.R`, `test_countKinshipValues.R`,
+`test_makeSimPed.R`: 0 failed, 0 error. Full unfiltered `test_dir` (`NOT_CRAN` set): 367 files, 2972 tests, 0 failed,
+0 error, 187 skipped, 6 warnings (no pre-change baseline for the last two). `lintr::lint()` after `load_all` on the 3
+`R/` files: 0 findings. `devtools::check()` with tests and vignettes skipped: 0 errors, 0 warnings, 0 notes
+(`checking examples ... OK`). `quality_ratchet.py --run`: 1/1 pass, results `c9267edb1761`.
+**Not run:** the Shiny app (no code in `R/` calls either function), the vignette build, CI (not pushed; `R/` changed).
+**Closed:** NEW-50 (Closure record 9); open count 14 -> 13, by script (43 ids, 30 closed). BACKLOG item removed.
+**Reduction:** removed the S861 record and evaluation; condensed S886 and dropped its evaluation of S885.
 
-### What Session 886 Did
-**Deliverable, DONE:** PED_GV owner decision on the simulation driver (NEW-50, NEW-51): the owner chose "Share the
-6-line step" over "Leave both as they are" and "Share it and add a safety check". Decision record 8 is in
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:238-261`; a new READY item in `BACKLOG.md:29` queues the work. Docs only:
-PRE-RED throughout, no TDD phase applied, no code touched. Claim `a5cc50a5d`; decision `71b1ce4c0`; records in the
-close-out commit.
-**Orient:** no ledger gap (frontiers at HEAD `96199a6e3`); tree clean; master 104 ahead of origin; CI 10/10 success;
-ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md size); context budget OK.
-**Decided:** NEW-50 stays open until an internal helper does one simulation (`makeSimPed()` then `kinship()`,
-`createSimKinships.R:60-65` and `cumulateSimKinships.R:63-68`) for both functions; each keeps its own loop. NEW-51 is
-closed as accepted (no dimnames guard). Open count 15 -> 14, recomputed by script from the report's table.
-**Measured (smallPed, `pop = LETTERS[1:7]`, seed 42):** 200 simulated matrices, row and column order identical in all
-200 and equal to `ped$id`; `cumulateSimKinships()`'s mean equals the mean of `createSimKinships()`'s matrices under one
-seed. Neither function is called anywhere in `R/`; the vignette and example blocks call `createSimKinships()`. Tests pin
-seeded numbers per function, the `twinRelations` values and `n < 2`, but nothing ties the two functions together. By
-arithmetic (not run): a 3,000-animal matrix is 72 MB, so 1,000 simulations kept as a list is about 72 GB.
-**Tests after the edits:** wordlist_coverage 3, pkgdown_reference_config 5, newsReleaseState 26: 0 failed, 0 error.
-**Not run:** full `test_dir`, `devtools::check()`, lint (no `.R` file changed), runtime smoke (docs only); push or CI
-(every changed path is build-ignored and no test reads any of them as a file).
-**Reduction:** removed the S860 record and the S860 and S859 evaluations (receipts in `HANDOFFS.md`, entries in
-`CHANGELOG.md`); condensed S885.
+**Handoff evaluation of S886: 9/10.** Helped: next step A named this exact pickup (READY, Effort S, strict TDD) and the
+`BACKLOG.md:29` item carried the test idea, the data.table-versus-data.frame gotcha and the 4-versus-`n` matrices
+reason, so nothing had to be rediscovered; `createSimKinships.R:60-65` and `cumulateSimKinships.R:63-68` were exact;
+"107 ahead" and the ledger sizes (229,408 B, 238,600 B) matched at Orient to the byte. Missing: the "first RED test" it
+named (same-seed mean equality) already passes, so it cannot be RED (it became a pin; the failing tests had to be the
+helper and delegation tests), and it did not say `twinRelations` ids must exist in the fixture. Wrong: nothing found.
 
-**Handoff evaluation of S885: 9/10.** Helped: next step A named this exact pickup with its DECISION NEEDED tag and said
-to ask one cluster at a time in plain words; the cluster list matched the report (script: 14 owner decisions plus
-NEW-24); `reportGV.R:229,248,267` were right (the report's 219, 238, 257 are 10 lines stale); "104 ahead" was exact.
-Missing: which cluster is smallest and self-contained, and that the sim functions have no caller in `R/`. Wrong: nothing.
+**Self-assessment: 8/10.** + Claimed before technical work; asked the PRE-RED scope gate with exact files and
+verification; read each RED failure message and fixed two tests that failed for the wrong reason before committing;
+proved the REFACTOR comment-only; verified with the full suite, lint and `check()` and said what each skipped; every
+commit under the 5-file cap; recomputed the open count by script and validated the script on S886's report; answered
+the owner's lint question from the history, not a guess.
+- My first delegation tests failed for the wrong reason (twin ids absent from `smallPed`; caught on the first run); my
+plan's caller list was incomplete (three roxygen examples call `createSimKinships()`; found at close-out, no effect on
+the code); I briefly read a wrapper's "completed" notice as the suite finishing and caught it from the empty output
+file; I had said "tests are excluded from lint" without knowing why until the owner asked.
 
-**Self-assessment: 8/10.** + Claimed before technical work; read both functions and measured the audit's row-order
-claim first-hand before asking; recomputed the open count by script; when the owner asked why, re-read the test
-assertions and corrected my own "tests pin the results"; 2-file deliverable commit; no code touched.
-- My first caller grep failed on an unquoted zsh glob and its rerun was cut by `head -40`, so "no callers" briefly rested
-on a cut list (re-run un-truncated before I presented it; it held); I wrote "tests pin the results" from test names only;
-my first option text was dense, so the pick took two extra rounds (clarify, then "why option 1").
+**Next steps:** (A) PED_GV: NEW-24 (issue #123, leave) plus 12 owner decisions, DECISION NEEDED, Effort S each, strict
+TDD for any code: error and return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported),
+constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress` null checks (NEW-62; 3 blocks at
+`reportGV.R:229,248,267`). One cluster at a time, in plain words; measure the audit's claim first. (B) `BACKLOG.md`
+compression (READY, Effort L): 57,996 B is 1,246 B over the 56,750 B one-read budget, so trimming one long item may
+clear the dashboard's HIGH flag (arithmetic, not tried). (C) The ledgers: after this commit `CHANGELOG.md` is 232,849 B
+and `HANDOFFS.md` 242,257 B, 29,295 B and 19,887 B under the 262,144 B no-content read limit; this session added
+3,441 B and 3,657 B, so about 8 and 5 sessions are left (an estimate from one session; S886 estimated 12 and 6). Needs
+scheduling and an owner decision soon. (D) Master is 113 ahead of origin after this commit (107 at Orient plus claim,
+RED, GREEN, REFACTOR, closure and close-out); push only on the owner's say-so; `R/` changed, so wait for CI.
 
-**Next steps:** (A) Build the owner's decision: the `BACKLOG.md:29` item (READY, Effort S, strict TDD). First RED test:
-same seed, `cumulateSimKinships()`'s mean equals the mean of `createSimKinships()`'s matrices. Ask the `PRE-RED->RED`
-gate via `AskUserQuestion`; staged commits under the 5-file cap; the owner was not asked whether `cumulateSimKinships()`
-gains `verbose`. (B) PED_GV: NEW-24 (issue #123, leave) plus 12 owner decisions, DECISION NEEDED, Effort S each: error and
-return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported), constants and HTML builders
-(NEW-18, 19, 21, 26, 57), `updateProgress` null checks (NEW-62; 3 blocks). One cluster at a time, in plain words; measure
-the audit's claim first. (C) `BACKLOG.md` compression (READY, Effort L; 59,274 B at close-out). (D) The ledgers:
-after this commit `CHANGELOG.md` is 229,408 B and `HANDOFFS.md` 238,600 B, 32,736 B and 23,544 B under the 262,144 B
-no-content read limit. This session added 2,625 B and 4,146 B; at that rate about 12 and 6 sessions are left (an estimate
-from one session; S885's "2 KB each, 14-19 sessions" was an average over earlier trims and looks too low for
-`HANDOFFS.md`). Needs scheduling and an owner decision soon. (E) Master is 107 ahead of origin after this commit (104 at Orient plus claim, decision, close-out); push only
-on the owner's say-so.
+**Key files:** `R/simulateKinship.R` (helper); `R/createSimKinships.R:59-64`, `R/cumulateSimKinships.R:62-66` (call
+sites); `tests/testthat/test_simulateKinship.R` (9 tests); `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:263-271`
+(Closure record 9); `BACKLOG.md:8-27` (PED_GV item).
 
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:238-261` (Decision record 8); `BACKLOG.md:8-27` (PED_GV
-item) and `:29` (the sim item); `R/createSimKinships.R:60-65`, `R/cumulateSimKinships.R:63-68`;
-`tests/testthat/test_createSimKinships.R:70`, `test_cumulateSimKinships.R:63` (seeded numbers).
+**Gotchas:** `createSimKinships()` converts the pedigree to a data.table once before its loop; `cumulateSimKinships()`
+passes its input as given and `makeSimPed()` converts on every call (unchanged). A twin pair in a delegation test must
+name ids in the fixture, or the real `kinship()` errors before the call-count assertion. A `( cmd ) &` inside
+`run_in_background` reports the wrapper's exit: read the job's own last line. `.lintr` excludes `tests` (merge
+`3821bef52`, no recorded reason): test files are linted nowhere.
 
-**Gotchas:** `createSimKinships()` converts the pedigree to a data.table and `cumulateSimKinships()` does not, so the
-helper takes a prepared pedigree; the same-seed equality was measured on `smallPed` only. In zsh an unquoted
-`--include=*.R` fails with "no matches found": quote it, and never `head` a caller grep before saying "no callers".
-Recompute the open count by script (parse the 43 ids, `\**` for bold; subtract closure rows and "CLOSED" decision rows).
-BACKLOG PED_GV lines 24-25 are very long: edit them with short single-line `old_string`s.
+### What Session 886 Did (condensed S887; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+PED_GV owner decision on the sim driver: share the step (NEW-50, open until shipped), NEW-51 closed accepted (Decision
+record 8, `71b1ce4c0`); claim `a5cc50a5d`. Handoff evaluation of S885: 9/10. Self 8/10.
+**Gotchas kept:** in zsh quote `--include='*.R'` and never `head` a caller grep before saying "no callers"; recompute the
+open count by script (43 ids, `\**` for bold, subtract closure rows and "CLOSED" decision rows); BACKLOG PED_GV lines
+24-25 are very long: edit them with short single-line `old_string`s.
 
 ### What Session 885 Did (condensed S886; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 11 PED_GV audit ids already fixed in code closed (Closure record 7, `482729a74`); BACKLOG count corrected 28 -> 15.
@@ -336,36 +336,3 @@ of origin; push only on the owner's say-so (count it at Orient).
 **Gotchas:** banners carry "S862" and say a later note was added; `ban.py`-style insertion must go after the
 first `# ` line (`issue168` has a license header first). Plans without a banner are unswept, not current (the
 README says so). zsh does not split unquoted variables; use `bash -c` for loops.
-
-### Session 861 Handoff Evaluation (by Session 862)
-**Score: 8/10.** **Helped:** exact plan lists for the sweep (11 status-less, 14+ stale) and the banner-wording
-gotcha saved a pass; "insert after the H1" was needed for `issue168`. **Wrong/missing:** it listed `issue167`
-among the status-less plans' set in one place and not another (167 was already bannered); said master 9 ahead,
-measured 11 at Orient; no per-file issue states, so I had to look them up. **ROI:** high.
-
-### What Session 861 Did
-**Deliverable, DONE:** slice 7c docs fixes from the S860 audit report; docs only, no code, no tests. Claim `1e0295d5b`; fixes `1754691e1` (banners), `a1cbfde13` (in-place), `f6ae48446` (BACKLOG).
-**Done:** status banners on the #112, #122, #123, #144, #167 plans and a status note plus subtitle fix on the
-reference qmd; the CRAN runbook, outreach plan and Quarto analysis fixed in place; 3 BACKLOG pointers fixed
-(Dragon 1 -> D5, qmd refresh marked done S484, #123 residuals now tracked); the audit item in `BACKLOG.md`
-marked "Slice 7c FIXED S861".
-**Re-checked first-hand before editing:** `rhub` not installed (devtools, gitcreds, usethis are);
-`cran-comments.md` has 0 markers; `DESCRIPTION` 2.0.0.9000; release `v2.0.0` 2026-07-28;
-`docs/architecture/module-contract.md` (the report cited a bare name, I fixed the path);
-`getGeneticDiversityStats.R:58`; vignette and `dev/extdata-scratch/` file lists. Not re-checked: outreach
-roster, third-party quotes, plan bodies.
-**Not done:** the header sweep (one-line status on 11 status-less and 14+ stale-header plans, `docs/planning/README`); recorded as the remaining part in the BACKLOG audit item. Tests/lint: none run (no `.R`, test or build-included file changed; skip-CI rule applies).
-**Slips:** I first cited `docs/conventions/module-contract.md` and "S857" in banners from the report; caught both on re-check and fixed before commit.
-**Reduction:** removed the S841 record (git and CHANGELOG keep it); the budget hook refused the commit 209 tokens over its ceiling. The 4 over-long lines it flags are older records, left alone.
-
-**Self-assessment: 7/10.** + Re-verified agent claims before writing them; banners not rewrites; kept to the cluster list; 3 commits under the 5-file cap. - Header sweep left; only spot re-checks of the 36 agent-only moderates; wrote two wrong cites first.
-
-**Next steps:** (A) Header sweep, docs only: one-line status for the 11 status-less plans (`issue119`,
-`125`-`130`, `152`, `168`, `30`, `76`, `9`) and the 14+ stale-header plans listed in the S860 report, plus
-`docs/planning/README`. (B) Owner decision: `getProductionStatus` 0 dams green vs grey. (C) Open: PED_GV
-decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep (the runbook and outreach plan now say what to
-refresh). (D) Master is 9 commits ahead of origin after close-out; push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table); `BACKLOG.md:149` (audit item); `docs/planning/cran-2.0.0-phase5-runbook.md:3-11`.
-
-**Gotchas:** banners say a later note was added and point at `CHANGELOG.md` as authority; keep that wording for the sweep. Banner-adding scripts must insert after the H1 line (issue167 has a license header first). BSD sed needs `-i ''`.
