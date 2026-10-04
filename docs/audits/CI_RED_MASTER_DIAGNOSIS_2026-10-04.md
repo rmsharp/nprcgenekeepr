@@ -152,3 +152,19 @@ fixture, the number of adjacent pairs (773 on CI and locally).
 All instrumentation (tag `[DEBUG-q7k2]`) lived in scratch files outside the repo; none is in the
 tree. The only artifact left outside the scratchpad is the Docker image `rocker/r-ver:4.5.3`
 (about 1 GB, pulled for the kernel test); `docker rmi rocker/r-ver:4.5.3` removes it.
+
+## Addendum (S893, 2026-10-04): what the repair measured, and what it overturned
+
+S893 made both repairs (test-only; see `CHANGELOG.md`). Causes 1 and 2 stand. Three figures above do not:
+
+| This diagnosis said | S893 measured (300 shuffles of the QP's variables, seeds 1-300) |
+|---|---|
+| 12 of 100 runs over 1e-6, max 1.09e-4 | **42 of 300** over 1e-6, max **5.98e-4** (seed 198); the tail grows with the sample |
+| "exactly 1 pair in 12 runs, never 2+" | up to **2** pairs in a run (seeds 198 and 147) |
+| Fix 1: tolerance **1e-3**, "10x headroom" | 1e-3 clears the worst of 300 by only 1.7x; the owner chose **1e-2** (1.2 px, 16x; still 58x under the 0.58-unit overlap margin) |
+
+Also found: `test_solveJointQP.R:437-439` allows only **1e-9**, and the `trackBFull` fixture misses it in **23 of 300**
+shuffles (worst 1.2e-8), a third exposure not listed above; the owner put it in scope and it now allows 1e-6. The two
+bounds this diagnosis asked to measure are safe: `:210` (worst 1.1e-8 over all fixtures) and `:440` (worst 2.7e-9),
+both against 1e-6. The shuffle seam is `tests/testthat/helper-reorderedSolveQP.R`. Still **not established**: the CI
+runners' own tails (nothing was pushed, so no CI run has seen the fixes).
