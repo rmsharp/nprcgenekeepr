@@ -98,6 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 891 Did
+**Deliverable:** diagnose the red CI on master after the S890 push of `2e2046efd`: R-CMD-check on ubuntu oldrel-1 and
+devel (`test_positionMatingUnitForest.R:645`), test-coverage; cause, evidence, proposed fix. READY, Effort M. No code or
+test is changed this session; the fix is a separate strict-TDD change (IN PROGRESS)
+**Started:** 2026-10-04, about 12:55 UTC
+**Status:** Session claimed. Work beginning: settle the brief's unchecked facts first (which test(s) test-coverage fails
+on, the CI `quadprog` and BLAS versions, the failing shortfall value and pair), then the one test file on local R 4.6.1
+and 4.5, and re-rank the brief's four hypotheses with the owner before any probe.
+**Orient:** no ledger gap (frontiers at HEAD `83c6beeb3`); tree clean; master 2 ahead of origin (notes only); CI on
+`2e2046efd`: lint and pkgdown green, R-CMD-check and test-coverage red, scheduled shinytest2 green (09:05 UTC); ratchet
+1/1 matches the receipt; dashboard 96/100, High+ risk 0; context budget OK; `HANDOFFS.md` 256,418 B (limit 262,144),
+`CHANGELOG.md` 243,973 B.
+**Owner pick:** "Diagnose the red CI" from the Phase 0 priorities list (S890's next step A, ordered first by the owner).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 890 Did
 **Deliverable, DONE:** compressed two `BACKLOG.md` items, the docs-audit item and the compression item's own pass history.
 Docs only, so no code and no RED/GREEN gates. Claim `d2e36c446`, deliverable `23432b24c`; the close-out commit holds the

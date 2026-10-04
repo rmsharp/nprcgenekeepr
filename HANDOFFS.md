@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S891
+date: 2026-10-04
+status: pending
+active_task: diagnose the red CI on master after the S890 push of 2e2046efd (R-CMD-check red on ubuntu oldrel-1 and devel at test_positionMatingUnitForest.R:645, test-coverage red); the deliverable is the diagnosis (cause, evidence, proposed fix), no code or test changes (owner picked it at Phase 0; READY, Effort M)
+```
+
+```handoff
 session: S890
 date: 2026-10-03
 status: complete
