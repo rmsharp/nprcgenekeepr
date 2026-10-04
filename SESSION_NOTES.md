@@ -98,6 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 886 Did
+**Deliverable:** PED_GV audit follow-through, owner decisions (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. The cluster to decide is settled with the owner next; no TDD phase declared yet.
+**Orient:** no ledger gap (frontiers at HEAD `96199a6e3`); tree clean; master 104 ahead of origin; CI 10/10 success;
+ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md 57,805 B); `CHANGELOG.md` 226,783 B and `HANDOFFS.md`
+234,454 B are about 35 KB and 28 KB under the 262,144 B no-content read limit.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 885 Did
 **Deliverable, DONE:** PED_GV audit follow-through: 11 audit ids already fixed in code are closed (Closure record 7 in
 `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214`) and the `BACKLOG.md` item's count is corrected from 28 to 15. The
