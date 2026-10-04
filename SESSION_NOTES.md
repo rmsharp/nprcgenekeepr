@@ -99,76 +99,78 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 888 Did
-**Deliverable:** PED_GV owner decisions (`BACKLOG.md:8`; DECISION NEEDED, Effort S each; strict TDD for any code):
-walk ONE cluster with the owner and record each decision in the triage doc and `BACKLOG.md` (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning at PRE-RED: the cluster question is asked first, in plain words. Docs
-only; any code the owner's decision calls for is a later session.
-**Orient:** no ledger gap (frontiers at HEAD `0a26d9b5e`); tree clean; master 113 ahead of origin (`f0bcb9f48`, S858);
-CI 10/10 success (none of the 113 unpushed commits has run); ratchet 1/1; dashboard 96/100, one High+ flag; context
-budget OK (growth run 50/10); `CHANGELOG.md` 232,849 B, `HANDOFFS.md` 242,257 B, `BACKLOG.md` 57,996 B. Both
-sequencing audits are fully executed (only #138 open, low priority).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36), docs only: no code, no tests (TDD
+phases N/A). The owner kept the `reportErrors` two-mode pattern (PED-6, NEW-36 closed, accepted) and chose a clear up-front
+message in `reportGV()` only (NEW-28 decided, open until it ships; PED-5 closed). Claim `3dae4cfd2`, Decision record 10
+`5a47eb8a3`, probes P10 and P11 `b0f748891`; the close-out commit holds the receipt, these notes, the ledger entry, Learning 854.
+**Orient:** no ledger gap (frontiers at HEAD `0a26d9b5e`); tree clean; master 113 ahead of origin (`f0bcb9f48`, S858), and none
+of the 113 has had a CI run; CI 10/10 success; ratchet 1/1; dashboard 96/100, one High+ flag; context budget OK (growth run
+50/10); both sequencing audits fully executed.
+**Method:** the owner picked PED_GV at Phase 0, then the error-behavior group out of four plain-words groups (my
+recommendation). I measured before asking (ran the code unless "read"). Six exported functions take `reportErrors`
+(`qcStudbook`, `correctParentSex`, `removeDuplicates`, `checkParentAge`, `checkRequiredCols`, `convertDate`; four run in both
+modes, `checkParentAge` and `convertDate` read) and the app calls `qcStudbook()` with TRUE, then FALSE (`R/runQcStudbook.R:125,212`).
+Outside QC bad input gives a clear message (`getGeneticDiversityStats()`), a base-R message (`reportGV()`, `calcGU()`,
+`calcRetention()`) or a silent result (`filterReport()`, `rankSubjects(NULL)`). The S781 row's "none in `reportGV`" was stale:
+the `:291` check (issue #123, S386) runs after `kinship()` and `geneDrop()`. Per-column probe on the `reportGV()` example
+pipeline (704 rows): without `id`, `sire`, `dam` or `gen` a base-R message, without `sex` the named one, without `birth`,
+`exit`, `age` or `population` no error.
+**Verified:** `test_wordlist_coverage.R`, `test_rbuildignore.R`, `test_pkgdown_reference_config.R`: 10 tests, 0 failed,
+0 error. Open count by script: 43 ids, 33 closed, 10 open (the same script gave 13 on S887's report). `quality_ratchet.py
+--run`: 1/1 pass, results `60e009e87fe0`. **Not run:** full suite, `devtools::check()`, lint, runtime smoke, CI (docs only;
+every changed path is build-ignored).
+**Reduction:** removed the S862 record and its evaluation; condensed S887. `BACKLOG.md` grew 1,458 B to 59,454 B (2,704 B over
+its budget) and was not compressed: that is its own item.
 
-### What Session 887 Did
-**Deliverable, DONE:** NEW-50 shipped: `createSimKinships()` and `cumulateSimKinships()` call one internal
-`.simulateKinship()` (`R/simulateKinship.R`), which runs `makeSimPed()` then `kinship()`; each keeps its own loop. No
-change for users. Strict TDD, owner approved each gate through `AskUserQuestion`: claim `c7873ece6`, RED `b96bbb45f`,
-GREEN `de45c8928`, REFACTOR `38c3f713c`, closure `0261cc214`; the records are in the close-out commit.
-**Orient:** no ledger gap (frontiers at HEAD `fc850aad8`); tree clean; master 107 ahead of origin; CI 10/10 success;
-ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md size); context budget OK; both sequencing audits fully executed.
-**RED:** `tests/testthat/test_simulateKinship.R`, 9 tests: 5 error on the missing helper, 2 fail on the delegation
-assertions (`mockery` stub: call count, `verbose` and `twinRelations` passed by name, one-time data.table conversion in
-`createSimKinships()`), 2 pass by design (no helper call at `n = 0`; same seed, `cumulateSimKinships()`'s mean, min and
-max equal those of `createSimKinships()`'s matrices, 25 simulations on `smallPed`).
-**GREEN:** new `R/simulateKinship.R` and one call site in each function (3 files). **REFACTOR:** two comments reworded;
-parsed code identical to GREEN (`deparse(parse())` compared against `HEAD`).
-**Verified:** the new file and `test_createSimKinships.R`, `test_cumulateSimKinships.R`, `test_countKinshipValues.R`,
-`test_makeSimPed.R`: 0 failed, 0 error. Full unfiltered `test_dir` (`NOT_CRAN` set): 367 files, 2972 tests, 0 failed,
-0 error, 187 skipped, 6 warnings (no pre-change baseline for the last two). `lintr::lint()` after `load_all` on the 3
-`R/` files: 0 findings. `devtools::check()` with tests and vignettes skipped: 0 errors, 0 warnings, 0 notes
-(`checking examples ... OK`). `quality_ratchet.py --run`: 1/1 pass, results `c9267edb1761`.
-**Not run:** the Shiny app (no code in `R/` calls either function), the vignette build, CI (not pushed; `R/` changed).
-**Closed:** NEW-50 (Closure record 9); open count 14 -> 13, by script (43 ids, 30 closed). BACKLOG item removed.
-**Reduction:** removed the S861 record and evaluation; condensed S886 and dropped its evaluation of S885.
+**Handoff evaluation of S887: 9/10.** Helped: next step A named these 12 ids in the same four groups I put to the owner,
+with tags; "measure the audit's claim first" was needed (one stale claim found); `BACKLOG.md:8-27` and the triage doc's
+`:263-271` were exact; BACKLOG 57,996 B, the ledger sizes and "113 ahead" matched Orient to the byte. Missing: that the S781
+table's `getPotentialParents.R` line numbers (`:90,211`) predate the S881 split (its `NULL` returns are now at `:103,161`),
+and that `core.hooksPath` is unset here. Wrong: nothing found.
 
-**Handoff evaluation of S886: 9/10.** Helped: next step A named this exact pickup (READY, Effort S, strict TDD) and the
-`BACKLOG.md:29` item carried the test idea, the data.table-versus-data.frame gotcha and the 4-versus-`n` matrices
-reason, so nothing had to be rediscovered; `createSimKinships.R:60-65` and `cumulateSimKinships.R:63-68` were exact;
-"107 ahead" and the ledger sizes (229,408 B, 238,600 B) matched at Orient to the byte. Missing: the "first RED test" it
-named (same-seed mean equality) already passes, so it cannot be RED (it became a pin; the failing tests had to be the
-helper and delegation tests), and it did not say `twinRelations` ids must exist in the fixture. Wrong: nothing found.
+**Self-assessment: 8/10.** + Claimed before technical work; chased the ratchet-hash difference and found it is measurement
+noise (three hashes, same verdict, every changed path build-ignored); asked the group question in plain words with a
+recommendation (answered at once); said which facts I ran and which I only read; caught my invalid first fixture (`smallPed`
+fails `reportGV()` unmodified) from the baseline line and re-ran; grepped every citation against the files before the commit,
+which fixed three errors; recomputed the open count by script, validated on the unchanged report (13) first; stayed docs-only
+and under the 5-file cap; did not compress `BACKLOG.md` ("while I'm at it").
+- In my message to the owner I listed `cumulateSimKinships()` and `getPedDirectRelatives()` as clear-message functions without
+saying I had only read them (the record says so; neither changes the decision); my first fixture was invalid; three
+first-draft citations were wrong (fixed before commit); one probe, `kinship('a','b',NA,pdepth=1)`, was a malformed call and
+I dropped it; my first receipt draft was longer than S887's and I cut it; `BACKLOG.md` got longer.
 
-**Self-assessment: 8/10.** + Claimed before technical work; asked the PRE-RED scope gate with exact files and
-verification; read each RED failure message and fixed two tests that failed for the wrong reason before committing;
-proved the REFACTOR comment-only; verified with the full suite, lint and `check()` and said what each skipped; every
-commit under the 5-file cap; recomputed the open count by script and validated the script on S886's report; answered
-the owner's lint question from the history, not a guess.
-- My first delegation tests failed for the wrong reason (twin ids absent from `smallPed`; caught on the first run); my
-plan's caller list was incomplete (three roxygen examples call `createSimKinships()`; found at close-out, no effect on
-the code); I briefly read a wrapper's "completed" notice as the suite finishing and caught it from the empty output
-file; I had said "tests are excluded from lint" without knowing why until the owner asked.
+**Next steps:** (A) PED_GV, one of: (1) NEW-28 implementation: `reportGV()` names missing required columns up front
+(`BACKLOG.md:29`, READY, Effort S, strict TDD; at its scope gate ask whether the new check replaces or precedes the `:291`
+one, and whether "clear message" means missing columns only); (2) the next owner-decision group, 8 ids left, DECISION NEEDED,
+Effort S each: walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress`
+null checks (NEW-62; S887 gave `reportGV.R:229,248,267`, I re-checked only `:229`); NEW-24 stays on issue #123. One group at a
+time, in plain words; measure the audit's claim first. (B) `BACKLOG.md` compression (READY, Effort L): 59,454 B is 2,704 B over
+the 56,750 B budget (cutting the docs-audit and chromote items, the file's own named next cuts, is arithmetic, untried).
+(C) The ledgers: after this commit `CHANGELOG.md` is 237,053 B and `HANDOFFS.md` 246,645 B, 25,091 B and 15,499 B under the
+262,144 B no-content read limit; this session added 4,204 B and 4,388 B, so about 5 and 3 sessions are left (an estimate from
+one session; S887 said 8 and 5). Needs an owner decision and scheduling now; shorter receipts help. (D) Master is 117 ahead of
+origin after this commit; push only on the owner's say-so; none of the unpushed commits has had CI, and `R/` changed in earlier
+sessions, so wait for CI after a push.
 
-**Next steps:** (A) PED_GV: NEW-24 (issue #123, leave) plus 12 owner decisions, DECISION NEEDED, Effort S each, strict
-TDD for any code: error and return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported),
-constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress` null checks (NEW-62; 3 blocks at
-`reportGV.R:229,248,267`). One cluster at a time, in plain words; measure the audit's claim first. (B) `BACKLOG.md`
-compression (READY, Effort L): 57,996 B is 1,246 B over the 56,750 B one-read budget, so trimming one long item may
-clear the dashboard's HIGH flag (arithmetic, not tried). (C) The ledgers: after this commit `CHANGELOG.md` is 232,849 B
-and `HANDOFFS.md` 242,257 B, 29,295 B and 19,887 B under the 262,144 B no-content read limit; this session added
-3,441 B and 3,657 B, so about 8 and 5 sessions are left (an estimate from one session; S886 estimated 12 and 6). Needs
-scheduling and an owner decision soon. (D) Master is 113 ahead of origin after this commit (107 at Orient plus claim,
-RED, GREEN, REFACTOR, closure and close-out); push only on the owner's say-so; `R/` changed, so wait for CI.
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:273-319` (Decision record 10), `:390-407` (probes P10, P11);
+`BACKLOG.md:8-27` (PED_GV item), `:29-41` (the `reportGV()` item); `R/reportGV.R:179` (`kinship`), `:223` (`geneDrop`), `:291`
+(the `id` and `sex` check); `R/assertRequiredColsPresent.R:19` (the validator a new check would call); `R/runQcStudbook.R:125,212`.
 
-**Key files:** `R/simulateKinship.R` (helper); `R/createSimKinships.R:59-64`, `R/cumulateSimKinships.R:62-66` (call
-sites); `tests/testthat/test_simulateKinship.R` (9 tests); `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:263-271`
-(Closure record 9); `BACKLOG.md:8-27` (PED_GV item).
+**Gotchas:** `smallPed` is not a good-input fixture for `reportGV()` (fails unmodified); use the `@examples` pipeline
+(`examplePedigree`, `qcStudbook(minSireAge = 2, minDamAge = 2)`, `setPopulation`, `trimPedigree`; 704 rows; `guIter = 10L`,
+`guThresh = 3`). `reportErrors` is the app's QC contract: never change one function's return alone. The open-count script (ids
+with `\**` for bold, closure-section rows, decision rows starting CLOSED) gave 13 on S887's report, 10 now. The ratchet's
+results hash changes on every run (the measured tarball size moves by tens of bytes): compare the counts and the manifest.
+`core.hooksPath` is unset, so the ledger co-staging hook is not enforced. Guess, not traced: a new check in `reportGV()` cannot
+change app behavior since the app runs QC first; run the `test-app-*` and `test-e2e-*` files in the full suite after any change.
 
-**Gotchas:** `createSimKinships()` converts the pedigree to a data.table once before its loop; `cumulateSimKinships()`
-passes its input as given and `makeSimPed()` converts on every call (unchanged). A twin pair in a delegation test must
-name ids in the fixture, or the real `kinship()` errors before the call-count assertion. A `( cmd ) &` inside
-`run_in_background` reports the wrapper's exit: read the job's own last line. `.lintr` excludes `tests` (merge
-`3821bef52`, no recorded reason): test files are linted nowhere.
+### What Session 887 Did (condensed S888; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+NEW-50 shipped: `createSimKinships()` and `cumulateSimKinships()` call one internal `.simulateKinship()`
+(`R/simulateKinship.R`); no change for users. Claim `c7873ece6`, RED `b96bbb45f`, GREEN `de45c8928`, REFACTOR `38c3f713c`.
+Handoff evaluation of S886: 9/10. Self 8/10.
+**Gotchas kept:** `createSimKinships()` converts the pedigree to a data.table once before its loop and `cumulateSimKinships()`
+does not; a twin pair in a delegation test must name ids in the fixture; `( cmd ) &` inside `run_in_background` reports the
+wrapper's exit, so read the job's own last line; `.lintr` excludes `tests`, so test files are linted nowhere.
 
 ### What Session 886 Did (condensed S887; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 PED_GV owner decision on the sim driver: share the step (NEW-50, open until shipped), NEW-51 closed accepted (Decision
@@ -312,39 +314,3 @@ Self-score 8/10. Slips: a test pinning the old green was missed in RED; prose "g
 **Gotchas kept:** `getGeneticDiversityStats()` now emits an NA Production cell for a no-dam group;
 the modules' own UI text for an NA cell was not inspected. `devtools::document()` churns
 `man/nprcgenekeepr-package.Rd`; revert it unless DESCRIPTION changed on purpose.
-
-### Session 862 Handoff Evaluation (by Session 863)
-**Score: 8/10.** **Helped:** next steps named the exact owner decision (0 dams green vs grey) and the backlog
-line; the 20-ahead count was right. **Missing:** it did not say the sibling metric already returned NA, nor
-that the heat map rejects NA, which decided the scope. **Wrong:** nothing found. **ROI:** high.
-
-### What Session 862 Did
-**Deliverable, DONE:** header sweep of `docs/planning/`; docs only, no code, no tests (TDD phases N/A). Claim
-`b651541d4`; banners `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432` (22 `issue*` plans),
-`f35538868`, `93670ec95` (9 non-issue plans); the close-out commit holds `docs/planning/README.md`, the
-BACKLOG update and records.
-**Done:** a `Status banner (S862...)` after the H1 of 31 plans: the 11 status-less (`issue119`, `125`-`130`,
-`152`, `168`, `30`, `76`, `9`), 10 stale-header `issue*` (`118`, `13`, `133`, `136`, `143`, `148`, `150`,
-`153`, `2`, `73`) and 9 non-issue plans (module conversion, Document 2, extdata, five pedigree-diagram plans).
-With S861's five, every plan on the S860 report's sweep list is bannered.
-**Method:** 3 read-only subagents (one per group) gathered issue state, commits and artifacts; I re-checked
-every hash they cited (`git log -1`), the issue states (`gh issue view`), `inst/application` gone,
-`inst/extdata` listing, `R/` artifacts, and `.deCollideIndividualPoints` gone. Unverified points are said in
-the banner (`issue9` slices, `issue13` closing commit, `issue73` slice count, `issue153` last slice,
-sibling-width asymmetry, duplicate-proximity supersession link, fidelity 7b).
-**Slips:** one agent cite widened (#131-#139 to #145) before I caught it; my first commit loop failed twice (zsh does not word-split; used `bash -c`). Nothing was committed wrongly.
-**Not done:** the 8+ other non-issue plans the audit did not name, `docs/research/` and older `docs/audits/` headers; no tests/lint/CI (no `.R` or build-included file changed; `docs` is `.Rbuildignore`d, skip-CI rule applies).
-**Reduction:** removed the S806 evaluation and S807 record (git and CHANGELOG keep them).
-
-**Self-assessment: 8/10.** + Every banner traced to a command I (or an agent I re-checked) ran; hedges kept where unverified; under the 5-file cap; stayed in scope. - Agents' evidence for `issue9`, `13`, `73` is thin; a few slice session numbers are agent-read only.
-
-**Next steps:** (A) Owner decision: `getProductionStatus` 0 dams green vs grey (then strict TDD). (B) Owner
-decisions: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; the duplicated gate code
-is READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Master is about 20 commits ahead
-of origin; push only on the owner's say-so (count it at Orient).
-
-**Key files:** `docs/planning/README.md`; `BACKLOG.md:149` (audit item); `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table).
-
-**Gotchas:** banners carry "S862" and say a later note was added; `ban.py`-style insertion must go after the
-first `# ` line (`issue168` has a license header first). Plans without a banner are unswept, not current (the
-README says so). zsh does not split unquoted variables; use `bash -c` for loops.
