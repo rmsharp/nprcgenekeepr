@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S890
+date: 2026-10-03
+status: pending
+active_task: compress two BACKLOG.md items, the docs-audit item (BACKLOG.md:80-134) and the compression item's own pass history (BACKLOG.md:354-403) (owner picked it from a measured comparison; READY, Effort L; docs only)
+```
+
+```handoff
 session: S889
 date: 2026-10-03
 status: complete

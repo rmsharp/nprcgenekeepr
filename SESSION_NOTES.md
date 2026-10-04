@@ -98,6 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 890 Did
+**Deliverable:** compress two `BACKLOG.md` items: the docs-audit item (`BACKLOG.md:80-134`, 55 lines, 14,531 B) and the
+compression item's own pass history (`BACKLOG.md:354-403`, 50 lines, 4,629 B). READY, Effort L; docs only, so no code, no
+tests, no RED/GREEN gates (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning: read both blocks end to end, check every cited session and fact against
+`CHANGELOG.md` and the archive, keep every open part byte-for-byte, cut only resolved narrative.
+**Orient:** no ledger gap (frontiers at HEAD `d38494449`); tree clean; master 125 ahead of origin (none has had CI); CI
+10/10 success; ratchet 1/1 matches the receipt; dashboard 96/100, one High flag (`BACKLOG.md` 58,228 B, 1,478 B over
+its 56,750 B budget); context budget OK; `CHANGELOG.md` 240,102 B, `HANDOFFS.md` 251,508 B.
+**Owner pick:** this option from a measured comparison (55 + 50 of 553 lines; every session cited in both blocks has a
+mention in the ledgers, a weak check the pass repeats properly). Estimate, not yet measured: about 75 lines removed.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 889 Did
 **Deliverable, DONE:** NEW-28 shipped: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` as its first statement (one
 `assertRequiredColsPresent()` call, `R/reportGV.R:173-183`) and names every missing one in one message before `kinship()`
