@@ -99,64 +99,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 886 Did
-**Deliverable:** PED_GV audit follow-through, owner decisions (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. The cluster to decide is settled with the owner next; no TDD phase declared yet.
+**Deliverable, DONE:** PED_GV owner decision on the simulation driver (NEW-50, NEW-51): the owner chose "Share the
+6-line step" over "Leave both as they are" and "Share it and add a safety check". Decision record 8 is in
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:238-261`; a new READY item in `BACKLOG.md:29` queues the work. Docs only:
+PRE-RED throughout, no TDD phase applied, no code touched. Claim `a5cc50a5d`; decision `71b1ce4c0`; records in the
+close-out commit.
 **Orient:** no ledger gap (frontiers at HEAD `96199a6e3`); tree clean; master 104 ahead of origin; CI 10/10 success;
-ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md 57,805 B); `CHANGELOG.md` 226,783 B and `HANDOFFS.md`
-234,454 B are about 35 KB and 28 KB under the 262,144 B no-content read limit.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md size); context budget OK.
+**Decided:** NEW-50 stays open until an internal helper does one simulation (`makeSimPed()` then `kinship()`,
+`createSimKinships.R:60-65` and `cumulateSimKinships.R:63-68`) for both functions; each keeps its own loop. NEW-51 is
+closed as accepted (no dimnames guard). Open count 15 -> 14, recomputed by script from the report's table.
+**Measured (smallPed, `pop = LETTERS[1:7]`, seed 42):** 200 simulated matrices, row and column order identical in all
+200 and equal to `ped$id`; `cumulateSimKinships()`'s mean equals the mean of `createSimKinships()`'s matrices under one
+seed. Neither function is called anywhere in `R/`; the vignette and example blocks call `createSimKinships()`. Tests pin
+seeded numbers per function, the `twinRelations` values and `n < 2`, but nothing ties the two functions together. By
+arithmetic (not run): a 3,000-animal matrix is 72 MB, so 1,000 simulations kept as a list is about 72 GB.
+**Tests after the edits:** wordlist_coverage 3, pkgdown_reference_config 5, newsReleaseState 26: 0 failed, 0 error.
+**Not run:** full `test_dir`, `devtools::check()`, lint (no `.R` file changed), runtime smoke (docs only); push or CI
+(every changed path is build-ignored and no test reads any of them as a file).
+**Reduction:** removed the S860 record and the S860 and S859 evaluations (receipts in `HANDOFFS.md`, entries in
+`CHANGELOG.md`); condensed S885.
 
-### What Session 885 Did
-**Deliverable, DONE:** PED_GV audit follow-through: 11 audit ids already fixed in code are closed (Closure record 7 in
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214`) and the `BACKLOG.md` item's count is corrected from 28 to 15. The
-owner picked the item at Phase 0, then "Close the 11 fixed ids". Docs only, so no TDD phase applied.
-Claim `c618eaab3`; closure record `482729a74`; records in the close-out commit.
-**Orient:** no ledger gap (frontiers at HEAD `971b4fcce`); tree clean; master 101 ahead of origin; CI 10/10 success;
-ratchet 1/1; dashboard 96/100 with one HIGH flag (`BACKLOG.md` 57,487 B).
-**Measured, S781 audit claim against today:** `removeUnknownAnimals(smallPed)` 17 rows in, 17 out (was 17 to 0);
-`getAncestors()` on a 2-cycle stops naming `A -> B -> A`; `kinshipMatricesToKValues(list())` stops with "kinshipMatrices
-must contain at least one kinship matrix" (was "object 'kValues' not found"); no `any()` in `getRecordStatusIndex()`;
-no `[1L]` slip left in `getPotentialParents*.R`; `getMaxAx()`, `createPedOne()` and `createPedSix()` roxygen now correct.
-The 6 test files that pin these (getPotentialParents, addUIds, removeAutoGenIds, removeUnknownAnimals, getAncestors,
-kinshipMatricesToKValues) pass; `git log -S` gave each fix its commit (S782, S783, S795, S797-S798, S808-S811).
-**Count:** the `BACKLOG.md` item said 28 after S881 while the report's own count was 26. A script that parses the report's
-43-id table and subtracts every closure record gives 15 open now: NEW-24 (issue #123) plus 14 owner decisions.
-**Tests after the edits:** wordlist_coverage, pkgdown_reference_config, newsReleaseState: 34 tests, 0 failed, 0 error.
-**Not run:** full `test_dir`, `devtools::check()`, lint (no `.R` file changed), runtime smoke (docs only), push or CI
-(every changed path is build-ignored and no test reads the closure text).
-**Reduction:** removed the S859 record and the S858 and S857 evaluations (receipts in `HANDOFFS.md`, entries in
-`CHANGELOG.md`); condensed S884.
-**Correction to my Phase 0 report:** I said no BACKLOG item touches the ledger-size warning. Two adjacent items exist
-(`BACKLOG.md:319`, the `HANDOFFS.md` trim's verify-script FAIL, and `:339`, the `CHANGELOG.md` growth rate) but neither is
-about the 262,144 B no-content read limit, so the finding stands as step C below.
+**Handoff evaluation of S885: 9/10.** Helped: next step A named this exact pickup with its DECISION NEEDED tag and said
+to ask one cluster at a time in plain words; the cluster list matched the report (script: 14 owner decisions plus
+NEW-24); `reportGV.R:229,248,267` were right (the report's 219, 238, 257 are 10 lines stale); "104 ahead" was exact.
+Missing: which cluster is smallest and self-contained, and that the sim functions have no caller in `R/`. Wrong: nothing.
 
-**Handoff evaluation of S884: 8/10.** Helped: next step A named this exact pickup with its DECISION NEEDED tag; "101 ahead"
-and the ledger frontiers were exact at Orient; the BACKLOG item pointed straight at the triage report. Missing: that the
-id count was stale. Wrong: "28 ids" (the report said 26 after S881, and 11 of those 26 were already fixed in code).
+**Self-assessment: 8/10.** + Claimed before technical work; read both functions and measured the audit's row-order
+claim first-hand before asking; recomputed the open count by script; when the owner asked why, re-read the test
+assertions and corrected my own "tests pin the results"; 2-file deliverable commit; no code touched.
+- My first caller grep failed on an unquoted zsh glob and its rerun was cut by `head -40`, so "no callers" briefly rested
+on a cut list (re-run un-truncated before I presented it; it held); I wrote "tests pin the results" from test names only;
+my first option text was dense, so the pick took two extra rounds (clarify, then "why option 1").
 
-**Self-assessment: 8/10.** + Claimed before technical work; checked every id against code, tests and `git log -S` before
-asking, and showed the owner a claim-against-today table; recounted by script, not by hand; 2-file deliverable commit.
-- Wrote the Phase 0 ledger-size sentence without reading the two adjacent BACKLOG items; I had read only ledger headlines
-for NEW-35 and NEW-38 when I recommended closing them (re-ran their tests after the owner chose); long silent stretches.
+**Next steps:** (A) Build the owner's decision: the `BACKLOG.md:29` item (READY, Effort S, strict TDD). First RED test:
+same seed, `cumulateSimKinships()`'s mean equals the mean of `createSimKinships()`'s matrices. Ask the `PRE-RED->RED`
+gate via `AskUserQuestion`; staged commits under the 5-file cap; the owner was not asked whether `cumulateSimKinships()`
+gains `verbose`. (B) PED_GV: NEW-24 (issue #123, leave) plus 12 owner decisions, DECISION NEEDED, Effort S each: error and
+return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported), constants and HTML builders
+(NEW-18, 19, 21, 26, 57), `updateProgress` null checks (NEW-62; 3 blocks). One cluster at a time, in plain words; measure
+the audit's claim first. (C) `BACKLOG.md` compression (READY, Effort L; 59,274 B at close-out). (D) The ledgers:
+after this commit `CHANGELOG.md` is 229,408 B and `HANDOFFS.md` 238,600 B, 32,736 B and 23,544 B under the 262,144 B
+no-content read limit. This session added 2,625 B and 4,146 B; at that rate about 12 and 6 sessions are left (an estimate
+from one session; S885's "2 KB each, 14-19 sessions" was an average over earlier trims and looks too low for
+`HANDOFFS.md`). Needs scheduling and an owner decision soon. (E) Master is 107 ahead of origin after this commit (104 at Orient plus claim, decision, close-out); push only
+on the owner's say-so.
 
-**Next steps:** (A) PED_GV: NEW-24 (issue #123, leave) plus 14 owner decisions, all DECISION NEEDED, Effort S each, strict
-TDD for any code: error/return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported, so an API
-change), sim driver (NEW-50, NEW-51), constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress` null checks
-(NEW-62; 3 blocks). Ask one cluster at a time, in plain words. (B) `BACKLOG.md` compression (READY, Effort L; 57,805 B).
-(C) The ledgers: `CHANGELOG.md` 224,845 B and `HANDOFFS.md` 231,701 B at Orient, 37 KB and 30 KB under the 262,144 B
-no-content read limit. Estimate: about 2 KB per session each (S784/S789 trims to S885), so roughly 14-19 sessions left;
-needs scheduling and an owner decision. (D) The two kinship2 drawing features (which column marks "deceased"); 3.0.0
-release prep and the colony-snapshot backfill each need their own scoping session. (E) Master is 104 ahead of origin after
-this commit (101 at Orient plus claim, closure record, close-out); push only on the owner's say-so.
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:238-261` (Decision record 8); `BACKLOG.md:8-27` (PED_GV
+item) and `:29` (the sim item); `R/createSimKinships.R:60-65`, `R/cumulateSimKinships.R:63-68`;
+`tests/testthat/test_createSimKinships.R:70`, `test_cumulateSimKinships.R:63` (seeded numbers).
 
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214-236` (Closure record 7); `BACKLOG.md:8-27` (the PED_GV
-item); `BACKLOG.md:319,339` (ledger-trim items); `R/reportGV.R:229,248,267` (NEW-62 blocks).
+**Gotchas:** `createSimKinships()` converts the pedigree to a data.table and `cumulateSimKinships()` does not, so the
+helper takes a prepared pedigree; the same-seed equality was measured on `smallPed` only. In zsh an unquoted
+`--include=*.R` fails with "no matches found": quote it, and never `head` a caller grep before saying "no callers".
+Recompute the open count by script (parse the 43 ids, `\**` for bold; subtract closure rows and "CLOSED" decision rows).
+BACKLOG PED_GV lines 24-25 are very long: edit them with short single-line `old_string`s.
 
-**Gotchas:** recompute the open count from the report's table, never carry it: parse the 43 ids (the first column bolds
-some, e.g. `**NEW-31**`) and subtract every closure row. An audit id never appears in a commit message, so attribute a
-fix with `git log -S'<old text>' -- <file>`. The BACKLOG PED_GV item has two very long lines (24-25): edit them with
-short single-line `old_string`s.
+### What Session 885 Did (condensed S886; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+11 PED_GV audit ids already fixed in code closed (Closure record 7, `482729a74`); BACKLOG count corrected 28 -> 15.
+Claim `c618eaab3`. Handoff evaluation of S884: 8/10. Self 8/10.
+**Gotchas kept:** recompute the open count from the report's table, never carry it; attribute a fix with
+`git log -S'<old text>' -- <file>`, since an audit id never appears in a commit message.
 
 ### What Session 884 Did (condensed S885; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Tracked `kinship2-fidelity-validation.pdf` deleted (`4e7bb2725`) and `trackC-nprc-rectilinear.png` regenerated (`5bbad09e3`)
@@ -356,40 +359,3 @@ refresh). (D) Master is 9 commits ahead of origin after close-out; push only on 
 **Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md` (sweep table); `BACKLOG.md:149` (audit item); `docs/planning/cran-2.0.0-phase5-runbook.md:3-11`.
 
 **Gotchas:** banners say a later note was added and point at `CHANGELOG.md` as authority; keep that wording for the sweep. Banner-adding scripts must insert after the H1 line (issue167 has a license header first). BSD sed needs `-i ''`.
-
-### Session 860 Handoff Evaluation (by Session 861)
-**Score: 8/10.** **Helped:** the report's tables had file:line and a "Check" column, so I knew which claims
-were first-hand; "Recommended fixes" mapped directly to the work; the scope (A) was exact. **Wrong/missing:**
-it said master is 5 ahead of origin; measured 6 at Orient. The report cites `module-contract.md` with no
-directory (it is `docs/architecture/`) and the key-files list gave no line for the 7c fix targets beyond the
-runbook. **ROI:** high.
-
-### What Session 860 Did
-**Deliverable, DONE:** docs-staleness audit slice 7c, scoped by the owner to live plans only. Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md`; no code changed; the docs themselves are not fixed. Claim `2c2d1aaea`.
-**Measured:** 9 live `docs/planning/` docs (those an open issue or BACKLOG/ROADMAP item points at) audited by
-4 read-only subagents; 53 moderate findings (ids XA-XI). I re-checked 18 first-hand (rhub missing,
-cran-comments marker absent, #145/#154/#167 closed, `getPossibleCols()` 26 not 24, `effGenOf` gone, signature
-of `modSnapshotTrendsServer`, and more); 36 rest on one agent's read. Header sweep of all 84: 37 of 38
-`issue*` plans have a CLOSED issue; 14+ headers still say DRAFT/not implemented; 11 have no status line.
-**Tests/lint:** none run (docs only). **Not done:** fixing any of the findings; `docs/research/` and older audits.
-**Slips:** my first sed used GNU syntax (BSD needs `-i ''`); my first AskUserQuestion call had malformed JSON; both retried at once.
-**Reduction:** removed the S858 record (git and CHANGELOG keep it); the hook had refused the commit 137 tokens over its ceiling.
-
-**Self-assessment: 7/10.** + Asked the scope question before starting; objective definition of "live"; agent
-claims spot-checked before reporting; limits of checking stated. - Only 18 of 53 moderates re-checked; no
-fixes landed; the last two agent results arrived late and I wrote the report from them in one pass.
-
-**Next steps:** (A) slice 7c fixes, docs only: banners on the shipped plans, in-place edits to the runbook,
-outreach plan and Quarto analysis, three BACKLOG pointers (report "Recommended fixes"). (B) Owner decision:
-`getProductionStatus` 0 dams -> green vs grey. (C) Open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0
-release prep. (D) Master is 5 commits ahead of origin after close-out; push only on the owner's say-so.
-
-**Key files:** the 7c report; `BACKLOG.md:100-160,224,445`; `docs/planning/cran-2.0.0-phase5-runbook.md:137,246-259,270-281`.
-
-**Gotchas:** re-check an agent-only finding before editing the doc. Plans are dated records: banner, do not rewrite bodies. Plan headers lag; `CHANGELOG.md` is the authority.
-
-### Session 859 Handoff Evaluation (by Session 860)
-**Score: 8/10.** **Helped:** the Next steps and the BACKLOG list were accurate; the gotcha about pins and
-figures was not needed but the "push only on owner's say-so" and "ahead of origin" note was true (4 ahead at
-Orient, 3 plus the close-out). **Wrong/missing:** it said "3 commits ahead", measured 4. The BACKLOG
-docs-audit item named slice 7c as next but its scope was undecided; I had to ask. **ROI:** high.
