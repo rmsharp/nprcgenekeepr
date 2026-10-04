@@ -3,6 +3,30 @@
 on:
   push:
     branches: [main, master]
+    # A push that changes ONLY these files starts no run. Keep this list
+    # identical in the four push workflows; test_workflowPathsIgnore.R checks it.
+    paths-ignore:
+      - BACKLOG.md
+      - CHANGELOG.md
+      - CLAUDE.md
+      - HANDOFFS.md
+      - SESSION_NOTES.md
+      - PROJECT_LEARNINGS.md
+      - SESSION_RUNNER.md
+      - SAFEGUARDS.md
+      - BOOTSTRAP.md
+      - FRAMEWORK_LEARNINGS.md
+      - RECOMMENDED_SKILLS.md
+      - ROADMAP.md
+      - CLAUDE_TEMPLATE.md
+      - CONTEXT_TEMPLATE.md
+      - methodology_dashboard.py
+      - methodology_trim.py
+      - context_budget.py
+      - quality_ratchet.py
+      - .context-budget.json
+      - .quality-gates.json
+      - docs/**
   pull_request:
 
 name: test-coverage.yaml
