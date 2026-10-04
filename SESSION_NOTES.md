@@ -168,99 +168,98 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 896 Did
+### What Session 897 Did
 
-**Deliverable, DONE (docs only; `BACKLOG.md` changed, no code, test or R
-file):** compressed four `BACKLOG.md` blocks by the housekeeping item’s
-six-step method: PED_GV closure narrative 20 -\> 13 lines,
-standalone-package item 37 -\> 34, chromote item 23 -\> 17, kinship2
-section preamble 20 -\> 13. The file went 533 -\> 514 lines and 46,731
--\> 43,766 B (the housekeeping item’s own history and candidates grew 4
-lines of that). Claim `0a34f4787`; the deliverable and close-out are the
-commit that carries this note. Owner pick: “Compress BACKLOG blocks” at
-the Phase 0 picker. **What the method’s checks found (these changed the
-text):** (1) the standalone item’s D-2 prep claim had drifted:
-`tests/testthat/test_newsReleaseState.R:234,248` has called
-`.buildMatingUnitForest()` directly since S790-S791, so the item now
-says so and tells the planning session to re-run the grep; (2) its
-`:1661` line reference had rotted
-([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-is at `R/makePedigreeDiagramData.R:1675`), so it cites the function by
-name; (3) the Mozilla Bugzilla \#1893921 analog in the chromote item is
-in no ledger entry, so it stayed in the item; (4) the PED_GV “9 remain”
-was recomputed by script from the triage table (43 ids, 34 closed, the 9
-named, none double-counted). Open text was copied by script, not
-retyped; the `git diff` hunks touch only the four ranges and the
-housekeeping item. Cited paths, Learnings 410/411/485/488-499 and issues
-\#123/#131/#133/#136-#138/#145/#154 resolve. **Not run:** the R suite,
-`devtools::check()`, lint, CI: every changed file is `.Rbuildignore`d
-(`.Rbuildignore:70-80`) and no test opens any of them (grep: 0
-`readLines`/`file.path` readers); no `R/` file changed.
-`quality_ratchet.py --run` 1/1 pass (results `0c369cca1231`, manifest
-`aa983075d6a2`); dashboard 96/100, High+ risk 0. No runtime change, so
-no smoke test. No `CLOSEOUT_CHECKLISTS.md` item triggered (no `R/` file,
-no issue-linked item completed, no CI break). Learning 865. Not pushed.
+**Deliverable, DONE (docs only; ledger files changed, no R, test or
+build file):** trimmed `CHANGELOG.md` with
+`methodology_trim.py --file CHANGELOG.md --budget-bytes 65536 --force --cut 2026-10-03 --write`:
+311 of 329 entries (2026-09-26 to 2026-10-03) moved to
+`docs/archive/CHANGELOG-through-2026-10-03.md` (235,474 B) with its
+`.verify.sh`; live file 258,724 B -\> 25,172 B, now 236,972 B under the
+262,144 B Read refusal. Claim `86b537e3e`, trim `f4b181c69`; the
+close-out commit carries the receipt, notes, Learning 866, the BACKLOG
+note and this session’s ledger entry. Owner pick: “Trim CHANGELOG.md” at
+the Phase 0 picker, then “archive with a clean day seam” when I put the
+`--force` override (the trimmer refuses: SRF 7.9455 RED, the last
+archive refilled within about a week) to the owner with two measured
+dry-run cuts. **Verified:** the tool’s L1/L2/L3 and P1A; the shard’s
+`verify.sh` passes; independently, 329 entries = 18 retained + 311
+archived (+1 tool-written), none missing or duplicated, order kept; 322
+byte-identical and 7 differ only by the tool’s link re-basing (`](X)`
+-\> `](../../X)`, undone exactly, all 17 targets resolve);
+`quality_ratchet.py --run` 1/1 pass (results `958e31fae3ab`, manifest
+`aa983075d6a2`). **Not run:** the R suite, `devtools::check()`, lint,
+CI: every changed file is `.Rbuildignore`d (`^docs$`,
+`^CHANGELOG.*\.md$`) and the 5 test files that name `CHANGELOG.md` do so
+in comments only; no runtime change, so no smoke test. Learning 866. Not
+pushed.
 
-**Handoff evaluation of S895: 9/10.** Helped: step (B) named this task,
-its four blocks and their line numbers (`:231`, `:289-311`, `:398`,
-`:8-27`) and every anchor matched the file; its `CHANGELOG.md` headroom
-matched my Phase 0 measure (254,668 B). Missing: it did not say the
-method’s step-1 heading check must match the older `(Session N)` /
-`[issue #N]` forms (my first script reported 11 false “no heading”
-results); its 20-45 line estimate ran a little high (net 19). Wrong:
-nothing found. Item (A) (push) was settled by the owner between
-sessions; the handoff could not know that.
+**Handoff evaluation of S896: 9/10.** Helped: step (B) gave the exact
+command and the `--force` expectation, which held; its headroom figure
+(257,537 B) was true at its close-out, and the one later commit (the
+push-record addendum) accounts for the 758 B I measured at Phase 0
+(258,295 B); all 7 parked items exist by name in `BACKLOG.md`. Missing:
+it did not say that S892’s `--force` was an owner decision put with a
+dry run (that precedent is in the ledger, not the handoff), or that
+`--cut <date>` avoids the day-straddle warning. Wrong: nothing found.
 
 **Self-assessment: 8/10.** + Orientation complete before the picker;
-claimed before work; every fact I cut was checked against the ledger or
-the tree first, which caught two stale claims and one fact held nowhere
-else; open text proved intact by the diff; anchors asserted before the
-write (one tripped, nothing written); re-read end to end; no scope
-creep. - Two long silent tool chains (the harness nagged); a wrong first
-heading regex and a wrong first block-end anchor cost round trips; my
-first history figures (`533 -> 510`) were taken before the housekeeping
-item grew and had to be re-measured; the receipt is 4.2 KB, above the
-2.7 KB average. Reduction: the S895 record is condensed below and the
-S866 and S869 records are removed (full records stay in `CHANGELOG.md`
-and `HANDOFFS.md`), but this record is long, so the file still grew net
-642 B (31,089 -\> 31,731 B at close-out; ceiling 65,536 B). Nothing else
-was removable without losing a live gotcha.
+claimed before work; dry runs before any write, and the one guard
+override put to the owner with measured alternatives; verified the trim
+independently and explained my own 7 false mismatches exactly instead of
+dismissing them; no scope creep. - I skipped the Phase 0
+ratchet-citation check at first and did it before the claim; an ad hoc
+`gh run list --json` returned stale S680 runs (unexplained), so I re-ran
+the plain form; two quiet tool stretches. Reduction: `CHANGELOG.md`
+shrank 233,552 B; here the S896 record is condensed and the S871 and
+S872 records are removed (full records stay in
+`CHANGELOG-through-2026-10-03.md` and `HANDOFFS.md`).
 
-**Next steps (owner-ordered):** (A) the owner decides whether to push
-this session’s two local commits (claim `0a34f4787` and the close-out):
-docs only, no CI wait; each push starts four workflows. (B) S897,
-recommended: trim `CHANGELOG.md`
-(`python3 methodology_trim.py --file CHANGELOG.md --budget-bytes 65536`;
-expect `--force`, as for `HANDOFFS.md` in S892). It is 257,537 B,
-**4,607 B under the 262,144 B Read refusal**. The last three sessions
-added 2,686, 1,700 and 1,399 B (measured from `git show`), so S897 would
-leave about 1.9 to 3.2 KB and S898 likely crosses (an estimate); a
-session that reads it past the limit cannot. (C) The owner keeps or
-declines the 7 parked Effort-S items (`isAddedRecord()`, CI
-`paths-ignore`, trim verify script, Candidate C, `highlightNearest`,
-rhesus docstring, row-order item). (D) Then one real fix per session.
-The next BACKLOG compression candidates are named, measured, in the
-housekeeping item (`BACKLOG.md:331`). **Owner decision still open (from
-S892; not filed, not asked):** shorter receipts would lower the
-`HANDOFFS.md` refill rate (169,316 B now; 92,828 B under the Read
-refusal, room for about 34 more receipts at the 2.7 KB average, an
-estimate). Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)`
-unfiled.
+**Next steps (owner-ordered):** (A) The owner decides whether to push
+this session’s three commits (claim `86b537e3e`, trim `f4b181c69`,
+close-out): docs only, and a push starts four workflows that are not
+waited on. (B) The owner keeps or declines the 7 parked Effort-S items
+(`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C,
+`highlightNearest`, rhesus docstring, row-order item). (C) Then one real
+fix per session; the next BACKLOG compression candidates are named in
+the housekeeping item. **Owner decision still open (from S892; not
+filed, not asked):** the ledgers refill faster than a trim helps
+(`CHANGELOG.md` 37,593 B -\> 258,724 B in 7 days; `HANDOFFS.md` about
+169 KB); shorter claim/close-out entries and receipts are the lever (the
+BACKLOG item on the ledger’s ~4-entries-per-session convention now
+carries the measurement). An estimate, not a measurement: at the last
+three sessions’ 1.4-2.7 KB each, `CHANGELOG.md` reaches the 65,536 B
+budget in about 15-29 sessions. Carried: PED_GV next group (the 9 ids),
+`reportGV(smallPed)` unfiled.
 
-**Key files:** `BACKLOG.md:8-20` (PED_GV), `:224-257` (standalone
-package; D-2 drift note `:251-257`), `:279-295` (chromote), `:386-398`
-(kinship2 preamble), `:331-371` (housekeeping item);
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:147-333` (the closure and
-decision records); `tests/testthat/test_newsReleaseState.R:234,248` (the
-D-2 drift); `PROJECT_LEARNINGS.md` Learning 865.
+**Key files:** `docs/archive/CHANGELOG-through-2026-10-03.md` and
+`.verify.sh`; `CHANGELOG.md:65-71` (pointer block, the S897 entry and
+the tool’s entry); `.Rbuildignore:15,77`; `BACKLOG.md` (the ledger-rate
+item and the housekeeping item); `PROJECT_LEARNINGS.md` Learning 866.
 
-**Gotchas:** search ledger headings for both `S<N>` and `(Session N)` /
-`[issue #N]`; before replacing a fact with a pointer, regex the ledger
-entry body for it (the Bugzilla analog was not there); `BACKLOG.md`
-blocks A and B run straight into the next item with no blank line (C and
-D do not); `.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore
-them in greps; the PED_GV open paragraph (`BACKLOG.md:16-18`) has one
-very long line, so edit it with a short `old_string`.
+**Gotchas:** `--force` is needed (SRF_RED) and the override is the
+owner’s call (S892, S897); `--cut <YYYY-MM-DD>` gives a clean day seam
+and the newest date is refused; the tool re-bases markdown links in
+archived entries (7 of 329), so a byte compare shows false differences
+(Learning 866); it writes its own ledger entry and never commits, so
+stage the ledger, shard and `.verify.sh` together; a
+`gh run list --json` variant returned S680-era runs while the plain form
+returned current ones (unexplained): use the protocol’s plain form.
+
+### What Session 896 Did (condensed S897; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+Compressed four `BACKLOG.md` blocks (PED_GV closure narrative 20 -\> 13
+lines, standalone-package item 37 -\> 34, chromote item 23 -\> 17,
+kinship2 preamble 20 -\> 13; file 533 -\> 514 lines, 46,731 -\> 43,766
+B). Claim `0a34f4787`, close-out `e9d1bdf6e`, push-record addendum
+`fa28a54b0`; the owner pushed the first two. Handoff evaluation of S895:
+9/10. Self 8/10. **Gotchas kept:** search ledger headings for both
+`S<N>` and `(Session N)` / `[issue #N]`; before replacing a fact with a
+pointer, regex the ledger entry body for it; `BACKLOG.md` compression
+blocks A and B run into the next item with no blank line;
+`.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore them in
+greps; the PED_GV open paragraph has one very long line, so edit it with
+a short `old_string`.
 
 ### What Session 895 Did (condensed S896; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
@@ -525,22 +524,3 @@ two fixtures left). Planning only. Claim `6a84d5abe`. Self 8/10.
 **Gotchas kept:** single-bracket `sexCodes["male"]` is named and breaks
 [`identical()`](https://rdrr.io/r/base/identical.html); `.shapeForVec`
 at `makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`.
-
-### What Session 872 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-
-**DONE:** owner decision recorded: every direct sex letter in `R/` goes
-through `sexCodes` (PED-2, NEW-29, PED-7; ids stay open). BACKLOG item
-and triage Decision record 3. Docs only. Claim `bbe315dfa`; close-out
-`9d811590d`. Self 8/10. **Gotchas kept:** `convertSexCodes.R:56` lists
-the letters as factor levels and `sexCodes.R` defines them; the guard
-must not flag either. Many `R/` hits are roxygen (`#'`), not code.
-
-### What Session 871 Did (condensed S872; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-
-**DONE:** NEW-61 decision recorded and documented: `reportGV` lists
-known founders only; `calcFEFG` counts every both-parents-unknown animal
-as an unrelated founder. Roxygen in both files; triage Closure record 2.
-Docs only. Claim `f00361217`; docs `5f6ba3c0b`. Self 8/10. **Gotchas
-kept:** `roxygen2::roxygenise()` also rewrites
-`man/nprcgenekeepr-package.Rd` (revert it) and prints two old
-`@inheritParams` errors (`addParents`, `removeUninformativeFounders`).

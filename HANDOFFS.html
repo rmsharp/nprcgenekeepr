@@ -63,6 +63,22 @@
 <div class="section level2">
 <h2 id="format--a-fenced-handoff-block">Format — a fenced <code>handoff</code> block<a class="anchor" aria-label="anchor" href="#format--a-fenced-handoff-block"></a></h2>
 <pre><code>```handoff
+session: S897
+date: 2026-10-04
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- trimmed CHANGELOG.md: 311 of 329 entries (2026-09-26 to 2026-10-03) archived to docs/archive/CHANGELOG-through-2026-10-03.md (235,474 B) with its .verify.sh; live file 258,724 B -&gt; 25,172 B, now 236,972 B under the 262,144 B Read refusal. The owner picked it at the Phase 0 picker (READY, Effort S) and ruled on the --force override (the trimmer refuses with SRF_RED 7.9455) as "archive with a clean day seam" (--cut 2026-10-03). Docs only: no R file, test or build file changed. Claim 86b537e3e, trim f4b181c69; these and this session's close-out commit are NOT pushed.
+what_was_done: Phase 0 in full (no ledger gap, 0 pending receipts, ratchet citation matches the results file, dashboard 96/100, budget OK, no failed CI run); owner pick; claim 86b537e3e; dry runs (default, --force, --cut 2026-10-03, and --cut 2026-10-04, which the tool refuses) wrote nothing; the override was put to the owner with the two measured cuts; --write ran once. Verified independently: tool L1/L2/L3 + P1A, the shard's verify.sh, 329 = 18 retained + 311 archived (+1 tool-written), none missing or duplicated, order kept; 322 byte-identical and 7 differ only by the tool's link re-basing (undone exactly; 17 targets resolve); ratchet 1/1. Checked that all changed files are .Rbuildignore'd and 5 tests name CHANGELOG.md in comments only. CLOSEOUT_CHECKLISTS.md read: none triggered (--budget-bytes 65536 was passed; no sync happened). Learning 866; BACKLOG ledger-rate item got the measurement. Not run: R suite, check(), lint, CI.
+next_steps: Owner-ordered. (A) The owner decides whether to push this session's three commits (claim 86b537e3e, trim f4b181c69, close-out): docs only, no CI wait. (B) The owner keeps or declines the 7 parked Effort-S items (isAddedRecord(), CI paths-ignore, trim verify script, Candidate C, highlightNearest, rhesus docstring, row-order item). (C) Then one real fix per session; the next BACKLOG compression candidates are in the housekeeping item. Owner decision still open (from S892; not filed, not asked): the ledgers refill faster than a trim helps (CHANGELOG.md 37,593 B -&gt; 258,724 B in 7 days; HANDOFFS.md about 169 KB); shorter claim/close-out entries and receipts are the lever. An estimate, not a measurement: at the last three sessions' 1.4-2.7 KB each, CHANGELOG.md reaches the 65,536 B budget in about 15-29 sessions. Carried: PED_GV next group (9 ids), reportGV(smallPed) unfiled.
+key_files: docs/archive/CHANGELOG-through-2026-10-03.md and .verify.sh; CHANGELOG.md:65-71 (pointer block, the S897 entry and the tool's entry); .Rbuildignore:15,77; BACKLOG.md (the ledger-rate item and the housekeeping item); PROJECT_LEARNINGS.md Learning 866.
+gotchas: --force is needed (SRF_RED) and the override is the owner's call (S892, S897); --cut &lt;YYYY-MM-DD&gt; gives a clean day seam, the newest date is refused. The tool re-bases markdown links in archived entries (7 of 329), so a byte compare shows false differences (Learning 866). It writes its own ledger entry and never commits: stage the ledger, shard and .verify.sh together. A gh run list --json variant returned S680-era runs while the plain form returned current ones (unexplained): use the plain form.
+runtime_smoke: none -- docs only, no runtime change; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 958e31fae3ab · manifest aa983075d6a2
+changelog_ref: S897 DONE entry
+commit: the close-out commit that carries this receipt; claim 86b537e3e, trim f4b181c69
+```
+
+```handoff
 session: S896
 date: 2026-10-04
 status: complete

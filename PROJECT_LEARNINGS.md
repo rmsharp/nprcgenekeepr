@@ -13297,3 +13297,28 @@ them again double-counts. Also: copy open-item text from the file by
 script and assert the anchors before writing, so a wrong assumption
 (block A runs straight into the next item with no blank line) fails
 before any write.
+
+#### Learning 866
+
+**A trimmer’s “differences” need an exact explanation, not a dismissal:
+`methodology_trim.py` re-bases markdown links in the records it
+archives, and `--cut <YYYY-MM-DD>` is how to get a clean day seam.**
+(S897, 2026-10-04.) My own entry-by-entry byte comparison of
+`CHANGELOG.md` before and after the trim found 7 of 329 entries
+different, while the tool’s L1/L2/L3 and the shard’s `verify.sh` said
+all held. All 7 were earlier tool-written “Ledger trim” entries that
+hold markdown links, and the only difference is `](X)` -\> `](../../X)`:
+the tool rewrites repo-root link targets so they resolve from
+`docs/archive/`. Undoing that one substitution reproduced `HEAD`’s text
+for 7 of 7 and all 17 rebased targets exist, so the tool’s checks were
+right and the comparison to run is “identical, or identical after the
+inverse re-base”. Other measurements for the next trim: the computed cut
+straddles a day (`CUT_STRADDLES_DAY`, 306 entries moved),
+`--cut 2026-10-03` moved 311 with no warning and left only the newest
+day live, and `--cut` of the newest date is refused
+(`CUT_OUT_OF_RANGE`). The refill that raised `SRF_RED` (7.9455) was
+37,593 B (the 2026-09-27 trim) to 258,724 B in 7 days. Rules: (1) when
+an independent check disagrees with a tool’s proof, find the exact
+transformation before choosing a side; (2) run `--force` as a dry run
+(no `--write`) first, and put the cut to the owner with the measured
+alternatives.
