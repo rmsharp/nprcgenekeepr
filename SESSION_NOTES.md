@@ -99,82 +99,70 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 889 Did
-**Deliverable:** NEW-28, `reportGV()` names the missing required columns up front (`BACKLOG.md:29`; READY, Effort S;
-strict TDD, RED -> GREEN -> REFACTOR with a gate before each) (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning at PRE-RED: read Decision record 10 and `R/reportGV.R`, then the scope-gate
-question (replace or precede the `:291` check; missing columns only?) goes to the owner before RED is declared.
-**Orient:** no ledger gap (frontiers at HEAD `9b14b7a32`); tree clean; master 117 ahead of origin (none of the 117 has
-had a CI run); CI 10/10 success; ratchet 1/1; dashboard 96/100, one High+ flag; context budget OK (growth run 51/10);
-`CHANGELOG.md` 237,053 B, `HANDOFFS.md` 246,645 B, `BACKLOG.md` 59,454 B. The two sequencing audits were not re-read
-(S888's Orient found both fully executed).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** NEW-28 shipped: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` as its first statement (one
+`assertRequiredColsPresent()` call, `R/reportGV.R:173-183`) and names every missing one in one message before `kinship()`
+runs; the late `sex`-only check is deleted. Strict TDD. Claim `419a25c3c`, RED `22cc2f63f` + `e86e68b4e`, GREEN `7f6216876`,
+REFACTOR `67b8afd21` (comment only), NEWS `afd4952a0`, BACKLOG and triage closure `3907b0d3b`; the close-out commit holds the
+receipt, these notes, the ledger entry, Learning 855.
+**Owner choices (plain words):** five columns up front with the old `sex` check deleted (my recommendation); missing
+columns only. **My error, then a re-decision:** I told the owner no test pinned the old order and that the partial-parentage
+test's pedigree "has `sex`". `lacy1989Ped` has none; `test_calcFEFG.R:66` pins that a sex-less pedigree gets `calcFEFG()`'s
+partial-parentage message first (the comment I deleted at the old `reportGV.R:286-290` named it). GREEN found one failure; I
+shelved the edit and told the owner, who kept five columns and had that test's pedigree given a `sex` column (`e86e68b4e`,
+passes on old and new code). Cost: a GREEN -> RED -> GREEN detour. I also told the owner the e2e files exercise the app's
+`reportGV()` call; the default run skips them (`NPRC_RUN_E2E`), so I ran the genetic-value three with it set.
+**Verified:** `test_reportGV.R` 42 tests, 0 failed (RED: 8 expectation failures in 6 tests, each the intended message); full
+unfiltered suite 367 files, 2,982 tests, 0 failed, 0 error, 187 skipped (incl. the 34 `test-app-*`/`test-e2e-*` files);
+genetic-value e2e trio with `NPRC_RUN_E2E=true`: 22/22 in the live app, 0 skipped; seeded `reportGV(qcPed)` identical to a
+pre-change baseline (fresh process); `lint_package()` 0; NEWS, wordlist and rbuildignore tests pass; `quality_ratchet.py
+--run` 1/1 (results `4c089d72b67b`). Open count 10 -> 9 by a rebuilt script (validated on the unchanged report: 43/33/10).
+**Not run:** `devtools::check()`, CI (nothing pushed), the other 31 e2e files.
+**Reduction:** removed the S863 record and its evaluation; condensed S888. `BACKLOG.md` 59,454 B -> 58,228 B (1,478 B over budget).
 
-### What Session 888 Did
-**Deliverable, DONE:** PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36), docs only: no code, no tests (TDD
-phases N/A). The owner kept the `reportErrors` two-mode pattern (PED-6, NEW-36 closed, accepted) and chose a clear up-front
-message in `reportGV()` only (NEW-28 decided, open until it ships; PED-5 closed). Claim `3dae4cfd2`, Decision record 10
-`5a47eb8a3`, probes P10 and P11 `b0f748891`; the close-out commit holds the receipt, these notes, the ledger entry, Learning 854.
-**Orient:** no ledger gap (frontiers at HEAD `0a26d9b5e`); tree clean; master 113 ahead of origin (`f0bcb9f48`, S858), and none
-of the 113 has had a CI run; CI 10/10 success; ratchet 1/1; dashboard 96/100, one High+ flag; context budget OK (growth run
-50/10); both sequencing audits fully executed.
-**Method:** the owner picked PED_GV at Phase 0, then the error-behavior group out of four plain-words groups (my
-recommendation). I measured before asking (ran the code unless "read"). Six exported functions take `reportErrors`
-(`qcStudbook`, `correctParentSex`, `removeDuplicates`, `checkParentAge`, `checkRequiredCols`, `convertDate`; four run in both
-modes, `checkParentAge` and `convertDate` read) and the app calls `qcStudbook()` with TRUE, then FALSE (`R/runQcStudbook.R:125,212`).
-Outside QC bad input gives a clear message (`getGeneticDiversityStats()`), a base-R message (`reportGV()`, `calcGU()`,
-`calcRetention()`) or a silent result (`filterReport()`, `rankSubjects(NULL)`). The S781 row's "none in `reportGV`" was stale:
-the `:291` check (issue #123, S386) runs after `kinship()` and `geneDrop()`. Per-column probe on the `reportGV()` example
-pipeline (704 rows): without `id`, `sire`, `dam` or `gen` a base-R message, without `sex` the named one, without `birth`,
-`exit`, `age` or `population` no error.
-**Verified:** `test_wordlist_coverage.R`, `test_rbuildignore.R`, `test_pkgdown_reference_config.R`: 10 tests, 0 failed,
-0 error. Open count by script: 43 ids, 33 closed, 10 open (the same script gave 13 on S887's report). `quality_ratchet.py
---run`: 1/1 pass, results `60e009e87fe0`. **Not run:** full suite, `devtools::check()`, lint, runtime smoke, CI (docs only;
-every changed path is build-ignored).
-**Reduction:** removed the S862 record and its evaluation; condensed S887. `BACKLOG.md` grew 1,458 B to 59,454 B (2,704 B over
-its budget) and was not compressed: that is its own item.
+**Handoff evaluation of S888: 9/10.** Helped: next step A(1) named the two scope-gate questions I then asked; the key-file
+lines `R/reportGV.R:179,223,291` and `R/assertRequiredColsPresent.R:19` matched; BACKLOG 59,454 B, the ledger sizes and "117
+ahead" matched Orient to the byte; the `smallPed` warning kept me off a bad fixture (I used `qcPed`, 280 rows, 0.25 s).
+Missing: that `lacy1989Ped` has no `sex` and `test_calcFEFG.R:66` pins the old order; `qcPed` as the fast fixture. Wrong: the
+gotcha "run the `test-app-*` and `test-e2e-*` files in the full suite" implies the full suite runs them; it skips them
+unless `NPRC_RUN_E2E=true`.
 
-**Handoff evaluation of S887: 9/10.** Helped: next step A named these 12 ids in the same four groups I put to the owner,
-with tags; "measure the audit's claim first" was needed (one stale claim found); `BACKLOG.md:8-27` and the triage doc's
-`:263-271` were exact; BACKLOG 57,996 B, the ledger sizes and "113 ahead" matched Orient to the byte. Missing: that the S781
-table's `getPotentialParents.R` line numbers (`:90,211`) predate the S881 split (its `NULL` returns are now at `:103,161`),
-and that `core.hooksPath` is unset here. Wrong: nothing found.
+**Self-assessment: 7/10.** + Claimed before technical work; measured the baseline (messages, timing, a seeded result) before
+asking; asked in plain words with a recommendation; read each RED failure message; caught the `@param ped` leak (13 man pages)
+before committing; reported my wrong claim at once, shelved the edit rather than bending a test, and let the owner re-decide;
+validated the rebuilt count script on the unchanged report; verified the e2e skip and ran the relevant files.
+- A false statement to the owner drove a choice (same family as Learning 852); a GREEN -> RED -> GREEN detour; I said the e2e
+files covered the app path before checking they skip; my first seeded-identity run (FALSE) was a harness artifact; a stray
+write to `/tmp` (removed); `BACKLOG.md` is still over budget; my receipt (+4,863 B in `HANDOFFS.md`, with the claim stub)
+came out longer than S888's (+4,388 B) though I meant to shorten it, which leaves about 2 sessions of `HANDOFFS.md` runway.
 
-**Self-assessment: 8/10.** + Claimed before technical work; chased the ratchet-hash difference and found it is measurement
-noise (three hashes, same verdict, every changed path build-ignored); asked the group question in plain words with a
-recommendation (answered at once); said which facts I ran and which I only read; caught my invalid first fixture (`smallPed`
-fails `reportGV()` unmodified) from the baseline line and re-ran; grepped every citation against the files before the commit,
-which fixed three errors; recomputed the open count by script, validated on the unchanged report (13) first; stayed docs-only
-and under the 5-file cap; did not compress `BACKLOG.md` ("while I'm at it").
-- In my message to the owner I listed `cumulateSimKinships()` and `getPedDirectRelatives()` as clear-message functions without
-saying I had only read them (the record says so; neither changes the decision); my first fixture was invalid; three
-first-draft citations were wrong (fixed before commit); one probe, `kinship('a','b',NA,pdepth=1)`, was a malformed call and
-I dropped it; my first receipt draft was longer than S887's and I cut it; `BACKLOG.md` got longer.
+**Next steps:** (A) PED_GV, the next owner-decision group (8 ids, plus NEW-24 on issue #123; DECISION NEEDED, Effort S each):
+walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress` null checks
+(NEW-62; now `R/reportGV.R:247,266,285`, all three exist). One group per session, in plain words; first read the tests and
+comments that pin today's behavior. (B) `BACKLOG.md` compression (READY, Effort L): 1,478 B over budget. (C) The
+ledgers need an owner decision: CHANGELOG.md 240,102 B and HANDOFFS.md 251,508 B after this commit, 22,042 B and
+10,636 B under the 262,144 B no-content read limit; this session added 3,049 B and 4,863 B, so about 7 and 2 sessions
+are left (an estimate from one session; S888 said 5 and 3). (D) Docs-audit item: its Slice 2 screenshot findings (31
+of 38 images differ) were never acted on though the item says "nothing further is scoped"; ask whether to fix that
+line or scope a slice. (E) Not filed: `reportGV()` on an unprepared pedigree with every column (`smallPed`) still
+stops with "sire and dam must have had alleles assigned". (F) Master is 125 ahead of origin after this commit; push
+only on the owner's say-so; `R/` changed and nothing has had CI, so wait for CI after a push.
 
-**Next steps:** (A) PED_GV, one of: (1) NEW-28 implementation: `reportGV()` names missing required columns up front
-(`BACKLOG.md:29`, READY, Effort S, strict TDD; at its scope gate ask whether the new check replaces or precedes the `:291`
-one, and whether "clear message" means missing columns only); (2) the next owner-decision group, 8 ids left, DECISION NEEDED,
-Effort S each: walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress`
-null checks (NEW-62; S887 gave `reportGV.R:229,248,267`, I re-checked only `:229`); NEW-24 stays on issue #123. One group at a
-time, in plain words; measure the audit's claim first. (B) `BACKLOG.md` compression (READY, Effort L): 59,454 B is 2,704 B over
-the 56,750 B budget (cutting the docs-audit and chromote items, the file's own named next cuts, is arithmetic, untried).
-(C) The ledgers: after this commit `CHANGELOG.md` is 237,053 B and `HANDOFFS.md` 246,645 B, 25,091 B and 15,499 B under the
-262,144 B no-content read limit; this session added 4,204 B and 4,388 B, so about 5 and 3 sessions are left (an estimate from
-one session; S887 said 8 and 5). Needs an owner decision and scheduling now; shorter receipts help. (D) Master is 117 ahead of
-origin after this commit; push only on the owner's say-so; none of the unpushed commits has had CI, and `R/` changed in earlier
-sessions, so wait for CI after a push.
+**Key files:** `R/reportGV.R:173-183` (the check), `tests/testthat/test_reportGV.R:831-895` (NEW-28 tests),
+`tests/testthat/test_calcFEFG.R:66-80`, `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:320-333` (Closure record 11),
+`NEWS.Rmd:389-392`, `tests/testthat/helper-shinytest2.R:200-207` (the e2e opt-in).
 
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:273-319` (Decision record 10), `:390-407` (probes P10, P11);
-`BACKLOG.md:8-27` (PED_GV item), `:29-41` (the `reportGV()` item); `R/reportGV.R:179` (`kinship`), `:223` (`geneDrop`), `:291`
-(the `id` and `sex` check); `R/assertRequiredColsPresent.R:19` (the validator a new check would call); `R/runQcStudbook.R:125,212`.
+**Gotchas:** default test runs skip the 34 `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true` (Chrome is installed).
+The shared `@param ped` is inherited by 13 man pages: put function-specific text in details. `lacy1989Ped` has no `sex`. Run
+seeded identity checks in a fresh process. The open-count script is not in the repo: ids from the triage table's first
+column, closed = ids in Closure record sections plus Decision-record rows starting CLOSED; validate it on the unchanged
+report first. `git stash list` holds an old `dev`-branch entry (not mine). `core.hooksPath` is unset.
 
-**Gotchas:** `smallPed` is not a good-input fixture for `reportGV()` (fails unmodified); use the `@examples` pipeline
-(`examplePedigree`, `qcStudbook(minSireAge = 2, minDamAge = 2)`, `setPopulation`, `trimPedigree`; 704 rows; `guIter = 10L`,
-`guThresh = 3`). `reportErrors` is the app's QC contract: never change one function's return alone. The open-count script (ids
-with `\**` for bold, closure-section rows, decision rows starting CLOSED) gave 13 on S887's report, 10 now. The ratchet's
-results hash changes on every run (the measured tarball size moves by tens of bytes): compare the counts and the manifest.
-`core.hooksPath` is unset, so the ledger co-staging hook is not enforced. Guess, not traced: a new check in `reportGV()` cannot
-change app behavior since the app runs QC first; run the `test-app-*` and `test-e2e-*` files in the full suite after any change.
+### What Session 888 Did (condensed S889; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36): the owner kept the `reportErrors` two-mode pattern (PED-6,
+NEW-36 closed) and chose a clear up-front message in `reportGV()` only (NEW-28 decided; PED-5 closed). Docs only. Claim
+`3dae4cfd2`, Decision record 10 `5a47eb8a3`, probes `b0f748891`. Handoff evaluation of S887: 9/10. Self 8/10.
+**Gotchas kept:** `smallPed` is not a good-input fixture for `reportGV()` (fails unmodified); `reportErrors` is the app's QC
+contract: never change one function's return alone; the ratchet's results hash changes on every run: compare counts and manifest.
 
 ### What Session 887 Did (condensed S888; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-50 shipped: `createSimKinships()` and `cumulateSimKinships()` call one internal `.simulateKinship()`
@@ -311,18 +299,3 @@ the confirm observer and status text as further near-duplicates; I found them by
 **Gotcha kept:** the modules (`R/modMatePair.R:562`, `R/modBreedingGroups.R:889`) pass any non-NULL
 rules table to the builder, so a zero-rule run yields a 1-row CSV; the UI text around the download
 button was not inspected.
-
-### Session 863 Handoff Evaluation (by Session 864)
-**Score: 8/10.** **Helped:** next steps named the three mate-pair leftovers with their DECISION/READY
-tags, which made the scope question easy to pose. **Missing:** it did not say both tabs reach the
-manifest through one builder, nor what a zero-rule manifest should look like. **Wrong:** nothing
-found (the "22 ahead" count was 23 at Orient because the close-out commit followed). **ROI:** high.
-
-### What Session 863 Did (condensed S865; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** `getProductionStatus()` with 0 breeding-age females returns NA production/colour/index
-(was green); the heat map draws NA gray. Strict TDD; claim `1bcc1f76e`, GREEN `317d61687`.
-Self-score 8/10. Slips: a test pinning the old green was missed in RED; prose "grey" failed
-`test_wordlist_coverage.R` (use "gray" in docs).
-**Gotchas kept:** `getGeneticDiversityStats()` now emits an NA Production cell for a no-dam group;
-the modules' own UI text for an NA cell was not inspected. `devtools::document()` churns
-`man/nprcgenekeepr-package.Rd`; revert it unless DESCRIPTION changed on purpose.
