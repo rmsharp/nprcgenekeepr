@@ -211,6 +211,30 @@ Open after this closure: **28 ids** (29 minus NEW-55).
 
 Open after this closure: **26 ids** (28 minus PED-4 and NEW-54).
 
+### Closure record 7 (owner decision 2026-10-03, S885) -- ids already fixed in code
+
+The owner agreed to close these **11 ids**. Each was checked against today's code and its pinned tests, not the
+ledger alone. Closing changes no code, and the table above stays the frozen S781 reading. These ids stayed open
+only because the fixes travelled under session and issue names, not audit ids (Structural Observation 1).
+
+| id | closed because |
+|---|---|
+| NEW-31, NEW-32 | FIXED (F1, S782 `3aae4b9cb`): `removeUnknownAnimals()` returns a pedigree with no `recordStatus` column unchanged. S885: `smallPed` 17 rows in, 17 out (was 17 to 0); `test_removeUnknownAnimals.R` passes. |
+| NEW-41 | FIXED (F4, S783 `c0ef7bc6a`): `getAncestors()` stops with a message naming the cycle and keeps the documented diamond repeats. S885: a 2-cycle gives "...A -> B -> A"; `test_getAncestors.R` passes. The absent-id and depth-limit findings are their own BACKLOG item and stay open. |
+| NEW-35 | FIXED (F3, S798, RED `4bbcb071d`, GREEN `174be7f5e`): the dam fallback no longer re-admits a female ruled out by the gestation window. Pinned at `test_getPotentialParents.R:316,329,341` (the first is named for probe P5); the file passes S885. |
+| NEW-38 | FIXED, both halves: `addUIds()` never mints a duplicate of an existing id, including an id used only as a sire or dam (S797 `cf956da81`, S808 `bac494e0c`; `test_addUIds.R:39,68`); a real id that merely starts with the prefix is kept by the `placeholder` mark (S808-S811, e.g. `410273d54`, `665e9c475`; `test_removeAutoGenIds.R:61,95,116`). Both files pass S885. |
+| NEW-14 | FIXED (S795 GREEN `a2fe3443a`, restyle `926cc907b`): the first-flag accumulator is gone, and an empty list stops with "kinshipMatrices must contain at least one kinship matrix" (was "object 'kValues' not found"). `test_kinshipMatricesToKValues.R` passes. |
+| PED-11 | FIXED (S795 `926cc907b`): `getRecordStatusIndex()` no longer wraps `%in%` in `any()`. |
+| NEW-63 | FIXED (S795 `926cc907b`): the `getMaxAx()` roxygen now says non-negative integer `male` and `female` counts. |
+| PED-10, NEW-43 | DOC FIXED (S795 `926cc907b`): the `createPedOne()` and `createPedSix()` roxygen say the `data` subdirectory of `tempdir()`. `savePed = TRUE` still writes there by default; the triage accepted that for these `@noRd` internals. |
+| NEW-56 | GONE: `pUnknown$id[i][1L]` is not in `R/getPotentialParents*.R` (S880 and S885 both checked). |
+
+Open after this closure: **15 ids** (26 minus 11). The `BACKLOG.md` item said 28 after S881, when this report's own
+count was 26. The 15 are NEW-24 (issue #123, tracked) and 14 owner decisions: the error/return contract (PED-5,
+PED-6, NEW-28, NEW-36), the walk helpers (PED-3, NEW-42; exported), the sim driver (NEW-50, NEW-51), constants and
+HTML builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57) and the repeated `updateProgress` null checks (NEW-62; 3
+blocks, `reportGV.R:229,248,267`).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
