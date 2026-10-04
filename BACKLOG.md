@@ -21,24 +21,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       ruled out).
       **Open, all owner decisions:** (a) the overhaul roots,
       none urgent -- the error/return contract (PED-5/6, NEW-28/36), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
-      driver (NEW-50/51; decided S886, see the next item), constants and HTML builders (NEW-18/19/21/26/57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks in `reportGV.R`); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority). **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
-      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **PED-4 and NEW-54 were closed S881** (the `getPotentialParents()` split; NEW-55 shipped S880), and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), and **PED-2 and NEW-29 were closed S879** (sex-code adoption shipped, S874-S879; PED-7 was already counted closed S818), and **NEW-55 was closed S880**, and **11 more (NEW-14, NEW-31, NEW-32, NEW-35, NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43) were closed S885** (each already fixed in code, Closure record 7), so **15 remained after S885**, then **NEW-51 was closed S886** (owner: accepted, no guard; Decision record 8), so **14 remain** (the report's "Closure record" sections list them; this item said 28 after S881, when the report's own count was 26). **Trap:** an id grep of the ledger
+      constants and HTML builders (NEW-18/19/21/26/57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks in `reportGV.R`); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority). **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
+      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **PED-4 and NEW-54 were closed S881** (the `getPotentialParents()` split; NEW-55 shipped S880), and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), and **PED-2 and NEW-29 were closed S879** (sex-code adoption shipped, S874-S879; PED-7 was already counted closed S818), and **NEW-55 was closed S880**, and **11 more (NEW-14, NEW-31, NEW-32, NEW-35, NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43) were closed S885** (each already fixed in code, Closure record 7), so **15 remained after S885**, then **NEW-51 was closed S886** (owner: accepted, no guard; Decision record 8), then **NEW-50 was closed S887** (the shared `.simulateKinship()` helper shipped; Closure record 9), so **13 remain** (the report's "Closure record" sections list them; this item said 28 after S881, when the report's own count was 26). **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
-
-- [ ] **Share the one-simulation step between `createSimKinships()` and `cumulateSimKinships()`
-      (NEW-50; owner decision S886, 2026-10-03; READY, Effort S, strict TDD)** -- both loops repeat
-      `makeSimPed()` then `kinship()` (`R/createSimKinships.R:60-65`, `R/cumulateSimKinships.R:63-68`); the
-      owner chose an internal helper that both call (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`,
-      Decision record 8). Each function keeps its own loop: `cumulateSimKinships()` holds 4 running matrices,
-      `createSimKinships()` returns `n`, and building the summary on the list would hold `n` (about 72 GB at
-      3,000 animals and 1,000 simulations, by arithmetic). No change for users. **First RED test:** same seed,
-      `cumulateSimKinships()`'s mean equals the mean of `createSimKinships()`'s matrices (S886 measured TRUE at
-      n = 200 on `smallPed`; no test pins it). **Watch:** `createSimKinships()` converts the pedigree to a
-      data.table, `cumulateSimKinships()` does not, so the helper takes a prepared pedigree; the owner was not
-      asked whether `cumulateSimKinships()` gains `verbose` (it stays without). Not part of this item: NEW-51's
-      dimnames guard (declined; NEW-51 closed accepted). Refactor: approval at the PRE-RED scope gate; staged
-      commits under the 5-file cap.
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --

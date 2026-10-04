@@ -260,6 +260,16 @@ What S886 measured, for whoever picks up the work:
 
 Open after this decision: **14 ids** (15 minus NEW-51); NEW-50 is decided and waits on the work.
 
+### Closure record 9 (S887, 2026-10-03) -- decision record 8's shared step shipped
+
+| id | closed because |
+|---|---|
+| NEW-50 | SHIPPED: `createSimKinships()` and `cumulateSimKinships()` call one internal `.simulateKinship()` (`R/simulateKinship.R`), which runs `makeSimPed()` then `kinship()` in that order, so seeded results did not move. Each keeps its own loop, so `cumulateSimKinships()` still holds 4 running matrices and not `n`. No change for users; `cumulateSimKinships()` did not gain `verbose`. Pinned by `test_simulateKinship.R` (RED `b96bbb45f`; GREEN `de45c8928`; REFACTOR `38c3f713c`): the helper equals `makeSimPed()` then `kinship()` under one seed, passes `twinRelations` and `verbose`, leaves the caller's pedigree alone; each function calls it once per simulation and never at `n = 0`; and under one seed the mean, min and max of `cumulateSimKinships()` equal those of `createSimKinships()`'s matrices. |
+
+Open after this closure: **13 ids** (14 minus NEW-50): NEW-24 (issue #123, tracked) and 12 owner decisions, the
+error/return contract (PED-5, PED-6, NEW-28, NEW-36), the walk helpers (PED-3, NEW-42; exported), constants and HTML
+builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
