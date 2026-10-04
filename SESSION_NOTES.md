@@ -98,6 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 885 Did
+**Deliverable:** PED_GV audit follow-through, owner decisions (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Exact scope (which id or decision) is settled with the owner next; no TDD phase declared yet.
+**Orient:** no ledger gap (frontiers at HEAD `971b4fcce`); tree clean; master 101 ahead of origin; CI 10/10 success;
+ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md 57,487 B); `CHANGELOG.md` 224 KB and `HANDOFFS.md` 231 KB
+are 38 KB and 31 KB under the 262,144 B no-content read limit.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 884 Did
 **Deliverable, DONE:** the two docs-audit slice-1 leftovers: the tracked `vignettes/articles/kinship2-fidelity-validation.pdf`
 deleted, and `trackC-nprc-rectilinear.png` regenerated. The owner picked the item at Phase 0, then "Both, in order",

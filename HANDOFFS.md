@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S885
+date: 2026-10-03
+status: pending
+active_task: PED_GV audit follow-through (owner picked it from the Phase 0 list; S884's next step A; DECISION NEEDED, Effort S each, 28 ids open); exact scope (which id or decision) settled with the owner after the claim
+```
+
+```handoff
 session: S884
 date: 2026-10-03
 status: complete
