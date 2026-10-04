@@ -20,11 +20,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `getPotentialParents()` dam fallback no longer re-admits a female the gestation window
       ruled out).
       **Open, all owner decisions:** (a) the overhaul roots,
-      none urgent -- the error/return contract (PED-5/6, NEW-28/36), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
+      none urgent -- the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
       constants and HTML builders (NEW-18/19/21/26/57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks in `reportGV.R`); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority). **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
-      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **PED-4 and NEW-54 were closed S881** (the `getPotentialParents()` split; NEW-55 shipped S880), and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), and **PED-2 and NEW-29 were closed S879** (sex-code adoption shipped, S874-S879; PED-7 was already counted closed S818), and **NEW-55 was closed S880**, and **11 more (NEW-14, NEW-31, NEW-32, NEW-35, NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43) were closed S885** (each already fixed in code, Closure record 7), so **15 remained after S885**, then **NEW-51 was closed S886** (owner: accepted, no guard; Decision record 8), then **NEW-50 was closed S887** (the shared `.simulateKinship()` helper shipped; Closure record 9), so **13 remain** (the report's "Closure record" sections list them; this item said 28 after S881, when the report's own count was 26). **Trap:** an id grep of the ledger
+      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **PED-4 and NEW-54 were closed S881** (the `getPotentialParents()` split; NEW-55 shipped S880), and **NEW-61 was closed S871** (owner: known and unknown founders stay counted differently; documented in `calcFEFG()` and `reportGV()` roxygen), and **PED-2 and NEW-29 were closed S879** (sex-code adoption shipped, S874-S879; PED-7 was already counted closed S818), and **NEW-55 was closed S880**, and **11 more (NEW-14, NEW-31, NEW-32, NEW-35, NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43) were closed S885** (each already fixed in code, Closure record 7), so **15 remained after S885**, then **NEW-51 was closed S886** (owner: accepted, no guard; Decision record 8), then **NEW-50 was closed S887** (the shared `.simulateKinship()` helper shipped; Closure record 9), then **PED-5, PED-6 and NEW-36 were closed S888** (owner: keep the `reportErrors` two-mode pattern, no package-wide error contract; Decision record 10; NEW-28 is decided and stays open, see the `reportGV()` item below), so **10 remain** (the report's "Closure record" sections list them; this item said 28 after S881, when the report's own count was 26). **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
+
+- [ ] **`reportGV()`: name the missing required columns up front (decided S888, NEW-28; READY,
+      Effort S; strict TDD)** -- owner decision, `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`
+      Decision record 10 (read it first: it holds the measurements). Today a pedigree missing `id`,
+      `sire`, `dam` or `gen` stops with a base-R message ("'dimnames' applied to non-array",
+      "arguments imply differing number of rows: 704, 0", "result would be too long a vector"); only
+      a missing `sex` is named clearly, by the check at `R/reportGV.R:291` (issue #123, S386), which
+      runs after `kinship()` (`:179`) and `geneDrop()` (`:223`). Scope: `reportGV()` only, no other
+      function; a pedigree that works today gives the same result. First RED test: a fixture without
+      `gen` stops with a message naming `gen`, and the unmodified fixture's result is identical (use
+      the `reportGV()` example pipeline, 704 rows, `guIter = 10L`; `smallPed` is not a usable good
+      fixture: it stops with "sire and dam must have had alleles assigned"). **For the scope gate:**
+      does the new check replace the `:291` one or sit before it, and does "clear message" cover only
+      missing columns (a pedigree with every column, `smallPed`, can still fail cryptically).
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --

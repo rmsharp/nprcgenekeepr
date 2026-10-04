@@ -270,6 +270,53 @@ Open after this closure: **13 ids** (14 minus NEW-50): NEW-24 (issue #123, track
 error/return contract (PED-5, PED-6, NEW-28, NEW-36), the walk helpers (PED-3, NEW-42; exported), constants and HTML
 builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks).
 
+### Decision record 10 (owner decision 2026-10-03, S888) -- error behavior
+
+The owner chose "Keep it" for the `reportErrors` two-mode pattern (over "Change only `correctParentSex()`" and "Replace it
+in all six") and "Clear message in `reportGV()` only" for bad input outside QC (over "Leave it" and "`reportGV()` and the
+others"). The table above stays the frozen S781 reading.
+
+| id | decided |
+|---|---|
+| PED-6 | CLOSED, ACCEPTED: `correctParentSex()` returns the corrected sex codes when `reportErrors = FALSE` and the error list when `TRUE` (`R/correctParentSex.R:38-43`, the branches at `:95-103` and `:122-125`). That is the QC family's one pattern, below, not a quirk of this function. |
+| NEW-36 | CLOSED, ACCEPTED: same as PED-6. |
+| PED-5 | CLOSED, ACCEPTED as the umbrella for the two decisions in this record: no package-wide error or return contract. Of the sites the S781 row cites, `getPotentialParents()` returns `NULL` when no animal has an unknown parent with a candidate or `ped` has no `fromCenter` column (its `@return` says so, `R/getPotentialParents.R:59-61`) and `getPedDirectRelatives()` returns `NULL` for a `NULL` pedigree (its roxygen says so); `rbindFill()` is internal (`@noRd`). |
+| NEW-28 | DECIDED, STAYS OPEN until it ships: `reportGV()` names its missing required columns up front, before the kinship step. No other function changes. Work not started; strict TDD, with the owner's approval of the scope at its own gate. New READY item in `BACKLOG.md`. |
+
+What S888 measured, for whoever picks up the work (all by running the code, except where it says "read"):
+
+- **The pattern.** Six exported functions take `reportErrors`: `qcStudbook()`, `correctParentSex()`, `removeDuplicates()`,
+  `checkParentAge()`, `checkRequiredCols()` and `convertDate()`. `FALSE` stops at the first problem, or returns the cleaned
+  data; `TRUE` returns the problems (`NULL` when none). Run in both modes on clean and bad input: `correctParentSex`,
+  `removeDuplicates`, `checkRequiredCols`, `qcStudbook`, each returning what its help page says. Read, not run: `checkParentAge`
+  and `convertDate`. The app depends on it: `runQcStudbook()` calls `qcStudbook()` with `reportErrors = TRUE`, then `FALSE`
+  (`R/runQcStudbook.R:125,212`).
+- **Bad input outside QC** (a missing column or `NULL`), run: a clear message from `getGeneticDiversityStats()` ("requires at
+  least one group"); a base-R message from `reportGV()` ("result would be too long a vector"), `calcGU()` ("dim(X) must have
+  a positive length") and `calcRetention()` ("undefined columns selected"); silent from `filterReport()` (a table with no
+  `id` column gives an empty vector) and `rankSubjects(NULL)` (`NULL`). Read, not run: `cumulateSimKinships()` (stops when
+  `n < 1`) and `getPedDirectRelatives()` (stops on a missing `ids` or `ped`) give clear messages, and
+  `checkParentAge(reportErrors = FALSE)` returns its input unchanged when `sire` or `dam` is missing (`R/checkParentAge.R:92`,
+  the early `return(sb)`).
+- **The NEW-28 row's "none in `reportGV`" is out of date.** `reportGV()` checks `id` and `sex` at `R/reportGV.R:291` (issue
+  #123, S386), but after `kinship()` (`:179`) and `geneDrop()` (`:223`) have run, so a missing `id`, `sire`, `dam` or `gen`
+  never reaches it.
+- **Per-column probe** on the `reportGV()` example pipeline (`examplePedigree` through `qcStudbook()`, `setPopulation()` and
+  `trimPedigree()`; 704 rows; `guIter = 10L`, `guThresh = 3`): the unmodified fixture runs. Without `id`: "'dimnames' applied
+  to non-array". Without `sire` or `dam`: "arguments imply differing number of rows: 704, 0". Without `gen`: "result would
+  be too long a vector". Without `sex`: the clear named message of the `:291` check. Without `birth`, `exit`, `age` or
+  `population`: no error.
+- **A column check alone is not enough for a raw pedigree.** `smallPed` (all six columns present, no QC run) stopped with
+  "sire and dam must have had alleles assigned: logic error" at `guIter = 10L`; it is not a usable "good input" fixture.
+- The first RED test for the follow-up: a fixture without `gen` stops with a message naming `gen`, and the unmodified fixture's
+  result is identical. Two points for its scope gate: whether the new check replaces the `:291` one or sits before it, and
+  whether "clear message" means missing columns only.
+
+Open after this decision: **10 ids** (13 minus PED-5, PED-6, NEW-36; by script over this report's table: 43 ids, 33 closed,
+the same script gives 13 on the S887 report): NEW-24 (issue #123, tracked), NEW-28 (decided, waits on the work) and 8 owner
+decisions, the walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57)
+and the repeated `updateProgress` null checks (NEW-62; 3 blocks).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
