@@ -99,73 +99,65 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 900 Did
-**Deliverable:** push the 6 local commits `d13665e25..f43ff9501` to `origin/master` and read CI (IN PROGRESS)
-**Started:** 2026-10-04
-**Status:** Session claimed. Range checked: origin not ahead (`77ccb50f6`), 6 commits, 10 files, none under `R/`,
-`DESCRIPTION` or `NAMESPACE`; the four workflows and one test file change, so all four CI workflows should start.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (no code, test or document-content change):** pushed S899's 6 local commits to `origin/master`
+(`77ccb50f6..f43ff9501`, a plain fast-forward, by SHA, so this session's claim stayed local) and read CI. **All four push
+workflows started and passed on `f43ff9501`; all 8 jobs are green:** lint 5m25s, pkgdown 7m9s, test-coverage 12m28s,
+R-CMD-check 24m46s (ubuntu oldrel-1, release and devel; macOS release; Windows release); run ids 37243087764, 37243087741,
+37243087809, 37243087740, started 2026-10-04T23:15:19Z. All four starting shows the new `paths-ignore` blocks parse on GitHub
+and do not suppress a push that changes unlisted files; it says nothing yet about a listed-only push (the live check below).
+Range checked before claiming: origin not ahead, 10 files, none under `R/`, `DESCRIPTION` or `NAMESPACE`. The owner's pick
+at the Phase 0 picker was the authorisation to push those commits (S895 precedent). **Non-commit action: the push.** Claim
+`16d1fd75d`; the close-out commit carries the rest. No runtime smoke test applies (a push and a CI read).
 
-### What Session 899 Did
-**Deliverable, DONE (strict TDD; CI config plus one test file; no `R/` file changed):** lint, pkgdown, R-CMD-check and
-test-coverage now skip a push that changes only notes and tooling files. Each `push:` trigger carries the same 21-entry
-`paths-ignore:` (14 root notes/methodology `.md`, 4 methodology scripts, `.context-budget.json`, `.quality-gates.json`,
-`docs/**`); `pull_request`, `branches` and every other trigger are unchanged. Owner rulings, asked in plain words before
-RED: the list is notes and tooling only, not a literal `.Rbuildignore` mirror; pushes only. Claim `22f45005d`, RED
-`40f1495f4` (10 of 11 tests fail, 70 of 176 expectations), GREEN `3178b741c`, REFACTOR `436e656fe` (one redundant `any()`);
-the close-out commit carries the rest. New test `tests/testthat/test_workflowPathsIgnore.R` (11 tests, 218 expectations).
-**Why not a literal mirror (Learning 868):** lint.yaml lints `data-raw/*.R` and reads `.lintr`; pkgdown.yaml builds from
-`_pkgdown.yml` and 87 `vignettes/articles/` files; R-CMD-check and test-coverage test a built or installed copy where ignored
-files are absent (their readers `skip_if_not(file.exists())`). Payoff: 197 of the last 300 commits (66%) touched only listed
-files (an upper bound for pushes, which bundle commits).
-**Verified:** new test 0 failed; PyYAML parses all 4 workflows, 21 entries each, the rest of each document identical to
-HEAD; full unfiltered suite after GREEN and again after REFACTOR: 368 files, 2,997 tests, 9,632 expectations, 0 failed,
-0 error, 187 skipped; `lint_package()` 0 findings; in a built-and-installed copy 10 of the 11 tests skip and 0 fail;
-ratchet 1/1 pass. **Not verified (cannot be in-session):** GitHub's own path-filter behavior (now the first `BACKLOG.md`
-item, `:55`) and `devtools::check()` (this push changes tests and workflows, so CI runs it). No runtime smoke test was
-possible. CLOSEOUT_CHECKLISTS.md read: lint close-out run (0 findings); BACKLOG item replaced by a short live-check item;
-issue close-out n/a (the item named no issue); the rest not triggered.
+**Handoff evaluation of S899: 9/10.** Helped: the range, "6 local commits" and origin `77ccb50f6` were exact; "all four should
+start and pass, R-CMD-check about 25 minutes" held (24m46s); every `BACKLOG.md` line named (`:22 :55 :301 :417 :440 :461 :481`)
+was exact; `test_makePedigreeMatingLayout.R:663-742` is the real region (the long 1460L layout-count comment history); the
+ledger sizes (176,584 and 29,958 B) matched `git show f43ff9501^:`. Missing: that S899's and S900's own docs-only commits make
+the first valid live check (computed here, below). Wrong: nothing found. Not checked: which tests assert the raw-CSV count
+(S899 flagged it unknown).
 
-**Handoff evaluation of S898: 8/10.** Helped: `BACKLOG.md:55` was exact; "the four workflows also run on `pull_request`,
-`shinytest2.yaml` only nightly" held; the pushes-only decision was flagged; "only the addendum is local" was exact.
-Missing: that lint.yaml lints `data-raw/*.R` and reads `.lintr`, and that pkgdown.yaml builds from `_pkgdown.yml` and
-`vignettes/articles/` -- the real limits on the list. Wrong: "`.github` is build-ignored but tests read it, so the list
-must exclude those" named the wrong obstacle: the three workflow-reading tests read only `R-CMD-check*.yaml` and
-`shinytest2.yaml`, and they skip on CI (Learning 868). The `data-raw` "no CI wait" note is also wrong (lint reads it).
+**Self-assessment: 8/10.** + Phase 0 in full, picker, claim before any action, range and ancestry checked, pushed by SHA so
+the claim stayed local, CI read down to the 8 matrix jobs, no claim about CI made before it finished, the live-check
+opportunity computed from `git diff --name-only` rather than guessed. - Hit S894's zsh gotcha twice (`echo =====` separators,
+2 failed calls) although it was in the notes. No new learning, so `PROJECT_LEARNINGS.md` is untouched. Reduction: S899's
+record condensed (6,304 B -> 1,161 B), so this file shrinks 34,302 B -> 33,981 B (-321 B);
+`BACKLOG.md` untouched; the two ledgers grow by this session's entries.
 
-**Self-assessment: 8/10.** + Orientation, claim and all three TDD gates in order; scope questions in plain words with a
-measured payoff; the list was dry-run against the RED test before GREEN; every claim was checked on its real surface (YAML
-parse, installed copy, suite twice); an unsound literal mirror was found and not shipped. - About 8 wasted calls: `R CMD
-build -o` (no such option), `S=$S` passed as an argument, no renv paths for the tarball install, a one-liner that
-executed the test file, and parallel Bash calls whose `cd` leaked into each other; one passing test (the matcher
-self-check) in RED, disclosed. Reduction: S898's record is condensed (5,213 B -> 1,134 B) and `BACKLOG.md` shrank 485 B (46,454 -> 45,969), but this
-file still grew 1,578 B (32,724 -> 34,302); no further reduction was found this session.
+**Next steps (owner-ordered):** (A) The owner decides whether to push the 2 local commits (the claim `16d1fd75d` and this
+close-out). Both change only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all on the `paths-ignore` list (derived:
+`git diff --name-only f43ff9501..HEAD` printed exactly those three), so **that push is the live check for `BACKLOG.md:55`**:
+`gh run list --branch master --limit 10` should show no new run (the newest stays the four from 2026-10-04T23:15:19Z). Adding
+any unlisted file to that push voids the check; if runs do start, look first at the two dotfile entries and `docs/**`.
+(B) One real fix per session, any order, all READY: row-order tests only (`:440`; `test_makePedigreeMatingLayout.R:663-742`;
+which tests assert the raw-CSV count is still not known); rhesus comment (`:461`; `data-raw` is linted at 80 columns, so lint
+the reworded comment); verify-script upstream report (`:301`; characterize the 8 L1 failures first; posting is the owner's
+call). Kept open: `isAddedRecord()` (`:22`), Candidate C (`:417`), `highlightNearest` (`:481`). Docs-audit slice 2 (the
+`shiny_app_use/` images) is READY, Effort L, and needs scoping first. (C) The ledger-size lever is still open (S892; not
+filed, not asked): `HANDOFFS.md` 180,334 B and `CHANGELOG.md` 32,163 B before this close-out (262,144 B is the Read refusal).
+Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push: 6 local commits (`d13665e25` S898's addendum, the
-claim, RED, GREEN, REFACTOR and this close-out). **Unlike S896-S898 this push changes tests and workflow files, so watch
-CI:** all four workflows should start and pass (R-CMD-check takes about 25 minutes). (B) The live check, `BACKLOG.md:55`:
-the first push that changes only listed files must start no run (`gh run list --branch master --limit 10`); this push
-cannot prove it, because it changes unlisted files. (C) Then one real fix per session, any order, all READY: row-order
-tests only (`:440`; start at `tests/testthat/test_makePedigreeMatingLayout.R:663-742`; which tests assert the raw-CSV
-count is not yet known); rhesus comment (`:461`; `data-raw` is NOT in the skip list and lint.yaml lints it with an
-80-column limit that covers comments, so lint the reworded comment); verify-script upstream report (`:301`; characterize
-the 8 L1 failures first; posting is the owner's call). Kept open: `isAddedRecord()` (`:22`), Candidate C (`:417`),
-`highlightNearest` (`:481`). (D) The ledger-size lever is still open (S892; not filed, not asked): `HANDOFFS.md` was
-176,584 B and `CHANGELOG.md` 29,958 B before this close-out (262,144 B is the Read refusal). Carried: PED_GV next group
-(the 9 ids), `reportGV(smallPed)` unfiled.
+**Key files:** `.github/workflows/{lint,pkgdown,R-CMD-check,test-coverage}.yaml` lines 4-29 (the `push:` blocks, unchanged
+this session); `BACKLOG.md:55`; `tests/testthat/test_workflowPathsIgnore.R`.
 
-**Key files:** `.github/workflows/{lint,pkgdown,R-CMD-check,test-coverage}.yaml` lines 4-29 (the `push:` blocks);
-`tests/testthat/test_workflowPathsIgnore.R` (helpers `triggerChildren`, `pathsIgnoreEntries`, `globMatches`,
-`rbuildignoreExcludes`, lines 62-140); `BACKLOG.md:55`; `PROJECT_LEARNINGS.md` Learning 868.
+**Gotchas:** zsh treats a leading `=` word as an expansion, so `echo =====` fails with "= not found" (quote separators or use
+`printf '%s\n' '-----'`; hit twice here); the wait that worked is a `run_in_background` loop on `gh run list --commit <full
+SHA>` that exits when 4 runs are listed and none is queued or in progress, then `gh run view <id> --json jobs --jq` for the
+legs (a workflow-level "success" does not name them); push by SHA (`git push origin <sha>:master`) when a claim commit sits
+on top; `quality_ratchet.py --run` can pass the 120 s foreground limit (it builds a tarball), so expect it to move to the
+background; the S899 gotchas still hold (start each Bash command with `cd <repo> &&`; add a path to all four workflows and
+run `test_workflowPathsIgnore.R`).
 
-**Gotchas:** parallel Bash calls share one persistent shell, so a `cd` in one leaks into the other (the working directory
-drifted twice): start each command with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; to test an installed copy,
-`R CMD build` has no `-o` (run it from the output directory) and installing outside the project needs the renv paths
-(`R_LIBS=$(Rscript -e 'cat(paste(.libPaths(), collapse=":"))')` from the project directory), then `R CMD INSTALL
---install-tests -l <lib>` and `testthat::test_file()` on the installed copy; R CMD check and covr see no build-ignored root
-file, so tests that read one skip there, while lint and pkgdown run from the checkout and do see them; the 21 entries are
-repeated in four workflows, so add a file to all four and run the test (a `*.md` wildcard would match shipped `README.md`
-and `NEWS.md`, and the test refuses it); do not `eval()` a whole test file to borrow its helpers, because that runs its
-tests (slice the text before the first `test_that(`).
+### What Session 899 Did (condensed S900; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+lint, pkgdown, R-CMD-check and test-coverage skip a push that changes only notes and tooling files: each `push:` trigger
+carries the same 21-entry `paths-ignore:` (14 root notes/methodology `.md`, 4 methodology scripts, `.context-budget.json`,
+`.quality-gates.json`, `docs/**`); `pull_request` and every other trigger are unchanged. Owner rulings: notes and tooling
+only, not a literal `.Rbuildignore` mirror; pushes only. Strict TDD: claim `22f45005d`, RED `40f1495f4`, GREEN `3178b741c`,
+REFACTOR `436e656fe`, close-out `f43ff9501` (pushed S900, CI green). New test `tests/testthat/test_workflowPathsIgnore.R`
+(11 tests). Handoff evaluation of S898: 8/10. Self 8/10. Why not a literal mirror (Learning 868): lint reads `data-raw/*.R`
+and `.lintr`, pkgdown builds from `_pkgdown.yml` and `vignettes/articles/`, and R-CMD-check and test-coverage see no
+build-ignored root file.
+**Gotchas kept:** a `*.md` wildcard would match shipped `README.md` and `NEWS.md` (the test refuses it); do not `eval()` a
+whole test file to borrow its helpers, because that runs its tests.
 
 ### What Session 898 Did (condensed S899; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The owner ruled on the 7 parked Effort-S items (none declined); each ruling sits beside its item in `BACKLOG.md`:
