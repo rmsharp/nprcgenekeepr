@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S884
+date: 2026-10-03
+status: pending
+active_task: Docs-audit slice-1 leftovers (owner picked it from the Phase 0 list): the tracked vignettes/articles/kinship2-fidelity-validation.pdf (delete or git-ignore) and the stale trackC-nprc-rectilinear.png (regenerate); exact scope settled with the owner before any edit
+```
+
+```handoff
 session: S883
 date: 2026-10-03
 status: complete

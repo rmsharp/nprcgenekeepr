@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 884 Did
+**Deliverable:** docs-audit slice-1 leftovers: the tracked `vignettes/articles/kinship2-fidelity-validation.pdf` (delete or
+git-ignore) and the stale `trackC-nprc-rectilinear.png` (regenerate); exact scope settled with the owner (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 883 Did
 **Deliverable, DONE:** the stale `@noRd` roxygen of `.addRectilinearWaypoints()` is fixed (the owner picked it from the
 Phase 0 list; it was S882's next step A). Comment only, so no TDD phase applied.
