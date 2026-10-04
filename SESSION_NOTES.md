@@ -168,83 +168,109 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 897 Did
+### What Session 898 Did
 
-**Deliverable, DONE (docs only; ledger files changed, no R, test or
-build file):** trimmed `CHANGELOG.md` with
-`methodology_trim.py --file CHANGELOG.md --budget-bytes 65536 --force --cut 2026-10-03 --write`:
-311 of 329 entries (2026-09-26 to 2026-10-03) moved to
-`docs/archive/CHANGELOG-through-2026-10-03.md` (235,474 B) with its
-`.verify.sh`; live file 258,724 B -\> 25,172 B, now 236,972 B under the
-262,144 B Read refusal. Claim `86b537e3e`, trim `f4b181c69`; the
-close-out commit carries the receipt, notes, Learning 866, the BACKLOG
-note and this session’s ledger entry. Owner pick: “Trim CHANGELOG.md” at
-the Phase 0 picker, then “archive with a clean day seam” when I put the
-`--force` override (the trimmer refuses: SRF 7.9455 RED, the last
-archive refilled within about a week) to the owner with two measured
-dry-run cuts. **Verified:** the tool’s L1/L2/L3 and P1A; the shard’s
-`verify.sh` passes; independently, 329 entries = 18 retained + 311
-archived (+1 tool-written), none missing or duplicated, order kept; 322
-byte-identical and 7 differ only by the tool’s link re-basing (`](X)`
--\> `](../../X)`, undone exactly, all 17 targets resolve);
-`quality_ratchet.py --run` 1/1 pass (results `958e31fae3ab`, manifest
-`aa983075d6a2`). **Not run:** the R suite, `devtools::check()`, lint,
-CI: every changed file is `.Rbuildignore`d (`^docs$`,
-`^CHANGELOG.*\.md$`) and the 5 test files that name `CHANGELOG.md` do so
-in comments only; no runtime change, so no smoke test. Learning 866. Not
-pushed.
+**Deliverable, DONE (docs only; BACKLOG, ledger, notes and Learnings
+changed; no R, test, workflow or build file):** the owner ruled on the 7
+parked Effort-S items, one question each (two `AskUserQuestion` calls),
+after I re-checked every item’s stored claims against today’s code. **No
+item was declined.** Each ruling is recorded in `BACKLOG.md` beside its
+item, tag updated: (1) `isAddedRecord()` kept open (READY, optional);
+(2) CI skip: the `paths-ignore` list, not `[skip ci]` (READY, Effort S);
+(3) verify scripts: report it upstream to the `rmsharp/methodology` fork
+(READY, Effort S; posting needs the owner’s OK; characterize the 8 L1
+failures first); (4) Candidate C kept open (DECISION NEEDED: product
+sign-off to pursue); (5) `highlightNearest` kept open (READY, optional);
+(6) rhesus comment: reword it (READY, Effort S); (7) row order: accept
+the dependence, change only the tests (READY, Effort S). Claim
+`2fffad3d8`; the close-out commit carries the rest. Nothing was edited
+beyond recording: a ruling is not a go-ahead to edit code or CI.
+**Re-measured first (Learning 867):** the verify-script item said one
+shard fails and it recurs on every later trim; today 10 of 54 verify
+scripts FAIL (`HANDOFFS` 2/15, `CHANGELOG` 1/16, `SESSION_NOTES` 7/23: 2
+are the item’s L2 leak, 8 are `L1 ... not byte-identical`, cause read
+for only 1) while 13 of 15 `HANDOFFS` shards pass. Row order: raw 1456
+-\> 1460 (later layout fixes), QC’d 1412 unchanged, raw content in QC
+order gives 1412, `direct` 782 for both. Rhesus: the claim is about the
+`rhesusPedigree` object (`data-raw/rhesusPedigree.R:7-10`); its id and
+birth equal the `fromCenter` CSV’s and the two CSVs agree on all 8
+shared columns (375 rows). The other items’ claims held. **Not run:**
+the R suite, `devtools::check()`, lint (no `.R` file changed), CI: every
+changed file is `.Rbuildignore`d (`BACKLOG`, `CHANGELOG`, `HANDOFFS`,
+`SESSION_NOTES`, `PROJECT_LEARNINGS`); no runtime change, so no smoke
+test.
 
-**Handoff evaluation of S896: 9/10.** Helped: step (B) gave the exact
-command and the `--force` expectation, which held; its headroom figure
-(257,537 B) was true at its close-out, and the one later commit (the
-push-record addendum) accounts for the 758 B I measured at Phase 0
-(258,295 B); all 7 parked items exist by name in `BACKLOG.md`. Missing:
-it did not say that S892’s `--force` was an owner decision put with a
-dry run (that precedent is in the ledger, not the handoff), or that
-`--cut <date>` avoids the day-straddle warning. Wrong: nothing found.
+**Handoff evaluation of S897: 9/10.** Helped: step (B) named all 7
+parked items and each exists in `BACKLOG.md`; “only the addendum is
+local” was exact (`master` was 1 ahead at Phase 0); the open ledger-size
+decision and the plain `gh run list` form both held. Missing: no BACKLOG
+line numbers, and no warning that 3 of the 7 items (verify script, row
+order, rhesus) carried measurements older than later code and tool
+changes. Wrong: nothing in the handoff; the items it pointed at held two
+drifted claims (Learning 867).
 
 **Self-assessment: 8/10.** + Orientation complete before the picker;
-claimed before work; dry runs before any write, and the one guard
-override put to the owner with measured alternatives; verified the trim
-independently and explained my own 7 false mismatches exactly instead of
-dismissing them; no scope creep. - I skipped the Phase 0
-ratchet-citation check at first and did it before the claim; an ad hoc
-`gh run list --json` returned stale S680 runs (unexplained), so I re-ran
-the plain form; two quiet tool stretches. Reduction: `CHANGELOG.md`
-shrank 233,552 B; here the S896 record is condensed and the S871 and
-S872 records are removed (full records stay in
-`CHANGELOG-through-2026-10-03.md` and `HANDOFFS.md`).
+claimed before work; re-measured before asking, which caught 2 of 7
+items off; every question led with the purpose and each option’s
+consequence; recorded rulings only; BACKLOG edits scripted with every
+anchor asserted (17 of 17 matched once). - My first shard loop ended in
+`head -40` and cut the failing shards off (re-run as a tally); a zsh
+glob failed on the fixtures (they sit in `inst/extdata/examples/`); the
+cause of 7 of the 10 failing verify scripts is still unread. Reduction:
+none net. S897’s record is condensed here, but this file still grew
+1,003 B (31,006 -\> 32,009) and `BACKLOG.md` grew 2,352 B (44,102 -\>
+46,454: rulings and re-measurements).
 
 **Next steps (owner-ordered):** (A) The owner decides whether to push
-this session’s three commits (claim `86b537e3e`, trim `f4b181c69`,
-close-out): docs only, and a push starts four workflows that are not
-waited on. (B) The owner keeps or declines the 7 parked Effort-S items
-(`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C,
-`highlightNearest`, rhesus docstring, row-order item). (C) Then one real
-fix per session; the next BACKLOG compression candidates are named in
-the housekeeping item. **Owner decision still open (from S892; not
-filed, not asked):** the ledgers refill faster than a trim helps
-(`CHANGELOG.md` 37,593 B -\> 258,724 B in 7 days; `HANDOFFS.md` about
-169 KB); shorter claim/close-out entries and receipts are the lever (the
-BACKLOG item on the ledger’s ~4-entries-per-session convention now
-carries the measurement). An estimate, not a measurement: at the last
-three sessions’ 1.4-2.7 KB each, `CHANGELOG.md` reaches the 65,536 B
-budget in about 15-29 sessions. Carried: PED_GV next group (the 9 ids),
-`reportGV(smallPed)` unfiled.
+the local commits (S897’s addendum `4313562b4`, the claim `2fffad3d8`,
+this close-out): docs only, all `.Rbuildignore`d, no CI wait. (B) Then
+one real fix per session, any order. The READY items: CI `paths-ignore`
+(`BACKLOG.md:55`; edits `.github/workflows/*`, which `.Rbuildignore:40`
+ignores but tests read, so run the suite; the four workflows also run on
+`pull_request`, `shinytest2.yaml` only nightly); row-order tests only
+(`BACKLOG.md:446`; start at
+`tests/testthat/test_makePedigreeMatingLayout.R:663-742`, where 1456 and
+1460 are derived, and the `test-e2e-pedigree-module.R` family; which of
+them assert the raw-CSV count is not yet known); rhesus comment
+(`BACKLOG.md:467`; `data-raw` is `.Rbuildignore:53`, so no CI wait);
+verify-script upstream report (`BACKLOG.md:307`). Kept open:
+`isAddedRecord()` (`:22`), Candidate C (`:423`), `highlightNearest`
+(`:487`). (C) The ledger-size lever is still open (from S892; not filed,
+not asked): `HANDOFFS.md` was 172,892 B and `CHANGELOG.md` 27,636 B at
+Phase 0 (262,144 B is the Read refusal); at 1.4-2.7 KB per session
+`CHANGELOG.md` reaches 65,536 B in about 15-29 sessions (an estimate).
+Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
 
-**Key files:** `docs/archive/CHANGELOG-through-2026-10-03.md` and
-`.verify.sh`; `CHANGELOG.md:65-71` (pointer block, the S897 entry and
-the tool’s entry); `.Rbuildignore:15,77`; `BACKLOG.md` (the ledger-rate
-item and the housekeeping item); `PROJECT_LEARNINGS.md` Learning 866.
+**Key files:** `BACKLOG.md` at the line numbers above;
+`data-raw/rhesusPedigree.R:7-10` (the comment to reword);
+`docs/archive/*-through-*.verify.sh` (54 scripts; 10 fail);
+`PROJECT_LEARNINGS.md` Learning 867.
 
-**Gotchas:** `--force` is needed (SRF_RED) and the override is the
-owner’s call (S892, S897); `--cut <YYYY-MM-DD>` gives a clean day seam
-and the newest date is refused; the tool re-bases markdown links in
-archived entries (7 of 329), so a byte compare shows false differences
-(Learning 866); it writes its own ledger entry and never commits, so
-stage the ledger, shard and `.verify.sh` together; a
-`gh run list --json` variant returned S680-era runs while the plain form
-returned current ones (unexplained): use the protocol’s plain form.
+**Gotchas:** count verify scripts with a loop that prints only failures
+and a tally, never `head`; the first FAIL line of each is
+`bash <s> 2>&1 | grep -m1 '^FAIL'`; a BACKLOG item’s number can predate
+later code (row order 1456 -\> 1460), so re-run it before a ruling;
+`AskUserQuestion` takes at most 4 questions per call; the `BACKLOG.md`
+edits are long wrapped lines, so use a script with asserted anchors, not
+hand edits.
+
+### What Session 897 Did (condensed S898; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+Trimmed `CHANGELOG.md` with
+`methodology_trim.py --force --cut 2026-10-03 --write`: 311 of 329
+entries archived to `docs/archive/CHANGELOG-through-2026-10-03.md`,
+258,724 B -\> 25,172 B. The `--force` override of `SRF_RED` (7.9455) and
+the clean day seam were the owner’s calls. Claim `86b537e3e`, trim
+`f4b181c69`, close-out `18610c7e3` (pushed with S896’s addendum,
+`e9d1bdf6e..18610c7e3`); the push-record addendum `4313562b4` is local.
+Handoff evaluation of S896: 9/10. Self 8/10. **Gotchas kept:** `--force`
+is needed (`SRF_RED`) and the override is the owner’s call;
+`--cut <YYYY-MM-DD>` gives a clean day seam and the newest date is
+refused; the tool re-bases markdown links in archived entries, so a byte
+compare shows false differences (Learning 866); it writes its own ledger
+entry and never commits, so stage the ledger, shard and `.verify.sh`
+together; use the plain `gh run list` form (a `--json` variant once
+returned stale S680-era runs).
 
 ### What Session 896 Did (condensed S897; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 

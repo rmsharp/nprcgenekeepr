@@ -29,9 +29,9 @@ an id grep of the ledger both under- and over-counts (`NEWS.md` once
 used “NEW-47/48/49” as entry labels), so use the report’s table, not the
 old 41-id list.
 
-**(Optional, owner decision) One internal `isAddedRecord()` helper for
-the “added” mask (raised S785, deferred at the S785, S786 and S787
-REFACTORs; DECISION NEEDED, Effort S)** – the mask is written inline
+**(Optional) One internal `isAddedRecord()` helper for the “added” mask
+(raised S785, deferred at the S785, S786 and S787 REFACTORs; owner kept
+it open S898; READY (optional), Effort S)** – the mask is written inline
 four times, all meaning “only the exact status `"added"` is special; an
 `NA`, blank or unrecognized status is a real animal”:
 [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
@@ -45,9 +45,11 @@ four times, all meaning “only the exact status `"added"` is special; an
 with “no added rows”). One helper would put that contract in one place;
 the cost is a cross-file refactor (four R files plus a new file and its
 tests, so staged commits under the 5-file cap, and `SAFEGUARDS.md` asks
-for plan-mode approval of refactoring), and the owner may judge four
-short copies enough. **Trap** to keep in any helper or caller: a
-negative subscript built from an index that can be empty
+for plan-mode approval of refactoring), and the owner kept it open
+rather than judge four short copies enough (S898; the four masks were
+re-found at the lines above that day, and no helper exists yet).
+**Trap** to keep in any helper or caller: a negative subscript built
+from an index that can be empty
 (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when
 nothing is `"added"`.
 
@@ -79,23 +81,32 @@ and
 Callers: only `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither
 reached from the app.
 
-**(Optional, owner decision) Stop the four push workflows from running
-on pushes that change only build-ignored files** (raised 2026-09-24;
-DECISION NEEDED, Effort S) – lint, pkgdown, R-CMD-check and
+**Stop the four push workflows from running on pushes that change only
+build-ignored files** (raised 2026-09-24; owner chose the `paths-ignore`
+list S898; READY, Effort S) – lint, pkgdown, R-CMD-check and
 test-coverage run on every push to `master` with no `paths-ignore`, so a
 push of only
 `BACKLOG.md`/`CHANGELOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md` still costs
 a ~25-minute R-CMD-check that cannot say anything new. The owner’s rule
 (2026-09-24: “if all files edited are in .rbuildignore, there is no
 reason to ever run CI”) is followed today only by not waiting for the
-run. Options: a `paths-ignore` list mirroring `.Rbuildignore` in each
-workflow, or `[skip ci]` in such commits’ messages. Caveat for the
-first: some ignored files ARE read by tests (`.github/workflows/*`,
+run. **Owner ruling (S898): a `paths-ignore` list mirroring
+`.Rbuildignore` in each workflow** (not `[skip ci]` in commit messages).
+Caveat: some ignored files ARE read by tests (`.github/workflows/*`,
 `_pkgdown.yml`, `.quality-gates.json`, `.Rbuildignore`;
 e.g. `test_r_cmd_check_workflow_chrome_setup.R` and
 `test_shinytest2_workflow_coverage.R` read the workflow files), so the
-list must exclude those. Not done: it edits CI config, which the owner
-has not asked for.
+list must exclude those. Not done: the owner has now asked for it
+(S898), as its own session. **Read S898:** lint, pkgdown, R-CMD-check
+and test-coverage trigger on `push` to main/master AND on `pull_request`
+(pkgdown also on release and manual dispatch); `shinytest2.yaml` is
+nightly and manual only; none of the seven has `paths-ignore` or
+`skip ci`. The owner’s rule covers pushes, so decide whether
+`pull_request` gets the same list. Six test files mention `.github` (the
+two named above, `test_shinytest2_workflow_timeout.R`,
+`test_e2e_package_qualification.R` and two e2e files); only the two
+named above were confirmed to read the workflow files, so check each
+before fixing the list.
 
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
@@ -402,29 +413,40 @@ macOS+GHA+live-CDP-timeout signature).
 
 **`methodology_trim.py`’s generated shard verify script FAILs its L2
 “leak” check when an archived record quotes a front-matter line (found
-S784, 2026-09-26, DECISION NEEDED, Effort S)** – the check embedded in
-each shard’s `.verify.sh` is `ln in "".join(sr)`, a SUBSTRING test of
-every front-matter line over 24 characters against the whole archived
-records text. The archived S779 receipt’s `next_steps:` quotes the
-trimmer’s `--check` command (with `--budget-bytes 65536`), which
-contains the front-matter `--check` line, so
-`bash docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh` prints
+S784, 2026-09-26; owner chose to report it upstream, S898; READY, Effort
+S)** – the check embedded in each shard’s `.verify.sh` is
+`ln in "".join(sr)`, a SUBSTRING test of every front-matter line over 24
+characters against the whole archived records text. The archived S779
+receipt’s `next_steps:` quotes the trimmer’s `--check` command (with
+`--budget-bytes 65536`), which contains the front-matter `--check` line,
+so `bash docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh` prints
 `FAIL: L2 FRONT MATTER leaked 1 line(s) into the shard` although the
 write-time L1/L2/L3 all passed and the script’s own L1/L3 checks hold
 (reproduced by a write, a rollback and a second write, and by a separate
 Python probe; the `CHANGELOG.md` shard from the same session is clean, 0
-hits). It recurs on every later `HANDOFFS.md` trim, because S779 is
-always in the archived tail. Nothing runs these scripts (no CI job, test
-or tool; only the dashboard recognizes the suffix). **Decision for the
-owner:** (1) fix it upstream in the `rmsharp/methodology` fork – compare
-against the SET of exact record lines, as that script’s BL-28 fix
-already does for its “lost line” check (a local patch would be a second
-local modification to `methodology_trim.py` to re-apply after every
-sync, per `CLAUDE.md`’s checklist); (2) leave it and accept the one
-known FAIL; (3) reword the front-matter command line in `HANDOFFS.md` so
-it is no longer a substring of what receipts quote (edits a ledger’s
-seed text; its L2 then checks the reworded line). Until decided, do not
-quote front-matter command lines verbatim in receipts (Learning 797e).
+hits). **Re-measured S898: it does NOT recur on every later trim, and
+the scope is wider.** 10 of 54 shard verify scripts FAIL today
+(`HANDOFFS` 2 of 15, `CHANGELOG` 1 of 16, `SESSION_NOTES` 7 of 23). The
+L2 front-matter leak is in 2 (`HANDOFFS-through-2026-09-26`, the
+`--check` line, and `CHANGELOG-through-2026-08-10`, leaking
+`## Size, and when to archive`); the other 8 fail
+`L1 records-zone concatenation is not byte-identical`, and only
+`HANDOFFS-through-2026-09-26-3` was read further (its output cites the
+accepted frontier-record pattern, BL-27, and says to diff record 0 by
+hand). The `HANDOFFS-through-2026-09-30` and the S897 `CHANGELOG` shards
+pass. Nothing runs these scripts (no CI job, test or tool; only the
+dashboard recognizes the suffix). **Owner ruling (S898): report it
+upstream** to the `rmsharp/methodology` fork – compare against the SET
+of exact record lines, as that script’s BL-28 fix already does for its
+“lost line” check (a local patch would be a second local modification to
+`methodology_trim.py` to re-apply after every sync, per `CLAUDE.md`’s
+checklist). Write the report to the measured scope above, and
+characterize the 8 L1 failures first (cause not yet known for 7 of
+them). Posting it is an outward action: confirm with the owner at
+pickup. Rejected by the owner: leaving it, and rewording the ledger’s
+front-matter line (it could fix at most 1 of the 10). Until fixed, do
+not quote front-matter command lines verbatim in receipts (Learning
+797e).
 
 **`CHANGELOG.md`’s own ~4-entries-per-session ledger convention (claim,
 Phase 0 reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side
@@ -494,13 +516,12 @@ byte-untouched; (6) re-read the compressed result end to end.
 pass; re-grep, sizes not anchors):** the docs-audit item (47 lines; S890
 already compressed it, so check for regrowth first), this item’s own
 history (41 lines), the paper item (24), Candidate C (22), the
-`inst/doc/` slimming item (21) and the trim verify-script item (20).
-Candidate C and the verify-script item are two of the 7 parked Effort-S
-items awaiting the owner’s keep-or-decline, so wait for that ruling
-before compressing them. The standalone-package item is still 34 lines
-but is nearly all ratified-scope open text; leave it. Regrowth, for
-scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after
-S896.
+`inst/doc/` slimming item (21) and the trim verify-script item (20, now
+longer after S898). Candidate C and the verify-script item were two of
+the 7 parked Effort-S items; the owner kept all 7 open (S898), so they
+may be compressed. The standalone-package item is still 34 lines but is
+nearly all ratified-scope open text; leave it. Regrowth, for scale: 378
+lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
 
 **Two kinship2 drawing features the Diagram tab still lacks (found S847,
 2026-10-01; DECISION NEEDED – which pedigree column marks “deceased”,
@@ -540,7 +561,8 @@ below are the section’s live work.*
 
 **Candidate C’s connector/dogleg visual-signposting idea** (found S473,
 designing the issue \#144 plan; not adopted for \#144 itself, Effort
-unknown, low priority) – extends the existing D2 mate-line “dogleg”
+unknown, low priority; kept open by the owner S898, DECISION NEEDED:
+product sign-off to pursue) – extends the existing D2 mate-line “dogleg”
 (issue \#142) to `edgeStyle="direct"` (which currently gets zero
 compensating treatment for any cross-generation connector) and adds
 dashed/colored/titled styling to both edge styles so a
@@ -565,11 +587,11 @@ benefit from signposting for legibility.
 
 **The live app’s uploaded/QC’d copy of `obfuscated_rhesus_mhc_ped.csv`
 gets a different Diagram layout than the same CSV read directly – cause
-found (row order); decision open** (found S472, cause measured
-2026-09-24, low priority, Effort S) – the S472 figures (739 live vs 740
-offline nodes; 50 vs 51 projection nodes) no longer reproduce, since the
-layout has changed since (e.g. Track 4, S573), and the original
-hypothesis – that
+found (row order); owner ruled S898: fix the tests only** (found S472,
+cause measured 2026-09-24 and re-measured S898; READY, low priority,
+Effort S) – the S472 figures (739 live vs 740 offline nodes; 50 vs 51
+projection nodes) no longer reproduce, since the layout has changed
+since (e.g. Track 4, S573), and the original hypothesis – that
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
 drops or merges a row – is REFUTED: it keeps all 375 rows and ids (none
 lost or added, 0 duplicates), and
@@ -580,23 +602,26 @@ row ORDER –
 reorders the rows – and the mating layout depends on it:
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
 gives 782 nodes for both inputs under `edgeStyle = "direct"`, but **1456
-(raw order) vs 1412 (QC order)** under `"rectilinear"`, and the raw
-content re-ordered to QC’s row order gives exactly 1412 (so order alone
+(raw order; 1460 re-measured S898, after later layout fixes) vs 1412 (QC
+order, unchanged)** under `"rectilinear"`, and the raw content
+re-ordered to QC’s row order gives exactly 1412 (so order alone
 reproduces QC’s count; QC also normalizes some id/sire/dam/sex cells,
 not characterized). Consequence: the app’s rectilinear diagram of an
 uploaded file can carry a different number of waypoint nodes than a
-script user’s diagram of the same data, depending only on row order. A
-future session should decide whether that row-order dependence is
-acceptable, and whether the bundled-fixture tests
-(`test-e2e-pedigree-module.R`, etc.) should assert the QC’d count rather
-than the raw-CSV count as a proxy for what the live app renders.
+script user’s diagram of the same data, depending only on row order.
+**Owner ruling (S898): accept the row-order dependence and change only
+the bundled-fixture tests** (`test-e2e-pedigree-module.R`, etc.) to
+assert the QC’d count, which is what the live app renders; layout code
+untouched. Not chosen: making the layout order-independent. The pickup
+starts by finding which tests assert the raw-CSV count.
 
 **`data-raw/rhesusPedigree.R`’s docstring claims
 `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
 source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
 are byte-identical on every shared column** (found S470, incidental to
-the founder-positioning audit above, Effort S, low priority) – confirmed
-via [`identical()`](https://rdrr.io/r/base/identical.html) on
+the founder-positioning audit above; owner chose to reword the comment,
+S898; READY, Effort S, low priority) – confirmed via
+[`identical()`](https://rdrr.io/r/base/identical.html) on
 `id`/`sire`/`dam`/`sex`/`gen`/`birth`/`exit`/`age` between the two
 files; `rhesusPedigree_fromCenter.csv` differs only by one added
 `fromCenter` column (all `TRUE`). The documented
@@ -605,27 +630,34 @@ id/date-obfuscation transform was evidently never applied to produce
 this particular fixture, or produced a no-op. Not fixed this session
 (reported per `PROJECT_LEARNINGS.md` Learning 382’s “report, don’t fix
 mid-session” precedent – out of the founder-positioning audit’s own
-scope). A future session should reconcile the docstring against the
-shipped fixture (or regenerate `rhesusPedigree_fromCenter.csv` to match
-the documented provenance). See
+scope). **Owner ruling (S898): reword the comment** to say only what is
+true (the values agree; the obfuscation step cannot be reproduced);
+comment only, no data change, and the CSV is not regenerated.
+**Re-measured S898:** the claim sits in the docstring’s lines 7-10 and
+is about the `rhesusPedigree` object, not
+`obfuscated_rhesus_mhc_ped.csv`; that object’s `id` and `birth` equal
+the `fromCenter` CSV’s, and the two CSVs agree on all 8 shared columns
+(375 rows). See
 `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md` Finding
 \#4, `PROJECT_LEARNINGS.md` Learning 468.
 
 **`highlightNearest` degree=6 mitigation for the rectilinear style is
-bounded, not a full fix** (found S468, Effort M, low priority) – a very
-wide sibship’s D1 sibship-bar chain can exceed 6 hops (chain length
-scales with the number of children in one mating unit), so a hover on an
-individual in a very large family could still light up nothing visible.
-A full fix would need either a custom JS `highlightNearest`
-reimplementation that specifically skips through invisible waypoint
-nodes regardless of hop count, or a data-layer change that keeps
-degree-1 semantics correct (e.g. tagging waypoint edges so a custom
-traversal treats them as zero-cost hops). Not designed this session –
-the degree=6 mitigation was explicitly scoped as a quick, bounded fix,
-owner-directed via `AskUserQuestion`. A future session should measure
-the real fixture’s own maximum sibship size to gauge how often 6 hops is
-actually insufficient in practice before deciding whether a full fix is
-warranted.
+bounded, not a full fix** (found S468, owner kept it open S898; READY
+(optional), Effort M, low priority) – a very wide sibship’s D1
+sibship-bar chain can exceed 6 hops (chain length scales with the number
+of children in one mating unit), so a hover on an individual in a very
+large family could still light up nothing visible. A full fix would need
+either a custom JS `highlightNearest` reimplementation that specifically
+skips through invisible waypoint nodes regardless of hop count, or a
+data-layer change that keeps degree-1 semantics correct (e.g. tagging
+waypoint edges so a custom traversal treats them as zero-cost hops). Not
+designed this session – the degree=6 mitigation was explicitly scoped as
+a quick, bounded fix, owner-directed via `AskUserQuestion`. A future
+session should measure the real fixture’s own maximum sibship size to
+gauge how often 6 hops is actually insufficient in practice before
+deciding whether a full fix is warranted. (S898 re-check: the degree is
+still style-aware at `R/modPedigree.R:828` and pinned by
+`test_modPedigree.R:2033`.)
 
 ## Outreach
 

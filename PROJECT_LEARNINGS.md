@@ -13322,3 +13322,24 @@ an independent check disagrees with a tool’s proof, find the exact
 transformation before choosing a side; (2) run `--force` as a dry run
 (no `--write`) first, and put the cut to the owner with the measured
 alternatives.
+
+#### Learning 867
+
+**Re-run a parked item’s own measurement before asking the owner to rule
+on it: 2 of 7 stored claims had drifted, one by a factor of five.**
+(S898, 2026-10-04.) The trim verify-script item said one shard fails and
+“recurs on every later `HANDOFFS.md` trim”; a pass/fail loop over all
+`docs/archive/*-through-*.verify.sh` gave 10 of 54 failing (`HANDOFFS` 2
+of 15, `CHANGELOG` 1 of 16, `SESSION_NOTES` 7 of 23), two with the
+item’s L2 front-matter leak and eight with `L1 ... not byte-identical`,
+while 13 of 15 `HANDOFFS` shards pass. The row-order item’s 1456
+rectilinear nodes for the raw file re-measured as 1460 after later
+layout fixes (S857, S859, S878); the QC’d 1412 and the “reorder
+reproduces it” result held. The rhesus item’s claim is about the
+`rhesusPedigree` object in `data-raw/rhesusPedigree.R:7-10`, not the
+second CSV. A ruling on a stale number is a ruling on a different
+problem. Rules: (1) re-run the stored measurement and put the new number
+beside the old one in both the question and the BACKLOG ruling; (2) a
+“recurs every time” claim is a count, so count it; (3) never truncate a
+pass/fail loop with `head` (mine cut the failing shards off): print only
+the failures and a tally.
