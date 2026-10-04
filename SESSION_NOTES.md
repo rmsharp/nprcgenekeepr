@@ -170,133 +170,111 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ### What Session 894 Did
 
-**Deliverable:** push `master` and read CI for S893’s two red-CI fixes
-(IN PROGRESS). READY, Effort S. Report only: a red job’s full log is
-read and its failing value reported; the fix, if any, is a separate
-deliverable. **Started:** 2026-10-04 **Status:** Session claimed. Work
-beginning: confirm the 17-commit range, push, then watch the four push
-workflows. **Orient:** no ledger gap (frontiers at HEAD `0a71074e0`);
-tree clean; master 17 ahead of origin (docs and tests only); CI on the
-S890 push: lint and pkgdown green, R-CMD-check and test-coverage red
-(S891’s two causes), scheduled shinytest2 green 10-02 to 10-04;
-dashboard 96/100, High+ risk 0; context budget OK (growth run 60/10);
-`quality_ratchet.py --run` 1/1 pass, manifest `aa983075d6a2` matches
-S893’s receipt. `CHANGELOG.md` 251,569 B (10,575 B under the Read
-refusal). **Owner pick:** “Push to GitHub, check CI” at the Phase 0
-picker; the pick is the authorisation to push. **Ledger:**
-`CHANGELOG: pending` – the claim commit’s `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest.
+**Deliverable, DONE (no code or test change):** pushed `master` and read
+CI for S893’s two red-CI fixes. **Both fixes are confirmed green on
+CI.** Claim `1fd37a244`. The push `2e2046efd..1fd37a244` sent 18 commits
+(S893’s 17 plus the claim); none touched `R/`, `DESCRIPTION` or
+`NAMESPACE`, and origin was not ahead. **Not pushed: the close-out
+commit** (master is 1 ahead; the owner decides, see Next steps A). Owner
+pick: “Push to GitHub, check CI” at the Phase 0 picker, which was also
+the authorisation to push. **CI on `1fd37a244`, all four green** (run
+ids `37234582588` lint about 4 min, `...580` pkgdown about 6, `...576`
+test-coverage about 13, `...577` R-CMD-check about 16). Per leg,
+R-CMD-check: ubuntu release, **oldrel-1**, **devel**, macos release and
+windows release all success; on the S890 push (run `37179033145`)
+oldrel-1 and devel failed. test-coverage, red on the S890 push, is
+success. **What one green run does and does not show:** the
+test-coverage failure was deterministic, so its green run is the proof
+for Fix 1. The oldrel-1/devel failure was probabilistic (S891: 12 of 100
+variable orderings; S893: 42 of 300 over 1e-6), so one green run is
+consistent with Fix 2 but is not its proof; the proof is S893’s
+300-shuffle measurement and the 16x headroom of 1e-2. A rare red there
+would be a new finding, not a failed fix. **Verified:** the push range
+before pushing (18 commits, not behind, no `R/` change); local and
+origin SHAs equal after; per-leg conclusions, not only the
+workflow-level result. No runtime change, so no smoke test;
+`quality_ratchet.py --run` 1/1 pass at Phase 0 (manifest
+`aa983075d6a2`). Nothing else was run: no code, test or doc under test
+changed.
 
-### What Session 893 Did
+**Handoff evaluation of S893: 9/10.** Helped: every figure I measured
+matched (master 17 ahead; `CHANGELOG.md` 251,569 B; `SESSION_NOTES.md`
+about 31 KB, actually 30,955 B); step (A) said what to run after a push
+and what to expect, and the expectation was right; “CI is not confirmed”
+kept me from treating the fixes as proven before the push. Missing:
+nothing that cost time (no run-time estimate for the four workflows; I
+measured 16 min for the slowest). Wrong: nothing found. Not exercised:
+its key-file line refs, since I opened no test file.
 
-**Deliverable, DONE (tests only; no `R/` file changed):** repaired the
-two red-CI causes from S891’s diagnosis. Strict TDD, an
-`AskUserQuestion` at every gate. Claim `9c445bfa7`; Fix 1 RED
-`c68ceffc2`, GREEN `ff9347e68`; Fix 2 RED `71110c5c8`, GREEN
-`3cd3989a4`, REFACTOR `9d56803d4`; diagnosis addendum `b10303c39`; the
-close-out commit holds the receipt, these notes, Learnings 862-864 and
-the BACKLOG removal. **CI is not confirmed: nothing was pushed** (master
-is 17 ahead of origin, all docs and tests), so only a push shows both
-jobs green. **Fix 1 (test-coverage):** `test_sexCodes.R` skips both `R/`
-scans unless `R/` lists a `.R`/`.r` file (helper
-`sexCodeSourceAvailable()`, two RED tests). Check in a scratch install
-laid out like the coverage job (`R/` holds only `nprcgenekeepr`, `.rdb`,
-`.rdx`): the pre-fix file fails twice there (S891’s `:110`/`:115`); the
-fixed file has 0 failures, 2 skips. **Fix 2 (R-CMD-check
-oldrel-1/devel):** `tests/testthat/helper-reorderedSolveQP.R` adds
-`withReorderedSolveQP(seed, code)`, which shuffles the QP’s variables
-with a fixed seed through `with_mocked_bindings(.package = "quadprog")`
-(all 5 solves of the 375 fixture are intercepted). `qpFloorTolerance`
-1e-6 -\> **1e-2** in `test_positionMatingUnitForest.R`; `qpGapTolerance`
-1e-9 -\> **1e-6** at `test_solveJointQP.R:437-439`; `:210` and `:440`
-left (worst 1.1e-8 and 2.7e-9 against 1e-6). **Measurement overturned
-the plan (owner chose from the numbers, in plain-words gates):** S891’s
-1e-3 came from 100 shuffles (12 over 1e-6, max 1.1e-4, “never 2 pairs”);
-300 gave 42 over 1e-6, max **6.0e-4** and 2 pairs in a run, so 1e-3 had
-1.7x headroom; the owner chose 1e-2 (1.2 px, 16x). A third test,
-`test_solveJointQP.R:437-439` (1e-9), was missed by `trackBFull` in 23
-of 300 shuffles (worst 1.2e-8); the owner put it in scope. Corrections:
-the diagnosis addendum and Learning 862. **Verified:** at GREEN
-(`3cd3989a4`) full suite 367 files, 2,986 tests, 0 failed, 0 errors, 187
-skipped, 6 warnings;
-`devtools::check(document = FALSE, args = "--no-manual")` 0 errors, 0
-warnings, 0 notes (7.4 min); `lintr::lint_package()` 0. After the
-REFACTOR (`9d56803d4`, one test file): that file alone 58 tests, 218
-expectations, 0 failures; lint 0; the full suite twice. **The first run
-had 1 failure:** `test_markerKinship.R`’s wall-clock benchmark
-(`skip_on_ci()`; its own comment calls it noise-sensitive; machine load
-average 6.7-8.7), which passed 3 of 3 alone; the second run was clean (0
-failed, 0 errors). `quality_ratchet.py --run` 1/1 pass (results
-`bf628e34bf4c`, manifest `aa983075d6a2`). **Not run:**
-`devtools::check()` after the REFACTOR, the manual build, and CI. No
-runtime change (tests only), so no smoke test. Nothing could be removed
-from a mandated-read file this session beyond condensing S892’s record
-below (`SESSION_NOTES.md` 29,312 B -\> about 31 KB).
+**Self-assessment: 8/10.** + Orientation complete before the picker;
+claimed before pushing; checked the range before the push; read the
+per-leg results of the two legs that had failed instead of trusting the
+workflow-level success; no scope creep (no red result, so nothing to
+diagnose). - Three wasted calls: a foreground `sleep` (the harness
+blocks it; use a `run_in_background` loop that prints its own last line)
+and an `echo =====` separator (zsh reads a leading `=` as an expansion
+and errors). Reduction: S893’s record is condensed below
+(`SESSION_NOTES.md` 32,048 B at the claim -\> 30,559 B).
 
-**Handoff evaluation of S892: 8/10.** Helped: the Phase 0 figures
-(`HANDOFFS.md` 152,883 B, master 9 ahead) matched exactly; the BACKLOG
-item’s recipes worked as written (the scratch-install loop reproduced
-the two failures; the shuffle seam was S891’s design); every key-file
-line ref held. Missing: `test_solveJointQP.R:437-439` (1e-9) was in
-neither the BACKLOG item nor the diagnosis, and “measure `:210` and
-`:440` first” named two of the three bounds. Wrong: the 1e-3 tolerance
-“with 10x headroom” and “never 2+ pairs” (100-shuffle figures that 300
-shuffles overturned); nothing else found.
-
-**Self-assessment: 8/10.** + Claimed first; measured before every gate
-and put each decision to the owner in plain words with the numbers; let
-the data overturn the diagnosis’ own tolerance instead of implementing
-it; faithful checks (the pre-fix file fails and the fixed one passes in
-the coverage layout; two full runs; `devtools::check()`); one phase per
-commit; docs after. - A probe slipped on a line range (about 5 min); RED
-put the constants below the existing tests and GREEN had to move them;
-the harness nudged me for silence twice (S891/S892 gotcha again); one
-waiter fired early; the first final run’s benchmark failure had to be
-separated from my change before I could say it was unrelated.
-
-**Next steps (owner-ordered, carried from S892):** (A) the owner decides
-whether to push (outward; master is 17 ahead, all docs and tests). After
-a push run `gh run list --branch master --limit 10`; for any red, read
-the job’s full log (`gh run view <id> --log`, Learning 858) and bring
-the failing value before changing anything. Expected: test-coverage and
-R-CMD-check oldrel-1/devel green. (B) S894: compress four more
-`BACKLOG.md` blocks (standalone-package item, “Pedigree diagram vs
+**Next steps (owner-ordered, carried from S893):** (A) the owner decides
+whether to push the close-out commit (outward). It changes only
+`CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all
+`.Rbuildignore`d with no test or workflow opening them (grepped S894),
+so no CI wait is needed. Until it is pushed, `origin/master`’s
+`HANDOFFS.md` shows S894 as `status: pending`. (B) S895: compress four
+more `BACKLOG.md` blocks (standalone-package item, “Pedigree diagram vs
 kinship2 audit follow-ups” preamble, chromote item, PED_GV closure
-narrative; estimate 20-45 lines, draft first and count). (C) S895: the
+narrative; estimate 20-45 lines, draft first and count). (C) S896: the
 owner keeps or declines the 7 parked Effort-S items (`isAddedRecord()`,
 CI `paths-ignore`, trim verify script, Candidate C, `highlightNearest`,
-rhesus docstring, row-order item). (D) Then one real fix per session.
-**Owner decision still open (from S892; not filed, not asked):** shorter
-receipts would lower the `HANDOFFS.md` refill rate (room for about 30
-more before the Read refusal at 262,144 B). Carried: PED_GV next group
-(8 ids + NEW-24), `reportGV(smallPed)` unfiled.
+rhesus docstring, row-order item). (D) Trim `CHANGELOG.md` (see Gotchas
+for the headroom). (E) Then one real fix per session. **Owner decision
+still open (from S892; not filed, not asked):** shorter receipts would
+lower the `HANDOFFS.md` refill rate (room for about 30 more before the
+Read refusal at 262,144 B). Carried: PED_GV next group (8 ids + NEW-24),
+`reportGV(smallPed)` unfiled.
 
-**Key files:** `tests/testthat/helper-reorderedSolveQP.R` (39 lines, the
-whole shuffle seam);
-`tests/testthat/test_positionMatingUnitForest.R:594`
-(`qpFloorTolerance`), `:599` (`adjacentFloorShortfall`), `:701` (the new
-shuffled-solve test); `tests/testthat/test_solveJointQP.R:421`
-(`qpGapTolerance`), `:459-460` (the new `trackBFull` test);
-`tests/testthat/test_sexCodes.R:92` (`sexCodeSourceAvailable`),
-`:101-130` (its tests), `:135,:151` (the two skips);
-`docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md` (addendum at the
-end).
+**Key files:** `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md` (what
+the two fixes address, with S893’s addendum);
+`tests/testthat/helper-reorderedSolveQP.R` (the shuffle seam);
+`tests/testthat/test_sexCodes.R:92` (`sexCodeSourceAvailable`). Per-leg
+CI check:
+`gh run view <id> --json jobs --jq '.jobs[] | "\(.conclusion)\t\(.name)"'`.
 
-**Gotchas:** use
+**Gotchas:** `gh run list --commit` needs the full SHA (Learning 857). A
+workflow-level “success” does not name the matrix legs; read
+`--json jobs` when a specific leg was the one that failed. The harness
+blocks a foreground `sleep`: start a `run_in_background` loop and wait
+on its own last line (Learning 864). **`CHANGELOG.md` is 253,269 B,
+8,875 B under the 262,144 B Read refusal** (measured after this
+close-out). This session added 1,700 B (claim plus close-out); S893
+estimated 3 KB a session, so room for roughly 3 to 5 sessions (an
+estimate): trim it
+(`methodology_trim.py --file CHANGELOG.md --budget-bytes 65536`; expect
+`--force`, as for `HANDOFFS.md`) before it runs out. S892’s
+`HANDOFFS.md`-trim gotchas still apply (condensed below).
+
+### What Session 893 Did (condensed S894; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+Repaired the two red-CI causes, tests only (no `R/` file changed):
+`test_sexCodes.R` skips its `R/` scans unless `R/` lists a `.R`/`.r`
+file (`sexCodeSourceAvailable()`); the QP floor tolerances now match the
+solver’s measured noise (`qpFloorTolerance` 1e-6 -\> 1e-2,
+`qpGapTolerance` 1e-9 -\> 1e-6 at `test_solveJointQP.R:437-439`),
+through the seeded shuffle seam
+`tests/testthat/helper-reorderedSolveQP.R`. Claim `9c445bfa7`, Fix 1 RED
+`c68ceffc2` GREEN `ff9347e68`, Fix 2 RED `71110c5c8` GREEN `3cd3989a4`
+REFACTOR `9d56803d4`, addendum `b10303c39`, close-out `0a71074e0`.
+Handoff evaluation of S892: 8/10. Self 8/10. S894 confirmed both fixes
+green on CI. **Gotchas kept:** use
 [`withr::with_seed`](https://withr.r-lib.org/reference/with_seed.html)
-(declared in Suggests); `testthat::with_seed` is not exported. The
-shuffle wrapper takes exactly `(Dmat, dvec, Amat, bvec, meq)`, so a new
-argument in the production `solve.QP()` call fails loudly. A constant an
-existing test reads must be defined above that test (a test file runs
-top to bottom). `test_markerKinship.R`’s runtime benchmark can fail on a
-loaded machine: rerun it alone before suspecting a change. `pgrep -f`
-wait loops fire early (Learning 864): wait on the job’s own marker line.
-`rm -f $VAR/*.R` is blocked by the safety check. **`CHANGELOG.md` is
-251,569 B, 10,575 B under the 262,144 B Read refusal**; a session adds
-about 3 KB (estimate), so trim it
-(`methodology_trim.py --file CHANGELOG.md`; expect `--force`, as for
-`HANDOFFS.md`) within about 3 sessions. S892’s gotchas on the
-`HANDOFFS.md` trim still apply: see its condensed record below.
+(`testthat::with_seed` is not exported); the shuffle wrapper takes
+exactly `(Dmat, dvec, Amat, bvec, meq)`, so a new argument in the
+production `solve.QP()` call fails loudly; a constant an existing test
+reads must be defined above that test; `test_markerKinship.R`’s
+wall-clock benchmark can fail on a loaded machine (rerun it alone
+first); `pgrep -f` wait loops fire early (Learning 864);
+`rm -f $VAR/*.R` is blocked by the safety check.
 
 ### What Session 892 Did (condensed S893; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
