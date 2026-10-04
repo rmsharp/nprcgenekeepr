@@ -57,11 +57,9 @@ createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
   simKinships <- vector(mode = "list", length = n)
 
   for (i in seq_len(n)) {
-    simPed <- makeSimPed(ped, allSimParents, verbose = verbose)
-    simKinships[[i]] <- kinship(
-      simPed$id, simPed$sire,
-      simPed$dam, simPed$gen,
-      twinRelations = twinRelations
+    simKinships[[i]] <- .simulateKinship(
+      ped, allSimParents,
+      twinRelations = twinRelations, verbose = verbose
     )
   }
   simKinships

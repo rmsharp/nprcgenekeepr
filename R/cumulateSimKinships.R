@@ -60,10 +60,8 @@ cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
   first_time <- TRUE
 
   for (i in seq_len(n)) {
-    simPed <- makeSimPed(ped, allSimParents)
-    kmat <- kinship(
-      simPed$id, simPed$sire,
-      simPed$dam, simPed$gen,
+    kmat <- .simulateKinship(
+      ped, allSimParents,
       twinRelations = twinRelations
     )
     if (first_time) { # initializes minKinship correctly and adds IDs
