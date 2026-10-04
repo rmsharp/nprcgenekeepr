@@ -130,8 +130,8 @@ failing shards off (re-run as a tally); a zsh glob failed on the fixtures (they 
 of 7 of the 10 failing verify scripts is still unread. Reduction: none net. S897's record is condensed here, but this
 file still grew 1,003 B (31,006 -> 32,009) and `BACKLOG.md` grew 2,352 B (44,102 -> 46,454: rulings and re-measurements).
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push the local commits (S897's addendum `4313562b4`, the
-claim `2fffad3d8`, this close-out): docs only, all `.Rbuildignore`d, no CI wait. (B) Then one real fix per session, any
+**Next steps (owner-ordered):** (A) DONE: the owner said "push" after the close-out and 3 commits went to origin
+(`18610c7e3..77ccb50f6`: S897's addendum, the claim, the close-out); only the addendum that records the push is local. (B) Then one real fix per session, any
 order. The READY items: CI `paths-ignore` (`BACKLOG.md:55`; edits `.github/workflows/*`, which `.Rbuildignore:40` ignores
 but tests read, so run the suite; the four workflows also run on `pull_request`, `shinytest2.yaml` only nightly);
 row-order tests only (`BACKLOG.md:446`;
