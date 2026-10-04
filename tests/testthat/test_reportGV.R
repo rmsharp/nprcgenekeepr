@@ -829,6 +829,72 @@ test_that("reportGV errors clearly when 'sex' is missing instead of silently cor
 })
 
 # ---------------------------------------------------------------------------
+# NEW-28 (PED_GV audit, owner decision S888, Decision record 10): reportGV()
+# names every missing required column up front, in one message, before the
+# kinship step. Before this, a pedigree missing id, sire, dam or gen stopped
+# with a base-R message ("'dimnames' applied to non-array", "arguments imply
+# differing number of rows", "result would be too long a vector"), and a
+# missing sex was named only after kinship() and geneDrop() had finished
+# (issue #123 above). Required: id, sire, dam, gen (the kinship step) and sex
+# (the founder lists). birth, exit, age and population are not required.
+# ---------------------------------------------------------------------------
+for (col in c("id", "sire", "dam", "gen")) {
+  test_that(paste0("reportGV names a missing '", col, "' column, not a base-R message (NEW-28)"), {
+    pedMissing <- qcPed
+    pedMissing[[col]] <- NULL
+    expect_error(
+      reportGV(pedMissing, guIter = 20L, guThresh = 3L, byID = TRUE,
+               updateProgress = NULL),
+      paste0("required column\\(s\\) missing in reportGV\\(ped\\): ", col, "\\.")
+    )
+  })
+}
+
+test_that("reportGV names every missing required column in one message, in the order id, sire, dam, gen, sex (NEW-28)", {
+  pedNoGenSex <- qcPed
+  pedNoGenSex$gen <- NULL
+  pedNoGenSex$sex <- NULL
+  expect_error(
+    reportGV(pedNoGenSex, guIter = 20L, guThresh = 3L, byID = TRUE,
+             updateProgress = NULL),
+    "required column\\(s\\) missing in reportGV\\(ped\\): gen, sex\\."
+  )
+  pedNoneRequired <- qcPed[, c("birth", "exit", "age")]
+  expect_error(
+    reportGV(pedNoneRequired, guIter = 20L, guThresh = 3L, byID = TRUE,
+             updateProgress = NULL),
+    "required column\\(s\\) missing in reportGV\\(ped\\): id, sire, dam, gen, sex\\."
+  )
+})
+
+test_that("reportGV checks the required columns before it starts the kinship step (NEW-28)", {
+  local_mocked_bindings(kinship = function(...) stop("kinship ran"))
+  for (col in c("sex", "gen")) {
+    pedMissing <- qcPed
+    pedMissing[[col]] <- NULL
+    expect_error(
+      reportGV(pedMissing, guIter = 20L, guThresh = 3L, byID = TRUE,
+               updateProgress = NULL),
+      paste0("required column\\(s\\) missing in reportGV\\(ped\\): ", col, "\\.")
+    )
+  }
+})
+
+## Characterization guard (passes before and after the change): the check must
+## not demand columns reportGV() does not use.
+for (col in c("birth", "exit", "age", "population")) {
+  test_that(paste0("reportGV still runs without a '", col, "' column (NEW-28 guard)"), {
+    pedMissing <- qcPed
+    pedMissing[[col]] <- NULL
+    expect_s3_class(
+      reportGV(pedMissing, guIter = 20L, guThresh = 3L, byID = TRUE,
+               updateProgress = NULL),
+      "nprcgenekeeprGV"
+    )
+  })
+}
+
+# ---------------------------------------------------------------------------
 # BL-N Slice 2 (twinRelations-into-kinship() plan, docs/planning/
 # twin-relations-kinship-computation-plan.md sec 4): reportGV() threads an
 # optional twinRelations = NULL parameter straight through to its internal
