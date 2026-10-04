@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S894
+date: 2026-10-04
+status: pending
+active_task: push master (17 commits ahead of origin after S893, all docs and tests) and read CI for S893's two red-CI fixes (test-coverage; R-CMD-check oldrel-1/devel); report only, any red job gets its full log read and is brought to the owner before anything changes; the owner picked it at Phase 0 and that pick authorised the push
+```
+
+```handoff
 session: S893
 date: 2026-10-04
 status: complete

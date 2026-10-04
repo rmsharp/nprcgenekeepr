@@ -98,6 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 894 Did
+**Deliverable:** push `master` and read CI for S893's two red-CI fixes (IN PROGRESS). READY, Effort S. Report only: a red
+job's full log is read and its failing value reported; the fix, if any, is a separate deliverable.
+**Started:** 2026-10-04
+**Status:** Session claimed. Work beginning: confirm the 17-commit range, push, then watch the four push workflows.
+**Orient:** no ledger gap (frontiers at HEAD `0a71074e0`); tree clean; master 17 ahead of origin (docs and tests only);
+CI on the S890 push: lint and pkgdown green, R-CMD-check and test-coverage red (S891's two causes), scheduled shinytest2
+green 10-02 to 10-04; dashboard 96/100, High+ risk 0; context budget OK (growth run 60/10); `quality_ratchet.py --run`
+1/1 pass, manifest `aa983075d6a2` matches S893's receipt. `CHANGELOG.md` 251,569 B (10,575 B under the Read refusal).
+**Owner pick:** "Push to GitHub, check CI" at the Phase 0 picker; the pick is the authorisation to push.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 893 Did
 **Deliverable, DONE (tests only; no `R/` file changed):** repaired the two red-CI causes from S891's diagnosis. Strict TDD,
 an `AskUserQuestion` at every gate. Claim `9c445bfa7`; Fix 1 RED `c68ceffc2`, GREEN `ff9347e68`; Fix 2 RED `71110c5c8`,
