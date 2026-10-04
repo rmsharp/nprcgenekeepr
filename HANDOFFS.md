@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S899
+date: 2026-10-04
+status: pending
+active_task: stop the four push workflows (lint, pkgdown, R-CMD-check, test-coverage) running on pushes that change only build-ignored files, via a paths-ignore list that excludes the files tests read (BACKLOG.md:55; READY, Effort S; owner ruled the paths-ignore approach in S898 and picked this item at the S899 Phase 0 picker). Strict TDD: RED, GREEN, REFACTOR, each gated by AskUserQuestion.
+```
+
+```handoff
 session: S898
 date: 2026-10-04
 status: complete

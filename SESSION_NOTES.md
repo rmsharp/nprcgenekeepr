@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 899 Did
+**Deliverable:** stop the four push workflows (lint, pkgdown, R-CMD-check, test-coverage) running on pushes that change only build-ignored files, via a `paths-ignore` list (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Phase 0 clean: no ledger gap, 0 pending receipts, ratchet counts and manifest match, dashboard 96/100, budget OK, no red CI; `master` 1 ahead of origin (S898's push-record addendum `d13665e25`, docs only). Strict TDD: PRE-RED, no test or workflow edited yet.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 898 Did
 **Deliverable, DONE (docs only; BACKLOG, ledger, notes and Learnings changed; no R, test, workflow or build file):** the
 owner ruled on the 7 parked Effort-S items, one question each (two `AskUserQuestion` calls), after I re-checked every
