@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S896
+date: 2026-10-04
+status: pending
+active_task: compress four more BACKLOG.md blocks (standalone-package item, kinship2 follow-ups preamble, chromote item, PED_GV closure narrative) per the recurring housekeeping item's six-step method; the owner picked it at the Phase 0 picker (READY, Effort M)
+```
+
+```handoff
 session: S895
 date: 2026-10-04
 status: complete

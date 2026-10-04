@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 896 Did
+**Deliverable:** compress four more `BACKLOG.md` blocks (standalone-package item, kinship2 follow-ups preamble, chromote
+item, PED_GV closure narrative) per the recurring housekeeping item's method (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Phase 0 clean: no ledger gap, 0 pending receipts, ratchet 1/1, origin equals HEAD.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 895 Did
 **Deliverable, DONE (no code, test or doc under test changed):** pushed S894's close-out commit `1d8902e32` to
 `origin/master` (`1fd37a244..1d8902e32`, 1 commit, fast-forward). Claim `c0b01c3c6`. Owner pick: "Push close-out commit"
