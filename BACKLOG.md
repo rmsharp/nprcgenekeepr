@@ -52,26 +52,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
       `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
 
-- [ ] **Stop the four push workflows from running on pushes that
-      change only build-ignored files** (raised 2026-09-24; owner chose the `paths-ignore` list
-      S898; READY, Effort S) -- lint,
-      pkgdown, R-CMD-check and test-coverage run on every push to `master` with no `paths-ignore`,
-      so a push of only `BACKLOG.md`/`CHANGELOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md` still costs a
-      ~25-minute R-CMD-check that cannot say anything new. The owner's rule (2026-09-24: "if all
-      files edited are in .rbuildignore, there is no reason to ever run CI") is followed today
-      only by not waiting for the run. **Owner ruling (S898): a `paths-ignore` list mirroring
-      `.Rbuildignore` in each workflow** (not `[skip ci]` in commit messages). Caveat: some
-      ignored files ARE read by tests (`.github/workflows/*`, `_pkgdown.yml`,
-      `.quality-gates.json`, `.Rbuildignore`; e.g. `test_r_cmd_check_workflow_chrome_setup.R` and
-      `test_shinytest2_workflow_coverage.R` read the workflow files), so the list must exclude
-      those. Not done: the owner has now asked for it (S898), as its own session. **Read S898:**
-      lint, pkgdown, R-CMD-check and test-coverage trigger on `push` to main/master AND on
-      `pull_request` (pkgdown also on release and manual dispatch); `shinytest2.yaml` is nightly
-      and manual only; none of the seven has `paths-ignore` or `skip ci`. The owner's rule covers
-      pushes, so decide whether `pull_request` gets the same list. Six test files mention
-      `.github` (the two named above, `test_shinytest2_workflow_timeout.R`,
-      `test_e2e_package_qualification.R` and two e2e files); only the two named above were
-      confirmed to read the workflow files, so check each before fixing the list.
+- [ ] **Confirm the push `paths-ignore` list on GitHub itself (READY once the owner next pushes
+      only listed files, Effort S)** -- S899 shipped it (`3178b741c`): lint, pkgdown,
+      R-CMD-check and test-coverage carry the same 21-entry `paths-ignore:` under `push:` (14 root
+      notes/methodology `.md`, 4 methodology scripts, `.context-budget.json`, `.quality-gates.json`,
+      `docs/**`), guarded by `tests/testthat/test_workflowPathsIgnore.R`. Local checks (that test,
+      a YAML parse, the full suite, an installed-copy run) cannot show GitHub's own filter
+      behavior. **Check:** after the first push that changes only listed files (a docs-only
+      close-out), `gh run list --branch master --limit 10` must show no new run for that commit;
+      if runs start, look first at the two dotfile entries and `docs/**`. Left out on purpose
+      because a workflow reads them: `data-raw/**` and `.lintr` (lint), `_pkgdown.yml` and
+      `vignettes/**` (pkgdown), `.github/**`, `NEWS.Rmd`, `README.Rmd`, `renv.lock`, `codecov.yml`.
+      `pull_request` stays unfiltered (owner, S899: pushes only; no branch protection or rulesets
+      exist today, so a path-skipped PR could not wedge a required check). To add a file, edit all
+      four workflows and run that test.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
