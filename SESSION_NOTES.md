@@ -98,6 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 893 Did
+**Deliverable:** repair the two red-CI causes on master (S891's diagnosis in
+`docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`). Strict TDD: RED then GREEN for each fix, with an `AskUserQuestion`
+gate before each phase (IN PROGRESS). READY, Effort M.
+**Started:** 2026-10-04
+**Status:** Session claimed. Work beginning: read the diagnosis and the two test files, measure the QP tail at
+`test_solveJointQP.R:210` and `:440` (same 1e-6 bound), then the PRE-RED -> RED gate with the exact plan.
+**Orient:** no ledger gap (frontiers at HEAD `8bb64efee`); tree clean; master 9 ahead of origin (notes only); CI on
+`2e2046efd`: lint and pkgdown green, R-CMD-check and test-coverage red (the two causes), scheduled shinytest2 green;
+dashboard 96/100, High+ risk 0; context budget OK (growth run 58/10); `quality_ratchet.py --run` 1/1 pass, manifest
+`aa983075d6a2` matches the S892 receipt.
+**Owner pick:** "Repair the two red-CI causes" at the Phase 0 picker (the recommended first option).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 892 Did
 **Deliverable, DONE:** trimmed `HANDOFFS.md` so a close-out receipt fits again: 24 receipts (S789-S812, dated 2026-09-27 to
 2026-09-30) archived by `methodology_trim.py --force --write` into `docs/archive/HANDOFFS-through-2026-09-30.md` (111,575 B) with

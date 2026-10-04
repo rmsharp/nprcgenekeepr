@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S893
+date: 2026-10-04
+status: pending
+active_task: repair the two red-CI causes on master (BACKLOG.md Up Next, top item): the test_sexCodes.R source-scan guard (test-coverage) and the test_positionMatingUnitForest.R:645 layout tolerance (R-CMD-check oldrel-1/devel); strict TDD, a gate before each phase; the owner picked it at Phase 0
+```
+
+```handoff
 session: S892
 date: 2026-10-04
 status: complete
