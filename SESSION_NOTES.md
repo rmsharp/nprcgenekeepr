@@ -99,122 +99,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 891 Did
-**Deliverable:** diagnose the red CI on master after the S890 push of `2e2046efd`: R-CMD-check on ubuntu oldrel-1 and
-devel (`test_positionMatingUnitForest.R:645`), test-coverage; cause, evidence, proposed fix. READY, Effort M. No code or
-test is changed this session; the fix is a separate strict-TDD change (IN PROGRESS)
-**Started:** 2026-10-04, about 12:55 UTC
-**Status:** Session claimed. Work beginning: settle the brief's unchecked facts first (which test(s) test-coverage fails
-on, the CI `quadprog` and BLAS versions, the failing shortfall value and pair), then the one test file on local R 4.6.1
-and 4.5, and re-rank the brief's four hypotheses with the owner before any probe.
-**Orient:** no ledger gap (frontiers at HEAD `83c6beeb3`); tree clean; master 2 ahead of origin (notes only); CI on
-`2e2046efd`: lint and pkgdown green, R-CMD-check and test-coverage red, scheduled shinytest2 green (09:05 UTC); ratchet
-1/1 matches the receipt; dashboard 96/100, High+ risk 0; context budget OK; `HANDOFFS.md` 256,418 B (limit 262,144),
-`CHANGELOG.md` 243,973 B.
-**Owner pick:** "Diagnose the red CI" from the Phase 0 priorities list (S890's next step A, ordered first by the owner).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** diagnosed the red CI on master after the S890 push (`2e2046efd`): **two separate causes**, each
+reproduced, written up in `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md` (cause, evidence, proposed fix for each).
+Docs only; no code or test changed, so no RED/GREEN gates. Claim `b2df5c4fb`, diagnosis `ca78f413f`, BACKLOG item and
+Learnings 858-860 `7e900ec72`; the close-out commit holds the receipt, these notes and the ledger entry.
+**Cause 1, flaky (R-CMD-check ubuntu oldrel-1 and devel):** `test_positionMatingUnitForest.R:645` allows 1e-6 layout units,
+and the QP behind it (`R/makePedigreeDiagramData.R:1578`) has cond(Dmat) 1.6e9. The same QP with its variables re-ordered put
+exactly one pair over 1e-6 in 12 of 100 runs (max 1.1e-4, median 1.2e-7); local natural order gives 4.3e-8. Not the code: the
+QP is identical at `f0bcb9f48` (4.6e-8, same Dmat spectrum). Not the logged environment: oldrel-1 green and red have the same
+image, R 4.5.3, OpenBLAS 0.3.26, quadprog 1.5-8 and 129 identical package versions. The runner CPU is unobserved.
+**Cause 2, deterministic (test-coverage):** `test_sexCodes.R:110` and `:115` (S879's guard, new since the last green push)
+skip only when `../../R` is missing; under covr it holds only `.rdb`/`.rdx`. Reproduced locally, same messages, by
+installing HEAD into a scratch library and running the file from `<lib>/nprcgenekeepr/nprcgenekeepr-tests/testthat/`.
+**Brief corrections:** test-coverage was NOT the same test (S890 guessed "likely"); its failures print in the step "Show
+testthat output", which `gh run view --log-failed` omits. H1 (S859) and H3 (quadprog or BLAS version) not supported; H2 sharpened.
+**Owner choices (plain words):** "Diagnose the red CI" from the Phase 0 list; then "Close out now, fix in S892" (each fix is a
+separate tested change; S892 does both; the compression queue moves down one session).
+**Not established:** the actual failing value and pair on CI (the log prints only "got 1"); the runner CPU; whether
+`test_solveJointQP.R:210` and `:440` (same 1e-6) share the exposure. **Not run:** the R suite and `devtools::check()` (no R, test
+or build file changed). `quality_ratchet.py --run` 1/1 pass (results `793d20f2b256`, manifest `aa983075d6a2`).
+**Left outside the repo:** Docker image `rocker/r-ver:4.5.3` (about 1 GB; `docker rmi` removes it) and scratch files in the
+session scratchpad. No code or test carries the debug tag `[DEBUG-q7k2]` (it appears only as prose in these notes and the diagnosis).
 
-### What Session 890 Did
-**Deliverable, DONE:** compressed two `BACKLOG.md` items, the docs-audit item and the compression item's own pass history.
-Docs only, so no code and no RED/GREEN gates. Claim `d2e36c446`, deliverable `23432b24c`; the close-out commit holds the
-receipt, these notes, the ledger entry, Learning 856. `BACKLOG.md` 552 -> 533 lines, 58,228 -> 46,731 B (High+ risk 0
-now); docs-audit item 55 -> 48 lines (14,531 -> 4,343 B), compression item 50 -> 38 (4,629 -> 3,320 B).
-**My error:** the owner chose this option on my estimate of "about 75 lines removed" (also in the claim stub). The lines fell
-19 and the bytes 11,497: the old blocks were a few very long lines, and I kept every open thread in full (Slice 2, about 100
-code-decision candidates, the unsettled doc ids) wrapped at 100 columns. I also gave the owner "553 lines"; `wc -l` says 552.
-**Owner choices (plain words):** this option from a measured comparison; then "have subsequent sessions be the remaining
-options you wrote out"; then "push" (done, CI red, above); then "diagnose the red CI first", which the owner confirmed is S891's
-job and not this session's (Next steps).
-**Verified:** all 41 + 12 sessions cited in the two blocks have their own ledger entries (first a mention-only check, then the
-figures: S529 652 -> 389, S530 896 -> 286, S531 753 -> 267, S606 304 -> 80, S752 91 -> 62 and 91 -> 38, 2026-09-24 44 -> 15
-and 84 -> 20); paths, Learnings 347 and 537 and 15 issue states resolve (only #123 open); 213 + 26 dropped tokens reviewed,
-the ones with no obvious home found elsewhere (`9a2a5ddb7`, `26.29`, `RF2, RH2, RJ3`); the file outside the two ranges is
-byte-identical; no test reads `BACKLOG.md`; `quality_ratchet.py --run` 1/1 (results `b99f87ba4720`).
-**Not run:** R suite, `devtools::check()` (no R, test or build file changed).
-**Pushed after close-out (owner said "push"):** `f0bcb9f48..2e2046efd`, 128 commits, 26 touching `R/`. CI on `2e2046efd`:
-lint and pkgdown green; **R-CMD-check red** on ubuntu oldrel-1 and devel only (release on ubuntu, macOS and windows green);
-**test-coverage red**. R-CMD-check's one failure, on both: `test_positionMatingUnitForest.R:645:3`, `expect_equal(sum(shortfall >
-1e-6), 0L)` got 1 (one of 773 adjacent pairs is over the solver tolerance); test-coverage's log does not name its test (the
-same one is likely, not checked). The previous push's four runs (`f0bcb9f48`) were green. S889-S890 never touched the layout
-engine; the 128 commits do include S859 (`makePedigreeDiagramData`, one-mate-each couples draw male-left) and S878.
-Not diagnosed: a red run is reported, not fixed in the session that found it (`CLAUDE.md`). My CI watcher passed an
-abbreviated SHA to `gh run list --commit`, which does not match, so it saw no runs for an hour; they were done by 05:30 UTC.
-**Fixed in passing:** the item's "58 lines" (2026-09-24) is 55 in the ledger; its "nothing further is scoped" line now says
-Slice 2 was never acted on (the owner still decides whether to scope a slice).
-**Reduction:** removed the S864 record and its evaluation; condensed S889. `BACKLOG.md` is now 10,019 B under its budget.
+**Handoff evaluation of S890: 8/10.** Helped: the brief's run ids, failing assertion and fixture facts (about 10 minutes saved);
+the check-first list and ranked, falsifiable hypotheses (two were refuted by cheap probes); the full-SHA `gh run list --commit`
+warning; the 5,726 B `HANDOFFS.md` headroom figure matched Orient. Missing: that test-coverage's failures print in a later step.
+Wrong: "same one is likely" for test-coverage; feedback loop (ii), the framework 4.5 `Rscript`, ran R 4.6.1 from the project dir (I
+used a Docker amd64 R 4.5.3); "the CI logs do not show the quadprog version" (they do: 1.5-8 on every job).
 
-**Handoff evaluation of S889: 9/10.** Helped: next step B's "58,228 B, 1,478 B over budget", the ledger sizes and "125 ahead"
-matched Orient to the byte; D named the Slice 2 gap, which I confirmed at `BACKLOG.md:122-124` and which kept the rewrite
-honest; the key-file lines matched. Missing: which blocks to cut and that line yield would trail byte yield far behind; that
-Phase 0's `grep -c 'status: pending' HANDOFFS.md` hits prose at `:22`. Wrong: nothing found.
+**Self-assessment: 7/10.** + Claimed before work; measured before ranking; refuted my own strong form of H-A (ulp noise, kernels)
+and said so, then found the mechanism that reproduces the symptom; found the second cause the brief had assumed away and
+reproduced both locally; checked each document claim against logs and source before committing (caught "3 of 6 jobs" and wrong
+line numbers); no repo change beyond docs; asked the owner at the fix decision.
+- The harness reminded me five times that the owner had not heard from me during long tool chains: post a line every few calls.
+I ran scratch probes without waiting at the Phase 3 hypothesis checkpoint (the brief said to re-rank with the owner first; the
+skill says do not block; nothing in the repo was touched). My first container run was invalid: zsh did not word-split `$envs`,
+so `OPENBLAS_CORETYPE` never reached R (the probe printed `(unset)`, which exposed it). I did not ask at Phase 0 whether the
+ledger trim becomes S892, as the brief said to: it is now S892's first question.
 
-**Self-assessment: 6/10** (7 at the first close-out; lowered for what followed). + Claimed before technical work; measured
-every item before recommending; checked each cited session, figure, path, Learning and issue before cutting, and found the one
-figure the ledger states differently; kept every open thread; proved the rest of the file byte-identical; reported the estimate
-miss at once; pushed only on the owner's word, fast-forward checked first; pulled the failing step and assertion from the red
-CI instead of reporting "red" alone.
-- I sold the pick on a line estimate I had not drafted (19 lines, not 75) and gave a count off by one; I went quiet through
-many tool calls until nudged; I wrapped the ratchet in `( cmd ) &` inside a background run (S887's gotcha) and caught it only
-from the empty output; my CI watcher filtered on an abbreviated SHA and sat for an hour on zero runs, and I had not tried the
-query against a run I knew existed (Learning 857); and when the owner said "diagnose the red CI first" I began S891 inside
-S890 (announced a session, loaded the diagnose skill) after telling the owner a red run is fixed in its own session. The owner
-stopped me; nothing was diagnosed or changed for it.
+**Next steps (owner-ordered):** (A) **S892: repair the two red-CI causes** (READY, Effort M; two small strict-TDD changes, RED
+then GREEN for each, `AskUserQuestion` at each gate). First, at Phase 0, put the `HANDOFFS.md` size to the owner: after this
+receipt it is 2,622 B under its 262,144 B limit and a receipt costs 3-5 KB, so S892's would not fit;
+`python3 methodology_trim.py --file HANDOFFS.md --budget-bytes ...` is the tool (budget not chosen, not run), the decision is the
+owner's. Fix 1: the `sexCodes` guard (certain, Effort S). Fix 2: the QP-floor tolerance (measure `test_solveJointQP.R:210` and
+`:440` first). Both specs are in the top `BACKLOG.md` "Up Next" item and the diagnosis. (B) S893: compress four more `BACKLOG.md`
+blocks (standalone-package item, "Pedigree diagram vs kinship2 audit follow-ups" preamble, chromote item, PED_GV closure
+narrative; estimate 20-45 lines, draft first and count). (C) S894: the owner keeps or declines the 7 parked Effort-S items
+(`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C, `highlightNearest`, rhesus docstring, row-order item).
+(D) Then one real fix per session. Master is ahead of origin by S890's two notes commits and S891's; nothing is pushed, and both
+causes are still in HEAD, so a push will show the same two reds until S892 lands. Carried: PED_GV next group (8 ids + NEW-24),
+`reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered):** (A) **S891: diagnose the red CI on master, first** ("diagnose the red CI first"). The deliverable
-is the diagnosis (cause, evidence, proposed fix); the fix is a separate strict-TDD change with its RED -> GREEN gates, which the
-owner takes in S891 after the diagnosis or leaves for S892. Brief below. (B) S892: compress four more blocks (READY, Effort M):
-the standalone-package item, the "Pedigree diagram vs kinship2 audit follow-ups" preamble, the chromote item, the PED_GV
-closure narrative; estimate 20-45 lines (from 19 of 105 here; not measured), so draft first and count before promising lines.
-(C) S893: the owner keeps or declines each of 7 parked Effort-S items (`isAddedRecord()`, CI `paths-ignore`, trim verify
-script, Candidate C, `highlightNearest`, rhesus docstring, row-order item); up to about 118 lines if all declined. (D) Then
-one real fix per session: `deidentified_jmac_ped.csv` (option 1 or 2), `getAncestors()` absent id or CI `paths-ignore`, the
-harem-sire hole, PED_GV groups (3+ sessions each). **Dependency, not in the owner's list:** `HANDOFFS.md` is 256,418 B, 5,726 B
-under the 262,144 B limit, and a receipt costs 3-5 KB (S889 4,863 B, S890 3,907 B before this edit), so S891's fits and S892's
-would cross it; `CHANGELOG.md` is about 243 KB, 19 KB under. The dashboard names `HANDOFFS.md` its top risk (MEDIUM) and says
-`methodology_trim.py --file HANDOFFS.md --check` reports whether a trim fits (not run). Ask at S891 Phase 0 whether the ledger
-decision becomes S892. Carried: PED_GV next group (8 ids + NEW-24), `reportGV(smallPed)` unfiled. Master is pushed; the notes
-commit `69f9a3b9d` and this close-out are local only, and a push starts all four workflows again.
+**Key files:** `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md` (evidence, recipes, proposed fixes);
+`tests/testthat/test_sexCodes.R:93-94,108-116` (the guard); `tests/testthat/test_positionMatingUnitForest.R:637-645` (the tolerance
+and its comment); `R/makePedigreeDiagramData.R:1413-1585` (`.solveJointQP`, `Dmat` at `:1578`);
+`tests/testthat/test_solveJointQP.R:197-210,440`.
 
-**S891 brief (prepared S890; nothing below is diagnosed):**
-- *What is red:* the four runs on `2e2046efd37ce3301886e243e78492ddb3b7d628`. R-CMD-check `37179033145`: ubuntu oldrel-1
-(R 4.5.3) and ubuntu devel failed; ubuntu, macOS and windows release passed. test-coverage `37179033148`, step "Test
-coverage": `testthat.R` failed, the log does not print which test (`testthat.Rout.fail` was not shown); its `spelling.R`
-output also differs from `spelling.Rout.save` ("Failed to find package source directory"), not checked. Green: lint
-`37179033168`, pkgdown `37179033154`. The previous push, `f0bcb9f48`, was all green. `gh run view <id> --log-failed` re-fetches.
-- *The failing assertion:* `tests/testthat/test_positionMatingUnitForest.R:645`, `expect_equal(sum(shortfall > 1e-6), 0L)`
-got 1; line 644 (`length(shortfall)` equals 773) passed. The test's own comment: 1e-6 is `quadprog::solve.QP()`'s solver
-precision (measured max shortfall 6.8e-8 raw = 8e-6 px on S675's fixture) on the full Real-375 bundled fixture.
-- *Check first (none done):* (1) which test(s) test-coverage fails on; (2) `quadprog` and BLAS versions on each CI job against
-local `quadprog` 1.5.8 / R 4.6.1 (the CI logs do not show the quadprog version in what I grepped); (3) the failing shortfall
-value and which adjacent pair, on CI against local; (4) whether this is new in the pushed range or only newly seen: commits
-touching the engine, the test or the fixture since `f0bcb9f48` are `82e020669` (S859, one-mate-each couples draw male-left),
-`b3f3a3ad5` (S878, sexCodes stage 5) and `13ab22bc1` (S883, comment only).
-- *Feedback loops, cheapest first:* (i) the one test file on local R 4.6.1: `Sys.setenv(NOT_CRAN = "true");
-pkgload::load_all("."); testthat::test_file("tests/testthat/test_positionMatingUnitForest.R")` (S889's full suite passed there,
-so green is expected, which would make it version-specific); (ii) the same under R 4.5, installed at
-`/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/bin/Rscript` (matches oldrel-1 4.5.3; its package library is
-not checked); caveat: CI is ubuntu x86_64 and local is arm64, so BLAS may hide it; (iii) a throwaway branch run on CI, an
-outward action that needs the owner's say-so; `devel` R is not installed here.
-- *My ranked guesses, to re-rank with the owner at the diagnose skill's Phase 3 before any probe:* H1 the S859 layout change
-moved one adjacent pair close to its floor and `solve.QP` rounds differently on the oldrel/devel builds (predicts: the failing
-pair is just above 1e-6 there and below on release; reverting `82e020669` locally on 4.5 turns it green). H2 the 1e-6 tolerance
-was always marginal (the comment's own 8e-6 px) and this is the first run past it (predicts: the pair already sat near the
-limit before S859). H3 a different `quadprog` or BLAS build on those two jobs (predicts: the CI logs show it). H4 an
-R-version difference in the test's `order(..., method = "radix")` tie-break picks different adjacent pairs (predicts: same
-count, different pair ids). Coverage may be the same test or a separate covr cause.
-- *Rules:* a red run is reported and the fix is its own gated change (`CLAUDE.md`); no GitHub issue for a CI break; tag debug
-output `[DEBUG-xxxx]` and remove it; validate any CI watcher against a known run first.
-
-**Key files:** `BACKLOG.md:80-126` (docs-audit item: slices, Still open 1-3), `:347-383` (compression item: pass history,
-Method, next candidates); `docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md` (the open candidates' ids);
-`tests/testthat/test_positionMatingUnitForest.R:625-646` (the failing assertion at `:645`), for S891.
-
-**Gotchas:** estimate a compression's line yield from a draft, not from block size (Learning 856); count lines with `wc -l`;
-`( cmd ) &` inside `run_in_background` reports the wrapper's exit, so read the job's own last line; use `grep -c
-'^status: pending' HANDOFFS.md` (the unanchored form hits prose at `:22`); the open candidate lists stay in the item on
-purpose, and if they should become pointers their ids are in the slice reports; `gh run list --commit` needs the full SHA
-(`git rev-parse HEAD`), an abbreviated one matches nothing and the poll waits forever, so try a watcher's query on a run you
-know exists first (Learning 857); `git stash list` holds an old `dev`-branch
+**Gotchas:** in zsh an unquoted `$var` holding several flags is NOT split: pass docker `-e` flags explicitly and have a probe
+print its own configuration; `gh run view --log-failed` omits "Show testthat output" (use `--log`); `gh api .../logs` returns an
+empty body, so use `curl -sL -H "Authorization: Bearer $(gh auth token)"` on `.../actions/jobs/<id>/logs`; the framework
+`4.5-arm64` `Rscript` ran R 4.6.1 from the project dir (renv; not investigated); Rosetta amd64 containers expose AVX2 and FMA but
+not AVX-512, so the CI's SkylakeX kernel cannot be tried here; the permutation probe is deterministic at seed 2026 (12 of 100);
+use `grep -c '^status: pending' HANDOFFS.md` (the unanchored form hits prose at `:22`); `git stash list` holds an old `dev`-branch
 entry (not mine); `core.hooksPath` is unset (the context-budget hook is in `.git/hooks`).
+
+### What Session 890 Did (condensed S891; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Compressed the docs-audit item and the compression item's pass history in `BACKLOG.md` (552 -> 533 lines, 58,228 -> 46,731 B;
+High+ risk 0). Claim `d2e36c446`, deliverable `23432b24c`. At the owner's "push" it pushed 128 commits (`f0bcb9f48..2e2046efd`);
+CI came back red and S891 diagnosed it. Handoff evaluation of S889: 9/10. Self 6/10.
+**Gotchas kept:** estimate a compression's line yield from a draft, not block size (Learning 856); `gh run list --commit` needs the
+full SHA (Learning 857); `( cmd ) &` inside `run_in_background` reports the wrapper's exit, so read the job's own last line.
 
 ### What Session 889 Did (condensed S890; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-28 shipped: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` first and names every missing one before `kinship()`
@@ -338,14 +292,3 @@ S842 record and S841 evaluation removed. Docs only. Claim `cb178a6ef`. Self 8/10
 `R/modMatePair.R`), holding the rows left after the curator's filter. Claim `2b777576a`; RED+GREEN
 `6c72dd8e6`. Full suite 2927 tests, 0 failed. Self-score 8/10. Gotcha kept: `excludedTable_rows_all`
 is still set by DT although the Excluded table is client-side `renderDT`.
-
-### Session 865 Handoff Evaluation (by Session 866)
-**Score 9/10.** Helped: the exact next-step list with the Excluded-tab export marked DECISION NEEDED,
-the key-files line numbers for the shared helpers, and the clean-tree/ahead note. Missing: the
-Excluded tab's own code location (I grepped for it). Wrong: nothing found. ROI: high.
-
-### What Session 865 Did (condensed S866; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** the ancestry-override select-choices builder and confirm modal in `R/modBreedingGroups.R` and
-`R/modMatePair.R` are shared as `.ancestryOverrideChoices()` and `.ancestryOverrideModal()` in
-`R/ancestryOverrides.R`. Claim `dfd40047d`; RED+GREEN `adb5d2991`; REFACTOR `4ba8138f2`. Full suite 2922
-tests, 0 failed; lint clean. Self-score 8/10. Gotcha: the modal helper takes `session$ns` (the function).

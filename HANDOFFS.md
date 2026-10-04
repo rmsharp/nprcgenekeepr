@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S891
 date: 2026-10-04
-status: pending
-active_task: diagnose the red CI on master after the S890 push of 2e2046efd (R-CMD-check red on ubuntu oldrel-1 and devel at test_positionMatingUnitForest.R:645, test-coverage red); the deliverable is the diagnosis (cause, evidence, proposed fix), no code or test changes (owner picked it at Phase 0; READY, Effort M)
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- diagnosed the red CI on master after the S890 push of 2e2046efd: two separate causes, each reproduced; diagnosis only, no code or test changed (the owner picked it at Phase 0, then chose "close out now, fix in S892")
+what_was_done: claim b2df5c4fb; diagnosis ca78f413f (docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md); BACKLOG item + Learnings 858-860 7e900ec72. Cause 1, flaky, R-CMD-check ubuntu oldrel-1 + devel: test_positionMatingUnitForest.R:645 allows 1e-6 layout units but the QP (R/makePedigreeDiagramData.R:1578, cond(Dmat) 1.6e9) has a noise tail: re-ordering its variables put exactly one pair over 1e-6 in 12 of 100 runs (max 1.1e-4); the code did not change the QP (identical Dmat spectrum at f0bcb9f48) and the logged environment is identical green vs red (image, R 4.5.3, OpenBLAS 0.3.26, quadprog 1.5-8, 129 packages); runner CPU unobserved. Cause 2, deterministic, test-coverage: test_sexCodes.R:110/:115 (S879) skip only when ../../R is missing, but under covr it holds only .rdb/.rdx; reproduced locally from a scratch install. S890's guess that test-coverage failed on the same test was wrong.
+next_steps: Owner-ordered. (1) S892 = repair both causes (BACKLOG.md Up Next, top item; two small strict-TDD changes, RED -> GREEN gates and an AskUserQuestion at each): the sexCodes guard (skip unless R/ holds .R files) and the QP-floor tolerance (1e-6 -> 1e-3 layout units, after measuring test_solveJointQP.R:210/:440). FIRST, at Phase 0, put the HANDOFFS.md size to the owner: 2,622 B under its 262,144 B limit after this receipt, a receipt costs 3-5 KB, so S892's would not fit; methodology_trim.py --file HANDOFFS.md is the tool, the decision is the owner's. (2) S893 compress four more BACKLOG blocks; (3) S894 keep or decline the 7 parked items; (4) one real fix per session.
+key_files: docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md (evidence, recipes, proposed fixes); tests/testthat/test_sexCodes.R:93-94,108-116; tests/testthat/test_positionMatingUnitForest.R:637-645; R/makePedigreeDiagramData.R:1413-1585; tests/testthat/test_solveJointQP.R:197-210,440.
+gotchas: In zsh an unquoted $var of several flags is not split: docker -e flags were silently dropped, and the probe's own printout showed it. gh run view --log-failed omits test-coverage's "Show testthat output" step (use --log; Learning 858). The permutation probe is deterministic at seed 2026 (12 of 100) and is a stress test, not a measured CI rate. Nothing is pushed and both causes are still in HEAD: a push shows the same two reds until S892 lands. Docker image rocker/r-ver:4.5.3 (about 1 GB) is left on the machine.
+runtime_smoke: none -- docs only, no runtime change; the two causes were reproduced with scratch probes and a scratch install outside the repo; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 88e802d22761 · manifest aa983075d6a2
+changelog_ref: S891 DONE entry
+commit: the close-out commit that carries this receipt; claim b2df5c4fb, diagnosis ca78f413f
 ```
 
 ```handoff

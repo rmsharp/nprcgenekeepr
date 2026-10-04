@@ -20,7 +20,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the overlap margin is 70 px) with the measured tail in the comment; RED = a fixed-seed re-ordering wrapper
       around `solve.QP()` asserting the old bound. Measure `test_solveJointQP.R:210` and `:440` (same 1e-6)
       before touching. Not established: the actual CI value, the runner CPU. **Prerequisite for S892:**
-      `HANDOFFS.md` is under about 2 KB from its 262,144 B limit once S891's receipt lands and a receipt costs
+      `HANDOFFS.md` is 2,622 B under its 262,144 B limit after S891's receipt and a receipt costs
       3-5 KB, so the owner decides a `methodology_trim.py --file HANDOFFS.md --budget-bytes ...` trim at S892
       Phase 0 first. The compression queue (four more blocks, then the 7 parked items) moves down one session.
 
