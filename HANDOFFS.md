@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S900
+date: 2026-10-04
+status: pending
+active_task: push the 6 local commits d13665e25..f43ff9501 (S898 addendum, S899 claim, RED, GREEN, REFACTOR, close-out) to origin/master and read CI; the owner picked it at the Phase 0 picker, which is also the authorisation to push those commits; this claim commit does not go
+```
+
+```handoff
 session: S899
 date: 2026-10-04
 status: complete
