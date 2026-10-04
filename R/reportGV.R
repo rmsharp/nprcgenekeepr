@@ -173,7 +173,11 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # NEW-28 (issue #123 XARCH-5 for 'sex'): name every missing required column
   # before any other work, rather than failing later with a base-R message
   # (id, sire, dam, gen: the kinship step) or after kinship() and geneDrop()
-  # have run ('sex': the founder lists).
+  # have run ('sex': the founder lists). Chosen on purpose (owner, S889): a
+  # pedigree missing 'sex' that also has an animal with one known parent now
+  # gets this message, not calcFEFG()'s partial-parentage one, which is why
+  # the partial-parentage test in test_calcFEFG.R gives its pedigree a sex
+  # column.
   assertRequiredColsPresent(
     names(ped), c("id", "sire", "dam", "gen", "sex"), "reportGV(ped)"
   )
