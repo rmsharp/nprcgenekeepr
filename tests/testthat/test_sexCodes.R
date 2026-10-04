@@ -89,6 +89,43 @@ scanForBareSexCodeLiterals <- function(rDir, allowedFiles, allowedLines) {
   offenders
 }
 
+# S893: the two R/ scans below must run only against a source tree. Under
+# covr (the test-coverage workflow) the tests run from an installed copy of the
+# package, where `../../R` exists but holds only `.rdb`/`.rdx` files, so the
+# old `dir.exists()` skip let the scans run on no source and fail. The skip now
+# asks whether R/ holds any `.R` file (the same pattern the scan lists by).
+test_that("sexCodeSourceAvailable() is FALSE where there is no R source", {
+  base <- tempfile("srcavail")
+  dir.create(base)
+  on.exit(unlink(base, recursive = TRUE))
+  emptyDir <- file.path(base, "empty")
+  installedDir <- file.path(base, "installed")
+  nestedDir <- file.path(base, "nested")
+  dir.create(emptyDir)
+  dir.create(installedDir)
+  dir.create(file.path(nestedDir, "sub"), recursive = TRUE)
+  file.create(file.path(installedDir, c("pkg", "pkg.rdb", "pkg.rdx")))
+  file.create(file.path(nestedDir, "sub", "deep.R"))
+  expect_false(sexCodeSourceAvailable(file.path(base, "absent")))
+  expect_false(sexCodeSourceAvailable(emptyDir))
+  expect_false(sexCodeSourceAvailable(installedDir))
+  expect_false(sexCodeSourceAvailable(nestedDir))
+})
+
+test_that("sexCodeSourceAvailable() is TRUE where R holds a .R or .r file", {
+  base <- tempfile("srcavail")
+  dir.create(base)
+  on.exit(unlink(base, recursive = TRUE))
+  sourceDir <- file.path(base, "source")
+  lowerDir <- file.path(base, "lower")
+  dir.create(sourceDir)
+  dir.create(lowerDir)
+  file.create(file.path(sourceDir, c("a.R", "pkg.rdb")))
+  file.create(file.path(lowerDir, "b.r"))
+  expect_true(sexCodeSourceAvailable(sourceDir))
+  expect_true(sexCodeSourceAvailable(lowerDir))
+})
+
 test_that("no bare sex-code literals remain anywhere in R/ outside the allowlist", {
   rDir <- testthat::test_path("..", "..", "R")
   skip_if(!dir.exists(rDir), "R/ source not available (installed package)")
