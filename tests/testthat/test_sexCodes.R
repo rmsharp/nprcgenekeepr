@@ -89,6 +89,10 @@ scanForBareSexCodeLiterals <- function(rDir, allowedFiles, allowedLines) {
   offenders
 }
 
+sexCodeSourceAvailable <- function(rDir) {
+  length(list.files(rDir, pattern = "\\.[Rr]$")) > 0L
+}
+
 # S893: the two R/ scans below must run only against a source tree. Under
 # covr (the test-coverage workflow) the tests run from an installed copy of the
 # package, where `../../R` exists but holds only `.rdb`/`.rdx` files, so the
@@ -128,7 +132,8 @@ test_that("sexCodeSourceAvailable() is TRUE where R holds a .R or .r file", {
 
 test_that("no bare sex-code literals remain anywhere in R/ outside the allowlist", {
   rDir <- testthat::test_path("..", "..", "R")
-  skip_if(!dir.exists(rDir), "R/ source not available (installed package)")
+  skip_if(!sexCodeSourceAvailable(rDir),
+          "R/ source not available (installed package)")
   offenders <- scanForBareSexCodeLiterals(
     rDir, sexCodeAllowedFiles, sexCodeAllowedLines
   )
@@ -143,7 +148,8 @@ test_that("no bare sex-code literals remain anywhere in R/ outside the allowlist
 
 test_that("every allowlisted file and line still exists in R/", {
   rDir <- testthat::test_path("..", "..", "R")
-  skip_if(!dir.exists(rDir), "R/ source not available (installed package)")
+  skip_if(!sexCodeSourceAvailable(rDir),
+          "R/ source not available (installed package)")
   expect_true(all(file.exists(file.path(rDir, sexCodeAllowedFiles))))
   allLines <- unlist(lapply(
     list.files(rDir, pattern = "\\.[Rr]$", full.names = TRUE),
