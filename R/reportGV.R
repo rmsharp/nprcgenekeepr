@@ -5,6 +5,11 @@
 #'
 #' This is the main function for the Genetic Value Analysis.
 #'
+#' The pedigree \code{ped} must have the columns \code{id}, \code{sire},
+#' \code{dam}, \code{gen} (generation number) and \code{sex}. If any is
+#' missing, \code{reportGV} stops before doing any calculation, with a message
+#' naming every missing column.
+#'
 #' Reported genome uniqueness (\code{gu}) is set to 0 for "Undetermined"
 #' animals -- those with both parents unknown (U-id aware) and no recorded
 #' origin -- because their apparent uniqueness is an artifact of unknown
@@ -165,6 +170,14 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      axisPriority = NULL) {
   # Generates a genetic value report for a provided pedigree
 
+  # NEW-28 (issue #123 XARCH-5 for 'sex'): name every missing required column
+  # before any other work, rather than failing later with a base-R message
+  # (id, sire, dam, gen: the kinship step) or after kinship() and geneDrop()
+  # have run ('sex': the founder lists).
+  assertRequiredColsPresent(
+    names(ped), c("id", "sire", "dam", "gen", "sex"), "reportGV(ped)"
+  )
+
   ## If user has limited the population of interest by defining 'pop',
   ## that information is incorporated via the 'population' column.
   ped$population <- getGVPopulation(ped, pop)
@@ -283,12 +296,6 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   fgSE <- calcFGSE(ped, alleles)
 
   # Calculating known founders
-  # Issue #123 (XARCH-5) Phase 1: guarded here, not at the includeCols
-  # intersect above -- calcFEFG() (called just above) has no dependency on
-  # 'sex' and must still run (and surface its own partial-parentage error,
-  # test_calcFEFG.R) for a sex-less pedigree; 'sex' is not actually
-  # dereferenced until founders$sex immediately below.
-  assertRequiredColsPresent(names(ped), c("id", "sex"), "reportGV(ped)")
   founders <- ped[isFounder(ped), ]
   males <- founders[(founders$sex == sexCodes[["male"]]) &
     !isGeneratedUnknownId(founders$id, ped = ped), ]
