@@ -114,7 +114,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Slice 1 DONE S820** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`): the staleness is in both
       the local PDFs (rendered 2026-08-25, carry since-retracted claims) and the committed images (1 of 8
       `kinship2-fidelity-validation-img/` is stale: `trackC-nprc-rectilinear.png`; the other 7 are current). **Open
-      from slice 1:** owner decides delete-or-ignore for the one remaining PDF, the tracked `kinship2-fidelity-validation.pdf` (S853 correction); regenerate `trackC-nprc-rectilinear.png`
+      from slice 1:** the one remaining PDF, the tracked `kinship2-fidelity-validation.pdf` (S853 correction), was **DELETED S884** (owner decision; it was swept in by accident by S825's `9a2a5ddb7`, from which it can be recovered); still open: regenerate `trackC-nprc-rectilinear.png`
       (`data-raw/kinship2FidelityValidation.R`; look at the fresh arc touching the `W` square first); the third, the stale "defaulting to direct"
       comment at `R/modPedigree.R:459-461`, was **FIXED S882** (it now says `"rectilinear"`, the default since S574; the parsed code is unchanged), as the `_pedigree_browser.Rmd` wording was S828.
       **Found S882, same kind, FIXED S883 (comment only; parsed code identical):** the `@noRd` roxygen of `.addRectilinearWaypoints()`
