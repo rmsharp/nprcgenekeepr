@@ -593,6 +593,32 @@ test_that(".positionMatingUnitForest positions the full real
 ## under the 0.58-unit margin at which two symbols would overlap.
 qpFloorTolerance <- 1e-2
 
+## Every adjacent same-row pair's shortfall against the QP floor
+## (floor - gap, so positive means the floor is missed). Re-derived here,
+## not shared with R/. Used by the two 375-fixture floor tests below.
+adjacentFloorShortfall <- function(pos, forest) {
+  minSep <- 1
+  kind <- ifelse(pos$id %in% forest$matingUnits$id, "U", "I")
+  names(kind) <- pos$id
+  floorFor <- function(a, b) {
+    both <- paste(sort(c(kind[[a]], kind[[b]])), collapse = "")
+    if (both == "UU") minSep / 4 else if (both == "IU") minSep / 2 else minSep
+  }
+  shortfall <- numeric(0L)
+  for (g in sort(unique(pos$gen))) {
+    rowIds <- pos$id[pos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
+                            method = "radix")]
+    x <- pos$x[match(rowIds, pos$id)]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      shortfall <- c(shortfall,
+                     floorFor(rowIds[i], rowIds[i + 1L]) - (x[i + 1L] - x[i]))
+    }
+  }
+  shortfall
+}
+
 ## ---- Migration Path Phase 3 (S675): the real 375 fixture through the QP
 ## engine, production path (5 weakly-connected families, each solved by its
 ## own .solveJointQP() call, then .packComponents()) -----------------------
@@ -621,26 +647,8 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
   ## fixture's 705 adjacent pairs to exactly the floor (symbols touching,
   ## labels overlapping into a band) and the census's class (a) read 90
   ## sub-microscopic (<= 1.3e-6 px) shortfalls at its 1e-9 px epsilon.
-  ## Re-derived here, not shared with R/.
-  minSep <- 1
-  kind <- ifelse(pos$id %in% forest$matingUnits$id, "U", "I")
-  names(kind) <- pos$id
-  floorFor <- function(a, b) {
-    both <- paste(sort(c(kind[[a]], kind[[b]])), collapse = "")
-    if (both == "UU") minSep / 4 else if (both == "IU") minSep / 2 else minSep
-  }
-  shortfall <- numeric(0L)
-  for (g in sort(unique(pos$gen))) {
-    rowIds <- pos$id[pos$gen == g]
-    if (length(rowIds) < 2L) next
-    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
-                            method = "radix")]
-    x <- pos$x[match(rowIds, pos$id)]
-    for (i in seq_len(length(rowIds) - 1L)) {
-      shortfall <- c(shortfall,
-                     floorFor(rowIds[i], rowIds[i + 1L]) - (x[i + 1L] - x[i]))
-    }
-  }
+  ## Re-derived in adjacentFloorShortfall() above, not shared with R/.
+  shortfall <- adjacentFloorShortfall(pos, forest)
   ## 714 nodes across 9 rows -> 705 adjacent pairs (measured S675). The
   ## tolerance (qpFloorTolerance, above) is quadprog::solve.QP()'s own
   ## rounding noise -- NOT a geometric allowance: the census-style overlap
@@ -688,29 +696,6 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
 ## and same floors as the test above, with the QP's variables shuffled by a
 ## fixed seed (helper-reorderedSolveQP.R). Seeds 198, 147 and 64 were the 1st,
 ## 2nd and 5th worst of 300 on the dev machine (S893).
-adjacentFloorShortfall <- function(pos, forest) {
-  minSep <- 1
-  kind <- ifelse(pos$id %in% forest$matingUnits$id, "U", "I")
-  names(kind) <- pos$id
-  floorFor <- function(a, b) {
-    both <- paste(sort(c(kind[[a]], kind[[b]])), collapse = "")
-    if (both == "UU") minSep / 4 else if (both == "IU") minSep / 2 else minSep
-  }
-  shortfall <- numeric(0L)
-  for (g in sort(unique(pos$gen))) {
-    rowIds <- pos$id[pos$gen == g]
-    if (length(rowIds) < 2L) next
-    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
-                            method = "radix")]
-    x <- pos$x[match(rowIds, pos$id)]
-    for (i in seq_len(length(rowIds) - 1L)) {
-      shortfall <- c(shortfall,
-                     floorFor(rowIds[i], rowIds[i + 1L]) - (x[i + 1L] - x[i]))
-    }
-  }
-  shortfall
-}
-
 test_that(".positionMatingUnitForest holds the QP floor to within
            qpFloorTolerance on the real 375 fixture when the solver meets
            its variables in a different order (a different rounding path)", {
