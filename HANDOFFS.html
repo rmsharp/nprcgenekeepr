@@ -63,6 +63,22 @@
 <div class="section level2">
 <h2 id="format--a-fenced-handoff-block">Format — a fenced <code>handoff</code> block<a class="anchor" aria-label="anchor" href="#format--a-fenced-handoff-block"></a></h2>
 <pre><code>```handoff
+session: S896
+date: 2026-10-04
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- compressed four BACKLOG.md blocks by the housekeeping item's six-step method (PED_GV closure narrative 20 -&gt; 13 lines, standalone-package item 37 -&gt; 34, chromote item 23 -&gt; 17, kinship2 section preamble 20 -&gt; 13); BACKLOG.md 533 -&gt; 514 lines, 46,731 -&gt; 43,766 B (the housekeeping item's own history and candidates grew 4 lines). The owner picked it at the Phase 0 picker (READY, Effort M). Docs only: no R/ file, test or build file changed. Claim 0a34f4787; this session's close-out commit is NOT pushed.
+what_was_done: Phase 0 in full (no ledger gap, 0 pending receipts, ratchet 1/1, dashboard 96/100, budget OK; CI workflows in progress on docs-only pushes, not watched per the owner's rule); owner picked 'Compress BACKLOG blocks'; claim 0a34f4787. Method steps 1-2 by script: every cited session has a ledger entry (older ones under '(Session N)' / '[issue #N]' headings, which my first S&lt;N&gt;-only regex missed); paths, Learnings and issue states resolve. Checks that changed the text: the standalone item's D-2 claim had drifted (tests/testthat/test_newsReleaseState.R:234,248 calls .buildMatingUnitForest() directly since S790-S791), its :1661 line reference had rotted (function now at :1675, cited by name), the Mozilla Bugzilla #1893921 analog is in no ledger entry (kept), and the PED_GV 9-remain count was recomputed from the triage table (43 ids, 34 closed). Open text copied by script with anchors asserted first; git diff touches only the four ranges plus the housekeeping item (history and next-pass candidates updated); re-read end to end. Learning 865. CLOSEOUT_CHECKLISTS.md read: none triggered. Not run: R suite, devtools::check(), lint, CI (all changed files .Rbuildignore'd, no test opens one).
+next_steps: Owner-ordered. (A) The owner decides whether to push this session's two local commits (claim 0a34f4787 and the close-out): docs only, no CI wait; each push starts four workflows. (B) S897, recommended: trim CHANGELOG.md (python3 methodology_trim.py --file CHANGELOG.md --budget-bytes 65536; expect --force, as for HANDOFFS.md in S892). It is 4,607 B under the 262,144 B Read refusal after this close-out (257,537 B); the last three sessions added 2,686, 1,700 and 1,399 B (measured from git), so S897 would leave about 1.9 to 3.2 KB and S898 likely crosses (an estimate); a session that reads it past the limit cannot. (C) The owner keeps or declines the 7 parked Effort-S items (isAddedRecord(), CI paths-ignore, trim verify script, Candidate C, highlightNearest, rhesus docstring, row-order item). (D) Then one real fix per session. Next BACKLOG compression candidates are named in the housekeeping item (BACKLOG.md:331). Owner decision still open (from S892; not filed, not asked): shorter receipts would lower the HANDOFFS.md refill rate. Carried: PED_GV next group (the 9 ids), reportGV(smallPed) unfiled.
+key_files: BACKLOG.md:8-20 (PED_GV), :224-257 (standalone package; the D-2 drift note at :251-257), :279-295 (chromote), :386-398 (kinship2 preamble), :331-371 (housekeeping item); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:147-333 (closure and decision records); tests/testthat/test_newsReleaseState.R:234,248 (the D-2 drift); PROJECT_LEARNINGS.md Learning 865.
+gotchas: Search ledger headings for both S&lt;N&gt; and '(Session N)' / '[issue #N]'; regex the ledger entry body for any fact you are about to replace with a pointer (the Bugzilla analog was not there). BACKLOG.md blocks A (standalone package) and B (chromote) run straight into the next item with no blank line; blocks C and D do not. .claude/worktrees/*/BACKLOG.md are stale copies: ignore them in greps. The PED_GV open paragraph (BACKLOG.md:16-18) has one very long line: edit it with a short old_string. The harness nags after a long silent tool chain: post one line every few calls.
+runtime_smoke: none -- docs only, no runtime change; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 0c369cca1231 · manifest aa983075d6a2
+changelog_ref: S896 DONE entry
+commit: the close-out commit that carries this receipt; claim 0a34f4787
+```
+
+```handoff
 session: S895
 date: 2026-10-04
 status: complete

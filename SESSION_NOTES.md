@@ -168,84 +168,109 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 895 Did
+### What Session 896 Did
 
-**Deliverable, DONE (no code, test or doc under test changed):** pushed
-S894’s close-out commit `1d8902e32` to `origin/master`
-(`1fd37a244..1d8902e32`, 1 commit, fast-forward). Claim `c0b01c3c6`.
-Owner pick: “Push close-out commit” at the Phase 0 picker, which was
-also the authorisation to push that one commit. **Not pushed: this
-session’s claim and its close-out commit** (master is 2 ahead; the owner
-decides, see Next steps A). Pushed by SHA
-(`git push origin 1d8902e32:master`), so the claim commit stayed local.
-**Checked before the push:** `git fetch` (origin not ahead); range 1
-commit, 3 files (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`), all
-`.Rbuildignore`d (lines 73/75/77/80); the 3 test files that mention
-`CHANGELOG.md` do so in comments only (`test_markerKinship.R:159`,
-`test_markerParentageLikelihood.R:574`/`:632`,
-`test_buildMatingUnitForest.R:280`). **Verified after:** `origin/master`
-is `1d8902e32`; `git show origin/master:HANDOFFS.md` has 0
-`status: pending` and shows S894 `complete`. The push started the four
-push workflows (no `paths-ignore`); by the owner’s docs-only rule they
-were not watched and none is cited. No runtime change, so no smoke test;
-`quality_ratchet.py --run` 1/1 pass at Phase 0 (manifest
-`aa983075d6a2`). No `CLOSEOUT_CHECKLISTS.md` item triggered (no `R/`
-file, no issue-linked BACKLOG item, no CI break).
+**Deliverable, DONE (docs only; `BACKLOG.md` changed, no code, test or R
+file):** compressed four `BACKLOG.md` blocks by the housekeeping item’s
+six-step method: PED_GV closure narrative 20 -\> 13 lines,
+standalone-package item 37 -\> 34, chromote item 23 -\> 17, kinship2
+section preamble 20 -\> 13. The file went 533 -\> 514 lines and 46,731
+-\> 43,766 B (the housekeeping item’s own history and candidates grew 4
+lines of that). Claim `0a34f4787`; the deliverable and close-out are the
+commit that carries this note. Owner pick: “Compress BACKLOG blocks” at
+the Phase 0 picker. **What the method’s checks found (these changed the
+text):** (1) the standalone item’s D-2 prep claim had drifted:
+`tests/testthat/test_newsReleaseState.R:234,248` has called
+`.buildMatingUnitForest()` directly since S790-S791, so the item now
+says so and tells the planning session to re-run the grep; (2) its
+`:1661` line reference had rotted
+([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+is at `R/makePedigreeDiagramData.R:1675`), so it cites the function by
+name; (3) the Mozilla Bugzilla \#1893921 analog in the chromote item is
+in no ledger entry, so it stayed in the item; (4) the PED_GV “9 remain”
+was recomputed by script from the triage table (43 ids, 34 closed, the 9
+named, none double-counted). Open text was copied by script, not
+retyped; the `git diff` hunks touch only the four ranges and the
+housekeeping item. Cited paths, Learnings 410/411/485/488-499 and issues
+\#123/#131/#133/#136-#138/#145/#154 resolve. **Not run:** the R suite,
+`devtools::check()`, lint, CI: every changed file is `.Rbuildignore`d
+(`.Rbuildignore:70-80`) and no test opens any of them (grep: 0
+`readLines`/`file.path` readers); no `R/` file changed.
+`quality_ratchet.py --run` 1/1 pass (results `0c369cca1231`, manifest
+`aa983075d6a2`); dashboard 96/100, High+ risk 0. No runtime change, so
+no smoke test. No `CLOSEOUT_CHECKLISTS.md` item triggered (no `R/` file,
+no issue-linked item completed, no CI break). Learning 865. Not pushed.
 
-**Handoff evaluation of S894: 9/10.** Helped: step (A) described exactly
-this task and its basis (“changes only `CHANGELOG.md`, `HANDOFFS.md` and
-`SESSION_NOTES.md`, all `.Rbuildignore`d with no test or workflow
-opening them”) held when I re-checked it; every figure matched (master 1
-ahead, `CHANGELOG.md` 253,269 B, `SESSION_NOTES.md` 30,559 B, 0
-undocumented commits). Missing: nothing that cost time; it did not say a
-docs-only push still starts four workflows, nor that a later claim
-commit means pushing by SHA to send only the close-out commit. Wrong:
-nothing found. Not exercised: its key-file line refs (no test file
-opened).
+**Handoff evaluation of S895: 9/10.** Helped: step (B) named this task,
+its four blocks and their line numbers (`:231`, `:289-311`, `:398`,
+`:8-27`) and every anchor matched the file; its `CHANGELOG.md` headroom
+matched my Phase 0 measure (254,668 B). Missing: it did not say the
+method’s step-1 heading check must match the older `(Session N)` /
+`[issue #N]` forms (my first script reported 11 false “no heading”
+results); its 20-45 line estimate ran a little high (net 19). Wrong:
+nothing found. Item (A) (push) was settled by the owner between
+sessions; the handoff could not know that.
 
 **Self-assessment: 8/10.** + Orientation complete before the picker;
-claimed before the push; checked the range and the readers before
-pushing; pushed exactly the one authorised commit, not HEAD; verified
-the result on origin, not only the push output; no scope creep. - A long
-run of silent tool calls during orientation drew the harness nag; post a
-line every few calls. Reduction: S894’s record is condensed below, but
-S895’s record is about as long, so `SESSION_NOTES.md` grew slightly
-(30,559 B at the claim; the budget check reads the final size) and stays
-well under the 65,536 B ceiling; nothing else was removed.
+claimed before work; every fact I cut was checked against the ledger or
+the tree first, which caught two stale claims and one fact held nowhere
+else; open text proved intact by the diff; anchors asserted before the
+write (one tripped, nothing written); re-read end to end; no scope
+creep. - Two long silent tool chains (the harness nagged); a wrong first
+heading regex and a wrong first block-end anchor cost round trips; my
+first history figures (`533 -> 510`) were taken before the housekeeping
+item grew and had to be re-measured; the receipt is 4.2 KB, above the
+2.7 KB average. Reduction: the S895 record is condensed below and the
+S866 and S869 records are removed (full records stay in `CHANGELOG.md`
+and `HANDOFFS.md`), but this record is long, so the file still grew net
+642 B (31,089 -\> 31,731 B at close-out; ceiling 65,536 B). Nothing else
+was removable without losing a live gotcha.
 
-**Next steps (owner-ordered, carried from S894):** (A) the owner decides
-whether to push this session’s two local commits (claim `c0b01c3c6` and
-the close-out): docs only, same three files, no CI wait; each such push
-still starts four workflows (about 16 min for the slowest), which the
-parked CI `paths-ignore` item in (C) would stop. (B) S896: compress four
-more `BACKLOG.md` blocks (standalone-package item `BACKLOG.md:231`, 37
-lines; “Pedigree diagram vs kinship2 audit follow-ups” preamble `:398`;
-chromote item `:289-311`; PED_GV closure narrative, the first item,
-lines 8-27, with very long lines 24-25; estimate 20-45 lines, draft
-first and count). (C) S897: the owner keeps or declines the 7 parked
-Effort-S items (`isAddedRecord()`, CI `paths-ignore`, trim verify
-script, Candidate C, `highlightNearest`, rhesus docstring, row-order
-item). (D) Trim `CHANGELOG.md` (see Gotchas for the headroom). (E) Then
-one real fix per session. **Owner decision still open (from S892; not
-filed, not asked):** shorter receipts would lower the `HANDOFFS.md`
-refill rate (165,276 B now; room for about 35 more before the Read
-refusal at 262,144 B, an estimate at roughly 2.7 KB a receipt). Carried:
-PED_GV next group (8 ids + NEW-24), `reportGV(smallPed)` unfiled.
+**Next steps (owner-ordered):** (A) the owner decides whether to push
+this session’s two local commits (claim `0a34f4787` and the close-out):
+docs only, no CI wait; each push starts four workflows. (B) S897,
+recommended: trim `CHANGELOG.md`
+(`python3 methodology_trim.py --file CHANGELOG.md --budget-bytes 65536`;
+expect `--force`, as for `HANDOFFS.md` in S892). It is 257,537 B,
+**4,607 B under the 262,144 B Read refusal**. The last three sessions
+added 2,686, 1,700 and 1,399 B (measured from `git show`), so S897 would
+leave about 1.9 to 3.2 KB and S898 likely crosses (an estimate); a
+session that reads it past the limit cannot. (C) The owner keeps or
+declines the 7 parked Effort-S items (`isAddedRecord()`, CI
+`paths-ignore`, trim verify script, Candidate C, `highlightNearest`,
+rhesus docstring, row-order item). (D) Then one real fix per session.
+The next BACKLOG compression candidates are named, measured, in the
+housekeeping item (`BACKLOG.md:331`). **Owner decision still open (from
+S892; not filed, not asked):** shorter receipts would lower the
+`HANDOFFS.md` refill rate (169,316 B now; 92,828 B under the Read
+refusal, room for about 34 more receipts at the 2.7 KB average, an
+estimate). Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)`
+unfiled.
 
-**Key files:** `BACKLOG.md:231`, `:289-311`, `:398`, `:8-27` (the four
-blocks for (B)); `docs/conventions/CLOSEOUT_CHECKLISTS.md` (read at
-Phase 3); `.Rbuildignore:73-80` (the four build-ignored ledger files).
+**Key files:** `BACKLOG.md:8-20` (PED_GV), `:224-257` (standalone
+package; D-2 drift note `:251-257`), `:279-295` (chromote), `:386-398`
+(kinship2 preamble), `:331-371` (housekeeping item);
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:147-333` (the closure and
+decision records); `tests/testthat/test_newsReleaseState.R:234,248` (the
+D-2 drift); `PROJECT_LEARNINGS.md` Learning 865.
 
-**Gotchas:** to send only the close-out commit when a claim commit sits
-on top, use `git push origin <sha>:master`; a plain `git push` sends
-both. A docs-only push still starts all four workflows; the owner’s rule
-is not to wait for them. **`CHANGELOG.md` is 254,668 B, 7,476 B under
-the 262,144 B Read refusal** (measured after this close-out). This
-session added 1,399 B (claim plus close-out); S893 estimated 3 KB a
-session, so room for roughly 2 to 5 sessions (an estimate): trim it
-(`methodology_trim.py --file CHANGELOG.md --budget-bytes 65536`; expect
-`--force`, as for `HANDOFFS.md`) before it runs out. S892’s
-`HANDOFFS.md`-trim gotchas still apply (condensed below).
+**Gotchas:** search ledger headings for both `S<N>` and `(Session N)` /
+`[issue #N]`; before replacing a fact with a pointer, regex the ledger
+entry body for it (the Bugzilla analog was not there); `BACKLOG.md`
+blocks A and B run straight into the next item with no blank line (C and
+D do not); `.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore
+them in greps; the PED_GV open paragraph (`BACKLOG.md:16-18`) has one
+very long line, so edit it with a short `old_string`.
+
+### What Session 895 Did (condensed S896; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+Pushed S894’s close-out commit `1d8902e32` (`1fd37a244..1d8902e32`, 1
+commit) by SHA at the owner’s pick; claim `c0b01c3c6`, close-out
+`3d210301b`. The owner then pushed both: origin equalled HEAD at S896’s
+Phase 0. Handoff evaluation of S894: 9/10. Self 8/10. **Gotchas kept:**
+to send only the close-out commit when a claim commit sits on top, use
+`git push origin <sha>:master`; a docs-only push still starts four
+workflows, and the owner’s rule is not to wait for them.
 
 ### What Session 894 Did (condensed S895; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
@@ -519,20 +544,3 @@ Docs only. Claim `f00361217`; docs `5f6ba3c0b`. Self 8/10. **Gotchas
 kept:** `roxygen2::roxygenise()` also rewrites
 `man/nprcgenekeepr-package.Rd` (revert it) and prints two old
 `@inheritParams` errors (`addParents`, `removeUninformativeFounders`).
-
-### What Session 869 Did (condensed S871; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-
-**DONE:** the 15 `SESSION_NOTES.md` lines over 280 B re-wrapped (text
-unchanged, proved by `diff`); the S842 record and S841 evaluation
-removed. Docs only. Claim `cb178a6ef`. Self 8/10. **Gotcha kept:** wrap
-new records at about 110 columns or the 280 B per-line check trips
-again.
-
-### What Session 866 Did (condensed S867; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-
-**DONE:** Mate Pair Excluded tab gets an Export Excluded Pairs CSV
-button (`downloadExcluded`, `R/modMatePair.R`), holding the rows left
-after the curator’s filter. Claim `2b777576a`; RED+GREEN `6c72dd8e6`.
-Full suite 2927 tests, 0 failed. Self-score 8/10. Gotcha kept:
-`excludedTable_rows_all` is still set by DT although the Excluded table
-is client-side `renderDT`.

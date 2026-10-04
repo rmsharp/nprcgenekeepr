@@ -6,62 +6,28 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**PED_GV audit follow-through – triage DONE (S781, 2026-09-26), F1
-shipped (S782), F4 shipped (S783), F2’s duplicate-id half shipped
-(S797), F3 shipped (S798); every F-slice is done, and what remains is
+**PED_GV audit follow-through – every F-slice DONE; what remains is
 owner decisions (DECISION NEEDED, Effort S each; strict TDD for every
 fix)** – `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids
-against today’s code (35 present, 2 fixed, 4 moot, 2 refuted); its table
-is the plan, so read it first (its F1 is done:
-[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-now returns a pedigree with no `recordStatus` column unchanged; its F4
-is done:
-[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
-now stops with a message naming the cycle instead of recursing until R
-aborts, and keeps the documented diamond repeats; F2’s
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-half is done: a minted id now skips any id already in the `id` column
-(S806 found it still reuses an id used only as a sire or dam; fixed
-S808); F2’s other half, real ids mistaken for placeholders, is done
-(S807-S811, the `placeholder` mark); F3 is done: the
-[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-dam fallback no longer re-admits a female the gestation window ruled
-out). **Open, all owner decisions:** (a) the overhaul roots, none urgent
-– the walk helpers (PED-3, NEW-42; all exported, so an API change), the
-sim constants and HTML builders (NEW-18/19/21/26/57) and the repeated
+against today’s code; its table is the plan, so read it first. Its four
+fix slices all shipped (F1 S782, F4 S783, F2 S797 and S806-S811, F3
+S798), and its Closure and Decision records 1-11 (S818-S889) hold the 34
+ids closed since, each with who decided it and when; `CHANGELOG.md`
+holds the sessions. **9 ids remain** (S896 recomputed this from the
+report’s table: 43 ids, 34 closed, none counted twice). **Open, all
+owner decisions:** (a) the overhaul roots, none urgent – the walk
+helpers (PED-3, NEW-42; all exported, so an API change), the sim
+constants and HTML builders (NEW-18/19/21/26/57) and the repeated
 `updateProgress` null checks (NEW-62; 3 blocks in `reportGV.R`); (b)
 NEW-24 is already open issue \#123 (kept open on purpose after Phase 1
 shipped S386; its residuals, which the issue’s closing comment says are
 tracked here, are the `nprcgenekeeprGV` print-method wrinkle – the class
 is appended last and there is no bare `print.nprcgenekeeprGV`, near
 `reportGV.R:353` – and `getGeneticDiversityStats.R:58` keeping its own
-`requiredPed` vector; plan §10 items 4-5, both low priority). **The 11
-settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44,
-NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, and **PED-4 and
-NEW-54 were closed S881** (the
-[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-split; NEW-55 shipped S880), and **NEW-61 was closed S871** (owner:
-known and unknown founders stay counted differently; documented in
-[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
-and
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-roxygen), and **PED-2 and NEW-29 were closed S879** (sex-code adoption
-shipped, S874-S879; PED-7 was already counted closed S818), and **NEW-55
-was closed S880**, and **11 more (NEW-14, NEW-31, NEW-32, NEW-35,
-NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43) were closed
-S885** (each already fixed in code, Closure record 7), so **15 remained
-after S885**, then **NEW-51 was closed S886** (owner: accepted, no
-guard; Decision record 8), then **NEW-50 was closed S887** (the shared
-`.simulateKinship()` helper shipped; Closure record 9), then **PED-5,
-PED-6 and NEW-36 were closed S888** (owner: keep the `reportErrors`
-two-mode pattern, no package-wide error contract; Decision record 10;
-NEW-28 was decided there and **closed S889**, Closure record 11:
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-now names every missing required column up front), so **9 remain** (the
-report’s “Closure record” sections list them; this item said 28 after
-S881, when the report’s own count was 26). **Trap:** an id grep of the
-ledger both under- and over-counts (`NEWS.md` once used “NEW-47/48/49”
-as entry labels), so use the report’s table, not the old 41-id list.
+`requiredPed` vector; plan §10 items 4-5, both low priority). **Trap:**
+an id grep of the ledger both under- and over-counts (`NEWS.md` once
+used “NEW-47/48/49” as entry labels), so use the report’s table, not the
+old 41-id list.
 
 **(Optional, owner decision) One internal `isAddedRecord()` helper for
 the “added” mask (raised S785, deferred at the S785, S786 and S787
@@ -367,20 +333,19 @@ OUT — block-sparse `makekinship` (dense whole-colony matrices are
 current practice); API shape (data-frame-as-is vs kinship2-compat layer)
 DELIBERATELY OPEN — decide at plan time with a prototype in hand. When
 unblocked, the pickup is a planning session (package boundary/plan doc
-in `docs/planning/`, evidence-based inventory); step 0’s prep is
-complete — D-1 landed S744: `makePedigreeMatingLayout(kinshipMatrix = )`
-(`R/makePedigreeDiagramData.R:1661`) is exactly the injectable boundary
-the package needs; D-2 landed S745: no test file outside the layout
-core’s own reaches `.buildMatingUnitForest()` any more (the two
-`test_modPedigree.R` reaches now derive union/duplicate ids from the
-exported return’s `nodes$id` / `duplicateToReal`); D-3 landed S746: all
-13 `R/positionTreeApportion.R` functions carry `@noRd` roxygen (title +
-`@param` + `@return`, house style), so the engine’s contract is readable
-in place (`@noRd` generates no `.Rd`, `man/`/`NAMESPACE` verified
-byte-identical). (Prep-step origin context: the owner accepted the S667
-recommendation NOT to split the layout core into its own package —
-disposition recorded S738 in `CHANGELOG.md`; the prep steps hardened the
-boundary in place and stand whether or not a split ever happens.)
+in `docs/planning/`, evidence-based inventory). **Prep is done** (D-1
+S744, D-2 S745, D-3 S746; each is in `CHANGELOG.md`):
+`makePedigreeMatingLayout(kinshipMatrix = )`
+(`R/makePedigreeDiagramData.R`) is the injectable boundary the package
+needs, and the 13 `R/positionTreeApportion.R` functions carry `@noRd`
+roxygen. **One prep claim has drifted (found S896):** D-2 took every
+test outside the layout core’s own files off `.buildMatingUnitForest()`,
+but `tests/testthat/test_newsReleaseState.R:234,248` has called it
+directly since S790-S791 (NEWS release-state counts; it is not one of
+the scoping doc’s 9 core test files), so the planning session must
+re-run the grep and decide where that test lives. (The owner accepted
+S667’s recommendation NOT to split the layout core, recorded S738; the
+prep steps stand whether or not a split ever happens.)
 
 **(Optional, owner decision) Slim `inst/doc/` by moving the three
 `html_document` vignettes to
@@ -419,28 +384,21 @@ fix (see `CHANGELOG.md`), READY (optional), Effort M – research only,
 not required) – the practical problem is FULLY resolved: `macos-latest`
 reverts to ambient/ unpinned Chrome (`R-CMD-check.yaml`,
 `if: matrix.config.os != 'macos-latest'` on the 3 Chrome-provisioning
-steps), verified green on real CI. What remains unexplained: raising
-chromote’s `default_timeout` to 60s did NOT resolve the pinned binary’s
-hang (same exact failure, wall time roughly doubled, confirming the
-session is genuinely wedged, not merely slow) – direct source inspection
-confirmed the timeout-governed call is `ChromoteSession$new()`’s own
-internal `Runtime.evaluate("window.devicePixelRatio", ...)` bootstrap
-probe (`private$get_pixel_ratio()`, chromote 0.5.1), but WHY that
-specific probe never gets a response on the pinned macOS ARM64 binary
-specifically (vs. the SAME pinned binary working fine on
-ubuntu-latest/windows-latest, and vs. ambient Chrome working fine on
-macos-latest) is unconfirmed. A research workflow found a plausible but
-NOT Chromium- confirmed analog (Mozilla Bugzilla \#1893921 – Firefox’s
-own content-process spawn hitting a 5s AppKit/IOKit sandbox-denial stall
-specific to GitHub’s *virtualized* macOS ARM64 hosts, fixed by widening
-Firefox’s own sandbox allowlist) but found no matching Chromium tracker
-entry. Only worth pursuing if pinned-Chrome reproducibility on macOS
-specifically becomes valuable later (e.g. `xattr -l` on the extracted
-`.app` on a live failing runner to rule out/in Gatekeeper quarantine,
-which the same research found NOT evidenced for
-`browser-actions/setup-chrome`’s actual download/unzip pipeline; or
-filing a new `rstudio/chromote` upstream issue, since no existing issue
-there matches this exact macOS+GHA+live-CDP-timeout signature).
+steps), verified green on real CI. **Unexplained:** why the bootstrap
+probe `Runtime.evaluate("window.devicePixelRatio", ...)`
+(`private$get_pixel_ratio()`, chromote 0.5.1) never gets a response on
+the pinned macOS ARM64 binary, though the same binary works on
+ubuntu-latest/windows-latest and ambient Chrome works on macos-latest
+(raising `default_timeout` to 60s changed nothing: the session is
+wedged, not slow). The only plausible analog found is Mozilla Bugzilla
+\#1893921 (Firefox’s content-process spawn hitting a 5s sandbox-denial
+stall on GitHub’s *virtualized* macOS ARM64 hosts); no matching Chromium
+tracker entry exists. Only worth pursuing if pinned-Chrome
+reproducibility on macOS becomes valuable: `xattr -l` on the extracted
+`.app` on a live failing runner (the research found Gatekeeper
+quarantine NOT evidenced for `browser-actions/setup-chrome`), or a new
+`rstudio/chromote` upstream issue (none matches this
+macOS+GHA+live-CDP-timeout signature).
 
 **`methodology_trim.py`’s generated shard verify script FAILs its L2
 “leak” check when an archived record quotes a front-matter line (found
@@ -490,7 +448,7 @@ be a norm plus a check, not an archiver”) is worth adopting for
 
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
-Effort L; RECURRING – last pass S890, 2026-10-03) – `BACKLOG.md` is one
+Effort L; RECURRING – last pass S896, 2026-10-04) – `BACKLOG.md` is one
 of the dashboard’s HIGH-risk ledger-size items but does not fit
 `methodology_trim.py`’s chronological-record model: its `##` sections
 are standing *topical* categories that accumulate resolved-item
@@ -505,18 +463,21 @@ Housekeeping section (652 -\> 389 lines; its inventory found 2 items
 with no ledger entry, a real FM \#27 gap, backfilled before
 compressing); S530 “Pedigree diagram vs kinship2” (896 -\> 286); S531
 “Genetic-metrics PDF audit follow-ups” (753 -\> 267); S606 re-compressed
-Genetic-metrics after regrowth (304 -\> 80); S752 (2026-09-21)
-re-compressed it again (91 -\> 62 lines), condensed this item’s history
-and found “Pedigree diagram vs kinship2” NOT regrown (286 -\> 156);
-**2026-09-24** (ad hoc, owner-picked): removed 2 completed items, fixed
-4 stale statements, compressed the LabKey item (44 -\> 15) and the
-kinship2 DONE narrative (84 -\> 20), then deleted the 3 resolved
-sections (55 lines by that entry: 6 + 4 + 45; the file went 432 -\> 378;
-the NEW-53 ledger gap found there was backfilled); **S890**
-(2026-10-03): condensed the docs-audit item (55 -\> 48 lines, the open
-parts kept) and this history (50 -\> 38 lines); the file went 552 -\>
-533 lines (58,228 -\> 46,731 B). **Method (every pass, all steps):**
-before compressing anything to a pointer, (1) verify `CHANGELOG.md` +
+Genetic-metrics after regrowth (304 -\> 80); S752 (2026-09-21) again (91
+-\> 62), condensed this history, found “Pedigree diagram vs kinship2”
+NOT regrown (286 -\> 156); **2026-09-24** (ad hoc, owner-picked):
+removed 2 completed items, fixed 4 stale statements, compressed the
+LabKey item (44 -\> 15) and the kinship2 DONE narrative (84 -\> 20),
+deleted the 3 resolved sections (55 lines; file 432 -\> 378; the NEW-53
+ledger gap found there was backfilled); **S890** (2026-10-03): condensed
+the docs-audit item (55 -\> 48) and this history (50 -\> 38); file 552
+-\> 533 lines (58,228 -\> 46,731 B); **S896** (2026-10-04): compressed
+the four S890 candidates (PED_GV 20 -\> 13 lines, standalone-package 37
+-\> 34, chromote 23 -\> 17, kinship2 preamble 20 -\> 13); its checks
+corrected a stale `:1661` line reference and a drifted D-2 claim, and
+recomputed the PED_GV count of 9 from the triage table; file 533 -\> 514
+lines (46,731 -\> 43,766 B). **Method (every pass, all steps):** before
+compressing anything to a pointer, (1) verify `CHANGELOG.md` +
 `docs/archive/CHANGELOG-*.md` carry an entry heading for every session
 number cited AND that the load-bearing facts are inside those entries (a
 heading alone proves little); (2) confirm every cited Learning / doc
@@ -525,15 +486,17 @@ extract any buried open thread as its own item first; (4) replace whole
 line ranges mechanically (Learning 537: a partial `old_string` leaves
 later paragraphs duplicated beside the new bullet); (5) leave open items
 byte-untouched; (6) re-read the compressed result end to end.
-**Candidates for the next pass (measured S890, line counts before this
-pass; re-grep, sizes not anchors):** the standalone-package item (37
-lines, mostly the S738-S746 prep narrative), the
-`## Pedigree diagram vs kinship2 audit follow-ups` preamble (about 17
-lines of shipped history; \#138 is tracked on GitHub), the chromote item
-(23 lines; its practical problem is resolved) and the PED_GV item’s
-closure narrative (21 lines; the triage report’s Closure records hold
-it). Regrowth, for scale: 378 lines on 2026-09-24, 599 at S853, 552
-before S890.
+**Candidates for the next pass (measured S896, line counts after this
+pass; re-grep, sizes not anchors):** the docs-audit item (47 lines; S890
+already compressed it, so check for regrowth first), this item’s own
+history (41 lines), the paper item (24), Candidate C (22), the
+`inst/doc/` slimming item (21) and the trim verify-script item (20).
+Candidate C and the verify-script item are two of the 7 parked Effort-S
+items awaiting the owner’s keep-or-decline, so wait for that ruling
+before compressing them. The standalone-package item is still 34 lines
+but is nearly all ratified-scope open text; leave it. Regrowth, for
+scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after
+S896.
 
 **Two kinship2 drawing features the Diagram tab still lacks (found S847,
 2026-10-01; DECISION NEEDED – which pedigree column marks “deceased”,
@@ -557,30 +520,17 @@ more than one affected condition are not drawn” until both ship.
 *S435’s capability comparison of the issue \#129 pedigree diagram
 against kinship2’s drawing feature set
 (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
-produced 8 recommendations; S436 (2026-07-30, owner direction) filed all
-8 as GitHub issues \#131-#138 in an owner-set priority order that
-inverts the audit’s own. **All are shipped and closed except \#138**
-(full-colony rendering beyond the 1,500-node cap: `low priority` label,
-needs its own scoping session first; tracked on GitHub, not here).
-Implementation followed
-`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
-(S480). **Tier 1** (S481-S484): the dangling-parent crash fixes (issue
-\#154); the issue \#145 verification spike – kinship2 v1.9.6.2
-implements neither a hard male-left invariant nor a sex-aware
-crossing-minimizing default
-(`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`);
-and a refresh of
-`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` (done
-S484; its “current” claims have since gone stale again, and it now
-carries a status note). **Tier 2** (S485-S500): \#133 (affected status,
-closed S487), \#136 (name labels, S490), \#137 (twin/zygosity, S494) and
-\#145 (sire/dam placement, S500, simple-pair scope), each from a
-ratified plan in `docs/planning/` and one to three strict-TDD slices
-with the citation / tutorial / `NEWS.Rmd` / `a2interactive.Rmd`
-checklists applied; kinship2’s `affected` and `relation` argument
-conventions were adopted in \#133 and \#137. None reopens issue \#129 or
-the visNetwork-vs-kinship2 technology decision (D2), which stands as
-ratified. Session-by-session record: `CHANGELOG.md`; technical findings:
+produced 8 recommendations, filed S436 as GitHub issues \#131-#138.
+**All are shipped and closed except \#138** (full-colony rendering
+beyond the 1,500-node cap: `low priority` label, needs its own scoping
+session first; tracked on GitHub, not here). The order they shipped in
+is the sequencing audit’s status line
+(`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`).
+None reopens issue \#129 or the visNetwork-vs-kinship2 technology
+decision (D2), which stands as ratified; the
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`
+refresh (S484) has since gone stale again and carries a status note.
+Session-by-session record: `CHANGELOG.md`; technical findings:
 `PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. The open items
 below are the section’s live work.*
 
