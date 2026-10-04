@@ -13343,3 +13343,34 @@ beside the old one in both the question and the BACKLOG ruling; (2) a
 “recurs every time” claim is a count, so count it; (3) never truncate a
 pass/fail loop with `head` (mine cut the failing shards off): print only
 the failures and a tally.
+
+#### Learning 868
+
+**A `paths-ignore` list is not a copy of `.Rbuildignore`: what a
+workflow reads from the checkout decides, not what the package build
+ships.** (S899, 2026-10-04.) The S898 ruling said to mirror
+`.Rbuildignore` and warned that tests read some ignored files. Checked
+against the four push workflows: R-CMD-check and test-coverage test a
+built or installed copy, where ignored root files are absent, so every
+test that reads one guards with `skip_if_not(file.exists())` and skips
+there (the new test: 10 of 11 skip in an installed copy, 0 fail), and a
+build-ignored file cannot change those two jobs. lint.yaml and
+pkgdown.yaml run from the checkout: `lintr::lint_package()` lints
+`data-raw/*.R` and reads `.lintr` (a past lint red was at
+`data-raw/kinship2FidelityValidation.R`), and the site build reads
+`_pkgdown.yml` and 87 tracked `vignettes/articles/` files, all
+build-ignored. So a literal mirror would hide real inputs, and the S898
+caveat named the wrong obstacle (tests only matter in local runs).
+Shipped: 21 explicit entries (14 notes/methodology `.md`, 4 scripts, 2
+JSON, `docs/**`), identical in the four workflows, pinned by
+`tests/testthat/test_workflowPathsIgnore.R`; 197 of the last 300 commits
+(66%) touched only these, an upper bound for skippable pushes because a
+push bundles commits. Rules: (1) for each CI job, ask where it runs
+(tarball, installed copy or checkout) before deciding which ignored
+files it can see; (2) a skip-when-absent guard in a test means CI never
+exercises that file; (3) pin both directions in the test (named
+skippable paths must match, named CI inputs must not) with a matcher
+self-check so a broken matcher cannot pass the negative probes
+vacuously, and dry-run the intended list against the RED test before
+GREEN; (4) GitHub’s own filter behavior cannot be proven locally, so
+name the live check as a BACKLOG item instead of claiming it verified.

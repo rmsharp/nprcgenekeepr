@@ -168,91 +168,127 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 898 Did
+### What Session 899 Did
 
-**Deliverable, DONE (docs only; BACKLOG, ledger, notes and Learnings
-changed; no R, test, workflow or build file):** the owner ruled on the 7
-parked Effort-S items, one question each (two `AskUserQuestion` calls),
-after I re-checked every item’s stored claims against today’s code. **No
-item was declined.** Each ruling is recorded in `BACKLOG.md` beside its
-item, tag updated: (1) `isAddedRecord()` kept open (READY, optional);
-(2) CI skip: the `paths-ignore` list, not `[skip ci]` (READY, Effort S);
-(3) verify scripts: report it upstream to the `rmsharp/methodology` fork
-(READY, Effort S; posting needs the owner’s OK; characterize the 8 L1
-failures first); (4) Candidate C kept open (DECISION NEEDED: product
-sign-off to pursue); (5) `highlightNearest` kept open (READY, optional);
-(6) rhesus comment: reword it (READY, Effort S); (7) row order: accept
-the dependence, change only the tests (READY, Effort S). Claim
-`2fffad3d8`; the close-out commit carries the rest. Nothing was edited
-beyond recording: a ruling is not a go-ahead to edit code or CI.
-**Re-measured first (Learning 867):** the verify-script item said one
-shard fails and it recurs on every later trim; today 10 of 54 verify
-scripts FAIL (`HANDOFFS` 2/15, `CHANGELOG` 1/16, `SESSION_NOTES` 7/23: 2
-are the item’s L2 leak, 8 are `L1 ... not byte-identical`, cause read
-for only 1) while 13 of 15 `HANDOFFS` shards pass. Row order: raw 1456
--\> 1460 (later layout fixes), QC’d 1412 unchanged, raw content in QC
-order gives 1412, `direct` 782 for both. Rhesus: the claim is about the
-`rhesusPedigree` object (`data-raw/rhesusPedigree.R:7-10`); its id and
-birth equal the `fromCenter` CSV’s and the two CSVs agree on all 8
-shared columns (375 rows). The other items’ claims held. **Not run:**
-the R suite, `devtools::check()`, lint (no `.R` file changed), CI: every
-changed file is `.Rbuildignore`d (`BACKLOG`, `CHANGELOG`, `HANDOFFS`,
-`SESSION_NOTES`, `PROJECT_LEARNINGS`); no runtime change, so no smoke
-test.
+**Deliverable, DONE (strict TDD; CI config plus one test file; no `R/`
+file changed):** lint, pkgdown, R-CMD-check and test-coverage now skip a
+push that changes only notes and tooling files. Each `push:` trigger
+carries the same 21-entry `paths-ignore:` (14 root notes/methodology
+`.md`, 4 methodology scripts, `.context-budget.json`,
+`.quality-gates.json`, `docs/**`); `pull_request`, `branches` and every
+other trigger are unchanged. Owner rulings, asked in plain words before
+RED: the list is notes and tooling only, not a literal `.Rbuildignore`
+mirror; pushes only. Claim `22f45005d`, RED `40f1495f4` (10 of 11 tests
+fail, 70 of 176 expectations), GREEN `3178b741c`, REFACTOR `436e656fe`
+(one redundant [`any()`](https://rdrr.io/r/base/any.html)); the
+close-out commit carries the rest. New test
+`tests/testthat/test_workflowPathsIgnore.R` (11 tests, 218
+expectations). **Why not a literal mirror (Learning 868):** lint.yaml
+lints `data-raw/*.R` and reads `.lintr`; pkgdown.yaml builds from
+`_pkgdown.yml` and 87 `vignettes/articles/` files; R-CMD-check and
+test-coverage test a built or installed copy where ignored files are
+absent (their readers `skip_if_not(file.exists())`). Payoff: 197 of the
+last 300 commits (66%) touched only listed files (an upper bound for
+pushes, which bundle commits). **Verified:** new test 0 failed; PyYAML
+parses all 4 workflows, 21 entries each, the rest of each document
+identical to HEAD; full unfiltered suite after GREEN and again after
+REFACTOR: 368 files, 2,997 tests, 9,632 expectations, 0 failed, 0 error,
+187 skipped; `lint_package()` 0 findings; in a built-and-installed copy
+10 of the 11 tests skip and 0 fail; ratchet 1/1 pass. **Not verified
+(cannot be in-session):** GitHub’s own path-filter behavior (now the
+first `BACKLOG.md` item, `:55`) and `devtools::check()` (this push
+changes tests and workflows, so CI runs it). No runtime smoke test was
+possible. CLOSEOUT_CHECKLISTS.md read: lint close-out run (0 findings);
+BACKLOG item replaced by a short live-check item; issue close-out n/a
+(the item named no issue); the rest not triggered.
 
-**Handoff evaluation of S897: 9/10.** Helped: step (B) named all 7
-parked items and each exists in `BACKLOG.md`; “only the addendum is
-local” was exact (`master` was 1 ahead at Phase 0); the open ledger-size
-decision and the plain `gh run list` form both held. Missing: no BACKLOG
-line numbers, and no warning that 3 of the 7 items (verify script, row
-order, rhesus) carried measurements older than later code and tool
-changes. Wrong: nothing in the handoff; the items it pointed at held two
-drifted claims (Learning 867).
+**Handoff evaluation of S898: 8/10.** Helped: `BACKLOG.md:55` was exact;
+“the four workflows also run on `pull_request`, `shinytest2.yaml` only
+nightly” held; the pushes-only decision was flagged; “only the addendum
+is local” was exact. Missing: that lint.yaml lints `data-raw/*.R` and
+reads `.lintr`, and that pkgdown.yaml builds from `_pkgdown.yml` and
+`vignettes/articles/` – the real limits on the list. Wrong: “`.github`
+is build-ignored but tests read it, so the list must exclude those”
+named the wrong obstacle: the three workflow-reading tests read only
+`R-CMD-check*.yaml` and `shinytest2.yaml`, and they skip on CI (Learning
+868). The `data-raw` “no CI wait” note is also wrong (lint reads it).
 
-**Self-assessment: 8/10.** + Orientation complete before the picker;
-claimed before work; re-measured before asking, which caught 2 of 7
-items off; every question led with the purpose and each option’s
-consequence; recorded rulings only; BACKLOG edits scripted with every
-anchor asserted (17 of 17 matched once). - My first shard loop ended in
-`head -40` and cut the failing shards off (re-run as a tally); a zsh
-glob failed on the fixtures (they sit in `inst/extdata/examples/`); the
-cause of 7 of the 10 failing verify scripts is still unread. Reduction:
-none net. S897’s record is condensed here, but this file still grew
-1,003 B (31,006 -\> 32,009) and `BACKLOG.md` grew 2,352 B (44,102 -\>
-46,454: rulings and re-measurements).
+**Self-assessment: 8/10.** + Orientation, claim and all three TDD gates
+in order; scope questions in plain words with a measured payoff; the
+list was dry-run against the RED test before GREEN; every claim was
+checked on its real surface (YAML parse, installed copy, suite twice);
+an unsound literal mirror was found and not shipped. - About 8 wasted
+calls: `R CMD build -o` (no such option), `S=$S` passed as an argument,
+no renv paths for the tarball install, a one-liner that executed the
+test file, and parallel Bash calls whose `cd` leaked into each other;
+one passing test (the matcher self-check) in RED, disclosed. Reduction:
+S898’s record is condensed (5,213 B -\> 1,134 B) and `BACKLOG.md` shrank
+485 B (46,454 -\> 45,969), but this file still grew 1,578 B (32,724 -\>
+34,302); no further reduction was found this session.
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push
-the local commits (S897’s addendum `4313562b4`, the claim `2fffad3d8`,
-this close-out): docs only, all `.Rbuildignore`d, no CI wait. (B) Then
-one real fix per session, any order. The READY items: CI `paths-ignore`
-(`BACKLOG.md:55`; edits `.github/workflows/*`, which `.Rbuildignore:40`
-ignores but tests read, so run the suite; the four workflows also run on
-`pull_request`, `shinytest2.yaml` only nightly); row-order tests only
-(`BACKLOG.md:446`; start at
-`tests/testthat/test_makePedigreeMatingLayout.R:663-742`, where 1456 and
-1460 are derived, and the `test-e2e-pedigree-module.R` family; which of
-them assert the raw-CSV count is not yet known); rhesus comment
-(`BACKLOG.md:467`; `data-raw` is `.Rbuildignore:53`, so no CI wait);
-verify-script upstream report (`BACKLOG.md:307`). Kept open:
-`isAddedRecord()` (`:22`), Candidate C (`:423`), `highlightNearest`
-(`:487`). (C) The ledger-size lever is still open (from S892; not filed,
-not asked): `HANDOFFS.md` was 172,892 B and `CHANGELOG.md` 27,636 B at
-Phase 0 (262,144 B is the Read refusal); at 1.4-2.7 KB per session
-`CHANGELOG.md` reaches 65,536 B in about 15-29 sessions (an estimate).
-Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
+**Next steps (owner-ordered):** (A) The owner decides whether to push: 6
+local commits (`d13665e25` S898’s addendum, the claim, RED, GREEN,
+REFACTOR and this close-out). **Unlike S896-S898 this push changes tests
+and workflow files, so watch CI:** all four workflows should start and
+pass (R-CMD-check takes about 25 minutes). (B) The live check,
+`BACKLOG.md:55`: the first push that changes only listed files must
+start no run (`gh run list --branch master --limit 10`); this push
+cannot prove it, because it changes unlisted files. (C) Then one real
+fix per session, any order, all READY: row-order tests only (`:440`;
+start at `tests/testthat/test_makePedigreeMatingLayout.R:663-742`; which
+tests assert the raw-CSV count is not yet known); rhesus comment
+(`:461`; `data-raw` is NOT in the skip list and lint.yaml lints it with
+an 80-column limit that covers comments, so lint the reworded comment);
+verify-script upstream report (`:301`; characterize the 8 L1 failures
+first; posting is the owner’s call). Kept open: `isAddedRecord()`
+(`:22`), Candidate C (`:417`), `highlightNearest` (`:481`). (D) The
+ledger-size lever is still open (S892; not filed, not asked):
+`HANDOFFS.md` was 176,584 B and `CHANGELOG.md` 29,958 B before this
+close-out (262,144 B is the Read refusal). Carried: PED_GV next group
+(the 9 ids), `reportGV(smallPed)` unfiled.
 
-**Key files:** `BACKLOG.md` at the line numbers above;
-`data-raw/rhesusPedigree.R:7-10` (the comment to reword);
-`docs/archive/*-through-*.verify.sh` (54 scripts; 10 fail);
-`PROJECT_LEARNINGS.md` Learning 867.
+**Key files:**
+`.github/workflows/{lint,pkgdown,R-CMD-check,test-coverage}.yaml` lines
+4-29 (the `push:` blocks); `tests/testthat/test_workflowPathsIgnore.R`
+(helpers `triggerChildren`, `pathsIgnoreEntries`, `globMatches`,
+`rbuildignoreExcludes`, lines 62-140); `BACKLOG.md:55`;
+`PROJECT_LEARNINGS.md` Learning 868.
 
-**Gotchas:** count verify scripts with a loop that prints only failures
-and a tally, never `head`; the first FAIL line of each is
-`bash <s> 2>&1 | grep -m1 '^FAIL'`; a BACKLOG item’s number can predate
-later code (row order 1456 -\> 1460), so re-run it before a ruling;
-`AskUserQuestion` takes at most 4 questions per call; the `BACKLOG.md`
-edits are long wrapped lines, so use a script with asserted anchors, not
-hand edits.
+**Gotchas:** parallel Bash calls share one persistent shell, so a `cd`
+in one leaks into the other (the working directory drifted twice): start
+each command with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; to
+test an installed copy, `R CMD build` has no `-o` (run it from the
+output directory) and installing outside the project needs the renv
+paths (`R_LIBS=$(Rscript -e 'cat(paste(.libPaths(), collapse=":"))')`
+from the project directory), then
+`R CMD INSTALL --install-tests -l <lib>` and
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+on the installed copy; R CMD check and covr see no build-ignored root
+file, so tests that read one skip there, while lint and pkgdown run from
+the checkout and do see them; the 21 entries are repeated in four
+workflows, so add a file to all four and run the test (a `*.md` wildcard
+would match shipped `README.md` and `NEWS.md`, and the test refuses it);
+do not [`eval()`](https://rdrr.io/r/base/eval.html) a whole test file to
+borrow its helpers, because that runs its tests (slice the text before
+the first `test_that(`).
+
+### What Session 898 Did (condensed S899; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+The owner ruled on the 7 parked Effort-S items (none declined); each
+ruling sits beside its item in `BACKLOG.md`: `isAddedRecord()`,
+`highlightNearest` and Candidate C kept open; CI skip = a `paths-ignore`
+list (S899 shipped it); verify-script bug = report it upstream to the
+`rmsharp/methodology` fork; rhesus comment = reword it; row order =
+accept it and change only the tests. Re-measured first (Learning 867):
+10 of 54 verify scripts FAIL (not 1); the raw row-order count is 1460
+(not 1456). Claim `2fffad3d8`, close-out `77ccb50f6`, push-record
+addendum `d13665e25` (the owner pushed `18610c7e3..77ccb50f6`). Handoff
+evaluation of S897: 9/10. Self 8/10. **Gotchas kept:** count verify
+scripts with a loop that prints only failures and a tally, never `head`;
+the first FAIL line of each is `bash <s> 2>&1 | grep -m1 '^FAIL'`; a
+stored BACKLOG number can predate later code, so re-run it before a
+ruling; `AskUserQuestion` takes at most 4 questions per call; BACKLOG
+items are long wrapped lines, so edit by script with asserted anchors.
 
 ### What Session 897 Did (condensed S898; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
