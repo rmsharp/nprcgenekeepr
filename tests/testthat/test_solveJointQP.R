@@ -413,6 +413,13 @@ test_that(".solveJointQP() does not error when a duplicate node's own realId
   out
 }
 
+## S893: tolerance for the small-fixture floor checks below, in layout units.
+## trackBFull over 300 seeded shuffles of the QP's variables
+## (helper-reorderedSolveQP.R) missed 1e-9 in 23 runs, the worst by 1.2e-8;
+## trackC's worst was 4.9e-11. 1e-6 is the bound .expectMinSepFloorHeld()
+## above already allows (worst seen there: 1.1e-8).
+qpGapTolerance <- 1e-6
+
 for (fixtureName in c("trackC", "trackBFull")) {
   local({
     thisFixture <- fixtureName
@@ -434,9 +441,9 @@ for (fixtureName in c("trackC", "trackBFull")) {
       gaps <- .qpAdjacentGaps(solved, built$forest$matingUnits)
       expect_gt(length(gaps$II), 0L)
       expect_gt(length(gaps$IU), 0L)
-      expect_true(all(gaps$II >= 1.0 - 1e-9))
-      expect_true(all(gaps$IU >= 0.5 - 1e-9))
-      expect_true(all(gaps$UU >= 0.25 - 1e-9))
+      expect_true(all(gaps$II >= 1.0 - qpGapTolerance))
+      expect_true(all(gaps$IU >= 0.5 - qpGapTolerance))
+      expect_true(all(gaps$UU >= 0.25 - qpGapTolerance))
       expect_equal(min(gaps$II), 1.0, tolerance = 1e-6)
     })
   })
@@ -447,8 +454,6 @@ for (fixtureName in c("trackC", "trackBFull")) {
 ## floors as the test above, with the QP's variables shuffled by a fixed seed
 ## (helper-reorderedSolveQP.R). Seeds 75, 187 and 253 were the 3 worst of 300
 ## on the dev machine (S893): margins -1.2e-8, -7.2e-9 and -6.6e-9.
-qpGapTolerance <- 1e-9
-
 test_that(".solveJointQP() holds the individual-individual 1.0, individual-
            union 0.5 and union-union 0.25 floors to within qpGapTolerance
            when the solver meets its variables in a different order -- the

@@ -586,6 +586,13 @@ test_that(".positionMatingUnitForest positions the full real
   expect_equal(nCollidingNodes, 0L)
 })
 
+## S893: tolerance for the QP's adjacent-pair floors, in layout units (1 unit =
+## 120 px). Measured on the 375 fixture over 300 seeded shuffles of the QP's
+## variables (helper-reorderedSolveQP.R): worst shortfall 6.0e-4, 42 of 300
+## runs over 1e-6, none over 1e-3. 1e-2 is 1.2 px: 16x the worst seen, and 58x
+## under the 0.58-unit margin at which two symbols would overlap.
+qpFloorTolerance <- 1e-2
+
 ## ---- Migration Path Phase 3 (S675): the real 375 fixture through the QP
 ## engine, production path (5 weakly-connected families, each solved by its
 ## own .solveJointQP() call, then .packComponents()) -----------------------
@@ -635,23 +642,26 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
     }
   }
   ## 714 nodes across 9 rows -> 705 adjacent pairs (measured S675). The
-  ## tolerance is quadprog::solve.QP()'s own solver precision (measured
-  ## max shortfall on this fixture 6.8e-8 raw = 8e-6 px; the same 1e-6 the
-  ## joint-QP file's .expectMinSepFloorHeld() allows) -- NOT a geometric
-  ## allowance: the census-style overlap check below is exact.
+  ## tolerance (qpFloorTolerance, above) is quadprog::solve.QP()'s own
+  ## rounding noise -- NOT a geometric allowance: the census-style overlap
+  ## check below is exact. S675 measured 6.8e-8 on one run and took 1e-6 for
+  ## the solver's precision; S893 shuffled the QP's variables 300 ways
+  ## (cond(Dmat) is 1.6e9) and 42 of 300 put a pair over 1e-6, the worst by
+  ## 6.0e-4 -- the failure R-CMD-check showed on oldrel-1 and devel after the
+  ## S890 push.
   ## CHANGED S678 from 705L -- Decision 2's 68 extra duplicates (714 ->
   ## 782 nodes) add 68 adjacent pairs across the same 9 rows.
   expect_equal(length(shortfall), 773L)
-  expect_equal(sum(shortfall > 1e-6), 0L)
+  expect_equal(sum(shortfall > qpFloorTolerance), 0L)
 
   ## Census class (a), restated independently of data-raw/
   ## pedigreeDrawingErrorCensus.R: two VISIBLE nodes on one rendered row
   ## whose centre distance is below the sum of their symbol radii (25 px
   ## individual/duplicate, 6 px union dot -- the layout's own 'size'
-  ## column) at the census's own eps = 1e-9 px. The 1e-6 px tolerance the
-  ## floor check above allows is irrelevant here: with a 1.0-unit (120 px)
-  ## floor between 50 px symbols the margin is 70 px, so a solver-precision
-  ## shortfall can never produce an overlap.
+  ## column) at the census's own eps = 1e-9 px. The tolerance the floor
+  ## check above allows (qpFloorTolerance, 1.2 px) is irrelevant here: with
+  ## a 1.0-unit (120 px) floor between 50 px symbols the margin is 70 px, so
+  ## a solver-precision shortfall can never produce an overlap.
   layout <- suppressWarnings(
     makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
   )
@@ -678,8 +688,6 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
 ## and same floors as the test above, with the QP's variables shuffled by a
 ## fixed seed (helper-reorderedSolveQP.R). Seeds 198, 147 and 64 were the 1st,
 ## 2nd and 5th worst of 300 on the dev machine (S893).
-qpFloorTolerance <- 1e-6
-
 adjacentFloorShortfall <- function(pos, forest) {
   minSep <- 1
   kind <- ifelse(pos$id %in% forest$matingUnits$id, "U", "I")
