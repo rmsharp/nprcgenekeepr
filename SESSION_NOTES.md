@@ -99,62 +99,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 895 Did
-**Deliverable:** push S894's close-out commit `1d8902e32` to `origin/master` (IN PROGRESS)
-**Started:** 2026-10-04
-**Status:** Session claimed. Range checked: origin not ahead, 1 commit, 3 docs files, all `.Rbuildignore`d, no reader.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (no code, test or doc under test changed):** pushed S894's close-out commit `1d8902e32` to
+`origin/master` (`1fd37a244..1d8902e32`, 1 commit, fast-forward). Claim `c0b01c3c6`. Owner pick: "Push close-out commit"
+at the Phase 0 picker, which was also the authorisation to push that one commit. **Not pushed: this session's claim and
+its close-out commit** (master is 2 ahead; the owner decides, see Next steps A). Pushed by SHA (`git push origin
+1d8902e32:master`), so the claim commit stayed local.
+**Checked before the push:** `git fetch` (origin not ahead); range 1 commit, 3 files (`CHANGELOG.md`, `HANDOFFS.md`,
+`SESSION_NOTES.md`), all `.Rbuildignore`d (lines 73/75/77/80); the 3 test files that mention `CHANGELOG.md` do so in
+comments only (`test_markerKinship.R:159`, `test_markerParentageLikelihood.R:574`/`:632`, `test_buildMatingUnitForest.R:280`).
+**Verified after:** `origin/master` is `1d8902e32`; `git show origin/master:HANDOFFS.md` has 0 `status: pending` and shows
+S894 `complete`. The push started the four push workflows (no `paths-ignore`); by the owner's docs-only rule they were not
+watched and none is cited. No runtime change, so no smoke test; `quality_ratchet.py --run` 1/1 pass at Phase 0 (manifest
+`aa983075d6a2`). No `CLOSEOUT_CHECKLISTS.md` item triggered (no `R/` file, no issue-linked BACKLOG item, no CI break).
 
-### What Session 894 Did
-**Deliverable, DONE (no code or test change):** pushed `master` and read CI for S893's two red-CI fixes. **Both fixes are
-confirmed green on CI.** Claim `1fd37a244`. The push `2e2046efd..1fd37a244` sent 18 commits (S893's 17 plus the claim);
-none touched `R/`, `DESCRIPTION` or `NAMESPACE`, and origin was not ahead. **Not pushed: the close-out commit** (master is
-1 ahead; the owner decides, see Next steps A). Owner pick: "Push to GitHub, check CI" at the Phase 0 picker, which was
-also the authorisation to push.
-**CI on `1fd37a244`, all four green** (run ids `37234582588` lint about 4 min, `...580` pkgdown about 6, `...576`
-test-coverage about 13, `...577` R-CMD-check about 16). Per leg, R-CMD-check: ubuntu release, **oldrel-1**, **devel**, macos
-release and windows release all success; on the S890 push (run `37179033145`) oldrel-1 and devel failed. test-coverage,
-red on the S890 push, is success.
-**What one green run does and does not show:** the test-coverage failure was deterministic, so its green run is the proof
-for Fix 1. The oldrel-1/devel failure was probabilistic (S891: 12 of 100 variable orderings; S893: 42 of 300 over 1e-6),
-so one green run is consistent with Fix 2 but is not its proof; the proof is S893's 300-shuffle measurement and the
-16x headroom of 1e-2. A rare red there would be a new finding, not a failed fix.
-**Verified:** the push range before pushing (18 commits, not behind, no `R/` change); local and origin SHAs equal after;
-per-leg conclusions, not only the workflow-level result. No runtime change, so no smoke test; `quality_ratchet.py --run`
-1/1 pass at Phase 0 (manifest `aa983075d6a2`). Nothing else was run: no code, test or doc under test changed.
+**Handoff evaluation of S894: 9/10.** Helped: step (A) described exactly this task and its basis ("changes only
+`CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all `.Rbuildignore`d with no test or workflow opening them") held when
+I re-checked it; every figure matched (master 1 ahead, `CHANGELOG.md` 253,269 B, `SESSION_NOTES.md` 30,559 B, 0 undocumented
+commits). Missing: nothing that cost time; it did not say a docs-only push still starts four workflows, nor that a later
+claim commit means pushing by SHA to send only the close-out commit. Wrong: nothing found. Not exercised: its key-file line
+refs (no test file opened).
 
-**Handoff evaluation of S893: 9/10.** Helped: every figure I measured matched (master 17 ahead; `CHANGELOG.md` 251,569 B;
-`SESSION_NOTES.md` about 31 KB, actually 30,955 B); step (A) said what to run after a push and what to expect, and the
-expectation was right; "CI is not confirmed" kept me from treating the fixes as proven before the push. Missing: nothing
-that cost time (no run-time estimate for the four workflows; I measured 16 min for the slowest). Wrong: nothing found.
-Not exercised: its key-file line refs, since I opened no test file.
+**Self-assessment: 8/10.** + Orientation complete before the picker; claimed before the push; checked the range and the
+readers before pushing; pushed exactly the one authorised commit, not HEAD; verified the result on origin, not only the
+push output; no scope creep. - A long run of silent tool calls during orientation drew the harness nag; post a line every
+few calls. Reduction: S894's record is condensed below, but S895's record is about as long, so
+`SESSION_NOTES.md` grew slightly (30,559 B at the claim; the budget check reads the final size) and stays well under
+the 65,536 B ceiling; nothing else was removed.
 
-**Self-assessment: 8/10.** + Orientation complete before the picker; claimed before pushing; checked the range before
-the push; read the per-leg results of the two legs that had failed instead of trusting the workflow-level success;
-no scope creep (no red result, so nothing to diagnose). - Three wasted calls: a foreground `sleep` (the harness blocks
-it; use a `run_in_background` loop that prints its own last line) and an `echo =====` separator (zsh reads a leading `=`
-as an expansion and errors). Reduction: S893's record is condensed below (`SESSION_NOTES.md` 32,048 B at the claim -> 30,559 B).
+**Next steps (owner-ordered, carried from S894):** (A) the owner decides whether to push this session's two local commits
+(claim `c0b01c3c6` and the close-out): docs only, same three files, no CI wait; each such push still starts four workflows
+(about 16 min for the slowest), which the parked CI `paths-ignore` item in (C) would stop. (B) S896: compress four more
+`BACKLOG.md` blocks (standalone-package item `BACKLOG.md:231`, 37 lines; "Pedigree diagram vs kinship2 audit follow-ups"
+preamble `:398`; chromote item `:289-311`; PED_GV closure narrative, the first item, lines 8-27, with very long lines 24-25;
+estimate 20-45 lines, draft first and count). (C) S897: the owner keeps or declines the 7 parked Effort-S items
+(`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C, `highlightNearest`, rhesus docstring, row-order
+item). (D) Trim `CHANGELOG.md` (see Gotchas for the headroom). (E) Then one real fix per session. **Owner decision still
+open (from S892; not filed, not asked):** shorter receipts would lower the `HANDOFFS.md` refill rate (165,276 B now; room
+for about 35 more before the Read refusal at 262,144 B, an estimate at roughly 2.7 KB a receipt). Carried: PED_GV next group
+(8 ids + NEW-24), `reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered, carried from S893):** (A) the owner decides whether to push the close-out commit (outward). It
-changes only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all `.Rbuildignore`d with no test or workflow opening
-them (grepped S894), so no CI wait is needed. Until it is pushed, `origin/master`'s `HANDOFFS.md` shows S894 as `status:
-pending`. (B) S895: compress four more `BACKLOG.md` blocks (standalone-package item, "Pedigree diagram vs kinship2 audit
-follow-ups" preamble, chromote item, PED_GV closure narrative; estimate 20-45 lines, draft first and count). (C) S896: the
-owner keeps or declines the 7 parked Effort-S items (`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C,
-`highlightNearest`, rhesus docstring, row-order item). (D) Trim `CHANGELOG.md` (see Gotchas for the headroom). (E) Then one
-real fix per session. **Owner decision still open (from S892; not filed, not asked):** shorter receipts would lower the
-`HANDOFFS.md` refill rate (room for about 30 more before the Read refusal at 262,144 B). Carried: PED_GV next group (8 ids
-+ NEW-24), `reportGV(smallPed)` unfiled.
+**Key files:** `BACKLOG.md:231`, `:289-311`, `:398`, `:8-27` (the four blocks for (B));
+`docs/conventions/CLOSEOUT_CHECKLISTS.md` (read at Phase 3); `.Rbuildignore:73-80` (the four build-ignored ledger files).
 
-**Key files:** `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md` (what the two fixes address, with S893's addendum);
-`tests/testthat/helper-reorderedSolveQP.R` (the shuffle seam); `tests/testthat/test_sexCodes.R:92` (`sexCodeSourceAvailable`).
-Per-leg CI check: `gh run view <id> --json jobs --jq '.jobs[] | "\(.conclusion)\t\(.name)"'`.
+**Gotchas:** to send only the close-out commit when a claim commit sits on top, use `git push origin <sha>:master`; a plain
+`git push` sends both. A docs-only push still starts all four workflows; the owner's rule is not to wait for them.
+**`CHANGELOG.md` is 254,668 B, 7,476 B under the 262,144 B Read refusal** (measured after this close-out). This session added
+1,399 B (claim plus close-out); S893 estimated 3 KB a session, so room for roughly 2 to 5 sessions (an estimate): trim it
+(`methodology_trim.py --file CHANGELOG.md --budget-bytes 65536`; expect `--force`, as for `HANDOFFS.md`) before it runs out.
+S892's `HANDOFFS.md`-trim gotchas still apply (condensed below).
 
-**Gotchas:** `gh run list --commit` needs the full SHA (Learning 857). A workflow-level "success" does not name the matrix
-legs; read `--json jobs` when a specific leg was the one that failed. The harness blocks a foreground `sleep`: start a
-`run_in_background` loop and wait on its own last line (Learning 864). **`CHANGELOG.md` is 253,269 B, 8,875 B under
-the 262,144 B Read refusal** (measured after this close-out). This session added 1,700 B (claim plus close-out); S893
-estimated 3 KB a session, so room for roughly 3 to 5 sessions (an estimate): trim it (`methodology_trim.py --file
-CHANGELOG.md --budget-bytes 65536`; expect `--force`, as for `HANDOFFS.md`) before it runs out. S892's `HANDOFFS.md`-trim gotchas still apply (condensed below).
+### What Session 894 Did (condensed S895; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Pushed `master` (`2e2046efd..1fd37a244`, 18 commits, none touching `R/`, `DESCRIPTION` or `NAMESPACE`) and read CI for S893's two
+red-CI fixes: all four push workflows green on `1fd37a244`, including R-CMD-check oldrel-1 and devel, which had failed on the
+S890 push. Claim `1fd37a244`, close-out `1d8902e32` (pushed S895). Handoff evaluation of S893: 9/10. Self 8/10.
+**Gotchas kept:** a workflow-level "success" does not name the matrix legs (read `gh run view <id> --json jobs`); one green run
+is consistent with the probabilistic oldrel-1/devel fix but is not its proof (the proof is S893's 300-shuffle measurement); the
+harness blocks a foreground `sleep` (use a `run_in_background` loop, Learning 864); zsh reads a leading `=` word as an expansion.
 
 ### What Session 893 Did (condensed S894; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Repaired the two red-CI causes, tests only (no `R/` file changed): `test_sexCodes.R` skips its `R/` scans unless `R/` lists a
