@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S885
 date: 2026-10-03
-status: pending
-active_task: PED_GV audit follow-through (owner picked it from the Phase 0 list; S884's next step A; DECISION NEEDED, Effort S each, 28 ids open); exact scope (which id or decision) settled with the owner after the claim
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- PED_GV audit follow-through (owner picked it at Phase 0; S884's next step A), scoped by the owner to "Close the 11 fixed ids": Closure record 7 written and the BACKLOG count corrected from 28 to 15; nothing owed on it
+what_was_done: claim c618eaab3; closure record 482729a74 (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214-236 closes NEW-14, NEW-31, NEW-32, NEW-35, NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43, each checked against today's code, its pinned tests and git log -S; BACKLOG.md PED_GV item now says 15 remain and names NEW-62); a script over the report's 43-id table confirms 15 open (NEW-24 plus 14 owner decisions); 6 pinning test files pass and wordlist_coverage, pkgdown_reference_config, newsReleaseState 34 tests 0 failed 0 error; SESSION_NOTES.md 40,332 B to 35,784 B (S859 record, S858 and S857 evaluations removed, S884 condensed)
+next_steps: (A) PED_GV: NEW-24 (issue #123, leave) plus 14 owner decisions, each DECISION NEEDED, Effort S, strict TDD for any code: error/return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported), sim driver (NEW-50, NEW-51), constants and HTML builders (NEW-18, 19, 21, 26, 57), updateProgress null checks (NEW-62); ask one cluster at a time. (B) BACKLOG.md compression (READY, Effort L; 57,805 B). (C) CHANGELOG.md (224,845 B) and HANDOFFS.md (231,701 B) at Orient sit 37 KB and 30 KB under the 262,144 B no-content read limit; estimate about 2 KB per session each (S784/S789 trims to S885), so roughly 14-19 sessions left; needs scheduling and an owner decision (related items BACKLOG.md:319, :339). (D) kinship2 drawing features (which column marks deceased); 3.0.0 release prep and colony-snapshot backfill each need a scoping session. (E) master 104 ahead of origin after this commit; push only on the owner's say-so
+key_files: docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214-236 (Closure record 7); BACKLOG.md:8-27 (PED_GV item); BACKLOG.md:319,339 (ledger-trim items); R/reportGV.R:229,248,267 (NEW-62 blocks)
+gotchas: recompute the open count from the report's table, never carry it (parse the 43 ids, the first column bolds some like **NEW-31**, subtract every closure row); an audit id never appears in a commit message, so attribute a fix with git log -S'<old text>' -- <file>; the BACKLOG PED_GV item has two very long lines (24-25), edit them with short single-line old_strings; the ledger-growth figure in next step C is an estimate from two trim points, not a forecast
+runtime_smoke: none -- docs only, nothing runs differently; no .R file changed so no lint; full suite, devtools::check() and CI not run (every changed path build-ignored, no test reads the closure text); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 880a0da4fe30 · manifest aa983075d6a2
+changelog_ref: S885 DONE entry
+commit: the close-out commit that carries this receipt; claim c618eaab3, closure record 482729a74
 ```
 
 ```handoff

@@ -99,64 +99,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 885 Did
-**Deliverable:** PED_GV audit follow-through, owner decisions (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Exact scope (which id or decision) is settled with the owner next; no TDD phase declared yet.
+**Deliverable, DONE:** PED_GV audit follow-through: 11 audit ids already fixed in code are closed (Closure record 7 in
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214`) and the `BACKLOG.md` item's count is corrected from 28 to 15. The
+owner picked the item at Phase 0, then "Close the 11 fixed ids". Docs only, so no TDD phase applied.
+Claim `c618eaab3`; closure record `482729a74`; records in the close-out commit.
 **Orient:** no ledger gap (frontiers at HEAD `971b4fcce`); tree clean; master 101 ahead of origin; CI 10/10 success;
-ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md 57,487 B); `CHANGELOG.md` 224 KB and `HANDOFFS.md` 231 KB
-are 38 KB and 31 KB under the 262,144 B no-content read limit.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+ratchet 1/1; dashboard 96/100 with one HIGH flag (`BACKLOG.md` 57,487 B).
+**Measured, S781 audit claim against today:** `removeUnknownAnimals(smallPed)` 17 rows in, 17 out (was 17 to 0);
+`getAncestors()` on a 2-cycle stops naming `A -> B -> A`; `kinshipMatricesToKValues(list())` stops with "kinshipMatrices
+must contain at least one kinship matrix" (was "object 'kValues' not found"); no `any()` in `getRecordStatusIndex()`;
+no `[1L]` slip left in `getPotentialParents*.R`; `getMaxAx()`, `createPedOne()` and `createPedSix()` roxygen now correct.
+The 6 test files that pin these (getPotentialParents, addUIds, removeAutoGenIds, removeUnknownAnimals, getAncestors,
+kinshipMatricesToKValues) pass; `git log -S` gave each fix its commit (S782, S783, S795, S797-S798, S808-S811).
+**Count:** the `BACKLOG.md` item said 28 after S881 while the report's own count was 26. A script that parses the report's
+43-id table and subtracts every closure record gives 15 open now: NEW-24 (issue #123) plus 14 owner decisions.
+**Tests after the edits:** wordlist_coverage, pkgdown_reference_config, newsReleaseState: 34 tests, 0 failed, 0 error.
+**Not run:** full `test_dir`, `devtools::check()`, lint (no `.R` file changed), runtime smoke (docs only), push or CI
+(every changed path is build-ignored and no test reads the closure text).
+**Reduction:** removed the S859 record and the S858 and S857 evaluations (receipts in `HANDOFFS.md`, entries in
+`CHANGELOG.md`); condensed S884.
+**Correction to my Phase 0 report:** I said no BACKLOG item touches the ledger-size warning. Two adjacent items exist
+(`BACKLOG.md:319`, the `HANDOFFS.md` trim's verify-script FAIL, and `:339`, the `CHANGELOG.md` growth rate) but neither is
+about the 262,144 B no-content read limit, so the finding stands as step C below.
 
-### What Session 884 Did
-**Deliverable, DONE:** the two docs-audit slice-1 leftovers: the tracked `vignettes/articles/kinship2-fidelity-validation.pdf`
-deleted, and `trackC-nprc-rectilinear.png` regenerated. The owner picked the item at Phase 0, then "Both, in order",
-"Delete it" and "Regenerate and commit it". Docs and an image only, so no TDD phase applied.
-Claim `61b8978e8`; PDF `4e7bb2725` (`git rm` plus `BACKLOG.md`); picture `5bbad09e3`; records in the close-out commit.
-**Orient:** no ledger gap (CHANGELOG and HANDOFFS frontiers at HEAD `66216b289`), so no backfill; tree clean; master 97
-ahead of origin. CI: the plain `gh run list --branch master --limit 10` gave 10 rows, all `completed success`. Ratchet 1/1.
-**PDF:** `git log` showed S825's unrelated `9a2a5ddb7` (2026-09-30) added it, so it was tracked, not untracked as the
-slice-1 audit saw it. Nothing references it (grep of `tests/`, `.github/`, `_pkgdown.yml`, the articles: none) and it is
-not shipped (`^vignettes/articles$` is build-ignored). Deleted as the owner chose, like its sibling in S831; recoverable
-from `9a2a5ddb7`. 4 test files that read the articles dir or scan docs (pkgdown_reference_config,
-vignettes_no_deprecated_minParentAge, wordlist_coverage, newsReleaseState): 116 tests, 0 failed, 0 error.
-**Picture:** ran a scratch copy of `data-raw/kinship2FidelityValidation.R` with `outDir` redirected to the scratchpad (a
-perl one-liner), so the repo stayed clean until the owner decided. Against `git show HEAD:` the diff was exactly the audit's
-box (x 508-678, y 171-217; 339 px over threshold 24); the other 7 images: 0 px over it. Showed the owner a full and a 4x
-zoom side-by-side. I measured the dashed arc `Y` to `__dup_Y_1` on the real layout (roundness 0.25): it does not enter `W`
-(min Chebyshev distance to `W`'s centre 26.29 against half-side 25; min Euclid 28.51), so it skims the top edge by about
-1.3 units. The S714 census counts only arcs strictly inside a node's disc, so it calls Track C clean. The owner chose
-"regenerate and commit"; I copied only that one file (still 992 x 738) into the repo. Article prose and alt text say nothing
-about the arc's shape.
-**Not run:** full `test_dir`, `devtools::check()`, lint (no `.R` file changed), runtime smoke (docs and an image: nothing
-runs differently), push or CI (every changed path is build-ignored and no test reads the image).
-**Reduction:** removed the S855 record and its evaluation (receipt in `HANDOFFS.md`, entries in `CHANGELOG.md`); condensed S883.
+**Handoff evaluation of S884: 8/10.** Helped: next step A named this exact pickup with its DECISION NEEDED tag; "101 ahead"
+and the ledger frontiers were exact at Orient; the BACKLOG item pointed straight at the triage report. Missing: that the
+id count was stale. Wrong: "28 ids" (the report said 26 after S881, and 11 of those 26 were already fixed in code).
 
-**Handoff evaluation of S883: 9/10.** Helped: next step A named both leftovers with their owner-decision tags and the
-generator script; "97 ahead" measured 97 at Orient; "look at the new arc first" shaped the whole session. Missing: that
-S825 swept the PDF in (the answer to "why is it tracked"), and that the script rewrites all 8 images and hard-codes its
-output dir (I redirected a copy). Wrong: nothing material; its "7 numbered items" in the Phase 0 list was 6 when I counted.
+**Self-assessment: 8/10.** + Claimed before technical work; checked every id against code, tests and `git log -S` before
+asking, and showed the owner a claim-against-today table; recounted by script, not by hand; 2-file deliverable commit.
+- Wrote the Phase 0 ledger-size sentence without reading the two adjacent BACKLOG items; I had read only ledger headlines
+for NEW-35 and NEW-38 when I recommended closing them (re-ran their tests after the owner chose); long silent stretches.
 
-**Self-assessment: 8/10.** + Claimed first; read-only checks before asking; put both decisions in plain words with each
-option's consequence; measured the arc against layout data instead of judging pixels; kept the repo clean until the owner
-approved; one-purpose commits, `git show --stat` checked; scope held (no BACKLOG item filed for the grazing, since the owner
-chose otherwise). - My first `Rscript -e` probe died on an unescaped regex (retried at once); long silent stretches during
-the Orient and the first investigation; the corner-cutting remark in step D is a geometric inference, measured on one edge.
+**Next steps:** (A) PED_GV: NEW-24 (issue #123, leave) plus 14 owner decisions, all DECISION NEEDED, Effort S each, strict
+TDD for any code: error/return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported, so an API
+change), sim driver (NEW-50, NEW-51), constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress` null checks
+(NEW-62; 3 blocks). Ask one cluster at a time, in plain words. (B) `BACKLOG.md` compression (READY, Effort L; 57,805 B).
+(C) The ledgers: `CHANGELOG.md` 224,845 B and `HANDOFFS.md` 231,701 B at Orient, 37 KB and 30 KB under the 262,144 B
+no-content read limit. Estimate: about 2 KB per session each (S784/S789 trims to S885), so roughly 14-19 sessions left;
+needs scheduling and an owner decision. (D) The two kinship2 drawing features (which column marks "deceased"); 3.0.0
+release prep and the colony-snapshot backfill each need their own scoping session. (E) Master is 104 ahead of origin after
+this commit (101 at Orient plus claim, closure record, close-out); push only on the owner's say-so.
 
-**Next steps:** (A) PED_GV decisions (DECISION NEEDED, Effort S each; 28 ids), or the two kinship2 drawing features (which
-column marks "deceased"). (B) `BACKLOG.md` compression pass (READY, Effort L, recurring; 57 KB at Orient). (C) 3.0.0
-release prep and the colony-snapshot backfill each need their own scoping session. (D) Optional, the owner's call, not
-filed: the arc repair pass scores arcs against a disc of radius `size`, but a square's half-side is `size`, so the disc is the
-circle inscribed in the square and a "clear" arc could still cut a corner (measured on this one edge only: it did not).
-(E) Master is 101 ahead of origin after this commit (97 at Orient plus claim, PDF, picture, close-out); push only on the
-owner's say-so.
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214-236` (Closure record 7); `BACKLOG.md:8-27` (the PED_GV
+item); `BACKLOG.md:319,339` (ledger-trim items); `R/reportGV.R:229,248,267` (NEW-62 blocks).
 
-**Key files:** `vignettes/articles/kinship2-fidelity-validation-img/trackC-nprc-rectilinear.png`;
-`R/makePedigreeDiagramData.R:2432` (`.curvedCwVia`), `:2503` (`.arcDiscHitCount`), `:3038-3078` (roundness repair loop);
-`docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md`; `data-raw/kinship2FidelityValidation.R:67,250,323`.
+**Gotchas:** recompute the open count from the report's table, never carry it: parse the 43 ids (the first column bolds
+some, e.g. `**NEW-31**`) and subtract every closure row. An audit id never appears in a commit message, so attribute a
+fix with `git log -S'<old text>' -- <file>`. The BACKLOG PED_GV item has two very long lines (24-25): edit them with
+short single-line `old_string`s.
 
-**Gotchas:** the generator writes all 8 images and hard-codes `outDir` (line 67): review a copy with `outDir` redirected and
-copy only the changed file. Its console labels (lines 250, 323) still say "dogleg", which the article retracted (console
-only; not changed). `git show HEAD:<png>` gives the committed image for a diff.
+### What Session 884 Did (condensed S885; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Tracked `kinship2-fidelity-validation.pdf` deleted (`4e7bb2725`) and `trackC-nprc-rectilinear.png` regenerated (`5bbad09e3`)
+by owner choice; claim `61b8978e8`. Handoff evaluation of S883: 9/10. Self 8/10.
+**Gotchas kept:** the generator `data-raw/kinship2FidelityValidation.R` writes all 8 images and hard-codes `outDir` (line 67):
+review a copy with `outDir` redirected and copy only the changed file; `git show HEAD:<png>` gives the committed image.
 
 ### What Session 883 Did (condensed S884; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Stale `@noRd` roxygen of `.addRectilinearWaypoints()` fixed at `R/makePedigreeDiagramData.R:2109-2113` (comment only; parsed
@@ -387,38 +384,3 @@ release prep. (D) Master is 5 commits ahead of origin after close-out; push only
 figures was not needed but the "push only on owner's say-so" and "ahead of origin" note was true (4 ahead at
 Orient, 3 plus the close-out). **Wrong/missing:** it said "3 commits ahead", measured 4. The BACKLOG
 docs-audit item named slice 7c as next but its scope was undecided; I had to ask. **ROI:** high.
-
-### What Session 859 Did
-**Deliverable, DONE:** the 2 `rhesusPedigree` couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) now draw male-left, by a general rule: every one-mate-each
-couple takes the sex rule (`R/makePedigreeDiagramData.R:1267`, `|| qualifies(u)`). Strict TDD, all gates asked (PRE-RED scope, PRE-RED, RED, GREEN, REFACTOR). Claim `f46ce6de3`; RED `ca0ee89ac`; GREEN+REFACTOR `82e020669`.
-**Owner's rule (S859):** "Try male left, but do not add doglegs just to save horizontal space ... do not add a dogleg or a shift without a visual and readability purpose." Acceptance: pictures decide. Owner verdict after
-the app-proportion figures: "The current fix is fine"; they expect the rule to hold for all couples where possible, and the plan's multi-mate exclusion (issue #145 D5/D9) is unchanged, so multi-mate couples are still tree-placed.
-**Measured by me:** same one-line change as S858 (its RED file restored). Rectilinear nodes 1456 to 1460, jog nodes 186 to 190, direct unchanged (782). Couple 1 (4CHDK1): parents' connector is the same bus shape,
-about 135 px shorter, no new bend (the extra jog nodes are the same bend stored differently). Couple 2 (V1X2X3): about 8 px step just above him (parents' union 10426, box 10418); a jog-free version needs a solver-weight or post-pass change, not done.
-**Tests:** `test_maleLeftDuplicateMate.R` rewritten generic (every one-mate-each couple on rhesusPedigree, qcPed, pedWithGenotype, smallPed, both edge styles; plus duplicate-mate couples on rhesusPedigree, > 15 so it cannot
-pass vacuously); fails 4 times on the old code, passes on the new. Pins moved: `test_makePedigreeMatingLayout.R` 1456 to 1460 and 186 to 190, `test_addRectilinearWaypoints.R` 97 to 98 (x2), and
-`test_resolveEdgeNodeCollisions.R:721-722` 93 to 95 and 205 to 207 (not in the S858 list; found by the full suite).
-**Verified by me:** full unfiltered suite 364 files, 2,907 tests, 1 file failed (the resolveEdgeNodeCollisions pins, then fixed; that file re-ran green); lint_package(): 0. **Not re-run:** the full suite after the last pin edit (that file only);
-edge crossings (S858 measured 1702 to 1700 rectilinear, 1542 to 1544 direct for this same change); `devtools::check()`; a live Shiny launch. **NEWS.Rmd:** none (`:59` "in most cases" stays true).
-**Slips:** my first figures were base graphics with the wrong scale and a window that cut the couple off; the next set failed to zoom and I opened it anyway (the owner saw one wrong figure); I reported a "135 px dogleg" that
-the matched figures did not show, and retracted it; my first tests named animals instead of testing the rule. **Reduction:** removed the S857 record and the completed BACKLOG item.
-
-**Self-assessment: 6/10.** + Rule shipped generally with the owner's acceptance; blast radius and pins measured; generic tests shown to fail without the fix. - Four rounds of wrong or unclear figures and questions cost the owner time;
-one wrong claim to retract; pair-specific tests first.
-
-**Next steps:** (A) Nothing owed on this item; the BACKLOG item is removed. If the owner wants male-left for multi-mate couples, that is a new plan (issue #145 D5/D9: new placement machinery). (B) Still open: PED_GV
-decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep: BACKLOG "Move the version to 3.0.0". (D) Master is 3 commits ahead of origin after the close-out commit; push only on the owner's say-so.
-
-**Key files:** `R/makePedigreeDiagramData.R:1267` and header `:1213-1222`; `tests/testthat/test_maleLeftDuplicateMate.R`; pins at `test_makePedigreeMatingLayout.R:745,774`, `test_addRectilinearWaypoints.R:797-798`,
-`test_resolveEdgeNodeCollisions.R:721-722`.
-
-**Gotchas:** show the owner figures drawn through the app's own visNetwork pipeline (`visNetwork(nodes, edges)` + `visPhysics(enabled = FALSE)`), fixed `moveTo` zoom and centre, after a warm-up navigate to `about:blank`
-(the first page of a chromote session ignores the zoom); scripts are in the S859 scratchpad. Any layout change moves 6 pins in 3 test files, not 4.
-
-### Session 858 Handoff Evaluation (by Session 859)
-**Score: 8/10.** **Helped:** the BACKLOG item held the owner's words, the files and lines, the rejected RED file's git hash and the warning not to infer a rule; Orient measurements held. **Wrong/missing:** the pin list
-named 4 pins in 2 files; the full suite found 2 more in `test_resolveEdgeNodeCollisions.R:721-722`. Master was in sync with origin, not ahead (the owner pushed). **ROI:** high.
-
-### Session 857 Handoff Evaluation (by Session 858)
-**Score: 8/10.** **Helped:** the BACKLOG item named both couples, the measuring helper and the files; Orient measurements all held (frontiers at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause
-line said only the female has a parent edge; both parents do. **Missing:** which census pins move under any layout change. **ROI:** high.
