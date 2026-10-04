@@ -421,6 +421,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   close in time to have also carried this animal; when no nearby female
   was a proven breeder, the fallback let her back in. It now leaves her
   out too.
+- Fixed: `reportGV()` now stops before doing any calculation, with a
+  message naming every missing column, when the pedigree lacks `id`,
+  `sire`, `dam`, `gen` or `sex`. A missing `id`, `sire`, `dam` or `gen`
+  used to give an unexplained R error.
 
 # nprcgenekeepr 2.0.0 (20260721)
 
