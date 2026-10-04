@@ -68,6 +68,9 @@ test_that("reportGV surfaces the partial-parentage error through its real caller
   ## A descendant with one NA parent must yield the clear diagnostic through the
   ## actual caller, not the cryptic subscript-out-of-bounds crash.
   modLacy <- lacy1989Ped
+  ## lacy1989Ped has no sex column, which reportGV() now checks before it does
+  ## anything else (NEW-28), so give it one: this test is about parentage.
+  modLacy$sex <- rep(c("M", "F"), length.out = nrow(modLacy))
   modLacy$dam[modLacy$id == "C"] <- NA   # C: sire A, dam NA -> partial parentage
   expect_error(
     reportGV(modLacy, guIter = 50L, guThresh = 1L, byID = TRUE,
