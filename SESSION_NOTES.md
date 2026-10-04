@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 898 Did
+**Deliverable:** get the owner's keep-or-decline ruling on the 7 parked Effort-S items and record each (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Phase 0 clean: no ledger gap, 0 pending receipts, ratchet counts and manifest match, origin 1 behind HEAD.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 897 Did
 **Deliverable, DONE (docs only; ledger files changed, no R, test or build file):** trimmed `CHANGELOG.md` with
 `methodology_trim.py --file CHANGELOG.md --budget-bytes 65536 --force --cut 2026-10-03 --write`: 311 of 329 entries

@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S898
+date: 2026-10-04
+status: pending
+active_task: get the owner's keep-or-decline ruling on the 7 parked Effort-S items (isAddedRecord(), CI paths-ignore, trim verify script, Candidate C, highlightNearest, rhesus docstring, row-order item) and record each; the owner picked it at the Phase 0 picker (DECISION NEEDED, Effort S). Decision-only: no file edit beyond recording the rulings.
+```
+
+```handoff
 session: S897
 date: 2026-10-04
 status: complete
