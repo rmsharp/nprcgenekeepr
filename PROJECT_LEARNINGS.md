@@ -13104,3 +13104,169 @@ a file that ends in a newline counts one extra: I said 553, the file has
 pointers to the slice reports, which is a visibility trade for the
 owner, not a compression step. Same family as Learning 855: a claim
 about a file needs the file open first.
+
+#### Learning 857
+
+**Before waiting on a background poll, run its query once against
+something you know exists: a poll that can match nothing looks exactly
+like one that has not finished.** (S890, 2026-10-04.) After the owner’s
+“push” I started a background loop that waited for the four workflow
+runs on `2e2046efd`, filtered with
+`gh run list --commit <abbreviated sha>`. That flag matches only the
+full 40-character SHA, so every poll returned zero runs; the loop ran
+its whole 60 minutes and printed “FINAL (runs=0 …)” as if done. The runs
+had finished 21 minutes after the push (by 05:30 UTC; lint and pkgdown
+green, R-CMD-check and test-coverage red). The same filter run once on
+`f0bcb9f48`, whose runs I had already listed, would have returned
+nothing and shown the bug in a second. Rules: (1) test a watcher’s query
+against a known positive before backgrounding it; (2) when “found
+nothing” cannot be a good outcome, make zero results an error after a
+poll or two, not a wait; (3) pass `gh` the output of
+`git rev-parse HEAD`, not an abbreviated hash. Related, from the same
+session: when the owner said “diagnose the red CI first” about a thing I
+had just said needs its own session, I started that session inside S890
+(announced S891, loaded the diagnose skill). The order of sessions is
+the owner’s to set; the work still waits for its own session, claim and
+brief. The owner stopped me before anything was probed.
+
+#### Learning 858
+
+**A red push of many commits is usually more than one break: read each
+failing job’s own failing assertion before assuming a shared cause, and
+read the full log, because `gh run view --log-failed` hides
+test-coverage’s “Show testthat output” step.** (S891, 2026-10-04.)
+S890’s brief said test-coverage’s log “does not name its test” and
+guessed it was the same assertion as R-CMD-check’s. The failing step,
+“Test coverage”, only says `testthat.R failed`; the failures are printed
+by the next step, “Show testthat output”, which `--log-failed` leaves
+out because that step itself succeeds. The full log
+(`gh run view <id> --log`) named two other tests (`test_sexCodes.R:110`
+and `:115`), a separate cause from R-CMD-check’s
+`test_positionMatingUnitForest.R:645`. A guess written into a handoff as
+“likely, not checked” was one `grep` from a fact. Rules: (1) per failing
+job, grep the full log for `Failure (` before theorizing; (2) a
+handoff’s “likely” is a to-do, not a premise; (3) after a long unpushed
+run (S890 pushed 128 commits at once) expect several breaks, since no CI
+ran in between to separate them. Tooling:
+`gh api repos/<repo>/actions/runs/<id>/logs` returned an empty body (a
+redirect `gh` does not follow);
+`curl -sL -H "Authorization: Bearer $(gh auth token)" https://api.github.com/repos/<repo>/actions/jobs/<job id>/logs`
+returns the text.
+
+#### Learning 859
+
+**A numeric test tolerance justified by one measured run is a claim
+about one arithmetic path; for an ill-conditioned solver, measure the
+tail by re-ordering the variables of the same problem.** (S891,
+2026-10-04.) `test_positionMatingUnitForest.R:645` allows a spacing
+shortfall of 1e-6 and its comment calls that “solver precision” from one
+measured run (6.8e-8, S675). The QP behind it
+(`R/makePedigreeDiagramData.R:1578`,
+`Dmat = t(pmat) %*% pmat + 1e-8 * diag(n)`) has condition number 1.6e9.
+Probes that perturb only the inputs barely moved it: ulp-scale noise in
+`Dmat` gave at most 1.3e-7, and forcing the OpenBLAS kernel (Haswell,
+Sandybridge, Nehalem) gave 7e-8 to 1.2e-7. Re-ordering the variables
+(permute `Dmat`, `dvec`, the rows of `Amat`; un-permute the solution:
+identical in exact arithmetic, different rounding at every step) put one
+pair over 1e-6 in 12 of 100 runs, up to 1.1e-4, and always exactly one
+pair, as CI saw. Rules: (1) for an ill-conditioned solve, a tolerance
+needs a measured distribution over equivalent arithmetic paths, not one
+run; (2) ulp noise on the inputs is no substitute, since the
+amplification happens across the solver’s whole path; (3) the wrapper is
+about ten lines around the solver call, and a fixed seed makes it
+deterministic.
+
+#### Learning 860
+
+**A skip guard that tests whether a directory exists is true in an
+installed package: test for the files you need.** (S891, 2026-10-04.)
+S879’s `test_sexCodes.R` scans `../../R/*.R` and skips on
+`!dir.exists(rDir)`. Under test-coverage (covr) the tests run from
+`<lib>/nprcgenekeepr/nprcgenekeepr-tests/testthat/`, so `../../R` is the
+installed package’s `R/`, which exists and holds only `nprcgenekeepr`,
+`.rdb` and `.rdx`. The scan found no source: the allowlist assertions
+failed (`:110`, `:115`) and the “no bare literals” test passed
+vacuously. R CMD check never saw it (there `../../R` is absent, so the
+test skips) and neither did any local run. Reproduced in about 2 minutes
+without CI: `git archive HEAD` to a scratch dir,
+`install.packages(<dir>, repos = NULL, lib = <scratch lib>)`, copy the
+test file to `<lib>/nprcgenekeepr/nprcgenekeepr-tests/testthat/`, then
+`testthat::test_file(..., package = "nprcgenekeepr", load_package = "installed")`.
+Rule: a test that reads the package’s own source skips on “no `.R` files
+here”, and a source-scanning guard gets one run from an installed layout
+before it is called done.
+
+#### Learning 861
+
+**A ledger’s size limit may be a tool’s read-refusal point, and a trim
+tool that refuses to re-archive is saying the growth rate is the
+problem, not the level.** (S892, 2026-10-04.) `HANDOFFS.md` was 259,522
+B against a “262,144 B limit”; that number is
+`READ_REFUSE_BYTES = 256 * 1024` at `methodology_trim.py:129`, the point
+past which a default Read returns no content at all, not a repo setting.
+`python3 methodology_trim.py --file HANDOFFS.md` refused at 196,608,
+131,072 and 65,536 B alike (`SRF_RED` 7.3957 against the last archive
+`2e206a6`, S790, which the file had refilled in about a week).
+`--budget-bytes` does not move that gate and only `--force` does; a
+`--force` run without `--write` is a safe dry run that prints the exact
+cut (24 of 25 records, 259,859 B -\> 149,289 B). The fill rate is the
+lever: the newest 10 receipts average 3,441 B, so the trim buys room for
+about 30 receipts (arithmetic, not a forecast). Rules: (1) before a
+trim, dry-run at the real budget and read the first refusal line, not
+the headline; (2) put an override to the owner with the number, the cost
+and a hold option; (3) after the write, check losslessness yourself
+(receipt ids before = live + archived, no overlap, order preserved) and
+do not hand-edit the tool’s computed front-matter lines (its “currently
+holds N receipt(s)” line says 1 for 81 live receipts).
+
+#### Learning 862
+
+**A tolerance sized from a sample is a claim about that sample’s tail:
+for an ill-conditioned solve the worst case keeps growing with the
+sample, so size the tolerance by headroom over the worst of a larger
+sample and write the sample size into the comment.** (S893, 2026-10-04.)
+S891 measured 100 shuffles of the QP’s variables on the 375 fixture (12
+over 1e-6, max 1.09e-4, “never 2 pairs”) and proposed 1e-3 with “10x
+headroom”. S893’s 300 shuffles gave 42 over 1e-6, max 5.98e-4 (seed 198)
+and 2 pairs in one run, so 1e-3 would have had 1.7x headroom. The owner,
+shown both numbers, chose 1e-2 (1.2 px: 16x the worst, 58x under the
+0.58-unit overlap margin). Rules: (1) before settling a numeric
+tolerance, run a sample at least 3x the one that proposed it and watch
+whether the maximum moves; (2) state the headroom factor and the sample
+size in the test’s comment; (3) a loose tolerance is acceptable when the
+exact property it stands in for is asserted separately (here the census
+overlap check at 1e-9 px). Corrects the numbers in Learning 859, whose
+method (shuffle the variables of the same QP) stands.
+
+#### Learning 863
+
+**A tolerance has siblings: run the same probe over every tolerance in
+the file, not only the ones the diagnosis names, and define a constant a
+test reads above that test.** (S893, 2026-10-04.) S891 named
+`test_solveJointQP.R:210` and `:440` (both 1e-6). Running the shuffle
+probe over every fixture and bound of that file found a third,
+`:437-439`, which allows only 1e-9: `trackBFull` misses it in 23 of 300
+shuffles (worst 1.2e-8), yet every job of the S890 push passed it.
+`:210` (worst 1.1e-8) and `:440` (worst 2.7e-9) were safe against 1e-6.
+Rules: (1) grep the file for every numeric tolerance (`1e-`,
+`tolerance =`) before calling a flaky-tolerance fix done; (2) a bound
+that has never failed is no evidence it is safe, only a probe is; (3)
+put the scope question, with the numbers, to the owner before RED (S893
+did; the owner included it). Trap caught at GREEN: a test file runs top
+to bottom, so a constant an existing test reads must be defined above
+it; S893’s RED had defined it below, which only the new test exercised.
+
+#### Learning 864
+
+**A `pgrep -f` wait loop can report done while the job still runs, and a
+“completed” notification is not a result: wait on a marker the job
+writes, and read the output file before acting.** (S893, 2026-10-04.)
+One of the background waiters,
+`until grep -q DONE ... || ! pgrep -f probe.R`, fired early: it printed
+an empty tail while the 300-seed probe was still running. The loops
+keyed on the job’s own last line (`until grep -q '^elapsed:' out.txt`)
+never misfired. After every notification, read the real output file (and
+`pgrep -f <full path>`) before treating the job as finished. Also:
+`rm -f $VAR/*.R` is refused by the safety check, because an unset `$VAR`
+would expand toward the filesystem root; overwrite with `cp` to the same
+names, or write `"${VAR:?}"/*.R`.

@@ -66,11 +66,11 @@ safeExecute({ 2 + 2 }, module = "test")
 
 # Returns NULL and logs error
 safeExecute({ stop("Error!") }, module = "test")
-#> [2026-10-04 05:14:21] [ERROR] [test] Error: Error!
+#> [2026-10-04 21:08:46] [ERROR] [test] Error: Error!
 #> NULL
 
 # Returns custom default on error
 safeExecute({ stop("Error!") }, module = "test", default = data.frame())
-#> [2026-10-04 05:14:21] [ERROR] [test] Error: Error!
+#> [2026-10-04 21:08:46] [ERROR] [test] Error: Error!
 #> data frame with 0 columns and 0 rows
 ```
