@@ -673,6 +673,54 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
   expect_equal(overlaps, 0L)
 })
 
+## S893: the QP floors must hold to within `qpFloorTolerance` on EVERY
+## rounding path, not only the one this machine happens to take. Same fixture
+## and same floors as the test above, with the QP's variables shuffled by a
+## fixed seed (helper-reorderedSolveQP.R). Seeds 198, 147 and 64 were the 1st,
+## 2nd and 5th worst of 300 on the dev machine (S893).
+qpFloorTolerance <- 1e-6
+
+adjacentFloorShortfall <- function(pos, forest) {
+  minSep <- 1
+  kind <- ifelse(pos$id %in% forest$matingUnits$id, "U", "I")
+  names(kind) <- pos$id
+  floorFor <- function(a, b) {
+    both <- paste(sort(c(kind[[a]], kind[[b]])), collapse = "")
+    if (both == "UU") minSep / 4 else if (both == "IU") minSep / 2 else minSep
+  }
+  shortfall <- numeric(0L)
+  for (g in sort(unique(pos$gen))) {
+    rowIds <- pos$id[pos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
+                            method = "radix")]
+    x <- pos$x[match(rowIds, pos$id)]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      shortfall <- c(shortfall,
+                     floorFor(rowIds[i], rowIds[i + 1L]) - (x[i + 1L] - x[i]))
+    }
+  }
+  shortfall
+}
+
+test_that(".positionMatingUnitForest holds the QP floor to within
+           qpFloorTolerance on the real 375 fixture when the solver meets
+           its variables in a different order (a different rounding path)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  for (seed in c(198L, 147L, 64L)) {
+    pos <- withReorderedSolveQP(seed, .positionMatingUnitForest(ped, forest))
+    shortfall <- adjacentFloorShortfall(pos, forest)
+    expect_equal(length(shortfall), 773L, info = paste("seed", seed))
+    expect_equal(sum(shortfall > qpFloorTolerance), 0L,
+                 info = paste("seed", seed, "max shortfall", max(shortfall)))
+  }
+})
+
 ## ---- gen semantics: every node's gen matches its source-of-truth ------
 
 test_that(".positionMatingUnitForest's gen column matches each occurrence's

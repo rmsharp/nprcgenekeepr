@@ -442,6 +442,34 @@ for (fixtureName in c("trackC", "trackBFull")) {
   })
 }
 
+## S893: the floors must hold to within `qpGapTolerance` on EVERY rounding
+## path, not only the one this machine takes. Same trackBFull fixture and
+## floors as the test above, with the QP's variables shuffled by a fixed seed
+## (helper-reorderedSolveQP.R). Seeds 75, 187 and 253 were the 3 worst of 300
+## on the dev machine (S893): margins -1.2e-8, -7.2e-9 and -6.6e-9.
+qpGapTolerance <- 1e-9
+
+test_that(".solveJointQP() holds the individual-individual 1.0, individual-
+           union 0.5 and union-union 0.25 floors to within qpGapTolerance
+           when the solver meets its variables in a different order -- the
+           trackBFull fixture", {
+  built <- .qpProvisional(.qpSmallFixtures[["trackBFull"]])
+  for (seed in c(75L, 187L, 253L)) {
+    solved <- withReorderedSolveQP(
+      seed,
+      .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                    built$forest$duplicates, built$forest$childEdges)
+    )
+    gaps <- .qpAdjacentGaps(solved, built$forest$matingUnits)
+    expect_true(all(gaps$II >= 1.0 - qpGapTolerance),
+                info = paste("seed", seed, "II"))
+    expect_true(all(gaps$IU >= 0.5 - qpGapTolerance),
+                info = paste("seed", seed, "IU"))
+    expect_true(all(gaps$UU >= 0.25 - qpGapTolerance),
+                info = paste("seed", seed, "UU"))
+  }
+})
+
 ## ---- S683: term 4 skips spouse (B2) duplicates -------------------------
 ## Owner-ratified amendment to the S675 no-weight-tuning mandate (the
 ## wDup-on-spouse-duplicates BACKLOG item; provisional-order design Open
