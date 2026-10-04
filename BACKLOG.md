@@ -6,7 +6,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 ## Up Next
 
 - [ ] **Repair the two red-CI causes on master (READY, Effort M; two small strict-TDD changes; owner order
-      S891: first, S892)** -- both found by S891's diagnosis, evidence and recipes in
+      S891: first; S892 went to the HANDOFFS.md trim, so S893)** -- both found by S891's diagnosis, evidence and recipes in
       `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`; no GitHub issue (CI-break rule). **(1) test-coverage,
       deterministic:** `test_sexCodes.R:93-94` and `:108-109` skip only when `../../R` is missing, but under covr
       the tests run from an installed copy whose `R/` holds only `.rdb`/`.rdx`, so `:110` and `:115` fail (the
@@ -19,10 +19,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       variable re-orderings of the same QP put exactly one pair over, as CI saw. Fix: tolerance 1e-3 (0.12 px;
       the overlap margin is 70 px) with the measured tail in the comment; RED = a fixed-seed re-ordering wrapper
       around `solve.QP()` asserting the old bound. Measure `test_solveJointQP.R:210` and `:440` (same 1e-6)
-      before touching. Not established: the actual CI value, the runner CPU. **Prerequisite for S892:**
-      `HANDOFFS.md` is 2,622 B under its 262,144 B limit after S891's receipt and a receipt costs
-      3-5 KB, so the owner decides a `methodology_trim.py --file HANDOFFS.md --budget-bytes ...` trim at S892
-      Phase 0 first. The compression queue (four more blocks, then the 7 parked items) moves down one session.
+      before touching. Not established: the actual CI value, the runner CPU. **Prerequisite done (S892):**
+      `HANDOFFS.md` was trimmed to 149,289 B (`methodology_trim.py --force`, owner-approved), room for about
+      30 receipts at 3.4 KB. The compression queue (four more blocks, then the 7 parked items) moves down again.
 
 - [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
       shipped (S783), F2's duplicate-id half shipped (S797), F3 shipped (S798); every F-slice is

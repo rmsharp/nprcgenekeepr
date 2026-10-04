@@ -62,6 +62,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] S892 DONE: trimmed `HANDOFFS.md` so a close-out receipt fits again, picked by the owner at Phase 0 (typed "trim HANDOFFS.md" at the picker; it had been listed only as the prerequisite inside the red-CI item). `methodology_trim.py` refused at three budgets (196,608, 131,072 and 65,536 B) with `SRF_RED` 7.3957 against the last archive `2e206a6` (S790, 2026-09-27: the file refilled within about a week), so a dry run with `--force` and no `--write` showed the cut, and the owner chose "Archive now with --force" (the override is recorded here): 24 receipts (S789-S812, 2026-09-27 to 2026-09-30) moved to `docs/archive/HANDOFFS-through-2026-09-30.md` (111,575 B) with its `.verify.sh`; live file 259,859 B -> 149,289 B. The tool wrote its own ledger entry just below this one. Claim `d5e140140`, trim `4def45b83`; the close-out commit adds the receipt, notes, Learning 861 and the BACKLOG note. Verified: the tool's L1/L2/L3 and the shard's `verify.sh` pass; an independent check found 105 receipts = 81 live + 24 archived, no overlap, order preserved; `quality_ratchet.py --run` 1/1 pass (results `0913a9616d31`). Not run: R suite and `devtools::check()` (no R, test or build file changed; every changed file is `.Rbuildignore`d and no test or workflow reads them). Not fixed: the growth rate (the newest 10 receipts average 3,441 B). Not pushed (master 9 ahead of origin). Model: Claude Sonnet 5.5.
+
 ### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-30.md` (24 record(s), 259,859 B → 149,289 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
