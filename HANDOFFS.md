@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S898
 date: 2026-10-04
-status: pending
-active_task: get the owner's keep-or-decline ruling on the 7 parked Effort-S items (isAddedRecord(), CI paths-ignore, trim verify script, Candidate C, highlightNearest, rhesus docstring, row-order item) and record each; the owner picked it at the Phase 0 picker (DECISION NEEDED, Effort S). Decision-only: no file edit beyond recording the rulings.
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the owner ruled on the 7 parked Effort-S items; none declined. Recorded in BACKLOG.md beside each item with its tag updated: isAddedRecord() kept open (READY, optional); CI skip = the paths-ignore list, not [skip ci] (READY, S); trim verify scripts = report upstream to the rmsharp/methodology fork (READY, S); Candidate C kept open (DECISION NEEDED: product sign-off); highlightNearest kept open (READY, optional); rhesus comment = reword it (READY, S); row order = accept it, change only the tests (READY, S). Picked at the Phase 0 picker (DECISION NEEDED, Effort S). Docs only. Claim 2fffad3d8; this close-out commit and the claim are NOT pushed.
+what_was_done: Phase 0 in full (no ledger gap, 0 pending receipts, ratchet counts and manifest match, dashboard 96/100, budget OK, the four S897 CI runs still in progress and not watched per the owner's docs-only rule); owner pick; claim 2fffad3d8; re-measured every item's stored claims before asking (Learning 867): verify scripts 10 of 54 FAIL, not 1, and it does not recur on every later trim; row order 1456 -> 1460 raw, 1412 QC'd unchanged; rhesus claim is about the rhesusPedigree object; the other four held; 7 questions in two AskUserQuestion calls; 17 scripted BACKLOG edits (anchors asserted) plus one more for the CI item's workflow triggers (read, not assumed). Nothing edited beyond recording. CLOSEOUT_CHECKLISTS.md read: none triggered. Not run: R suite, check(), lint (no .R file changed), CI (every changed file .Rbuildignore'd).
+next_steps: Owner-ordered. (A) The owner decides whether to push the local commits (S897 addendum 4313562b4, claim 2fffad3d8, this close-out): docs only, no CI wait. (B) One real fix per session, any order: CI paths-ignore (BACKLOG.md:55; .github is build-ignored but tests read it, the four workflows also run on pull_request), row-order tests only (:446; start at test_makePedigreeMatingLayout.R:663-742), rhesus comment (:467; data-raw is build-ignored), verify-script upstream report (:307; characterize the 8 L1 failures first; posting is the owner's call). Kept open: isAddedRecord() (:22), Candidate C (:423), highlightNearest (:487). (C) The ledger-size lever is still open (S892; not filed, not asked): HANDOFFS.md 172,892 B and CHANGELOG.md 27,636 B at Phase 0. Carried: PED_GV next group (the 9 ids), reportGV(smallPed) unfiled.
+key_files: BACKLOG.md at the lines above; data-raw/rhesusPedigree.R:7-10; docs/archive/*-through-*.verify.sh (54 scripts, 10 fail); PROJECT_LEARNINGS.md Learning 867.
+gotchas: count verify scripts with a loop that prints only failures and a tally, never head; a stored BACKLOG number can predate later code, so re-run it before a ruling; AskUserQuestion takes at most 4 questions per call; BACKLOG.md items are long wrapped lines, so edit by script with asserted anchors; a ruling is not a go-ahead to edit code or CI.
+runtime_smoke: none -- docs only, no runtime change; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 37676020f928 · manifest aa983075d6a2
+changelog_ref: S898 DONE entry
+commit: the close-out commit that carries this receipt; claim 2fffad3d8
 ```
 
 ```handoff
