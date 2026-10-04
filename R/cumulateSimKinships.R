@@ -54,7 +54,7 @@ cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
   ## that information is incorporated via the 'population' column.
   ped$population <- getGVPopulation(ped, pop)
 
-  # Get the list of animals in the population to consider
+  # Running totals over the simulations, one cell per pair of animals
   nIds <- nrow(ped)
   squaredKinship <- sumKinship <- matrix(data = 0L, nrow = nIds, ncol = nIds)
   first_time <- TRUE

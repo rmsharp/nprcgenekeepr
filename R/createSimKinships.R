@@ -53,7 +53,7 @@ createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
   ped <- data.table::as.data.table(ped)
   ped$population <- getGVPopulation(ped, pop)
 
-  # Get the list of animals in the population to consider
+  # One kinship matrix is kept for each simulation
   simKinships <- vector(mode = "list", length = n)
 
   for (i in seq_len(n)) {
