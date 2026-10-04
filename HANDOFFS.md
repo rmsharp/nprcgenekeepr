@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S889
+date: 2026-10-03
+status: pending
+active_task: NEW-28 -- reportGV() names the missing required columns up front (BACKLOG.md:29; owner picked it at Phase 0 from the priorities list; READY, Effort S; strict TDD)
+```
+
+```handoff
 session: S888
 date: 2026-10-03
 status: complete

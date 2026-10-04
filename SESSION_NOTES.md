@@ -98,6 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 889 Did
+**Deliverable:** NEW-28, `reportGV()` names the missing required columns up front (`BACKLOG.md:29`; READY, Effort S;
+strict TDD, RED -> GREEN -> REFACTOR with a gate before each) (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning at PRE-RED: read Decision record 10 and `R/reportGV.R`, then the scope-gate
+question (replace or precede the `:291` check; missing columns only?) goes to the owner before RED is declared.
+**Orient:** no ledger gap (frontiers at HEAD `9b14b7a32`); tree clean; master 117 ahead of origin (none of the 117 has
+had a CI run); CI 10/10 success; ratchet 1/1; dashboard 96/100, one High+ flag; context budget OK (growth run 51/10);
+`CHANGELOG.md` 237,053 B, `HANDOFFS.md` 246,645 B, `BACKLOG.md` 59,454 B. The two sequencing audits were not re-read
+(S888's Orient found both fully executed).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 888 Did
 **Deliverable, DONE:** PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36), docs only: no code, no tests (TDD
 phases N/A). The owner kept the `reportErrors` two-mode pattern (PED-6, NEW-36 closed, accepted) and chose a clear up-front
