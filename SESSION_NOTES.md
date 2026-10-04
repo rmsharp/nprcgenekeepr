@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 895 Did
+**Deliverable:** push S894's close-out commit `1d8902e32` to `origin/master` (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Range checked: origin not ahead, 1 commit, 3 docs files, all `.Rbuildignore`d, no reader.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 894 Did
 **Deliverable, DONE (no code or test change):** pushed `master` and read CI for S893's two red-CI fixes. **Both fixes are
 confirmed green on CI.** Claim `1fd37a244`. The push `2e2046efd..1fd37a244` sent 18 commits (S893's 17 plus the claim);

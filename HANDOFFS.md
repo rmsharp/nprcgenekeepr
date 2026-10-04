@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S895
+date: 2026-10-04
+status: pending
+active_task: push S894's close-out commit (1d8902e32, docs only: CHANGELOG.md, HANDOFFS.md, SESSION_NOTES.md) to origin/master; the owner picked it at the Phase 0 picker, which is also the authorisation to push that one commit
+```
+
+```handoff
 session: S894
 date: 2026-10-04
 status: complete
