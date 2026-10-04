@@ -111,7 +111,7 @@ archived (+1 tool-written), none missing or duplicated, order kept; 322 byte-ide
 re-basing (`](X)` -> `](../../X)`, undone exactly, all 17 targets resolve); `quality_ratchet.py --run` 1/1 pass (results
 `958e31fae3ab`, manifest `aa983075d6a2`). **Not run:** the R suite, `devtools::check()`, lint, CI: every changed file is
 `.Rbuildignore`d (`^docs$`, `^CHANGELOG.*\.md$`) and the 5 test files that name `CHANGELOG.md` do so in comments only; no
-runtime change, so no smoke test. Learning 866. Not pushed.
+runtime change, so no smoke test. Learning 866. Pushed after the close-out (see (A) below).
 
 **Handoff evaluation of S896: 9/10.** Helped: step (B) gave the exact command and the `--force` expectation, which held; its
 headroom figure (257,537 B) was true at its close-out, and the one later commit (the push-record addendum) accounts for the
@@ -126,8 +126,8 @@ did it before the claim; an ad hoc `gh run list --json` returned stale S680 runs
 two quiet tool stretches. Reduction: `CHANGELOG.md` shrank 233,552 B; here the S896 record is condensed and the S871 and
 S872 records are removed (full records stay in `CHANGELOG-through-2026-10-03.md` and `HANDOFFS.md`).
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push this session's three commits (claim `86b537e3e`, trim
-`f4b181c69`, close-out): docs only, and a push starts four workflows that are not waited on. (B) The owner keeps or declines
+**Next steps (owner-ordered):** (A) DONE: the owner said "push" after the close-out and 4 commits went to origin (`e9d1bdf6e..18610c7e3`:
+S896's addendum, the claim, the trim and the close-out); only the addendum that records the push is local. (B) The owner keeps or declines
 the 7 parked Effort-S items (`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C, `highlightNearest`,
 rhesus docstring, row-order item). (C) Then one real fix per session; the next BACKLOG compression candidates are named in
 the housekeeping item. **Owner decision still open (from S892; not filed, not asked):** the ledgers refill faster than a
