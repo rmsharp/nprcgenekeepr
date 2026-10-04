@@ -106,8 +106,9 @@ now); docs-audit item 55 -> 48 lines (14,531 -> 4,343 B), compression item 50 ->
 **My error:** the owner chose this option on my estimate of "about 75 lines removed" (also in the claim stub). The lines fell
 19 and the bytes 11,497: the old blocks were a few very long lines, and I kept every open thread in full (Slice 2, about 100
 code-decision candidates, the unsettled doc ids) wrapped at 100 columns. I also gave the owner "553 lines"; `wc -l` says 552.
-**Owner choices (plain words):** this option from a measured comparison; then, mid-session, "have subsequent sessions be the
-remaining options you wrote out", recorded as the queue in Next steps.
+**Owner choices (plain words):** this option from a measured comparison; then "have subsequent sessions be the remaining
+options you wrote out"; then "push" (done, CI red, above); then "diagnose the red CI first", which the owner confirmed is S891's
+job and not this session's (Next steps).
 **Verified:** all 41 + 12 sessions cited in the two blocks have their own ledger entries (first a mention-only check, then the
 figures: S529 652 -> 389, S530 896 -> 286, S531 753 -> 267, S606 304 -> 80, S752 91 -> 62 and 91 -> 38, 2026-09-24 44 -> 15
 and 84 -> 20); paths, Learnings 347 and 537 and 15 issue states resolve (only #123 open); 213 + 26 dropped tokens reviewed,
@@ -131,35 +132,73 @@ matched Orient to the byte; D named the Slice 2 gap, which I confirmed at `BACKL
 honest; the key-file lines matched. Missing: which blocks to cut and that line yield would trail byte yield far behind; that
 Phase 0's `grep -c 'status: pending' HANDOFFS.md` hits prose at `:22`. Wrong: nothing found.
 
-**Self-assessment: 7/10.** + Claimed before technical work; measured every item before recommending; checked each cited
-session, figure, path, Learning and issue before cutting, and found the one figure the ledger states differently; kept every
-open thread; proved the rest of the file byte-identical; reported the estimate miss at once.
+**Self-assessment: 6/10** (7 at the first close-out; lowered for what followed). + Claimed before technical work; measured
+every item before recommending; checked each cited session, figure, path, Learning and issue before cutting, and found the one
+figure the ledger states differently; kept every open thread; proved the rest of the file byte-identical; reported the estimate
+miss at once; pushed only on the owner's word, fast-forward checked first; pulled the failing step and assertion from the red
+CI instead of reporting "red" alone.
 - I sold the pick on a line estimate I had not drafted (19 lines, not 75) and gave a count off by one; I went quiet through
 many tool calls until nudged; I wrapped the ratchet in `( cmd ) &` inside a background run (S887's gotcha) and caught it only
-from the empty output.
+from the empty output; my CI watcher filtered on an abbreviated SHA and sat for an hour on zero runs, and I had not tried the
+query against a run I knew existed (Learning 857); and when the owner said "diagnose the red CI first" I began S891 inside
+S890 (announced a session, loaded the diagnose skill) after telling the owner a red run is fixed in its own session. The owner
+stopped me; nothing was diagnosed or changed for it.
 
-**Next steps (owner-ordered: "have subsequent sessions be the remaining options you wrote out"):** (A) S891: compress four
-more blocks (READY, Effort M): the standalone-package item, the "Pedigree diagram vs kinship2 audit follow-ups" preamble,
-the chromote item, the PED_GV closure narrative; estimate 20-45 lines (from 19 of 105 here; not measured), so draft first and
-count before promising lines. (B) S892: the owner keeps or declines each of 7 parked Effort-S items (`isAddedRecord()`, CI
-`paths-ignore`, trim verify script, Candidate C, `highlightNearest`, rhesus docstring, row-order item); up to about 118 lines
-if all declined. (C) Then one real fix per session, in that order: `deidentified_jmac_ped.csv` (option 1 or 2),
-`getAncestors()` absent id or CI `paths-ignore`, the harem-sire hole, PED_GV groups (3+ sessions each). **Dependency, not in
-the owner's list:** `HANDOFFS.md` is 255,415 B, 6,729 B under the 262,144 B limit, and a receipt costs 3-5 KB
-(S889 4,863 B, S890 3,907 B); `CHANGELOG.md` is 242,105 B, 20,039 B under. The dashboard now names `HANDOFFS.md` the top risk
-(MEDIUM) and says `methodology_trim.py --file HANDOFFS.md --check` reports whether a trim fits (not run). Ask at Phase 0
-whether to put the ledger decision before (B). **Red CI on master (above):** ask whether to diagnose it before (A); one test,
-two R versions, release green. Carried from S889: `reportGV(smallPed)` unfiled. Master is pushed; the post-push notes
-commit is local only (1 ahead), and a push of it starts all four workflows again.
+**Next steps (owner-ordered):** (A) **S891: diagnose the red CI on master, first** ("diagnose the red CI first"). The deliverable
+is the diagnosis (cause, evidence, proposed fix); the fix is a separate strict-TDD change with its RED -> GREEN gates, which the
+owner takes in S891 after the diagnosis or leaves for S892. Brief below. (B) S892: compress four more blocks (READY, Effort M):
+the standalone-package item, the "Pedigree diagram vs kinship2 audit follow-ups" preamble, the chromote item, the PED_GV
+closure narrative; estimate 20-45 lines (from 19 of 105 here; not measured), so draft first and count before promising lines.
+(C) S893: the owner keeps or declines each of 7 parked Effort-S items (`isAddedRecord()`, CI `paths-ignore`, trim verify
+script, Candidate C, `highlightNearest`, rhesus docstring, row-order item); up to about 118 lines if all declined. (D) Then
+one real fix per session: `deidentified_jmac_ped.csv` (option 1 or 2), `getAncestors()` absent id or CI `paths-ignore`, the
+harem-sire hole, PED_GV groups (3+ sessions each). **Dependency, not in the owner's list:** `HANDOFFS.md` is 256,418 B, 5,726 B
+under the 262,144 B limit, and a receipt costs 3-5 KB (S889 4,863 B, S890 3,907 B before this edit), so S891's fits and S892's
+would cross it; `CHANGELOG.md` is about 243 KB, 19 KB under. The dashboard names `HANDOFFS.md` its top risk (MEDIUM) and says
+`methodology_trim.py --file HANDOFFS.md --check` reports whether a trim fits (not run). Ask at S891 Phase 0 whether the ledger
+decision becomes S892. Carried: PED_GV next group (8 ids + NEW-24), `reportGV(smallPed)` unfiled. Master is pushed; the notes
+commit `69f9a3b9d` and this close-out are local only, and a push starts all four workflows again.
+
+**S891 brief (prepared S890; nothing below is diagnosed):**
+- *What is red:* the four runs on `2e2046efd37ce3301886e243e78492ddb3b7d628`. R-CMD-check `37179033145`: ubuntu oldrel-1
+(R 4.5.3) and ubuntu devel failed; ubuntu, macOS and windows release passed. test-coverage `37179033148`, step "Test
+coverage": `testthat.R` failed, the log does not print which test (`testthat.Rout.fail` was not shown); its `spelling.R`
+output also differs from `spelling.Rout.save` ("Failed to find package source directory"), not checked. Green: lint
+`37179033168`, pkgdown `37179033154`. The previous push, `f0bcb9f48`, was all green. `gh run view <id> --log-failed` re-fetches.
+- *The failing assertion:* `tests/testthat/test_positionMatingUnitForest.R:645`, `expect_equal(sum(shortfall > 1e-6), 0L)`
+got 1; line 644 (`length(shortfall)` equals 773) passed. The test's own comment: 1e-6 is `quadprog::solve.QP()`'s solver
+precision (measured max shortfall 6.8e-8 raw = 8e-6 px on S675's fixture) on the full Real-375 bundled fixture.
+- *Check first (none done):* (1) which test(s) test-coverage fails on; (2) `quadprog` and BLAS versions on each CI job against
+local `quadprog` 1.5.8 / R 4.6.1 (the CI logs do not show the quadprog version in what I grepped); (3) the failing shortfall
+value and which adjacent pair, on CI against local; (4) whether this is new in the pushed range or only newly seen: commits
+touching the engine, the test or the fixture since `f0bcb9f48` are `82e020669` (S859, one-mate-each couples draw male-left),
+`b3f3a3ad5` (S878, sexCodes stage 5) and `13ab22bc1` (S883, comment only).
+- *Feedback loops, cheapest first:* (i) the one test file on local R 4.6.1: `Sys.setenv(NOT_CRAN = "true");
+pkgload::load_all("."); testthat::test_file("tests/testthat/test_positionMatingUnitForest.R")` (S889's full suite passed there,
+so green is expected, which would make it version-specific); (ii) the same under R 4.5, installed at
+`/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/bin/Rscript` (matches oldrel-1 4.5.3; its package library is
+not checked); caveat: CI is ubuntu x86_64 and local is arm64, so BLAS may hide it; (iii) a throwaway branch run on CI, an
+outward action that needs the owner's say-so; `devel` R is not installed here.
+- *My ranked guesses, to re-rank with the owner at the diagnose skill's Phase 3 before any probe:* H1 the S859 layout change
+moved one adjacent pair close to its floor and `solve.QP` rounds differently on the oldrel/devel builds (predicts: the failing
+pair is just above 1e-6 there and below on release; reverting `82e020669` locally on 4.5 turns it green). H2 the 1e-6 tolerance
+was always marginal (the comment's own 8e-6 px) and this is the first run past it (predicts: the pair already sat near the
+limit before S859). H3 a different `quadprog` or BLAS build on those two jobs (predicts: the CI logs show it). H4 an
+R-version difference in the test's `order(..., method = "radix")` tie-break picks different adjacent pairs (predicts: same
+count, different pair ids). Coverage may be the same test or a separate covr cause.
+- *Rules:* a red run is reported and the fix is its own gated change (`CLAUDE.md`); no GitHub issue for a CI break; tag debug
+output `[DEBUG-xxxx]` and remove it; validate any CI watcher against a known run first.
 
 **Key files:** `BACKLOG.md:80-126` (docs-audit item: slices, Still open 1-3), `:347-383` (compression item: pass history,
-Method, next candidates); `docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md` (the open candidates' ids).
+Method, next candidates); `docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md` (the open candidates' ids);
+`tests/testthat/test_positionMatingUnitForest.R:625-646` (the failing assertion at `:645`), for S891.
 
 **Gotchas:** estimate a compression's line yield from a draft, not from block size (Learning 856); count lines with `wc -l`;
 `( cmd ) &` inside `run_in_background` reports the wrapper's exit, so read the job's own last line; use `grep -c
 '^status: pending' HANDOFFS.md` (the unanchored form hits prose at `:22`); the open candidate lists stay in the item on
 purpose, and if they should become pointers their ids are in the slice reports; `gh run list --commit` needs the full SHA
-(`git rev-parse HEAD`), an abbreviated one matches nothing and the poll waits forever; `git stash list` holds an old `dev`-branch
+(`git rev-parse HEAD`), an abbreviated one matches nothing and the poll waits forever, so try a watcher's query on a run you
+know exists first (Learning 857); `git stash list` holds an old `dev`-branch
 entry (not mine); `core.hooksPath` is unset (the context-budget hook is in `.git/hooks`).
 
 ### What Session 889 Did (condensed S890; full record in `CHANGELOG.md` and `HANDOFFS.md`)
