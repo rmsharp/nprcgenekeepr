@@ -99,77 +99,66 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 890 Did
-**Deliverable:** compress two `BACKLOG.md` items: the docs-audit item (`BACKLOG.md:80-134`, 55 lines, 14,531 B) and the
-compression item's own pass history (`BACKLOG.md:354-403`, 50 lines, 4,629 B). READY, Effort L; docs only, so no code, no
-tests, no RED/GREEN gates (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning: read both blocks end to end, check every cited session and fact against
-`CHANGELOG.md` and the archive, keep every open part byte-for-byte, cut only resolved narrative.
-**Orient:** no ledger gap (frontiers at HEAD `d38494449`); tree clean; master 125 ahead of origin (none has had CI); CI
-10/10 success; ratchet 1/1 matches the receipt; dashboard 96/100, one High flag (`BACKLOG.md` 58,228 B, 1,478 B over
-its 56,750 B budget); context budget OK; `CHANGELOG.md` 240,102 B, `HANDOFFS.md` 251,508 B.
-**Owner pick:** this option from a measured comparison (55 + 50 of 553 lines; every session cited in both blocks has a
-mention in the ledgers, a weak check the pass repeats properly). Estimate, not yet measured: about 75 lines removed.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** compressed two `BACKLOG.md` items, the docs-audit item and the compression item's own pass history.
+Docs only, so no code and no RED/GREEN gates. Claim `d2e36c446`, deliverable `23432b24c`; the close-out commit holds the
+receipt, these notes, the ledger entry, Learning 856. `BACKLOG.md` 552 -> 533 lines, 58,228 -> 46,731 B (High+ risk 0
+now); docs-audit item 55 -> 48 lines (14,531 -> 4,343 B), compression item 50 -> 38 (4,629 -> 3,320 B).
+**My error:** the owner chose this option on my estimate of "about 75 lines removed" (also in the claim stub). The lines fell
+19 and the bytes 11,497: the old blocks were a few very long lines, and I kept every open thread in full (Slice 2, about 100
+code-decision candidates, the unsettled doc ids) wrapped at 100 columns. I also gave the owner "553 lines"; `wc -l` says 552.
+**Owner choices (plain words):** this option from a measured comparison; then, mid-session, "have subsequent sessions be the
+remaining options you wrote out", recorded as the queue in Next steps.
+**Verified:** all 41 + 12 sessions cited in the two blocks have their own ledger entries (first a mention-only check, then the
+figures: S529 652 -> 389, S530 896 -> 286, S531 753 -> 267, S606 304 -> 80, S752 91 -> 62 and 91 -> 38, 2026-09-24 44 -> 15
+and 84 -> 20); paths, Learnings 347 and 537 and 15 issue states resolve (only #123 open); 213 + 26 dropped tokens reviewed,
+the ones with no obvious home found elsewhere (`9a2a5ddb7`, `26.29`, `RF2, RH2, RJ3`); the file outside the two ranges is
+byte-identical; no test reads `BACKLOG.md`; `quality_ratchet.py --run` 1/1 (results `b99f87ba4720`).
+**Not run:** R suite, `devtools::check()`, CI (no R, test or build file changed; nothing pushed).
+**Fixed in passing:** the item's "58 lines" (2026-09-24) is 55 in the ledger; its "nothing further is scoped" line now says
+Slice 2 was never acted on (the owner still decides whether to scope a slice).
+**Reduction:** removed the S864 record and its evaluation; condensed S889. `BACKLOG.md` is now 10,019 B under its budget.
 
-### What Session 889 Did
-**Deliverable, DONE:** NEW-28 shipped: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` as its first statement (one
-`assertRequiredColsPresent()` call, `R/reportGV.R:173-183`) and names every missing one in one message before `kinship()`
-runs; the late `sex`-only check is deleted. Strict TDD. Claim `419a25c3c`, RED `22cc2f63f` + `e86e68b4e`, GREEN `7f6216876`,
-REFACTOR `67b8afd21` (comment only), NEWS `afd4952a0`, BACKLOG and triage closure `3907b0d3b`; the close-out commit holds the
-receipt, these notes, the ledger entry, Learning 855.
-**Owner choices (plain words):** five columns up front with the old `sex` check deleted (my recommendation); missing
-columns only. **My error, then a re-decision:** I told the owner no test pinned the old order and that the partial-parentage
-test's pedigree "has `sex`". `lacy1989Ped` has none; `test_calcFEFG.R:66` pins that a sex-less pedigree gets `calcFEFG()`'s
-partial-parentage message first (the comment I deleted at the old `reportGV.R:286-290` named it). GREEN found one failure; I
-shelved the edit and told the owner, who kept five columns and had that test's pedigree given a `sex` column (`e86e68b4e`,
-passes on old and new code). Cost: a GREEN -> RED -> GREEN detour. I also told the owner the e2e files exercise the app's
-`reportGV()` call; the default run skips them (`NPRC_RUN_E2E`), so I ran the genetic-value three with it set.
-**Verified:** `test_reportGV.R` 42 tests, 0 failed (RED: 8 expectation failures in 6 tests, each the intended message); full
-unfiltered suite 367 files, 2,982 tests, 0 failed, 0 error, 187 skipped (incl. the 34 `test-app-*`/`test-e2e-*` files);
-genetic-value e2e trio with `NPRC_RUN_E2E=true`: 22/22 in the live app, 0 skipped; seeded `reportGV(qcPed)` identical to a
-pre-change baseline (fresh process); `lint_package()` 0; NEWS, wordlist and rbuildignore tests pass; `quality_ratchet.py
---run` 1/1 (results `4c089d72b67b`). Open count 10 -> 9 by a rebuilt script (validated on the unchanged report: 43/33/10).
-**Not run:** `devtools::check()`, CI (nothing pushed), the other 31 e2e files.
-**Reduction:** removed the S863 record and its evaluation; condensed S888. `BACKLOG.md` 59,454 B -> 58,228 B (1,478 B over budget).
+**Handoff evaluation of S889: 9/10.** Helped: next step B's "58,228 B, 1,478 B over budget", the ledger sizes and "125 ahead"
+matched Orient to the byte; D named the Slice 2 gap, which I confirmed at `BACKLOG.md:122-124` and which kept the rewrite
+honest; the key-file lines matched. Missing: which blocks to cut and that line yield would trail byte yield far behind; that
+Phase 0's `grep -c 'status: pending' HANDOFFS.md` hits prose at `:22`. Wrong: nothing found.
 
-**Handoff evaluation of S888: 9/10.** Helped: next step A(1) named the two scope-gate questions I then asked; the key-file
-lines `R/reportGV.R:179,223,291` and `R/assertRequiredColsPresent.R:19` matched; BACKLOG 59,454 B, the ledger sizes and "117
-ahead" matched Orient to the byte; the `smallPed` warning kept me off a bad fixture (I used `qcPed`, 280 rows, 0.25 s).
-Missing: that `lacy1989Ped` has no `sex` and `test_calcFEFG.R:66` pins the old order; `qcPed` as the fast fixture. Wrong: the
-gotcha "run the `test-app-*` and `test-e2e-*` files in the full suite" implies the full suite runs them; it skips them
-unless `NPRC_RUN_E2E=true`.
+**Self-assessment: 7/10.** + Claimed before technical work; measured every item before recommending; checked each cited
+session, figure, path, Learning and issue before cutting, and found the one figure the ledger states differently; kept every
+open thread; proved the rest of the file byte-identical; reported the estimate miss at once.
+- I sold the pick on a line estimate I had not drafted (19 lines, not 75) and gave a count off by one; I went quiet through
+many tool calls until nudged; I wrapped the ratchet in `( cmd ) &` inside a background run (S887's gotcha) and caught it only
+from the empty output.
 
-**Self-assessment: 7/10.** + Claimed before technical work; measured the baseline (messages, timing, a seeded result) before
-asking; asked in plain words with a recommendation; read each RED failure message; caught the `@param ped` leak (13 man pages)
-before committing; reported my wrong claim at once, shelved the edit rather than bending a test, and let the owner re-decide;
-validated the rebuilt count script on the unchanged report; verified the e2e skip and ran the relevant files.
-- A false statement to the owner drove a choice (same family as Learning 852); a GREEN -> RED -> GREEN detour; I said the e2e
-files covered the app path before checking they skip; my first seeded-identity run (FALSE) was a harness artifact; a stray
-write to `/tmp` (removed); `BACKLOG.md` is still over budget; my receipt (+4,863 B in `HANDOFFS.md`, with the claim stub)
-came out longer than S888's (+4,388 B) though I meant to shorten it, which leaves about 2 sessions of `HANDOFFS.md` runway.
+**Next steps (owner-ordered: "have subsequent sessions be the remaining options you wrote out"):** (A) S891: compress four
+more blocks (READY, Effort M): the standalone-package item, the "Pedigree diagram vs kinship2 audit follow-ups" preamble,
+the chromote item, the PED_GV closure narrative; estimate 20-45 lines (from 19 of 105 here; not measured), so draft first and
+count before promising lines. (B) S892: the owner keeps or declines each of 7 parked Effort-S items (`isAddedRecord()`, CI
+`paths-ignore`, trim verify script, Candidate C, `highlightNearest`, rhesus docstring, row-order item); up to about 118 lines
+if all declined. (C) Then one real fix per session, in that order: `deidentified_jmac_ped.csv` (option 1 or 2),
+`getAncestors()` absent id or CI `paths-ignore`, the harem-sire hole, PED_GV groups (3+ sessions each). **Dependency, not in
+the owner's list:** `HANDOFFS.md` is 255,415 B, 6,729 B under the 262,144 B limit, and a receipt costs 3-5 KB
+(S889 4,863 B, S890 3,907 B); `CHANGELOG.md` is 242,105 B, 20,039 B under. The dashboard now names `HANDOFFS.md` the top risk
+(MEDIUM) and says `methodology_trim.py --file HANDOFFS.md --check` reports whether a trim fits (not run). Ask at Phase 0
+whether to put the ledger decision before (B). Carried from S889: `reportGV(smallPed)` unfiled; master is 128 ahead of
+origin after this commit, push only on the owner's say-so, and wait for CI since `R/` has changed.
 
-**Next steps:** (A) PED_GV, the next owner-decision group (8 ids, plus NEW-24 on issue #123; DECISION NEEDED, Effort S each):
-walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), `updateProgress` null checks
-(NEW-62; now `R/reportGV.R:247,266,285`, all three exist). One group per session, in plain words; first read the tests and
-comments that pin today's behavior. (B) `BACKLOG.md` compression (READY, Effort L): 1,478 B over budget. (C) The
-ledgers need an owner decision: CHANGELOG.md 240,102 B and HANDOFFS.md 251,508 B after this commit, 22,042 B and
-10,636 B under the 262,144 B no-content read limit; this session added 3,049 B and 4,863 B, so about 7 and 2 sessions
-are left (an estimate from one session; S888 said 5 and 3). (D) Docs-audit item: its Slice 2 screenshot findings (31
-of 38 images differ) were never acted on though the item says "nothing further is scoped"; ask whether to fix that
-line or scope a slice. (E) Not filed: `reportGV()` on an unprepared pedigree with every column (`smallPed`) still
-stops with "sire and dam must have had alleles assigned". (F) Master is 125 ahead of origin after this commit; push
-only on the owner's say-so; `R/` changed and nothing has had CI, so wait for CI after a push.
+**Key files:** `BACKLOG.md:80-126` (docs-audit item: slices, Still open 1-3), `:347-383` (compression item: pass history,
+Method, next candidates); `docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md` (the open candidates' ids).
 
-**Key files:** `R/reportGV.R:173-183` (the check), `tests/testthat/test_reportGV.R:831-895` (NEW-28 tests),
-`tests/testthat/test_calcFEFG.R:66-80`, `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:320-333` (Closure record 11),
-`NEWS.Rmd:389-392`, `tests/testthat/helper-shinytest2.R:200-207` (the e2e opt-in).
+**Gotchas:** estimate a compression's line yield from a draft, not from block size (Learning 856); count lines with `wc -l`;
+`( cmd ) &` inside `run_in_background` reports the wrapper's exit, so read the job's own last line; use `grep -c
+'^status: pending' HANDOFFS.md` (the unanchored form hits prose at `:22`); the open candidate lists stay in the item on
+purpose, and if they should become pointers their ids are in the slice reports; `git stash list` holds an old `dev`-branch
+entry (not mine); `core.hooksPath` is unset (the context-budget hook is in `.git/hooks`).
 
-**Gotchas:** default test runs skip the 34 `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true` (Chrome is installed).
-The shared `@param ped` is inherited by 13 man pages: put function-specific text in details. `lacy1989Ped` has no `sex`. Run
-seeded identity checks in a fresh process. The open-count script is not in the repo: ids from the triage table's first
-column, closed = ids in Closure record sections plus Decision-record rows starting CLOSED; validate it on the unchanged
-report first. `git stash list` holds an old `dev`-branch entry (not mine). `core.hooksPath` is unset.
+### What Session 889 Did (condensed S890; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+NEW-28 shipped: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` first and names every missing one before `kinship()`
+runs (`R/reportGV.R:173-183`); the late `sex`-only check is deleted. Claim `419a25c3c`, RED `22cc2f63f` + `e86e68b4e`, GREEN
+`7f6216876`, REFACTOR `67b8afd21`. Handoff evaluation of S888: 9/10. Self 7/10.
+**Gotchas kept:** default test runs skip the 34 `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true`; the shared
+`@param ped` is inherited by 13 man pages (function-specific text goes in details); `lacy1989Ped` has no `sex`; run seeded
+identity checks in a fresh process; the open-count script is not in the repo (Learning 855).
 
 ### What Session 888 Did (condensed S889; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36): the owner kept the `reportErrors` two-mode pattern (PED-6,
@@ -296,20 +285,3 @@ Excluded tab's own code location (I grepped for it). Wrong: nothing found. ROI: 
 `R/modMatePair.R` are shared as `.ancestryOverrideChoices()` and `.ancestryOverrideModal()` in
 `R/ancestryOverrides.R`. Claim `dfd40047d`; RED+GREEN `adb5d2991`; REFACTOR `4ba8138f2`. Full suite 2922
 tests, 0 failed; lint clean. Self-score 8/10. Gotcha: the modal helper takes `session$ns` (the function).
-
-### Session 864 Handoff Evaluation (by Session 865)
-**Score: 9/10.** **Helped:** next steps named the duplicated gate code as a READY refactor and said
-exactly which two shared helpers S776 had already extracted, so I knew what was left to share;
-key files had line ranges that still matched. **Missing:** nothing that cost time (it did not list
-the confirm observer and status text as further near-duplicates; I found them by diffing).
-**Wrong:** nothing found ("25 ahead" was 26 at Orient because the close-out commit followed).
-**ROI:** high.
-
-### What Session 864 Did (condensed S865; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** a valid zero-rule ancestry table no longer breaks Download Audit Manifest;
-`.buildAncestryOverrideManifest()` returns one inactive row. Strict TDD; claim `a66e2e4bb`, GREEN
-`38c38ee90`, close-out `dce846d5c`. Full suite then: 0 error / 1 failed
-(`test_markerParentageLikelihood.R` runtime benchmark, passes alone). Self-score 8/10.
-**Gotcha kept:** the modules (`R/modMatePair.R:562`, `R/modBreedingGroups.R:889`) pass any non-NULL
-rules table to the builder, so a zero-rule run yields a 1-row CSV; the UI text around the download
-button was not inspected.
