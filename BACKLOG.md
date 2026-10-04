@@ -327,7 +327,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       housekeeping-vs-deliverable entry-byte split and decide whether a norm analogous to
       the canonical design's own deferred H4 remedy (recorded as `docs/planning/ledger-trimmer-design.md`
       §10.2, a file that is not in this repo; "the lever is receipt size, and the mechanism would be a norm plus a check, not
-      an archiver") is worth adopting for `CHANGELOG.md` specifically.
+      an archiver") is worth adopting for `CHANGELOG.md` specifically. **Measured S897
+      (2026-10-04):** `CHANGELOG.md` went from 37,593 B (its 2026-09-27 trim) to 258,724 B in 7
+      days, which is what raised the trimmer's `SRF_RED` (7.9455); the owner-approved `--force`
+      trim left it at 25,172 B. The owner's choice of lever (shorter claim/close-out entries and
+      receipts) is still open.
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
       last pass S896, 2026-10-04) -- `BACKLOG.md` is one of the dashboard's HIGH-risk
