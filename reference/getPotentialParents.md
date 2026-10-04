@@ -83,10 +83,12 @@ getPotentialParents(
 a list of list with each internal list being made up of an animal id
 (`id`), a vector of possible sires (`sires`) and a vector of possible
 dams (`dams`). The `id` must be defined while the vectors `sires` and
-`dams` can be empty. Candidate dams are females who gave birth near the
-time of the focal birth (proven breeders); when there are none, `dams`
-lists every female old enough and present at the birth instead. Either
-way, a female who delivered another offspring within
+`dams` can be empty. A fourth element, `damBasis`, is a single string
+saying where `dams` came from: `"provenBreeder"` when the candidates are
+females who gave birth near the time of the focal birth,
+`"eligibleFemale"` when there were none and `dams` lists every female
+old enough and present at the birth instead, and `NA` when `dams` is
+empty. In both tiers, a female who delivered another offspring within
 `maxGestationalPeriod` days of the focal birth is never listed.
 Candidates are listed only for the parent that is missing: when an
 animal's dam is recorded its `dams` is empty, and when its sire is
@@ -121,5 +123,8 @@ potentialParents[[1L]]
 #> 
 #> $dams
 #> [1] "HR70BU" "I2G9D6" "J8XZ81" "HV7LZ3" "IMF6BL"
+#> 
+#> $damBasis
+#> [1] "provenBreeder"
 #> 
 ```

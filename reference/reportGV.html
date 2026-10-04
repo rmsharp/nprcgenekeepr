@@ -212,6 +212,13 @@ and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of
 those founders), and <code>total</code> (the total number of known founders).
+The founder lists hold only <em>known</em> founders: an animal with both
+parents unknown whose id was generated to stand in for an unknown parent is
+left out, because that placeholder may be a known founder, another animal
+in the population, or an animal outside it. <code>fe</code> and <code>fg</code>, by
+contrast, count every animal with both parents unknown as a separate,
+unrelated founder (see <code><a href="calcFEFG.html">calcFEFG</a></code>), so they can differ from
+<code>total</code>.
 <code>report</code> also carries a <code>flagged</code> column (issue #127):
 <code>TRUE</code> for a one-unknown-parent animal left uncorrected by
 <code>correctUnknownParentMeanKinship()</code> for lack of an eligible
@@ -222,7 +229,11 @@ candidates for this correction).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Reported genome uniqueness (<code>gu</code>) is set to 0 for "Undetermined"
+    <p>The pedigree <code>ped</code> must have the columns <code>id</code>, <code>sire</code>,
+<code>dam</code>, <code>gen</code> (generation number) and <code>sex</code>. If any is
+missing, <code>reportGV</code> stops before doing any calculation, with a message
+naming every missing column.</p>
+<p>Reported genome uniqueness (<code>gu</code>) is set to 0 for "Undetermined"
 animals – those with both parents unknown (U-id aware) and no recorded
 origin – because their apparent uniqueness is an artifact of unknown
 parentage (decline-to-credit policy). Imports (both parents

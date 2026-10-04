@@ -38,6 +38,511 @@ Minimum Handoff Requirements (`SESSION_RUNNER.md` §3D).
 ## Format — a fenced `handoff` block
 
     ```handoff
+    session: S890
+    date: 2026-10-03
+    status: complete
+    self_score: 7
+    predecessor_score: 9
+    active_task: DONE -- compressed two BACKLOG.md items, the docs-audit item and the compression item's own pass history (docs only; the owner picked it from a measured comparison, then ordered the later sessions: see next_steps)
+    what_was_done: claim d2e36c446; deliverable 23432b24c: BACKLOG.md 552 -> 533 lines and 58,228 -> 46,731 B (the dashboard's one High flag is gone); docs-audit item 55 -> 48 lines, compression item 50 -> 38; every open thread kept, resolved narrative cut only after each cited session and figure was checked against the ledger; the close-out commit holds this receipt, SESSION_NOTES.md, the ledger entry, Learning 856. My estimate was wrong: I told the owner "about 75 lines"; lines fell 19 (bytes 11,497) because I kept the open-thread detail in full. Also fixed: the item's "58 lines" (2026-09-24) is 55 in the ledger; its "nothing further is scoped" line now says Slice 2 was never acted on. Verified: 41 + 12 cited sessions and 7 pass figures against CHANGELOG/archive; paths, Learnings 347/537, 15 issue states; the file outside the two ranges is byte-identical; no test reads BACKLOG.md. Not run: R suite, devtools::check(), CI (no R/test/build file changed; nothing pushed).
+    next_steps: Owner-ordered queue ("have subsequent sessions be the remaining options you wrote out"): (1) S891 compress four more blocks -- the standalone-package item, the "Pedigree diagram vs kinship2 audit follow-ups" preamble, the chromote item, the PED_GV closure narrative (READY, Effort M); expect about 20-45 lines, an estimate from this pass's 19 of 105, not measured: draft first, count, then promise lines. (2) S892 the owner keeps or declines each of 7 parked Effort-S items (isAddedRecord(), CI paths-ignore, trim verify script, Candidate C, highlightNearest, rhesus docstring, row-order item); up to about 118 lines if all declined. (3) Then one real fix per session in the table's order: deidentified_jmac_ped.csv (option 1 or 2), getAncestors() absent id or CI paths-ignore, the harem-sire hole, PED_GV groups (3+ sessions each). Not in the owner's list but a dependency: HANDOFFS.md is 255,415 B, 6,729 B under the 262,144 B limit, and a receipt costs 3-5 KB; the dashboard now names it the top risk (MEDIUM) and says `methodology_trim.py --file HANDOFFS.md --check` reports whether a trim fits (not run). Ask at Phase 0 whether to put the ledger decision before (2). Carried from S889: PED_GV next group (8 ids + NEW-24), `reportGV(smallPed)` unfiled, push only on the owner's say-so (master 128 ahead; R/ changed since the last CI).
+    key_files: BACKLOG.md:80-126 (docs-audit item: slices, Still open (1)-(3)); BACKLOG.md:347-383 (compression item: pass history, Method, next candidates); docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md (the open candidates' ids).
+    gotchas: Estimate a compression's line yield from a draft, not from block size: long-line blocks save bytes, not lines (Learning 856). Count lines with `wc -l` (a `split('\n')` gave 553; the file has 552). `( cmd ) &` inside run_in_background reports the wrapper's exit: read the job's own last line (S887's gotcha; the ratchet run showed it). Phase 0's `grep -c 'status: pending' HANDOFFS.md` is always 1 (prose at :22); use `grep -c '^status: pending'`. The open code-candidate lists stay in the item on purpose; if the owner wants them as pointers, their ids are in the slice reports (checked). HANDOFFS.md edits worked with offset/limit reads (untested above the limit). git stash holds an old dev-branch entry (not mine).
+    runtime_smoke: none -- docs only, no runtime change; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results b99f87ba4720 · manifest aa983075d6a2
+    changelog_ref: S890 DONE entry
+    commit: the close-out commit that carries this receipt; claim d2e36c446, deliverable 23432b24c
+    ```
+
+    ```handoff
+    session: S889
+    date: 2026-10-03
+    status: complete
+    self_score: 7
+    predecessor_score: 9
+    active_task: DONE -- NEW-28: reportGV() names every missing required column up front (strict TDD; the owner picked it at Phase 0)
+    what_was_done: claim 419a25c3c; RED 22cc2f63f (8 expectation failures in 6 tests, each the intended message) and e86e68b4e (test_calcFEFG.R:73 gives its pedigree a sex column); GREEN 7f6216876 (R/reportGV.R:173-183: one assertRequiredColsPresent() call for id, sire, dam, gen, sex as the first statement; the late sex-only check deleted; documented in the details section and man/reportGV.Rd); REFACTOR 67b8afd21 (comment only, parsed code identical); NEWS afd4952a0; BACKLOG item removed, Closure record 11, open count 10 -> 9 3907b0d3b; the close-out commit holds this receipt, SESSION_NOTES.md, the ledger entry, Learning 855. Owner chose five columns up front with the old check deleted, missing columns only. My wrong claim (lacy1989Ped "has sex", no test pins the order) was found by GREEN, reported and re-decided: S889 DONE entry, Learning 855. Verified: test_reportGV.R 42 tests 0 failed; full unfiltered suite 2,982 tests 0 failed 0 errors 187 skipped; genetic-value e2e trio 22/22 (NPRC_RUN_E2E=true); seeded result identical to the pre-change baseline (fresh process); lint 0. Not run: devtools::check(), CI, the other 31 e2e files.
+    next_steps: (A) PED_GV, the next owner-decision group (8 ids, plus NEW-24 on issue #123; DECISION NEEDED, Effort S each): walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), updateProgress null checks (NEW-62; now R/reportGV.R:247,266,285, all three exist). One group per session, plain words; first read the tests and comments that pin today's behavior (Learning 855). (B) BACKLOG.md compression (READY, Effort L): 58,228 B, 1,478 B over the 56,750 B budget. (C) Ledgers: CHANGELOG.md 240,102 B and HANDOFFS.md 251,508 B after this commit, 22,042 B and 10,636 B under the 262,144 B no-content read limit; this session added 3,049 B and 4,863 B, so about 7 and 2 sessions are left (an estimate from one session; S888 said 5 and 3); needs an owner decision and scheduling; needs an owner decision. (D) Docs-audit item: its Slice 2 findings (31 of 38 shiny_app_use images differ, 12 without a generator, orphan pb_unknown_displayed.png) were never acted on, yet the item says "nothing further is scoped"; the owner asked about it this session (answered in chat, BACKLOG.md not edited): ask whether to fix that line or scope a slice. Two doc leftovers it lists are still present: R/makeGroupNum.R:7 ("Default is 1") and minParentAge in R/fillGroupMembersWithSexRatio.R:37 and R/groupAddAssign.R:128. (E) Not filed, owner was told it would only be noted: reportGV() on a pedigree with every column but nothing the gene drop needs (smallPed) still stops with "sire and dam must have had alleles assigned". (F) Master is 125 ahead of origin after this commit; push only on the owner's say-so; none has had CI and R/ changed, so wait for CI after a push.
+    key_files: R/reportGV.R:173-183 (the check and why it runs first), :4-13 (roxygen details), :247,266,285 (updateProgress); tests/testthat/test_reportGV.R:831-895 (NEW-28 tests), tests/testthat/test_calcFEFG.R:66-80; docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:320-333 (Closure record 11); NEWS.Rmd:389-392; BACKLOG.md:25 (open count 9); tests/testthat/helper-shinytest2.R:200-207 (the e2e opt-in).
+    gotchas: default test runs skip the 34 test-app-*/test-e2e-* files unless NPRC_RUN_E2E=true (Chrome is installed here; the genetic-value trio takes about 1.6 min). The shared @param ped is inherited by 13 man pages: put function-specific text in details, check git diff man/ after devtools::document(), revert man/nprcgenekeepr-package.Rd. lacy1989Ped has no sex column. Run seeded identity checks in a fresh process. The open-count script is not in the repo (rebuilt S889: ids from the triage table's first column; closed = ids in Closure record sections plus Decision-record rows starting CLOSED; validate on the unchanged report first: 43/33/10 before, 43/34/9 now). qcPed (280 rows, 0.25 s) is the fast reportGV() fixture. git stash list holds an old dev-branch entry (not mine, untouched). core.hooksPath is unset. Estimate, not traced: the ledger runway in (C).
+    runtime_smoke: genetic-value e2e trio (test-e2e-genetic-value-module, -detailed, -tutorial) 22/22 passed in the live app with NPRC_RUN_E2E=true, 0 skipped; the other 31 e2e files not run; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4c089d72b67b · manifest aa983075d6a2; CI not run (nothing pushed)
+    changelog_ref: S889 DONE entry
+    commit: the close-out commit that carries this receipt; claim 419a25c3c, RED 22cc2f63f + e86e68b4e, GREEN 7f6216876, REFACTOR 67b8afd21, NEWS afd4952a0, BACKLOG and triage 3907b0d3b
+    ```
+
+    ```handoff
+    session: S888
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- PED_GV owner decisions, the error-behavior group (PED-5, PED-6, NEW-28, NEW-36): the owner picked PED_GV at Phase 0, then my recommended group of four; decisions recorded, docs only (no code, no tests, TDD phases N/A)
+    what_was_done: claim 3dae4cfd2; Decision record 10 and a new READY BACKLOG item 5a47eb8a3 (PED-6, NEW-36 CLOSED accepted: keep the reportErrors two-mode pattern; PED-5 CLOSED as the umbrella; NEW-28 decided, open until reportGV() names its missing required columns up front; open count 13 -> 10 by script, 43 ids, 33 closed); probes P10, P11 b0f748891; the close-out commit holds this receipt, SESSION_NOTES.md, the ledger entry and Learning 854. The measurements behind the decisions (six reportErrors functions, bad-input table, the stale "none in reportGV" claim, the per-column probe) are in the S888 DONE entry and Decision record 10. No code changed; BACKLOG.md grew 1,458 B to 59,454 B and was not compressed.
+    next_steps: (A) PED_GV, one of: (1) NEW-28 implementation, reportGV() names missing required columns up front (BACKLOG.md:29, READY, Effort S, strict TDD; at its scope gate ask whether the new check replaces or precedes the :291 one, and whether "clear message" means missing columns only); (2) the next owner-decision group, 8 ids left, DECISION NEEDED, Effort S each: walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), updateProgress null checks (NEW-62; S887 gave reportGV.R:229,248,267, I re-checked only :229); NEW-24 stays on issue #123. One group per session, in plain words; measure the audit's claim first (this session found one stale claim; the S781 table's line numbers predate the S881 split). (B) BACKLOG.md compression (READY, Effort L): 59,454 B, 2,704 B over the 56,750 B read budget. (C) Ledgers: CHANGELOG.md 237,053 B and HANDOFFS.md 246,645 B after this commit, 25,091 B and 15,499 B under the 262,144 B no-content read limit; this session added 4,204 B and 4,388 B, so about 5 and 3 sessions are left (an estimate from this one session; S887 estimated 8 and 5): needs an owner decision and scheduling now, and shorter receipts help. (D) Master is 117 ahead of origin after this commit; push only on the owner's say-so; none of the unpushed commits has had a CI run and R/ changed in earlier sessions, so wait for CI after a push.
+    key_files: docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:273-319 (Decision record 10), :390-407 (probes P10, P11); BACKLOG.md:8-27 (PED_GV item), :29-41 (the reportGV() item); R/reportGV.R:179 (kinship), :223 (geneDrop), :291 (the id and sex check); R/assertRequiredColsPresent.R:19 (the validator a new check would call); R/runQcStudbook.R:125,212 (the two-mode calls); R/correctParentSex.R:95-103,122-125; R/checkParentAge.R:92
+    gotchas: smallPed is not a good-input fixture for reportGV(): it fails unmodified ("sire and dam must have had alleles assigned"); use the @examples pipeline (examplePedigree, qcStudbook(minSireAge = 2, minDamAge = 2), setPopulation, trimPedigree; 704 rows; guIter = 10L, guThresh = 3). reportErrors is the app's QC contract: never change one function's return alone. The open-count script (first-column ids with \** for bold, closure-section rows, decision rows starting CLOSED) gave 13 on the S887 report and 10 now. The ratchet's results hash changes on every run (c9267edb1761 in S887's receipt, 0da1ad39d65f at Orient, 60e009e87fe0 at close-out) because the measured tarball size moves by tens of bytes even when every changed path is build-ignored: compare the pass/fail counts and the manifest. core.hooksPath is unset here, so the ledger co-staging hook is not enforced. Guess, not traced: a new up-front check in reportGV() cannot change app behavior since the app runs QC first; run the test-app-* and test-e2e-* files in the full suite after any change.
+    runtime_smoke: not applicable: docs only, no runtime behavior changed (probes called package code through load_all, read-only); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 60e009e87fe0 · manifest aa983075d6a2; CI not run (nothing pushed; every changed path is build-ignored)
+    changelog_ref: S888 DONE entry
+    commit: the close-out commit that carries this receipt; claim 3dae4cfd2, decision record 5a47eb8a3, probes b0f748891
+    ```
+
+    ```handoff
+    session: S887
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- share the one-simulation step (NEW-50): the owner picked it at Phase 0 from the priorities list (S886's next step A). createSimKinships() and cumulateSimKinships() now call one internal .simulateKinship(); strict TDD with an AskUserQuestion gate at PRE-RED->RED, RED->GREEN and GREEN->REFACTOR, each answered yes by the owner.
+    what_was_done: claim c7873ece6; RED b96bbb45f (tests/testthat/test_simulateKinship.R, 9 tests: 5 error on the missing helper, 2 fail on the delegation assertions, 2 pass by design as pins); GREEN de45c8928 (new R/simulateKinship.R plus one call site in each exported function); REFACTOR 38c3f713c (two comments reworded, parsed code identical to GREEN); closure 0261cc214 (Closure record 9 in docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md, BACKLOG item removed, open count 14 -> 13 by script); the close-out commit carries these records and Learning 853. Full unfiltered test_dir 2972 tests, 0 failed, 0 error; lintr 0 findings on the 3 R files; devtools::check() 0 errors, 0 warnings, 0 notes with tests and vignettes skipped.
+    next_steps: (A) PED_GV: NEW-24 (issue #123, leave) plus 12 owner decisions, DECISION NEEDED, Effort S each, strict TDD for any code: error/return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), updateProgress null checks (NEW-62; 3 blocks at reportGV.R:229,248,267); one cluster at a time, in plain words, measuring the audit's claim first. (B) BACKLOG.md is 57,996 B, 1,246 B over the 56,750 B one-read budget (READY, Effort L editorial pass; trimming one long item may be enough to clear the HIGH flag). (C) CHANGELOG.md and HANDOFFS.md are near the 262,144 B read limit (sizes in SESSION_NOTES.md); needs scheduling and an owner decision. (D) Push only on the owner's say-so; R/ files changed this session, so CI is not skippable when it is pushed.
+    key_files: R/simulateKinship.R (the helper); R/createSimKinships.R:59-64 and R/cumulateSimKinships.R:62-66 (call sites); tests/testthat/test_simulateKinship.R (9 tests); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:263-271 (Closure record 9); BACKLOG.md:8-27 (PED_GV item)
+    gotchas: the helper takes whatever pedigree the caller prepared: createSimKinships() converts to a data.table once before its loop, cumulateSimKinships() passes its input and makeSimPed() converts on every call (behavior unchanged); mockery::stub works on the dotted helper, but a twin pair in a delegation test must name ids that exist in the fixture or the real kinship() errors before the call-count assertion; a job started as ( cmd ) & inside a run_in_background call reports the wrapper's exit, so read the job's own last line before trusting it; .lintr excludes tests (added in merge 3821bef52, 2025-07-24, no recorded reason), so test files are linted nowhere
+    runtime_smoke: partial -- the Shiny app was not launched: no code in R/ calls either function (only roxygen examples, tests and the vignette simulatedKValues.Rmd do), so the app cannot reach them; the examples of both changed functions and of countKinshipValues(), summarizeKinshipValues() and kinshipMatricesToKValues() ran under devtools::check() (checking examples OK; tests and vignettes skipped, vignette build not run); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results c9267edb1761 · manifest aa983075d6a2
+    changelog_ref: S887 DONE entry
+    commit: the close-out commit that carries this receipt; claim c7873ece6, RED b96bbb45f, GREEN de45c8928, REFACTOR 38c3f713c, closure 0261cc214
+    ```
+
+    ```handoff
+    session: S886
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- PED_GV audit follow-through (owner picked it at Phase 0; S885's next step A), scoped to one cluster: the simulation driver (NEW-50, NEW-51). The owner chose "Share the 6-line step"; Decision record 8 written and the work queued as a BACKLOG item; no code touched, nothing else owed on the decision itself
+    what_was_done: claim a5cc50a5d; decision 71b1ce4c0 (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:238-261, Decision record 8: NEW-50 SHARE THE STEP, stays open until it ships; NEW-51 CLOSED, ACCEPTED, no guard; BACKLOG.md:29 new READY item; BACKLOG PED_GV item now says 14 remain). Measured first-hand on smallPed (pop LETTERS[1:7], seed 42): 200 simulated matrices, row and column order identical in all 200 and equal to ped$id, and cumulateSimKinships()'s mean equals the mean of createSimKinships()'s matrices under one seed; neither function is called in R/; tests pin seeded numbers per function but nothing ties the two together. A script over the report's table confirms 43 ids, 29 closed, 14 open (NEW-24, NEW-50 and 12 owner decisions). wordlist_coverage 3, pkgdown_reference_config 5, newsReleaseState 26 tests 0 failed 0 error. SESSION_NOTES.md 36,450 B to 33,663 B (S860 record, S860 and S859 evaluations removed, S885 condensed)
+    next_steps: (A) Build the owner's decision: BACKLOG.md:29 item (READY, Effort S, strict TDD); first RED test is same seed, cumulateSimKinships() mean equals the mean of createSimKinships() matrices; PRE-RED to RED gate via AskUserQuestion; staged commits under the 5-file cap; the owner was not asked whether cumulateSimKinships() gains verbose. (B) PED_GV: NEW-24 (issue #123, leave) plus 12 owner decisions, each DECISION NEEDED, Effort S: error/return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, 19, 21, 26, 57), updateProgress null checks (NEW-62; 3 blocks); one cluster at a time, in plain words, measuring the audit's claim first. (C) BACKLOG.md compression (READY, Effort L; 59,274 B). (D) after this commit CHANGELOG.md is 229,408 B and HANDOFFS.md 238,600 B, 32,736 B and 23,544 B under the 262,144 B no-content read limit; this session added 2,625 B and 4,146 B, so at that rate about 12 and 6 sessions are left (an estimate from one session; S885's 2 KB each, 14-19 sessions, was an average over earlier trims and looks too low for HANDOFFS.md); needs scheduling and an owner decision soon. (E) master 107 ahead of origin after this commit; push only on the owner's say-so
+    key_files: docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:238-261 (Decision record 8); BACKLOG.md:8-27 (PED_GV item), :29 (sim item); R/createSimKinships.R:60-65, R/cumulateSimKinships.R:63-68 (the repeated step); tests/testthat/test_createSimKinships.R:70 and test_cumulateSimKinships.R:63 (seeded numbers)
+    gotchas: createSimKinships() converts the pedigree to a data.table and cumulateSimKinships() does not, so the helper takes a prepared pedigree, and the same-seed equality was measured on smallPed only; making cumulateSimKinships() call createSimKinships() would hold n matrices (about 72 GB at 3,000 animals and 1,000 simulations, by arithmetic, not run), so each function keeps its own loop; in zsh an unquoted --include=*.R fails with "no matches found", and never head a caller grep before saying "no callers"; recompute the open count by script, never carry it; BACKLOG PED_GV lines 24-25 are very long, edit them with short single-line old_strings; the ledger-growth figure in next step D is an estimate
+    runtime_smoke: none -- docs only, nothing runs differently; no .R file changed so no lint; full suite, devtools::check() and CI not run (every changed path build-ignored: ^docs$, BACKLOG, CHANGELOG, HANDOFFS, SESSION_NOTES, PROJECT_LEARNINGS; no test reads any of them as a file); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 5519806d55ad · manifest aa983075d6a2
+    changelog_ref: S886 DONE entry
+    commit: the close-out commit that carries this receipt; claim a5cc50a5d, decision 71b1ce4c0
+    ```
+
+    ```handoff
+    session: S885
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 8
+    active_task: DONE -- PED_GV audit follow-through (owner picked it at Phase 0; S884's next step A), scoped by the owner to "Close the 11 fixed ids": Closure record 7 written and the BACKLOG count corrected from 28 to 15; nothing owed on it
+    what_was_done: claim c618eaab3; closure record 482729a74 (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214-236 closes NEW-14, NEW-31, NEW-32, NEW-35, NEW-38, NEW-41, NEW-56, NEW-63, PED-10, PED-11, NEW-43, each checked against today's code, its pinned tests and git log -S; BACKLOG.md PED_GV item now says 15 remain and names NEW-62); a script over the report's 43-id table confirms 15 open (NEW-24 plus 14 owner decisions); 6 pinning test files pass and wordlist_coverage, pkgdown_reference_config, newsReleaseState 34 tests 0 failed 0 error; SESSION_NOTES.md 40,332 B to 35,784 B (S859 record, S858 and S857 evaluations removed, S884 condensed)
+    next_steps: (A) PED_GV: NEW-24 (issue #123, leave) plus 14 owner decisions, each DECISION NEEDED, Effort S, strict TDD for any code: error/return contract (PED-5, PED-6, NEW-28, NEW-36), walk helpers (PED-3, NEW-42; exported), sim driver (NEW-50, NEW-51), constants and HTML builders (NEW-18, 19, 21, 26, 57), updateProgress null checks (NEW-62); ask one cluster at a time. (B) BACKLOG.md compression (READY, Effort L; 57,805 B). (C) CHANGELOG.md (224,845 B) and HANDOFFS.md (231,701 B) at Orient sit 37 KB and 30 KB under the 262,144 B no-content read limit; estimate about 2 KB per session each (S784/S789 trims to S885), so roughly 14-19 sessions left; needs scheduling and an owner decision (related items BACKLOG.md:319, :339). (D) kinship2 drawing features (which column marks deceased); 3.0.0 release prep and colony-snapshot backfill each need a scoping session. (E) master 104 ahead of origin after this commit; push only on the owner's say-so
+    key_files: docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:214-236 (Closure record 7); BACKLOG.md:8-27 (PED_GV item); BACKLOG.md:319,339 (ledger-trim items); R/reportGV.R:229,248,267 (NEW-62 blocks)
+    gotchas: recompute the open count from the report's table, never carry it (parse the 43 ids, the first column bolds some like **NEW-31**, subtract every closure row); an audit id never appears in a commit message, so attribute a fix with git log -S'<old text>' -- <file>; the BACKLOG PED_GV item has two very long lines (24-25), edit them with short single-line old_strings; the ledger-growth figure in next step C is an estimate from two trim points, not a forecast
+    runtime_smoke: none -- docs only, nothing runs differently; no .R file changed so no lint; full suite, devtools::check() and CI not run (every changed path build-ignored, no test reads the closure text); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 880a0da4fe30 · manifest aa983075d6a2
+    changelog_ref: S885 DONE entry
+    commit: the close-out commit that carries this receipt; claim c618eaab3, closure record 482729a74
+    ```
+
+    ```handoff
+    session: S884
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- docs-audit slice-1 leftovers (owner picked them at Phase 0; S883's next step A): the tracked kinship2-fidelity-validation.pdf deleted and trackC-nprc-rectilinear.png regenerated; nothing owed on either
+    what_was_done: claim 61b8978e8; PDF deleted 4e7bb2725 (git rm vignettes/articles/kinship2-fidelity-validation.pdf, added by accident by S825's 9a2a5ddb7 and recoverable from it; BACKLOG docs-audit item updated); picture 5bbad09e3 (trackC-nprc-rectilinear.png only, 992 x 738, rendered by a scratch copy of data-raw/kinship2FidelityValidation.R with outDir redirected; owner compared old and new side by side and approved; diff vs HEAD was exactly the audit's box x 508-678 y 171-217, the other 7 images 0 px over threshold); records in the close-out commit; Phase 0 found no ledger gap (frontiers at HEAD 66216b289) so no backfill; measured on the real layout: the new dashed arc Y to __dup_Y_1 (roundness 0.25) does not enter W (min Chebyshev 26.29 vs half-side 25, min Euclid 28.51) so it skims the top edge by about 1.3 layout units
+    next_steps: (A) PED_GV decisions (DECISION NEEDED, Effort S each; 28 ids), or the two kinship2 drawing features (which column marks deceased); (B) BACKLOG.md compression pass (READY, Effort L, recurring; 57 KB at Orient); (C) 3.0.0 release prep and the colony-snapshot backfill each need their own scoping session; (D) optional, owner's call, not filed: the arc repair pass scores arcs against a disc of radius size, which for a square (half-side = size) is the inscribed circle, so a clear arc could still cut a corner (measured on this one edge only: it did not); (E) master is 101 ahead of origin after this commit (97 at Orient plus claim, PDF, picture, close-out); push only on the owner's say-so
+    key_files: vignettes/articles/kinship2-fidelity-validation-img/trackC-nprc-rectilinear.png; R/makePedigreeDiagramData.R:2432 (.curvedCwVia), :2503 (.arcDiscHitCount), :3038-3078 (roundness repair loop); docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md; data-raw/kinship2FidelityValidation.R:67,250,323; PROJECT_LEARNINGS.md Learning 850
+    gotchas: the generator writes all 8 images and hard-codes outDir (line 67), so review a copy with outDir redirected and copy only the changed file; its console labels (lines 250, 323) still say dogleg, which the article retracted (console only, not changed); git show HEAD:<png> gives the committed image for a diff; the S883 Phase 0 list said 7 numbered items, I counted 6
+    runtime_smoke: none -- docs and an image only, nothing runs differently; no .R file changed so lint not needed; 4 test files that read the articles dir or scan docs 116 tests 0 failed 0 error, then wordlist_coverage, newsReleaseState, sexCodes re-run after the notes edits 116 tests 0 failed 0 error; full test_dir and devtools::check() not run; CI not waited on (every changed path build-ignored, no test reads the image); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results bdf0fc651eab · manifest aa983075d6a2
+    changelog_ref: S884 DONE entry
+    commit: the close-out commit that carries this receipt; claim 61b8978e8, PDF 4e7bb2725, picture 5bbad09e3
+    ```
+
+    ```handoff
+    session: S883
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- stale @noRd roxygen of .addRectilinearWaypoints() fixed (owner picked it at Phase 0; S882's next step A); nothing owed on it
+    what_was_done: claim 5fa503303; deliverable 13ab22bc1 (R/makePedigreeDiagramData.R:2109-2113 now says makePedigreeMatingLayout() calls .addRectilinearWaypoints(), then .resolveEdgeNodeCollisions(), when edgeStyle is "rectilinear" (default since S574) and "direct" skips it; the "own default direct", "no call site yet" and "Migration Path step 1" wording is gone; BACKLOG docs-audit item marks the S882-found straggler FIXED S883); records in the close-out commit; Phase 0 found no ledger gap (frontiers at HEAD b3caf68db) so no backfill; read-only grep of every quoted "direct" comment in R/ found no further straggler
+    next_steps: (A) remaining slice-1 leftovers, owner decisions (DECISION NEEDED, Effort S): delete or git-ignore the tracked vignettes/articles/kinship2-fidelity-validation.pdf; regenerate trackC-nprc-rectilinear.png (data-raw/kinship2FidelityValidation.R; owner looks at the new arc touching the W square first); (B) PED_GV decisions (28 ids) and the other DECISION NEEDED items in BACKLOG, incl. the two missing kinship2 drawing features (which column marks deceased); (C) BACKLOG.md compression pass (READY, Effort L, recurring; 57 KB at Orient); (D) master is 97 ahead of origin after this commit (94 at Orient plus claim, deliverable, close-out); push only on the owner's say-so
+    key_files: R/makePedigreeDiagramData.R:2097-2113 (fixed block), :1675 (real default), :2069-2070 (call site); R/modPedigree.R:682 (edgeStyle wiring); BACKLOG.md docs-audit item (grep "FIXED S883"); PROJECT_LEARNINGS.md Learning 849
+    gotchas: BACKLOG docs-audit item is one very long line per cluster, so edit it with short single-line old_strings; the Phase 0 picker showed 4 of 7 numbered items (BACKLOG compression, 3.0.0 release prep, snapshot backfill were prose-only); S882's note that plain gh run list returns stale September rows did not hold at this Orient
+    runtime_smoke: none -- comment-only change, parsed code identical before and after (identical(parse(keep.source = FALSE)) TRUE, 5 comment lines replaced by 5); lintr::lint_package() 0 lints; 12 test files naming the file or scanning R/ 1,084 tests 0 failed 0 error; full test_dir and devtools::check() not run; Shiny not launched (nothing changes at runtime); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 688b57f32a9a · manifest aa983075d6a2
+    changelog_ref: S883 DONE entry
+    commit: the close-out commit that carries this receipt; claim 5fa503303, deliverable 13ab22bc1
+    ```
+
+    ```handoff
+    session: S882
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 7
+    active_task: DONE -- docs staleness audit leftover (owner picked 1 of 3): stale "defaulting to direct" comment in R/modPedigree.R fixed; BACKLOG's stale BB14 note corrected; nothing owed on it
+    what_was_done: Phase 0 ledger backfill 9a1224603 (S881 2/2 records commit 188af9077); claim 1cd71ab9c; deliverable 67c83def8 (R/modPedigree.R:459-462 now says "rectilinear", the default since S574 cb5141f75, and drops the pre-issue-142 byte-identical reason; BACKLOG marks BB14 FIXED S830, the comment FIXED S882, and records one more stale statement at R/makePedigreeDiagramData.R:2110-2113); close-out commit holds Learning 849, records, and removal of the S808-S810 SESSION_NOTES records
+    next_steps: (A) same-kind stale roxygen at R/makePedigreeDiagramData.R:2110-2113 (READY, Effort S, comment only; @noRd, no man page); (B) remaining slice-1 leftovers, owner decisions: delete or ignore tracked kinship2-fidelity-validation.pdf, regenerate trackC-nprc-rectilinear.png (owner looks at the new arc first); (C) PED_GV and other DECISION NEEDED BACKLOG items. Push only on owner say-so (master 94 ahead of origin, from git rev-list --count origin/master..HEAD)
+    key_files: R/modPedigree.R:459-462; R/makePedigreeDiagramData.R:2110-2113 (stale), :1675 (real default), :2070 (call site); BACKLOG.md docs-audit item (grep "FIXED S882"); PROJECT_LEARNINGS.md Learning 849
+    gotchas: BACKLOG docs-audit item is one very long line per cluster, so edit it with short single-line old_strings; a single-line grep for "default ... direct" misses comments that wrap (the fixed one did), read the comment lines naming the old value; plain gh run list --branch master returns stale September rows, use gh run list --commit <sha>; the docs-audit item was tagged READY but its own last sentence says nothing further is scoped
+    runtime_smoke: none -- comment-only change, parsed code identical before and after (identical(parse(keep.source = FALSE)) TRUE, 3 comment lines changed); lintr::lint_package() 0 lints; 7 test files naming modPedigree.R or scanning R/ 127 tests 0 failed 0 error; full test_dir and devtools::check() not run; Shiny not launched (nothing changes at runtime); quality_ratchet: not run
+    changelog_ref: S882 DONE entry
+    commit: the close-out commit that carries this receipt; claim 1cd71ab9c
+    ```
+
+    ```handoff
+    session: S881
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- getPotentialParents() split into five internal helpers (PED-4, NEW-54 closed); nothing owed on it
+    what_was_done: claim d5ccda82c; plan approved in plan mode; RED b446143ac + 8509d4b7d (5 pinned fixtures; 5 characterization tests pass pre-split, 12 helper tests fail on missing functions); GREEN 5d9dbbfa9 (R/getPotentialParentsHelpers.R new, R/getPotentialParents.R delegates); REFACTOR 8add079bb (is.na(exit) consistency); BACKLOG item removed, triage Closure record 6, Learning 848 in the close-out commit
+    next_steps: pick from BACKLOG: docs staleness audit next slice (READY, Effort L, one report per session) or an owner decision (PED_GV overhaul roots: error/return contract, walk helpers, sim driver, constants/HTML builders; getAncestors absent id; isAddedRecord helper). Push only on owner say-so (master about 88 ahead of origin; computed from git rev-list at close-out)
+    key_files: R/getPotentialParentsHelpers.R (five helpers); R/getPotentialParents.R:78-150 (loop now calls them); tests/testthat/test_getPotentialParentsHelpers.R; tests/testthat/fixtures/gpp_pinned_*.rds; docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record 6); PROJECT_LEARNINGS.md Learning 848
+    gotchas: pinned fixtures were saved from the pre-split code, so regenerating them from today's code would erase the check; helper params must not share a column name (focalBirth, not birth) inside data.table calls; test-e2e-potential-parents-module.R needs NPRC_RUN_E2E=true to run (4 tests, passed); one full run hit a Chrome-startup error in test_positionMatingUnitForest.R:1971 that did not repeat
+    runtime_smoke: full test_dir 366 files 0 failed 0 error 187 skipped (after REFACTOR); lintr::lint_package() 0 lints; devtools::check() 0/0/0 (before REFACTOR); e2e potential-parents with NPRC_RUN_E2E=true 4 tests 0 failed; Shiny tab not launched by hand; quality_ratchet: not run
+    changelog_ref: S881 DONE entry
+    commit: the close-out commit that carries this receipt; claim d5ccda82c
+    ```
+
+    ```handoff
+    session: S880
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 8
+    active_task: DONE -- PED_GV dam-list confidence: damBasis label shipped (NEW-55 closed); function split deferred to its own session
+    what_was_done: claim 9dbf45d61; RED a0388e5f6 (5 tests for damBasis, all failing on the missing field); GREEN ed344a83a (R/getPotentialParents.R, man/getPotentialParents.Rd); REFACTOR none needed; NEWS.Rmd/NEWS.md entry, triage Decision record 5, BACKLOG split item, Learning 847 in the close-out commit
+    next_steps: pick from BACKLOG: split getPotentialParents (PED-4, NEW-54; needs plan-mode approval first, Effort M), other PED_GV owner decisions (error/return contract, walk helpers, sim driver, constants/HTML builders), docs-staleness leftovers, getAncestors absent id, isAddedRecord helper. Push only on owner say-so (master about 82 ahead of origin)
+    key_files: R/getPotentialParents.R:156-231 (tier tracking and entry list); tests/testthat/test_getPotentialParents.R:555-615 (damBasis tests); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Decision record 5); BACKLOG.md:8-42; PROJECT_LEARNINGS.md Learning 847
+    gotchas: fallbackPed() needs at least one female with an offspring (paste0("KID_", character(0)) gives "KID_"); devtools::document() rewrites man/nprcgenekeepr-package.Rd from DESCRIPTION (stale "five groups" text) -- I reverted that unrelated change, so it is still stale; NEWS.md re-knit also pulled in about 24 lines that were already stale
+    runtime_smoke: full test_dir 365 files 0 failed 0 error 187 skipped; lintr::lint_package() 0 lints; devtools::check() 0 errors 0 warnings 0 notes; Shiny tab not launched (the tab does not read damBasis); quality_ratchet: not run
+    changelog_ref: S880 DONE entry
+    commit: the close-out commit that carries this receipt; claim 9dbf45d61
+    ```
+
+    ```handoff
+    session: S879
+    date: 2026-10-03
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- sexCodes adoption stage 6 of 6 (full R/ scan with allowlist; PED-2, NEW-29, PED-7 closed); nothing owed on sexCodes
+    what_was_done: claim e9823c856; RED 2ea50611a (test_sexCodes.R scans every R/*.R minus allowlist; passes on current code, proved able to fail by a planted letter at calcNeSexRatio.R:62); GREEN 9c6c034a6 (triage Closure record 4, BACKLOG block removed, no R/ change); REFACTOR removed the six-file test and helper now covered by the scan; records in the close-out commit
+    next_steps: pick from BACKLOG: docs staleness audit next slice (READY, Effort L, one report per session) or an owner decision (PED_GV overhaul roots, isAddedRecord() helper). Push only on owner say-so (master about 79 ahead of origin)
+    key_files: tests/testthat/test_sexCodes.R (scanForBareSexCodeLiterals, sexCodeAllowedFiles, sexCodeAllowedLines, self-test); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record 4); BACKLOG.md:8-28 (PED_GV item, open ids now 29); PROJECT_LEARNINGS.md Learning 846
+    gotchas: allowlist lines match trimmed text, so reflowing one fails the stale-allowlist test; a mutation check must put the letter inside a function body or load_all fails; open-id count went 31 to 29 because PED-7 was already counted closed in S818
+    runtime_smoke: full test_dir 365 files 0 failed 0 error 187 skipped; lintr::lint_package() 0 lints; devtools::check() 0 errors 0 warnings 0 notes; no runtime change (tests and docs only); quality_ratchet: not run
+    changelog_ref: S879 DONE entry
+    commit: the close-out commit that carries this receipt; claim e9823c856
+    ```
+
+    ```handoff
+    session: S878
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- sexCodes adoption stage 5 of 6 (makePedigreeDiagramData); stage 6 remains
+    what_was_done: claim 4ea9aed71; RED 40a8e53de (stage-5 test in test_sexCodes.R; failed on exactly the 6 expected lines); GREEN b3f3a3ad5 (male/female locals from sexCodes at line 901, 6 bare letters replaced); REFACTOR nothing to change; close-out commit carries records
+    next_steps: stage 6 of docs/planning/sexcodes-adoption-plan.md section 4: replace the stage lists in test_sexCodes.R with a scan of every R/*.R minus the allowlist (sexCodes.R, convertSexCodes.R, createPedOne.R, createPedSix.R, the five non-sex lines and groupAddAssign:179 by exact text); close PED-2, NEW-29, PED-7 in docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md; remove the BACKLOG block; run devtools::check()
+    key_files: tests/testthat/test_sexCodes.R (stage-5 test); R/makePedigreeDiagramData.R:901-902 (locals), 967-968, 1092-1093, 1264-1265 (uses); PROJECT_LEARNINGS.md Learning 845
+    gotchas: allowlist the five non-sex lines by exact trimmed text, never whole files (qcStudbook.R especially); groupAddAssign keeps its literal default per owner answer 1; makePedigreeDiagramData.R:.shapeForVec still has a parameter named sexCodes, harmless but a future use inside it would break
+    runtime_smoke: before/after snapshot of diagram data and mating layout on 3 pedigrees identical(); full test_dir 365 files 0 failed 0 error 187 skipped; lintr::lint_package() 0 lints; devtools::check() not run (plan: stage 6); quality_ratchet: not run
+    changelog_ref: S878 DONE entry
+    commit: the close-out commit that carries this receipt; claim 4ea9aed71
+    ```
+
+    ```handoff
+    session: S877
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- sexCodes adoption stage 4 of 6 (correctParentSex, addParents, modORIPReporting); stages 5-6 remain
+    what_was_done: claim df4767656; RED 4295ec5b4 (stage-4 list in test_sexCodes.R; failed on exactly the 14 expected lines); GREEN 3040c6d8a (14 bare letters now use sexCodes; keepAsSire/keepAsDam locals); REFACTOR nothing to change; close-out commit carries records
+    next_steps: stage 5 of docs/planning/sexcodes-adoption-plan.md section 4: makePedigreeDiagramData.R, hoist male/female <- sexCodes[[...]] out of loops at ~965/1090/1262; RED = add the file to the guard list; DONE needs the 9 pedigree-diagram test files green and rendered output identical on a fixed pedigree before and after
+    key_files: tests/testthat/test_sexCodes.R (stage-4 test); R/correctParentSex.R:82-90,97-98,110-111; R/addParents.R:54,62; R/modORIPReporting.R:210-218,312-313,359-360; PROJECT_LEARNINGS.md Learning 844
+    gotchas: makePedigreeDiagramData.R has a parameter named sexCodes in .shapeForVec (~1840) that shadows the constant, so do not use it there; identical(sexOf[[p]], ...) keeps [[ ]] access; stage 5 changes drawn output, so capture a before-render first; e2e needs NPRC_RUN_E2E=true
+    runtime_smoke: e2e-orip-module with NPRC_RUN_E2E=true 9 pass; 5 related test files pass; lintr::lint_package() 0 lints; full test_dir 365 files 0 failed 0 error 187 skipped; devtools::check() not run (plan: stage 6); quality_ratchet: not run
+    changelog_ref: S877 DONE entry
+    commit: the close-out commit that carries this receipt; claim df4767656
+    ```
+
+    ```handoff
+    session: S876
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- sexCodes adoption stage 3 of 6 (getPotentialParents, reportGV, modPyramid, correctUnknownParentMeanKinship); stages 4-6 remain
+    what_was_done: claim f4a645440; RED 6fafbcd30 (assignmentPattern, self-test lines, stage-3 list in test_sexCodes.R; failed on exactly the 7 expected lines); GREEN 01600af88 (7 bare letters now use sexCodes[["male"]]/[["female"]]); REFACTOR nothing to change; close-out commit carries records
+    next_steps: stage 4 of docs/planning/sexcodes-adoption-plan.md section 4: correctParentSex (97,98,108,109), addParents (54,62), modORIPReporting; RED = stage-4 file list in test_sexCodes.R; GREEN also runs tests/testthat/test-e2e-orip-module.R
+    key_files: tests/testthat/test_sexCodes.R (findBareSexCodeLiterals, assignmentPattern, stage-3 test); R/getPotentialParents.R:164,171; R/reportGV.R:293,295; R/modPyramid.R:121,122; R/correctUnknownParentMeanKinship.R:172
+    gotchas: correctParentSex:97,98 use c("H","U","M") inside %in%, so confirm RED flags them; assignment scan of all R/ hits only stage 4 files and allowlisted convertSexCodes; macOS sed -i needs -i ''; wrap at 80 columns
+    runtime_smoke: 6 related test files pass; lintr::lint_package() 0 lints; full test_dir 365 files 0 failed 0 error 187 skipped; no shinytest2 run (modPyramid changed only sum() tests); devtools::check() not run (plan: stage 6)
+    changelog_ref: S876 DONE entry
+    commit: the close-out commit that carries this receipt; claim f4a645440
+    ```
+
+    ```handoff
+    session: S875
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- sexCodes adoption stage 2 of 6 (getSpeciesMinBreedingAge, resolveBreedingAge, checkParentAge, getKinshipWithMaleStatus); stages 3-6 remain
+    what_was_done: claim b7f865a4c; RED 672d2d5dd (stage-2 list and argumentPattern in test_sexCodes.R, self-test lines); GREEN 0ac3b7858 (8 bare letters in 4 R files now use sexCodes[["male"]]/[["female"]]); records in the close-out commit
+    next_steps: stage 3 of docs/planning/sexcodes-adoption-plan.md section 4: getPotentialParents, reportGV, modPyramid, correctUnknownParentMeanKinship; RED = stage-3 file list in test_sexCodes.R plus an assignment-form pattern (correctUnknownParentMeanKinship:172 assigns a letter); re-run plan section 2 greps first; estimate: 4 R files + the guard test = 5 files
+    key_files: tests/testthat/test_sexCodes.R (findBareSexCodeLiterals, argumentPattern, stage-2 test); R/getSpeciesMinBreedingAge.R:57-58; R/resolveBreedingAge.R:35-40; R/checkParentAge.R:148-153; R/getKinshipWithMaleStatus.R:51-53; PROJECT_LEARNINGS.md Learning 842
+    gotchas: argumentPattern also matches correctParentSex:108-109 (stage 4 scope) and the known non-sex lines (convertFromCenter:28, convertStatusCodes:40, obfuscateId:53-54, qcStudbook:412); new lines must stay within 80 columns for lint; macOS sed needs -i ''
+    runtime_smoke: 5 touched test files pass; lintr::lint_package() 0 lints; full test_dir 0 failed 0 error 187 skipped over 365 files; no Shiny module touched so no shinytest2 run; devtools::check() not run (plan: stage 6). quality_ratchet: not run.
+    changelog_ref: S875 DONE entry
+    commit: the close-out commit that carries this receipt; claim b7f865a4c
+    ```
+
+    ```handoff
+    session: S874
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- sexCodes adoption stage 1 of 6 (calcNeSexRatio, createColonySnapshot, getSexRatioWithAdditions, getProductionStatus); stages 2-6 remain
+    what_was_done: claim cc22c5ce6; guard in test_sexCodes.R widened (both-side ==/!=, %in%, identical, single quotes) with a self-test and stage-1 list; new test_getSexRatioWithAdditions.R; 7 bare letters in 4 R files now use sexCodes[["male"]]/[["female"]]; code and records in the close-out commit
+    next_steps: stage 2 of docs/planning/sexcodes-adoption-plan.md section 4: getSpeciesMinBreedingAge, resolveBreedingAge, checkParentAge (lines 148,151 are argument literals), getKinshipWithMaleStatus; RED = add a stage-2 file list to test_sexCodes.R and extend the guard for the "M", argument form; estimate: 4 R files + the guard test = 5 files
+    key_files: tests/testthat/test_sexCodes.R (findBareSexCodeLiterals, expectNoBareSexCodeLiterals, stage-1 test); tests/testthat/test_getSexRatioWithAdditions.R; R/getSexRatioWithAdditions.R:20-24; R/calcNeSexRatio.R:54-55; R/createColonySnapshot.R:154-155; R/getProductionStatus.R:83
+    gotchas: SESSION_NOTES.md has a 25,000-token commit ceiling (a claim stub was refused; methodology_trim.py had nothing to do, so condense an older record); macOS sed needs -i ''; getSexRatioWithAdditions counts every non-M (incl. U, H, NA) as female, pinned by the new test; test_createColonySnapshot.R warns about gene-drop outside test_that (unrelated)
+    runtime_smoke: 7 touched test files pass; lintr::lint_package() 0 lints; full test_dir 0 failed 0 error 187 skipped over 365 files; no Shiny module touched so no shinytest2 run. quality_ratchet: not run (no .quality-gates.json check performed).
+    ```
+
+    ```handoff
+    session: S873
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- scoping plan for the sexCodes adoption written (docs/planning/sexcodes-adoption-plan.md); no code touched
+    what_was_done: claim 6a84d5abe; plan document with grep inventory (43 code lines, 17 files), 6 staged sessions, guard-test design; BACKLOG item updated; records in the close-out commit
+    next_steps: owner answers plan section 5 (groupAddAssign default; leave convertSexCodes.R and fixtures), then stage 1 of the plan under strict TDD: RED = add the 4 stage-1 files to the guard list in tests/testthat/test_sexCodes.R plus a direct getSexRatioWithAdditions test. Push only on owner say-so
+    key_files: docs/planning/sexcodes-adoption-plan.md; tests/testthat/test_sexCodes.R:12-25 (guard helper); R/sexCodes.R:13; R/groupAddAssign.R:179; man/groupAddAssign.Rd:13; R/makePedigreeDiagramData.R:965,1090,1262,1840
+    gotchas: sexCodes["male"] (single bracket) is named and breaks identical(); .shapeForVec param named sexCodes shadows the constant; getSexRatioWithAdditions has no direct test; non-sex quoted letters at convertFromCenter:28, convertStatusCodes:40, obfuscateId:53-54, qcStudbook:412
+    runtime_smoke: not applicable -- planning/docs only; no tests or lint run (no .R file changed). quality_ratchet: not run.
+    ```
+
+    ```handoff
+    session: S872
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 8
+    active_task: DONE -- owner decision on PED-2/NEW-29/PED-7 recorded (adopt sexCodes everywhere); no code touched; docs only
+    what_was_done: claim bbe315dfa; BACKLOG item "Adopt sexCodes for every direct sex letter"; triage report Decision record 3 (ids stay open); records in the close-out commit
+    next_steps: (A) plan-mode scoping of the sexCodes adoption, then strict TDD in staged commits, first RED a guard test scanning R/ for quoted sex letters in comparisons. (B) other owner decisions: PED-5/6, PED-3/NEW-42, sim driver, constants/HTML builders. (C) find or drop "four likely code defects". (D) 3.0.0 scoping. (E) push only on owner say-so
+    key_files: R/sexCodes.R:13; R/convertSexCodes.R:56; R/addParents.R:54,62; R/makePedigreeDiagramData.R:965-1262; R/modORIPReporting.R (8 hits); BACKLOG.md (new sexCodes item); docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Decision record 3)
+    gotchas: count is 40 comparison lines in 16 files by grep, not the old 28/10; convertSexCodes level list and sexCodes.R itself are legitimate literals; roxygen examples also contain letters
+    runtime_smoke: not applicable -- docs only; no tests or lint run (no .R file changed). quality_ratchet: not run.
+    changelog_ref: S872 DONE entry
+    commit: the close-out commit that carries this receipt; claim bbe315dfa
+    ```
+
+    ```handoff
+    session: S871
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 7
+    active_task: DONE -- NEW-61 decision recorded (keep both founder definitions) and documented in calcFEFG/reportGV roxygen; docs only
+    what_was_done: claim f00361217; roxygen docs 5f6ba3c0b (R/calcFEFG.R, R/reportGV.R, two Rd); triage report Closure record 2 and BACKLOG update in the close-out commit
+    next_steps: (A) remaining owner decisions: PED-2 sex-code constants, PED-5/6 error contract, PED-3/NEW-42 walk helpers, sim driver, constants/HTML builders; read the code, then ask in plain words. (B) 3.0.0 release prep scoping. (C) Push only on the owner's say-so.
+    key_files: R/calcFEFG.R:1-20 (new founder paragraph); R/reportGV.R:97-108; docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record 2); BACKLOG.md:8-31
+    gotchas: roxygenise() also rewrites man/nprcgenekeepr-package.Rd (revert it); "four likely code defects" in S870's handoff has no findable list; 31 triage ids open
+    runtime_smoke: not applicable -- roxygen text only; lintr clean on both files, test_wordlist_coverage.R passes; full suite not run. quality_ratchet: not run.
+    changelog_ref: S871 DONE entry
+    commit: the close-out commit that carries this receipt; claim f00361217
+    ```
+
+    ```handoff
+    session: S870
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- status banners on the 26 dated docs/research and docs/audits files with a moderate slice 8 finding, plus two inline number corrections; docs only
+    what_was_done: claim 99631c962; banner commits 42d617267..19e8f917c (26 files, +52 -0); number fixes 89e3fc7c9; close-out commit holds the BACKLOG slice 8 note, slice 8 report update note, SESSION_NOTES, CHANGELOG and this receipt
+    next_steps: (A) Owner decisions: PED_GV leftovers and the four likely code defects (Effort S each, strict TDD), CV1/CV2. (B) 3.0.0 release prep scoping session. (C) Push only on the owner's say-so. (D) Optional: replace stale file:line cites in plans and gap analysis with function names
+    key_files: BACKLOG.md (slice 8 note, "Banner pass DONE S870"); docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md (source of every banner)
+    gotchas: banners rest on the slice 8 agents' tables spot-checked only where a number was written; "S673-S697" merges the report's S673 and S674 ids; a later change to a banner's subject makes it stale again
+    runtime_smoke: not applicable -- docs only; no tests or lint run (no .R file changed; docs/ is .Rbuildignore'd). quality_ratchet: not run.
+    changelog_ref: S870 DONE entry
+    commit: the close-out commit that carries this receipt; claim 99631c962
+    ```
+
+    ```handoff
+    session: S869
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- 15 SESSION_NOTES.md lines over 280 B re-wrapped; context_budget.py per-line finding cleared; docs only
+    what_was_done: claim cb178a6ef; close-out commit holds the wrapped SESSION_NOTES.md (text identical modulo whitespace, checked by diff), CHANGELOG entry, this receipt; removed the S842 record and S841 evaluation
+    next_steps: (A) Owner decision: banner pass on ~30 dated audit/research files (Effort M). (B) Owner decisions: PED_GV leftovers, CV1/CV2. (C) 3.0.0 release prep scoping. (D) Push only on the owner's say-so
+    key_files: SESSION_NOTES.md (records S859-S862 re-wrapped); python3 context_budget.py
+    gotchas: new long lines will trip the 280 B per-line check; wrap at about 110 columns. Master is 39 ahead of origin before the close-out commit
+    runtime_smoke: not applicable -- docs only; no tests or lint run (no .R file changed). quality_ratchet: not run.
+    changelog_ref: S869 DONE entry
+    commit: the close-out commit that carries this receipt; claim cb178a6ef
+    ```
+
+    ```handoff
+    session: S868
+    date: 2026-10-02
+    status: complete
+    self_score: 7
+    predecessor_score: 8
+    active_task: DONE -- docs-staleness audit slice 8 (docs/research, 41 older docs/audits files): 42 moderate, 62 minor, no code defects; report only, nothing applied
+    what_was_done: claim 0754aa0c5; close-out commit holds docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md, BACKLOG slice 8 note, CHANGELOG, SESSION_NOTES, this receipt. Four read-only subagents; headline claims re-run first-hand
+    next_steps: (A) Owner decision: banner pass on ~30 dated reports (Effort M). (B) SESSION_NOTES.md housekeeping (15 lines over 280 B). (C) Owner decisions: PED_GV leftovers, CV1/CV2. (D) 3.0.0 scoping session. (E) Push only on owner's say-so
+    key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE8_2026-10-02.md (Recommendation at top, agent tables A-D below); BACKLOG.md slice 8 note in the docs-staleness item
+    gotchas: agent tables are unedited and carry minors I did not re-check; census scripts overwrite tracked CSVs so D did not run them; PED_GV triage needs a banner most (926cc907b not listed in BACKLOG)
+    runtime_smoke: not applicable -- docs only, no runtime change; no tests or lint run (no .R file changed). quality_ratchet: not run.
+    changelog_ref: S868 DONE entry
+    commit: the close-out commit that carries this receipt; claim 0754aa0c5
+    ```
+
+    ```handoff
+    session: S867
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- Breeding Groups and Mate Pair share the override status sentence/paragraph, the confirm step and the filtered-rows-for-CSV helper in R/ancestryOverrides.R; behavior unchanged; strict-TDD REFACTOR
+    what_was_done: claim 1f4ac9b75; REFACTOR f5e833df9 (6 helper tests in tests/testthat/test_ancestryOverrides.R, helpers in R/ancestryOverrides.R, R/modMatePair.R and R/modBreedingGroups.R rewired); close-out commit holds BACKLOG removal and records. Full suite 9283 expectations 0 failed 0 error; lint 0
+    next_steps: (A) Docs-staleness audit next slice (READY, Effort L). (B) BACKLOG.md / SESSION_NOTES.md housekeeping (READY; 15 SESSION_NOTES lines over 280 B). (C) Owner decisions: PED_GV leftovers, CV1/CV2. (D) 3.0.0 release prep needs a scoping session. (E) Push only on the owner's say-so
+    key_files: R/ancestryOverrides.R:~130-205 (four helpers); R/modMatePair.R:~359-375 and ~490-510; R/modBreedingGroups.R:~476-495; tests/testthat/test_ancestryOverrides.R:~535-590
+    gotchas: onThisTab only changes the sentence wording; .ancestryOverrideApply() relies on callers req()-ing the rule key first; no app launch this session (e2e files skip without a browser); a stack trace prints when test_modMatePair.R runs but the file passes
+    ```
+
+    ```handoff
+    session: S866
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- the Mate Pair Excluded tab has an Export Excluded Pairs CSV button (downloadExcluded) holding the rows left after the curator's filter; strict TDD, REFACTOR skipped by owner
+    what_was_done: claim 2b777576a; RED+GREEN 6c72dd8e6 (tests/testthat/test_modMatePair.R 5 new tests, R/modMatePair.R); close-out commit holds NEWS.Rmd, colony-manager-guide.qmd, BACKLOG, CHANGELOG, records. Owner chose rows-shown scope and Excluded-tab-only button.
+    next_steps: (A) Optional READY refactor: share overrideConfirm observer and overrideStatus sentence, and the filter-then-write body of the two downloads. (B) Owner: PED_GV leftovers; CV1/CV2. (C) Docs-staleness audit next slice. (D) 3.0.0 release prep needs its own scoping session. (E) Push only on owner's say-so.
+    key_files: R/modMatePair.R:121-125 (button), R/modMatePair.R:~509-523 (handler); tests/testthat/test_modMatePair.R:449-570 (new tests)
+    gotchas: excludedTable is client-side renderDT but excludedTable_rows_all is still set by DT; NEWS.md not re-knit (S864 did not either); a stack trace prints when test_modMatePair.R runs though it reports 19/19.
+    runtime_smoke: not done -- no app launch; behaviour covered by testServer tests; full suite 2927 tests, 0 failed, 0 error; lint clean. quality_ratchet: not run.
+    changelog_ref: S866 DONE entry
+    commit: the close-out commit that carries this receipt; claim 2b777576a; RED+GREEN 6c72dd8e6
+    ```
+
+    ```handoff
+    session: S865
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 9
+    active_task: DONE -- the duplicated ancestry-override gate code (choices builder + confirm modal) in modBreedingGroups.R and modMatePair.R is shared as .ancestryOverrideChoices() and .ancestryOverrideModal(); behaviour unchanged; strict TDD
+    what_was_done: claim dfd40047d; RED+GREEN adb5d2991 (R/ancestryOverrides.R, test_ancestryOverrides.R, 8 new tests); REFACTOR 4ba8138f2 (both modules); close-out commit holds BACKLOG, CHANGELOG, records. Owner picked the item and the narrow scope (choices builder + modal only).
+    next_steps: (A) Owner: Excluded-tab export DECISION NEEDED; PED_GV leftovers; CV1/CV2. (B) Optional READY follow-up: share the overrideConfirm observer and overrideStatus sentence. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on owner's say-so.
+    key_files: R/ancestryOverrides.R:92-139 (helpers); R/modMatePair.R:336-353; R/modBreedingGroups.R:456-474; tests/testthat/test_ancestryOverrides.R (last 8 tests)
+    gotchas: helpers rely on the package-wide importFrom(shiny,...) in NAMESPACE (roxygen not re-run, NAMESPACE unchanged and already complete); modal helper takes session$ns the function; test_markerParentageLikelihood.R benchmark can flake under load (passed both full runs)
+    runtime_smoke: not done -- no manual app launch; behaviour covered by module testServer tests and e2e files in the full suite (2922 tests, 0 failed, 0 error, before and after REFACTOR); lint clean. quality_ratchet: not run (no .quality-gates.json run this session).
+    changelog_ref: S865 DONE entry
+    commit: the close-out commit that carries this receipt; claim dfd40047d; RED+GREEN adb5d2991; REFACTOR 4ba8138f2
+    ```
+
+    ```handoff
+    session: S864
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 8
+    active_task: DONE -- a valid zero-rule ancestry table now gives a 1-row inactive audit manifest instead of an error (Mate Pair and Breeding Groups); strict TDD, REFACTOR skipped by owner
+    what_was_done: claim a66e2e4bb; GREEN 38c38ee90 (R/ancestryOverrides.R, test_ancestryOverrides.R, test_matePairAncestryManifest.R); close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG, records. Owner chose scope = zero-rule only and behavior = inactive.
+    next_steps: (A) Owner: PED_GV leftovers; mate-pair residue (Excluded-tab export DECISION NEEDED; duplicated gate code READY refactor); CV1/CV2. (B) 3.0.0 release prep needs its own scoping session. (C) Push only on owner's say-so (about 25 ahead). (D) Optional: watch CI on 38c38ee90.
+    key_files: R/ancestryOverrides.R:212-290; tests/testthat/test_ancestryOverrides.R (zero-rule tests); tests/testthat/test_matePairAncestryManifest.R; R/modMatePair.R:562; R/modBreedingGroups.R:889
+    gotchas: modules pass any non-NULL rules table to the builder so a zero-rule run yields a 1-row CSV (download UI text not inspected); test_markerParentageLikelihood.R runtime benchmark flakes under load, re-run alone; guard test pinned to "not present in rules" so it cannot pass via the old stop
+    runtime_smoke: not done -- no app launch, no module-level test; builder covered at unit level only (stated as a gap). quality_ratchet: not run (no .quality-gates.json run this session).
+    changelog_ref: S864 DONE entry
+    commit: the close-out commit that carries this receipt; claim a66e2e4bb; GREEN 38c38ee90
+    ```
+
+    ```handoff
+    session: S863
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 8
+    active_task: DONE -- getProductionStatus 0 dams now NA (was green) and the Genetic Diversity heat map draws NA gray; strict TDD, REFACTOR skipped by owner
+    what_was_done: claim 1bcc1f76e; GREEN 317d61687 (R/getProductionStatus.R, R/makeGeneticDiversityHeatmap.R, man, 2 test files); close-out commit holds NEWS.Rmd, BACKLOG, CHANGELOG, records. Owner chose gray and producer + heat map scope. Full suite 1 failed (wordlist "grey") fixed, then re-run files green; lint clean.
+    next_steps: (A) Optional: run the app with a no-dam group and look at the heat map. (B) Owner: PED_GV leftovers, mate-pair residue, CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) Push only on owner's say-so (about 22 ahead). (E) Watch CI on 317d61687.
+    key_files: R/getProductionStatus.R:93-120; R/makeGeneticDiversityHeatmap.R:44-47,66; tests/testthat/test_getProductionStatus.R:55-85,163-175; tests/testthat/test_makeGeneticDiversityHeatmap.R:105-140
+    gotchas: use "gray" in prose (wordlist guard flags "grey"); devtools::document() churns man/nprcgenekeepr-package.Rd, revert it; one test pinning old green was missed in RED; modules' UI text for an NA cell not inspected.
+    runtime_smoke: not done -- heat map exercised through tests only, no app launch (stated as a gap). quality_ratchet: not run (no .quality-gates.json run this session).
+    changelog_ref: S863 DONE entry
+    commit: the close-out commit that carries this receipt; claim 1bcc1f76e; GREEN 317d61687
+    ```
+
+    ```handoff
+    session: S862
+    date: 2026-10-02
+    status: complete
+    self_score: 8
+    predecessor_score: 8
+    active_task: DONE -- header sweep of docs/planning (docs only): status banners on 31 plans plus docs/planning/README.md; BACKLOG audit item updated
+    what_was_done: claim b651541d4; banners c5c15b6ee, fdb24ef30, 5fed0fb1a, 026fbf102, c2a1ec432 (22 issue plans), f35538868, 93670ec95 (9 non-issue plans); close-out commit holds README, BACKLOG and records. 3 read-only subagents gathered evidence; I re-checked every cited hash, issue state and key artifact; unverified points are hedged in the banners.
+    next_steps: (A) Owner: getProductionStatus 0 dams green vs grey, then strict TDD. (B) Owner: PED_GV leftovers, mate-pair residue (zero-rule table, Excluded-tab export; duplicated gate code READY), CV1/CV2. (C) 3.0.0 release prep needs its own scoping session. (D) master is ahead of origin by about 20 commits; push only on owner say-so.
+    key_files: docs/planning/README.md; BACKLOG.md:149 (audit item); docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md (sweep table)
+    gotchas: banners say S862 and a later note; plans with no banner are unswept, not current; insert after the first "# " line (issue168 has a license header); zsh does not word-split variables, use bash -c for loops; agent evidence for issue9/13/73 was thin.
+    runtime_smoke: n/a -- docs only. quality_ratchet: not run (no code change).
+    changelog_ref: S862 close-out entry
+    commit: the close-out commit that carries this receipt; claim b651541d4
+    ```
+
+    ```handoff
+    session: S861
+    date: 2026-10-02
+    status: complete
+    self_score: 7
+    predecessor_score: 8
+    active_task: DONE -- slice 7c docs fixes (banners on 5 plans + reference qmd, in-place edits to runbook/outreach/Quarto docs, 3 BACKLOG pointers); header sweep remains
+    what_was_done: claim 1e0295d5b; banners 1754691e1; runbook/outreach/Quarto fixes a1cbfde13; BACKLOG pointers and audit-item status f6ae48446; close-out commit holds records. Re-checked rhub, cran-comments markers, versions, paths before writing; fixed two wrong cites caught on re-check.
+    next_steps: (A) Header sweep, docs only: one-line status for the 11 status-less plans and the 14+ stale-header plans in the S860 report, plus docs/planning/README (CHANGELOG is the authority). (B) Owner: getProductionStatus 0 dams green vs grey. (C) PED_GV decisions, mate-pair residue, 3.0.0 release prep. (D) master 11 ahead of origin; push only if the owner says.
+    key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md (sweep table); BACKLOG.md:149 (audit item); docs/planning/cran-2.0.0-phase5-runbook.md:3-11 (banner)
+    gotchas: banners are later notes, bodies untouched; insert after the H1 (issue167 has a license header first); 36 of 53 moderates were agent-only, so re-check before editing; BSD sed needs -i ''.
+    runtime_smoke: n/a -- docs only. quality_ratchet: not run (no code change).
+    changelog_ref: S861 close-out entry
+    commit: the close-out commit that carries this receipt; claim 1e0295d5b
+    ```
+
+    ```handoff
+    session: S860
+    date: 2026-10-02
+    status: complete
+    self_score: 7
+    predecessor_score: 8
+    active_task: DONE -- docs-staleness audit slice 7c, live docs/planning plans only (owner-scoped); report written, docs not fixed yet
+    what_was_done: claim 2c2d1aaea; close-out commit holds docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md, BACKLOG audit item, records. 4 read-only subagents audited 9 live plans; I re-checked 18 of 53 moderates; status sweep of 84 files done here.
+    next_steps: (A) Fix slice 7c: one banner per shipped plan (issue112/122/123/144/167 + reference qmd), in-place fixes to cran-2.0.0-phase5-runbook, nprc-outreach plan, quarto analysis, 3 BACKLOG pointers (report section "Recommended fixes"); docs only. (B) Owner call: getProductionStatus 0 dams -> green. (C) Still open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep. (D) Master is 5 commits ahead of origin; push only on the owner's say-so.
+    key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md; BACKLOG.md:100-160 (audit item), :224 (wrong Dragon 1 pointer), :445; docs/planning/cran-2.0.0-phase5-runbook.md:137,246-259,270-281
+    gotchas: 36 of 53 moderates rest on one agent's read; re-check before editing. Many plan bodies are dated design records: use banners, not rewrites. BSD sed needs -i ''. Plan header status lags; CHANGELOG is the authority.
+    runtime_smoke: n/a -- docs only. quality_ratchet: not run (no code change).
+    changelog_ref: S860 close-out entry
+    commit: the close-out commit that carries this receipt; claim 2c2d1aaea
+    ```
+
+    ```handoff
+    session: S859
+    date: 2026-10-02
+    status: complete
+    self_score: 6
+    predecessor_score: 8
+    active_task: DONE -- one-mate-each couples whose mate is a duplicate node draw male-left (`|| qualifies(u)`, R/makePedigreeDiagramData.R:1267); strict TDD, all gates asked; owner accepted the fix after app-proportion figures; BACKLOG item removed.
+    what_was_done: claim f46ce6de3; RED ca0ee89ac; GREEN+REFACTOR 82e020669 (1 R line, header comment, generic test file, 6 pins in 3 files); close-out commit holds records and BACKLOG removal. Full suite 364 files / 2,907 tests, lint 0.
+    next_steps: (A) Nothing owed on this item. Male-left for multi-mate couples would be a new plan (issue #145 D5/D9, new machinery) only if the owner asks. (B) Open: PED_GV decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep: BACKLOG "Move the version to 3.0.0". (D) Push only on the owner's say-so.
+    key_files: R/makePedigreeDiagramData.R:1213-1222,1267; tests/testthat/test_maleLeftDuplicateMate.R; test_makePedigreeMatingLayout.R:745,774; test_addRectilinearWaypoints.R:797-798; test_resolveEdgeNodeCollisions.R:721-722
+    gotchas: any layout change moves 6 pins in 3 files; render owner figures via the app's visNetwork settings with fixed moveTo zoom after a warm-up navigate; couple 2 keeps an ~8 px step (jog-free needs a solver change); crossings not recounted this session (S858: 1702 to 1700, 1542 to 1544).
+    runtime_smoke: layout function output rendered through visNetwork + chromote; no live Shiny launch. quality_ratchet: not run (no .quality-gates results cited).
+    changelog_ref: S859 close-out entry
+    commit: the close-out commit that carries this receipt; claim f46ce6de3
+    ```
+
+    ```handoff
     session: S858
     date: 2026-10-02
     status: complete

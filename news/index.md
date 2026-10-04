@@ -332,6 +332,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - The **Ancestry** tab shows coverage, and **Download Audit Manifest**
   saves the rules, overrides with reasons, pair counts and the
   confirmation warning.
+- The **Excluded** tab has an **Export Excluded Pairs** button that
+  saves the blocked pairs, with their reasons, as a CSV file. Like the
+  Eligible Pairs export, it holds exactly the rows left after any search
+  or filter.
 - Script users:
   [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
   takes `ancestryRules` and `overriddenRules`. Without rules or an
@@ -399,6 +403,18 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- Fixed: loading an ancestry rules table that is valid but has no rules
+  made Download Audit Manifest fail with an error on both the Mate Pair
+  and Breeding Groups tabs. A table with no rules now counts as no rules
+  in effect: the download works, and its single row says that no
+  ancestry rules were in effect for the run.
+
+- Fixed: a breeding group with no breeding-age females was shown as a
+  green Production cell in the Genetic Diversity dashboard, as healthy
+  as a group that meets its birth target. Production cannot be
+  calculated for such a group, so its cell is now gray, as the
+  Inbreeding cell already was.
+
 - Fixed: a real animal whose id starts with a capital U (such as `U1`,
   `U123` or `Uma`) was mistaken for a stand-in for an unknown parent, so
   it was left out of founder and breeder counts, hidden when “Display
@@ -406,28 +422,42 @@ export workflows, and longitudinal monitoring of colony genetic health.
   parent. Only ids shaped like a stand-in – a U followed by at least
   four capital letters or digits, such as `U0001` – are treated that
   way.
+
 - New `placeholder` column: the pedigree check records which animals are
   stand-ins. Enter `FALSE` for a real animal whose id looks like one
   (such as `U1234`) and it is kept as real throughout, including
   Potential Parents, founder counts and the breeder counts behind
   effective population size.
+
 - A `placeholder` value other than TRUE, FALSE, 1, 0 or blank stops the
   check and names the rows. The column survives download and re-upload,
   de-identified export and cross-center linking.
+
 - Changed: Potential Parents
   ([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md))
   lists candidates only for the missing parent: an animal with a
   recorded dam and no sire gets candidate sires, and the reverse.
   Before, a recorded dam was ruled out of her own animal’s list, so
   those dam lists were never useful.
+
+- New: each Potential Parents result
+  ([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md))
+  now says where its dam list came from: `damBasis` is `"provenBreeder"`
+  for females who gave birth near the animal’s birth, `"eligibleFemale"`
+  when there were none and every female old enough and present is listed
+  instead, and blank when no dam is listed. The sire and dam lists
+  themselves are unchanged.
+
 - Fixed: a sire or dam whose sex was blank, misspelled or space-padded
   (such as `"M "`) was reported as a “female sire” or “male dam” and
   stopped the upload. Spaces are ignored, and a blank or unreadable sex
   is read as unknown.
+
 - Fixed: the Shiny app read an empty cell in an uploaded CSV or text
   file as a value rather than missing, unlike Excel uploads and
   [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md).
   Empty cells are now read as missing.
+
 - The old behavior meant files with blank founder sire and dam cells
   would not load, a blank ancestry counted as OTHER instead of UNKNOWN,
   and a founder with a blank origin ranked as an import instead of
@@ -471,6 +501,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
   close in time to have also carried this animal; when no nearby female
   was a proven breeder, the fallback let her back in. It now leaves her
   out too.
+- Fixed:
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  now stops before doing any calculation, with a message naming every
+  missing column, when the pedigree lacks `id`, `sire`, `dam`, `gen` or
+  `sex`. A missing `id`, `sire`, `dam` or `gen` used to give an
+  unexplained R error.
 
 ## nprcgenekeepr 2.0.0 (20260721)
 

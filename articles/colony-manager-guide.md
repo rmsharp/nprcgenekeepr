@@ -737,7 +737,9 @@ visible after any filter – not the full, unfiltered table.
 
 A separate **Excluded** tab shows every pair the age or exclude-list
 screen dropped, together with its reason, so a curator can see *why* a
-pair is missing instead of it silently disappearing.
+pair is missing instead of it silently disappearing. **Export Excluded
+Pairs** under the table saves them as a CSV file; as with the Eligible
+Pairs export, the file holds exactly the rows left after any filter.
 
 ![Mate Pair Analysis Excluded tab showing a table with sire ID, dam ID,
 and a reason column reading either 'under minimum age' or

@@ -130,16 +130,19 @@ to <code>NULL</code>, which uses the bundled <code><a href="speciesGestation.htm
     <p>a list of list with each internal list being made up of an animal
 id (<code>id</code>), a vector of possible sires (<code>sires</code>) and a vector of
 possible dams (<code>dams</code>). The <code>id</code> must be defined while the
-vectors <code>sires</code> and <code>dams</code> can be empty. Candidate dams are
-females who gave birth near the time of the focal birth (proven
-breeders); when there are none, <code>dams</code> lists every female old enough
-and present at the birth instead. Either way, a female who delivered
-another offspring within <code>maxGestationalPeriod</code> days of the focal
-birth is never listed. Candidates are listed only for the parent that is
-missing: when an animal's dam is recorded its <code>dams</code> is empty, and
-when its sire is recorded its <code>sires</code> is empty. <code>NULL</code> (not a
-list) is returned when no animal has an unknown parent with a candidate
-and when <code>ped</code> has no <code>fromCenter</code> column.</p>
+vectors <code>sires</code> and <code>dams</code> can be empty. A fourth element,
+<code>damBasis</code>, is a single string saying where <code>dams</code> came from:
+<code>"provenBreeder"</code> when the candidates are females who gave birth
+near the time of the focal birth, <code>"eligibleFemale"</code> when there were
+none and <code>dams</code> lists every female old enough and present at the
+birth instead, and <code>NA</code> when <code>dams</code> is empty. In both tiers, a
+female who delivered another offspring within <code>maxGestationalPeriod</code>
+days of the focal birth is never listed. Candidates are listed only for
+the parent that is missing: when an animal's dam is recorded its
+<code>dams</code> is empty, and when its sire is recorded its <code>sires</code> is
+empty. <code>NULL</code> (not a list) is returned when no animal has an unknown
+parent with a candidate and when <code>ped</code> has no <code>fromCenter</code>
+column.</p>
     </div>
 
     <div class="section level2">
@@ -168,6 +171,9 @@ and when <code>ped</code> has no <code>fromCenter</code> column.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HR70BU" "I2G9D6" "J8XZ81" "HV7LZ3" "IMF6BL"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $damBasis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "provenBreeder"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

@@ -12723,3 +12723,384 @@ five lines. My first measuring script followed only real-id edges into
 with the earlier measurement is what exposed it. Fixing the named pairs
 also surfaced 2 more male-right couples whose mate is a duplicate node,
 recorded as their own BACKLOG item.
+
+#### Learning 840
+
+**Judge a layout change from figures drawn through the app’s own
+renderer, and do not read a rise in `__jog_` nodes as a new bend.**
+(S859, 2026-10-02.) Base-graphics plots of layout coordinates had the
+wrong scale and misled; the app’s `visNetwork(nodes, edges)` with
+`visPhysics(enabled = FALSE)`, a fixed `moveTo()` zoom and centre, and a
+warm-up `about:blank` navigation (the first chromote page ignores the
+zoom) gives frames the owner can compare. A connector can change from
+`__bar_` to `__jog_` nodes with the same drawn shape: S858/S859 counted
+4 more jog nodes for a change whose connector was only shorter. Measure
+the connector’s x offsets before calling something a dogleg. Also: a fix
+that is a general rule must be tested over several pedigrees, not over
+the named animals where it first showed.
+
+#### Learning 841
+
+**A claim commit can be refused by the token ceiling on
+`SESSION_NOTES.md`, and `methodology_trim.py` may report “nothing to
+do”.** (S874, 2026-10-02.) `context_budget.py` has a token ceiling
+(25,000) as well as the byte ceiling; the 1B claim stub pushed the file
+66 tokens over and the pre-commit hook refused. The trimmer judges bytes
+against `--budget-bytes 65536`, so it can find nothing to cut. The legal
+fix is to shrink the file in the same commit: condense the oldest full
+record to the short “(condensed …)” form the file already uses. Also,
+macOS `sed` needs `-i ''`; with plain `-i` it fails with “invalid
+command code” and, in a `&&` chain, silently skips every later edit.
+
+#### Learning 842
+
+**When a source guard grows a new form, scan all of `R/` with the new
+pattern before the final stage, so the allowlist is known early.**
+(S875, 2026-10-02.) The stage-2 argument-form pattern
+`[(,]\s*"X"\s*[,)]` was run over every `R/*.R` file: it hit only files
+the sexCodes plan already names (converter vocabulary, fixtures, the
+non-sex `F`/`U` lines, `groupAddAssign:179`, `correctParentSex`,
+`makePedigreeDiagramData`). A pattern that hit an unplanned file would
+have meant a plan change; knowing it at stage 2 costs one script,
+finding it at stage 6 costs a replan.
+
+#### Learning 843
+
+**A guard pattern for `if (x) "M" else "F"` must key on `else`/`)`/`<-`
+before the quote, and a membership set inside `[...] <-` assignments is
+caught by the assignment form too.** (S876, 2026-10-02.) The stage-2
+argument pattern missed `correctUnknownParentMeanKinship:172`; the new
+`(<-|\belse\b|\))\s*"X"` pattern catches it. Scanning all of `R/` with
+it hit only stage 4 files (`addParents:54,62`, `correctParentSex:97,98`)
+and the allowlisted `convertSexCodes.R:45-55`, so the stage 6 allowlist
+still needs no surprise entries.
+
+#### Learning 844
+
+**`test-e2e-orip-module.R` skips unless `NPRC_RUN_E2E=true`, so a plain
+`test_file` run of it proves nothing.** (S877, 2026-10-02.) The stage-4
+plan says GREEN runs it; run bare, it reports 4 skips with “End-to-end
+Shiny tests are opt-in”. With the variable set it ran 9 expectations and
+passed. Any stage that touches a Shiny module and cites the e2e file
+must set the variable and read the pass count, not just the absence of
+failures.
+
+#### Learning 845
+
+**A before/after render check must run the layer that produces
+positions, not just the data builder.** (S878, 2026-10-02.)
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+returns nodes with `level` only; x/y come from
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+which is where `.positionMatingUnitForest()` (the function holding the
+sex comparisons) runs. A snapshot of only the first would have passed
+trivially. The snapshot script lives in the session scratchpad (not the
+repo): it saved both for `examplePedigree`, `qcPed` and
+`pedWithGenotype` before the edit and compared with
+[`identical()`](https://rdrr.io/r/base/identical.html) after. Five other
+data sets failed on missing columns both times, so check the snapshot
+actually contains results.
+
+#### Learning 846
+
+**When a staged guard’s last stage only flips it to a whole-tree scan,
+the new scan passes at once; prove it can fail with a mutation.** (S879,
+2026-10-03.) Stages 1-5 had converted every file, so the stage-6 scan of
+`R/*.R` was green on arrival and a RED that “fails” would have been
+staged theater. The proof was a planted `zz <- function(sex) sex == "M"`
+appended to `R/calcNeSexRatio.R`, which failed the scan at
+`calcNeSexRatio.R:62`, then restore; plus a temp-dir self-test with a
+clean, a comment-only, a mixed and a whole-file-allowlisted file. The
+letter must sit inside a function body, because `load_all()` evaluates
+top-level code (`sex` is undefined). Allowlist lines match trimmed text,
+so a stale-allowlist test is needed or a deleted exempt line silently
+widens the exemption.
+
+#### Learning 847
+
+**Adding a field to a list-returning exported function is safe when
+consumers read by name; test the entry shape, not just the new field.**
+(S880, 2026-10-03.)
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+entries are read as `x$dams` / `x$sires` in `modPotentialParents.R`,
+`makeSimPed.R` and `markerParentageLikelihood.R`, so appending
+`damBasis` broke none of them; the RED shape test (`names(e)` equals the
+four names, `NA` exactly when `dams` is empty) pins the contract.
+Fixture trap: `fallbackPed()` with no female-with-offspring makes
+`paste0("KID_", character(0))` return `"KID_"`, a bogus row; give it a
+second female. `devtools::document()` also rewrites
+`man/nprcgenekeepr-package.Rd` from `DESCRIPTION`, an unrelated stale
+diff to revert.
+
+#### Learning 848
+
+**Before trusting a characterization pin, prove it discriminates; and in
+a data.table helper never name a parameter after a column.** (S881,
+2026-10-03.) The first “no species column” pin was byte-identical to the
+defaults pin because `rhesusPedigree` has no `species` column at all, so
+it pinned nothing; the replacement (RHESUS, COMMON MARMOSET, BABOON, NA
+mix) was checked `!identical()` to the species-less output before it was
+saved. Inside `ba[...]` a column beats a same-named variable, so the
+helpers take `focalBirth`, not `birth` (`exit >= birth - mgp` would
+silently compare against the column). Also:
+`test-e2e-potential-parents-module.R` is opt-in (Learning 844); with
+`NPRC_RUN_E2E=true` it runs 4 tests, 0 skipped. One full `test_dir` and
+`check` run failed on `test_positionMatingUnitForest.R:1971` (“Chrome
+debugging port not open after 10 seconds”); the file passed alone and
+the rerun was 0/0/0.
+
+#### Learning 849
+
+**A default flip leaves stale “default X” wording in comments and
+`@noRd` roxygen that no `man/` audit reads; grep `R/` for the old
+default when flipping, and read a BACKLOG item’s last sentence, not just
+its READY tag.** (S882, 2026-10-03.) S574 (`cb5141f75`, 2026-08-14)
+flipped `edgeStyle` from `"direct"` to `"rectilinear"` and updated the
+exported roxygen and `man/`. Two other statements kept saying “direct”
+for seven weeks: the `.currentEdgeStyle()` comment in `R/modPedigree.R`
+(written S468) and the `@noRd` roxygen of `.addRectilinearWaypoints()`
+at `R/makePedigreeDiagramData.R:2110-2113`, which also still says the
+function “has no call site yet” although `:2070` calls it. The 267-page
+`man/` audit could not see either. Find the flip with
+`git log -L<start>,<end>:<file>` on the fallback branch; find stragglers
+by reading every comment line that names the old value
+(`grep -n '^\s*#.*"direct"' R/*.R`), because a single-line grep for
+“default … direct” misses a phrase the comment wraps across two lines,
+as this one did. Separately, the docs-audit item was tagged READY, yet
+its own last sentence said “nothing further is scoped” and it still
+listed BB14 as open after S830 had fixed it, so the handoff’s “next
+slice (READY)” pointed at nothing. Before picking an item by its tag,
+spend two minutes checking one “still open” claim against the code or
+`git log --grep`; here that turned a vague pickup into a three-way scope
+question the owner could answer in one click.
+
+#### Learning 850
+
+**To review a regenerated figure before committing it, run a scratch
+copy of its generator with the output directory redirected, diff it
+against `git show HEAD:<path>`, and measure any suspicious feature on
+the layout data instead of judging the pixels; and `git log -- <path>`
+before treating an audit’s “untracked” as true.** (S884, 2026-10-03.)
+`data-raw/kinship2FidelityValidation.R` hard-codes `outDir` and rewrites
+all 8 images, so running it in place churns the 7 unchanged ones by
+anti-aliasing noise and commits the repo to the new picture before the
+owner has looked. A `perl -0pe` swap of the two-line `outDir <-`
+assignment gave a scratch copy that wrote to the scratchpad in 14 s; a
+PIL `ImageChops.difference` against the committed image gave the changed
+box (x 508-678, y 171-217, the box the S820 audit measured) and 0 px
+over threshold on the other 7, so only one file was copied in after the
+owner approved. The picture looked as if the dashed arc touched the `W`
+square; the layout data said it does not enter it: `.curvedCwVia()` plus
+`.bezierPointAt()` on that edge (roundness 0.25) put its closest
+approach to `W`’s centre at 26.29 (Chebyshev) against a half-side of 25,
+about 1.3 layout units clear. The S714 census criterion counts only an
+arc strictly inside a node’s disc of radius `size`; for a square that
+disc is the inscribed circle, so a “clear” arc could still cut a corner
+(not measured beyond this one edge, and not filed because the owner
+chose to publish the picture). Separately, the S820 audit called
+`kinship2-fidelity-validation.pdf` untracked from `git status`; it was
+tracked, added by S825’s unrelated `9a2a5ddb7`, and knowing that made
+“delete it” a one-click owner decision (same cause and fix as its
+sibling in S831, Learning 836).
+
+#### Learning 851
+
+**An open-id count that a BACKLOG item carries forward drifts from the
+report it summarises, and ids stay “open” long after the fix ships;
+recompute the count by script from the report’s table and closure rows,
+and judge each remaining id against today’s code and its pinned tests,
+not the ledger.** (S885, 2026-10-03.) The `BACKLOG.md` PED_GV item said
+28 ids remained after S881 while the triage report’s own “Open after
+this closure” line said 26; 11 of those 26 were already fixed in code,
+because the fixes travelled under session and issue names and the audit
+ids never appear in a commit message (Structural Observation 1; 0 of 43
+do). Per-id probes gave a claim-against-today row each:
+`removeUnknownAnimals(smallPed)` 17 rows in, 17 out (the audit saw 17 to
+0);
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+on a 2-cycle stops naming `A -> B -> A`;
+`kinshipMatricesToKValues(list())` stops with a clear message;
+`getRecordStatusIndex()` has no
+[`any()`](https://rdrr.io/r/base/any.html); `getMaxAx()`,
+`createPedOne()` and `createPedSix()` roxygen read correctly.
+`git log -S'<old text>' -- <file>` attributed each fix (S782, S783,
+S795, S797-S798, S808-S811) without any id grep. A 12-line Python pass
+that parses the table’s 43 ids (the first column bolds some,
+`**NEW-31**`, so the regex needs `\**`) and subtracts every closure row
+gave 15 open, matching the list written by hand. Two cautions: I
+recommended closing NEW-35 and NEW-38 after reading only ledger
+headlines and re-ran their six pinning test files only after the owner
+chose, so verify before recommending; and I told the owner no BACKLOG
+item touched the ledger-size warning without reading the two adjacent
+items (`BACKLOG.md:319,339`), which are related but not about the
+262,144 B no-content read limit.
+
+#### Learning 852
+
+**A test name is not an assertion, and a capped grep is not a census:
+before telling the owner that tests “pin” something, or that nothing
+calls a function, read the `expect_` lines and run the caller search
+un-truncated.** (S886, 2026-10-03.) While posing the NEW-50/NEW-51
+simulation-driver decision I wrote “existing tests pin the results”
+after seeing only `test_that()` names in a grep. When the owner asked
+why I preferred the option I re-read both files: they pin seeded numbers
+per function (`test_createSimKinships.R:70`,
+`test_cumulateSimKinships.R:63`), the `twinRelations` values and the
+`n < 2` handling, but nothing ties
+[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+to
+[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md).
+The tie (same seed, same mean, TRUE over 200 simulations on `smallPed`)
+was my own one-off measurement, so the queued work’s first RED test has
+to carry it. Separately, my caller grep failed on an unquoted
+`--include=*.R` in zsh (“no matches found”), and its rerun was piped
+through `head -40`, which cut the list right after `_pkgdown.yml:240`
+and before `data-raw`; an un-truncated rerun confirmed no caller outside
+tests, docs, NEWS and pkgdown, but for a moment “no callers” rested on a
+cut list. What worked: measuring the audit’s reason for NEW-51 (row
+order, 200 of 200 matrices) before asking turned “trust the audit” into
+a claim-against-today row, and the owner’s “why” question surfaced the
+overstatement before the pick, not after.
+
+#### Learning 853
+
+**A red count is not a reason: read each RED failure message to confirm
+every test fails for the cause you intend, and when a job’s “completed”
+notice or a history search says nothing, find out whether it was about
+the thing you meant.** (S887, 2026-10-03.) Three small near-misses in
+one refactor session. (1) My first two delegation tests (a `mockery`
+stub of the new helper, then a call count) used a twin pair with ids “8”
+and “9”, which are not in `smallPed`, so the real
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+stopped them with “All twinRelations id1/id2 values must be present in
+id” before the call-count assertion ran. The file was red, but for the
+wrong reason, and those tests would have passed after GREEN regardless
+of the delegation. Reading the failure text and switching to siblings C
+and D made them fail on “mock object has not been called 3 times”. (2) A
+background `( Rscript ... ) &` inside a `run_in_background` Bash call
+returns at once, so its task notification said “completed” while the
+full suite was still running and the output file was empty; reading the
+file and `ps` before using the notice showed the R process alive. Run
+the long job itself in the background, or wait on a sentinel line in its
+own output (`exit 0`), never on the wrapper. (3) When the owner asked
+why `tests/` is excluded from lint, `git log -S'"tests"' -- .lintr`
+returned nothing, because the entry arrived through a merge commit and
+default history simplification hides it; `git blame -L 14,22 -- .lintr`
+named the commit (`3821bef52`, 2025-07-24, no recorded reason) and
+`git log --full-history -m -S` found it too. Use blame, or
+`--full-history -m`, when a pickaxe search comes back empty for text
+known to be in the file. Practical consequence: `lint_package()` and CI
+skip `tests/`, so test files are linted nowhere. Also, my plan’s caller
+list (“called by `test_countKinshipValues.R` and the vignette”) missed
+three exported functions whose `@examples` call
+[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
+(`countKinshipValues`, `summarizeKinshipValues`,
+`kinshipMatricesToKValues`), found only when I re-grepped `R/` at
+close-out: a grep restricted to `cumulateSimKinships(` cannot see the
+roxygen lines, and `check()`’s examples step is what runs them.
+
+#### Learning 854
+
+**A “without column X” probe proves nothing until the unmodified input
+has been shown to run clean, and an audit’s “no validation in F” claim
+has two parts, existence and position: check that the check exists and
+that it runs before the failure it should prevent.** (S888, 2026-10-03.)
+Measuring the NEW-28 claim (“none in `reportGV`”), I removed each column
+of `smallPed` in turn and called `reportGV(p, guIter = 10L)`. The first
+run printed “without sex -\> sire and dam must have had alleles
+assigned: logic error”, which looked like a sex finding until the
+unmodified `smallPed` printed the same error: it fails on its own, all
+six columns present, so every “without” row was meaningless. I switched
+to the function’s own `@examples` pipeline (`examplePedigree` through
+`qcStudbook(minSireAge = 2, minDamAge = 2)`,
+[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+and
+[`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md);
+704 rows), whose unmodified run is clean, and the real table appeared:
+without `id`, `sire`, `dam` or `gen` a base-R message; without `sex` the
+named one; without `birth`, `exit`, `age` or `population` no error. The
+audit row was wrong on existence
+(`assertRequiredColsPresent(names(ped), c("id", "sex"), "reportGV(ped)")`
+has been at `R/reportGV.R:291` since S386, issue \#123) and right in
+effect: it sits after
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+(`:179`) and
+[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+(`:223`), so a missing `id`, `sire`, `dam` or `gen` never reaches it.
+Second, three citations in my first draft of Decision record 10 were
+written from memory and wrong (a `correctParentSex` line range, the
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+`NULL` condition missing “with a candidate”, and a bullet saying every
+bad-input result was run when
+[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+and
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+were only read); grepping each cited line and roxygen sentence against
+the file before the commit caught all three. What worked: a saved probe
+script whose first printed line is the unmodified input, and grepping
+each citation before it entered the record. Rule: the first line of any
+column-removal or input-mutation probe is the unmodified input, and a
+fixture counts as “good” only once its unmodified run is shown clean;
+probes P10 and P11 in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`
+carry the working fixture.
+
+#### Learning 855
+
+**Before putting a behavior choice to the owner, read what pins today’s
+behavior: the comment you would delete, and the fixture of the test it
+names. “A test uses X, which has Y” is a claim about a file, so open the
+file.** (S889, 2026-10-03.) At NEW-28’s scope gate I told the owner that
+no test depended on the old order of
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+`sex` check and that the partial-parentage test used `lacy1989Ped`,
+“which has `sex`”, from a grep and without reading the fixture. It has
+no `sex` column, and `test_calcFEFG.R:66` pins that a sex-less pedigree
+gets
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)’s
+partial-parentage message first; the comment I later deleted (old
+`reportGV.R:286-290`) named that file, and I had read it. The owner
+chose on my claim, GREEN failed one existing test, I shelved the edit
+and said so, the owner re-decided, and the cost was a GREEN -\> RED -\>
+GREEN detour. Same family as Learning 852 (a test name is not an
+assertion): when a code comment names a test file, run that file against
+a trial edit of the favored option before asking. Three smaller
+findings. (1) The default full-suite run skips the 34 `test-app-*` and
+`test-e2e-*` files unless `NPRC_RUN_E2E=true`
+(`helper-shinytest2.R:200-207`), so “full suite green” says nothing
+about them; I had told the owner they exercise the app’s
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+call, then ran the three genetic-value ones with the opt-in set (22/22,
+about 1.6 min; Chrome is installed here). (2) Roxygen on a shared
+`@param ped` is inherited by 13 other man pages (`countFirstOrder`,
+`getPyramidPlot`, …); function-specific text goes in the details
+section, and `git diff man/` after `devtools::document()` shows the
+leak. (3) A seeded before/after identity check run after
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+in the same process said FALSE; in a fresh process it said TRUE with and
+without the change (cause not traced): run identity checks in a fresh
+process.
+
+#### Learning 856
+
+**Estimate a compression pass’s line yield from a draft of the result,
+not from the size of the blocks it targets: a block of very long lines
+saves bytes, not lines.** (S890, 2026-10-04.) The owner picked “compress
+the docs-audit item (55 lines) and the compression item’s pass history
+(50 lines)” on my estimate of “about 75 lines removed”. The two blocks
+were 14,531 B and 4,629 B, mostly a few very long lines, and the pass
+kept every open thread (Slice 2, about 100 code-decision candidates, the
+unsettled doc ids) in full, wrapped at 100 columns: they became 48 lines
+(4,343 B) and 38 lines (3,320 B), so the file fell 19 lines but 11,497 B
+(552 -\> 533 lines, 58,228 -\> 46,731 B). What worked: the byte figure
+was right and cleared the dashboard’s one High flag; replacing by line
+range with boundary asserts, then proving the file outside the ranges
+byte-identical; checking every cited session twice, first by mention and
+then by the figure, which found one number the ledger states differently
+(the 2026-09-24 deletion is 55 lines, not 58). Rules: (1) before
+offering the owner a line count, write the replacement and count it, or
+say “bytes, not lines”; (2) count lines with `wc -l` (a `split('\n')` of
+a file that ends in a newline counts one extra: I said 553, the file has
+552); (3) when the open detail is what is long, the next lever is
+pointers to the slice reports, which is a visibility trade for the
+owner, not a compression step. Same family as Learning 855: a claim
+about a file needs the file open first.

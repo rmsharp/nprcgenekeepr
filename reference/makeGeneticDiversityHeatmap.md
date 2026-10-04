@@ -3,7 +3,10 @@
 Renders a red/yellow/green stoplight heat map of breeding-group genetic
 diversity metrics. Each row is a breeding group and each column is a
 metric; every cell is colored by its color index, where 1 is red (the
-problem condition), 2 is yellow (watch), and 3 is green (healthy).
+problem condition), 2 is yellow (watch), and 3 is green (healthy). A
+metric that is undefined for a group (an `NA` index, such as Production
+for a group with no breeding-age females) is drawn gray, never as a
+verdict.
 
 ## Usage
 
@@ -17,14 +20,14 @@ makeGeneticDiversityHeatmap(stats)
 
   A data frame with one row per breeding group. The first column holds
   the group label; every remaining column is a metric whose values are
-  color indices in `c(1, 2, 3)`.
+  color indices in `c(1, 2, 3)` or `NA`.
 
 ## Value
 
 A `ggplot` object: a
 [`geom_tile`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
 heat map with metric headers across the top and group labels down the
-left, filled red/yellow/green from the color indices.
+left, filled red/yellow/green (gray for `NA`) from the color indices.
 
 ## Details
 

@@ -167,15 +167,27 @@ living breeders; `NA` when fewer than two living breeders; see
 `maleFounders` and `femaleFounders` (dataframes of the known male and
 female founder records), `nMaleFounders` and `nFemaleFounders` (the
 counts of those founders), and `total` (the total number of known
-founders). `report` also carries a `flagged` column (issue \#127):
-`TRUE` for a one-unknown-parent animal left uncorrected by
-`correctUnknownParentMeanKinship()` for lack of an eligible breeding-age
-peer cohort (or a missing birth date); `FALSE` for every other animal,
-including one-unknown-parent animals that were successfully corrected
-and all fully-known/both-unknown animals (which are never candidates for
-this correction).
+founders). The founder lists hold only *known* founders: an animal with
+both parents unknown whose id was generated to stand in for an unknown
+parent is left out, because that placeholder may be a known founder,
+another animal in the population, or an animal outside it. `fe` and
+`fg`, by contrast, count every animal with both parents unknown as a
+separate, unrelated founder (see
+[`calcFEFG`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)),
+so they can differ from `total`. `report` also carries a `flagged`
+column (issue \#127): `TRUE` for a one-unknown-parent animal left
+uncorrected by `correctUnknownParentMeanKinship()` for lack of an
+eligible breeding-age peer cohort (or a missing birth date); `FALSE` for
+every other animal, including one-unknown-parent animals that were
+successfully corrected and all fully-known/both-unknown animals (which
+are never candidates for this correction).
 
 ## Details
+
+The pedigree `ped` must have the columns `id`, `sire`, `dam`, `gen`
+(generation number) and `sex`. If any is missing, `reportGV` stops
+before doing any calculation, with a message naming every missing
+column.
 
 Reported genome uniqueness (`gu`) is set to 0 for "Undetermined" animals
 – those with both parents unknown (U-id aware) and no recorded origin –

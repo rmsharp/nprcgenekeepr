@@ -168,805 +168,315 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 858 Did
+### What Session 890 Did
 
-**Deliverable:** the cause of the 2 duplicate-mate male-right couples, a
-fix tried and rejected by the owner, and a corrected BACKLOG item.
-Strict TDD began (PRE-RED, RED, GREEN gates asked); the owner rejected
-the result after seeing figures, so the layout code is unchanged. Claim
-`88f283ea6`; RED `8aeef0da2` (test file removed in the close-out
-commit). **Measured:** in both couples (`D0Z114` x `4CHDK1`, `V1X2X3` x
-`SH0L6S`) both parents have parents, so `qualifies()` is TRUE but the
-mate is not in `b1Ids` and `correctableUnitIds` skips the unit; the
-seeding (`R/makePedigreeDiagramData.R:1265`) then takes the
-children’s-mean side. The S857 BACKLOG reading (“the female has a parent
-edge”) was half right: the male has parents too. **Tried:**
-`|| qualifies(u)` in that condition. Flipped exactly the 2 couples; 6
-RED tests passed; crossings and every other bundled pedigree unchanged;
-but 4 census pins moved (nodes 1456 to 1460, jog nodes 186 to 190, bar
-hits 97 to 98 x2) and the parents’ connector gained a step. **Owner
-verdict:** reject (quoted in BACKLOG). I then wrongly turned the
-feedback into a proposed “centered pair, male left” rule; the owner said
-inferred rules are not accepted. Reverted `R/`, removed the RED file,
-BACKLOG now records the owner’s words and says no rule is decided.
-**Verified by me:** old vs new on 8 bundled pedigrees x 2 edge styles
-(script and `s858_couples_old_vs_new.png` in the session scratchpad);
-the 6 new tests and the layout test files after the edit. **Not run:**
-full suite, lint, `devtools::check()` (no code kept; `R/` identical to
-S857 close-out). **NEWS.Rmd:** none. **Slips:** I showed myself a figure
-and described it as if you had seen it (the owner could not see it;
-fixed by opening the file); I proposed pin updates before showing the
-picture; I inferred a rule from feedback. **Reduction:** removed the
-S856 evaluation and record.
+**Deliverable, DONE:** compressed two `BACKLOG.md` items, the docs-audit
+item and the compression item’s own pass history. Docs only, so no code
+and no RED/GREEN gates. Claim `d2e36c446`, deliverable `23432b24c`; the
+close-out commit holds the receipt, these notes, the ledger entry,
+Learning 856. `BACKLOG.md` 552 -\> 533 lines, 58,228 -\> 46,731 B (High+
+risk 0 now); docs-audit item 55 -\> 48 lines (14,531 -\> 4,343 B),
+compression item 50 -\> 38 (4,629 -\> 3,320 B). **My error:** the owner
+chose this option on my estimate of “about 75 lines removed” (also in
+the claim stub). The lines fell 19 and the bytes 11,497: the old blocks
+were a few very long lines, and I kept every open thread in full (Slice
+2, about 100 code-decision candidates, the unsettled doc ids) wrapped at
+100 columns. I also gave the owner “553 lines”; `wc -l` says 552.
+**Owner choices (plain words):** this option from a measured comparison;
+then, mid-session, “have subsequent sessions be the remaining options
+you wrote out”, recorded as the queue in Next steps. **Verified:** all
+41 + 12 sessions cited in the two blocks have their own ledger entries
+(first a mention-only check, then the figures: S529 652 -\> 389, S530
+896 -\> 286, S531 753 -\> 267, S606 304 -\> 80, S752 91 -\> 62 and 91
+-\> 38, 2026-09-24 44 -\> 15 and 84 -\> 20); paths, Learnings 347 and
+537 and 15 issue states resolve (only \#123 open); 213 + 26 dropped
+tokens reviewed, the ones with no obvious home found elsewhere
+(`9a2a5ddb7`, `26.29`, `RF2, RH2, RJ3`); the file outside the two ranges
+is byte-identical; no test reads `BACKLOG.md`;
+`quality_ratchet.py --run` 1/1 (results `b99f87ba4720`). **Not run:** R
+suite, `devtools::check()`, CI (no R, test or build file changed;
+nothing pushed). **Fixed in passing:** the item’s “58 lines”
+(2026-09-24) is 55 in the ledger; its “nothing further is scoped” line
+now says Slice 2 was never acted on (the owner still decides whether to
+scope a slice). **Reduction:** removed the S864 record and its
+evaluation; condensed S889. `BACKLOG.md` is now 10,019 B under its
+budget.
 
-**Self-assessment: 6/10.** + Cause traced with measurements; blast
-radius measured; no code change left behind. - Three process slips
-above; no deliverable code; the owner’s time went to a fix they did not
-want.
+**Handoff evaluation of S889: 9/10.** Helped: next step B’s “58,228 B,
+1,478 B over budget”, the ledger sizes and “125 ahead” matched Orient to
+the byte; D named the Slice 2 gap, which I confirmed at
+`BACKLOG.md:122-124` and which kept the rewrite honest; the key-file
+lines matched. Missing: which blocks to cut and that line yield would
+trail byte yield far behind; that Phase 0’s
+`grep -c 'status: pending' HANDOFFS.md` hits prose at `:22`. Wrong:
+nothing found.
 
-**Next steps:** (A) A new session: ask the owner for the rule on these
-couples (BACKLOG “Placement of couples whose mate is drawn as a
-duplicate node”); do not infer it. (B) Still open: PED_GV decisions,
-mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep:
-BACKLOG “Move the version to 3.0.0”. (D) Master is 26 ahead of origin
-after the close-out commit; push only on the owner’s say-so.
+**Self-assessment: 7/10.** + Claimed before technical work; measured
+every item before recommending; checked each cited session, figure,
+path, Learning and issue before cutting, and found the one figure the
+ledger states differently; kept every open thread; proved the rest of
+the file byte-identical; reported the estimate miss at once. - I sold
+the pick on a line estimate I had not drafted (19 lines, not 75) and
+gave a count off by one; I went quiet through many tool calls until
+nudged; I wrapped the ratchet in `( cmd ) &` inside a background run
+(S887’s gotcha) and caught it only from the empty output.
 
-**Key files:** `R/makePedigreeDiagramData.R:1262-1272` (seeding side),
-`:1075-1080` (`correctableUnitIds`), `BACKLOG.md:101`; the rejected RED
-test is
-`git show 8aeef0da2:tests/testthat/test_maleLeftDuplicateMate.R`.
+**Next steps (owner-ordered: “have subsequent sessions be the remaining
+options you wrote out”):** (A) S891: compress four more blocks (READY,
+Effort M): the standalone-package item, the “Pedigree diagram vs
+kinship2 audit follow-ups” preamble, the chromote item, the PED_GV
+closure narrative; estimate 20-45 lines (from 19 of 105 here; not
+measured), so draft first and count before promising lines. (B) S892:
+the owner keeps or declines each of 7 parked Effort-S items
+(`isAddedRecord()`, CI `paths-ignore`, trim verify script, Candidate C,
+`highlightNearest`, rhesus docstring, row-order item); up to about 118
+lines if all declined. (C) Then one real fix per session, in that order:
+`deidentified_jmac_ped.csv` (option 1 or 2),
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+absent id or CI `paths-ignore`, the harem-sire hole, PED_GV groups (3+
+sessions each). **Dependency, not in the owner’s list:** `HANDOFFS.md`
+is 255,415 B, 6,729 B under the 262,144 B limit, and a receipt costs 3-5
+KB (S889 4,863 B, S890 3,907 B); `CHANGELOG.md` is 242,105 B, 20,039 B
+under. The dashboard now names `HANDOFFS.md` the top risk (MEDIUM) and
+says `methodology_trim.py --file HANDOFFS.md --check` reports whether a
+trim fits (not run). Ask at Phase 0 whether to put the ledger decision
+before (B). Carried from S889: `reportGV(smallPed)` unfiled; master is
+128 ahead of origin after this commit, push only on the owner’s say-so,
+and wait for CI since `R/` has changed.
 
-**Gotchas:** pins that move with any layout change on `rhesusPedigree`:
-`test_makePedigreeMatingLayout.R:745,774` and
-`test_addRectilinearWaypoints.R:797-798`. Show the owner figures by
-opening the file (`open`); a figure I read is not a figure they saw.
-Measure scripts must be run per pedigree with a timeout
-(`ExamplePedigree.csv` did not finish in 240 s).
+**Key files:** `BACKLOG.md:80-126` (docs-audit item: slices, Still open
+1-3), `:347-383` (compression item: pass history, Method, next
+candidates);
+`docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md` (the open
+candidates’ ids).
 
-### Session 857 Handoff Evaluation (by Session 858)
+**Gotchas:** estimate a compression’s line yield from a draft, not from
+block size (Learning 856); count lines with `wc -l`; `( cmd ) &` inside
+`run_in_background` reports the wrapper’s exit, so read the job’s own
+last line; use `grep -c '^status: pending' HANDOFFS.md` (the unanchored
+form hits prose at `:22`); the open candidate lists stay in the item on
+purpose, and if they should become pointers their ids are in the slice
+reports; `git stash list` holds an old `dev`-branch entry (not mine);
+`core.hooksPath` is unset (the context-budget hook is in `.git/hooks`).
 
-**Score: 8/10.** **Helped:** the BACKLOG item named both couples, the
-measuring helper and the files; Orient measurements all held (frontiers
-at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause line said only
-the female has a parent edge; both parents do. **Missing:** which census
-pins move under any layout change. **ROI:** high.
+### What Session 889 Did (condensed S890; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-### What Session 857 Did
-
-**Deliverable, DONE:** the diagram layout keeps the male-left rule for
-the two squeezed `rhesusPedigree` couples (`QL6GH4` x `3PD3U5`, `BM40IX`
-x `MTSHHY`) and for every one-mate, non-duplicate couple the S666 pass
-handles. Strict TDD, all three gates asked. Claim `acc020703`; RED
-`62cac01de`; GREEN `c4b383978`; REFACTOR (comments only) and records in
-the close-out commit. **RED:**
-`tests/testthat/test_maleLeftSweepSurvival.R`, 6 tests (the two named
-pairs, every simple pair, a pin that the other simple pairs stay
-male-left; both edge styles). 4 failed for the stated reason (male x \>=
-female x, 6 failure lines); the 2 pins passed. **GREEN:**
-`R/makePedigreeDiagramData.R:1261-1271`: for a unit in
-`correctableUnitIds` the single-unit mate side is the sex rule, not the
-children’s mean (the sweep after the S666 pass can push the anchor past
-its children). All 6 pass. **REFACTOR:** comments only (header bullet
-`:1213-1219` updated; note moved beside the condition). **Verified by
-me:** full unfiltered suite on the GREEN code: 363 files, 2,897 tests, 0
-failed, 0 error, 187 skipped (S854: 362 / 2,891; +6 = the new tests).
-After the comment/format edits I re-ran only the 6 related layout files
-(`maleLeftSweepSurvival`, `positionMatingUnitForest`,
-`makePedigreeMatingLayout`, `makePedigreeDiagramData`,
-`comparePedigreeStructure`, `addRectilinearWaypoints`): all pass.
-`lintr::lint_package()`: 0 lints (GREEN code), the edited file re-linted
-clean. **Blast radius, old vs new code on 11 bundled pedigrees x 2 edge
-styles (22 layouts):** 14 layouts unchanged (smallPed and the 6 example
-CSVs). Changed: `rhesusPedigree` (31 of 375 animals move, mostly a 120
-swap plus re-centering of -19..-6), `qcPed` and `pedWithGenotype` (8
-couples swap, plus a uniform 1e-4 solver drift on most nodes),
-`obfuscated_rhesus_mhc_ped` (1 couple swaps; a 56-node block shifts
-120). Identical old vs new: edge crossings (e.g. 1702, 1542), minimum
-row gaps, the 72-collision warning on `rhesusPedigree`. Coincident
-positions are only `__bar`/`__drop` pairs (no two animals share a spot).
-The drawn parent-child edges (502) and mate pairs (237) of
-`rhesusPedigree` equal the data (also `smallPed`, `qcPed`); one
-zero-length bar-drop connector in the MHC pedigree flipped direction.
-Male-right units on `rhesusPedigree`: 30 to 28 of 237; one-mate
-non-duplicate: 2 to 0. **Pictures:** `img/draw_coupleA.png`,
-`img/draw_coupleB.png` in the session scratchpad (before/after, couple
-highlighted); chromote screenshots raced visNetwork’s auto-fit, so I
-drew the same coordinates with base graphics. **New finding, in BACKLOG
-(DECISION NEEDED):** 2 one-mate couples whose mate is drawn as a
-duplicate node stay male-right on `rhesusPedigree` (`D0Z114` x `4CHDK1`,
-`V1X2X3` x `SH0L6S`); S789 excluded duplicates, so they are outside this
-item. **Not run:** `devtools::check()`; a live Shiny launch (the
-function output was rendered instead; the committed shinytest2 e2e files
-ran in the suite). **NEWS.Rmd:** none (`:59` “in most cases” stays
-true). Issue \#145 was already closed. **Reduction:** removed the S853
-evaluation and record; wrapped the 4 over-long lines the dashboard
-flagged. **Slips caught:** my first measuring script dropped `__dup_`
-nodes (64 units, against S789’s 237), found by comparing with S789; the
-first full-suite monitor fired on a Shiny traceback in the log, not on
-completion (waited for `full.rds`).
-
-**Self-assessment: 8/10.** + All three gates asked; cause traced before
-fixing; blast radius measured on 22 layouts, with pictures; two further
-exceptions reported, not buried. - Two rounds lost to chromote
-screenshots; the full suite was not re-run after the comment-only
-REFACTOR edits (targeted files were).
-
-**Next steps:** (A) Owner decides the duplicate-mate item (BACKLOG
-“Male-on-the-left for couples whose mate is drawn as a duplicate node”):
-extend the sex rule (strict TDD) or reword the roxygen. (B) Still open:
-PED_GV decisions, mate-pair residue, CV1/CV2. (C) At release prep:
-BACKLOG “Move the version to 3.0.0 just before release”. (D) Master is
-23 ahead of origin after the close-out commit (22 from `git rev-list`
-plus this one); push only on the owner’s say-so.
-
-**Key files:** `R/makePedigreeDiagramData.R:1213-1219,1261-1272`,
-`tests/testthat/test_maleLeftSweepSurvival.R` (`.maleFemaleUnitX()`
-helper), `BACKLOG.md:101`.
-
-**Gotchas:** `.maleFemaleUnitX()` traces back through `__jog_` nodes and
-keeps `__dup_` nodes (dropping them gives a wrong count). Never compare
-layout x with `==` across code versions: the QP drifts by 1e-4.
-Full-suite logs hold Shiny tracebacks, so wait for the saved results
-file, not for a non-empty log. To compare old and new code, parse
-`git show HEAD:R/makePedigreeDiagramData.R` and
-`assignInNamespace(".positionMatingUnitForest", ...)`.
-
-### Session 855 Handoff Evaluation (by Session 856)
-
-**Score: 8/10.** **Helped:** the BACKLOG male-left item named the
-measurement method and the two-pair count, so I reproduced it in one
-script. **Missing:** which node types appear as edge sources
-(`__jog_*`), which cost me one wrong count. **Wrong:** nothing material.
-**ROI:** high.
-
-### What Session 855 Did
-
-**Deliverable, DONE:** recorded the owner’s release-number decision
-(next release is **3.0.0**) as a pre-release BACKLOG item. Docs only, so
-no TDD phase applies. Claim `2d7189745`; edits and records in the
-close-out commit. **Changed:** only `BACKLOG.md`. The owner chose 3.0.0;
-I wrongly also bumped `DESCRIPTION` (an option I invented), and the
-owner corrected it. All version files were reverted to 2.0.0.9000; the
-“Decide the release number” item became “Move the version to 3.0.0 just
-before release”. **Verified by me:**
-`git diff 2d7189745 -- DESCRIPTION NEWS.Rmd NEWS.md README.md ROADMAP.md`
-is empty (versions back to the claim state). **Not run:** full suite,
-`devtools::check()`, lint (no `.R` changed). The snapshot tests’
-“2.0.0.9000” strings are fixture data and were left alone on purpose.
-**Slip (mine):** my follow-up question offered “Bump DESCRIPTION now”,
-which the owner never asked for; I acted on it. Reverted at the owner’s
-direction. **Reduction:** none this session (`SESSION_NOTES.md` is 50 KB
-of 65 KB).
-
-**Self-assessment: 8/10.** + Reverted cleanly and fast. - Invented an
-option the owner had not asked for and edited 6 files on it; the
-deliverable was a one-line decision record.
-
-**Next steps:** (A) Owner picks another decision: PED_GV items,
-mate-pair guardrails residue, male-left placement, CV1/CV2. (B) At
-release prep: the new BACKLOG item “Move the version to 3.0.0 just
-before release”. (C) Master is 16 ahead of origin after the close-out
-commit (13 at Orient plus the claim, plus this one); push only on the
-owner’s say-so.
-
-**Key files:** `BACKLOG.md` (grep “Move the version to 3.0.0”).
-
-**Gotchas:** version files intentionally still say 2.0.0.9000.
-
-### Session 854 Handoff Evaluation (by Session 855)
-
-**Score: 8/10.** **Helped:** the picker-ready list of open decisions and
-the BACKLOG item for the release number got me to the work in one read.
-**Missing:** nothing material for this task. **Wrong:** the “13 ahead”
-count was 12 in the note; `git status -sb` gave 13 at Orient (the
-close-out commit adds one). **ROI:** high.
-
-### What Session 854 Did
-
-**Deliverable, DONE:**
-[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-now numbers an invalid date by its row in the pedigree passed in, so an
-“added” record ahead of an original no longer shifts the number (a bad
-date on row 3 was reported as row 2). Strict TDD, all gates asked. Claim
-`a06651046`; fix and tests in the close-out commit. **RED:** 5 tests in
-`tests/testthat/test_convertDate.R` (added first, added between, added
-last pin, two date columns, [`stop()`](https://rdrr.io/r/base/stop.html)
-message); 4 failed for the right reason, the added-last pin passed.
-**GREEN:** `R/convertDate.R` keeps `pedRows` (the original row
-positions) and uses it in both the `reportErrors = TRUE` vector and the
-[`stop()`](https://rdrr.io/r/base/stop.html) message (3 lines); roxygen
-`@return` for `reportErrors` and `man/convertDate.Rd` corrected.
-**REFACTOR:** reviewed, no change. **Owner decision taken:** option (1)
-of the BACKLOG item, fix the number; the
-[`stop()`](https://rdrr.io/r/base/stop.html) message shared the same
-defect so it was fixed too. **Verified by me:** full unfiltered suite
-362 files, 2,891 tests, 0 failed, 0 error (187 skipped); `lintr::lint`
-clean on both files; the downstream `getDateErrorsAndConvertDatesInPed`
-and `qcStudbook` tests pass. **Not run:** `devtools::check()`; runtime
-smoke n/a (no startup/wiring change). **Side effect:**
-[`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
-feeds these numbers to `sb[-invalidAndAdded, ]`, so it now drops the
-right row when an added row comes first (before, it dropped the wrong
-one); no test pins that path yet. **Reduction:** removed the S851
-evaluation and record, and the completed BACKLOG item; fixed the
-`convertDate.R:113` cite to `:115` in the `isAddedRecord()` item.
-
-**Self-assessment: 8/10.** + Found the
-[`stop()`](https://rdrr.io/r/base/stop.html) message shared the defect;
-reverted the unrelated `nprcgenekeepr-package.Rd` roxygen drift instead
-of folding it in; all four gates asked. - Did not add a test for the
-`getDateErrorsAndConvertDatesInPed` consequence; did not run
-`devtools::check()`.
-
-**Next steps:** (A) Owner picks another PED_GV decision (BACKLOG “PED_GV
-audit follow-through”): `isAddedRecord()` helper, sex-code adoption,
-`getPotentialParents` split. (B) Optional small TDD slice: pin
-[`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
-with an added row first. (C) Still open: release number, CV1/CV2,
-male-left placement. (D) Master is 12 ahead of origin after this commit
-(count from `git rev-list origin/master..HEAD`); push only on the
-owner’s say-so.
-
-**Key files:** `R/convertDate.R:109-120,160-170`,
-`tests/testthat/test_convertDate.R:140-185`,
-`R/getDateErrorsAndConvertDatesInPed.R:33-45`.
-
-**Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against
-`DESCRIPTION` (roxygenise regenerates it with extra tab text); I
-reverted it, so the next roxygenise will show that diff again. Not in
-scope here; commit it deliberately in a docs pass.
-
-### What Session 842 Did
-
-**Deliverable, DONE:** docs-staleness audit slice 6e, the last 126
-`man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`):
-26 moderate, 69 minor, 46 code candidates; all 267 pages now audited.
-Read-only; no code or tests, so no TDD phase applies. **Commits:** claim
-`89042b761`; report, BACKLOG and records in the close-out commit.
-**Verified:** re-ran in R or re-read in source 23 of the 26 moderates
-(all but RF2, RH2, RJ3; listed in the report’s “Verified by me”); two
-agent claims corrected (RE4 line cites, RJ4 narrower: extra columns are
-dropped, not an error). **Not verified:** RF2, RH2, RJ3, all 69 minors
-and all 46 code candidates rest on the agents’ own checks; not run:
-`lint_package()` (no `.R` changed), full suite, `devtools::check`.
-**NEWS.Rmd:** none. **Reduction:** removed the S804 evaluation and S805
-record at claim, and the S840 evaluation and record at close-out (in git
-and receipts). **Slips caught:** the claim commit was refused by the
-context-budget hook (SESSION_NOTES over its token ceiling); trimmed with
-the owner’s OK. My first RG1 re-run used an id not in `examplePedigree`
-and proved nothing; fixed. One agent ran `roxygenise()` by mistake and
-restored `man/` (git status clean).
-
-**Self-assessment: 8/10.** + One deliverable; every set covered, 126 of
-126 pages from a computed list; moderates checked first-hand before the
-report. - Minors and code candidates unverified; RF2/RH2/RJ3 not
-re-checked.
-
-**Next steps:** (A) fix the 95 slice-6e findings (26 + 69) in `R/*.R`
-roxygen, then `devtools::document()` and
-`git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); document
-today’s behavior, as S839/S841 did. (B) Owner decisions on code: 46
-slice-6e candidates (CE-CL), 22 slice-6d, 8 slice-6c, and the older
-PB/PA/PD/MC/MB items. (C) Master is 47 ahead of origin after the
-close-out commit; push only on the owner’s say-so. The
-`suggested_NEWS_entry.md` question was asked at Orient and S805 already
-says do not carry it.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`
-(findings by set), `BACKLOG.md:197`, `R/trimPedigree.R`,
-`R/getAnimalsWithHighKinship.R:5-42`, `R/readKinshipOverrides.R`,
-`R/getPotentialParents.R`.
-
-**Gotchas:** same as S837-S841
-(`git checkout man/nprcgenekeepr-package.Rd` after `document()`;
-`lint_package()` after joined roxygen lines; reword rather than add to
-`inst/WORDLIST`; prose after a `@param` folds into it). The report’s
-“Location” line numbers can be off (RE4 was); grep for the text. Do NOT
-use `echo ====` in the Bash tool.
-
-### Session 841 Handoff Evaluation (by Session 842)
-
-**Score: 8/10.** Orient measurements held: both ledger frontiers at
-HEAD, 46 ahead, one untracked file, 126 pages left. Step (A) gave the
-exact recipe (`comm -13` of the “Items audited” ids against `ls man`)
-and it produced 126. **Wrong:** none. **Missing:** it did not say that
-SESSION_NOTES.md was at the token ceiling, so the claim commit was
-refused and needed a trim (the dashboard showed it). It re-asked about
-`suggested_NEWS_entry.md` although S805 says not to carry it. **ROI:**
-high.
-
-### What Session 841 Did
-
-**Deliverable, DONE:** fixed all 42 slice-6d docs-staleness findings
-(RA1-RA13 except the non-findings, RB1-RB11, RC1-RC10, RD1-RD9) in the
-roxygen of 15 `R/*.R` files and regenerated `man/`
-(`devtools::document()`, then
-`git checkout man/nprcgenekeepr-package.Rd`). Docs only: no code or test
-change, so no TDD phase applies. The 22 code candidates are untouched;
-the docs state today’s behavior. **Commits:** claim `c33cfd543`; fixes
-`8b2e51b54` (RA, 4 files), `9b66199cd` (RB, 3 files), `53409c805` (RC, 4
-files), `21d33c54f` (RD, 4 files), `fd573b5c8` (wordlist rewording);
-records in the close-out commit. **Verified:** `lintr::lint_package()` 0
-lints after each group; `test_wordlist_coverage.R` passes (it caught
-“unflagged” and “upload’s”; reworded, not added);
-`devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked
-`suggested_NEWS_entry.md`), examples OK; the top-level tab count (16, 15
-without ORIP) read from `appUI.R` titles; the RA1 fix read in the
-generated Rd (paragraph now outside `\item{twinRelations}`); each option
-bullet I wrote for `modBreedingGroupsServer` and the `geneticValues`
-wording checked against `R/modBreedingGroups.R:545-600` and the UI
-controls. **Not verified:** the minors’ new wording rests on the audit’s
-own checks plus my source read (RA13, RC6, RC9, RC10, RD4, RD7 were not
-re-run); not run: the full test suite, a live Shiny launch.
-**NEWS.Rmd:** none. **Reduction:** removed the S839 handoff evaluation
-and the S839 record (in git and their receipts). **Slips caught:** my
-first `geneticValues` wording said group formation always halts without
-it; the code needs it only for “Top ranked” or the genetic-value floor,
-and I corrected it. My first option list said “exhaustive mode forms one
-group”; the UI offers it only when groups = 1 and sex ratio = “none”.
-Two wordlist failures from new words.
-
-**Self-assessment: 8/10.** + One deliverable; five commits, each group
-linted and regenerated; two of my own wrong claims caught against the
-code before commit; all gates run. - Minors’ wording not re-run; several
-audit “Location” line numbers (RB2, RB3) pointed at code, not the
-roxygen, so I found the text by grep.
-
-**Next steps:** (A) slice 6e audit (READY, Effort L): 126 `man/` pages
-left (`obfuscate*`, pedigree-tree and getters, `get*`/`calc*`/`check*`
-helpers, datasets); list = `comm -13` of the slice 6a-6d reports’ “Items
-audited” ids against `ls man`. (B) Owner decisions on code: the 22
-slice-6d candidates (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6), the 8 slice-6c
-candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3; then reword
-their docs (RA3/RA4/RA6, RA8, RB10, RC7 first). (C)
-`suggested_NEWS_entry.md` commit or drop (asked at Orient again; not
-answered). (D) Master is 46 ahead of origin with the close-out commit;
-push only on the owner’s say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`
-(the code candidates), `R/modBreedingGroups.R:205-290`,
-`R/modPedigree.R:190-250`, `R/modSummaryStats.R:235-310`,
-`R/runGenekeepr.R:1-40`, `BACKLOG.md:197`.
-
-**Gotchas:** same as S837-S840
-(`git checkout man/nprcgenekeepr-package.Rd` after `document()`;
-`lint_package()` after joined roxygen lines; reword rather than add
-words to `inst/WORDLIST`). `R/runGenekeepr.R` (lowercase k) holds
-`runGeneKeepR`. A blank-line paragraph after a `@param` folds into it,
-so put prose before the first `@param`. Do NOT use `echo ====` in the
-Bash tool (zsh `=` expansion errors).
-
-### What Session 810 Did
-
-**Deliverable, DONE:** Slice 4 of
-`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`). The Pedigree Browser’s “Display
-Unknown IDs” filter now reads the `placeholder` mark (a real `U1234`
-marked FALSE stays; a stand-in marked TRUE is hidden whatever its id
-looks like; an unmarked row is read by its id shape);
-`headerDisplayNames("placeholder")` is “Generated Unknown ID”; the help
-text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd` and `NEWS.Rmd`
-say what the column is. Both exports already carried the column; two
-round-trip guard tests now pin it. No new owner decisions. **Commits:**
-claim `27510590b`; RED `056bceda4`
-(`tests/testthat/test_placeholderMarkDisplay.R`, 10 tests, 5 failing, 5
-guards); GREEN `83dbbee34` (`R/modPedigree.R`,
-`R/headerDisplayNames.R`); docs `b406e7ead`; records (this).
-**Verification:** - The 5 RED tests failed on the old behavior, then
-passed; `test_modPedigree.R` (70), `test_modPedigree_coverage.R` and
-`test_headerDisplayNames.R` still pass. - Full unfiltered suite
-(`NOT_CRAN=true`, `load_all`) after GREEN: 360 files, 2,854 tests, 0
-errors, 1 failure, the known local-only
-`test_pkgdown_reference_config.R`. After the docs:
-`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass. -
-`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
-(the owner’s untracked drafts). - Lint 0 on `R/modPedigree.R`,
-`R/headerDisplayNames.R` and the new test file. - Runtime smoke:
-`runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The filter itself
-was verified with `testServer` on `modPedigreeServer`, not by clicking
-in a browser. - CI: Phase 0 `gh run list --branch master`: all four
-workflows and the scheduled shinytest2 green on the last pushed commit;
-nothing pushed this session. **Learnings:** 826. **Reduction:** nothing
-removed; `BACKLOG.md`’s placeholder item is about the same size; these
-notes stay under the 65,536 B ceiling (checked below).
-
-**Self-assessment: 9/10.** - + Read every RED failure message; caught a
-help-text test that passed by accident (the HTML `placeholder`
-attribute) before GREEN; every commit at 5 files or fewer. - + Ran the
-full suite, `devtools::check`, lint and the smoke test before
-close-out. - - Left one garbled expectation in the first draft of the
-RED file (fixed before running). - - No browser click-through of the
-unticked box; `testServer` only.
-
-**Next steps:** - (A) Slice 5 of the plan (strict TDD; plan §5 “Slice
-5”): de-identification
-([`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-gets an optional `placeholder` vector that
-[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
-fills from the column) and the cross-center merge
-(`R/resolveCrossCenterIds.R:17-26`, NA-fills the unmarked side). Re-run
-the plan §2 greps first. - (B) Other items: “Display Unknown IDs”
-breaking
+NEW-28 shipped:
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-(DECISION NEEDED; Slice 4 fixed which rows are hidden but not the
-dangling sire/dam ids); documentation audit’s next slice;
-`a2interactive` demonstration for `reportMatePairs`; Potential Parents
-own-dam; jmac. - (C) Carried: 8 unpushed commits before this session
-plus this session’s 5 (pushing is the owner’s call; the push changes
-`R/`, so all 4 workflows run); 7 untracked files; the
-`CHANGELOG.md`/`HANDOFFS.md` trims.
+checks `id`, `sire`, `dam`, `gen` and `sex` first and names every
+missing one before
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+runs (`R/reportGV.R:173-183`); the late `sex`-only check is deleted.
+Claim `419a25c3c`, RED `22cc2f63f` + `e86e68b4e`, GREEN `7f6216876`,
+REFACTOR `67b8afd21`. Handoff evaluation of S888: 9/10. Self 7/10.
+**Gotchas kept:** default test runs skip the 34
+`test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true`; the shared
+`@param ped` is inherited by 13 man pages (function-specific text goes
+in details); `lacy1989Ped` has no `sex`; run seeded identity checks in a
+fresh process; the open-count script is not in the repo (Learning 855).
 
-**Key files:** `R/modPedigree.R:361-364` (filter),
-`R/modPedigree.R:107-120` (help text), `R/headerDisplayNames.R:56-57`,
-`tests/testthat/test_placeholderMarkDisplay.R`; plan §5 Slice 4 DONE
-note; `PROJECT_LEARNINGS.md` Learning 826.
+### What Session 888 Did (condensed S889; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Gotchas:** 1. The unticked box still leaves children naming a hidden
-stand-in as sire/dam, so the Genetic Value module still receives that
-filtered pedigree (`R/appServer.R:312`); that is the separate DECISION
-NEEDED item. 2. The browser table shows raw column names, so a display
-name in
-[`headerDisplayNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/headerDisplayNames.md)
-does not change it. 3. A test that greps rendered UI html for a word
-(`placeholder`) can match an HTML attribute; grep a phrase. 4. STANDING
-SET unchanged from S790-809.
-
-### Session 808 Handoff Evaluation (by Session 809)
-
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
-one docs-only commit behind HEAD (`f443b6d93`, ledgered this session),
-the S808 receipt `status: complete`, the 7 untracked files unchanged,
-dashboard 96/100. Next step (A) was exact: `R/reportGV.R:283-286` and
-`:292`, `R/gvaConvergence.R:175`, `R/getLivingBreeders.R:26` and
-`R/correctUnknownParentMeanKinship.R:155` all sat where it said, and the
-26.405868 pin was right. **Missing:** (A) named `classifyParentage`’s
-callers but not
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-as a function to pass `ped` (the plan §5 has it); it also did not say
-the shipped data is unmarked, so no shipped pedigree can show a mark
-changing an answer (a fixture must be built). **Wrong:** nothing.
-**ROI:** high.
-
-### What Session 809 Did
-
-**Deliverable, DONE:** Slice 3 of
-`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`).
+PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36): the
+owner kept the `reportErrors` two-mode pattern (PED-6, NEW-36 closed)
+and chose a clear up-front message in
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-(founder counts, parentage), `classifyParentage(ped =)`,
-`correctUnknownParentMeanKinship()` (whole `ped`, not the proband
-subset), `getLivingBreeders()` (so
-[`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)/[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md))
+only (NEW-28 decided; PED-5 closed). Docs only. Claim `3dae4cfd2`,
+Decision record 10 `5a47eb8a3`, probes `b0f748891`. Handoff evaluation
+of S887: 9/10. Self 8/10. **Gotchas kept:** `smallPed` is not a
+good-input fixture for
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+(fails unmodified); `reportErrors` is the app’s QC contract: never
+change one function’s return alone; the ratchet’s results hash changes
+on every run: compare counts and manifest.
+
+### What Session 887 Did (condensed S888; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+NEW-50 shipped:
+[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
 and
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-(parentage) now read the `placeholder` mark; an id with no row in the
-pedigree is read by its shape (D4). No new owner decisions. **Commits:**
-claim `8164ed80a`; RED `deb75ec4f`
-(`tests/testthat/test_placeholderMarkReaders.R`, 14 tests, 11 failing, 2
-guards); GREEN `03c455a73`, `4802843c6`; docs `cc1eca898` (NEWS.Rmd,
-plan, BACKLOG); records (this). **Verification:** - The 11 RED tests
-failed on the old behavior (every message read), then passed; the older
-tests of every touched function still pass. - Full unfiltered suite
-(`NOT_CRAN=true`, `load_all`), after GREEN: 359 files, 2,844 tests, 0
-errors, 1 failure, the known local-only
-`test_pkgdown_reference_config.R`. After the docs,
-`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass. -
-`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
-(the owner’s untracked drafts). - Lint 0 on the 5 touched R files. -
-Runtime smoke: `runGeneKeepR(port = 6097L)` HTTP 200, no log errors. The
-module behavior was verified with `testServer` on
-`modGeneticValueServer`, not by clicking in a browser. -
-`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4f4491dfc876 · manifest aa983075d6a2`. -
-CI: not checked at Phase 0 (`gh run list` timed out, TLS handshake);
-nothing pushed this session. **Learnings:** 825. **Reduction:** nothing
-removed; `BACKLOG.md`’s placeholder item is about 60 B shorter net;
-these notes stay under the 65,536 B ceiling.
+[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+call one internal `.simulateKinship()` (`R/simulateKinship.R`); no
+change for users. Claim `c7873ece6`, RED `b96bbb45f`, GREEN `de45c8928`,
+REFACTOR `38c3f713c`. Handoff evaluation of S886: 9/10. Self 8/10.
+**Gotchas kept:**
+[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
+converts the pedigree to a data.table once before its loop and
+[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+does not; a twin pair in a delegation test must name ids in the fixture;
+`( cmd ) &` inside `run_in_background` reports the wrapper’s exit, so
+read the job’s own last line; `.lintr` excludes `tests`, so test files
+are linted nowhere.
 
-**Self-assessment: 8/10.** - + Read every RED failure message; controls
-that pass before and after; every commit at 5 files or fewer. - + Ran
-the full suite, `devtools::check`, lint and the smoke test before
-close-out. - + Found the whole-`ped` trap in
-`correctUnknownParentMeanKinship()` before writing GREEN (Learning
-825). - - First lint call passed a vector to `lintr::lint()` (one file
-per call); two background waits hit their limit. - - Phase 0 CI check
-failed on a network timeout and was reported, not retried.
+### What Session 886 Did (condensed S887; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Next steps:** - (A) Slice 4 of the plan (strict TDD; plan §5 “Slice
-4”): the “Display Unknown IDs” filter (`R/modPedigree.R:363`,
-`ped[!isGeneratedUnknownId(ped$id), ]`) passes `ped`; the column’s
-display name (`R/headerDisplayNames.R`); help text and the §2.5
-documents (`vignettes/articles/colony-manager-guide.qmd`,
-`vignettes/manual_components/_pedigree_browser.Rmd`);
-`summary_stats.html`; exports round-trip the mark (D8). RED: the filter
-hides marked rows only (a real `U1` stays); round trips of the
-cleaned-studbook and Pedigree Browser exports keep the marks. Re-run the
-plan §2 greps first. - (B) Other items: “Display Unknown IDs” breaking
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md);
-documentation audit’s next slice; Potential Parents own-dam; jmac. - (C)
-Carried: 22 unpushed commits after this records commit (pushing is the
-owner’s call; this push changes `R/`, so all 4 workflows run); 7
-untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
+PED_GV owner decision on the sim driver: share the step (NEW-50, open
+until shipped), NEW-51 closed accepted (Decision record 8, `71b1ce4c0`);
+claim `a5cc50a5d`. Handoff evaluation of S885: 9/10. Self 8/10.
+**Gotchas kept:** in zsh quote `--include='*.R'` and never `head` a
+caller grep before saying “no callers”; recompute the open count by
+script (43 ids, `\**` for bold, subtract closure rows and “CLOSED”
+decision rows); BACKLOG PED_GV lines 24-25 are very long: edit them with
+short single-line `old_string`s.
 
-**Key files:** `R/classifyParentage.R:20`, `R/getLivingBreeders.R:26`,
-`R/correctUnknownParentMeanKinship.R:155-157`, `R/reportGV.R:282-293`,
-`R/gvaConvergence.R:175-176`,
-`tests/testthat/test_placeholderMarkReaders.R`; plan §5 Slice 3 DONE
-note; `PROJECT_LEARNINGS.md` Learning 825.
+### What Session 885 Did (condensed S886; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Gotchas:** 1. Until Slice 4, the “Display Unknown IDs” filter
-(`R/modPedigree.R:363`) still uses the id shape, so a real `U1234`
-marked FALSE is hidden when it is turned off. 2. The shipped data is
-unmarked; only a fixture with a mark shows a changed answer
-(`makeMarkedPed()` in the new test file is reusable). 3.
-`gh run list --branch master` can return stale runs or time out; find
-runs by head sha. 4. STANDING SET unchanged from S790-808.
+11 PED_GV audit ids already fixed in code closed (Closure record 7,
+`482729a74`); BACKLOG count corrected 28 -\> 15. Claim `c618eaab3`.
+Handoff evaluation of S884: 8/10. Self 8/10. **Gotchas kept:** recompute
+the open count from the report’s table, never carry it; attribute a fix
+with `git log -S'<old text>' -- <file>`, since an audit id never appears
+in a commit message.
 
-**Owner-directed after close-out (2026-09-29):** - **Pushed** 17
-commits: `origin/master` `1d93590d` -\> `16da1062`, a fast-forward. Runs
-found by head sha: lint (36617669752), pkgdown (36617669607),
-test-coverage (36617669621) and R-CMD-check (36617669618) all green,
-R-CMD-check on all 5 legs. The Pages deploy also succeeded
-(owner-confirmed; run id not checked here). This push-record commit
-stays local.
+### What Session 884 Did (condensed S885; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-### Session 807 Handoff Evaluation (by Session 808)
+Tracked `kinship2-fidelity-validation.pdf` deleted (`4e7bb2725`) and
+`trackC-nprc-rectilinear.png` regenerated (`5bbad09e3`) by owner choice;
+claim `61b8978e8`. Handoff evaluation of S883: 9/10. Self 8/10.
+**Gotchas kept:** the generator `data-raw/kinship2FidelityValidation.R`
+writes all 8 images and hard-codes `outDir` (line 67): review a copy
+with `outDir` redirected and copy only the changed file;
+`git show HEAD:<png>` gives the committed image.
 
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
-= HEAD, 0 undocumented; the S807 receipt `status: complete` with a
-`quality_ratchet` citation matching the results file; the 7 untracked
-files unchanged; CI green on all 4 workflows. Next step (A) was exact:
-`R/addUIds.R:46`, `R/qcStudbook.R:231`, the `test_qcStudbook.R:105` pin
-and the 1,587 pin all sat where it said. Gotcha 4 (hoist the width if
-the predicate is called per row) was right to raise; Slice 2 calls it on
-whole vectors, so it did not bite. **Missing:** the plan did not check
-what
+### What Session 883 Did (condensed S884; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+Stale `@noRd` roxygen of `.addRectilinearWaypoints()` fixed at
+`R/makePedigreeDiagramData.R:2109-2113` (comment only; parsed code
+identical). Claim `5fa503303`; deliverable `13ab22bc1`. Handoff
+evaluation of S882: 9/10. Self 8/10. **Gotchas kept:** the BACKLOG
+docs-audit item is one very long line per cluster: edit it with short
+single-line `old_string`s.
+
+### What Session 882 Did (condensed S883; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+Stale “defaulting to direct” comment in `R/modPedigree.R:459-462` fixed
+(parsed code identical) and BACKLOG’s stale BB14 note corrected. Phase 0
+backfill `9a1224603`; claim `1cd71ab9c`; deliverable `67c83def8`.
+Handoff evaluation of S881: 7/10. Self 8/10. **Gotchas kept:** a
+single-line grep for “default … direct” misses comments that wrap; read
+the comment lines that name the old value.
+
+### What Session 881 Did (condensed S882; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
 [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-drops before it reads ids (animals with no birth date, D12), which cost
-an owner decision; it also did not list `a2interactive.Rmd`’s error-type
-table among the places that enumerate
-[`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
-fields (found by `devtools::check`). **Wrong:** nothing. **ROI:** high.
+split into five internal helpers in `R/getPotentialParentsHelpers.R`
+(PED-4, NEW-54 closed; output unchanged, 5 pinned fixtures). Claim
+`d5ccda82c`, RED `b446143ac` + `8509d4b7d`, GREEN `5d9dbbfa9`, REFACTOR
+`8add079bb`. Handoff evaluation of S880: 9/10. Self 8/10. **Gotchas
+kept:** never regenerate `gpp_pinned_*.rds` from post-split code; name
+helper parameters unlike any column. \### What Session 880 Did
+(condensed S881; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+entries now carry `damBasis` (NEW-55 closed); owner chose to split the
+function later. Claim `9dbf45d61`, RED `a0388e5f6`, GREEN `ed344a83a`.
+Handoff evaluation of S879: 8/10. Self 8/10. **Gotchas kept:**
+`devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (stale vs
+`DESCRIPTION`); revert it. `fallbackPed()` needs one female with an
+offspring.
 
-### What Session 808 Did
+### What Session 879 Did (condensed S880; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Deliverable, DONE:** Slice 2 of
-`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`).
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-now writes a logical `placeholder` column (stand-ins it made TRUE; a
-user’s TRUE/FALSE/1/0 kept; every other row by id shape).
-`isGeneratedUnknownId(ped =)` and
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-read it, so a real `U1234` marked FALSE is kept as an animal and as a
-parent.
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-no longer reuses an id used only as a sire or dam. A value the column
-does not accept stops QC (production) or is listed in
-`errorLst$invalidPlaceholderRows` (11th field). **Owner decisions:** D12
-([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-reads the mark before setting aside animals with no birth date) and D13
-(accepted values: TRUE/FALSE spellings, 1/0, blank), both plan §11.
-**Commits:** claim `a0e687f7`; decisions `2c82c8a8`; RED `98720bf2`,
-`b6f050a1`, `84382fa1`; GREEN `bac494e0` (id level), `410273d5` (QC),
-`9a4dee7c` (error reporting), `cd19fbab` (lint); docs `ec2c4d14`,
-`d830034e`, `34fcc801`, `ef91c4b1`, `904d9ff2`; records (this).
-**Verification:** - 23 new tests failed on the old behavior (every
-message read), then passed; all older tests in the touched files kept
-passing, including the 1,587 pin. - Full unfiltered suite
-(`NOT_CRAN=true`, `load_all`), after the docs: 358 files, 2,830 tests, 0
-errors, 1 failure, the known local-only
-`test_pkgdown_reference_config.R`. -
-`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
-(the owner’s untracked drafts). Its first run failed building
-`a2interactive.Rmd` (11 fields, 10 descriptions); fixed `904d9ff2`. -
-Lint 0 on the 9 touched R files (3 findings fixed in `cd19fbab`). -
-Runtime smoke: `runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The
-upload and Potential Parents behavior was verified with `testServer` on
-the real module servers (`test_modInput_placeholder.R`), not by clicking
-in a browser. -
-`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 44ec6f035883 · manifest aa983075d6a2`.
-**Learnings:** 824. **Reduction:** nothing removed; `BACKLOG.md` grew
-112 B (54,629 B) and these notes stay under the 65,536 B ceiling.
+`sexCodes` adoption stage 6 of 6 shipped: `test_sexCodes.R` scans every
+`R/*.R` minus an allowlist; PED-2, NEW-29, PED-7 closed. Claim
+`e9823c856`, RED `2ea50611a`, GREEN `9c6c034a6`. Handoff evaluation of
+S878: 9/10. Self 8/10. **Gotchas kept:** a new bare letter in `R/` fails
+`test_sexCodes.R`; allowlist entries match trimmed line text.
 
-**Self-assessment: 8/10.** - + Read every RED failure message; every
-commit at 5 files or fewer with its own ledger entry. - + Read the QC
-error-list path end to end before RED, so D5’s error entry touched all 5
-places. - + Ran `devtools::check()` and re-ran the full suite after the
-docs, which caught the vignette. - - The RED-1 ledger line said “9
-failing, 1 guard”; the real count was 8 (corrected in the next
-entry). - - The a2interactive table was missed until `check`; a grep for
-a neighbouring field name before the docs step would have found it
-(Learning 824). - - One of two tool results carried a fake “attribution”
-reminder; ignored, but it cost a turn.
+### What Session 878 Did (condensed S879; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Next steps:** - (A) Slice 3 of the plan (strict TDD; plan §5 “Slice
-3”):
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-founders (`R/reportGV.R:283-286`), `classifyParentage()` gains an
-optional `ped` (callers `R/reportGV.R:292`, `R/gvaConvergence.R:175`),
-`correctUnknownParentMeanKinship()` (`:134`, `:155`),
-`getLivingBreeders()` (`R/getLivingBreeders.R:26`) pass `ped`. RED: a
-marked real `U1234` founder is counted and its offspring “known”; a
-parent whose placeholder row was filtered away still counts as unknown
-(D4); `qcPed`’s
-[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
-stays 26.405868. Re-run the plan §2 greps first. - (B) Other items:
-“Display Unknown IDs” breaking
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md);
-documentation audit’s next slice; Potential Parents own-dam; jmac. - (C)
-Carried: 15 unpushed commits after this records commit (pushing is the
-owner’s call; this push changes `R/`, so all 4 workflows run); 7
-untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
+`sexCodes` adoption stage 5 of 6 shipped: 6 bare letters in
+`makePedigreeDiagramData.R`; claim `4ea9aed71`, RED `40a8e53de`, GREEN
+`b3f3a3ad5`. Handoff evaluation of S877: 9/10. Self-score 8/10.
 
-**Key files:** `R/qcStudbook.R:207-240` (parse and validate), `:370-420`
-(`readPlaceholderMark()`, `addPlaceholderMark()`);
-`R/autoIdFormat.R:143` (`isGeneratedUnknownId`);
-`R/removeAutoGenIds.R:25`; `R/getPotentialParents.R:90-98`;
-`R/addUIds.R:46`; `tests/testthat/test_modInput_placeholder.R`;
-`test_qcStudbook.R:495-600`; plan §5 Slice 2 DONE note, §11 D12/D13;
-`PROJECT_LEARNINGS.md` Learning 824.
+### What Session 877 Did (condensed S878; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Gotchas:** 1. Until Slice 3,
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
-`classifyParentage()`, `correctUnknownParentMeanKinship()` and
-`getLivingBreeders()` still use the id shape: a real `U1234` marked
-FALSE is still misread there. 2. The Pedigree Browser table shows the
-new `placeholder` column under its raw name until Slice 4
-(`R/headerDisplayNames.R`); the “Display Unknown IDs” filter
-(`R/modPedigree.R:363`) is unchanged. 3. `readPlaceholderMark()` numbers
-invalid rows by the uploaded file’s rows before `unknown2NA()` drops any
-`UNKNOWN`-id rows. 4. `test_getFocalAnimalPed.R:112` runs only for the
-owner’s user name (`skip_if_not`); it pins 11 fields. 5.
-`devtools::check()` builds vignettes; the suite does not (Learning 824).
-6. STANDING SET unchanged from S790-807.
+`sexCodes` adoption stage 4 of 6 shipped: 14 bare letters in 3 R files;
+claim `df4767656`, RED `4295ec5b4`, GREEN `3040c6d8a`. Handoff
+evaluation of S876: 9/10. Self-score 8/10.
 
-### Session 806 Handoff Evaluation (by Session 807)
+### What Session 876 Did (condensed S877; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and
-`HANDOFFS.md` frontier = HEAD `0fc874f9`, 0 undocumented; the S806
-receipt `status: complete`, its `quality_ratchet` citation matching
-`.quality-gates-results.json` (results `3749928c8792`); 4 unpushed; the
-7 untracked files unchanged. Next step (A) was exact: the 4 decisions
-with recommendations, then Slice 1’s files and the 3 moved tests at the
-right lines (`R/autoIdFormat.R:109-111`, `test_autoIdFormat.R:58`,
-`test_modPedigree.R:113-169`, `test_obfuscateId.R:31`), and “1,470 ids,
-only `U1` changes” re-measured identically. Gotcha 5 (the local-only
-pkgdown failure) saved a diagnosis. **Missing:** the plan’s Slice 1 did
-not check what sets
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)’s
-`size`; the app’s alias-length box allows 4, where the tighter rule
-makes the export stop (found here before RED, D10). Nor did it check
-which formats
-[`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-accepts (D11). **Wrong:** nothing. **ROI:** high.
+`sexCodes` adoption stage 3 of 6 shipped: 7 bare letters in 4 R files;
+claim `f4a645440`, RED `6fafbcd30`, GREEN `01600af88`. Handoff
+evaluation of S875: 9/10. Self-score 8/10.
 
-### What Session 807 Did
+### What Session 875 Did (condensed S876; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Deliverable, DONE:** Slice 1 of
-`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`): a real animal whose id merely starts
-with `U` (`U1`, `U123`, `Uma`) is no longer taken for a stand-in for an
-unknown parent. A placeholder is now the prefix followed by at least as
-many capital letters/digits as the format’s number prints
-(`getAutoIdWidth()`, 4 for `"U%04d"`). The shipped ancestry example now
-counts its founder `U1` (4 female founders, not 3). **Owner decisions
-(AskUserQuestion), all as recommended:** D1 column `placeholder`; D3 the
-tighter rule, as Slice 1; D5 a bad value stops QC; D6 shipped data
-unmarked (plan §11). Found before RED and ratified: **D10**, the
-De-identified Export allows alias length 4, and with the tighter rule
-`obfuscatePed(qcPed, size = 4L)` stopped (measured), so placeholder
-aliases are now lengthened to `max(size, prefix + W)`; **D11**,
-[`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-now refuses formats whose ids the rule cannot read (`"U%04x"`, `"U%4d"`,
-`"U%-4d"`). Owner chose a docs-only REFACTOR. **Commits:** - claim
-`0647abea` - decisions `95a4e5fa` (plan §11) - RED `9b8431dd` (4 files,
-10 failing plus 5 guards), `9dd49380` (4 files, 6 failing) - GREEN
-`aeccac96` (`R/autoIdFormat.R`, `R/obfuscateId.R`) - REFACTOR docs
-`9e89cd3d` (roxygen + man: `setAutoIdFormat`, `obfuscateId`, the
-predicate), `32cae6cc` (`removeAutoGenIds` roxygen + man, app help text,
-`_pedigree_browser.Rmd:38`), `93640b3f` (`NEWS.Rmd` General Fixes
-entry) - plan/backlog `f673d78d` - NEWS spelling fix `02a83f49`
-(“unticked” -\> “turned off”) - records (this)
+**DONE:** `sexCodes` adoption stage 2 of 6: argument-form pattern added
+to the guard; 8 bare letters in 4 R files converted. Claim `b7f865a4c`;
+close-out `ed93a7182`. Self 8/10. **Gotchas kept:** `argumentPattern`
+also matches `correctParentSex:108-109`; macOS `sed -i` needs `-i ''`.
 
-**Verification:** - The 16 RED tests failed on the old behavior (every
-message read), then passed. - Full unfiltered suite (`NOT_CRAN=true`,
-`load_all`), twice: 357 files, 2,809 tests, 0 errors. After GREEN, 1
-failure: the known local-only `test_pkgdown_reference_config.R`. After
-the docs, a second failure in `test_wordlist_coverage.R` (“unticked”),
-fixed in `02a83f49`; that test and `test_newsReleaseState.R` then
-passed. - `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2
-notes, both the owner’s untracked `suggested_NEWS_entry` drafts. It ran
-before `02a83f49`, which touches only the build-ignored `NEWS.Rmd`
-(`.Rbuildignore:37`). - Lint 0 on the 4 touched R files (`.lintr`
-excludes `tests/`). - Runtime smoke: `runGeneKeepR(port = 6099L)` served
-HTTP 200 with the new help text and without the old, and logged no
-errors. The filter and export behavior were verified with `testServer`
-on the real module servers (`test_modPedigree.R:176`,
-`test_modDeidentifiedExport.R:189`), not by clicking in a browser. -
-`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4e12678a802c · manifest aa983075d6a2`
-(3,594,042 B at `02a83f49`, +4,313 B over S806). -
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-on 10,000 real ids: 1.35 s (0.87 s with the old rule). **Learnings:**
-823. **Reduction:** `BACKLOG.md`’s placeholder item is 320 B shorter
-(54,517 B). Nothing else was removed; these notes grow
-`SESSION_NOTES.md`, which stays under its 65,536 B ceiling.
+### What Session 874 Did (condensed S875; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Self-assessment: 8/10.** - + Re-measured the plan’s key number before
-putting it to the owner. - + Inventoried the generators paired with the
-predicate before RED, which found D10 and D11 instead of shipping a new
-failure at alias length 4. - + Read every RED failure message, not just
-the counts. - + Kept every commit at 5 files or fewer, with one ledger
-entry each. - + Ran the whole suite again after the docs step, which
-caught the spelling guard. - - The docs-3 step ran only the 3
-`NEWS.Rmd`-reading tests, not `test_wordlist_coverage.R`, so “unticked”
-needed a follow-up commit. - - One Python quoting slip (no file changed)
-and one scratch-script type error. - - `getAutoIdWidth()` has no guard
-for a format with no conversion set directly via
-[`options()`](https://rdrr.io/r/base/options.html) (gotcha 1); untested
-edge, not fixed.
+**DONE:** `sexCodes` adoption stage 1 of 6: guard widened (`==`/`!=`
+both sides, `%in%`,
+[`identical()`](https://rdrr.io/r/base/identical.html)), new
+`test_getSexRatioWithAdditions.R`, 7 bare letters in 4 R files
+converted. Claim `cc22c5ce6`; close-out `878c89851`. Self 8/10.
+**Gotchas kept:** the commit hook caps `SESSION_NOTES.md` at 25,000
+tokens; `test_createColonySnapshot.R` emits two gene-drop warnings
+outside `test_that()` (unrelated).
 
-**Next steps:** - (A) Slice 2 of the plan (strict TDD; plan §5 “Slice
-2”): - First,
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-skips ids used only as a sire or dam (`existingIds <- ped$id`,
-`R/addUIds.R:46`; plan M11 has the 3-row repro). - Then
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-writes the logical `placeholder` column after
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)/[`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
-(`R/qcStudbook.R:231-232`), keeps a user’s `TRUE`/`FALSE`, stops on a
-bad value (D5, a new `errorLst` entry), and fills blanks with the Slice
-1 rule. - `isGeneratedUnknownId(id, format, ped = NULL)` reads the mark
-when `ped` has it (D4), and
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-passes `ped`. - Pins that move: `test_qcStudbook.R:105` (`expect_named`,
-adds `placeholder`); must stay: `test_getPotentialParents.R:452`
-(1587). - Re-run the plan §2 grep commands before RED (line numbers
-drift). - (B) Other items: the documentation audit’s next slice;
-“Display Unknown IDs” breaking
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md);
-recorded dam never listed; jmac. - (C) Carried: - 15 unpushed after this
-records commit (4 from S806, 11 from S807). This push changes `R/`, so
-all 4 workflows will run for real; pushing is the owner’s call. -
-residue: 7 untracked files - the `CHANGELOG.md`/`HANDOFFS.md` trims (the
-owner runs the forced write)
+### What Session 873 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Key files:** - `R/autoIdFormat.R:116` (`getAutoIdWidth()`), `:143`
-(`isGeneratedUnknownId()`), `:75`
-([`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-probe) - `R/obfuscateId.R:40` (`placeholderSize`), `R/modPedigree.R:110`
-(help text) - `tests/testthat/test_autoIdFormat.R:84`, `:120`, `:140`;
-`test_reportGV.R:870`; `test_modPedigree.R:176`;
-`test_modDeidentifiedExport.R:189` -
-`docs/planning/unknown-parent-placeholder-marking-plan.md` §5 Slice 1
-DONE note, §11 D10/D11 - `R/addUIds.R:46`, `R/qcStudbook.R:231` (Slice
-2’s start); `PROJECT_LEARNINGS.md` Learning 823
+**DONE:** scoping plan `docs/planning/sexcodes-adoption-plan.md` (43
+code lines, 17 files, six staged sessions); owner approved it (literal
+`groupAddAssign` default kept and allowlisted; `convertSexCodes.R` and
+two fixtures left). Planning only. Claim `6a84d5abe`. Self 8/10.
+**Gotchas kept:** single-bracket `sexCodes["male"]` is named and breaks
+[`identical()`](https://rdrr.io/r/base/identical.html); `.shapeForVec`
+at `makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`.
 
-**Gotchas:** 1. `getAutoIdWidth()` errors (“invalid ‘pattern’ argument”)
-if the option is set directly with
-`options(nprcgenekeepr.autoIdFormat = "ABC")` (no conversion); before
-S807 that degraded to a prefix match.
-[`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-refuses such formats, so only a direct
-[`options()`](https://rdrr.io/r/base/options.html) call reaches it.
-Untested. 2. `test_wordlist_coverage.R` runs only in the full suite
-(`skip_on_cran()`, needs `NOT_CRAN=true`); run it after any
-`NEWS.Rmd`/roxygen/vignette wording change. 3.
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)’s
-random stream changed for real ids at small `size`: a short `U`-leading
-alias (`"UA1"` at size 3) is now accepted instead of redrawn. No test
-pins such aliases today. 4. `isGeneratedUnknownId()` recomputes the
-width on every call; hoist it if Slice 2 calls the predicate per row in
-a loop. 5. The full suite’s known local-only failure
-(`test_pkgdown_reference_config.R`) and `check`’s 2 notes are the
-owner’s untracked `suggested_NEWS_entry` drafts. 6. STANDING SET
-unchanged from S790-806.
+### What Session 872 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 
-**Owner-directed after close-out (2026-09-29 ~03:35 UTC):** - **Pushed**
-the 15 commits: `origin/master` `e5e007f8` -\> `1d93590d`, a
-fast-forward (0 behind after a fresh fetch). This push changes `R/`, so
-all 4 workflows were awaited, found by commit sha (the plain
-`gh run list --branch master` returned stale S680 runs at first): lint
-(36517811103), pkgdown (36517811074), test-coverage (36517811115) and
-R-CMD-check (36517811053) all green, R-CMD-check on all 5 legs (macos,
-windows, ubuntu release/devel/oldrel-1); the Pages deploy (36518278161)
-succeeded. This push-record commit stays local.
+**DONE:** owner decision recorded: every direct sex letter in `R/` goes
+through `sexCodes` (PED-2, NEW-29, PED-7; ids stay open). BACKLOG item
+and triage Decision record 3. Docs only. Claim `bbe315dfa`; close-out
+`9d811590d`. Self 8/10. **Gotchas kept:** `convertSexCodes.R:56` lists
+the letters as factor levels and `sexCodes.R` defines them; the guard
+must not flag either. Many `R/` hits are roxygen (`#'`), not code.
+
+### What Session 871 Did (condensed S872; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+**DONE:** NEW-61 decision recorded and documented: `reportGV` lists
+known founders only; `calcFEFG` counts every both-parents-unknown animal
+as an unrelated founder. Roxygen in both files; triage Closure record 2.
+Docs only. Claim `f00361217`; docs `5f6ba3c0b`. Self 8/10. **Gotchas
+kept:** `roxygen2::roxygenise()` also rewrites
+`man/nprcgenekeepr-package.Rd` (revert it) and prints two old
+`@inheritParams` errors (`addParents`, `removeUninformativeFounders`).
+
+### What Session 869 Did (condensed S871; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+**DONE:** the 15 `SESSION_NOTES.md` lines over 280 B re-wrapped (text
+unchanged, proved by `diff`); the S842 record and S841 evaluation
+removed. Docs only. Claim `cb178a6ef`. Self 8/10. **Gotcha kept:** wrap
+new records at about 110 columns or the 280 B per-line check trips
+again.
+
+### What Session 866 Did (condensed S867; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+**DONE:** Mate Pair Excluded tab gets an Export Excluded Pairs CSV
+button (`downloadExcluded`, `R/modMatePair.R`), holding the rows left
+after the curator’s filter. Claim `2b777576a`; RED+GREEN `6c72dd8e6`.
+Full suite 2927 tests, 0 failed. Self-score 8/10. Gotcha kept:
+`excludedTable_rows_all` is still set by DT although the Excluded table
+is client-side `renderDT`.
+
+### Session 865 Handoff Evaluation (by Session 866)
+
+**Score 9/10.** Helped: the exact next-step list with the Excluded-tab
+export marked DECISION NEEDED, the key-files line numbers for the shared
+helpers, and the clean-tree/ahead note. Missing: the Excluded tab’s own
+code location (I grepped for it). Wrong: nothing found. ROI: high.
+
+### What Session 865 Did (condensed S866; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+**DONE:** the ancestry-override select-choices builder and confirm modal
+in `R/modBreedingGroups.R` and `R/modMatePair.R` are shared as
+`.ancestryOverrideChoices()` and `.ancestryOverrideModal()` in
+`R/ancestryOverrides.R`. Claim `dfd40047d`; RED+GREEN `adb5d2991`;
+REFACTOR `4ba8138f2`. Full suite 2922 tests, 0 failed; lint clean.
+Self-score 8/10. Gotcha: the modal helper takes `session$ns` (the
+function).
