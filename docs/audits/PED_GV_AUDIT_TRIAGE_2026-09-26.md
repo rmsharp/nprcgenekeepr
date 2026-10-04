@@ -235,6 +235,31 @@ PED-6, NEW-28, NEW-36), the walk helpers (PED-3, NEW-42; exported), the sim driv
 HTML builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57) and the repeated `updateProgress` null checks (NEW-62; 3
 blocks, `reportGV.R:229,248,267`).
 
+### Decision record 8 (owner decision 2026-10-03, S886) -- sim driver
+
+The owner chose "Share the 6-line step" over "Leave both as they are" and "Share it and add a safety check". The
+table above stays the frozen S781 reading.
+
+| id | decided |
+|---|---|
+| NEW-50 | SHARE THE STEP, STAYS OPEN until it ships: an internal helper does one simulation (`makeSimPed()` then `kinship()`, `createSimKinships.R:60-65` and `cumulateSimKinships.R:63-68`) and both exported functions call it. Each keeps its own loop, so `cumulateSimKinships()` still holds 4 running matrices and not `n`. No change for users. Work not started; strict TDD, with the owner's approval of the refactor given at its own scope gate. |
+| NEW-51 | CLOSED, ACCEPTED, no guard: the owner declined the dimnames check. S886 measured the audit's reason on `smallPed` (`pop = LETTERS[1:7]`, seed 42): 200 simulated matrices, row and column order identical in all 200 and equal to `ped$id`; and `cumulateSimKinships()`'s mean equalled the mean of `createSimKinships()`'s matrices under the same seed. One small fixture: no wrong result today, not a proof. |
+
+What S886 measured, for whoever picks up the work:
+
+- The two functions differ on purpose in memory: `createSimKinships()` returns all `n` matrices, `cumulateSimKinships()`
+  keeps 4. By arithmetic (not run), one 3,000-animal matrix is 72 MB, so 1,000 simulations kept as a list would be about
+  72 GB against about 288 MB. Building the summary on top of `createSimKinships()` would lose that, so it is not the plan.
+- `createSimKinships()` converts the pedigree to a data.table and takes `verbose`; `cumulateSimKinships()` does neither.
+  The helper must take an already-prepared pedigree. The same-seed match above suggests the result does not depend on the
+  class, on that one fixture. Whether `cumulateSimKinships()` gains `verbose` was not asked; it stays without.
+- Existing tests pin seeded numbers for each function (`test_createSimKinships.R:70`, `test_cumulateSimKinships.R:63`),
+  the `twinRelations` values and the `n < 2` handling, but nothing ties the two functions together. The first RED test
+  should: same seed, `cumulateSimKinships()`'s mean equals the mean of `createSimKinships()`'s matrices.
+- Only one behavior change ever had to edit both files: `twinRelations` (`99796a655`). No function in `R/` calls either.
+
+Open after this decision: **14 ids** (15 minus NEW-51); NEW-50 is decided and waits on the work.
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
