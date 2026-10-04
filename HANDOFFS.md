@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S892
+date: 2026-10-04
+status: pending
+active_task: trim HANDOFFS.md with methodology_trim.py so a receipt fits again (it was 2,622 B under its 262,144 B limit; a receipt costs 3-5 KB); the owner picked it at Phase 0 over the red-CI repair, which it unblocks; docs only, no code or test changes (READY, Effort S)
+```
+
+```handoff
 session: S891
 date: 2026-10-04
 status: complete

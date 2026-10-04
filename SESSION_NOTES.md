@@ -98,6 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 892 Did
+**Deliverable:** trim `HANDOFFS.md` with `methodology_trim.py` so a close-out receipt fits again: it is 259,522 B against a
+262,144 B limit and a receipt costs 3-5 KB. Docs only, so no RED/GREEN gates. READY, Effort S (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Work beginning: run the tool's dry run and `--check` on `HANDOFFS.md` first (is there a
+`LedgerSpec` for it, what budget and cut does it propose), then put the budget choice to the owner in plain words.
+**Orient:** no ledger gap (frontiers at HEAD `a83d6c681`); tree clean; master 6 ahead of origin (notes only); CI on
+`2e2046efd`: lint and pkgdown green, R-CMD-check and test-coverage red (the two causes S891 diagnosed), scheduled
+shinytest2 green; dashboard 96/100, High+ risk 0; context budget OK (growth run 57/10, nothing over a ceiling).
+**Owner pick:** "trim HANDOFFS.md" (typed as Other at the Phase 0 picker, which listed the red-CI repair first). The
+red-CI repair (the S891 next step A) stays READY and moves to the next session.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 891 Did
 **Deliverable, DONE:** diagnosed the red CI on master after the S890 push (`2e2046efd`): **two separate causes**, each
 reproduced, written up in `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md` (cause, evidence, proposed fix for each).
