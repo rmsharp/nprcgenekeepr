@@ -132,10 +132,10 @@ rbuildignoreExcludes <- function(patterns, path) {
   parts <- strsplit(path, "/", fixed = TRUE)[[1]]
   prefixes <- Reduce(function(a, b) paste0(a, "/", b), parts, accumulate = TRUE)
   any(vapply(patterns, function(p) {
-    any(isTRUE(tryCatch(
+    isTRUE(tryCatch(
       any(grepl(p, prefixes, perl = TRUE, ignore.case = TRUE)),
       error = function(e) FALSE
-    )))
+    ))
   }, logical(1)))
 }
 
