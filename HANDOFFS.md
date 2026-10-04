@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S897
+date: 2026-10-04
+status: pending
+active_task: trim CHANGELOG.md with methodology_trim.py (--file CHANGELOG.md --budget-bytes 65536) before it passes the 262,144 B Read refusal (258,295 B at Phase 0); the owner picked it at the Phase 0 picker (READY, Effort S). Docs only.
+```
+
+```handoff
 session: S896
 date: 2026-10-04
 status: complete

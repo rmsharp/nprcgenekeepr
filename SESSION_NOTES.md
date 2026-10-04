@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 897 Did
+**Deliverable:** trim `CHANGELOG.md` with `methodology_trim.py` before it passes the 262,144 B Read refusal (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Phase 0 clean: no ledger gap, 0 pending receipts, ratchet citation matches, origin 1 behind HEAD.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 896 Did
 **Deliverable, DONE (docs only; `BACKLOG.md` changed, no code, test or R file):** compressed four `BACKLOG.md` blocks by the
 housekeeping item's six-step method: PED_GV closure narrative 20 -> 13 lines, standalone-package item 37 -> 34, chromote item
