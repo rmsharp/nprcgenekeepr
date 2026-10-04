@@ -387,6 +387,24 @@ removeAutoGenIds(data.frame(id = c("Uma","U123","real1","kid1"), sire = NA, dam 
 # P8  cycles   qcStudbook(a 2-cycle, reportErrors = TRUE) error list has no cycle category
 # P9  PED-8    cyc <- data.frame(id = c("A","B","C"), sire = c("B","A",NA), dam = NA_character_)
 #              findGeneration(cyc$id, cyc$sire, cyc$dam)   # NA NA 0, warning naming "A, B"
+# P10 PED-5/6, NEW-28/36 (S888): bad input outside QC, then the QC family in both modes
+reportGV(data.frame(id = "a"))                              # Error: result would be too long a vector
+calcGU(data.frame(x = 1))                                   # Error: dim(X) must have a positive length
+calcRetention(data.frame(id = "a"), data.frame(id = "a"))   # Error: undefined columns selected
+filterReport("a", data.frame(x = 1))                        # numeric(0), no message
+rankSubjects(NULL)                                          # NULL
+getGeneticDiversityStats(NULL, NULL, NULL, NULL)            # Error: getGeneticDiversityStats() requires at least one group.
+qcStudbook(data.frame(id = "a"), reportErrors = FALSE)      # Error: Required field(s) missing: sire, dam, sex, birth.
+qcStudbook(data.frame(id = "a"), reportErrors = TRUE)       # a list of 11 (failedDatabaseConnection, missingColumns, ... changedCols)
+checkRequiredCols(c("id","sire","dam","sex"), FALSE)        # Error: Required field(s) missing: birth.
+checkRequiredCols(c("id","sire","dam","sex"), TRUE)         # a character(1)
+# P11 NEW-28 (S888): reportGV(p, guIter = 10L, guThresh = 3) with each column removed in turn, on the example pipeline
+#     (examplePedigree -> qcStudbook(minSireAge = 2, minDamAge = 2) -> setPopulation(focal) -> trimPedigree(probands,
+#     removeUninformative = FALSE, addBackParents = FALSE); 704 rows)
+#     unmodified: runs. without id: "'dimnames' applied to non-array". without sire or dam: "arguments imply differing number
+#     of rows: 704, 0". without gen: "result would be too long a vector". without sex: "nprcgenekeepr: required column(s)
+#     missing in reportGV(ped): sex." without birth, exit, age or population: runs.
+#     smallPed unmodified, reportGV(smallPed, guIter = 10L): Error: sire and dam must have had alleles assigned: logic error
 ```
 
 ## Verification
