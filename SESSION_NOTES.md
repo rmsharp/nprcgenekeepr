@@ -98,6 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 888 Did
+**Deliverable:** PED_GV owner decisions (`BACKLOG.md:8`; DECISION NEEDED, Effort S each; strict TDD for any code):
+walk ONE cluster with the owner and record each decision in the triage doc and `BACKLOG.md` (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning at PRE-RED: the cluster question is asked first, in plain words. Docs
+only; any code the owner's decision calls for is a later session.
+**Orient:** no ledger gap (frontiers at HEAD `0a26d9b5e`); tree clean; master 113 ahead of origin (`f0bcb9f48`, S858);
+CI 10/10 success (none of the 113 unpushed commits has run); ratchet 1/1; dashboard 96/100, one High+ flag; context
+budget OK (growth run 50/10); `CHANGELOG.md` 232,849 B, `HANDOFFS.md` 242,257 B, `BACKLOG.md` 57,996 B. Both
+sequencing audits are fully executed (only #138 open, low priority).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 887 Did
 **Deliverable, DONE:** NEW-50 shipped: `createSimKinships()` and `cumulateSimKinships()` call one internal
 `.simulateKinship()` (`R/simulateKinship.R`), which runs `makeSimPed()` then `kinship()`; each keeps its own loop. No

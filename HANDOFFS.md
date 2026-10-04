@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S888
+date: 2026-10-03
+status: pending
+active_task: PED_GV owner decisions (BACKLOG.md:8; owner picked it at Phase 0 from the priorities list; DECISION NEEDED, Effort S each): walk ONE cluster with the owner and record each decision in the triage doc and BACKLOG.md; docs only
+```
+
+```handoff
 session: S887
 date: 2026-10-03
 status: complete
