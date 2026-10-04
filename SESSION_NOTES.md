@@ -113,7 +113,15 @@ figures: S529 652 -> 389, S530 896 -> 286, S531 753 -> 267, S606 304 -> 80, S752
 and 84 -> 20); paths, Learnings 347 and 537 and 15 issue states resolve (only #123 open); 213 + 26 dropped tokens reviewed,
 the ones with no obvious home found elsewhere (`9a2a5ddb7`, `26.29`, `RF2, RH2, RJ3`); the file outside the two ranges is
 byte-identical; no test reads `BACKLOG.md`; `quality_ratchet.py --run` 1/1 (results `b99f87ba4720`).
-**Not run:** R suite, `devtools::check()`, CI (no R, test or build file changed; nothing pushed).
+**Not run:** R suite, `devtools::check()` (no R, test or build file changed).
+**Pushed after close-out (owner said "push"):** `f0bcb9f48..2e2046efd`, 128 commits, 26 touching `R/`. CI on `2e2046efd`:
+lint and pkgdown green; **R-CMD-check red** on ubuntu oldrel-1 and devel only (release on ubuntu, macOS and windows green);
+**test-coverage red**. R-CMD-check's one failure, on both: `test_positionMatingUnitForest.R:645:3`, `expect_equal(sum(shortfall >
+1e-6), 0L)` got 1 (one of 773 adjacent pairs is over the solver tolerance); test-coverage's log does not name its test (the
+same one is likely, not checked). The previous push's four runs (`f0bcb9f48`) were green. S889-S890 never touched the layout
+engine; the 128 commits do include S859 (`makePedigreeDiagramData`, one-mate-each couples draw male-left) and S878.
+Not diagnosed: a red run is reported, not fixed in the session that found it (`CLAUDE.md`). My CI watcher passed an
+abbreviated SHA to `gh run list --commit`, which does not match, so it saw no runs for an hour; they were done by 05:30 UTC.
 **Fixed in passing:** the item's "58 lines" (2026-09-24) is 55 in the ledger; its "nothing further is scoped" line now says
 Slice 2 was never acted on (the owner still decides whether to scope a slice).
 **Reduction:** removed the S864 record and its evaluation; condensed S889. `BACKLOG.md` is now 10,019 B under its budget.
@@ -140,8 +148,9 @@ if all declined. (C) Then one real fix per session, in that order: `deidentified
 the owner's list:** `HANDOFFS.md` is 255,415 B, 6,729 B under the 262,144 B limit, and a receipt costs 3-5 KB
 (S889 4,863 B, S890 3,907 B); `CHANGELOG.md` is 242,105 B, 20,039 B under. The dashboard now names `HANDOFFS.md` the top risk
 (MEDIUM) and says `methodology_trim.py --file HANDOFFS.md --check` reports whether a trim fits (not run). Ask at Phase 0
-whether to put the ledger decision before (B). Carried from S889: `reportGV(smallPed)` unfiled; master is 128 ahead of
-origin after this commit, push only on the owner's say-so, and wait for CI since `R/` has changed.
+whether to put the ledger decision before (B). **Red CI on master (above):** ask whether to diagnose it before (A); one test,
+two R versions, release green. Carried from S889: `reportGV(smallPed)` unfiled. Master is pushed; the post-push notes
+commit is local only (1 ahead), and a push of it starts all four workflows again.
 
 **Key files:** `BACKLOG.md:80-126` (docs-audit item: slices, Still open 1-3), `:347-383` (compression item: pass history,
 Method, next candidates); `docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6E}_*.md` (the open candidates' ids).
@@ -149,7 +158,8 @@ Method, next candidates); `docs/audits/DOCS_STALENESS_AUDIT_SLICE{2,4,6A,6C,6D,6
 **Gotchas:** estimate a compression's line yield from a draft, not from block size (Learning 856); count lines with `wc -l`;
 `( cmd ) &` inside `run_in_background` reports the wrapper's exit, so read the job's own last line; use `grep -c
 '^status: pending' HANDOFFS.md` (the unanchored form hits prose at `:22`); the open candidate lists stay in the item on
-purpose, and if they should become pointers their ids are in the slice reports; `git stash list` holds an old `dev`-branch
+purpose, and if they should become pointers their ids are in the slice reports; `gh run list --commit` needs the full SHA
+(`git rev-parse HEAD`), an abbreviated one matches nothing and the poll waits forever; `git stash list` holds an old `dev`-branch
 entry (not mine); `core.hooksPath` is unset (the context-budget hook is in `.git/hooks`).
 
 ### What Session 889 Did (condensed S890; full record in `CHANGELOG.md` and `HANDOFFS.md`)
