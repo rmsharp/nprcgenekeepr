@@ -98,6 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 887 Did
+**Deliverable:** share the one-simulation step between `createSimKinships()` and `cumulateSimKinships()` (NEW-50;
+`BACKLOG.md:29`; READY, Effort S, strict TDD) (IN PROGRESS)
+**Started:** 2026-10-03
+**Status:** Session claimed. Work beginning at PRE-RED: the scope question is asked first, then the PRE-RED->RED gate.
+**Orient:** no ledger gap (frontiers at HEAD `fc850aad8`); tree clean; master 107 ahead of origin; CI 10/10 success;
+ratchet 1/1; dashboard 96/100, one HIGH flag (BACKLOG.md 59,274 B); context budget OK; `CHANGELOG.md` 229,408 B and
+`HANDOFFS.md` 238,600 B. Both sequencing audits are fully executed (only #138 open, low priority).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 886 Did
 **Deliverable, DONE:** PED_GV owner decision on the simulation driver (NEW-50, NEW-51): the owner chose "Share the
 6-line step" over "Leave both as they are" and "Share it and add a safety check". Decision record 8 is in

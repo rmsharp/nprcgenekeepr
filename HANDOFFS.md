@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S887
+date: 2026-10-03
+status: pending
+active_task: share the one-simulation step between createSimKinships() and cumulateSimKinships() (NEW-50; BACKLOG.md:29; owner picked it at Phase 0 from the priorities list; READY, Effort S, strict TDD)
+```
+
+```handoff
 session: S886
 date: 2026-10-03
 status: complete
