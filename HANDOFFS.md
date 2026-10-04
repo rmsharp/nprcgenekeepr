@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S884
 date: 2026-10-03
-status: pending
-active_task: Docs-audit slice-1 leftovers (owner picked it from the Phase 0 list): the tracked vignettes/articles/kinship2-fidelity-validation.pdf (delete or git-ignore) and the stale trackC-nprc-rectilinear.png (regenerate); exact scope settled with the owner before any edit
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- docs-audit slice-1 leftovers (owner picked them at Phase 0; S883's next step A): the tracked kinship2-fidelity-validation.pdf deleted and trackC-nprc-rectilinear.png regenerated; nothing owed on either
+what_was_done: claim 61b8978e8; PDF deleted 4e7bb2725 (git rm vignettes/articles/kinship2-fidelity-validation.pdf, added by accident by S825's 9a2a5ddb7 and recoverable from it; BACKLOG docs-audit item updated); picture 5bbad09e3 (trackC-nprc-rectilinear.png only, 992 x 738, rendered by a scratch copy of data-raw/kinship2FidelityValidation.R with outDir redirected; owner compared old and new side by side and approved; diff vs HEAD was exactly the audit's box x 508-678 y 171-217, the other 7 images 0 px over threshold); records in the close-out commit; Phase 0 found no ledger gap (frontiers at HEAD 66216b289) so no backfill; measured on the real layout: the new dashed arc Y to __dup_Y_1 (roundness 0.25) does not enter W (min Chebyshev 26.29 vs half-side 25, min Euclid 28.51) so it skims the top edge by about 1.3 layout units
+next_steps: (A) PED_GV decisions (DECISION NEEDED, Effort S each; 28 ids), or the two kinship2 drawing features (which column marks deceased); (B) BACKLOG.md compression pass (READY, Effort L, recurring; 57 KB at Orient); (C) 3.0.0 release prep and the colony-snapshot backfill each need their own scoping session; (D) optional, owner's call, not filed: the arc repair pass scores arcs against a disc of radius size, which for a square (half-side = size) is the inscribed circle, so a clear arc could still cut a corner (measured on this one edge only: it did not); (E) master is 101 ahead of origin after this commit (97 at Orient plus claim, PDF, picture, close-out); push only on the owner's say-so
+key_files: vignettes/articles/kinship2-fidelity-validation-img/trackC-nprc-rectilinear.png; R/makePedigreeDiagramData.R:2432 (.curvedCwVia), :2503 (.arcDiscHitCount), :3038-3078 (roundness repair loop); docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md; data-raw/kinship2FidelityValidation.R:67,250,323; PROJECT_LEARNINGS.md Learning 850
+gotchas: the generator writes all 8 images and hard-codes outDir (line 67), so review a copy with outDir redirected and copy only the changed file; its console labels (lines 250, 323) still say dogleg, which the article retracted (console only, not changed); git show HEAD:<png> gives the committed image for a diff; the S883 Phase 0 list said 7 numbered items, I counted 6
+runtime_smoke: none -- docs and an image only, nothing runs differently; no .R file changed so lint not needed; 4 test files that read the articles dir or scan docs 116 tests 0 failed 0 error, then wordlist_coverage, newsReleaseState, sexCodes re-run after the notes edits 116 tests 0 failed 0 error; full test_dir and devtools::check() not run; CI not waited on (every changed path build-ignored, no test reads the image); quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results bdf0fc651eab · manifest aa983075d6a2
+changelog_ref: S884 DONE entry
+commit: the close-out commit that carries this receipt; claim 61b8978e8, PDF 4e7bb2725, picture 5bbad09e3
 ```
 
 ```handoff

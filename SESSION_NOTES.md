@@ -99,64 +99,60 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 884 Did
-**Deliverable:** docs-audit slice-1 leftovers: the tracked `vignettes/articles/kinship2-fidelity-validation.pdf` (delete or
-git-ignore) and the stale `trackC-nprc-rectilinear.png` (regenerate); exact scope settled with the owner (IN PROGRESS)
-**Started:** 2026-10-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** the two docs-audit slice-1 leftovers: the tracked `vignettes/articles/kinship2-fidelity-validation.pdf`
+deleted, and `trackC-nprc-rectilinear.png` regenerated. The owner picked the item at Phase 0, then "Both, in order",
+"Delete it" and "Regenerate and commit it". Docs and an image only, so no TDD phase applied.
+Claim `61b8978e8`; PDF `4e7bb2725` (`git rm` plus `BACKLOG.md`); picture `5bbad09e3`; records in the close-out commit.
+**Orient:** no ledger gap (CHANGELOG and HANDOFFS frontiers at HEAD `66216b289`), so no backfill; tree clean; master 97
+ahead of origin. CI: the plain `gh run list --branch master --limit 10` gave 10 rows, all `completed success`. Ratchet 1/1.
+**PDF:** `git log` showed S825's unrelated `9a2a5ddb7` (2026-09-30) added it, so it was tracked, not untracked as the
+slice-1 audit saw it. Nothing references it (grep of `tests/`, `.github/`, `_pkgdown.yml`, the articles: none) and it is
+not shipped (`^vignettes/articles$` is build-ignored). Deleted as the owner chose, like its sibling in S831; recoverable
+from `9a2a5ddb7`. 4 test files that read the articles dir or scan docs (pkgdown_reference_config,
+vignettes_no_deprecated_minParentAge, wordlist_coverage, newsReleaseState): 116 tests, 0 failed, 0 error.
+**Picture:** ran a scratch copy of `data-raw/kinship2FidelityValidation.R` with `outDir` redirected to the scratchpad (a
+perl one-liner), so the repo stayed clean until the owner decided. Against `git show HEAD:` the diff was exactly the audit's
+box (x 508-678, y 171-217; 339 px over threshold 24); the other 7 images: 0 px over it. Showed the owner a full and a 4x
+zoom side-by-side. I measured the dashed arc `Y` to `__dup_Y_1` on the real layout (roundness 0.25): it does not enter `W`
+(min Chebyshev distance to `W`'s centre 26.29 against half-side 25; min Euclid 28.51), so it skims the top edge by about
+1.3 units. The S714 census counts only arcs strictly inside a node's disc, so it calls Track C clean. The owner chose
+"regenerate and commit"; I copied only that one file (still 992 x 738) into the repo. Article prose and alt text say nothing
+about the arc's shape.
+**Not run:** full `test_dir`, `devtools::check()`, lint (no `.R` file changed), runtime smoke (docs and an image: nothing
+runs differently), push or CI (every changed path is build-ignored and no test reads the image).
+**Reduction:** removed the S855 record and its evaluation (receipt in `HANDOFFS.md`, entries in `CHANGELOG.md`); condensed S883.
 
-### What Session 883 Did
-**Deliverable, DONE:** the stale `@noRd` roxygen of `.addRectilinearWaypoints()` is fixed (the owner picked it from the
-Phase 0 list; it was S882's next step A). Comment only, so no TDD phase applied.
-Claim `5fa503303`; deliverable `13ab22bc1` (`R/makePedigreeDiagramData.R`, `BACKLOG.md`); records in the close-out commit.
-**Orient:** no ledger gap (CHANGELOG and HANDOFFS frontiers at HEAD `b3caf68db`), so no backfill; tree clean; master 94
-ahead of origin (`f0bcb9f48`, the S858 close-out). CI: the plain `gh run list --branch master --limit 10` gave 10 rows, all
-`completed success` (the S858 push runs plus two scheduled shinytest2 runs, latest 2026-10-03). Quality ratchet 1/1 pass.
-**Done:** `R/makePedigreeDiagramData.R:2109-2113` now says `makePedigreeMatingLayout()` calls the function, then
-`.resolveEdgeNodeCollisions()`, when `edgeStyle` is `"rectilinear"` (its default since S574) and `"direct"` skips it. It
-drops "own default ("direct")", "no call site yet" and the "Migration Path step 1 ... later implementation slice" clause
-(the `edgeStyle` wiring and the `R/modPedigree.R` control have shipped: `modPedigree.R:682` passes
-`edgeStyle = .currentEdgeStyle()`). BACKLOG docs-audit item: the S882-found straggler marked FIXED S883.
-**Verified by me:** parsed code identical before and after (`identical(parse(keep.source = FALSE))` on a saved copy of
-`HEAD` vs the edited file: TRUE; 5 comment lines replaced by 5); `lint_package()` 0 lints; 12 test files that name the
-file or scan `R/` (addRectilinearWaypoints, makePedigreeMatingLayout, modPedigree, modPedigree_coverage,
-modPedigree_processing, modPedigree_twinRelations, newsReleaseState, positionMatingUnitForest, comparePedigreeStructure,
-positionTreeApportion, sexCodes, wordlist_coverage): 1,084 tests, 0 failed, 0 error; wordlist, newsReleaseState and
-sexCodes re-run after the BACKLOG edit; `quality_ratchet.py --run` 1/1 pass. I also read every comment line in `R/` that
-names `"direct"` in quotes (6): the other 5 are accurate (`comparePedigreeStructure()` really does need
-`edgeStyle = "direct"`; the exported roxygen already says `"rectilinear"` is the default), so none is a straggler.
-**Not run:** full `test_dir`, `devtools::check()`, runtime smoke (comment-only, parse-identical, `@noRd` so no `man/`
-page), push or CI. **Reduction:** removed the S854 record and its evaluation (receipt in `HANDOFFS.md`, entries in
-`CHANGELOG.md`); condensed the S882 record. No new learning: Learning 849 already names this block and the method.
+**Handoff evaluation of S883: 9/10.** Helped: next step A named both leftovers with their owner-decision tags and the
+generator script; "97 ahead" measured 97 at Orient; "look at the new arc first" shaped the whole session. Missing: that
+S825 swept the PDF in (the answer to "why is it tracked"), and that the script rewrites all 8 images and hard-codes its
+output dir (I redirected a copy). Wrong: nothing material; its "7 numbered items" in the Phase 0 list was 6 when I counted.
 
-**Handoff evaluation of S882: 9/10.** Helped: next step A gave the exact lines (`:2110-2113` stale, `:1675` default,
-`:2070` call site), the READY/S/comment-only tag and that the block is `@noRd` with no `man/` page, so I knew nothing
-regenerates; the parse-identity recipe and the scanner-test list carried over; the long-line BACKLOG gotcha was needed
-(short single-line `old_string`s worked); "94 ahead" measured 94. Missing: the stale sentence starts at `:2109`, and the
-block's last clause ("Migration Path step 1 ... later implementation slice") was a second stale claim in the same passage;
-its test list said `twinRelations`, which is `test_modPedigree_twinRelations.R`. Wrong: "plain `gh run list --branch
-master` still returns stale September rows" did not hold at Orient (it returned the 2026-10-02/03 rows).
+**Self-assessment: 8/10.** + Claimed first; read-only checks before asking; put both decisions in plain words with each
+option's consequence; measured the arc against layout data instead of judging pixels; kept the repo clean until the owner
+approved; one-purpose commits, `git show --stat` checked; scope held (no BACKLOG item filed for the grazing, since the owner
+chose otherwise). - My first `Rscript -e` probe died on an unescaped regex (retried at once); long silent stretches during
+the Orient and the first investigation; the corner-cutting remark in step D is a geometric inference, measured on one edge.
 
-**Self-assessment: 8/10.** + Used the Phase 0 picker; re-read the target lines before the edit; checked every new claim
-(default, call site, the S574 commit, `modPedigree.R:682`, what runs after the call) before writing it; proved the edit
-comment-only by parse identity; left the neighboring "(direct style)" `@param` lines alone after reading them (still
-accurate); scope held, and the straggler grep was read-only.
-- Orient was a long silent stretch of tool calls; my first test run silently dropped a mislabeled file (`file.exists`
-filter on `test_twinRelations.R`), caught by the file count and fixed; no full suite or `devtools::check()`.
+**Next steps:** (A) PED_GV decisions (DECISION NEEDED, Effort S each; 28 ids), or the two kinship2 drawing features (which
+column marks "deceased"). (B) `BACKLOG.md` compression pass (READY, Effort L, recurring; 57 KB at Orient). (C) 3.0.0
+release prep and the colony-snapshot backfill each need their own scoping session. (D) Optional, the owner's call, not
+filed: the arc repair pass scores arcs against a disc of radius `size`, but a square's half-side is `size`, so the disc is the
+circle inscribed in the square and a "clear" arc could still cut a corner (measured on this one edge only: it did not).
+(E) Master is 101 ahead of origin after this commit (97 at Orient plus claim, PDF, picture, close-out); push only on the
+owner's say-so.
 
-**Next steps:** (A) Remaining slice-1 leftovers, owner decisions (DECISION NEEDED, Effort S): delete or git-ignore the
-tracked `vignettes/articles/kinship2-fidelity-validation.pdf`; regenerate `trackC-nprc-rectilinear.png`
-(`data-raw/kinship2FidelityValidation.R`; the owner should look at the new arc touching the `W` square first). (B) PED_GV
-decisions (28 ids) and the other DECISION NEEDED items in BACKLOG, incl. the two missing kinship2 drawing features (which
-column marks "deceased"). (C) `BACKLOG.md` compression pass (READY, Effort L, recurring; 57 KB at Orient). (D) Master is 97
-ahead of origin after this commit (94 at Orient plus claim, deliverable and close-out); push only on the owner's say-so.
+**Key files:** `vignettes/articles/kinship2-fidelity-validation-img/trackC-nprc-rectilinear.png`;
+`R/makePedigreeDiagramData.R:2432` (`.curvedCwVia`), `:2503` (`.arcDiscHitCount`), `:3038-3078` (roundness repair loop);
+`docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md`; `data-raw/kinship2FidelityValidation.R:67,250,323`.
 
-**Key files:** `R/makePedigreeDiagramData.R:2097-2113` (the fixed block), `:1675` (real default), `:2069-2070` (call site);
-`BACKLOG.md` docs-audit item (grep "FIXED S883"); `PROJECT_LEARNINGS.md` Learning 849.
+**Gotchas:** the generator writes all 8 images and hard-codes `outDir` (line 67): review a copy with `outDir` redirected and
+copy only the changed file. Its console labels (lines 250, 323) still say "dogleg", which the article retracted (console
+only; not changed). `git show HEAD:<png>` gives the committed image for a diff.
 
-**Gotchas:** the BACKLOG docs-audit item is one very long line per cluster: edit it with short single-line `old_string`s.
-The Phase 0 picker listed 4 of 7 numbered items; the other 3 (BACKLOG compression, 3.0.0 release prep, snapshot backfill)
-were prose-only.
+### What Session 883 Did (condensed S884; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Stale `@noRd` roxygen of `.addRectilinearWaypoints()` fixed at `R/makePedigreeDiagramData.R:2109-2113` (comment only; parsed
+code identical). Claim `5fa503303`; deliverable `13ab22bc1`. Handoff evaluation of S882: 9/10. Self 8/10.
+**Gotchas kept:** the BACKLOG docs-audit item is one very long line per cluster: edit it with short single-line `old_string`s.
 
 ### What Session 882 Did (condensed S883; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Stale "defaulting to direct" comment in `R/modPedigree.R:459-462` fixed (parsed code identical) and BACKLOG's stale BB14 note
@@ -417,27 +413,3 @@ named 4 pins in 2 files; the full suite found 2 more in `test_resolveEdgeNodeCol
 ### Session 857 Handoff Evaluation (by Session 858)
 **Score: 8/10.** **Helped:** the BACKLOG item named both couples, the measuring helper and the files; Orient measurements all held (frontiers at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause
 line said only the female has a parent edge; both parents do. **Missing:** which census pins move under any layout change. **ROI:** high.
-
-### Session 855 Handoff Evaluation (by Session 856)
-**Score: 8/10.** **Helped:** the BACKLOG male-left item named the measurement method and the two-pair count, so I reproduced it in one script. **Missing:** which node types appear as edge sources
-(`__jog_*`), which cost me one wrong count. **Wrong:** nothing material. **ROI:** high.
-
-### What Session 855 Did
-**Deliverable, DONE:** recorded the owner's release-number decision (next release is **3.0.0**) as a pre-release BACKLOG item. Docs only, so no TDD phase applies.
-Claim `2d7189745`; edits and records in the close-out commit.
-**Changed:** only `BACKLOG.md`. The owner chose 3.0.0; I wrongly also bumped `DESCRIPTION` (an option I invented), and the owner corrected it. All
-version files were reverted to 2.0.0.9000; the "Decide the release number" item became "Move the version to 3.0.0 just before release".
-**Verified by me:** `git diff 2d7189745 -- DESCRIPTION NEWS.Rmd NEWS.md README.md ROADMAP.md` is empty (versions back to the claim state).
-**Not run:** full suite, `devtools::check()`, lint (no `.R` changed). The snapshot tests' "2.0.0.9000" strings are fixture data and were left alone on purpose.
-**Slip (mine):** my follow-up question offered "Bump DESCRIPTION now", which the owner never asked for; I acted on it. Reverted at the owner's direction.
-**Reduction:** none this session (`SESSION_NOTES.md` is 50 KB of 65 KB).
-
-**Self-assessment: 8/10.** + Reverted cleanly and fast. - Invented an option the owner had not asked for and edited 6 files on it; the deliverable was a one-line decision record.
-
-**Next steps:** (A) Owner picks another decision: PED_GV items, mate-pair guardrails residue, male-left placement, CV1/CV2. (B) At release prep: the
-new BACKLOG item "Move the version to 3.0.0 just before release". (C) Master is 16 ahead of origin after the close-out commit (13 at Orient plus the
-claim, plus this one); push only on the owner's say-so.
-
-**Key files:** `BACKLOG.md` (grep "Move the version to 3.0.0").
-
-**Gotchas:** version files intentionally still say 2.0.0.9000.
