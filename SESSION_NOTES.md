@@ -132,8 +132,8 @@ figures (`533 -> 510`) were taken before the housekeeping item grew and had to b
 `CHANGELOG.md` and `HANDOFFS.md`), but this record is long, so the file still grew net 642 B (31,089 -> 31,731 B at close-out;
 ceiling 65,536 B). Nothing else was removable without losing a live gotcha.
 
-**Next steps (owner-ordered):** (A) the owner decides whether to push this session's two local commits (claim `0a34f4787` and
-the close-out): docs only, no CI wait; each push starts four workflows. (B) S897, recommended: trim `CHANGELOG.md`
+**Next steps (owner-ordered):** (A) DONE: the owner said "push" after the close-out and both session commits went to origin
+(`3d210301b..e9d1bdf6e`); only the addendum commit that records the push is local. (B) S897, recommended: trim `CHANGELOG.md`
 (`python3 methodology_trim.py --file CHANGELOG.md --budget-bytes 65536`; expect `--force`, as for `HANDOFFS.md` in S892). It is
 257,537 B, **4,607 B under the 262,144 B Read refusal**. The last three sessions added 2,686, 1,700 and 1,399 B (measured from
 `git show`), so S897 would leave about 1.9 to 3.2 KB and S898 likely crosses (an estimate); a session that reads it past the
