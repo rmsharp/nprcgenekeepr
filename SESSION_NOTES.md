@@ -99,73 +99,85 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 909 Did
-**Deliverable:** measure how often the `highlightNearest` degree-6 limit fails on the real rectilinear diagram, and recommend fix-or-close (`BACKLOG.md:398`) (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; phase PRE-RED. Measurement only (no `R/` change); a fix, if the numbers warrant one, is a separate session with its own plan and TDD gates.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (measurement and an owner ruling; documentation only, behaviour unchanged):** measured how often the
+rectilinear diagram's `highlightNearest` degree-6 hover falls short, and recorded the owner's ruling: **close the item, keep
+degree 6** (`BACKLOG.md:398-414` before removal; picked at the Phase 0 picker, "highlightNearest limit"). Report
+`docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md` (4 findings, 5 appendix scripts that reproduce every number).
 
-### What Session 908 Did
-**Deliverable, DONE (strict TDD, behaviour unchanged):** one internal `isAddedRecord(recordStatus, n = length(recordStatus))`
-(`R/isAddedRecord.R`) now says which records are "added", and the four inline copies call it: `convertDate()`
-(`R/convertDate.R:115`), `removeDuplicates()` (`:48`), `removeUnknownAnimals()` (`:31`) and `correctParentSex()` (`:106`)
-(`BACKLOG.md:22-38` before removal; picked at the Phase 0 picker, "isAddedRecord() helper"). Plan-mode approval first; the owner
-ruled the scope: the four named files only, `getRecordStatusIndex()` left alone (row numbers, also serves "original").
-Commits: claim `a1813dfdb`; RED `1cfee7215` (`tests/testthat/test_isAddedRecord.R`, 14 tests, all failing: each delegation
-test's real-rule control passed and only its stub assertion failed); GREEN `226069212` (helper) and `8881aa188` (4 callers);
-REFACTOR `7d6ef261e` (4 comments, parsed code identical); the close-out commit carries the rest.
-Verified: 14/14 new tests (62 expectations); a 133-result behaviour baseline (the four functions over a fixture matrix plus
-`qcStudbook()` on 12 bundled pedigrees in both `reportErrors` modes; 14 results hold "added" rows, 32 capture an error) was
-`identical()` after GREEN and after REFACTOR; full suite 3,013 tests / 9,706 expectations, 0 failed, 0 error (187 skipped,
-6 warnings, 6.1 min); `lint_package()` 0 lints; `devtools::check(document = FALSE, args = "--no-manual")` 0 errors, 0 warnings,
-0 notes (8.3 min); 4 shinytest2 files that drive the app through input QC (29 tests) 0 failed; `quality_ratchet.py --run`
-1/1 pass, results `516bd24e314a`, manifest `aa983075d6a2` (run at `7d6ef261e`). `BACKLOG.md:22-38` removed (17 lines; 476 -> 459
-lines, 40,473 -> 39,127 B). NEWS, `_pkgdown`, `a2interactive` and the tutorial checklist are not owed (internal, nothing exported,
-no behaviour change); the item named no GitHub issue. Not run: CI (unpushed), the PDF manual (`--no-manual`).
+**Results** (rhesus, 375 animals, QC'd as the app lays it out; standard = what the direct style's degree 1 lights): hovering
+never lights nothing (0 of 375); 373 of 375 animals light everything the direct style lights; the other 2 (`42M0Y8`, `IRSC6X`)
+are 7 hops from their parents' union dot because `.resolveEdgeNodeCollisions()` rerouted their sibship connectors through 4
+`__jog_` waypoints, not because of a wide family (widest family 3; widest in any bundled pedigree 4). The item's stated cause
+(wide sibships) is real but needs 9 full siblings of one pair (synthetic). Degree 7 would fix the 2 but light about 5 more nodes
+on a typical hover (median 14 -> 19). A real Chrome hover on 6 animals lit exactly the nodes the BFS model predicted.
 
-**Handoff evaluation of S907: 9/10.** Helped: all five cites re-found exactly (`BACKLOG.md:8`, `:22`, `:63`, `:392`, `:415`),
-and the three mask lines (`:115`, `:48`, `:31`) matched the files; "plan-mode approval and staged commits" was the right gate;
-"12 local commits" measured 12 ahead / 0 behind; the `paths-ignore` consequence held when re-read (`R/` and `tests/` are not on
-the push list); upstream #93 open with 1 comment. Missing: that a fifth function, `getRecordStatusIndex()`, holds the same status
-test in another shape (and is where the item's "Trap" lives, via `getDateErrorsAndConvertDatesInPed.R:41-43`), so scope needed an
-owner question; no line cite for the `correctParentSex()` mask (`:106-110`); the post-close-out `HANDOFFS.md` size (it gave
-208,186 B "before this close-out's edits", labelled correctly; measured 212,072 B at Phase 0). Wrong: nothing material.
+**Owner ruling:** option 1, with the limitation and the "simpler hover" rationale documented (the first wording of option 3,
+"raise to 7", was rejected for clarification and re-explained in plain words). Mid-session the owner added that some baboon
+pedigrees have more siblings (not measured; none bundled): revisit only when a user asks.
 
-**Self-assessment: 8/10.** + Claimed before any technical work; plan-mode approval, then a plain-words scope question to the
-owner; captured the behaviour baseline before any change and ran it twice at one HEAD first, which caught a `tempdir()` path in
-an error message (Learning 873); RED proved to fail for the right reason (controls passed); every commit 4 files or fewer; the
-helper's design (NULL handled inside, mask not index) is in its roxygen; verification at four surfaces; parse identity for the
-REFACTOR. - My Phase 0 report repeated the "next push starts four workflows" claim from the notes before re-reading `lint.yaml`
-(true, but unverified when stated; verified in 3A); the first baseline script had a zero-row fixture bug and the first test
-draft had five lines over 80 columns (both fixed before use); `test-e2e-data-ready.R` finished in under 0.1 min, so I do not
-claim it as a live app launch (the other three took 0.4-1.5 min). Reduction: `BACKLOG.md` 17 lines removed; S907's record
-condensed (5,324 B -> 1,077 B); the files still grew by this session's own entries.
+Commits: claim `a3c8d174a`; report `6b0525d7c`; docs `7970ba878` (comment above `degree =` in `R/modPedigree.R`, parsed code
+identical; `vignettes/a2interactive.Rmd` degree paragraph; the user manual's Pedigree Browser section; the report's Owner
+ruling); the close-out commit carries the `BACKLOG.md:398-414` removal (17 lines; 459 -> 442 lines, 39,127 -> 37,882 B),
+receipt, notes, ledger entry and Learning 874.
 
-**Next steps (owner-ordered):** (A) Nothing waits on the owner about `isAddedRecord()`. (B) READY, one per session, any order
-(cites grepped after the removal): `highlightNearest` (`BACKLOG.md:398`, optional, Effort M; measure the real fixture's largest
-sibship first); Candidate C (`:375`, DECISION NEEDED, product sign-off); docs-audit slice 2 (`:46`, READY, Effort L, needs
-scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C) Unpushed: 18 local commits after this close-out (S904
-claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim `2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3`; S906
-claim `31493f61d`, close-out `c651882ed`; S907 claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`, close-out
-`cf537c88d`; S908 claim `a1813dfdb`, RED `1cfee7215`, GREEN `226069212` and `8881aa188`, REFACTOR `7d6ef261e`, close-out). Unlike
-S904-S907 this push carries `R/` changes, so all four workflows will start and the R-CMD-check matrix (oldrel-1, devel) has not seen
-the helper: read CI after it. Per the owner's S905 ruling it is not offered as a task. (D) Upstream `KJ5HST/methodology#93`
-is still open with 1 comment (checked S908); `BACKLOG.md:269` stays BLOCKED. (E) `HANDOFFS.md` is 216,889 B after this
-close-out's edits (212,353 B before; about 45 KB below the 262,144 B Read refusal; at about 4 KB per session, my estimate,
-roughly ten sessions).
-Carried: `reportGV(smallPed)` unfiled.
+Verified: parse digest of `R/modPedigree.R` equal before and after; `lint_package()` 0 lints; `test_wordlist_coverage.R` (3),
+`test_vignettes_no_deprecated_minParentAge.R` (4), `test_pkgdown_reference_config.R` (5), `test_modPedigree.R` (70): 0 failed, 0
+error; `a2interactive.Rmd` renders in a scratch copy (12 s); `quality_ratchet.py --run` 1/1 pass, results `b082c69b41cf`,
+manifest `aa983075d6a2`. Not run: full suite and `devtools::check()` (comment and prose only), CI (unpushed), the `a3manual.Rmd`
+render. NEWS and `_pkgdown` not owed; the item named no GitHub issue.
 
-**Key files:** `R/isAddedRecord.R` (the helper and its contract); `tests/testthat/test_isAddedRecord.R` (contract, equivalence to
-the old inline rule, four stub-delegation tests); `R/convertDate.R:115`, `R/removeDuplicates.R:48`, `R/removeUnknownAnimals.R:31`,
-`R/correctParentSex.R:106` (the callers); `R/getRecordStatusIndex.R` and `R/getDateErrorsAndConvertDatesInPed.R:41-43` (left alone
-by ruling); `PROJECT_LEARNINGS.md` Learning 873; `BACKLOG.md:8`, `:46`, `:375`, `:398` (the open items).
+**Handoff evaluation of S908: 9/10.** Helped: all four cites re-found exactly (`BACKLOG.md:8`, `:46`, `:375`, `:398`); "18 local
+commits" measured 18 ahead; `HANDOFFS.md` 216,889 B and upstream #93 (open, 1 comment) matched; "measure the real fixture's
+largest sibship first" was the right first step. Missing: that the item's cause (wide sibship chains) predates the jog pass
+(2026-08-15), so width was the wrong quantity to chase; no pointer to `qcdRhesusPed()` (the app's real input; it is in S905's
+record, not S908's); the 400-animal rectilinear cap (`R/modPedigree.R:457`), which bounds what the app can ever draw. Wrong:
+nothing material.
 
-**Gotchas:** save a behaviour baseline's outputs and run it twice at one commit before trusting it (a `tempdir()` path in an
-error message made two runs differ); a delegation test needs a stub whose answer differs from the real rule, with a real-rule
-control first, or a caller that ignores the helper still passes; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd`
-every run (revert it; seen twice this session) and makes no page for an `@noRd` helper; the full suite took 6.1 min and
-`devtools::check()` 8.3 min, so run them in the background one at a time (the wall-clock benchmark in `test_markerKinship.R`
-dislikes a loaded machine); `getRecordStatusIndex()` still has its own `which(ped$recordStatus == status)`; removing a BACKLOG
-block shifts every later cite by its length, so re-grep them; take `wc -c` after the last edit (Learning 871).
+**Self-assessment: 8/10.** + Claimed before technical work; read visNetwork's JS before modelling it; measured against the
+standard the setting was built for; found the stated cause was wrong and gave the width threshold; confirmed the model live; an
+assertion on id prefixes caught the `__jog_` kind; parse digest proves the R edit is comment-only; every commit 4 files or
+fewer; corrected my own wrong "45 KB" size claim before committing. - Option 3's first wording cost the owner a round trip; I
+started a layout loop on a 3,694-row file without counting rows (minutes lost); two harness slips in the vignette render
+(`SCRATCH` not exported; scratch copy had no `../inst`); the first report commit said "no `R/` change" and needed a follow-up.
+Reduction: `BACKLOG.md` 17 lines removed; S908's record condensed (6,753 B -> 1,184 B); `HANDOFFS.md` and `CHANGELOG.md`
+still grew by this session's entries.
+
+**Next steps (owner-ordered):** (A) Nothing waits on the owner about `highlightNearest`; revisit only on a user request (baboon
+pedigrees; start from the report's Findings 3 and 4 and recommendation 3). (B) READY, one per session, any order (cites grepped
+after the removal; items above line 398 did not move): Candidate C (`BACKLOG.md:375`, DECISION NEEDED, product sign-off);
+docs-audit slice 2 (`:46`, READY, Effort L, needs scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C)
+Unpushed: 22 local commits after this close-out (S904-S908 as in the S908 record; S909 claim `a3c8d174a`, report `6b0525d7c`,
+docs `7970ba878`, close-out). The push carries `R/` and vignette changes, so all four workflows start and the R-CMD-check matrix
+(oldrel-1, devel) has not seen S908's helper or this session's vignette edit: read CI after it. Per the owner's S905 ruling it
+is not offered as a task. (D) Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked S909); `BACKLOG.md:269`
+stays BLOCKED. (E) `HANDOFFS.md` is 222,737 B after this close-out's edits (217,189 B before them; about 39 KB below the 262,144
+B Read refusal; roughly seven sessions at this session's 5.4 KB, my estimate). Carried: `reportGV(smallPed)` unfiled.
+
+**Key files:** `docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md` (the evidence and scripts); `R/modPedigree.R:828-858`
+(options; KNOWN LIMITATION comment at `:839`; `degree =` at `:856`); `R/makePedigreeDiagramData.R:2203-2236` (D1 bar chain) and
+`:2639-3097` (`.resolveEdgeNodeCollisions()`); `tests/testthat/test_modPedigree.R:2032-2075` (pins `"degree":6`, untouched);
+`tests/testthat/helper-qcdRhesusPed.R`; `vignettes/a2interactive.Rmd:561-578`;
+`vignettes/manual_components/_pedigree_browser.Rmd:104-115`; `PROJECT_LEARNINGS.md` Learning 874; `BACKLOG.md:8`, `:46`, `:375`,
+`:400` (outreach), `:419` (paper).
+
+**Gotchas:** count a file's rows before laying it out (`ExamplePedigree.csv` is 3,694 animals, over the 400-animal rectilinear
+cap); in a live visNetwork page the network object is on the inner `graph<id>` element and `emit()` must be wrapped to return a
+plain value (chromote: "Object reference chain is too long"); assert on unknown layout id prefixes (`__jog_` exists); a scratch
+render of `a2interactive.Rmd` needs `../inst` beside it and `SCRATCH` exported; `( cmd ) &` inside `run_in_background` reports
+the wrapper's exit, so read the job's own output file; removing a BACKLOG block shifts every later cite, so re-grep them; take
+`wc -c` after the last edit (Learning 871).
+
+### What Session 908 Did (condensed S909; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+One internal `isAddedRecord(recordStatus, n = length(recordStatus))` (`R/isAddedRecord.R`) now says which records are "added",
+and the four inline copies call it (`convertDate()`, `removeDuplicates()`, `removeUnknownAnimals()`, `correctParentSex()`);
+behaviour unchanged; `getRecordStatusIndex()` left alone by the owner's ruling. `BACKLOG.md:22-38` removed. Claim `a1813dfdb`,
+RED `1cfee7215`, GREEN `226069212` and `8881aa188`, REFACTOR `7d6ef261e`, close-out `db755d5d3` (all still local). Handoff
+evaluation of S907: 9/10. Self 8/10.
+**Gotchas kept:** save a behaviour baseline's outputs and run it twice at one commit before trusting it (a `tempdir()` path in
+an error message made two runs differ); a delegation test needs a stub whose answer differs from the real rule, with a real-rule
+control first; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` every run (revert it); run the full suite (6.1
+min) and `devtools::check()` (8.3 min) in the background one at a time (`test_markerKinship.R` has a wall-clock benchmark); take
+`wc -c` after the last edit (Learning 871).
 
 ### What Session 907 Did (condensed S908; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Reworded the `data-raw/rhesusPedigree.R` docstring (comment only; parsed code identical, 0 lints) so it says only what is true.

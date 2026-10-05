@@ -395,23 +395,6 @@ section's live work.*
       precluded -- remains open as a future, separately-scoped enhancement if the owner judges,
       from that live render, that remaining cross-generation mate-lines still benefit from
       signposting for legibility.
-- [ ] **`highlightNearest` degree=6 mitigation for the rectilinear style is
-      bounded, not a full fix** (found S468, owner kept it open S898; READY (optional), Effort
-      M, low priority) -- a
-      very wide sibship's D1 sibship-bar chain can exceed 6 hops (chain
-      length scales with the number of children in one mating unit), so a
-      hover on an individual in a very large family could still light up
-      nothing visible. A full fix would need either a custom JS
-      `highlightNearest` reimplementation that specifically skips through
-      invisible waypoint nodes regardless of hop count, or a data-layer
-      change that keeps degree-1 semantics correct (e.g. tagging waypoint
-      edges so a custom traversal treats them as zero-cost hops). Not
-      designed this session -- the degree=6 mitigation was explicitly
-      scoped as a quick, bounded fix, owner-directed via `AskUserQuestion`.
-      A future session should measure the real fixture's own maximum
-      sibship size to gauge how often 6 hops is actually insufficient in
-      practice before deciding whether a full fix is warranted. (S898 re-check: the degree is
-      still style-aware at `R/modPedigree.R:828` and pinned by `test_modPedigree.R:2033`.)
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
