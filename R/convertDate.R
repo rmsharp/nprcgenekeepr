@@ -107,9 +107,9 @@
 #' convertDate(ped4)
 convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
                         reportErrors = FALSE) {
-  ## Ignore records added because of unknown parents. Only "added" records are
-  ## set aside; an NA or unrecognized status is a real animal, and an NA in a
-  ## row subscript would return an all-NA phantom row, so mask explicitly.
+  ## Ignore records added because of unknown parents (isAddedRecord() says
+  ## which); its mask has no NA, so the row subscripts below cannot return an
+  ## all-NA phantom row.
   pedRows <- seq_len(nrow(ped))
   if (any("recordStatus" %in% names(ped))) {
     isAdded <- isAddedRecord(ped$recordStatus)
