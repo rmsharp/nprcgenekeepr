@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S912
+date: 2026-10-05
+status: pending
+active_task: work through the remaining PED_GV audit owner decisions (BACKLOG.md:8; 9 ids remain: 7 undecided, NEW-62 decided in S911 and waiting on its build, NEW-24 on issue #123); the owner picked it at the Phase 0 picker; which group of the 7 comes first is settled at the pre-RED scope gate, and any code change follows strict TDD
+```
+
+```handoff
 session: S911
 date: 2026-10-05
 status: complete

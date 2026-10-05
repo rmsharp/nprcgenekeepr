@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 912 Did
+**Deliverable:** the remaining PED_GV audit owner decisions (`BACKLOG.md:8`; 9 ids: 7 undecided, NEW-62 decided, NEW-24 on #123) (IN PROGRESS)
+**Started:** 2026-10-05 15:40 CDT
+**Status:** Session claimed; phase PRE-RED. First step: read `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` for the 7 undecided ids,
+then ask the owner (in plain words) which group to take this session (one deliverable only); any code change goes through RED/GREEN/REFACTOR.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 911 Did
 **Deliverable, DONE (an owner decision recorded; documentation only, no `R/` change):** the owner's decision on NEW-62, the
 repeated "call the progress function if one was given" blocks (`BACKLOG.md:8`; picked at the Phase 0 picker, the group chosen at
