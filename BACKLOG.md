@@ -412,27 +412,22 @@ section's live work.*
       precluded -- remains open as a future, separately-scoped enhancement if the owner judges,
       from that live render, that remaining cross-generation mate-lines still benefit from
       signposting for legibility.
-- [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv` gets a different
-      Diagram layout than the same CSV read directly -- cause found (row order); owner ruled
-      S898: fix the tests only**
-      (found S472, cause measured 2026-09-24 and re-measured S898; READY, low priority,
-      Effort S) -- the S472 figures (739
-      live vs 740 offline nodes; 50 vs 51 projection nodes) no longer reproduce, since the layout
-      has changed since (e.g. Track 4, S573), and the original hypothesis -- that `qcStudbook()`
-      drops or merges a row -- is REFUTED: it keeps all 375 rows and ids (none lost or added, 0
-      duplicates), and `makePedigreeDiagramData()` returns the same 375 nodes / 502 edges for
-      both inputs. What differs is row ORDER -- `qcStudbook()` reorders the rows -- and the mating
-      layout depends on it: `makePedigreeMatingLayout()` gives 782 nodes for both inputs under
-      `edgeStyle = "direct"`, but **1456 (raw order; 1460 re-measured S898, after later layout
-      fixes) vs 1412 (QC order, unchanged)** under `"rectilinear"`,
-      and the raw content re-ordered to QC's row order gives exactly 1412 (so order alone
-      reproduces QC's count; QC also normalizes some id/sire/dam/sex cells, not characterized).
-      Consequence: the app's rectilinear diagram of an uploaded file can carry a different
-      number of waypoint nodes than a script user's diagram of the same data, depending only on
-      row order. **Owner ruling (S898): accept the row-order dependence and change only the
-      bundled-fixture tests** (`test-e2e-pedigree-module.R`, etc.) to assert the QC'd count, which
-      is what the live app renders; layout code untouched. Not chosen: making the layout
-      order-independent. The pickup starts by finding which tests assert the raw-CSV count.
+- [ ] **Row order alone changes the bundled rhesus pedigree's Diagram layout; the app's QC order
+      shows two differences from the raw-CSV order the tests use (DECISION NEEDED, Effort S)**
+      (found S472; cause measured S898 and S905) -- `runQcStudbook()` keeps all 375 rows and every
+      sire/dam/sex cell and only reorders them; raw content put in QC's row order gives QC's
+      results exactly. `direct` is 782 nodes either way; `rectilinear` is 1460 (190 jog) in raw
+      order and 1412 (142 jog) in QC order. **Shipped S905** (the owner chose this over re-pinning):
+      `test_makePedigreeMatingLayout.R` pins the QC'd layout through `helper-qcdRhesusPed.R`; the
+      raw-order tests are unchanged. **Measured S905** (the QC'd copy fed to the 7 layout test files
+      by defining `read.csv()` in the `env` given to `testthat::test_file()`): 8 tests in 5 files
+      fail. 4 are count or order pins (the 1460/190 pin, collision baseline 95/207 -> 71/121, bar
+      overlaps 98 -> 55, the 5 families' order) and 4 are real differences: union dot `__union_120`
+      sits 0.5 outside its parents' span (raw: none); 8 off-centre union dots, none among the 6 the
+      test names (largest 1.5, bound 1.55); `compareAgainstKinship2()` gives `identical = FALSE`
+      (`3CLMPL` and `3GW5WC`; raw: TRUE); the arc-roundness test finds no colliding pair.
+      **Decide:** leave it (the tests keep guarding raw order), find out why kinship2 drops the two
+      animals in QC order, or make the layout order-independent (declined S898).
 - [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
       `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
       source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures

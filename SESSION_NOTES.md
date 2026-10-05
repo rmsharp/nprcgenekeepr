@@ -99,69 +99,72 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 905 Did
-**Deliverable:** row-order tests only (`BACKLOG.md:415`): change the bundled-fixture tests that assert the raw-CSV rectilinear
-node count so they assert the QC'd count the live app renders; layout code untouched (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; strict TDD, phase PRE-RED. Picked by the owner at the Phase 0 picker (S898 ruling: accept the
-row-order dependence, change only the tests). Also at Phase 0 the owner ruled: stop offering "push N local commits" as a
-picker task (2 notes-only commits stay local until the next real push). First step: find which tests assert the raw-CSV count.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (tests only; no `R/` change):** the row-order item (`BACKLOG.md:415`). Measuring first (Learning 870) showed
+the S898 ruling's premise was too narrow. The app's QC'd copy of the bundled rhesus fixture differs from the raw CSV in row
+order only (0 sire/dam/sex cells differ), but fed to the 7 layout test files it failed 8 tests in 5 files: 4 count or order
+pins and 4 real differences (union dot `__union_120` 0.5 outside its parents' span; 8 off-centre dots, none among the 6 the
+test names; `compareAgainstKinship2()` `identical = FALSE` for `3CLMPL` and `3GW5WC`; the arc-roundness test finds no pair).
+The owner chose "add one QC-order test, keep the rest" over re-pinning. Strict TDD: claim `2563a6ee0`; RED `5fd9a72e1` (2 tests
+in `test_makePedigreeMatingLayout.R:780-828` calling a missing helper); GREEN `7d1da7d39` (`tests/testthat/helper-qcdRhesusPed.R`,
+`qcdRhesusPed()`); REFACTOR: review only, nothing to change (0 lint findings, no line over 80 columns). The new tests pin the
+QC'd layout: rectilinear 1412 nodes (142 jog), direct 782; raw order gives 1460 (190 jog) and 782. `BACKLOG.md:415` is now a
+DECISION NEEDED item (21 -> 16 lines; file 517 -> 512). Full suite: 368 files, 2999 tests, 0 failed, 0 error, 187 skipped.
+`lintr::lint_package()`: 0. `quality_ratchet.py --run`: 1/1 pass, results `0e2e7c50061e`, manifest `aa983075d6a2`. Non-commit
+actions at Phase 0 (owner rulings): stop offering "push N local commits" in the picker (saved to memory; the cause is that every
+push session owes a claim and a close-out commit that cannot be in their own push); I also answered why `BACKLOG.md` barely shrank
+in lines (570 -> 517 lines but 57,031 -> 43,893 B since S862: the passes cut bytes of long lines, and new text kept landing).
+Commits: claim `2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`; the close-out commit carries the rest.
 
-### What Session 904 Did
-**Deliverable, DONE (docs only; no code, test or `R/` change):** pushed S903's 2 local commits to `origin/master`
-(`6f4733c78..42b4fb0b8`: claim `ee5632c86` and close-out `42b4fb0b8`, a plain fast-forward, 0 behind after `git fetch`, by
-SHA, so this session's claim `64ef6bf03` stayed local) at the owner's pick from the Phase 0 picker ("Push 2 local
-commits"). `git diff --name-only origin/master..42b4fb0b8` listed 3 files (`CHANGELOG.md`, `HANDOFFS.md`,
-`SESSION_NOTES.md`); my first `awk` pull of the ignore list returned nothing, so I read the `push:` block of
-`.github/workflows/lint.yaml` itself and checked each file against it. **Result: no CI run started.** `gh run list --commit
-42b4fb0b8a4aad65e2e7a4a99dd98c8a780cf1d0` returned nothing 65 s after the push (pushed 21:56:48, queried 21:57:53 CDT), a
-control query on `f43ff9501` listed its 4 runs, the newest 4 runs on `master` are still S899's, and `origin/master` equals
-`42b4fb0b8`: the fifth confirmation of the `paths-ignore` list (S900 push 2, S901's addendum, S902, S903, S904). Phase 0
-found 0 undocumented commits, 0 pending receipts, S903's `quality_ratchet:` citation matching the results file, CI green on
-the last 10 runs, and upstream `KJ5HST/methodology#93` open with 0 comments (still 0 at close-out). `quality_ratchet.py
---run`: 1/1 pass, results `b84a2472a129`, manifest `aa983075d6a2` unchanged. **Non-commit action:** the push. Commits: claim
-`64ef6bf03`; the close-out commit carries the rest. No new Learning: nothing this session was not already in S900-S903's
-gotchas.
+**Handoff evaluation of S904: 9/10.** Helped: every `BACKLOG.md` line cite re-found exactly (`:22`, `:286`, `:392`, `:415`,
+`:436`, `:456`); the push-cycle diagnosis and its "stop offering it" recommendation, which the owner ruled on in one question; the
+file-size baselines; "which tests assert the raw-CSV count is not yet known" was true and exactly the first step needed. Missing:
+nothing that cost time. Wrong: nothing in its own claims; "(B) upstream has 0 comments" was true at Phase 0 and false by 3A
+(the owner commented at 11:32 CDT). The row-order item's premise came from S898 and was too narrow (Learning 870).
 
-**Handoff evaluation of S903: 9/10.** Helped: every `BACKLOG.md` line cite re-found exactly (`:22`, `:286`, `:392`, `:415`,
-`:436`, `:456`); the push range (2 commits, 3 files, all on the `paths-ignore` list), the push-by-SHA step, the full-SHA,
-wait-plus-control and local-date gotchas, and "expect no run" all matched what happened; "(B) upstream has 0 comments" was
-still true; the file sizes in (D) (191,229 B and 40,772 B) were the right baseline. Missing: nothing that cost time. Wrong:
-nothing found. One refinement, not an error: its "wait with a `Monitor` until-loop" is not needed, because a plain
-`sleep 60; <query>` as the `run_in_background` command itself (no `( ) &` wrapper) re-invokes the session on exit.
+**Self-assessment: 8/10.** + Orientation before action; when the owner declined the picker I asked what to clarify and answered
+both questions from `git log` measurements, not memory; claimed first; measured the ruling's premise before RED and put the
+sorted result to the owner in plain words; all three TDD gates asked with exact actions; RED shown failing for the stated reason;
+full suite, lint and ratchet run; re-checked upstream at 3A instead of copying "0 comments". - I offered the push as option 1 of
+the first picker although S904 had recommended stopping (a wasted round trip); a zsh `=` separator and a `\s` inside `Rscript -e`
+each cost a call; no runtime smoke (tests-only change, stated). Reduction: S904's record condensed (5,660 B -> 874 B) and the
+BACKLOG item shortened; the files still grew by this session's own entries (`SESSION_NOTES.md` 38,605 B at Phase 0 -> 39,375 B at
+3A before this edit, `HANDOFFS.md` 198,289 -> 198,608 B, `CHANGELOG.md` 43,758 -> 44,721 B).
 
-**Self-assessment: 8/10.** + Orientation before any action; picker offered; claimed first (ledger entry, receipt stub, notes
-stub); fetched and confirmed 0 behind; when my `awk` came back empty I read the workflow file instead of assuming the list
-matched; pushed by SHA; paired the "no run" query with a control; dated by local time; ran the ratchet in parallel with the
-wait. - I called `Monitor` without loading its schema (one wasted call, no harm), and the harness had to prompt me for a
-status line after a silent run of reads. Reduction: S903's record condensed (4,851 B -> 762 B); this file still grew,
-37,034 B at Phase 0 -> 38,605 B, by this session's own record; `HANDOFFS.md` (194,212 B -> 194,489 B at 3A, before this
-receipt) and `CHANGELOG.md` (41,835 B -> 42,408 B) grew by this session's entries.
+**Next steps (owner-ordered):** (A) The owner decides the row-order item (`BACKLOG.md:415`): leave it (the tests keep guarding raw
+order), find out why kinship2 drops `3CLMPL` and `3GW5WC` in QC order, or make the layout order-independent (declined S898); not a
+pickup until decided. (B) Unpushed: 6 local commits after this close-out (S904 claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim
+`2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out). `tests/testthat/*.R` is NOT on the 21-entry `paths-ignore` list (read from
+`lint.yaml`'s `push:` block), so the next push WILL start four workflows (R-CMD-check ran 24m46s on S899's push): read CI after it.
+Per the owner's S905 ruling it is not offered as a task; it goes with the next push that carries real work. (C) READY, one per
+session, any order: rhesus comment (`BACKLOG.md:431`, was `:436`; lint the reworded comment at 80 columns); kept open: `isAddedRecord()`
+(`:22`), Candidate C (`:392`), `highlightNearest` (`:451`, was `:456`). Docs-audit slice 2 is READY, Effort L, needs scoping first. PED_GV: 9
+ids remain, all owner decisions. (D) Upstream `KJ5HST/methodology#93` now has 1 comment (the owner's, 2026-10-05 11:32 CDT; read it with
+`gh api repos/KJ5HST/methodology/issues/93/comments`): it confirms the 10 red of 54; says the substring-test fix is safe (turns no proof red
+in 54 here or 103 in the owner's fork archive); says the old-script `INJECTED=0` case is not independent of the claim-stub cause (re-derived,
+it still fails); says in all 8 claim-stub shards record 0 was a Phase 1B stub and nothing else is missing; asks that any `--reverify` lift the
+record grammar from the frozen script, not from `LEDGERS`. Nothing is merged; `BACKLOG.md:286` stays BLOCKED and its body was not updated
+this session (it still lists S901's three causes). (E) The ledger-size lever is still open: `HANDOFFS.md` 198,608 B (262,144 B is the Read
+refusal, about 63 KB of headroom). Carried: `reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push this session's 2 local commits (claim `64ef6bf03` and
-the close-out). They change only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all on the `paths-ignore` list;
-re-run `git diff --name-only origin/master..HEAD` first. Expect no run (measured for this file set five times now). This is
-a cycle: every push session ends with 2 new local commits that the next picker offers to push (S895, S900, S902, S903,
-S904). My recommendation, not a ruling: stop offering it, and let those commits go out with the next push that carries real
-work. (B) Read upstream's answer: `gh issue view 93 -R KJ5HST/methodology --comments` (0 comments at Phase 0 and at 3A);
-`BACKLOG.md:286` stays BLOCKED on it. (C) One real fix per session, any order, all READY: row-order tests only
-(`BACKLOG.md:415`; which tests assert the raw-CSV count is still not known); rhesus comment (`:436`; lint the reworded
-comment at 80 columns). Kept open: `isAddedRecord()` (`:22`), Candidate C (`:392`), `highlightNearest` (`:456`). Docs-audit
-slice 2 (the `shiny_app_use/` images) is READY, Effort L, and needs scoping first. PED_GV: 9 ids remain, all owner
-decisions (DECISION NEEDED, Effort S each); it was item 5 of the Phase 0 list, below the 4-option picker. (D) The
-ledger-size lever is still open (S892; not filed, not asked): `HANDOFFS.md` was 194,489 B and `CHANGELOG.md` 42,408 B at 3A
-(262,144 B is the Read refusal for `HANDOFFS.md`, about 68 KB of headroom). Carried: `reportGV(smallPed)` unfiled.
+**Key files:** `tests/testthat/helper-qcdRhesusPed.R`; `tests/testthat/test_makePedigreeMatingLayout.R:780-828` (new tests; the
+raw-order test they sit beside is at `:600-778`); `BACKLOG.md:415-430` (the rewritten item); `PROJECT_LEARNINGS.md` Learning 870;
+`.github/workflows/lint.yaml` (the `paths-ignore` list).
 
-**Key files:** `.github/workflows/lint.yaml` (the `paths-ignore` list, same in all four push workflows);
-`tests/testthat/test_workflowPathsIgnore.R`; `BACKLOG.md:286`, `:415`, `:436`.
+**Gotchas:** to run an existing test file against a different fixture without editing it, define `read.csv()` in the `env` passed to
+`testthat::test_file()` (helpers load into that env); `gh issue view --comments` fails here with a Projects-classic GraphQL error, so use
+`gh api repos/<repo>/issues/<n>/comments`; in zsh a leading `=` word in `echo` is an expansion (quote separators); put R code that
+contains `\s` in a script file, not `Rscript -e '...'`; tests that pin union ids (`__union_97`, ...) or the order of the 5 disconnected
+families are raw-order specific; `runQcStudbook()` returns identical `cleaned` data for `reportChanges` TRUE and FALSE; the QC'd copy has
+`sex` as a factor, `birth` as `Date` and two extra columns (`recordStatus`, `placeholder`).
 
-**Gotchas:** a "no run" result needs a wait (60 s; I waited 65 s) and a control query on a commit that does have runs; use
-the full SHA (`git rev-parse <sha>`) for `gh run list --commit`; date ledger entries by local time (`date`), not UTC; push
-by SHA (`git push origin <sha>:master`) so the claim commit stays local; a foreground `sleep` is blocked, and a `( cmd ) &`
-wrapper inside `run_in_background` exits at once, so put the `sleep N; <query>` itself in `run_in_background` and read the
-job's output when its notification arrives; if a shell pull of the ignore list is empty, read the workflow file (the
-`push:` block is `paths-ignore:` at 6 spaces, entries at 8); `quality_ratchet.py --run` finished in under a minute here and
-its results hash changes every run (compare counts and manifest).
+### What Session 904 Did (condensed S905; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Pushed S903's 2 local commits (`6f4733c78..42b4fb0b8`, a fast-forward, by SHA) at the owner's pick; all 3 changed files were on the
+21-entry `paths-ignore` list and **no CI run started** (nothing for `42b4fb0b8` 65 s later, a control on `f43ff9501` listed 4, the newest 4
+still S899's): the fifth confirmation. Claim `64ef6bf03`, close-out `5ec2d5ebb` (still local; the owner ruled in S905 to stop offering a
+push-only session). Handoff evaluation of S903: 9/10. Self 8/10.
+**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date ledger entries by
+local time (`date`), not UTC; push by SHA so the claim commit stays local; a `sleep N; <query>` as the `run_in_background` command itself
+re-invokes the session on exit.
 
 ### What Session 903 Did (condensed S904; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Pushed S902's 2 local commits (`7acce42cf..6f4733c78`, a fast-forward, by SHA) at the owner's pick; all 3 changed files were
