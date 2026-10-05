@@ -19,23 +19,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
       "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
 
-- [ ] **(Optional) One internal `isAddedRecord()` helper for the "added" mask
-      (raised S785, deferred at the S785, S786 and S787 REFACTORs; owner kept it open S898;
-      READY (optional), Effort S)** --
-      the mask is written inline four times, all meaning "only the exact status `"added"` is
-      special; an `NA`, blank or unrecognized status is a real animal": `convertDate()`
-      (`R/convertDate.R:115`) and `removeDuplicates()` (`R/removeDuplicates.R:48`) as
-      `!is.na(x) & x == "added"`, `removeUnknownAnimals()` (`R/removeUnknownAnimals.R:31`) as its
-      complement, and `correctParentSex()` (`R/correctParentSex.R`, `isAdded`, which also answers
-      a `NULL` status with "no added rows"). One helper would put that contract in one place; the
-      cost is a cross-file refactor (four R files plus a new file and its tests, so staged commits
-      under the 5-file cap, and `SAFEGUARDS.md` asks for plan-mode approval of refactoring), and the
-      owner kept it open rather than judge four short copies enough (S898; the four masks were
-      re-found at the lines above that day, and no helper exists yet). **Trap** to keep in any
-      helper or caller: a
-      negative subscript built from an index that can be empty
-      (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when nothing is `"added"`.
-
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
       S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.

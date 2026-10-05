@@ -99,61 +99,77 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 908 Did
-**Deliverable:** one internal `isAddedRecord()` helper for the "added" mask, with the four inline copies moved onto it (`BACKLOG.md:22`) (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; phase PRE-RED. A cross-file refactor: plan-mode approval first, strict TDD gates, staged commits under the 5-file cap.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (strict TDD, behaviour unchanged):** one internal `isAddedRecord(recordStatus, n = length(recordStatus))`
+(`R/isAddedRecord.R`) now says which records are "added", and the four inline copies call it: `convertDate()`
+(`R/convertDate.R:115`), `removeDuplicates()` (`:48`), `removeUnknownAnimals()` (`:31`) and `correctParentSex()` (`:106`)
+(`BACKLOG.md:22-38` before removal; picked at the Phase 0 picker, "isAddedRecord() helper"). Plan-mode approval first; the owner
+ruled the scope: the four named files only, `getRecordStatusIndex()` left alone (row numbers, also serves "original").
+Commits: claim `a1813dfdb`; RED `1cfee7215` (`tests/testthat/test_isAddedRecord.R`, 14 tests, all failing: each delegation
+test's real-rule control passed and only its stub assertion failed); GREEN `226069212` (helper) and `8881aa188` (4 callers);
+REFACTOR `7d6ef261e` (4 comments, parsed code identical); the close-out commit carries the rest.
+Verified: 14/14 new tests (62 expectations); a 133-result behaviour baseline (the four functions over a fixture matrix plus
+`qcStudbook()` on 12 bundled pedigrees in both `reportErrors` modes; 14 results hold "added" rows, 32 capture an error) was
+`identical()` after GREEN and after REFACTOR; full suite 3,013 tests / 9,706 expectations, 0 failed, 0 error (187 skipped,
+6 warnings, 6.1 min); `lint_package()` 0 lints; `devtools::check(document = FALSE, args = "--no-manual")` 0 errors, 0 warnings,
+0 notes (8.3 min); 4 shinytest2 files that drive the app through input QC (29 tests) 0 failed; `quality_ratchet.py --run`
+1/1 pass, results `516bd24e314a`, manifest `aa983075d6a2` (run at `7d6ef261e`). `BACKLOG.md:22-38` removed (17 lines; 476 -> 459
+lines, 40,473 -> 39,127 B). NEWS, `_pkgdown`, `a2interactive` and the tutorial checklist are not owed (internal, nothing exported,
+no behaviour change); the item named no GitHub issue. Not run: CI (unpushed), the PDF manual (`--no-manual`).
 
-### What Session 907 Did
-**Deliverable, DONE (comment only; no code, data or test change):** reworded the `data-raw/rhesusPedigree.R` docstring (now lines
-7-19, plus line 25) so it says only what is true (`BACKLOG.md:415-434` before removal; owner ruling S898). Picked at the Phase 0
-picker ("Reword rhesus comment"). Re-measured first (Learning 872): the object, `rhesusPedigree_fromCenter.csv` and
-`obfuscated_rhesus_mhc_ped.csv` agree on all 8 shared columns over 375 rows, so the old "cannot be re-derived from the CSV" was
-false; the CSV was first committed 2026-06-15 (`868a4975f`), six years after the object (`31c4679d7`, 2020-02-02). The new text
-states those facts and what cannot be recovered (`obfuscatePed()` draws `runif` offsets; no script or seed is kept) and does not
-claim the values were never obfuscated. Verified: parsed code identical to the pre-session file (7 expressions), only comment
-lines differ, widest line 79, `lintr::lint()` on the file and `lint_package()` (package loaded) 0 lints, no test reads the file.
-`BACKLOG.md:415-434` removed (20 lines; 496 -> 476, 42,057 -> 40,473 B). `quality_ratchet.py --run`: 1/1 pass, results `60e6b323d03a`,
-manifest `aa983075d6a2`. Commits: claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`; the close-out commit carries the rest.
-No runtime smoke (comment only; stated). R/data.R:360 still says "obfuscated"; left on purpose (consistent, out of scope).
+**Handoff evaluation of S907: 9/10.** Helped: all five cites re-found exactly (`BACKLOG.md:8`, `:22`, `:63`, `:392`, `:415`),
+and the three mask lines (`:115`, `:48`, `:31`) matched the files; "plan-mode approval and staged commits" was the right gate;
+"12 local commits" measured 12 ahead / 0 behind; the `paths-ignore` consequence held when re-read (`R/` and `tests/` are not on
+the push list); upstream #93 open with 1 comment. Missing: that a fifth function, `getRecordStatusIndex()`, holds the same status
+test in another shape (and is where the item's "Trap" lives, via `getDateErrorsAndConvertDatesInPed.R:41-43`), so scope needed an
+owner question; no line cite for the `correctParentSex()` mask (`:106-110`); the post-close-out `HANDOFFS.md` size (it gave
+208,186 B "before this close-out's edits", labelled correctly; measured 212,072 B at Phase 0). Wrong: nothing material.
 
-**Handoff evaluation of S906: 9/10.** Helped: all six `BACKLOG.md` cites re-found exactly (`:8`, `:22`, `:63`, `:392`, `:415`,
-`:435`); the "lint at 80 columns" note (`.lintr` `line_length_linter(80)`); every quoted size re-measured exact (`HANDOFFS.md`
-207,912 B at `c651882ed`, `BACKLOG.md` 42,057 B), so Learning 871 held; "8 local commits" measured 0 behind / 8 ahead; the
-`paths-ignore` consequence matched `lint.yaml`. Missing: that the false sentence ran to line 12 and recurred at line 25 (the
-cite said 7-10); the CSV's git history, a one-command check. Wrong: nothing material. ROI clearly positive.
+**Self-assessment: 8/10.** + Claimed before any technical work; plan-mode approval, then a plain-words scope question to the
+owner; captured the behaviour baseline before any change and ran it twice at one HEAD first, which caught a `tempdir()` path in
+an error message (Learning 873); RED proved to fail for the right reason (controls passed); every commit 4 files or fewer; the
+helper's design (NULL handled inside, mask not index) is in its roxygen; verification at four surfaces; parse identity for the
+REFACTOR. - My Phase 0 report repeated the "next push starts four workflows" claim from the notes before re-reading `lint.yaml`
+(true, but unverified when stated; verified in 3A); the first baseline script had a zero-row fixture bug and the first test
+draft had five lines over 80 columns (both fixed before use); `test-e2e-data-ready.R` finished in under 0.1 min, so I do not
+claim it as a live app launch (the other three took 0.4-1.5 min). Reduction: `BACKLOG.md` 17 lines removed; S907's record
+condensed (5,324 B -> 1,077 B); the files still grew by this session's own entries.
 
-**Self-assessment: 8/10.** + Orientation before action; claimed before any technical work; re-measured S898's numbers instead of
-copying them and found stronger evidence (CSV added six years after the object); kept the diff comment-only and proved it
-(parse identity against the pre-session file, widths, lint, no test readers); read the finished file back and caught a second
-assertion and a ragged break; reported `R/data.R:360` without touching it; ran the ratchet at the final head.
-- The first pass trusted the BACKLOG line cite instead of grepping the file for the word, so a second commit was needed
-(Learning 872 (4)); the first `gh run list` call returned stale rows (re-run was current); no RED/GREEN cycle: a judgment, not
-a gate (comment only, no behavior to test, precedent S882/S883), stated here so the owner can object.
-Reduction: `BACKLOG.md` 20 lines removed; S906's record condensed (5,130 B -> 969 B); the files still grew by this
-session's own entries.
+**Next steps (owner-ordered):** (A) Nothing waits on the owner about `isAddedRecord()`. (B) READY, one per session, any order
+(cites grepped after the removal): `highlightNearest` (`BACKLOG.md:398`, optional, Effort M; measure the real fixture's largest
+sibship first); Candidate C (`:375`, DECISION NEEDED, product sign-off); docs-audit slice 2 (`:46`, READY, Effort L, needs
+scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C) Unpushed: 18 local commits after this close-out (S904
+claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim `2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3`; S906
+claim `31493f61d`, close-out `c651882ed`; S907 claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`, close-out
+`cf537c88d`; S908 claim `a1813dfdb`, RED `1cfee7215`, GREEN `226069212` and `8881aa188`, REFACTOR `7d6ef261e`, close-out). Unlike
+S904-S907 this push carries `R/` changes, so all four workflows will start and the R-CMD-check matrix (oldrel-1, devel) has not seen
+the helper: read CI after it. Per the owner's S905 ruling it is not offered as a task. (D) Upstream `KJ5HST/methodology#93`
+is still open with 1 comment (checked S908); `BACKLOG.md:269` stays BLOCKED. (E) `HANDOFFS.md` is 216,889 B after this
+close-out's edits (212,353 B before; about 45 KB below the 262,144 B Read refusal; at about 4 KB per session, my estimate,
+roughly ten sessions).
+Carried: `reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered):** (A) Nothing waits on the owner about the rhesus comment. (B) READY, one per session, any order
-(cites grepped after the removal): `isAddedRecord()` (`BACKLOG.md:22`, optional, Effort S; a cross-file refactor, so plan-mode
-approval and staged commits); `highlightNearest` (`:415`, was `:435`; optional, Effort M; measure the real fixture's largest
-sibship first); Candidate C (`:392`, DECISION NEEDED, product sign-off); docs-audit slice 2 (`:63`, READY, Effort L, needs
-scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C) Unpushed: 12 local commits after this close-out (S904
-claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim `2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3`;
-S906 claim `31493f61d`, close-out `c651882ed`; S907 claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`,
-close-out). `data-raw/rhesusPedigree.R` and `tests/testthat/*.R` are NOT on the 21-entry `paths-ignore` list (read from
-`lint.yaml`'s `push:` block), so the next push WILL start four workflows (lint reads `data-raw/*.R`, Learning 868): read CI after
-it. Per the owner's S905 ruling it is not offered as a task. (D) Upstream `KJ5HST/methodology#93` is still open with 1 comment
-(checked S907); `BACKLOG.md:286` stays BLOCKED. (E) `HANDOFFS.md` was 208,186 B before this close-out's edits (about
-54 KB below the 262,144 B Read refusal). Carried: `reportGV(smallPed)` unfiled.
+**Key files:** `R/isAddedRecord.R` (the helper and its contract); `tests/testthat/test_isAddedRecord.R` (contract, equivalence to
+the old inline rule, four stub-delegation tests); `R/convertDate.R:115`, `R/removeDuplicates.R:48`, `R/removeUnknownAnimals.R:31`,
+`R/correctParentSex.R:106` (the callers); `R/getRecordStatusIndex.R` and `R/getDateErrorsAndConvertDatesInPed.R:41-43` (left alone
+by ruling); `PROJECT_LEARNINGS.md` Learning 873; `BACKLOG.md:8`, `:46`, `:375`, `:398` (the open items).
 
-**Key files:** `data-raw/rhesusPedigree.R:7-19`, `:25` (the reworded comment); `PROJECT_LEARNINGS.md` Learning 872;
-`BACKLOG.md:22`, `:63`, `:392`, `:415`, `:8` (the open items); `.github/workflows/lint.yaml` (the `push:` `paths-ignore` block);
-`R/data.R:360` (still says "obfuscated"; left on purpose).
+**Gotchas:** save a behaviour baseline's outputs and run it twice at one commit before trusting it (a `tempdir()` path in an
+error message made two runs differ); a delegation test needs a stub whose answer differs from the real rule, with a real-rule
+control first, or a caller that ignores the helper still passes; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd`
+every run (revert it; seen twice this session) and makes no page for an `@noRd` helper; the full suite took 6.1 min and
+`devtools::check()` 8.3 min, so run them in the background one at a time (the wall-clock benchmark in `test_markerKinship.R`
+dislikes a loaded machine); `getRecordStatusIndex()` still has its own `which(ped$recordStatus == status)`; removing a BACKLOG
+block shifts every later cite by its length, so re-grep them; take `wc -c` after the last edit (Learning 871).
 
-**Gotchas:** a BACKLOG line cite can understate a claim: grep the whole file for the key word before calling it fixed; an `Edit`
-whose `old_string` ends mid-line leaves a ragged short line, so end the replacement at a line boundary; the first plain
-`gh run list` returned stale June rows and an immediate re-run was current (S882, S883 and S896 each saw a different variant),
-so re-run it before trusting an old date; the ratchet's results hash changes on every run, so compare counts and manifest; take
+### What Session 907 Did (condensed S908; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Reworded the `data-raw/rhesusPedigree.R` docstring (comment only; parsed code identical, 0 lints) so it says only what is true.
+Re-measured first: the object, `rhesusPedigree_fromCenter.csv` and `obfuscated_rhesus_mhc_ped.csv` agree on all 8 shared columns
+over 375 rows, so "cannot be re-derived from the CSV" was false; the CSV was first committed six years after the object.
+`BACKLOG.md:415-434` removed. Claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`, close-out `cf537c88d` (all still
+local). Handoff evaluation of S906: 9/10. Self 8/10.
+**Gotchas kept:** a BACKLOG line cite can understate a claim, so grep the whole file for the key word before calling it fixed;
+an `Edit` whose `old_string` ends mid-line leaves a ragged short line, so end the replacement at a line boundary; the first plain
+`gh run list` returned stale June rows and an immediate re-run was current, so re-run it before trusting an old date; take
 `wc -c` after the last edit (Learning 871).
 
 ### What Session 906 Did (condensed S907; full record in `CHANGELOG.md` and `HANDOFFS.md`)
