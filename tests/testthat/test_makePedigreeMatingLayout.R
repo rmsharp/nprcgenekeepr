@@ -777,6 +777,56 @@ test_that(
   expect_equal(sum(grepl("^__jog_", result$nodes$id)), 190L)
 })
 
+## ---- S905: the bundled fixture as the app's QC step delivers it -------
+## The live app never lays out the raw CSV: modInput runs the QC step
+## first, and that step reorders the rows. Row order alone moves the
+## rectilinear waypoint count (BACKLOG row-order item, found S472, owner
+## ruling S898: accept the dependence and pin what the app renders). The
+## test above pins the raw-CSV row order; the two below pin the QC'd order
+## the app actually draws. qcdRhesusPed() is in helper-qcdRhesusPed.R.
+test_that(
+  "the QC'd copy of the bundled rhesus fixture differs from the raw CSV in
+   row order only: same 375 ids and the same sire/dam/sex cells", {
+  raw <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  qcd <- qcdRhesusPed()
+  expect_equal(nrow(qcd), 375L)
+  expect_setequal(qcd$id, raw$id)
+  ## Without a real reorder the two tests would compare one input twice.
+  expect_false(identical(qcd$id, raw$id))
+  rawRow <- match(qcd$id, raw$id)
+  for (col in c("sire", "dam", "sex")) {
+    expect_identical(as.character(qcd[[col]]),
+                     as.character(raw[[col]][rawRow]))
+  }
+})
+
+test_that(
+  "makePedigreeMatingLayout on the QC'd bundled fixture (what the live app
+   draws) produces 1,412 nodes under edgeStyle = \"rectilinear\" (142
+   __jog_ waypoints) and 782 under \"direct\"; the raw-CSV row order gives
+   1,460 and 782, so row order alone moves only the rectilinear count", {
+  qcd <- qcdRhesusPed()
+  direct <- makePedigreeMatingLayout(qcd, edgeStyle = "direct")
+  expect_equal(nrow(direct$nodes), 782L)
+  ## Same disclosed curved-duplicate-connector warning as the raw-order
+  ## test above; makePedigreeMatingLayout() warns and carries on.
+  rectilinear <- withCallingHandlers(
+    makePedigreeMatingLayout(qcd, edgeStyle = "rectilinear"),
+    warning = function(w) {
+      expect_match(conditionMessage(w), "same-row edge-node collision")
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_equal(nrow(rectilinear$nodes), 1412L)
+  expect_equal(sum(grepl("^__jog_", rectilinear$nodes$id)), 142L)
+  expect_false(any(is.na(rectilinear$nodes$x)))
+  expect_false(any(is.na(rectilinear$nodes$y)))
+})
+
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
 ## issue #145 Slice 1's own orderBySex toggle (docs/planning/issue145-
 ## sire-dam-left-right-placement-plan.md) is removed from
