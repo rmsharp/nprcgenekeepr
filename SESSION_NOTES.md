@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 915 Did
+**Deliverable:** PED-3, one unexported function for the four "collect parents or offspring until nothing new turns up" loops
+(`BACKLOG.md:25`; owner decision S912, Decision record 13; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-05 18:05 CDT
+**Status:** Session claimed; phase PRE-RED. Picked at the Phase 0 picker. First step: read `DEVELOPMENT_WORKSTREAM.md`, Decision
+record 13 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`) and the four loops, re-measure them, then ask the owner the Pre-RED questions.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 914 Did
 **Deliverable, DONE (NEW-62 shipped; strict TDD; no change for users):** one internal helper, `notifyProgress(updateProgress, ...)`
 (`R/notifyProgress.R`, `@noRd`, not exported), replaces the seven `if (!is.null(updateProgress))` blocks: `R/reportGV.R:246,263,280`,

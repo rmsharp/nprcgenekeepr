@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S915
+date: 2026-10-05
+status: pending
+active_task: PED-3, one unexported function for the four "collect parents or offspring until nothing new turns up" loops (BACKLOG.md:25; owner decision S912, Decision record 13; READY, Effort M); the owner picked it at the Phase 0 picker; the walker's name and file and the circular-data behaviour of getLkDirectAncestors() are settled at the Pre-RED gate
+```
+
+```handoff
 session: S914
 date: 2026-10-05
 status: complete
