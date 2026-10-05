@@ -98,6 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 905 Did
+**Deliverable:** row-order tests only (`BACKLOG.md:415`): change the bundled-fixture tests that assert the raw-CSV rectilinear
+node count so they assert the QC'd count the live app renders; layout code untouched (IN PROGRESS)
+**Started:** 2026-10-05
+**Status:** Session claimed; strict TDD, phase PRE-RED. Picked by the owner at the Phase 0 picker (S898 ruling: accept the
+row-order dependence, change only the tests). Also at Phase 0 the owner ruled: stop offering "push N local commits" as a
+picker task (2 notes-only commits stay local until the next real push). First step: find which tests assert the raw-CSV count.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 904 Did
 **Deliverable, DONE (docs only; no code, test or `R/` change):** pushed S903's 2 local commits to `origin/master`
 (`6f4733c78..42b4fb0b8`: claim `ee5632c86` and close-out `42b4fb0b8`, a plain fast-forward, 0 behind after `git fetch`, by

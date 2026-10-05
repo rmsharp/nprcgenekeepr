@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S905
+date: 2026-10-05
+status: pending
+active_task: row-order tests only (BACKLOG.md:415): change the bundled-fixture tests that assert the raw-CSV rectilinear node count to assert the QC'd count the live app renders; layout code untouched; strict TDD; the owner picked it at the Phase 0 picker
+```
+
+```handoff
 session: S904
 date: 2026-10-04
 status: complete
