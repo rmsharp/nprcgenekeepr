@@ -64,3 +64,66 @@ test_that("getDescendantPedigree terminates on a circular reference", {
   expect_no_error(result <- getDescendantPedigree(probands = "A", circ))
   expect_setequal(result$id, c("A", "B"))
 })
+
+## PED-3 (BACKLOG; owner decision S912, Decision record 13; strict TDD, S915):
+## the loop that collects the descendants moves into walkPedigree(). The tests
+## below record what the function returns today (they pass at the commit that
+## adds them) and check it asks walkPedigree() for its ids. The fixtures are in
+## helper-walkPedigree.R.
+
+test_that("getDescendantPedigree returns the pedigree's own rows in the pedigree's order", {
+  expect_identical(
+    getDescendantPedigree(probands = "A", ped),
+    ped[ped$id %in% c("A", "C", "D", "F", "G"), ]
+  )
+  expect_identical(
+    getDescendantPedigree(probands = c("E", "A"), ped)$id,
+    c("A", "C", "D", "E", "F", "G")
+  )
+})
+
+test_that("getDescendantPedigree copes with repeated and missing probands", {
+  expect_identical(
+    getDescendantPedigree(probands = c("D", "D"), ped)$id,
+    c("D", "F", "G")
+  )
+  expect_identical(
+    getDescendantPedigree(probands = c("A", NA), ped)$id,
+    c("A", "C", "D", "F", "G")
+  )
+  expect_identical(nrow(getDescendantPedigree(probands = NA_character_, ped)), 0L)
+})
+
+test_that("getDescendantPedigree returns a row whose id is missing when it is an offspring", {
+  pedMissing <- missingIdPed()
+  expect_identical(
+    getDescendantPedigree(probands = "A", pedMissing)$id,
+    c("A", "C", "D", "F", "G", NA_character_)
+  )
+  expect_identical(
+    getDescendantPedigree(probands = NA_character_, pedMissing)$id,
+    NA_character_
+  )
+})
+
+test_that("getDescendantPedigree stops on an animal that is its own sire", {
+  expect_identical(
+    withinSeconds(getDescendantPedigree(probands = "A", selfParentPed()))$id,
+    "A"
+  )
+})
+
+test_that("getDescendantPedigree asks walkPedigree() for the descendants of the probands", {
+  skip_if_not_installed("mockery")
+  ## Control: the real rule gives A and all four of its descendants.
+  expect_identical(
+    getDescendantPedigree(probands = "A", ped)$id,
+    c("A", "C", "D", "F", "G")
+  )
+  ## A stand-in that finds nothing below A leaves only A.
+  walker <- mockery::mock(list("A"))
+  mockery::stub(getDescendantPedigree, "walkPedigree", walker)
+  result <- getDescendantPedigree(probands = "A", ped)
+  expectOneWalk(walker, ids = "A", ped = ped, direction = "descendants")
+  expect_identical(result$id, "A")
+})
