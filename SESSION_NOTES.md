@@ -99,71 +99,66 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 906 Did
-**Deliverable:** record the owner's decision on the row-order item (`BACKLOG.md:415`): leave it, find out why kinship2 drops
-`3CLMPL` and `3GW5WC` in QC order, or make the layout order-independent (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; phase PRE-RED, nothing to build until the owner rules. Picked by the owner at the Phase 0 picker.
-A decision pick is not a go-ahead to edit files: record the ruling, then close out.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (decision only; no code, test or `R/` change):** recorded the owner's ruling on the row-order item
+(`BACKLOG.md:415` before removal): **leave it.** Picked at the Phase 0 picker ("Decide row-order item"). I put S905's
+measurements to the owner in plain words (same animals, parents and sexes; rectilinear 1460 nodes / 190 jog in raw order vs
+1412 / 142 in the app's QC order; direct 782 either way; four real differences) with three options (leave it; investigate why
+kinship2 drops `3CLMPL` and `3GW5WC` in QC order; make the layout order-independent, declined S898), and the owner chose
+"Leave it". Consequence recorded: the raw-order tests and S905's two QC-order tests stay as the guard, and the four QC-order
+differences (union dot `__union_120` 0.5 outside its parents' span, 8 off-centre dots, `compareAgainstKinship2()`
+`identical = FALSE` for `3CLMPL`/`3GW5WC`, the arc-roundness test finds no pair) stay unexamined and unguarded by decision.
+`BACKLOG.md:415-430` removed (16 lines; 512 -> 496 lines, 43,601 -> 42,057 B); the measurements stay in the S905 ledger entry
+and Learning 870. Learning 871. `quality_ratchet.py --run`: 1/1 pass, results `7a3697b7fb08`, manifest `aa983075d6a2`.
+Commits: claim `31493f61d`; the close-out commit carries the rest. No runtime smoke (docs only; stated).
 
-### What Session 905 Did
-**Deliverable, DONE (tests only; no `R/` change):** the row-order item (`BACKLOG.md:415`). Measuring first (Learning 870) showed
-the S898 ruling's premise was too narrow. The app's QC'd copy of the bundled rhesus fixture differs from the raw CSV in row
-order only (0 sire/dam/sex cells differ), but fed to the 7 layout test files it failed 8 tests in 5 files: 4 count or order
-pins and 4 real differences (union dot `__union_120` 0.5 outside its parents' span; 8 off-centre dots, none among the 6 the
-test names; `compareAgainstKinship2()` `identical = FALSE` for `3CLMPL` and `3GW5WC`; the arc-roundness test finds no pair).
-The owner chose "add one QC-order test, keep the rest" over re-pinning. Strict TDD: claim `2563a6ee0`; RED `5fd9a72e1` (2 tests
-in `test_makePedigreeMatingLayout.R:780-828` calling a missing helper); GREEN `7d1da7d39` (`tests/testthat/helper-qcdRhesusPed.R`,
-`qcdRhesusPed()`); REFACTOR: review only, nothing to change (0 lint findings, no line over 80 columns). The new tests pin the
-QC'd layout: rectilinear 1412 nodes (142 jog), direct 782; raw order gives 1460 (190 jog) and 782. `BACKLOG.md:415` is now a
-DECISION NEEDED item (21 -> 16 lines; file 517 -> 512). Full suite: 368 files, 2999 tests, 0 failed, 0 error, 187 skipped.
-`lintr::lint_package()`: 0. `quality_ratchet.py --run`: 1/1 pass, results `0e2e7c50061e`, manifest `aa983075d6a2`. Non-commit
-actions at Phase 0 (owner rulings): stop offering "push N local commits" in the picker (saved to memory; the cause is that every
-push session owes a claim and a close-out commit that cannot be in their own push); I also answered why `BACKLOG.md` barely shrank
-in lines (570 -> 517 lines but 57,031 -> 43,893 B since S862: the passes cut bytes of long lines, and new text kept landing).
-Commits: claim `2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`; the close-out commit carries the rest.
+**Handoff evaluation of S905: 9/10.** Helped: all six `BACKLOG.md` cites re-found exactly (`:22`, `:286`, `:392`, `:415`, `:431`,
+`:451`); the 21-entry `paths-ignore` note (re-read in `lint.yaml`, exact) and the "next push WILL start four workflows"
+consequence; the measured differences, which let me put the decision to the owner in one plain question. Missing: nothing that
+cost time. Wrong: the sizes. It quoted `HANDOFFS.md` 198,608 B with "about 63 KB" of headroom and `CHANGELOG.md` 44,721 B; at
+its close-out commit `e569765a3` they were 203,985 B (58 KB of headroom) and 47,010 B, because they were taken at 3A before
+its own receipt and ledger entries were written (Learning 871).
 
-**Handoff evaluation of S904: 9/10.** Helped: every `BACKLOG.md` line cite re-found exactly (`:22`, `:286`, `:392`, `:415`,
-`:436`, `:456`); the push-cycle diagnosis and its "stop offering it" recommendation, which the owner ruled on in one question; the
-file-size baselines; "which tests assert the raw-CSV count is not yet known" was true and exactly the first step needed. Missing:
-nothing that cost time. Wrong: nothing in its own claims; "(B) upstream has 0 comments" was true at Phase 0 and false by 3A
-(the owner commented at 11:32 CDT). The row-order item's premise came from S898 and was too narrow (Learning 870).
+**Self-assessment: 8/10.** + Orientation before action, and the Phase 0 report named the one ratified-order check (both
+sequencing audits fully executed; only #138 left); claimed before any other work; put the decision in plain words with each
+option's consequence and recorded exactly what was picked, with no follow-up file change offered; re-measured the predecessor's
+sizes with `git show <sha>:<file> | wc -c` instead of copying them; ran the ratchet in the background and read its output file.
+- A decision-only session leaves nothing built, so no runtime or test verification exists to cite; the orientation report was
+long (five numbered items plus a bundled lower-priority line); one turn was interrupted mid-close-out, no state was lost.
+Reduction: `BACKLOG.md` 16 lines removed; S905's record condensed (about 5.5 KB -> about 1.3 KB); the files still grew by this
+session's own entries.
 
-**Self-assessment: 8/10.** + Orientation before action; when the owner declined the picker I asked what to clarify and answered
-both questions from `git log` measurements, not memory; claimed first; measured the ruling's premise before RED and put the
-sorted result to the owner in plain words; all three TDD gates asked with exact actions; RED shown failing for the stated reason;
-full suite, lint and ratchet run; re-checked upstream at 3A instead of copying "0 comments". - I offered the push as option 1 of
-the first picker although S904 had recommended stopping (a wasted round trip); a zsh `=` separator and a `\s` inside `Rscript -e`
-each cost a call; no runtime smoke (tests-only change, stated). Reduction: S904's record condensed (5,660 B -> 874 B) and the
-BACKLOG item shortened; the files still grew by this session's own entries (`SESSION_NOTES.md` 38,605 B at Phase 0 -> 39,375 B at
-3A before this edit, `HANDOFFS.md` 198,289 -> 198,608 B, `CHANGELOG.md` 43,758 -> 44,721 B).
+**Next steps (owner-ordered):** (A) Nothing waits on the owner about row order: "leave it" closes the item. (B) READY, one per
+session, any order (cites re-found after the removal): rhesus comment (`BACKLOG.md:415`, was `:431`; lint the reworded comment
+at 80 columns); kept open: `isAddedRecord()` (`:22`), Candidate C (`:392`, DECISION NEEDED), `highlightNearest` (`:435`, was
+`:451`). Docs-audit slice 2 (`:63`) is READY, Effort L, needs scoping first. PED_GV: 9 ids remain, all owner decisions (`:8`).
+(C) Unpushed: 8 local commits after this close-out (S904 claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim `2563a6ee0`, RED
+`5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3`; S906 claim `31493f61d`, close-out). `tests/testthat/*.R` is NOT on the
+21-entry `paths-ignore` list (read from `lint.yaml`'s `push:` block), so the next push WILL start four workflows (R-CMD-check
+ran 24m46s on S899's push): read CI after it. Per the owner's S905 ruling it is not offered as a task. (D) Upstream
+`KJ5HST/methodology#93` still has 1 comment (the owner's); nothing merged; `BACKLOG.md:286` stays BLOCKED. (E) The ledger-size
+lever is still open: `HANDOFFS.md` is about 208 KB (about 54 KB below the 262,144 B Read refusal). Carried: `reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered):** (A) The owner decides the row-order item (`BACKLOG.md:415`): leave it (the tests keep guarding raw
-order), find out why kinship2 drops `3CLMPL` and `3GW5WC` in QC order, or make the layout order-independent (declined S898); not a
-pickup until decided. (B) Unpushed: 6 local commits after this close-out (S904 claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim
-`2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out). `tests/testthat/*.R` is NOT on the 21-entry `paths-ignore` list (read from
-`lint.yaml`'s `push:` block), so the next push WILL start four workflows (R-CMD-check ran 24m46s on S899's push): read CI after it.
-Per the owner's S905 ruling it is not offered as a task; it goes with the next push that carries real work. (C) READY, one per
-session, any order: rhesus comment (`BACKLOG.md:431`, was `:436`; lint the reworded comment at 80 columns); kept open: `isAddedRecord()`
-(`:22`), Candidate C (`:392`), `highlightNearest` (`:451`, was `:456`). Docs-audit slice 2 is READY, Effort L, needs scoping first. PED_GV: 9
-ids remain, all owner decisions. (D) Upstream `KJ5HST/methodology#93` now has 1 comment (the owner's, 2026-10-05 11:32 CDT; read it with
-`gh api repos/KJ5HST/methodology/issues/93/comments`): it confirms the 10 red of 54; says the substring-test fix is safe (turns no proof red
-in 54 here or 103 in the owner's fork archive); says the old-script `INJECTED=0` case is not independent of the claim-stub cause (re-derived,
-it still fails); says in all 8 claim-stub shards record 0 was a Phase 1B stub and nothing else is missing; asks that any `--reverify` lift the
-record grammar from the frozen script, not from `LEDGERS`. Nothing is merged; `BACKLOG.md:286` stays BLOCKED and its body was not updated
-this session (it still lists S901's three causes). (E) The ledger-size lever is still open: `HANDOFFS.md` 198,608 B (262,144 B is the Read
-refusal, about 63 KB of headroom). Carried: `reportGV(smallPed)` unfiled.
+**Key files:** `BACKLOG.md:415` (the rhesus comment item); `data-raw/rhesusPedigree.R:7-10` (the docstring it names);
+`PROJECT_LEARNINGS.md` Learning 871; `tests/testthat/test_makePedigreeMatingLayout.R:780-828` and
+`tests/testthat/helper-qcdRhesusPed.R` (S905's QC-order guard, unchanged); `.github/workflows/lint.yaml` (the `paths-ignore` list).
 
-**Key files:** `tests/testthat/helper-qcdRhesusPed.R`; `tests/testthat/test_makePedigreeMatingLayout.R:780-828` (new tests; the
-raw-order test they sit beside is at `:600-778`); `BACKLOG.md:415-430` (the rewritten item); `PROJECT_LEARNINGS.md` Learning 870;
-`.github/workflows/lint.yaml` (the `paths-ignore` list).
+**Gotchas:** a pure decision pick is a short session (claim, one plain question, record the pick, close out); removing a BACKLOG
+block shifts every later line cite by its length (16 here), so re-grep the cites rather than subtract; `quality_ratchet.py --run`
+takes minutes, so run it in the background and read its output file; its results hash changes on every run, so compare counts and
+manifest; take `wc -c` after the last edit (Learning 871); `gh issue view --comments` fails here with a Projects-classic GraphQL
+error, so use `gh api repos/<repo>/issues/<n>/comments`.
 
-**Gotchas:** to run an existing test file against a different fixture without editing it, define `read.csv()` in the `env` passed to
-`testthat::test_file()` (helpers load into that env); `gh issue view --comments` fails here with a Projects-classic GraphQL error, so use
-`gh api repos/<repo>/issues/<n>/comments`; in zsh a leading `=` word in `echo` is an expansion (quote separators); put R code that
-contains `\s` in a script file, not `Rscript -e '...'`; tests that pin union ids (`__union_97`, ...) or the order of the 5 disconnected
-families are raw-order specific; `runQcStudbook()` returns identical `cleaned` data for `reportChanges` TRUE and FALSE; the QC'd copy has
-`sex` as a factor, `birth` as `Date` and two extra columns (`recordStatus`, `placeholder`).
+### What Session 905 Did (condensed S906; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Row-order item, tests only (no `R/` change): the app's QC'd copy of the bundled rhesus fixture differs from the raw CSV in row
+order only, but fed to the 7 layout test files it failed 8 tests in 5 files (4 count or order pins, 4 real differences;
+Learning 870). At the owner's pick, strict TDD added `qcdRhesusPed()` (`tests/testthat/helper-qcdRhesusPed.R`) and two tests
+(`test_makePedigreeMatingLayout.R:780-828`) pinning the QC'd layout (rectilinear 1412 nodes / 142 jog, direct 782). Claim
+`2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3` (all still local). The owner ruled at Phase 0 to stop
+offering push-only sessions; S906: the owner left the item as is. Handoff evaluation of S904: 9/10. Self 8/10.
+**Gotchas kept:** to run an existing test file against a different fixture without editing it, define `read.csv()` in the `env`
+passed to `testthat::test_file()`; put R code containing `\s` in a script file, not `Rscript -e '...'`; tests that pin union ids
+(`__union_97`, ...) or the order of the 5 disconnected families are raw-order specific; the QC'd copy has `sex` as a factor,
+`birth` as `Date` and two extra columns (`recordStatus`, `placeholder`).
 
 ### What Session 904 Did (condensed S905; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Pushed S903's 2 local commits (`6f4733c78..42b4fb0b8`, a fast-forward, by SHA) at the owner's pick; all 3 changed files were on the
