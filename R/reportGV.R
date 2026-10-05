@@ -243,12 +243,10 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     updateProgress = updateProgress
   )
 
-  if (!is.null(updateProgress)) {
-    updateProgress(
-      detail = "Calculating Genome Uniqueness", value = 1L,
-      reset = TRUE
-    )
-  }
+  notifyProgress(
+    updateProgress,
+    detail = "Calculating Genome Uniqueness", value = 1L, reset = TRUE
+  )
 
   # Calculate genome uniqueness and order the rows of the returned data.frame
   gu <- calcGU(alleles, threshold = guThresh, byID = byID, pop = probands)
@@ -262,12 +260,10 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   guSE <- calcGUSE(alleles, threshold = guThresh, byID = byID, pop = probands)
   guSE <- guSE[probands, , drop = FALSE]
 
-  if (!is.null(updateProgress)) {
-    updateProgress(
-      detail = "Calculating Numbers of Offspring", value = 1L,
-      reset = TRUE
-    )
-  }
+  notifyProgress(
+    updateProgress,
+    detail = "Calculating Numbers of Offspring", value = 1L, reset = TRUE
+  )
 
   # Get a data.frame of offspring counts for the probands
   offspring <- offspringCounts(probands, ped, considerPop = TRUE)
@@ -281,12 +277,10 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   rownames(ped) <- ped$id
   demographics <- ped[probands, c(includeCols, "sire", "dam")]
 
-  if (!is.null(updateProgress)) {
-    updateProgress(
-      detail = "Calculating Founder Equivalents", value = 1L,
-      reset = TRUE
-    )
-  }
+  notifyProgress(
+    updateProgress,
+    detail = "Calculating Founder Equivalents", value = 1L, reset = TRUE
+  )
 
   # Calculating founder equivalents and founder genome equivalents
   feFg <- calcFEFG(ped, alleles)

@@ -305,9 +305,7 @@ groupAddAssign <- function(candidates,
     }
 
     # Updating the progress bar, if applicable
-    if (!is.null(updateProgress)) {
-      updateProgress()
-    }
+    notifyProgress(updateProgress)
   }
 
   # Best candidate first; ties broken by discovery order (order() is not

@@ -121,12 +121,10 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
 
   alleles <- list(alleles = list(), counter = 1L)
 
-  if (!is.null(updateProgress)) {
-    updateProgress(
-      detail = "Performing Gene-drop Simulation", value = 0L,
-      reset = TRUE
-    )
-  }
+  notifyProgress(
+    updateProgress,
+    detail = "Performing Gene-drop Simulation", value = 0L, reset = TRUE
+  )
 
   ## Iterate through each ID and get the maternal and paternal alleles
   for (id in ped$id) {
@@ -144,9 +142,7 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
       alleles <- assignAlleles(alleles, "dam", dam, id, n)
     }
 
-    if (!is.null(updateProgress)) {
-      updateProgress(n = nrow(ped))
-    }
+    notifyProgress(updateProgress, n = nrow(ped))
   }
 
   # Convert the list of alleles to a data.frame

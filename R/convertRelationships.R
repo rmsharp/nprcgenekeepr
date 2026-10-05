@@ -91,9 +91,7 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
 
     r <- c(r, relation)
 
-    if (!is.null(updateProgress)) {
-      updateProgress()
-    }
+    notifyProgress(updateProgress)
   }
   kin["relation"] <- r
   kin
