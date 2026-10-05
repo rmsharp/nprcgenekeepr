@@ -283,34 +283,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       research found Gatekeeper quarantine NOT evidenced for `browser-actions/setup-chrome`), or a
       new `rstudio/chromote` upstream issue (none matches this macOS+GHA+live-CDP-timeout
       signature).
-- [ ] **`methodology_trim.py`'s generated shard verify script FAILs its L2 "leak" check when an
-      archived record quotes a front-matter line (found S784, 2026-09-26; owner chose to report
-      it upstream, S898; READY, Effort S)** -- the check embedded in each shard's `.verify.sh` is `ln in "".join(sr)`, a
-      SUBSTRING test of every front-matter line over 24 characters against the whole archived
-      records text. The archived S779 receipt's `next_steps:` quotes the trimmer's `--check`
-      command (with `--budget-bytes 65536`), which contains the front-matter `--check` line, so
-      `bash docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh` prints `FAIL: L2 FRONT MATTER
-      leaked 1 line(s) into the shard` although the write-time L1/L2/L3 all passed and the
-      script's own L1/L3 checks hold (reproduced by a write, a rollback and a second write, and by
-      a separate Python probe; the `CHANGELOG.md` shard from the same session is clean, 0 hits).
-      **Re-measured S898: it does NOT recur on every later trim, and the scope is wider.** 10 of
-      54 shard verify scripts FAIL today (`HANDOFFS` 2 of 15, `CHANGELOG` 1 of 16, `SESSION_NOTES`
-      7 of 23). The L2 front-matter leak is in 2 (`HANDOFFS-through-2026-09-26`, the `--check`
-      line, and `CHANGELOG-through-2026-08-10`, leaking `## Size, and when to archive`); the other
-      8 fail `L1 records-zone concatenation is not byte-identical`, and only
-      `HANDOFFS-through-2026-09-26-3` was read further (its output cites the accepted frontier-record
-      pattern, BL-27, and says to diff record 0 by hand). The `HANDOFFS-through-2026-09-30` and
-      the S897 `CHANGELOG` shards pass.
-      Nothing runs these scripts (no CI job, test or tool; only the dashboard recognizes the
-      suffix). **Owner ruling (S898): report it upstream** to the `rmsharp/methodology` fork --
-      compare against the SET of exact record lines, as that script's BL-28 fix already does for
-      its "lost line" check (a local patch would be a second local modification to
-      `methodology_trim.py` to re-apply after every sync, per `CLAUDE.md`'s checklist). Write the
-      report to the measured scope above, and characterize the 8 L1 failures first (cause not yet
-      known for 7 of them). Posting it is an outward action: confirm with the owner at pickup.
-      Rejected by the owner: leaving it, and rewording the ledger's front-matter line (it could
-      fix at most 1 of the 10). Until fixed, do not quote front-matter command lines verbatim in
-      receipts (Learning 797e).
+- [ ] **Shard verify scripts that FAIL on lossless trims: reported upstream as `KJ5HST/methodology#93`;
+      waiting on a fix and a way to regenerate old scripts (BLOCKED -- on upstream #93, Effort S once
+      it ships)** -- S901 characterized all 10 red scripts (of 54: HANDOFFS 2 of 15, CHANGELOG 1 of 16,
+      SESSION_NOTES 7 of 23) and diffed the records: **none is a real loss.** Three causes: (1) 7 scripts
+      (v1.5.0): the trim shares a commit with the session's own close-out, so record 0 (a claim stub or a
+      `status: pending` receipt) differs, and BL-27 keeps that a loud FAIL; (2) 1 script (v1.1.2): a
+      baked-in `INJECTED=0`, fixed upstream since v1.2.0 but frozen scripts never benefit; (3) 2 scripts:
+      the L2 "leak" test is a substring test, so a mid-line backtick quote of a front-matter line counts.
+      Causes 1 and 3 are still in the current `main` of both `rmsharp/methodology` and `KJ5HST/methodology`
+      (byte-identical, v1.5.0). The fork has issues disabled, so the owner chose `KJ5HST/methodology`;
+      posted 2026-10-04 (https://github.com/KJ5HST/methodology/issues/93). Evidence and the posted text:
+      `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (the issue starts at its line 150).
+      **What is left:** read upstream's answer (`gh issue view 93 -R KJ5HST/methodology --comments`); when
+      a fix and a regenerate path ship, sync the trimmer (re-apply this project's `SESSION_NOTES.md`
+      patch, per the `CLAUDE.md` checklist) and regenerate the 10 scripts; if upstream declines, decide
+      whether to patch them here (a second local modification to `methodology_trim.py`, which the owner
+      rejected S898). Until then do not quote front-matter command lines verbatim in receipts (Learning 797e).
+
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
