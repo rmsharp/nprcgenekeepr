@@ -52,21 +52,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
       `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
 
-- [ ] **Confirm the push `paths-ignore` list on GitHub itself (READY once the owner next pushes
-      only listed files, Effort S)** -- S899 shipped it (`3178b741c`): lint, pkgdown,
-      R-CMD-check and test-coverage carry the same 21-entry `paths-ignore:` under `push:` (14 root
-      notes/methodology `.md`, 4 methodology scripts, `.context-budget.json`, `.quality-gates.json`,
-      `docs/**`), guarded by `tests/testthat/test_workflowPathsIgnore.R`. Local checks (that test,
-      a YAML parse, the full suite, an installed-copy run) cannot show GitHub's own filter
-      behavior. **Check:** after the first push that changes only listed files (a docs-only
-      close-out), `gh run list --branch master --limit 10` must show no new run for that commit;
-      if runs start, look first at the two dotfile entries and `docs/**`. Left out on purpose
-      because a workflow reads them: `data-raw/**` and `.lintr` (lint), `_pkgdown.yml` and
-      `vignettes/**` (pkgdown), `.github/**`, `NEWS.Rmd`, `README.Rmd`, `renv.lock`, `codecov.yml`.
-      `pull_request` stays unfiltered (owner, S899: pushes only; no branch protection or rulesets
-      exist today, so a path-skipped PR could not wedge a required check). To add a file, edit all
-      four workflows and run that test.
-
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
       `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.

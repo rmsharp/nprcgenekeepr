@@ -123,21 +123,22 @@ opportunity computed from `git diff --name-only` rather than guessed. - Hit S894
 record condensed (6,304 B -> 1,161 B), so this file shrinks 34,302 B -> 33,981 B (-321 B);
 `BACKLOG.md` untouched; the two ledgers grow by this session's entries.
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push the 2 local commits (the claim `16d1fd75d` and this
-close-out). Both change only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all on the `paths-ignore` list (derived:
-`git diff --name-only f43ff9501..HEAD` printed exactly those three), so **that push is the live check for `BACKLOG.md:55`**:
-`gh run list --branch master --limit 10` should show no new run (the newest stays the four from 2026-10-04T23:15:19Z). Adding
-any unlisted file to that push voids the check; if runs do start, look first at the two dotfile entries and `docs/**`.
-(B) One real fix per session, any order, all READY: row-order tests only (`:440`; `test_makePedigreeMatingLayout.R:663-742`;
-which tests assert the raw-CSV count is still not known); rhesus comment (`:461`; `data-raw` is linted at 80 columns, so lint
-the reworded comment); verify-script upstream report (`:301`; characterize the 8 L1 failures first; posting is the owner's
-call). Kept open: `isAddedRecord()` (`:22`), Candidate C (`:417`), `highlightNearest` (`:481`). Docs-audit slice 2 (the
+**Next steps (owner-ordered):** (A) DONE after the close-out report: the owner had me push the 2 commits (`f43ff9501..ac110d665`,
+2026-10-05T00:31:21Z) and **the live check passed**: no run started for `ac110d665` (0 runs at 83 s and again at 94 s;
+the previous push's four runs queued within 3 s), so GitHub honours the `paths-ignore` list for a push that changes only
+listed files. The push-record addendum is the one local commit; it too changes only listed files (`CHANGELOG.md`,
+`HANDOFFS.md`, `SESSION_NOTES.md`, `BACKLOG.md`), so its push should start no run either. The `BACKLOG.md` live-check item is removed
+(15 lines), so every later `BACKLOG.md` line number dropped by 15; the numbers below are the new ones.
+(B) One real fix per session, any order, all READY: row-order tests only (`:425`; `test_makePedigreeMatingLayout.R:663-742`;
+which tests assert the raw-CSV count is still not known); rhesus comment (`:446`; `data-raw` is linted at 80 columns, so lint
+the reworded comment); verify-script upstream report (`:286`; characterize the 8 L1 failures first; posting is the owner's
+call). Kept open: `isAddedRecord()` (`:22`), Candidate C (`:402`), `highlightNearest` (`:466`). Docs-audit slice 2 (the
 `shiny_app_use/` images) is READY, Effort L, and needs scoping first. (C) The ledger-size lever is still open (S892; not
 filed, not asked): `HANDOFFS.md` 180,334 B and `CHANGELOG.md` 32,163 B before this close-out (262,144 B is the Read refusal).
 Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
 
 **Key files:** `.github/workflows/{lint,pkgdown,R-CMD-check,test-coverage}.yaml` lines 4-29 (the `push:` blocks, unchanged
-this session); `BACKLOG.md:55`; `tests/testthat/test_workflowPathsIgnore.R`.
+this session); `tests/testthat/test_workflowPathsIgnore.R`.
 
 **Gotchas:** zsh treats a leading `=` word as an expansion, so `echo =====` fails with "= not found" (quote separators or use
 `printf '%s\n' '-----'`; hit twice here); the wait that worked is a `run_in_background` loop on `gh run list --commit <full
