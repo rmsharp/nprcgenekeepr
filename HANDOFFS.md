@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S909
+date: 2026-10-05
+status: pending
+active_task: measure how often the highlightNearest degree-6 limit fails on the real rectilinear diagram and recommend fix-or-close (BACKLOG.md:398; optional, Effort M; owner kept it open S898); the owner picked it at the Phase 0 picker
+```
+
+```handoff
 session: S908
 date: 2026-10-05
 status: complete

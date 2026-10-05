@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 909 Did
+**Deliverable:** measure how often the `highlightNearest` degree-6 limit fails on the real rectilinear diagram, and recommend fix-or-close (`BACKLOG.md:398`) (IN PROGRESS)
+**Started:** 2026-10-05
+**Status:** Session claimed; phase PRE-RED. Measurement only (no `R/` change); a fix, if the numbers warrant one, is a separate session with its own plan and TDD gates.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 908 Did
 **Deliverable, DONE (strict TDD, behaviour unchanged):** one internal `isAddedRecord(recordStatus, n = length(recordStatus))`
 (`R/isAddedRecord.R`) now says which records are "added", and the four inline copies call it: `convertDate()`
