@@ -99,60 +99,66 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 907 Did
-**Deliverable:** reword the `data-raw/rhesusPedigree.R` docstring (lines 7-10) so it says only what is true (`BACKLOG.md:415`) (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; phase PRE-RED. Comment-only change per the S898 owner ruling; no data change, the CSV is not regenerated.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (comment only; no code, data or test change):** reworded the `data-raw/rhesusPedigree.R` docstring (now lines
+7-19, plus line 25) so it says only what is true (`BACKLOG.md:415-434` before removal; owner ruling S898). Picked at the Phase 0
+picker ("Reword rhesus comment"). Re-measured first (Learning 872): the object, `rhesusPedigree_fromCenter.csv` and
+`obfuscated_rhesus_mhc_ped.csv` agree on all 8 shared columns over 375 rows, so the old "cannot be re-derived from the CSV" was
+false; the CSV was first committed 2026-06-15 (`868a4975f`), six years after the object (`31c4679d7`, 2020-02-02). The new text
+states those facts and what cannot be recovered (`obfuscatePed()` draws `runif` offsets; no script or seed is kept) and does not
+claim the values were never obfuscated. Verified: parsed code identical to the pre-session file (7 expressions), only comment
+lines differ, widest line 79, `lintr::lint()` on the file and `lint_package()` (package loaded) 0 lints, no test reads the file.
+`BACKLOG.md:415-434` removed (20 lines; 496 -> 476, 42,057 -> 40,473 B). `quality_ratchet.py --run`: 1/1 pass, results `60e6b323d03a`,
+manifest `aa983075d6a2`. Commits: claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`; the close-out commit carries the rest.
+No runtime smoke (comment only; stated). R/data.R:360 still says "obfuscated"; left on purpose (consistent, out of scope).
 
-### What Session 906 Did
-**Deliverable, DONE (decision only; no code, test or `R/` change):** recorded the owner's ruling on the row-order item
-(`BACKLOG.md:415` before removal): **leave it.** Picked at the Phase 0 picker ("Decide row-order item"). I put S905's
-measurements to the owner in plain words (same animals, parents and sexes; rectilinear 1460 nodes / 190 jog in raw order vs
-1412 / 142 in the app's QC order; direct 782 either way; four real differences) with three options (leave it; investigate why
-kinship2 drops `3CLMPL` and `3GW5WC` in QC order; make the layout order-independent, declined S898), and the owner chose
-"Leave it". Consequence recorded: the raw-order tests and S905's two QC-order tests stay as the guard, and the four QC-order
-differences (union dot `__union_120` 0.5 outside its parents' span, 8 off-centre dots, `compareAgainstKinship2()`
-`identical = FALSE` for `3CLMPL`/`3GW5WC`, the arc-roundness test finds no pair) stay unexamined and unguarded by decision.
-`BACKLOG.md:415-430` removed (16 lines; 512 -> 496 lines, 43,601 -> 42,057 B); the measurements stay in the S905 ledger entry
-and Learning 870. Learning 871. `quality_ratchet.py --run`: 1/1 pass, results `7a3697b7fb08`, manifest `aa983075d6a2`.
-Commits: claim `31493f61d`; the close-out commit carries the rest. No runtime smoke (docs only; stated).
+**Handoff evaluation of S906: 9/10.** Helped: all six `BACKLOG.md` cites re-found exactly (`:8`, `:22`, `:63`, `:392`, `:415`,
+`:435`); the "lint at 80 columns" note (`.lintr` `line_length_linter(80)`); every quoted size re-measured exact (`HANDOFFS.md`
+207,912 B at `c651882ed`, `BACKLOG.md` 42,057 B), so Learning 871 held; "8 local commits" measured 0 behind / 8 ahead; the
+`paths-ignore` consequence matched `lint.yaml`. Missing: that the false sentence ran to line 12 and recurred at line 25 (the
+cite said 7-10); the CSV's git history, a one-command check. Wrong: nothing material. ROI clearly positive.
 
-**Handoff evaluation of S905: 9/10.** Helped: all six `BACKLOG.md` cites re-found exactly (`:22`, `:286`, `:392`, `:415`, `:431`,
-`:451`); the 21-entry `paths-ignore` note (re-read in `lint.yaml`, exact) and the "next push WILL start four workflows"
-consequence; the measured differences, which let me put the decision to the owner in one plain question. Missing: nothing that
-cost time. Wrong: the sizes. It quoted `HANDOFFS.md` 198,608 B with "about 63 KB" of headroom and `CHANGELOG.md` 44,721 B; at
-its close-out commit `e569765a3` they were 203,985 B (58 KB of headroom) and 47,010 B, because they were taken at 3A before
-its own receipt and ledger entries were written (Learning 871).
-
-**Self-assessment: 8/10.** + Orientation before action, and the Phase 0 report named the one ratified-order check (both
-sequencing audits fully executed; only #138 left); claimed before any other work; put the decision in plain words with each
-option's consequence and recorded exactly what was picked, with no follow-up file change offered; re-measured the predecessor's
-sizes with `git show <sha>:<file> | wc -c` instead of copying them; ran the ratchet in the background and read its output file.
-- A decision-only session leaves nothing built, so no runtime or test verification exists to cite; the orientation report was
-long (five numbered items plus a bundled lower-priority line); one turn was interrupted mid-close-out, no state was lost.
-Reduction: `BACKLOG.md` 16 lines removed; S905's record condensed (about 5.5 KB -> about 1.3 KB); the files still grew by this
+**Self-assessment: 8/10.** + Orientation before action; claimed before any technical work; re-measured S898's numbers instead of
+copying them and found stronger evidence (CSV added six years after the object); kept the diff comment-only and proved it
+(parse identity against the pre-session file, widths, lint, no test readers); read the finished file back and caught a second
+assertion and a ragged break; reported `R/data.R:360` without touching it; ran the ratchet at the final head.
+- The first pass trusted the BACKLOG line cite instead of grepping the file for the word, so a second commit was needed
+(Learning 872 (4)); the first `gh run list` call returned stale rows (re-run was current); no RED/GREEN cycle: a judgment, not
+a gate (comment only, no behavior to test, precedent S882/S883), stated here so the owner can object.
+Reduction: `BACKLOG.md` 20 lines removed; S906's record condensed (5,130 B -> 969 B); the files still grew by this
 session's own entries.
 
-**Next steps (owner-ordered):** (A) Nothing waits on the owner about row order: "leave it" closes the item. (B) READY, one per
-session, any order (cites re-found after the removal): rhesus comment (`BACKLOG.md:415`, was `:431`; lint the reworded comment
-at 80 columns); kept open: `isAddedRecord()` (`:22`), Candidate C (`:392`, DECISION NEEDED), `highlightNearest` (`:435`, was
-`:451`). Docs-audit slice 2 (`:63`) is READY, Effort L, needs scoping first. PED_GV: 9 ids remain, all owner decisions (`:8`).
-(C) Unpushed: 8 local commits after this close-out (S904 claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim `2563a6ee0`, RED
-`5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3`; S906 claim `31493f61d`, close-out). `tests/testthat/*.R` is NOT on the
-21-entry `paths-ignore` list (read from `lint.yaml`'s `push:` block), so the next push WILL start four workflows (R-CMD-check
-ran 24m46s on S899's push): read CI after it. Per the owner's S905 ruling it is not offered as a task. (D) Upstream
-`KJ5HST/methodology#93` still has 1 comment (the owner's); nothing merged; `BACKLOG.md:286` stays BLOCKED. (E) The ledger-size
-lever is still open: `HANDOFFS.md` is about 208 KB (about 54 KB below the 262,144 B Read refusal). Carried: `reportGV(smallPed)` unfiled.
+**Next steps (owner-ordered):** (A) Nothing waits on the owner about the rhesus comment. (B) READY, one per session, any order
+(cites grepped after the removal): `isAddedRecord()` (`BACKLOG.md:22`, optional, Effort S; a cross-file refactor, so plan-mode
+approval and staged commits); `highlightNearest` (`:415`, was `:435`; optional, Effort M; measure the real fixture's largest
+sibship first); Candidate C (`:392`, DECISION NEEDED, product sign-off); docs-audit slice 2 (`:63`, READY, Effort L, needs
+scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C) Unpushed: 12 local commits after this close-out (S904
+claim `64ef6bf03`, close-out `5ec2d5ebb`; S905 claim `2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3`;
+S906 claim `31493f61d`, close-out `c651882ed`; S907 claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`,
+close-out). `data-raw/rhesusPedigree.R` and `tests/testthat/*.R` are NOT on the 21-entry `paths-ignore` list (read from
+`lint.yaml`'s `push:` block), so the next push WILL start four workflows (lint reads `data-raw/*.R`, Learning 868): read CI after
+it. Per the owner's S905 ruling it is not offered as a task. (D) Upstream `KJ5HST/methodology#93` is still open with 1 comment
+(checked S907); `BACKLOG.md:286` stays BLOCKED. (E) `HANDOFFS.md` was 208,186 B before this close-out's edits (about
+54 KB below the 262,144 B Read refusal). Carried: `reportGV(smallPed)` unfiled.
 
-**Key files:** `BACKLOG.md:415` (the rhesus comment item); `data-raw/rhesusPedigree.R:7-10` (the docstring it names);
-`PROJECT_LEARNINGS.md` Learning 871; `tests/testthat/test_makePedigreeMatingLayout.R:780-828` and
-`tests/testthat/helper-qcdRhesusPed.R` (S905's QC-order guard, unchanged); `.github/workflows/lint.yaml` (the `paths-ignore` list).
+**Key files:** `data-raw/rhesusPedigree.R:7-19`, `:25` (the reworded comment); `PROJECT_LEARNINGS.md` Learning 872;
+`BACKLOG.md:22`, `:63`, `:392`, `:415`, `:8` (the open items); `.github/workflows/lint.yaml` (the `push:` `paths-ignore` block);
+`R/data.R:360` (still says "obfuscated"; left on purpose).
 
-**Gotchas:** a pure decision pick is a short session (claim, one plain question, record the pick, close out); removing a BACKLOG
-block shifts every later line cite by its length (16 here), so re-grep the cites rather than subtract; `quality_ratchet.py --run`
-takes minutes, so run it in the background and read its output file; its results hash changes on every run, so compare counts and
-manifest; take `wc -c` after the last edit (Learning 871); `gh issue view --comments` fails here with a Projects-classic GraphQL
-error, so use `gh api repos/<repo>/issues/<n>/comments`.
+**Gotchas:** a BACKLOG line cite can understate a claim: grep the whole file for the key word before calling it fixed; an `Edit`
+whose `old_string` ends mid-line leaves a ragged short line, so end the replacement at a line boundary; the first plain
+`gh run list` returned stale June rows and an immediate re-run was current (S882, S883 and S896 each saw a different variant),
+so re-run it before trusting an old date; the ratchet's results hash changes on every run, so compare counts and manifest; take
+`wc -c` after the last edit (Learning 871).
+
+### What Session 906 Did (condensed S907; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Decision only (no code, test or `R/` change): the owner ruled "leave it" on the row-order item after S905's measurements were put
+to them in plain words (rectilinear 1460 nodes / 190 jog in raw order vs 1412 / 142 in the app's QC order; direct 782 either
+way; four real QC-order differences left unexamined and unguarded by decision). `BACKLOG.md:415-430` removed. Claim `31493f61d`,
+close-out `c651882ed` (both still local). Handoff evaluation of S905: 9/10. Self 8/10.
+**Gotchas kept:** a pure decision pick is a short session; removing a BACKLOG block shifts every later cite by its length, so
+re-grep the cites; `quality_ratchet.py --run` takes minutes, so run it in the background and read its output file; take `wc -c`
+after the last edit (Learning 871); `gh issue view --comments` fails here (Projects-classic GraphQL), so use
+`gh api repos/<repo>/issues/<n>/comments`.
 
 ### What Session 905 Did (condensed S906; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Row-order item, tests only (no `R/` change): the app's QC'd copy of the bundled rhesus fixture differs from the raw CSV in row
