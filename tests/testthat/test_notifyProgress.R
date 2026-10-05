@@ -30,9 +30,56 @@ makeRecorder <- function() {
   )
 }
 
+## The calls each function sends today, written once. geneDrop() sends one
+## start call, then one per animal; reportGV() then sends three step messages;
+## convertRelationships() and groupAddAssign() send argument-free calls.
 geneDropStart <- list(
   detail = "Performing Gene-drop Simulation", value = 0L, reset = TRUE
 )
+perAnimalCalls <- function(nAnimals) {
+  rep(list(list(n = nAnimals)), nAnimals)
+}
+geneDropCalls <- function(nAnimals) {
+  c(list(geneDropStart), perAnimalCalls(nAnimals))
+}
+reportGVSteps <- list(
+  list(detail = "Calculating Genome Uniqueness", value = 1L, reset = TRUE),
+  list(detail = "Calculating Numbers of Offspring", value = 1L, reset = TRUE),
+  list(detail = "Calculating Founder Equivalents", value = 1L, reset = TRUE)
+)
+noArgCalls <- function(n) rep(list(list()), n)
+
+## What a stand-in for the helper recorded (mockery::mock_args()): TRUE when
+## every call had the progress function as its first argument and, with
+## only = TRUE, no other argument.
+allCallsLeadWith <- function(args, callback, only = FALSE) {
+  all(vapply(args, function(a) {
+    identical(a[[1L]], callback) && (!only || length(a) == 1L)
+  }, logical(1L)))
+}
+
+## The calls to the function under test are made through these, which take the
+## function as an argument: mockery::stub() replaces a function in the scope of
+## the test that stubs it, so a call made by name from here would miss the stub.
+callGeneDrop <- function(geneDropFn, callback) {
+  ped <- nprcgenekeepr::lacy1989Ped
+  geneDropFn(ped$id, ped$sire, ped$dam, ped$gen,
+    n = 3L, updateProgress = callback
+  )
+}
+callGroupAddAssign <- function(groupAddAssignFn, callback) {
+  set_seed(10L)
+  groupAddAssignFn(
+    candidates = qcBreeders, kmat = pedWithGenotypeReport$kinship,
+    ped = pedWithGenotype, currentGroups = list(qcBreeders[1L:3L]),
+    ignore = NULL, minAge = 1.0, numGp = 1L, harem = FALSE, sexRatio = 0L,
+    withKin = FALSE, iter = 25L, updateProgress = callback
+  )
+}
+smallPedKinship <- function() {
+  ped <- nprcgenekeepr::smallPed
+  kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+}
 
 ## ---------------------------------------------------------------------------
 ## 1. The helper
@@ -94,14 +141,11 @@ test_that("notifyProgress is internal, not exported", {
 ## 2. Today's calls, recorded at the current commit
 ## ---------------------------------------------------------------------------
 test_that("geneDrop sends one start call, then n = nrow(ped) per animal", {
-  ped <- nprcgenekeepr::lacy1989Ped
   rec <- makeRecorder()
-  geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
-    n = 3L, updateProgress = rec$callback
-  )
+  callGeneDrop(geneDrop, rec$callback)
   expect_identical(
     rec$calls(),
-    c(list(geneDropStart), rep(list(list(n = nrow(ped))), nrow(ped)))
+    geneDropCalls(nrow(nprcgenekeepr::lacy1989Ped))
   )
 })
 
@@ -112,48 +156,30 @@ test_that("reportGV sends the gene-drop calls, then three step messages", {
   nAnimals <- nrow(nprcgenekeepr::qcPed)
   expect_length(calls, 1L + nAnimals + 3L)
   expect_identical(calls[[1L]], geneDropStart)
-  expect_identical(
-    calls[2L:(1L + nAnimals)],
-    rep(list(list(n = nAnimals)), nAnimals)
-  )
-  expect_identical(
-    calls[(2L + nAnimals):(1L + nAnimals + 3L)],
-    list(
-      list(detail = "Calculating Genome Uniqueness", value = 1L, reset = TRUE),
-      list(
-        detail = "Calculating Numbers of Offspring", value = 1L, reset = TRUE
-      ),
-      list(detail = "Calculating Founder Equivalents", value = 1L, reset = TRUE)
-    )
-  )
+  expect_identical(calls[2L:(1L + nAnimals)], perAnimalCalls(nAnimals))
+  expect_identical(calls[(2L + nAnimals):(1L + nAnimals + 3L)], reportGVSteps)
 })
 
 test_that("convertRelationships sends one argument-free call per pair", {
   ped <- nprcgenekeepr::smallPed
-  kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+  kmat <- smallPedKinship()
   rec <- makeRecorder()
   rel <- convertRelationships(kmat, ped, updateProgress = rec$callback)
   expect_gt(nrow(rel), 0L)
-  expect_identical(rec$calls(), rep(list(list()), nrow(rel)))
+  expect_identical(rec$calls(), noArgCalls(nrow(rel)))
   recSome <- makeRecorder()
   relSome <- convertRelationships(kmat, ped,
     ids = c("A", "B", "D"),
     updateProgress = recSome$callback
   )
-  expect_identical(recSome$calls(), rep(list(list()), nrow(relSome)))
+  expect_identical(recSome$calls(), noArgCalls(nrow(relSome)))
 })
 
 test_that("groupAddAssign sends one argument-free call per iteration", {
   skip_if_not(exists("pedWithGenotypeReport"))
   rec <- makeRecorder()
-  set_seed(10L)
-  groupAddAssign(
-    candidates = qcBreeders, kmat = pedWithGenotypeReport$kinship,
-    ped = pedWithGenotype, currentGroups = list(qcBreeders[1L:3L]),
-    ignore = NULL, minAge = 1.0, numGp = 1L, harem = FALSE, sexRatio = 0L,
-    withKin = FALSE, iter = 25L, updateProgress = rec$callback
-  )
-  expect_identical(rec$calls(), rep(list(list()), 25L))
+  callGroupAddAssign(groupAddAssign, rec$callback)
+  expect_identical(rec$calls(), noArgCalls(25L))
 })
 
 ## ---------------------------------------------------------------------------
@@ -167,21 +193,17 @@ test_that("groupAddAssign sends one argument-free call per iteration", {
 ## first.
 
 test_that("geneDrop sends its progress calls through notifyProgress", {
-  ped <- nprcgenekeepr::lacy1989Ped
+  nAnimals <- nrow(nprcgenekeepr::lacy1989Ped)
   rec <- makeRecorder()
   helper <- mockery::mock(NULL, cycle = TRUE)
   mockery::stub(geneDrop, "notifyProgress", helper)
-  geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
-    n = 3L, updateProgress = rec$callback
-  )
-  mockery::expect_called(helper, 1L + nrow(ped))
+  callGeneDrop(geneDrop, rec$callback)
+  mockery::expect_called(helper, 1L + nAnimals)
   args <- mockery::mock_args(helper)
-  expect_true(all(vapply(
-    args, function(a) identical(a[[1L]], rec$callback), logical(1L)
-  )))
+  expect_true(allCallsLeadWith(args, rec$callback))
   expect_identical(
     lapply(args, function(a) a[-1L]),
-    c(list(geneDropStart), rep(list(list(n = nrow(ped))), nrow(ped)))
+    geneDropCalls(nAnimals)
   )
   expect_length(rec$calls(), 0L)
 })
@@ -193,19 +215,8 @@ test_that("reportGV sends its three step messages through notifyProgress", {
   reportGV(nprcgenekeepr::qcPed, guIter = 20L, updateProgress = rec$callback)
   mockery::expect_called(helper, 3L)
   args <- mockery::mock_args(helper)
-  expect_true(all(vapply(
-    args, function(a) identical(a[[1L]], rec$callback), logical(1L)
-  )))
-  expect_identical(
-    lapply(args, function(a) a[-1L]),
-    list(
-      list(detail = "Calculating Genome Uniqueness", value = 1L, reset = TRUE),
-      list(
-        detail = "Calculating Numbers of Offspring", value = 1L, reset = TRUE
-      ),
-      list(detail = "Calculating Founder Equivalents", value = 1L, reset = TRUE)
-    )
-  )
+  expect_true(allCallsLeadWith(args, rec$callback))
+  expect_identical(lapply(args, function(a) a[-1L]), reportGVSteps)
   ## The stub covers reportGV()'s own calls only. geneDrop(), which reportGV()
   ## hands the progress function to, still calls it: one start call and one per
   ## animal, and none of the three step messages.
@@ -219,19 +230,17 @@ test_that("reportGV sends its three step messages through notifyProgress", {
 })
 
 test_that("convertRelationships sends its per-pair call via notifyProgress", {
-  ped <- nprcgenekeepr::smallPed
-  kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
   rec <- makeRecorder()
   helper <- mockery::mock(NULL, cycle = TRUE)
   mockery::stub(convertRelationships, "notifyProgress", helper)
-  rel <- convertRelationships(kmat, ped, updateProgress = rec$callback)
+  rel <- convertRelationships(
+    smallPedKinship(), nprcgenekeepr::smallPed,
+    updateProgress = rec$callback
+  )
   mockery::expect_called(helper, nrow(rel))
-  args <- mockery::mock_args(helper)
-  expect_true(all(vapply(
-    args,
-    function(a) length(a) == 1L && identical(a[[1L]], rec$callback),
-    logical(1L)
-  )))
+  expect_true(
+    allCallsLeadWith(mockery::mock_args(helper), rec$callback, only = TRUE)
+  )
   expect_length(rec$calls(), 0L)
 })
 
@@ -240,19 +249,10 @@ test_that("groupAddAssign sends its per-iteration call via notifyProgress", {
   rec <- makeRecorder()
   helper <- mockery::mock(NULL, cycle = TRUE)
   mockery::stub(groupAddAssign, "notifyProgress", helper)
-  set_seed(10L)
-  groupAddAssign(
-    candidates = qcBreeders, kmat = pedWithGenotypeReport$kinship,
-    ped = pedWithGenotype, currentGroups = list(qcBreeders[1L:3L]),
-    ignore = NULL, minAge = 1.0, numGp = 1L, harem = FALSE, sexRatio = 0L,
-    withKin = FALSE, iter = 25L, updateProgress = rec$callback
-  )
+  callGroupAddAssign(groupAddAssign, rec$callback)
   mockery::expect_called(helper, 25L)
-  args <- mockery::mock_args(helper)
-  expect_true(all(vapply(
-    args,
-    function(a) length(a) == 1L && identical(a[[1L]], rec$callback),
-    logical(1L)
-  )))
+  expect_true(
+    allCallsLeadWith(mockery::mock_args(helper), rec$callback, only = TRUE)
+  )
   expect_length(rec$calls(), 0L)
 })
