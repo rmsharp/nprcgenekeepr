@@ -49,21 +49,7 @@ getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
   }
 
 
-  offspring <- parents <- ids
-  len <- length(ids)
-  while (len > 0L) {
-    parents <- getParents(ped, ids)
-    offspring <- getOffspring(ped, ids)
-    added <- unique(union(parents, offspring))
-    added <- setdiff(added, ids)
-    len <- length(added)
-    if (len == 0L) {
-      break
-    }
-    ids <- union(added, ids)
-    ids <- ids[!is.na(ids)]
-  }
-
+  ids <- unlist(walkPedigree(ids, ped, "both"))
   relatives <- ped[ped$id %in% ids, ]
   if (unrelatedParents) {
     unrelated <- unique(ids[!ids %in% ped$id])

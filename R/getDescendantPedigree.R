@@ -24,15 +24,7 @@
 #' ## D's descendants are F and G
 #' getDescendantPedigree(probands = "D", ped = ped)$id
 getDescendantPedigree <- function(probands, ped) {
-  repeat {
-    offspring <- getOffspring(ped, probands)
-    added <- setdiff(offspring, probands)
-    if (length(added) == 0L) {
-      break
-    }
-    probands <- union(probands, offspring)
-  }
-
+  probands <- unlist(walkPedigree(probands, ped, "descendants"))
   ped <- ped[ped$id %in% probands, ]
   ped
 }

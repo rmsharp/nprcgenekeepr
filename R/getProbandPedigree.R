@@ -23,19 +23,7 @@
 #' sires <- getPotentialSires(ids, ped, minAge = 1)
 #' head(getProbandPedigree(probands = sires, ped = ped))
 getProbandPedigree <- function(probands, ped) {
-  repeat {
-    sires <- ped$sire[ped$id %in% probands]
-    dams <- ped$dam[ped$id %in% probands]
-
-    parents <- unique(union(sires, dams))
-    parents <- parents[!is.na(parents)]
-    added <- setdiff(parents, probands)
-    if (length(added) == 0L) {
-      break
-    }
-    probands <- union(probands, parents)
-  }
-
+  probands <- unlist(walkPedigree(probands, ped, "ancestors"))
   ped <- ped[ped$id %in% probands, ]
   ped
 }

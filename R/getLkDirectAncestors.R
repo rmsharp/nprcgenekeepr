@@ -63,18 +63,9 @@ getLkDirectAncestors <- function(ids) {
     return(NULL)
   }
   names(pedSourceDf) <- siteInfo$mapPedColumns
-  parents <- ids
-  len <- length(parents)
-  ancestorsDf <- pedSourceDf[pedSourceDf$id %in% ids, ]
-  while (len > 0L) {
-    parents <- getParents(pedSourceDf, parents)
-    len <- length(parents)
-    if (len > 0L) {
-      ancestorsDf <- rbind(ancestorsDf,
-        pedSourceDf[pedSourceDf$id %in% parents, ],
-        stringsAsFactors = FALSE
-      )
-    }
-  }
+  generations <- walkPedigree(ids, pedSourceDf, "ancestors")
+  ancestorsDf <- do.call(rbind, lapply(generations, function(generation) {
+    pedSourceDf[pedSourceDf$id %in% generation, ]
+  }))
   ancestorsDf[!duplicated(ancestorsDf$id), ]
 }
