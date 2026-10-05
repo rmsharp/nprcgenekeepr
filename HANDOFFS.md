@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S910
+date: 2026-10-05
+status: pending
+active_task: get the owner's product decision on Candidate C, the connector/dogleg visual-signposting idea for multi-generation mate-lines in the pedigree diagram (BACKLOG.md:375; DECISION NEEDED, product sign-off; kept open by the owner S898); the owner picked it at the Phase 0 picker; decision only, no code
+```
+
+```handoff
 session: S909
 date: 2026-10-05
 status: complete

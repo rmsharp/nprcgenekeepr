@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 910 Did
+**Deliverable:** the owner's product decision on Candidate C, the connector/dogleg signposting idea (`BACKLOG.md:375`) (IN PROGRESS)
+**Started:** 2026-10-05
+**Status:** Session claimed; phase PRE-RED. Decision only (no `R/` change); a build, if the owner says yes, is a separate session
+with its own plan and TDD gates.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 909 Did
 **Deliverable, DONE (measurement and an owner ruling; documentation only, behaviour unchanged):** measured how often the
 rectilinear diagram's `highlightNearest` degree-6 hover falls short, and recorded the owner's ruling: **close the item, keep
