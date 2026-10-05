@@ -49,7 +49,9 @@ getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
   }
 
 
-  ids <- unlist(walkPedigree(ids, ped, "both"))
+  ## Farthest generation first, the order the loop this replaced left `ids` in;
+  ## it sets the order of the placeholder records below.
+  ids <- unlist(rev(walkPedigree(ids, ped, "both")))
   relatives <- ped[ped$id %in% ids, ]
   if (unrelatedParents) {
     unrelated <- unique(ids[!ids %in% ped$id])
