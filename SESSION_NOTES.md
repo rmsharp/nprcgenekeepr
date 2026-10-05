@@ -99,58 +99,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 903 Did
-**Deliverable:** push S902's 2 local commits (claim `ee54ef006`, close-out `6f4733c78`) to `origin/master` and read CI (IN PROGRESS)
-**Started:** 2026-10-04
-**Status:** Session claimed. Origin is 2 commits behind HEAD (S902: claim, close-out). Docs only; no code, test or `R/`
-change; the push goes by SHA so this claim commit stays local.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only; no code, test or `R/` change):** pushed S902's 2 local commits to `origin/master`
+(`7acce42cf..6f4733c78`: claim `ee54ef006` and close-out `6f4733c78`, a plain fast-forward, 0 behind after `git fetch`, by
+SHA, so this session's claim `ee5632c86` stayed local) at the owner's pick from the Phase 0 picker ("Push the 2 local
+commits"). `git diff --name-only origin/master..6f4733c78` listed 3 files (`CHANGELOG.md`, `HANDOFFS.md`,
+`SESSION_NOTES.md`), all on the 21-entry `paths-ignore` list. **Result: no CI run started.** `gh run list --commit
+6f4733c78a39ea9746ed7dec5e589c75f9416b3a` returned nothing about 60 s after the push, a control query on `f43ff9501` listed
+its 4 runs, the newest 4 runs on `master` are still S899's, and `origin/master` equals `6f4733c78`: the fourth confirmation
+of the `paths-ignore` list (S900 push 2, S901's addendum, S902, S903), and the first measured on this exact range (S902 had
+only derived it from the file list). Phase 0 found 0 undocumented commits, 0 pending receipts, S902's `quality_ratchet:`
+citation matching the results file, CI green on the last 10 runs, and upstream `KJ5HST/methodology#93` open with 0
+comments. **Non-commit action:** the push. Commits: claim `ee5632c86`; the close-out commit carries the rest. No new
+Learning: nothing this session was not already in S900-S902's gotchas.
 
-### What Session 902 Did
-**Deliverable, DONE (docs only; no code, test or `R/` change):** pushed S901's 4 local commits to `origin/master`
-(`529bb031b..7acce42cf`, a plain fast-forward, 0 behind, by SHA, so this session's claim `ee54ef006` stayed local) at the
-owner's pick from the Phase 0 picker ("Push 4 local commits"). Before pushing, `git diff --name-only origin/master..7acce42cf`
-listed 6 files (`BACKLOG.md`, `CHANGELOG.md`, `HANDOFFS.md`, `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`,
-`docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`), all on the 21-entry `paths-ignore` list; none under `R/`,
-`DESCRIPTION`, `NAMESPACE`, `tests/`, `man/` or `inst/`. **Result: no CI run started.** `gh run list --commit
-7acce42cfb4e9da0681f8df6f769b805d967b6e0` returned nothing 60 s after the push, a control query on `f43ff9501` listed its 4
-runs, and the newest 4 runs on `master` are still S899's: the third confirmation of the `paths-ignore` list (S900 push 2,
-S901's addendum, S902). Phase 0 found 0 undocumented commits, 0 pending receipts, S901's `quality_ratchet:` citation matching
-the results file, CI green on the last 10 runs, and upstream `KJ5HST/methodology#93` open with 0 comments. **Non-commit
-action:** the push. Commits: claim `ee54ef006` (amended once, to fix its date); the close-out commit carries the rest.
-No new Learning: nothing this session was not already in S900's and S901's gotchas.
+**Handoff evaluation of S902: 9/10.** Helped: every `BACKLOG.md` line cite re-found exactly (`:22`, `:286`, `:392`, `:415`,
+`:436`, `:456`); the push range (2 commits, 3 files, all on the `paths-ignore` list), the push-by-SHA step, the full-SHA
+gotcha and "expect no run" all matched what happened; "(B) upstream has 0 comments" was still true. Missing: nothing that
+cost time. Wrong: nothing found.
 
-**Handoff evaluation of S901: 9/10.** Helped: every `BACKLOG.md` line cite re-found exactly (`:22`, `:286`, `:392`, `:415`,
-`:436`, `:456`; `test_makePedigreeMatingLayout.R:663` and `:742` land on the 1456 arithmetic); the push range (4 commits, 6
-files, all on the `paths-ignore` list), the push-by-SHA step and the `gh run list --commit <full SHA>` gotcha all matched
-what happened, and "the push should start no run" was right. Missing: nothing that cost time. Wrong: nothing found.
+**Self-assessment: 8/10.** + Orientation before any action; claimed first (ledger entry, receipt stub, notes stub); fetched
+and confirmed 0 behind, then checked each of the 3 files against the ignore list before pushing; pushed by SHA; paired the
+"no run" query with a control so it is evidence, not an empty result; dated by local time. - I tried a foreground `sleep`
+(blocked, no harm) despite S902's gotcha, and started the ratchet in a `( cmd ) &` wrapper inside `run_in_background`, whose
+exit reports the wrapper's, so I first read an empty output and the old results file (S890's gotcha again; I then waited on
+the job's own `EXIT` line). Reduction: S902's record condensed (4,530 B -> 753 B), yet this file still grew, 36,449 B ->
+about 37,050 B, by this session's own record; `HANDOFFS.md` and `CHANGELOG.md` grew by this session's entries.
 
-**Self-assessment: 8/10.** + Orientation before any action; claimed first; checked the file list against the ignore list
-and the fast-forward (0 behind) before pushing; pushed by SHA; paired the "no run" query with a control so it is evidence,
-not an empty result. - My claim stub used the UTC date (2026-10-05) where this project dates by local time (2026-10-04); I
-caught it at close-out and amended the unpushed claim commit, which breaks the "a committed entry is never edited" habit
-in the one case where nothing had been pushed. Reduction: S901's record condensed (about 4,500 B -> about 1,300 B), so this
-file shrank, 36,625 B -> about 35,950 B; `HANDOFFS.md` (188,531 -> 190,952 B) and `CHANGELOG.md` (39,130 -> 40,209 B) grew by
-this session's entries.
-
-**Next steps (owner-ordered):** (A) The owner decides whether to push this session's 2 local commits (claim `ee54ef006` and
-the close-out). They change only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all on the `paths-ignore` list; re-run
-`git diff --name-only origin/master..HEAD` first. Expect no run (derived from the file list; not yet measured for that range).
-A push session always ends with 2 new local commits, so the picker will offer a push again (S895, S900, S902). (B) Read
-upstream's answer: `gh issue view 93 -R KJ5HST/methodology --comments` (0 comments at this Phase 0); `BACKLOG.md:286` stays
-BLOCKED on it. (C) One real fix per session, any order, all READY: row-order tests only (`BACKLOG.md:415`; which tests
-assert the raw-CSV count is still not known); rhesus comment (`:436`; lint the reworded comment at 80 columns). Kept open:
-`isAddedRecord()` (`:22`), Candidate C (`:392`), `highlightNearest` (`:456`). Docs-audit slice 2 (the `shiny_app_use/`
-images) is READY, Effort L, and needs scoping first. (D) The ledger-size lever is still open (S892; not filed, not asked):
-at the start of this close-out `HANDOFFS.md` was 188,531 B and `CHANGELOG.md` 39,130 B (262,144 B is the Read refusal).
-Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
+**Next steps (owner-ordered):** (A) The owner decides whether to push this session's 2 local commits (claim `ee5632c86` and
+the close-out). They change only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all on the `paths-ignore` list;
+re-run `git diff --name-only origin/master..HEAD` first. Expect no run (measured for this file set four times now). Every
+push session ends with 2 new local commits, so the picker offers a push again (S895, S900, S902, S903); my guess, not a
+ruling, is that the owner may prefer to let those commits go out with the next push that carries real work. (B) Read
+upstream's answer: `gh issue view 93 -R KJ5HST/methodology --comments` (0 comments at this Phase 0 and at 3A); `BACKLOG.md:286`
+stays BLOCKED on it. (C) One real fix per session, any order, all READY: row-order tests only (`BACKLOG.md:415`; which
+tests assert the raw-CSV count is still not known); rhesus comment (`:436`; lint the reworded comment at 80 columns). Kept
+open: `isAddedRecord()` (`:22`), Candidate C (`:392`), `highlightNearest` (`:456`). Docs-audit slice 2 (the
+`shiny_app_use/` images) is READY, Effort L, and needs scoping first. (D) The ledger-size lever is still open (S892; not
+filed, not asked): at the start of this close-out `HANDOFFS.md` was 191,229 B and `CHANGELOG.md` 40,772 B (262,144 B is the
+Read refusal). Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
 
 **Key files:** `.github/workflows/lint.yaml` (the `paths-ignore` list, same in all four push workflows);
 `tests/testthat/test_workflowPathsIgnore.R`; `BACKLOG.md:286`, `:415`, `:436`.
 
 **Gotchas:** a "no run" result needs a wait (60 s here) and a control query on a commit that does have runs; use the full
 SHA (`git rev-parse <sha>`) for `gh run list --commit`; date ledger entries by local time (`date`), not UTC; push by SHA
-(`git push origin <sha>:master`) so the claim commit stays local; run a wait inside `run_in_background` (a foreground
-`sleep` is blocked).
+(`git push origin <sha>:master`) so the claim commit stays local; a foreground `sleep` is blocked, and a `( cmd ) &`
+wrapper inside `run_in_background` exits at once, so wait on the job's own output (a `Monitor` until-loop on its `EXIT`
+line); `quality_ratchet.py --run` takes over a minute and its results hash changes every run (compare counts and manifest).
+
+### What Session 902 Did (condensed S903; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Pushed S901's 4 local commits (`529bb031b..7acce42cf`, a fast-forward, by SHA) at the owner's pick; all 6 changed files were
+on the 21-entry `paths-ignore` list and **no CI run started** (nothing for `7acce42cf` 60 s later, a control on `f43ff9501`
+listed 4, the newest 4 still S899's): the third confirmation. Claim `ee54ef006` (amended once, to fix its UTC date),
+close-out `6f4733c78` (pushed S903). Handoff evaluation of S901: 9/10. Self 8/10.
+**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date
+ledger entries by local time (`date`), not UTC; push by SHA so the claim commit stays local.
 
 ### What Session 901 Did (condensed S902; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Characterized the 10 red shard verify scripts (of 54: HANDOFFS 2, CHANGELOG 1, SESSION_NOTES 7) by diffing their records:
