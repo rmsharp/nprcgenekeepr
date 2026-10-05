@@ -99,82 +99,93 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 914 Did
-**Deliverable:** NEW-62, one internal helper for the seven "call the progress function if one was given" blocks (`BACKLOG.md:25`;
-owner decision S911, Decision record 12; no change for users) (IN PROGRESS)
-**Started:** 2026-10-05 16:57 CDT
-**Status:** Session claimed; phase PRE-RED. Picked at the Phase 0 picker. First step: read `DEVELOPMENT_WORKSTREAM.md`, Decision
-record 12 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:335`) and the seven sites, then ask the owner the Pre-RED questions.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (NEW-62 shipped; strict TDD; no change for users):** one internal helper, `notifyProgress(updateProgress, ...)`
+(`R/notifyProgress.R`, `@noRd`, not exported), replaces the seven `if (!is.null(updateProgress))` blocks: `R/reportGV.R:246,263,280`,
+`R/geneDrop.R:124,145`, `R/convertRelationships.R:94`, `R/groupAddAssign.R:308` (33 lines of blocks became 19 lines of calls). Picked
+at the Phase 0 picker (`BACKLOG.md`, owner decision S911, Decision record 12). Each phase gate was asked with `AskUserQuestion` and
+answered yes. At the Pre-RED gate the owner kept the `!is.null()` test and chose the name `notifyProgress`, no dot; the REFACTOR was
+the owner's choice.
 
-### What Session 913 Did
-**Deliverable, DONE (NEW-42 shipped; help text only, strict TDD):** the help pages of `getParents()` and `getOffspring()` now
-say the pedigree is the first argument, unlike `getProbandPedigree()`, `getDescendantPedigree()`, `getPedDirectRelatives()`
-and `findOffspring()`, which take the animal ids first (`BACKLOG.md:57`; owner decision S912, Decision record 13; picked at
-the Phase 0 picker). The argument order is unchanged. Each phase gate was asked with `AskUserQuestion` and answered yes; the
-REFACTOR was the owner's choice (`getOffspring()` inherits `pedSourceDf` from `getParents()`, so the sentence is written
-once).
+**What I measured (unchanged commit `824336627`, scratch files only):** the seven sites are exactly where record 12 says; a
+non-function progress argument stops with `could not find function "updateProgress"` today, so the helper's parameter keeps that
+name; per-call cost of a helper is +0.4 to +0.6 microseconds. RED (`66c9e61cf`, `tests/testthat/test_notifyProgress.R`): 14 tests,
+29 expectations; 9 tests fail (3 errors, 6 failures, 15 expectations), each for the right reason (`could not find function
+"notifyProgress"`, mock never called, progress function still called directly 8, 284, 153 and 25 times); 5 pass by design (4
+recording tests, 1 not-exported lock). GREEN (`a2a0c9bb7`): 5 `R/` files (1 new, 4 edited); 14 tests, 34 expectations pass; the 8
+existing test files that touch these functions are 120 tests, 0 failed, before and after; lint 0. REFACTOR (`3d521d0c9`, tests only):
+each repeated expectation written once, per-test expectation counts unchanged; a mutation check with the pre-change `R/` files back
+in place fails exactly the 4 delegation tests (11 expectations), as at RED. Timing, old and new code alternating in one R process:
++0.3 to +0.8% on five of six rows, +3.8% on `groupAddAssign()` with no callback inside a 0.26-0.40 s noise range.
 
-**What I measured:** `@inheritParams getParents` is in 11 R files but only 2 man pages carry `pedSourceDf` (`getParents`,
-`getOffspring`; `getDemographics` has its own), so the sentence cannot spread. All four named functions take ids first, then
-`ped`. RED (`dd5396ddc`, `tests/testthat/test_getParentsOffspringHelp.R`): 4 tests and 10 expectations fail, each printing
-the isolated `pedSourceDf` text; 4 tests pass by design (2 reader checks, 2 contract locks on the argument orders). The
-parsed R code of both files is identical before and after (`parse(keep.source = FALSE)` deparsed to a scratch file before the
-first edit). The PED_GV count is 8: the table has 43 ids, the 9 named in record 13 are all in it, 35 are closed.
+Commits: claim `824336627`, RED `66c9e61cf`, GREEN `a2a0c9bb7`, REFACTOR `3d521d0c9`, closure `a4769053c` (Closure record 15,
+`BACKLOG.md` block removed, Learning 879); the close-out commit carries receipt, notes and ledger entry.
 
-Commits: claim `5d3d8d68a`, RED `dd5396ddc`, GREEN `5b87d8819`, REFACTOR `0645d57f4`, closure `06fc3c923` (Closure record 14,
-`BACKLOG.md` item removed, Learning 878); the close-out commit carries receipt, notes and ledger entry.
+Verified at REFACTOR: full suite 371 files, 3,035 tests, 9,763 expectations, 0 failed, 0 errors, 187 skipped (5.9 min; GREEN gave the
+same numbers; against S913 that is +1 file, +14 tests, +34 expectations); plain `devtools::check()` 0 errors, 0 warnings, 0 notes (the
+benchmark flake of S913 did not recur in 2 suite runs and 1 check); `quality_ratchet.py --run` 1/1 pass, results `502e5c2d2107`,
+manifest `aa983075d6a2`, head `3d521d0c9`, tarball 3.69056e+06 B against the 5e+06 limit. **App path:** the opt-in end-to-end files
+for the two modules (4 files, 28 tests, 29 expectations, 0 failed, 0 skipped, `NPRC_RUN_E2E=true`) never press "Run Analysis" or
+"Form Groups", so they do not reach the progress calls; the module tests that do (`session$setInputs(runAnalysis = 1)`, `formGroups`,
+via `shiny::testServer`: `test_modGeneticValue.R`, `test_modBreedingGroups.R`, `test_modBreedingGroups_groupAddAssign.R`, 150 tests, 347
+expectations, 0 failed, 0 skipped) called `notifyProgress` 2,101 times with `notifyProgress` traced, 192 of them with a message. **Not
+run:** the app in a live browser (a `testServer` mock session, not a page), CI (unpushed). NEWS, `_pkgdown`, `a2interactive` not
+owed (nothing exported); no issue closed (the item names none).
 
-Verified: full suite at GREEN 370 files, 3,021 tests, 9,729 expectations, 0 failed, 0 errors, 187 skipped (7.1 min); lint 0
-(twice); spelling-list and help-example tests pass; the REFACTOR left `man/getOffspring.Rd` and `man/getParents.Rd`
-byte-identical to GREEN; both help pages rendered with `tools::Rd2txt`; `devtools::check(args = "--no-manual")` 0 warnings, 0
-notes, 1 error: `test_markerKinship.R:177` (0.110 s against 0.10) and `test_markerParentageLikelihood.R:647` (0.515 s against
-0.5), wall-clock benchmarks; re-run alone on an idle machine the first failed 1 of 3 runs and the second 0 of 3 (Learning
-760's flake; not fixed, not tracked in `BACKLOG.md`). `quality_ratchet.py --run` 1/1 pass, results `044e169aa91d`, manifest
-`aa983075d6a2`, tarball 3.68749e+06 B against the 5e+06 limit. Not run: the app (help text only), CI (unpushed). NEWS,
-`_pkgdown`, `a2interactive` not owed; no issue closed.
+**Handoff evaluation of S913: 9/10.** Helped: all 10 `BACKLOG.md` cites it gave (`:8`, `:25`, `:38`, `:57`, `:73`, `:81`, `:304`,
+`:410`, `:434`, `:453`) re-found exactly; "37 local commits" measured 37 ahead; `HANDOFFS.md` 245,569 B matched; S913's ratchet
+citation matched the results file before I ran anything; Decision record 12 listed the seven sites and the four Pre-RED questions, so
+scoping took one gate; "tally a RED with `as.data.frame(test_file(..., reporter = "silent"))`" was used as written. Missing: no timing
+recipe or large pedigree for the "time before and after" point (I used `examplePedigree`, 3,694 animals), and no note that the
+end-to-end files are opt-in and do not press the run buttons (S889 recorded the opt-in and it was archived). Wrong: nothing found.
 
-**Handoff evaluation of S912: 9/10.** Helped: its next-steps order matched `BACKLOG.md`; all 7 cites (`:8`, `:25`, `:38`,
-`:57`, `:92`, `:315`, `:421`) re-found exactly; "31 local commits" measured 31 ahead; `HANDOFFS.md` 239,775 B matched; the two
-roxygen cites `R/getParents.R:6-7` and `R/getOffspring.R:6-7` were exact; the four "ids first" names were all right; S912's
-ratchet citation matched the results file before I ran anything; Closure record 9 was the format template. Missing: the
-NEW-42 item said "help text only" but not how strict TDD applies to it (I used Learning 89's pattern, a test that reads the
-help text, plus a contract lock), and it did not say `getOffspring()` already inherits `ids` from `getParents()`, which made
-the REFACTOR possible. Wrong: nothing found.
+**Self-assessment: 8/10.** + Claimed (`824336627`) before any technical work; one deliverable; the baseline (timing and 120 tests) was
+taken at the unchanged commit; RED checked for the right reasons and `mockery::mock_args()` probed before GREEN; every recording test
+was measured, not assumed; the refactor was mutation-checked; the full suite and the plain `devtools::check()` ran on the exact
+final commit; the app-path gap was found and measured instead of claimed. - My first timing run printed 0 s for every row (a lazy
+promise; caught because 0 was implausible) and my "after" run was 14-32% faster (machine drift, so I redid it as an alternating
+comparison); my first mutation check mutated nothing (zsh does not split an unquoted `$FILES`, a gotcha already in these notes) and
+left an empty stray file, which I verified untracked and removed; my first scratch script ran outside the project root (no `renv`);
+the owner had to nudge me once for a silent stretch. Reduction: S913's record condensed (6,914 B to 1,166 B);
+`BACKLOG.md` -13 lines, -1,082 B (NEW-62 block removed); `HANDOFFS.md`, `CHANGELOG.md` and `PROJECT_LEARNINGS.md` grew by this session's
+entries, and nothing else could be removed.
 
-**Self-assessment: 8/10.** + Claimed (`5d3d8d68a`) before any technical work; one deliverable; three gates asked in plain
-words with the exact sentence and the exact verification in each option; the RED was verified for the right reason (isolated
-text printed, reader sanity tests) and tallied properly; the parsed-code baseline was saved before the first edit; the
-REFACTOR was proved with a byte-compare; the full suite ran at GREEN before the REFACTOR so its result stays attributable. -
-My first RED run used the summary reporter, which stops at 10 failures, so I needed a second run for the tally; I ran
-`devtools::check()` with `--no-manual`, not the plain command in `CLAUDE.md`; the check's one error is a benchmark flake I
-re-ran and reported but did not fix; I was nudged twice for silent tool chains. Reduction: S912's record condensed (8,047 B to 983 B); `BACKLOG.md` -11 lines, -836 B (NEW-42 block removed); `HANDOFFS.md`, `CHANGELOG.md` and
-`PROJECT_LEARNINGS.md` grew by this session's entries, and nothing else could be removed.
+**Next steps (recommended order, from the owner's "optimize the order" request; not yet ruled on):** (A) The PED-3 build
+(`BACKLOG.md:25`, READY, Effort M): Pre-RED scope gate first (the walker's name and file; whether `getLkDirectAncestors()` stops with
+the animals found or with a message), then a recording test per function at the current commit, then a circular-data test for each of
+the three that lack one, then the merge; time `getDescendantPedigree()` (`R/modPedigree.R:392`) and `trimPedigree()` the way this
+session did (alternating old and new in one process). (B) One decision session for NEW-18/19/21/26/57 and NEW-24's two leftovers
+(`:8`; four questions: thresholds NEW-21+26, relation names NEW-19, low-value NEW-18+57, NEW-24), after re-measuring the sites. (C) The
+builds that (B) decides, one capability per session. Then: (D) the dashed-link item (`:397`, DECISION NEEDED); (E) docs-audit slice 2
+(`:68`, needs scoping first, Effort L); (F) unpushed: 43 local commits after this close-out (37 at Phase 0 plus this session's six); the
+push carries `R/` changes, so all four workflows start: read CI after it; per the owner's S905 ruling it is not offered as a task; (G)
+upstream `KJ5HST/methodology#93` was open with 1 comment at Phase 0 (BLOCKED item `:291`); (H) `HANDOFFS.md` is 252,343 B after this
+close-out (the Read tool refuses at 262,144 B); trim with `methodology_trim.py --force` before it gets there. Carried: `reportGV(smallPed)`
+unfiled; the D2 dogleg observation from S910 (untested); `test_markerKinship.R:177` benchmark flake (S913's observation; it did not recur).
 
-**Next steps (owner-ordered):** (A) The PED-3 build (`BACKLOG.md:38`, READY, Effort M): the Pre-RED scope gate first (the
-walker's name and file; whether `getLkDirectAncestors()` stops with the animals found or with a message), then a recording
-test per function at the current commit, then a circular-data test for each of the three that lack one, then the merge. (B)
-The NEW-62 build (`:25`, READY, Effort S). (C) The dashed-link item (`:410`, DECISION NEEDED; Effort S for a legend row, M
-for hover text). (D) Docs-audit slice 2 (`:81`, READY but needs scoping first, Effort L). (E) PED_GV: the 5 undecided ids
-(NEW-18/19/21/26/57) at `:8`. (F) Unpushed: 37 local commits after this close-out (31 at Phase 0 plus this session's six);
-the push carries `R/` and vignette changes, so all four workflows start: read CI after it; per the owner's S905 ruling it is
-not offered as a task. (G) Upstream `KJ5HST/methodology#93` was open with 1 comment at Phase 0; the BLOCKED item is
-`BACKLOG.md:304`. (H) `HANDOFFS.md` is 245,569 B after this close-out (the Read tool refuses at 262,144 B); trim with
-`methodology_trim.py --force` before it gets there. (I) Observation: `test_markerKinship.R:177` limits a median to 0.10 s and
-failed 1 of 3 isolated runs on an idle machine; whether to file an item is the owner's call. Carried: `reportGV(smallPed)`
-unfiled; the D2 dogleg observation from S910 (untested).
+**Key files:** `R/notifyProgress.R` (the helper), `R/geneDrop.R:124,145`, `R/reportGV.R:246,263,280`, `R/convertRelationships.R:94`,
+`R/groupAddAssign.R:308` (the calls), `tests/testthat/test_notifyProgress.R` (helper, recording and delegation tests),
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:459` (Closure record 15), `PROJECT_LEARNINGS.md` Learning 879; `BACKLOG.md` cites after this
+session's -13 lines: `:8` (PED_GV), `:25` (PED-3), `:44` (`getAncestors`), `:60` (3.0.0), `:68` (docs audit), `:291` (upstream-blocked),
+`:397` (dashed links), `:421` (outreach), `:440` (paper). The timing scripts (`timing.R`, `ab_timing.R`) were scratch and are not in the repo.
 
-**Key files:** `R/getParents.R:6-10` (the sentence), `R/getOffspring.R:6-8` (inherits it),
-`tests/testthat/test_getParentsOffspringHelp.R` (`argumentHelpText()` reads one `\item` from `man/<fn>.Rd` with
-`tools::parse_Rd`), `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (Closure record 14), `PROJECT_LEARNINGS.md` Learning 878;
-`BACKLOG.md` cites after this session's -11 lines: `:8`, `:25`, `:38`, `:57` (`getAncestors`), `:73` (3.0.0), `:81` (docs
-audit), `:304` (upstream-blocked), `:410` (dashed links), `:434` (outreach), `:453` (paper).
+**Gotchas:** `mockery::stub()` replaces a function only in the scope of the test that calls it, so a wrapper defined at file top level
+must take the function as an argument; `mockery::mock_args()` keeps names and function identity; a helper whose parameter is named like
+the argument keeps R's `could not find function "updateProgress"` text; `system.time(expr)` inside `vapply()` runs a lazy promise once, so
+time a function; compare old and new alternating in one R process, not across runs minutes apart; print the number of files a mutation
+check mutated before reading its result, and quote or list shell words in zsh; run scratch `Rscript` from the project root; the
+`test-e2e-*` files are opt-in (`NPRC_RUN_E2E=true`) and the four for Genetic Value and Breeding Groups do not press the run buttons;
+adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
 
-**Gotchas:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it); tally a RED with
-`as.data.frame(test_file(..., reporter = "silent"))`, since the summary reporter stops at 10 failures; a background
-`devtools::check(quiet = TRUE)` prints nothing until it ends, and its output holds shiny stack traces from app tests that
-pass; grep `man/*.Rd`, not `R/`, to see who really inherits an argument; adding or removing a BACKLOG block shifts every
-later cite, so re-grep; rerun the two benchmark tests alone before calling a regression; take `wc -c` after the last edit
-(Learning 871).
+### What Session 913 Did (condensed S914; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+NEW-42 shipped (help text only, strict TDD): the help pages of `getParents()` and `getOffspring()` now say the pedigree is the first
+argument, unlike `getProbandPedigree()`, `getDescendantPedigree()`, `getPedDirectRelatives()` and `findOffspring()`; the argument order
+is unchanged and the parsed R code of both files is identical. `getOffspring()` inherits `pedSourceDf` from `getParents()` (the owner's
+REFACTOR choice). Claim `5d3d8d68a`, RED `dd5396ddc`, GREEN `5b87d8819`, REFACTOR `0645d57f4`, closure `06fc3c923`, close-out
+`0277ca8a7` (all still local at S914's Phase 0). Handoff evaluation of S912: 9/10. Self 8/10.
+**Gotchas kept:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it; a `@noRd` helper needs no run); tally a RED
+with `as.data.frame(test_file(..., reporter = "silent"))`; grep `man/*.Rd`, not `R/`, to see who really inherits an argument; adding or
+removing a BACKLOG block shifts every later cite, so re-grep; rerun the two benchmark tests alone before calling a regression; take
+`wc -c` after the last edit (Learning 871).
 
 ### What Session 912 Did (condensed S913; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Recorded the owner's two decisions on the walk helpers (Decision record 13): PED-3, merge the four "collect parents or
