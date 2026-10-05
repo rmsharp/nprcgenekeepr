@@ -99,93 +99,84 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 913 Did
-**Deliverable:** NEW-42, one help-page sentence saying `getParents()` and `getOffspring()` take the pedigree first (`BACKLOG.md:57`;
-owner decision S912, Decision record 13; help text only) (IN PROGRESS)
-**Started:** 2026-10-05 15:58 CDT
-**Status:** Session claimed; phase PRE-RED. Picked at the Phase 0 picker. First step: read `DEVELOPMENT_WORKSTREAM.md` and the two
-roxygen blocks (`R/getParents.R:6-7`, `R/getOffspring.R:6-7`), then settle with the owner how a help-text-only change fits strict TDD.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (NEW-42 shipped; help text only, strict TDD):** the help pages of `getParents()` and `getOffspring()` now
+say the pedigree is the first argument, unlike `getProbandPedigree()`, `getDescendantPedigree()`, `getPedDirectRelatives()`
+and `findOffspring()`, which take the animal ids first (`BACKLOG.md:57`; owner decision S912, Decision record 13; picked at
+the Phase 0 picker). The argument order is unchanged. Each phase gate was asked with `AskUserQuestion` and answered yes; the
+REFACTOR was the owner's choice (`getOffspring()` inherits `pedSourceDf` from `getParents()`, so the sentence is written
+once).
 
-### What Session 912 Did
-**Deliverable, DONE (two owner decisions recorded; documentation only, no `R/` change):** the walk helpers, PED-3 and NEW-42
-(`BACKLOG.md:8`; picked at the Phase 0 picker, the group chosen at a scope question over the constants and HTML builders).
-**PED-3:** "Merge all four" hand-written "collect parents or offspring until nothing new turns up" loops into one internal
-function (over "fix only the LabKey function" and "leave all four, close it"). **NEW-42:** "Leave as is, document it" (over
-"ids first, in the 3.0.0 release"): `getParents()` and `getOffspring()` keep the pedigree-first order and their help pages
-will say so. Recorded as Decision record 13 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:379`); nothing is built. Two new
-READY items: `BACKLOG.md:38` (PED-3 build, Effort M, strict TDD) and `:57` (NEW-42 help sentence, Effort S, help text only).
+**What I measured:** `@inheritParams getParents` is in 11 R files but only 2 man pages carry `pedSourceDf` (`getParents`,
+`getOffspring`; `getDemographics` has its own), so the sentence cannot spread. All four named functions take ids first, then
+`ped`. RED (`dd5396ddc`, `tests/testthat/test_getParentsOffspringHelp.R`): 4 tests and 10 expectations fail, each printing
+the isolated `pedSourceDf` text; 4 tests pass by design (2 reader checks, 2 contract locks on the argument orders). The
+parsed R code of both files is identical before and after (`parse(keep.source = FALSE)` deparsed to a scratch file before the
+first edit). The PED_GV count is 8: the table has 43 ids, the 9 named in record 13 are all in it, 35 are closed.
 
-**What I measured** (today's code, one bounded R probe, greps of `R/` and `tests/`): the PED-3 row names 2 loops and there
-are 4, 42 lines in all (`getProbandPedigree.R:26-37`, `getDescendantPedigree.R:27-34`, `getPedDirectRelatives.R:54-65`,
-`getLkDirectAncestors.R:69-78`). On circular data (A's sire B, B's sire A) three return the 2 animals in under 0.1 s and
-`getLkDirectAncestors()` (exported; no caller in `R/` or the app) never stops (it ran to my 5 s limit); only
-`test_getDescendantPedigree.R:57` tests circular data, so the merge is also a fix. Of the 18 exported functions that take a
-pedigree and animal ids, 11 put the ids first and 7 the pedigree first; a swapped call to `getParents()` or `getOffspring()`
-stops with "$ operator is invalid for atomic vectors". I also counted the other group's sites for the scope question (kept
-in record 13). Nine PED_GV ids stay open: 5 undecided (NEW-18/19/21/26/57), 3 decided and waiting on work (NEW-62, PED-3,
-NEW-42) and NEW-24 (issue #123).
+Commits: claim `5d3d8d68a`, RED `dd5396ddc`, GREEN `5b87d8819`, REFACTOR `0645d57f4`, closure `06fc3c923` (Closure record 14,
+`BACKLOG.md` item removed, Learning 878); the close-out commit carries receipt, notes and ledger entry.
 
-Commits: claim `61e143bce`; decision record and `BACKLOG.md` `6c64a3700`; the close-out commit carries receipt, notes, ledger
-entry and Learning 877.
+Verified: full suite at GREEN 370 files, 3,021 tests, 9,729 expectations, 0 failed, 0 errors, 187 skipped (7.1 min); lint 0
+(twice); spelling-list and help-example tests pass; the REFACTOR left `man/getOffspring.Rd` and `man/getParents.Rd`
+byte-identical to GREEN; both help pages rendered with `tools::Rd2txt`; `devtools::check(args = "--no-manual")` 0 warnings, 0
+notes, 1 error: `test_markerKinship.R:177` (0.110 s against 0.10) and `test_markerParentageLikelihood.R:647` (0.515 s against
+0.5), wall-clock benchmarks; re-run alone on an idle machine the first failed 1 of 3 runs and the second 0 of 3 (Learning
+760's flake; not fixed, not tracked in `BACKLOG.md`). `quality_ratchet.py --run` 1/1 pass, results `044e169aa91d`, manifest
+`aa983075d6a2`, tarball 3.68749e+06 B against the 5e+06 limit. Not run: the app (help text only), CI (unpushed). NEWS,
+`_pkgdown`, `a2interactive` not owed; no issue closed.
 
-Verified: `quality_ratchet.py --run` 1/1 pass, results `097417a245af`, manifest `aa983075d6a2`, tarball 3.68601e+06 B against
-the 5e+06 limit. Grepped `tests/`, `R/` and `.github/` for the names of the files I changed: every match is a comment, a
-message string, or `test_workflowPathsIgnore.R` (workflow YAML and a list of paths), so no test was run. Not run: full suite,
-`devtools::check()`, lint (no `.R` file changed), CI (unpushed), the app (docs only). NEWS and `_pkgdown` not owed; no issue
-closed (#123 is NEW-24's and stays open).
+**Handoff evaluation of S912: 9/10.** Helped: its next-steps order matched `BACKLOG.md`; all 7 cites (`:8`, `:25`, `:38`,
+`:57`, `:92`, `:315`, `:421`) re-found exactly; "31 local commits" measured 31 ahead; `HANDOFFS.md` 239,775 B matched; the two
+roxygen cites `R/getParents.R:6-7` and `R/getOffspring.R:6-7` were exact; the four "ids first" names were all right; S912's
+ratchet citation matched the results file before I ran anything; Closure record 9 was the format template. Missing: the
+NEW-42 item said "help text only" but not how strict TDD applies to it (I used Learning 89's pattern, a test that reads the
+help text, plus a contract lock), and it did not say `getOffspring()` already inherits `ids` from `getParents()`, which made
+the REFACTOR possible. Wrong: nothing found.
 
-**Handoff evaluation of S911: 9/10.** Helped: its next-steps list matched `BACKLOG.md` and ordered the picker; all 7 cites
-(`BACKLOG.md:8`, `:23`, `:60`, `:283`, `:389`, `:413`, `:432`) re-found exactly before my edit; "28 local commits" measured 28
-ahead; `HANDOFFS.md` 233,063 B matched; upstream #93 open with 1 comment (re-checked with `gh api`); Decision record 12 was
-the format template and its gotcha (grep the idiom across `R/`) held again, 2 loops became 4. Missing: it could not say the
-two unmeasured groups hid anything (the walk helpers hid a hang); the ratchet citation sits inside the receipt's
-`runtime_smoke` field, not a named one, so Phase 0 step 6's check is a text search (it matched: results `c4dda28d3c7c`,
-manifest `aa983075d6a2`, before I ran anything). Wrong: nothing found.
-
-**Self-assessment: 8/10.** + Claimed (`61e143bce`) before any technical work; measured before asking and put tested facts
-beside each question (the hang by probe, the swap by test, the argument-order count by script); both question rounds were
-answered on the first try (plain option text, exported names only, recommendation first); one deliverable, no `R/` change; two
-commits of 2 and 3 files. - My scope-question option said "the 11 relationship names listed in 3 files"; measured afterwards,
-all 11 are in 2 files and 3 are also in a third (corrected in record 13 and Learning 877). My chat summary said the four loops
-are "10-15 lines each" before I counted (8 to 12; 42 in all). Neither changed the owner's pick. I read all five sites of the
-second group for one count that I then misworded. Reduction: S911's record condensed (6,906 B to 1035 B);
-`BACKLOG.md` +32 lines, +2,586 B (two new items, nothing completed to remove); `HANDOFFS.md`, `CHANGELOG.md` and
+**Self-assessment: 8/10.** + Claimed (`5d3d8d68a`) before any technical work; one deliverable; three gates asked in plain
+words with the exact sentence and the exact verification in each option; the RED was verified for the right reason (isolated
+text printed, reader sanity tests) and tallied properly; the parsed-code baseline was saved before the first edit; the
+REFACTOR was proved with a byte-compare; the full suite ran at GREEN before the REFACTOR so its result stays attributable. -
+My first RED run used the summary reporter, which stops at 10 failures, so I needed a second run for the tally; I ran
+`devtools::check()` with `--no-manual`, not the plain command in `CLAUDE.md`; the check's one error is a benchmark flake I
+re-ran and reported but did not fix; I was nudged twice for silent tool chains. Reduction: S912's record condensed (8,047 B to 983 B); `BACKLOG.md` -11 lines, -836 B (NEW-42 block removed); `HANDOFFS.md`, `CHANGELOG.md` and
 `PROJECT_LEARNINGS.md` grew by this session's entries, and nothing else could be removed.
 
 **Next steps (owner-ordered):** (A) The PED-3 build (`BACKLOG.md:38`, READY, Effort M): the Pre-RED scope gate first (the
 walker's name and file; whether `getLkDirectAncestors()` stops with the animals found or with a message), then a recording
-test per function at the current commit (rows, row order including the LabKey generation order, `NA` ids), then a
-circular-data test for each of the three that lack one, then the merge under strict TDD. (B) The NEW-62 build (`:25`, READY,
-Effort S). (C) The NEW-42 help sentence (`:57`, READY, Effort S, help text only). (D) The dashed-link item (`:421`, DECISION
-NEEDED; Effort S for a legend row, M for hover text). (E) Docs-audit slice 2 (`:92`, READY but needs scoping first, Effort
-L). (F) PED_GV: the 5 undecided ids are the constants and HTML builders (NEW-18/19/21/26/57; their sites are in record 13),
-at `:8`. (G) Unpushed: 31 local commits after this close-out (S904-S911 as in their records; S912 claim `61e143bce`,
-decision `6c64a3700`, close-out); the push carries `R/` and vignette changes, so all four workflows start and the
-R-CMD-check matrix has not seen S908's helper or S909's vignette edit: read CI after it; per the owner's S905 ruling it is
-not offered as a task. (H) Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked S912); the BLOCKED item is
-`BACKLOG.md:315`. (I) `HANDOFFS.md` is 239,775 B after this close-out's edits (233,063 B after S911's; the Read tool refuses
-at 262,144 B, so about 22 KB of room; roughly three sessions at this session's 6.7 KB, my estimate; trim with
-`methodology_trim.py --force` before it gets there). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from
-S910 (untested).
+test per function at the current commit, then a circular-data test for each of the three that lack one, then the merge. (B)
+The NEW-62 build (`:25`, READY, Effort S). (C) The dashed-link item (`:410`, DECISION NEEDED; Effort S for a legend row, M
+for hover text). (D) Docs-audit slice 2 (`:81`, READY but needs scoping first, Effort L). (E) PED_GV: the 5 undecided ids
+(NEW-18/19/21/26/57) at `:8`. (F) Unpushed: 37 local commits after this close-out (31 at Phase 0 plus this session's six);
+the push carries `R/` and vignette changes, so all four workflows start: read CI after it; per the owner's S905 ruling it is
+not offered as a task. (G) Upstream `KJ5HST/methodology#93` was open with 1 comment at Phase 0; the BLOCKED item is
+`BACKLOG.md:304`. (H) `HANDOFFS.md` is 245,569 B after this close-out (the Read tool refuses at 262,144 B); trim with
+`methodology_trim.py --force` before it gets there. (I) Observation: `test_markerKinship.R:177` limits a median to 0.10 s and
+failed 1 of 3 isolated runs on an idle machine; whether to file an item is the owner's call. Carried: `reportGV(smallPed)`
+unfiled; the D2 dogleg observation from S910 (untested).
 
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:379` (Decision record 13: the 4-loop table, the
-argument-order count; probe P12 at the end of the file); `R/getProbandPedigree.R:26-37`, `R/getDescendantPedigree.R:27-34`,
-`R/getPedDirectRelatives.R:54-65`, `R/getLkDirectAncestors.R:69-78` (the loops); `R/getParents.R:6-7` and
-`R/getOffspring.R:6-7` (the help text to extend); `tests/testthat/test_getDescendantPedigree.R:57` (the only circular-data
-test), `test_getLkDirectAncestors.R:36-51` (the `mockery` stub pattern); `PROJECT_LEARNINGS.md` Learning 877; `BACKLOG.md`
-cites after this session's +32 lines: `:8`, `:25`, `:38`, `:57`, `:68` (`getAncestors`), `:92` (docs audit), `:315`
-(upstream-blocked), `:421` (dashed links), `:445` (outreach), `:464` (paper).
+**Key files:** `R/getParents.R:6-10` (the sentence), `R/getOffspring.R:6-8` (inherits it),
+`tests/testthat/test_getParentsOffspringHelp.R` (`argumentHelpText()` reads one `\item` from `man/<fn>.Rd` with
+`tools::parse_Rd`), `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (Closure record 14), `PROJECT_LEARNINGS.md` Learning 878;
+`BACKLOG.md` cites after this session's -11 lines: `:8`, `:25`, `:38`, `:57` (`getAncestors`), `:73` (3.0.0), `:81` (docs
+audit), `:304` (upstream-blocked), `:410` (dashed links), `:434` (outreach), `:453` (paper).
 
-**Gotchas:** run a never-stops probe only under `setTimeLimit(elapsed = 5, transient = TRUE)` (the LabKey loop grows a data
-frame every pass); `getLkDirectAncestors()` returns rows generation by generation with the first occurrence of an id kept,
-the other three return rows in pedigree order, so a shared walker must hand back ids and let each caller keep its own row
-assembly; stub the LabKey function with `mockery::stub(f, "getDemographics", function(...) table)` (`getSiteInfo()` needs no
-stub, it only warns); the argument-order survey matched by argument names (`ped`, `pedSourceDf`, `pedigree`, `pedDf` against
-`ids`, `id`, `probands` and similar) and left out the Shiny module servers, whose `id` is the module id; zsh does not
-word-split an unquoted `$spec` (`set -- $spec` fails), so write a shell function; `devtools::document()` rewrites
-`man/nprcgenekeepr-package.Rd` (revert it); adding or removing a BACKLOG block shifts every later cite, so re-grep; state a
-count in option text the way it was measured and re-run it first (Learning 877); take `wc -c` after the last edit
+**Gotchas:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it); tally a RED with
+`as.data.frame(test_file(..., reporter = "silent"))`, since the summary reporter stops at 10 failures; a background
+`devtools::check(quiet = TRUE)` prints nothing until it ends, and its output holds shiny stack traces from app tests that
+pass; grep `man/*.Rd`, not `R/`, to see who really inherits an argument; adding or removing a BACKLOG block shifts every
+later cite, so re-grep; rerun the two benchmark tests alone before calling a regression; take `wc -c` after the last edit
 (Learning 871).
+
+### What Session 912 Did (condensed S913; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Recorded the owner's two decisions on the walk helpers (Decision record 13): PED-3, merge the four "collect parents or
+offspring until nothing new turns up" loops into one internal function; NEW-42, leave the argument order of `getParents()`
+and `getOffspring()` and document it. Docs only. Measured: 4 loops, not 2 (42 lines); `getLkDirectAncestors()` never stops on
+circular data; 11 of 18 exported functions take ids first. Claim `61e143bce`, decision `6c64a3700`, close-out `81cd4133e`
+(all still local). Handoff evaluation of S911: 9/10. Self 8/10.
+**Gotchas kept:** run a never-stops probe only under `setTimeLimit(elapsed = 5, transient = TRUE)`; state a count in option
+text the way it was measured and re-run it first (Learning 877); `getLkDirectAncestors()` returns rows generation by
+generation, the other three in pedigree order; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 911 Did (condensed S912; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Recorded the owner's decision on NEW-62, the seven repeated "call the progress function if one was given" blocks: one shared
