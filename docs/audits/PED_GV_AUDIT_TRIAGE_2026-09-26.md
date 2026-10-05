@@ -376,6 +376,76 @@ Open after this decision: **9 ids** (no id closed; NEW-62 is decided and waits o
 NEW-24 (issue #123, tracked), NEW-62 (decided) and 7 owner decisions, the walk helpers (PED-3, NEW-42; exported) and constants
 and HTML builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
 
+### Decision record 13 (owner decision 2026-10-05, S912) -- the walk helpers
+
+The owner took the walk helpers at the Phase 0 scope question (the other group was the constants and HTML builders) and chose:
+
+- **PED-3:** "Merge all four" (over "Fix only the LabKey function" and "Leave all four, close it").
+- **NEW-42:** "Leave as is, document it" (over "Ids first, in the 3.0.0 release").
+
+S912 wrote it down and changed no code. The table above stays the frozen S781 reading.
+
+| id | decided |
+|---|---|
+| PED-3 | DECIDED, STAYS OPEN until it ships: one internal (not exported) function replaces the four hand-written "collect parents or offspring until nothing new turns up" loops; no change for users on normal data; `getLkDirectAncestors()` will stop on circular data (today it never does). Work not started; strict TDD, with the owner's approval of the scope at its own gate. New READY item in `BACKLOG.md`. |
+| NEW-42 | DECIDED, STAYS OPEN until it ships: the argument order of `getParents()` and `getOffspring()` (pedigree first) stays, and the help page of each says so. No API change. A small READY item in `BACKLOG.md` (help text only). |
+
+What S912 measured, for whoever picks up the work (by reading today's code, one bounded R probe (P12 below) and greps of `R/`
+and `tests/`; no test suite was run):
+
+- **The PED-3 row names 2 loops; there are 4** (42 lines in all):
+
+  | Site | Walks | Lines |
+  |---|---|---|
+  | `getProbandPedigree.R:26-37` | up (ancestors), with its own inline parent lookup | 12 |
+  | `getDescendantPedigree.R:27-34` | down (descendants), through `getOffspring()` | 8 |
+  | `getPedDirectRelatives.R:54-65` | both ways, through `getParents()` and `getOffspring()` | 12 |
+  | `getLkDirectAncestors.R:69-78` | up, over the LabKey demographics table, one generation at a time | 10 |
+
+  The fourth is the odd one out. It widens only the newest generation (it passes the last result back in), not the whole set
+  found so far, and it has no "nothing new was added" test. It also returns rows generation by generation with the first
+  occurrence of an id kept, while the other three return rows in the pedigree's own order.
+- **Circular data** (P12: A's sire is B and B's sire is A): `getProbandPedigree()`, `getDescendantPedigree()` and
+  `getPedDirectRelatives()` each returned the 2 animals in under 0.1 s; `getLkDirectAncestors()` ran until the probe's 5-second
+  limit stopped it. Only `tests/testthat/test_getDescendantPedigree.R:57` tests circular data; the other three have no such
+  test. `getLkDirectAncestors()` is exported but has no caller in `R/` or the app; its tests stub `getDemographics()` with
+  `mockery` (`test_getLkDirectAncestors.R:36-51`).
+- **Who calls the walkers:** the app calls `getDescendantPedigree()` (`R/modPedigree.R:392`); `trimPedigree()` calls
+  `getProbandPedigree()` (`R/trimPedigree.R:60`); `getLkDirectRelatives.R:39` and `getFileDirectRelatives.R:52` call
+  `getPedDirectRelatives()`; `getParents()` is also called at `getLkDirectAncestors.R:70` and `getOffspring()` at
+  `getDescendantPedigree.R:28`. All five functions the NEW-42 row names are exported, as are `getDescendantPedigree()` and
+  `getLkDirectAncestors()`.
+- **NEW-42, the argument-order count:** of the 18 exported functions that take both a pedigree and animal ids (matched by
+  argument name; the Shiny module servers excluded, because their `id` is the module id), 11 put the ids first
+  (`addSexAndAgeToGroup`, `calculateSexRatio`, `findOffspring`, `getDescendantPedigree`, `getPedDirectRelatives`,
+  `getPotentialSires`, `getProbandPedigree`, `hasBothParents`, `offspringCounts`, `removePotentialSires`, `trimPedigree`) and
+  7 put the pedigree first (`convertRelationships`, `countFirstOrder`, `getOffspring`, `getParents`,
+  `markerParentageLikelihood`, `markerRealizedRelatednessVariance`, `setPopulation`). Reordering `getParents()` and
+  `getOffspring()` would have lined up 2 of the 7; the other 5 would have stayed. A call in the swapped order stops with "$
+  operator is invalid for atomic vectors" from both (tested), so a script passing them by position would have failed loudly, not
+  silently. Callers in `R/`: 2 each; tests: `test_getParents.R` (4 mentions), `test_getOffspring.R` (4) and
+  `test_getDescendantPedigree.R` (1).
+- **Points for PED-3's pickup scope gate:** (a) the walker's name and file; (b) when `getLkDirectAncestors()` stops on circular
+  data, whether it returns the animals found, as the other three do, or stops with a message; (c) the exported signatures stay
+  as they are; (d) the first RED is a recording test per function (rows and row order of each, including the LabKey
+  generation order and first-occurrence de-duplication, and today's handling of `NA` ids), then a circular-data test for each
+  of the three that lack one, which is RED for the LabKey function; (e) time `getDescendantPedigree()` and `trimPedigree()`
+  before and after on a large pedigree (not timed here).
+- **Measured for the remaining group, no decision taken** (these backed the scope question; today's code): the 11
+  relationship-class names are all in `makeRelationClassesTable.R:35` and `convertRelationships.R`, and 3 of them
+  (`Parent-Offspring`, `Full-Siblings`, `Half-Siblings`) are also in `markerRealizedRelatednessVariance.R` (S912's option text
+  said "listed in 3 files", which overstated it); the `0.015625` default is typed in 3 places (`filterThreshold.R:28`,
+  `getKinshipWithMaleStatus.R:40`, `groupAddAssign.R:179`); the `0.5` and `0.3` cut-offs are inside one function
+  (`getProportionLow.R`, internal, one caller at `getGeneticDiversityStats.R:95`); `digits = 4L` is once in
+  `makeGeneticSummaryTable.R:57` (the `DT::formatRound(..., digits = 4L)` at `modMarkerGenetics.R:1192` is a different
+  formatter); `makeFounderStatsTable.R` now has 6 "if present, else default" blocks (the row says five; `fgSE` was added by
+  issue #82 Slice 3); `"lowVal"` and `"noParentage"` are compared by text at `rankSubjects.R:51,53,59` and listed again at
+  `orderReport.R:131,139`.
+
+Open after this decision: **9 ids** (no id closed; PED-3 and NEW-42 are decided and wait on the work, as NEW-62, NEW-28 and
+NEW-50 did): NEW-24 (issue #123, tracked), NEW-62, PED-3 and NEW-42 (decided), and the 5 undecided constants and HTML builders
+ids (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
@@ -464,6 +534,12 @@ checkRequiredCols(c("id","sire","dam","sex"), TRUE)         # a character(1)
 #     of rows: 704, 0". without gen: "result would be too long a vector". without sex: "nprcgenekeepr: required column(s)
 #     missing in reportGV(ped): sex." without birth, exit, age or population: runs.
 #     smallPed unmodified, reportGV(smallPed, guIter = 10L): Error: sire and dam must have had alleles assigned: logic error
+# P12 PED-3 / NEW-42 (S912): circular data, each call run under setTimeLimit(elapsed = 5)
+cyc <- data.frame(id = c("A","B","C"), sire = c("B","A",NA), dam = NA_character_, stringsAsFactors = FALSE)
+getProbandPedigree("A", cyc)$id; getDescendantPedigree("A", cyc)$id; getPedDirectRelatives("A", cyc)$id   # "A" "B" each, under 0.1 s
+# getLkDirectAncestors(ids = "A") with mockery::stub(f, "getDemographics", function(...) <the 7-column table of cyc>)
+#     -> no return: "reached elapsed time limit" at 5.0 s
+getParents("C", cyc); getOffspring("C", cyc)    # swapped order: Error: $ operator is invalid for atomic vectors (both)
 ```
 
 ## Verification

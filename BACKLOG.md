@@ -9,14 +9,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (DECISION NEEDED, Effort S each; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code; its
       table is the plan, so read it first. Its four fix slices all shipped (F1 S782, F4 S783,
-      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-12 (S818-S911) hold
+      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-13 (S818-S912) hold
       the 34 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
       sessions. **9 ids remain** (S896 recomputed this from the report's table: 43 ids, 34 closed,
       none counted twice).
-      **Open, 7 owner decisions plus NEW-62 and NEW-24:** (a) the overhaul roots,
-      none urgent -- the walk helpers (PED-3, NEW-42; all exported, so an API change) and the
-      constants and HTML builders (NEW-18/19/21/26/57); NEW-62 (the `updateProgress` null checks) is
-      decided (record 12, S911) and waits on the next item; (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
+      **Open, 5 owner decisions, 3 decided ids waiting on work, and NEW-24:** (a) the overhaul
+      roots, none urgent -- only the constants and HTML builders (NEW-18/19/21/26/57) are still
+      undecided (S912 measured their sites, kept in record 13); NEW-62 (the `updateProgress` null
+      checks; record 12, S911), PED-3 (merge the four walk loops) and NEW-42 (leave the walk
+      helpers' argument order and document it; both record 13, S912) are decided and wait on the
+      next three items; (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
       **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
       "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
 
@@ -32,6 +34,36 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Pre-RED gate:** keep the `!is.null()` test or move to `is.function()` (a small behaviour
       change); the helper's name and file; time the three per-item-loop sites before and after on
       a large pedigree (not timed yet).
+
+- [ ] **One internal walker for the four "collect parents or offspring until nothing new turns
+      up" loops (PED-3; READY, Effort M; owner decision S912, Decision record 13 of the PED_GV
+      triage report; strict TDD)** -- replaces the hand-written loops in
+      `R/getProbandPedigree.R:26-37` (ancestors), `R/getDescendantPedigree.R:27-34`
+      (descendants), `R/getPedDirectRelatives.R:54-65` (both ways) and
+      `R/getLkDirectAncestors.R:69-78` (ancestors from the LabKey table) with one unexported
+      function; no change for users on normal data. **A side effect the owner chose on purpose:**
+      `getLkDirectAncestors()` (exported, no caller in `R/` or the app) never stops on circular
+      data today (measured S912: the other three return the 2 animals in under 0.1 s, it ran to
+      a 5-second limit) and will stop. **First RED:** a recording test per function at the
+      current commit (rows and row order, including `getLkDirectAncestors()`'s generation order
+      and first-occurrence de-duplication, and today's handling of `NA` ids); only
+      `test_getDescendantPedigree.R:57` tests circular data, so add one for each of the other
+      three (RED for the LabKey one). **For its Pre-RED gate:** the walker's name and file;
+      whether the LabKey function stops with the animals found (as the other three do) or with
+      a message; keep all four exported signatures; time `getDescendantPedigree()` (the app,
+      `R/modPedigree.R:392`) and `trimPedigree()` before and after on a large pedigree (not
+      timed yet).
+
+- [ ] **Say in the help pages that `getParents()` and `getOffspring()` take the pedigree first
+      (NEW-42; READY, Effort S; owner decision S912, Decision record 13 of the PED_GV triage
+      report)** -- the owner kept the argument order (both are exported, and a swapped call
+      fails loudly but would still break scripts that pass them by position) and chose to
+      document it: one sentence in the roxygen `@param pedSourceDf` of `R/getParents.R:6-7` and
+      `R/getOffspring.R:6-7` saying the pedigree comes first, unlike `getProbandPedigree()`,
+      `getDescendantPedigree()`, `getPedDirectRelatives()` and `findOffspring()`, which take the
+      ids first; then `devtools::document()` (revert its unrelated `man/nprcgenekeepr-package.Rd`
+      change). Help text only: confirm the parsed code is identical; no NEWS entry owed. Ships
+      NEW-42.
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
