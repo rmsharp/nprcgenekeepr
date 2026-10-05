@@ -189,6 +189,28 @@ test_that("getPedDirectRelatives puts the placeholder records last and renumbers
   expect_identical(rownames(result), c("1", "2", "3", "4"))
 })
 
+test_that("getPedDirectRelatives lists the placeholder records farthest generation first", {
+  ## X1 (A's sire) is two generations above C and P (C's dam) one, and neither
+  ## has a row. The animals are found as C, then A and P, then X1, and the
+  ## placeholders come out in the reverse of that: X1, then P.
+  pedGap <- data.frame(
+    id = c("A", "C"), sire = c("X1", "A"), dam = c(NA, "P"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    getPedDirectRelatives(ids = "C", ped = pedGap, unrelatedParents = TRUE)$id,
+    c("A", "C", "X1", "P")
+  )
+  ## Within one generation the placeholders keep the sire, then dam, order.
+  pedPair <- data.frame(
+    id = "C", sire = "P1", dam = "P2", stringsAsFactors = FALSE
+  )
+  expect_identical(
+    getPedDirectRelatives(ids = "C", ped = pedPair, unrelatedParents = TRUE)$id,
+    c("C", "P1", "P2")
+  )
+})
+
 test_that("getPedDirectRelatives copes with absent, repeated and missing ids", {
   expect_identical(nrow(getPedDirectRelatives(ids = "ZZZ", ped = pedLacy)), 0L)
   expect_identical(
