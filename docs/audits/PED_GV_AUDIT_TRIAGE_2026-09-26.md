@@ -446,6 +446,16 @@ Open after this decision: **9 ids** (no id closed; PED-3 and NEW-42 are decided 
 NEW-50 did): NEW-24 (issue #123, tracked), NEW-62, PED-3 and NEW-42 (decided), and the 5 undecided constants and HTML builders
 ids (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
 
+### Closure record 14 (S913, 2026-10-05) -- decision record 13's NEW-42 shipped
+
+| id | closed because |
+|---|---|
+| NEW-42 | SHIPPED: the help pages of `getParents()` and `getOffspring()` say the pedigree is the first argument, unlike `getProbandPedigree()`, `getDescendantPedigree()`, `getPedDirectRelatives()` and `findOffspring()`, which take the animal ids first. The sentence is in `@param pedSourceDf` of `R/getParents.R:6-10`; `getOffspring()` already inherited `ids` from `getParents()` and now inherits `pedSourceDf` too, so it is written once and both man pages carry it. The argument order is unchanged (record 13) and the parsed R code of both files is identical to before. Pinned by `test_getParentsOffspringHelp.R` (RED `dd5396ddc`; GREEN `5b87d8819`; REFACTOR `0645d57f4`): the `pedSourceDf` entry of each man page says "first" and names the four functions, and the argument order of all six functions is what the sentence says (green before the edit; a lock against a later reorder). |
+
+Open after this closure: **8 ids** (9 minus NEW-42; recounted S913: the table has 43 ids and the 9 named in record 13 are all
+among them, so 35 are closed): NEW-24 (issue #123, tracked), NEW-62 and PED-3 (decided, wait on the work), and the 5 undecided
+constants and HTML builders ids (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
