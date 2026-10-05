@@ -564,7 +564,16 @@ difference: __highlightNearest__'s hover-highlight _degree_ is raised from
 neighbor is often one of the invisible waypoint nodes above rather than a
 visible mating dot, so `degree = 1` (correct for _direct_) can highlight
 nothing visible at all on hover; `6` restores visible feedback for the
-common case. The live Shiny app's Diagram tab applies this same
+common case. It is a deliberate compromise, not a complete fix, because
+the invisible waypoints count as steps: on the bundled 375-animal rhesus
+pedigree, hovering an animal lights everything that the _direct_ style's
+`degree = 1` lights for all but 2 animals, whose parents' mating dot is
+just out of reach (their family's connectors were rerouted around crowded
+lines, which adds waypoints). One mating pair with nine or more full
+siblings reaches the same limit; the widest pair in the bundled pedigrees
+has four. A larger `degree` would cover these cases, but it highlights
+more of the diagram on every hover, so the simpler, tighter hover was
+kept. The live Shiny app's Diagram tab applies this same
 style-aware degree automatically when you switch the "Diagram Edge Style"
 toggle.
 

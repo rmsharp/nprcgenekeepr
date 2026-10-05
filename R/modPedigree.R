@@ -833,10 +833,26 @@ modPedigreeServer <- function(id, studbook) {
             # waypoint rather than a visible union dot, so degree = 1L
             # (correct for the direct style, where degree 1 always
             # reaches a visible node) can highlight nothing visible at
-            # all. Raising it is a bounded mitigation, not a full fix --
-            # very wide sibships (a long D1 bar chain) can still exceed
-            # it -- but it restores visible feedback for the common case
-            # confirmed live (measured hop distances up to 4).
+            # all. Raising it restores visible feedback for the common
+            # case confirmed live (measured hop distances up to 4).
+            #
+            # KNOWN LIMITATION (S909, owner-ruled: keep 6). The hover
+            # counts every edge, invisible waypoints included, so it can
+            # stop short of an animal's own parents' union dot. Measured
+            # on the 375-animal rhesus pedigree: hovering never lights
+            # nothing (0 of 375), and 373 of 375 animals light everything
+            # the direct style's degree 1 lights; the other 2 are 7 hops
+            # from that dot because their sibship connectors were
+            # rerouted through __jog_ waypoints. A pair with 9 or more
+            # full siblings reaches the same limit on its own (the widest
+            # bundled pedigree has 4). Raising the degree was declined to
+            # keep the hover simple: 7 would light about 5 more nodes on
+            # a typical hover (median 14 -> 19) to fix those 2 animals,
+            # and no fixed degree covers a wide family. The owner notes
+            # that some baboon pedigrees have more siblings (none is
+            # bundled, so not measured here); revisit only when a user
+            # asks. Measurements and scripts:
+            # docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md.
             degree = if (.currentEdgeStyle() == "rectilinear") 6L else 1L,
             algorithm = "all"
           )

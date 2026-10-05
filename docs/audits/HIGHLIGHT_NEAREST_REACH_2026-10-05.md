@@ -1,9 +1,8 @@
 # `highlightNearest` degree-6 limit: how often does a rectilinear hover fall short? (S909, 2026-10-05)
 
-> **Status:** measurement DONE; no `R/` or test change. `BACKLOG.md`'s item ("`highlightNearest` degree=6
+> **Status:** measurement DONE; no behaviour or test change (the only `R/` edit is a comment). `BACKLOG.md`'s item ("`highlightNearest` degree=6
 > mitigation for the rectilinear style is bounded, not a full fix") asked for this measurement as its first
-> step. What to do with the item (close it, raise the degree, or keep it) is the owner's call and is recorded
-> in `CHANGELOG.md`, not here.
+> step. The owner closed the item and kept the degree at 6; see "Owner ruling" at the end.
 
 ## Audit summary
 
@@ -138,9 +137,10 @@ direction), and the page left 1,360-1,402 of 1,412 nodes dimmed, so the highligh
 
 ## Not measured
 
-- Colonies other than the bundled pedigrees; the app's focal-animal subsets (each is a smaller pedigree
-  laid out the same way, so its families are no wider than in the full one); real mouse hit-testing (the live
-  check fired the handler directly); browsers other than Chrome; visNetwork versions other than 2.1.4.
+- Colonies other than the bundled pedigrees (no baboon pedigree is bundled; see "Owner ruling"); the app's
+  focal-animal subsets (each is a smaller pedigree laid out the same way, so its families are no wider than in
+  the full one); real mouse hit-testing (the live check fired the handler directly); browsers other than
+  Chrome; visNetwork versions other than 2.1.4.
 
 ## Recommendations
 
@@ -150,10 +150,20 @@ direction), and the page left 1,360-1,402 of 1,412 nodes dimmed, so the highligh
    family is 4.
 2. **Do not raise the degree** on this evidence: it fixes 2 dots (Finding 1) at the cost of about 5 more
    lit nodes on a typical hover (Finding 4), and it cannot scale to wide families (Finding 3).
-3. If the owner knows of a colony with a sire-dam pair of 9 or more offspring, reopen with that evidence;
-   the fix would then be a traversal that skips invisible waypoints (its own plan session first).
+3. If a colony with a sire-dam pair of 9 or more offspring turns up, reopen with that evidence; the fix
+   would then be a traversal that skips invisible waypoints (its own plan session first).
 4. If the owner wants the 2 rhesus dots anyway: degree 7 is a one-line change plus the two assertions in
    Finding 4, strict TDD, its own session.
+
+## Owner ruling (S909, 2026-10-05)
+
+Recommendation 1 and 2 were taken: **the item is closed and the degree stays 6.** The limitation and the
+rationale (a simpler, tighter hover) are documented in the comment above `degree =` in `R/modPedigree.R`, in
+`vignettes/a2interactive.Rmd` (the paragraph that explains the degree) and in the user manual's Pedigree
+Browser section (`vignettes/manual_components/_pedigree_browser.Rmd`). The owner added that some baboon
+pedigrees have more siblings than any bundled pedigree. That is the owner's knowledge, not a measurement here
+(no baboon pedigree is bundled, and how wide those families get was not given); the decision is to **revisit
+only when a user asks.** Findings 3 and 4 and recommendation 3 are the starting point for that session.
 
 ## Appendix: scripts (run from the repo root; save each in one scratch directory as named)
 
