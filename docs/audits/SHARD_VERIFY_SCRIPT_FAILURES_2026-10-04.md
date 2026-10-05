@@ -124,6 +124,27 @@ Read-only checks today (nothing changed anywhere):
 - The local clone is at `fae8ed1` with 2 unrelated modified files (`.context-budget-history.jsonl`,
   `dashboard_history.jsonl`); its trimmer is clean. It was only read.
 
+## Is the problem still in the current methodology version? (checked S901, read-only, after the owner asked)
+
+The first pass compared only a local clone. This check read `starter-kit/methodology_trim.py` from the current `main` of
+**both** repos through the GitHub API (head commits `rmsharp/methodology` `c8215af`, 2026-10-02, and `KJ5HST/methodology`
+`f34769f`, 2026-10-03):
+
+| Test on the current file | `rmsharp/methodology` main | `KJ5HST/methodology` main |
+|---|---|---|
+| Version | 1.5.0 | 1.5.0 |
+| Size and identity | 113,754 B | 113,754 B, **byte-identical** to the fork's |
+| Finding 3: substring leak test (`ln in sfront or ln in "".join(sr)`) | present | present |
+| Finding 1: `frontier_edit` prints the BL-27 note and still fails | present | present |
+| Finding 2: baked-in `INJECTED=` constant in the template | absent (fixed by BL-36, v1.2.0) | absent |
+| A regenerate/reverify option | none | none |
+
+So **Findings 1 and 3 are present in the current upstream trimmer, and Finding 2 is already fixed there** (it only
+affects the 18 already-written v1.1.2 scripts). The local clone's trimmer (`fae8ed1`) is also byte-identical to the
+fork's `main`. Duplicate check on the parent: no issue (open or closed) matched "verify.sh", "methodology_trim",
+"L2 front matter leaked" or "frontier BL-27"; the trimmer's four commits on the parent's `main` (latest 2026-09-18) are
+the original ship plus documentation changes, none touching the verify template.
+
 ---
 
 ## Draft upstream report (ready to paste; NOT posted)
