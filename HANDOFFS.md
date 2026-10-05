@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S904
+date: 2026-10-04
+status: pending
+active_task: push S903's 2 local commits (claim ee5632c86 and close-out 42b4fb0b8) to origin/master by SHA (the S904 claim commit stays local); the owner picked it at the Phase 0 picker; no code, test or R/ change
+```
+
+```handoff
 session: S903
 date: 2026-10-04
 status: complete
