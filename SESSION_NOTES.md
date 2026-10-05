@@ -99,80 +99,84 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 910 Did
-**Deliverable:** the owner's product decision on Candidate C, the connector/dogleg signposting idea (`BACKLOG.md:375`) (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; phase PRE-RED. Decision only (no `R/` change); a build, if the owner says yes, is a separate session
-with its own plan and TDD gates.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (measurement and an owner ruling; documentation only, no `R/` change):** the owner's product decision on
+Candidate C (`BACKLOG.md:375-397` before the edit; picked at the Phase 0 picker). Candidate C's target, a mate-line that spans
+generation rows, no longer occurs, so the owner **closed Candidate C and replaced it with a smaller item** about the dashed
+duplicate-animal links (`BACKLOG.md:375`, DECISION NEEDED). Report `docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md` (4 findings,
+3 appendix scripts that reproduce every number).
 
-### What Session 909 Did
-**Deliverable, DONE (measurement and an owner ruling; documentation only, behaviour unchanged):** measured how often the
-rectilinear diagram's `highlightNearest` degree-6 hover falls short, and recorded the owner's ruling: **close the item, keep
-degree 6** (`BACKLOG.md:398-414` before removal; picked at the Phase 0 picker, "highlightNearest limit"). Report
-`docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md` (4 findings, 5 appendix scripts that reproduce every number).
+**Results** (rhesus, 375 animals, QC'd as the app lays it out; row gap = `abs(y_from - y_to) / 150` on the direct-style layout):
+0 of 474 mate-lines span a row; the same in the 6 small bundled pedigrees (44 mate-lines) and in `rhesusPedigree_fromCenter.csv`
+(identical table, the same 375 animals); 0 of 2,032 in 60 seeded random pedigrees (synthetic; 672 of 1,016 units had parents of
+different input generations). The rectilinear layout keeps all 782 nodes on the same rows and makes 0 `__proj_` dogleg nodes
+(142 `__jog_`). Cause: S573's gen-aware anchors plus the #143 fix. What does cross rows: 111 of the 170 dashed duplicate-animal
+links (51 cross 2 or more, 8 cross 3 or more); the user manual explains them (`_pedigree_browser.Rmd:90-91`) but the legend has
+no row for them and edges have no hover text (no `title` column).
 
-**Results** (rhesus, 375 animals, QC'd as the app lays it out; standard = what the direct style's degree 1 lights): hovering
-never lights nothing (0 of 375); 373 of 375 animals light everything the direct style lights; the other 2 (`42M0Y8`, `IRSC6X`)
-are 7 hops from their parents' union dot because `.resolveEdgeNodeCollisions()` rerouted their sibship connectors through 4
-`__jog_` waypoints, not because of a wide family (widest family 3; widest in any bundled pedigree 4). The item's stated cause
-(wide sibships) is real but needs 9 full siblings of one pair (synthetic). Degree 7 would fix the 2 but light about 5 more nodes
-on a typical hover (median 14 -> 19). A real Chrome hover on 6 animals lit exactly the nodes the BFS model predicted.
+**Owner ruling:** "Replace with the dashed-link idea" (options: close, replace, keep). Nothing is built; the new item needs the
+owner's decisions first (legend row only or hover text too; the wording).
 
-**Owner ruling:** option 1, with the limitation and the "simpler hover" rationale documented (the first wording of option 3,
-"raise to 7", was rejected for clarification and re-explained in plain words). Mid-session the owner added that some baboon
-pedigrees have more siblings (not measured; none bundled): revisit only when a user asks.
+Commits: claim `e2fdd492a`; report and the #144 plan's status banner `ad49c296f`; the close-out commit carries `BACKLOG.md`
+(Candidate C block replaced, 442 -> 441 lines, 37,882 -> 38,155 B; the housekeeping item's compression-candidate list no longer
+counts Candidate C), receipt, notes, ledger entry and Learning 875.
 
-Commits: claim `a3c8d174a`; report `6b0525d7c`; docs `7970ba878` (comment above `degree =` in `R/modPedigree.R`, parsed code
-identical; `vignettes/a2interactive.Rmd` degree paragraph; the user manual's Pedigree Browser section; the report's Owner
-ruling); the close-out commit carries the `BACKLOG.md:398-414` removal (17 lines; 459 -> 442 lines, 39,127 -> 37,882 B),
-receipt, notes, ledger entry and Learning 874.
+Verified: `quality_ratchet.py --run` 1/1 pass, results `43ac12b4193b`, manifest `aa983075d6a2`, tarball 3,686,045 B (S909:
+3,686,071 B; no packaged file changed, so I take the 26 B as run-to-run noise, an inference). No test reads `BACKLOG.md` or
+`docs/` (grepped `tests/`), so none was run. Not run: full suite, `devtools::check()`, lint (no `.R` file changed), CI
+(unpushed), the app (docs only). NEWS and `_pkgdown` not owed; no open GitHub issue named (#144 is closed).
 
-Verified: parse digest of `R/modPedigree.R` equal before and after; `lint_package()` 0 lints; `test_wordlist_coverage.R` (3),
-`test_vignettes_no_deprecated_minParentAge.R` (4), `test_pkgdown_reference_config.R` (5), `test_modPedigree.R` (70): 0 failed, 0
-error; `a2interactive.Rmd` renders in a scratch copy (12 s); `quality_ratchet.py --run` 1/1 pass, results `b082c69b41cf`,
-manifest `aa983075d6a2`. Not run: full suite and `devtools::check()` (comment and prose only), CI (unpushed), the `a3manual.Rmd`
-render. NEWS and `_pkgdown` not owed; the item named no GitHub issue.
+**Handoff evaluation of S909: 9/10.** Helped: `BACKLOG.md:8`, `:46`, `:375` re-found exactly; "22 local commits" measured 22
+ahead; `HANDOFFS.md` 222,737 B matched at the close-out commit; upstream #93 open with 1 comment (re-checked with `gh api`);
+`helper-qcdRhesusPed.R` in its key files was the right input, and its report's scripts were a template. Missing: that Candidate
+C's premise might not survive S573 (its BACKLOG text said "if the owner judges, from that live render", with no count), so the
+first step was to measure, not to ask. Wrong: nothing material.
 
-**Handoff evaluation of S908: 9/10.** Helped: all four cites re-found exactly (`BACKLOG.md:8`, `:46`, `:375`, `:398`); "18 local
-commits" measured 18 ahead; `HANDOFFS.md` 216,889 B and upstream #93 (open, 1 comment) matched; "measure the real fixture's
-largest sibship first" was the right first step. Missing: that the item's cause (wide sibship chains) predates the jog pass
-(2026-08-15), so width was the wrong quantity to chase; no pointer to `qcdRhesusPed()` (the app's real input; it is in S905's
-record, not S908's); the 400-animal rectilinear cap (`R/modPedigree.R:457`), which bounds what the app can ever draw. Wrong:
-nothing material.
+**Self-assessment: 8/10.** + Claimed before technical work; measured before asking; put the count beside the owner's question
+in plain words; a synthetic check that is not vacuous; confirmed the rectilinear layout shares the direct style's rows before
+generalising; caught my own "7 small" (it is 6 small plus an identical 375-animal file) and a mis-summed 2,506 (2,550) before
+the report committed; every commit 3 files or fewer; no `R/` change. - My orientation-time table and my message to the owner
+said "7 small pedigrees" (wrong; the report is right); a macOS `sed -i` slip; S573's 102 duplicate nodes versus today's 170
+left untraced (named in the report); no screenshot. Reduction: S909's record condensed (about 6.5 KB to 1.3 KB); `BACKLOG.md`
+net -1 line, +273 B (the replacement item carries the gotchas its pickup needs; I first kept a 3-line "replaces Candidate C"
+note, and the owner had me delete it as redundant with the changelog and report); `HANDOFFS.md`, `CHANGELOG.md` and
+`PROJECT_LEARNINGS.md` still grew by this session's entries.
 
-**Self-assessment: 8/10.** + Claimed before technical work; read visNetwork's JS before modelling it; measured against the
-standard the setting was built for; found the stated cause was wrong and gave the width threshold; confirmed the model live; an
-assertion on id prefixes caught the `__jog_` kind; parse digest proves the R edit is comment-only; every commit 4 files or
-fewer; corrected my own wrong "45 KB" size claim before committing. - Option 3's first wording cost the owner a round trip; I
-started a layout loop on a 3,694-row file without counting rows (minutes lost); two harness slips in the vignette render
-(`SCRATCH` not exported; scratch copy had no `../inst`); the first report commit said "no `R/` change" and needed a follow-up.
-Reduction: `BACKLOG.md` 17 lines removed; S908's record condensed (6,753 B -> 1,184 B); `HANDOFFS.md` and `CHANGELOG.md`
-still grew by this session's entries.
+**Next steps (owner-ordered):** (A) The dashed-link item (`BACKLOG.md:375`, DECISION NEEDED, Effort estimate S for a legend
+row, M for hover text): the pickup starts with the owner's decisions (legend row only or hover text too; wording), then strict
+TDD. (B) READY, one per session, any order (cites grepped after the edit; `:8` and `:46` did not move): docs-audit slice 2
+(`:46`, READY, Effort L, needs scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C) Unpushed: 25 local commits
+after this close-out (S904-S908 as in the S908 record; S909 claim `a3c8d174a`, report `6b0525d7c`, docs `7970ba878`, close-out
+`c6ff74e08`; S910 claim `e2fdd492a`, report `ad49c296f`, close-out). The push carries `R/` and vignette changes, so all four
+workflows start and the R-CMD-check matrix has not seen S908's helper or S909's vignette edit: read CI after it. Per the
+owner's S905 ruling it is not offered as a task. (D) Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked
+S910); `BACKLOG.md:269` stays BLOCKED. (E) `HANDOFFS.md` is 227,537 B after this close-out's edits (222,737 B after S909's;
+about 34 KB below the 262,144 B Read refusal; roughly seven sessions at this session's 4.4 KB, my estimate). Carried: `reportGV(smallPed)` unfiled. Observation, not acted on:
+the D2 dogleg block (`R/makePedigreeDiagramData.R:2238-2310`) makes 0 waypoints on the app's real pedigree; whether any input
+reaches it was not tested (the #144 plan's section 8 records a dangling-parent crash there).
 
-**Next steps (owner-ordered):** (A) Nothing waits on the owner about `highlightNearest`; revisit only on a user request (baboon
-pedigrees; start from the report's Findings 3 and 4 and recommendation 3). (B) READY, one per session, any order (cites grepped
-after the removal; items above line 398 did not move): Candidate C (`BACKLOG.md:375`, DECISION NEEDED, product sign-off);
-docs-audit slice 2 (`:46`, READY, Effort L, needs scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C)
-Unpushed: 22 local commits after this close-out (S904-S908 as in the S908 record; S909 claim `a3c8d174a`, report `6b0525d7c`,
-docs `7970ba878`, close-out). The push carries `R/` and vignette changes, so all four workflows start and the R-CMD-check matrix
-(oldrel-1, devel) has not seen S908's helper or this session's vignette edit: read CI after it. Per the owner's S905 ruling it
-is not offered as a task. (D) Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked S909); `BACKLOG.md:269`
-stays BLOCKED. (E) `HANDOFFS.md` is 222,737 B after this close-out's edits (217,189 B before them; about 39 KB below the 262,144
-B Read refusal; roughly seven sessions at this session's 5.4 KB, my estimate). Carried: `reportGV(smallPed)` unfiled.
+**Key files:** `docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md` (evidence and scripts); `R/makePedigreeDiagramData.R:1999-2008`
+(the dashed link is built) and `:2238-2310` (D2 dogleg); `R/modPedigree.R:726-779` (legend; `stepY = 54L` at `:778`);
+`tests/testthat/test_modPedigree.R:1383-1424` (twin legend rows read from the widget JSON);
+`vignettes/manual_components/_pedigree_browser.Rmd:90-91`; `tests/testthat/helper-qcdRhesusPed.R`; `PROJECT_LEARNINGS.md`
+Learning 875; `BACKLOG.md:8`, `:46`, `:375`, `:399` (outreach), `:418` (paper).
 
-**Key files:** `docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md` (the evidence and scripts); `R/modPedigree.R:828-858`
-(options; KNOWN LIMITATION comment at `:839`; `degree =` at `:856`); `R/makePedigreeDiagramData.R:2203-2236` (D1 bar chain) and
-`:2639-3097` (`.resolveEdgeNodeCollisions()`); `tests/testthat/test_modPedigree.R:2032-2075` (pins `"degree":6`, untouched);
-`tests/testthat/helper-qcdRhesusPed.R`; `vignettes/a2interactive.Rmd:561-578`;
-`vignettes/manual_components/_pedigree_browser.Rmd:104-115`; `PROJECT_LEARNINGS.md` Learning 874; `BACKLOG.md:8`, `:46`, `:375`,
-`:400` (outreach), `:419` (paper).
+**Gotchas:** classify edges by endpoint kind (`real`, `dup`, `union`) before deciding which cross rows; rows are 150 apart in
+`y`; a `title` column on edges may force every edge builder to supply it (`R/makePedigreeDiagramData.R:2252-2255`); the legend
+is hand-tuned to 400 px, so a new row needs a hands-on retune; macOS `sed -i` needs an extension argument, so edit scratch
+files with Python; `( cmd ) &` inside `run_in_background` reports the wrapper's exit and the ratchet ran minutes after the
+"completed" notice, so read the job's own output file; take `wc -c` after the last edit (Learning 871).
 
-**Gotchas:** count a file's rows before laying it out (`ExamplePedigree.csv` is 3,694 animals, over the 400-animal rectilinear
-cap); in a live visNetwork page the network object is on the inner `graph<id>` element and `emit()` must be wrapped to return a
-plain value (chromote: "Object reference chain is too long"); assert on unknown layout id prefixes (`__jog_` exists); a scratch
-render of `a2interactive.Rmd` needs `../inst` beside it and `SCRATCH` exported; `( cmd ) &` inside `run_in_background` reports
-the wrapper's exit, so read the job's own output file; removing a BACKLOG block shifts every later cite, so re-grep them; take
-`wc -c` after the last edit (Learning 871).
+### What Session 909 Did (condensed S910; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Measured how often the rectilinear diagram's `highlightNearest` degree-6 hover falls short (375-animal rhesus, QC'd): it never
+lights nothing (0 of 375) and 373 of 375 animals light everything the direct style's degree 1 lights; the other 2 (`42M0Y8`,
+`IRSC6X`) are 7 hops from their parents' union dot through 4 `__jog_` waypoints, not a wide family. The owner ruled: close the
+item, keep degree 6, document the limit (revisit only on a user request; some baboon pedigrees may have wider families).
+Report `docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md`; `BACKLOG.md:398-414` removed. Claim `a3c8d174a`, report `6b0525d7c`,
+docs `7970ba878`, close-out `c6ff74e08` (all still local). Handoff evaluation of S908: 9/10. Self 8/10.
+**Gotchas kept:** count a file's rows before laying it out (`ExamplePedigree.csv` is 3,694 animals, over the 400-animal
+rectilinear cap); in a live visNetwork page the network object is on the inner `graph<id>` element and `emit()` must return a
+plain value; assert on unknown layout id prefixes (`__jog_` exists); a scratch render of `a2interactive.Rmd` needs `../inst`
+beside it and `SCRATCH` exported; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 908 Did (condensed S909; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 One internal `isAddedRecord(recordStatus, n = length(recordStatus))` (`R/isAddedRecord.R`) now says which records are "added",

@@ -338,10 +338,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-read the compressed result end to end.
       **Candidates for the next pass (measured S896, line counts after this pass; re-grep, sizes
       not anchors):** the docs-audit item (47 lines; S890 already compressed it, so check for
-      regrowth first), this item's own history (41 lines), the paper item (24), Candidate C (22),
-      the `inst/doc/` slimming item (21) and the trim verify-script item (20, now longer after
-      S898). Candidate C and the verify-script item were two of the 7 parked Effort-S items; the
-      owner kept all 7 open (S898), so they may be compressed. The standalone-package
+      regrowth first), this item's own history (41 lines), the paper item (24), the `inst/doc/`
+      slimming item (21) and the trim verify-script item (20, now longer after S898). The
+      verify-script item was one of the 7 parked Effort-S items; the owner kept all 7 open (S898),
+      so it may be compressed (Candidate C, another of the 7, was closed S910). The standalone-package
       item is still 34 lines but is nearly all ratified-scope open text; leave it. Regrowth, for
       scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
 
@@ -372,29 +372,28 @@ stale again and carries a status note. Session-by-session record: `CHANGELOG.md`
 findings: `PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. The open items below are the
 section's live work.*
 
-- [ ] **Candidate C's connector/dogleg visual-signposting idea** (found S473,
-      designing the issue #144 plan; not adopted for #144 itself, Effort
-      unknown, low priority; kept open by the owner S898, DECISION NEEDED: product sign-off
-      to pursue) -- extends the existing D2 mate-line "dogleg"
-      (issue #142) to `edgeStyle="direct"` (which currently gets zero
-      compensating treatment for any cross-generation connector) and adds
-      dashed/colored/titled styling to both edge styles so a
-      multi-generation-spanning mate-line reads as intentional rather than a
-      positioning bug. Fully validated (including a real ~37%
-      `edgeStyle="rectilinear"` performance regression found and fixed during
-      design) but requires its own fresh, explicit owner product-level
-      sign-off to pursue -- independently valuable as a diagram-readability
-      enhancement, decoupled from #144's own resolution (which does not need
-      it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8.
-      **Also considered and again not adopted for the kinship2-fidelity remediation plan's
-      Track 4 (design S572, implemented S573, 2026-08-14)** -- Track 4 ratified and shipped
-      Candidate A (gen-aware D2 anchor selection) instead, see
-      `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` §3/§8. Live-rendered
-      (S573, both `edgeStyle` values, zero console errors) with the redistribution this decision
-      predicted (duplicate nodes 128->102, multi-anchor individuals 2->22, max 5). Still not
-      precluded -- remains open as a future, separately-scoped enhancement if the owner judges,
-      from that live render, that remaining cross-generation mate-lines still benefit from
-      signposting for legibility.
+- [ ] **Dashed duplicate-animal links have no legend row and no hover text (found S910,
+      2026-10-05, replacing Candidate C; DECISION NEEDED -- what the legend row and the hover
+      text should say; Effort estimate S for a legend row, M for hover text; strict TDD)** -- the
+      dashed curved link that joins an animal's repeat appearance back to its main one (built at
+      `R/makePedigreeDiagramData.R:1999-2008`: `dashes = TRUE`, `curvedCW`, roundness 0.2) is
+      explained in the user manual (`vignettes/manual_components/_pedigree_browser.Rmd:90-91`)
+      but not in the diagram itself: the legend (`R/modPedigree.R:726-779`) has the sex shapes,
+      "Affected" and the MZ/DZ/? twin rows and no row for this link, and no edge has hover text
+      (the edge table has no `title` column). Measured S910 on the 375-animal rhesus pedigree as
+      the app lays it out: 170 such links, 111 cross at least one generation row, 51 cross two or
+      more, 8 cross three or more (`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`, Finding 3;
+      script `rectCheck.R` in its appendix).
+      **Decisions the pickup needs from the owner first:** (a) a legend row only, or hover text
+      too; (b) the wording (for example "Same animal, shown again for another mating"); (c)
+      whether the hover text names the animal's id. **Gotchas:** the legend is tuned by hand to a
+      fixed 400 px height (`stepY = 54L` was set for 6 rows, `R/modPedigree.R:768-778`), so one
+      more row needs a hands-on retune; the twin rows already ride the same `visLegend()` call's
+      `addEdges` (a second call would overwrite it, `R/modPedigree.R:746-759`) and the legend tests
+      read rows out of the widget JSON (`tests/testthat/test_modPedigree.R:1383-1424`); a `title`
+      column on edges may mean every edge builder must supply it (see the matching-columns comment at
+      `R/makePedigreeDiagramData.R:2252-2255`). Shipping it is user-facing, so the `NEWS.Rmd` and
+      manual checklists in `docs/conventions/CLOSEOUT_CHECKLISTS.md` apply.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
