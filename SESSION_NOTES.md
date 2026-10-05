@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 913 Did
+**Deliverable:** NEW-42, one help-page sentence saying `getParents()` and `getOffspring()` take the pedigree first (`BACKLOG.md:57`;
+owner decision S912, Decision record 13; help text only) (IN PROGRESS)
+**Started:** 2026-10-05 15:58 CDT
+**Status:** Session claimed; phase PRE-RED. Picked at the Phase 0 picker. First step: read `DEVELOPMENT_WORKSTREAM.md` and the two
+roxygen blocks (`R/getParents.R:6-7`, `R/getOffspring.R:6-7`), then settle with the owner how a help-text-only change fits strict TDD.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 912 Did
 **Deliverable, DONE (two owner decisions recorded; documentation only, no `R/` change):** the walk helpers, PED-3 and NEW-42
 (`BACKLOG.md:8`; picked at the Phase 0 picker, the group chosen at a scope question over the constants and HTML builders).

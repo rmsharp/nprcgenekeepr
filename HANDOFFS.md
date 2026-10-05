@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S913
+date: 2026-10-05
+status: pending
+active_task: NEW-42, one help-page sentence saying getParents() and getOffspring() take the pedigree first (BACKLOG.md:57; owner decision S912, Decision record 13; help text only); the owner picked it at the Phase 0 picker; how a help-text-only change fits strict TDD is settled at the pre-RED gate
+```
+
+```handoff
 session: S912
 date: 2026-10-05
 status: complete
