@@ -99,79 +99,82 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 911 Did
-**Deliverable:** the remaining PED_GV audit owner decisions (`BACKLOG.md:8`; 9 ids, all owner decisions) (IN PROGRESS)
-**Started:** 2026-10-05
-**Status:** Session claimed; phase PRE-RED. The first step is reading `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`, then asking
-the owner which group of ids to take this session (one deliverable only); any code change goes through the RED/GREEN/REFACTOR gates.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (an owner decision recorded; documentation only, no `R/` change):** the owner's decision on NEW-62, the
+repeated "call the progress function if one was given" blocks (`BACKLOG.md:8`; picked at the Phase 0 picker, the group chosen at
+a scope question). **Decision:** "One shared helper for all 7" (over "leave as is, close it", which I recommended, and "only the 3
+in `reportGV`"). Nothing is built; the build is a new READY item (`BACKLOG.md:23`, Effort S, strict TDD). Recorded as Decision
+record 12 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:335`).
 
-### What Session 910 Did
-**Deliverable, DONE (measurement and an owner ruling; documentation only, no `R/` change):** the owner's product decision on
-Candidate C (`BACKLOG.md:375-397` before the edit; picked at the Phase 0 picker). Candidate C's target, a mate-line that spans
-generation rows, no longer occurs, so the owner **closed Candidate C and replaced it with a smaller item** about the dashed
-duplicate-animal links (`BACKLOG.md:375`, DECISION NEEDED). Report `docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md` (4 findings,
-3 appendix scripts that reproduce every number).
+**What I measured** (read-only, today's code and `tests/`): the triage row is out of date twice. It cites 3 blocks at
+`reportGV.R:219,238,257` (now `:246,265,284`; S889's `assertRequiredColsPresent()` moved them), and the same pattern has 4 more
+copies outside that file: `geneDrop.R:124,147`, `convertRelationships.R:94`, `groupAddAssign.R:308` (7 sites, 33 lines). The app's
+callback is `function(n = 1L, detail = NULL, value = 0L, reset = FALSE)` (`modGeneticValue.R:284`, `modBreedingGroups.R:625`). No
+test records which messages are sent: the `reportGV` test's callback returns `"stub"`, all 10 `updateProgress` mentions in
+`test_geneDrop.R` pass `NULL`, and no `test_groupAddAssign*` passes one, so the build's first RED is a recording test per function.
 
-**Results** (rhesus, 375 animals, QC'd as the app lays it out; row gap = `abs(y_from - y_to) / 150` on the direct-style layout):
-0 of 474 mate-lines span a row; the same in the 6 small bundled pedigrees (44 mate-lines) and in `rhesusPedigree_fromCenter.csv`
-(identical table, the same 375 animals); 0 of 2,032 in 60 seeded random pedigrees (synthetic; 672 of 1,016 units had parents of
-different input generations). The rectilinear layout keeps all 782 nodes on the same rows and makes 0 `__proj_` dogleg nodes
-(142 `__jog_`). Cause: S573's gen-aware anchors plus the #143 fix. What does cross rows: 111 of the 170 dashed duplicate-animal
-links (51 cross 2 or more, 8 cross 3 or more); the user manual explains them (`_pedigree_browser.Rmd:90-91`) but the legend has
-no row for them and edges have no hover text (no `title` column).
+Commits: claim `1e4e858a1`; decision record and `BACKLOG.md` `5e6d30711`; the close-out commit carries receipt, notes, ledger
+entry and Learning 876. Nine PED_GV ids stay open: 7 undecided owner decisions, NEW-62 (decided, waits on the build) and NEW-24
+(issue #123).
 
-**Owner ruling:** "Replace with the dashed-link idea" (options: close, replace, keep). Nothing is built; the new item needs the
-owner's decisions first (legend row only or hover text too; the wording).
+Verified: `quality_ratchet.py --run` 1/1 pass, results `c4dda28d3c7c`, manifest `aa983075d6a2`, tarball 3.68606e+06 B against the
+5e+06 limit. Grepped `tests/` and `R/` for the names of the files I changed: every match is a comment except
+`test_workflowPathsIgnore.R`, which reads the workflow YAML and `.Rbuildignore` (these files appear there only as a list of
+paths), so no test was run. Not run: full suite, `devtools::check()`, lint (no `.R` file changed), CI (unpushed), the app (docs
+only). NEWS and `_pkgdown` not owed; no issue closed (#123 is NEW-24's and stays open).
 
-Commits: claim `e2fdd492a`; report and the #144 plan's status banner `ad49c296f`; the close-out commit carries `BACKLOG.md`
-(Candidate C block replaced, 442 -> 441 lines, 37,882 -> 38,155 B; the housekeeping item's compression-candidate list no longer
-counts Candidate C), receipt, notes, ledger entry and Learning 875.
+**Handoff evaluation of S910: 9/10.** Helped: `BACKLOG.md:8`, `:46`, `:375` and `:269` re-found exactly before my edit; "25 local
+commits" measured 25 ahead; `HANDOFFS.md` 227,537 B matched; upstream #93 open with 1 comment (re-checked with `gh api`); the
+Phase 0 grep of `BACKLOG.md` tags found only 2 tagged items, so its owner-ordered list was the real priority source. Missing: how
+a PED_GV pickup proceeds (a decision session writes a record, a later session builds; Decision records 8, 10 and 12 are the
+pattern) and that the triage table's line cites had drifted. Wrong: it lists PED_GV under "READY" while `BACKLOG.md:8` says
+DECISION NEEDED, and "all owner decisions" is not quite right (NEW-24 is tracked on #123).
 
-Verified: `quality_ratchet.py --run` 1/1 pass, results `43ac12b4193b`, manifest `aa983075d6a2`, tarball 3,686,045 B (S909:
-3,686,071 B; no packaged file changed, so I take the 26 B as run-to-run noise, an inference). No test reads `BACKLOG.md` or
-`docs/` (grepped `tests/`), so none was run. Not run: full suite, `devtools::check()`, lint (no `.R` file changed), CI
-(unpushed), the app (docs only). NEWS and `_pkgdown` not owed; no open GitHub issue named (#144 is closed).
+**Self-assessment: 6/10.** + Claimed before technical work; measured today's code before asking and put the counts (7 sites,
+33 lines, 0 tests on the messages) beside the question; caught my own "8 owner decisions" (it is 7 plus NEW-62 plus NEW-24) and a
+wrong "NEW-51 waited like NEW-50" before they left the working tree; two commits of 3 and 2 files; no `R/` change. - I skipped Phase 0
+step 6's check of S910's `quality_ratchet:` citation (results `43ac12b4193b`) against `.quality-gates-results.json`; my later
+`--run` overwrote that gitignored file, so it cannot be made now (the new run passes, same manifest). The first
+NEW-62 question bounced: its option text named `isAddedRecord()` and "pins today's messages", the S788/S909 failure my memory
+already warns about; the plain re-ask was answered at once. My recommendation (leave as is) was not the owner's choice. I copied
+"all owner decisions" into the claim stub from the handoff before checking. Reduction: S910's record condensed (6.7 KB to about
+1.0 KB); `BACKLOG.md` +14 lines, +1,132 B (a new item, nothing completed to remove); `HANDOFFS.md`, `CHANGELOG.md` and
+`PROJECT_LEARNINGS.md` grew by this session's entries.
 
-**Handoff evaluation of S909: 9/10.** Helped: `BACKLOG.md:8`, `:46`, `:375` re-found exactly; "22 local commits" measured 22
-ahead; `HANDOFFS.md` 222,737 B matched at the close-out commit; upstream #93 open with 1 comment (re-checked with `gh api`);
-`helper-qcdRhesusPed.R` in its key files was the right input, and its report's scripts were a template. Missing: that Candidate
-C's premise might not survive S573 (its BACKLOG text said "if the owner judges, from that live render", with no count), so the
-first step was to measure, not to ask. Wrong: nothing material.
+**Next steps (owner-ordered):** (A) The NEW-62 build (`BACKLOG.md:23`, READY, Effort S): the Pre-RED scope gate first (keep the
+`!is.null()` test or move to `is.function()`; the helper's name and file), then recording tests at the current commit. (B) The
+dashed-link item (`BACKLOG.md:389`, DECISION NEEDED; Effort S for a legend row, M for hover text): the owner decides legend row
+only or hover text too, and the wording. (C) Docs-audit slice 2 (`:60`, READY but needs scoping first, Effort L). (D) PED_GV: the
+7 undecided ids are the walk helpers (PED-3, NEW-42; exported) and the constants and HTML builders (NEW-18/19/21/26/57), at `:8`.
+(E) Unpushed: 28 local commits after this close-out (S904-S910 as in their records; S911 claim `1e4e858a1`, decision
+`5e6d30711`, close-out); the push carries `R/` and vignette changes, so all four workflows start and the R-CMD-check matrix has not
+seen S908's helper or S909's vignette edit: read CI after it; per the owner's S905 ruling it is not offered as a task. (F)
+Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked S911); the BLOCKED item is now `BACKLOG.md:283`. (G)
+`HANDOFFS.md` is 233,063 B after this close-out's edits (227,537 B after S910's; about 29 KB below the 262,144 B Read refusal;
+roughly five sessions at this session's 5.5 KB, my estimate). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested).
 
-**Self-assessment: 8/10.** + Claimed before technical work; measured before asking; put the count beside the owner's question
-in plain words; a synthetic check that is not vacuous; confirmed the rectilinear layout shares the direct style's rows before
-generalising; caught my own "7 small" (it is 6 small plus an identical 375-animal file) and a mis-summed 2,506 (2,550) before
-the report committed; every commit 3 files or fewer; no `R/` change. - My orientation-time table and my message to the owner
-said "7 small pedigrees" (wrong; the report is right); a macOS `sed -i` slip; S573's 102 duplicate nodes versus today's 170
-left untraced (named in the report); no screenshot. Reduction: S909's record condensed (about 6.5 KB to 1.3 KB); `BACKLOG.md`
-net -1 line, +273 B (the replacement item carries the gotchas its pickup needs; I first kept a 3-line "replaces Candidate C"
-note, and the owner had me delete it as redundant with the changelog and report); `HANDOFFS.md`, `CHANGELOG.md` and
-`PROJECT_LEARNINGS.md` still grew by this session's entries.
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:335` (Decision record 12, the 7-site table);
+`R/reportGV.R:246,265,284`, `R/geneDrop.R:124,147`, `R/convertRelationships.R:94`, `R/groupAddAssign.R:308` (the blocks);
+`tests/testthat/test_reportGV.R:24-28`, `test_geneDrop.R`, `test_convertRelationships.R:8` (what the tests pass);
+`PROJECT_LEARNINGS.md` Learning 876; `BACKLOG.md` cites after this session's +14 lines: `:8`, `:23`, `:60` (docs audit), `:283`
+(upstream-blocked), `:389` (dashed links), `:413` (outreach), `:432` (paper).
 
-**Next steps (owner-ordered):** (A) The dashed-link item (`BACKLOG.md:375`, DECISION NEEDED, Effort estimate S for a legend
-row, M for hover text): the pickup starts with the owner's decisions (legend row only or hover text too; wording), then strict
-TDD. (B) READY, one per session, any order (cites grepped after the edit; `:8` and `:46` did not move): docs-audit slice 2
-(`:46`, READY, Effort L, needs scoping first); PED_GV: 9 ids remain, all owner decisions (`:8`). (C) Unpushed: 25 local commits
-after this close-out (S904-S908 as in the S908 record; S909 claim `a3c8d174a`, report `6b0525d7c`, docs `7970ba878`, close-out
-`c6ff74e08`; S910 claim `e2fdd492a`, report `ad49c296f`, close-out). The push carries `R/` and vignette changes, so all four
-workflows start and the R-CMD-check matrix has not seen S908's helper or S909's vignette edit: read CI after it. Per the
-owner's S905 ruling it is not offered as a task. (D) Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked
-S910); `BACKLOG.md:269` stays BLOCKED. (E) `HANDOFFS.md` is 227,537 B after this close-out's edits (222,737 B after S909's;
-about 34 KB below the 262,144 B Read refusal; roughly seven sessions at this session's 4.4 KB, my estimate). Carried: `reportGV(smallPed)` unfiled. Observation, not acted on:
-the D2 dogleg block (`R/makePedigreeDiagramData.R:2238-2310`) makes 0 waypoints on the app's real pedigree; whether any input
-reaches it was not tested (the #144 plan's section 8 records a dangling-parent crash there).
+**Gotchas:** a triage row scoped to one file understates a repeated idiom, so grep the idiom across `R/` before asking (3 blocks
+were 7 sites in 4 files); a report's line cites drift after every edit to the cited file; `geneDrop.R:147`,
+`convertRelationships.R:94` and `groupAddAssign.R:308` sit in per-item loops, so time each function before and after (not timed
+here); a helper must keep today's behaviour for a non-function callback unless the owner chooses otherwise; keep internal names and
+"pins" out of `AskUserQuestion` option text; `run_in_background` with a redirect finishes quietly, so read the output file; compare the last receipt's ratchet citation with
+`.quality-gates-results.json` at Phase 0, before any `--run` overwrites that gitignored file; take `wc -c` after the last edit
+(Learning 871).
 
-**Key files:** `docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md` (evidence and scripts); `R/makePedigreeDiagramData.R:1999-2008`
-(the dashed link is built) and `:2238-2310` (D2 dogleg); `R/modPedigree.R:726-779` (legend; `stepY = 54L` at `:778`);
-`tests/testthat/test_modPedigree.R:1383-1424` (twin legend rows read from the widget JSON);
-`vignettes/manual_components/_pedigree_browser.Rmd:90-91`; `tests/testthat/helper-qcdRhesusPed.R`; `PROJECT_LEARNINGS.md`
-Learning 875; `BACKLOG.md:8`, `:46`, `:375`, `:399` (outreach), `:418` (paper).
-
-**Gotchas:** classify edges by endpoint kind (`real`, `dup`, `union`) before deciding which cross rows; rows are 150 apart in
-`y`; a `title` column on edges may force every edge builder to supply it (`R/makePedigreeDiagramData.R:2252-2255`); the legend
-is hand-tuned to 400 px, so a new row needs a hands-on retune; macOS `sed -i` needs an extension argument, so edit scratch
-files with Python; `( cmd ) &` inside `run_in_background` reports the wrapper's exit and the ratchet ran minutes after the
-"completed" notice, so read the job's own output file; take `wc -c` after the last edit (Learning 871).
+### What Session 910 Did (condensed S911; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Measured the mate-line row span on the app's 375-animal rhesus layout: 0 of 474 mate-lines span a generation row (also 0 in the 6
+small bundled pedigrees, 0 of 2,032 in 60 synthetic ones), so the owner **closed Candidate C and replaced it** with a smaller item
+about the dashed duplicate-animal links (111 of 170 cross a row; no legend row, no hover text; `BACKLOG.md:389` now). Report
+`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`. Claim `e2fdd492a`, report `ad49c296f`, close-out `5d33665ea` (all still local).
+Handoff evaluation of S909: 9/10. Self 8/10.
+**Gotchas kept:** classify edges by endpoint kind (`real`, `dup`, `union`) before deciding which cross rows; rows are 150 apart in
+`y`; the legend is hand-tuned to 400 px (a new row needs a hands-on retune); macOS `sed -i` needs an extension argument, so edit
+scratch files with Python; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 909 Did (condensed S910; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Measured how often the rectilinear diagram's `highlightNearest` degree-6 hover falls short (375-animal rhesus, QC'd): it never
