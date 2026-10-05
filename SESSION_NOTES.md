@@ -99,67 +99,64 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 902 Did
-**Deliverable:** push S901's 4 local commits (`14a59bb4b..7acce42cf`) to `origin/master` and read CI (IN PROGRESS)
-**Started:** 2026-10-04
-**Status:** Session claimed. Origin is 4 commits behind HEAD (S901: claim, report, currency check, close-out). Docs only; no
-code, test or `R/` change; the push goes by SHA so this claim commit stays local.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only; no code, test or `R/` change):** pushed S901's 4 local commits to `origin/master`
+(`529bb031b..7acce42cf`, a plain fast-forward, 0 behind, by SHA, so this session's claim `ee54ef006` stayed local) at the
+owner's pick from the Phase 0 picker ("Push 4 local commits"). Before pushing, `git diff --name-only origin/master..7acce42cf`
+listed 6 files (`BACKLOG.md`, `CHANGELOG.md`, `HANDOFFS.md`, `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`,
+`docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`), all on the 21-entry `paths-ignore` list; none under `R/`,
+`DESCRIPTION`, `NAMESPACE`, `tests/`, `man/` or `inst/`. **Result: no CI run started.** `gh run list --commit
+7acce42cfb4e9da0681f8df6f769b805d967b6e0` returned nothing 60 s after the push, a control query on `f43ff9501` listed its 4
+runs, and the newest 4 runs on `master` are still S899's: the third confirmation of the `paths-ignore` list (S900 push 2,
+S901's addendum, S902). Phase 0 found 0 undocumented commits, 0 pending receipts, S901's `quality_ratchet:` citation matching
+the results file, CI green on the last 10 runs, and upstream `KJ5HST/methodology#93` open with 0 comments. **Non-commit
+action:** the push. Commits: claim `ee54ef006` (amended once, to fix its date); the close-out commit carries the rest.
+No new Learning: nothing this session was not already in S900's and S901's gotchas.
 
-### What Session 901 Did
-**Deliverable, DONE (docs only; no code, test or `R/` change):** characterized the 10 red shard verify scripts and **reported the
-defect upstream as `KJ5HST/methodology#93`** (https://github.com/KJ5HST/methodology/issues/93), posted 2026-10-05T02:21:02Z on the
-owner's explicit instruction ("Post it as issue on KJ5HST/methodology"); title and body verified byte-identical to the draft; no
-labels. Re-measured first: 54 scripts, 44 pass, 10 fail (as S898 found). **None of the 10 is a real loss** (the records were
-diffed, not the script's verdict). Three causes: (1) 7 scripts (6 SESSION_NOTES, 1 HANDOFFS; v1.5.0): the trim shares a commit
-with the session's own close-out, so record 0 (a claim stub or a `status: pending` receipt) differs, and BL-27 keeps that a loud
-FAIL (the HANDOFFS shard has 7 receipts before and after); (2) 1 script (`SESSION_NOTES-through-2026-08-15`, v1.1.2): a baked-in
-`INJECTED=0` while the trim added one handoff-evaluation record (0 absent, 1 added); (3) 2 scripts: the L2 leak check is a
-substring test (an exact whole-line test flags 0). Report: `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (the issue text
-starts at its line 150). **Two facts changed the plan:** the fork `rmsharp/methodology` has issues disabled (the S898 ruling's
-channel did not exist, so the owner chose the parent, which has issues on), and, after the owner asked whether the defect is in the
-current version, both repos' `main` carry a byte-identical trimmer (113,754 B, v1.5.0): causes 1 and 3 are still present, cause 2
-was fixed upstream in v1.2.0, and no duplicate issue existed. **Non-commit actions:** the issue, and the push of S900's addendum
-(`ac110d665..529bb031b`; 0 CI runs, the second such confirmation of the `paths-ignore` list). Commits: claim `14a59bb4b`, report
-`360f1aa6d`, currency check `3b780513a`; the close-out commit carries the rest. `BACKLOG.md`: the item is now a compact BLOCKED
-item (28 -> 18 lines); Learning 869.
+**Handoff evaluation of S901: 9/10.** Helped: every `BACKLOG.md` line cite re-found exactly (`:22`, `:286`, `:392`, `:415`,
+`:436`, `:456`; `test_makePedigreeMatingLayout.R:663` and `:742` land on the 1456 arithmetic); the push range (4 commits, 6
+files, all on the `paths-ignore` list), the push-by-SHA step and the `gh run list --commit <full SHA>` gotcha all matched
+what happened, and "the push should start no run" was right. Missing: nothing that cost time. Wrong: nothing found.
 
-**Handoff evaluation of S900: 9/10.** Helped: `BACKLOG.md:286` was exact; "characterize the 8 L1 failures first (cause not yet known
-for 7)" was the right first question and the per-ledger split (HANDOFFS 2 of 15, CHANGELOG 1 of 16, SESSION_NOTES 7 of 23)
-re-measured exactly; the zsh-separator gotcha and the push-by-SHA note held. Missing: that the channel it called "the fork" has
-issues disabled (nobody had checked; the S898 ruling assumed it). Wrong: nothing found.
+**Self-assessment: 8/10.** + Orientation before any action; claimed first; checked the file list against the ignore list
+and the fast-forward (0 behind) before pushing; pushed by SHA; paired the "no run" query with a control so it is evidence,
+not an empty result. - My claim stub used the UTC date (2026-10-05) where this project dates by local time (2026-10-04); I
+caught it at close-out and amended the unpushed claim commit, which breaks the "a committed entry is never edited" habit
+in the one case where nothing had been pushed. Reduction: S901's record condensed (about 4,500 B -> about 1,300 B), so this
+file shrank, 36,625 B -> about 35,950 B; `HANDOFFS.md` (188,531 -> 190,952 B) and `CHANGELOG.md` (39,130 -> 40,209 B) grew by
+this session's entries.
 
-**Self-assessment: 8/10.** + Re-measured before trusting S898; characterized by diffing the records (the by-hand diff the script's
-own note asks for) rather than by the script's word; ran a patched scratch copy to show what the substring test matched; saw the
-issues-disabled problem before posting and stopped to ask; nothing was posted without an explicit instruction; the posted text was
-verified against the draft; the report's own unverified claims (a script line number, "routine", a stub's field count, a cited
-file path) were re-checked and corrected before commit. - The first pass checked the defect only against a local clone, so the
-owner had to ask whether it is in the current version (Learning 869); my first HANDOFFS record diff took the front-matter example
-block instead of receipt S790 (caught and redone); the owner declined my first routing question and asked that instead. Reduction:
-S900's record condensed (4,910 B -> 974 B) and the `BACKLOG.md` item shrank 28 -> 18 lines, but this file still grew,
-33,981 B (S900's close-out) -> 36,130 B (the S901 record is long); no further reduction was found this session. The ledgers
-and `PROJECT_LEARNINGS.md` also grew by this session's entries.
+**Next steps (owner-ordered):** (A) The owner decides whether to push this session's 2 local commits (claim `ee54ef006` and
+the close-out). They change only `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md`, all on the `paths-ignore` list; re-run
+`git diff --name-only origin/master..HEAD` first. Expect no run (derived from the file list; not yet measured for that range).
+A push session always ends with 2 new local commits, so the picker will offer a push again (S895, S900, S902). (B) Read
+upstream's answer: `gh issue view 93 -R KJ5HST/methodology --comments` (0 comments at this Phase 0); `BACKLOG.md:286` stays
+BLOCKED on it. (C) One real fix per session, any order, all READY: row-order tests only (`BACKLOG.md:415`; which tests
+assert the raw-CSV count is still not known); rhesus comment (`:436`; lint the reworded comment at 80 columns). Kept open:
+`isAddedRecord()` (`:22`), Candidate C (`:392`), `highlightNearest` (`:456`). Docs-audit slice 2 (the `shiny_app_use/`
+images) is READY, Effort L, and needs scoping first. (D) The ledger-size lever is still open (S892; not filed, not asked):
+at the start of this close-out `HANDOFFS.md` was 188,531 B and `CHANGELOG.md` 39,130 B (262,144 B is the Read refusal).
+Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
 
-**Next steps (owner-ordered):** (A) The owner decides whether to push the 4 local commits (claim `14a59bb4b`, report `360f1aa6d`,
-currency check `3b780513a` and this close-out). They change only `docs/audits/*.md`, `CHANGELOG.md`, `HANDOFFS.md`,
-`SESSION_NOTES.md`, `BACKLOG.md` and `PROJECT_LEARNINGS.md`, all on the `paths-ignore` list (run `git diff --name-only
-origin/master..HEAD` before pushing), so the push should start no run. (B) Read upstream's answer: `gh issue view 93 -R
-KJ5HST/methodology --comments`; the `BACKLOG.md:286` item is BLOCKED on it, and a follow-up goes in the same issue, never a
-re-post. (C) One real fix per session, any order, all READY: row-order tests only (`BACKLOG.md:415`;
-`test_makePedigreeMatingLayout.R:663-742`; which tests assert the raw-CSV count is still not known); rhesus comment (`:436`;
-`data-raw` is linted at 80 columns, so lint the reworded comment). Kept open: `isAddedRecord()` (`:22`), Candidate C (`:392`),
-`highlightNearest` (`:456`). Docs-audit slice 2 (the `shiny_app_use/` images) is READY, Effort L, and needs scoping first. (D) The
-ledger-size lever is still open (S892; not filed, not asked): at the start of this close-out `HANDOFFS.md` was 184,522 B and
-`CHANGELOG.md` 36,568 B (262,144 B is the Read refusal). Carried: PED_GV next group (the 9 ids), `reportGV(smallPed)` unfiled.
+**Key files:** `.github/workflows/lint.yaml` (the `paths-ignore` list, same in all four push workflows);
+`tests/testthat/test_workflowPathsIgnore.R`; `BACKLOG.md:286`, `:415`, `:436`.
 
-**Key files:** `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (findings lines 24-83, currency check 127-149, the issue text
-150-end); `BACKLOG.md:286`; https://github.com/KJ5HST/methodology/issues/93; `docs/archive/*-through-*.verify.sh` (54).
+**Gotchas:** a "no run" result needs a wait (60 s here) and a control query on a commit that does have runs; use the full
+SHA (`git rev-parse <sha>`) for `gh run list --commit`; date ledger entries by local time (`date`), not UTC; push by SHA
+(`git push origin <sha>:master`) so the claim commit stays local; run a wait inside `run_in_background` (a foreground
+`sleep` is blocked).
 
-**Gotchas:** run `gh repo view <repo> --json hasIssuesEnabled` before promising to post (the fork has issues off); read upstream's
-current file with `gh api "repos/<owner>/<repo>/contents/<path>?ref=main" --jq .content | base64 -d` and `cmp` it (the trimmer is
-`starter-kit/methodology_trim.py`; the root path 404s); to see what a generated `.verify.sh` matched, run a patched scratch copy
-(replace `if leaked:` with debug prints), never edit the shipped script; diff a HANDOFFS record by `session: S<N>`, not the first
-```handoff block (the front matter holds a format example); `gh run list --limit 1` once returned an older run (S900), so use the
-plain list or `--commit <full SHA>`; the S900 gotchas still hold.
+### What Session 901 Did (condensed S902; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Characterized the 10 red shard verify scripts (of 54: HANDOFFS 2, CHANGELOG 1, SESSION_NOTES 7) by diffing their records:
+**none is a real loss.** Causes: the trim shares a commit with the close-out, so record 0 differs (7 scripts, v1.5.0); a
+baked-in `INJECTED=0` (1 script, v1.1.2, fixed upstream in v1.2.0); a substring L2 leak test (2 scripts). **Reported upstream
+as `KJ5HST/methodology#93`** on the owner's instruction (the fork has issues disabled, so the owner chose the parent);
+`BACKLOG.md:286` is now BLOCKED on it. Report `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; Learning 869. Claim
+`14a59bb4b`, report `360f1aa6d`, currency check `3b780513a`, close-out `7acce42cf` (pushed S902). Handoff evaluation of S900:
+9/10. Self 8/10.
+**Gotchas kept:** run `gh repo view <repo> --json hasIssuesEnabled` before promising to post; read upstream's current file
+with `gh api ".../contents/<path>?ref=main" --jq .content | base64 -d` (the trimmer is `starter-kit/methodology_trim.py`); to
+see what a `.verify.sh` matched, run a patched scratch copy, never the shipped script; diff a HANDOFFS record by `session:
+S<N>`, not the first handoff block (the front matter holds a format example).
 
 ### What Session 900 Did (condensed S901; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Pushed S899's 6 local commits (`77ccb50f6..f43ff9501`, by SHA) and read CI: all four push workflows and all 8 jobs green on
