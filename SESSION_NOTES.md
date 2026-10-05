@@ -99,78 +99,95 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 912 Did
-**Deliverable:** the remaining PED_GV audit owner decisions (`BACKLOG.md:8`; 9 ids: 7 undecided, NEW-62 decided, NEW-24 on #123) (IN PROGRESS)
-**Started:** 2026-10-05 15:40 CDT
-**Status:** Session claimed; phase PRE-RED. First step: read `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` for the 7 undecided ids,
-then ask the owner (in plain words) which group to take this session (one deliverable only); any code change goes through RED/GREEN/REFACTOR.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (two owner decisions recorded; documentation only, no `R/` change):** the walk helpers, PED-3 and NEW-42
+(`BACKLOG.md:8`; picked at the Phase 0 picker, the group chosen at a scope question over the constants and HTML builders).
+**PED-3:** "Merge all four" hand-written "collect parents or offspring until nothing new turns up" loops into one internal
+function (over "fix only the LabKey function" and "leave all four, close it"). **NEW-42:** "Leave as is, document it" (over
+"ids first, in the 3.0.0 release"): `getParents()` and `getOffspring()` keep the pedigree-first order and their help pages
+will say so. Recorded as Decision record 13 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:379`); nothing is built. Two new
+READY items: `BACKLOG.md:38` (PED-3 build, Effort M, strict TDD) and `:57` (NEW-42 help sentence, Effort S, help text only).
 
-### What Session 911 Did
-**Deliverable, DONE (an owner decision recorded; documentation only, no `R/` change):** the owner's decision on NEW-62, the
-repeated "call the progress function if one was given" blocks (`BACKLOG.md:8`; picked at the Phase 0 picker, the group chosen at
-a scope question). **Decision:** "One shared helper for all 7" (over "leave as is, close it", which I recommended, and "only the 3
-in `reportGV`"). Nothing is built; the build is a new READY item (`BACKLOG.md:23`, Effort S, strict TDD). Recorded as Decision
-record 12 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:335`).
+**What I measured** (today's code, one bounded R probe, greps of `R/` and `tests/`): the PED-3 row names 2 loops and there
+are 4, 42 lines in all (`getProbandPedigree.R:26-37`, `getDescendantPedigree.R:27-34`, `getPedDirectRelatives.R:54-65`,
+`getLkDirectAncestors.R:69-78`). On circular data (A's sire B, B's sire A) three return the 2 animals in under 0.1 s and
+`getLkDirectAncestors()` (exported; no caller in `R/` or the app) never stops (it ran to my 5 s limit); only
+`test_getDescendantPedigree.R:57` tests circular data, so the merge is also a fix. Of the 18 exported functions that take a
+pedigree and animal ids, 11 put the ids first and 7 the pedigree first; a swapped call to `getParents()` or `getOffspring()`
+stops with "$ operator is invalid for atomic vectors". I also counted the other group's sites for the scope question (kept
+in record 13). Nine PED_GV ids stay open: 5 undecided (NEW-18/19/21/26/57), 3 decided and waiting on work (NEW-62, PED-3,
+NEW-42) and NEW-24 (issue #123).
 
-**What I measured** (read-only, today's code and `tests/`): the triage row is out of date twice. It cites 3 blocks at
-`reportGV.R:219,238,257` (now `:246,265,284`; S889's `assertRequiredColsPresent()` moved them), and the same pattern has 4 more
-copies outside that file: `geneDrop.R:124,147`, `convertRelationships.R:94`, `groupAddAssign.R:308` (7 sites, 33 lines). The app's
-callback is `function(n = 1L, detail = NULL, value = 0L, reset = FALSE)` (`modGeneticValue.R:284`, `modBreedingGroups.R:625`). No
-test records which messages are sent: the `reportGV` test's callback returns `"stub"`, all 10 `updateProgress` mentions in
-`test_geneDrop.R` pass `NULL`, and no `test_groupAddAssign*` passes one, so the build's first RED is a recording test per function.
+Commits: claim `61e143bce`; decision record and `BACKLOG.md` `6c64a3700`; the close-out commit carries receipt, notes, ledger
+entry and Learning 877.
 
-Commits: claim `1e4e858a1`; decision record and `BACKLOG.md` `5e6d30711`; the close-out commit carries receipt, notes, ledger
-entry and Learning 876. Nine PED_GV ids stay open: 7 undecided owner decisions, NEW-62 (decided, waits on the build) and NEW-24
-(issue #123).
+Verified: `quality_ratchet.py --run` 1/1 pass, results `097417a245af`, manifest `aa983075d6a2`, tarball 3.68601e+06 B against
+the 5e+06 limit. Grepped `tests/`, `R/` and `.github/` for the names of the files I changed: every match is a comment, a
+message string, or `test_workflowPathsIgnore.R` (workflow YAML and a list of paths), so no test was run. Not run: full suite,
+`devtools::check()`, lint (no `.R` file changed), CI (unpushed), the app (docs only). NEWS and `_pkgdown` not owed; no issue
+closed (#123 is NEW-24's and stays open).
 
-Verified: `quality_ratchet.py --run` 1/1 pass, results `c4dda28d3c7c`, manifest `aa983075d6a2`, tarball 3.68606e+06 B against the
-5e+06 limit. Grepped `tests/` and `R/` for the names of the files I changed: every match is a comment except
-`test_workflowPathsIgnore.R`, which reads the workflow YAML and `.Rbuildignore` (these files appear there only as a list of
-paths), so no test was run. Not run: full suite, `devtools::check()`, lint (no `.R` file changed), CI (unpushed), the app (docs
-only). NEWS and `_pkgdown` not owed; no issue closed (#123 is NEW-24's and stays open).
+**Handoff evaluation of S911: 9/10.** Helped: its next-steps list matched `BACKLOG.md` and ordered the picker; all 7 cites
+(`BACKLOG.md:8`, `:23`, `:60`, `:283`, `:389`, `:413`, `:432`) re-found exactly before my edit; "28 local commits" measured 28
+ahead; `HANDOFFS.md` 233,063 B matched; upstream #93 open with 1 comment (re-checked with `gh api`); Decision record 12 was
+the format template and its gotcha (grep the idiom across `R/`) held again, 2 loops became 4. Missing: it could not say the
+two unmeasured groups hid anything (the walk helpers hid a hang); the ratchet citation sits inside the receipt's
+`runtime_smoke` field, not a named one, so Phase 0 step 6's check is a text search (it matched: results `c4dda28d3c7c`,
+manifest `aa983075d6a2`, before I ran anything). Wrong: nothing found.
 
-**Handoff evaluation of S910: 9/10.** Helped: `BACKLOG.md:8`, `:46`, `:375` and `:269` re-found exactly before my edit; "25 local
-commits" measured 25 ahead; `HANDOFFS.md` 227,537 B matched; upstream #93 open with 1 comment (re-checked with `gh api`); the
-Phase 0 grep of `BACKLOG.md` tags found only 2 tagged items, so its owner-ordered list was the real priority source. Missing: how
-a PED_GV pickup proceeds (a decision session writes a record, a later session builds; Decision records 8, 10 and 12 are the
-pattern) and that the triage table's line cites had drifted. Wrong: it lists PED_GV under "READY" while `BACKLOG.md:8` says
-DECISION NEEDED, and "all owner decisions" is not quite right (NEW-24 is tracked on #123).
+**Self-assessment: 8/10.** + Claimed (`61e143bce`) before any technical work; measured before asking and put tested facts
+beside each question (the hang by probe, the swap by test, the argument-order count by script); both question rounds were
+answered on the first try (plain option text, exported names only, recommendation first); one deliverable, no `R/` change; two
+commits of 2 and 3 files. - My scope-question option said "the 11 relationship names listed in 3 files"; measured afterwards,
+all 11 are in 2 files and 3 are also in a third (corrected in record 13 and Learning 877). My chat summary said the four loops
+are "10-15 lines each" before I counted (8 to 12; 42 in all). Neither changed the owner's pick. I read all five sites of the
+second group for one count that I then misworded. Reduction: S911's record condensed (6,906 B to 1035 B);
+`BACKLOG.md` +32 lines, +2,586 B (two new items, nothing completed to remove); `HANDOFFS.md`, `CHANGELOG.md` and
+`PROJECT_LEARNINGS.md` grew by this session's entries, and nothing else could be removed.
 
-**Self-assessment: 6/10.** + Claimed before technical work; measured today's code before asking and put the counts (7 sites,
-33 lines, 0 tests on the messages) beside the question; caught my own "8 owner decisions" (it is 7 plus NEW-62 plus NEW-24) and a
-wrong "NEW-51 waited like NEW-50" before they left the working tree; two commits of 3 and 2 files; no `R/` change. - I skipped Phase 0
-step 6's check of S910's `quality_ratchet:` citation (results `43ac12b4193b`) against `.quality-gates-results.json`; my later
-`--run` overwrote that gitignored file, so it cannot be made now (the new run passes, same manifest). The first
-NEW-62 question bounced: its option text named `isAddedRecord()` and "pins today's messages", the S788/S909 failure my memory
-already warns about; the plain re-ask was answered at once. My recommendation (leave as is) was not the owner's choice. I copied
-"all owner decisions" into the claim stub from the handoff before checking. Reduction: S910's record condensed (6.7 KB to about
-1.0 KB); `BACKLOG.md` +14 lines, +1,132 B (a new item, nothing completed to remove); `HANDOFFS.md`, `CHANGELOG.md` and
-`PROJECT_LEARNINGS.md` grew by this session's entries.
+**Next steps (owner-ordered):** (A) The PED-3 build (`BACKLOG.md:38`, READY, Effort M): the Pre-RED scope gate first (the
+walker's name and file; whether `getLkDirectAncestors()` stops with the animals found or with a message), then a recording
+test per function at the current commit (rows, row order including the LabKey generation order, `NA` ids), then a
+circular-data test for each of the three that lack one, then the merge under strict TDD. (B) The NEW-62 build (`:25`, READY,
+Effort S). (C) The NEW-42 help sentence (`:57`, READY, Effort S, help text only). (D) The dashed-link item (`:421`, DECISION
+NEEDED; Effort S for a legend row, M for hover text). (E) Docs-audit slice 2 (`:92`, READY but needs scoping first, Effort
+L). (F) PED_GV: the 5 undecided ids are the constants and HTML builders (NEW-18/19/21/26/57; their sites are in record 13),
+at `:8`. (G) Unpushed: 31 local commits after this close-out (S904-S911 as in their records; S912 claim `61e143bce`,
+decision `6c64a3700`, close-out); the push carries `R/` and vignette changes, so all four workflows start and the
+R-CMD-check matrix has not seen S908's helper or S909's vignette edit: read CI after it; per the owner's S905 ruling it is
+not offered as a task. (H) Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked S912); the BLOCKED item is
+`BACKLOG.md:315`. (I) `HANDOFFS.md` is 239,775 B after this close-out's edits (233,063 B after S911's; the Read tool refuses
+at 262,144 B, so about 22 KB of room; roughly three sessions at this session's 6.7 KB, my estimate; trim with
+`methodology_trim.py --force` before it gets there). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from
+S910 (untested).
 
-**Next steps (owner-ordered):** (A) The NEW-62 build (`BACKLOG.md:23`, READY, Effort S): the Pre-RED scope gate first (keep the
-`!is.null()` test or move to `is.function()`; the helper's name and file), then recording tests at the current commit. (B) The
-dashed-link item (`BACKLOG.md:389`, DECISION NEEDED; Effort S for a legend row, M for hover text): the owner decides legend row
-only or hover text too, and the wording. (C) Docs-audit slice 2 (`:60`, READY but needs scoping first, Effort L). (D) PED_GV: the
-7 undecided ids are the walk helpers (PED-3, NEW-42; exported) and the constants and HTML builders (NEW-18/19/21/26/57), at `:8`.
-(E) Unpushed: 28 local commits after this close-out (S904-S910 as in their records; S911 claim `1e4e858a1`, decision
-`5e6d30711`, close-out); the push carries `R/` and vignette changes, so all four workflows start and the R-CMD-check matrix has not
-seen S908's helper or S909's vignette edit: read CI after it; per the owner's S905 ruling it is not offered as a task. (F)
-Upstream `KJ5HST/methodology#93` is still open with 1 comment (checked S911); the BLOCKED item is now `BACKLOG.md:283`. (G)
-`HANDOFFS.md` is 233,063 B after this close-out's edits (227,537 B after S910's; about 29 KB below the 262,144 B Read refusal;
-roughly five sessions at this session's 5.5 KB, my estimate). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested).
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:379` (Decision record 13: the 4-loop table, the
+argument-order count; probe P12 at the end of the file); `R/getProbandPedigree.R:26-37`, `R/getDescendantPedigree.R:27-34`,
+`R/getPedDirectRelatives.R:54-65`, `R/getLkDirectAncestors.R:69-78` (the loops); `R/getParents.R:6-7` and
+`R/getOffspring.R:6-7` (the help text to extend); `tests/testthat/test_getDescendantPedigree.R:57` (the only circular-data
+test), `test_getLkDirectAncestors.R:36-51` (the `mockery` stub pattern); `PROJECT_LEARNINGS.md` Learning 877; `BACKLOG.md`
+cites after this session's +32 lines: `:8`, `:25`, `:38`, `:57`, `:68` (`getAncestors`), `:92` (docs audit), `:315`
+(upstream-blocked), `:421` (dashed links), `:445` (outreach), `:464` (paper).
 
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:335` (Decision record 12, the 7-site table);
-`R/reportGV.R:246,265,284`, `R/geneDrop.R:124,147`, `R/convertRelationships.R:94`, `R/groupAddAssign.R:308` (the blocks);
-`tests/testthat/test_reportGV.R:24-28`, `test_geneDrop.R`, `test_convertRelationships.R:8` (what the tests pass);
-`PROJECT_LEARNINGS.md` Learning 876; `BACKLOG.md` cites after this session's +14 lines: `:8`, `:23`, `:60` (docs audit), `:283`
-(upstream-blocked), `:389` (dashed links), `:413` (outreach), `:432` (paper).
+**Gotchas:** run a never-stops probe only under `setTimeLimit(elapsed = 5, transient = TRUE)` (the LabKey loop grows a data
+frame every pass); `getLkDirectAncestors()` returns rows generation by generation with the first occurrence of an id kept,
+the other three return rows in pedigree order, so a shared walker must hand back ids and let each caller keep its own row
+assembly; stub the LabKey function with `mockery::stub(f, "getDemographics", function(...) table)` (`getSiteInfo()` needs no
+stub, it only warns); the argument-order survey matched by argument names (`ped`, `pedSourceDf`, `pedigree`, `pedDf` against
+`ids`, `id`, `probands` and similar) and left out the Shiny module servers, whose `id` is the module id; zsh does not
+word-split an unquoted `$spec` (`set -- $spec` fails), so write a shell function; `devtools::document()` rewrites
+`man/nprcgenekeepr-package.Rd` (revert it); adding or removing a BACKLOG block shifts every later cite, so re-grep; state a
+count in option text the way it was measured and re-run it first (Learning 877); take `wc -c` after the last edit
+(Learning 871).
 
-**Gotchas:** a triage row scoped to one file understates a repeated idiom, so grep the idiom across `R/` before asking (3 blocks
-were 7 sites in 4 files); a report's line cites drift after every edit to the cited file; `geneDrop.R:147`,
-`convertRelationships.R:94` and `groupAddAssign.R:308` sit in per-item loops, so time each function before and after (not timed
-here); a helper must keep today's behaviour for a non-function callback unless the owner chooses otherwise; keep internal names and
-"pins" out of `AskUserQuestion` option text; `run_in_background` with a redirect finishes quietly, so read the output file; compare the last receipt's ratchet citation with
-`.quality-gates-results.json` at Phase 0, before any `--run` overwrites that gitignored file; take `wc -c` after the last edit
+### What Session 911 Did (condensed S912; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Recorded the owner's decision on NEW-62, the seven repeated "call the progress function if one was given" blocks: one shared
+helper for all 7 (over "leave as is", my recommendation, and "only the 3 in `reportGV`"). Docs only. The row was out of date
+twice: 3 blocks at `reportGV.R:219,238,257` were 7 sites in 4 files (33 lines) and no test records the messages. Decision
+record 12; the build is `BACKLOG.md:25` (READY, Effort S). Claim `1e4e858a1`, decision `5e6d30711`, close-out `e761909e9`
+(all still local). Handoff evaluation of S910: 9/10. Self 6/10.
+**Gotchas kept:** a triage row scoped to one file understates a repeated idiom, so grep it across `R/` first; a report's line
+cites drift after every edit to the cited file; keep internal names and "pins" out of option text; compare the last receipt's
+ratchet citation with `.quality-gates-results.json` at Phase 0, before any `--run`; take `wc -c` after the last edit
 (Learning 871).
 
 ### What Session 910 Did (condensed S911; full record in `CHANGELOG.md` and `HANDOFFS.md`)
