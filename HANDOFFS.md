@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S906
+date: 2026-10-05
+status: pending
+active_task: record the owner's decision on the row-order item (BACKLOG.md:415); decision only, no code change unless the ruling names one; the owner picked it at the Phase 0 picker
+```
+
+```handoff
 session: S905
 date: 2026-10-05
 status: complete

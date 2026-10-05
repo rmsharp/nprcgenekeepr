@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 906 Did
+**Deliverable:** record the owner's decision on the row-order item (`BACKLOG.md:415`): leave it, find out why kinship2 drops
+`3CLMPL` and `3GW5WC` in QC order, or make the layout order-independent (IN PROGRESS)
+**Started:** 2026-10-05
+**Status:** Session claimed; phase PRE-RED, nothing to build until the owner rules. Picked by the owner at the Phase 0 picker.
+A decision pick is not a go-ahead to edit files: record the ruling, then close out.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 905 Did
 **Deliverable, DONE (tests only; no `R/` change):** the row-order item (`BACKLOG.md:415`). Measuring first (Learning 870) showed
 the S898 ruling's premise was too narrow. The app's QC'd copy of the bundled rhesus fixture differs from the raw CSV in row
