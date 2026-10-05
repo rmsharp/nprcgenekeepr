@@ -332,6 +332,50 @@ report, where it gave 43 ids, 33 closed, 10 open, the same open set as Decision 
 8 owner decisions, the walk helpers (PED-3, NEW-42; exported), constants and HTML builders (NEW-18, NEW-19, NEW-21, NEW-26,
 NEW-57) and the repeated `updateProgress` null checks (NEW-62; 3 blocks).
 
+### Decision record 12 (owner decision 2026-10-05, S911) -- progress-callback checks
+
+The owner chose "One shared helper for all 7" (over "Leave as is, close it" and "Only the 3 in reportGV") for NEW-62. S911
+wrote it down and changed no code. The table above stays the frozen S781 reading.
+
+| id | decided |
+|---|---|
+| NEW-62 | DECIDED, STAYS OPEN until it ships: one internal (not exported) helper replaces the seven "if a progress function was given, call it" blocks in four files; no change for users. Work not started; strict TDD, with the owner's approval of the scope at its own gate. New READY item in `BACKLOG.md`. |
+
+What S911 measured, for whoever picks up the work (by reading today's code and grepping `tests/`; nothing was run):
+
+- **The row is out of date twice.** It cites 3 blocks at `reportGV.R:219,238,257`; they are at `:246,265,284` (S889's
+  `assertRequiredColsPresent()` call moved them), and the same pattern has four more copies outside `reportGV.R`.
+- **The seven sites** (33 lines in all; the `reportGV.R` three differ only in the message text):
+
+  | Site | What it sends | Lines |
+  |---|---|---|
+  | `reportGV.R:246` | `detail = "Calculating Genome Uniqueness", value = 1L, reset = TRUE` | 6 |
+  | `reportGV.R:265` | `detail = "Calculating Numbers of Offspring"`, same two arguments | 6 |
+  | `reportGV.R:284` | `detail = "Calculating Founder Equivalents"`, same two arguments | 6 |
+  | `geneDrop.R:124` | `detail = "Performing Gene-drop Simulation", value = 0L, reset = TRUE` | 6 |
+  | `geneDrop.R:147` | `n = nrow(ped)`, inside `for (id in ped$id)` | 3 |
+  | `convertRelationships.R:94` | no arguments, inside the per-pair loop | 3 |
+  | `groupAddAssign.R:308` | no arguments, inside the iteration loop | 3 |
+
+- **The callback the app passes** is `function(n = 1L, detail = NULL, value = 0L, reset = FALSE)` (`R/modGeneticValue.R:284`,
+  `R/modBreedingGroups.R:625`). `reportGV()` hands its callback to `geneDrop()` (`:243`) and `gvaConvergence()` hands its own to
+  `geneDrop()` (`R/gvaConvergence.R:199`); those two are pass-throughs with no null check, so they are not blocks.
+- **What the tests pin about the calls to the callback: nothing.** `test_reportGV.R:24-26` passes a stub that returns `"stub"` and
+  checks only the report's shape; `test_convertRelationships.R:8` passes `function() {}`; all 10 `updateProgress` mentions in
+  `test_geneDrop.R` pass `NULL` (so `geneDrop()`'s own tests never reach its two callback branches; `reportGV()`'s test does);
+  no `test_groupAddAssign*` file passes a callback. No test records which messages are sent or in what order, so the first RED
+  is a recording test for each function (a stub that saves its calls), written and run at the current commit before any block moves.
+- **Estimate, not a measurement:** the 33 lines of blocks become about 11 lines of calls, plus a helper of roughly 10 lines and a
+  new test file.
+- **Points for the pickup's scope gate:** (a) keep the `!is.null(updateProgress)` test, so a non-function still fails as it
+  does today, or switch to `is.function()` (a small behaviour change); (b) the helper's name and file; (c) three sites sit in
+  per-item loops (`geneDrop.R:147`, `convertRelationships.R:94`, `groupAddAssign.R:308`), so time each function before and after
+  on a large pedigree (not timed here); (d) whether `reportGV()`'s own checks stay inline.
+
+Open after this decision: **9 ids** (no id closed; NEW-62 is decided and waits on the work, as NEW-28 and NEW-50 did):
+NEW-24 (issue #123, tracked), NEW-62 (decided) and 7 owner decisions, the walk helpers (PED-3, NEW-42; exported) and constants
+and HTML builders (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
