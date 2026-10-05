@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 914 Did
+**Deliverable:** NEW-62, one internal helper for the seven "call the progress function if one was given" blocks (`BACKLOG.md:25`;
+owner decision S911, Decision record 12; no change for users) (IN PROGRESS)
+**Started:** 2026-10-05 16:57 CDT
+**Status:** Session claimed; phase PRE-RED. Picked at the Phase 0 picker. First step: read `DEVELOPMENT_WORKSTREAM.md`, Decision
+record 12 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:335`) and the seven sites, then ask the owner the Pre-RED questions.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 913 Did
 **Deliverable, DONE (NEW-42 shipped; help text only, strict TDD):** the help pages of `getParents()` and `getOffspring()` now
 say the pedigree is the first argument, unlike `getProbandPedigree()`, `getDescendantPedigree()`, `getPedDirectRelatives()`

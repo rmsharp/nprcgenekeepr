@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S914
+date: 2026-10-05
+status: pending
+active_task: NEW-62, one internal helper for the seven "call the progress function if one was given" blocks (BACKLOG.md:25; owner decision S911, Decision record 12; READY, Effort S); the owner picked it at the Phase 0 picker; the helper's test, name, file and the timing are settled at the pre-RED gate
+```
+
+```handoff
 session: S913
 date: 2026-10-05
 status: complete
