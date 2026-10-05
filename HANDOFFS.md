@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S901
+date: 2026-10-04
+status: pending
+active_task: characterize the 8 L1 shard-verify failures and the 2 L2 front-matter leaks from methodology_trim.py's generated .verify.sh scripts, then draft the upstream report for the rmsharp/methodology fork (BACKLOG.md:286); the owner picked it at the Phase 0 picker; the draft is the deliverable and posting it is not done without the owner's go-ahead
+```
+
+```handoff
 session: S900
 date: 2026-10-04
 status: complete

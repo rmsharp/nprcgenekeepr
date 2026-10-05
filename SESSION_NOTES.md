@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 901 Did
+**Deliverable:** characterize the 8 `L1 records-zone concatenation is not byte-identical` shard verify failures and the
+2 L2 front-matter leaks, then draft the upstream report for the `rmsharp/methodology` fork (`BACKLOG.md:286`) (IN PROGRESS)
+**Started:** 2026-10-04
+**Status:** Session claimed. Origin equals HEAD (0 ahead, 0 behind). The draft is the deliverable; posting it is an outward
+action and waits for the owner's go-ahead. No code in this repo changes.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 900 Did
 **Deliverable, DONE (no code, test or document-content change):** pushed S899's 6 local commits to `origin/master`
 (`77ccb50f6..f43ff9501`, a plain fast-forward, by SHA, so this session's claim stayed local) and read CI. **All four push
