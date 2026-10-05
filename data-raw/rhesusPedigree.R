@@ -4,12 +4,16 @@
 #' Re-export of the bundled `rhesusPedigree` data object (Session 123, owner
 #' pick A6: correct the degraded column types).
 #'
-#' `rhesusPedigree` is an obfuscated 375-animal rhesus studbook with NO
-#' reproducible generator: the original object was obfuscated from
-#' inst/extdata/examples/rhesusPedigree_fromCenter.csv via obfuscatePed() and
-#' saved by hand (commit 31c4679d, 2020-02-02). The obfuscation is
-#' non-deterministic and was never scripted or seeded, so the exact shipped
-#' (obfuscated) id and birth VALUES cannot be re-derived from the CSV. This
+#' `rhesusPedigree` is a 375-animal rhesus studbook with NO reproducible
+#' generator: no script here builds it, and data/rhesusPedigree.RData was
+#' first committed in 31c4679d (2020-02-02). Any obfuscation of its id and
+#' birth values (obfuscatePed() draws random date offsets) cannot be
+#' reproduced, since no script or seed for it is kept in this repository.
+#' Nor is inst/extdata/examples/rhesusPedigree_fromCenter.csv an independent
+#' pre-obfuscation source: its 8 shared columns (id, sire, dam, sex, gen,
+#' birth, exit, age) hold the object's values on all 375 rows (compared
+#' 2026-10-05), and it was first committed in 868a4975 (2026-06-15), after
+#' the object. This
 #' script therefore COERCES the existing object's column types to the
 #' canonical pedigree types (matching `examplePedigree`) WITHOUT altering any
 #' values, then re-saves it in place.

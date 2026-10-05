@@ -412,26 +412,6 @@ section's live work.*
       precluded -- remains open as a future, separately-scoped enhancement if the owner judges,
       from that live render, that remaining cross-generation mate-lines still benefit from
       signposting for legibility.
-- [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
-      `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
-      source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
-      are byte-identical on every shared column** (found S470, incidental to
-      the founder-positioning audit above; owner chose to reword the comment, S898; READY,
-      Effort S, low priority) -- confirmed
-      via `identical()` on `id`/`sire`/`dam`/`sex`/`gen`/`birth`/`exit`/`age`
-      between the two files; `rhesusPedigree_fromCenter.csv` differs only by
-      one added `fromCenter` column (all `TRUE`). The documented `obfuscatePed()`
-      id/date-obfuscation transform was evidently never applied to produce this
-      particular fixture, or produced a no-op. Not fixed this session (reported
-      per `PROJECT_LEARNINGS.md` Learning 382's "report, don't fix mid-session"
-      precedent -- out of the founder-positioning audit's own scope). **Owner ruling (S898):
-      reword the comment** to say only what is true (the values agree; the obfuscation step
-      cannot be reproduced); comment only, no data change, and the CSV is not regenerated.
-      **Re-measured S898:** the claim sits in the docstring's lines 7-10 and is about the
-      `rhesusPedigree` object, not `obfuscated_rhesus_mhc_ped.csv`; that object's `id` and `birth`
-      equal the `fromCenter` CSV's, and the two CSVs agree on all 8 shared columns (375 rows). See
-      `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md`
-      Finding #4, `PROJECT_LEARNINGS.md` Learning 468.
 - [ ] **`highlightNearest` degree=6 mitigation for the rectilinear style is
       bounded, not a full fix** (found S468, owner kept it open S898; READY (optional), Effort
       M, low priority) -- a
