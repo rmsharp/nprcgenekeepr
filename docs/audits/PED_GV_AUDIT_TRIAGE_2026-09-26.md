@@ -456,6 +456,16 @@ Open after this closure: **8 ids** (9 minus NEW-42; recounted S913: the table ha
 among them, so 35 are closed): NEW-24 (issue #123, tracked), NEW-62 and PED-3 (decided, wait on the work), and the 5 undecided
 constants and HTML builders ids (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
 
+### Closure record 15 (S914, 2026-10-05) -- decision record 12's NEW-62 shipped
+
+| id | closed because |
+|---|---|
+| NEW-62 | SHIPPED: one internal helper, `notifyProgress(updateProgress, ...)` in `R/notifyProgress.R` (`@noRd`, not exported, a 6-line function), replaces the seven `if (!is.null(updateProgress))` blocks at `R/reportGV.R:246,263,280`, `R/geneDrop.R:124,145`, `R/convertRelationships.R:94` and `R/groupAddAssign.R:308`; the 33 lines of blocks became 19 lines of calls. The two pass-throughs (`reportGV.R:243`, `gvaConvergence.R:199`) are untouched. At the Pre-RED gate the owner kept the `!is.null()` test (a non-function still stops with `could not find function "updateProgress"`, measured for `geneDrop()` and `convertRelationships()` before the change; the helper's parameter is named `updateProgress` so that message is unchanged) and chose the name `notifyProgress`, no leading dot. Pinned by `test_notifyProgress.R` (RED `66c9e61cf`; GREEN `a2a0c9bb7`; REFACTOR `3d521d0c9`), 14 tests and 34 expectations: the helper itself; one recording test per function of the calls it sends, measured at the unchanged commit (`geneDrop()`: one start call, then one `n = nrow(ped)` per animal; `reportGV()`: those, then three step messages; `convertRelationships()`: one argument-free call per pair; `groupAddAssign()`: one per iteration; green before any block moved); and one test per function that it goes through the helper (red until the blocks moved; with the pre-change `R/` files back in place exactly these four fail again, 11 expectations). Timing, old and new code alternating in one R process (7 repetitions): +0.3 to +0.8% on five of six rows and +3.8% for `groupAddAssign()` with no callback, inside a 0.26-0.40 s run-to-run range; a per-call microbenchmark gives +0.4 to +0.6 microseconds, about 2 ms on the 3,694-animal `examplePedigree` run. |
+
+Open after this closure: **7 ids** (8 minus NEW-62; recounted S914: the table has 43 ids, all unique, and the 7 open ones are all
+among them, so 36 are closed): NEW-24 (issue #123, tracked), PED-3 (decided, waits on the work), and the 5 undecided constants and
+HTML builders ids (NEW-18, NEW-19, NEW-21, NEW-26, NEW-57).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

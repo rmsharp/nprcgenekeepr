@@ -9,31 +9,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (DECISION NEEDED, Effort S each; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code; its
       table is the plan, so read it first. Its four fix slices all shipped (F1 S782, F4 S783,
-      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-14 (S818-S913) hold
-      the 35 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
-      sessions. **8 ids remain** (S913 recomputed this from the report's table: 43 ids, 35 closed,
+      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-15 (S818-S914) hold
+      the 36 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
+      sessions. **7 ids remain** (S914 recomputed this from the report's table: 43 ids, 36 closed,
       none counted twice).
-      **Open, 5 owner decisions, 2 decided ids waiting on work, and NEW-24:** (a) the overhaul
+      **Open, 5 owner decisions, 1 decided id waiting on work, and NEW-24:** (a) the overhaul
       roots, none urgent -- only the constants and HTML builders (NEW-18/19/21/26/57) are still
-      undecided (S912 measured their sites, kept in record 13); NEW-62 (the `updateProgress` null
-      checks; record 12, S911) and PED-3 (merge the four walk loops; record 13, S912) are decided
-      and wait on the next two items (NEW-42, the walk helpers' argument order, shipped S913 as a
-      help-page sentence; closure record 14); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
+      undecided (S912 measured their sites, kept in record 13); PED-3 (merge the four walk loops;
+      record 13, S912) is decided and waits on the next item (NEW-42, the walk helpers' argument
+      order, shipped S913 as a help-page sentence, closure record 14; NEW-62, the
+      `updateProgress` null checks, shipped S914, closure record 15); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
       **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
       "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
-
-- [ ] **One internal helper for the seven "call the progress function if one was given" blocks
-      (NEW-62; READY, Effort S; owner decision S911, Decision record 12 of the PED_GV triage
-      report; strict TDD)** -- replaces the seven `if (!is.null(updateProgress))` blocks in
-      `R/reportGV.R:246,265,284`, `R/geneDrop.R:124,147`, `R/convertRelationships.R:94` and
-      `R/groupAddAssign.R:308` with calls to one unexported helper; no change for users. The
-      record lists what each site sends. **First RED:** a recording test per function (a stub that
-      saves its calls), run at the current commit before any block moves, because no test pins the
-      messages or their order today (`test_reportGV.R:24-26` returns `"stub"`, all 10 mentions in
-      `test_geneDrop.R` pass `NULL`, no `test_groupAddAssign*` passes a callback). **For its
-      Pre-RED gate:** keep the `!is.null()` test or move to `is.function()` (a small behaviour
-      change); the helper's name and file; time the three per-item-loop sites before and after on
-      a large pedigree (not timed yet).
 
 - [ ] **One internal walker for the four "collect parents or offspring until nothing new turns
       up" loops (PED-3; READY, Effort M; owner decision S912, Decision record 13 of the PED_GV
