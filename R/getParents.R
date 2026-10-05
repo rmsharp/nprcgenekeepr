@@ -4,7 +4,10 @@
 #' Get parents to corresponding animal IDs provided
 #'
 #' @param pedSourceDf dataframe with pedigree structure having at least the
-#' columns id, sire, and dam.
+#' columns id, sire, and dam. The pedigree is the first argument, unlike
+#' \code{\link{getProbandPedigree}()}, \code{\link{getDescendantPedigree}()},
+#' \code{\link{getPedDirectRelatives}()} and \code{\link{findOffspring}()},
+#' which take the animal ids first.
 #' @param ids character vector of animal IDs
 #' @return A character vector with the IDs of the parents of the provided ID
 #' list.
