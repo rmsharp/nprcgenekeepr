@@ -103,11 +103,7 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
   }
   # Only "added" records are set aside: an NA, blank or unrecognised status is
   # a real animal, and an absent (NULL) status means no added rows are known.
-  isAdded <- if (is.null(recordStatus)) {
-    rep(FALSE, length(id))
-  } else {
-    !is.na(recordStatus) & recordStatus == "added"
-  }
+  isAdded <- isAddedRecord(recordStatus, length(id))
   femaleSires <- id[(id %in% sires) & (!sex %in% keepAsSire) & !isAdded]
   maleDams <- id[(id %in% dams) & (!sex %in% keepAsDam) & !isAdded]
   if (length(femaleSires) == 0L) {

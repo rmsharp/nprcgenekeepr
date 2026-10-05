@@ -112,7 +112,7 @@ convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
   ## row subscript would return an all-NA phantom row, so mask explicitly.
   pedRows <- seq_len(nrow(ped))
   if (any("recordStatus" %in% names(ped))) {
-    isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"
+    isAdded <- isAddedRecord(ped$recordStatus)
     addedPed <- ped[isAdded, ]
     ped <- ped[!isAdded, ]
     pedRows <- pedRows[!isAdded]

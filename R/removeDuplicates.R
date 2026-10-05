@@ -45,7 +45,7 @@ removeDuplicates <- function(ped, reportErrors = FALSE) {
     ## Only "added" records are set aside. An NA, blank or unrecognized status
     ## is a real animal. The ids come from the remaining rows alone, so no
     ## logical mask shorter than ped$id is recycled over the added rows.
-    isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"
+    isAdded <- isAddedRecord(ped$recordStatus)
     ids <- ped$id[!isAdded]
     if (anyDuplicated(ids) > 0L) {
       ids[duplicated(ids)]

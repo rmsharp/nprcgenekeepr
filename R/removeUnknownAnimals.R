@@ -28,5 +28,5 @@ removeUnknownAnimals <- function(ped) {
   }
   ## Only "added" rows are removed. An NA status is not "added", and an NA in a
   ## row subscript would return an all-NA phantom row, so guard it explicitly.
-  ped[is.na(ped$recordStatus) | ped$recordStatus != "added", ]
+  ped[!isAddedRecord(ped$recordStatus), ]
 }
