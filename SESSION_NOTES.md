@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 907 Did
+**Deliverable:** reword the `data-raw/rhesusPedigree.R` docstring (lines 7-10) so it says only what is true (`BACKLOG.md:415`) (IN PROGRESS)
+**Started:** 2026-10-05
+**Status:** Session claimed; phase PRE-RED. Comment-only change per the S898 owner ruling; no data change, the CSV is not regenerated.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 906 Did
 **Deliverable, DONE (decision only; no code, test or `R/` change):** recorded the owner's ruling on the row-order item
 (`BACKLOG.md:415` before removal): **leave it.** Picked at the Phase 0 picker ("Decide row-order item"). I put S905's

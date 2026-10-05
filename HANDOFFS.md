@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S907
+date: 2026-10-05
+status: pending
+active_task: reword the data-raw/rhesusPedigree.R docstring (lines 7-10) so it says only what is true (BACKLOG.md:415; owner ruling S898: comment only, no data change); the owner picked it at the Phase 0 picker
+```
+
+```handoff
 session: S906
 date: 2026-10-05
 status: complete
