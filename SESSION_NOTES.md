@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 908 Did
+**Deliverable:** one internal `isAddedRecord()` helper for the "added" mask, with the four inline copies moved onto it (`BACKLOG.md:22`) (IN PROGRESS)
+**Started:** 2026-10-05
+**Status:** Session claimed; phase PRE-RED. A cross-file refactor: plan-mode approval first, strict TDD gates, staged commits under the 5-file cap.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 907 Did
 **Deliverable, DONE (comment only; no code, data or test change):** reworded the `data-raw/rhesusPedigree.R` docstring (now lines
 7-19, plus line 25) so it says only what is true (`BACKLOG.md:415-434` before removal; owner ruling S898). Picked at the Phase 0

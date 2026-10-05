@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S908
+date: 2026-10-05
+status: pending
+active_task: add one internal isAddedRecord() helper for the "added" mask and move the four inline copies onto it (BACKLOG.md:22; optional, Effort S; owner kept it open S898); the owner picked it at the Phase 0 picker
+```
+
+```handoff
 session: S907
 date: 2026-10-05
 status: complete
