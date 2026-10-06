@@ -38,6 +38,7 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   if (!is.null(ids)) {
     kmat <- filterKinMatrix(ids, kmat)
   }
+  # No id of `ids` is in `kmat`: a matrix with no cells has no pairs to name.
   if (length(kmat) == 0L) {
     return(data.frame(
       id1 = character(0L), id2 = character(0L), kinship = numeric(0L),

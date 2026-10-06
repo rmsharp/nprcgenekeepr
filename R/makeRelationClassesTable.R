@@ -39,6 +39,8 @@ makeRelationClassesTable <- function(kin) {
   relationClass <- unname(relationClassNames)
 
   kin <- kin[kin$relation != relationClassNames[["self"]], ]
+  # Only Self pairs, or no rows, were given: nothing to count. The columns keep
+  # the classes (factor, integer) they have when there are rows.
   if (nrow(kin) == 0L) {
     return(data.frame(
       `Relationship Class` = factor(character(0L)),
