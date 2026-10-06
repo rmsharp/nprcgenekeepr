@@ -225,7 +225,7 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
     }
   }
 
-  kmat <- kmat[1L:n, 1L:n]
+  kmat <- kmat[1L:n, 1L:n, drop = FALSE]
   dimnames(kmat) <- list(id, id)
   kmat
 }

@@ -63,7 +63,7 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
   }
 
   currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
-  d <- d[currentDesc, ]
+  d <- d[currentDesc, , drop = FALSE]
   p <- colMeans(d)
 
   list(p = p, ped = ped)

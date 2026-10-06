@@ -28,6 +28,9 @@ alleleFreq <- function(alleles, ids = NULL) {
     alleles <- unlist(tapply(alleles, as.factor(ids), unique))
   }
 
+  if (length(alleles) == 0L) {
+    return(data.frame(allele = factor(), freq = integer()))
+  }
   a <- as.data.frame(table(alleles))
   colnames(a) <- c("allele", "freq")
   a

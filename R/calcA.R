@@ -46,5 +46,5 @@ calcA <- function(alleles, threshold = 1L, byID = FALSE) {
     tapply(a, ids, sum)
   }
 
-  apply(alleles, 2L, countRare)
+  do.call(cbind, apply(alleles, 2L, countRare, simplify = FALSE))
 }
