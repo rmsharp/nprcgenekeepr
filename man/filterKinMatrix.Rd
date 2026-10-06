@@ -15,7 +15,8 @@ Animal IDs are the row and column names.}
 }
 \value{
 A numeric matrix that is the reduced kinship matrix with named
-rows and columns (row and col names are 'ids').
+rows and columns (row and col names are 'ids'). It is a matrix however many
+IDs match: 1 x 1 for one ID, and with no rows or columns when none match.
 }
 \description{
 Filter a kinship matrix to selected IDs

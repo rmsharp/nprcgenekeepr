@@ -24,7 +24,9 @@ will be called during each iteration to update a
 \value{
 A dataframe with columns \code{id1}, \code{id2}, \code{kinship},
 \code{relation}. It is a long-form table of pairwise kinships, with
-relationship categories included for each pair.
+relationship categories included for each pair. IDs that are not in
+\code{kmat} are ignored. One ID gives that animal's own \code{Self} row, and
+no ID in \code{kmat} (or an empty \code{ids}) gives a table with no rows.
 }
 \description{
 Part of Relations

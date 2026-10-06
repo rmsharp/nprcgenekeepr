@@ -7,7 +7,8 @@
 #' The kinship matrix should be reduced to only include these rows and columns.
 #' @inheritParams meanKinship
 #' @return A numeric matrix that is the reduced kinship matrix with named
-#' rows and columns (row and col names are 'ids').
+#' rows and columns (row and col names are 'ids'). It is a matrix however many
+#' IDs match: 1 x 1 for one ID, and with no rows or columns when none match.
 #'
 #' @export
 #' @examples
