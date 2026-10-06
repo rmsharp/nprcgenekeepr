@@ -568,6 +568,16 @@ Open after this decision: **2 ids** (4 closed: NEW-18, NEW-21, NEW-26, NEW-57; r
 and the 6 open ones before this record are all among them, so 41 are closed): NEW-19 (decided, waits on its build) and NEW-24
 (issue #123: its first leftover decided and waiting on a build, its print-method leftover open, low priority).
 
+### Closure record 18 (S918, 2026-10-05) -- decision record 17's NEW-19 shipped
+
+| id | closed because |
+|---|---|
+| NEW-19 | SHIPPED: one internal list, `relationClassNames` in `R/relationClassNames.R` (`@noRd`, not exported; 11 named elements `self`, `parentOffspring`, `fullSiblings`, `halfSiblings`, `grandparentGrandchild`, `fullCousins`, `cousinOther`, `fullAvuncular`, `avuncularOther`, `other`, `noRelation`, in the table's display order, written like `sexCodes`), is read by `convertRelationships()` (its 11 assignments at `R/convertRelationships.R:51-89` now take each name by element name) and by `makeRelationClassesTable()` (its typed vector of 11 became `unname(relationClassNames)` and its `"Self"` test reads the list too). No output changed: both functions' results were identical to a baseline saved from the unchanged commit, for the bundled `smallPed`, the full `qcPed`, 12-id subsets of each, and both empty-table errors (6 of 6; two baseline runs at the old commit were identical first). `markerRealizedRelatednessVariance()` keeps its own 3 names, as decided. No signature, help page, `NAMESPACE`, `man/` or `NEWS` change. Tests: 4 new in `tests/testthat/test_relationClassNames.R` (the list, its two uses, both functions following a swapped list), 3 recordings added to `test_makeRelationsClasses.R` and 1 to `test_convertRelationships.R`. At RED all 4 new tests errored (no list); with the list present and unread, the two "reads the list" tests failed on assertions (checked in a scratch clone); putting either function back to typed names fails only its own test. Full suite at GREEN: 373 files, 3,081 tests, 0 failed, 0 errors, 187 skipped. S918 found two edge cases it left alone (`BACKLOG.md`): `convertRelationships()` given exactly one id returns a nonsense row (`filterKinMatrix()` has no `drop = FALSE`), and `makeRelationClassesTable()` stops when no non-Self pair is left (recorded as today's behaviour in a test). |
+
+Open after this closure: **1 id** (2 minus NEW-19; recounted S918: the table has 43 ids, all unique, and the 1 open one is among
+them, so 42 are closed): NEW-24 (issue #123: its first leftover decided and waiting on a build, its print-method leftover open,
+low priority).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

@@ -5,36 +5,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **PED_GV audit follow-through -- every F-slice DONE and every id decided; 2 ids remain, each
-      waits on a build below (READY, Effort S each; strict TDD for every fix)** --
+- [ ] **PED_GV audit follow-through -- every F-slice DONE and every id decided; 1 id remains and
+      waits on a build below (READY, Effort S; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code; its
       table is the plan, so read it first. Its four fix slices all shipped (F1 S782, F4 S783,
-      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-17 (S818-S916) hold
-      the 41 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
-      sessions. **2 ids remain** (S916 recomputed this from the report's table: 43 ids, 41 closed,
-      none counted twice): NEW-19 (decided S916, Decision record 17; its build is the next item)
-      and NEW-24 (open issue #123, kept open on purpose after Phase 1 shipped S386; its first
-      leftover, `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector, is decided
-      S916 and has a build below; its second, the missing `print` method for genetic-value
-      results -- the class is appended last at `reportGV.R:365` and there is no bare
+      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-18 (S818-S918) hold
+      the 42 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
+      sessions. **1 id remains** (S918 recomputed this from the report's table: 43 ids, 42 closed,
+      none counted twice): NEW-24 (open issue #123, kept open on purpose after Phase 1 shipped
+      S386; its first leftover, `getGeneticDiversityStats.R:58` keeping its own `requiredPed`
+      vector, is decided S916 and has a build below; its second, the missing `print` method for
+      genetic-value results -- the class is appended last at `reportGV.R:365` and there is no bare
       `print.nprcgenekeeprGV` -- stays open on the issue as low priority, the owner chose not to
       build it).
       **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
       "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
-
-- [ ] **One internal list of the 11 relationship names for `convertRelationships()` and
-      `makeRelationClassesTable()` (NEW-19; READY, Effort S; owner decision S916, Decision record
-      17 of the PED_GV triage report; strict TDD)** -- `R/convertRelationships.R:51-89` assigns
-      the 11 names and `R/makeRelationClassesTable.R:38-43` lists them again to put its rows in
-      order; a pair given an unlisted name is dropped from the table without a message (probe
-      P13: `Full-Sibling`, one letter short, gave 4 rows from 5 pairs). Both read the names from
-      one internal list; no output changes; `R/markerRealizedRelatednessVariance.R:33-35` keeps
-      its own 3 (each is paired with a formula). **First RED:** a recording test of the table's
-      rows and their order for the bundled `smallPed`, which gives all 11 names (measured S916,
-      probe P15), then a test that every name `convertRelationships()` can give is in the table's
-      list. **For its Pre-RED gate:** the list's name and file; whether `convertRelationships()`
-      takes each name from the list by element name or keeps its literals; keep both exported
-      signatures and help pages; NEWS: none owed unless an output changes. Ships NEW-19.
 
 - [ ] **One internal list of the three genetic-value labels (a S916 finding, not an audit id;
       READY, Effort S; owner choice S916, Decision record 17; strict TDD)** -- `"Low Value"`,
@@ -95,6 +80,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       style), or treat an absent parent as a founder (returns fewer ancestors silently; a behavior
       change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
       `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
+
+- [ ] **`convertRelationships()` given exactly one id returns a nonsense row, and
+      `makeRelationClassesTable()` stops when no non-Self pair is left (found S918, DECISION
+      NEEDED, Effort S)** -- both left alone by NEW-19 (no output change). Probes (S918, bundled
+      `smallPed`): (1) `convertRelationships(kmat, smallPed, "A")` gives one row with
+      `id1 = "kinMatrix"`, `id2 = 1`, `kinship = 0.5`, `relation = "Full-Siblings"`; cause read
+      in the code: `filterKinMatrix()` (`R/filterKinMatrix.R`) is `kmat[rows, cols]` with no
+      `drop = FALSE`, so one id collapses the matrix to a single number. (2)
+      `makeRelationClassesTable()` of a table with only Self pairs, or with no rows, stops with
+      `'names' attribute [2] must be the same length as the vector [1]` (recorded as today's
+      behaviour in `test_makeRelationsClasses.R`). The app calls `convertRelationships()`
+      without `ids` (`R/modSummaryStats.R:424`) and `kinship()` itself fails on a one-animal
+      pedigree (`'dimnames' applied to non-array`), so the app reaches neither; the other
+      caller, `R/markerRealizedRelatednessVariance.R:119`, passes `ids` through. **Decision for
+      the owner:** for (1), stop with a message ("give at least two ids") or keep a 1 x 1
+      matrix and return the Self pair; for (2), return an empty table with its two columns or
+      keep stopping with a clearer message.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
