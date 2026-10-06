@@ -98,6 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 918 Did
+**Deliverable:** NEW-19 -- one internal list of the 11 relationship names for `convertRelationships()` and
+`makeRelationClassesTable()` (`BACKLOG.md:25`, READY, Effort S, strict TDD) (IN PROGRESS)
+**Started:** 2026-10-05 23:05 CDT
+**Status:** Session claimed. Phase: PRE-RED. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the
+S917 ratchet citation matching the results file, CI green, dashboard 96/100 with High+ risk 0, 60 commits ahead of origin.
+The owner chose this build over the shared column check after a mapping of the picker to their S914-era order advice.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### What Session 917 Did
 **Deliverable, DONE (housekeeping; docs and tooling only; no `R/`, test or `man/` change):** trimmed `HANDOFFS.md`, picked at
 the Phase 0 picker ("Trim `HANDOFFS.md`"): 92 receipts (S813-S904, 2026-09-30 to 2026-10-04) now live in

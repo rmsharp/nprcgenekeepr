@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S918
+date: 2026-10-05
+status: pending
+active_task: NEW-19 build (BACKLOG.md:25; READY, Effort S; strict TDD; owner picked it at the Phase 0 picker, S916 Decision record 17): one internal list of the 11 relationship names that convertRelationships() and makeRelationClassesTable() both read; no output changes. Ships audit id NEW-19.
+```
+
+```handoff
 session: S917
 date: 2026-10-05
 status: complete
