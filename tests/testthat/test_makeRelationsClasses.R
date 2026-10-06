@@ -71,8 +71,9 @@ test_that("makeRelationClassesTable leaves out a pair whose name is not listed",
 })
 
 # Recorded, not endorsed: today the function stops when no pair is left once
-# the Self pairs are removed (found S918; a one-animal pedigree reaches it
-# through modSummaryStats). NEW-19 does not change it.
+# the Self pairs are removed, as with a table of Self pairs only or with no
+# rows (found S918). kinship() itself fails on a one-animal pedigree, so the
+# app does not reach it; a hand-built table does. NEW-19 does not change it.
 test_that("makeRelationClassesTable stops today when only Self pairs are left", {
   selfOnly <- data.frame(
     id1 = c("a", "b"), id2 = c("a", "b"), kinship = 0.5,

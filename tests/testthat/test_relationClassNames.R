@@ -23,6 +23,8 @@ swappedNames <- stats::setNames(sprintf("Class%02d", 1:11), expectedKeys)
 ped <- nprcgenekeepr::smallPed
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 rel <- convertRelationships(kmat, ped)
+# what each pair of rel is called when the list holds the swapped labels
+swappedRelation <- unname(swappedNames[match(rel$relation, expectedNames)])
 
 test_that("relationClassNames holds the 11 names in the table's display order", {
   expect_identical(
@@ -42,17 +44,14 @@ test_that("convertRelationships() takes each name from the list", {
     .package = "nprcgenekeepr"
   )
   swappedRel <- convertRelationships(kmat, ped)
-  expect_identical(
-    swappedRel$relation,
-    unname(swappedNames[match(rel$relation, expectedNames)])
-  )
+  expect_identical(swappedRel$relation, swappedRelation)
   expect_identical(swappedRel[, c("id1", "id2", "kinship")],
                    rel[, c("id1", "id2", "kinship")])
 })
 
 test_that("makeRelationClassesTable() takes its names and their order from the list", {
   swappedKin <- rel
-  swappedKin$relation <- unname(swappedNames[match(rel$relation, expectedNames)])
+  swappedKin$relation <- swappedRelation
   testthat::local_mocked_bindings(
     relationClassNames = swappedNames,
     .package = "nprcgenekeepr"
