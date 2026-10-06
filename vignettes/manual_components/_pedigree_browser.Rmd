@@ -88,7 +88,8 @@ more traditional pedigree-chart look, and "Direct", the straight-line
 connector. An animal that mates more
 than once, or whose lineage loops back on itself (e.g. a consanguineous
 mating), appears once per mating, with each occurrence joined back to its main
-occurrence by a curved, dashed line; hovering, clicking, or searching any occurrence
+occurrence by a curved, dashed line (the legend's "Same animal, again" entry shows
+this line's style); hovering, clicking, or searching any occurrence
 behaves identically to the animal's main occurrence. When a mating pairs two
 blood-related animals (their kinship coefficient is greater than zero), the
 two connector lines joining that pair to their shared mating point render
