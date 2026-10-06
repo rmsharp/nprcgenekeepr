@@ -443,6 +443,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
   population of interest has fewer than 2 animals (none, or one). They
   used to stop with an unexplained R error. Ranking needs at least two
   animals to compare.
+- Fixed: `calcGU()`, `calcGUSE()`, `calcA()` and `kinship()` now work
+  for a single animal, and `calcFE()`, `calcFG()`, `calcFEFG()` and
+  `calcFGSE()` for a population with one living descendant, instead of
+  stopping with an unexplained R error. `calcGU()`, `calcGUSE()` and
+  `alleleFreq()` return an empty table when given no animals or no
+  alleles.
 
 # nprcgenekeepr 2.0.0 (20260721)
 
