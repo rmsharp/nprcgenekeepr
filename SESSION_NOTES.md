@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 916 Did
+**Deliverable:** decision session for what is left of the PED_GV audit (`BACKLOG.md:8`, DECISION NEEDED, Effort S): NEW-18/19/21/26/57
+(the constants and HTML builders) and NEW-24's two leftovers, 6 ids; docs only, no code, test or `R/` change (IN PROGRESS)
+**Started:** 2026-10-05 21:40 CDT
+**Status:** Session claimed. Picked at the Phase 0 picker. First step: read the triage report (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`,
+its table and Decision record 13), re-measure the sites of the 6 ids, then ask the owner in plain words.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 915 Did
 **Deliverable, DONE (PED-3 shipped; strict TDD; on normal data the only change is the row labels `getLkDirectAncestors()` returns):** one unexported `walkPedigree(ids, ped,
 direction)` (`R/walkPedigree.R`, 51 lines, `@noRd`, not exported; `direction` is `"ancestors"`, `"descendants"` or `"both"`; it

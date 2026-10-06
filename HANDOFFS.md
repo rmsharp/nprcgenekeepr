@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S916
+date: 2026-10-05
+status: pending
+active_task: decision session for what is left of the PED_GV audit (BACKLOG.md:8, DECISION NEEDED, Effort S): NEW-18/19/21/26/57 (the constants and HTML builders) and NEW-24's two leftovers, 6 ids; picked by the owner at the Phase 0 picker. Docs only, no code, test or R/ change. Re-measure the sites, ask the owner in plain words, record the rulings as Decision record 17.
+```
+
+```handoff
 session: S915
 date: 2026-10-05
 status: complete
