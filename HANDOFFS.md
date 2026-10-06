@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S924
+date: 2026-10-06
+status: pending
+active_task: The one-animal reportGV() finding (BACKLOG.md:24; DECISION NEEDED, Effort S; picked at the Phase 0 picker, option 2 of 4); the owner still decides between a clear message and a one-row report before RED.
+```
+
+```handoff
 session: S923
 date: 2026-10-06
 status: complete
