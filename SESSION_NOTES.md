@@ -99,15 +99,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 920 Did
-**Deliverable:** one internal list of the three genetic-value labels (`BACKLOG.md:8`, READY, Effort S, strict TDD; a S916 finding,
-not an audit id) (IN PROGRESS)
-**Started:** 2026-10-06 02:03 CDT
-**Status:** Session claimed. Phase: PRE-RED. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the S919
-ratchet citation matching the results file (results `474f97e30ac7`, manifest `aa983075d6a2`), CI green (the unfiltered `gh run
-list`; the `--branch master` form and the API's branch filter both returned September rows), dashboard 96/100 with High+ risk 0,
-72 commits ahead of origin. The owner picked this item (the recommended one, last queued build in the S914 order) at the picker.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; nothing changes for users on normal data):** one internal named vector, `valueLabels`
+(`R/valueLabels.R`, `@noRd`), read by the six places that typed the three labels: `rankSubjects()` (`R/rankSubjects.R:52-56`),
+`getGeneticDiversityStats()` (`:89`), `getProportionLow()` (`:22`), `summary.nprcgenekeeprGV()` (`R/summary.nprcgenekeeprErr.R:262,267`),
+the breeding-group value floor (`R/modBreedingGroups.R:548`) and `modGeneticValueServer()`'s demotion (`R/modGeneticValue.R:385`).
+Owner choices: a new file named `valueLabels`; `getProportionLow()` counts only the exact Low Value label (before: any text containing
+"Low", and a missing value counted as Low; the app passes neither). Commits: claim `7cedd23d7`, RED `e79b88da4` + `9b7fe04e7`, RED fix
+`3facbbac4`, GREEN `f3aded2d4` + `84a709c7f`, REFACTOR `211da5abe`, closure `210895445`; the close-out commit carries this note, the
+receipt and the ledger entry (81 ahead of origin after it).
+**Measured:** 7 new tests (all errored before GREEN); suite 374 files, 3,098 tests, 0 errors, 2 failed = the wall-clock benchmarks
+`markerKinship` and `markerParentageLikelihood` under a load of about 100 from other projects (both pass alone; neither mentions the
+changed names); lint 0; `devtools::check(args = "--no-manual")` 0/0/0 after GREEN and REFACTOR; mutation check 6 of 6 caught; ratchet
+1/1 pass (results `8992e777d6c4`, manifest `aa983075d6a2`, head `84a709c7f`). **Runtime (3E):** the Genetic Value and Breeding Groups
+app-level files with `NPRC_RUN_E2E=true`: 8 of 8 and 9 tests, 0 failed (they do not press the run buttons). **Closure:** not an audit
+id (no closure record); `BACKLOG.md` `:8` item removed (later cites moved up 15; S918's `:54` is now `:39`); NEWS none owed; Learning 885.
+**Mistakes (recovered):** a RED test passed once only `rankSubjects()` followed the list (vacuous for the server's own comparison),
+replaced after a GREEN-to-RED permission (`3facbbac4`); "six R files" at a gate was seven; a stray scratch `Write` (cleaned);
+`--no-init-file` skipped renv.
+**Handoff evaluation of S919: 9/10.** Helped: every cite re-grepped true; S914's order sentence made the picker one round; the
+Pre-RED gate named the two decisions; the load-tracing gotcha. Missing: two sites had no test at all; a "follows the list" test can
+pass through the producer; `getProportionLow()` counted a missing value as Low. Wrong: nothing found.
+**Self-assessment: 8/10.** + Order reconciled first; gates in plain words; the vacuous test found mid-GREEN; mutation check 6/6;
+app-level E2E run, not "not launched"; load traced. - The vacuous RED test; the "six files" count; the stray write; the notes ceiling
+hit at the claim and again at close-out (over by 1,102 tokens: this section and two older records cut to fit). Reduction:
+`SESSION_NOTES.md` 56,347 B to 55,642 B; `BACKLOG.md` 41,613 B to 40,379 B.
+
+**Next steps (recommended, not yet ruled on; the owner's S914 order was the builds, then the dashed-link item, then docs-audit slice
+2; the builds have all shipped; (C) and (D) are newer findings that order does not cover):** (A) the dashed-link item
+(`BACKLOG.md:403`, DECISION NEEDED, Effort S legend / M hover; decide first: legend row only or hover too, the wording, whether hover
+names the id; user-facing, so NEWS and manual checklists apply; legend hand-tuned to 400 px, `R/modPedigree.R:768-778`). (B) docs-audit
+slice 2 (`:64`, needs scoping first, L). (C) receipt-placement gate (`:8`, DECISION NEEDED, S). (D) one-id `convertRelationships()`
+finding (`:39`, DECISION NEEDED, S). (E) upstream `KJ5HST/methodology#93` (`:287`, BLOCKED). (F) unpushed: 81 local commits; not
+offered (owner's S905 ruling). Lower priority: `getAncestors()` on an absent id (`:23`). Carried: NEW-24's print method on issue #123
+(owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested). **Not filed, your call:** a scan test
+like `test_sexCodes.R` (code lines only) would catch a seventh typed label added later. Before the picker: grep the receipts for an
+order the owner already gave.
+
+**Key files:** `R/valueLabels.R`; the six cites above; `tests/testthat/test_valueLabels.R` (the list and six swapped-label tests; the
+server test fakes `reportGV()`), `test_getProportionLow.R`, `test_rankSubjects.R`, `test_summary.nprcgenekeeprGV.R`;
+`PROJECT_LEARNINGS.md` Learning 885; `BACKLOG.md:8`, `:23`, `:39`, `:56`, `:64`, `:287`, `:403`.
+
+**Gotchas:** after each GREEN commit run the new test file and read which tests pass early (a test that passes before its site moved
+pins nothing; fake the producer when data flows through another reader of the list); `local_mocked_bindings(valueLabels = ...,
+.package = "nprcgenekeepr")` errors "Can't find binding" until the constant exists; plain `Rscript` here, not `--no-init-file`;
+`NPRC_RUN_E2E=true` with a test-file runner runs the app-level files (in the background); the two wall-clock benchmarks fail whenever
+other projects load the machine, so rerun them alone first; the notes ceiling is 25,000 tokens, so condense S920 at the next claim;
+adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 919 Did (condensed S920; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-24's first leftover shipped (strict TDD; users see only one error message's wording change): `getGeneticDiversityStats()` makes
@@ -116,35 +153,26 @@ labels `getGeneticDiversityStats(ped)` and `getGeneticDiversityStats(geneticValu
 GREEN `791096a93`, REFACTOR `0f689cc2c`, closure `c14c13ef6` (Closure record 19), close-out `421ef4256` (all still local at S920's
 Phase 0). Handoff evaluation of S918: 8/10. Self 8/10. NEW-24 stays open on issue #123 for the print method (low priority, the owner
 closes it; no `BACKLOG.md` item), so the PED_GV open count stays 1.
-**Gotchas kept:** the full suite (about 6 min when quiet) and `devtools::check()` (about 8 min) run one at a time; a run far over that
-means check `uptime` and `ps -Ao pid,ppid,etime,pcpu,command` before reading a benchmark failure as a regression (S919's load of 455
-came from another project's `quarto render` jobs), then rerun the failing files alone; wait on a result file with `grep -q` for its
-result line, never `[ -s file ]` when stderr goes there; a GREEN that changes a file's length shifts every cite into it (grep
-`BACKLOG.md` and `ROADMAP.md` for `<file>:`); adding or removing a BACKLOG block shifts every later cite, so re-grep; a handoff's
-predicted count yields to the ratified record; take `wc -c` after the last edit (Learning 871). **Carried:** `reportGV(smallPed)`
-unfiled; the D2 dogleg observation from S910 (untested).
+**Gotchas kept:** the full suite (about 6 min when quiet) and `devtools::check()` (about 8 min) run one at a time; a run far over
+that means check `uptime` and `ps -Ao pid,ppid,etime,pcpu,command` before reading a benchmark failure as a regression, then rerun
+the failing files alone; wait on a result file with `grep -q` for its result line, never `[ -s file ]`; adding or removing a
+BACKLOG block shifts every later cite, so re-grep. **Carried:** `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910
+(untested).
 
 ### What Session 918 Did (condensed S919; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-19 shipped (strict TDD, no change for users): one internal list, `relationClassNames` (`R/relationClassNames.R`, `@noRd`), read by
-`convertRelationships()` and `makeRelationClassesTable()`; output identical to a baseline from the old commit in 6 of 6 cases. Claim
-`de14ccf2e`, RED `238a558c7`, GREEN `d3681b69a`, REFACTOR `f35742512`, closure `81cff6de3`, close-out `d82833ef4` (all still local at
-S919's Phase 0). Handoff evaluation of S917: 8/10. Self 8/10. Left alone (`BACKLOG.md:54`): a one-id `convertRelationships()` and an
-empty `makeRelationClassesTable()`.
-**Gotchas kept:** a scratch clone needs `R_LIBS` set from `.libPaths()` and `Rscript --no-init-file`; the loaded namespace is locked,
-so a constant cannot be injected in memory; `testthat::local_mocked_bindings()` swaps a non-function internal constant; before the
-picker, grep the receipts for an order the owner already gave; take `wc -c` after the last edit (Learning 871).
+`convertRelationships()` and `makeRelationClassesTable()`. Claim `de14ccf2e`, RED `238a558c7`, GREEN `d3681b69a`, REFACTOR `f35742512`,
+closure `81cff6de3`, close-out `d82833ef4`. Handoff evaluation of S917: 8/10. Self 8/10. Left alone (`BACKLOG.md:39`): a one-id
+`convertRelationships()` and an empty `makeRelationClassesTable()`. **Gotchas kept:** a scratch clone needs `R_LIBS` set from
+`.libPaths()` and `Rscript --no-init-file`; the loaded namespace is locked, so a constant cannot be injected in memory.
 
 ### What Session 917 Did (condensed S918; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Trimmed `HANDOFFS.md` (housekeeping, docs and tooling only): 92 receipts (S813-S904) archived to
-`docs/archive/HANDOFFS-through-2026-10-04.md`, 268,350 B to 85,965 B, the dashboard's only High+ flag cleared. The trimmer first
-answered `NOTHING_TO_DO` because it saw 1 of 105 receipts: since S892 every new receipt had been put inside the format-example code
-box, which it counts as front matter. Repair `b53927bdf` (104 receipts moved out of the box, a pure reorder), trim `91273b21a`, claim
-`5a4ee190c`, close-out `641ea6e1b` (all still local at S918's Phase 0). Handoff evaluation of S916: 8/10. Self 8/10.
-**Gotchas kept:** a new receipt goes directly above the newest one, below the archive pointers, never right after the four-backtick
-line; a trimmer answer of `NOTHING_TO_DO`, or a "currently holds" count far below `grep -c '^```handoff'`, means run
-`classify_zones()` first; the trimmer refuses with `P1_UNDOCUMENTED` after any commit not in `CHANGELOG.md`; keep a trim apart from
-the close-out commit; in zsh spell the flags out; adding or removing a BACKLOG block shifts every later cite, so re-grep; take
-`wc -c` after the last edit (Learning 871).
+Trimmed `HANDOFFS.md` (docs and tooling only): 92 receipts (S813-S904) archived to `docs/archive/HANDOFFS-through-2026-10-04.md`,
+268,350 B to 85,965 B. The trimmer first answered `NOTHING_TO_DO` because every receipt since S814 sat inside the format-example box
+(Learning 882). Claim `5a4ee190c`, repair `b53927bdf`, trim `91273b21a`, close-out `641ea6e1b`. Handoff evaluation of S916: 8/10. Self
+8/10. **Gotchas kept:** a new receipt goes directly above the newest one, never right after the four-backtick line; a trimmer
+`NOTHING_TO_DO`, or a "currently holds" count far below `grep -c '^```handoff'`, means run `classify_zones()` first; keep a trim
+apart from the close-out commit.
 
 ### What Session 916 Did (condensed S917; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Decision session, docs only: the owner closed NEW-18, 21, 26 and 57 with no change and queued three READY builds (the 11
