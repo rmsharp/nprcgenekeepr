@@ -259,12 +259,12 @@ summary.nprcgenekeeprGV <- function(object, ...) {
   txt <-
     c(txt, stri_c(
       "High Value Individuals: ",
-      nrow(rpt[rpt$value == "High Value", ])
+      nrow(rpt[rpt$value == valueLabels[["highValue"]], ])
     ))
   txt <-
     c(txt, stri_c(
       "Low Value Individuals: ",
-      nrow(rpt[rpt$value == "Low Value", ])
+      nrow(rpt[rpt$value == valueLabels[["lowValue"]], ])
     ))
   class(txt) <- "summary.nprcgenekeeprGV"
   txt

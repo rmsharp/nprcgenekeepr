@@ -545,7 +545,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           # and is excluded by the %in% filter below.
           req(geneticValues())
           gv <- geneticValues()
-          passingIds <- gv$id[gv$value != "Low Value"]
+          passingIds <- gv$id[gv$value != valueLabels[["lowValue"]]]
           rawPool[rawPool %in% passingIds]
         } else if (input$animalSource == "topRanked") {
           rawPool[seq_len(min(input$nTopAnimals, length(rawPool)))]

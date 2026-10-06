@@ -382,7 +382,7 @@ modGeneticValueServer <- function(id, pedigree,
         # displayed table; imports, one-unknown, known animals rank normally.
         report$rank <- rank(report$indivMeanKin - report$gu)
         demote <- if ("value" %in% names(report)) {
-          !is.na(report$value) & report$value == "Undetermined"
+          !is.na(report$value) & report$value == valueLabels[["undetermined"]]
         } else {
           rep(FALSE, nrow(report))
         }
