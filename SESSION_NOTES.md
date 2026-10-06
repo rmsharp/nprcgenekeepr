@@ -99,125 +99,117 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 921 Did
-**Deliverable:** the dashed duplicate-animal link in the pedigree diagram (`BACKLOG.md:403`; DECISION NEEDED, Effort S for a legend
-row, M with hover text; strict TDD; owner pick at the Phase 0 picker, the recommended option, next in the owner's S914 order) (IN PROGRESS)
-**Started:** 2026-10-06, about 03:00 CDT
-**Status:** Session claimed. Work beginning. The three Pre-RED decisions (legend row only or hover too, the wording, whether hover
-names the id) are not yet asked; S920's notes section was condensed here to fit the 25,000-token ceiling.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; one user-visible change):** the Pedigree Browser Diagram legend has a dashed row, "Same animal, again",
+for the dashed repeat-appearance link, directly above MZ/DZ/? (`R/modPedigree.R:707-710`, one row in the table passed to the same
+`visLegend()` call; `addEdges = legendEdges` at `:773`). Owner choices (plain words, three questions, then one layout question): legend
+row only (no hover text on the link), that label, no NEWS line, and layout A: the panel stays 400 px and the legend rescales itself
+about 10% smaller (width 0.28 and `stepY` 54 unchanged). The manual says it (`vignettes/manual_components/_pedigree_browser.Rmd:91-92`);
+the Pedigree Diagram article and its legend screenshot were left alone (the picture lacks the row; carried into slice 2, `BACKLOG.md:64`).
+Commits: claim `548ed44b7`, RED `f6857f348`, GREEN `6619cddbf`, docs `3fe9f64f8`, REFACTOR `fe0e5ad3d`, RED fix `81288295e`, closure
+`10a99475f`; the close-out commit carries this note, the receipt and the ledger entry (89 ahead of origin after it).
+**Measured:** 3 new tests (`tests/testthat/test_modPedigree.R:1426-1572`; 6 expectations failed at RED, none errored); full suite on
+GREEN 374 files, 3,101 tests, 0 failed, 0 errors, 187 skipped (7.7 min; the two benchmarks passed at load 26-111); lint 0;
+`devtools::check(args = "--no-manual")` 0/0/0 on the final tree (its first run warned: the tests called jsonlite); mutation check 5 of
+5 caught, twice; ratchet 1/1 pass (results `d6fe3c81fbc1`, manifest `aa983075d6a2`, head `81288295e`, tarball 3,704,669 B).
+**Runtime (3E):** screenshots of the real Pedigree module in Chrome (legend before and after; the real code matched the candidate the
+owner chose) and the 3 app-level Pedigree files with `NPRC_RUN_E2E=true`: 16 + 6 + 9 = 31 tests, 0 failed. Those files do not read
+legend rows, so the legend rests on the screenshot and the 3 tests. **Re-measured:** S910's 170 / 111 / 51 / 8 reproduced exactly; a
+repeated animal's node already says "(duplicate occurrence)" with its ID (`R/makePedigreeDiagramData.R:1891-1892`). **Closure:** not an
+audit id; `BACKLOG.md` item removed (cites after slice 2 moved down 4, Outreach up 19); NEWS none (owner); Learning 886.
+**Mistakes (recovered):** the tests called jsonlite, which this package avoids on purpose (`tests/testthat/helper-shinytest2.R:390-391`);
+`devtools::check()` caught it and a REFACTOR-to-RED permission fixed it (`81288295e`), one extra check cycle; the first picker quoted
+"111 of 170" from BACKLOG before I re-ran it (same numbers); one sanity assertion in a one-off script was off by two.
+**Handoff evaluation of S920: 9/10.** Helped: every BACKLOG cite re-grepped true; "condense S920 at the next claim" was exactly right
+(the notes read 25,316 tokens); the order sentence made the picker one round; the "legend is hand-tuned" gotcha. Missing: the retune
+is not a `stepY` tweak (the legend rescales and the Export button covers its last row); tests here never call jsonlite. Wrong: nothing.
+**Self-assessment: 8/10.** + Re-measured first; probed the real widget in Chrome (a scratch wrapper, nothing in the repo changed) before
+asking for a layout choice; found the node hover that decided the scope; RED proved against the pre-GREEN file; mutation 5/5 twice;
+the check warning caught before close-out; every gate asked. - the jsonlite miss (the convention was one grep away); an extra cycle.
+Reduction: `SESSION_NOTES.md` 55,642 B at Phase 0 to 52,490 B (S920 to S911 shortened).
+
+**Next steps (recommended, not yet ruled on; the owner's S914 order was the builds, then the dashed-link item, then docs-audit slice 2;
+the builds and the dashed-link item have shipped, so slice 2 is next in that order):** (A) docs-audit slice 2 (`BACKLOG.md:64`, needs
+scoping first, Effort L; its first session scopes which of the 31 images to regenerate and in what order, and diagnoses the colony
+script's tail first; it now also holds the stale `pb_diagram_legend.png` and the article sentence to add). (B) the receipt-placement
+gate (`:8`, DECISION NEEDED, S). (C) one-id `convertRelationships()` (`:39`, DECISION NEEDED, S). (D) upstream `KJ5HST/methodology#93`
+(`:291`, BLOCKED; still its one comment at S921's Phase 0). (E) unpushed: 89 local commits; not offered (owner's S905 ruling). Lower
+priority: `getAncestors()` on an absent id (`:23`); version 3.0.0 at release (`:56`). Carried: hover text on the dashed link (not built,
+the owner's choice; no BACKLOG item); NEW-24's print method on issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2
+dogleg observation from S910 (untested); the seventh-label scan test (unfiled). Before the picker: grep the receipts for an order the
+owner already gave.
+
+**Key files:** `R/modPedigree.R:707-710,773`; `tests/testthat/test_modPedigree.R:1426-1572` (3 tests);
+`vignettes/manual_components/_pedigree_browser.Rmd:91-92`; `PROJECT_LEARNINGS.md` Learning 886; `BACKLOG.md:8`, `:23`, `:39`, `:56`,
+`:64`, `:191`, `:291`, `:408`.
+
+**Gotchas:** a legend row cannot just be appended: the legend rescales to its canvas and the Export button covers the last row, so keep
+the last row short (Learning 886); a scratch app around the real module, a namespace patch of `visNetwork::visLegend` and
+`shinytest2::AppDriver` show the real legend, and need `NOT_CRAN=true`; tests here match serialized JSON text and never call jsonlite
+(`devtools::check()` warns); a test fix after GREEN needs a REFACTOR-to-RED permission and a run against the pre-GREEN file; the legend
+serializes as `"edges":{"label":[..],"color":[null,..],"dashes":[true,false,[4,4],[14,8]]}`; `vignettes/a3manual.md` is a stale copy
+(edit the components); adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit
+(Learning 871).
 
 ### What Session 920 Did (condensed S921; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The genetic-value labels item shipped (strict TDD; nothing changes for users on normal data): one internal named vector,
-`valueLabels` (`R/valueLabels.R`, `@noRd`), read by `rankSubjects()`, `getGeneticDiversityStats()`, `getProportionLow()`,
-`summary.nprcgenekeeprGV()`, the breeding-group value floor (`R/modBreedingGroups.R:548`) and `modGeneticValueServer()`'s demotion
-(`R/modGeneticValue.R:385`); `getProportionLow()` now counts only the exact Low Value label. Claim `7cedd23d7`, RED `e79b88da4`,
-`9b7fe04e7` and fix `3facbbac4`, GREEN `f3aded2d4` and `84a709c7f`, REFACTOR `211da5abe`, closure `210895445`, close-out `73df7ce31`
-(all still local at S921's Phase 0). Handoff evaluation of S919: 9/10. Self 8/10.
-**Gotchas kept:** after each GREEN commit run the new test file and read which tests pass early (a test that passes before its site
-moved pins nothing; fake the producer when data flows through another reader of the list); plain `Rscript` here, not
-`--no-init-file` (it skips renv); `NPRC_RUN_E2E=true` with a test-file runner runs the app-level files (in the background); the two
-wall-clock benchmarks (`markerKinship`, `markerParentageLikelihood`) fail whenever other projects load the machine, so rerun them
-alone first; adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
-**Carried:** `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); a scan test like `test_sexCodes.R` that
-would catch a seventh typed label is unfiled (the owner's call).
+The genetic-value labels item shipped (strict TDD, nothing changes for users on normal data): one internal vector, `valueLabels`
+(`R/valueLabels.R`, `@noRd`), read by six places; `getProportionLow()` counts only the exact Low Value label. Claim `7cedd23d7`, RED
+`e79b88da4`, `9b7fe04e7`, `3facbbac4`, GREEN `f3aded2d4`, `84a709c7f`, REFACTOR `211da5abe`, closure `210895445`, close-out `73df7ce31`.
+Handoff evaluation of S919: 9/10. Self 8/10. **Gotchas kept:** after each GREEN commit run the new test file and read which tests
+pass early (a test that passes before its site moved pins nothing); plain `Rscript` here, not `--no-init-file`; the two wall-clock
+benchmarks fail whenever other projects load the machine, so rerun them alone first. **Carried:** `reportGV(smallPed)` unfiled; the D2
+dogleg observation from S910 (untested); the seventh-label scan test (unfiled).
 
 ### What Session 919 Did (condensed S920; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-NEW-24's first leftover shipped (strict TDD; users see only one error message's wording change): `getGeneticDiversityStats()` makes
-its `ped` and `geneticValues` column checks with the shared `assertRequiredColsPresent()` (`R/getGeneticDiversityStats.R:58-65`,
-labels `getGeneticDiversityStats(ped)` and `getGeneticDiversityStats(geneticValues)`, ped first). Claim `fe75f34cd`, RED `ea46cb959`,
-GREEN `791096a93`, REFACTOR `0f689cc2c`, closure `c14c13ef6` (Closure record 19), close-out `421ef4256` (all still local at S920's
-Phase 0). Handoff evaluation of S918: 8/10. Self 8/10. NEW-24 stays open on issue #123 for the print method (low priority, the owner
-closes it; no `BACKLOG.md` item), so the PED_GV open count stays 1.
-**Gotchas kept:** the full suite (about 6 min when quiet) and `devtools::check()` (about 8 min) run one at a time; a run far over
-that means check `uptime` and `ps -Ao pid,ppid,etime,pcpu,command` before reading a benchmark failure as a regression, then rerun
-the failing files alone; wait on a result file with `grep -q` for its result line, never `[ -s file ]`; adding or removing a
-BACKLOG block shifts every later cite, so re-grep. **Carried:** `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910
-(untested).
+NEW-24's first leftover shipped (strict TDD; one error message's wording): `getGeneticDiversityStats()` uses the shared
+`assertRequiredColsPresent()` (`R/getGeneticDiversityStats.R:58-65`). Claim `fe75f34cd`, close-out `421ef4256`. Handoff evaluation of
+S918: 8/10. Self 8/10. NEW-24 stays open on issue #123 (the print method; the owner closes it). **Gotchas kept:** the suite and
+`devtools::check()` run one at a time; check `uptime` before reading a benchmark failure; wait on a result file with `grep -q`.
 
 ### What Session 918 Did (condensed S919; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-NEW-19 shipped (strict TDD, no change for users): one internal list, `relationClassNames` (`R/relationClassNames.R`, `@noRd`), read by
-`convertRelationships()` and `makeRelationClassesTable()`. Claim `de14ccf2e`, RED `238a558c7`, GREEN `d3681b69a`, REFACTOR `f35742512`,
-closure `81cff6de3`, close-out `d82833ef4`. Handoff evaluation of S917: 8/10. Self 8/10. Left alone (`BACKLOG.md:39`): a one-id
-`convertRelationships()` and an empty `makeRelationClassesTable()`. **Gotchas kept:** a scratch clone needs `R_LIBS` set from
-`.libPaths()` and `Rscript --no-init-file`; the loaded namespace is locked, so a constant cannot be injected in memory.
+NEW-19 shipped (strict TDD, no change for users): internal list `relationClassNames` (`R/relationClassNames.R`). Claim `de14ccf2e`,
+close-out `d82833ef4`. Handoff evaluation of S917: 8/10. Self 8/10. Left alone: `BACKLOG.md:39`.
 
 ### What Session 917 Did (condensed S918; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Trimmed `HANDOFFS.md` (docs and tooling only): 92 receipts (S813-S904) archived to `docs/archive/HANDOFFS-through-2026-10-04.md`,
-268,350 B to 85,965 B. The trimmer first answered `NOTHING_TO_DO` because every receipt since S814 sat inside the format-example box
-(Learning 882). Claim `5a4ee190c`, repair `b53927bdf`, trim `91273b21a`, close-out `641ea6e1b`. Handoff evaluation of S916: 8/10. Self
-8/10. **Gotchas kept:** a new receipt goes directly above the newest one, never right after the four-backtick line; a trimmer
-`NOTHING_TO_DO`, or a "currently holds" count far below `grep -c '^```handoff'`, means run `classify_zones()` first; keep a trim
-apart from the close-out commit.
+Trimmed `HANDOFFS.md` (docs and tooling only): 92 receipts (S813-S904) archived, 268,350 B to 85,965 B; the trimmer first answered
+`NOTHING_TO_DO` because every receipt since S814 sat inside the format-example box (Learning 882). Claim `5a4ee190c`, close-out
+`641ea6e1b`. Handoff evaluation of S916: 8/10. Self 8/10. **Gotchas kept:** a new receipt goes directly above the newest one, never
+right after the four-backtick line; keep a trim apart from the close-out commit.
 
 ### What Session 916 Did (condensed S917; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Decision session, docs only: the owner closed NEW-18, 21, 26 and 57 with no change and queued three READY builds (the 11
-relationship names `:25`, the three value labels `:39`, the shared column check in `getGeneticDiversityStats()` `:54`); NEW-24's
-missing print method stays open on issue #123; Decision record 17; PED_GV open count 6 -> 2. Claim `923d12678`, decision
-`ea775c32c`, close-out `f0cc1e332` (all still local at S917's Phase 0). Handoff evaluation of S915: 9/10. Self 8/10.
-**Gotchas kept:** count a repeated number per number, per function and per occurrence, with the claim's exact words, before it
-goes into option text (Learning 881); put one probe-measured consequence in each build option; grep the user-facing text before
-offering "document it"; `getProportionLow()` matches the substring `"Low"`; a named constant in `groupAddAssign()`'s heading would
-change `test_sexCodes.R:75` and the `man/` usage line; the app calls neither `makeGeneticSummaryTable()` nor
-`makeFounderStatsTable()`; take `wc -c` after the last edit (Learning 871).
+Decision session, docs only: the owner closed NEW-18, 21, 26 and 57 with no change and queued three READY builds (relation names, value
+labels, shared column check); NEW-24's print method stays open on issue #123; Decision record 17; PED_GV open count 6 -> 2. Claim
+`923d12678`, close-out `f0cc1e332`. Handoff evaluation of S915: 9/10. Self 8/10. **Gotchas kept:** count a repeated number with the
+claim's exact words before it goes into option text (Learning 881); put one probe-measured consequence in each build option.
 
 ### What Session 915 Did (condensed S916; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-PED-3 shipped (strict TDD; on normal data the only change is the row labels `getLkDirectAncestors()` returns): one unexported
-`walkPedigree(ids, ped, direction)` (`R/walkPedigree.R`, `@noRd`) replaces the four walk loops in `getProbandPedigree()`,
-`getDescendantPedigree()`, `getPedDirectRelatives()` and `getLkDirectAncestors()`; the last now stops on circular data and
-`getPedDirectRelatives()` on a row with a missing id (both ran without end). Claim `d11c068a1`, RED `710677332` and `a29e3a643`,
-GREEN `302a0cdb8`, gap test `75832de41`, gap fix `a3c8f584f`, REFACTOR `af402927e`, NEWS `fcc676510`, closure `4b59860c7`,
-close-out `c75cfc2aa` (all still local at S916's Phase 0). Handoff evaluation of S914: 9/10. Self 7/10.
-**Gotchas kept:** never run `git stash pop` without `git stash list` (an existing stash gets applied); wrap every never-stops
-probe in `setTimeLimit(elapsed = 5, transient = TRUE)`; `expect_error(f(...))` with no message passes while `f` does not exist;
-when merging loops compare old and new on random inputs with `identical()` and classify any difference; trace a high load up `ps
--o ppid=` before calling a benchmark failure a flake; adding or removing a BACKLOG block shifts every later cite, so re-grep;
-take `wc -c` after the last edit (Learning 871).
-
+PED-3 shipped (strict TDD): one unexported `walkPedigree(ids, ped, direction)` (`R/walkPedigree.R`, `@noRd`) replaces four walk loops;
+`getLkDirectAncestors()` and `getPedDirectRelatives()` now stop on circular or missing-id data. Claim `d11c068a1`, close-out
+`c75cfc2aa`. Handoff evaluation of S914: 9/10. Self 7/10. **Gotchas kept:** never run `git stash pop` without `git stash list`; wrap
+every never-stops probe in `setTimeLimit(elapsed = 5, transient = TRUE)`; `expect_error(f(...))` with no message passes while `f`
+does not exist; trace a high load up `ps -o ppid=` before calling a benchmark failure a flake.
 
 ### What Session 914 Did (condensed S915; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-NEW-62 shipped (strict TDD, no change for users): one internal `notifyProgress(updateProgress, ...)` (`R/notifyProgress.R`,
-`@noRd`) replaces the seven `if (!is.null(updateProgress))` blocks in `R/reportGV.R`, `R/geneDrop.R`, `R/convertRelationships.R`
-and `R/groupAddAssign.R` (33 lines became 19); the owner kept the `!is.null()` test and chose the name. Claim `824336627`, RED
-`66c9e61cf`, GREEN `a2a0c9bb7`, REFACTOR `3d521d0c9`, closure `a4769053c`, close-out `40d2f0400` (all still local at S915's Phase
-0). Handoff evaluation of S913: 9/10. Self 8/10.
-**Gotchas kept:** `mockery::stub()` replaces a function only in the scope of the test that calls it, so a wrapper at file top
-level must take the function as an argument; `system.time(expr)` inside `vapply()` runs a lazy promise once, so time a function;
-compare old and new alternating in one R process; print the number of files a mutation check mutated before reading its result;
-the `test-e2e-*` files are opt-in (`NPRC_RUN_E2E=true`) and those for Genetic Value and Breeding Groups do not press the run
-buttons; take `wc -c` after the last edit (Learning 871).
+NEW-62 shipped (strict TDD, no change for users): one internal `notifyProgress(updateProgress, ...)` (`R/notifyProgress.R`, `@noRd`)
+replaces seven `if (!is.null(updateProgress))` blocks in 4 files. Claim `824336627`, close-out `40d2f0400`. Handoff evaluation of
+S913: 9/10. Self 8/10. **Gotchas kept:** `mockery::stub()` replaces a function only in the scope of the test that calls it; print the
+number of files a mutation check mutated before reading its result; the `test-e2e-*` files are opt-in (`NPRC_RUN_E2E=true`).
 
 ### What Session 913 Did (condensed S914; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-NEW-42 shipped (help text only, strict TDD): the help pages of `getParents()` and `getOffspring()` now say the pedigree is the first
-argument, unlike `getProbandPedigree()`, `getDescendantPedigree()`, `getPedDirectRelatives()` and `findOffspring()`; the argument order
-is unchanged and the parsed R code of both files is identical. `getOffspring()` inherits `pedSourceDf` from `getParents()` (the owner's
-REFACTOR choice). Claim `5d3d8d68a`, RED `dd5396ddc`, GREEN `5b87d8819`, REFACTOR `0645d57f4`, closure `06fc3c923`, close-out
-`0277ca8a7` (all still local at S914's Phase 0). Handoff evaluation of S912: 9/10. Self 8/10.
-**Gotchas kept:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it; a `@noRd` helper needs no run); tally a RED
-with `as.data.frame(test_file(..., reporter = "silent"))`; grep `man/*.Rd`, not `R/`, to see who really inherits an argument; adding or
-removing a BACKLOG block shifts every later cite, so re-grep; rerun the two benchmark tests alone before calling a regression; take
-`wc -c` after the last edit (Learning 871).
+NEW-42 shipped (help text only, strict TDD): the help pages of `getParents()` and `getOffspring()` say the pedigree is the first
+argument; argument order unchanged, parsed R code identical. Claim `5d3d8d68a`, close-out `0277ca8a7`. Handoff evaluation of S912:
+9/10. Self 8/10. **Gotchas kept:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it); tally a RED with
+`as.data.frame(test_file(..., reporter = "silent"))`; grep `man/*.Rd`, not `R/`, to see who inherits an argument.
 
 ### What Session 912 Did (condensed S913; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Recorded the owner's two decisions on the walk helpers (Decision record 13): PED-3, merge the four "collect parents or
-offspring until nothing new turns up" loops into one internal function; NEW-42, leave the argument order of `getParents()`
-and `getOffspring()` and document it. Docs only. Measured: 4 loops, not 2 (42 lines); `getLkDirectAncestors()` never stops on
-circular data; 11 of 18 exported functions take ids first. Claim `61e143bce`, decision `6c64a3700`, close-out `81cd4133e`
-(all still local). Handoff evaluation of S911: 9/10. Self 8/10.
-**Gotchas kept:** run a never-stops probe only under `setTimeLimit(elapsed = 5, transient = TRUE)`; state a count in option
-text the way it was measured and re-run it first (Learning 877); `getLkDirectAncestors()` returns rows generation by
-generation, the other three in pedigree order; take `wc -c` after the last edit (Learning 871).
+Recorded the owner's two decisions on the walk helpers (Decision record 13): PED-3, merge the four loops into one internal function;
+NEW-42, leave the argument order and document it. Docs only. Claim `61e143bce`, close-out `81cd4133e`. Handoff evaluation of S911:
+9/10. Self 8/10. **Gotchas kept:** state a count in option text the way it was measured and re-run it first (Learning 877).
 
 ### What Session 911 Did (condensed S912; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Recorded the owner's decision on NEW-62, the seven repeated "call the progress function if one was given" blocks: one shared
-helper for all 7 (over "leave as is", my recommendation, and "only the 3 in `reportGV`"). Docs only. The row was out of date
-twice: 3 blocks at `reportGV.R:219,238,257` were 7 sites in 4 files (33 lines) and no test records the messages. Decision
-record 12; the build is `BACKLOG.md:25` (READY, Effort S). Claim `1e4e858a1`, decision `5e6d30711`, close-out `e761909e9`
-(all still local). Handoff evaluation of S910: 9/10. Self 6/10.
-**Gotchas kept:** a triage row scoped to one file understates a repeated idiom, so grep it across `R/` first; a report's line
-cites drift after every edit to the cited file; keep internal names and "pins" out of option text; compare the last receipt's
-ratchet citation with `.quality-gates-results.json` at Phase 0, before any `--run`; take `wc -c` after the last edit
-(Learning 871).
+Recorded the owner's decision on NEW-62: one shared helper for all 7 repeated progress blocks (the row was out of date twice: 3 blocks
+were 7 sites in 4 files). Decision record 12. Docs only. Claim `1e4e858a1`, close-out `e761909e9`. Handoff evaluation of S910: 9/10.
+Self 6/10. **Gotchas kept:** a triage row scoped to one file understates a repeated idiom, so grep across `R/` first; compare the last
+receipt's ratchet citation with `.quality-gates-results.json` at Phase 0, before any `--run`.
 
 ### What Session 910 Did (condensed S911; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Measured the mate-line row span on the app's 375-animal rhesus layout: 0 of 474 mate-lines span a generation row (also 0 in the 6
