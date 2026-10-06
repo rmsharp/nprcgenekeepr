@@ -84,7 +84,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       differ from the app (Pedigree Browser family +147 px; Home, Input, Summary Statistics,
       Breeding Groups, GVA); the colony script's tail fails identically every run (diagnose
       first, then regenerate by module); 12 images have no generator; `pb_unknown_displayed.png`
-      is an orphan. The owner decides whether to scope a regeneration slice.
+      is an orphan. The owner decides whether to scope a regeneration slice. S921 added a legend row
+      ("Same animal, again") that `pb_diagram_legend.png` (`colony-manager-guide.qmd:347`,
+      `pedigree-diagram.qmd:40`) does not show; whether it is one of the 31 was not checked. When it is
+      regenerated, add a sentence naming that entry to the article's dashed-line paragraph
+      (`pedigree-diagram.qmd:50-55`); the manual (`_pedigree_browser.Rmd:91-92`) already does.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
@@ -397,31 +401,8 @@ reopens issue #129 or the visNetwork-vs-kinship2 technology decision (D2), which
 ratified; the
 `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` refresh (S484) has since gone
 stale again and carries a status note. Session-by-session record: `CHANGELOG.md`; technical
-findings: `PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. The open items below are the
-section's live work.*
-
-- [ ] **Dashed duplicate-animal links have no legend row and no hover text (found S910,
-      2026-10-05, replacing Candidate C; DECISION NEEDED -- what the legend row and the hover
-      text should say; Effort estimate S for a legend row, M for hover text; strict TDD)** -- the
-      dashed curved link that joins an animal's repeat appearance back to its main one (built at
-      `R/makePedigreeDiagramData.R:1999-2008`: `dashes = TRUE`, `curvedCW`, roundness 0.2) is
-      explained in the user manual (`vignettes/manual_components/_pedigree_browser.Rmd:90-91`)
-      but not in the diagram itself: the legend (`R/modPedigree.R:726-779`) has the sex shapes,
-      "Affected" and the MZ/DZ/? twin rows and no row for this link, and no edge has hover text
-      (the edge table has no `title` column). Measured S910 on the 375-animal rhesus pedigree as
-      the app lays it out: 170 such links, 111 cross at least one generation row, 51 cross two or
-      more, 8 cross three or more (`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`, Finding 3;
-      script `rectCheck.R` in its appendix).
-      **Decisions the pickup needs from the owner first:** (a) a legend row only, or hover text
-      too; (b) the wording (for example "Same animal, shown again for another mating"); (c)
-      whether the hover text names the animal's id. **Gotchas:** the legend is tuned by hand to a
-      fixed 400 px height (`stepY = 54L` was set for 6 rows, `R/modPedigree.R:768-778`), so one
-      more row needs a hands-on retune; the twin rows already ride the same `visLegend()` call's
-      `addEdges` (a second call would overwrite it, `R/modPedigree.R:746-759`) and the legend tests
-      read rows out of the widget JSON (`tests/testthat/test_modPedigree.R:1383-1424`); a `title`
-      column on edges may mean every edge builder must supply it (see the matching-columns comment at
-      `R/makePedigreeDiagramData.R:2252-2255`). Shipping it is user-facing, so the `NEWS.Rmd` and
-      manual checklists in `docs/conventions/CLOSEOUT_CHECKLISTS.md` apply.
+findings: `PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. No live item remains here: S921 shipped
+the last one (the legend row for the dashed repeat-appearance link; see `CHANGELOG.md`).*
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
