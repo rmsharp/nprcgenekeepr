@@ -226,6 +226,125 @@ test_that("a genetic-value frame without a value column is an error", {
   )
 })
 
+## Issue #123 (XARCH-5), NEW-24's first leftover: the two column checks are
+## made by the shared assertRequiredColsPresent(), so a missing column reads
+## "nprcgenekeepr: required column(s) missing in <where>: <columns>." like the
+## reportGV(), reportMatePairs(), gvaConvergence() and qcStudbook() messages,
+## and the error carries no call.
+
+## Replace assertRequiredColsPresent() for the calling test with a recorder;
+## returns the environment that collects the calls.
+recordRequiredColsChecks <- function(envir = parent.frame()) {
+  rec <- new.env()
+  rec$calls <- list()
+  local_mocked_bindings(
+    assertRequiredColsPresent = function(availableCols, required, where) {
+      rec$calls[[length(rec$calls) + 1L]] <- list(
+        availableCols = availableCols, required = required, where = where
+      )
+      invisible(NULL)
+    },
+    .env = envir
+  )
+  rec
+}
+
+test_that("a ped missing columns is reported in the shared wording, in the required order", {
+  pedNoDam <- ped[, names(ped) != "dam"]
+  expect_error(
+    getGeneticDiversityStats(list(g1), pedNoDam, gv, kmat,
+                             currentDate = currentDate),
+    "required column\\(s\\) missing in getGeneticDiversityStats\\(ped\\): dam\\."
+  )
+  pedNoIdExit <- ped[, !names(ped) %in% c("id", "exit")]
+  expect_error(
+    getGeneticDiversityStats(list(g1), pedNoIdExit, gv, kmat,
+                             currentDate = currentDate),
+    "missing in getGeneticDiversityStats\\(ped\\): id, exit\\."
+  )
+  expect_error(
+    getGeneticDiversityStats(list(g1), NULL, gv, kmat,
+                             currentDate = currentDate),
+    "missing in getGeneticDiversityStats\\(ped\\): id, dam, sex, birth, exit\\."
+  )
+})
+
+test_that("a genetic-value frame missing columns is reported in the shared wording", {
+  expect_error(
+    getGeneticDiversityStats(list(g1), ped, gv[, "id", drop = FALSE], kmat,
+                             currentDate = currentDate),
+    paste0("required column\\(s\\) missing in ",
+           "getGeneticDiversityStats\\(geneticValues\\): value\\.")
+  )
+  expect_error(
+    getGeneticDiversityStats(list(g1), ped, gv[, "value", drop = FALSE], kmat,
+                             currentDate = currentDate),
+    "missing in getGeneticDiversityStats\\(geneticValues\\): id\\."
+  )
+  expect_error(
+    getGeneticDiversityStats(list(g1), ped, data.frame(label = "x"), kmat,
+                             currentDate = currentDate),
+    "missing in getGeneticDiversityStats\\(geneticValues\\): id, value\\."
+  )
+})
+
+test_that("a missing-column error carries no call, so the message is the whole report", {
+  pedNoDam <- ped[, names(ped) != "dam"]
+  errPed <- tryCatch(
+    getGeneticDiversityStats(list(g1), pedNoDam, gv, kmat,
+                             currentDate = currentDate),
+    error = function(e) e
+  )
+  expect_s3_class(errPed, "error")
+  expect_null(conditionCall(errPed))
+  errGv <- tryCatch(
+    getGeneticDiversityStats(list(g1), ped, gv[, "id", drop = FALSE], kmat,
+                             currentDate = currentDate),
+    error = function(e) e
+  )
+  expect_s3_class(errGv, "error")
+  expect_null(conditionCall(errGv))
+})
+
+test_that("a bad ped is reported before a bad genetic-value frame", {
+  pedNoDam <- ped[, names(ped) != "dam"]
+  expect_error(
+    getGeneticDiversityStats(list(g1), pedNoDam, gv[, "id", drop = FALSE],
+                             kmat, currentDate = currentDate),
+    "missing in getGeneticDiversityStats\\(ped\\): dam\\."
+  )
+})
+
+test_that("the ped check is made by assertRequiredColsPresent() with the ped's names, its five columns and its label", {
+  rec <- recordRequiredColsChecks()
+  getGeneticDiversityStats(list(g1), ped, gv, kmat, currentDate = currentDate)
+  pedCalls <- Filter(
+    function(x) identical(x$where, "getGeneticDiversityStats(ped)"),
+    rec$calls
+  )
+  expect_identical(
+    pedCalls,
+    list(list(availableCols = names(ped),
+              required = c("id", "dam", "sex", "birth", "exit"),
+              where = "getGeneticDiversityStats(ped)"))
+  )
+})
+
+test_that("the genetic-value check is made by assertRequiredColsPresent() with the frame's names, its two columns and its label", {
+  rec <- recordRequiredColsChecks()
+  getGeneticDiversityStats(list(g1), ped, gv, kmat, currentDate = currentDate)
+  gvCalls <- Filter(
+    function(x) identical(x$where, "getGeneticDiversityStats(geneticValues)"),
+    rec$calls
+  )
+  expect_identical(
+    gvCalls,
+    list(list(availableCols = names(gv),
+              required = c("id", "value"),
+              where = "getGeneticDiversityStats(geneticValues)"))
+  )
+})
+
 test_that("assembler output feeds makeGeneticDiversityHeatmap end to end", {
   res <- getGeneticDiversityStats(list(g1, g2), ped, gv, kmat,
                                   currentDate = currentDate)
