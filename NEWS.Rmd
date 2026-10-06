@@ -380,6 +380,10 @@ longitudinal monitoring of colony genetic health.
 - Fixed: when a pedigree lists an animal as its own ancestor,
   `getAncestors()`, `findLoops()` and `countLoops()` stop with a message
   naming the animals instead of an "infinite recursion" error.
+- Fixed: `getLkDirectAncestors()` no longer runs without end when a pedigree
+  lists an animal as its own ancestor; it stops and returns the animals found.
+  `getPedDirectRelatives()` no longer runs without end when a pedigree has a
+  row with no animal id; it stops and returns the family, that row included.
 - Fixed: a stand-in id (`U0001`, `U0002`, ...) could duplicate an id a real
   animal already had. The check and `addUIds()` skip any id already in the
   pedigree, including one that appears only as a sire or dam.
