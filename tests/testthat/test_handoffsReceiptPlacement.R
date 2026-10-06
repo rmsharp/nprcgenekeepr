@@ -5,18 +5,20 @@
 ## box of `HANDOFFS.md`", found S917; the owner chose a test in the suite, S922):
 ## from S814 to S917 every new session receipt was written right after the
 ## four-backtick line that opens the code box holding the format example, so
-## `methodology_trim.py` counted them as front matter, saw 1 of 105 receipts
-## and could archive nothing. The sentence added to the file's "How to write a
-## receipt" is a row, not a gate (Learning 882). This file is the gate: the
-## box must hold exactly one `handoff` block, the example.
+## `methodology_trim.py` counted them as front matter and could archive
+## nothing. Measured S922: the file just before S917 moved them (`b53927bdf^`)
+## held 105 blocks inside the box (the example and 104 receipts) and 1 outside
+## it; handoffsBoxReceiptCount() returns 105 on that file. The sentence added to
+## the file's "How to write a receipt" is a row, not a gate (Learning 882). This
+## file is the gate: the box must hold exactly one `handoff` block, the example.
 ##
 ## handoffsBoxReceiptCount() (tests/testthat/helper-handoffsBox.R) counts the
 ## blocks between the first two lines that are exactly four backticks, so a
-## receipt above or below the box is not counted (the first block in the file
-## is not the test: the box is). The real-file tests read ../../HANDOFFS.md,
-## which .Rbuildignore excludes, so they skip in a built package, under
-## `devtools::check()` and under covr; they run from the source tree, which is
-## where the close-out suite runs.
+## receipt above or below the box is not counted (the count is the box's, not
+## the first block in the file's). The real-file tests read ../../HANDOFFS.md,
+## which .Rbuildignore excludes: a built package holds no copy (measured S922),
+## so they skip in a built package and under `devtools::check()`. They run from
+## the source tree, which is where the close-out suite runs.
 
 pkg_root <- testthat::test_path("..", "..")
 handoffs_path <- file.path(pkg_root, "HANDOFFS.md")
