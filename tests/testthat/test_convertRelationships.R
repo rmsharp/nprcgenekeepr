@@ -62,3 +62,18 @@ test_that("convertRelationships makes correct transformations", {
   expect_identical(relBIds$relation[relBIds$id1 == "4LFS70" &
     relBIds$id2 == "DD1U77"], "Other")
 })
+
+# NEW-19: record how often each of the 11 names is given for smallPed, so
+# moving the names to one list changes nothing a user sees.
+test_that("convertRelationships gives each of the 11 names for smallPed", {
+  counts <- table(rel$relation)
+  expect_length(counts, 11L)
+  expect_identical(
+    as.integer(counts[c(
+      "Self", "Parent-Offspring", "Full-Siblings", "Half-Siblings",
+      "Grandparent-Grandchild", "Full-Cousins", "Cousin - Other",
+      "Full-Avuncular", "Avuncular - Other", "Other", "No Relation"
+    )]),
+    c(17L, 19L, 4L, 7L, 13L, 2L, 3L, 6L, 10L, 4L, 68L)
+  )
+})
