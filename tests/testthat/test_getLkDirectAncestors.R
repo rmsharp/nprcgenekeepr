@@ -76,18 +76,21 @@ lkOver <- function(lkFn, demographics) {
   lkFn
 }
 
+## getLkDirectAncestors() reading the diamond table (helper-walkPedigree.R).
+lkDiamond <- function() lkOver(getLkDirectAncestors, diamondPed())
+
 test_that("getLkDirectAncestors returns the focal animals, then each generation, in table order", {
   skip_if_not_installed("mockery")
   ## The table is in the order G, H, D, S, O. Pure table order would be that
   ## order and pure discovery order O, S, D, G, H; the rows come back as O, then
   ## D and S (O's parents, in table order), then G and H (their parents).
-  result <- lkOver(getLkDirectAncestors, diamondPed())("O")
+  result <- lkDiamond()("O")
   expect_identical(result$id, c("O", "D", "S", "G", "H"))
 })
 
 test_that("getLkDirectAncestors puts the focal animals first, in table order", {
   skip_if_not_installed("mockery")
-  result <- lkOver(getLkDirectAncestors, diamondPed())(c("D", "O"))
+  result <- lkDiamond()(c("D", "O"))
   expect_identical(result$id, c("D", "O", "H", "S", "G"))
 })
 
@@ -105,7 +108,7 @@ test_that("getLkDirectAncestors keeps the first row of an id that the table repe
 
 test_that("getLkDirectAncestors returns no rows for missing, absent or empty ids", {
   skip_if_not_installed("mockery")
-  lk <- lkOver(getLkDirectAncestors, diamondPed())
+  lk <- lkDiamond()
   expect_identical(nrow(lk(NA_character_)), 0L)
   expect_identical(nrow(lk("ZZZ")), 0L)
   expect_identical(nrow(lk(character(0L))), 0L)
@@ -131,17 +134,13 @@ test_that("getLkDirectAncestors stops on circular data", {
 
 test_that("getLkDirectAncestors asks walkPedigree() for the ancestors of the focal animals", {
   skip_if_not_installed("mockery")
-  fixture <- diamondPed()
   ## Control: the real rule gives all four ancestors of O.
-  expect_identical(
-    lkOver(getLkDirectAncestors, fixture)("O")$id,
-    c("O", "D", "S", "G", "H")
-  )
+  expect_identical(lkDiamond()("O")$id, c("O", "D", "S", "G", "H"))
   ## A stand-in that finds only D above O leaves O and D.
   walker <- mockery::mock(list("O", "D"))
-  lk <- lkOver(getLkDirectAncestors, fixture)
+  lk <- lkDiamond()
   mockery::stub(lk, "walkPedigree", walker)
   result <- lk("O")
-  expectOneWalk(walker, ids = "O", ped = fixture, direction = "ancestors")
+  expectOneWalk(walker, ids = "O", ped = diamondPed(), direction = "ancestors")
   expect_identical(result$id, c("O", "D"))
 })

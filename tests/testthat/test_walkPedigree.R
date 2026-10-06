@@ -18,6 +18,7 @@ library(testthat)
 ## other. The fixtures are in helper-walkPedigree.R.
 
 lacy <- nprcgenekeepr::lacy1989Ped
+allDirections <- c("ancestors", "descendants", "both")
 
 test_that("walkPedigree 'ancestors' lists the parents generation by generation", {
   expect_identical(
@@ -65,7 +66,7 @@ test_that("walkPedigree keeps each starting id once, in the order given", {
 })
 
 test_that("walkPedigree returns the starting ids alone when there is nowhere to go", {
-  for (direction in c("ancestors", "descendants", "both")) {
+  for (direction in allDirections) {
     expect_identical(
       walkPedigree(character(0L), lacy, direction),
       list(character(0L)),
@@ -80,7 +81,7 @@ test_that("walkPedigree returns the starting ids alone when there is nowhere to 
 })
 
 test_that("walkPedigree stops on two animals that are each other's sire", {
-  for (direction in c("ancestors", "descendants", "both")) {
+  for (direction in allDirections) {
     expect_identical(
       withinSeconds(walkPedigree("A", circlePed(), direction)),
       list("A", "B"),
@@ -90,7 +91,7 @@ test_that("walkPedigree stops on two animals that are each other's sire", {
 })
 
 test_that("walkPedigree stops on an animal that is its own sire", {
-  for (direction in c("ancestors", "descendants", "both")) {
+  for (direction in allDirections) {
     expect_identical(
       withinSeconds(walkPedigree("A", selfParentPed(), direction)),
       list("A"),

@@ -167,11 +167,14 @@ pedExtended <- rbind(pedLacy, data.frame(
   population = rep(TRUE, 6L),
   stringsAsFactors = FALSE
 ))
+## Everyone in the Lacy pedigree is one family, so every one of them has all
+## seven as relatives.
+lacyFamily <- c("A", "B", "C", "D", "E", "F", "G")
 
 test_that("getPedDirectRelatives returns the pedigree's own rows in the pedigree's order", {
   expect_identical(
     getPedDirectRelatives(ids = "E", ped = pedLacy)$id,
-    c("A", "B", "C", "D", "E", "F", "G")
+    lacyFamily
   )
   expect_identical(
     getPedDirectRelatives(ids = "M", ped = pedExtended),
@@ -222,14 +225,14 @@ test_that("getPedDirectRelatives copes with absent, repeated and missing ids", {
   )
   expect_identical(
     getPedDirectRelatives(ids = c("F", NA), ped = pedLacy)$id,
-    c("A", "B", "C", "D", "E", "F", "G")
+    lacyFamily
   )
   ## A missing id never gets a placeholder record.
   expect_identical(
     getPedDirectRelatives(
       ids = c("G", NA), ped = pedLacy, unrelatedParents = TRUE
     )$id,
-    c("A", "B", "C", "D", "E", "F", "G")
+    lacyFamily
   )
 })
 
@@ -272,7 +275,7 @@ test_that("getPedDirectRelatives asks walkPedigree() for the relatives in both d
   ## Control: the real rule gives the whole family of E.
   expect_identical(
     getPedDirectRelatives(ids = "E", ped = pedLacy)$id,
-    c("A", "B", "C", "D", "E", "F", "G")
+    lacyFamily
   )
   ## A stand-in that finds no relatives leaves only E.
   walker <- mockery::mock(list("E"))
@@ -289,7 +292,7 @@ test_that("getPedDirectRelatives makes its placeholder records from the ids walk
     getPedDirectRelatives(
       ids = "E", ped = pedLacy, unrelatedParents = TRUE
     )$id,
-    c("A", "B", "C", "D", "E", "F", "G")
+    lacyFamily
   )
   ## A stand-in that also finds Q, which has no row, adds a placeholder for Q.
   walker <- mockery::mock(list("E", "Q"))
