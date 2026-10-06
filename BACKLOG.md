@@ -5,22 +5,65 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **PED_GV audit follow-through -- every F-slice DONE; what remains is owner decisions
-      (DECISION NEEDED, Effort S each; strict TDD for every fix)** --
+- [ ] **PED_GV audit follow-through -- every F-slice DONE and every id decided; 2 ids remain, each
+      waits on a build below (READY, Effort S each; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code; its
       table is the plan, so read it first. Its four fix slices all shipped (F1 S782, F4 S783,
-      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-16 (S818-S915) hold
-      the 37 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
-      sessions. **6 ids remain** (S915 recomputed this from the report's table: 43 ids, 37 closed,
-      none counted twice).
-      **Open, 5 owner decisions and NEW-24:** (a) the overhaul
-      roots, none urgent -- only the constants and HTML builders (NEW-18/19/21/26/57) are still
-      undecided (S912 measured their sites, kept in record 13); the walk helpers are all shipped
-      (NEW-42, the argument order's help-page sentence, S913, closure record 14; NEW-62, the
-      `updateProgress` null checks, S914, closure record 15; PED-3, one `walkPedigree()` for the
-      four walk loops, S915, closure record 16); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
+      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-17 (S818-S916) hold
+      the 41 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
+      sessions. **2 ids remain** (S916 recomputed this from the report's table: 43 ids, 41 closed,
+      none counted twice): NEW-19 (decided S916, Decision record 17; its build is the next item)
+      and NEW-24 (open issue #123, kept open on purpose after Phase 1 shipped S386; its first
+      leftover, `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector, is decided
+      S916 and has a build below; its second, the missing `print` method for genetic-value
+      results -- the class is appended last at `reportGV.R:365` and there is no bare
+      `print.nprcgenekeeprGV` -- stays open on the issue as low priority, the owner chose not to
+      build it).
       **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
       "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
+
+- [ ] **One internal list of the 11 relationship names for `convertRelationships()` and
+      `makeRelationClassesTable()` (NEW-19; READY, Effort S; owner decision S916, Decision record
+      17 of the PED_GV triage report; strict TDD)** -- `R/convertRelationships.R:51-89` assigns
+      the 11 names and `R/makeRelationClassesTable.R:38-43` lists them again to put its rows in
+      order; a pair given an unlisted name is dropped from the table without a message (probe
+      P13: `Full-Sibling`, one letter short, gave 4 rows from 5 pairs). Both read the names from
+      one internal list; no output changes; `R/markerRealizedRelatednessVariance.R:33-35` keeps
+      its own 3 (each is paired with a formula). **First RED:** a recording test of the table's
+      rows and their order for the bundled `smallPed`, which gives all 11 names (measured S916,
+      probe P15), then a test that every name `convertRelationships()` can give is in the table's
+      list. **For its Pre-RED gate:** the list's name and file; whether `convertRelationships()`
+      takes each name from the list by element name or keeps its literals; keep both exported
+      signatures and help pages; NEWS: none owed unless an output changes. Ships NEW-19.
+
+- [ ] **One internal list of the three genetic-value labels (a S916 finding, not an audit id;
+      READY, Effort S; owner choice S916, Decision record 17; strict TDD)** -- `"Low Value"`,
+      `"High Value"` and `"Undetermined"` are typed as text in 5 files (8 lines):
+      `R/rankSubjects.R:52,54,56` assigns them; `R/getGeneticDiversityStats.R:91`,
+      `R/modBreedingGroups.R:548`, `R/modGeneticValue.R:385` and
+      `R/summary.nprcgenekeeprErr.R:262,267` compare them; `R/getProportionLow.R:21` matches the
+      substring `"Low"`. A label that drifted in one file would silently stop matching in the
+      others (not probed). One internal list that the 5 files read; no output changes. **First
+      RED:** a recording test per file of today's labels and counts, then a test per file that it
+      reads the list (red until moved). **For its Pre-RED gate:** the list's name and file (a new
+      file makes 6 files with the 5 edits, so two GREEN commits for the 5-file cap); whether
+      `getProportionLow()`'s `"Low"` substring match moves to the exact label (a behaviour
+      question: other `Low...` values would stop matching); NEWS: none owed. Ships no audit id
+      (NEW-18 and NEW-57 were closed without change).
+
+- [ ] **`getGeneticDiversityStats()` uses the shared required-column check (NEW-24's first
+      leftover; READY, Effort S; owner decision S916, Decision record 17; strict TDD)** --
+      `R/getGeneticDiversityStats.R:58-67` hand-writes two checks (`requiredPed`, 5 columns;
+      `requiredGv`, 2 columns) while `assertRequiredColsPresent()`
+      (`R/assertRequiredColsPresent.R:19`) serves `reportGV()`, `qcStudbook()`,
+      `gvaConvergence()` and `reportMatePairs()`. The exported function's error wording changes
+      from `ped is missing required column(s): dam` to `nprcgenekeepr: required column(s) missing
+      in getGeneticDiversityStats(ped): dam.` and the call is no longer shown in the message.
+      **First RED:** record today's two messages, add a test for a missing `geneticValues`
+      column (none exists), then the shared-wording tests; `test_getGeneticDiversityStats.R:194-201`
+      matches only `dam` and stays green. **For its Pre-RED gate:** the `where` label for each
+      check; whether a NEWS line is owed (an exported function's error wording changes). Issue
+      #123 stays open (the print method; the owner closes it).
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort

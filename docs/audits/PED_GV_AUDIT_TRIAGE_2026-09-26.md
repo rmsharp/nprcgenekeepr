@@ -476,6 +476,98 @@ Open after this closure: **6 ids** (7 minus PED-3; recounted S915: the table has
 among them, so 37 are closed): NEW-24 (issue #123, tracked) and the 5 undecided constants and HTML builders ids (NEW-18, NEW-19,
 NEW-21, NEW-26, NEW-57).
 
+### Decision record 17 (owner decision 2026-10-05, S916) -- the constants, the HTML builders and NEW-24's leftovers
+
+The owner took what was left of the audit at the Phase 0 picker ("PED_GV leftovers") and answered four questions put in plain
+words, each with the measurements below, and chose:
+
+- **NEW-21 and NEW-26 (the cut-off numbers):** "Leave, close both" (over "One internal list" and "Document for users").
+- **NEW-19 (the relationship names):** "Share one list" (over "Add the check only" and "Leave, close").
+- **NEW-18 and NEW-57 (the low-value items):** "Name value labels" (over "Leave, close both" and "Tidy table makers").
+- **NEW-24's two leftovers:** "Shared check only" (over "Check and print" and "Leave both").
+
+S916 wrote it down and changed no `R/` file, test or `man/` page. The table above stays the frozen S781 reading.
+
+| id | decided |
+|---|---|
+| NEW-21 | CLOSED, ACCEPTED, no change: the heat-map cut-off numbers and the `0.015625` kinship default stay where they are. |
+| NEW-26 | CLOSED, ACCEPTED, no change: same as NEW-21 (the `digits = 4L` formatter, once, in `makeGeneticSummaryTable()`, stays). |
+| NEW-18 | CLOSED, ACCEPTED, no change: the two exported HTML table makers keep their hand-built rows and their "if present, else default" blocks (the app calls neither). |
+| NEW-57 | CLOSED, ACCEPTED, no change: `rankSubjects()` and the internal ordering function keep comparing and listing the tier names (`lowVal`, `noParentage`, ...) as text. The owner chose instead to name the three value labels once; that is a new S916 finding, not an audit id (new READY item in `BACKLOG.md`). |
+| NEW-19 | DECIDED, STAYS OPEN until it ships: `convertRelationships()` and `makeRelationClassesTable()` read the 11 relationship names from one internal list, with a new test that every name `convertRelationships()` can give appears in the table; no output changes; `markerRealizedRelatednessVariance()` keeps its own 3 names. Work not started; strict TDD, with the owner's approval of the scope at its own gate. New READY item in `BACKLOG.md`. |
+| NEW-24 | DECIDED IN PART, STAYS OPEN (issue #123): leftover (1), `getGeneticDiversityStats()` keeping its own `requiredPed` and `requiredGv` checks, switches to the shared `assertRequiredColsPresent()` (the error wording changes); leftover (2), the missing `print` method for genetic-value results, stays open on issue #123 as low priority (the owner did not choose to build it). New READY item in `BACKLOG.md` for (1). |
+
+**Correction to the question text.** S916's first question said each heat-map number is "typed once". Today's code is more
+exact: each function holds its own numbers and nothing else repeats them, but within a function some appear twice, in its two
+comparisons (below). The answer does not turn on it (no number is typed in two functions), but the record states it as measured.
+
+What S916 measured, for whoever picks up the work (today's code at `c75cfc2aa`, by reading it, greps of `R/`, `tests/`, `inst/`
+and `vignettes/`, and the three bounded R probes P13 to P15 below; no test suite was run):
+
+- **Heat-map cut-offs (NEW-21, NEW-26):** four internal functions colour the cells. `R/getProportionLow.R:23,26,29` (Value: over
+  0.5 low-value is red, 0.3 to 0.5 yellow, under 0.3 green; 0.5 and 0.3 each appear twice, one caller at
+  `R/getGeneticDiversityStats.R:95`), `R/getKinshipWithMaleStatus.R:66,69` (Inbreeding: under 0.6 red, up to 0.9 yellow, over 0.9
+  green; stated in its comment `:11-12`), `R/getProductionStatus.R:108-114` (shelter pens 0.63 and 0.6) and `:122-128` (corral 0.53
+  and 0.5; each appears twice; stated in its comment `:20-28`) and `R/getIndianOriginStatus.R:36-43` (Origin: counts, no numbers:
+  Chinese plus hybrid at least 1 is red, borderline at least 1 yellow). `getProportionLow()` has no comment that states its numbers.
+  **No guide, article or vignette gives any of them:** a grep of `inst/extdata/ui_guidance`, `vignettes/*.Rmd`,
+  `vignettes/articles/*.qmd` and `vignettes/manual_components` for 30, 50, 60, 63, 90 and 53 with a percent sign or word beside
+  heat-map words found nothing, and `vignettes/articles/colony-manager-guide.qmd:676-690` says only "cut-offs that depend on the
+  selected Housing type".
+- **The `0.015625` kinship default (second cousins, 1/64):** the default in `R/filterThreshold.R:28` and `R/groupAddAssign.R:179`
+  (both exported) and `R/getKinshipWithMaleStatus.R:40` (internal; `R/getGeneticDiversityStats.R:103` passes no threshold, so the
+  Inbreeding cell uses this default); also written in the help text of two of them (`getKinshipWithMaleStatus.R:31`,
+  `groupAddAssign.R:32`), in 3 roxygen examples, and in 6 hand-written guide, article and vignette files
+  (`inst/extdata/ui_guidance/group_formation.html:26,76` and `gvAndBgDesc.html:137`, `vignettes/a2interactive.Rmd:887`,
+  `vignettes/articles/breeding-group-formation.qmd:112,176`, `vignettes/manual_components/_breeding_group_algorithm.Rmd:52` and
+  `_breeding_group_formation.Rmd:167`). `tests/testthat/test_sexCodes.R:75` pins the text of `groupAddAssign()`'s heading line
+  `threshold = 0.015625, ignore = list(c("F", "F")),`. A shared constant in an exported heading would, by how roxygen writes usage, put the constant's name where
+  `man/filterThreshold.Rd:7` and `man/groupAddAssign.Rd:12` print the number (reasoned from those two lines; not run) and would
+  still leave the 6 prose files typing the number. The application's own
+  default Max kinship threshold is 0.25 (`_breeding_group_algorithm.Rmd:52`), a different setting.
+- **Relationship names (NEW-19):** `R/convertRelationships.R:51,53,56,59,63,69,75,81,85,87,89` assign the 11 names (`Self`,
+  `Full-Siblings`, `Parent-Offspring`, `Half-Siblings`, `Grandparent-Grandchild`, `Full-Cousins`, `Cousin - Other`,
+  `Full-Avuncular`, `Avuncular - Other`, `Other`, `No Relation`); `R/makeRelationClassesTable.R:38-43` lists the same 11 in display
+  order (the app calls it at `R/modSummaryStats.R:432`); `R/markerRealizedRelatednessVariance.R:33-35` uses 3 of them as the names
+  of a list of formulas. **P13: a pair named `Full-Sibling` (one letter short) is left out of the table silently** (5 pairs that are
+  not `Self` in, 4 in the table): the table keeps only names that are in its own list, so an unlisted name is dropped whatever the
+  reason.
+  Tests: only `test_convertRelationships.R` names all 11; `test_makeRelationsClasses.R` has 1 test; no test checks that the two
+  lists match.
+- **HTML builders (NEW-18):** `R/makeGeneticSummaryTable.R` (exported; header plus two near-identical rows by hand, `fmt()` with
+  `digits = 4L` at `:57`) and `R/makeFounderStatsTable.R` (exported; 6 "if present, else default" blocks). Neither is called from
+  `R/` or the app (issue #37's table says "Not on the app's call path" for both). Tests: `test_makeGeneticSummaryTable.R` (8),
+  `test_makeFounderStatsTable.R` (3), `test_modFounderStats.R` (14).
+- **Tier names (NEW-57):** `R/rankSubjects.R:51,53,59` compare the list name to `"lowVal"` and `"noParentage"`;
+  `R/orderReport.R:131,139` list the five tier names in order; `orderReport()` is internal (callers `R/reportGV.R:336`,
+  `R/gvaConvergence.R:215`).
+- **Value labels (the new finding):** `"Low Value"`, `"High Value"` and `"Undetermined"` are typed as text in 5 files, 8 lines:
+  `R/rankSubjects.R:52,54,56` (assigns them), `R/getGeneticDiversityStats.R:91`, `R/modBreedingGroups.R:548`,
+  `R/modGeneticValue.R:385` and `R/summary.nprcgenekeeprErr.R:262,267` (compare them). A ninth site is a substring match:
+  `R/getProportionLow.R:21` counts values containing `"Low"`, not the whole label. No file in `inst/` names them. Not measured: what
+  the app does when one file's label drifts (no probe was run).
+- **NEW-24's leftovers:** `R/getGeneticDiversityStats.R:58-67` keeps two hand-written checks (`requiredPed`, 5 columns, message
+  `ped is missing required column(s): dam`; `requiredGv`, 2 columns) while `assertRequiredColsPresent()` (`R/assertRequiredColsPresent.R:19`)
+  is used at `R/reportGV.R:181`, `R/qcStudbook.R:373`, `R/gvaConvergence.R:176` and `R/reportMatePairs.R:175`; its message is
+  `nprcgenekeepr: required column(s) missing in <where>: <cols>.` with `call. = FALSE`. The only test, `test_getGeneticDiversityStats.R:194-201`,
+  matches the column name `dam` and nothing else; none covers a missing `geneticValues` column. **P14:** a list given the class
+  `c("list", "nprcgenekeeprGV")` the way `R/reportGV.R:365` does prints in full with an `attr(,"class")` line; the package has
+  `summary` and `print.summary` methods for the class but no `print` method.
+- **Points for each build's Pre-RED gate:** (NEW-19) the list's name and file; whether `convertRelationships()` takes each name
+  from the list by element name or keeps its literals and the new test alone guards the two (the owner chose to share the list);
+  keep the exported signatures; the bundled `smallPed` gives all 11 names (P15: 17 `Self`, 19 `Parent-Offspring`, 13 `Grandparent-Grandchild`, 10 `Avuncular - Other`, 7
+  `Half-Siblings`, 6 `Full-Avuncular`, 4 `Full-Siblings`, 4 `Other`, 3 `Cousin - Other`, 2 `Full-Cousins`, 68 `No Relation`), so it
+  serves as the fixture for the new test. (Value
+  labels) the list's name and file (a new file makes 6 files with the 5 edits: two GREEN commits for the 5-file cap); whether
+  `getProportionLow()`'s `"Low"` substring match moves to the exact label (a behaviour question, since other `Low...` values would
+  stop matching); the first RED is a recording test per file of today's labels and counts. (NEW-24 first leftover) the exported
+  function's error wording changes (and the call is no longer in the message); a NEWS line is decided at the gate; the first RED
+  records today's two messages and adds a test for a missing `geneticValues` column.
+
+Open after this decision: **2 ids** (4 closed: NEW-18, NEW-21, NEW-26, NEW-57; recounted S916: the table has 43 ids, all unique,
+and the 6 open ones before this record are all among them, so 41 are closed): NEW-19 (decided, waits on its build) and NEW-24
+(issue #123: its first leftover decided and waiting on a build, its print-method leftover open, low priority).
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
@@ -570,6 +662,16 @@ getProbandPedigree("A", cyc)$id; getDescendantPedigree("A", cyc)$id; getPedDirec
 # getLkDirectAncestors(ids = "A") with mockery::stub(f, "getDemographics", function(...) <the 7-column table of cyc>)
 #     -> no return: "reached elapsed time limit" at 5.0 s
 getParents("C", cyc); getOffspring("C", cyc)    # swapped order: Error: $ operator is invalid for atomic vectors (both)
+# P13 NEW-19 (S916): a misspelt relation name is dropped from the table
+kin <- data.frame(id1 = letters[1:6], id2 = letters[7:12], kinship = 0.1, stringsAsFactors = FALSE,
+                  relation = c("Parent-Offspring", "Full-Siblings", "Full-Siblings", "Full-Sibling", "Self", "No Relation"))
+makeRelationClassesTable(kin)    # Parent-Offspring 1, Full-Siblings 2, No Relation 1: 4 rows of the 5 that are not Self
+# P14 NEW-24 (S916): the class reportGV() gives, printed
+x <- list(report = data.frame(id = "a", value = "High Value"), k = 1); class(x) <- append(class(x), "nprcgenekeeprGV")
+class(x)   # "list" "nprcgenekeeprGV"; print(x) shows both list elements and an attr(,"class") line (no print method)
+# P15 NEW-19 (S916): which names the bundled smallPed gives
+rel <- convertRelationships(kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen, sparse = FALSE), smallPed)
+table(rel$relation)   # all 11 names appear (counts in Decision record 17); setdiff(<the 11>, unique(rel$relation)) is character(0)
 ```
 
 ## Verification
