@@ -765,7 +765,10 @@ modPedigreeServer <- function(id, studbook) {
           # #133 Affected-row comment above already established). Values
           # match .buildTwinConnectorEdges() (R/makePedigreeDiagramData.R)
           # exactly -- label + dashes + color (D10's #009E73 color pick,
-          # found never wired at S494, fixed S506).
+          # found never wired at S494, fixed S506). S921: the same table
+          # now also leads with the "Same animal, again" row for the dashed
+          # repeat-appearance link (built above, where `legendEdges` is
+          # made).
           # nolint end
           addEdges = legendEdges,
           useGroups = FALSE,
