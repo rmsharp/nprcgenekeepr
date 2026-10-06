@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S920
+date: 2026-10-06
+status: pending
+active_task: One internal list of the three genetic-value labels (BACKLOG.md:8; READY, Effort S; strict TDD; a S916 finding, not an audit id; owner S916 choice, Decision record 17; picked at the Phase 0 picker, recommended option; last queued build in the owner's S914 order).
+```
+
+```handoff
 session: S919
 date: 2026-10-06
 status: complete

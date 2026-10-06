@@ -98,70 +98,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 919 Did
-**Deliverable, DONE (strict TDD; users see only one error message's wording change):** NEW-24's first leftover, picked by the owner
-at the Phase 0 picker. `getGeneticDiversityStats()` makes its `ped` and `geneticValues` column checks with the shared
-`assertRequiredColsPresent()` (`R/getGeneticDiversityStats.R:58-65`, labels `getGeneticDiversityStats(ped)` and
-`getGeneticDiversityStats(geneticValues)`, ped first); a missing column now reads "nprcgenekeepr: required column(s) missing in
-getGeneticDiversityStats(ped): dam." with no call. Commits: claim `fe75f34cd`, RED `ea46cb959`, GREEN `791096a93`, REFACTOR
-`0f689cc2c`, closure `c14c13ef6`; the close-out commit carries this note, the receipt and the ledger entry (all local; 72 ahead of
-origin after it).
+### What Session 920 Did
+**Deliverable:** one internal list of the three genetic-value labels (`BACKLOG.md:8`, READY, Effort S, strict TDD; a S916 finding,
+not an audit id) (IN PROGRESS)
+**Started:** 2026-10-06 02:03 CDT
+**Status:** Session claimed. Phase: PRE-RED. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the S919
+ratchet citation matching the results file (results `474f97e30ac7`, manifest `aa983075d6a2`), CI green (the unfiltered `gh run
+list`; the `--branch master` form and the API's branch filter both returned September rows), dashboard 96/100 with High+ risk 0,
+72 commits ahead of origin. The owner picked this item (the recommended one, last queued build in the S914 order) at the picker.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Two contexts.** The first ended when the owner's iTerm2 window closed (claim, RED, one uncommitted edit). I re-ran Phase 0 (0
-undocumented commits, receipt pending, CI green 10 of 10, dashboard 96/100, budget OK, 68 ahead), ran the test file against the edit
-(22 tests, 0 failed), and asked the RED-to-GREEN gate again before committing it. Owner choices: both gates, and "No NEWS line".
-
-**Measured:** 22 tests (6 new, 16 existing), 0 failed; the pre-GREEN function put back after REFACTOR fails exactly the 6 new ones
-. Full suite: 373 files, 3,087 tests, 0 errors, 187 skipped, 2 failed: the wall-clock benchmarks
-`markerKinship` and `markerParentageLikelihood`, while another project's session (`vscode-quarto-ext`, about 30 parallel `quarto
-render` jobs; the owner is investigating) held the load average at 455; neither file mentions the changed function and
-both pass alone (5 and 25 tests). Lint 0; `devtools::check(args = "--no-manual")` 0/0/0 after GREEN and after REFACTOR;
-`quality_ratchet.py --run` 1/1 pass, results `474f97e30ac7`, manifest `aa983075d6a2`, head `c14c13ef6`, tarball 3.69983e+06 B of
-5e+06. **Not run, stated:** the Shiny app (Phase 3E: only an error message's wording changed; the only caller's tests, in
-`modGeneticDiversity`, ran green in the suite); the manual build; the full suite again after REFACTOR (tests only; the file alone,
-then `check` ran the whole directory).
-
-**Closure:** Closure record 19 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:581`). NEW-24 stays open on issue #123 for the print
-method (Decision record 17), so the PED_GV count stays 1 and no build waits. `BACKLOG.md`: the `:39` item removed; the PED_GV
-follow-through item removed too (nothing in it waited on a build; the gates did not name this: put it back if you want it); cite
-`:91` to `:89` fixed; Learning 884.
-
-**My mistakes (recovered):** a gate option said "PED_GV open count 1 to 0" (copied from S918; the closure keeps 1); the suite watch
-used `[ -s file ]` and fired on stderr noise, then its 15-minute window expired on a 24-minute run.
-
-**Handoff evaluation of S918: 8/10.** Helped: every number re-measured exactly (66 ahead, the `:39` item, `:58-67`, the four sibling
-callers, "NEWS decided at the gate"); the receipt-placement gotcha; the load-under-benchmarks warning plus S915's "trace a high load
-up `ps`" explained the 2 failures at once. Missing: the load can come from another project (S918 named three idle `R` processes at
-0% CPU, not the cause). Wrong: "open count 1 to 0" contradicts Decision record 17 ("STAYS OPEN") and every earlier count; I kept 1.
-
-**Self-assessment: 8/10.** + The orphaned edit verified before it was touched; gates asked with concrete actions and a plain-words
-NEWS question; mutation check; load traced to a named project and left alone; code argument, then the rerun; closure follows the
-ratified record; a stale cite caught; a specific learning. - The stderr watch (about 30 minutes); a gate option promising "1 to
-0"; one item removed beyond what the gates named. Reduction: `SESSION_NOTES.md` 56,672 B to 56,347 B (S918 condensed, this section kept short; 9,189 B under its 65,536 B ceiling and
-under its 25,000-token ceiling); `BACKLOG.md` 44,099 B to 41,613 B (two items removed); nothing else removed.
-
-**Next steps (recommended, not yet ruled on; S914's receipt gives the owner's order for this campaign: builds first, then the
-dashed-link item, then docs-audit slice 2; (B) and (C) are newer findings that order does not cover):** (A) the three value labels
-(`BACKLOG.md:8`, READY, Effort S, two GREEN commits for the 5-file cap; the last queued build; not an audit id; Pre-RED gate: the
-list's name and file, and whether `getProportionLow()`'s `"Low"` substring match moves to the exact label). (B) the receipt-placement
-gate (`:23`, DECISION NEEDED, S). (C) the S918 finding on a one-id `convertRelationships()` and an empty
-`makeRelationClassesTable()` (`:54`, DECISION NEEDED, S). (D) the dashed-link item (`:418`, DECISION NEEDED, S). (E) docs-audit
-slice 2 (`:79`, needs scoping first, L). (F) upstream `KJ5HST/methodology#93` (`:302`, BLOCKED). (G) unpushed: 72 local commits after
-this close-out; the push carries `R/` changes from S915, S918, S919, so all four workflows start; not offered as a task (owner's S905
-ruling). Lower priority: `getAncestors()` on an absent id (`:38`, DECISION NEEDED, S). Carried: NEW-24's print method stays on issue
-#123 (low priority, the owner closes it; no `BACKLOG.md` item); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910
-(untested). Before the picker: grep the receipts for an order the owner already gave and label which options close what.
-
-**Key files:** `R/getGeneticDiversityStats.R:58-65`; `R/assertRequiredColsPresent.R:19`; `tests/testthat/test_getGeneticDiversityStats.R:94-95`
-(the shared fixtures), `:239-345` (recorder and the 6 new tests); `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:581` (Closure record
-19); `PROJECT_LEARNINGS.md` Learning 884; `BACKLOG.md:8`, `:23`, `:38`, `:54`, `:79`, `:302`, `:418`.
-
-**Gotchas:** the full suite (about 6 min when quiet) and `devtools::check()` (about 8 min) run one at a time; a run far over that
-means check `uptime` and `ps -Ao pid,ppid,etime,pcpu,command` before reading a benchmark failure as a regression, then rerun the
-failing files alone; wait on a result file with `grep -q` for its result line, never `[ -s file ]` when stderr goes there; a GREEN
-that changes a file's length shifts every cite into it (grep `BACKLOG.md` and `ROADMAP.md` for `<file>:`); adding or removing a
-BACKLOG block shifts every later cite, so re-grep; a handoff's predicted count yields to the ratified record; take `wc -c` after
-the last edit (Learning 871).
+### What Session 919 Did (condensed S920; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+NEW-24's first leftover shipped (strict TDD; users see only one error message's wording change): `getGeneticDiversityStats()` makes
+its `ped` and `geneticValues` column checks with the shared `assertRequiredColsPresent()` (`R/getGeneticDiversityStats.R:58-65`,
+labels `getGeneticDiversityStats(ped)` and `getGeneticDiversityStats(geneticValues)`, ped first). Claim `fe75f34cd`, RED `ea46cb959`,
+GREEN `791096a93`, REFACTOR `0f689cc2c`, closure `c14c13ef6` (Closure record 19), close-out `421ef4256` (all still local at S920's
+Phase 0). Handoff evaluation of S918: 8/10. Self 8/10. NEW-24 stays open on issue #123 for the print method (low priority, the owner
+closes it; no `BACKLOG.md` item), so the PED_GV open count stays 1.
+**Gotchas kept:** the full suite (about 6 min when quiet) and `devtools::check()` (about 8 min) run one at a time; a run far over that
+means check `uptime` and `ps -Ao pid,ppid,etime,pcpu,command` before reading a benchmark failure as a regression (S919's load of 455
+came from another project's `quarto render` jobs), then rerun the failing files alone; wait on a result file with `grep -q` for its
+result line, never `[ -s file ]` when stderr goes there; a GREEN that changes a file's length shifts every cite into it (grep
+`BACKLOG.md` and `ROADMAP.md` for `<file>:`); adding or removing a BACKLOG block shifts every later cite, so re-grep; a handoff's
+predicted count yields to the ratified record; take `wc -c` after the last edit (Learning 871). **Carried:** `reportGV(smallPed)`
+unfiled; the D2 dogleg observation from S910 (untested).
 
 ### What Session 918 Did (condensed S919; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-19 shipped (strict TDD, no change for users): one internal list, `relationClassNames` (`R/relationClassNames.R`, `@noRd`), read by
