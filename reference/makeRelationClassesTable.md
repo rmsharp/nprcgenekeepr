@@ -24,7 +24,8 @@ number of pairs in each of the following relationship classes:
 Parent-Offspring, Full-Siblings, Half-Siblings, Grandparent-Grandchild,
 Full-Cousins, Cousin - Other, Full-Avuncular, Avuncular - Other, Other,
 and No Relation. Self pairs are not counted, and classes with no pairs
-are left out.
+are left out. When no pair of different animals is left to count, the
+table has its two columns and no rows.
 
 ## Examples
 

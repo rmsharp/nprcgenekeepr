@@ -96,7 +96,7 @@ ped
 #> 3 s1 <NA> <NA>   M   0 2000-07-18 <NA> 26.2     original       FALSE
 #> 4 s2 <NA> <NA>   M   0 2005-06-19 <NA> 21.3     original       FALSE
 #> 5 o1   s1   d1   F   1 2015-02-04 <NA> 11.7     original       FALSE
-#> 6 o2   s1   d2   F   1 2009-03-17 <NA> 17.5     original       FALSE
+#> 6 o2   s1   d2   F   1 2009-03-17 <NA> 17.6     original       FALSE
 #> 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original       FALSE
 #> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.5     original       FALSE
 obfuscatedPed

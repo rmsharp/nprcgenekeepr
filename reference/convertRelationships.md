@@ -37,7 +37,9 @@ convertRelationships(kmat, ped, ids = NULL, updateProgress = NULL)
 
 A dataframe with columns `id1`, `id2`, `kinship`, `relation`. It is a
 long-form table of pairwise kinships, with relationship categories
-included for each pair.
+included for each pair. IDs that are not in `kmat` are ignored. One ID
+gives that animal's own `Self` row, and no ID in `kmat` (or an empty
+`ids`) gives a table with no rows.
 
 ## Examples
 

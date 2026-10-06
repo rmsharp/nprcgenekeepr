@@ -23,7 +23,8 @@ filterKinMatrix(ids, kmat)
 ## Value
 
 A numeric matrix that is the reduced kinship matrix with named rows and
-columns (row and col names are 'ids').
+columns (row and col names are 'ids'). It is a matrix however many IDs
+match: 1 x 1 for one ID, and with no rows or columns when none match.
 
 ## Examples
 

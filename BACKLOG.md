@@ -6,53 +6,6 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**PED_GV audit follow-through – every F-slice DONE; what remains is
-owner decisions (DECISION NEEDED, Effort S each; strict TDD for every
-fix)** – `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids
-against today’s code; its table is the plan, so read it first. Its four
-fix slices all shipped (F1 S782, F4 S783, F2 S797 and S806-S811, F3
-S798), and its Closure and Decision records 1-11 (S818-S889) hold the 34
-ids closed since, each with who decided it and when; `CHANGELOG.md`
-holds the sessions. **9 ids remain** (S896 recomputed this from the
-report’s table: 43 ids, 34 closed, none counted twice). **Open, all
-owner decisions:** (a) the overhaul roots, none urgent – the walk
-helpers (PED-3, NEW-42; all exported, so an API change), the sim
-constants and HTML builders (NEW-18/19/21/26/57) and the repeated
-`updateProgress` null checks (NEW-62; 3 blocks in `reportGV.R`); (b)
-NEW-24 is already open issue \#123 (kept open on purpose after Phase 1
-shipped S386; its residuals, which the issue’s closing comment says are
-tracked here, are the `nprcgenekeeprGV` print-method wrinkle – the class
-is appended last and there is no bare `print.nprcgenekeeprGV`, near
-`reportGV.R:353` – and `getGeneticDiversityStats.R:58` keeping its own
-`requiredPed` vector; plan §10 items 4-5, both low priority). **Trap:**
-an id grep of the ledger both under- and over-counts (`NEWS.md` once
-used “NEW-47/48/49” as entry labels), so use the report’s table, not the
-old 41-id list.
-
-**(Optional) One internal `isAddedRecord()` helper for the “added” mask
-(raised S785, deferred at the S785, S786 and S787 REFACTORs; owner kept
-it open S898; READY (optional), Effort S)** – the mask is written inline
-four times, all meaning “only the exact status `"added"` is special; an
-`NA`, blank or unrecognized status is a real animal”:
-[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-(`R/convertDate.R:115`) and
-[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-(`R/removeDuplicates.R:48`) as `!is.na(x) & x == "added"`,
-[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-(`R/removeUnknownAnimals.R:31`) as its complement, and
-[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-(`R/correctParentSex.R`, `isAdded`, which also answers a `NULL` status
-with “no added rows”). One helper would put that contract in one place;
-the cost is a cross-file refactor (four R files plus a new file and its
-tests, so staged commits under the 5-file cap, and `SAFEGUARDS.md` asks
-for plan-mode approval of refactoring), and the owner kept it open
-rather than judge four short copies enough (S898; the four masks were
-re-found at the lines above that day, and no helper exists yet).
-**Trap** to keep in any helper or caller: a negative subscript built
-from an index that can be empty
-(`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when
-nothing is `"added"`.
-
 **[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
 fails cryptically on an id or parent that is absent from the tree, and
 cannot resolve a very deep acyclic chain (found S783, 2026-09-26,
@@ -81,25 +34,39 @@ and
 Callers: only `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither
 reached from the app.
 
-**Confirm the push `paths-ignore` list on GitHub itself (READY once the
-owner next pushes only listed files, Effort S)** – S899 shipped it
-(`3178b741c`): lint, pkgdown, R-CMD-check and test-coverage carry the
-same 21-entry `paths-ignore:` under `push:` (14 root notes/methodology
-`.md`, 4 methodology scripts, `.context-budget.json`,
-`.quality-gates.json`, `docs/**`), guarded by
-`tests/testthat/test_workflowPathsIgnore.R`. Local checks (that test, a
-YAML parse, the full suite, an installed-copy run) cannot show GitHub’s
-own filter behavior. **Check:** after the first push that changes only
-listed files (a docs-only close-out),
-`gh run list --branch master --limit 10` must show no new run for that
-commit; if runs start, look first at the two dotfile entries and
-`docs/**`. Left out on purpose because a workflow reads them:
-`data-raw/**` and `.lintr` (lint), `_pkgdown.yml` and `vignettes/**`
-(pkgdown), `.github/**`, `NEWS.Rmd`, `README.Rmd`, `renv.lock`,
-`codecov.yml`. `pull_request` stays unfiltered (owner, S899: pushes
-only; no branch protection or rulesets exist today, so a path-skipped PR
-could not wedge a required check). To add a file, edit all four
-workflows and run that test.
+**[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+with a one-animal population stops with “‘x’ must be an array of at
+least two dimensions” (found S923, DECISION NEEDED, Effort S)** –
+measured S923 on `examplePedigree`
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
+then the trimming in the
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+example; 327 animals in the population):
+`reportGV(ped, guIter = 10L, pop = <one id>)` stops in
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
+([`rowSums()`](https://rdrr.io/r/base/colSums.html) on a single row);
+two ids run. The message is the same before and after S923’s
+[`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
+change, so it is a second cause that change did not touch. Not probed:
+whether the app can build a one-animal population, and
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
+which builds its proband matrix the same way (`R/gvaConvergence.R:149`).
+**Decision for the owner:** stop with a message that names the
+population size, or return a one-row report. Do not use `smallPed` to
+test it: `reportGV(smallPed)` failed with “sire and dam must have had
+alleles assigned: logic error” on all 5 calls tried in S923 (with and
+without `age` and `pop`): the carried, unfiled `reportGV(smallPed)`
+finding.
+
+**`man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (found
+S923, READY, Effort S)** – `devtools::document()` rewrites its
+description paragraph (“five groups” becomes “these main groups”, plus a
+sentence on the further tabs): `DESCRIPTION` was reworded in S830
+(`73c00d1ec`) and the man page was not regenerated. One file; S923
+restored it rather than commit it with an unrelated change.
+`devtools::check()` does not flag it (0/0/0). Fix: run
+`devtools::document()` in its own commit and confirm no other file
+changes.
 
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
@@ -140,17 +107,23 @@ images differ from the app (Pedigree Browser family +147 px; Home,
 Input, Summary Statistics, Breeding Groups, GVA); the colony script’s
 tail fails identically every run (diagnose first, then regenerate by
 module); 12 images have no generator; `pb_unknown_displayed.png` is an
-orphan. The owner decides whether to scope a regeneration slice. (2)
-*Owner decisions about code, found by slices 6-8* (DECISION NEEDED,
-Effort S each; reword the docs if the code changes; carried as recorded
-S870 and not re-checked against today’s code, except where a present-day
-check is named; the ids are in each slice’s report): 6a MC1
-(`filterKinMatrix` lacks `drop = FALSE`) and MB3 (unknown-sex founder
-kinship), and MA3/MB14 cite only `e1071` for `type = 2` from recall, not
-a run (neither `moments` nor `e1071` is installed here); 6b PB4, PB7,
-PB11 (docs untouched), and PB13, PA4, PD12, PD1 (S837 documented today’s
-behavior); 6c 8 candidates (`markerExpectedHeterozygosity` He = 1.0 for
-an all-NA locus, `computeGenomicROH` silent locus drop, `hasGenotype`
+orphan. The owner decides whether to scope a regeneration slice. S921
+added a legend row (“Same animal, again”) that `pb_diagram_legend.png`
+(`colony-manager-guide.qmd:347`, `pedigree-diagram.qmd:40`) does not
+show; whether it is one of the 31 was not checked. When it is
+regenerated, add a sentence naming that entry to the article’s
+dashed-line paragraph (`pedigree-diagram.qmd:50-55`); the manual
+(`_pedigree_browser.Rmd:91-92`) already does. (2) *Owner decisions about
+code, found by slices 6-8* (DECISION NEEDED, Effort S each; reword the
+docs if the code changes; carried as recorded S870 and not re-checked
+against today’s code, except where a present-day check is named; the ids
+are in each slice’s report): 6a MB3 (unknown-sex founder kinship; MC1,
+`filterKinMatrix` without `drop = FALSE`, was fixed S923), and MA3/MB14
+cite only `e1071` for `type = 2` from recall, not a run (neither
+`moments` nor `e1071` is installed here); 6b PB4, PB7, PB11 (docs
+untouched), and PB13, PA4, PD12, PD1 (S837 documented today’s behavior);
+6c 8 candidates (`markerExpectedHeterozygosity` He = 1.0 for an all-NA
+locus, `computeGenomicROH` silent locus drop, `hasGenotype`
 `First`/`Second`, `checkSequenceGenotypeFile` sidecar not reconciled,
 plus candidates 5-8); 6d 22 candidates CA1-CA5, CB1-CB5, CC1-CC5,
 CD1-CD6 (esp. RA3/RA4/RA6 (CA1, CA3), RA8 (CA2), RB10 (CB1), RC7 (CC1)),
@@ -404,42 +377,45 @@ quarantine NOT evidenced for `browser-actions/setup-chrome`), or a new
 `rstudio/chromote` upstream issue (none matches this
 macOS+GHA+live-CDP-timeout signature).
 
-**`methodology_trim.py`’s generated shard verify script FAILs its L2
-“leak” check when an archived record quotes a front-matter line (found
-S784, 2026-09-26; owner chose to report it upstream, S898; READY, Effort
-S)** – the check embedded in each shard’s `.verify.sh` is
-`ln in "".join(sr)`, a SUBSTRING test of every front-matter line over 24
-characters against the whole archived records text. The archived S779
-receipt’s `next_steps:` quotes the trimmer’s `--check` command (with
-`--budget-bytes 65536`), which contains the front-matter `--check` line,
-so `bash docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh` prints
-`FAIL: L2 FRONT MATTER leaked 1 line(s) into the shard` although the
-write-time L1/L2/L3 all passed and the script’s own L1/L3 checks hold
-(reproduced by a write, a rollback and a second write, and by a separate
-Python probe; the `CHANGELOG.md` shard from the same session is clean, 0
-hits). **Re-measured S898: it does NOT recur on every later trim, and
-the scope is wider.** 10 of 54 shard verify scripts FAIL today
-(`HANDOFFS` 2 of 15, `CHANGELOG` 1 of 16, `SESSION_NOTES` 7 of 23). The
-L2 front-matter leak is in 2 (`HANDOFFS-through-2026-09-26`, the
-`--check` line, and `CHANGELOG-through-2026-08-10`, leaking
-`## Size, and when to archive`); the other 8 fail
-`L1 records-zone concatenation is not byte-identical`, and only
-`HANDOFFS-through-2026-09-26-3` was read further (its output cites the
-accepted frontier-record pattern, BL-27, and says to diff record 0 by
-hand). The `HANDOFFS-through-2026-09-30` and the S897 `CHANGELOG` shards
-pass. Nothing runs these scripts (no CI job, test or tool; only the
-dashboard recognizes the suffix). **Owner ruling (S898): report it
-upstream** to the `rmsharp/methodology` fork – compare against the SET
-of exact record lines, as that script’s BL-28 fix already does for its
-“lost line” check (a local patch would be a second local modification to
-`methodology_trim.py` to re-apply after every sync, per `CLAUDE.md`’s
-checklist). Write the report to the measured scope above, and
-characterize the 8 L1 failures first (cause not yet known for 7 of
-them). Posting it is an outward action: confirm with the owner at
-pickup. Rejected by the owner: leaving it, and rewording the ledger’s
-front-matter line (it could fix at most 1 of the 10). Until fixed, do
-not quote front-matter command lines verbatim in receipts (Learning
-797e).
+**Shard verify scripts that FAIL on lossless trims: reported upstream as
+`KJ5HST/methodology#93`; waiting on a fix and a way to regenerate old
+scripts (BLOCKED – on upstream \#93, Effort S once it ships)** – S901
+characterized all 10 red scripts (of 54: HANDOFFS 2 of 15, CHANGELOG 1
+of 16, SESSION_NOTES 7 of 23) and diffed the records: **none is a real
+loss.** Three causes: (1) 7 scripts (v1.5.0): the trim shares a commit
+with the session’s own close-out, so record 0 (a claim stub or a
+`status: pending` receipt) differs, and BL-27 keeps that a loud FAIL;
+(2) 1 script (v1.1.2): a baked-in `INJECTED=0`, fixed upstream since
+v1.2.0 but frozen scripts never benefit; (3) 2 scripts: the L2 “leak”
+test is a substring test, so a mid-line backtick quote of a front-matter
+line counts. Causes 1 and 3 are still in the current `main` of both
+`rmsharp/methodology` and `KJ5HST/methodology` (byte-identical, v1.5.0).
+The fork has issues disabled, so the owner chose `KJ5HST/methodology`;
+posted 2026-10-04 (<https://github.com/KJ5HST/methodology/issues/93>).
+Evidence and the posted text:
+`docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (the issue
+starts at its line 150). **New at S917’s Phase 0:** a comment on \#93
+(2026-10-05 16:32 UTC, from the `rmsharp` account, not recorded before)
+re-ran the 54 proofs from a clone at `2563a6ee0` and got the same
+counts. It says: cause 2 is fixed safely by testing whole lines instead
+of substrings (both shards go green, none turns red across 54 here and
+103 in its own archive); cause 3 is not independent of cause 1 (the
+v1.1.2 `SESSION_NOTES-through-2026-08-15` shard still fails for cause
+1’s reason once regenerated); all 8 cause-1 shards have a claim stub or
+a `status: pending` receipt as record 0 and nothing else missing; and a
+`--reverify` would have to lift the record grammar from the frozen
+script, because the canonical `LEDGERS` table has no `SESSION_NOTES.md`
+entry. It proposes no patch yet. S917’s own `HANDOFFS.md` trim was
+committed apart from its close-out and its verify script passes. **What
+is left:** read upstream’s answer
+(`gh api repos/KJ5HST/methodology/issues/93/comments`;
+`gh issue view --comments` fails here); when a fix and a regenerate path
+ship, sync the trimmer (re-apply this project’s `SESSION_NOTES.md`
+patch, per the `CLAUDE.md` checklist) and regenerate the 10 scripts; if
+upstream declines, decide whether to patch them here (a second local
+modification to `methodology_trim.py`, which the owner rejected S898).
+Until then do not quote front-matter command lines verbatim in receipts
+(Learning 797e).
 
 **`CHANGELOG.md`’s own ~4-entries-per-session ledger convention (claim,
 Phase 0 reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side
@@ -508,13 +484,14 @@ byte-untouched; (6) re-read the compressed result end to end.
 **Candidates for the next pass (measured S896, line counts after this
 pass; re-grep, sizes not anchors):** the docs-audit item (47 lines; S890
 already compressed it, so check for regrowth first), this item’s own
-history (41 lines), the paper item (24), Candidate C (22), the
-`inst/doc/` slimming item (21) and the trim verify-script item (20, now
-longer after S898). Candidate C and the verify-script item were two of
-the 7 parked Effort-S items; the owner kept all 7 open (S898), so they
-may be compressed. The standalone-package item is still 34 lines but is
-nearly all ratified-scope open text; leave it. Regrowth, for scale: 378
-lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
+history (41 lines), the paper item (24), the `inst/doc/` slimming item
+(21) and the trim verify-script item (20, now longer after S898). The
+verify-script item was one of the 7 parked Effort-S items; the owner
+kept all 7 open (S898), so it may be compressed (Candidate C, another of
+the 7, was closed S910). The standalone-package item is still 34 lines
+but is nearly all ratified-scope open text; leave it. Regrowth, for
+scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after
+S896.
 
 **Two kinship2 drawing features the Diagram tab still lacks (found S847,
 2026-10-01; DECISION NEEDED – which pedigree column marks “deceased”,
@@ -549,108 +526,9 @@ decision (D2), which stands as ratified; the
 `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`
 refresh (S484) has since gone stale again and carries a status note.
 Session-by-session record: `CHANGELOG.md`; technical findings:
-`PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. The open items
-below are the section’s live work.*
-
-**Candidate C’s connector/dogleg visual-signposting idea** (found S473,
-designing the issue \#144 plan; not adopted for \#144 itself, Effort
-unknown, low priority; kept open by the owner S898, DECISION NEEDED:
-product sign-off to pursue) – extends the existing D2 mate-line “dogleg”
-(issue \#142) to `edgeStyle="direct"` (which currently gets zero
-compensating treatment for any cross-generation connector) and adds
-dashed/colored/titled styling to both edge styles so a
-multi-generation-spanning mate-line reads as intentional rather than a
-positioning bug. Fully validated (including a real ~37%
-`edgeStyle="rectilinear"` performance regression found and fixed during
-design) but requires its own fresh, explicit owner product-level
-sign-off to pursue – independently valuable as a diagram-readability
-enhancement, decoupled from \#144’s own resolution (which does not need
-it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8.
-**Also considered and again not adopted for the kinship2-fidelity
-remediation plan’s Track 4 (design S572, implemented S573, 2026-08-14)**
-– Track 4 ratified and shipped Candidate A (gen-aware D2 anchor
-selection) instead, see
-`docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` §3/§8.
-Live-rendered (S573, both `edgeStyle` values, zero console errors) with
-the redistribution this decision predicted (duplicate nodes 128-\>102,
-multi-anchor individuals 2-\>22, max 5). Still not precluded – remains
-open as a future, separately-scoped enhancement if the owner judges,
-from that live render, that remaining cross-generation mate-lines still
-benefit from signposting for legibility.
-
-**The live app’s uploaded/QC’d copy of `obfuscated_rhesus_mhc_ped.csv`
-gets a different Diagram layout than the same CSV read directly – cause
-found (row order); owner ruled S898: fix the tests only** (found S472,
-cause measured 2026-09-24 and re-measured S898; READY, low priority,
-Effort S) – the S472 figures (739 live vs 740 offline nodes; 50 vs 51
-projection nodes) no longer reproduce, since the layout has changed
-since (e.g. Track 4, S573), and the original hypothesis – that
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-drops or merges a row – is REFUTED: it keeps all 375 rows and ids (none
-lost or added, 0 duplicates), and
-[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
-returns the same 375 nodes / 502 edges for both inputs. What differs is
-row ORDER –
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-reorders the rows – and the mating layout depends on it:
-[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-gives 782 nodes for both inputs under `edgeStyle = "direct"`, but **1456
-(raw order; 1460 re-measured S898, after later layout fixes) vs 1412 (QC
-order, unchanged)** under `"rectilinear"`, and the raw content
-re-ordered to QC’s row order gives exactly 1412 (so order alone
-reproduces QC’s count; QC also normalizes some id/sire/dam/sex cells,
-not characterized). Consequence: the app’s rectilinear diagram of an
-uploaded file can carry a different number of waypoint nodes than a
-script user’s diagram of the same data, depending only on row order.
-**Owner ruling (S898): accept the row-order dependence and change only
-the bundled-fixture tests** (`test-e2e-pedigree-module.R`, etc.) to
-assert the QC’d count, which is what the live app renders; layout code
-untouched. Not chosen: making the layout order-independent. The pickup
-starts by finding which tests assert the raw-CSV count.
-
-**`data-raw/rhesusPedigree.R`’s docstring claims
-`rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
-source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
-are byte-identical on every shared column** (found S470, incidental to
-the founder-positioning audit above; owner chose to reword the comment,
-S898; READY, Effort S, low priority) – confirmed via
-[`identical()`](https://rdrr.io/r/base/identical.html) on
-`id`/`sire`/`dam`/`sex`/`gen`/`birth`/`exit`/`age` between the two
-files; `rhesusPedigree_fromCenter.csv` differs only by one added
-`fromCenter` column (all `TRUE`). The documented
-[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
-id/date-obfuscation transform was evidently never applied to produce
-this particular fixture, or produced a no-op. Not fixed this session
-(reported per `PROJECT_LEARNINGS.md` Learning 382’s “report, don’t fix
-mid-session” precedent – out of the founder-positioning audit’s own
-scope). **Owner ruling (S898): reword the comment** to say only what is
-true (the values agree; the obfuscation step cannot be reproduced);
-comment only, no data change, and the CSV is not regenerated.
-**Re-measured S898:** the claim sits in the docstring’s lines 7-10 and
-is about the `rhesusPedigree` object, not
-`obfuscated_rhesus_mhc_ped.csv`; that object’s `id` and `birth` equal
-the `fromCenter` CSV’s, and the two CSVs agree on all 8 shared columns
-(375 rows). See
-`docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md` Finding
-\#4, `PROJECT_LEARNINGS.md` Learning 468.
-
-**`highlightNearest` degree=6 mitigation for the rectilinear style is
-bounded, not a full fix** (found S468, owner kept it open S898; READY
-(optional), Effort M, low priority) – a very wide sibship’s D1
-sibship-bar chain can exceed 6 hops (chain length scales with the number
-of children in one mating unit), so a hover on an individual in a very
-large family could still light up nothing visible. A full fix would need
-either a custom JS `highlightNearest` reimplementation that specifically
-skips through invisible waypoint nodes regardless of hop count, or a
-data-layer change that keeps degree-1 semantics correct (e.g. tagging
-waypoint edges so a custom traversal treats them as zero-cost hops). Not
-designed this session – the degree=6 mitigation was explicitly scoped as
-a quick, bounded fix, owner-directed via `AskUserQuestion`. A future
-session should measure the real fixture’s own maximum sibship size to
-gauge how often 6 hops is actually insufficient in practice before
-deciding whether a full fix is warranted. (S898 re-check: the degree is
-still style-aware at `R/modPedigree.R:828` and pinned by
-`test_modPedigree.R:2033`.)
+`PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. No live item
+remains here: S921 shipped the last one (the legend row for the dashed
+repeat-appearance link; see `CHANGELOG.md`).*
 
 ## Outreach
 

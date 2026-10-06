@@ -492,6 +492,26 @@ export workflows, and longitudinal monitoring of colony genetic health.
   [`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)
   stop with a message naming the animals instead of an “infinite
   recursion” error.
+- Fixed:
+  [`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md)
+  no longer runs without end when a pedigree lists an animal as its own
+  ancestor; it stops and returns the animals found.
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+  no longer runs without end when a pedigree has a row with no animal
+  id; it stops and returns the family, that row included.
+- Fixed:
+  [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
+  given the id of a single animal now returns that animal’s own “Self”
+  row instead of a meaningless row, and given ids that match no animal
+  returns an empty table instead of an error.
+  [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)
+  returns an empty table when there are no pairs of different animals to
+  count instead of stopping.
+  [`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
+  always returns a matrix, so
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  given one animal’s id returns its usual empty result instead of an
+  error.
 - Fixed: a stand-in id (`U0001`, `U0002`, …) could duplicate an id a
   real animal already had. The check and
   [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)

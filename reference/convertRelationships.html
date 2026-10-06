@@ -88,7 +88,9 @@ will be called during each iteration to update a
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A dataframe with columns <code>id1</code>, <code>id2</code>, <code>kinship</code>,
 <code>relation</code>. It is a long-form table of pairwise kinships, with
-relationship categories included for each pair.</p>
+relationship categories included for each pair. IDs that are not in
+<code>kmat</code> are ignored. One ID gives that animal's own <code>Self</code> row, and
+no ID in <code>kmat</code> (or an empty <code>ids</code>) gives a table with no rows.</p>
     </div>
 
     <div class="section level2">

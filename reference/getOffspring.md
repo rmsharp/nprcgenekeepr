@@ -13,7 +13,13 @@ getOffspring(pedSourceDf, ids)
 - pedSourceDf:
 
   dataframe with pedigree structure having at least the columns id,
-  sire, and dam.
+  sire, and dam. The pedigree is the first argument, unlike
+  [`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md),
+  [`getDescendantPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDescendantPedigree.md),
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+  and
+  [`findOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/findOffspring.md),
+  which take the animal ids first.
 
 - ids:
 

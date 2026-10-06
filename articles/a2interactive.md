@@ -567,9 +567,18 @@ raised from `1` to `6`. Under *rectilinear*, a plain individual’s
 nearest graph neighbor is often one of the invisible waypoint nodes
 above rather than a visible mating dot, so `degree = 1` (correct for
 *direct*) can highlight nothing visible at all on hover; `6` restores
-visible feedback for the common case. The live Shiny app’s Diagram tab
-applies this same style-aware degree automatically when you switch the
-“Diagram Edge Style” toggle.
+visible feedback for the common case. It is a deliberate compromise, not
+a complete fix, because the invisible waypoints count as steps: on the
+bundled 375-animal rhesus pedigree, hovering an animal lights everything
+that the *direct* style’s `degree = 1` lights for all but 2 animals,
+whose parents’ mating dot is just out of reach (their family’s
+connectors were rerouted around crowded lines, which adds waypoints).
+One mating pair with nine or more full siblings reaches the same limit;
+the widest pair in the bundled pedigrees has four. A larger `degree`
+would cover these cases, but it highlights more of the diagram on every
+hover, so the simpler, tighter hover was kept. The live Shiny app’s
+Diagram tab applies this same style-aware degree automatically when you
+switch the “Diagram Edge Style” toggle.
 
 ``` r
 
@@ -1587,7 +1596,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpIargDv/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp5OrMnV/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1625,7 +1634,7 @@ ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
     ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.5     original       FALSE
     ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.3     original       FALSE
     ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original       FALSE
-    ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.0     original       FALSE
+    ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.1     original       FALSE
 
 However, the preferred method of creating the standardized studbook
 format with **qcStudbook** is to examine all errors found and correcting
@@ -2421,8 +2430,8 @@ as *id*, or the call stops.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-04 23:20:32.743758. The processing
-time for this document was 23 seconds..
+The current date and time is 2026-10-06 21:31:57.5785. The processing
+time for this document was 21 seconds..
 
 ``` r
 

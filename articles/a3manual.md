@@ -354,7 +354,8 @@ connectors as strict right angles, matching the more traditional
 pedigree-chart look, and “Direct”, the straight-line connector. An
 animal that mates more than once, or whose lineage loops back on itself
 (e.g. a consanguineous mating), appears once per mating, with each
-occurrence joined back to its main occurrence by a curved, dashed line;
+occurrence joined back to its main occurrence by a curved, dashed line
+(the legend’s “Same animal, again” entry shows this line’s style);
 hovering, clicking, or searching any occurrence behaves identically to
 the animal’s main occurrence. When a mating pairs two blood-related
 animals (their kinship coefficient is greater than zero), the two
@@ -369,11 +370,21 @@ the focal-animals text area. An **Export Diagram (PNG)** button, shown
 in the diagram’s own corner, saves the current diagram view as a PNG
 image file – useful for husbandry reports, IACUC documents, or
 presentations. Hovering any animal shows its ID, sex, generation, sire,
-dam, and (when the pedigree data includes it) affected status. A
-**Select by id** dropdown above the diagram lets you jump straight to a
-specific animal by ID, dimming every node except it and its direct
-connections – useful for locating one animal in a large, busy diagram
-without narrowing the focal-animal selection.
+dam, and (when the pedigree data includes it) affected status. Hovering
+also highlights that animal together with the animals and mating points
+connected to it within a few steps, and dims the rest of the diagram.
+Under the default Rectilinear style the highlight reaches a fixed number
+of steps along the connector lines, and the invisible bend points that
+carry the right-angle lines count as steps, so in some cases (a mating
+with nine or more full siblings, or a family whose connectors were
+rerouted around crowded lines) an animal’s own parents’ mating point is
+not highlighted even though it is connected. A pedigree with many full
+siblings of one pair is the most likely to show this. The reach is kept
+short on purpose so that the highlight stays easy to read. A **Select by
+id** dropdown above the diagram lets you jump straight to a specific
+animal by ID, dimming every node except it and its direct connections –
+useful for locating one animal in a large, busy diagram without
+narrowing the focal-animal selection.
 
 If a colony records twin births, an optional **Twin/Zygosity Relations**
 file can be uploaded from the panel to the right of the focal-animal
