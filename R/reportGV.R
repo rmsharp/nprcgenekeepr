@@ -10,6 +10,11 @@
 #' missing, \code{reportGV} stops before doing any calculation, with a message
 #' naming every missing column.
 #'
+#' The population of interest (see \code{pop}) must hold at least 2 animals,
+#' because the report ranks animals against one another. With fewer,
+#' \code{reportGV} stops before doing any calculation, with a message giving
+#' the number of animals.
+#'
 #' Reported genome uniqueness (\code{gu}) is set to 0 for "Undetermined"
 #' animals -- those with both parents unknown (U-id aware) and no recorded
 #' origin -- because their apparent uniqueness is an artifact of unknown

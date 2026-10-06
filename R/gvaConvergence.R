@@ -43,6 +43,10 @@
 #' reproducibility of the \emph{process}, whereas this function reports the
 #' sampling reproducibility of the \emph{estimate}.
 #'
+#' The population of interest (see \code{pop}) must hold at least 2 animals, as
+#' for \code{\link{reportGV}}. With fewer, \code{gvaConvergence} stops before
+#' doing any calculation, with a message giving the number of animals.
+#'
 #' @param ped The pedigree information in data.frame format (the same input
 #' \code{\link{reportGV}} takes).
 #' @param pop Character vector with animal IDs to consider as the population of

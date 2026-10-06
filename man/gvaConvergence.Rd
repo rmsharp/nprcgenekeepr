@@ -149,6 +149,10 @@ of reproducibility at \code{N}. This changes nothing about seeding: a fixed
 seed already makes \code{gu} bit-identical run to run; that is
 reproducibility of the \emph{process}, whereas this function reports the
 sampling reproducibility of the \emph{estimate}.
+
+The population of interest (see \code{pop}) must hold at least 2 animals, as
+for \code{\link{reportGV}}. With fewer, \code{gvaConvergence} stops before
+doing any calculation, with a message giving the number of animals.
 }
 \examples{
 library(nprcgenekeepr)
