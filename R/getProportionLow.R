@@ -8,9 +8,10 @@
 #' included in the calculation. Must contain at least one value; an empty
 #' vector is rejected with an error.
 #' @return List of the proportion of Low genetic value animals and the
-#' dashboard color to be assigned base on that proportion.
+#' dashboard color to be assigned base on that proportion. An animal is Low
+#' only when its value is exactly the \code{lowValue} label of
+#' \code{valueLabels}; any other value, including a missing one, is not.
 #'
-#' @importFrom stringi stri_detect_fixed
 #' @noRd
 getProportionLow <- function(geneticValues) {
   if (length(geneticValues) == 0L) {
