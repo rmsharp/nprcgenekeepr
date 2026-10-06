@@ -9,37 +9,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (DECISION NEEDED, Effort S each; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code; its
       table is the plan, so read it first. Its four fix slices all shipped (F1 S782, F4 S783,
-      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-15 (S818-S914) hold
-      the 36 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
-      sessions. **7 ids remain** (S914 recomputed this from the report's table: 43 ids, 36 closed,
+      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-16 (S818-S915) hold
+      the 37 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
+      sessions. **6 ids remain** (S915 recomputed this from the report's table: 43 ids, 37 closed,
       none counted twice).
-      **Open, 5 owner decisions, 1 decided id waiting on work, and NEW-24:** (a) the overhaul
+      **Open, 5 owner decisions and NEW-24:** (a) the overhaul
       roots, none urgent -- only the constants and HTML builders (NEW-18/19/21/26/57) are still
-      undecided (S912 measured their sites, kept in record 13); PED-3 (merge the four walk loops;
-      record 13, S912) is decided and waits on the next item (NEW-42, the walk helpers' argument
-      order, shipped S913 as a help-page sentence, closure record 14; NEW-62, the
-      `updateProgress` null checks, shipped S914, closure record 15); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
+      undecided (S912 measured their sites, kept in record 13); the walk helpers are all shipped
+      (NEW-42, the argument order's help-page sentence, S913, closure record 14; NEW-62, the
+      `updateProgress` null checks, S914, closure record 15; PED-3, one `walkPedigree()` for the
+      four walk loops, S915, closure record 16); (b) NEW-24 is already open issue #123 (kept open on purpose after Phase 1 shipped S386; its residuals, which the issue's closing comment says are tracked here, are the `nprcgenekeeprGV` print-method wrinkle -- the class is appended last and there is no bare `print.nprcgenekeeprGV`, near `reportGV.R:353` -- and `getGeneticDiversityStats.R:58` keeping its own `requiredPed` vector; plan §10 items 4-5, both low priority).
       **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
       "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
-
-- [ ] **One internal walker for the four "collect parents or offspring until nothing new turns
-      up" loops (PED-3; READY, Effort M; owner decision S912, Decision record 13 of the PED_GV
-      triage report; strict TDD)** -- replaces the hand-written loops in
-      `R/getProbandPedigree.R:26-37` (ancestors), `R/getDescendantPedigree.R:27-34`
-      (descendants), `R/getPedDirectRelatives.R:54-65` (both ways) and
-      `R/getLkDirectAncestors.R:69-78` (ancestors from the LabKey table) with one unexported
-      function; no change for users on normal data. **A side effect the owner chose on purpose:**
-      `getLkDirectAncestors()` (exported, no caller in `R/` or the app) never stops on circular
-      data today (measured S912: the other three return the 2 animals in under 0.1 s, it ran to
-      a 5-second limit) and will stop. **First RED:** a recording test per function at the
-      current commit (rows and row order, including `getLkDirectAncestors()`'s generation order
-      and first-occurrence de-duplication, and today's handling of `NA` ids); only
-      `test_getDescendantPedigree.R:57` tests circular data, so add one for each of the other
-      three (RED for the LabKey one). **For its Pre-RED gate:** the walker's name and file;
-      whether the LabKey function stops with the animals found (as the other three do) or with
-      a message; keep all four exported signatures; time `getDescendantPedigree()` (the app,
-      `R/modPedigree.R:392`) and `trimPedigree()` before and after on a large pedigree (not
-      timed yet).
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
