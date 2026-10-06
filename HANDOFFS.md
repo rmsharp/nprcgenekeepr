@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S917
+date: 2026-10-05
+status: pending
+active_task: trim HANDOFFS.md with methodology_trim.py (268,350 B, past the Read tool's 262,144 B whole-file refusal; the dashboard's High+ risk flag, new since S916's close-out): archive the oldest receipts so the file opens again. Tooling and housekeeping only, no R/, test or man/ change; picked by the owner at the Phase 0 picker. The --force override (SRF_RED) and the cut point are the owner's call, asked after a dry run.
+```
+
+```handoff
 session: S916
 date: 2026-10-05
 status: complete

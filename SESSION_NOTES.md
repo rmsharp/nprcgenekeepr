@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 917 Did
+**Deliverable:** Trim `HANDOFFS.md` with `methodology_trim.py` so a whole-file read works again (IN PROGRESS)
+**Started:** 2026-10-05 21:56 CDT
+**Status:** Session claimed. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the S916 ratchet
+citation matching the results file, CI green, dashboard 96/100 with High+ risk 1 (this file), 56 commits ahead of origin.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### What Session 916 Did
 **Deliverable, DONE (decision session; docs only; no `R/`, test or `man/` change):** the owner ruled on what was left of the
 PED_GV audit, picked at the Phase 0 picker ("PED_GV leftovers"). Four plain-words questions, each with re-measured sites, were
