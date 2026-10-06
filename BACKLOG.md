@@ -65,6 +65,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       check; whether a NEWS line is owed (an exported function's error wording changes). Issue
       #123 stays open (the print method; the owner closes it).
 
+- [ ] **A gate that fails when a receipt sits inside the format-example box of `HANDOFFS.md` (found
+      S917; DECISION NEEDED -- which kind of gate, or none; Effort S)** -- from S814 to S917 every new
+      receipt went inside the code box that holds the format example, so `methodology_trim.py` saw 1 of
+      105 receipts and could archive nothing (`NOTHING_TO_DO`); S917 moved them out (`b53927bdf`),
+      trimmed (`91273b21a`) and added one sentence to the file's "How to write a receipt" saying a new
+      receipt goes above the newest one. That sentence is a row, not a gate (Learning 882), and the
+      habit that caused it (insert after the four-backtick line) is in every recent claim commit.
+      **Options for the owner:** (a) a test in `tests/testthat/` that skips when `HANDOFFS.md` is absent
+      (it is build-ignored, so a test run from the built package never sees it) and fails when the box
+      holds more than the one example block; (b) the same check as a few lines in the context-budget
+      pre-commit hook, which needs no R session; (c) nothing: the sentence stays, and the file's own
+      line "This file currently holds **N** receipt(s)" (computed on every trim) is the tell, since it
+      said 1 for 25 sessions while the file held over 100. **Gotcha:** the check must count blocks
+      between the two four-backtick lines, not the first block in the file.
+
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
       S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.
@@ -324,7 +339,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (byte-identical, v1.5.0). The fork has issues disabled, so the owner chose `KJ5HST/methodology`;
       posted 2026-10-04 (https://github.com/KJ5HST/methodology/issues/93). Evidence and the posted text:
       `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (the issue starts at its line 150).
-      **What is left:** read upstream's answer (`gh issue view 93 -R KJ5HST/methodology --comments`); when
+      **New at S917's Phase 0:** a comment on #93 (2026-10-05 16:32 UTC, from the `rmsharp` account, not
+      recorded before) re-ran the 54 proofs from a clone at `2563a6ee0` and got the same counts. It says:
+      cause 2 is fixed safely by testing whole lines instead of substrings (both shards go green, none
+      turns red across 54 here and 103 in its own archive); cause 3 is not independent of cause 1 (the
+      v1.1.2 `SESSION_NOTES-through-2026-08-15` shard still fails for cause 1's reason once regenerated);
+      all 8 cause-1 shards have a claim stub or a `status: pending` receipt as record 0 and nothing
+      else missing; and a `--reverify` would have to lift the record grammar from the frozen script,
+      because the canonical `LEDGERS` table has no `SESSION_NOTES.md` entry. It proposes no patch yet.
+      S917's own `HANDOFFS.md` trim was committed apart from its close-out and its verify script passes.
+      **What is left:** read upstream's answer (`gh api repos/KJ5HST/methodology/issues/93/comments`;
+      `gh issue view --comments` fails here); when
       a fix and a regenerate path ship, sync the trimmer (re-apply this project's `SESSION_NOTES.md`
       patch, per the `CLAUDE.md` checklist) and regenerate the 10 scripts; if upstream declines, decide
       whether to patch them here (a second local modification to `methodology_trim.py`, which the owner

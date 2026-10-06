@@ -99,90 +99,87 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 917 Did
-**Deliverable:** Trim `HANDOFFS.md` with `methodology_trim.py` so a whole-file read works again (IN PROGRESS)
-**Started:** 2026-10-05 21:56 CDT
-**Status:** Session claimed. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the S916 ratchet
-citation matching the results file, CI green, dashboard 96/100 with High+ risk 1 (this file), 56 commits ahead of origin.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (housekeeping; docs and tooling only; no `R/`, test or `man/` change):** trimmed `HANDOFFS.md`, picked at
+the Phase 0 picker ("Trim `HANDOFFS.md`"): 92 receipts (S813-S904, 2026-09-30 to 2026-10-04) now live in
+`docs/archive/HANDOFFS-through-2026-10-04.md`, the file went from 268,350 B (past the Read tool's 262,144 B refusal) to 85,965 B
+before this close-out's receipt, and the dashboard's only High+ risk flag is the file's own size, so it should clear.
 
-### What Session 916 Did
-**Deliverable, DONE (decision session; docs only; no `R/`, test or `man/` change):** the owner ruled on what was left of the
-PED_GV audit, picked at the Phase 0 picker ("PED_GV leftovers"). Four plain-words questions, each with re-measured sites, were
-answered first try, and all four answers were my recommended option (I cannot tell calibration from steering). **Closed with no
-change:** NEW-21 and NEW-26 (the heat-map cut-offs, the `0.015625` kinship default, `digits = 4L`), NEW-18 and NEW-57 (the two
-exported HTML table makers, the tier names). **Decided, three READY builds in `BACKLOG.md`:** NEW-19, one shared internal list
-of the 11 relationship names for `convertRelationships()` and `makeRelationClassesTable()` plus a guard test (`:25`); one
-internal list of the three value labels `"Low Value"`, `"High Value"`, `"Undetermined"` (typed in 5 files, 8 lines; a S916
-finding, not an audit id; `:39`); NEW-24's first leftover, `getGeneticDiversityStats()` uses the shared
-`assertRequiredColsPresent()` and its error wording changes (`:54`). NEW-24's second leftover, the missing print method for
-genetic-value results, stays open on issue #123, low priority. Decision record 17
-(`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`); open count 6 -> 2 (43 ids, 41 closed, recounted from the report's table).
+**What I measured and found:** `methodology_trim.py --force` answered `NOTHING_TO_DO` at both budgets. `classify_zones()` split
+the file into 266,813 B of front matter and **1 record** (S813): since at least S892 every new receipt had been inserted straight
+after the four-backtick line that opens the format example's code box, so S814-S917 (104 receipts) sat inside the box, which the
+tool counts as front matter; S892's trim worked only because 24 old receipts had fallen below the box (the file's line "currently
+holds N receipt(s)" said 1 for 25 sessions while it held over 100). A throwaway `git clone --local` with the receipts moved out
+printed `L1_OK`, `L2_OK`, `L3_OK` for all 105. Dry runs of four cuts (computed 89 archived and 95,644 B; `--budget-bytes 65536`
+102 and 31,523 B; `--cut 2026-10-04` 92 and 85,577 B; `--cut 2026-10-03` 78 and 138,018 B) went to the owner in plain words.
 
-**What I measured and found** (greps of `R/`, `tests/`, `inst/`, `vignettes/` and three bounded probes, P13-P15; no suite run):
-the heat-map cut-offs sit in four internal functions, not one (Value 0.5/0.3, Inbreeding 0.6/0.9, Production 0.63/0.6 for
-shelter pens and 0.53/0.5 for corral, Origin by counts) and no guide, vignette or article states any of them; `0.015625` is the
-default in 3 headings (2 exported), is written in 6 hand-written files, and `test_sexCodes.R:75` pins `groupAddAssign()`'s
-heading text; `makeGeneticSummaryTable()` and `makeFounderStatsTable()` are not called by the app (issue #37); P13: a pair named
-`Full-Sibling` is dropped silently from `makeRelationClassesTable()` (5 pairs in, 4 in the table); P15: the bundled `smallPed`
-gives all 11 names, so it is the guard test's fixture; P14: a genetic-value result prints as the whole list plus an
-`attr(,"class")` line; `getProportionLow.R:21` matches the substring `"Low"`, not the label.
+**Owner decisions (AskUserQuestion, both my recommended option):** move the receipts out of the box, then trim; cut at
+2026-10-04 (keep all of today's 13). Commits: claim `5a4ee190c`; repair `b53927bdf` (104 receipts moved above S813, a pure
+reorder: 268,842 B before and after, sorted lines identical, 106 blocks before and after, plus one sentence in "How to write a
+receipt" saying a new receipt goes above the newest one); trim `91273b21a` (`--force --cut 2026-10-04 --budget-bytes 65536`; its
+verify script passes against the committed trim: 105 = 13 + 92, 0 added); the close-out commit carries receipt, notes, ledger
+entry, Learning 882 and the two `BACKLOG.md` edits (all local). **Not run, stated:** the test suite, lint, `devtools::check()`
+(no `R/`, test, `man/` or `NAMESPACE` file changed; `docs/` and `HANDOFFS*.md` are build-ignored); `quality_ratchet.py --run`
+1/1 pass, results `20dd89b875cd`, manifest `aa983075d6a2`, head `91273b21a`, tarball 3.6969e+06 B against 5e+06.
 
-**My mistakes (recovered):** question 1 said each heat-map number is "typed once"; `0.5`, `0.3`, `0.63`, `0.6`, `0.53` and `0.5`
-appear twice each inside their function (no number is in two functions); Decision record 17 carries a "Correction to the
-question text" (Learning 881). A re-read of my draft of the record, before `git add`, caught three unverified claims (a line
-cite one line off, a loose sentence about how the table drops names, a fixture claim); the usage-line claim for `man/` is
-labelled reasoned, not run.
+**Also found at Phase 0 (recorded in `BACKLOG.md:330`):** a comment on upstream `KJ5HST/methodology#93` (2026-10-05 16:32 UTC, from
+the `rmsharp` account) re-ran the 54 proofs and agrees; it proposes no patch yet.
 
-Commits: claim `923d12678`, decision `ea775c32c` (Decision record 17, `BACKLOG.md`); the close-out commit carries receipt,
-notes, ledger entry and Learning 881 (all local). **Not run, stated:** the test suite, lint and `devtools::check()` (no `R/`,
-test, `man/` or `NAMESPACE` file changed; every changed file is `.Rbuildignore`d and the tests that name them do so only in
-comments); `quality_ratchet.py --run` 1/1 pass, results `ec326fab4b97`, manifest `aa983075d6a2`, tarball 3.69692e+06 B against
-the 5e+06 limit. `BACKLOG.md` is 444 -> 487 lines, 38,357 -> 41,637 B.
+**My mistakes (recovered):** I ran `--check` and two dry runs before looking at what the tool saw (the record count was the
+quickest clue); I repeated the zsh word-split gotcha (S891) in my clone loop, which cost one run; I first dry-ran the clone
+without a `CHANGELOG.md` entry and met `P1_UNDOCUMENTED` (the real repair commit carries one).
 
-**Handoff evaluation of S915: 9/10.** Helped: the Phase 0 numbers all re-measured exactly (53 commits ahead, `HANDOFFS.md`
-260,501 B, the ratchet citation, `BACKLOG.md:8`); the four-question plan (thresholds NEW-21+26, relation names NEW-19, low-value
-NEW-18+57, NEW-24, after re-measuring the sites) was followed as written; Decision record 13's "measured for the remaining
-group" list led straight to the sites. Missing: nothing said the other stoplight functions hold cut-offs too or that no user
-text states them, and the value-label text coupling (5 files) was on no list. Wrong: nothing found.
+**Handoff evaluation of S916: 8/10.** Helped: every Phase 0 number re-measured exactly (56 commits ahead, 268 KB, the ratchet
+citation, the `BACKLOG.md` cites); S892's gotcha "`--force` without `--write` is a safe dry run; stage the ledger, shard,
+`.verify.sh` and `CHANGELOG.md` together" was used as written; the next-steps order and key files. Missing: nothing said the
+trim could not run at all, though S892's own result ("currently holds 1 receipt(s)" after its trim) was the clue; the
+dashboard's High+ flag, new at S916's close-out, was not named. Wrong: item (D), "trim with `--force` as its own small
+session", implied `--force` was enough; it answered `NOTHING_TO_DO`.
 
-**Self-assessment: 8/10.** + Claimed (`923d12678`) before any technical work; one deliverable; every site re-measured and a
-probe behind each build option; plain-words questions with the recommendation first; the record corrects my own first-question
-wording; the re-read before the commit; ratchet run and cited. - Question 1's "typed once" was inexact; three unverified claims
-reached my draft (caught, not shipped); I did not probe what a drifted value label does in the app (the build item says so);
-long silent stretches (the harness nudged me four times). Reduction: S915's record condensed (10,845 B to 1,378 B);
-`BACKLOG.md`, `HANDOFFS.md` (now 268 KB), `CHANGELOG.md` and `PROJECT_LEARNINGS.md` grew by this session's entries and nothing
-else could be removed.
+**Self-assessment: 8/10.** + Claimed before any technical work; one deliverable; found the cause by measuring (1 record seen,
+266,813 B of front matter) and tested the repair in a throwaway clone before asking; asked in plain words with a measured
+consequence per option; repair and trim in separate commits, each with a ledger entry, so the shard verify script passes
+(not an 11th red one); pure-reorder proofs; the budget flag passed as the checklist says. - Slow to look at the zones; a repeated
+zsh gotcha; the placement sentence is a row, not a gate (the gate is `BACKLOG.md:68`, the owner's call). Reduction: `HANDOFFS.md`
+268,350 B to 85,965 B (the deliverable); S916's record condensed (about 9 KB to 1.5 KB); `BACKLOG.md` (+25 lines),
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md` grew.
 
 **Next steps (recommended order; not yet ruled on):** (A) one of the three READY builds, each Effort S, strict TDD, its own
-session, its Pre-RED questions written in its `BACKLOG.md` item: the shared column check in `getGeneticDiversityStats()` (`:54`,
-one `R/` file, decide a NEWS line at the gate), then the 11 relationship names (`:25`, two `R/` files plus a list file), then
-the value labels (`:39`, 5 `R/` files plus a list file, so two GREEN commits for the 5-file cap). Then (B) the dashed-link item
-(`:421`, DECISION NEEDED: legend row only or hover text too, and the wording); (C) docs-audit slice 2 (`:92`, needs scoping
-first, Effort L); (D) trim `HANDOFFS.md` with `methodology_trim.py --force` as its own small session (268 KB, past the Read
-tool's 262,144 B whole-file limit; offset and limit still work); (E) unpushed: 56 local commits after this close-out, the push
-carries S915's `R/` and `NEWS.md` changes so all four workflows start, read CI after it, not offered as a task by the owner's
-S905 ruling; (F) upstream `KJ5HST/methodology#93` is open (BLOCKED item `:315`). Still open, lower priority: `getAncestors()` on
-an absent id (`:68`, DECISION NEEDED, S). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested);
-the two wall-clock benchmark tests fail when another process loads the machine.
+session, its Pre-RED questions in its `BACKLOG.md` item: the shared column check in `getGeneticDiversityStats()` (`:54`), then
+the 11 relationship names (`:25`), then the value labels (`:39`, two GREEN commits for the 5-file cap). (B) the receipt-placement
+gate (`:68`, DECISION NEEDED: a test, a hook check, or nothing; Effort S). (C) the dashed-link item (`:446`, DECISION NEEDED:
+legend row only or hover text too, and the wording); (D) docs-audit slice 2 (`:107`, needs scoping first, Effort L); (E)
+upstream `#93` (`:330`, BLOCKED); (F) unpushed: 60 local commits after this close-out, the push carries S915's `R/` and
+`NEWS.md` changes so all four workflows start, read CI after it, not offered as a task (owner's S905 ruling). Lower priority:
+`getAncestors()` on an absent id (`:83`, DECISION NEEDED, S). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation
+from S910 (untested); the two wall-clock benchmark tests fail when another process loads the machine. **Estimate, not
+measured:** `HANDOFFS.md` reaches the trimmer's 196,608 B trigger again in about 15 sessions at today's receipt size (13
+receipts, 85,965 B).
 
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (Decision record 17 after Closure record 16; probes P13-P15 at
-the end of the probe transcript); `BACKLOG.md:8` (tracker), `:25`, `:39`, `:54` (the builds), `:68` (`getAncestors`), `:84`
-(3.0.0), `:92` (docs audit), `:315` (upstream-blocked), `:421` (dashed links), `:445` (outreach), `:464` (paper);
-`R/convertRelationships.R:51-89`, `R/makeRelationClassesTable.R:38-43`, `R/markerRealizedRelatednessVariance.R:33-35`;
-`R/getGeneticDiversityStats.R:58-67` and `R/assertRequiredColsPresent.R:19`; the value-label sites `R/rankSubjects.R:52,54,56`,
-`R/getGeneticDiversityStats.R:91`, `R/modBreedingGroups.R:548`, `R/modGeneticValue.R:385`,
-`R/summary.nprcgenekeeprErr.R:262,267`, `R/getProportionLow.R:21`; `tests/testthat/test_convertRelationships.R`,
-`test_makeRelationsClasses.R`, `test_getGeneticDiversityStats.R:194-201`, `test_sexCodes.R:75`; `PROJECT_LEARNINGS.md` Learning
-881. The probe scripts were scratch and are not in the repo.
+**Key files:** `HANDOFFS.md` (example box lines 35-59; the "currently holds" line 143; receipts start below the archive
+pointers, newest first); `docs/archive/HANDOFFS-through-2026-10-04.md` and its `.verify.sh`; `methodology_trim.py:1063`
+(`choose_cut`) and `:1967` (the zero-record answer); `PROJECT_LEARNINGS.md` Learning 882; `BACKLOG.md:25`, `:39`, `:54` (the
+builds, each names its files and lines), `:68` (gate), `:83` (`getAncestors`), `:99` (3.0.0), `:107` (docs audit), `:330`
+(upstream-blocked), `:446` (dashed links), `:470` (outreach), `:489` (paper). The clone, `repair.py` and the dry-run
+transcripts were scratch and are not in the repo.
 
-**Gotchas:** count a repeated number per number, per function and per occurrence, with the claim's exact words, before it goes
-into option text (Learning 881); put one probe-measured consequence in each option that proposes a build; grep the user-facing
-text before offering "document it"; re-read each line cite and each "has/does not" sentence of a record against the file before
-`git add`; the app calls neither `makeGeneticSummaryTable()` nor `makeFounderStatsTable()`; `getProportionLow()` matches the
-substring `"Low"`; a named constant in `groupAddAssign()`'s heading would change `test_sexCodes.R:75` and the `man/` usage line;
-adding or removing a BACKLOG block shifts every later cite, so re-grep; zsh aborts a command line on an unmatched glob
-(`inst/*.md`); edit `BACKLOG.md` with a script and asserted anchors; take `wc -c` after the last edit (Learning 871).
+**Gotchas:** a new receipt goes directly above the newest one, below the archive pointers, never right after the four-backtick
+line (that opens the example box; S918's claim commit must follow it or the next trim fails the same way); a trimmer answer of
+`NOTHING_TO_DO`, or a "currently holds" count far below `grep -c '^```handoff'`, means run `classify_zones()` first; the trimmer
+refuses with `P1_UNDOCUMENTED` after any commit not in `CHANGELOG.md`, so a repair before a trim carries an entry; keep the
+trim apart from the close-out commit; in zsh spell the flags out, `$flags` is not split; read upstream with
+`gh api repos/KJ5HST/methodology/issues/93/comments` (`gh issue view --comments` fails here); adding or removing a BACKLOG
+block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
+
+### What Session 916 Did (condensed S917; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Decision session, docs only: the owner closed NEW-18, 21, 26 and 57 with no change and queued three READY builds (the 11
+relationship names `:25`, the three value labels `:39`, the shared column check in `getGeneticDiversityStats()` `:54`); NEW-24's
+missing print method stays open on issue #123; Decision record 17; PED_GV open count 6 -> 2. Claim `923d12678`, decision
+`ea775c32c`, close-out `f0cc1e332` (all still local at S917's Phase 0). Handoff evaluation of S915: 9/10. Self 8/10.
+**Gotchas kept:** count a repeated number per number, per function and per occurrence, with the claim's exact words, before it
+goes into option text (Learning 881); put one probe-measured consequence in each build option; grep the user-facing text before
+offering "document it"; `getProportionLow()` matches the substring `"Low"`; a named constant in `groupAddAssign()`'s heading would
+change `test_sexCodes.R:75` and the `man/` usage line; the app calls neither `makeGeneticSummaryTable()` nor
+`makeFounderStatsTable()`; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 915 Did (condensed S916; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 PED-3 shipped (strict TDD; on normal data the only change is the row labels `getLkDirectAncestors()` returns): one unexported
