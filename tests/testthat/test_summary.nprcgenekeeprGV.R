@@ -58,3 +58,14 @@ test_that("summary.nprcgenekeeprGV degrades to bare FG when fgSE absent or NA (i
   fgLineNa <- outna[grepl("Founder Genome Equivalents:", outna)]
   expect_false(grepl("\\+/-", fgLineNa))
 })
+
+## S920: nothing else pins the two value counts the summary prints (the first
+## test only checks the number of lines). The bundled report holds 35 High Value,
+## 121 Low Value and 124 Undetermined animals; only the first two are printed.
+test_that("summary.nprcgenekeeprGV prints the High Value and Low Value counts", {
+  out <- unclass(summary(nprcgenekeepr::qcPedGvReport))
+  expect_identical(
+    out[grepl("Value Individuals:", out)],
+    c("High Value Individuals: 35", "Low Value Individuals: 121")
+  )
+})
