@@ -149,6 +149,8 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
   # in the same way (reportGV / calcA / orderReport themselves are unchanged).
   ped$population <- getGVPopulation(ped, pop)
   probands <- as.character(ped$id[ped$population])
+  # S924: same check and position as in reportGV(), ahead of kinship() and
+  # calcA().
   assertPopulationSize(length(probands), "gvaConvergence(ped)")
   genotype <- getGVGenotype(ped)
   kmat <- filterKinMatrix(probands, kinship(
