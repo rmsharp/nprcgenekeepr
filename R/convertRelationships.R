@@ -36,6 +36,12 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   if (!is.null(ids)) {
     kmat <- filterKinMatrix(ids, kmat)
   }
+  if (length(kmat) == 0L) {
+    return(data.frame(
+      id1 = character(0L), id2 = character(0L), kinship = numeric(0L),
+      relation = character(0L), stringsAsFactors = FALSE
+    ))
+  }
   kin <- kinMatrix2LongForm(kmat, removeDups = TRUE)
   ped <- makeCEPH(ped$id, ped$sire, ped$dam)
   r <- character(0L)

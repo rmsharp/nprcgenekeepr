@@ -24,5 +24,5 @@
 #' ncol(kmatFiltered)
 #' nrow(kmatFiltered)
 filterKinMatrix <- function(ids, kmat) {
-  kmat[(rownames(kmat) %in% ids), (colnames(kmat) %in% ids)]
+  kmat[(rownames(kmat) %in% ids), (colnames(kmat) %in% ids), drop = FALSE]
 }

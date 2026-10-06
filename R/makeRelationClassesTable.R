@@ -38,6 +38,12 @@ makeRelationClassesTable <- function(kin) {
   relationClass <- unname(relationClassNames)
 
   kin <- kin[kin$relation != relationClassNames[["self"]], ]
+  if (nrow(kin) == 0L) {
+    return(data.frame(
+      `Relationship Class` = factor(character(0L)),
+      Frequency = integer(0L), check.names = FALSE
+    ))
+  }
   r <- as.data.frame(table(kin$relation))
   colnames(r) <- c("Relationship Class", "Frequency")
 
