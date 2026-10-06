@@ -98,52 +98,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 924 Did
-**Deliverable, DONE (strict TDD; user-visible error message):** the one-animal `reportGV()` finding (`BACKLOG.md:24` before
-replacement; found S923; picked at the Phase 0 picker, option 2 of 4). The owner's four answers, all the recommended ones: stop
-with a message, not a one-row report; fewer than 2 animals (none or one); both `reportGV()` and `gvaConvergence()`; one NEWS
-line. One unexported check, `assertPopulationSize()` (`R/assertPopulationSize.R`), called once in each function right after the
-population is worked out (`R/reportGV.R:199`, `R/gvaConvergence.R:154`), ahead of `kinship()`. Commits: claim `57fbc6ec9`, RED
-`478a3978f`, GREEN `9ad1f7ed2`, docs `029e421de` and `68c115f6c`, REFACTOR `a17d7d5f5`; the close-out commit carries this note,
-the receipt, the ledger entry, the BACKLOG edit and Learning 889 (6 ahead of origin before it, nothing pushed).
-**Measured:** before the change all 327 one-animal populations of `examplePedigree` stopped in `calcGU()`, 2 or 3 ran, none
-stopped in `alleleFreq()`, a lone living founder in `kinship()`, `gvaConvergence()` in its own indexing; a one-row report needed
-`calcA()` and `calcFounderContributions()` both patched in memory (Learning 889), which is why the owner chose the message.
-After: RED 13 new tests in 3 files, 11 failed for the intended reasons, 2 pins passed; mutation 5 of 5; full suite 377 files,
-3,134 tests, 0 failed, 0 errors, 187 skipped; lint 0; check 0/0/0; ratchet 1/1 (results `ea0686ea1e3d`); E2E (3 Genetic Value
-files) 22 tests, 0 failed. No E2E drives a one-animal population, so the message was not seen in the live app.
-**Found, not fixed:** `calcGU()`, `calcGUSE()` and `kinship()` still stop cryptically for one-animal input called directly
-(`BACKLOG.md:24`); `man/nprcgenekeepr-package.Rd` stale since S830 (`:42`). **Mistakes (recovered):** a stack probe with its
-calling handler outside `tryCatch()` printed nothing; a "third place" drafted for `gvaConvergence()` was wrong (never reached the
-owner); two comment lines over 80 columns (lint caught them).
-**Handoff evaluation of S923: 9/10.** Helped: every BACKLOG cite re-grepped true; the `reportGV(smallPed)` warning sent me to
-`qcPed` and `examplePedigree` at once; the namespace-patch recipe ran the one-row preview. Missing: a lone living founder and
-zero animals are separate failures, and whether the app can reach a one-animal population (it said "not probed"). Wrong:
-nothing (its "103 unpushed" was stale at Phase 0: pushed after its close-out).
-**Self-assessment: 8/10.** + Measured before asking, so each option carried a tested cost; gates in plain words with exact counts
-(13 tests, 11 failing: right); RED proved by reading the messages; mutation 5 of 5; suite, check, lint, E2E clean; docs split
-4 + 2. - the stack-probe slip; the long comment lines; no live look at the message. Reduction: `SESSION_NOTES.md` 55,971 B at
-Phase 0, 55,620 B now (S923 and this section condensed after it passed the 25,000-token read cap, 56,750 B, at 58,403 B).
+### What Session 925 Did
+**Deliverable:** one-animal and zero-animal input fixed at the cause (`BACKLOG.md:24`, DECISION NEEDED, Effort S; found S924;
+the owner first asked how option 2 related to S924's pick: it is S924's leftover) (IN PROGRESS)
+**Started:** 2026-10-06 17:26 CDT
+**Status:** Session claimed. The owner's two answers at PRE-RED, both the recommended ones: fix the cause (not a message in each
+function); a `pop` that names no animal gives an empty table from `calcGU()`/`calcGUSE()` (the S923 rule). Next: the
+PRE-RED→RED gate.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 (S925):** 0 undocumented commits, 0 pending receipts, S924's ratchet citation (`ea0686ea1e3d`) matched
+`.quality-gates-results.json`; 7 ahead of origin (not offered, S905 ruling); CI green on the last 10 runs; dashboard 96/100,
+High+ risk 0; context budget no file over its ceiling (growth run 117), synced tools behind canonical (reported only);
+`SESSION_NOTES.md` 55,620 B at Phase 0.
+**PRE-RED measured (in memory, no repo edit; scripts in the session scratchpad):** one cause, R dropping a one-row table to a
+bare vector, at `R/calcA.R` (`apply()`), `R/kinship.R` (last subset) and `R/calcFounderContributions.R` (`d[currentDesc, ]`);
+it also breaks `calcFE()` (not in the BACKLOG item). With three one-line fixes in memory: one animal gives GU 100, GU SE 0,
+kinship 0.5 (X-linked male 1), FE 2; 18 of 18 results for 2+ animals byte-identical (full `reportGV(qcPed)`,
+`gvaConvergence(qcPed)`, `kinship()` on `examplePedigree`, 3,694 animals). Zero animals fails in `alleleFreq()` on empty input;
+a one-line `as.data.frame(table(allele = ...), responseName = "freq")` dropped the `allele` column: not enough. Do not change
+`kinship()`'s `1L:max(pdepth)` loop: `seq_len()` turns MZ-twin founders' kinship 0.5 into 0.
 
-**Next steps (recommended, not yet ruled on; the order followed since S914 was my recommendation, not a ruling):** (A) docs-audit
-slice 2 (`BACKLOG.md:57`, needs scoping first, Effort L; scope which of the 31 images to regenerate and diagnose the colony
-script's tail first; it also holds the stale `pb_diagram_legend.png` and the article sentence at `pedigree-diagram.qmd:50-55`).
-(B) one-animal input to `calcGU()`, `calcGUSE()` and `kinship()` (`:24`, DECISION NEEDED, S). (C) the stale
-`man/nprcgenekeepr-package.Rd` (`:42`, READY, S; one file, `devtools::document()` in its own commit). (D) upstream
-`KJ5HST/methodology#93` (`:284`, BLOCKED; still its one comment). (E) unpushed: 6 local commits plus the close-out; not offered
-(owner's S905 ruling). Lower priority: `getAncestors()` on an absent id (`:8`); version 3.0.0 at release (`:49`). Carried: hover
-text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it); `reportGV(smallPed)` unfiled
-(5 of 5 calls fail); the D2 dogleg observation from S910 (untested); the seventh-label scan test (unfiled); synced tools behind
-canonical (no BACKLOG item, no sync asked for).
-**Key files:** `R/assertPopulationSize.R`; `R/reportGV.R:196-199`; `R/gvaConvergence.R:151-154`;
-`tests/testthat/test_assertPopulationSize.R`; `test_reportGV.R:974-`; `test_gvaConvergence.R:349-`; `NEWS.Rmd:404-408`; Learning 889.
-**Gotchas:** put a degenerate-input check ahead of every function that fails and pin the placement with a test that fails when
-the call moves; probe with `qcPed` (`reportGV(qcPed, guIter = 20L)` is fast) or `examplePedigree`, never `smallPed`; to preview
-a fix to a shared helper patch the loaded namespace (`unlockBinding` + `assign` on `asNamespace(...)`) and step it until the call
-succeeds; a calling handler outside an inner `tryCatch()` never runs; commit GREEN before a mutation check; `devtools::document()`
-rewrites `man/nprcgenekeepr-package.Rd`: restore it; the roxygen R files count toward the 5-file cap; removing or adding a BACKLOG
-block shifts every later cite, so re-grep; the full suite and `devtools::check()` run one at a time; take `wc -c` after the last
-edit (Learning 871); `SESSION_NOTES.md` must stay under 56,750 B (25,000 tokens), not the 65,536 B byte ceiling.
+### What Session 924 Did (condensed S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`reportGV()` and `gvaConvergence()` stop with a message giving the number of animals when the population of interest has fewer
+than 2 (strict TDD): one unexported check, `assertPopulationSize()`, at `R/reportGV.R:199` and `R/gvaConvergence.R:154`; 13 new
+tests. Claim `57fbc6ec9`, RED `478a3978f`, GREEN `9ad1f7ed2`, docs `029e421de` and `68c115f6c`, REFACTOR `a17d7d5f5`, close-out
+`65c0a7346`. Handoff evaluation of S923: 9/10. Self 8/10.
+**Gotchas kept:** probe with `qcPed` (`reportGV(qcPed, guIter = 20L)` is fast) or `examplePedigree`, never `smallPed`; preview a
+fix by patching the loaded namespace (`unlockBinding` + `assign` on `asNamespace(...)`); a calling handler outside an inner
+`tryCatch()` never runs; commit GREEN before a mutation check; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd`:
+restore it; the roxygen R files count toward the 5-file cap; `SESSION_NOTES.md` must stay under 56,750 B (25,000 tokens).
+**Carried:** docs-audit slice 2 (`BACKLOG.md:57`, needs scoping, Effort L); the stale `man/nprcgenekeepr-package.Rd` (`:42`,
+READY); upstream `KJ5HST/methodology#93` (`:284`, BLOCKED); `getAncestors()` on an absent id (`:8`); version 3.0.0 at release
+(`:49`); hover text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it);
+`reportGV(smallPed)` unfiled (5 of 5 calls fail); the D2 dogleg observation from S910 (untested); the seventh-label scan test
+(unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).
 
 ### What Session 923 Did (condensed S924; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The one-id `convertRelationships()` and empty `makeRelationClassesTable()` finding shipped (strict TDD): `filterKinMatrix()`

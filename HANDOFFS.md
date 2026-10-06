@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S925
+date: 2026-10-06
+status: pending
+active_task: One-animal and zero-animal input fixed at the cause (BACKLOG.md:24; DECISION NEEDED, Effort S; found S924). The owner's two PRE-RED answers, both the recommended ones: calcA(), kinship() and the founder-contribution step keep a one-row table a table, so calcGU(), calcGUSE(), kinship() and calcFE() return the one-animal value; calcGU()/calcGUSE() return an empty table when pop names no animal (the S923 rule, via alleleFreq()'s empty case).
+```
+
+```handoff
 session: S924
 date: 2026-10-06
 status: complete
