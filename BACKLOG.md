@@ -5,26 +5,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **PED_GV audit follow-through -- every F-slice DONE and every id decided; 1 id remains and
-      waits on a build below (READY, Effort S; strict TDD for every fix)** --
-      `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code; its
-      table is the plan, so read it first. Its four fix slices all shipped (F1 S782, F4 S783,
-      F2 S797 and S806-S811, F3 S798), and its Closure and Decision records 1-18 (S818-S918) hold
-      the 42 ids closed since, each with who decided it and when; `CHANGELOG.md` holds the
-      sessions. **1 id remains** (S918 recomputed this from the report's table: 43 ids, 42 closed,
-      none counted twice): NEW-24 (open issue #123, kept open on purpose after Phase 1 shipped
-      S386; its first leftover, `getGeneticDiversityStats.R:58` keeping its own `requiredPed`
-      vector, is decided S916 and has a build below; its second, the missing `print` method for
-      genetic-value results -- the class is appended last at `reportGV.R:365` and there is no bare
-      `print.nprcgenekeeprGV` -- stays open on the issue as low priority, the owner chose not to
-      build it).
-      **Trap:** an id grep of the ledger both under- and over-counts (`NEWS.md` once used
-      "NEW-47/48/49" as entry labels), so use the report's table, not the old 41-id list.
-
 - [ ] **One internal list of the three genetic-value labels (a S916 finding, not an audit id;
       READY, Effort S; owner choice S916, Decision record 17; strict TDD)** -- `"Low Value"`,
       `"High Value"` and `"Undetermined"` are typed as text in 5 files (8 lines):
-      `R/rankSubjects.R:52,54,56` assigns them; `R/getGeneticDiversityStats.R:91`,
+      `R/rankSubjects.R:52,54,56` assigns them; `R/getGeneticDiversityStats.R:89`,
       `R/modBreedingGroups.R:548`, `R/modGeneticValue.R:385` and
       `R/summary.nprcgenekeeprErr.R:262,267` compare them; `R/getProportionLow.R:21` matches the
       substring `"Low"`. A label that drifted in one file would silently stop matching in the
@@ -35,20 +19,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `getProportionLow()`'s `"Low"` substring match moves to the exact label (a behaviour
       question: other `Low...` values would stop matching); NEWS: none owed. Ships no audit id
       (NEW-18 and NEW-57 were closed without change).
-
-- [ ] **`getGeneticDiversityStats()` uses the shared required-column check (NEW-24's first
-      leftover; READY, Effort S; owner decision S916, Decision record 17; strict TDD)** --
-      `R/getGeneticDiversityStats.R:58-67` hand-writes two checks (`requiredPed`, 5 columns;
-      `requiredGv`, 2 columns) while `assertRequiredColsPresent()`
-      (`R/assertRequiredColsPresent.R:19`) serves `reportGV()`, `qcStudbook()`,
-      `gvaConvergence()` and `reportMatePairs()`. The exported function's error wording changes
-      from `ped is missing required column(s): dam` to `nprcgenekeepr: required column(s) missing
-      in getGeneticDiversityStats(ped): dam.` and the call is no longer shown in the message.
-      **First RED:** record today's two messages, add a test for a missing `geneticValues`
-      column (none exists), then the shared-wording tests; `test_getGeneticDiversityStats.R:194-201`
-      matches only `dam` and stays green. **For its Pre-RED gate:** the `where` label for each
-      check; whether a NEWS line is owed (an exported function's error wording changes). Issue
-      #123 stays open (the print method; the owner closes it).
 
 - [ ] **A gate that fails when a receipt sits inside the format-example box of `HANDOFFS.md` (found
       S917; DECISION NEEDED -- which kind of gate, or none; Effort S)** -- from S814 to S917 every new

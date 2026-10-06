@@ -578,6 +578,21 @@ Open after this closure: **1 id** (2 minus NEW-19; recounted S918: the table has
 them, so 42 are closed): NEW-24 (issue #123: its first leftover decided and waiting on a build, its print-method leftover open,
 low priority).
 
+### Closure record 19 (S919, 2026-10-06) -- decision record 17's NEW-24 first leftover shipped
+
+| id | closed because |
+|---|---|
+| NEW-24, first leftover | SHIPPED: `getGeneticDiversityStats()` (`R/getGeneticDiversityStats.R:58-65`) makes its two column checks with the shared `assertRequiredColsPresent()`, in place of its hand-written `requiredPed` and `requiredGv` checks: `names(ped)` against `id`, `dam`, `sex`, `birth`, `exit`, labelled `getGeneticDiversityStats(ped)`, then `names(geneticValues)` against `id`, `value`, labelled `getGeneticDiversityStats(geneticValues)`; the ped is still checked first. The only change for a caller is the wording of the error, from `ped is missing required column(s): dam` to `nprcgenekeepr: required column(s) missing in getGeneticDiversityStats(ped): dam.`, which no longer shows the call; the function stops under exactly the same conditions as before. No signature, help page, `NAMESPACE` or `man/` change; no `NEWS` line (the owner's answer at the REFACTOR gate: `reportGV()`, `qcStudbook()`, `gvaConvergence()` and `reportMatePairs()` moved to the shared check with none). Tests: 6 new in `tests/testthat/test_getGeneticDiversityStats.R` (the shared wording for the ped and for the genetic-value frame, no call on the error, the ped reported before the genetic-value frame, and one recorder test per check that `assertRequiredColsPresent()` is called with the names, the required columns and the label), 16 existing, still green. At RED all 6 failed; after REFACTOR (the file builds its two one-column-short frames once instead of 4 and 4 times, so two existing tests only lost a local copy of one) putting the pre-GREEN function back fails exactly those 6 (11 failed expectations) and passes the 16. Full suite: 373 files, 3,087 tests, 0 errors, 187 skipped, and 2 failed: the wall-clock benchmarks `markerKinship` and `markerParentageLikelihood` while another project's parallel `quarto render` jobs held the machine at a load average of 455; neither file nor the two functions it times mention `getGeneticDiversityStats()` or `assertRequiredColsPresent()`, and both files pass alone (5 and 25 tests) once no render job was left. |
+
+NEW-24 itself **stays open**, as Decision record 17 says: its second leftover, the missing `print` method for genetic-value
+results (`reportGV.R:365` appends the class last; there is no bare `print.nprcgenekeeprGV`), stays on issue #123 as low priority,
+the owner chose not to build it, and the owner closes the issue. No build waits on it.
+
+Open after this closure: **1 id** (unchanged: leftover (1) shipped, the id stays open; recounted S919: the table, lines 55-99,
+has 43 rows and 43 distinct ids, and the 1 open one is among them, so 42 are closed): NEW-24 (issue #123: its first leftover
+shipped, its print-method leftover open, low priority, tracked on the issue only). S918's handoff predicted "open count 1 to 0"
+for this build; Decision record 17's "STAYS OPEN (issue #123)" and every earlier count (NEW-24 listed as "tracked") say it stays 1.
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22
