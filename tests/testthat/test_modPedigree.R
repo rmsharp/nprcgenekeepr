@@ -1434,10 +1434,12 @@ test_that(
 ## one (confirmed hands-on, S921). Owner choices S921: the label "Same animal,
 ## again", a legend row only (no hover text), and nothing else about the panel
 ## changes -- the "width":0.28 / "stepY":54 pins above stay as they are.
-
-legendOf <- function(widgetJson) {
-  jsonlite::fromJSON(widgetJson, simplifyVector = FALSE)$x$legend
-}
+##
+## These tests match the serialized legend text, as the "stepY":54 test above
+## does, instead of parsing it: this package does not depend on jsonlite
+## (helper-shinytest2.R's own note) and devtools::check() warns "unstated
+## dependencies in tests" if a test calls it. The legend serializes as
+##   "edges":{"label":[..],"color":[..],"dashes":[..]}   (an NA color is null)
 
 test_that(
   "modPedigreeServer's diagram legend has a dashed row labelled 'Same animal,
@@ -1445,7 +1447,6 @@ test_that(
    the twin-connector green", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
-  skip_if_not_installed("jsonlite")
 
   test_studbook <- data.frame(
     id = c("A", "B", "C"),
@@ -1467,11 +1468,16 @@ test_that(
       )
       session$flushReact()
 
-      edgeRows <- legendOf(output$pedigreeDiagram)$edges
-      row <- which(unlist(edgeRows$label) == "Same animal, again")
-      expect_length(row, 1L)
-      expect_identical(unlist(edgeRows$dashes[row]), TRUE)
-      expect_false(identical(unlist(edgeRows$color[row]), "#009E73"))
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"Same animal, again"', widgetJson, fixed = TRUE))
+      # Plain dashes (true) for the new row, then the three twin rows' own.
+      expect_true(grepl('"dashes":[true,false,[4,4],[14,8]]', widgetJson,
+                        fixed = TRUE))
+      # Not in the twin green: four greens in a row would mean it is.
+      expect_false(grepl(
+        '"color":["#009E73","#009E73","#009E73","#009E73"]', widgetJson,
+        fixed = TRUE
+      ))
     }
   )
 })
@@ -1482,7 +1488,6 @@ test_that(
    shape rows, unchanged", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
-  skip_if_not_installed("jsonlite")
 
   test_studbook <- data.frame(
     id = c("A", "B", "C"),
@@ -1504,15 +1509,18 @@ test_that(
       )
       session$flushReact()
 
-      legend <- legendOf(output$pedigreeDiagram)
-      expect_equal(unlist(legend$edges$label),
-                   c("Same animal, again", "MZ", "DZ", "?"))
-      expect_equal(legend$edges$dashes[-1],
-                   list(FALSE, list(4, 4), list(14, 8)))
-      expect_equal(unlist(legend$edges$color[-1]), rep("#009E73", 3L))
-      expect_equal(unlist(legend$nodes$label),
-                   c("Female", "Male", "Hermaphrodite", "Unknown",
-                     "Other / Unrecorded", "Affected"))
+      widgetJson <- output$pedigreeDiagram
+      expect_true(grepl('"label":["Same animal, again","MZ","DZ","?"]',
+                        widgetJson, fixed = TRUE))
+      # The twin rows' dashes and green sit right after the new row's.
+      expect_true(grepl(",false,[4,4],[14,8]]", widgetJson, fixed = TRUE))
+      expect_true(grepl(',"#009E73","#009E73","#009E73"]', widgetJson,
+                        fixed = TRUE))
+      expect_true(grepl(
+        paste0('"label":["Female","Male","Hermaphrodite","Unknown",',
+               '"Other / Unrecorded","Affected"]'),
+        widgetJson, fixed = TRUE
+      ))
     }
   )
 })
@@ -1522,7 +1530,6 @@ test_that(
    the same dashes the diagram draws on a repeat-appearance link", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
-  skip_if_not_installed("jsonlite")
 
   # S mates D1 and D2, so S appears twice: one repeat appearance, one link.
   test_studbook <- data.frame(
@@ -1533,10 +1540,16 @@ test_that(
     gen = c(0L, 0L, 0L, 1L, 1L),
     stringsAsFactors = FALSE
   )
-  repeats <- unlist(
-    makePedigreeMatingLayout(test_studbook)$duplicateToReal
-  )
+  layout <- makePedigreeMatingLayout(test_studbook)
+  repeats <- unlist(layout$duplicateToReal)
   expect_length(repeats, 1L)
+  isLink <- (layout$edges$from == names(repeats) &
+               layout$edges$to == unname(repeats)) |
+    (layout$edges$to == names(repeats) &
+       layout$edges$from == unname(repeats))
+  expect_equal(sum(isLink), 1L)
+  linkDashes <- tolower(as.character(layout$edges$dashes[isLink]))
+  expect_length(linkDashes, 1L)
 
   shiny::testServer(
     modPedigreeServer,
@@ -1550,18 +1563,10 @@ test_that(
       )
       session$flushReact()
 
-      widget <- jsonlite::fromJSON(output$pedigreeDiagram,
-                                   simplifyVector = FALSE)$x
-      from <- unlist(widget$edges$from)
-      to <- unlist(widget$edges$to)
-      isLink <- (from == names(repeats) & to == unname(repeats)) |
-        (to == names(repeats) & from == unname(repeats))
-      expect_equal(sum(isLink), 1L)
-
-      edgeRows <- widget$legend$edges
-      row <- which(unlist(edgeRows$label) == "Same animal, again")
-      expect_equal(unlist(edgeRows$dashes[row]),
-                   unlist(widget$edges$dashes[isLink]))
+      expect_true(grepl(
+        sprintf('"dashes":[%s,false,[4,4],[14,8]]', linkDashes),
+        output$pedigreeDiagram, fixed = TRUE
+      ))
     }
   )
 })
