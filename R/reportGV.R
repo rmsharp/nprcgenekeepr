@@ -188,6 +188,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
 
   # Get the list of animals in the population to consider
   probands <- as.character(ped$id[ped$population])
+  assertPopulationSize(length(probands), "reportGV(ped)")
 
   ## Extract genotype data if available otherwise NULL is returned.
   genotype <- getGVGenotype(ped)
