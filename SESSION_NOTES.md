@@ -99,83 +99,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 919 Did
-**Deliverable:** `getGeneticDiversityStats()` uses the shared required-column check (`BACKLOG.md:39`, READY, Effort S, strict
-TDD; NEW-24's first leftover and the last open PED_GV audit id) (IN PROGRESS)
-**Started:** 2026-10-05 23:50 CDT
-**Status:** Session claimed. Phase: PRE-RED. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the
-S918 ratchet citation matching the results file before I re-ran it, CI green on all 10 recent master runs, dashboard 96/100
-with High+ risk 0, 66 commits ahead of origin. The owner picked this item (the recommended one) at the Phase 0 picker.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; users see only one error message's wording change):** NEW-24's first leftover, picked by the owner
+at the Phase 0 picker. `getGeneticDiversityStats()` makes its `ped` and `geneticValues` column checks with the shared
+`assertRequiredColsPresent()` (`R/getGeneticDiversityStats.R:58-65`, labels `getGeneticDiversityStats(ped)` and
+`getGeneticDiversityStats(geneticValues)`, ped first); a missing column now reads "nprcgenekeepr: required column(s) missing in
+getGeneticDiversityStats(ped): dam." with no call. Commits: claim `fe75f34cd`, RED `ea46cb959`, GREEN `791096a93`, REFACTOR
+`0f689cc2c`, closure `c14c13ef6`; the close-out commit carries this note, the receipt and the ledger entry (all local; 72 ahead of
+origin after it).
 
-### What Session 918 Did
-**Deliverable, DONE (strict TDD; no change for users):** NEW-19, picked at the Phase 0 picker. The owner first declined the
-picker and asked how its options mapped to the order they had given in S914; after a mapping table they chose the
-relationship-names list first. One internal list, `relationClassNames` (`R/relationClassNames.R`, 25 lines, `@noRd`, 11 named
-elements in the table's display order, written like `sexCodes`), is now read by `convertRelationships()` (its 11 assignments,
-`R/convertRelationships.R:51-89`) and by `makeRelationClassesTable()` (`:38` and its Self test). Owner choices: the list's name and
-file (`relationClassNames`, its own file), and all three phase gates. Commits: claim `de14ccf2e`, RED `238a558c7`, GREEN
-`d3681b69a`, REFACTOR `f35742512`, closure `81cff6de3`; the close-out commit carries this note, the receipt and the ledger entry
-(all local; 66 ahead of origin after it).
+**Two contexts.** The first ended when the owner's iTerm2 window closed (claim, RED, one uncommitted edit). I re-ran Phase 0 (0
+undocumented commits, receipt pending, CI green 10 of 10, dashboard 96/100, budget OK, 68 ahead), ran the test file against the edit
+(22 tests, 0 failed), and asked the RED-to-GREEN gate again before committing it. Owner choices: both gates, and "No NEWS line".
 
-**Measured, not recalled:** P15 re-run: all 11 names on `smallPed`, table of 10 rows summing to 136 non-Self pairs. P13 re-run:
-3 table rows and 4 of 5 pairs counted (the `BACKLOG.md` text "4 rows from 5 pairs" was loose). Output identical to a baseline saved at
-the old commit (two old-commit runs identical first): `smallPed`, full `qcPed`, 12-id subsets, both empty-table errors, 6 of 6.
-Tests: 4 new in `tests/testthat/test_relationClassNames.R` (all 4 errored at RED; with the list present and unread, the two "reads
-the list" tests failed on assertions, checked in a scratch clone), 3 added at `test_makeRelationsClasses.R:40,56,77`, 1 at
-`test_convertRelationships.R:68`. Mutation check: putting either function back to typed names fails only its own test.
+**Measured:** 22 tests (6 new, 16 existing), 0 failed; the pre-GREEN function put back after REFACTOR fails exactly the 6 new ones
+. Full suite: 373 files, 3,087 tests, 0 errors, 187 skipped, 2 failed: the wall-clock benchmarks
+`markerKinship` and `markerParentageLikelihood`, while another project's session (`vscode-quarto-ext`, about 30 parallel `quarto
+render` jobs; the owner is investigating) held the load average at 455; neither file mentions the changed function and
+both pass alone (5 and 25 tests). Lint 0; `devtools::check(args = "--no-manual")` 0/0/0 after GREEN and after REFACTOR;
+`quality_ratchet.py --run` 1/1 pass, results `474f97e30ac7`, manifest `aa983075d6a2`, head `c14c13ef6`, tarball 3.69983e+06 B of
+5e+06. **Not run, stated:** the Shiny app (Phase 3E: only an error message's wording changed; the only caller's tests, in
+`modGeneticDiversity`, ran green in the suite); the manual build; the full suite again after REFACTOR (tests only; the file alone,
+then `check` ran the whole directory).
 
-**Verified, stated:** the 5 related files green after REFACTOR (4, 4, 2, 23 and 9 tests); full suite at GREEN: 373 files, 3,081
-tests, 0 failed, 0 errors, 187 skipped; `lintr::lint_package()` 0 lints; `devtools::check(args = "--no-manual")` after REFACTOR: 0
-errors, 0 warnings, 0 notes; `quality_ratchet.py --run` 1/1 pass, results `8044c8d9b0ea`, manifest `aa983075d6a2`, head
-`f35742512`, tarball 3.69908e+06 B against 5e+06. **Not run, stated:** the Shiny app (Phase 3E: no runtime behaviour changed; the
-summary-statistics module's own 23 tests ran green); the manual build (`--no-manual`).
+**Closure:** Closure record 19 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:581`). NEW-24 stays open on issue #123 for the print
+method (Decision record 17), so the PED_GV count stays 1 and no build waits. `BACKLOG.md`: the `:39` item removed; the PED_GV
+follow-through item removed too (nothing in it waited on a build; the gates did not name this: put it back if you want it); cite
+`:91` to `:89` fixed; Learning 884.
 
-**Findings left alone (`BACKLOG.md:84`, DECISION NEEDED, Effort S):** `convertRelationships(kmat, smallPed, "A")` (one id) returns
-one row with `id1 = "kinMatrix"`, `id2 = 1`, `relation = "Full-Siblings"` (`filterKinMatrix()` has no `drop = FALSE`);
-`makeRelationClassesTable()` stops with a cryptic message when no non-Self pair is left (recorded as today's behaviour in a test).
-The app reaches neither (`kinship()` fails on one animal first).
+**My mistakes (recovered):** a gate option said "PED_GV open count 1 to 0" (copied from S918; the closure keeps 1); the suite watch
+used `[ -s file ]` and fired on stderr noise, then its 15-minute window expired on a 24-minute run.
 
-**My mistakes (recovered):** the picker's recommendation followed S917's list order instead of the owner's earlier order and its
-options carried no label for what closes PED_GV (owner bounced it; memory `picker-reconcile-with-owner-given-order`); a test comment
-claimed a one-animal pedigree reaches the empty-table error before I probed it (it does not; fixed in REFACTOR); the first scratch
-clone failed because its `.Rprofile` starts renv (use `R_LIBS` and `--no-init-file`); in-memory injection of the list failed (locked
-namespace).
+**Handoff evaluation of S918: 8/10.** Helped: every number re-measured exactly (66 ahead, the `:39` item, `:58-67`, the four sibling
+callers, "NEWS decided at the gate"); the receipt-placement gotcha; the load-under-benchmarks warning plus S915's "trace a high load
+up `ps`" explained the 2 failures at once. Missing: the load can come from another project (S918 named three idle `R` processes at
+0% CPU, not the cause). Wrong: "open count 1 to 0" contradicts Decision record 17 ("STAYS OPEN") and every earlier count; I kept 1.
 
-**Handoff evaluation of S917: 8/10.** Helped: every number re-measured exactly (60 ahead, S917's ratchet citation, the example box
-at `HANDOFFS.md:35-59`, the "currently holds" line, BACKLOG cites `:25`, `:39`, `:54`, the P15 counts); the receipt-placement
-gotcha was used as written (my claim sits above S917's block); "two R files plus a list file, `smallPed` is the fixture" was exact.
-Missing: the build order (column check first) departs from the order the owner gave in S914's receipt, with no reason (S916 wrote it,
-S917 carried it); it cost one clarification round. Wrong: nothing S917 itself claimed; the "4 rows from 5 pairs" wording is S916's.
+**Self-assessment: 8/10.** + The orphaned edit verified before it was touched; gates asked with concrete actions and a plain-words
+NEWS question; mutation check; load traced to a named project and left alone; code argument, then the rerun; closure follows the
+ratified record; a stale cite caught; a specific learning. - The stderr watch (about 30 minutes); a gate option promising "1 to
+0"; one item removed beyond what the gates named. Reduction: `SESSION_NOTES.md` 56,672 B to 56,347 B (S918 condensed, this section kept short; 9,189 B under its 65,536 B ceiling and
+under its 25,000-token ceiling); `BACKLOG.md` 44,099 B to 41,613 B (two items removed); nothing else removed.
 
-**Self-assessment: 8/10.** + Claimed before work; owner's plain-words naming question answered first try; all three gates asked with
-concrete actions; baseline, mutation and right-reason-RED checks; full suite, lint, check and ratchet clean; two findings logged,
-not fixed; memory saved. - Bounced picker (two extra round trips); one unverified comment. Reduction: S917's notes 7,171 B to 1,253
-B; `BACKLOG.md` 44,011 B to 44,099 B (NEW-19 item removed, 17-line finding added); nothing else removed.
+**Next steps (recommended, not yet ruled on; S914's receipt gives the owner's order for this campaign: builds first, then the
+dashed-link item, then docs-audit slice 2; (B) and (C) are newer findings that order does not cover):** (A) the three value labels
+(`BACKLOG.md:8`, READY, Effort S, two GREEN commits for the 5-file cap; the last queued build; not an audit id; Pre-RED gate: the
+list's name and file, and whether `getProportionLow()`'s `"Low"` substring match moves to the exact label). (B) the receipt-placement
+gate (`:23`, DECISION NEEDED, S). (C) the S918 finding on a one-id `convertRelationships()` and an empty
+`makeRelationClassesTable()` (`:54`, DECISION NEEDED, S). (D) the dashed-link item (`:418`, DECISION NEEDED, S). (E) docs-audit
+slice 2 (`:79`, needs scoping first, L). (F) upstream `KJ5HST/methodology#93` (`:302`, BLOCKED). (G) unpushed: 72 local commits after
+this close-out; the push carries `R/` changes from S915, S918, S919, so all four workflows start; not offered as a task (owner's S905
+ruling). Lower priority: `getAncestors()` on an absent id (`:38`, DECISION NEEDED, S). Carried: NEW-24's print method stays on issue
+#123 (low priority, the owner closes it; no `BACKLOG.md` item); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910
+(untested). Before the picker: grep the receipts for an order the owner already gave and label which options close what.
 
-**Next steps (recommended order; not yet ruled on):** (A) the shared column check in `getGeneticDiversityStats()` (`BACKLOG.md:39`,
-READY, Effort S, strict TDD): NEW-24's first leftover and the last open PED_GV id; its Pre-RED gate: the `where` label for each of
-the two checks, and whether a NEWS line is owed (an exported function's error wording changes); on shipping, write Closure record
-19 (open count 1 to 0), leave issue #123 open for the print method. (B) the three value labels (`:24`, READY, Effort S, two GREEN
-commits for the 5-file cap; not an audit id). (C) the receipt-placement gate (`:53`, DECISION NEEDED, S). (D) the S918 finding
-(`:84`, DECISION NEEDED, S). (E) the dashed-link item (`:448`, DECISION NEEDED, S). (F) docs-audit slice 2 (`:109`, needs scoping
-first, Effort L). (G) upstream `#93` (`:332`, BLOCKED). (H) unpushed: 66 local commits after this close-out, the push carries `R/`
-changes from S915 and S918 so all four workflows start; read CI after it; not offered as a task (owner's S905 ruling). Lower
-priority: `getAncestors()` on an absent id (`:68`, DECISION NEEDED, S). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg
-observation from S910 (untested); the two wall-clock benchmark tests fail when another process loads the machine (three `R`
-processes from earlier sessions, pids 29511, 82416 and 92900, 6 to 7 days old, still run; not mine, left alone).
+**Key files:** `R/getGeneticDiversityStats.R:58-65`; `R/assertRequiredColsPresent.R:19`; `tests/testthat/test_getGeneticDiversityStats.R:94-95`
+(the shared fixtures), `:239-345` (recorder and the 6 new tests); `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:581` (Closure record
+19); `PROJECT_LEARNINGS.md` Learning 884; `BACKLOG.md:8`, `:23`, `:38`, `:54`, `:79`, `:302`, `:418`.
 
-**Key files:** `R/relationClassNames.R:1-25`; `R/convertRelationships.R:51-89`; `R/makeRelationClassesTable.R:38-45`;
-`tests/testthat/test_relationClassNames.R:29-60`; `tests/testthat/test_makeRelationsClasses.R:40-87`;
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:571` (Closure record 18); `PROJECT_LEARNINGS.md` Learning 883; `BACKLOG.md:8` (PED_GV
-item), `:24`, `:39`, `:53`, `:68`, `:84`, `:101` (3.0.0), `:109`, `:332`, `:448`, `:472` (outreach), `:491` (paper). Scratch (not in the
-repo): the baseline script and its `.rds` files, the scratch clone, the probes.
+**Gotchas:** the full suite (about 6 min when quiet) and `devtools::check()` (about 8 min) run one at a time; a run far over that
+means check `uptime` and `ps -Ao pid,ppid,etime,pcpu,command` before reading a benchmark failure as a regression, then rerun the
+failing files alone; wait on a result file with `grep -q` for its result line, never `[ -s file ]` when stderr goes there; a GREEN
+that changes a file's length shifts every cite into it (grep `BACKLOG.md` and `ROADMAP.md` for `<file>:`); adding or removing a
+BACKLOG block shifts every later cite, so re-grep; a handoff's predicted count yields to the ratified record; take `wc -c` after
+the last edit (Learning 871).
 
-**Gotchas:** a scratch clone needs `R_LIBS="$(Rscript -e 'cat(paste(.libPaths(), collapse=":"))')"` and `Rscript --no-init-file`;
-the loaded namespace is locked, so a list cannot be injected in memory; `testthat::local_mocked_bindings()` can swap a non-function
-internal constant and errors "Can't find binding" while it does not exist; `makeRelationClassesTable()`'s row names (`10 5 7 6 4 2 3
-1 9 8`) are part of its recorded output; the full suite (about 6 min) and `devtools::check()` (about 8 min) run one at a time; adding
-or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
+### What Session 918 Did (condensed S919; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+NEW-19 shipped (strict TDD, no change for users): one internal list, `relationClassNames` (`R/relationClassNames.R`, `@noRd`), read by
+`convertRelationships()` and `makeRelationClassesTable()`; output identical to a baseline from the old commit in 6 of 6 cases. Claim
+`de14ccf2e`, RED `238a558c7`, GREEN `d3681b69a`, REFACTOR `f35742512`, closure `81cff6de3`, close-out `d82833ef4` (all still local at
+S919's Phase 0). Handoff evaluation of S917: 8/10. Self 8/10. Left alone (`BACKLOG.md:54`): a one-id `convertRelationships()` and an
+empty `makeRelationClassesTable()`.
+**Gotchas kept:** a scratch clone needs `R_LIBS` set from `.libPaths()` and `Rscript --no-init-file`; the loaded namespace is locked,
+so a constant cannot be injected in memory; `testthat::local_mocked_bindings()` swaps a non-function internal constant; before the
+picker, grep the receipts for an order the owner already gave; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 917 Did (condensed S918; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Trimmed `HANDOFFS.md` (housekeeping, docs and tooling only): 92 receipts (S813-S904) archived to
