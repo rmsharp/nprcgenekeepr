@@ -99,114 +99,96 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 916 Did
-**Deliverable:** decision session for what is left of the PED_GV audit (`BACKLOG.md:8`, DECISION NEEDED, Effort S): NEW-18/19/21/26/57
-(the constants and HTML builders) and NEW-24's two leftovers, 6 ids; docs only, no code, test or `R/` change (IN PROGRESS)
-**Started:** 2026-10-05 21:40 CDT
-**Status:** Session claimed. Picked at the Phase 0 picker. First step: read the triage report (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`,
-its table and Decision record 13), re-measure the sites of the 6 ids, then ask the owner in plain words.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (decision session; docs only; no `R/`, test or `man/` change):** the owner ruled on what was left of the
+PED_GV audit, picked at the Phase 0 picker ("PED_GV leftovers"). Four plain-words questions, each with re-measured sites, were
+answered first try, and all four answers were my recommended option (I cannot tell calibration from steering). **Closed with no
+change:** NEW-21 and NEW-26 (the heat-map cut-offs, the `0.015625` kinship default, `digits = 4L`), NEW-18 and NEW-57 (the two
+exported HTML table makers, the tier names). **Decided, three READY builds in `BACKLOG.md`:** NEW-19, one shared internal list
+of the 11 relationship names for `convertRelationships()` and `makeRelationClassesTable()` plus a guard test (`:25`); one
+internal list of the three value labels `"Low Value"`, `"High Value"`, `"Undetermined"` (typed in 5 files, 8 lines; a S916
+finding, not an audit id; `:39`); NEW-24's first leftover, `getGeneticDiversityStats()` uses the shared
+`assertRequiredColsPresent()` and its error wording changes (`:54`). NEW-24's second leftover, the missing print method for
+genetic-value results, stays open on issue #123, low priority. Decision record 17
+(`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`); open count 6 -> 2 (43 ids, 41 closed, recounted from the report's table).
 
-### What Session 915 Did
-**Deliverable, DONE (PED-3 shipped; strict TDD; on normal data the only change is the row labels `getLkDirectAncestors()` returns):** one unexported `walkPedigree(ids, ped,
-direction)` (`R/walkPedigree.R`, 51 lines, `@noRd`, not exported; `direction` is `"ancestors"`, `"descendants"` or `"both"`; it
-returns a list of id vectors, one per generation, each id once) replaces the four "collect parents or offspring until nothing new
-turns up" loops (42 lines): `R/getProbandPedigree.R:26`, `R/getDescendantPedigree.R:27`, `R/getPedDirectRelatives.R:54` and
-`R/getLkDirectAncestors.R:66` are now one call each. Picked at the Phase 0 picker (`BACKLOG.md`, owner decision S912, Decision
-record 13). Each phase gate was asked with `AskUserQuestion` and answered yes. At the Pre-RED gate the owner chose the name and
-file (`walkPedigree`, `R/walkPedigree.R`) and that `getLkDirectAncestors()` stops and returns the animals found; the owner also
-chose to keep today's placeholder order (below), the REFACTOR, and a NEWS line.
+**What I measured and found** (greps of `R/`, `tests/`, `inst/`, `vignettes/` and three bounded probes, P13-P15; no suite run):
+the heat-map cut-offs sit in four internal functions, not one (Value 0.5/0.3, Inbreeding 0.6/0.9, Production 0.63/0.6 for
+shelter pens and 0.53/0.5 for corral, Origin by counts) and no guide, vignette or article states any of them; `0.015625` is the
+default in 3 headings (2 exported), is written in 6 hand-written files, and `test_sexCodes.R:75` pins `groupAddAssign()`'s
+heading text; `makeGeneticSummaryTable()` and `makeFounderStatsTable()` are not called by the app (issue #37); P13: a pair named
+`Full-Sibling` is dropped silently from `makeRelationClassesTable()` (5 pairs in, 4 in the table); P15: the bundled `smallPed`
+gives all 11 names, so it is the guard test's fixture; P14: a genetic-value result prints as the whole list plus an
+`attr(,"class")` line; `getProportionLow.R:21` matches the substring `"Low"`, not the label.
 
-**Two stops on invalid data:** `getLkDirectAncestors()` now stops on circular data (before: it hit a 5-second
-limit on two animals that are each other's sire, and on one that is its own sire); and `getPedDirectRelatives()` now stops when a
-row of the pedigree has a missing id (a new finding, not in record 13: each pass found that row as an offspring, dropped it from
-`ids` and found it again; it hit the limit for `ids = "A"`, `NA` and `c("F", NA)`). NEWS: one "Fixed:" line in General Fixes
-(`NEWS.Rmd`, `NEWS.md` re-knitted; a fresh knit of the unchanged `NEWS.Rmd` was byte-identical first).
+**My mistakes (recovered):** question 1 said each heat-map number is "typed once"; `0.5`, `0.3`, `0.63`, `0.6`, `0.53` and `0.5`
+appear twice each inside their function (no number is in two functions); Decision record 17 carries a "Correction to the
+question text" (Learning 881). A re-read of my draft of the record, before `git add`, caught three unverified claims (a line
+cite one line off, a loose sentence about how the table drops names, a fixture claim); the usage-line claim for `man/` is
+labelled reasoned, not run.
 
-**What I measured and found:** at the unchanged commit the four loops were where record 13 says and no fifth loop exists. RED
-(`710677332`, `a29e3a643`; two commits for the 5-file cap): `test_walkPedigree.R` (11 tests) plus additions to the four existing
-test files, 37 new tests, 19 green by design (recordings), 7 red, 11 error (9 for the missing function, 2 at the 5-second limit);
-two walker tests that passed for the wrong reason were fixed before the commit. GREEN `302a0cdb8` (5 `R/` files, 1 new). An
-old-versus-new comparison (400 random pedigrees, one R process, `identical()`) found what my RED tests missed:
-`getPedDirectRelatives(unrelatedParents = TRUE)` listed the placeholder records in a different order in 259 of 400 (the old loop
-left `ids` farthest generation first). The owner chose to keep today's order: gap test `75832de41` (red on `302a0cdb8`, green on
-the old code) and fix `a3c8f584f` (`unlist(rev(walkPedigree(...)))`); the difference is then 0. `getLkDirectAncestors()`: 0
-differences in values or row order and 679 of 1,200 (3 seeds) in row labels only (the old code re-added found ancestors and
-`rbind()` relabelled rows, for example `112` for `11`; the new rows keep the table's labels). REFACTOR `af402927e` (tests only,
-counts unchanged); a mutation check in a scratch copy with the 4 pre-change `R/` files fails exactly 7 of 64 (5 delegation, 2
-never-stops). Timing, old and new alternating (median of 9): 1-2 ms before and after on the 3,694-animal `examplePedigree`; a
-2,000-generation chain 0.44-0.65 times the old time.
+Commits: claim `923d12678`, decision `ea775c32c` (Decision record 17, `BACKLOG.md`); the close-out commit carries receipt,
+notes, ledger entry and Learning 881 (all local). **Not run, stated:** the test suite, lint and `devtools::check()` (no `R/`,
+test, `man/` or `NAMESPACE` file changed; every changed file is `.Rbuildignore`d and the tests that name them do so only in
+comments); `quality_ratchet.py --run` 1/1 pass, results `ec326fab4b97`, manifest `aa983075d6a2`, tarball 3.69692e+06 B against
+the 5e+06 limit. `BACKLOG.md` is 444 -> 487 lines, 38,357 -> 41,637 B.
 
-Commits: claim `d11c068a1`, RED `710677332` and `a29e3a643`, GREEN `302a0cdb8`, gap test `75832de41`, gap fix `a3c8f584f`,
-REFACTOR `af402927e`, NEWS `fcc676510`, closure `4b59860c7` (Closure record 16, `BACKLOG.md` block removed, Learning 880); the
-close-out commit carries receipt, notes and ledger entry.
+**Handoff evaluation of S915: 9/10.** Helped: the Phase 0 numbers all re-measured exactly (53 commits ahead, `HANDOFFS.md`
+260,501 B, the ratchet citation, `BACKLOG.md:8`); the four-question plan (thresholds NEW-21+26, relation names NEW-19, low-value
+NEW-18+57, NEW-24, after re-measuring the sites) was followed as written; Decision record 13's "measured for the remaining
+group" list led straight to the sites. Missing: nothing said the other stoplight functions hold cut-offs too or that no user
+text states them, and the value-label text coupling (5 files) was on no list. Wrong: nothing found.
 
-Verified on the final tree (`4b59860c7`): full suite 372 files, 3,073 tests, 9,869 expectations, 0 failed, 0 errors, 187 skipped
-(9.2 min; against S914 that is +1 file, +38 tests, +106 expectations); `lintr::lint_package()` 0; plain `devtools::check()` Status
-OK, 0 errors, 0 warnings, 0 notes; `quality_ratchet.py --run` 1/1 pass, results `ac8cf981fee5`, manifest `aa983075d6a2`, tarball
-3.6969e+06 B against the 5e+06 limit. **Timing failures, not a regression:** the first `devtools::check()` (at the GREEN commit)
-failed only `test_markerKinship.R:177` (0.147 s against 0.1 s) and `test_markerParentageLikelihood.R:647` (1.36 s against 0.5 s)
-with the load average above 900; I traced it up the `ppid` chain to another Claude Code session's `render2.sh` (`xargs -P 6`
-quarto renders in `vscode_quarto_ext`), not this project; both files pass alone (30 tests, 138 expectations), marker code never
-calls the changed functions, and the check on the final tree passed at load about 35. The first full suite took 14.2 min for the
-same reason (S914: 5.9 min). **App path:** the opt-in `test-e2e-pedigree-module.R` (16 tests, 55 expectations, 0 failed,
-`NPRC_RUN_E2E=true`, headless Chrome) never reaches the walker; the module tests do (`shiny::testServer`: `test_modPedigree.R`,
-`_processing`, `_coverage`, `test_trimPedigree.R`, `test_getFocalAnimalPed.R`, `test_modInput.R`: 169 tests, 487 expectations, 0
-failed) and called `walkPedigree()` 25 times (14 ancestors, 10 descendants, 1 both ways). **Not run:** the app in a live browser
-by hand, CI (unpushed).
+**Self-assessment: 8/10.** + Claimed (`923d12678`) before any technical work; one deliverable; every site re-measured and a
+probe behind each build option; plain-words questions with the recommendation first; the record corrects my own first-question
+wording; the re-read before the commit; ratchet run and cited. - Question 1's "typed once" was inexact; three unverified claims
+reached my draft (caught, not shipped); I did not probe what a drifted value label does in the app (the build item says so);
+long silent stretches (the harness nudged me four times). Reduction: S915's record condensed (10,845 B to 1,378 B);
+`BACKLOG.md`, `HANDOFFS.md` (now 268 KB), `CHANGELOG.md` and `PROJECT_LEARNINGS.md` grew by this session's entries and nothing
+else could be removed.
 
-**My mistake (recovered):** to test against old code I ran `git stash -- R/walkPedigree.R; git stash pop`. The first stashed
-nothing, so the `pop` applied the repo's old April 2025 `dev` stash (only a `.DS_Store` change): it conflicted, left unmerged
-index entries and wrote a root `.DS_Store`. I proved the file was byte-identical to the stash blob and absent before (not ignored,
-Phase 0 untracked list empty), ran `git reset -q -- .DS_Store` and removed it; the stash is intact (`git stash list` shows it) and
-`git status` showed only my change. Learning 880 has the rule.
+**Next steps (recommended order; not yet ruled on):** (A) one of the three READY builds, each Effort S, strict TDD, its own
+session, its Pre-RED questions written in its `BACKLOG.md` item: the shared column check in `getGeneticDiversityStats()` (`:54`,
+one `R/` file, decide a NEWS line at the gate), then the 11 relationship names (`:25`, two `R/` files plus a list file), then
+the value labels (`:39`, 5 `R/` files plus a list file, so two GREEN commits for the 5-file cap). Then (B) the dashed-link item
+(`:421`, DECISION NEEDED: legend row only or hover text too, and the wording); (C) docs-audit slice 2 (`:92`, needs scoping
+first, Effort L); (D) trim `HANDOFFS.md` with `methodology_trim.py --force` as its own small session (268 KB, past the Read
+tool's 262,144 B whole-file limit; offset and limit still work); (E) unpushed: 56 local commits after this close-out, the push
+carries S915's `R/` and `NEWS.md` changes so all four workflows start, read CI after it, not offered as a task by the owner's
+S905 ruling; (F) upstream `KJ5HST/methodology#93` is open (BLOCKED item `:315`). Still open, lower priority: `getAncestors()` on
+an absent id (`:68`, DECISION NEEDED, S). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested);
+the two wall-clock benchmark tests fail when another process loads the machine.
 
-**Handoff evaluation of S914: 9/10.** Helped: the Phase 0 numbers all re-measured exactly (43 commits ahead, `HANDOFFS.md` 252,343
-B, ratchet citation, `BACKLOG.md:25`, `R/modPedigree.R:392`, upstream #93 open with 1 comment); the PED-3 plan (scope gate, a
-recording test per function, a circular-data test for each of the three that lack one, alternating timing) was followed as written
-and kept the session on one deliverable; the timing recipe and the `mockery` scope gotcha were used as written. Missing: nothing
-flagged the two things the build found (a missing-id row hangs `getPedDirectRelatives()`; the order of the placeholder records is
-observable), and no probe of today's output with two placeholders. Wrong: nothing found.
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (Decision record 17 after Closure record 16; probes P13-P15 at
+the end of the probe transcript); `BACKLOG.md:8` (tracker), `:25`, `:39`, `:54` (the builds), `:68` (`getAncestors`), `:84`
+(3.0.0), `:92` (docs audit), `:315` (upstream-blocked), `:421` (dashed links), `:445` (outreach), `:464` (paper);
+`R/convertRelationships.R:51-89`, `R/makeRelationClassesTable.R:38-43`, `R/markerRealizedRelatednessVariance.R:33-35`;
+`R/getGeneticDiversityStats.R:58-67` and `R/assertRequiredColsPresent.R:19`; the value-label sites `R/rankSubjects.R:52,54,56`,
+`R/getGeneticDiversityStats.R:91`, `R/modBreedingGroups.R:548`, `R/modGeneticValue.R:385`,
+`R/summary.nprcgenekeeprErr.R:262,267`, `R/getProportionLow.R:21`; `tests/testthat/test_convertRelationships.R`,
+`test_makeRelationsClasses.R`, `test_getGeneticDiversityStats.R:194-201`, `test_sexCodes.R:75`; `PROJECT_LEARNINGS.md` Learning
+881. The probe scripts were scratch and are not in the repo.
 
-**Self-assessment: 7/10.** + Claimed (`d11c068a1`) before any technical work; one deliverable; every Pre-RED claim was measured,
-and the gate text said what changes; RED checked for the right reasons (two wrong-reason passes fixed before committing); the
-old-versus-new run found a real change, and the owner ruled on it in plain words; mutation check; full suite, lint,
-`devtools::check()` and the ratchet on the final tree; the load was traced rather than assumed. - The `git stash` command was
-needless and touched a stash that was not mine (recovered, but it was an unforced error); my RED tests missed the placeholder
-order, which only the old-versus-new run caught, at GREEN rather than RED; my first missing-id probe ran without a time limit
-(past 120 s) although these notes say to wrap every never-stops probe; several long silent stretches (the harness nudged me several times). Reduction: S914's record condensed (8,678 B to 1,217 B); `BACKLOG.md` -19 lines, -1,598 B (PED-3 block removed, 463
-to 444 lines); `HANDOFFS.md`, `CHANGELOG.md` and `PROJECT_LEARNINGS.md` grew by this session's entries and nothing else could be
-removed.
+**Gotchas:** count a repeated number per number, per function and per occurrence, with the claim's exact words, before it goes
+into option text (Learning 881); put one probe-measured consequence in each option that proposes a build; grep the user-facing
+text before offering "document it"; re-read each line cite and each "has/does not" sentence of a record against the file before
+`git add`; the app calls neither `makeGeneticSummaryTable()` nor `makeFounderStatsTable()`; `getProportionLow()` matches the
+substring `"Low"`; a named constant in `groupAddAssign()`'s heading would change `test_sexCodes.R:75` and the `man/` usage line;
+adding or removing a BACKLOG block shifts every later cite, so re-grep; zsh aborts a command line on an unmatched glob
+(`inst/*.md`); edit `BACKLOG.md` with a script and asserted anchors; take `wc -c` after the last edit (Learning 871).
 
-**Next steps (recommended order; not yet ruled on):** (A) One decision session for what is left of the PED_GV audit
-(`BACKLOG.md:8`, DECISION NEEDED, Effort S): NEW-18/19/21/26/57 and NEW-24's two leftovers, four questions (thresholds NEW-21+26,
-relation names NEW-19, low-value NEW-18+57, NEW-24), after re-measuring the sites; 6 ids remain (43 in the table, 37 closed). (B)
-The builds (A) decides, one capability per session. Then (C) the dashed-link item (`:378`, DECISION NEEDED: legend row only or
-hover text too, and the wording); (D) docs-audit slice 2 (`:49`, needs scoping first, Effort L); (E) unpushed: 53 local commits
-after this close-out (43 at Phase 0, 9 of this session's before it); the push carries `R/` and `NEWS.md` changes, so all four
-workflows start: read CI after it; per the owner's S905 ruling it is not offered as a task; (F) upstream `KJ5HST/methodology#93`
-is open with 1 comment (BLOCKED item `:272`); (G) `HANDOFFS.md` is 260,501 B after this close-out (the Read tool refuses a
-whole-file read at 262,144 B; offset and limit still work): trim with `methodology_trim.py --force` before S916's receipt makes it
-worse. Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); the two wall-clock benchmark tests
-(`test_markerKinship.R:177`, `test_markerParentageLikelihood.R:647`) fail when the machine is loaded by another process.
+### What Session 915 Did (condensed S916; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+PED-3 shipped (strict TDD; on normal data the only change is the row labels `getLkDirectAncestors()` returns): one unexported
+`walkPedigree(ids, ped, direction)` (`R/walkPedigree.R`, `@noRd`) replaces the four walk loops in `getProbandPedigree()`,
+`getDescendantPedigree()`, `getPedDirectRelatives()` and `getLkDirectAncestors()`; the last now stops on circular data and
+`getPedDirectRelatives()` on a row with a missing id (both ran without end). Claim `d11c068a1`, RED `710677332` and `a29e3a643`,
+GREEN `302a0cdb8`, gap test `75832de41`, gap fix `a3c8f584f`, REFACTOR `af402927e`, NEWS `fcc676510`, closure `4b59860c7`,
+close-out `c75cfc2aa` (all still local at S916's Phase 0). Handoff evaluation of S914: 9/10. Self 7/10.
+**Gotchas kept:** never run `git stash pop` without `git stash list` (an existing stash gets applied); wrap every never-stops
+probe in `setTimeLimit(elapsed = 5, transient = TRUE)`; `expect_error(f(...))` with no message passes while `f` does not exist;
+when merging loops compare old and new on random inputs with `identical()` and classify any difference; trace a high load up `ps
+-o ppid=` before calling a benchmark failure a flake; adding or removing a BACKLOG block shifts every later cite, so re-grep;
+take `wc -c` after the last edit (Learning 871).
 
-**Key files:** `R/walkPedigree.R` (the walker); `R/getProbandPedigree.R:26`, `R/getDescendantPedigree.R:27`,
-`R/getPedDirectRelatives.R:54`, `R/getLkDirectAncestors.R:66` (the calls); `tests/testthat/helper-walkPedigree.R` (shared
-fixtures, `withinSeconds()`, `expectOneWalk()`), `test_walkPedigree.R` and the additions to `test_getProbandPedigree.R`,
-`test_getDescendantPedigree.R`, `test_getPedDirectRelatives.R`, `test_getLkDirectAncestors.R`;
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:469` (Closure record 16); `PROJECT_LEARNINGS.md` Learning 880; `NEWS.Rmd` General
-Fixes. `BACKLOG.md` cites after this session's -19 lines: `:8` (PED_GV), `:25` (`getAncestors`), `:41` (3.0.0), `:49` (docs
-audit), `:272` (upstream-blocked), `:378` (dashed links), `:402` (outreach), `:421` (paper). The comparison, timing and mutation
-scripts were scratch and are not in the repo.
-
-**Gotchas:** never run `git stash pop` without `git stash list` (an existing stash gets applied); wrap every never-stops probe in
-`setTimeLimit(elapsed = 5, transient = TRUE)`; `expect_error(f(...))` with no message passes while `f` does not exist; when
-merging loops compare the old and the new code on random inputs with `identical()` and classify any difference (id set, id order,
-row labels, values) before judging it; the old whole-set loop left `ids` farthest generation first, the walker lists nearest
-first, so `getPedDirectRelatives()` reverses it; `unlist(list(character(0)))` is `character(0)`; read a delegation stand-in's
-arguments with `do.call(function(ids, ped, direction) ..., mock_args(m)[[1]])`; trace a high load up `ps -o ppid=` before calling
-a benchmark failure a flake, and do not stop another session's processes; a fresh knit of `NEWS.Rmd` equals `NEWS.md` (checked),
-so a knit shows only your edit; adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the
-last edit (Learning 871).
 
 ### What Session 914 Did (condensed S915; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-62 shipped (strict TDD, no change for users): one internal `notifyProgress(updateProgress, ...)` (`R/notifyProgress.R`,
