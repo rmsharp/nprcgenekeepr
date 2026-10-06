@@ -1423,6 +1423,149 @@ test_that(
   )
 })
 
+## S921 -- legend row for the dashed repeat-appearance link. The diagram joins
+## an animal's repeat appearance back to its main one with a dashed curved
+## link (R/makePedigreeDiagramData.R, "dupEdges"); the user manual explained
+## it but the legend did not (BACKLOG item found S910). The row rides the SAME
+## visLegend() call's addEdges (a second call would overwrite it -- the same
+## constraint as the #133 and #137 rows above) and sits ABOVE the twin rows:
+## the legend rescales itself to fill its canvas and the Export button covers
+## the last row's right-hand end, so the last row has to stay the short "?"
+## one (confirmed hands-on, S921). Owner choices S921: the label "Same animal,
+## again", a legend row only (no hover text), and nothing else about the panel
+## changes -- the "width":0.28 / "stepY":54 pins above stay as they are.
+
+legendOf <- function(widgetJson) {
+  jsonlite::fromJSON(widgetJson, simplifyVector = FALSE)$x$legend
+}
+
+test_that(
+  "modPedigreeServer's diagram legend has a dashed row labelled 'Same animal,
+   again', present even for a pedigree with no repeat appearance, and not in
+   the twin-connector green", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+  skip_if_not_installed("jsonlite")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      edgeRows <- legendOf(output$pedigreeDiagram)$edges
+      row <- which(unlist(edgeRows$label) == "Same animal, again")
+      expect_length(row, 1L)
+      expect_identical(unlist(edgeRows$dashes[row]), TRUE)
+      expect_false(identical(unlist(edgeRows$color[row]), "#009E73"))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram legend puts the 'Same animal, again' row
+   directly above the three twin rows and leaves those rows, and the six
+   shape rows, unchanged", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+  skip_if_not_installed("jsonlite")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      legend <- legendOf(output$pedigreeDiagram)
+      expect_equal(unlist(legend$edges$label),
+                   c("Same animal, again", "MZ", "DZ", "?"))
+      expect_equal(legend$edges$dashes[-1],
+                   list(FALSE, list(4, 4), list(14, 8)))
+      expect_equal(unlist(legend$edges$color[-1]), rep("#009E73", 3L))
+      expect_equal(unlist(legend$nodes$label),
+                   c("Female", "Male", "Hermaphrodite", "Unknown",
+                     "Other / Unrecorded", "Affected"))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram legend draws the 'Same animal, again' row with
+   the same dashes the diagram draws on a repeat-appearance link", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+  skip_if_not_installed("jsonlite")
+
+  # S mates D1 and D2, so S appears twice: one repeat appearance, one link.
+  test_studbook <- data.frame(
+    id = c("S", "D1", "D2", "K1", "K2"),
+    sire = c(NA, NA, NA, "S", "S"),
+    dam = c(NA, NA, NA, "D1", "D2"),
+    sex = c("M", "F", "F", "M", "F"),
+    gen = c(0L, 0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  repeats <- unlist(
+    makePedigreeMatingLayout(test_studbook)$duplicateToReal
+  )
+  expect_length(repeats, 1L)
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE
+      )
+      session$flushReact()
+
+      widget <- jsonlite::fromJSON(output$pedigreeDiagram,
+                                   simplifyVector = FALSE)$x
+      from <- unlist(widget$edges$from)
+      to <- unlist(widget$edges$to)
+      isLink <- (from == names(repeats) & to == unname(repeats)) |
+        (to == names(repeats) & from == unname(repeats))
+      expect_equal(sum(isLink), 1L)
+
+      edgeRows <- widget$legend$edges
+      row <- which(unlist(edgeRows$label) == "Same animal, again")
+      expect_equal(unlist(edgeRows$dashes[row]),
+                   unlist(widget$edges$dashes[isLink]))
+    }
+  )
+})
+
 ## Issue #135 -- ID-select search dropdown + hover-highlight on the Diagram
 ## tab. hoverNearest (not the visNetwork default click-based highlight) is
 ## used deliberately so the highlight effect does not overlap the existing
