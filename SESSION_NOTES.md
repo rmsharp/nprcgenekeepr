@@ -98,54 +98,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 922 Did
-**Deliverable, DONE (strict TDD; tests only, no `R/` change):** the receipt-placement gate (`BACKLOG.md:8` before removal). The owner
-chose a test in the suite: `tests/testthat/test_handoffsReceiptPlacement.R` (7 tests, 10 expectations) and the test helper
-`tests/testthat/helper-handoffsBox.R` (`handoffsBoxReceiptCount(lines)`, 9 lines of code) fail unless the format-example box of
-`HANDOFFS.md` holds exactly one `handoff` block. On the file just before S917 moved the receipts (`b53927bdf^`) it returns 105 (the
-example and 104 receipts); on today's file, 1. Commits: claim `7d75ec577`, RED `eff4bc84d`, GREEN `d06fa5d6a`, REFACTOR `99d90cc04`,
-closure `9d67a0ec5`; the close-out commit carries this note, the receipt and the ledger entry (95 ahead of origin after it).
-**Measured:** RED 7 tests (6 errored "could not find function", 1 failed on the missing message); GREEN 0 failed, 0 errors, 0 skipped;
-full suite 375 files, 3,108 tests, 0 failed, 0 errors, 187 skipped (5.9 min); `devtools::check(args = "--no-manual")` 0/0/0; lint 0;
-mutation check 6 of 6 caught (5 helper mutations and a receipt slipped into the real box; tree clean after); ratchet 1/1 pass (results
-`d310a742f5d2`, manifest `aa983075d6a2`, head `99d90cc04`, tarball 3,706,290 B). The built tarball holds 0 `HANDOFFS.md` entries
-(`.Rbuildignore:80`), so the two real-file tests skip there and under `devtools::check()`; they run only from the source tree.
-**Runtime (3E):** n/a for the app (tests only). The gate ran against the real file in the full suite, not skipped, and the
-slipped-receipt mutation failed it. **Closure:** no audit id or issue; `BACKLOG.md` item removed (later cites moved up 15); NEWS none
-(nothing user-facing); Learning 887. **Not taken (the owner's choice):** a pre-commit check (its hook comes from synced
-`context_budget.py`, local v1.2.0, canonical v1.3.1) and nothing.
-**Mistakes (recovered):** "about 6 tests" at the gate, 7 written; the first header draft said the tests skip "under covr" (unmeasured;
-the REFACTOR re-read dropped it); the owner's mid-turn "2" was ambiguous and I read it as confirming the pick; the empty-box case has
-no test (a scratch call only; named at the RED to GREEN gate).
-**Handoff evaluation of S921: 9/10.** Helped: every BACKLOG cite re-grepped true at Phase 0 (`:8`, `:23`, `:39`, `:56`, `:64`,
-`:291`); "grep the receipts for an order the owner already gave" kept the picker to one round; the 89-ahead count matched; the claim
-shape and "condense the previous section at the claim"; the ratchet citation matched first time; the item's own gotcha (count between
-the two four-backtick lines) shaped the helper. Missing: nothing material. Wrong: one attribution: the receipts call the S914 order
-"the owner's", but S914's own receipt labels it "Recommended order (not yet ruled on)" and the S915/S916 receipts I searched do not
-show the owner ruling it (each picker pick followed it); unverified.
-**Self-assessment: 8/10.** + Measured before asking (box, build-ignore, the hook's source, then the pre-S917 file and the tarball);
-every gate asked in plain words; RED proved for the right reasons; mutation 6/6; suite, check and lint clean; the REFACTOR re-read
-caught an unmeasured claim. - the count and "covr" slips; the ambiguous "2". Reduction: none net: `SESSION_NOTES.md` was 52,490 B at Phase 0 and is 53,407 B (S921
-shortened at the claim, 3,768 B, then this section added); under the 65,536 B ceiling.
+### What Session 923 Did
+**Deliverable:** the one-id `convertRelationships()` and empty `makeRelationClassesTable()` finding (`BACKLOG.md:24`, DECISION NEEDED,
+Effort S; owner pick at the Phase 0 picker, option 2 of 3) (IN PROGRESS)
+**Started:** 2026-10-06 14:32 CDT
+**Status:** Session claimed. Work beginning. Pre-RED: the owner still decides, in plain words, what each of the two cases should
+do (stop with a message, or return a result) and whether a NEWS line is owed, before RED is declared.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not yet ruled on; the S919-S921 receipts carry the owner's S914 order, builds then the dashed-link item
-then slice 2, so slice 2 is first):** (A) docs-audit slice 2 (`BACKLOG.md:49`, needs scoping first, Effort L). (B) one-id
-`convertRelationships()` (`:24`, DECISION NEEDED, S). (C) upstream `KJ5HST/methodology#93` (`:276`, BLOCKED; still its one
-comment). (D) unpushed: 95 local commits; not offered (owner's S905 ruling). Lower priority: `getAncestors()` on an absent id
-(`:8`); version 3.0.0 at release (`:41`). Carried: hover text on the dashed link (not built); NEW-24's print method on
-issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); the seventh-label
-scan test (unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for). Before the picker: grep the receipts for an
-order the owner already gave, label which options close what, and say the S914 order's attribution is unverified.
-
-**Key files:** `tests/testthat/test_handoffsReceiptPlacement.R` (header `:1-21`); `tests/testthat/helper-handoffsBox.R`;
-`PROJECT_LEARNINGS.md` Learning 887; `HANDOFFS.md:35-59` (the format-example box); `.Rbuildignore:80`;
-`BACKLOG.md:8`, `:24`, `:41`, `:49`, `:276`.
-
-**Gotchas:** the gate runs only from the source tree, so after writing a claim receipt run
-`tests/testthat/test_handoffsReceiptPlacement.R` (the command is in the receipt); a new receipt goes directly above the newest one,
-below the archive pointers; `testthat::test_file()` loads `helper-*.R` itself; for a mutation check commit GREEN first so
-`git checkout` restores the file; removing a BACKLOG block shifts every later cite, so re-grep; the full suite and
-`devtools::check()` run one at a time; take `wc -c` after the last edit (Learning 871).
+### What Session 922 Did (condensed S923; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The receipt-placement gate shipped (strict TDD; tests only, no `R/` change): `tests/testthat/test_handoffsReceiptPlacement.R`
+(7 tests) and `tests/testthat/helper-handoffsBox.R` (`handoffsBoxReceiptCount()`) fail unless the format-example box of
+`HANDOFFS.md` holds exactly one receipt (105 on the file before S917's move, 1 today). Claim `7d75ec577`, RED `eff4bc84d`, GREEN
+`d06fa5d6a`, REFACTOR `99d90cc04`, closure `9d67a0ec5`, close-out `325e0c480`. Handoff evaluation of S921: 9/10. Self 8/10.
+**Gotchas kept:** the gate runs only from the source tree (the built package holds no `HANDOFFS.md`), so after writing a claim
+receipt run `tests/testthat/test_handoffsReceiptPlacement.R`; a new receipt goes directly above the newest one, below the archive
+pointers; for a mutation check commit GREEN first so `git checkout` restores the file; removing a BACKLOG block shifts every later
+cite, so re-grep; the full suite and `devtools::check()` run one at a time; take `wc -c` after the last edit (Learning 871).
+**Carried:** docs-audit slice 2 (`BACKLOG.md:49`, needs scoping, Effort L); upstream `KJ5HST/methodology#93` (`:276`, BLOCKED);
+`getAncestors()` on an absent id (`:8`); version 3.0.0 at release (`:41`); hover text on the dashed link (not built); NEW-24's
+print method on issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested);
+the seventh-label scan test (unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).
 
 ### What Session 921 Did (condensed S922; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Pedigree Browser Diagram legend has a dashed row, "Same animal, again", for the dashed repeat-appearance link, directly
