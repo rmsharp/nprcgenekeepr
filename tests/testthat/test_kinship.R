@@ -178,3 +178,39 @@ test_that("kinship() with chrtype = 'x' gives NA kinship for a subject with
   # Unrelated cells elsewhere in the matrix are unaffected.
   expect_equal(kmat["1", "4"], 0.50)
 })
+
+# S925: kinship() took its final n x n block without keeping the matrix shape,
+# so for one animal it got a bare number and naming its rows and columns
+# stopped with "'dimnames' applied to non-array".
+test_that("kinship() returns a 1 x 1 matrix for a single animal (S925)", {
+  kmat <- kinship("A", NA, NA, 0L)
+  expect_true(is.matrix(kmat))
+  expect_identical(dimnames(kmat), list("A", "A"))
+  expect_equal(kmat[["A", "A"]], 0.5)
+  ## The same value the founder gets in a two-founder pedigree.
+  kmatTwo <- kinship(c("A", "B"), c(NA, NA), c(NA, NA), c(0L, 0L))
+  expect_identical(kmat[["A", "A"]], kmatTwo[["A", "A"]])
+
+  kmatSparse <- kinship("A", NA, NA, 0L, sparse = TRUE)
+  expect_identical(dim(kmatSparse), c(1L, 1L))
+  expect_identical(dimnames(kmatSparse), list("A", "A"))
+  expect_equal(as.numeric(kmatSparse), 0.5)
+
+  ## One animal whose parents are not in the pedigree.
+  kmatNoParents <- kinship("A", "S", "D", 1L)
+  expect_identical(dimnames(kmatNoParents), list("A", "A"))
+  expect_equal(kmatNoParents[["A", "A"]], 0.5)
+})
+
+test_that("kinship() with chrtype = 'x' returns a 1 x 1 matrix for a single
+  animal (S925)", {
+  male <- kinship("A", NA, NA, 0L, chrtype = "x", sex = "M")
+  female <- kinship("A", NA, NA, 0L, chrtype = "x", sex = "F")
+  unknown <- kinship("A", NA, NA, 0L, chrtype = "x", sex = "U")
+  expect_identical(dimnames(male), list("A", "A"))
+  expect_identical(dimnames(female), list("A", "A"))
+  expect_identical(dimnames(unknown), list("A", "A"))
+  expect_equal(male[["A", "A"]], 1)
+  expect_equal(female[["A", "A"]], 0.5)
+  expect_true(is.na(unknown[["A", "A"]]))
+})

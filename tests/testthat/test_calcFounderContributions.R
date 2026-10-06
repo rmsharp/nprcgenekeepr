@@ -75,3 +75,39 @@ test_that("calcFounderContributions stops on partial parentage, naming the calle
     regexp = "calcFEFG.*partial parentage"
   )
 })
+
+## S925: with one living descendant, the founder-contribution step took that
+## animal's row without keeping the matrix shape, so colMeans() stopped calcFE(),
+## calcFG(), calcFEFG() and calcFGSE() with "'x' must be an array of at least two
+## dimensions".
+oneDescendantPed <- data.frame(
+  id = c("F1", "F2", "C1"),
+  sire = c(NA, NA, "F1"),
+  dam = c(NA, NA, "F2"),
+  gen = c(0L, 0L, 1L),
+  population = c(TRUE, TRUE, TRUE),
+  stringsAsFactors = FALSE
+)
+
+test_that("founder contributions work with one living descendant (S925)", {
+  fc <- calcFounderContributions(oneDescendantPed)
+  expect_equal(fc$p, c(F1 = 0.5, F2 = 0.5))
+  ## FE = 1 / sum(p^2) = 1 / (0.25 + 0.25)
+  expect_equal(calcFE(oneDescendantPed), 2)
+})
+
+test_that("calcFG, calcFEFG and calcFGSE work with one living descendant (S925)", {
+  set_seed(1L)
+  alleles <- geneDrop(oneDescendantPed$id, oneDescendantPed$sire,
+    oneDescendantPed$dam, oneDescendantPed$gen,
+    n = 50L
+  )
+  ## The one descendant carries exactly one allele of each founder in every
+  ## gene drop, so retention is 0.5 for each founder whatever the seed:
+  ## FG = 1 / (0.25 / 0.5 + 0.25 / 0.5) = 1, with no sampling variation.
+  expect_equal(calcFG(oneDescendantPed, alleles), 1)
+  fefg <- calcFEFG(oneDescendantPed, alleles)
+  expect_equal(fefg$FE, 2)
+  expect_equal(fefg$FG, 1)
+  expect_equal(calcFGSE(oneDescendantPed, alleles), 0)
+})

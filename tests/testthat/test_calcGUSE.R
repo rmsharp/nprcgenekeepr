@@ -75,3 +75,42 @@ test_that("calcGUSE shrinks with more iterations (exact var-of-mean scaling)", {
   expect_true(any(pos))
   expect_true(all(dub$guSE[pos] < base$guSE[pos]))
 })
+
+# S925: one animal stopped calcGUSE() with "dim(X) must have a positive length"
+# (calcA() returned a bare vector), and a pop that names no animal stopped it in
+# alleleFreq(). One animal now gives one row; no animal gives no rows.
+test_that("calcGUSE returns one row for a single animal (S925)", {
+  alleles <- nprcgenekeepr::ped1Alleles
+  oneId <- alleles$id[1L]
+  one <- alleles[alleles$id == oneId, ]
+  iterations <- setdiff(names(alleles), c("id", "parent"))
+  ## Alone, both alleles are rare unless they are the same allele; the SE is
+  ## taken over the per-iteration values, as for any animal.
+  rareCount <- ifelse(
+    unlist(one[1L, iterations]) != unlist(one[2L, iterations]), 2L, 0L
+  )
+  expectedSE <- 100 * sqrt(stats::var(rareCount / 2) / length(iterations))
+
+  guSE <- calcGUSE(alleles, threshold = 1L, byID = FALSE, pop = oneId)
+  expect_s3_class(guSE, "data.frame")
+  expect_named(guSE, "guSE")
+  expect_identical(rownames(guSE), oneId)
+  expect_equal(guSE$guSE, expectedSE)
+
+  ## byID: both copies are rare in every iteration, so there is no variation.
+  guSEByID <- calcGUSE(alleles, threshold = 1L, byID = TRUE, pop = oneId)
+  expect_identical(rownames(guSEByID), oneId)
+  expect_equal(guSEByID$guSE, 0)
+})
+
+test_that("calcGUSE returns an empty table when pop names no animal (S925)", {
+  alleles <- nprcgenekeepr::ped1Alleles
+  for (pop in list("NO_SUCH_ANIMAL", character(0L))) {
+    for (byID in c(FALSE, TRUE)) {
+      guSE <- calcGUSE(alleles, threshold = 1L, byID = byID, pop = pop)
+      expect_s3_class(guSE, "data.frame")
+      expect_named(guSE, "guSE")
+      expect_identical(nrow(guSE), 0L)
+    }
+  }
+})
