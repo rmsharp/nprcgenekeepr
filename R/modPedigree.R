@@ -698,6 +698,17 @@ modPedigreeServer <- function(id, studbook) {
         stringsAsFactors = FALSE
       )
       twinLegendEdges$dashes <- I(list(FALSE, c(4L, 4L), c(14L, 8L)))
+      # S921: the dashed repeat-appearance link's legend row -- plain dashes
+      # like dupEdges in R/makePedigreeDiagramData.R, color unset so it
+      # follows the diagram's own edge color. It goes FIRST: the legend
+      # rescales itself to fill its canvas and the Export button covers the
+      # last row's right-hand end, so the last row has to stay the short "?"
+      # one (confirmed hands-on, S921).
+      legendEdges <- rbind(
+        data.frame(label = "Same animal, again", color = NA_character_,
+                   dashes = I(list(TRUE)), stringsAsFactors = FALSE),
+        twinLegendEdges
+      )
       # Option 2 Slice 3: fixed x/y coordinates (S457's proven Case C2
       # geometry) replace visHierarchicalLayout() entirely -- confirmed
       # hands-on (Learning 446) that manual coordinates and hierarchical
@@ -756,7 +767,7 @@ modPedigreeServer <- function(id, studbook) {
           # exactly -- label + dashes + color (D10's #009E73 color pick,
           # found never wired at S494, fixed S506).
           # nolint end
-          addEdges = twinLegendEdges,
+          addEdges = legendEdges,
           useGroups = FALSE,
           position = "right",
           main = "Sex",
