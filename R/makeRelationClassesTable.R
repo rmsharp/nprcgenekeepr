@@ -35,14 +35,9 @@
 #'   summarise(count = n())
 #' relClassTbl
 makeRelationClassesTable <- function(kin) {
-  relationClass <- c(
-    "Self", "Parent-Offspring", "Full-Siblings",
-    "Half-Siblings", "Grandparent-Grandchild", "Full-Cousins",
-    "Cousin - Other", "Full-Avuncular", "Avuncular - Other",
-    "Other", "No Relation"
-  )
+  relationClass <- unname(relationClassNames)
 
-  kin <- kin[kin$relation != "Self", ]
+  kin <- kin[kin$relation != relationClassNames[["self"]], ]
   r <- as.data.frame(table(kin$relation))
   colnames(r) <- c("Relationship Class", "Frequency")
 

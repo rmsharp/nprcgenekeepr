@@ -48,45 +48,45 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
     ceph2 <- ped[[id2]]
 
     if (id1 == id2) {
-      relation <- "Self"
+      relation <- relationClassNames[["self"]]
     } else if (allTrueNoNA(ceph1$parents == ceph2$parents)) {
-      relation <- "Full-Siblings"
+      relation <- relationClassNames[["fullSiblings"]]
     } else if (id1 %in% ceph2$parents || id2 %in% ceph1$parents) {
       # one animal is the parent of the other
-      relation <- "Parent-Offspring"
+      relation <- relationClassNames[["parentOffspring"]]
     } else if (!isEmpty(intersect(ceph1$parents, ceph2$parents))) {
       # at least 1 parent is shared
-      relation <- "Half-Siblings"
+      relation <- relationClassNames[["halfSiblings"]]
     } else if (id1 %in% c(ceph2$pgp, ceph2$mgp) ||
       id2 %in% c(ceph1$pgp, ceph1$mgp)) {
       # one animals is the grandparent of the other
-      relation <- "Grandparent-Grandchild"
+      relation <- relationClassNames[["grandparentGrandchild"]]
     } else if (allTrueNoNA(ceph1$pgp == ceph2$pgp) ||
       allTrueNoNA(ceph1$pgp == ceph2$mgp) ||
       allTrueNoNA(ceph1$mgp == ceph2$pgp) ||
       allTrueNoNA(ceph1$mgp == ceph2$mgp)) {
       # When a full set of grandparents are shared
-      relation <- "Full-Cousins"
+      relation <- relationClassNames[["fullCousins"]]
     } else if (!isEmpty(intersect(
       c(ceph1$pgp, ceph1$mgp),
       c(ceph2$pgp, ceph2$mgp)
     ))) {
       # When at least one grandparent is in common
-      relation <- "Cousin - Other"
+      relation <- relationClassNames[["cousinOther"]]
     } else if (allTrueNoNA(ceph1$parents == ceph2$pgp) ||
       allTrueNoNA(ceph1$parents == ceph2$mgp) ||
       allTrueNoNA(ceph2$parents == ceph1$pgp) ||
       allTrueNoNA(ceph2$parents == ceph1$mgp)) {
       # When parents of one proband are the grandparents of the other
-      relation <- "Full-Avuncular"
+      relation <- relationClassNames[["fullAvuncular"]]
     } else if (!isEmpty(intersect(ceph1$parents, c(ceph2$pgp, ceph2$mgp))) ||
       !isEmpty(intersect(ceph2$parents, c(ceph1$pgp, ceph1$mgp)))) {
       # When at least one parent of a proband is the grandparent of the other
-      relation <- "Avuncular - Other"
+      relation <- relationClassNames[["avuncularOther"]]
     } else if (kin$kinship[i] > 0L) {
-      relation <- "Other"
+      relation <- relationClassNames[["other"]]
     } else {
-      relation <- "No Relation"
+      relation <- relationClassNames[["noRelation"]]
     }
 
     r <- c(r, relation)
