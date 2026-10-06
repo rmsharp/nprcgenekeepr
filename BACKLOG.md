@@ -5,21 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **One internal list of the three genetic-value labels (a S916 finding, not an audit id;
-      READY, Effort S; owner choice S916, Decision record 17; strict TDD)** -- `"Low Value"`,
-      `"High Value"` and `"Undetermined"` are typed as text in 5 files (8 lines):
-      `R/rankSubjects.R:52,54,56` assigns them; `R/getGeneticDiversityStats.R:89`,
-      `R/modBreedingGroups.R:548`, `R/modGeneticValue.R:385` and
-      `R/summary.nprcgenekeeprErr.R:262,267` compare them; `R/getProportionLow.R:21` matches the
-      substring `"Low"`. A label that drifted in one file would silently stop matching in the
-      others (not probed). One internal list that the 5 files read; no output changes. **First
-      RED:** a recording test per file of today's labels and counts, then a test per file that it
-      reads the list (red until moved). **For its Pre-RED gate:** the list's name and file (a new
-      file makes 6 files with the 5 edits, so two GREEN commits for the 5-file cap); whether
-      `getProportionLow()`'s `"Low"` substring match moves to the exact label (a behaviour
-      question: other `Low...` values would stop matching); NEWS: none owed. Ships no audit id
-      (NEW-18 and NEW-57 were closed without change).
-
 - [ ] **A gate that fails when a receipt sits inside the format-example box of `HANDOFFS.md` (found
       S917; DECISION NEEDED -- which kind of gate, or none; Effort S)** -- from S814 to S917 every new
       receipt went inside the code box that holds the format example, so `methodology_trim.py` saw 1 of
