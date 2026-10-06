@@ -401,6 +401,11 @@ longitudinal monitoring of colony genetic health.
   naming every missing column, when the pedigree lacks `id`, `sire`, `dam`,
   `gen` or `sex`. A missing `id`, `sire`, `dam` or `gen` used to give an
   unexplained R error.
+- Fixed: `reportGV()` and `gvaConvergence()` now stop before doing any
+  calculation, with a message giving the number of animals, when the
+  population of interest has fewer than 2 animals (none, or one). They used to
+  stop with an unexplained R error. Ranking needs at least two animals to
+  compare.
 
 # nprcgenekeepr 2.0.0 (20260721)
 - Major changes
