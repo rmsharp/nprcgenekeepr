@@ -55,16 +55,14 @@ getGeneticDiversityStats <- function(groups, ped, geneticValues, kmat,
   if (!is.list(groups) || length(groups) == 0L) {
     stop("getGeneticDiversityStats() requires at least one group.")
   }
-  requiredPed <- c("id", "dam", "sex", "birth", "exit")
-  if (!all(requiredPed %in% names(ped))) {
-    missingCol <- requiredPed[!requiredPed %in% names(ped)]
-    stop("ped is missing required column(s): ", toString(missingCol))
-  }
-  requiredGv <- c("id", "value")
-  if (!all(requiredGv %in% names(geneticValues))) {
-    missingCol <- requiredGv[!requiredGv %in% names(geneticValues)]
-    stop("geneticValues is missing required column(s): ", toString(missingCol))
-  }
+  assertRequiredColsPresent(
+    names(ped), c("id", "dam", "sex", "birth", "exit"),
+    "getGeneticDiversityStats(ped)"
+  )
+  assertRequiredColsPresent(
+    names(geneticValues), c("id", "value"),
+    "getGeneticDiversityStats(geneticValues)"
+  )
   if (length(housing) != 1L && length(housing) != length(groups)) {
     stop("housing must have length 1 or length(groups).")
   }
