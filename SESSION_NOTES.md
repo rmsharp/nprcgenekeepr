@@ -98,57 +98,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 921 Did
-**Deliverable, DONE (strict TDD; one user-visible change):** the Pedigree Browser Diagram legend has a dashed row, "Same animal, again",
-for the dashed repeat-appearance link, directly above MZ/DZ/? (`R/modPedigree.R:707-710`, one row in the table passed to the same
-`visLegend()` call; `addEdges = legendEdges` at `:773`). Owner choices (plain words, three questions, then one layout question): legend
-row only (no hover text on the link), that label, no NEWS line, and layout A: the panel stays 400 px and the legend rescales itself
-about 10% smaller (width 0.28 and `stepY` 54 unchanged). The manual says it (`vignettes/manual_components/_pedigree_browser.Rmd:91-92`);
-the Pedigree Diagram article and its legend screenshot were left alone (the picture lacks the row; carried into slice 2, `BACKLOG.md:64`).
-Commits: claim `548ed44b7`, RED `f6857f348`, GREEN `6619cddbf`, docs `3fe9f64f8`, REFACTOR `fe0e5ad3d`, RED fix `81288295e`, closure
-`10a99475f`; the close-out commit carries this note, the receipt and the ledger entry (89 ahead of origin after it).
-**Measured:** 3 new tests (`tests/testthat/test_modPedigree.R:1426-1572`; 6 expectations failed at RED, none errored); full suite on
-GREEN 374 files, 3,101 tests, 0 failed, 0 errors, 187 skipped (7.7 min; the two benchmarks passed at load 26-111); lint 0;
-`devtools::check(args = "--no-manual")` 0/0/0 on the final tree (its first run warned: the tests called jsonlite); mutation check 5 of
-5 caught, twice; ratchet 1/1 pass (results `d6fe3c81fbc1`, manifest `aa983075d6a2`, head `81288295e`, tarball 3,704,669 B).
-**Runtime (3E):** screenshots of the real Pedigree module in Chrome (legend before and after; the real code matched the candidate the
-owner chose) and the 3 app-level Pedigree files with `NPRC_RUN_E2E=true`: 16 + 6 + 9 = 31 tests, 0 failed. Those files do not read
-legend rows, so the legend rests on the screenshot and the 3 tests. **Re-measured:** S910's 170 / 111 / 51 / 8 reproduced exactly; a
-repeated animal's node already says "(duplicate occurrence)" with its ID (`R/makePedigreeDiagramData.R:1891-1892`). **Closure:** not an
-audit id; `BACKLOG.md` item removed (cites after slice 2 moved down 4, Outreach up 19); NEWS none (owner); Learning 886.
-**Mistakes (recovered):** the tests called jsonlite, which this package avoids on purpose (`tests/testthat/helper-shinytest2.R:390-391`);
-`devtools::check()` caught it and a REFACTOR-to-RED permission fixed it (`81288295e`), one extra check cycle; the first picker quoted
-"111 of 170" from BACKLOG before I re-ran it (same numbers); one sanity assertion in a one-off script was off by two.
-**Handoff evaluation of S920: 9/10.** Helped: every BACKLOG cite re-grepped true; "condense S920 at the next claim" was exactly right
-(the notes read 25,316 tokens); the order sentence made the picker one round; the "legend is hand-tuned" gotcha. Missing: the retune
-is not a `stepY` tweak (the legend rescales and the Export button covers its last row); tests here never call jsonlite. Wrong: nothing.
-**Self-assessment: 8/10.** + Re-measured first; probed the real widget in Chrome (a scratch wrapper, nothing in the repo changed) before
-asking for a layout choice; found the node hover that decided the scope; RED proved against the pre-GREEN file; mutation 5/5 twice;
-the check warning caught before close-out; every gate asked. - the jsonlite miss (the convention was one grep away); an extra cycle.
-Reduction: `SESSION_NOTES.md` 55,642 B at Phase 0 to 52,490 B (S920 to S911 shortened).
+### What Session 922 Did
+**Deliverable:** the receipt-placement gate (`BACKLOG.md:8`, DECISION NEEDED, Effort S; owner pick at the Phase 0 picker,
+option 2 of 4, confirmed by the owner's "2") (IN PROGRESS)
+**Started:** 2026-10-06 13:49 CDT
+**Status:** Session claimed. Work beginning. Pre-RED: the owner still decides which kind of gate (a test, a pre-commit
+check, or none) before RED is declared.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not yet ruled on; the owner's S914 order was the builds, then the dashed-link item, then docs-audit slice 2;
-the builds and the dashed-link item have shipped, so slice 2 is next in that order):** (A) docs-audit slice 2 (`BACKLOG.md:64`, needs
-scoping first, Effort L; its first session scopes which of the 31 images to regenerate and in what order, and diagnoses the colony
-script's tail first; it now also holds the stale `pb_diagram_legend.png` and the article sentence to add). (B) the receipt-placement
-gate (`:8`, DECISION NEEDED, S). (C) one-id `convertRelationships()` (`:39`, DECISION NEEDED, S). (D) upstream `KJ5HST/methodology#93`
-(`:291`, BLOCKED; still its one comment at S921's Phase 0). (E) unpushed: 89 local commits; not offered (owner's S905 ruling). Lower
-priority: `getAncestors()` on an absent id (`:23`); version 3.0.0 at release (`:56`). Carried: hover text on the dashed link (not built,
-the owner's choice; no BACKLOG item); NEW-24's print method on issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2
-dogleg observation from S910 (untested); the seventh-label scan test (unfiled). Before the picker: grep the receipts for an order the
-owner already gave.
-
-**Key files:** `R/modPedigree.R:707-710,773`; `tests/testthat/test_modPedigree.R:1426-1572` (3 tests);
-`vignettes/manual_components/_pedigree_browser.Rmd:91-92`; `PROJECT_LEARNINGS.md` Learning 886; `BACKLOG.md:8`, `:23`, `:39`, `:56`,
-`:64`, `:191`, `:291`, `:408`.
-
-**Gotchas:** a legend row cannot just be appended: the legend rescales to its canvas and the Export button covers the last row, so keep
-the last row short (Learning 886); a scratch app around the real module, a namespace patch of `visNetwork::visLegend` and
-`shinytest2::AppDriver` show the real legend, and need `NOT_CRAN=true`; tests here match serialized JSON text and never call jsonlite
-(`devtools::check()` warns); a test fix after GREEN needs a REFACTOR-to-RED permission and a run against the pre-GREEN file; the legend
-serializes as `"edges":{"label":[..],"color":[null,..],"dashes":[true,false,[4,4],[14,8]]}`; `vignettes/a3manual.md` is a stale copy
-(edit the components); adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit
-(Learning 871).
+### What Session 921 Did (condensed S922; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Pedigree Browser Diagram legend has a dashed row, "Same animal, again", for the dashed repeat-appearance link, directly
+above MZ/DZ/? (`R/modPedigree.R:707-710`; strict TDD; legend row only, no hover text, no NEWS line: the owner's choices).
+Claim `548ed44b7`, RED `f6857f348`, GREEN `6619cddbf`, docs `3fe9f64f8`, REFACTOR `fe0e5ad3d`, RED fix `81288295e`, closure
+`10a99475f`, close-out `849a5e694`. Handoff evaluation of S920: 9/10. Self 8/10. **Gotchas kept:** a legend row cannot just
+be appended (the legend rescales to its canvas and the Export button covers the last row; Learning 886); tests here match
+serialized JSON text and never call jsonlite (`devtools::check()` warns; `tests/testthat/helper-shinytest2.R:390-391`); a
+test fix after GREEN needs a REFACTOR-to-RED permission and a run against the pre-GREEN file; `vignettes/a3manual.md` is a
+stale copy (edit the components); adding or removing a BACKLOG block shifts later cites, so re-grep; take `wc -c` after the
+last edit (Learning 871). **Carried:** the stale `pb_diagram_legend.png` and the article sentence to add (slice 2,
+`BACKLOG.md:64`); hover text on the dashed link (not built, the owner's choice; no BACKLOG item); NEW-24's print method on
+issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); the
+seventh-label scan test (unfiled).
 
 ### What Session 920 Did (condensed S921; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The genetic-value labels item shipped (strict TDD, nothing changes for users on normal data): one internal vector, `valueLabels`
