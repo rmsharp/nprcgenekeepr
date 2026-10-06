@@ -66,6 +66,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-04.md` (92 record(s), 269,230 B → 85,965 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **92** record(s) (2026-09-30 → 2026-10-04) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-04.md`](docs/archive/HANDOFFS-through-2026-10-04.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh)
+rather than trusting a digest printed here. Live file 269,230 B → 85,965 B (−68.1%).
+
 ### 2026-10-05 · [ad hoc] S917 repair (commit 1 of 2 for the `HANDOFFS.md` trim; owner-approved at the S917 layout question): moved the 104 receipts S814-S917 (1,543 lines) out of the code box that holds the format example and placed them directly above S813, and added one sentence to "How to write a receipt" saying a new receipt goes above the newest one, never inside that box. Why: `methodology_trim.py` counts everything inside that box as front matter, so it saw 1 of the 105 receipts and answered `NOTHING_TO_DO`; every trim since S892 could reach only the receipts that had fallen below the box. A pure reorder: 268,842 B before and after, the sorted lines identical, 106 `handoff` blocks before and after (105 receipts and the example). A throwaway clone of the repo with the same move: the tool then saw all 105 receipts and printed L1_OK, L2_OK and L3_OK. The trim itself is commit 2.
 
 ### 2026-10-05 · [ad hoc] S917 claim (in progress): trim HANDOFFS.md with methodology_trim.py (268,350 B, past the Read tool's 262,144 B whole-file refusal; the dashboard's High+ risk flag, new since S916's close-out): archive the oldest receipts so the file opens again. Tooling and housekeeping only, no R/, test or man/ change; picked by the owner at the Phase 0 picker. The --force override (SRF_RED) and the cut point are the owner's call, asked after a dry run. Phase 3F records the rest.
