@@ -90,7 +90,11 @@ gv <- data.frame(
 ## females are unrelated to its single adult male; everyone else stays related.
 kmat <- makeKmat(ped$id, list(c("f1", "m1"), c("f2", "m1")))
 
-g1 <- c("f1", "f2", "m1", "o1", "o2")   # all-green group
+## One required column dropped, for the missing-column tests.
+pedNoDam <- ped[, names(ped) != "dam"]
+gvNoValue <- gv[, "id", drop = FALSE]
+
+g1 <-c("f1", "f2", "m1", "o1", "o2")   # all-green group
 g2 <- c("c1", "c2", "c3", "cm", "co")   # all-red group
 
 test_that("assembles a group x metric colorIndex frame (green + red groups)", {
@@ -192,7 +196,6 @@ test_that("an empty groups list is an error", {
 })
 
 test_that("a pedigree missing a required column is an error", {
-  pedNoDam <- ped[, names(ped) != "dam"]
   expect_error(
     getGeneticDiversityStats(list(g1), pedNoDam, gv, kmat,
                              currentDate = currentDate),
@@ -218,7 +221,6 @@ test_that("a housing vector of the wrong length is an error", {
 })
 
 test_that("a genetic-value frame without a value column is an error", {
-  gvNoValue <- gv[, "id", drop = FALSE]
   expect_error(
     getGeneticDiversityStats(list(g1), ped, gvNoValue, kmat,
                              currentDate = currentDate),
@@ -250,7 +252,6 @@ recordRequiredColsChecks <- function(envir = parent.frame()) {
 }
 
 test_that("a ped missing columns is reported in the shared wording, in the required order", {
-  pedNoDam <- ped[, names(ped) != "dam"]
   expect_error(
     getGeneticDiversityStats(list(g1), pedNoDam, gv, kmat,
                              currentDate = currentDate),
@@ -271,7 +272,7 @@ test_that("a ped missing columns is reported in the shared wording, in the requi
 
 test_that("a genetic-value frame missing columns is reported in the shared wording", {
   expect_error(
-    getGeneticDiversityStats(list(g1), ped, gv[, "id", drop = FALSE], kmat,
+    getGeneticDiversityStats(list(g1), ped, gvNoValue, kmat,
                              currentDate = currentDate),
     paste0("required column\\(s\\) missing in ",
            "getGeneticDiversityStats\\(geneticValues\\): value\\.")
@@ -289,7 +290,6 @@ test_that("a genetic-value frame missing columns is reported in the shared wordi
 })
 
 test_that("a missing-column error carries no call, so the message is the whole report", {
-  pedNoDam <- ped[, names(ped) != "dam"]
   errPed <- tryCatch(
     getGeneticDiversityStats(list(g1), pedNoDam, gv, kmat,
                              currentDate = currentDate),
@@ -298,7 +298,7 @@ test_that("a missing-column error carries no call, so the message is the whole r
   expect_s3_class(errPed, "error")
   expect_null(conditionCall(errPed))
   errGv <- tryCatch(
-    getGeneticDiversityStats(list(g1), ped, gv[, "id", drop = FALSE], kmat,
+    getGeneticDiversityStats(list(g1), ped, gvNoValue, kmat,
                              currentDate = currentDate),
     error = function(e) e
   )
@@ -307,10 +307,9 @@ test_that("a missing-column error carries no call, so the message is the whole r
 })
 
 test_that("a bad ped is reported before a bad genetic-value frame", {
-  pedNoDam <- ped[, names(ped) != "dam"]
   expect_error(
-    getGeneticDiversityStats(list(g1), pedNoDam, gv[, "id", drop = FALSE],
-                             kmat, currentDate = currentDate),
+    getGeneticDiversityStats(list(g1), pedNoDam, gvNoValue, kmat,
+                             currentDate = currentDate),
     "missing in getGeneticDiversityStats\\(ped\\): dam\\."
   )
 })
