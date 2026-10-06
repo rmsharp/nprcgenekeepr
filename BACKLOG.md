@@ -21,18 +21,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
       `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
 
-- [ ] **`reportGV()` with a one-animal population stops with "'x' must be an array of at least two
-      dimensions" (found S923, DECISION NEEDED, Effort S)** -- measured S923 on `examplePedigree`
-      (`qcStudbook()`, then the trimming in the `reportGV()` example; 327 animals in the population):
-      `reportGV(ped, guIter = 10L, pop = <one id>)` stops in `calcGU()` (`rowSums()` on a single row);
-      two ids run. The message is the same before and after S923's `filterKinMatrix()` change, so
-      it is a second cause that change did not touch. Not probed: whether the app can build a
-      one-animal population, and `gvaConvergence()`, which builds its proband matrix the same way
-      (`R/gvaConvergence.R:149`). **Decision for the owner:** stop with a message that names the
-      population size, or return a one-row report. Do not use `smallPed` to test it:
-      `reportGV(smallPed)` failed with "sire and dam must have had alleles assigned: logic error" on
-      all 5 calls tried in S923 (with and without `age` and `pop`): the carried, unfiled
-      `reportGV(smallPed)` finding.
+- [ ] **`calcGU()`, `calcGUSE()` and `kinship()` still stop with unexplained R errors for a one-animal input
+      (found S924, DECISION NEEDED, Effort S)** -- S924 made `reportGV()` and `gvaConvergence()` stop with a
+      message naming the population size when it is under 2 (the owner chose the message over a one-row
+      report). Called directly, measured S924: `calcGU(ped1Alleles, pop = <one id>)` stops with "'x' must be an
+      array of at least two dimensions" and `calcGUSE()` with "dim(X) must have a positive length"; either with
+      a `pop` that matches no animal, with "'names' attribute [2] must be the same length as the vector [1]";
+      `kinship("A", NA_character_, NA_character_, 0L)` (one animal) with "'dimnames' applied to non-array" (two
+      animals give a 2 x 2 matrix). Causes: `calcA()` returns a bare vector for one animal (`apply()`,
+      `R/calcA.R`), so `rowSums()` in `calcGU()` and `apply()` in `calcGUSE()` fail; `kinship()` treats a
+      one-row pedigree as a non-array. **Decision for the owner:** leave them (building blocks; the report
+      functions now give the readable message), give each a message of its own (the same shared check,
+      `assertPopulationSize()`), or make them return the one-animal value. The last is wider than it looks:
+      S924 previewed it in memory, and `reportGV()` returned one row (genome uniqueness 100, mean kinship 0.5,
+      z-score NaN, rank 1, "High Value") only after `calcA()` and `calcFounderContributions()`
+      (`d[currentDesc, ]` drops to a vector, `R/calcFounderContributions.R:66-67`) were both made keep their
+      matrix; `kinship()` for a lone founder was not previewed. Test on `qcPed` or `examplePedigree`, not
+      `smallPed`: `reportGV(smallPed)` fails on every call (5 of 5 in S923; the carried, unfiled finding).
 
 - [ ] **`man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (found S923, READY, Effort S)** --
       `devtools::document()` rewrites its description paragraph ("five groups" becomes "these main
