@@ -35,3 +35,37 @@ test_that("filterKinMatrix leaves the correct rows", {
     kmatFiltered[20L:23L, 20L:23L]
   )
 })
+
+# S923 (BACKLOG finding of S918): given one id the function returned the bare
+# number 0.5, not the matrix its help page promises, so every caller that read
+# the result as a matrix (convertRelationships(), reportMatePairs()) failed or
+# answered nonsense. A matrix is returned however many ids match.
+smallPed <- nprcgenekeepr::smallPed
+smallKmat <- kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen,
+  sparse = FALSE
+)
+expectOneAnimalMatrix <- function(m) {
+  expect_true(is.matrix(m))
+  expect_identical(dim(m), c(1L, 1L))
+  expect_identical(dimnames(m), list("A", "A"))
+  expect_identical(m["A", "A"], smallKmat["A", "A"])
+}
+
+test_that("filterKinMatrix gives a 1 x 1 matrix named for the animal when one id is given", {
+  expectOneAnimalMatrix(filterKinMatrix("A", smallKmat))
+})
+
+test_that("filterKinMatrix gives that 1 x 1 matrix when one id is in the matrix and one is not", {
+  expectOneAnimalMatrix(filterKinMatrix(c("A", "ZZZ"), smallKmat))
+})
+
+test_that("filterKinMatrix gives that 1 x 1 matrix when the same id is given twice", {
+  expectOneAnimalMatrix(filterKinMatrix(c("A", "A"), smallKmat))
+})
+
+# Recorded, not changed by S923: no matching id gives an empty matrix.
+test_that("filterKinMatrix gives a 0 x 0 matrix when no id is in the matrix", {
+  none <- filterKinMatrix("ZZZ", smallKmat)
+  expect_true(is.matrix(none))
+  expect_identical(dim(none), c(0L, 0L))
+})

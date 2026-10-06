@@ -258,3 +258,23 @@ test_that(paste(
   expect_identical(nrow(result$excluded), 1L)
   expect_identical(result$excluded$reason, "under minimum age")
 })
+
+test_that("a populationIds naming one animal returns the empty result, not an error", {
+  ## S923 (BACKLOG finding of S918): filterKinMatrix() gave a bare number for one
+  ## id, so reportMatePairs() stopped with "missing value where TRUE/FALSE
+  ## needed". One animal cannot form a pair, so the result is the same empty
+  ## result as for an empty populationIds above.
+  expect_no_error(
+    result <- reportMatePairs(ped, kmat,
+      minAge = 1L, populationIds = "A"
+    )
+  )
+
+  expectedCols <- c(
+    "sireId", "damId", "kinship", "markerKinship",
+    "sireIndivMeanKin", "sireGu", "damIndivMeanKin", "damGu"
+  )
+  expect_identical(nrow(result$pairs), 0L)
+  expect_true(all(expectedCols %in% names(result$pairs)))
+  expect_identical(nrow(result$excluded), 0L)
+})

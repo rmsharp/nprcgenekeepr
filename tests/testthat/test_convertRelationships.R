@@ -77,3 +77,53 @@ test_that("convertRelationships gives each of the 11 names for smallPed", {
     c(17L, 19L, 4L, 7L, 13L, 2L, 3L, 6L, 10L, 4L, 68L)
   )
 })
+
+# S923 (BACKLOG finding of S918): ids that name fewer than two animals in the
+# matrix. One animal gives its own Self row, the same row each animal already
+# gets when two or more ids are given; no animal gives a table with no rows.
+# Before, one id gave a row with id1 "kinMatrix" and id2 1, and no animal
+# stopped with "no vector columns were selected".
+oneIdPed <- nprcgenekeepr::smallPed
+oneIdKmat <- kinship(oneIdPed$id, oneIdPed$sire, oneIdPed$dam, oneIdPed$gen,
+  sparse = FALSE
+)
+aSelfRowOfTwoIds <- {
+  twoIds <- convertRelationships(oneIdKmat, oneIdPed, c("A", "B"))
+  twoIds[twoIds$id1 == "A" & twoIds$id2 == "A", ]
+}
+expectAsOwnSelfRow <- function(rel) {
+  expect_identical(names(rel), c("id1", "id2", "kinship", "relation"))
+  expect_identical(nrow(rel), 1L)
+  expect_identical(rel$id1, aSelfRowOfTwoIds$id1)
+  expect_identical(rel$id2, aSelfRowOfTwoIds$id2)
+  expect_identical(rel$kinship, aSelfRowOfTwoIds$kinship)
+  expect_identical(rel$relation, "Self")
+}
+expectNoRows <- function(rel) {
+  expect_identical(names(rel), c("id1", "id2", "kinship", "relation"))
+  expect_identical(nrow(rel), 0L)
+  expect_identical(
+    vapply(rel, class, ""),
+    vapply(aSelfRowOfTwoIds, class, "")
+  )
+}
+
+test_that("convertRelationships gives the animal's own Self row for one id", {
+  expectAsOwnSelfRow(convertRelationships(oneIdKmat, oneIdPed, "A"))
+})
+
+test_that("convertRelationships gives that Self row when one id is in the matrix and one is not", {
+  expectAsOwnSelfRow(convertRelationships(oneIdKmat, oneIdPed, c("A", "ZZZ")))
+})
+
+test_that("convertRelationships gives that Self row when the same id is given twice", {
+  expectAsOwnSelfRow(convertRelationships(oneIdKmat, oneIdPed, c("A", "A")))
+})
+
+test_that("convertRelationships gives a table with no rows when no id is in the matrix", {
+  expectNoRows(convertRelationships(oneIdKmat, oneIdPed, "ZZZ"))
+})
+
+test_that("convertRelationships gives a table with no rows when the id list is empty", {
+  expectNoRows(convertRelationships(oneIdKmat, oneIdPed, character(0L)))
+})

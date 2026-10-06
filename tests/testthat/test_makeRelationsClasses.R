@@ -70,21 +70,42 @@ test_that("makeRelationClassesTable leaves out a pair whose name is not listed",
   expect_identical(tbl$Frequency, c(1L, 2L, 1L))
 })
 
-# Recorded, not endorsed: today the function stops when no pair is left once
-# the Self pairs are removed, as with a table of Self pairs only or with no
-# rows (found S918). kinship() itself fails on a one-animal pedigree, so the
-# app does not reach it; a hand-built table does. NEW-19 does not change it.
-test_that("makeRelationClassesTable stops today when only Self pairs are left", {
+# S923 (S918's finding, replacing S918's test that recorded the old stop with
+# "'names' attribute [2] must be the same length as the vector [1]"): with no
+# pair of different animals to count (Self pairs only, or no rows at all) the
+# table keeps its two columns and has no rows. The columns have the classes
+# they have when there are rows (a factor and an integer).
+expectNoRowsTwoColumns <- function(tbl) {
+  expect_identical(colnames(tbl), c("Relationship Class", "Frequency"))
+  expect_identical(nrow(tbl), 0L)
+  expect_identical(
+    vapply(tbl, class, ""),
+    vapply(makeRelationClassesTable(smallKin), class, "")
+  )
+}
+
+test_that("makeRelationClassesTable gives its two columns and no rows when only Self pairs are left", {
   selfOnly <- data.frame(
     id1 = c("a", "b"), id2 = c("a", "b"), kinship = 0.5,
     relation = "Self", stringsAsFactors = FALSE
   )
-  expect_error(
-    makeRelationClassesTable(selfOnly),
-    "'names' attribute \\[2\\] must be the same length"
+  expectNoRowsTwoColumns(makeRelationClassesTable(selfOnly))
+})
+
+test_that("makeRelationClassesTable gives its two columns and no rows when the table has no rows", {
+  noRows <- data.frame(
+    id1 = character(0L), id2 = character(0L), kinship = numeric(0L),
+    relation = character(0L), stringsAsFactors = FALSE
   )
-  expect_error(
-    makeRelationClassesTable(selfOnly[0, ]),
-    "'names' attribute \\[2\\] must be the same length"
+  expectNoRowsTwoColumns(makeRelationClassesTable(noRows))
+})
+
+test_that("makeRelationClassesTable gives its two columns and no rows for the relationships of one id", {
+  oneId <- convertRelationships(
+    kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen,
+      sparse = FALSE
+    ),
+    smallPed, "A"
   )
+  expectNoRowsTwoColumns(makeRelationClassesTable(oneId))
 })
