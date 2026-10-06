@@ -99,86 +99,85 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 918 Did
-**Deliverable:** NEW-19 -- one internal list of the 11 relationship names for `convertRelationships()` and
-`makeRelationClassesTable()` (`BACKLOG.md:25`, READY, Effort S, strict TDD) (IN PROGRESS)
-**Started:** 2026-10-05 23:05 CDT
-**Status:** Session claimed. Phase: PRE-RED. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the
-S917 ratchet citation matching the results file, CI green, dashboard 96/100 with High+ risk 0, 60 commits ahead of origin.
-The owner chose this build over the shared column check after a mapping of the picker to their S914-era order advice.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; no change for users):** NEW-19, picked at the Phase 0 picker. The owner first declined the
+picker and asked how its options mapped to the order they had given in S914; after a mapping table they chose the
+relationship-names list first. One internal list, `relationClassNames` (`R/relationClassNames.R`, 25 lines, `@noRd`, 11 named
+elements in the table's display order, written like `sexCodes`), is now read by `convertRelationships()` (its 11 assignments,
+`R/convertRelationships.R:51-89`) and by `makeRelationClassesTable()` (`:38` and its Self test). Owner choices: the list's name and
+file (`relationClassNames`, its own file), and all three phase gates. Commits: claim `de14ccf2e`, RED `238a558c7`, GREEN
+`d3681b69a`, REFACTOR `f35742512`, closure `81cff6de3`; the close-out commit carries this note, the receipt and the ledger entry
+(all local; 66 ahead of origin after it).
 
-### What Session 917 Did
-**Deliverable, DONE (housekeeping; docs and tooling only; no `R/`, test or `man/` change):** trimmed `HANDOFFS.md`, picked at
-the Phase 0 picker ("Trim `HANDOFFS.md`"): 92 receipts (S813-S904, 2026-09-30 to 2026-10-04) now live in
-`docs/archive/HANDOFFS-through-2026-10-04.md`, the file went from 268,350 B (past the Read tool's 262,144 B refusal) to 85,965 B
-before this close-out's receipt, and the dashboard's only High+ risk flag is the file's own size, so it should clear.
+**Measured, not recalled:** P15 re-run: all 11 names on `smallPed`, table of 10 rows summing to 136 non-Self pairs. P13 re-run:
+3 table rows and 4 of 5 pairs counted (the `BACKLOG.md` text "4 rows from 5 pairs" was loose). Output identical to a baseline saved at
+the old commit (two old-commit runs identical first): `smallPed`, full `qcPed`, 12-id subsets, both empty-table errors, 6 of 6.
+Tests: 4 new in `tests/testthat/test_relationClassNames.R` (all 4 errored at RED; with the list present and unread, the two "reads
+the list" tests failed on assertions, checked in a scratch clone), 3 added at `test_makeRelationsClasses.R:40,56,77`, 1 at
+`test_convertRelationships.R:68`. Mutation check: putting either function back to typed names fails only its own test.
 
-**What I measured and found:** `methodology_trim.py --force` answered `NOTHING_TO_DO` at both budgets. `classify_zones()` split
-the file into 266,813 B of front matter and **1 record** (S813): since at least S892 every new receipt had been inserted straight
-after the four-backtick line that opens the format example's code box, so S814-S917 (104 receipts) sat inside the box, which the
-tool counts as front matter; S892's trim worked only because 24 old receipts had fallen below the box (the file's line "currently
-holds N receipt(s)" said 1 for 25 sessions while it held over 100). A throwaway `git clone --local` with the receipts moved out
-printed `L1_OK`, `L2_OK`, `L3_OK` for all 105. Dry runs of four cuts (computed 89 archived and 95,644 B; `--budget-bytes 65536`
-102 and 31,523 B; `--cut 2026-10-04` 92 and 85,577 B; `--cut 2026-10-03` 78 and 138,018 B) went to the owner in plain words.
+**Verified, stated:** the 5 related files green after REFACTOR (4, 4, 2, 23 and 9 tests); full suite at GREEN: 373 files, 3,081
+tests, 0 failed, 0 errors, 187 skipped; `lintr::lint_package()` 0 lints; `devtools::check(args = "--no-manual")` after REFACTOR: 0
+errors, 0 warnings, 0 notes; `quality_ratchet.py --run` 1/1 pass, results `8044c8d9b0ea`, manifest `aa983075d6a2`, head
+`f35742512`, tarball 3.69908e+06 B against 5e+06. **Not run, stated:** the Shiny app (Phase 3E: no runtime behaviour changed; the
+summary-statistics module's own 23 tests ran green); the manual build (`--no-manual`).
 
-**Owner decisions (AskUserQuestion, both my recommended option):** move the receipts out of the box, then trim; cut at
-2026-10-04 (keep all of today's 13). Commits: claim `5a4ee190c`; repair `b53927bdf` (104 receipts moved above S813, a pure
-reorder: 268,842 B before and after, sorted lines identical, 106 blocks before and after, plus one sentence in "How to write a
-receipt" saying a new receipt goes above the newest one); trim `91273b21a` (`--force --cut 2026-10-04 --budget-bytes 65536`; its
-verify script passes against the committed trim: 105 = 13 + 92, 0 added); the close-out commit carries receipt, notes, ledger
-entry, Learning 882 and the two `BACKLOG.md` edits (all local). **Not run, stated:** the test suite, lint, `devtools::check()`
-(no `R/`, test, `man/` or `NAMESPACE` file changed; `docs/` and `HANDOFFS*.md` are build-ignored); `quality_ratchet.py --run`
-1/1 pass, results `20dd89b875cd`, manifest `aa983075d6a2`, head `91273b21a`, tarball 3.6969e+06 B against 5e+06.
+**Findings left alone (`BACKLOG.md:84`, DECISION NEEDED, Effort S):** `convertRelationships(kmat, smallPed, "A")` (one id) returns
+one row with `id1 = "kinMatrix"`, `id2 = 1`, `relation = "Full-Siblings"` (`filterKinMatrix()` has no `drop = FALSE`);
+`makeRelationClassesTable()` stops with a cryptic message when no non-Self pair is left (recorded as today's behaviour in a test).
+The app reaches neither (`kinship()` fails on one animal first).
 
-**Also found at Phase 0 (recorded in `BACKLOG.md:330`):** a comment on upstream `KJ5HST/methodology#93` (2026-10-05 16:32 UTC, from
-the `rmsharp` account) re-ran the 54 proofs and agrees; it proposes no patch yet.
+**My mistakes (recovered):** the picker's recommendation followed S917's list order instead of the owner's earlier order and its
+options carried no label for what closes PED_GV (owner bounced it; memory `picker-reconcile-with-owner-given-order`); a test comment
+claimed a one-animal pedigree reaches the empty-table error before I probed it (it does not; fixed in REFACTOR); the first scratch
+clone failed because its `.Rprofile` starts renv (use `R_LIBS` and `--no-init-file`); in-memory injection of the list failed (locked
+namespace).
 
-**My mistakes (recovered):** I ran `--check` and two dry runs before looking at what the tool saw (the record count was the
-quickest clue); I repeated the zsh word-split gotcha (S891) in my clone loop, which cost one run; I first dry-ran the clone
-without a `CHANGELOG.md` entry and met `P1_UNDOCUMENTED` (the real repair commit carries one).
+**Handoff evaluation of S917: 8/10.** Helped: every number re-measured exactly (60 ahead, S917's ratchet citation, the example box
+at `HANDOFFS.md:35-59`, the "currently holds" line, BACKLOG cites `:25`, `:39`, `:54`, the P15 counts); the receipt-placement
+gotcha was used as written (my claim sits above S917's block); "two R files plus a list file, `smallPed` is the fixture" was exact.
+Missing: the build order (column check first) departs from the order the owner gave in S914's receipt, with no reason (S916 wrote it,
+S917 carried it); it cost one clarification round. Wrong: nothing S917 itself claimed; the "4 rows from 5 pairs" wording is S916's.
 
-**Handoff evaluation of S916: 8/10.** Helped: every Phase 0 number re-measured exactly (56 commits ahead, 268 KB, the ratchet
-citation, the `BACKLOG.md` cites); S892's gotcha "`--force` without `--write` is a safe dry run; stage the ledger, shard,
-`.verify.sh` and `CHANGELOG.md` together" was used as written; the next-steps order and key files. Missing: nothing said the
-trim could not run at all, though S892's own result ("currently holds 1 receipt(s)" after its trim) was the clue; the
-dashboard's High+ flag, new at S916's close-out, was not named. Wrong: item (D), "trim with `--force` as its own small
-session", implied `--force` was enough; it answered `NOTHING_TO_DO`.
+**Self-assessment: 8/10.** + Claimed before work; owner's plain-words naming question answered first try; all three gates asked with
+concrete actions; baseline, mutation and right-reason-RED checks; full suite, lint, check and ratchet clean; two findings logged,
+not fixed; memory saved. - Bounced picker (two extra round trips); one unverified comment. Reduction: S917's notes 7,171 B to 1,253
+B; `BACKLOG.md` 44,011 B to 44,099 B (NEW-19 item removed, 17-line finding added); nothing else removed.
 
-**Self-assessment: 8/10.** + Claimed before any technical work; one deliverable; found the cause by measuring (1 record seen,
-266,813 B of front matter) and tested the repair in a throwaway clone before asking; asked in plain words with a measured
-consequence per option; repair and trim in separate commits, each with a ledger entry, so the shard verify script passes
-(not an 11th red one); pure-reorder proofs; the budget flag passed as the checklist says. - Slow to look at the zones; a repeated
-zsh gotcha; the placement sentence is a row, not a gate (the gate is `BACKLOG.md:68`, the owner's call). Reduction: `HANDOFFS.md`
-268,350 B to 85,965 B (the deliverable); S916's record condensed (about 9 KB to 1.5 KB); `BACKLOG.md` (+25 lines),
-`CHANGELOG.md`, `PROJECT_LEARNINGS.md` grew.
+**Next steps (recommended order; not yet ruled on):** (A) the shared column check in `getGeneticDiversityStats()` (`BACKLOG.md:39`,
+READY, Effort S, strict TDD): NEW-24's first leftover and the last open PED_GV id; its Pre-RED gate: the `where` label for each of
+the two checks, and whether a NEWS line is owed (an exported function's error wording changes); on shipping, write Closure record
+19 (open count 1 to 0), leave issue #123 open for the print method. (B) the three value labels (`:24`, READY, Effort S, two GREEN
+commits for the 5-file cap; not an audit id). (C) the receipt-placement gate (`:53`, DECISION NEEDED, S). (D) the S918 finding
+(`:84`, DECISION NEEDED, S). (E) the dashed-link item (`:448`, DECISION NEEDED, S). (F) docs-audit slice 2 (`:109`, needs scoping
+first, Effort L). (G) upstream `#93` (`:332`, BLOCKED). (H) unpushed: 66 local commits after this close-out, the push carries `R/`
+changes from S915 and S918 so all four workflows start; read CI after it; not offered as a task (owner's S905 ruling). Lower
+priority: `getAncestors()` on an absent id (`:68`, DECISION NEEDED, S). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg
+observation from S910 (untested); the two wall-clock benchmark tests fail when another process loads the machine (three `R`
+processes from earlier sessions, pids 29511, 82416 and 92900, 6 to 7 days old, still run; not mine, left alone).
 
-**Next steps (recommended order; not yet ruled on):** (A) one of the three READY builds, each Effort S, strict TDD, its own
-session, its Pre-RED questions in its `BACKLOG.md` item: the shared column check in `getGeneticDiversityStats()` (`:54`), then
-the 11 relationship names (`:25`), then the value labels (`:39`, two GREEN commits for the 5-file cap). (B) the receipt-placement
-gate (`:68`, DECISION NEEDED: a test, a hook check, or nothing; Effort S). (C) the dashed-link item (`:446`, DECISION NEEDED:
-legend row only or hover text too, and the wording); (D) docs-audit slice 2 (`:107`, needs scoping first, Effort L); (E)
-upstream `#93` (`:330`, BLOCKED); (F) unpushed: 60 local commits after this close-out, the push carries S915's `R/` and
-`NEWS.md` changes so all four workflows start, read CI after it, not offered as a task (owner's S905 ruling). Lower priority:
-`getAncestors()` on an absent id (`:83`, DECISION NEEDED, S). Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation
-from S910 (untested); the two wall-clock benchmark tests fail when another process loads the machine. **Estimate, not
-measured:** `HANDOFFS.md` reaches the trimmer's 196,608 B trigger again in about 15 sessions at today's receipt size (13
-receipts, 85,965 B).
+**Key files:** `R/relationClassNames.R:1-25`; `R/convertRelationships.R:51-89`; `R/makeRelationClassesTable.R:38-45`;
+`tests/testthat/test_relationClassNames.R:29-60`; `tests/testthat/test_makeRelationsClasses.R:40-87`;
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:571` (Closure record 18); `PROJECT_LEARNINGS.md` Learning 883; `BACKLOG.md:8` (PED_GV
+item), `:24`, `:39`, `:53`, `:68`, `:84`, `:101` (3.0.0), `:109`, `:332`, `:448`, `:472` (outreach), `:491` (paper). Scratch (not in the
+repo): the baseline script and its `.rds` files, the scratch clone, the probes.
 
-**Key files:** `HANDOFFS.md` (example box lines 35-59; the "currently holds" line 143; receipts start below the archive
-pointers, newest first); `docs/archive/HANDOFFS-through-2026-10-04.md` and its `.verify.sh`; `methodology_trim.py:1063`
-(`choose_cut`) and `:1967` (the zero-record answer); `PROJECT_LEARNINGS.md` Learning 882; `BACKLOG.md:25`, `:39`, `:54` (the
-builds, each names its files and lines), `:68` (gate), `:83` (`getAncestors`), `:99` (3.0.0), `:107` (docs audit), `:330`
-(upstream-blocked), `:446` (dashed links), `:470` (outreach), `:489` (paper). The clone, `repair.py` and the dry-run
-transcripts were scratch and are not in the repo.
+**Gotchas:** a scratch clone needs `R_LIBS="$(Rscript -e 'cat(paste(.libPaths(), collapse=":"))')"` and `Rscript --no-init-file`;
+the loaded namespace is locked, so a list cannot be injected in memory; `testthat::local_mocked_bindings()` can swap a non-function
+internal constant and errors "Can't find binding" while it does not exist; `makeRelationClassesTable()`'s row names (`10 5 7 6 4 2 3
+1 9 8`) are part of its recorded output; the full suite (about 6 min) and `devtools::check()` (about 8 min) run one at a time; adding
+or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
 
-**Gotchas:** a new receipt goes directly above the newest one, below the archive pointers, never right after the four-backtick
-line (that opens the example box; S918's claim commit must follow it or the next trim fails the same way); a trimmer answer of
-`NOTHING_TO_DO`, or a "currently holds" count far below `grep -c '^```handoff'`, means run `classify_zones()` first; the trimmer
-refuses with `P1_UNDOCUMENTED` after any commit not in `CHANGELOG.md`, so a repair before a trim carries an entry; keep the
-trim apart from the close-out commit; in zsh spell the flags out, `$flags` is not split; read upstream with
-`gh api repos/KJ5HST/methodology/issues/93/comments` (`gh issue view --comments` fails here); adding or removing a BACKLOG
-block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
+### What Session 917 Did (condensed S918; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Trimmed `HANDOFFS.md` (housekeeping, docs and tooling only): 92 receipts (S813-S904) archived to
+`docs/archive/HANDOFFS-through-2026-10-04.md`, 268,350 B to 85,965 B, the dashboard's only High+ flag cleared. The trimmer first
+answered `NOTHING_TO_DO` because it saw 1 of 105 receipts: since S892 every new receipt had been put inside the format-example code
+box, which it counts as front matter. Repair `b53927bdf` (104 receipts moved out of the box, a pure reorder), trim `91273b21a`, claim
+`5a4ee190c`, close-out `641ea6e1b` (all still local at S918's Phase 0). Handoff evaluation of S916: 8/10. Self 8/10.
+**Gotchas kept:** a new receipt goes directly above the newest one, below the archive pointers, never right after the four-backtick
+line; a trimmer answer of `NOTHING_TO_DO`, or a "currently holds" count far below `grep -c '^```handoff'`, means run
+`classify_zones()` first; the trimmer refuses with `P1_UNDOCUMENTED` after any commit not in `CHANGELOG.md`; keep a trim apart from
+the close-out commit; in zsh spell the flags out; adding or removing a BACKLOG block shifts every later cite, so re-grep; take
+`wc -c` after the last edit (Learning 871).
 
 ### What Session 916 Did (condensed S917; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Decision session, docs only: the owner closed NEW-18, 21, 26 and 57 with no change and queued three READY builds (the 11
