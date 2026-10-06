@@ -970,3 +970,56 @@ test_that("reportGV counts real U-leading founders and calls their offspring kno
   expect_identical(parentage[["K1"]], "known") # U123 x Uma
   expect_identical(parentage[["K3"]], "known") # R1 x Uma
 })
+
+# S924 (BACKLOG item found S923): a population of fewer than 2 animals stops
+# reportGV() before any calculation, with a message that names the count.
+# Measured on qcPed before the change: one animal stopped in calcGU() ("'x' must
+# be an array of at least two dimensions"), none in alleleFreq() ("'names'
+# attribute [2] must be the same length as the vector [1]") and a one-row
+# pedigree in kinship() ("'dimnames' applied to non-array"). Two animals ran.
+popSizeMsg <- function(n) {
+  paste0(
+    "reportGV\\(ped\\) needs at least 2 animals in the population; ",
+    "the population has ", n, "\\."
+  )
+}
+
+test_that("reportGV stops, naming the count, when pop holds one animal (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  expect_error(
+    reportGV(ped, guIter = 20L, pop = ped$id[10L]), popSizeMsg(1L)
+  )
+})
+
+test_that("reportGV stops, naming the count, when pop matches no animal (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  expect_error(
+    reportGV(ped, guIter = 20L, pop = "NO_SUCH_ANIMAL"), popSizeMsg(0L)
+  )
+  expect_error(
+    reportGV(ped, guIter = 20L, pop = character(0L)), popSizeMsg(0L)
+  )
+})
+
+test_that("reportGV stops, naming the count, when the population column marks one animal (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  ped$population <- FALSE
+  ped$population[10L] <- TRUE
+  expect_error(reportGV(ped, guIter = 20L), popSizeMsg(1L))
+})
+
+test_that("reportGV stops with the same message for a one-row pedigree (S924)", {
+  one <- data.frame(
+    id = "A", sire = NA_character_, dam = NA_character_, sex = "M",
+    gen = 0L, stringsAsFactors = FALSE
+  )
+  expect_error(reportGV(one, guIter = 20L), popSizeMsg(1L))
+})
+
+test_that("reportGV still returns a report for a population of two animals (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  set_seed(1L)
+  gv <- reportGV(ped, guIter = 20L, pop = ped$id[10:11])
+  expect_identical(nrow(gv$report), 2L)
+  expect_identical(nrow(gv$gu), 2L)
+})

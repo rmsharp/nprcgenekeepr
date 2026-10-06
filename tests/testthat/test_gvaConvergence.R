@@ -345,3 +345,52 @@ test_that("gvaConvergence without twinRelations is unaffected (backward compatib
   expect_identical(a$recommendedIter, b$recommendedIter)
 })
 
+
+# S924 (BACKLOG item found S923): a population of fewer than 2 animals stops
+# gvaConvergence() before any calculation, with a message that names the count,
+# the same check and wording as reportGV(). Measured on qcPed before the change:
+# one animal stopped with "incorrect number of dimensions", none in alleleFreq()
+# ("'names' attribute [2] must be the same length as the vector [1]") and a
+# one-row pedigree in kinship() ("'dimnames' applied to non-array"). Two
+# animals ran.
+convPopSizeMsg <- function(n) {
+  paste0(
+    "gvaConvergence\\(ped\\) needs at least 2 animals in the population; ",
+    "the population has ", n, "\\."
+  )
+}
+
+test_that("gvaConvergence stops, naming the count, when pop holds one animal (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  expect_error(
+    gvaConvergence(ped, pop = ped$id[10L], nMax = 50L, grid = 25L, seed = 1L),
+    convPopSizeMsg(1L)
+  )
+})
+
+test_that("gvaConvergence stops, naming the count, when pop matches no animal (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  expect_error(
+    gvaConvergence(ped, pop = "NO_SUCH_ANIMAL", nMax = 50L, grid = 25L,
+      seed = 1L),
+    convPopSizeMsg(0L)
+  )
+})
+
+test_that("gvaConvergence stops with the same message for a one-row pedigree (S924)", {
+  one <- data.frame(
+    id = "A", sire = NA_character_, dam = NA_character_, sex = "M",
+    gen = 0L, stringsAsFactors = FALSE
+  )
+  expect_error(
+    gvaConvergence(one, nMax = 50L, grid = 25L, seed = 1L),
+    convPopSizeMsg(1L)
+  )
+})
+
+test_that("gvaConvergence still runs for a population of two animals (S924)", {
+  ped <- nprcgenekeepr::qcPed
+  res <- gvaConvergence(ped, pop = ped$id[10:11], nMax = 50L, grid = 25L,
+    seed = 1L)
+  expect_s3_class(res, "nprcgenekeeprGVConv")
+})
