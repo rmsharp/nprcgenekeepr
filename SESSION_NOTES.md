@@ -98,6 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 919 Did
+**Deliverable:** `getGeneticDiversityStats()` uses the shared required-column check (`BACKLOG.md:39`, READY, Effort S, strict
+TDD; NEW-24's first leftover and the last open PED_GV audit id) (IN PROGRESS)
+**Started:** 2026-10-05 23:50 CDT
+**Status:** Session claimed. Phase: PRE-RED. Work beginning. Phase 0 found 0 undocumented commits, 0 pending receipts, the
+S918 ratchet citation matching the results file before I re-ran it, CI green on all 10 recent master runs, dashboard 96/100
+with High+ risk 0, 66 commits ahead of origin. The owner picked this item (the recommended one) at the Phase 0 picker.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### What Session 918 Did
 **Deliverable, DONE (strict TDD; no change for users):** NEW-19, picked at the Phase 0 picker. The owner first declined the
 picker and asked how its options mapped to the order they had given in S914; after a mapping table they chose the

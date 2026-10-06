@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S919
+date: 2026-10-05
+status: pending
+active_task: getGeneticDiversityStats() uses the shared required-column check (BACKLOG.md:39; READY, Effort S; strict TDD; NEW-24's first leftover, the last open PED_GV audit id; owner S916 decision, Decision record 17; picked at the Phase 0 picker, recommended option).
+```
+
+```handoff
 session: S918
 date: 2026-10-05
 status: complete
