@@ -99,13 +99,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 923 Did
-**Deliverable:** the one-id `convertRelationships()` and empty `makeRelationClassesTable()` finding (`BACKLOG.md:24`, DECISION NEEDED,
-Effort S; owner pick at the Phase 0 picker, option 2 of 3) (IN PROGRESS)
-**Started:** 2026-10-06 14:32 CDT
-**Status:** Session claimed. Work beginning. Pre-RED: the owner still decides, in plain words, what each of the two cases should
-do (stop with a message, or return a result) and whether a NEWS line is owed, before RED is declared.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; user-visible edge cases):** the one-id `convertRelationships()` and empty
+`makeRelationClassesTable()` finding (`BACKLOG.md:24` before removal; found S918). The owner's four answers (plain words, then the RED
+and GREEN gates): one id returns that animal's own Self row; ids matching no animal return a 0-row table; nothing left to count
+returns a 0-row two-column table; one NEWS line. Done at the cause: `filterKinMatrix()` always returns a matrix (`R/filterKinMatrix.R:28`,
+`drop = FALSE`), plus two guards (`R/convertRelationships.R:42`, `R/makeRelationClassesTable.R:44`). Side effects measured and told to
+the owner before the pick: `reportMatePairs()` with one population id returns its empty result (was "missing value where TRUE/FALSE
+needed"); a one-animal group's kinship is a named 1 x 1 matrix (was a bare 0.5). Commits: claim `24239d31d`, RED `831050908`, GREEN
+`19d976b45`, docs `c43f11c4e` and `87c5eee54` (8 files, split 4 + 4), REFACTOR `9ad69b78f`, closure `3e1842ae9`; the close-out commit
+carries this note, the receipt and the ledger entry (103 ahead of origin after it).
+**Measured:** RED 14 new tests in 5 files, 13 failed for the intended reasons (messages read), 1 pin passed; GREEN all 14 pass; mutation
+check 6 of 6 caught (undoing `drop = FALSE` alone fails 9 tests in 5 files); full suite on GREEN 376 files, 3,121 tests, 0 failed,
+0 errors, 187 skipped (6.0 min; load 27-66, the benchmarks passed); `lint_package()` 0; `devtools::check(--no-manual)` 0/0/0 on the
+final tree (after REFACTOR; parsed code identical to GREEN); ratchet 1/1 pass (results `5e549b4495ad`, manifest `aa983075d6a2`, head
+`9ad69b78f`, tarball 3,708,491 B). **Runtime (3E):** `NPRC_RUN_E2E=true` on the real Shiny modules that call these functions:
+Summary Statistics 8, Breeding Groups 7 + 7, Mate Pair 1: 23 tests, 0 failed, 0 skipped.
+**Found, not fixed:** `reportGV()` with a one-animal population fails in `calcGU()` (`rowSums()`), same message before and after
+(`BACKLOG.md:24`); `man/nprcgenekeepr-package.Rd` is stale since S830 (`:37`; `devtools::document()` rewrote it, I restored it);
+ids matching no animal were a case the item did not list (now covered). **Mistakes (recovered):** the gate said the docs commit was
+"5 files" and left out the 3 roxygen R files (8; split 4 + 4); I told the owner a one-animal `reportGV()` "still fails with a different
+message", an artefact of `reportGV(smallPed)` failing on every call (re-measured on `examplePedigree`: same message, Learning 888);
+zsh did not split an unquoted `$ALL` (two failed mutation runs); a background launcher's "completed" notice was not the job's.
+**Handoff evaluation of S922: 9/10.** Helped: every BACKLOG cite re-grepped true at Phase 0 (`:24`, `:41`, `:49`, `:276`); "grep the
+receipts for an order the owner already gave" and "say the S914 order's attribution is unverified" shaped a one-round picker (S914's
+receipt confirms it was my recommendation made at the owner's request, "not yet ruled on"); the gotchas on the placement test, GREEN
+before the mutation check, re-grepping cites and `wc -c` were all used. Missing: that `filterKinMatrix()` has six other callers, so
+the item's choice reached further than its text said; the no-match case. Wrong: nothing.
+**Self-assessment: 8/10.** + Measured before asking (one id, absent, repeated, no match, every other caller, on a patched copy), so
+each option carried a tested consequence; every gate asked in plain words with exact counts (14 tests, 13 failing: right); RED proved
+by reading the messages; mutation 6/6; suite, check, lint and E2E clean; corrected the reportGV claim myself. - the "5 files" count;
+the reportGV remark; two harness slips. Reduction: none net: `SESSION_NOTES.md` was 53,407 B at Phase 0 and is 55,971 B (S922 shortened at the claim, 50,415 B, then this section added); under the 65,536 B ceiling.
+
+**Next steps (recommended, not yet ruled on; the order followed since S914 was my recommendation, not a ruling):** (A) docs-audit
+slice 2 (`BACKLOG.md:52`, needs scoping first, Effort L; scope which of the 31 images to regenerate and diagnose the colony script's
+tail first; it also holds the stale `pb_diagram_legend.png` and the article sentence at `pedigree-diagram.qmd:50-55`). (B) `reportGV()`
+with a one-animal population (`:24`, DECISION NEEDED, S). (C) the stale `man/nprcgenekeepr-package.Rd` (`:37`, READY, S; one file,
+`devtools::document()` in its own commit). (D) upstream `KJ5HST/methodology#93` (`:279`, BLOCKED; still its one comment). (E) unpushed:
+103 local commits; not offered (owner's S905 ruling). Lower priority: `getAncestors()` on an absent id (`:8`); version 3.0.0 at
+release (`:44`). Carried: hover text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it);
+`reportGV(smallPed)` unfiled (5 of 5 calls fail); `gvaConvergence()` with one animal not probed; the D2 dogleg observation from S910
+(untested); the seventh-label scan test (unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).
+
+**Key files:** `R/filterKinMatrix.R:28`; `R/convertRelationships.R:42`; `R/makeRelationClassesTable.R:44`;
+`tests/testthat/test_filterKinMatrix.R:39-70`; `test_convertRelationships.R:81-`; `test_makeRelationsClasses.R:73-`;
+`test_reportMatePairs.R:262`; `test_groupMembersReturn.R` (new); `NEWS.Rmd` (General Fixes, after the S915 entry);
+`PROJECT_LEARNINGS.md` Learning 888; `BACKLOG.md:8`, `:24`, `:37`, `:44`, `:52`, `:279`.
+
+**Gotchas:** to preview a fix to a shared helper, patch the loaded namespace (`unlockBinding` + `assign` on `asNamespace(...)`) and
+call callers through the package, not the attached export; `reportGV(smallPed)` fails on every call, so use `examplePedigree`
+(trimmed as in the `reportGV()` example) for any `reportGV()` probe; `devtools::document()` also rewrites
+`man/nprcgenekeepr-package.Rd`: restore it; the roxygen R files count toward the 5-file cap; in zsh use `${=VAR}` to split;
+`rmarkdown::render("NEWS.Rmd")` (no extra arguments) re-knits `NEWS.md`; removing or adding a BACKLOG block shifts every later cite,
+so re-grep; the full suite and `devtools::check()` run one at a time; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 922 Did (condensed S923; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The receipt-placement gate shipped (strict TDD; tests only, no `R/` change): `tests/testthat/test_handoffsReceiptPlacement.R`
