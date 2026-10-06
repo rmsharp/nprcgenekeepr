@@ -419,6 +419,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
   animals found. `getPedDirectRelatives()` no longer runs without end
   when a pedigree has a row with no animal id; it stops and returns the
   family, that row included.
+- Fixed: `convertRelationships()` given the id of a single animal now
+  returns that animal's own "Self" row instead of a meaningless row, and
+  given ids that match no animal returns an empty table instead of an
+  error. `makeRelationClassesTable()` returns an empty table when there
+  are no pairs of different animals to count instead of stopping.
+  `filterKinMatrix()` always returns a matrix, so `reportMatePairs()`
+  given one animal's id returns its usual empty result instead of an
+  error.
 - Fixed: a stand-in id (`U0001`, `U0002`, ...) could duplicate an id a
   real animal already had. The check and `addUIds()` skip any id already
   in the pedigree, including one that appears only as a sire or dam.
