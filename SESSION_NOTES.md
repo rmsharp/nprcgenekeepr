@@ -99,90 +99,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 915 Did
-**Deliverable:** PED-3, one unexported function for the four "collect parents or offspring until nothing new turns up" loops
-(`BACKLOG.md:25`; owner decision S912, Decision record 13; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-05 18:05 CDT
-**Status:** Session claimed; phase PRE-RED. Picked at the Phase 0 picker. First step: read `DEVELOPMENT_WORKSTREAM.md`, Decision
-record 13 (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`) and the four loops, re-measure them, then ask the owner the Pre-RED questions.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (PED-3 shipped; strict TDD; on normal data the only change is the row labels `getLkDirectAncestors()` returns):** one unexported `walkPedigree(ids, ped,
+direction)` (`R/walkPedigree.R`, 51 lines, `@noRd`, not exported; `direction` is `"ancestors"`, `"descendants"` or `"both"`; it
+returns a list of id vectors, one per generation, each id once) replaces the four "collect parents or offspring until nothing new
+turns up" loops (42 lines): `R/getProbandPedigree.R:26`, `R/getDescendantPedigree.R:27`, `R/getPedDirectRelatives.R:54` and
+`R/getLkDirectAncestors.R:66` are now one call each. Picked at the Phase 0 picker (`BACKLOG.md`, owner decision S912, Decision
+record 13). Each phase gate was asked with `AskUserQuestion` and answered yes. At the Pre-RED gate the owner chose the name and
+file (`walkPedigree`, `R/walkPedigree.R`) and that `getLkDirectAncestors()` stops and returns the animals found; the owner also
+chose to keep today's placeholder order (below), the REFACTOR, and a NEWS line.
 
-### What Session 914 Did
-**Deliverable, DONE (NEW-62 shipped; strict TDD; no change for users):** one internal helper, `notifyProgress(updateProgress, ...)`
-(`R/notifyProgress.R`, `@noRd`, not exported), replaces the seven `if (!is.null(updateProgress))` blocks: `R/reportGV.R:246,263,280`,
-`R/geneDrop.R:124,145`, `R/convertRelationships.R:94`, `R/groupAddAssign.R:308` (33 lines of blocks became 19 lines of calls). Picked
-at the Phase 0 picker (`BACKLOG.md`, owner decision S911, Decision record 12). Each phase gate was asked with `AskUserQuestion` and
-answered yes. At the Pre-RED gate the owner kept the `!is.null()` test and chose the name `notifyProgress`, no dot; the REFACTOR was
-the owner's choice.
+**Two stops on invalid data:** `getLkDirectAncestors()` now stops on circular data (before: it hit a 5-second
+limit on two animals that are each other's sire, and on one that is its own sire); and `getPedDirectRelatives()` now stops when a
+row of the pedigree has a missing id (a new finding, not in record 13: each pass found that row as an offspring, dropped it from
+`ids` and found it again; it hit the limit for `ids = "A"`, `NA` and `c("F", NA)`). NEWS: one "Fixed:" line in General Fixes
+(`NEWS.Rmd`, `NEWS.md` re-knitted; a fresh knit of the unchanged `NEWS.Rmd` was byte-identical first).
 
-**What I measured (unchanged commit `824336627`, scratch files only):** the seven sites are exactly where record 12 says; a
-non-function progress argument stops with `could not find function "updateProgress"` today, so the helper's parameter keeps that
-name; per-call cost of a helper is +0.4 to +0.6 microseconds. RED (`66c9e61cf`, `tests/testthat/test_notifyProgress.R`): 14 tests,
-29 expectations; 9 tests fail (3 errors, 6 failures, 15 expectations), each for the right reason (`could not find function
-"notifyProgress"`, mock never called, progress function still called directly 8, 284, 153 and 25 times); 5 pass by design (4
-recording tests, 1 not-exported lock). GREEN (`a2a0c9bb7`): 5 `R/` files (1 new, 4 edited); 14 tests, 34 expectations pass; the 8
-existing test files that touch these functions are 120 tests, 0 failed, before and after; lint 0. REFACTOR (`3d521d0c9`, tests only):
-each repeated expectation written once, per-test expectation counts unchanged; a mutation check with the pre-change `R/` files back
-in place fails exactly the 4 delegation tests (11 expectations), as at RED. Timing, old and new code alternating in one R process:
-+0.3 to +0.8% on five of six rows, +3.8% on `groupAddAssign()` with no callback inside a 0.26-0.40 s noise range.
+**What I measured and found:** at the unchanged commit the four loops were where record 13 says and no fifth loop exists. RED
+(`710677332`, `a29e3a643`; two commits for the 5-file cap): `test_walkPedigree.R` (11 tests) plus additions to the four existing
+test files, 37 new tests, 19 green by design (recordings), 7 red, 11 error (9 for the missing function, 2 at the 5-second limit);
+two walker tests that passed for the wrong reason were fixed before the commit. GREEN `302a0cdb8` (5 `R/` files, 1 new). An
+old-versus-new comparison (400 random pedigrees, one R process, `identical()`) found what my RED tests missed:
+`getPedDirectRelatives(unrelatedParents = TRUE)` listed the placeholder records in a different order in 259 of 400 (the old loop
+left `ids` farthest generation first). The owner chose to keep today's order: gap test `75832de41` (red on `302a0cdb8`, green on
+the old code) and fix `a3c8f584f` (`unlist(rev(walkPedigree(...)))`); the difference is then 0. `getLkDirectAncestors()`: 0
+differences in values or row order and 679 of 1,200 (3 seeds) in row labels only (the old code re-added found ancestors and
+`rbind()` relabelled rows, for example `112` for `11`; the new rows keep the table's labels). REFACTOR `af402927e` (tests only,
+counts unchanged); a mutation check in a scratch copy with the 4 pre-change `R/` files fails exactly 7 of 64 (5 delegation, 2
+never-stops). Timing, old and new alternating (median of 9): 1-2 ms before and after on the 3,694-animal `examplePedigree`; a
+2,000-generation chain 0.44-0.65 times the old time.
 
-Commits: claim `824336627`, RED `66c9e61cf`, GREEN `a2a0c9bb7`, REFACTOR `3d521d0c9`, closure `a4769053c` (Closure record 15,
-`BACKLOG.md` block removed, Learning 879); the close-out commit carries receipt, notes and ledger entry.
+Commits: claim `d11c068a1`, RED `710677332` and `a29e3a643`, GREEN `302a0cdb8`, gap test `75832de41`, gap fix `a3c8f584f`,
+REFACTOR `af402927e`, NEWS `fcc676510`, closure `4b59860c7` (Closure record 16, `BACKLOG.md` block removed, Learning 880); the
+close-out commit carries receipt, notes and ledger entry.
 
-Verified at REFACTOR: full suite 371 files, 3,035 tests, 9,763 expectations, 0 failed, 0 errors, 187 skipped (5.9 min; GREEN gave the
-same numbers; against S913 that is +1 file, +14 tests, +34 expectations); plain `devtools::check()` 0 errors, 0 warnings, 0 notes (the
-benchmark flake of S913 did not recur in 2 suite runs and 1 check); `quality_ratchet.py --run` 1/1 pass, results `502e5c2d2107`,
-manifest `aa983075d6a2`, head `3d521d0c9`, tarball 3.69056e+06 B against the 5e+06 limit. **App path:** the opt-in end-to-end files
-for the two modules (4 files, 28 tests, 29 expectations, 0 failed, 0 skipped, `NPRC_RUN_E2E=true`) never press "Run Analysis" or
-"Form Groups", so they do not reach the progress calls; the module tests that do (`session$setInputs(runAnalysis = 1)`, `formGroups`,
-via `shiny::testServer`: `test_modGeneticValue.R`, `test_modBreedingGroups.R`, `test_modBreedingGroups_groupAddAssign.R`, 150 tests, 347
-expectations, 0 failed, 0 skipped) called `notifyProgress` 2,101 times with `notifyProgress` traced, 192 of them with a message. **Not
-run:** the app in a live browser (a `testServer` mock session, not a page), CI (unpushed). NEWS, `_pkgdown`, `a2interactive` not
-owed (nothing exported); no issue closed (the item names none).
+Verified on the final tree (`4b59860c7`): full suite 372 files, 3,073 tests, 9,869 expectations, 0 failed, 0 errors, 187 skipped
+(9.2 min; against S914 that is +1 file, +38 tests, +106 expectations); `lintr::lint_package()` 0; plain `devtools::check()` Status
+OK, 0 errors, 0 warnings, 0 notes; `quality_ratchet.py --run` 1/1 pass, results `ac8cf981fee5`, manifest `aa983075d6a2`, tarball
+3.6969e+06 B against the 5e+06 limit. **Timing failures, not a regression:** the first `devtools::check()` (at the GREEN commit)
+failed only `test_markerKinship.R:177` (0.147 s against 0.1 s) and `test_markerParentageLikelihood.R:647` (1.36 s against 0.5 s)
+with the load average above 900; I traced it up the `ppid` chain to another Claude Code session's `render2.sh` (`xargs -P 6`
+quarto renders in `vscode_quarto_ext`), not this project; both files pass alone (30 tests, 138 expectations), marker code never
+calls the changed functions, and the check on the final tree passed at load about 35. The first full suite took 14.2 min for the
+same reason (S914: 5.9 min). **App path:** the opt-in `test-e2e-pedigree-module.R` (16 tests, 55 expectations, 0 failed,
+`NPRC_RUN_E2E=true`, headless Chrome) never reaches the walker; the module tests do (`shiny::testServer`: `test_modPedigree.R`,
+`_processing`, `_coverage`, `test_trimPedigree.R`, `test_getFocalAnimalPed.R`, `test_modInput.R`: 169 tests, 487 expectations, 0
+failed) and called `walkPedigree()` 25 times (14 ancestors, 10 descendants, 1 both ways). **Not run:** the app in a live browser
+by hand, CI (unpushed).
 
-**Handoff evaluation of S913: 9/10.** Helped: all 10 `BACKLOG.md` cites it gave (`:8`, `:25`, `:38`, `:57`, `:73`, `:81`, `:304`,
-`:410`, `:434`, `:453`) re-found exactly; "37 local commits" measured 37 ahead; `HANDOFFS.md` 245,569 B matched; S913's ratchet
-citation matched the results file before I ran anything; Decision record 12 listed the seven sites and the four Pre-RED questions, so
-scoping took one gate; "tally a RED with `as.data.frame(test_file(..., reporter = "silent"))`" was used as written. Missing: no timing
-recipe or large pedigree for the "time before and after" point (I used `examplePedigree`, 3,694 animals), and no note that the
-end-to-end files are opt-in and do not press the run buttons (S889 recorded the opt-in and it was archived). Wrong: nothing found.
+**My mistake (recovered):** to test against old code I ran `git stash -- R/walkPedigree.R; git stash pop`. The first stashed
+nothing, so the `pop` applied the repo's old April 2025 `dev` stash (only a `.DS_Store` change): it conflicted, left unmerged
+index entries and wrote a root `.DS_Store`. I proved the file was byte-identical to the stash blob and absent before (not ignored,
+Phase 0 untracked list empty), ran `git reset -q -- .DS_Store` and removed it; the stash is intact (`git stash list` shows it) and
+`git status` showed only my change. Learning 880 has the rule.
 
-**Self-assessment: 8/10.** + Claimed (`824336627`) before any technical work; one deliverable; the baseline (timing and 120 tests) was
-taken at the unchanged commit; RED checked for the right reasons and `mockery::mock_args()` probed before GREEN; every recording test
-was measured, not assumed; the refactor was mutation-checked; the full suite and the plain `devtools::check()` ran on the exact
-final commit; the app-path gap was found and measured instead of claimed. - My first timing run printed 0 s for every row (a lazy
-promise; caught because 0 was implausible) and my "after" run was 14-32% faster (machine drift, so I redid it as an alternating
-comparison); my first mutation check mutated nothing (zsh does not split an unquoted `$FILES`, a gotcha already in these notes) and
-left an empty stray file, which I verified untracked and removed; my first scratch script ran outside the project root (no `renv`);
-the owner had to nudge me once for a silent stretch. Reduction: S913's record condensed (6,914 B to 1,166 B);
-`BACKLOG.md` -13 lines, -1,082 B (NEW-62 block removed); `HANDOFFS.md`, `CHANGELOG.md` and `PROJECT_LEARNINGS.md` grew by this session's
-entries, and nothing else could be removed.
+**Handoff evaluation of S914: 9/10.** Helped: the Phase 0 numbers all re-measured exactly (43 commits ahead, `HANDOFFS.md` 252,343
+B, ratchet citation, `BACKLOG.md:25`, `R/modPedigree.R:392`, upstream #93 open with 1 comment); the PED-3 plan (scope gate, a
+recording test per function, a circular-data test for each of the three that lack one, alternating timing) was followed as written
+and kept the session on one deliverable; the timing recipe and the `mockery` scope gotcha were used as written. Missing: nothing
+flagged the two things the build found (a missing-id row hangs `getPedDirectRelatives()`; the order of the placeholder records is
+observable), and no probe of today's output with two placeholders. Wrong: nothing found.
 
-**Next steps (recommended order, from the owner's "optimize the order" request; not yet ruled on):** (A) The PED-3 build
-(`BACKLOG.md:25`, READY, Effort M): Pre-RED scope gate first (the walker's name and file; whether `getLkDirectAncestors()` stops with
-the animals found or with a message), then a recording test per function at the current commit, then a circular-data test for each of
-the three that lack one, then the merge; time `getDescendantPedigree()` (`R/modPedigree.R:392`) and `trimPedigree()` the way this
-session did (alternating old and new in one process). (B) One decision session for NEW-18/19/21/26/57 and NEW-24's two leftovers
-(`:8`; four questions: thresholds NEW-21+26, relation names NEW-19, low-value NEW-18+57, NEW-24), after re-measuring the sites. (C) The
-builds that (B) decides, one capability per session. Then: (D) the dashed-link item (`:397`, DECISION NEEDED); (E) docs-audit slice 2
-(`:68`, needs scoping first, Effort L); (F) unpushed: 43 local commits after this close-out (37 at Phase 0 plus this session's six); the
-push carries `R/` changes, so all four workflows start: read CI after it; per the owner's S905 ruling it is not offered as a task; (G)
-upstream `KJ5HST/methodology#93` was open with 1 comment at Phase 0 (BLOCKED item `:291`); (H) `HANDOFFS.md` is 252,343 B after this
-close-out (the Read tool refuses at 262,144 B); trim with `methodology_trim.py --force` before it gets there. Carried: `reportGV(smallPed)`
-unfiled; the D2 dogleg observation from S910 (untested); `test_markerKinship.R:177` benchmark flake (S913's observation; it did not recur).
+**Self-assessment: 7/10.** + Claimed (`d11c068a1`) before any technical work; one deliverable; every Pre-RED claim was measured,
+and the gate text said what changes; RED checked for the right reasons (two wrong-reason passes fixed before committing); the
+old-versus-new run found a real change, and the owner ruled on it in plain words; mutation check; full suite, lint,
+`devtools::check()` and the ratchet on the final tree; the load was traced rather than assumed. - The `git stash` command was
+needless and touched a stash that was not mine (recovered, but it was an unforced error); my RED tests missed the placeholder
+order, which only the old-versus-new run caught, at GREEN rather than RED; my first missing-id probe ran without a time limit
+(past 120 s) although these notes say to wrap every never-stops probe; several long silent stretches (the harness nudged me several times). Reduction: S914's record condensed (8,678 B to 1,217 B); `BACKLOG.md` -19 lines, -1,598 B (PED-3 block removed, 463
+to 444 lines); `HANDOFFS.md`, `CHANGELOG.md` and `PROJECT_LEARNINGS.md` grew by this session's entries and nothing else could be
+removed.
 
-**Key files:** `R/notifyProgress.R` (the helper), `R/geneDrop.R:124,145`, `R/reportGV.R:246,263,280`, `R/convertRelationships.R:94`,
-`R/groupAddAssign.R:308` (the calls), `tests/testthat/test_notifyProgress.R` (helper, recording and delegation tests),
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:459` (Closure record 15), `PROJECT_LEARNINGS.md` Learning 879; `BACKLOG.md` cites after this
-session's -13 lines: `:8` (PED_GV), `:25` (PED-3), `:44` (`getAncestors`), `:60` (3.0.0), `:68` (docs audit), `:291` (upstream-blocked),
-`:397` (dashed links), `:421` (outreach), `:440` (paper). The timing scripts (`timing.R`, `ab_timing.R`) were scratch and are not in the repo.
+**Next steps (recommended order; not yet ruled on):** (A) One decision session for what is left of the PED_GV audit
+(`BACKLOG.md:8`, DECISION NEEDED, Effort S): NEW-18/19/21/26/57 and NEW-24's two leftovers, four questions (thresholds NEW-21+26,
+relation names NEW-19, low-value NEW-18+57, NEW-24), after re-measuring the sites; 6 ids remain (43 in the table, 37 closed). (B)
+The builds (A) decides, one capability per session. Then (C) the dashed-link item (`:378`, DECISION NEEDED: legend row only or
+hover text too, and the wording); (D) docs-audit slice 2 (`:49`, needs scoping first, Effort L); (E) unpushed: 53 local commits
+after this close-out (43 at Phase 0, 9 of this session's before it); the push carries `R/` and `NEWS.md` changes, so all four
+workflows start: read CI after it; per the owner's S905 ruling it is not offered as a task; (F) upstream `KJ5HST/methodology#93`
+is open with 1 comment (BLOCKED item `:272`); (G) `HANDOFFS.md` is 260,501 B after this close-out (the Read tool refuses a
+whole-file read at 262,144 B; offset and limit still work): trim with `methodology_trim.py --force` before S916's receipt makes it
+worse. Carried: `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); the two wall-clock benchmark tests
+(`test_markerKinship.R:177`, `test_markerParentageLikelihood.R:647`) fail when the machine is loaded by another process.
 
-**Gotchas:** `mockery::stub()` replaces a function only in the scope of the test that calls it, so a wrapper defined at file top level
-must take the function as an argument; `mockery::mock_args()` keeps names and function identity; a helper whose parameter is named like
-the argument keeps R's `could not find function "updateProgress"` text; `system.time(expr)` inside `vapply()` runs a lazy promise once, so
-time a function; compare old and new alternating in one R process, not across runs minutes apart; print the number of files a mutation
-check mutated before reading its result, and quote or list shell words in zsh; run scratch `Rscript` from the project root; the
-`test-e2e-*` files are opt-in (`NPRC_RUN_E2E=true`) and the four for Genetic Value and Breeding Groups do not press the run buttons;
-adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
+**Key files:** `R/walkPedigree.R` (the walker); `R/getProbandPedigree.R:26`, `R/getDescendantPedigree.R:27`,
+`R/getPedDirectRelatives.R:54`, `R/getLkDirectAncestors.R:66` (the calls); `tests/testthat/helper-walkPedigree.R` (shared
+fixtures, `withinSeconds()`, `expectOneWalk()`), `test_walkPedigree.R` and the additions to `test_getProbandPedigree.R`,
+`test_getDescendantPedigree.R`, `test_getPedDirectRelatives.R`, `test_getLkDirectAncestors.R`;
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:469` (Closure record 16); `PROJECT_LEARNINGS.md` Learning 880; `NEWS.Rmd` General
+Fixes. `BACKLOG.md` cites after this session's -19 lines: `:8` (PED_GV), `:25` (`getAncestors`), `:41` (3.0.0), `:49` (docs
+audit), `:272` (upstream-blocked), `:378` (dashed links), `:402` (outreach), `:421` (paper). The comparison, timing and mutation
+scripts were scratch and are not in the repo.
+
+**Gotchas:** never run `git stash pop` without `git stash list` (an existing stash gets applied); wrap every never-stops probe in
+`setTimeLimit(elapsed = 5, transient = TRUE)`; `expect_error(f(...))` with no message passes while `f` does not exist; when
+merging loops compare the old and the new code on random inputs with `identical()` and classify any difference (id set, id order,
+row labels, values) before judging it; the old whole-set loop left `ids` farthest generation first, the walker lists nearest
+first, so `getPedDirectRelatives()` reverses it; `unlist(list(character(0)))` is `character(0)`; read a delegation stand-in's
+arguments with `do.call(function(ids, ped, direction) ..., mock_args(m)[[1]])`; trace a high load up `ps -o ppid=` before calling
+a benchmark failure a flake, and do not stop another session's processes; a fresh knit of `NEWS.Rmd` equals `NEWS.md` (checked),
+so a knit shows only your edit; adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the
+last edit (Learning 871).
+
+### What Session 914 Did (condensed S915; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+NEW-62 shipped (strict TDD, no change for users): one internal `notifyProgress(updateProgress, ...)` (`R/notifyProgress.R`,
+`@noRd`) replaces the seven `if (!is.null(updateProgress))` blocks in `R/reportGV.R`, `R/geneDrop.R`, `R/convertRelationships.R`
+and `R/groupAddAssign.R` (33 lines became 19); the owner kept the `!is.null()` test and chose the name. Claim `824336627`, RED
+`66c9e61cf`, GREEN `a2a0c9bb7`, REFACTOR `3d521d0c9`, closure `a4769053c`, close-out `40d2f0400` (all still local at S915's Phase
+0). Handoff evaluation of S913: 9/10. Self 8/10.
+**Gotchas kept:** `mockery::stub()` replaces a function only in the scope of the test that calls it, so a wrapper at file top
+level must take the function as an argument; `system.time(expr)` inside `vapply()` runs a lazy promise once, so time a function;
+compare old and new alternating in one R process; print the number of files a mutation check mutated before reading its result;
+the `test-e2e-*` files are opt-in (`NPRC_RUN_E2E=true`) and those for Genetic Value and Breeding Groups do not press the run
+buttons; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 913 Did (condensed S914; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-42 shipped (help text only, strict TDD): the help pages of `getParents()` and `getOffspring()` now say the pedigree is the first
