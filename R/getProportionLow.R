@@ -18,7 +18,7 @@ getProportionLow <- function(geneticValues) {
          "'geneticValues' is empty.")
   }
   proportion <-
-    length(geneticValues[stri_detect_fixed(geneticValues, "Low")]) /
+    sum(geneticValues == valueLabels[["lowValue"]], na.rm = TRUE) /
       length(geneticValues)
   if (proportion > 0.5) {
     color <- "red"

@@ -86,7 +86,7 @@ getGeneticDiversityStats <- function(groups, ped, geneticValues, kmat,
         duration(num = 1L, units = "years")
     )
     vals <- geneticValues$value[geneticValues$id %in% members]
-    vals <- vals[vals != "Undetermined"]
+    vals <- vals[vals != valueLabels[["undetermined"]]]
     valueIndex <- if (length(vals) == 0L) {
       1L
     } else {

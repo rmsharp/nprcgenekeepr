@@ -49,11 +49,11 @@ rankSubjects <- function(rpt) {
     }
 
     if (names(rpt[i]) == "lowVal") {
-      rpt[[i]][, "value"] <- "Low Value"
+      rpt[[i]][, "value"] <- valueLabels[["lowValue"]]
     } else if (names(rpt[i]) == "noParentage") {
-      rpt[[i]][, "value"] <- "Undetermined"
+      rpt[[i]][, "value"] <- valueLabels[["undetermined"]]
     } else { # everything else
-      rpt[[i]][, "value"] <- "High Value"
+      rpt[[i]][, "value"] <- valueLabels[["highValue"]]
     }
 
     if (names(rpt[i]) == "noParentage") {
