@@ -167,27 +167,30 @@ test_that("the breeding-group value floor drops the list's Low Value label", {
 test_that("modGeneticValueServer() ranks the list's Undetermined animals last", {
   skip_on_cran()
   skip_if_not_installed("shiny")
+  # A report in which the Undetermined animal ("D") has the best score
+  # (lowest mean kinship minus uniqueness), so only the server's own comparison
+  # with the Undetermined label can send it to the bottom. reportGV() is
+  # replaced by one that returns this report, so nothing else produces labels.
+  fakeReport <- data.frame(
+    id = c("A", "B", "C", "D"),
+    indivMeanKin = c(0.10, 0.20, 0.30, 0.01),
+    gu = 0,
+    value = relabel(c("High Value", "High Value", "Low Value",
+                      "Undetermined")),
+    stringsAsFactors = FALSE
+  )
   testthat::local_mocked_bindings(
     valueLabels = swappedLabels,
+    reportGV = function(...) list(report = fakeReport),
     .package = "nprcgenekeepr"
   )
-  # 6 founders (both parents unknown, each with offspring) and 12 offspring of
-  # known parents, as test_modGeneticValue.R builds for its demotion test
-  founders <- data.frame(
-    id = paste0("F", 1:6),
-    sire = NA_character_,
-    dam = NA_character_,
-    sex = c(rep("M", 3L), rep("F", 3L)),
+  test_ped <- data.frame(
+    id = c("F1", "F2", "O1", "O2"),
+    sire = c(NA, NA, "F1", "F1"),
+    dam = c(NA, NA, "F2", "F2"),
+    sex = c("M", "F", "M", "F"),
     stringsAsFactors = FALSE
   )
-  offspring <- data.frame(
-    id = paste0("O", 1:12),
-    sire = rep(founders$id[founders$sex == "M"], length.out = 12L),
-    dam = rep(founders$id[founders$sex == "F"], length.out = 12L),
-    sex = rep(c("M", "F"), length.out = 12L),
-    stringsAsFactors = FALSE
-  )
-  test_ped <- rbind(founders, offspring)
 
   shiny::testServer(
     modGeneticValueServer,
@@ -199,12 +202,10 @@ test_that("modGeneticValueServer() ranks the list's Undetermined animals last", 
       session$setInputs(runAnalysis = 1)
 
       results <- gvResults()
-      founderIds <- test_ped$id[is.na(test_ped$sire) & is.na(test_ped$dam)]
-      nFounders <- length(founderIds)
 
-      # every founder sits in the bottom nFounders ranks, none in the top block
-      expect_true(all(results$rank[results$id %in% founderIds] >
-        (nrow(results) - nFounders)))
+      # D would rank first on its score; the Undetermined demotion puts it last
+      expect_identical(results$id, c("A", "B", "C", "D"))
+      expect_identical(results$rank, 1:4)
     }
   )
 })
