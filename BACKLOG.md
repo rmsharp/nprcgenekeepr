@@ -21,22 +21,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
       `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
 
-- [ ] **`convertRelationships()` given exactly one id returns a nonsense row, and
-      `makeRelationClassesTable()` stops when no non-Self pair is left (found S918, DECISION
-      NEEDED, Effort S)** -- both left alone by NEW-19 (no output change). Probes (S918, bundled
-      `smallPed`): (1) `convertRelationships(kmat, smallPed, "A")` gives one row with
-      `id1 = "kinMatrix"`, `id2 = 1`, `kinship = 0.5`, `relation = "Full-Siblings"`; cause read
-      in the code: `filterKinMatrix()` (`R/filterKinMatrix.R`) is `kmat[rows, cols]` with no
-      `drop = FALSE`, so one id collapses the matrix to a single number. (2)
-      `makeRelationClassesTable()` of a table with only Self pairs, or with no rows, stops with
-      `'names' attribute [2] must be the same length as the vector [1]` (recorded as today's
-      behaviour in `test_makeRelationsClasses.R`). The app calls `convertRelationships()`
-      without `ids` (`R/modSummaryStats.R:424`) and `kinship()` itself fails on a one-animal
-      pedigree (`'dimnames' applied to non-array`), so the app reaches neither; the other
-      caller, `R/markerRealizedRelatednessVariance.R:119`, passes `ids` through. **Decision for
-      the owner:** for (1), stop with a message ("give at least two ids") or keep a 1 x 1
-      matrix and return the Self pair; for (2), return an empty table with its two columns or
-      keep stopping with a clearer message.
+- [ ] **`reportGV()` with a one-animal population stops with "'x' must be an array of at least two
+      dimensions" (found S923, DECISION NEEDED, Effort S)** -- measured S923 on `examplePedigree`
+      (`qcStudbook()`, then the trimming in the `reportGV()` example; 327 animals in the population):
+      `reportGV(ped, guIter = 10L, pop = <one id>)` stops in `calcGU()` (`rowSums()` on a single row);
+      two ids run. The message is the same before and after S923's `filterKinMatrix()` change, so
+      it is a second cause that change did not touch. Not probed: whether the app can build a
+      one-animal population, and `gvaConvergence()`, which builds its proband matrix the same way
+      (`R/gvaConvergence.R:149`). **Decision for the owner:** stop with a message that names the
+      population size, or return a one-row report. Do not use `smallPed` to test it:
+      `reportGV(smallPed)` failed with "sire and dam must have had alleles assigned: logic error" on
+      all 5 calls tried in S923 (with and without `age` and `pop`): the carried, unfiled
+      `reportGV(smallPed)` finding.
+
+- [ ] **`man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (found S923, READY, Effort S)** --
+      `devtools::document()` rewrites its description paragraph ("five groups" becomes "these main
+      groups", plus a sentence on the further tabs): `DESCRIPTION` was reworded in S830 (`73c00d1ec`)
+      and the man page was not regenerated. One file; S923 restored it rather than commit it with an
+      unrelated change. `devtools::check()` does not flag it (0/0/0). Fix: run `devtools::document()`
+      in its own commit and confirm no other file changes.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
@@ -77,8 +80,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
-      report): 6a MC1 (`filterKinMatrix` lacks `drop = FALSE`) and MB3 (unknown-sex founder
-      kinship), and MA3/MB14 cite only `e1071` for `type = 2` from recall, not a run (neither
+      report): 6a MB3 (unknown-sex founder kinship; MC1, `filterKinMatrix` without `drop = FALSE`, was fixed
+      S923), and MA3/MB14 cite only `e1071` for `type = 2` from recall, not a run (neither
       `moments` nor `e1071` is installed here); 6b PB4, PB7, PB11 (docs untouched), and PB13, PA4,
       PD12, PD1 (S837 documented today's behavior); 6c 8 candidates (`markerExpectedHeterozygosity`
       He = 1.0 for an all-NA locus, `computeGenomicROH` silent locus drop, `hasGenotype`
