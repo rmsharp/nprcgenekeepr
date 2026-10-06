@@ -98,53 +98,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 920 Did
-**Deliverable, DONE (strict TDD; nothing changes for users on normal data):** one internal named vector, `valueLabels`
-(`R/valueLabels.R`, `@noRd`), read by the six places that typed the three labels: `rankSubjects()` (`R/rankSubjects.R:52-56`),
-`getGeneticDiversityStats()` (`:89`), `getProportionLow()` (`:22`), `summary.nprcgenekeeprGV()` (`R/summary.nprcgenekeeprErr.R:262,267`),
-the breeding-group value floor (`R/modBreedingGroups.R:548`) and `modGeneticValueServer()`'s demotion (`R/modGeneticValue.R:385`).
-Owner choices: a new file named `valueLabels`; `getProportionLow()` counts only the exact Low Value label (before: any text containing
-"Low", and a missing value counted as Low; the app passes neither). Commits: claim `7cedd23d7`, RED `e79b88da4` + `9b7fe04e7`, RED fix
-`3facbbac4`, GREEN `f3aded2d4` + `84a709c7f`, REFACTOR `211da5abe`, closure `210895445`; the close-out commit carries this note, the
-receipt and the ledger entry (81 ahead of origin after it).
-**Measured:** 7 new tests (all errored before GREEN); suite 374 files, 3,098 tests, 0 errors, 2 failed = the wall-clock benchmarks
-`markerKinship` and `markerParentageLikelihood` under a load of about 100 from other projects (both pass alone; neither mentions the
-changed names); lint 0; `devtools::check(args = "--no-manual")` 0/0/0 after GREEN and REFACTOR; mutation check 6 of 6 caught; ratchet
-1/1 pass (results `8992e777d6c4`, manifest `aa983075d6a2`, head `84a709c7f`). **Runtime (3E):** the Genetic Value and Breeding Groups
-app-level files with `NPRC_RUN_E2E=true`: 8 of 8 and 9 tests, 0 failed (they do not press the run buttons). **Closure:** not an audit
-id (no closure record); `BACKLOG.md` `:8` item removed (later cites moved up 15; S918's `:54` is now `:39`); NEWS none owed; Learning 885.
-**Mistakes (recovered):** a RED test passed once only `rankSubjects()` followed the list (vacuous for the server's own comparison),
-replaced after a GREEN-to-RED permission (`3facbbac4`); "six R files" at a gate was seven; a stray scratch `Write` (cleaned);
-`--no-init-file` skipped renv.
-**Handoff evaluation of S919: 9/10.** Helped: every cite re-grepped true; S914's order sentence made the picker one round; the
-Pre-RED gate named the two decisions; the load-tracing gotcha. Missing: two sites had no test at all; a "follows the list" test can
-pass through the producer; `getProportionLow()` counted a missing value as Low. Wrong: nothing found.
-**Self-assessment: 8/10.** + Order reconciled first; gates in plain words; the vacuous test found mid-GREEN; mutation check 6/6;
-app-level E2E run, not "not launched"; load traced. - The vacuous RED test; the "six files" count; the stray write; the notes ceiling
-hit at the claim and again at close-out (over by 1,102 tokens: this section and two older records cut to fit). Reduction:
-`SESSION_NOTES.md` 56,347 B to 55,642 B; `BACKLOG.md` 41,613 B to 40,379 B.
+### What Session 921 Did
+**Deliverable:** the dashed duplicate-animal link in the pedigree diagram (`BACKLOG.md:403`; DECISION NEEDED, Effort S for a legend
+row, M with hover text; strict TDD; owner pick at the Phase 0 picker, the recommended option, next in the owner's S914 order) (IN PROGRESS)
+**Started:** 2026-10-06, about 03:00 CDT
+**Status:** Session claimed. Work beginning. The three Pre-RED decisions (legend row only or hover too, the wording, whether hover
+names the id) are not yet asked; S920's notes section was condensed here to fit the 25,000-token ceiling.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not yet ruled on; the owner's S914 order was the builds, then the dashed-link item, then docs-audit slice
-2; the builds have all shipped; (C) and (D) are newer findings that order does not cover):** (A) the dashed-link item
-(`BACKLOG.md:403`, DECISION NEEDED, Effort S legend / M hover; decide first: legend row only or hover too, the wording, whether hover
-names the id; user-facing, so NEWS and manual checklists apply; legend hand-tuned to 400 px, `R/modPedigree.R:768-778`). (B) docs-audit
-slice 2 (`:64`, needs scoping first, L). (C) receipt-placement gate (`:8`, DECISION NEEDED, S). (D) one-id `convertRelationships()`
-finding (`:39`, DECISION NEEDED, S). (E) upstream `KJ5HST/methodology#93` (`:287`, BLOCKED). (F) unpushed: 81 local commits; not
-offered (owner's S905 ruling). Lower priority: `getAncestors()` on an absent id (`:23`). Carried: NEW-24's print method on issue #123
-(owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested). **Not filed, your call:** a scan test
-like `test_sexCodes.R` (code lines only) would catch a seventh typed label added later. Before the picker: grep the receipts for an
-order the owner already gave.
-
-**Key files:** `R/valueLabels.R`; the six cites above; `tests/testthat/test_valueLabels.R` (the list and six swapped-label tests; the
-server test fakes `reportGV()`), `test_getProportionLow.R`, `test_rankSubjects.R`, `test_summary.nprcgenekeeprGV.R`;
-`PROJECT_LEARNINGS.md` Learning 885; `BACKLOG.md:8`, `:23`, `:39`, `:56`, `:64`, `:287`, `:403`.
-
-**Gotchas:** after each GREEN commit run the new test file and read which tests pass early (a test that passes before its site moved
-pins nothing; fake the producer when data flows through another reader of the list); `local_mocked_bindings(valueLabels = ...,
-.package = "nprcgenekeepr")` errors "Can't find binding" until the constant exists; plain `Rscript` here, not `--no-init-file`;
-`NPRC_RUN_E2E=true` with a test-file runner runs the app-level files (in the background); the two wall-clock benchmarks fail whenever
-other projects load the machine, so rerun them alone first; the notes ceiling is 25,000 tokens, so condense S920 at the next claim;
-adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
+### What Session 920 Did (condensed S921; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The genetic-value labels item shipped (strict TDD; nothing changes for users on normal data): one internal named vector,
+`valueLabels` (`R/valueLabels.R`, `@noRd`), read by `rankSubjects()`, `getGeneticDiversityStats()`, `getProportionLow()`,
+`summary.nprcgenekeeprGV()`, the breeding-group value floor (`R/modBreedingGroups.R:548`) and `modGeneticValueServer()`'s demotion
+(`R/modGeneticValue.R:385`); `getProportionLow()` now counts only the exact Low Value label. Claim `7cedd23d7`, RED `e79b88da4`,
+`9b7fe04e7` and fix `3facbbac4`, GREEN `f3aded2d4` and `84a709c7f`, REFACTOR `211da5abe`, closure `210895445`, close-out `73df7ce31`
+(all still local at S921's Phase 0). Handoff evaluation of S919: 9/10. Self 8/10.
+**Gotchas kept:** after each GREEN commit run the new test file and read which tests pass early (a test that passes before its site
+moved pins nothing; fake the producer when data flows through another reader of the list); plain `Rscript` here, not
+`--no-init-file` (it skips renv); `NPRC_RUN_E2E=true` with a test-file runner runs the app-level files (in the background); the two
+wall-clock benchmarks (`markerKinship`, `markerParentageLikelihood`) fail whenever other projects load the machine, so rerun them
+alone first; adding or removing a BACKLOG block shifts every later cite, so re-grep; take `wc -c` after the last edit (Learning 871).
+**Carried:** `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); a scan test like `test_sexCodes.R` that
+would catch a seventh typed label is unfiled (the owner's call).
 
 ### What Session 919 Did (condensed S920; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-24's first leftover shipped (strict TDD; users see only one error message's wording change): `getGeneticDiversityStats()` makes

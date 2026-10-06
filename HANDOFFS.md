@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S921
+date: 2026-10-06
+status: pending
+active_task: The dashed duplicate-animal link's explanation in the pedigree diagram (BACKLOG.md:403; DECISION NEEDED, Effort S for a legend row, M with hover text; strict TDD; picked at the Phase 0 picker, the recommended option; next in the owner's S914 order).
+```
+
+```handoff
 session: S920
 date: 2026-10-06
 status: complete
