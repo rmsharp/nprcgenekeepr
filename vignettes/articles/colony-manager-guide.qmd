@@ -218,9 +218,16 @@ a value of 2 is appropriate for both).
 Selecting **Read and Check Pedigree** reads the file and validates it --
 checking that every required column is present and that the pedigree is
 internally consistent (parent-of-the-right-sex, no duplicate IDs, valid
-dates, and more; the full set of checks is listed below). Results appear on
-the "QC Summary" sub-tab. For the shipped example pedigree read as CSV, this
-reports **Records Processed: 3,694, Errors: 0, Warnings: 1**.
+dates, and more; the full set of checks is listed below). The counts are on
+the "QC Summary" sub-tab. When the check finds errors, the app opens the
+"Errors" sub-tab instead; when it finds only warnings, it opens the "Warnings"
+sub-tab and shows a yellow notice, and you click "QC Summary" for the counts.
+For the shipped example pedigree read as CSV, the counts are **Records
+Processed: 3,694, Errors: 0, Warnings: 1**. The one warning, "Animals with no
+birth date", says that 1,432 of the 3,694 animals (all of them founders) have no
+birth date, so their age is unknown and the age-based checks and counts -- the
+parent-age check, the Age-Sex Pyramid and the breeding-age counts -- cannot use
+them. A warning never stops the pedigree from being used.
 
 ![QC Summary after reading and checking the example pedigree.](shiny_app_use/read_and_check_pedigree.png){fig-alt="QC Summary sub-tab showing Records Processed 3694, Errors 0, Warnings 1."}
 

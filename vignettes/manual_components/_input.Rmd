@@ -55,8 +55,14 @@ displays results across multiple tabs:
 
 - **QC Summary**: Shows counts of records processed, errors found, and warnings
 - **Errors**: Lists critical issues that must be fixed before proceeding
-- **Warnings**: Lists potential issues that may need review
+- **Warnings**: Lists potential issues that may need review, such as renamed
+  columns and animals with no birth date (the warning says how many; their age
+  is unknown, so age-based checks and counts cannot use them). A warning never
+  stops the pedigree from being used
 - **Cleaned Data**: Preview of the validated studbook data
+
+When the check finds errors, the app opens the Errors tab; when it finds only
+warnings, it opens the Warnings tab and shows a yellow notice.
 
 The Errors, Warnings and Cleaned Data tabs each include a download button to
 export the data for offline review.
