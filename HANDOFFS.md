@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S930
+date: 2026-10-07
+status: pending
+active_task: Docs-audit slice 2, Phase 2 (docs/planning/docs-audit-slice2-screenshot-plan.md:191-207; script only, no R/ change, no image replaced; owner pick at the Phase 0 picker, option 1 of 3, the recommended one; READY, Effort M; strict TDD): make the guide screenshot script report a failed step or a timed-out idle wait, and let a run write to a scratch folder. Which of plan items (a)-(f) are in scope is settled with the owner at the Pre-RED gate.
+```
+
+```handoff
 session: S929
 date: 2026-10-07
 status: complete
