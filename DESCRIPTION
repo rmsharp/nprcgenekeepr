@@ -76,7 +76,8 @@ Suggests:
     shinyBS,
     spelling,
     testthat,
-    withr
+    withr,
+    yaml
 Language: en-US
 Encoding: UTF-8
 License: MIT + file LICENSE
