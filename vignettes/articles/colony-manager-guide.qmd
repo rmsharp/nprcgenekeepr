@@ -694,9 +694,11 @@ years, scored red/yellow/green against cut-offs that depend on the selected
 group with no assessed value, or an undefined Inbreeding result, is scored
 red rather than shown as healthy, so missing data surfaces instead of hiding
 as a false green. A breeding-age female is one at least 3 years old. A female
-with no birth date has no age, so she counts as a breeding-age female only
-when the pedigree lists an offspring for her, wherever that offspring is;
-with no offspring she is left out. A group with no breeding-age females has
+with no birth date has no age, so, in both the Production and the Inbreeding
+column, she counts as a breeding-age female only when the pedigree lists an
+offspring for her, wherever that offspring is; with no offspring she is left
+out. A male with no birth date is never counted as a potential mate in the
+Inbreeding column. A group with no breeding-age females has
 no Production value, and its cell is gray. When any animal in the groups has
 no birth date, a note under the heat map says how many, and how many of those
 females were counted or left out. Until groups are formed and an analysis has
