@@ -59,6 +59,9 @@ makeGeneticDiversityHeatmap <- function(stats) {
     colorIndex = factor(metricValues, levels = c("1", "2", "3")),
     stringsAsFactors = FALSE
   )
+  ## One size for the column names and the group names: 2.5 times the 8.8 pt
+  ## default, so both can be read at the size the app draws the plot.
+  labelSize <- 22L
   ggplot2::ggplot(
     long,
     ggplot2::aes(x = .data$metric, y = .data$group, fill = .data$colorIndex)
@@ -73,7 +76,7 @@ makeGeneticDiversityHeatmap <- function(stats) {
     ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.x = ggplot2::element_text(angle = 0L, hjust = 0.5,
-                                          size = 22L, face = "bold"),
-      axis.text.y = ggplot2::element_text(size = 22L)
+                                          size = labelSize, face = "bold"),
+      axis.text.y = ggplot2::element_text(size = labelSize)
     )
 }
