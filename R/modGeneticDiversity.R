@@ -131,9 +131,12 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
       }
     })
 
-    # Signal data-ready when the heat map is rendered (for E2E testing)
+    # Signal data-ready when the heat map is rendered (for E2E testing). An
+    # error in an observer ends the user's whole session, unlike an error in
+    # an output (shown in the tab), so a failing calculation is read as "not
+    # ready" here; heatmap and guidance still report it.
     observe({
-      req(diversityPlot())
+      req(tryCatch(diversityPlot(), error = function(e) NULL))
       session$sendCustomMessage("setDataReady", list(
         selector = paste0("#", session$ns("moduleContainer")),
         ready = TRUE

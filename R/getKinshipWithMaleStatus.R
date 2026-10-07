@@ -16,6 +16,9 @@
 #' \code{colorIndex} are all returned as \code{NA} (deliberately not green,
 #' to avoid reporting missing data as a healthy condition).
 #'
+#' An animal whose age or sex is missing (\code{NA}) cannot be shown to be a
+#' breeding-age female or male, so it is left out of both counts.
+#'
 #' @param group Dataframe of the group members. The \code{id}, \code{sex}
 #' (\code{"F"}/\code{"M"}), and \code{age} (in years) columns are required.
 #' @param kmat Square kinship matrix for the group whose row and column
@@ -48,9 +51,10 @@ getKinshipWithMaleStatus <- function(group, kmat, minFemaleAge = 3L,
     stop("kmat is missing kinship for group member(s): ",
          toString(missingId))
   }
-  females <- group$id[group$sex == sexCodes[["female"]] &
-                        group$age >= minFemaleAge]
-  males <- group$id[group$sex == sexCodes[["male"]] & group$age >= minMaleAge]
+  females <- group$id[which(group$sex == sexCodes[["female"]] &
+                              group$age >= minFemaleAge)]
+  males <- group$id[which(group$sex == sexCodes[["male"]] &
+                            group$age >= minMaleAge)]
   if (length(females) == 0L) {
     return(list(fraction = NA_real_, color = NA_character_,
                 colorIndex = NA_integer_))
