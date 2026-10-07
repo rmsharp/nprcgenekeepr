@@ -175,6 +175,37 @@ test_that("modGeneticDiversityServer heatmap is a ggplot geom_tile", {
   )
 })
 
+## The heat map the app draws must carry the readable labels: the column names
+## were slanted and cut off by the top edge of the drawing, and both sets of
+## names were tiny (S934).
+test_that("modGeneticDiversityServer heatmap has level, bold, readable names", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("ggplot2")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1, g2) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      result <- session$getReturned()
+      session$setInputs(housing = "shelter_pens")
+      p <- result$heatmap()
+      col <- ggplot2::calc_element("axis.text.x.top", p$theme)
+      row <- ggplot2::calc_element("axis.text.y", p$theme)
+      expect_equal(col$angle, 0)
+      expect_equal(col$hjust, 0.5)
+      expect_identical(col$face, "bold")
+      expect_gte(col$size, 22)
+      expect_gte(row$size, 22)
+    }
+  )
+})
+
 ## ---- Server: housing input --------------------------------------------
 
 test_that("modGeneticDiversityServer defaults housing when input is unset", {

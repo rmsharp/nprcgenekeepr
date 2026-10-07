@@ -142,3 +142,83 @@ test_that("makeGeneticDiversityHeatmap rejects non-data-frame input", {
   expect_error(makeGeneticDiversityHeatmap(list(a = 1)), "data frame")
   expect_error(makeGeneticDiversityHeatmap(matrix(1:4, nrow = 2)), "data frame")
 })
+
+## ---- Readable labels (S934) -------------------------------------------------
+## The column names were slanted at 45 degrees, so the top edge of the drawing
+## cut them off ("Va", "Or", "Pro", "Inb"), and both sets of names were drawn at
+## 8.8 pt beside tiles hundreds of pixels wide. The names are written level,
+## centred over their column, in bold, at a size that can be read: 22 pt, 2.5
+## times the 8.8 pt default (the owner's estimate of what the labels need).
+## These tests read the settings the plot ends up with once its theme is
+## resolved.
+
+labelSettings <- function(p, element) {
+  ggplot2::calc_element(element, p$theme)
+}
+
+## Data frames of different shapes: the label settings must not depend on the
+## data.
+labelFixtures <- list(
+  "four metrics" = statsFixture,
+  "five metrics" = data.frame(
+    group = c("Corral_1", "Corral_2"),
+    Value = c(1, 3),
+    Origin = c(2, 2),
+    Production = c(3, 1),
+    Inbreeding = c(1, 2),
+    Flags = c(3, 3),
+    stringsAsFactors = FALSE
+  ),
+  "one group and one metric" = data.frame(
+    group = "Group_1", Value = 2, stringsAsFactors = FALSE
+  ),
+  "an undefined cell" = data.frame(
+    group = c("Group_1", "Group_2"),
+    Value = c(1, NA),
+    Production = c(NA, 3),
+    stringsAsFactors = FALSE
+  )
+)
+
+test_that("makeGeneticDiversityHeatmap writes the column names level", {
+  p <- makeGeneticDiversityHeatmap(statsFixture)
+  expect_equal(labelSettings(p, "axis.text.x.top")$angle, 0)
+})
+
+test_that("makeGeneticDiversityHeatmap centres each column name over its column", {
+  p <- makeGeneticDiversityHeatmap(statsFixture)
+  expect_equal(labelSettings(p, "axis.text.x.top")$hjust, 0.5)
+})
+
+test_that("makeGeneticDiversityHeatmap writes the column names in bold", {
+  p <- makeGeneticDiversityHeatmap(statsFixture)
+  expect_identical(labelSettings(p, "axis.text.x.top")$face, "bold")
+})
+
+test_that("makeGeneticDiversityHeatmap draws the column names at least 22 pt", {
+  p <- makeGeneticDiversityHeatmap(statsFixture)
+  expect_gte(labelSettings(p, "axis.text.x.top")$size, 22)
+})
+
+test_that("makeGeneticDiversityHeatmap draws the group names at least 22 pt", {
+  p <- makeGeneticDiversityHeatmap(statsFixture)
+  expect_gte(labelSettings(p, "axis.text.y")$size, 22)
+})
+
+test_that("makeGeneticDiversityHeatmap keeps the column names above the grid", {
+  p <- makeGeneticDiversityHeatmap(statsFixture)
+  expect_identical(p$scales$get_scales("x")$position, "top")
+})
+
+test_that("makeGeneticDiversityHeatmap labels do not depend on the data shape", {
+  for (shape in names(labelFixtures)) {
+    p <- makeGeneticDiversityHeatmap(labelFixtures[[shape]])
+    col <- labelSettings(p, "axis.text.x.top")
+    row <- labelSettings(p, "axis.text.y")
+    expect_equal(col$angle, 0, info = shape)
+    expect_equal(col$hjust, 0.5, info = shape)
+    expect_identical(col$face, "bold", info = shape)
+    expect_gte(col$size, 22)
+    expect_gte(row$size, 22)
+  }
+})
