@@ -224,10 +224,10 @@ test_that("qcSummaryUI renders the warning panel and changedCols is exposed", {
     ))
     session$flushReact()
 
-    # Warnings present selects the panel-warning class; no errors with records
-    # present selects the success alert.
+    # Warnings present selects the bg-warning card header; no errors with
+    # records present selects the success alert.
     ui <- as.character(output$qcSummaryUI)
-    expect_true(any(grepl("panel-warning", ui)))
+    expect_true(any(grepl("bg-warning", ui)))
     expect_true(any(grepl("alert-success", ui)))
 
     # qcErrors renders its zero-error branch without error.
