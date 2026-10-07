@@ -592,28 +592,28 @@ modInputServer <- function(id) {
           name = "nprcgenekeepr"
         )
 
+      errorsColour <- if (nErrors > 0L) "danger" else "success"
+      warningsColour <- if (nWarnings > 0L) "warning" else "success"
+
       div(
         fluidRow(
           column(4L,
-                 div(class = "panel panel-primary",
-                     div(class = "panel-heading", h4("Records Processed")),
-                     div(class = "panel-body", h2(nRecords)))),
+                 div(class = "card border-primary",
+                     div(class = "card-header bg-primary text-white",
+                         h4("Records Processed")),
+                     div(class = "card-body", h2(nRecords)))),
           column(4L,
-                 div(class = if (nErrors > 0L) {
-                   "panel panel-danger"
-                 } else {
-                   "panel panel-success"
-                 },
-                     div(class = "panel-heading", h4("Errors")),
-                     div(class = "panel-body", h2(nErrors)))),
+                 div(class = paste0("card border-", errorsColour),
+                     div(class = paste0("card-header bg-", errorsColour,
+                                        " text-white"),
+                         h4("Errors")),
+                     div(class = "card-body", h2(nErrors)))),
           column(4L,
-                 div(class = if (nWarnings > 0L) {
-                   "panel panel-warning"
-                 } else {
-                   "panel panel-success"
-                 },
-                     div(class = "panel-heading", h4("Warnings")),
-                     div(class = "panel-body", h2(nWarnings))))
+                 div(class = paste0("card border-", warningsColour),
+                     div(class = paste0("card-header bg-", warningsColour,
+                                        " text-white"),
+                         h4("Warnings")),
+                     div(class = "card-body", h2(nWarnings))))
         ),
         if (nErrors == 0L && nRecords > 0L) {
           div(
