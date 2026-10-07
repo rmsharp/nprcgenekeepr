@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S927
+date: 2026-10-06
+status: pending
+active_task: Scope docs-audit slice 2 (BACKLOG.md:32; READY, Effort L, needs scoping first; owner pick at the Phase 0 picker, option 1 of 4, the S926 recommended order): one scoping plan in docs/planning/ saying which of the 31 stale shiny_app_use/ images to regenerate, why the colony script's tail fails, and the pickup order. Planning only; no image or code changes.
+```
+
+```handoff
 session: S926
 date: 2026-10-06
 status: complete
