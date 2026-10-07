@@ -289,27 +289,28 @@ test_that("a male with no age stays out of the mates even when damIds lists his 
   expect_identical(status$colorIndex, 1L)
 })
 
-## The rule lives in one place. This test stubs it with a mask that DIFFERS
-## from the real rule (the real rule counts nobody here, because no id is in
-## damIds) and checks the cell follows the stub. A control with the real rule
-## comes first.
+## Who counts as a breeding-age female lives in one place,
+## isBreedingAgeFemale(). This test stubs it with a mask that DIFFERS from the
+## real rule (the real rule counts f1, who is 4, and not f2) and checks the cell
+## follows the stub. A control with the real rule comes first.
 
-test_that("getKinshipWithMaleStatus asks isCountedMotherWithoutBirthDate which females count", {
+test_that("getKinshipWithMaleStatus asks isBreedingAgeFemale which females count", {
   ids <- c("f1", "f2", "m1")
   group <- makeGroup(ids, c("F", "F", "M"), c(4, NA, 6))
   kmat <- makeKmat(ids, list(c("f1", "m1")))
-  ## Control: the real rule leaves f2 out, so f1 alone decides: 1 (green).
+  ## Control: the real rule counts f1 only, who is unrelated to m1: 1 (green).
   control <- getKinshipWithMaleStatus(group, kmat, damIds = "elsewhere")
   expect_equal(control$fraction, 1)
   helper <- mockery::mock(c(FALSE, TRUE, FALSE))
-  mockery::stub(getKinshipWithMaleStatus,
-                "isCountedMotherWithoutBirthDate", helper)
+  mockery::stub(getKinshipWithMaleStatus, "isBreedingAgeFemale", helper)
   status <- getKinshipWithMaleStatus(group, kmat, damIds = "elsewhere")
   mockery::expect_called(helper, 1L)
-  expect_equal(status$fraction, 0.5)
+  ## The stub counts f2 only, who is related to m1: 0 (red).
+  expect_equal(status$fraction, 0)
   args <- mockery::mock_args(helper)[[1L]]
   expect_identical(args[[1L]], group$id)
   expect_identical(args[[2L]], group$sex)
-  expect_identical(args[[3L]], is.na(group$age))
-  expect_identical(args[[4L]], "elsewhere")
+  expect_identical(args[[3L]], group$age)
+  expect_identical(args[[4L]], 3L)
+  expect_identical(args[[5L]], "elsewhere")
 })

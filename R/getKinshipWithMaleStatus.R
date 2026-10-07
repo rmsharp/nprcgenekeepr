@@ -59,12 +59,9 @@ getKinshipWithMaleStatus <- function(group, kmat, minFemaleAge = 3L,
     stop("kmat is missing kinship for group member(s): ",
          toString(missingId))
   }
-  countedWithoutAge <- isCountedMotherWithoutBirthDate(
-    group$id, group$sex, is.na(group$age), damIds
-  )
-  females <- group$id[which((group$sex == sexCodes[["female"]] &
-                               group$age >= minFemaleAge) |
-                              countedWithoutAge)]
+  females <- group$id[which(
+    isBreedingAgeFemale(group$id, group$sex, group$age, minFemaleAge, damIds)
+  )]
   males <- group$id[which(group$sex == sexCodes[["male"]] &
                             group$age >= minMaleAge)]
   if (length(females) == 0L) {

@@ -97,10 +97,7 @@ getProductionStatus <- function(ped, minDamAge = 3L,
   ## no birth date counts only when she is listed in damIds (the whole
   ## pedigree's dams). An NA from a blank sex is dropped, not counted.
   ## damIds is first read here, before ped is reduced below.
-  isFemale <- ped$sex == sexCodes[["female"]]
-  nDam <- sum(isFemale & ped$age >= minDamAge,
-              isCountedMotherWithoutBirthDate(ped$id, ped$sex, is.na(ped$age),
-                                              damIds),
+  nDam <- sum(isBreedingAgeFemale(ped$id, ped$sex, ped$age, minDamAge, damIds),
               na.rm = TRUE)
   if (is.null(maxOffspringAge)) {
     # nolint start: nonportable_path_linter
