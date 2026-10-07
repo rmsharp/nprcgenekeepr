@@ -5,6 +5,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Forming breeding groups after a Genetic Value Analysis run on the shipped example pedigree ends the
+      user's session (found S927, 2026-10-06; READY, Effort M; strict TDD for the fix)** -- the page turns
+      grey with Shiny's "disconnected" overlay, which is the colony-manager guide's own walkthrough. The
+      Genetic Diversity module's `observe()` (`R/modGeneticDiversity.R:135-141`, there only to send a
+      "data ready" message for tests) evaluates the diversity-statistics chain whenever groups form, even
+      with that tab closed; the chain throws `Error in [: subscript out of bounds` at
+      `R/getKinshipWithMaleStatus.R:62` (`any(kmat[f, males] <= threshold)`) via `getGeneticDiversityStats()`
+      (`R/getGeneticDiversityStats.R:101`); an unhandled observer error ends the session. **Measured S927**
+      (Shiny 1.14.0, shinytest2 0.5.1): 3 of 3 runs on `ExamplePedigree` (3,694 animals) with a Genetic Value run
+      first end the session ("Top ranked" and "All available" alike); no Genetic Value run first, or the
+      375-animal rhesus fixture, is fine; `test-e2e-breeding-groups-tutorial.R` passes (small fixture, so CI
+      cannot see this). **Not determined:** why the index is out of bounds (the guard at `:46-50` checks row
+      names only) and when it started (the 2026-08-10 Breeding Groups images show groups, so probably
+      newer; suspects S923-S925's shape-preserving changes to `filterKinMatrix()`, `kinship()`, `calcA()`;
+      no bisect run). Reproduction: `docs/planning/docs-audit-slice2-screenshot-plan.md` Appendix B. Pickup =
+      that plan's Phase 1: reproduce with function calls (no browser), find the cause, fix it at the cause,
+      decide whether the test-only observer should be able to end a session, pre-RED scope gate with the
+      owner first. Also check once by hand in a real browser.
+
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
       S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.
@@ -47,15 +66,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `NEWS.Rmd`, fixed S846-S847; 7b (S852) living internal docs, 33 of 35 fixed S853; 7c (S860)
       live `docs/planning/` plans, fixed S861, and a header sweep of all 84 plans (31 bannered),
       S862; 8 (S868) `docs/research/` and older `docs/audits/`, a status banner on 26 files, S870.
-      **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was never
-      acted on, and no slice is scoped to act on it: 31 of 38 regenerable `shiny_app_use/` images
-      differ from the app (Pedigree Browser family +147 px; Home, Input, Summary Statistics,
-      Breeding Groups, GVA); the colony script's tail fails identically every run (diagnose
-      first, then regenerate by module); 12 images have no generator; `pb_unknown_displayed.png`
-      is an orphan. The owner decides whether to scope a regeneration slice. S921 added a legend row
-      ("Same animal, again") that `pb_diagram_legend.png` (`colony-manager-guide.qmd:347`,
-      `pedigree-diagram.qmd:40`) does not show; whether it is one of the 31 was not checked. When it is
-      regenerated, add a sentence naming that entry to the article's dashed-line paragraph
+      **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped
+      S927 into 7-8 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its owner decisions
+      D1-D5 are pending; Phases 3a-3b can start before the crash fix in the item above). Measured S927:
+      37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
+      script's tail failure is that crash, not a script bug; 12 images have no script (2 of the 3 CSV
+      pictures are stale from the code alone); `pb_unknown_displayed.png` is an orphan;
+      `pb_diagram_legend.png` is stale (it lacks S921's "Same animal, again" row). When it is regenerated,
+      add a sentence naming that entry to the article's dashed-line paragraph
       (`pedigree-diagram.qmd:50-55`); the manual (`_pedigree_browser.Rmd:91-92`) already does.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
