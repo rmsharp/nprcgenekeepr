@@ -193,9 +193,9 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
 
   # Get the list of animals in the population to consider
   probands <- as.character(ped$id[ped$population])
-  # S924: before kinship(), so a population of fewer than 2 animals (including
-  # a one-row pedigree) stops here with the count, not inside kinship() or
-  # calcGU().
+  # S924: a ranking needs at least 2 animals (with one, the report would run
+  # but its z-score would be NaN), so a smaller population stops here, before
+  # kinship(), with the count.
   assertPopulationSize(length(probands), "reportGV(ped)")
 
   ## Extract genotype data if available otherwise NULL is returned.

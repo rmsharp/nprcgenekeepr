@@ -225,6 +225,7 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
     }
   }
 
+  ## drop = FALSE keeps a single animal a 1 x 1 matrix (S925).
   kmat <- kmat[1L:n, 1L:n, drop = FALSE]
   dimnames(kmat) <- list(id, id)
   kmat

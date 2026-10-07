@@ -63,6 +63,7 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
   }
 
   currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
+  ## drop = FALSE keeps a single living descendant a one-row matrix (S925).
   d <- d[currentDesc, , drop = FALSE]
   p <- colMeans(d)
 

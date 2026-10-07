@@ -28,6 +28,8 @@ alleleFreq <- function(alleles, ids = NULL) {
     alleles <- unlist(tapply(alleles, as.factor(ids), unique))
   }
 
+  # S925: with no alleles (a pop that names no animal), table() gives no
+  # allele column to name, so return the empty two-column table directly.
   if (length(alleles) == 0L) {
     return(data.frame(allele = factor(), freq = integer()))
   }

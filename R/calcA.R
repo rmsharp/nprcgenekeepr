@@ -46,5 +46,7 @@ calcA <- function(alleles, threshold = 1L, byID = FALSE) {
     tapply(a, ids, sum)
   }
 
+  # S925: cbind keeps one row per animal; apply()'s own simplification turned
+  # a single animal's row into a bare vector and dropped its id.
   do.call(cbind, apply(alleles, 2L, countRare, simplify = FALSE))
 }
