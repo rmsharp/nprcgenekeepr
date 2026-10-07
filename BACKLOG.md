@@ -69,10 +69,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       on Phase 2). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
-      and it is fixed, but the fix was checked in the headless test driver only: a short check by hand in
-      a real browser is still owed (S928's Chrome extension was not connected): load the shipped example
-      pedigree, run Genetic Value Analysis (a low iteration count is faster), Form Groups with the
-      defaults, and the page should stay live and the Genetic Diversity tab show a heat map. Also: 12
+      and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
+      (the owner: `ExamplePedigree.csv` on the Input tab, Form Groups with the defaults, Top ranked; the
+      page stayed live and the Genetic Diversity tab drew the heat map; "All available" was checked only
+      in S928's headless run, not by hand). Also: 12
       images have no script (2 of the 3 CSV
       pictures are stale from the code alone); `pb_unknown_displayed.png` is an orphan;
       `pb_diagram_legend.png` is stale (it lacks S921's "Same animal, again" row). When it is regenerated,

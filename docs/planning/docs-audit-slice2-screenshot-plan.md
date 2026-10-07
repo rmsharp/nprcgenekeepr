@@ -13,7 +13,8 @@ to write it. Every number below was measured this session unless it says "S821" 
 > A Genetic Value run only matters because the diversity heat map needs its values. The trigger table below describes
 > symptoms, not the cause. The Genetic Diversity module's background "ready" step also can no longer end a session.
 > Phase 3c, which needed Phases 1 and 2, now waits only on Phase 2 (Phases 2, 3a and 3b never waited on Phase 1); the
-> by-hand browser check this plan asks for is still owed.
+> by-hand browser check this plan asked for was done S929 (the owner, in Chrome, Top ranked source: the page stayed live and
+> the heat map drew).
 
 ## What this plan is for
 
