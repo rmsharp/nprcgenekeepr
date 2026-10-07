@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S928
+date: 2026-10-06
+status: pending
+active_task: Fix the session-ending crash when breeding groups form after a Genetic Value Analysis run on the shipped example pedigree (BACKLOG.md:8; READY, Effort M; strict TDD; owner pick at the Phase 0 picker, option 1 of 3, the recommended one; Phase 1 of docs/planning/docs-audit-slice2-screenshot-plan.md). Reproduce with function calls, find why kmat[f, males] is out of bounds at R/getKinshipWithMaleStatus.R:62, fix at the cause, pre-RED scope question to the owner first.
+```
+
+```handoff
 session: S927
 date: 2026-10-06
 status: complete

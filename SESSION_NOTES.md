@@ -98,39 +98,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 927 Did
-**Deliverable, DONE (planning only; no code, test or image changed):** scoped docs-audit slice 2 (`BACKLOG.md:32` before the
-edit, `:51` now; owner pick at the Phase 0 picker, option 1 of 4). One plan: `docs/planning/docs-audit-slice2-screenshot-plan.md`
-(five owner decisions D1-D5 at its top, Phases 1-4b, an estimated 7-8 sessions). Commits: claim `95667431e`, deliverable
-`db288efed`; the close-out commit carries this note, the receipt and the ledger entry (24 ahead of origin, nothing pushed).
-**Measured (scratch runs, committed images never touched):** 37 of the 38 script-written images differ from the app (S821: 31);
-the diagram script ran clean and its 5 images are all +147 px, so `pb_diagram_legend.png` is stale (S921 left that open); the
-colony script again 76/81 with S821's five failures. **Cause of the tail failure, an app bug and not a script bug:** after a
-Genetic Value run on the 3,694-animal example, forming groups makes the Genetic Diversity test-only `observe()`
-(`R/modGeneticDiversity.R:135-141`) throw `subscript out of bounds` (`R/getKinshipWithMaleStatus.R:62`); Shiny ends the session
-(grey overlay, socket gone, server 0.0% CPU). 3 of 3 runs crash; no Genetic Value run first, or the 375-animal rhesus fixture,
-is fine; `test-e2e-breeding-groups-tutorial.R` passes. Why the index is out of bounds, and since when: not determined (no
-bisect). Also: `data-ready` never resets, so waits after the first formation return in 0 s. New `BACKLOG.md:8` item; Learning 892.
-**Handoff evaluation of S926: 8/10.** Helped: step (A) named the item, said it needed scoping and what to diagnose first; the
-`:32` cite was right. Missing: the capture scripts overwrite committed images in place (copy the script, change `SHOT_DIR`);
-the commit hook's 25,000-token ceiling is its own count (56,390 B was 24,841 tok), not 56,750 B. Wrong: "31 of 38" had aged.
-**Self-assessment: 8/10.** + re-measured instead of citing S821; viewed old/new pairs; CPU, `sample`, server log and overlay
-found the cause; one factor at a time found the trigger; stayed planning-only. - first claim commit refused for size; one bad
-`click(wait_ =)` call; a wrong 404 explanation caught before it reached Learning 892; no check in a real browser; the 7-8
-session figure is a guess. Reduction: S926's block condensed 5,641 B to 1,693 B at claim.
+### What Session 928 Did
+**Deliverable:** fix the session-ending crash when breeding groups form after a Genetic Value Analysis run on the example pedigree
+(`BACKLOG.md:8`; READY, Effort M; strict TDD; owner pick at the Phase 0 picker, option 1 of 3, the recommended one; Phase 1 of
+`docs/planning/docs-audit-slice2-screenshot-plan.md`) (IN PROGRESS)
+**Started:** 2026-10-06; TDD phase PRE-RED.
+**Status:** Session claimed. Work beginning: reproduce with function calls, find why `kmat[f, males]` is out of bounds, then the
+pre-RED scope question to the owner. No code or test written yet.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on):** (A) the crash (`BACKLOG.md:8`, READY, Effort M, strict TDD; plan Phase 1: reproduce
-with function calls, find why `kmat[f, males]` is out of bounds, bisect from S923-S925 if unclear, pre-RED scope gate first).
-(B) plan Phases 3a-3b (27 clean images; can start any time) once the owner answers D1-D5. (C) `getAncestors()` absent id (`:27`,
-DECISION NEEDED, S); upstream #93 (`:277`, BLOCKED). BACKLOG cites moved: `:8` crash, `:27` getAncestors, `:43` version, `:51`
-docs-audit, `:102` tutorial, `:277` #93. Unpushed: 24 local commits; not offered (S905 ruling); no GitHub issue filed for the
-crash (the owner may want one). Carried: the S926 list below.
-**Key files:** the plan (Appendix B reproduces the crash); `R/modGeneticDiversity.R:104-105,135-141`;
-`R/getKinshipWithMaleStatus.R:46-50,62`; `R/getGeneticDiversityStats.R:101`; `R/modBreedingGroups.R:742-745`;
-`tests/testthat/helper-shinytest2.R:280-286`; Learning 892.
-**Gotchas:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits; `app$click(selector = )` takes no `wait_`; one
-Chrome session at a time; the compare/crop/diagnostic scripts lived in the session scratchpad and are not committed (the plan's
-appendices describe them); `quality_ratchet.py --run` takes minutes (1/1 pass, results `9536ca141317`).
+### What Session 927 Did (condensed S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Planning only (no code, test or image changed): scoped docs-audit slice 2 into `docs/planning/docs-audit-slice2-screenshot-plan.md`
+(owner decisions D1-D5, Phases 1-4b, an estimated 7-8 sessions, a guess). Measured: 37 of the 38 script-written guide images differ
+from the app (S821: 31); `pb_diagram_legend.png` is stale. The colony script's tail failure is an app bug, `BACKLOG.md:8`: the Genetic
+Diversity test-only `observe()` (`R/modGeneticDiversity.R:135-141`) throws `subscript out of bounds` at
+`R/getKinshipWithMaleStatus.R:62` after a Genetic Value run on the 3,694-animal example, and Shiny ends the session (3 of 3 runs;
+Appendix B of the plan reproduces it; cause and start date not determined). Claim `95667431e`, deliverable `db288efed`, close-out
+`395298aee`. Handoff evaluation of S926: 8/10. Self 8/10.
+**Gotchas kept:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits; `app$click(selector = )` takes no `wait_`; one
+Chrome session at a time; the capture scripts overwrite committed images in place (copy the script, change `SHOT_DIR`); the compare,
+crop and diagnostic scripts are not committed (the plan's appendices describe them); `data-ready` never resets
+(`R/modBreedingGroups.R:742-745`); `quality_ratchet.py --run` takes minutes. **Carried:** the S926 list below; D1-D5 pending;
+BACKLOG cites `:8` crash, `:27` getAncestors, `:43` version, `:51` docs-audit, `:277` #93 (upstream); 24 local commits unpushed (not
+offered); no GitHub issue filed for the crash.
 
 ### What Session 926 Did (condensed S927; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Description sync shipped (strict TDD): `_pkgdown.yml` (a folded block, `:15`), `CITATION.cff` and
