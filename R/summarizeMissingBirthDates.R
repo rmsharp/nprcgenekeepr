@@ -4,10 +4,10 @@
 #' Summarize the animals in breeding groups that have no birth date
 #'
 #' Counts, for the Genetic Diversity tab's note, the animals in the groups
-#' that have no birth date and how the Production cell treats the females among
-#' them: a female with no birth date counts as a breeding-age mother only when
-#' the pedigree lists an offspring for her, looked up in the whole pedigree
-#' (not only in the groups).
+#' that have no birth date and how the Production and Inbreeding cells treat the
+#' females among them: a female with no birth date counts as a breeding-age
+#' mother only when the pedigree lists an offspring for her, looked up in the
+#' whole pedigree (not only in the groups).
 #'
 #' @param groups list of character vectors of animal IDs, one per breeding
 #' group.
@@ -46,9 +46,9 @@ makeBirthDateNoteText <- function(summary) {
   paste0(
     summary$animals, " of the ", summary$total, " animals in these groups ",
     if (summary$animals == 1L) "has" else "have",
-    " no birth date, so their age is unknown. In the Production ",
-    "column, a female with no birth date counts as a breeding-age ",
-    "female only when the pedigree lists an offspring for her (",
+    " no birth date, so their age is unknown. In the Production and ",
+    "Inbreeding columns, a female with no birth date counts as a ",
+    "breeding-age female only when the pedigree lists an offspring for her (",
     summary$femalesCounted, " counted, ", summary$femalesLeftOut, " left out)."
   )
 }

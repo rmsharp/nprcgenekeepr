@@ -80,4 +80,9 @@ offspring are in another group still counts. A female with no birth date and
 no offspring is left out, and so is an animal with a blank sex. A group with
 no breeding-age females has no Production value: its entry is \code{NA}, and
 the heat map draws that cell gray.
+
+The Inbreeding column counts breeding-age females by the same rule: a female
+with no birth date counts when the pedigree lists an offspring for her, and
+is left out otherwise. A male with no birth date is never counted as a
+potential mate.
 }

@@ -33,6 +33,11 @@
 #' no breeding-age females has no Production value: its entry is \code{NA}, and
 #' the heat map draws that cell gray.
 #'
+#' The Inbreeding column counts breeding-age females by the same rule: a female
+#' with no birth date counts when the pedigree lists an offspring for her, and
+#' is left out otherwise. A male with no birth date is never counted as a
+#' potential mate.
+#'
 #' @param groups List of character vectors of animal IDs, one per breeding
 #' group (for example the \code{groups} returned by
 #' \code{modBreedingGroupsServer}). If the list is named, the names become the
@@ -111,7 +116,9 @@ getGeneticDiversityStats <- function(groups, ped, geneticValues, kmat,
     )$colorIndex
     grp <- data.frame(id = subped$id, sex = subped$sex, age = subped$age,
                       stringsAsFactors = FALSE)
-    inbreedingIndex <- getKinshipWithMaleStatus(grp, kmat)$colorIndex
+    inbreedingIndex <- getKinshipWithMaleStatus(
+      grp, kmat, damIds = ped$dam
+    )$colorIndex
     if (is.na(inbreedingIndex)) {
       inbreedingIndex <- 1L
     }

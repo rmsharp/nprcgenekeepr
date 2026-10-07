@@ -17,7 +17,10 @@
 #' to avoid reporting missing data as a healthy condition).
 #'
 #' An animal whose age or sex is missing (\code{NA}) cannot be shown to be a
-#' breeding-age female or male, so it is left out of both counts.
+#' breeding-age female or male, so it is left out of both counts, with one
+#' exception: a female with no age (no birth date) counts as a breeding-age
+#' female when the pedigree lists an offspring for her (\code{damIds}), the
+#' same rule the Production cell uses. A male with no age is never counted.
 #'
 #' @param group Dataframe of the group members. The \code{id}, \code{sex}
 #' (\code{"F"}/\code{"M"}), and \code{age} (in years) columns are required.
@@ -32,6 +35,10 @@
 #' as a potential mate. Defaults to 5.
 #' @param threshold Numeric kinship at or below which a female and male are
 #' treated as unrelated. Defaults to 0.015625.
+#' @param damIds Character vector of the IDs listed as a dam anywhere in the
+#' pedigree, not only in \code{group}. A female with no age counts as a
+#' breeding-age female only when her ID is in it. Defaults to none, so a female
+#' with no age is left out.
 #' @return A list with \code{fraction} -- the proportion of breeding-age
 #' females unrelated to at least one breeding-age male; \code{color} -- the
 #' heat-map color ("red", "yellow", or "green"); and \code{colorIndex} --
@@ -40,7 +47,8 @@
 #' @noRd
 getKinshipWithMaleStatus <- function(group, kmat, minFemaleAge = 3L,
                                      minMaleAge = 5L,
-                                     threshold = 0.015625) {
+                                     threshold = 0.015625,
+                                     damIds = character(0L)) {
   expectedCols <- c("id", "sex", "age")
   if (!all(expectedCols %in% names(group))) {
     missingCol <- expectedCols[!expectedCols %in% names(group)]
@@ -51,8 +59,12 @@ getKinshipWithMaleStatus <- function(group, kmat, minFemaleAge = 3L,
     stop("kmat is missing kinship for group member(s): ",
          toString(missingId))
   }
-  females <- group$id[which(group$sex == sexCodes[["female"]] &
-                              group$age >= minFemaleAge)]
+  countedWithoutAge <- isCountedMotherWithoutBirthDate(
+    group$id, group$sex, is.na(group$age), damIds
+  )
+  females <- group$id[which((group$sex == sexCodes[["female"]] &
+                               group$age >= minFemaleAge) |
+                              countedWithoutAge)]
   males <- group$id[which(group$sex == sexCodes[["male"]] &
                             group$age >= minMaleAge)]
   if (length(females) == 0L) {
