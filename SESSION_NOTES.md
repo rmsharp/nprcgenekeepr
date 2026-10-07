@@ -98,38 +98,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 934 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Genetic Diversity heat map's names are whole and
-readable. `makeGeneticDiversityHeatmap()` (`R/makeGeneticDiversityHeatmap.R:64,76-80`) writes the column names level, centred and bold,
-and both name sets at 22 pt (the owner's "about 2.5 times larger" than 8.8 pt; one `labelSize`). Cause, measured outside the app at 900 x
-500, 72 dpi: the 45-degree names run up and right and the top edge cuts them; why that strip is too short was not traced (removing the
-slant made it unnecessary). **Owner answers at Pre-RED:** level bold names (not a bigger slant); retake the guide's picture now. 8 new
-blocks (7 failed at RED on the old values, the "stay above the grid" guard passed). Claim `b06d00b07`, RED `f0d4f1e9f`, GREEN
-`bab2c8d43`, REFACTOR `4a086004c`, docs `e514b9a08` (picture, alt text), NEWS `03adde64a`, close-out (the commit carrying this note).
-**Verified:** full suite 3,231 tests, 0 failed, 0 errors (GREEN, REFACTOR); `check()` 0/0/0; `lint_package` 0; ratchet 1/1 (results
-`58130a0825f7`); REFACTOR's theme, data, scales and layers identical to GREEN on two fixtures. Real app (headless Chrome, the guide's
-example): the capture script's heat map step, opened for the owner who approved it before any full testing; that run was stopped after
-the step, so it is not an 81/81 run. **Went wrong:** I wrote "shown above" twice for pictures the owner never saw (images I Read reach
-only me), so the look was chosen from text; a 6-minute suite was running when the owner asked to see the real picture first (killed);
-my first sizes, 15 and 14 pt, were 1.6-1.7 x against the owner's 2.5 x (moved before RED was committed). Learning 900.
-**Handoff evaluation of S933: 9/10.** Helped: the A-E order and its cites (all held), the capture-script gotchas, "full suite alone".
-Wrong: one stale cite (`BACKLOG.md:57` in the docs-audit item; the heat map item was at `:20`). Missing: that images I Read do not
-reach the owner. **Self-assessment: 7/10.** + reproduced before asking; the 5-column 600 px collision found and disclosed; REFACTOR
-proved identical; the owner's mid-turn size acted on before RED. - the unseen-picture overclaim; the suite started before the picture.
+### What Session 935 Did
+**Deliverable:** decide the Inbreeding cell's rule for a female with no birth date who has offspring, and whether a
+sire with no birth date counts the same way (`BACKLOG.md:8`; DECISION NEEDED, Effort S; owner pick at the Phase 0
+picker, option 1 of 4; strict TDD for any change) (IN PROGRESS)
+**Started:** 2026-10-07 13:55
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on):** (A) the Inbreeding cell's rule (`BACKLOG.md:8`, DECISION NEEDED, S). (B) The QC Summary
-boxes' colour (`:20`, DECISION NEEDED, S). (C) Docs-audit slice 2 (`:78`): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a,
-4b. (D) Origin-and-funding reword (`:33`); `getAncestors()` (`:54`). Cites: `:70` version, `:143` contributor tutorial.
-**Key files:** `R/makeGeneticDiversityHeatmap.R:64,76-80`; `tests/testthat/test_makeGeneticDiversityHeatmap.R:146-224` (the labels
-section; `labelSettings()` at `:155`); `test_modGeneticDiversity.R:181` (through the module);
-`vignettes/articles/shiny_app_use/genetic_diversity_heatmap.png` and `colony-manager-guide.qmd:705`.
-**Gotchas:** show a picture with `open <png>` plus its path (a `Read` image does not reach the owner); 5 columns in a 600 px window
-collide at 22 pt (the app has 4 metrics; a Flags column, issue #116, would need `guide_axis(n.dodge = 2)` or smaller names); read a
-look's resolved settings with `ggplot2::calc_element(el, p$theme)`; a zsh `rm -f dir/*.png` with no match aborts the `&&` chain;
-the capture script still needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>`; a BACKLOG removal shifts every later cite; take `wc -c`
-after the last edit.
+### What Session 934 Did (condensed S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`makeGeneticDiversityHeatmap()` writes its column names level, centred and bold, and both name sets at 22 pt (the owner's "about
+2.5 times larger" than 8.8 pt; one `labelSize`, `R/makeGeneticDiversityHeatmap.R:64,76-80`), so the top edge no longer cuts them
+(strict TDD; 8 new test blocks; full suite 3,231, 0 failed). The guide's picture is retaken from the real app. Claim `b06d00b07`,
+RED `f0d4f1e9f`, GREEN `bab2c8d43`, REFACTOR `4a086004c`, close-out `f6b8ccf67`. Handoff evaluation of S933: 9/10. Self 7/10.
+**Gotchas kept:** show a picture with `open <png>` plus its path (a `Read` image does not reach the owner); 5 columns in a 600 px
+window collide at 22 pt (a Flags column, issue #116, would need `guide_axis(n.dodge = 2)` or smaller names); read a look's resolved
+settings with `ggplot2::calc_element(el, p$theme)`; the capture script still needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>`;
+a BACKLOG removal shifts every later cite; take `wc -c` after the last edit.
 
-### What Session 933 Did (condensed S934; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### What Session 933 Did (condensed S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; only with `reportChanges = TRUE`; a warning
 like any other after an upload); one `getEmptyWarningsTable()` replaces 4 copies (the 4 in `R/modInput.R:422,450,478,536` stay). 17
 new tests; full suite 3,223, 0 failed. Claim `be7537637`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10.
