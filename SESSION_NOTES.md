@@ -128,12 +128,15 @@ plain words; RED proved by messages; mutation 4 of 4; suite, check, lint, E2E cl
 picker's missing relation; options offered before the cause was found); one invalid regression check (caught). Reduction:
 `SESSION_NOTES.md` 55,620 B at Phase 0, 55,141 B now (S924, S922 and S921 condensed; S924's carried list folded into this one).
 
-**Next steps (recommended, not yet ruled on):** (A) the stale `man/nprcgenekeepr-package.Rd` (`BACKLOG.md:24`, READY, S; one
-file, `devtools::document()` in its own commit, confirm nothing else changes). (B) docs-audit slice 2 (`:39`, needs scoping
-first, Effort L; scope which of the 31 images to regenerate and diagnose the colony script's tail first; it also holds the stale
-`pb_diagram_legend.png` and the article sentence at `pedigree-diagram.qmd:50-55`). (C) `getAncestors()` on an absent id (`:8`,
-DECISION NEEDED, S). (D) upstream `KJ5HST/methodology#93` (`:266`, BLOCKED). Unpushed: 13 local commits plus the close-out; not
-offered (owner's S905 ruling). Version 3.0.0 at release (`:31`). Carried: `reportGV(smallPed)` unfiled (3 of 3 calls fail in
+**Next steps (recommended, not yet ruled on):** (A) bring the copies of `DESCRIPTION`'s Description in line (`BACKLOG.md:24`,
+READY, S; widened after close-out, the owner ruled it a deliverable for another session): the owner's UNCOMMITTED `DESCRIPTION`
+edit (lines 18-19, "implements a derivation") shows in `git status`; ask whether to commit it with this item, then regenerate
+`man/nprcgenekeepr-package.Rd` and match `_pkgdown.yml:12` and `CITATION.cff:12` (still "five groups"). (B) docs-audit slice 2
+(`:46`, needs scoping first, Effort L; scope which of the 31 images to regenerate and diagnose the colony script's tail first; it
+also holds the stale `pb_diagram_legend.png` and the article sentence at `pedigree-diagram.qmd:50-55`). (C) `getAncestors()` on
+an absent id (`:8`, DECISION NEEDED, S). (D) upstream `KJ5HST/methodology#93` (`:273`, BLOCKED). The S925 receipt's BACKLOG
+cites are 7 lines low after the widening. Unpushed: 14 local commits plus the addendum; not offered (owner's S905 ruling).
+Version 3.0.0 at release (`:38`). Carried: `reportGV(smallPed)` unfiled (3 of 3 calls fail in
 `geneDrop()`: "sire and dam must have had alleles assigned: logic error"); hover text on the dashed link (not built); NEW-24's
 print method on issue #123 (the owner closes it); the D2 dogleg observation from S910 (untested); the seventh-label scan test
 (unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).

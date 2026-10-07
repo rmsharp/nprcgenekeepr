@@ -21,12 +21,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
       `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
 
-- [ ] **`man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (found S923, READY, Effort S)** --
-      `devtools::document()` rewrites its description paragraph ("five groups" becomes "these main
-      groups", plus a sentence on the further tabs): `DESCRIPTION` was reworded in S830 (`73c00d1ec`)
-      and the man page was not regenerated. One file; S923 restored it rather than commit it with an
-      unrelated change. `devtools::check()` does not flag it (0/0/0). Fix: run `devtools::document()`
-      in its own commit and confirm no other file changes.
+- [ ] **Bring the copies of `DESCRIPTION`'s Description in line with it (found S923, widened S925,
+      READY, Effort S)** -- three tracked files repeat the Description text and have fallen behind:
+      (1) `man/nprcgenekeepr-package.Rd:11` (generated): `devtools::document()` rewrites its paragraph
+      ("five groups" becomes "these main groups", plus a sentence on the further tabs); `DESCRIPTION`
+      was reworded in S830 (`73c00d1ec`) and the man page was not regenerated (S923 restored it rather
+      than commit it with an unrelated change; `devtools::check()` does not flag it, 0/0/0).
+      (2) `_pkgdown.yml:12` (website home page; S830 updated its "these main groups" text).
+      (3) `CITATION.cff:12` (citation abstract; last touched S321; still says "five groups").
+      **The owner's own edit, uncommitted at S925's end (2026-10-06):** `DESCRIPTION` lines 18-19 now
+      say the package "implements a derivation of the work in" Vinson and Raboin (2015), where all
+      three copies still say "is a derivation of the work in". Ask the owner whether to commit that
+      edit with this item, then regenerate (1) with `devtools::document()` and give (2) and (3) the
+      same wording; confirm no other file changes. One session, docs only, 4 files.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
