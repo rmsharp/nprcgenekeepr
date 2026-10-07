@@ -37,7 +37,8 @@ modGeneticDiversityUI <- function(id) {
       ),
       column(9L,
              uiOutput(ns("guidance")),
-             plotOutput(ns("heatmap"), height = "500px")
+             plotOutput(ns("heatmap"), height = "500px"),
+             uiOutput(ns("birthDateNote"))
       )
     )
   )
@@ -129,6 +130,29 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
           )
         )
       }
+    })
+
+    output$birthDateNote <- renderUI({
+      ## A failing calculation is already reported by the heat map and the
+      ## guidance, so it is read as "not ready" here.
+      if (is.null(tryCatch(diversityStats(), error = function(e) NULL))) {
+        return(NULL)
+      }
+      s <- summarizeMissingBirthDates(safeRead(groups), safeRead(pedigree))
+      if (s$animals == 0L) {
+        return(NULL)
+      }
+      div(
+        class = "alert alert-warning",
+        paste0(
+          s$animals, " of the ", s$total, " animals in these groups ",
+          if (s$animals == 1L) "has" else "have",
+          " no birth date, so their age is unknown. In the Production ",
+          "column, a female with no birth date counts as a breeding-age ",
+          "female only when the pedigree lists an offspring for her (",
+          s$femalesCounted, " counted, ", s$femalesLeftOut, " left out)."
+        )
+      )
     })
 
     # Signal data-ready when the heat map is rendered (for E2E testing). An

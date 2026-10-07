@@ -63,7 +63,8 @@ getProductionStatus <- function(ped, minDamAge = 3L,
                                 minParentAge = lifecycle::deprecated(),
                                 maxOffspringAge = NULL,
                                 housing = "shelter_pens",
-                                currentDate = Sys.Date()) {
+                                currentDate = Sys.Date(),
+                                damIds = ped$dam) {
   if (lifecycle::is_present(minParentAge)) {
     lifecycle::deprecate_warn(
       when = "2.0.0",
@@ -80,7 +81,14 @@ getProductionStatus <- function(ped, minDamAge = 3L,
     missingCol <- expectedCols[!expectedCols %in% names(ped)]
     stop("ped is missing: ", missingCol)
   }
-  nDam <- nrow(ped[ped$sex == sexCodes[["female"]] & ped$age >= minDamAge, ])
+  ## A female of known age counts when she is at least minDamAge. A female with
+  ## no birth date counts only when she is listed in damIds (the whole
+  ## pedigree's dams). An NA from a blank sex is dropped, not counted.
+  ## damIds is first read here, before ped is reduced below.
+  isFemale <- ped$sex == sexCodes[["female"]]
+  nDam <- sum(isFemale & ped$age >= minDamAge,
+              isFemale & is.na(ped$age) & ped$id %in% damIds,
+              na.rm = TRUE)
   if (is.null(maxOffspringAge)) {
     # nolint start: nonportable_path_linter
     maxOffspringAge <- mdy(paste0("1/1/", year(currentDate) - 2L))
