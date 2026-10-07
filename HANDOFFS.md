@@ -192,6 +192,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S934
+date: 2026-10-07
+status: pending
+active_task: IN PROGRESS -- fix the Genetic Diversity heat map's cut-off column labels and tiny row labels (BACKLOG.md:20; owner pick at the Phase 0 picker, option 1 of 4; strict TDD). Session claimed; work beginning.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S933
 date: 2026-10-07
 status: complete

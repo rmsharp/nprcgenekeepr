@@ -98,41 +98,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 933 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 2 of 4):** `runQcStudbook()` now adds the Input tab's
-"Animals with no birth date" warning (the S932 design; its `BACKLOG.md` item is removed). New internal `getNoBirthDateWarning()`
-(counts `is.na(ped[["birth"]])` in the cleaned pedigree; the ruled wording, plain numbers, "has" for one) and
-`getEmptyWarningsTable()`; `R/runQcStudbook.R:238-244` appends the row after the second pass. **Two owner answers at Pre-RED (both
-recommended):** the row is added only with `reportChanges = TRUE` (the app's call; scripts keep an empty table); after an upload it
-is a warning like any other: yellow pop-up, Warnings tab opens (`R/appServer.R:183-205`, a reader the backlog item did not list).
-REFACTOR (owner: QC code only): one shared empty warnings table replaces 4 copies; the 4 in `R/modInput.R:422,450,478,536` stay.
-17 new tests (8 helper, 6 `runQcStudbook()`, 3 through the real Input module); 13 failed at RED, 4 guards passed. Claim
-`be7537637`, RED `7d4a09af3`, GREEN `43dd16322`, REFACTOR `3da18de52`, docs `41f542ad4` (help), `cbb5f387c` (guide, manual, NEWS),
-`9f93834b7` (corrections from the real-app run), close-out (the commit carrying this note).
-**Verified:** full suite 3,223 tests, 0 failed, 0 errors (GREEN, REFACTOR); `check()` 0/0/0 (GREEN, REFACTOR, final);
-`lint_package` 0; the real app (headless Chrome, `makeExamplePedigreeFile()`): lands on Warnings, pop-up "QC found 2
-warning(s)", QC Summary 3694/0/2, Pedigree Browser loads, 0 error lines; the guide's capture script 81/81 steps (scratch folder).
-**Wrong claims that run caught:** the guide's example already had a column-case warning, so it shows 2, not 1 (text, alt text and
-`read_and_check_pedigree.png` fixed, picture copied alone); "the Warnings count turns yellow" is false (no fill in this theme;
-new item `BACKLOG.md:39`). **Handoff evaluation of S932: 7/10.** Helped: the A-E order and cites (all held), the RED test list in
-its next steps. Missing: the `appServer.R` reader. Wrong: "the shipped example has 0 warnings" (true of
-`inst/extdata/examples/ExamplePedigree.csv`, not of the guide's `makeExamplePedigreeFile()`); "turns yellow".
-**Self-assessment: 8/10.** + a gate each phase in plain words; fixtures probed before RED; the reader found by grep before the
-second question; the real-app run caught two wrong claims before close-out. - my guide sentence rested on a test of the other
-example file (wrong for one unpushed commit; Learning 899); RED's missing-function error hid a broken fixture until GREEN.
+### What Session 934 Did
+**Deliverable:** fix the Genetic Diversity heat map's cut-off column labels and tiny row labels (`BACKLOG.md:20`; READY, Effort S as
+an estimate; owner pick at the Phase 0 picker, option 1 of 4; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-07 11:44 CDT
+**Status:** Session claimed. Work beginning. Phase 0: 0 undocumented commits, 0 pending receipts, S933's ratchet citation (results
+`c33c6c0d2ebe`) matched, CI green on the last 10 master runs (the first `gh run list` returned stale September rows; the re-run was
+current), dashboard 96/100 High+ risk 0, context budget no file over its ceiling, 58 ahead of origin (not offered).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:20`, READY, S; judged by eye with the owner;
-docs-audit Phase 3c retakes that picture after it). (B) The Inbreeding cell's rule (`:8`, DECISION NEEDED, S). (C) The QC Summary
-boxes' colour (`:39`, DECISION NEEDED, S). (D) Docs-audit slice 2 (`:97`): D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b. (E)
-Origin-and-funding reword (`:52`); `getAncestors()` (`:73`). Cites: `:89` version, `:159` contributor tutorial.
-**Key files:** `R/getNoBirthDateWarning.R`, `R/getEmptyWarningsTable.R`, `R/runQcStudbook.R:238-244`, `R/appServer.R:183-205`,
-`tests/testthat/test_getNoBirthDateWarning.R`, `test_runQcStudbook.R:72-140`, `test_modInput_qcStudbook.R:744-812`.
-**Gotchas:** the capture script needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>` (without the first it stops at "On CRAN"; without
-the second it overwrites the guide's pictures); `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ
-(column case); `R/modInput.R` still holds 4 hand-copied empty warnings tables; take `wc -c` after the last edit; the full suite
-takes about 6 minutes and runs alone.
+### What Session 933 Did (condensed S934; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; owner picks: the row only with
+`reportChanges = TRUE`, and after an upload it behaves like any warning). REFACTOR, QC code only: `getEmptyWarningsTable()` replaces
+4 copies; the 4 in `R/modInput.R:422,450,478,536` stay. 17 new tests; full suite 3,223 tests, 0 failed; the real-app run caught two
+wrong claims (the guide's example shows Warnings 2; the QC boxes have no colour, `BACKLOG.md:39`). Claim `be7537637`, RED
+`7d4a09af3`, GREEN `43dd16322`, REFACTOR `3da18de52`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10.
+**S933's next steps (recommended, not ruled on):** (A) the heat map label fix (S934 took it); (B) the Inbreeding rule
+(`BACKLOG.md:8`); (C) the QC boxes' colour (`:39`); (D) docs-audit slice 2 (`:97`); (E) origin-and-funding reword (`:52`) and
+`getAncestors()` (`:73`).
+**Gotchas kept:** the capture script needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>` (without the second it overwrites the
+guide's pictures); `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ (column case); take `wc -c`
+after the last edit; the full suite takes about 6 minutes and runs alone.
 
-### What Session 932 Did (condensed S933; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### What Session 932 Did (condensed S933 and S934; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 A decision session, docs only: the Input-tab missing-birth-date warning design was ruled (the owner took all three recommended
 options: a row in the existing Warnings list, every animal, the stated wording); S933 built it. Measured: the example pedigree has
 1,432 of 3,694 animals with no birth date, none ALIVE; "living" has two meanings (no exit date 1,372 of 1,704; status ALIVE 0 of
