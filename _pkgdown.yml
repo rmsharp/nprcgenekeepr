@@ -9,6 +9,9 @@ destination: pkgdown_site
 
 home:
   title: Genetic Tools for Colony Management
+  # The same text as DESCRIPTION's Description (tests/testthat/test_descriptionCopies.R
+  # fails if they differ). A folded block, not a plain value: "functions:" ends a line
+  # below, and a plain multi-line value cannot hold a line ending in a colon.
   description: >-
     Provides genetic tools for colony management and implements a
     derivation of the work in Amanda Vinson and Michael J Raboin (2015)
