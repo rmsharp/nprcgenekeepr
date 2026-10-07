@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 937 Did
+**Deliverable:** fix `NEWS.Rmd:330`, undefined Inbreeding is red not gray (`BACKLOG.md:49`) (IN PROGRESS)
+**Started:** 2026-10-07 17:47 CDT. **Ledger:** `CHANGELOG: pending`
+
 ### What Session 936 Did
 **Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Input tab's QC Summary boxes (Records
 Processed, Errors, Warnings) are colored by what the check found, as Bootstrap 4 cards drawn by one internal

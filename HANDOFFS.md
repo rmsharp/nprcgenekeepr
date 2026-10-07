@@ -192,6 +192,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S937
+date: 2026-10-07
+status: pending
+active_task: IN PROGRESS -- NEWS.Rmd:330 says an undefined Inbreeding cell is gray, but the code scores it red (BACKLOG.md:49; READY, S, docs only; owner pick at the Phase 0 picker, option 1 of 4; strict TDD).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S936
 date: 2026-10-07
 status: complete
