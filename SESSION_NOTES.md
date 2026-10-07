@@ -99,25 +99,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 925 Did
-**Deliverable:** one-animal and zero-animal input fixed at the cause (`BACKLOG.md:24`, DECISION NEEDED, Effort S; found S924;
-the owner first asked how option 2 related to S924's pick: it is S924's leftover) (IN PROGRESS)
-**Started:** 2026-10-06 17:26 CDT
-**Status:** Session claimed. The owner's two answers at PRE-RED, both the recommended ones: fix the cause (not a message in each
-function); a `pop` that names no animal gives an empty table from `calcGU()`/`calcGUSE()` (the S923 rule). Next: the
-PRE-RED→RED gate.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
-**Phase 0 (S925):** 0 undocumented commits, 0 pending receipts, S924's ratchet citation (`ea0686ea1e3d`) matched
-`.quality-gates-results.json`; 7 ahead of origin (not offered, S905 ruling); CI green on the last 10 runs; dashboard 96/100,
-High+ risk 0; context budget no file over its ceiling (growth run 117), synced tools behind canonical (reported only);
-`SESSION_NOTES.md` 55,620 B at Phase 0.
-**PRE-RED measured (in memory, no repo edit; scripts in the session scratchpad):** one cause, R dropping a one-row table to a
-bare vector, at `R/calcA.R` (`apply()`), `R/kinship.R` (last subset) and `R/calcFounderContributions.R` (`d[currentDesc, ]`);
-it also breaks `calcFE()` (not in the BACKLOG item). With three one-line fixes in memory: one animal gives GU 100, GU SE 0,
-kinship 0.5 (X-linked male 1), FE 2; 18 of 18 results for 2+ animals byte-identical (full `reportGV(qcPed)`,
-`gvaConvergence(qcPed)`, `kinship()` on `examplePedigree`, 3,694 animals). Zero animals fails in `alleleFreq()` on empty input;
-a one-line `as.data.frame(table(allele = ...), responseName = "freq")` dropped the `allele` column: not enough. Do not change
-`kinship()`'s `1L:max(pdepth)` loop: `seq_len()` turns MZ-twin founders' kinship 0.5 into 0.
+**Deliverable, DONE (strict TDD):** one-animal and zero-animal input fixed at the cause (`BACKLOG.md:24` before removal; found
+S924). The owner bounced the Phase 0 picker to ask how option 2 related to S924's pick (it is S924's leftover), then asked for a
+clearer explanation and a more robust, cleaner solution than one check per function; the owner's two PRE-RED answers, both the
+recommended ones: fix the cause; an empty table when `pop` names no animal (the S923 rule). One cause, R collapsing a one-row
+result to a bare vector: `calcA()` builds its result with `cbind` (`R/calcA.R:51`), `kinship()` and the founder-contribution
+step keep the matrix shape (`drop = FALSE`, `R/kinship.R:229`, `R/calcFounderContributions.R:67`); `alleleFreq()` returns an
+empty two-column table for no alleles (`R/alleleFreq.R:33-35`). Commits: claim `c72ee87e4`, RED `ea2a03bde` and `e7881d441`,
+GREEN `7c369b185`, docs `b2df395d5`, REFACTOR `69906d9d5`; the close-out commit carries this note, the receipt, the ledger
+entry, the BACKLOG removal and Learning 890 (13 ahead of origin before it, nothing pushed).
+**Measured:** one animal now gives genome uniqueness 100 (SE 0) and a 1 x 1 kinship matrix (0.5; X-linked male 1, female 0.5,
+unknown NA); one living descendant gives FE 2, FG 1, FG SE 0 (`calcFE()`, `calcFG()`, `calcFEFG()`, `calcFGSE()` failed before
+too); in memory 18 of 18 results for 2+ animals byte-identical. RED 10 new tests in 6 files, all failing for the intended
+reasons; mutation 4 of 4; full suite 377 files, 3,144 tests, 0 failed, 0 errors, 187 skipped; lint 0; check 0/0/0; ratchet 1/1
+(results `64843ccc45c2`); E2E (3 Genetic Value files) 22 tests, 0 failed. No E2E drives a one-animal population (S924's
+message stops it in the app), so the new one-animal results were seen only in unit tests and in-memory probes.
+**Mistakes (recovered):** the picker did not say option 2 was S924's leftover, and my first explanation offered one check per
+function before I had read the code for a shared cause (the owner asked twice); one regression check compared two identical
+errors (`gvaConvergence()` has no `guIter` argument), caught and rerun; a one-line `alleleFreq()` rewrite lost the `allele`
+column (the probe caught it before any proposal).
+**Handoff evaluation of S924: 8/10.** Helped: the BACKLOG item's exact messages and causes (`calcA()`'s `apply()`,
+`R/calcFounderContributions.R:66-67`) pointed straight at the shared cause; the namespace-patch recipe ran every probe; "commit
+GREEN before a mutation check", "suite and check one at a time" and the 56,750 B cap all applied. Missing: that the three
+failing sites share one cause, and that `calcFE()`/`calcFG()` fail the same way. Wrong: "the last is wider than it looks"
+(returning the one-animal value took three one-line changes, identical for 2+ animals; the width S924 saw was that same cause).
+**Self-assessment: 7/10.** + measured before every claim (18 of 18 identical, the twin trap, the incomplete one-liner); gates in
+plain words; RED proved by messages; mutation 4 of 4; suite, check, lint, E2E clean. - two owner bounces before work began (the
+picker's missing relation; options offered before the cause was found); one invalid regression check (caught). Reduction:
+`SESSION_NOTES.md` 55,620 B at Phase 0, 55,141 B now (S924, S922 and S921 condensed; S924's carried list folded into this one).
+
+**Next steps (recommended, not yet ruled on):** (A) the stale `man/nprcgenekeepr-package.Rd` (`BACKLOG.md:24`, READY, S; one
+file, `devtools::document()` in its own commit, confirm nothing else changes). (B) docs-audit slice 2 (`:39`, needs scoping
+first, Effort L; scope which of the 31 images to regenerate and diagnose the colony script's tail first; it also holds the stale
+`pb_diagram_legend.png` and the article sentence at `pedigree-diagram.qmd:50-55`). (C) `getAncestors()` on an absent id (`:8`,
+DECISION NEEDED, S). (D) upstream `KJ5HST/methodology#93` (`:266`, BLOCKED). Unpushed: 13 local commits plus the close-out; not
+offered (owner's S905 ruling). Version 3.0.0 at release (`:31`). Carried: `reportGV(smallPed)` unfiled (3 of 3 calls fail in
+`geneDrop()`: "sire and dam must have had alleles assigned: logic error"); hover text on the dashed link (not built); NEW-24's
+print method on issue #123 (the owner closes it); the D2 dogleg observation from S910 (untested); the seventh-label scan test
+(unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).
+**Key files:** `R/calcA.R:49-51`; `R/kinship.R:228-229`; `R/calcFounderContributions.R:66-67`; `R/alleleFreq.R:31-35`;
+`R/reportGV.R:196-199`; tests `test_calcA.R:14-`, `test_calcGU.R:18-`, `test_calcGUSE.R:79-`, `test_kinship.R:182-`,
+`test_calcFounderContributions.R:79-`, `test_alleleFreq.R:23-`; `NEWS.Rmd:409-413`; Learning 890.
+**Gotchas:** do not change `kinship()`'s `1L:max(pdepth)` loop to `seq_len()` (with only founders it runs at depth 0, which gives
+MZ-twin founders their kinship: 0.5 becomes 0); a wrap-and-compare check can say "identical" when both runs failed the same
+way, so print each run's status first; `as.data.frame(table())` of an empty input has no factor column; `calcA()` with zero
+animals gives a logical 0-row matrix (harmless downstream); `devtools::check(document = FALSE)` leaves the stale man page alone;
+probe with `qcPed` or `examplePedigree`, never `smallPed`; commit GREEN before a mutation check; removing a BACKLOG block shifts
+later cites, so re-grep; the full suite and `devtools::check()` run one at a time; `SESSION_NOTES.md` must stay under 56,750 B.
 
 ### What Session 924 Did (condensed S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `reportGV()` and `gvaConvergence()` stop with a message giving the number of animals when the population of interest has fewer
@@ -128,11 +156,6 @@ tests. Claim `57fbc6ec9`, RED `478a3978f`, GREEN `9ad1f7ed2`, docs `029e421de` a
 fix by patching the loaded namespace (`unlockBinding` + `assign` on `asNamespace(...)`); a calling handler outside an inner
 `tryCatch()` never runs; commit GREEN before a mutation check; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd`:
 restore it; the roxygen R files count toward the 5-file cap; `SESSION_NOTES.md` must stay under 56,750 B (25,000 tokens).
-**Carried:** docs-audit slice 2 (`BACKLOG.md:57`, needs scoping, Effort L); the stale `man/nprcgenekeepr-package.Rd` (`:42`,
-READY); upstream `KJ5HST/methodology#93` (`:284`, BLOCKED); `getAncestors()` on an absent id (`:8`); version 3.0.0 at release
-(`:49`); hover text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it);
-`reportGV(smallPed)` unfiled (5 of 5 calls fail); the D2 dogleg observation from S910 (untested); the seventh-label scan test
-(unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).
 
 ### What Session 923 Did (condensed S924; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The one-id `convertRelationships()` and empty `makeRelationClassesTable()` finding shipped (strict TDD): `filterKinMatrix()`
@@ -140,33 +163,18 @@ always returns a matrix (`R/filterKinMatrix.R:28`, `drop = FALSE`) plus two empt
 RED `831050908`, GREEN `19d976b45`, REFACTOR `9ad69b78f`, close-out `7d85f4b89`. Handoff evaluation of S922: 9/10. Self 8/10.
 **Gotchas kept:** `rmarkdown::render("NEWS.Rmd")` (no extra arguments) re-knits `NEWS.md`; in zsh use `${=VAR}` to split.
 
-### What Session 922 Did (condensed S923; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The receipt-placement gate shipped (strict TDD; tests only, no `R/` change): `tests/testthat/test_handoffsReceiptPlacement.R`
-(7 tests) and `tests/testthat/helper-handoffsBox.R` (`handoffsBoxReceiptCount()`) fail unless the format-example box of
-`HANDOFFS.md` holds exactly one receipt (105 on the file before S917's move, 1 today). Claim `7d75ec577`, RED `eff4bc84d`, GREEN
-`d06fa5d6a`, REFACTOR `99d90cc04`, closure `9d67a0ec5`, close-out `325e0c480`. Handoff evaluation of S921: 9/10. Self 8/10.
-**Gotchas kept:** the gate runs only from the source tree (the built package holds no `HANDOFFS.md`), so after writing a claim
-receipt run `tests/testthat/test_handoffsReceiptPlacement.R`; a new receipt goes directly above the newest one, below the archive
-pointers; for a mutation check commit GREEN first so `git checkout` restores the file; removing a BACKLOG block shifts every later
-cite, so re-grep; the full suite and `devtools::check()` run one at a time; take `wc -c` after the last edit (Learning 871).
-**Carried:** docs-audit slice 2 (`BACKLOG.md:49`, needs scoping, Effort L); upstream `KJ5HST/methodology#93` (`:276`, BLOCKED);
-`getAncestors()` on an absent id (`:8`); version 3.0.0 at release (`:41`); hover text on the dashed link (not built); NEW-24's
-print method on issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested);
-the seventh-label scan test (unfiled); synced tools behind canonical (no BACKLOG item, no sync asked for).
+### What Session 922 Did (condensed S923 and S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The receipt-placement gate shipped (strict TDD; tests only): `tests/testthat/test_handoffsReceiptPlacement.R` (7 tests) fails
+unless the format-example box of `HANDOFFS.md` holds exactly one receipt. Close-out `325e0c480`. Handoff evaluation of S921: 9/10.
+Self 8/10. **Gotchas kept:** after writing a claim receipt run that test (source tree only); a new receipt goes directly above
+the newest one, below the archive pointers; take `wc -c` after the last edit (Learning 871).
 
-### What Session 921 Did (condensed S922; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Pedigree Browser Diagram legend has a dashed row, "Same animal, again", for the dashed repeat-appearance link, directly
-above MZ/DZ/? (`R/modPedigree.R:707-710`; strict TDD; legend row only, no hover text, no NEWS line: the owner's choices).
-Claim `548ed44b7`, RED `f6857f348`, GREEN `6619cddbf`, docs `3fe9f64f8`, REFACTOR `fe0e5ad3d`, RED fix `81288295e`, closure
-`10a99475f`, close-out `849a5e694`. Handoff evaluation of S920: 9/10. Self 8/10. **Gotchas kept:** a legend row cannot just
-be appended (the legend rescales to its canvas and the Export button covers the last row; Learning 886); tests here match
-serialized JSON text and never call jsonlite (`devtools::check()` warns; `tests/testthat/helper-shinytest2.R:390-391`); a
-test fix after GREEN needs a REFACTOR-to-RED permission and a run against the pre-GREEN file; `vignettes/a3manual.md` is a
-stale copy (edit the components); adding or removing a BACKLOG block shifts later cites, so re-grep; take `wc -c` after the
-last edit (Learning 871). **Carried:** the stale `pb_diagram_legend.png` and the article sentence to add (slice 2,
-`BACKLOG.md:64`); hover text on the dashed link (not built, the owner's choice; no BACKLOG item); NEW-24's print method on
-issue #123 (the owner closes it); `reportGV(smallPed)` unfiled; the D2 dogleg observation from S910 (untested); the
-seventh-label scan test (unfiled).
+### What Session 921 Did (condensed S922 and S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Pedigree Browser Diagram legend has a dashed row, "Same animal, again" (`R/modPedigree.R:707-710`; strict TDD; no hover
+text, no NEWS line: the owner's choices). Close-out `849a5e694`. Handoff evaluation of S920: 9/10. Self 8/10. **Gotchas kept:**
+a legend row cannot just be appended (the legend rescales and the Export button covers the last row; Learning 886); tests here
+match serialized JSON text, never jsonlite (`tests/testthat/helper-shinytest2.R:390-391`); a test fix after GREEN needs a
+REFACTOR-to-RED permission; `vignettes/a3manual.md` is a stale copy (edit the components).
 
 ### What Session 920 Did (condensed S921; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The genetic-value labels item shipped (strict TDD, nothing changes for users on normal data): one internal vector, `valueLabels`
