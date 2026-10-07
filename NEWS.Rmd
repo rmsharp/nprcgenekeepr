@@ -329,6 +329,13 @@ longitudinal monitoring of colony genetic health.
   that meets its birth target. Production cannot be calculated for such a
   group, so its cell is now gray, as the Inbreeding cell already was.
 
+- Fixed: forming breeding groups that include animals with no birth date,
+  after running the genetic value analysis, could turn the page gray and end
+  the session (the shipped example pedigree does this with the default
+  settings). Animals with no birth date are now left out of the Inbreeding
+  count of breeding-age females and males, and a problem while the Genetic
+  Diversity heat map is being worked out no longer ends the session.
+
 - Fixed: a real animal whose id starts with a capital U (such as `U1`, `U123`
   or `Uma`) was mistaken for a stand-in for an unknown parent, so it was left
   out of founder and breeder counts, hidden when "Display Unknown IDs" was

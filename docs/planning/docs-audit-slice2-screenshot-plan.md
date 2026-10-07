@@ -4,6 +4,17 @@
 to write it. Every number below was measured this session unless it says "S821" (the audit this plan acts on,
 `docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) or "not measured".
 
+> **Update S928 (2026-10-06): Phase 1 is DONE; the crash is fixed** (RED `2ceb443dd`, GREEN `79e54d7d4`). **The cause was
+> not what "The tail failure, explained" items 2 and 6 below suspected** (not the kinship matrix, not S923-S925's changes;
+> the app's matrix was complete, 3,694 x 3,694). A group member with no birth date has age `NA`;
+> `group$id[sex == "F" & age >= 3]` then held an `NA` id, and `kmat[NA, males]` stops with `subscript out of bounds`
+> (`R/getKinshipWithMaleStatus.R:51-53` before the fix; the lines date from 2026-07-05). The shipped example has 1,432 of
+> 3,694 animals with no birth date, and the app's default Top ranked group (20 animals) has a birth date on none of them.
+> A Genetic Value run only matters because the diversity heat map needs its values. The trigger table below describes
+> symptoms, not the cause. The Genetic Diversity module's background "ready" step also can no longer end a session.
+> Phase 3c, which needed Phases 1 and 2, now waits only on Phase 2 (Phases 2, 3a and 3b never waited on Phase 1); the
+> by-hand browser check this plan asks for is still owed.
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article

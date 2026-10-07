@@ -5,24 +5,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Forming breeding groups after a Genetic Value Analysis run on the shipped example pedigree ends the
-      user's session (found S927, 2026-10-06; READY, Effort M; strict TDD for the fix)** -- the page turns
-      grey with Shiny's "disconnected" overlay, which is the colony-manager guide's own walkthrough. The
-      Genetic Diversity module's `observe()` (`R/modGeneticDiversity.R:135-141`, there only to send a
-      "data ready" message for tests) evaluates the diversity-statistics chain whenever groups form, even
-      with that tab closed; the chain throws `Error in [: subscript out of bounds` at
-      `R/getKinshipWithMaleStatus.R:62` (`any(kmat[f, males] <= threshold)`) via `getGeneticDiversityStats()`
-      (`R/getGeneticDiversityStats.R:101`); an unhandled observer error ends the session. **Measured S927**
-      (Shiny 1.14.0, shinytest2 0.5.1): 3 of 3 runs on `ExamplePedigree` (3,694 animals) with a Genetic Value run
-      first end the session ("Top ranked" and "All available" alike); no Genetic Value run first, or the
-      375-animal rhesus fixture, is fine; `test-e2e-breeding-groups-tutorial.R` passes (small fixture, so CI
-      cannot see this). **Not determined:** why the index is out of bounds (the guard at `:46-50` checks row
-      names only) and when it started (the 2026-08-10 Breeding Groups images show groups, so probably
-      newer; suspects S923-S925's shape-preserving changes to `filterKinMatrix()`, `kinship()`, `calcA()`;
-      no bisect run). Reproduction: `docs/planning/docs-audit-slice2-screenshot-plan.md` Appendix B. Pickup =
-      that plan's Phase 1: reproduce with function calls (no browser), find the cause, fix it at the cause,
-      decide whether the test-only observer should be able to end a session, pre-RED scope gate with the
-      owner first. Also check once by hand in a real browser.
+- [ ] **The Genetic Diversity "Production" cell counts a female with no birth date as a breeding-age mother
+      (found S928, 2026-10-06; DECISION NEEDED, Effort S; strict TDD for the fix)** -- `getProductionStatus()`
+      (`R/getProductionStatus.R:83`, `nDam <- nrow(ped[ped$sex == sexCodes[["female"]] & ped$age >= minDamAge, ])`)
+      subsets rows with a test that is `NA` for an unknown age, and `nrow()` counts the all-`NA` row that
+      produces, so every female with no birth date adds one to the dam count the production ratio divides
+      by. **Measured S928:** 2 dams of known age plus 1 female with no birth date gives a count of 3, not 2.
+      It does not crash (its only caller is `R/getGeneticDiversityStats.R:95`), but the shown colour can
+      change: in the app's default Top ranked groups on the shipped example pedigree, groups 2 and 3 each
+      hold 1 female with no birth date and no female of known age, so Production is red today; under the
+      rule below they would have no breeding-age females and show gray (no value), as Group 1 already does.
+      **Decision for the owner:** the owner ruled S928 that the Inbreeding cell leaves animals with no age
+      or sex out of its counts (`R/getKinshipWithMaleStatus.R:54-57`); apply the same rule here (wrap the
+      test in `which()`; a displayed-value change for groups with such females, and the S928 NEWS "Fixed:"
+      line gets a sentence), or keep today's count. Same cause as the S928 crash: an `NA` inside a logical
+      subset. The owner chose S928 to record this and fix it separately, not to apply the rule now.
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
@@ -68,9 +65,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S862; 8 (S868) `docs/research/` and older `docs/audits/`, a status banner on 26 files, S870.
       **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped
       S927 into 7-8 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its owner decisions
-      D1-D5 are pending; Phases 3a-3b can start before the crash fix in the item above). Measured S927:
+      D1-D5 are pending; its Phase 1, the session-ending crash, was fixed S928, so Phase 3c now waits only
+      on Phase 2). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
-      script's tail failure is that crash, not a script bug; 12 images have no script (2 of the 3 CSV
+      script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
+      and it is fixed, but the fix was checked in the headless test driver only: a short check by hand in
+      a real browser is still owed (S928's Chrome extension was not connected): load the shipped example
+      pedigree, run Genetic Value Analysis (a low iteration count is faster), Form Groups with the
+      defaults, and the page should stay live and the Genetic Diversity tab show a heat map. Also: 12
+      images have no script (2 of the 3 CSV
       pictures are stale from the code alone); `pb_unknown_displayed.png` is an orphan;
       `pb_diagram_legend.png` is stale (it lacks S921's "Same animal, again" row). When it is regenerated,
       add a sentence naming that entry to the article's dashed-line paragraph
