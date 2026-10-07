@@ -72,12 +72,7 @@ processQcStudbookResult <- function(errorLst) {
       Details = character(0L),
       stringsAsFactors = FALSE
     ),
-    warnings = data.frame(
-      Row = integer(0L),
-      Warning = character(0L),
-      Details = character(0L),
-      stringsAsFactors = FALSE
-    ),
+    warnings = getEmptyWarningsTable(),
     changedCols = list(),
     hasErrors = FALSE,
     hasChangedCols = FALSE

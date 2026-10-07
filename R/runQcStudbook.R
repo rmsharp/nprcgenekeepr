@@ -82,12 +82,7 @@ runQcStudbook <- function(ped,
         Details = character(0L),
         stringsAsFactors = FALSE
       ),
-      warnings = data.frame(
-        Row = integer(0L),
-        Warning = character(0L),
-        Details = character(0L),
-        stringsAsFactors = FALSE
-      ),
+      warnings = getEmptyWarningsTable(),
       changedCols = list(),
       hasErrors = FALSE,
       hasChangedCols = FALSE
@@ -182,12 +177,7 @@ runQcStudbook <- function(ped,
   if (!reportChanges) {
     qcResult$changedCols <- list()
     qcResult$hasChangedCols <- FALSE
-    qcResult$warnings <- data.frame(
-      Row = integer(0L),
-      Warning = character(0L),
-      Details = character(0L),
-      stringsAsFactors = FALSE
-    )
+    qcResult$warnings <- getEmptyWarningsTable()
   }
 
   # If there are errors, return NULL for cleaned data

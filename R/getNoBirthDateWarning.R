@@ -18,12 +18,7 @@
 getNoBirthDateWarning <- function(ped) {
   nNoBirth <- sum(is.na(ped[["birth"]]))
   if (nNoBirth == 0L) {
-    return(data.frame(
-      Row = integer(0L),
-      Warning = character(0L),
-      Details = character(0L),
-      stringsAsFactors = FALSE
-    ))
+    return(getEmptyWarningsTable())
   }
   data.frame(
     Row = NA_integer_,
