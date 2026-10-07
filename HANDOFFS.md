@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S932
+date: 2026-10-07
+status: pending
+active_task: The Input-tab missing-birth-date warning's open design decisions (BACKLOG.md:20; DECISION NEEDED, Effort M; owner pick at the Phase 0 picker, option 3 of 4; a decision session, docs only: the owner's rulings are recorded beside the item, nothing is built).
+```
+
+```handoff
 session: S931
 date: 2026-10-07
 status: complete

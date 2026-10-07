@@ -98,37 +98,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 931 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 2 of 4; the owner ruled the rule and the scope):** the
-Production cell and a note on the Genetic Diversity tab. A female with no birth date counts as a breeding-age mother only if the
-pedigree lists an offspring for her, looked up in the whole pedigree (a known age under 3 and a blank sex stay out). The tab shows
-a note: how many animals in the groups have no birth date, and how many such females were counted or left out. Docs: code
-comments, exported help, the guide paragraph, NEWS. 20 new tests (74 in the four files); 3 example-pedigree expectations moved from
-71/629 to 71/625. **Measured first:** 27 of the 31 females with no birth date in the example pedigree have offspring (none is
-ALIVE); the package estimates no birth dates (owner confirmed).
-Claim `43e1a41c8`, ruling `fa8dbd3fd`, RED `a8f469e6c`, GREEN `735b26bc8`, REFACTOR `3b759e312`, docs `2e373ba90` and `567b5ad9f`,
-close-out (the commit carrying this note).
-**Verified:** full suite 3,206 tests, 0 failed, 0 errors (after GREEN and REFACTOR); `devtools::check()` 0/0/0; `lint_package()` 0;
-ratchet 1/1, results `9000df5bc90d`; the colony guide script into a scratch folder: 81/81 steps, the note shows ("20 of the 20
-animals ... (0 counted, 2 left out)", Production gray in all six groups).
-**Handoff evaluation of S930: 9/10.** Helped: the A-D order with cites (all 8 held at `17eb43401`); the `NPRC_SHOT_DIR` gotcha (the
-real run could not overwrite the guide's pictures); the `wc -c` gotcha. Missing: nothing it could know. Wrong: nothing found.
-**Self-assessment: 8/10.** + measured before the second question; a gate each phase; guard tests named; a real-app run; the rule
-in one function; docs in four places. - my first question rested on a stored claim, not on the offspring count (two question boxes
-declined; Learning 897); a commit-message miscount and a cite, both amended before any push; the note's Production sentence is
-constant text, left as it is.
+### What Session 932 Did
+**Deliverable:** the Input-tab missing-birth-date warning's open design decisions (`BACKLOG.md:20`; DECISION NEEDED, Effort M;
+docs only, no `R/` or test change) (IN PROGRESS; owner pick at the Phase 0 picker, option 3 of 4).
+**Started:** 2026-10-07 08:58 CDT; TDD phase PRE-RED (a decision session: no RED test unless the owner then asks for a build).
+**Status:** Session claimed. Work beginning: re-measure the item's stored claims (the 1,432-of-3,694 count, where the error list
+shows on the Input tab and the Summary page, how many such animals are alive), then put the decisions to the owner in plain words and
+record the rulings beside the item.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:33`, READY as an estimate, Effort S; Phase 3c
-then retakes that picture, which also lacks the new note). (B) The Inbreeding cell's rule for a female with no birth date and
-offspring (`:8`, DECISION NEEDED, S). (C) The Input-tab missing-birth-date warning (`:20`, DECISION NEEDED, M). (D) Docs-audit slice 2
-(`:97`): answer D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b. (E) Origin-and-funding reword (`:52`); `getAncestors()` (`:73`). Cites now:
-`:89` version, `:157` tutorial, `:332` #93 (grep; the item starts above).
-**Key files:** `R/isCountedMotherWithoutBirthDate.R` (the one rule), `R/summarizeMissingBirthDates.R` (counts and sentence),
-`R/modGeneticDiversity.R:139-150` (the note), `tests/testthat/test_summarizeMissingBirthDates.R`.
-**Gotchas:** the note's Production sentence shows even when only males lack a birth date ("0 counted, 0 left out"); dropping it
-there is new behaviour and needs a RED test first (offered to the owner at the REFACTOR gate, no ruling); in a `testServer` test an
-undefined output errors, which keeps a "no note" test honest; the colony script needs `NPRC_SHOT_DIR=<scratch>`; the full suite
-takes 6-12 minutes and runs alone; take `wc -c` after the last edit.
+### What Session 931 Did (condensed S932; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Production cell and a Genetic Diversity tab note shipped (strict TDD; the owner ruled the rule and the scope): a female with no
+birth date counts as a breeding-age mother only if the pedigree lists an offspring for her (whole pedigree; a known age under 3 and a
+blank sex stay out), and the tab says how many animals in the groups have no birth date and how many such females were counted or
+left out. 20 new tests; full suite 3,206, 0 failed; check 0/0/0; lint 0; real-app run 81/81 with the note visible. Measured: 27 of
+the 31 females with no birth date in the example pedigree have offspring (none ALIVE). Claim `43e1a41c8`, ruling `fa8dbd3fd`, RED
+`a8f469e6c`, GREEN `735b26bc8`, REFACTOR `3b759e312`, docs `2e373ba90` and `567b5ad9f`, close-out `0be13571a`. Handoff evaluation
+of S930: 9/10. Self 8/10.
+**Next-step list S931 left (recommended, not ruled on):** (A) heat map label fix (`:33`, READY, S); (B) the Inbreeding cell's rule
+(`:8`); (C) the Input-tab warning (`:20`, S932's pick); (D) docs-audit slice 2 (`:97`): D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b;
+(E) origin-and-funding reword (`:52`); `getAncestors()` (`:73`).
+**Gotchas kept:** the note's Production sentence is constant text ("0 counted, 0 left out" even when only males lack a birth date;
+dropping it needs a RED test first); in a `testServer` test an undefined output errors; the colony script needs
+`NPRC_SHOT_DIR=<scratch>`; the full suite takes 6-12 minutes and runs alone; take `wc -c` after the last edit.
 
 ### What Session 930 Did (condensed S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 2 done except item (e) (strict TDD): both guide screenshot scripts share
