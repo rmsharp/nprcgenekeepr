@@ -377,3 +377,41 @@ test_that("an animal with no birth date does not count as a breeding-age female"
                                   currentDate = currentDate)
   expect_identical(res$Inbreeding, 3L)
 })
+
+## Females with no birth date in the Production cell (S931 owner ruling): such a
+## female counts as a breeding-age mother only if the pedigree lists an
+## offspring for her, looked up in the WHOLE pedigree (not only her group). The
+## group gH has two mothers (h1, h2) and one offspring born in the window, so
+## Production is 0.5 (red) while both count.
+
+test_that("a female with no birth date and no offspring is left out of Production", {
+  gH <- c("h1", "h2", "ho")
+  pedH2NoBirth <- ped
+  pedH2NoBirth$birth[pedH2NoBirth$id == "h2"] <- as.Date(NA)
+  res <- getGeneticDiversityStats(list(gH), pedH2NoBirth, gv, kmat,
+                                  currentDate = currentDate)
+  ## h2 is left out: 1 birth over the 1 remaining mother -> green (3), not red.
+  expect_identical(res$Production, 3L)
+})
+
+test_that("a mother with no birth date whose offspring are in another group still counts", {
+  gH <- c("h1", "h2", "ho")
+  pedH2Mother <- ped
+  pedH2Mother$birth[pedH2Mother$id == "h2"] <- as.Date(NA)
+  ## The offspring "co" belongs to g2, not to gH: only the whole pedigree sees it.
+  pedH2Mother$dam[pedH2Mother$id == "co"] <- "h2"
+  res <- getGeneticDiversityStats(list(gH, g2), pedH2Mother, gv, kmat,
+                                  currentDate = currentDate)
+  ## h2 counts: 1 birth over 2 mothers = 0.5 -> red (1).
+  expect_identical(res$Production[1L], 1L)
+})
+
+test_that("a group whose only female has no birth date and no offspring has no Production value", {
+  gOnly <- c("h2", "ho")
+  pedH2NoBirth <- ped
+  pedH2NoBirth$birth[pedH2NoBirth$id == "h2"] <- as.Date(NA)
+  res <- getGeneticDiversityStats(list(gOnly), pedH2NoBirth, gv, kmat,
+                                  currentDate = currentDate)
+  expect_identical(res$Production, NA_integer_)
+  expect_s3_class(makeGeneticDiversityHeatmap(res), "ggplot")
+})

@@ -352,3 +352,104 @@ test_that("modGeneticDiversityServer: a failing heat-map calculation does not en
     }
   )
 })
+
+## ---- Note about animals with no birth date (S931) -------------------------
+## The app gave no sign that animals lack a birth date. When any animal in the
+## breeding groups has none, the tab says how many, and how the Production
+## column treats the females among them: a female with no birth date counts
+## as a breeding-age mother only if the pedigree lists an offspring for her.
+
+test_that("modGeneticDiversityUI has a place for the birth date note", {
+  ui_html <- as.character(modGeneticDiversityUI("gdNS"))
+  expect_true(grepl("gdNS-birthDateNote", ui_html))
+})
+
+## f1, f2 (females) and m1 (male) have no birth date; f1 is the dam of o1.
+pedNoBirthNote <- ped
+pedNoBirthNote$birth[pedNoBirthNote$id %in% c("f1", "f2", "m1")] <- as.Date(NA)
+pedNoBirthNote$dam[pedNoBirthNote$id == "o1"] <- "f1"
+
+test_that("the note says how many animals have no birth date and how Production treats the females", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1, g2) }),
+      pedigree = shiny::reactive({ pedNoBirthNote }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      html <- paste(as.character(output$birthDateNote), collapse = " ")
+      expect_true(grepl("3 of the 10 animals in these groups have no birth date",
+                        html, fixed = TRUE))
+      expect_true(grepl("1 counted", html, fixed = TRUE))
+      expect_true(grepl("1 left out", html, fixed = TRUE))
+    }
+  )
+})
+
+test_that("the note uses the singular when one animal has no birth date", {
+  skip_if_not_installed("shiny")
+  pedOne <- ped
+  pedOne$birth[pedOne$id == "m1"] <- as.Date(NA)
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1, g2) }),
+      pedigree = shiny::reactive({ pedOne }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      html <- paste(as.character(output$birthDateNote), collapse = " ")
+      expect_true(grepl("1 of the 10 animals in these groups has no birth date",
+                        html, fixed = TRUE))
+    }
+  )
+})
+
+test_that("there is no note when every animal in the groups has a birth date", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1, g2) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      html <- paste(as.character(output$birthDateNote), collapse = " ")
+      expect_false(grepl("birth date", html, fixed = TRUE))
+    }
+  )
+})
+
+test_that("there is no note before the heat map is ready", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ NULL }),
+      pedigree = shiny::reactive({ pedNoBirthNote }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      html <- paste(as.character(output$birthDateNote), collapse = " ")
+      expect_false(grepl("birth date", html, fixed = TRUE))
+    }
+  )
+})
