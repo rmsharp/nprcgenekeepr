@@ -99,58 +99,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 930 Did
-**Deliverable:** docs-audit slice 2, Phase 2 (`docs/planning/docs-audit-slice2-screenshot-plan.md:191-207`): make the guide
-screenshot script's waits mean something. Script only: no `R/` change, no image replaced (IN PROGRESS; owner pick at the Phase 0
-picker, option 1 of 3, the recommended one; READY, Effort M; needs none of decisions D1-D5).
-**Started:** 2026-10-07 00:20 CDT; TDD phase PRE-RED (scope and approach to settle with the owner before any RED test).
-**Status:** Session claimed. Work beginning: read `vignettes/articles/colony-manager-guide-screenshots.R` (and the Diagram
-script), decide which of Phase 2's items (a)-(f) are testable and how, put the scope to the owner, then RED.
-Also at the owner's request (mid-session): `BACKLOG.md` now carries the Genetic Diversity heat map label item (second under Up Next).
-Also: the owner's origin-and-funding correction (only version one was developed at ONPRC) is a `BACKLOG.md` item (third under Up Next; not reworded this session).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE except plan item (e) (strict TDD; owner pick at the Phase 0 picker, option 1 of 3; the owner chose the scope and
+the test approach at the Pre-RED gate):** docs-audit slice 2, Phase 2 (`docs/planning/docs-audit-slice2-screenshot-plan.md:208-224`).
+Both guide screenshot scripts now share `tests/testthat/helper-captureHarness.R`, tested with a stand-in browser in
+`test_captureHarness.R` (31 tests): a step whose last value is FALSE counts as failed (only the Genetic Value run click is exempt),
+pictures taken after an idle timeout are listed in the summary, `NPRC_SHOT_DIR` names the output folder, the Diagram legend picture
+waits for its pop-up. Item (e), the full-height Potential Parents capture, moves to Phase 3c. **Measured first:** the old script
+already said 81/81 (92.6 s, 92.1 s), so this makes the report able to fail; it changed no result. No `R/` file and no picture changed.
+Claim `e63e6ba81`, RED `23c2b6080`, GREEN `b77a2a7cc`, REFACTOR `b2c9c4b81` (the owner chose it against my recommendation), docs
+`e4da509d3`, close-out (the commit carrying this note). At the owner's request, as their own docs commits: the heat map label item
+`ff623d886` (`BACKLOG.md:24`) and the origin-and-funding item `8495b8c9e` (`:43`).
+**Verified:** real runs into a scratch folder after GREEN and REFACTOR (colony 81/81, Diagram 18/18); full suite 3,186 tests, 0 failed,
+0 errors; `devtools::check()` 0/0/0 twice; `lint_package()` 0; ratchet 1/1, results `d797a1f02224`. A real-page probe showed the marker
+reset works, but the guide script's waits still return in 0.0 s here, so my GREEN-gate promise was wrong (Learning 896).
+**Handoff evaluation of S929: 9/10.** Helped: the A/B/C order with cites (`:8`, `:24`, `:40`, `:48`, `:105` held), "needs none of D2-D5"
+(true), the Chrome probe gotcha. Missing: nothing it could know. Wrong: `:280` for #93 is one line off.
+**Self-assessment: 8/10.** + measured the baseline first; scope and test approach put to the owner with measured consequences; a gate
+each phase; checked on the real scripts and a real page; two owner requests recorded at once. - overstated the reset's effect at the
+GREEN gate; my first probe setup was wrong; a regex scan mis-parsed a comment; slow status lines.
+
+**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:24`, READY as an estimate, Effort S, strict TDD;
+size and angle judged by eye with the owner; Phase 3c retakes that picture after it). (B) The Production cell (`:8`, DECISION NEEDED,
+S). (C) Docs-audit slice 2 (`:88`): answer D2 and D3, then Phases 3a (15 images) and 3b (12), then 3c (10 plus item (e)), 4a, 4b.
+(D) Origin-and-funding reword (`:43`, DECISION NEEDED, S; the owner gives the wording); `getAncestors()` (`:64`). Cites now: `:8`, `:24`,
+`:43`, `:64`, `:80` version, `:88` docs-audit, `:148` tutorial, `:324` #93 (grep; the item starts above). Ratchet: 1/1, `d797a1f02224`.
+**Key files:** `tests/testthat/helper-captureHarness.R`, `test_captureHarness.R`; `vignettes/articles/colony-manager-guide-screenshots.R:86-100`.
+**Gotchas:** run a capture script with `NPRC_SHOT_DIR=<scratch>` (unset it overwrites the guide's pictures), one Chrome session at a
+time; the owner's RStudio holds port 6013; put R code with `\s` in a script file; take `wc -c` after the last edit (Learning 871); a
+BACKLOG insert shifts every later cite, so re-grep.
 
 ### What Session 929 Did (condensed S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Verification only (no code, test or `R/` change): S928's crash fix checked by hand in real Chrome. The extension was not connected, so
-the session started the working-tree app on port 6013 and the owner did the clicks: `ExamplePedigree.csv`, Form Groups with the
-defaults, the Genetic Diversity heat map drew with the page live; no error in the app log. Production gray, red, red as `BACKLOG.md:8`
-predicted. Not seen by hand: the Genetic Value step and "All available". Claim `67753ff45`, close-out `05673a072`. Handoff
-evaluation of S928: 8/10. Self 7/10.
+Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks on a working-tree app on port 6013:
+`ExamplePedigree.csv`, Form Groups with the defaults, the heat map drew, no error in the app log). Not seen by hand: the Genetic Value
+step and "All available". Claim `67753ff45`, close-out `05673a072`. Handoff evaluation of S928: 8/10. Self 7/10.
 **Gotchas kept:** start the app from the repo directory with plain `Rscript` and a scratch launcher (`load_all()`, then
-`runGeneKeepR(port = 6013L, launch.browser = FALSE)`); `list_connected_browsers` at Phase 0 before offering a browser option (it
-showed Browser 1 connected at S930); a background command's exit code is the wrapper's, so read the app's log and `lsof -nP
--iTCP:6013`; take `wc -c` after the last edit (Learning 871).
+`runGeneKeepR(port = 6013L, launch.browser = FALSE)`); `list_connected_browsers` at Phase 0 before offering a browser option; a
+background command's exit code is the wrapper's, so read the app's log.
 
-### What Session 928 Did (condensed S929; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Fixed the session-ending crash after a Genetic Value run on the example pedigree (strict TDD; owner pick). Cause: an animal with
-no birth date has age `NA`, so `kmat[NA, males]` stopped with "subscript out of bounds" (`R/getKinshipWithMaleStatus.R:54-57`; the
-line dates from 2026-07-05); the Genetic Diversity background "ready" step now reads the heat map through `tryCatch`
-(`R/modGeneticDiversity.R:134-144`). 7 new tests; the Production cell's same miscount is `BACKLOG.md:8` (DECISION NEEDED). Claim
-`852c811f6`, RED `2ceb443dd`, GREEN `79e54d7d4`, docs `f8e5a5d8a`, close-out `91e9505d1`. Handoff evaluation of S927: 8/10. Self 8/10.
-Not done at S928: the by-hand browser check (S929's deliverable).
-**Gotchas kept:** when a function-call model disagrees with the app, capture the real arguments with a scratch `app.R` outside the
-repo (Learning 893); `testServer()` closes on an observer error, not an output error (Learning 894); `pkill -f` takes a regex, so
-parentheses fail: kill by PID; write the full `devtools::check()` messages to a file, never `gsub` away the newlines.
+### What Session 928 Did (condensed S929 and S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Fixed the session-ending crash after a Genetic Value run on the example pedigree (strict TDD; owner pick): an animal with no birth
+date has age `NA`, so `kmat[NA, males]` stopped with "subscript out of bounds" (`R/getKinshipWithMaleStatus.R:54-57`); the Genetic
+Diversity "ready" step now reads the heat map through `tryCatch` (`R/modGeneticDiversity.R:134-144`). 7 new tests; the Production
+cell's same miscount is `BACKLOG.md:8`. Claim `852c811f6`, RED `2ceb443dd`, GREEN `79e54d7d4`, docs `f8e5a5d8a`, close-out `91e9505d1`.
+Handoff evaluation of S927: 8/10. Self 8/10.
+**Gotchas kept:** capture the real arguments with a scratch `app.R` outside the repo when a function-call model disagrees with the app
+(Learning 893); `testServer()` closes on an observer error, not an output error (Learning 894); `pkill -f` takes a regex: kill by PID.
 
-### What Session 927 Did (condensed S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Planning only: scoped docs-audit slice 2 into `docs/planning/docs-audit-slice2-screenshot-plan.md` (decisions D1-D5, Phases 1-4b; the
-7-8 sessions are a guess). Measured: 37 of 38 script-written guide images differ from the app; `pb_diagram_legend.png` is stale.
-Found the crash S928 fixed (its suspects for the cause were wrong). Claim `95667431e`, deliverable `db288efed`, close-out `395298aee`.
-Handoff evaluation of S926: 8/10. Self 8/10.
-**Gotchas kept:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits; `app$click(selector = )` takes no `wait_`; one
-Chrome session at a time; the capture scripts overwrite committed images in place (copy the script, change `SHOT_DIR`); `data-ready`
-never resets (`R/modBreedingGroups.R:742-745`).
+### What Session 927 Did (condensed S928 and S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Planning only: scoped docs-audit slice 2 into `docs/planning/docs-audit-slice2-screenshot-plan.md` (decisions D1-D5, Phases 1-4b).
+Measured: 37 of 38 script-written guide images differ from the app. Found the crash S928 fixed. Claim `95667431e`, deliverable
+`db288efed`, close-out `395298aee`. Handoff evaluation of S926: 8/10. Self 8/10.
+**Gotchas kept:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits; `app$click(selector = )` takes no `wait_`;
+`data-ready` never resets (`R/modBreedingGroups.R:742-745`).
 
-### What Session 926 Did (condensed S927 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Description sync shipped (strict TDD): `_pkgdown.yml` (a folded block), `CITATION.cff` and the help page say what `DESCRIPTION`'s
-Description says; `test_descriptionCopies.R` (4 tests). Close-out `5e569a021`. Handoff evaluation of S925: 8/10. Self 8/10.
-**Gotchas kept:** a plain multi-line YAML value cannot hold a line ending in a colon; `read.dcf(...)[1, 1]` carries the name
-"Description"; a diff in `man/nprcgenekeepr-package.Rd` after `devtools::document()` means `DESCRIPTION`'s Description changed (the test
-says which copy needs it); removing a BACKLOG block shifts later cites, so re-grep.
-**Carried:** `reportGV(smallPed)` unfiled (3 of 3 calls fail in `geneDrop()`: "sire and dam must have had alleles assigned: logic
-error"); hover text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it); the D2 dogleg
-observation from S910 (untested); the seventh-label scan test (unfiled); synced tools behind canonical, dashboard copy v2.19.0 against
-v2.21.0 (no sync asked for); `rhub` is in neither `renv.lock` nor `DESCRIPTION` (not done, not filed).
+### What Session 926 Did (condensed S927, S928 and S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Description sync shipped (strict TDD): `_pkgdown.yml`, `CITATION.cff` and the help page say what `DESCRIPTION`'s Description says;
+`test_descriptionCopies.R` (4 tests). Close-out `5e569a021`. Handoff evaluation of S925: 8/10. Self 8/10.
+**Gotchas kept:** a diff in `man/nprcgenekeepr-package.Rd` after `devtools::document()` means `DESCRIPTION`'s Description changed;
+removing a BACKLOG block shifts later cites, so re-grep.
+**Carried:** `reportGV(smallPed)` unfiled (3 of 3 calls fail in `geneDrop()`); hover text on the dashed link (not built); NEW-24's
+print method on issue #123 (the owner closes it); the D2 dogleg observation from S910 (untested); the seventh-label scan test
+(unfiled); synced tools behind canonical (dashboard v2.19.0 against v2.21.0); `rhub` is in neither `renv.lock` nor `DESCRIPTION`.
 
 ### What Session 925 Did (condensed S926 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 One-animal and zero-animal input fixed at the cause (strict TDD; `calcA()` `cbind`, `kinship()` and the founder step `drop = FALSE`,
