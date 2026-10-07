@@ -684,8 +684,14 @@ years, scored red/yellow/green against cut-offs that depend on the selected
 **Inbreeding** (within-group kinship risk involving the group's male). A
 group with no assessed value, or an undefined Inbreeding result, is scored
 red rather than shown as healthy, so missing data surfaces instead of hiding
-as a false green. Until groups are formed and an analysis has run, the tab
-shows guidance instead of an empty plot.
+as a false green. A breeding-age female is one at least 3 years old. A female
+with no birth date has no age, so she counts as a breeding-age female only
+when the pedigree lists an offspring for her, wherever that offspring is;
+with no offspring she is left out. A group with no breeding-age females has
+no Production value, and its cell is gray. When any animal in the groups has
+no birth date, a note under the heat map says how many, and how many of those
+females were counted or left out. Until groups are formed and an analysis has
+run, the tab shows guidance instead of an empty plot.
 
 ![The Genetic Diversity heat map for the 6 breeding groups formed above.](shiny_app_use/genetic_diversity_heatmap.png){fig-alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green."}
 

@@ -51,7 +51,10 @@ inputs into the per-group heat-map statistics (via
 \code{\link{getGeneticDiversityStats}}) and renders the red/yellow/green
 heat map (via \code{\link{makeGeneticDiversityHeatmap}}). When breeding
 groups have not been formed or the genetic value analysis has not been run,
-the module shows guidance instead of an empty plot.
+the module shows guidance instead of an empty plot. When any animal in the
+groups has no birth date, a note under the heat map says how many, and how
+many females among them the Production column counted (those the pedigree
+lists as a dam) and left out.
 }
 \seealso{
 \code{\link{modGeneticDiversityUI}}

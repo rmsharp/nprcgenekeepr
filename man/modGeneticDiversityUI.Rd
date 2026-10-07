@@ -11,7 +11,8 @@ modGeneticDiversityUI(id)
 }
 \value{
 A \code{div} containing the genetic diversity heat-map UI: a
-housing-type selector, a guidance area, and the heat-map plot.
+housing-type selector, a guidance area, the heat-map plot, and a note about
+animals with no birth date (shown only when there are any).
 }
 \description{
 Genetic Diversity Module - UI Function
