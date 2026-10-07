@@ -11,7 +11,11 @@
 #'        \code{currentYear - 2} through December 31 of
 #'        \code{currentYear - 1}) that lived at least 30 days.
 #' \item  Dams = count of all females in the group at least
-#'        \code{minDamAge} years old (default 3).
+#'        \code{minDamAge} years old (default 3), plus the females in the group
+#'        with no birth date (so no age) that the pedigree lists as a dam,
+#'        which is looked up in \code{damIds}. A female with no birth date and
+#'        no offspring, a female whose known age is below \code{minDamAge}, and
+#'        an animal with a blank sex are not counted.
 #' \item  Production = Births / Dams
 #' \item  Production Status (color)
 #'     \enumerate{
@@ -40,7 +44,8 @@
 #' @param minDamAge numeric minimum age in years for a female to be counted
 #' as a breeding-capacity dam in the production ratio. Defaults to 3, a
 #' demographic threshold distinct from the quality-control parent-age floor.
-#' The check is not performed for animals with missing birth dates.
+#' A female with no birth date has no age to compare with it; see
+#' \code{damIds}.
 #' @param minParentAge Deprecated scalar minimum dam age. Supplying it sets
 #' \code{minDamAge}; use \code{minDamAge} instead.
 #' @param maxOffspringAge Numeric values to set the maximum age in years for
@@ -50,11 +55,18 @@
 #' is either \emph{"shelter_pens"} or \emph{"corral"}.
 #' @param currentDate Date to be used for calculating age. Defaults to
 #'        \code{Sys.Date()}.
+#' @param damIds character vector of the IDs listed as a dam anywhere in the
+#' pedigree, not only in \code{ped} (the group), so a mother whose offspring
+#' are in another group is still found. A female with no birth date counts as
+#' a breeding-age dam only when her ID is in it. Defaults to the dams listed in
+#' \code{ped}.
 #' @return A list with \code{production} -- ratio of the number of births that
-#' lived at least 30 days to the number of females >= \code{minDamAge} years of
-#' age -- plus \code{color} and \code{colorIndex}. When the group has no such
-#' females the ratio is undefined: all three are \code{NA} (deliberately not
-#' green, to avoid reporting missing data as a healthy condition).
+#' lived at least 30 days to the number of breeding-age females (those >=
+#' \code{minDamAge} years of age, plus the counted females with no birth date,
+#' see \code{damIds}) -- plus \code{color} and \code{colorIndex}. When the group
+#' has no such females the ratio is undefined: all three are \code{NA}
+#' (deliberately not green, to avoid reporting missing data as a healthy
+#' condition).
 #'
 #' @importFrom lubridate as.duration ddays interval mdy year
 #' @importFrom lifecycle deprecated is_present deprecate_warn

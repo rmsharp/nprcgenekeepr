@@ -44,7 +44,8 @@ Defaults to \code{Sys.Date()}.}
 A data frame with one row per group: the first column \code{group}
 holds the group label and each remaining column (\code{Value},
 \code{Origin} when available, \code{Production}, \code{Inbreeding}) holds an
-integer color index in \code{c(1, 2, 3)}.
+integer color index in \code{c(1, 2, 3)}. \code{Production} is \code{NA} for
+a group with no breeding-age females.
 }
 \description{
 Assemble breeding-group genetic diversity heat-map statistics
@@ -68,4 +69,15 @@ Inbreeding metric is undefined (no breeding-age females), are both scored
 red so that missing data is surfaced rather than shown as healthy green.
 When the pedigree has no \code{ancestry} column the Origin metric cannot be
 computed and its column is omitted.
+
+Production is the number of births in the two calendar years ending the year
+before \code{currentDate} that lived at least 30 days, divided by the number
+of breeding-age females in the group: females at least 3 years old. A female
+with no birth date has no age. She counts as a breeding-age female only when
+the pedigree (\code{ped}) lists at least one animal as her offspring, looked
+up in the whole pedigree and not only in her group, so a mother whose
+offspring are in another group still counts. A female with no birth date and
+no offspring is left out, and so is an animal with a blank sex. A group with
+no breeding-age females has no Production value: its entry is \code{NA}, and
+the heat map draws that cell gray.
 }

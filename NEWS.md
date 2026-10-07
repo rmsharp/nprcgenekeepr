@@ -356,6 +356,16 @@ export workflows, and longitudinal monitoring of colony genetic health.
   while the Genetic Diversity heat map is being worked out no longer
   ends the session.
 
+- Fixed: in the Genetic Diversity dashboard, a female with no birth date
+  was always counted as a breeding-age female in the Production cell,
+  whether or not she had any offspring, which lowered Production. She
+  now counts only when the pedigree lists an offspring for her, wherever
+  that offspring is; a female with no birth date and no offspring is
+  left out. A group whose only female is left out has no Production
+  value, so its cell is gray. A note under the heat map now says how
+  many animals in the groups have no birth date, and how many of those
+  females were counted or left out.
+
 - Fixed: a real animal whose id starts with a capital U (such as `U1`,
   `U123` or `Uma`) was mistaken for a stand-in for an unknown parent, so
   it was left out of founder and breeder counts, hidden when "Display
