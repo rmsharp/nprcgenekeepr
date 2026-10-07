@@ -702,7 +702,7 @@ no birth date, a note under the heat map says how many, and how many of those
 females were counted or left out. Until groups are formed and an analysis has
 run, the tab shows guidance instead of an empty plot.
 
-![The Genetic Diversity heat map for the 6 breeding groups formed above.](shiny_app_use/genetic_diversity_heatmap.png){fig-alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green."}
+![The Genetic Diversity heat map for the 6 breeding groups formed above.](shiny_app_use/genetic_diversity_heatmap.png){fig-alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green (gray where a value is undefined), with a note under the grid about animals that have no birth date."}
 
 ### Marker Genetics
 
