@@ -99,44 +99,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 933 Did
-**Deliverable:** Build the Input-tab "Animals with no birth date" warning (`BACKLOG.md:20-55`; READY, Effort M as an estimate; strict
-TDD; owner pick at the Phase 0 picker, option 2 of 4) (IN PROGRESS)
-**Started:** 2026-10-07
-**Status:** Session claimed. Work beginning: PRE-RED; the Pre-RED scope gate (does `reportChanges = FALSE` add the row?) comes first.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
-**Phase 0 found:** 0 undocumented commits, 0 pending receipts, S932's ratchet citation (results `3832fc7e4a2d`) matched, CI green on
-the last 10 master runs (newest push runs are S923's close-out; 50 ahead of origin, not offered), dashboard 96/100 High+ risk 0,
-context budget no file over its ceiling, Chrome connected; no owner-given order in force.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 2 of 4):** `runQcStudbook()` now adds the Input tab's
+"Animals with no birth date" warning (the S932 design; its `BACKLOG.md` item is removed). New internal `getNoBirthDateWarning()`
+(counts `is.na(ped[["birth"]])` in the cleaned pedigree; the ruled wording, plain numbers, "has" for one) and
+`getEmptyWarningsTable()`; `R/runQcStudbook.R:238-244` appends the row after the second pass. **Two owner answers at Pre-RED (both
+recommended):** the row is added only with `reportChanges = TRUE` (the app's call; scripts keep an empty table); after an upload it
+is a warning like any other: yellow pop-up, Warnings tab opens (`R/appServer.R:183-205`, a reader the backlog item did not list).
+REFACTOR (owner: QC code only): one shared empty warnings table replaces 4 copies; the 4 in `R/modInput.R:422,450,478,536` stay.
+17 new tests (8 helper, 6 `runQcStudbook()`, 3 through the real Input module); 13 failed at RED, 4 guards passed. Claim
+`be7537637`, RED `7d4a09af3`, GREEN `43dd16322`, REFACTOR `3da18de52`, docs `41f542ad4` (help), `cbb5f387c` (guide, manual, NEWS),
+`9f93834b7` (corrections from the real-app run), close-out (the commit carrying this note).
+**Verified:** full suite 3,223 tests, 0 failed, 0 errors (GREEN, REFACTOR); `check()` 0/0/0 (GREEN, REFACTOR, final);
+`lint_package` 0; the real app (headless Chrome, `makeExamplePedigreeFile()`): lands on Warnings, pop-up "QC found 2
+warning(s)", QC Summary 3694/0/2, Pedigree Browser loads, 0 error lines; the guide's capture script 81/81 steps (scratch folder).
+**Wrong claims that run caught:** the guide's example already had a column-case warning, so it shows 2, not 1 (text, alt text and
+`read_and_check_pedigree.png` fixed, picture copied alone); "the Warnings count turns yellow" is false (no fill in this theme;
+new item `BACKLOG.md:39`). **Handoff evaluation of S932: 7/10.** Helped: the A-E order and cites (all held), the RED test list in
+its next steps. Missing: the `appServer.R` reader. Wrong: "the shipped example has 0 warnings" (true of
+`inst/extdata/examples/ExamplePedigree.csv`, not of the guide's `makeExamplePedigreeFile()`); "turns yellow".
+**Self-assessment: 8/10.** + a gate each phase in plain words; fixtures probed before RED; the reader found by grep before the
+second question; the real-app run caught two wrong claims before close-out. - my guide sentence rested on a test of the other
+example file (wrong for one unpushed commit; Learning 899); RED's missing-function error hid a broken fixture until GREEN.
+
+**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:20`, READY, S; judged by eye with the owner;
+docs-audit Phase 3c retakes that picture after it). (B) The Inbreeding cell's rule (`:8`, DECISION NEEDED, S). (C) The QC Summary
+boxes' colour (`:39`, DECISION NEEDED, S). (D) Docs-audit slice 2 (`:97`): D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b. (E)
+Origin-and-funding reword (`:52`); `getAncestors()` (`:73`). Cites: `:89` version, `:159` contributor tutorial.
+**Key files:** `R/getNoBirthDateWarning.R`, `R/getEmptyWarningsTable.R`, `R/runQcStudbook.R:238-244`, `R/appServer.R:183-205`,
+`tests/testthat/test_getNoBirthDateWarning.R`, `test_runQcStudbook.R:72-140`, `test_modInput_qcStudbook.R:744-812`.
+**Gotchas:** the capture script needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>` (without the first it stops at "On CRAN"; without
+the second it overwrites the guide's pictures); `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ
+(column case); `R/modInput.R` still holds 4 hand-copied empty warnings tables; take `wc -c` after the last edit; the full suite
+takes about 6 minutes and runs alone.
 
 ### What Session 932 Did (condensed S933; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-A decision session, docs only: the Input-tab missing-birth-date warning is ruled and recorded in `BACKLOG.md:20-55` (READY). The owner
-took all three recommended options: one row in the Input tab's existing Warnings list (never stops an upload), every animal with no
-birth date, the stated wording. Measured first: the item's two routes missed the existing Warnings list; `ExamplePedigree.csv` has
-1,432 of 3,694 animals with no birth date (none ALIVE); "living" has two meanings. Claim `c2b42bd40`, close-out `f120ac97c`. Handoff
-evaluation of S931: 9/10. Self 8/10.
-**Next-step list S932 left (recommended, not ruled on):** (A) heat map label fix (`BACKLOG.md:57`, READY, S). (B) the Input-tab warning
-build (`:20`, S933's pick). (C) the Inbreeding cell's rule (`:8`, DECISION NEEDED, S). (D) docs-audit slice 2 (`:121`): D2 and D3,
-then Phases 3a, 3b, 3c, 4a, 4b. (E) origin-and-funding reword (`:76`); `getAncestors()` (`:97`).
-**Gotchas kept:** `ExamplePedigree.csv` goes from 0 to 1 warning when the build lands (no test pairs it with a warnings expectation;
-the full suite at GREEN checks the rest); `summarizeMissingBirthDates()` counts only animals in groups; quote `echo` separators in
-zsh; the full suite takes 6-12 minutes and runs alone; take `wc -c` after the last edit. **Key files:** `R/runQcStudbook.R:182,198`,
-`R/processQcStudbookResult.R:197`, `R/modInput.R:575-641,660-663,721-724`, `tests/testthat/test_examplePedigreeFixtures.R:343`.
+A decision session, docs only: the Input-tab missing-birth-date warning design was ruled (the owner took all three recommended
+options: a row in the existing Warnings list, every animal, the stated wording); S933 built it. Measured: the example pedigree has
+1,432 of 3,694 animals with no birth date, none ALIVE; "living" has two meanings (no exit date 1,372 of 1,704; status ALIVE 0 of
+332). Claim `c2b42bd40`, close-out `f120ac97c`. Handoff evaluation of S931: 9/10. Self 8/10.
+**Gotchas kept:** quote `echo` separators in zsh; the full suite runs alone; take `wc -c` after the last edit.
 
-### What Session 931 Did (condensed S932; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### What Session 931 Did (condensed S932 and S933; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Production cell and a Genetic Diversity tab note shipped (strict TDD; the owner ruled the rule and the scope): a female with no
-birth date counts as a breeding-age mother only if the pedigree lists an offspring for her (whole pedigree; a known age under 3 and a
-blank sex stay out), and the tab says how many animals in the groups have no birth date and how many such females were counted or
-left out. 20 new tests; full suite 3,206, 0 failed; check 0/0/0; lint 0; real-app run 81/81 with the note visible. Measured: 27 of
-the 31 females with no birth date in the example pedigree have offspring (none ALIVE). Claim `43e1a41c8`, ruling `fa8dbd3fd`, RED
-`a8f469e6c`, GREEN `735b26bc8`, REFACTOR `3b759e312`, docs `2e373ba90` and `567b5ad9f`, close-out `0be13571a`. Handoff evaluation
-of S930: 9/10. Self 8/10.
-**Next-step list S931 left (recommended, not ruled on):** (A) heat map label fix (`:33`, READY, S); (B) the Inbreeding cell's rule
-(`:8`); (C) the Input-tab warning (`:20`, S932's pick); (D) docs-audit slice 2 (`:97`): D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b;
-(E) origin-and-funding reword (`:52`); `getAncestors()` (`:73`).
+birth date counts as a breeding-age mother only if the pedigree lists an offspring for her (whole pedigree), and the tab says how
+many animals in the groups have no birth date. 20 new tests; full suite 3,206, 0 failed; real-app run 81/81. Claim `43e1a41c8`,
+close-out `0be13571a`. Handoff evaluation of S930: 9/10. Self 8/10.
 **Gotchas kept:** the note's Production sentence is constant text ("0 counted, 0 left out" even when only males lack a birth date;
-dropping it needs a RED test first); in a `testServer` test an undefined output errors; the colony script needs
-`NPRC_SHOT_DIR=<scratch>`; the full suite takes 6-12 minutes and runs alone; take `wc -c` after the last edit.
+dropping it needs a RED test first); in a `testServer` test an undefined output errors.
 
 ### What Session 930 Did (condensed S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 2 done except item (e) (strict TDD): both guide screenshot scripts share

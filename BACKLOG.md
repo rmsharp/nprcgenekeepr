@@ -17,43 +17,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       a sire should count the same way (the S931 ruling named only females). **Not measured:** how many groups'
       Inbreeding colour would change on the shipped example pedigree.
 
-- [ ] **Warn the user on the Input tab that animals in the uploaded pedigree have no birth date (owner-requested
-      S931, 2026-10-07; owner ruled S932, 2026-10-07; READY, Effort M as an estimate; strict TDD)** -- the owner
-      believed the app already warns; **it does not (searched S931).** The Input tab's error list has 11 categories
-      (`getEmptyErrorLst()`, `R/getEmptyErrorLst.R:19-46`) and none is a blank birth date (`invalidDateRows` is a
-      date that cannot be read); no Shiny module says anything about missing birth dates; the parent-age check
-      silently skips such animals (`R/checkParentAge.R:17`); only documentation mentions them (the Age-Sex Pyramid
-      article, `vignettes/articles/age-sex-pyramid.qmd:69`). **Owner ruled S932 (all three recommended options):**
-      (1) *Where:* the Input tab's existing Warnings list gets one row: the QC Summary's Warnings count
-      (`R/modInput.R:575-641`) turns yellow and the Warnings sub-tab table (`:660-663`, download `:678-683`) lists
-      it; it never stops an upload (only `errors` make `isReady()` false, `:721-724`); `getEmptyErrorLst()`,
-      `checkErrorLst()` and the Error List tab are untouched; no line is added to the green QC Summary message. (2)
-      *Who counts:* every animal in the cleaned pedigree with no birth date, not only living ones. (3) *Wording:*
-      the warning is "Animals with no birth date" and its details read "<n> of <N> animals have no birth date, so
-      their age is unknown. Age-based checks and counts (the parent-age check, the Age-Sex Pyramid, breeding-age
-      counts) cannot use them." ("has" when n is 1). The first draft of this item offered "a new `errorLst` category
-      or a separate notice"; both missed the existing Warnings list (found S932). **Measured S932, for the build:**
-      the warnings table is built in `processQcStudbookResult()` (`R/processQcStudbookResult.R:197`; exported),
-      which receives only the error list and so has no birth dates to count; `runQcStudbook()` (exported) holds the
-      cleaned pedigree after its second pass (`R/runQcStudbook.R:198`), clears `warnings` when `reportChanges` is
-      FALSE (`:182`; the app passes TRUE, `R/modInput.R:519-524`), and returns `cleaned = NULL` when errors exist,
-      so there is nothing to count then. Today the only warnings are two column-name changes, and the shipped
-      example passes with 0 errors and 0 warnings. Counts: `ExamplePedigree.csv` 1,432 of 3,694 (39%; all 1,432 are
-      founders with no listed parents, 1,401 are male, 1,399 are a parent of someone, none has status ALIVE, 1,372
-      have no exit date); `rhesusPedigree` and the four `obfuscated_rhesus_mhc_ped*.csv` files 85 of 375; `qcPed` 47
-      of 280; `deidentified_jmac_ped.csv` 60 of 2,791 (it does not load today, see the item that names it); the
-      8-animal pedigrees (`pedGood`, `pedSix`, `pedOne`, ...) and the six small `example_*.csv` files none;
-      `lacy1989Ped` and `smallPed` have no birth column. A missing birth **column** is already an error ("Missing
-      required columns", fixture `pedMissingBirth`). `tests/testthat/test_examplePedigreeFixtures.R:343` expects 0
-      warnings from the small exemplar pedigrees, which all have complete birth dates (`:324`), so it should not
-      change. **Left for the build session, each with a RED test first:** whether `runQcStudbook(reportChanges =
-      FALSE)` adds the row (today that argument clears every warning, so the natural answer is no);
-      `summarizeMissingBirthDates()` (S931) counts only animals in groups, so it is not reused as is. "Living" has
-      two meanings in the package (no exit date, `R/getPyramidAgeDist.R:60`; `status == "ALIVE"`) and they disagree
-      on this example (1,372 of 1,704 by exit date, 0 of 332 by status); not used here because every animal counts,
-      noted in case the item widens. S931 added only the Genetic Diversity tab's own note (under the heat map, shown
-      when animals in the groups lack a birth date); this item stays separate.
-
 - [ ] **The Genetic Diversity heat map's column labels are cut off and its labels are too small to read
       (owner-reported S930, 2026-10-07; READY, Effort S as an estimate; strict TDD for the fix)** -- the owner
       sent two pictures of the Genetic Diversity tab, one magnified and one near the default size. The four column
@@ -72,6 +35,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       when picking it up:** the label size and angle, judged by eye in the real app with the owner; and the order
       with docs-audit slice 2's Phase 3c, which retakes `genetic_diversity_heatmap.png` (take that picture after
       this fix, or the guide shows the cut-off labels again).
+
+- [ ] **The Input tab's QC Summary boxes for Errors and Warnings never change colour (found S933, 2026-10-07;
+      DECISION NEEDED, Effort S; strict TDD for any change)** -- `qcSummaryUI` picks `panel panel-danger`,
+      `panel panel-warning` or `panel panel-success` for the Errors and Warnings boxes (`R/modInput.R:575-641`),
+      but the theme the app loads gives those classes no colour. **Measured S933** in the real app (headless
+      Chrome, the example pedigree, Warnings 2): the Warnings box is `panel panel-warning`, its heading background
+      is transparent and its border is the same dark grey as the other two boxes; the guide picture
+      `read_and_check_pedigree.png` shows the same. `panel-danger` was not measured (no pedigree with errors was
+      run). The S932 ruling for the no-birth-date warning assumed "the Warnings count turns yellow"; it does not,
+      and never has for any warning. The signals a user does see are the yellow pop-up and the Warnings tab opening
+      (`R/appServer.R:183-205`); S933 kept to those and left the claim out of NEWS. **Decide when picking it up:**
+      leave the boxes plain, or give them real colours; the second is a change to displayed markup, so a test on
+      the class names comes first.
 
 - [ ] **Reword where the repo says the package was developed at ONPRC and funded by NIH grants
       (owner-reported S930, 2026-10-07; DECISION NEEDED, Effort S; docs and `DESCRIPTION`, plus one displayed
@@ -153,7 +129,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       pictures are stale from the code alone); `pb_unknown_displayed.png` is an orphan;
       `pb_diagram_legend.png` is stale (it lacks S921's "Same animal, again" row). When it is regenerated,
       add a sentence naming that entry to the article's dashed-line paragraph
-      (`pedigree-diagram.qmd:50-55`); the manual (`_pedigree_browser.Rmd:91-92`) already does.
+      (`pedigree-diagram.qmd:50-55`); the manual (`_pedigree_browser.Rmd:91-92`) already does. S933 retook `read_and_check_pedigree.png` alone
+      (the Input tab's new no-birth-date warning made the old picture show Warnings 1; the app now shows 2 and the
+      guide text says 2), with the guide's own script into a scratch folder (81/81 steps), copied alone.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
