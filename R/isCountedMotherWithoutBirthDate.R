@@ -6,9 +6,10 @@
 #' The one place the rule lives: a female with no birth date counts as a
 #' breeding-age mother only when the pedigree lists her as a dam (\code{damIds},
 #' the dams of the whole pedigree, not only of her group). The Production
-#' count, the Inbreeding count of breeding-age females and the Genetic
-#' Diversity note's "counted / left out" numbers all use it, so the note cannot
-#' disagree with the counts.
+#' count and the Inbreeding count of breeding-age females reach it through
+#' \code{isBreedingAgeFemale()}, and the Genetic Diversity note's "counted /
+#' left out" numbers use it directly, so the note cannot disagree with the
+#' counts.
 #'
 #' @param id character vector of animal IDs.
 #' @param sex character vector of sex codes, the same length as \code{id}.
