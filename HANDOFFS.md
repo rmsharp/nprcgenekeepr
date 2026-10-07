@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S931
+date: 2026-10-07
+status: pending
+active_task: The Genetic Diversity "Production" cell counts a female with no birth date as a breeding-age mother (BACKLOG.md:8; R/getProductionStatus.R:83; DECISION NEEDED, Effort S; owner pick at the Phase 0 picker, option 2 of 4; the owner's rule decision first, then strict TDD for the fix).
+```
+
+```handoff
 session: S930
 date: 2026-10-07
 status: complete
