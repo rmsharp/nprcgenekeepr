@@ -21,10 +21,14 @@
 #' @param minParentAge `r lifecycle::badge("deprecated")` Deprecated scalar
 #'   minimum parent age. Supplying it sets both \code{minSireAge} and
 #'   \code{minDamAge}; use those sex-specific parameters instead.
-#' @param reportChanges logical whether to report column name changes in the
-#'   result (default FALSE). When TRUE, \code{changedCols} and
-#'   \code{hasChangedCols} in the qcResult report all renamed columns, while
-#'   \code{warnings} lists only the case and space changes.
+#' @param reportChanges logical whether to put notices in the result (default
+#'   FALSE). When TRUE, \code{changedCols} and \code{hasChangedCols} in the
+#'   qcResult report all renamed columns, while \code{warnings} lists the case
+#'   and space changes and, when animals in the cleaned pedigree have no birth
+#'   date, one warning, "Animals with no birth date", that says how many. That
+#'   warning is a notice only: it never makes \code{hasErrors} TRUE, and it is
+#'   left out when errors were found, because no cleaned pedigree exists then.
+#'   When FALSE, \code{warnings} is empty.
 #'
 #' @return A list with the following components:
 #' \itemize{
