@@ -3,7 +3,7 @@
 
 #' One box of the Input tab's QC Summary
 #'
-#' A Bootstrap 4 card: a header coloured by \code{colour} holding the title,
+#' A Bootstrap 4 card: a header colored by \code{colour} holding the title,
 #' and a body holding the count. The app's theme is Bootstrap 4 (bslib,
 #' flatly), which has no rules for the Bootstrap 3 \code{panel} classes these
 #' boxes used to carry, so the boxes showed plain grey. The three boxes

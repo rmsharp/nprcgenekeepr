@@ -195,6 +195,13 @@ do_step("click Read and Check Pedigree", {
 do_step("switch to QC Summary sub-tab", {
   app$set_inputs(`dataInput-mainTabs` = "QC Summary")
 })
+# The check ends with a yellow pop-up ("QC found 2 warning(s). Check the
+# Warnings tab.") that stays 8 seconds in the bottom-right corner, which this
+# picture's crop to the module container cuts off mid-sentence. Wait until it
+# has closed so the picture shows the counts, not half a sentence.
+do_step("wait for the QC pop-up to clear", {
+  wait_for_notifications_clear(app, timeout = 15000)
+})
 shot(app, "read_and_check_pedigree.png",
      selector = "#dataInput-moduleContainer")
 
