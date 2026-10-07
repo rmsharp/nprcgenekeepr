@@ -99,13 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 929 Did
-**Deliverable:** check S928's crash fix by hand in a real Chrome window (verification only; no code, test or `R/` change; owner
-pick at the Phase 0 picker, option 1 of 4, the recommended one; steps in `BACKLOG.md:48`) (IN PROGRESS)
-**Started:** 2026-10-07; TDD phase none (verification only, no RED, GREEN or REFACTOR).
-**Status:** Session claimed. Work beginning: connect the Chrome extension, load the shipped example pedigree, run Genetic Value
-Analysis, Form Groups with the defaults, open the Genetic Diversity tab. If the extension will not connect, report that and stop.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (verification only; owner pick at the Phase 0 picker, option 1 of 4):** S928's crash fix checked by hand in real
+Chrome. **The check passes.** The Chrome extension was not connected (`list_connected_browsers` returned `[]`), so the session started
+the working-tree app on port 6013 and the owner did the clicks: `ExamplePedigree.csv` on the Input tab (3,694 records, 0 errors),
+Form Groups with the defaults (Top ranked), Genetic Diversity: the page stayed live and the heat map drew (Value green x3; Production
+gray, red, red; Inbreeding red x3). Server side: no error in the app log, 4 Chrome connections ESTABLISHED, and a server-rendered
+heat map cannot draw in a dead session. Production matches the `BACKLOG.md:8` prediction; Inbreeding red is by design
+(`R/getGeneticDiversityStats.R:18-21`). **Not seen:** the Genetic Value step (inferred from the filled Value column) and "All available"
+by hand (S928's headless run only). No code, test or `R/` change. Claim `67753ff45`, close-out (the commit carrying this note).
+**Handoff evaluation of S928: 8/10.** Helped: the steps in `BACKLOG.md:48` went to the owner as written; every cite (`:8`, `:24`, `:40`,
+`:48`) and the 29-ahead count held. Missing: how to start the app on the working tree (my first launch from the scratchpad stopped with
+"The package quadprog is required": `.Rprofile` activates `renv` only when R starts in the repo); the Gene Drop Iterations minimum
+is 100; the Input tab takes the CSV, not the data object. Wrong: nothing found.
+**Self-assessment: 7/10.** + claimed first; stopped at the documented extension blocker and asked; checked the screenshots against
+the server. - the recommended option rested on a connection I never probed (Learning 895); one failed launch; the Genetic Value step unseen.
+
+**Next steps (recommended, not ruled on):** (A) The Production cell (`BACKLOG.md:8`, DECISION NEEDED, S): the real app now shows
+its predicted colours. (B) Docs-audit slice 2, plan Phase 2 (script only; needs none of D2-D5), then 3a-3c. (C) `getAncestors()`
+(`:24`, DECISION NEEDED, S); upstream #93 (`:280`, BLOCKED). Cites unchanged: `:8`, `:24`, `:40`, `:48`, `:105`, `:280`.
+32 local commits unpushed (not offered). Ratchet: 1/1 pass, results `2cd975e6add6`.
+**Key files:** `BACKLOG.md:72-75`; `docs/planning/docs-audit-slice2-screenshot-plan.md:15-17`; `R/modGeneticValue.R:39-41`; Learning 895.
+**Gotchas:** start the app from the repo directory with plain `Rscript` and a scratch launcher (`load_all()`, then
+`runGeneKeepR(port = 6013L, launch.browser = FALSE)`); `list_connected_browsers` at Phase 0 before offering a browser option; a
+background command's exit code is the wrapper's, so read the app's log and `lsof -nP -iTCP:6013`; the ratchet results file is
+gitignored; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 928 Did (condensed S929; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Fixed the session-ending crash after a Genetic Value run on the example pedigree (strict TDD; owner pick). Cause: an animal with
