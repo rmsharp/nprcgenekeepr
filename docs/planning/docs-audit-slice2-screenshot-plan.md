@@ -16,6 +16,23 @@ to write it. Every number below was measured this session unless it says "S821" 
 > by-hand browser check this plan asked for was done S929 (the owner, in Chrome, Top ranked source: the page stayed live and
 > the heat map drew).
 
+> **Update S930 (2026-10-07): Phase 2 is DONE except item (e).** One shared helper, `tests/testthat/helper-captureHarness.R`
+> (tested without a browser in `test_captureHarness.R`, 31 tests), now holds `shot()`, `do_step()` and the end-of-run summary
+> for both capture scripts. Done: (a) `reset_module_ready()` before each of the 4 Form Groups clicks; (b) a step whose last
+> value is FALSE counts as failed (only the Genetic Value run click is exempt: it returns FALSE at 30.0 s every run), the
+> potential-parents wait stops on a timeout, and "select group 6" returns its click; (c) pictures taken after a page-idle
+> timeout are listed in the summary; (d) `NPRC_SHOT_DIR` names the output folder (unset: the guide's own folder);
+> (f) the Diagram legend picture waits for the pop-up to clear (checked before and after: the old picture has the pop-up on
+> the "Twin/Zygosity Relations" heading, the new one does not). **Not done: (e)**, the full-height Potential Parents capture,
+> moves to Phase 3c, which takes that picture. Measured before the change (two runs, S928's fix in the tree): the colony script
+> reported 81/81 in 92.6 s and 92.1 s, so this phase's "DONE" test below was already true; 10 of its 11
+> `click_element_safe()` calls settled in 0.5-5.1 s and the 11th (the Genetic Value run) returned FALSE at 30.0 s; 5 of 6
+> `wait_for_module_ready()` calls returned in 0.0 s. After: colony 81/81 (96.7 s, 100.4 s), Diagram 18/18 (87.3 s, 87.6 s), no
+> idle timeouts. The marker reset works in a real page (a stale marker: the wait returned in 0.00 s; after the reset the marker
+> read false and the wait waited 0.51 s) but changes nothing in a run on this machine, because each formation ends inside the
+> click's own idle wait; it matters when a formation runs past 30 s. Take Phase 3c's `genetic_diversity_heatmap.png` after the
+> heat map label fix (`BACKLOG.md:24`), or the guide shows cut-off labels again.
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article

@@ -105,8 +105,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S862; 8 (S868) `docs/research/` and older `docs/audits/`, a status banner on 26 files, S870.
       **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped
       S927 into 7-8 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its owner decisions
-      D1-D5 are pending; its Phase 1, the session-ending crash, was fixed S928, so Phase 3c now waits only
-      on Phase 2). Measured S927:
+      D1-D5 are pending; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
+      honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
+      `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
+      capture, was NOT done and moves to Phase 3c; Phases 3a and 3b still need D2 and D3 answered; take
+      Phase 3c's `genetic_diversity_heatmap.png` after the heat map label fix, `BACKLOG.md:24`). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
