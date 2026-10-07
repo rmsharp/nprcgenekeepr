@@ -484,3 +484,23 @@ test_that("there is no note before the heat map is ready", {
     }
   )
 })
+
+test_that("the note on the tab names both columns that follow the offspring rule", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1, g2) }),
+      pedigree = shiny::reactive({ pedNoBirthNote }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      html <- paste(as.character(output$birthDateNote), collapse = " ")
+      expect_true(grepl("Production and Inbreeding columns", html, fixed = TRUE))
+    }
+  )
+})

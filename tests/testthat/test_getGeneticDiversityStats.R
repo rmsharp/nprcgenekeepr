@@ -415,3 +415,45 @@ test_that("a group whose only female has no birth date and no offspring has no P
   expect_identical(res$Production, NA_integer_)
   expect_s3_class(makeGeneticDiversityHeatmap(res), "ggplot")
 })
+
+## Females with no birth date in the Inbreeding cell (S935 owner ruling): the
+## same rule as Production. Such a female counts as a breeding-age female only
+## if the pedigree lists an offspring for her, looked up in the WHOLE pedigree.
+## A male with no birth date stays out of the potential mates.
+
+test_that("a female with no birth date and an offspring in her own group counts for Inbreeding", {
+  ## f1 is unrelated to the adult male m1; f2 is related to him. With f2's birth
+  ## date removed and o1 listed as her offspring she counts: 1 of 2 -> red (1).
+  ## Without the offspring she is left out and the group is green (3), as the
+  ## "does not count" test above shows.
+  kmatF1 <- makeKmat(ped$id, list(c("f1", "m1")))
+  pedF2Mother <- ped
+  pedF2Mother$birth[pedF2Mother$id == "f2"] <- as.Date(NA)
+  pedF2Mother$dam[pedF2Mother$id == "o1"] <- "f2"
+  res <- getGeneticDiversityStats(list(g1), pedF2Mother, gv, kmatF1,
+                                  currentDate = currentDate)
+  expect_identical(res$Inbreeding, 1L)
+})
+
+test_that("a mother with no birth date whose offspring are in another group counts for Inbreeding", {
+  kmatF1 <- makeKmat(ped$id, list(c("f1", "m1")))
+  pedF2Mother <- ped
+  pedF2Mother$birth[pedF2Mother$id == "f2"] <- as.Date(NA)
+  ## The offspring "co" belongs to g2, not to g1: only the whole pedigree sees it.
+  pedF2Mother$dam[pedF2Mother$id == "co"] <- "f2"
+  res <- getGeneticDiversityStats(list(g1, g2), pedF2Mother, gv, kmatF1,
+                                  currentDate = currentDate)
+  expect_identical(res$Inbreeding[1L], 1L)
+})
+
+test_that("a group whose only female has no birth date but an offspring has a defined Inbreeding", {
+  ## Left out she would leave no breeding-age female, so Inbreeding would be
+  ## undefined and scored red (1). Counted, and unrelated to m1: green (3).
+  kmatF2 <- makeKmat(ped$id, list(c("f2", "m1")))
+  pedF2Mother <- ped
+  pedF2Mother$birth[pedF2Mother$id == "f2"] <- as.Date(NA)
+  pedF2Mother$dam[pedF2Mother$id == "o1"] <- "f2"
+  res <- getGeneticDiversityStats(list(c("f2", "m1")), pedF2Mother, gv, kmatF2,
+                                  currentDate = currentDate)
+  expect_identical(res$Inbreeding, 3L)
+})

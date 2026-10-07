@@ -206,3 +206,110 @@ test_that("an animal with no sex is neither a female nor an eligible male", {
   expect_equal(status$fraction, 0)
   expect_identical(status$colorIndex, 1L)
 })
+
+## A female with no birth date and a listed offspring (S935 owner ruling). The
+## Production cell counts such a female as a breeding-age mother only when the
+## pedigree lists an offspring for her; the Inbreeding cell follows the same
+## rule. `damIds` holds the IDs listed as a dam in the WHOLE pedigree, and
+## isCountedMotherWithoutBirthDate() is the one place the rule lives. A male
+## with no birth date stays out of the potential mates.
+
+test_that("a female with no age counts as a breeding-age female when damIds lists her", {
+  ## f1 (age 4) is unrelated to m1; f2 has no age and is related to m1. Counted,
+  ## f2 makes it 1 of 2 = 0.5 (red); left out it is 1 (green).
+  ids <- c("f1", "f2", "m1")
+  group <- makeGroup(ids, c("F", "F", "M"), c(4, NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "f2")
+  expect_equal(status$fraction, 0.5)
+  expect_identical(status$color, "red")
+  expect_identical(status$colorIndex, 1L)
+})
+
+test_that("a female with no age stays out when damIds does not list her", {
+  ids <- c("f1", "f2", "m1")
+  group <- makeGroup(ids, c("F", "F", "M"), c(4, NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat,
+                                     damIds = c("elsewhere1", "elsewhere2"))
+  expect_equal(status$fraction, 1)
+  expect_identical(status$colorIndex, 3L)
+})
+
+test_that("a group whose only female has no age but a listed offspring has a result, not NA", {
+  ## Without the rule she is left out and the metric is undefined (NA).
+  ids <- c("f1", "m1")
+  group <- makeGroup(ids, c("F", "M"), c(NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "f1")
+  expect_equal(status$fraction, 1)
+  expect_identical(status$color, "green")
+  expect_identical(status$colorIndex, 3L)
+})
+
+test_that("a counted female with no age who is related to every male scores red", {
+  ids <- c("f1", "m1")
+  group <- makeGroup(ids, c("F", "M"), c(NA, 6))
+  kmat <- makeKmat(ids)
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "f1")
+  expect_equal(status$fraction, 0)
+  expect_identical(status$colorIndex, 1L)
+})
+
+test_that("a known age under minFemaleAge stays out even when damIds lists her", {
+  ## f2 is 1 year old and related to m1. A known age is judged by the age, not
+  ## by the offspring list: f1 alone decides, 1 of 1 -> green.
+  ids <- c("f1", "f2", "m1")
+  group <- makeGroup(ids, c("F", "F", "M"), c(4, 1, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "f2")
+  expect_equal(status$fraction, 1)
+  expect_identical(status$colorIndex, 3L)
+})
+
+test_that("an animal with no sex is not counted even when damIds lists it", {
+  ## x1 has no sex and no age. If it were counted as a mother f1 would not be
+  ## alone; left out, f1 is unrelated to m1: 1 of 1 -> green, and no error.
+  ids <- c("f1", "m1", "x1")
+  group <- makeGroup(ids, c("F", "M", NA), c(4, 6, NA))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "x1")
+  expect_equal(status$fraction, 1)
+  expect_identical(status$colorIndex, 3L)
+})
+
+test_that("a male with no age stays out of the mates even when damIds lists his id", {
+  ## m1 has no age and is unrelated to f1; m2 (age 6) is related to f1. Males
+  ## with no birth date are not counted, so f1 has no unrelated mate: red.
+  ids <- c("f1", "m1", "m2")
+  group <- makeGroup(ids, c("F", "M", "M"), c(4, NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "m1")
+  expect_equal(status$fraction, 0)
+  expect_identical(status$colorIndex, 1L)
+})
+
+## The rule lives in one place. This test stubs it with a mask that DIFFERS
+## from the real rule (the real rule counts nobody here, because no id is in
+## damIds) and checks the cell follows the stub. A control with the real rule
+## comes first.
+
+test_that("getKinshipWithMaleStatus asks isCountedMotherWithoutBirthDate which females count", {
+  ids <- c("f1", "f2", "m1")
+  group <- makeGroup(ids, c("F", "F", "M"), c(4, NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  ## Control: the real rule leaves f2 out, so f1 alone decides: 1 (green).
+  control <- getKinshipWithMaleStatus(group, kmat, damIds = "elsewhere")
+  expect_equal(control$fraction, 1)
+  helper <- mockery::mock(c(FALSE, TRUE, FALSE))
+  mockery::stub(getKinshipWithMaleStatus,
+                "isCountedMotherWithoutBirthDate", helper)
+  status <- getKinshipWithMaleStatus(group, kmat, damIds = "elsewhere")
+  mockery::expect_called(helper, 1L)
+  expect_equal(status$fraction, 0.5)
+  args <- mockery::mock_args(helper)[[1L]]
+  expect_identical(args[[1L]], group$id)
+  expect_identical(args[[2L]], group$sex)
+  expect_identical(args[[3L]], is.na(group$age))
+  expect_identical(args[[4L]], "elsewhere")
+})

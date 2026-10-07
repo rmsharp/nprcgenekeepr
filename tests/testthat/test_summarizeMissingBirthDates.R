@@ -56,3 +56,14 @@ test_that("summarizeMissingBirthDates ignores animals that are in no group", {
   expect_identical(res$animals, 0L)
   expect_identical(res$total, 2L)
 })
+
+test_that("the note names the Production and Inbreeding columns and the counts", {
+  s <- list(animals = 3L, total = 10L, females = 2L, femalesCounted = 1L,
+            femalesLeftOut = 1L)
+  txt <- makeBirthDateNoteText(s)
+  expect_true(grepl("3 of the 10 animals in these groups have no birth date",
+                    txt, fixed = TRUE))
+  expect_true(grepl("In the Production and Inbreeding columns", txt,
+                    fixed = TRUE))
+  expect_true(grepl("(1 counted, 1 left out)", txt, fixed = TRUE))
+})
