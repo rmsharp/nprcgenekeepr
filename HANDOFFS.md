@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S929
+date: 2026-10-07
+status: pending
+active_task: Check S928's crash fix by hand in a real Chrome window (verification only; no code, test or R/ change; owner pick at the Phase 0 picker, option 1 of 4, the recommended one; steps in BACKLOG.md:48): load the shipped example pedigree, run Genetic Value Analysis, Form Groups with the defaults, and confirm the page stays live and the Genetic Diversity tab draws the heat map. If the Chrome extension will not connect, report that and stop.
+```
+
+```handoff
 session: S928
 date: 2026-10-06
 status: complete
