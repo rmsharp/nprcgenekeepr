@@ -57,12 +57,11 @@ SHOT_DIR <- capture_shot_dir(
   file.path("vignettes", "articles", "shiny_app_use")
 )
 
-## shot() and do_step() come from the shared helper; see the header of
-## helper-captureHarness.R for what each one records and why an idle-wait
-## timeout before a picture is listed in the end-of-run summary.
-recorder <- new_capture_recorder(SHOT_DIR)
-shot <- recorder$shot
-do_step <- recorder$do_step
+## shot() and do_step() come from the shared helper and are installed here by
+## start_capture_run(); see the header of helper-captureHarness.R for what
+## each one records and why an idle-wait timeout before a picture is listed in
+## the end-of-run summary.
+recorder <- start_capture_run(SHOT_DIR)
 
 app_dir <- system.file("shinytest", package = "nprcgenekeepr")
 

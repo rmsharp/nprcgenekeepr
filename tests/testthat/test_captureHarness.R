@@ -304,6 +304,29 @@ test_that("wait_for_notifications_clear() returns FALSE when a pop-up outlasts t
   expect_lt(as.numeric(difftime(Sys.time(), started, units = "secs")), 5)
 })
 
+## ---- start_capture_run() (REFACTOR: the setup both scripts repeated) --------
+
+test_that("start_capture_run() installs shot() and do_step() in the given environment and returns the same recorder", {
+  dir <- withr::local_tempdir()
+  scriptEnv <- new.env()
+  rec <- start_capture_run(dir, envir = scriptEnv)
+  expect_true(is.function(scriptEnv$shot))
+  expect_true(is.function(scriptEnv$do_step))
+  runQuiet(scriptEnv$do_step("from the script", TRUE))
+  runQuiet(scriptEnv$shot(fakeApp()$app, "a.png"))
+  expect_identical(names(rec$results()), c("[step] from the script", "a.png"))
+  expect_true(file.exists(file.path(dir, "a.png")))
+})
+
+test_that("start_capture_run() installs into the calling environment by default", {
+  dir <- withr::local_tempdir()
+  installedHere <- function() {
+    start_capture_run(dir)
+    c(exists("shot", inherits = FALSE), exists("do_step", inherits = FALSE))
+  }
+  expect_identical(installedHere(), c(TRUE, TRUE))
+})
+
 ## ---- pins on the two scripts' own text ------------------------------------
 
 scriptDir <- testthat::test_path("..", "..", "vignettes", "articles")

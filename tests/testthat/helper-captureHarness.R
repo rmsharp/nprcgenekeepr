@@ -15,9 +15,7 @@
 # Usage in a script:
 #   source(file.path("tests", "testthat", "helper-captureHarness.R"))
 #   SHOT_DIR <- capture_shot_dir(file.path("vignettes", "articles", "shiny_app_use"))
-#   recorder <- new_capture_recorder(SHOT_DIR)
-#   shot <- recorder$shot
-#   do_step <- recorder$do_step
+#   recorder <- start_capture_run(SHOT_DIR)   # installs shot() and do_step()
 #   ... shot(app, "x.png", selector = ...); do_step("label", { ... }) ...
 #   recorder$summary()
 
@@ -116,6 +114,17 @@ new_capture_recorder <- function(shot_dir) {
 
   list(shot = shot, do_step = do_step, results = function() results,
        idle_timeouts = function() idle_timeouts, summary = summary)
+}
+
+## start_capture_run(): the setup both scripts begin with -- build the
+## recorder for `shot_dir` and put its shot() and do_step() in `envir` (the
+## calling script's own environment by default), so the script's shot(...) and
+## do_step(...) calls read as before. Returns the recorder, for its summary().
+start_capture_run <- function(shot_dir, envir = parent.frame()) {
+  recorder <- new_capture_recorder(shot_dir)
+  assign("shot", recorder$shot, envir = envir)
+  assign("do_step", recorder$do_step, envir = envir)
+  recorder
 }
 
 ## reset_module_ready(): set a module container's data-ready attribute back to
