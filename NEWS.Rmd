@@ -361,6 +361,12 @@ longitudinal monitoring of colony genetic health.
   counts, cannot use them. It is only a warning: the pedigree can still be
   used. `runQcStudbook(reportChanges = TRUE)` returns the same warning.
 
+- Fixed: the three count boxes on the Input tab's QC Summary (Records
+  Processed, Errors and Warnings) were plain gray whatever the check found.
+  They are now colored: Errors is red when there is at least one error,
+  Warnings is orange when there is at least one warning, both are green when
+  the count is 0, and Records Processed is dark blue.
+
 - Fixed: a real animal whose id starts with a capital U (such as `U1`, `U123`
   or `Uma`) was mistaken for a stand-in for an unknown parent, so it was left
   out of founder and breeder counts, hidden when "Display Unknown IDs" was
