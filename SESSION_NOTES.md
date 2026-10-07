@@ -99,34 +99,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 934 Did
-**Deliverable:** fix the Genetic Diversity heat map's cut-off column labels and tiny row labels (`BACKLOG.md:20`; READY, Effort S as
-an estimate; owner pick at the Phase 0 picker, option 1 of 4; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-07 11:44 CDT
-**Status:** Session claimed. Work beginning. Phase 0: 0 undocumented commits, 0 pending receipts, S933's ratchet citation (results
-`c33c6c0d2ebe`) matched, CI green on the last 10 master runs (the first `gh run list` returned stale September rows; the re-run was
-current), dashboard 96/100 High+ risk 0, context budget no file over its ceiling, 58 ahead of origin (not offered).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Genetic Diversity heat map's names are whole and
+readable. `makeGeneticDiversityHeatmap()` (`R/makeGeneticDiversityHeatmap.R:64,76-80`) writes the column names level, centred and bold,
+and both name sets at 22 pt (the owner's "about 2.5 times larger" than 8.8 pt; one `labelSize`). Cause, measured outside the app at 900 x
+500, 72 dpi: the 45-degree names run up and right and the top edge cuts them; why that strip is too short was not traced (removing the
+slant made it unnecessary). **Owner answers at Pre-RED:** level bold names (not a bigger slant); retake the guide's picture now. 8 new
+blocks (7 failed at RED on the old values, the "stay above the grid" guard passed). Claim `b06d00b07`, RED `f0d4f1e9f`, GREEN
+`bab2c8d43`, REFACTOR `4a086004c`, docs `e514b9a08` (picture, alt text), NEWS `03adde64a`, close-out (the commit carrying this note).
+**Verified:** full suite 3,231 tests, 0 failed, 0 errors (GREEN, REFACTOR); `check()` 0/0/0; `lint_package` 0; ratchet 1/1 (results
+`58130a0825f7`); REFACTOR's theme, data, scales and layers identical to GREEN on two fixtures. Real app (headless Chrome, the guide's
+example): the capture script's heat map step, opened for the owner who approved it before any full testing; that run was stopped after
+the step, so it is not an 81/81 run. **Went wrong:** I wrote "shown above" twice for pictures the owner never saw (images I Read reach
+only me), so the look was chosen from text; a 6-minute suite was running when the owner asked to see the real picture first (killed);
+my first sizes, 15 and 14 pt, were 1.6-1.7 x against the owner's 2.5 x (moved before RED was committed). Learning 900.
+**Handoff evaluation of S933: 9/10.** Helped: the A-E order and its cites (all held), the capture-script gotchas, "full suite alone".
+Wrong: one stale cite (`BACKLOG.md:57` in the docs-audit item; the heat map item was at `:20`). Missing: that images I Read do not
+reach the owner. **Self-assessment: 7/10.** + reproduced before asking; the 5-column 600 px collision found and disclosed; REFACTOR
+proved identical; the owner's mid-turn size acted on before RED. - the unseen-picture overclaim; the suite started before the picture.
+
+**Next steps (recommended, not ruled on):** (A) the Inbreeding cell's rule (`BACKLOG.md:8`, DECISION NEEDED, S). (B) The QC Summary
+boxes' colour (`:20`, DECISION NEEDED, S). (C) Docs-audit slice 2 (`:78`): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a,
+4b. (D) Origin-and-funding reword (`:33`); `getAncestors()` (`:54`). Cites: `:70` version, `:143` contributor tutorial.
+**Key files:** `R/makeGeneticDiversityHeatmap.R:64,76-80`; `tests/testthat/test_makeGeneticDiversityHeatmap.R:146-224` (the labels
+section; `labelSettings()` at `:155`); `test_modGeneticDiversity.R:181` (through the module);
+`vignettes/articles/shiny_app_use/genetic_diversity_heatmap.png` and `colony-manager-guide.qmd:705`.
+**Gotchas:** show a picture with `open <png>` plus its path (a `Read` image does not reach the owner); 5 columns in a 600 px window
+collide at 22 pt (the app has 4 metrics; a Flags column, issue #116, would need `guide_axis(n.dodge = 2)` or smaller names); read a
+look's resolved settings with `ggplot2::calc_element(el, p$theme)`; a zsh `rm -f dir/*.png` with no match aborts the `&&` chain;
+the capture script still needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>`; a BACKLOG removal shifts every later cite; take `wc -c`
+after the last edit.
 
 ### What Session 933 Did (condensed S934; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; owner picks: the row only with
-`reportChanges = TRUE`, and after an upload it behaves like any warning). REFACTOR, QC code only: `getEmptyWarningsTable()` replaces
-4 copies; the 4 in `R/modInput.R:422,450,478,536` stay. 17 new tests; full suite 3,223 tests, 0 failed; the real-app run caught two
-wrong claims (the guide's example shows Warnings 2; the QC boxes have no colour, `BACKLOG.md:39`). Claim `be7537637`, RED
-`7d4a09af3`, GREEN `43dd16322`, REFACTOR `3da18de52`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10.
-**S933's next steps (recommended, not ruled on):** (A) the heat map label fix (S934 took it); (B) the Inbreeding rule
-(`BACKLOG.md:8`); (C) the QC boxes' colour (`:39`); (D) docs-audit slice 2 (`:97`); (E) origin-and-funding reword (`:52`) and
-`getAncestors()` (`:73`).
-**Gotchas kept:** the capture script needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>` (without the second it overwrites the
-guide's pictures); `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ (column case); take `wc -c`
-after the last edit; the full suite takes about 6 minutes and runs alone.
+`runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; only with `reportChanges = TRUE`; a warning
+like any other after an upload); one `getEmptyWarningsTable()` replaces 4 copies (the 4 in `R/modInput.R:422,450,478,536` stay). 17
+new tests; full suite 3,223, 0 failed. Claim `be7537637`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10.
+**Gotchas kept:** `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ (column case); the QC Summary
+boxes have no colour (`BACKLOG.md:20`).
 
 ### What Session 932 Did (condensed S933 and S934; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 A decision session, docs only: the Input-tab missing-birth-date warning design was ruled (the owner took all three recommended
 options: a row in the existing Warnings list, every animal, the stated wording); S933 built it. Measured: the example pedigree has
 1,432 of 3,694 animals with no birth date, none ALIVE; "living" has two meanings (no exit date 1,372 of 1,704; status ALIVE 0 of
 332). Claim `c2b42bd40`, close-out `f120ac97c`. Handoff evaluation of S931: 9/10. Self 8/10.
-**Gotchas kept:** quote `echo` separators in zsh; the full suite runs alone; take `wc -c` after the last edit.
 
 ### What Session 931 Did (condensed S932 and S933; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Production cell and a Genetic Diversity tab note shipped (strict TDD; the owner ruled the rule and the scope): a female with no
@@ -141,9 +155,7 @@ Docs-audit slice 2, Phase 2 done except item (e) (strict TDD): both guide screen
 `tests/testthat/helper-captureHarness.R` (31 tests); a step whose last value is FALSE counts as failed, `NPRC_SHOT_DIR` names the
 output folder. Item (e), the full-height Potential Parents capture, moves to Phase 3c. Close-out `17eb43401`. Handoff evaluation of
 S929: 9/10. Self 8/10.
-**Gotchas kept:** run a capture script with `NPRC_SHOT_DIR=<scratch>` (unset it overwrites the guide's pictures), one Chrome session
-at a time; the owner's RStudio holds port 6013; put R code with `\s` in a script file; take `wc -c` after the last edit (Learning
-871); a BACKLOG insert or removal shifts every later cite, so re-grep.
+**Gotchas kept:** the owner's RStudio holds port 6013; one Chrome session at a time; put R code with `\s` in a script file.
 
 ### What Session 929 Did (condensed S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks). Close-out `05673a072`. Handoff
@@ -348,16 +360,12 @@ Pushed S902's 2 local commits (`7acce42cf..6f4733c78`, a fast-forward, by SHA) a
 on the 21-entry `paths-ignore` list and **no CI run started** (nothing for `6f4733c78` 60 s later, a control on `f43ff9501`
 listed 4, the newest 4 still S899's): the fourth confirmation, and the first measured on that exact range. Claim
 `ee5632c86`, close-out `42b4fb0b8` (pushed S904). Handoff evaluation of S902: 9/10. Self 8/10.
-**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date
-ledger entries by local time (`date`), not UTC; push by SHA so the claim commit stays local.
 
 ### What Session 902 Did (condensed S903; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Pushed S901's 4 local commits (`529bb031b..7acce42cf`, a fast-forward, by SHA) at the owner's pick; all 6 changed files were
 on the 21-entry `paths-ignore` list and **no CI run started** (nothing for `7acce42cf` 60 s later, a control on `f43ff9501`
 listed 4, the newest 4 still S899's): the third confirmation. Claim `ee54ef006` (amended once, to fix its UTC date),
 close-out `6f4733c78` (pushed S903). Handoff evaluation of S901: 9/10. Self 8/10.
-**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date
-ledger entries by local time (`date`), not UTC; push by SHA so the claim commit stays local.
 
 ### What Session 901 Did (condensed S902; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Characterized the 10 red shard verify scripts (of 54: HANDOFFS 2, CHANGELOG 1, SESSION_NOTES 7) by diffing their records:

@@ -17,25 +17,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       a sire should count the same way (the S931 ruling named only females). **Not measured:** how many groups'
       Inbreeding colour would change on the shipped example pedigree.
 
-- [ ] **The Genetic Diversity heat map's column labels are cut off and its labels are too small to read
-      (owner-reported S930, 2026-10-07; READY, Effort S as an estimate; strict TDD for the fix)** -- the owner
-      sent two pictures of the Genetic Diversity tab, one magnified and one near the default size. The four column
-      labels above the grid show only their first two or three letters ("Va", "On", "Pr", "Inb"), cut off at the
-      top edge of the drawing, so they get too little room; the row labels ("Group 1", "Group 2") are very small
-      beside tiles that are many times larger. **Measured S930, beyond the owner's pictures:** the same cut-off
-      shows in a fresh headless capture of the shipped example pedigree (6 groups) and in the committed guide
-      image `vignettes/articles/shiny_app_use/genetic_diversity_heatmap.png`, so the colony-manager guide shows
-      it too (the two pictures were sent in chat and are not in the repo). **Where:** the exported
-      `makeGeneticDiversityHeatmap()` sets only `theme_minimal()` and `axis.text.x = element_text(angle = 45L,
-      hjust = 0L)` (`R/makeGeneticDiversityHeatmap.R:68-73`): no text size, no space above the grid, no
-      `clip = "off"`; the module draws it with `plotOutput(ns("heatmap"), height = "500px")`
-      (`R/modGeneticDiversity.R:40`, `:116`). **The cause is a reading of that code, not yet shown by a fix.** No
-      test pins the current look (`tests/testthat/test_makeGeneticDiversityHeatmap.R` checks the class, the tile
-      layer, the tile count and the metric count; no `theme` or `axis.text` assertion, grep'd S930). **Decide
-      when picking it up:** the label size and angle, judged by eye in the real app with the owner; and the order
-      with docs-audit slice 2's Phase 3c, which retakes `genetic_diversity_heatmap.png` (take that picture after
-      this fix, or the guide shows the cut-off labels again).
-
 - [ ] **The Input tab's QC Summary boxes for Errors and Warnings never change colour (found S933, 2026-10-07;
       DECISION NEEDED, Effort S; strict TDD for any change)** -- `qcSummaryUI` picks `panel panel-danger`,
       `panel panel-warning` or `panel panel-success` for the Errors and Warnings boxes (`R/modInput.R:575-641`),
@@ -117,8 +98,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       D1-D5 are pending; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
-      capture, was NOT done and moves to Phase 3c; Phases 3a and 3b still need D2 and D3 answered; take
-      Phase 3c's `genetic_diversity_heatmap.png` after the heat map label fix, `BACKLOG.md:57`; that picture also lacks S931's note under the heat map, and the guide's heat map paragraph now describes it). Measured S927:
+      capture, was NOT done and moves to Phase 3c; Phases 3a and 3b still need D2 and D3 answered; Phase 3c has 9 pictures
+      left, `genetic_diversity_heatmap.png` having been retaken S934, see below). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
@@ -132,6 +113,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`pedigree-diagram.qmd:50-55`); the manual (`_pedigree_browser.Rmd:91-92`) already does. S933 retook `read_and_check_pedigree.png` alone
       (the Input tab's new no-birth-date warning made the old picture show Warnings 1; the app now shows 2 and the
       guide text says 2), with the guide's own script into a scratch folder (81/81 steps), copied alone.
+      S934 retook `genetic_diversity_heatmap.png` alone (the heat map's names were cut off and tiny; the new
+      picture shows them whole at 22 pt, and S931's note), with the guide's own script into a scratch folder,
+      copied alone; that run was stopped after the heat map step, so it is not an 81/81 run.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
