@@ -241,5 +241,13 @@ runQcStudbook <- function(ped,
     name = "nprcgenekeepr"
   )
 
+  # The warning about animals with no birth date counts the cleaned pedigree,
+  # so it is added here, after the second pass, and only for a caller that
+  # wants notices in the result
+  if (reportChanges && !is.null(cleanedPed)) {
+    qcResult$warnings <- rbind(qcResult$warnings,
+                               getNoBirthDateWarning(cleanedPed))
+  }
+
   list(cleaned = cleanedPed, qcResult = qcResult, errorLst = errorLst)
 }

@@ -21,9 +21,9 @@ afterCount <- paste0(
 
 makeBirthPed <- function(birth, sex = rep("F", length(birth))) {
   data.frame(
-    id = paste0("A", seq_along(birth)),
-    sire = NA_character_,
-    dam = NA_character_,
+    id = sprintf("A%d", seq_along(birth)),
+    sire = rep(NA_character_, length(birth)),
+    dam = rep(NA_character_, length(birth)),
     sex = sex,
     birth = as.Date(birth),
     stringsAsFactors = FALSE
