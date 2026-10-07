@@ -40,6 +40,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       with docs-audit slice 2's Phase 3c, which retakes `genetic_diversity_heatmap.png` (take that picture after
       this fix, or the guide shows the cut-off labels again).
 
+- [ ] **Reword where the repo says the package was developed at ONPRC and funded by NIH grants
+      (owner-reported S930, 2026-10-07; DECISION NEEDED, Effort S; docs and `DESCRIPTION`, plus one displayed
+      line in the app)** -- the owner wrote: "Only version one was developed at Oregon National Primate Research
+      Center and funded by NIH grants P51 RR13986 and P51 OD011092." Today most places say the whole package
+      was "initially conceived and developed" at ONPRC and pair the grants with different centers (P51 RR13986
+      to the Southwest National Primate Research Center, P51 OD011092 to the Oregon center), while the in-app
+      About tab (`R/appUI.R:323-324`) says "Developed at Oregon National Primate Research Center" and "Funded
+      by NIH grants P51 RR13986 and P51 OD011092" (both grants together, which fits the owner's sentence but
+      carries no "version one" limit). **Places carrying the wording (grep S930; re-grep before editing, the
+      lines shift):** `vignettes/manual_components/_introduction.Rmd:17-27` (the source `README.Rmd` pulls in as
+      a child; `README.md:32-40` is generated from it); `DESCRIPTION:14-17` (two `fnd` entries;
+      `man/nprcgenekeepr-package.Rd:36-37` is generated from it); `CLAUDE.md:19-21` (Project Overview, inside
+      its protected fence); `vignettes/articles/colony-manager-guide.qmd:68`, `:86-87`, `:1108-1109`;
+      `vignettes/articles/engineering-the-2.0.0-release.qmd:794-795`; `R/appUI.R:323-324`;
+      `docs/planning/nprc-outreach-announcement-plan.md:48`, `:426`, `:493-494` (a plan, not a shipped file).
+      **Decide when picking it up:** the exact wording and what "version one" means here (the 1.x releases?);
+      whether each grant is credited to a center, as now, or to the version-one work, as the owner's sentence and
+      the About tab read; whether `DESCRIPTION`'s two funder entries change (they set the package's funder
+      list); and whether the About tab's two lines change (a displayed-text change, so strict TDD needs a test
+      first).
+
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
       S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.
