@@ -98,41 +98,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 932 Did
-**Deliverable, DONE (a decision session, docs only; owner pick at the Phase 0 picker, option 3 of 4):** the Input-tab
-missing-birth-date warning is ruled and recorded in `BACKLOG.md:20-55`, now READY (Effort M as an estimate; strict TDD for the
-build). The owner took all three recommended options in one answer: (1) one row in the Input tab's **existing Warnings list**
-(the QC Summary count and the Warnings sub-tab), which never stops an upload and leaves the exported error list alone; (2)
-**every animal** with no birth date, not only living ones; (3) the wording "Animals with no birth date: <n> of <N> animals have
-no birth date, so their age is unknown. Age-based checks and counts (the parent-age check, the Age-Sex Pyramid, breeding-age
-counts) cannot use them." No `R/`, test or site file changed; nothing was built.
-**Measured first:** the item's two routes (a new `errorLst` category, or a separate notice) missed the Warnings list that
-already exists (`R/modInput.R:575-641`, `R/processQcStudbookResult.R:197`); `ExamplePedigree.csv` passes with 0 errors and 0
-warnings, and 1,432 of 3,694 animals have no birth date (S928's count held): all founders, 1,401 male, 1,399 a parent of
-someone, none ALIVE, 1,372 with no exit date; `rhesusPedigree` 85 of 375, `qcPed` 47 of 280; "living" has two meanings (1,372 of
-1,704 by exit date, 0 of 332 by status). Claim `c2b42bd40`, close-out (the commit carrying this note).
-**Verified:** receipt-placement gate 7/7 after the claim; ratchet 1/1, results `3832fc7e4a2d`; no test parses `BACKLOG.md`; no
-runtime verification, because nothing at runtime changed (Phase 3E).
-**Handoff evaluation of S931: 9/10.** Helped: the A-E order with cites (all held: `:8 :20 :33 :52 :73 :89 :97 :157 :332`); the
-notes-size gotcha (about 90 B of room, so I condensed S931's block at the claim); "Chrome connected". Missing: nothing it could
-know. Wrong: nothing found; the item it wrote (`:20`) listed two routes and left out the Warnings list.
-**Self-assessment: 8/10.** + counted the class before asking (Learning 897); found the unlisted route by reading the display
-code; three answers in one box; corrected an unmeasured claim (`pedSix`) before the commit; shifted cites re-grepped. - my
-column matcher missed `Birth Date` (Learning 898); a zsh `=====` echo cost a command (the S900 gotcha again); two status nudges
-after silent chains; the item grew from 13 to 36 lines (+2.85 KB) against the BACKLOG compression item.
+### What Session 933 Did
+**Deliverable:** Build the Input-tab "Animals with no birth date" warning (`BACKLOG.md:20-55`; READY, Effort M as an estimate; strict
+TDD; owner pick at the Phase 0 picker, option 2 of 4) (IN PROGRESS)
+**Started:** 2026-10-07
+**Status:** Session claimed. Work beginning: PRE-RED; the Pre-RED scope gate (does `reportChanges = FALSE` add the row?) comes first.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 found:** 0 undocumented commits, 0 pending receipts, S932's ratchet citation (results `3832fc7e4a2d`) matched, CI green on
+the last 10 master runs (newest push runs are S923's close-out; 50 ahead of origin, not offered), dashboard 96/100 High+ risk 0,
+context budget no file over its ceiling, Chrome connected; no owner-given order in force.
 
-**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:57`, READY as an estimate, Effort S). (B)
-BUILD the Input-tab warning (`:20`, READY, Effort M as an estimate; strict TDD; RED tests: a row in `runQcStudbook()`'s
-`warnings` with the count, "has" for one animal, no row when every animal has a birth date, no row when errors exist; ask the
-owner at the Pre-RED gate whether `reportChanges = FALSE` adds it). (C) The Inbreeding cell's rule (`:8`, DECISION NEEDED, S).
-(D) Docs-audit slice 2 (`:121`): D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b. (E) Origin-and-funding reword (`:76`);
-`getAncestors()` (`:97`). Cites now: `:113` version, `:181` tutorial, `:356` upstream #93 (grep; the item starts above).
-**Key files:** `BACKLOG.md:20-55` (the ruling and the measurements), `R/runQcStudbook.R:182,198`,
+### What Session 932 Did (condensed S933; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+A decision session, docs only: the Input-tab missing-birth-date warning is ruled and recorded in `BACKLOG.md:20-55` (READY). The owner
+took all three recommended options: one row in the Input tab's existing Warnings list (never stops an upload), every animal with no
+birth date, the stated wording. Measured first: the item's two routes missed the existing Warnings list; `ExamplePedigree.csv` has
+1,432 of 3,694 animals with no birth date (none ALIVE); "living" has two meanings. Claim `c2b42bd40`, close-out `f120ac97c`. Handoff
+evaluation of S931: 9/10. Self 8/10.
+**Next-step list S932 left (recommended, not ruled on):** (A) heat map label fix (`BACKLOG.md:57`, READY, S). (B) the Input-tab warning
+build (`:20`, S933's pick). (C) the Inbreeding cell's rule (`:8`, DECISION NEEDED, S). (D) docs-audit slice 2 (`:121`): D2 and D3,
+then Phases 3a, 3b, 3c, 4a, 4b. (E) origin-and-funding reword (`:76`); `getAncestors()` (`:97`).
+**Gotchas kept:** `ExamplePedigree.csv` goes from 0 to 1 warning when the build lands (no test pairs it with a warnings expectation;
+the full suite at GREEN checks the rest); `summarizeMissingBirthDates()` counts only animals in groups; quote `echo` separators in
+zsh; the full suite takes 6-12 minutes and runs alone; take `wc -c` after the last edit. **Key files:** `R/runQcStudbook.R:182,198`,
 `R/processQcStudbookResult.R:197`, `R/modInput.R:575-641,660-663,721-724`, `tests/testthat/test_examplePedigreeFixtures.R:343`.
-**Gotchas:** `ExamplePedigree.csv` goes from 0 to 1 warning when the build lands (I grepped tests for the example pedigree
-beside a warnings expectation and found none; the full suite at GREEN checks the rest); `summarizeMissingBirthDates()` counts
-only animals in groups; quote `echo` separators in zsh; the full suite takes 6-12 minutes and runs alone; take `wc -c` after the
-last edit.
 
 ### What Session 931 Did (condensed S932; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Production cell and a Genetic Diversity tab note shipped (strict TDD; the owner ruled the rule and the scope): a female with no

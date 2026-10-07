@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S933
+date: 2026-10-07
+status: pending
+active_task: Build the Input-tab "Animals with no birth date" warning (BACKLOG.md:20-55; READY, Effort M as an estimate; owner pick at the Phase 0 picker, option 2 of 4; strict TDD, PRE-RED first).
+```
+
+```handoff
 session: S932
 date: 2026-10-07
 status: complete
