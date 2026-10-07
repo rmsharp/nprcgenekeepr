@@ -99,68 +99,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 928 Did
-**Deliverable:** fix the session-ending crash when breeding groups form after a Genetic Value Analysis run on the example pedigree
-(`BACKLOG.md:8`; READY, Effort M; strict TDD; owner pick at the Phase 0 picker, option 1 of 3, the recommended one; Phase 1 of
-`docs/planning/docs-audit-slice2-screenshot-plan.md`) (IN PROGRESS)
-**Started:** 2026-10-06; TDD phase PRE-RED.
-**Status:** Session claimed. Work beginning: reproduce with function calls, find why `kmat[f, males]` is out of bounds, then the
-pre-RED scope question to the owner. No code or test written yet.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 3):** fixed the session-ending crash when breeding
+groups form after a Genetic Value run on the shipped example pedigree (`BACKLOG.md:8` before removal; Phase 1 of the slice-2 plan).
+Claim `852c811f6`, RED `2ceb443dd`, GREEN `79e54d7d4`, docs `f8e5a5d8a`, close-out (the commit carrying this note). No REFACTOR
+change: the owner approved the phase, and the diff (two `which()` wrappers, one `tryCatch`) had nothing to restructure.
+**Cause, not S927's suspects:** an animal with no birth date has age `NA`; `group$id[sex == "F" & age >= 3]` kept an `NA` id, and
+`kmat[NA, males]` is `subscript out of bounds`. In the real app the matrix was complete (3,694 x 3,694) and all 20 animals of the
+default Top ranked group lacked a birth date (1,432 of 3,694 do). The line dates from 2026-07-05: no regression.
+**Fix (the owner's three rulings):** `R/getKinshipWithMaleStatus.R:54-57` leaves animals with no age or sex out of the counts;
+`R/modGeneticDiversity.R:134-144` the background "ready" step reads the heat map through `tryCatch`, so it cannot end a session;
+the Production cell's same miscount (`R/getProductionStatus.R:83`: 3 dams counted for 2 known plus 1 unknown) is recorded, not fixed
+(`BACKLOG.md:8`, DECISION NEEDED). 7 new tests (`test_getKinshipWithMaleStatus.R:164-210`, `test_getGeneticDiversityStats.R:359-376`,
+`test_modGeneticDiversity.R:334`); NEWS "Fixed:" line; Learnings 893, 894.
+**Verified:** 3 target files 56/56; full suite 378 files, 3,155 tests, 0 failed, 0 errored (6 warnings, not examined); lint 0; the
+real app in headless Chrome stays connected for Top ranked and All available and draws the heat map; `devtools::check()` 0/0/0 on the
+rerun, but the FIRST run had 1 error in `tests/testthat.R` that I did not capture (my summary collapsed the text) and took 14.4 min
+against 7.6: probably a load-sensitive benchmark, a guess. **Not done:** a real-browser check (the Chrome extension was not
+connected; steps in `BACKLOG.md:48`); a mutation check (RED showed each test failing without the fix).
+**Handoff evaluation of S927: 8/10.** Helped: the Appendix B snippet reproduced the crash in the app; the file:line cites were right;
+Phase 1's steps matched the real path. Missing: a recipe for modelling the app with function calls (its pedigree carries a
+`population` column, so the Genetic Value matrix is the full one; the Breeding Groups default threshold is 0.25; the Genetic Value tab
+re-ranks the report): my first four models were wrong. Wrong: "probably newer, bisect from S923-S925" (the line is from July);
+"trigger: a Genetic Value run on the large example" is a symptom (the rhesus fixture has 85 of 375 without a birth date; its group
+had none of them).
+**Self-assessment: 8/10.** + captured the real arguments when four models disagreed; corrected S927's claims in the plan, BACKLOG
+and learnings; every TDD gate asked; the Production sibling recorded, not bundled. - four wrong models first; an unexplained first
+check error; no real-browser check; a `pkill` pattern with parentheses failed and left the scratch app listening (killed by PID).
+
+**Next steps (recommended, not ruled on):** (A) the by-hand browser check (a few clicks; the owner, or a session whose Chrome
+extension is connected). (B) The Production cell (`BACKLOG.md:8`, DECISION NEEDED, S). (C) Docs-audit slice 2: plan Phase 2 (script
+waits; one session), then 3a, 3b, 3c; D2-D5 pending (D1 is moot). (D) `getAncestors()` (`:24`, DECISION NEEDED, S); upstream #93
+(`:280`, BLOCKED). BACKLOG cites now: `:8` Production, `:24` getAncestors, `:40` version, `:48` docs-audit, `:105` tutorial, `:280` #93.
+29 local commits unpushed (not offered). Ratchet: 1/1 pass, results `d0f9238a0f30`.
+**Key files:** `R/getKinshipWithMaleStatus.R:54-57`; `R/modGeneticDiversity.R:134-144`; `R/getProductionStatus.R:83`;
+`R/getGeneticDiversityStats.R:95,101`; `docs/planning/docs-audit-slice2-screenshot-plan.md` (S928 note at its top); Learnings 893-894.
+**Gotchas:** when a function-call model disagrees with the app, capture the real arguments with a scratch `app.R` outside the repo
+(Learning 893); `testServer()` closes on an observer error, not an output error (Learning 894); `pkill -f` takes a regex, so
+parentheses fail: kill by PID; write the full `devtools::check()` messages to a file, never `gsub` away the newlines; the repro,
+capture and drive scripts lived in the session scratchpad and are not committed.
 
 ### What Session 927 Did (condensed S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Planning only (no code, test or image changed): scoped docs-audit slice 2 into `docs/planning/docs-audit-slice2-screenshot-plan.md`
-(owner decisions D1-D5, Phases 1-4b, an estimated 7-8 sessions, a guess). Measured: 37 of the 38 script-written guide images differ
-from the app (S821: 31); `pb_diagram_legend.png` is stale. The colony script's tail failure is an app bug, `BACKLOG.md:8`: the Genetic
-Diversity test-only `observe()` (`R/modGeneticDiversity.R:135-141`) throws `subscript out of bounds` at
-`R/getKinshipWithMaleStatus.R:62` after a Genetic Value run on the 3,694-animal example, and Shiny ends the session (3 of 3 runs;
-Appendix B of the plan reproduces it; cause and start date not determined). Claim `95667431e`, deliverable `db288efed`, close-out
-`395298aee`. Handoff evaluation of S926: 8/10. Self 8/10.
+Planning only: scoped docs-audit slice 2 into `docs/planning/docs-audit-slice2-screenshot-plan.md` (decisions D1-D5, Phases 1-4b; the
+7-8 sessions are a guess). Measured: 37 of 38 script-written guide images differ from the app; `pb_diagram_legend.png` is stale.
+Found the crash S928 fixed (its suspects for the cause were wrong). Claim `95667431e`, deliverable `db288efed`, close-out `395298aee`.
+Handoff evaluation of S926: 8/10. Self 8/10.
 **Gotchas kept:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits; `app$click(selector = )` takes no `wait_`; one
-Chrome session at a time; the capture scripts overwrite committed images in place (copy the script, change `SHOT_DIR`); the compare,
-crop and diagnostic scripts are not committed (the plan's appendices describe them); `data-ready` never resets
-(`R/modBreedingGroups.R:742-745`); `quality_ratchet.py --run` takes minutes. **Carried:** the S926 list below; D1-D5 pending;
-BACKLOG cites `:8` crash, `:27` getAncestors, `:43` version, `:51` docs-audit, `:277` #93 (upstream); 24 local commits unpushed (not
-offered); no GitHub issue filed for the crash.
+Chrome session at a time; the capture scripts overwrite committed images in place (copy the script, change `SHOT_DIR`); `data-ready`
+never resets (`R/modBreedingGroups.R:742-745`).
 
-### What Session 926 Did (condensed S927; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Description sync shipped (strict TDD): `_pkgdown.yml` (a folded block, `:15`), `CITATION.cff` and
-`man/nprcgenekeepr-package.Rd` say what `DESCRIPTION`'s Description says ("implements a derivation of", the owner's edit);
-new `tests/testthat/test_descriptionCopies.R` (4 tests); `yaml` added to `Suggests`. Claim `40f99380e`, the owner's edit
-`c8e0833d3`, RED `ae1777f2b`, GREEN `79e9046b9`, REFACTOR `bc6ddc970`, close-out `5e569a021`. Handoff evaluation of S925:
-8/10. Self 8/10.
-**Gotchas kept:** a plain multi-line YAML value cannot hold a line ending in a colon, so `_pkgdown.yml`'s home description
-stays a folded block; `read.dcf(...)[1, 1]` carries the name "Description", so `paste()` or `unname()` before `identical()`;
-`devtools::document()` leaves `man/nprcgenekeepr-package.Rd` alone now, so a diff there means `DESCRIPTION`'s Description
-changed and `_pkgdown.yml` and `CITATION.cff` need the same text (the new test says which); `CITATION.cff` is edited by hand
-(`cffr` is not installed); removing a BACKLOG block shifts later cites, so re-grep.
-**Carried:** `reportGV(smallPed)` unfiled (3 of 3 calls fail in `geneDrop()`: "sire and dam must have had alleles assigned:
-logic error"); hover text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it); the D2
-dogleg observation from S910 (untested); the seventh-label scan test (unfiled); synced tools behind canonical, dashboard copy
-v2.19.0 against v2.21.0 (no sync asked for); `rhub` is in neither `renv.lock` nor `DESCRIPTION` (the owner may want
-`renv::install("rhub")`; not done, not filed).
+### What Session 926 Did (condensed S927 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Description sync shipped (strict TDD): `_pkgdown.yml` (a folded block), `CITATION.cff` and the help page say what `DESCRIPTION`'s
+Description says; `test_descriptionCopies.R` (4 tests). Close-out `5e569a021`. Handoff evaluation of S925: 8/10. Self 8/10.
+**Gotchas kept:** a plain multi-line YAML value cannot hold a line ending in a colon; `read.dcf(...)[1, 1]` carries the name
+"Description"; a diff in `man/nprcgenekeepr-package.Rd` after `devtools::document()` means `DESCRIPTION`'s Description changed (the test
+says which copy needs it); removing a BACKLOG block shifts later cites, so re-grep.
+**Carried:** `reportGV(smallPed)` unfiled (3 of 3 calls fail in `geneDrop()`: "sire and dam must have had alleles assigned: logic
+error"); hover text on the dashed link (not built); NEW-24's print method on issue #123 (the owner closes it); the D2 dogleg
+observation from S910 (untested); the seventh-label scan test (unfiled); synced tools behind canonical, dashboard copy v2.19.0 against
+v2.21.0 (no sync asked for); `rhub` is in neither `renv.lock` nor `DESCRIPTION` (not done, not filed).
 
-### What Session 925 Did (condensed S926; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-One-animal and zero-animal input fixed at the cause (strict TDD): `calcA()` builds its result with `cbind` (`R/calcA.R:49-51`),
-`kinship()` and the founder-contribution step keep the matrix shape (`drop = FALSE`, `R/kinship.R:228-229`,
-`R/calcFounderContributions.R:66-67`), `alleleFreq()` returns an empty two-column table for no alleles (`R/alleleFreq.R:31-35`);
-10 new tests in 6 files. Claim `c72ee87e4`, RED `ea2a03bde` and `e7881d441`, GREEN `7c369b185`, docs `b2df395d5`, REFACTOR
-`69906d9d5`, close-out `5966f568a`, addendum `d5ff5731e`. Handoff evaluation of S924: 8/10. Self 7/10.
-**Gotchas kept:** do not change `kinship()`'s `1L:max(pdepth)` loop to `seq_len()` (with only founders it runs at depth 0, which
-gives MZ-twin founders their kinship: 0.5 becomes 0); a wrap-and-compare check can say "identical" when both runs failed the same
-way, so print each run's status first; `as.data.frame(table())` of an empty input has no factor column; probe with `qcPed` or
-`examplePedigree`, never `smallPed`; commit GREEN before a mutation check; the full suite and `devtools::check()` run one at a
-time.
+### What Session 925 Did (condensed S926 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+One-animal and zero-animal input fixed at the cause (strict TDD; `calcA()` `cbind`, `kinship()` and the founder step `drop = FALSE`,
+`alleleFreq()` an empty two-column table; 10 new tests). Close-out `5966f568a`. Handoff evaluation of S924: 8/10. Self 7/10.
+**Gotchas kept:** do not change `kinship()`'s `1L:max(pdepth)` loop to `seq_len()` (founders-only input runs at depth 0, which gives
+MZ-twin founders their kinship); probe with `qcPed` or `examplePedigree`, never `smallPed`; a wrap-and-compare check can say
+"identical" when both runs failed the same way, so print each run's status first; the full suite and `devtools::check()` run one at
+a time.
 
-### What Session 924 Did (condensed S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`reportGV()` and `gvaConvergence()` stop with a message giving the number of animals when the population of interest has fewer
-than 2 (strict TDD): one unexported check, `assertPopulationSize()`, at `R/reportGV.R:199` and `R/gvaConvergence.R:154`; 13 new
-tests. Claim `57fbc6ec9`, RED `478a3978f`, GREEN `9ad1f7ed2`, docs `029e421de` and `68c115f6c`, REFACTOR `a17d7d5f5`, close-out
-`65c0a7346`. Handoff evaluation of S923: 9/10. Self 8/10.
-**Gotchas kept:** probe with `qcPed` (`reportGV(qcPed, guIter = 20L)` is fast) or `examplePedigree`, never `smallPed`; preview a
-fix by patching the loaded namespace (`unlockBinding` + `assign` on `asNamespace(...)`); a calling handler outside an inner
-`tryCatch()` never runs; commit GREEN before a mutation check; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd`:
-restore it; the roxygen R files count toward the 5-file cap; `SESSION_NOTES.md` must stay under 56,750 B (25,000 tokens).
+### What Session 924 Did (condensed S925 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`reportGV()` and `gvaConvergence()` stop with a message giving the number of animals when the population of interest has fewer than 2
+(strict TDD; `assertPopulationSize()`, `R/reportGV.R:199`, `R/gvaConvergence.R:154`; 13 tests). Close-out `65c0a7346`. Handoff
+evaluation of S923: 9/10. Self 8/10. **Gotchas kept:** preview a fix by patching the loaded namespace (`unlockBinding` + `assign` on
+`asNamespace(...)`), which does not change the attached `package:` copy (Learning 894); `devtools::document()` rewrites
+`man/nprcgenekeepr-package.Rd`: restore it; `SESSION_NOTES.md` must stay under about 56,700 B (25,000 tokens by the commit hook).
 
 ### What Session 923 Did (condensed S924; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The one-id `convertRelationships()` and empty `makeRelationClassesTable()` finding shipped (strict TDD): `filterKinMatrix()`
@@ -174,21 +185,18 @@ unless the format-example box of `HANDOFFS.md` holds exactly one receipt. Close-
 Self 8/10. **Gotchas kept:** after writing a claim receipt run that test (source tree only); a new receipt goes directly above
 the newest one, below the archive pointers; take `wc -c` after the last edit (Learning 871).
 
-### What Session 921 Did (condensed S922 and S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Pedigree Browser Diagram legend has a dashed row, "Same animal, again" (`R/modPedigree.R:707-710`; strict TDD; no hover
-text, no NEWS line: the owner's choices). Close-out `849a5e694`. Handoff evaluation of S920: 9/10. Self 8/10. **Gotchas kept:**
-a legend row cannot just be appended (the legend rescales and the Export button covers the last row; Learning 886); tests here
-match serialized JSON text, never jsonlite (`tests/testthat/helper-shinytest2.R:390-391`); a test fix after GREEN needs a
-REFACTOR-to-RED permission; `vignettes/a3manual.md` is a stale copy (edit the components).
+### What Session 921 Did (condensed S922, S925 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Pedigree Browser Diagram legend has a dashed row, "Same animal, again" (`R/modPedigree.R:707-710`; strict TDD). Close-out
+`849a5e694`. Handoff evaluation of S920: 9/10. Self 8/10. **Gotchas kept:** a legend row cannot just be appended (the legend rescales
+and the Export button covers the last row; Learning 886); tests here match serialized JSON text, never jsonlite
+(`tests/testthat/helper-shinytest2.R:390-391`); `vignettes/a3manual.md` is a stale copy (edit the components).
 
-### What Session 920 Did (condensed S921; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The genetic-value labels item shipped (strict TDD, nothing changes for users on normal data): one internal vector, `valueLabels`
-(`R/valueLabels.R`, `@noRd`), read by six places; `getProportionLow()` counts only the exact Low Value label. Claim `7cedd23d7`, RED
-`e79b88da4`, `9b7fe04e7`, `3facbbac4`, GREEN `f3aded2d4`, `84a709c7f`, REFACTOR `211da5abe`, closure `210895445`, close-out `73df7ce31`.
-Handoff evaluation of S919: 9/10. Self 8/10. **Gotchas kept:** after each GREEN commit run the new test file and read which tests
-pass early (a test that passes before its site moved pins nothing); plain `Rscript` here, not `--no-init-file`; the two wall-clock
-benchmarks fail whenever other projects load the machine, so rerun them alone first. **Carried:** `reportGV(smallPed)` unfiled; the D2
-dogleg observation from S910 (untested); the seventh-label scan test (unfiled).
+### What Session 920 Did (condensed S921 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The genetic-value labels item shipped (strict TDD, nothing changes for users): one internal vector, `valueLabels`
+(`R/valueLabels.R`), read by six places. Close-out `73df7ce31`. Handoff evaluation of S919: 9/10. Self 8/10. **Gotchas kept:** after
+each GREEN commit run the new test file and read which tests pass early (a test that passes before its site moved pins nothing);
+plain `Rscript` here, not `--no-init-file`; the two wall-clock benchmarks fail whenever other projects load the machine, so rerun
+them alone first.
 
 ### What Session 919 Did (condensed S920; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 NEW-24's first leftover shipped (strict TDD; one error message's wording): `getGeneticDiversityStats()` uses the shared
