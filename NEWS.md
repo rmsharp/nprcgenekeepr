@@ -351,20 +351,22 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - Fixed: forming breeding groups that include animals with no birth
   date, after running the genetic value analysis, could turn the page
   gray and end the session (the shipped example pedigree does this with
-  the default settings). Animals with no birth date are now left out of
-  the Inbreeding count of breeding-age females and males, and a problem
-  while the Genetic Diversity heat map is being worked out no longer
-  ends the session.
+  the default settings). A male with no birth date is now left out of
+  the Inbreeding count of potential mates, a female with no birth date
+  is counted as described in the next entry, and a problem while the
+  Genetic Diversity heat map is being worked out no longer ends the
+  session.
 
 - Fixed: in the Genetic Diversity dashboard, a female with no birth date
   was always counted as a breeding-age female in the Production cell,
-  whether or not she had any offspring, which lowered Production. She
-  now counts only when the pedigree lists an offspring for her, wherever
-  that offspring is; a female with no birth date and no offspring is
-  left out. A group whose only female is left out has no Production
-  value, so its cell is gray. A note under the heat map now says how
-  many animals in the groups have no birth date, and how many of those
-  females were counted or left out.
+  whether or not she had any offspring, which lowered Production. In
+  both the Production and the Inbreeding cells she now counts only when
+  the pedigree lists an offspring for her, wherever that offspring is; a
+  female with no birth date and no offspring is left out of both. A
+  group whose only female is left out has no Production value, so its
+  cell is gray. A note under the heat map now says how many animals in
+  the groups have no birth date, and how many of those females were
+  counted or left out.
 
 - Fixed: the column names above the Genetic Diversity heat map were
   slanted and cut off by the top edge of the picture (they read "Va",
