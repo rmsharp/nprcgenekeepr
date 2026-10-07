@@ -102,8 +102,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Deliverable:** the Genetic Diversity "Production" cell counts a female with no birth date as a breeding-age mother
 (`BACKLOG.md:8`; DECISION NEEDED, Effort S; strict TDD for the fix) (IN PROGRESS; owner pick at the Phase 0 picker, option 2 of 4).
 **Started:** 2026-10-07 01:40 CDT; TDD phase PRE-RED (the owner's rule decision first, as its own question, before any RED test).
-**Status:** Session claimed. Work beginning: read `R/getProductionStatus.R` and its tests, put the rule decision to the owner
-(leave unknown-age females out, as the Inbreeding cell does, or keep today's count), then RED.
+**Status:** PRE-RED. Owner ruled the rule (a female with no birth date counts only if the pedigree lists an offspring for her;
+recorded at `BACKLOG.md:8`) and chose scope: count + docs + a note on the Genetic Diversity tab; the Input-tab warning is its own
+item (`BACKLOG.md:30`). Package estimates no birth dates (owner confirmed). Next: the PRE-RED to RED gate, then RED tests.
 **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
 close-out, this line is the crash breadcrumb for the next session's reconcile.
 

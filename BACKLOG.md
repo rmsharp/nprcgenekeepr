@@ -6,7 +6,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 ## Up Next
 
 - [ ] **The Genetic Diversity "Production" cell counts a female with no birth date as a breeding-age mother
-      (found S928, 2026-10-06; DECISION NEEDED, Effort S; strict TDD for the fix)** -- `getProductionStatus()`
+      (found S928, 2026-10-06; READY after the S931 owner ruling below, IN PROGRESS S931, Effort S; strict TDD for the fix)** -- `getProductionStatus()`
       (`R/getProductionStatus.R:83`, `nDam <- nrow(ped[ped$sex == sexCodes[["female"]] & ped$age >= minDamAge, ])`)
       subsets rows with a test that is `NA` for an unknown age, and `nrow()` counts the all-`NA` row that
       produces, so every female with no birth date adds one to the dam count the production ratio divides
@@ -15,11 +15,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       change: in the app's default Top ranked groups on the shipped example pedigree, groups 2 and 3 each
       hold 1 female with no birth date and no female of known age, so Production is red today; under the
       rule below they would have no breeding-age females and show gray (no value), as Group 1 already does.
-      **Decision for the owner:** the owner ruled S928 that the Inbreeding cell leaves animals with no age
-      or sex out of its counts (`R/getKinshipWithMaleStatus.R:54-57`); apply the same rule here (wrap the
-      test in `which()`; a displayed-value change for groups with such females, and the S928 NEWS "Fixed:"
-      line gets a sentence), or keep today's count. Same cause as the S928 crash: an `NA` inside a logical
-      subset. The owner chose S928 to record this and fix it separately, not to apply the rule now.
+      **Owner ruled S931 (2026-10-07), replacing the two options recorded S928:** (1) a female of known age
+      counts when she is at least `minDamAge`, as now; (2) a female with no birth date counts **only if the
+      pedigree lists an offspring for her** (27 of the 31 such females in the shipped example pedigree do,
+      measured S931; 4 do not); (3) a female with no birth date and no offspring is left out; (4) the
+      documentation says this clearly; (5) a short note on the Genetic Diversity tab says how many animals
+      in the groups have no birth date (the app gave no such warning, see the next item). S931's plan: the
+      offspring are looked up in the whole pedigree `getGeneticDiversityStats()` receives, not only the
+      group; a known age under `minDamAge` stays out even with an offspring; a blank sex stays out. Same
+      cause as the S928 crash: an `NA` inside a logical subset. The owner's earlier sentence that animals
+      with no birth date "are usually assigned estimated birth dates" describes the colony's records: the
+      package estimates nothing (searched `R/` S931).
+
+- [ ] **Warn the user on the Input tab that animals in the uploaded pedigree have no birth date
+      (owner-requested S931, 2026-10-07; DECISION NEEDED, Effort M; strict TDD)** -- the owner believed
+      the app already warns; **it does not (searched S931).** The Input tab's error list has 11 categories
+      (`getEmptyErrorLst()`, `R/getEmptyErrorLst.R:19-46`) and none is a blank birth date
+      (`invalidDateRows` is a date that cannot be read); no Shiny module (`R/mod*.R`, `R/appUI.R`,
+      `R/appServer.R`) says anything about missing birth dates; the parent-age check silently skips such
+      animals (`R/checkParentAge.R:17`). Only documentation mentions them (the Age-Sex Pyramid article,
+      `vignettes/articles/age-sex-pyramid.qmd:69`). **Decide when picking it up:** a new `errorLst` category
+      (changes the shape of an exported list) or a separate notice that leaves `errorLst` alone; where it
+      shows (after upload, on the Summary page); whether it counts every animal or only living ones; the
+      wording. S931 adds only the Genetic Diversity tab's own note (the Production item above); this item
+      stays separate.
 
 - [ ] **The Genetic Diversity heat map's column labels are cut off and its labels are too small to read
       (owner-reported S930, 2026-10-07; READY, Effort S as an estimate; strict TDD for the fix)** -- the owner
