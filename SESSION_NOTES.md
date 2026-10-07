@@ -98,40 +98,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 935 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Inbreeding cell counts a female with no
-birth date when the pedigree lists an offspring for her, by the same shared rule as the Production cell; a male with no birth date
-stays out. **Owner answers:** Pre-RED, females only, one shared rule (a sire rule declined: 1,370 of the example's 1,372
-no-birth-date sires are placeholder names with no record of their own; counting them turned 3 of 9 value-floor groups red to
-green); GREEN to REFACTOR, one internal `isBreedingAgeFemale()` (`R/isBreedingAgeFemale.R:25`); and add "Inb" to `inst/WORDLIST`
-(S934's NEWS entry had left the spelling guard red). `getKinshipWithMaleStatus()` takes `damIds` (`R/getKinshipWithMaleStatus.R:51`);
-`getGeneticDiversityStats()` passes `ped$dam`; the note reads "In the Production and Inbreeding columns". Claim `00da310cb`, RED
-`5f2df5b78` (13 blocks, all failing, 0 existing failing), GREEN `2a42b6059`, docs `f8123ab99`, picture `3f0d11de0`, NEWS
-`86bf66b1c`, word list `c0eb99c53`, REFACTOR `a5517d306` and `b7d369337`, close-out (the commit carrying this note).
-**Verified:** full suite 3,250 tests, 0 failed, 0 errors (the first run, 3,244, had S934's spelling failure); `check()` 0/0/0;
-`lint_package` 0; ratchet 1/1 (results `f3c47e8dce24`); REFACTOR identical to GREEN on 400 seeded cases and 6 example group sets.
-Real app (headless Chrome, the guide's capture script, 81/81 steps): the heat map picture, opened for the owner who approved it
-before any long run. **Went wrong:** my probe said the default top 20 hold no animal without a birth date ("0 of 66"), and that
-reached the picker text; the real app's note read "20 of the 20 animals ... have no birth date" and S928 had recorded the same.
-The decision stood, the figure did not, and the path difference is still not found (`BACKLOG.md:21`). Two helper tests assumed
-`FALSE` where the code returns `NA`. Learning 901. **Handoff evaluation of S934: 8/10.** Helped: the A-D order and cites (all held),
-the "not measured" flag, the picture and capture-script gotchas. Wrong: its "0 failed" was of REFACTOR, not of the close-out tree
-(its NEWS commit left the spelling guard red). Missing: that the capture run's top 20 differ from a plain module run.
-**Self-assessment: 7/10.** + measured before asking; a gate in plain words at every phase; the no-change proof; the picture shown
-before any long run; the red guard reported and fixed. - the unverified probe figure at the picker; the NA slip in two tests.
+### What Session 936 Did
+**Deliverable:** the Input tab's QC Summary boxes for Errors and Warnings (`BACKLOG.md:8`; DECISION NEEDED, Effort S) (IN PROGRESS)
+**Started:** 2026-10-07 16:20
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4 (confirmed by a later "1"). Strict TDD
+for any change; the Pre-RED decision (leave the boxes plain, or give them real colours) has not been asked yet.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 found:** 0 undocumented commits, 0 pending receipts, S935's ratchet citation (results `f3c47e8dce24`) matched, CI green on
+the Actions API (plain `gh run list` returned stale September rows a fourth time), dashboard 96/100, no file over its context ceiling.
 
-**Next steps (recommended, not ruled on):** (A) the QC Summary boxes' colour (`BACKLOG.md:8`, DECISION NEEDED, S). (B) NEWS says an
-undefined Inbreeding cell is gray, but it is red (`:40`, READY, S, docs only). (C) Placeholder sires in breeding groups and the
-unexplained app path for the default top 20 (`:21`, DECISION NEEDED, S; reproduce the app's default ranking first). (D) Docs-audit
-slice 2 (`:92`): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a, 4b. (E) Origin-and-funding reword (`:47`);
-`getAncestors()` (`:68`). Cites: `:84` version, `:159` contributor tutorial.
-**Key files:** `R/isBreedingAgeFemale.R:25`; `R/getKinshipWithMaleStatus.R:51,62-64`; `R/getProductionStatus.R:100`;
-`R/getGeneticDiversityStats.R:119-121`; `R/summarizeMissingBirthDates.R:49-54`; `tests/testthat/test_isBreedingAgeFemale.R`;
-`test_getKinshipWithMaleStatus.R:210-`; `test_getGeneticDiversityStats.R:419-`; `colony-manager-guide.qmd:697`.
-**Gotchas:** a probe that rebuilds the app's path is not the app: look at a real-app picture before quoting its count; the full
-suite must follow the last commit; `isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare
-`%in% TRUE`); `mockery::stub()` reaches only calls made inside the test; plain `gh run list` returned stale September rows three
-times (read `gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`); one R job at a time; `wc -c` after the last edit.
+### What Session 935 Did (condensed S936; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Inbreeding cell counts a female with no birth date by the Production cell's offspring rule, through one internal
+`isBreedingAgeFemale()` (`R/isBreedingAgeFemale.R:25`); `getKinshipWithMaleStatus()` takes `damIds` (`R/getKinshipWithMaleStatus.R:51`);
+a male with no birth date stays out (a sire rule declined: 1,370 of the example's 1,372 such sires are placeholder names). Strict TDD.
+Claim `00da310cb`, close-out `5fe9acd71`. Handoff evaluation of S934: 8/10. Self 7/10. **Gotchas kept:** a probe that rebuilds the app's
+path is not the app (look at a real-app picture before quoting its count); the full suite must follow the last commit;
+`isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare `%in% TRUE`); `mockery::stub()` reaches
+only calls made inside the test; plain `gh run list` returns stale September rows (read
+`gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`); one R job at a time; `wc -c` after the last edit.
 
 ### What Session 934 Did (condensed S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `makeGeneticDiversityHeatmap()` writes its names level, centred and bold, both sets at 22 pt (the owner's "about 2.5 times

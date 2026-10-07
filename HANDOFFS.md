@@ -192,6 +192,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S936
+date: 2026-10-07
+status: pending
+active_task: IN PROGRESS -- the Input tab's QC Summary boxes for Errors and Warnings never change colour (`BACKLOG.md:8`; DECISION NEEDED, Effort S; owner pick at the Phase 0 picker, option 1 of 4; strict TDD for any change)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S935
 date: 2026-10-07
 status: complete
