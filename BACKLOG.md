@@ -21,6 +21,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       line gets a sentence), or keep today's count. Same cause as the S928 crash: an `NA` inside a logical
       subset. The owner chose S928 to record this and fix it separately, not to apply the rule now.
 
+- [ ] **The Genetic Diversity heat map's column labels are cut off and its labels are too small to read
+      (owner-reported S930, 2026-10-07; READY, Effort S as an estimate; strict TDD for the fix)** -- the owner
+      sent two pictures of the Genetic Diversity tab, one magnified and one near the default size. The four column
+      labels above the grid show only their first two or three letters ("Va", "On", "Pr", "Inb"), cut off at the
+      top edge of the drawing, so they get too little room; the row labels ("Group 1", "Group 2") are very small
+      beside tiles that are many times larger. **Measured S930, beyond the owner's pictures:** the same cut-off
+      shows in a fresh headless capture of the shipped example pedigree (6 groups) and in the committed guide
+      image `vignettes/articles/shiny_app_use/genetic_diversity_heatmap.png`, so the colony-manager guide shows
+      it too (the two pictures were sent in chat and are not in the repo). **Where:** the exported
+      `makeGeneticDiversityHeatmap()` sets only `theme_minimal()` and `axis.text.x = element_text(angle = 45L,
+      hjust = 0L)` (`R/makeGeneticDiversityHeatmap.R:68-73`): no text size, no space above the grid, no
+      `clip = "off"`; the module draws it with `plotOutput(ns("heatmap"), height = "500px")`
+      (`R/modGeneticDiversity.R:40`, `:116`). **The cause is a reading of that code, not yet shown by a fix.** No
+      test pins the current look (`tests/testthat/test_makeGeneticDiversityHeatmap.R` checks the class, the tile
+      layer, the tile count and the metric count; no `theme` or `axis.text` assertion, grep'd S930). **Decide
+      when picking it up:** the label size and angle, judged by eye in the real app with the owner; and the order
+      with docs-audit slice 2's Phase 3c, which retakes `genetic_diversity_heatmap.png` (take that picture after
+      this fix, or the guide shows the cut-off labels again).
+
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
       S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.

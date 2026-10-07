@@ -105,6 +105,7 @@ picker, option 1 of 3, the recommended one; READY, Effort M; needs none of decis
 **Started:** 2026-10-07 00:20 CDT; TDD phase PRE-RED (scope and approach to settle with the owner before any RED test).
 **Status:** Session claimed. Work beginning: read `vignettes/articles/colony-manager-guide-screenshots.R` (and the Diagram
 script), decide which of Phase 2's items (a)-(f) are testable and how, put the scope to the owner, then RED.
+Also at the owner's request (mid-session): `BACKLOG.md` now carries the Genetic Diversity heat map label item (second under Up Next).
 **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
 close-out, this line is the crash breadcrumb for the next session's reconcile.
 
