@@ -99,43 +99,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 931 Did
-**Deliverable:** the Genetic Diversity "Production" cell counts a female with no birth date as a breeding-age mother
-(`BACKLOG.md:8`; DECISION NEEDED, Effort S; strict TDD for the fix) (IN PROGRESS; owner pick at the Phase 0 picker, option 2 of 4).
-**Started:** 2026-10-07 01:40 CDT; TDD phase PRE-RED (the owner's rule decision first, as its own question, before any RED test).
-**Status:** PRE-RED. Owner ruled the rule (a female with no birth date counts only if the pedigree lists an offspring for her;
-recorded at `BACKLOG.md:8`) and chose scope: count + docs + a note on the Genetic Diversity tab; the Input-tab warning is its own
-item (`BACKLOG.md:30`). Package estimates no birth dates (owner confirmed). Next: the PRE-RED to RED gate, then RED tests.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 2 of 4; the owner ruled the rule and the scope):** the
+Production cell and a note on the Genetic Diversity tab. A female with no birth date counts as a breeding-age mother only if the
+pedigree lists an offspring for her, looked up in the whole pedigree (a known age under 3 and a blank sex stay out). The tab shows
+a note: how many animals in the groups have no birth date, and how many such females were counted or left out. Docs: code
+comments, exported help, the guide paragraph, NEWS. 20 new tests (74 in the four files); 3 example-pedigree expectations moved from
+71/629 to 71/625. **Measured first:** 27 of the 31 females with no birth date in the example pedigree have offspring (none is
+ALIVE); the package estimates no birth dates (owner confirmed).
+Claim `43e1a41c8`, ruling `fa8dbd3fd`, RED `a8f469e6c`, GREEN `735b26bc8`, REFACTOR `3b759e312`, docs `2e373ba90` and `567b5ad9f`,
+close-out (the commit carrying this note).
+**Verified:** full suite 3,206 tests, 0 failed, 0 errors (after GREEN and REFACTOR); `devtools::check()` 0/0/0; `lint_package()` 0;
+ratchet 1/1, results `9000df5bc90d`; the colony guide script into a scratch folder: 81/81 steps, the note shows ("20 of the 20
+animals ... (0 counted, 2 left out)", Production gray in all six groups).
+**Handoff evaluation of S930: 9/10.** Helped: the A-D order with cites (all 8 held at `17eb43401`); the `NPRC_SHOT_DIR` gotcha (the
+real run could not overwrite the guide's pictures); the `wc -c` gotcha. Missing: nothing it could know. Wrong: nothing found.
+**Self-assessment: 8/10.** + measured before the second question; a gate each phase; guard tests named; a real-app run; the rule
+in one function; docs in four places. - my first question rested on a stored claim, not on the offspring count (two question boxes
+declined; Learning 897); a commit-message miscount and a cite, both amended before any push; the note's Production sentence is
+constant text, left as it is.
+
+**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:33`, READY as an estimate, Effort S; Phase 3c
+then retakes that picture, which also lacks the new note). (B) The Inbreeding cell's rule for a female with no birth date and
+offspring (`:8`, DECISION NEEDED, S). (C) The Input-tab missing-birth-date warning (`:20`, DECISION NEEDED, M). (D) Docs-audit slice 2
+(`:97`): answer D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b. (E) Origin-and-funding reword (`:52`); `getAncestors()` (`:73`). Cites now:
+`:89` version, `:157` tutorial, `:332` #93 (grep; the item starts above).
+**Key files:** `R/isCountedMotherWithoutBirthDate.R` (the one rule), `R/summarizeMissingBirthDates.R` (counts and sentence),
+`R/modGeneticDiversity.R:139-150` (the note), `tests/testthat/test_summarizeMissingBirthDates.R`.
+**Gotchas:** the note's Production sentence shows even when only males lack a birth date ("0 counted, 0 left out"); dropping it
+there is new behaviour and needs a RED test first (offered to the owner at the REFACTOR gate, no ruling); in a `testServer` test an
+undefined output errors, which keeps a "no note" test honest; the colony script needs `NPRC_SHOT_DIR=<scratch>`; the full suite
+takes 6-12 minutes and runs alone; take `wc -c` after the last edit.
 
 ### What Session 930 Did (condensed S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 2 done except item (e) (strict TDD): both guide screenshot scripts share
-`tests/testthat/helper-captureHarness.R` (31 tests in `test_captureHarness.R`); a step whose last value is FALSE counts as failed,
-idle-timeout pictures are listed, `NPRC_SHOT_DIR` names the output folder. Item (e), the full-height Potential Parents capture,
-moves to Phase 3c. Claim `e63e6ba81`, RED `23c2b6080`, GREEN `b77a2a7cc`, REFACTOR `b2c9c4b81`, docs `e4da509d3`, close-out
-`17eb43401`. Owner requests kept as docs commits: heat map labels `ff623d886` (`BACKLOG.md:24`), origin and funding `8495b8c9e`
-(`:43`). Handoff evaluation of S929: 9/10. Self 8/10.
-**Next-step list S930 left (recommended, not ruled on):** (A) heat map label fix (`:24`, READY, S); (B) the Production cell (`:8`,
-S931's pick); (C) docs-audit slice 2 (`:88`): answer D2 and D3, then Phases 3a, 3b, 3c (10 plus item (e)), 4a, 4b; (D)
-origin-and-funding reword (`:43`); `getAncestors()` (`:64`). Ratchet 1/1, results `d797a1f02224`.
+`tests/testthat/helper-captureHarness.R` (31 tests); a step whose last value is FALSE counts as failed, `NPRC_SHOT_DIR` names the
+output folder. Item (e), the full-height Potential Parents capture, moves to Phase 3c. Close-out `17eb43401`. Handoff evaluation of
+S929: 9/10. Self 8/10.
 **Gotchas kept:** run a capture script with `NPRC_SHOT_DIR=<scratch>` (unset it overwrites the guide's pictures), one Chrome session
 at a time; the owner's RStudio holds port 6013; put R code with `\s` in a script file; take `wc -c` after the last edit (Learning
-871); a BACKLOG insert shifts every later cite, so re-grep.
+871); a BACKLOG insert or removal shifts every later cite, so re-grep.
 
-### What Session 929 Did (condensed S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks on a working-tree app on port 6013:
-`ExamplePedigree.csv`, Form Groups with the defaults, the heat map drew, no error in the app log). Not seen by hand: the Genetic Value
-step and "All available". Claim `67753ff45`, close-out `05673a072`. Handoff evaluation of S928: 8/10. Self 7/10.
+### What Session 929 Did (condensed S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks). Close-out `05673a072`. Handoff
+evaluation of S928: 8/10. Self 7/10.
 **Gotchas kept:** start the app from the repo directory with plain `Rscript` and a scratch launcher (`load_all()`, then
 `runGeneKeepR(port = 6013L, launch.browser = FALSE)`); `list_connected_browsers` at Phase 0 before offering a browser option; a
 background command's exit code is the wrapper's, so read the app's log.
 
-### What Session 928 Did (condensed S929 and S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Fixed the session-ending crash after a Genetic Value run on the example pedigree (strict TDD; owner pick): an animal with no birth
-date has age `NA`, so `kmat[NA, males]` stopped with "subscript out of bounds" (`R/getKinshipWithMaleStatus.R:54-57`); the Genetic
-Diversity "ready" step now reads the heat map through `tryCatch` (`R/modGeneticDiversity.R:134-144`). 7 new tests; the Production
-cell's same miscount is `BACKLOG.md:8`. Claim `852c811f6`, RED `2ceb443dd`, GREEN `79e54d7d4`, docs `f8e5a5d8a`, close-out `91e9505d1`.
-Handoff evaluation of S927: 8/10. Self 8/10.
+### What Session 928 Did (condensed S929, S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Fixed the session-ending crash after a Genetic Value run on the example pedigree (strict TDD): an animal with no birth date has age
+`NA`, so `kmat[NA, males]` stopped (`R/getKinshipWithMaleStatus.R:54-57`); the heat map "ready" step reads through `tryCatch`
+(`R/modGeneticDiversity.R`). Close-out `91e9505d1`. Handoff evaluation of S927: 8/10. Self 8/10. Its Production twin was fixed S931.
 **Gotchas kept:** capture the real arguments with a scratch `app.R` outside the repo when a function-call model disagrees with the app
 (Learning 893); `testServer()` closes on an observer error, not an output error (Learning 894); `pkill -f` takes a regex: kill by PID.
 
