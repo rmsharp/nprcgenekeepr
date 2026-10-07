@@ -194,10 +194,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S936
 date: 2026-10-07
-status: pending
-active_task: IN PROGRESS -- the Input tab's QC Summary boxes for Errors and Warnings never change colour (`BACKLOG.md:8`; DECISION NEEDED, Effort S; owner pick at the Phase 0 picker, option 1 of 4; strict TDD for any change)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the Input tab's QC Summary boxes (Records Processed, Errors, Warnings) are colored by what the check found, as Bootstrap 4 cards (BACKLOG.md:8 item; owner pick at the Phase 0 picker, option 1 of 4; strict TDD; item removed). Owner scope pick at Pre-RED: the 3 QC boxes only.
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, S935's ratchet citation (results f3c47e8dce24) matched, CI green on the Actions API (plain gh run list stale a fourth time), dashboard 96/100, no file over its ceiling). Claim a658da981. Cause found by compiling the theme (0 .panel rules, 113 .card; 10 old-style sites in 3 files), asked scope at Pre-RED in plain words, RED 6fa5f478a (7 blocks, 67 failed checks, 0 errors), GREEN 777503703, REFACTOR e335cf5ba (internal qcSummaryBox(); HTML byte-identical on 5 cases; 3 tests), docs 0c8034a11 (guide picture retaken, capture script waits for the pop-up, guide names the sub-tabs, colors and notices), NEWS 969e8aa20. The owner's report of a cut-off pop-up was the guide picture's container crop (S933 retake). Verified: full suite 3,260 tests, 0 failed, 0 errors, 187 skipped; check 0/0/0; lint 0; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 77510354ff23 · manifest aa983075d6a2. BACKLOG: item removed; findings added (seven old-style boxes, optional Warnings-tab picture). Learning 902.
+next_steps: Recommended order (not ruled on). (A) NEWS says an undefined Inbreeding cell is gray but it is red (BACKLOG.md:49, READY, S, docs only). (B) Placeholder sires in breeding groups and the unexplained app path (BACKLOG.md:30, DECISION NEEDED, S: reproduce the app's default ranking first). (C) Docs-audit slice 2 (BACKLOG.md:101): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a, 4b. (D) Seven more old-style boxes (BACKLOG.md:8, DECISION NEEDED, M); optional Warnings-tab picture (BACKLOG.md:21, READY, S). (E) Origin-and-funding reword (BACKLOG.md:56); getAncestors() (BACKLOG.md:77). Cites: BACKLOG.md:93 version, BACKLOG.md:171 contributor tutorial. A BACKLOG removal shifts later cites: re-grep.
+key_files: R/qcSummaryBox.R:18 (the box function); R/modInput.R:595-602 (the three calls); tests/testthat/test_modInputQcSummaryCards.R:1 (10 blocks); tests/testthat/test_modInput_coverage.R:230 (moved assertion); vignettes/articles/colony-manager-guide.qmd:221-233 (the paragraph); vignettes/articles/colony-manager-guide-screenshots.R:202 (the pop-up wait); NEWS.Rmd:364; PROJECT_LEARNINGS.md Learning 902.
+gotchas: a picture cropped to a container clips a notice at its edge, so wait with wait_for_notifications_clear() and look at all four edges of a retaken picture; shiny prints nested tags on separate lines, so match with whitespace between tags removed; count theme rules with sass::sass(bslib::bs_theme(version = 4L, bootswatch = "flatly")); docs spell American (colored, gray) and the word-list guard fails on coloured and grey; the owner knows the app's expected behavior (do not explain it back); plain gh run list returns stale September rows (read gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master); one R job at a time; take wc -c after the last edit.
+runtime_smoke: the real app, headless Chrome on this Mac: a scratch script on 3 pedigrees (pedGood clean: blue, green, green; the example: blue, green, orange; pedFemaleSireMaleDam: red Errors) and the guide's own capture script into a scratch folder (82 of 82 steps succeeded); the pictures were opened for the owner before any long run, and read_and_check_pedigree.png was copied alone.
+changelog_ref: S936 DONE entry
+commit: the close-out commit that carries this receipt; claim a658da981
 ```
 
 ```handoff

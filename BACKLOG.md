@@ -5,18 +5,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **The Input tab's QC Summary boxes for Errors and Warnings never change colour (found S933, 2026-10-07;
-      DECISION NEEDED, Effort S; strict TDD for any change)** -- `qcSummaryUI` picks `panel panel-danger`,
-      `panel panel-warning` or `panel panel-success` for the Errors and Warnings boxes (`R/modInput.R:575-641`),
-      but the theme the app loads gives those classes no colour. **Measured S933** in the real app (headless
-      Chrome, the example pedigree, Warnings 2): the Warnings box is `panel panel-warning`, its heading background
-      is transparent and its border is the same dark grey as the other two boxes; the guide picture
-      `read_and_check_pedigree.png` shows the same. `panel-danger` was not measured (no pedigree with errors was
-      run). The S932 ruling for the no-birth-date warning assumed "the Warnings count turns yellow"; it does not,
-      and never has for any warning. The signals a user does see are the yellow pop-up and the Warnings tab opening
-      (`R/appServer.R:183-205`); S933 kept to those and left the claim out of NEWS. **Decide when picking it up:**
-      leave the boxes plain, or give them real colours; the second is a change to displayed markup, so a test on
-      the class names comes first.
+- [ ] **Seven more old-style `panel panel-*` boxes still show no colour: 6 on the Home tab and one per
+      breeding group (found S936, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any change)** -- the
+      cause S936 found for the QC Summary boxes holds for every box written the old way: the app's theme is
+      Bootstrap 4 (`bslib::bs_theme(version = 4L, bootswatch = "flatly")`, `R/appUI.R:69`), whose compiled
+      stylesheet has 0 `.panel` rules and 113 `.card` rules (measured S936), so a `panel panel-primary`,
+      `-info`, `-success`, `-warning`, `-danger` or `-default` box shows no colour. S936 rewrote only the 3
+      QC Summary boxes, as cards, through the internal `qcSummaryBox()` (`R/qcSummaryBox.R`). **Left as
+      written:** the six workflow boxes on the Home tab (`R/appUI.R:98-158`; their picture is
+      `home_tab_landing.png`) and the group boxes in Breeding Groups (`R/modBreedingGroups.R:956`, one per
+      group, `panel panel-primary`). Not looked at in the real app, only from the stylesheet. **Decide when
+      picking it up:** give them cards too (the Home and Breeding Groups pages change, so the pictures that
+      show them go stale and need retaking, and the class-name tests move), or leave them plain on purpose.
+
+- [ ] **Optional: a guide picture of the Warnings sub-tab as the app opens it after a check (raised S936,
+      2026-10-07; READY (optional), Effort S; docs and the capture script only)** -- the guide's paragraph on
+      Read and Check Pedigree now says in words where the Errors and Warnings sub-tabs are and what the red
+      and yellow notices say, but it has no picture of either sub-tab (measured S936: none in
+      `vignettes/articles/shiny_app_use/`). A full-window capture right after the check, with the Warnings
+      sub-tab open and the whole notice showing, was taken S936 as a scratch file only (1300 x 900; the notice
+      is 286 px wide and fits). Adding it means a new capture step, a new image file and a sentence in the
+      guide. Pick it up only if the owner wants the picture; the QC Summary picture and the words are done.
 
 - [ ] **Breeding groups can hold placeholder sires: names the pedigree gives only as someone's father, with no
       record of their own (found S935, 2026-10-07; DECISION NEEDED, Effort S to decide, M to change; strict TDD
@@ -132,6 +141,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       copied alone; that run was stopped after the heat map step, so it is not an 81/81 run.
       S935 retook it again (the note under the grid now names the Production and Inbreeding columns), from a
       full 81/81 run, copied alone.
+      S936 retook `read_and_check_pedigree.png` (the QC Summary boxes are colored now, and the capture script
+      waits for the yellow pop-up to close, which the container crop had cut off mid-sentence), from a full
+      82/82 run, copied alone.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's

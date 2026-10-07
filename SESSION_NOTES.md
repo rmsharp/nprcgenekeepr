@@ -99,14 +99,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 936 Did
-**Deliverable:** the Input tab's QC Summary boxes for Errors and Warnings (`BACKLOG.md:8`; DECISION NEEDED, Effort S) (IN PROGRESS)
-**Started:** 2026-10-07 16:20
-**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4 (confirmed by a later "1"). Strict TDD
-for any change; the Pre-RED decision (leave the boxes plain, or give them real colours) has not been asked yet.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
-**Phase 0 found:** 0 undocumented commits, 0 pending receipts, S935's ratchet citation (results `f3c47e8dce24`) matched, CI green on
-the Actions API (plain `gh run list` returned stale September rows a fourth time), dashboard 96/100, no file over its context ceiling.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Input tab's QC Summary boxes (Records
+Processed, Errors, Warnings) are colored by what the check found, as Bootstrap 4 cards drawn by one internal
+`qcSummaryBox(title, count, colour)` (`R/qcSummaryBox.R:18`, called at `R/modInput.R:600-602`). **Cause, new:** the theme is Bootstrap 4
+(`R/appUI.R:69`); its compiled stylesheet has 0 `.panel` rules and 113 `.card` rules, and the code wrote Bootstrap 3 `panel panel-*`
+boxes: 10 old-style sites in 3 files. **Owner scope pick: the 3 QC boxes only**; the 6 Home-tab boxes and the per-group Breeding Groups
+boxes stay plain (`BACKLOG.md:8`). Claim `a658da981`, RED `6fa5f478a` (7 blocks, 67 failed checks, 0 errors; one old assertion moved),
+GREEN `777503703`, REFACTOR `e335cf5ba` (3 more tests; rendered HTML byte-identical to GREEN on 5 cases), docs `0c8034a11`, NEWS
+`969e8aa20`, close-out (the commit carrying this note).
+**Owner mid-turn:** a picture of the pop-up cut off at "QC found 2 warning(s). Check the" was the guide's own
+`read_and_check_pedigree.png` (S933's retake): the crop to `#dataInput-moduleContainer` clips the notice. The capture script now waits
+for it to close (`vignettes/articles/colony-manager-guide-screenshots.R:202`, 82/82 steps); the guide names the five sub-tabs, each box's
+color and both notices' wording (`colony-manager-guide.qmd:221-233`). The owner took the QC picture and words (option 1) and said "I know
+expected behavior" (memory saved: do not explain the app to them).
+**Verified:** full suite 3,260 tests, 0 failed, 0 errors, 187 skipped (run after the NEWS commit; only notes files changed since);
+`check()` 0/0/0; `lint_package` 0; ratchet 1/1 (results `77510354ff23`); word list 3/3, NEWS 26/26. Real app (headless Chrome): 3 pedigrees
+(clean, the example, one with errors) and the guide's script, pictures opened for the owner before any long run.
+**Went wrong:** a blanket replace made `renderSummaryHtml()` call itself (caught before a run); my first RED helper reported a missing
+box twice and two negative checks passed only because the box was absent (tightened); two spelling slips ("coloured", "grey") found by the
+word-list guard; I explained the app's behavior to an owner who wrote it. Learning 902.
+**Handoff evaluation of S935: 9/10.** Helped: every `BACKLOG.md` cite held (`:8`, `:21`, `:40`, `:47`, `:68`, `:84`, `:92`, `:159`), the ratchet
+citation, `wc -c`, and the stale `gh run list` gotcha (a fourth time). Missing: the QC item named 3 boxes of a 10-site cause, which one
+grep shows. **Self-assessment: 8/10.** + the cause found by counting theme rules; scope asked in plain words with the 10-site count; a
+no-change proof for REFACTOR; pictures shown before long runs; the clipped pop-up traced with an uncropped capture. - the app
+explanation the owner did not need; the noisy first helper; two spelling slips.
+
+**Next steps (recommended, not ruled on):** (A) NEWS says an undefined Inbreeding cell is gray, but it is red (`BACKLOG.md:49`, READY, S,
+docs only). (B) Placeholder sires in breeding groups and the unexplained app path (`:30`, DECISION NEEDED, S; reproduce the app's default
+ranking first). (C) Docs-audit slice 2 (`:101`): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a, 4b. (D) Seven more old-style
+boxes (`:8`, DECISION NEEDED, M); an optional Warnings-sub-tab picture (`:21`, READY, S). (E) Origin-and-funding reword (`:56`);
+`getAncestors()` (`:77`). Cites: `:93` version, `:171` contributor tutorial.
+**Key files:** `R/qcSummaryBox.R:18`; `R/modInput.R:595-602`; `tests/testthat/test_modInputQcSummaryCards.R`;
+`test_modInput_coverage.R:230`; `vignettes/articles/colony-manager-guide.qmd:221-233`; `colony-manager-guide-screenshots.R:202`; `NEWS.Rmd:364`.
+**Gotchas:** a picture cropped to a container clips a notice at its edge (wait with `wait_for_notifications_clear()`, then look at all four
+edges); shiny prints nested tags on separate lines, so match with `gsub(">\\s+<", "><", html)`; count theme rules with
+`sass::sass(bslib::bs_theme(version = 4L, bootswatch = "flatly"))`; docs spell American ("colored", "gray"), the word-list guard fails
+on "coloured" and "grey"; plain `gh run list` is stale (read the Actions API); one R job at a time; `wc -c` after the last edit.
 
 ### What Session 935 Did (condensed S936; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Inbreeding cell counts a female with no birth date by the Production cell's offspring rule, through one internal
@@ -127,7 +155,7 @@ image does not reach the owner); 5 columns in a 600 px window collide at 22 pt (
 ### What Session 933 Did (condensed S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; only with `reportChanges = TRUE`). Claim
 `be7537637`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10. **Gotchas kept:** `makeExamplePedigreeFile()` and
-`inst/extdata/examples/ExamplePedigree.csv` differ (column case); the QC Summary boxes have no colour (`BACKLOG.md:8`).
+`inst/extdata/examples/ExamplePedigree.csv` differ (column case).
 
 ### What Session 932 Did (condensed S933, S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 A decision session, docs only: the owner ruled the Input-tab missing-birth-date warning (S933 built it). Measured: 1,432 of 3,694
@@ -267,26 +295,16 @@ Self 6/10. **Gotchas kept:** a triage row scoped to one file understates a repea
 receipt's ratchet citation with `.quality-gates-results.json` at Phase 0, before any `--run`.
 
 ### What Session 910 Did (condensed S911; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Measured the mate-line row span on the app's 375-animal rhesus layout: 0 of 474 mate-lines span a generation row (also 0 in the 6
-small bundled pedigrees, 0 of 2,032 in 60 synthetic ones), so the owner **closed Candidate C and replaced it** with a smaller item
-about the dashed duplicate-animal links (111 of 170 cross a row; no legend row, no hover text; `BACKLOG.md:389` now). Report
-`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`. Claim `e2fdd492a`, report `ad49c296f`, close-out `5d33665ea` (all still local).
-Handoff evaluation of S909: 9/10. Self 8/10.
-**Gotchas kept:** classify edges by endpoint kind (`real`, `dup`, `union`) before deciding which cross rows; rows are 150 apart in
-`y`; the legend is hand-tuned to 400 px (a new row needs a hands-on retune); macOS `sed -i` needs an extension argument, so edit
+Measured the mate-line row span on the app's 375-animal rhesus layout: 0 of 474 mate-lines span a generation row, so the owner closed
+Candidate C and replaced it with a smaller item about the dashed duplicate-animal links (its legend row shipped S921). Report
+`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`. Claim `e2fdd492a`. Handoff evaluation of S909: 9/10. Self 8/10. **Gotchas kept:**
+classify edges by endpoint kind (`real`, `dup`, `union`); rows are 150 apart in `y`; macOS `sed -i` needs an extension argument, so edit
 scratch files with Python; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 909 Did (condensed S910; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Measured how often the rectilinear diagram's `highlightNearest` degree-6 hover falls short (375-animal rhesus, QC'd): it never
-lights nothing (0 of 375) and 373 of 375 animals light everything the direct style's degree 1 lights; the other 2 (`42M0Y8`,
-`IRSC6X`) are 7 hops from their parents' union dot through 4 `__jog_` waypoints, not a wide family. The owner ruled: close the
-item, keep degree 6, document the limit (revisit only on a user request; some baboon pedigrees may have wider families).
-Report `docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md`; `BACKLOG.md:398-414` removed. Claim `a3c8d174a`, report `6b0525d7c`,
-docs `7970ba878`, close-out `c6ff74e08` (all still local). Handoff evaluation of S908: 9/10. Self 8/10.
-**Gotchas kept:** count a file's rows before laying it out (`ExamplePedigree.csv` is 3,694 animals, over the 400-animal
-rectilinear cap); in a live visNetwork page the network object is on the inner `graph<id>` element and `emit()` must return a
-plain value; assert on unknown layout id prefixes (`__jog_` exists); a scratch render of `a2interactive.Rmd` needs `../inst`
-beside it and `SCRATCH` exported; take `wc -c` after the last edit (Learning 871).
+Measured how often the rectilinear diagram's `highlightNearest` degree-6 hover falls short (375-animal rhesus): 373 of 375 animals light
+everything the direct style's degree 1 lights. The owner closed the item, kept degree 6 and documented the limit. Report
+`docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md`. Claim `a3c8d174a`. Handoff evaluation of S908: 9/10. Self 8/10.
 
 ### What Session 908 Did (condensed S909; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 One internal `isAddedRecord(recordStatus, n = length(recordStatus))` (`R/isAddedRecord.R`) now says which records are "added",
