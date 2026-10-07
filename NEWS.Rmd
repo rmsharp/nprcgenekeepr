@@ -345,6 +345,12 @@ longitudinal monitoring of colony genetic health.
   under the heat map now says how many animals in the groups have no birth
   date, and how many of those females were counted or left out.
 
+- Fixed: the column names above the Genetic Diversity heat map were slanted and
+  cut off by the top edge of the picture (they read "Va", "Or", "Pro" and
+  "Inb"), and both the column names and the group names were too small to read
+  comfortably. The names are now written level, in bold and whole, at 2.5
+  times the old size.
+
 - New: the Input tab now warns when animals in the uploaded pedigree have no
   birth date. The app shows its yellow warning notice and opens the Warnings
   tab, which says how many animals have none (1,432 of 3,694 in the shipped
