@@ -28,7 +28,10 @@ as a verdict.
 \details{
 This function is agnostic to the number of metric columns: it draws one
 tile per group-by-metric cell for whatever metric columns it is handed,
-preserving their input order across the top of the plot.
+preserving their input order across the top of the plot. The metric names
+are written level, centered over their column and in bold, and the group
+names down the left are the same size (22 pt, 2.5 times the 8.8 pt
+default), so both stay whole and readable at the size the app draws the plot.
 }
 \examples{
 stats <- data.frame(

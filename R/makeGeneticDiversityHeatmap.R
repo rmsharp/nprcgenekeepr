@@ -13,7 +13,10 @@
 #'
 #' This function is agnostic to the number of metric columns: it draws one
 #' tile per group-by-metric cell for whatever metric columns it is handed,
-#' preserving their input order across the top of the plot.
+#' preserving their input order across the top of the plot. The metric names
+#' are written level, centered over their column and in bold, and the group
+#' names down the left are the same size (22 pt, 2.5 times the 8.8 pt
+#' default), so both stay whole and readable at the size the app draws the plot.
 #'
 #' @param stats A data frame with one row per breeding group. The first
 #'   column holds the group label; every remaining column is a metric whose
@@ -69,6 +72,8 @@ makeGeneticDiversityHeatmap <- function(stats) {
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 45L, hjust = 0L)
+      axis.text.x = ggplot2::element_text(angle = 0L, hjust = 0.5,
+                                          size = 22L, face = "bold"),
+      axis.text.y = ggplot2::element_text(size = 22L)
     )
 }
