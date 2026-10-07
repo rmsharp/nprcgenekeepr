@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S926
+date: 2026-10-06
+status: pending
+active_task: Bring the three stale copies of DESCRIPTION's Description in line (BACKLOG.md:24; READY, Effort S; S925's leftover; owner pick at the Phase 0 picker, option 1 of 4): man/nprcgenekeepr-package.Rd:11 (generated), _pkgdown.yml:12, CITATION.cff:12. The owner's uncommitted DESCRIPTION edit (lines 18-19, "implements a derivation of") is not yet ruled on: commit with this item, or drop.
+```
+
+```handoff
 session: S925
 date: 2026-10-06
 status: complete

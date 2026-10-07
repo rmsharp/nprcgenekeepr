@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 926 Did
+**Deliverable:** bring the three stale copies of `DESCRIPTION`'s Description in line (`BACKLOG.md:24`, READY, Effort S; S925's
+leftover; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-06 20:40 local
+**Status:** Session claimed. Work beginning. The owner's uncommitted `DESCRIPTION` edit (lines 18-19) is not yet ruled on
+(commit with this item, or drop); the claim commit does not stage `DESCRIPTION`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 925 Did
 **Deliverable, DONE (strict TDD):** one-animal and zero-animal input fixed at the cause (`BACKLOG.md:24` before removal; found
 S924). The owner bounced the Phase 0 picker to ask how option 2 related to S924's pick (it is S924's leftover), then asked for a
