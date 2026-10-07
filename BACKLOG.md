@@ -5,18 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **The Inbreeding cell still leaves out a female with no birth date even when she has offspring, while the
-      Production cell now counts her (found S931, 2026-10-07; DECISION NEEDED, Effort S; strict TDD for any
-      change)** -- the owner ruled S928 that the Inbreeding cell leaves animals with no age or sex out of its
-      counts of breeding-age females and males (`R/getKinshipWithMaleStatus.R:54-57`); the owner ruled S931 that
-      the Production cell counts a female with no birth date when the pedigree lists an offspring for her
-      (`R/getProductionStatus.R`, `R/isCountedMotherWithoutBirthDate.R`). The two cells now treat the same
-      female differently, and the S931 note under the heat map says only how Production treats her.
-      **Decide when picking it up:** keep the two rules apart (and say so in the guide), or give the Inbreeding
-      cell the same offspring rule for females; and whether a male with no birth date that the pedigree lists as
-      a sire should count the same way (the S931 ruling named only females). **Not measured:** how many groups'
-      Inbreeding colour would change on the shipped example pedigree.
-
 - [ ] **The Input tab's QC Summary boxes for Errors and Warnings never change colour (found S933, 2026-10-07;
       DECISION NEEDED, Effort S; strict TDD for any change)** -- `qcSummaryUI` picks `panel panel-danger`,
       `panel panel-warning` or `panel panel-success` for the Errors and Warnings boxes (`R/modInput.R:575-641`),
@@ -29,6 +17,32 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`R/appServer.R:183-205`); S933 kept to those and left the claim out of NEWS. **Decide when picking it up:**
       leave the boxes plain, or give them real colours; the second is a change to displayed markup, so a test on
       the class names comes first.
+
+- [ ] **Breeding groups can hold placeholder sires: names the pedigree gives only as someone's father, with no
+      record of their own (found S935, 2026-10-07; DECISION NEEDED, Effort S to decide, M to change; strict TDD
+      for any change)** -- measured S935 at function level (the Genetic Value module on the cleaned example
+      pedigree, then `groupAddAssign()` with the Breeding Groups defaults; 21 formations, 66 groups): with the
+      default Top ranked / 20 animals the groups hold only animals with birth dates, but with "Genetic-value
+      floor" (1,382 candidates) or "All available" (3,694) about 450 of each group's roughly 460 animals are males
+      with no birth date. In the example, 1,370 of the 1,372 no-birth-date males listed as a sire are
+      placeholders: `placeholder` TRUE, status UNKNOWN, no exit date, no origin, no sire or dam of their own.
+      They enter the pool because it is built from `ped$id` or the whole report
+      (`R/modBreedingGroups.R:522-526`, `:549`). A sire rule for the Inbreeding cell was declined at S935 partly
+      because of them (counting them turned 3 of 9 value-floor groups red to green). **Not understood:** which
+      animals the app's default Top ranked 20 are. S928 recorded the shipped example's default top-ranked group as
+      having no birth date on any of its 20 animals, and the guide's capture run (the focal-animal steps first)
+      shows "20 of the 20 animals ... have no birth date" (deceased founders such as `77EUZ7`), but the Genetic
+      Value module run directly on the cleaned example gave 20 animals that all have birth dates; the app path
+      that differs from the module run was not found. **Decide when picking it up:** first reproduce the app's
+      default ranking (through the real app), then choose: leave placeholders in the pool, drop them from the
+      candidate pool, or drop them only from the Genetic Diversity counts.
+
+- [ ] **`NEWS.Rmd` says an undefined Inbreeding cell is gray, but the code scores it red (found S935, 2026-10-07;
+      READY, Effort S; docs only)** -- the Production entry says its cell "is now gray, as the Inbreeding cell
+      already was" (`NEWS.Rmd:330`). `R/getGeneticDiversityStats.R:122-124` sets an undefined Inbreeding to 1
+      (red), its help text says "scored red", the guide says so, and the picture S935 retook shows Production
+      gray and Inbreeding red for groups with no counted females. Reword the NEWS sentence, re-knit `NEWS.md`,
+      run the 26 NEWS guard tests.
 
 - [ ] **Reword where the repo says the package was developed at ONPRC and funded by NIH grants
       (owner-reported S930, 2026-10-07; DECISION NEEDED, Effort S; docs and `DESCRIPTION`, plus one displayed
@@ -116,6 +130,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S934 retook `genetic_diversity_heatmap.png` alone (the heat map's names were cut off and tiny; the new
       picture shows them whole at 22 pt, and S931's note), with the guide's own script into a scratch folder,
       copied alone; that run was stopped after the heat map step, so it is not an 81/81 run.
+      S935 retook it again (the note under the grid now names the Production and Inbreeding columns), from a
+      full 81/81 run, copied alone.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's

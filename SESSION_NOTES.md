@@ -99,51 +99,65 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 935 Did
-**Deliverable:** decide the Inbreeding cell's rule for a female with no birth date who has offspring, and whether a
-sire with no birth date counts the same way (`BACKLOG.md:8`; DECISION NEEDED, Effort S; owner pick at the Phase 0
-picker, option 1 of 4; strict TDD for any change) (IN PROGRESS)
-**Started:** 2026-10-07 13:55
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Inbreeding cell counts a female with no
+birth date when the pedigree lists an offspring for her, by the same shared rule as the Production cell; a male with no birth date
+stays out. **Owner answers:** Pre-RED, females only, one shared rule (a sire rule declined: 1,370 of the example's 1,372
+no-birth-date sires are placeholder names with no record of their own; counting them turned 3 of 9 value-floor groups red to
+green); GREEN to REFACTOR, one internal `isBreedingAgeFemale()` (`R/isBreedingAgeFemale.R:25`); and add "Inb" to `inst/WORDLIST`
+(S934's NEWS entry had left the spelling guard red). `getKinshipWithMaleStatus()` takes `damIds` (`R/getKinshipWithMaleStatus.R:51`);
+`getGeneticDiversityStats()` passes `ped$dam`; the note reads "In the Production and Inbreeding columns". Claim `00da310cb`, RED
+`5f2df5b78` (13 blocks, all failing, 0 existing failing), GREEN `2a42b6059`, docs `f8123ab99`, picture `3f0d11de0`, NEWS
+`86bf66b1c`, word list `c0eb99c53`, REFACTOR `a5517d306` and `b7d369337`, close-out (the commit carrying this note).
+**Verified:** full suite 3,250 tests, 0 failed, 0 errors (the first run, 3,244, had S934's spelling failure); `check()` 0/0/0;
+`lint_package` 0; ratchet 1/1 (results `f3c47e8dce24`); REFACTOR identical to GREEN on 400 seeded cases and 6 example group sets.
+Real app (headless Chrome, the guide's capture script, 81/81 steps): the heat map picture, opened for the owner who approved it
+before any long run. **Went wrong:** my probe said the default top 20 hold no animal without a birth date ("0 of 66"), and that
+reached the picker text; the real app's note read "20 of the 20 animals ... have no birth date" and S928 had recorded the same.
+The decision stood, the figure did not, and the path difference is still not found (`BACKLOG.md:21`). Two helper tests assumed
+`FALSE` where the code returns `NA`. Learning 901. **Handoff evaluation of S934: 8/10.** Helped: the A-D order and cites (all held),
+the "not measured" flag, the picture and capture-script gotchas. Wrong: its "0 failed" was of REFACTOR, not of the close-out tree
+(its NEWS commit left the spelling guard red). Missing: that the capture run's top 20 differ from a plain module run.
+**Self-assessment: 7/10.** + measured before asking; a gate in plain words at every phase; the no-change proof; the picture shown
+before any long run; the red guard reported and fixed. - the unverified probe figure at the picker; the NA slip in two tests.
+
+**Next steps (recommended, not ruled on):** (A) the QC Summary boxes' colour (`BACKLOG.md:8`, DECISION NEEDED, S). (B) NEWS says an
+undefined Inbreeding cell is gray, but it is red (`:40`, READY, S, docs only). (C) Placeholder sires in breeding groups and the
+unexplained app path for the default top 20 (`:21`, DECISION NEEDED, S; reproduce the app's default ranking first). (D) Docs-audit
+slice 2 (`:92`): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a, 4b. (E) Origin-and-funding reword (`:47`);
+`getAncestors()` (`:68`). Cites: `:84` version, `:159` contributor tutorial.
+**Key files:** `R/isBreedingAgeFemale.R:25`; `R/getKinshipWithMaleStatus.R:51,62-64`; `R/getProductionStatus.R:100`;
+`R/getGeneticDiversityStats.R:119-121`; `R/summarizeMissingBirthDates.R:49-54`; `tests/testthat/test_isBreedingAgeFemale.R`;
+`test_getKinshipWithMaleStatus.R:210-`; `test_getGeneticDiversityStats.R:419-`; `colony-manager-guide.qmd:697`.
+**Gotchas:** a probe that rebuilds the app's path is not the app: look at a real-app picture before quoting its count; the full
+suite must follow the last commit; `isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare
+`%in% TRUE`); `mockery::stub()` reaches only calls made inside the test; plain `gh run list` returned stale September rows three
+times (read `gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`); one R job at a time; `wc -c` after the last edit.
 
 ### What Session 934 Did (condensed S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`makeGeneticDiversityHeatmap()` writes its column names level, centred and bold, and both name sets at 22 pt (the owner's "about
-2.5 times larger" than 8.8 pt; one `labelSize`, `R/makeGeneticDiversityHeatmap.R:64,76-80`), so the top edge no longer cuts them
-(strict TDD; 8 new test blocks; full suite 3,231, 0 failed). The guide's picture is retaken from the real app. Claim `b06d00b07`,
-RED `f0d4f1e9f`, GREEN `bab2c8d43`, REFACTOR `4a086004c`, close-out `f6b8ccf67`. Handoff evaluation of S933: 9/10. Self 7/10.
-**Gotchas kept:** show a picture with `open <png>` plus its path (a `Read` image does not reach the owner); 5 columns in a 600 px
-window collide at 22 pt (a Flags column, issue #116, would need `guide_axis(n.dodge = 2)` or smaller names); read a look's resolved
-settings with `ggplot2::calc_element(el, p$theme)`; the capture script still needs `NOT_CRAN=true` and `NPRC_SHOT_DIR=<scratch>`;
-a BACKLOG removal shifts every later cite; take `wc -c` after the last edit.
+`makeGeneticDiversityHeatmap()` writes its names level, centred and bold, both sets at 22 pt (the owner's "about 2.5 times
+larger"; one `labelSize`, `R/makeGeneticDiversityHeatmap.R:64,76-80`). Strict TDD; 8 new blocks. Claim `b06d00b07`, close-out
+`f6b8ccf67`. Handoff evaluation of S933: 9/10. Self 7/10. **Gotchas kept:** show a picture with `open <png>` plus its path (a `Read`
+image does not reach the owner); 5 columns in a 600 px window collide at 22 pt (a Flags column, issue #116, needs `guide_axis(n.dodge = 2)`).
 
 ### What Session 933 Did (condensed S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; only with `reportChanges = TRUE`; a warning
-like any other after an upload); one `getEmptyWarningsTable()` replaces 4 copies (the 4 in `R/modInput.R:422,450,478,536` stay). 17
-new tests; full suite 3,223, 0 failed. Claim `be7537637`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10.
-**Gotchas kept:** `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ (column case); the QC Summary
-boxes have no colour (`BACKLOG.md:20`).
+`runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; only with `reportChanges = TRUE`). Claim
+`be7537637`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10. **Gotchas kept:** `makeExamplePedigreeFile()` and
+`inst/extdata/examples/ExamplePedigree.csv` differ (column case); the QC Summary boxes have no colour (`BACKLOG.md:8`).
 
-### What Session 932 Did (condensed S933 and S934; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-A decision session, docs only: the Input-tab missing-birth-date warning design was ruled (the owner took all three recommended
-options: a row in the existing Warnings list, every animal, the stated wording); S933 built it. Measured: the example pedigree has
-1,432 of 3,694 animals with no birth date, none ALIVE; "living" has two meanings (no exit date 1,372 of 1,704; status ALIVE 0 of
-332). Claim `c2b42bd40`, close-out `f120ac97c`. Handoff evaluation of S931: 9/10. Self 8/10.
+### What Session 932 Did (condensed S933, S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+A decision session, docs only: the owner ruled the Input-tab missing-birth-date warning (S933 built it). Measured: 1,432 of 3,694
+example animals have no birth date. Claim `c2b42bd40`, close-out `f120ac97c`. Handoff evaluation of S931: 9/10. Self 8/10.
 
-### What Session 931 Did (condensed S932 and S933; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Production cell and a Genetic Diversity tab note shipped (strict TDD; the owner ruled the rule and the scope): a female with no
-birth date counts as a breeding-age mother only if the pedigree lists an offspring for her (whole pedigree), and the tab says how
-many animals in the groups have no birth date. 20 new tests; full suite 3,206, 0 failed; real-app run 81/81. Claim `43e1a41c8`,
-close-out `0be13571a`. Handoff evaluation of S930: 9/10. Self 8/10.
-**Gotchas kept:** the note's Production sentence is constant text ("0 counted, 0 left out" even when only males lack a birth date;
-dropping it needs a RED test first); in a `testServer` test an undefined output errors.
+### What Session 931 Did (condensed S932, S933 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Production cell and a Genetic Diversity tab note shipped (strict TDD; owner-ruled): a female with no birth date counts as a
+breeding-age mother only if the pedigree lists an offspring for her (whole pedigree). Claim `43e1a41c8`, close-out `0be13571a`. Handoff
+evaluation of S930: 9/10. Self 8/10. **Gotchas kept:** the note's counts sentence is constant text (dropping it needs a RED test first);
+in a `testServer` test an undefined output errors.
 
-### What Session 930 Did (condensed S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 2 done except item (e) (strict TDD): both guide screenshot scripts share
-`tests/testthat/helper-captureHarness.R` (31 tests); a step whose last value is FALSE counts as failed, `NPRC_SHOT_DIR` names the
-output folder. Item (e), the full-height Potential Parents capture, moves to Phase 3c. Close-out `17eb43401`. Handoff evaluation of
-S929: 9/10. Self 8/10.
-**Gotchas kept:** the owner's RStudio holds port 6013; one Chrome session at a time; put R code with `\s` in a script file.
+### What Session 930 Did (condensed S931 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, Phase 2 (strict TDD): both guide screenshot scripts share `tests/testthat/helper-captureHarness.R`;
+`NPRC_SHOT_DIR` names the output folder; item (e), the full-height Potential Parents capture, moved to Phase 3c. Close-out `17eb43401`.
+Handoff evaluation of S929: 9/10. Self 8/10. **Gotchas kept:** one Chrome session at a time; put R code with `\s` in a script file.
 
 ### What Session 929 Did (condensed S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks). Close-out `05673a072`. Handoff
