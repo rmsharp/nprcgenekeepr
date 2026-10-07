@@ -17,18 +17,42 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       a sire should count the same way (the S931 ruling named only females). **Not measured:** how many groups'
       Inbreeding colour would change on the shipped example pedigree.
 
-- [ ] **Warn the user on the Input tab that animals in the uploaded pedigree have no birth date
-      (owner-requested S931, 2026-10-07; DECISION NEEDED, Effort M; strict TDD)** -- the owner believed
-      the app already warns; **it does not (searched S931).** The Input tab's error list has 11 categories
-      (`getEmptyErrorLst()`, `R/getEmptyErrorLst.R:19-46`) and none is a blank birth date
-      (`invalidDateRows` is a date that cannot be read); no Shiny module (`R/mod*.R`, `R/appUI.R`,
-      `R/appServer.R`) says anything about missing birth dates; the parent-age check silently skips such
-      animals (`R/checkParentAge.R:17`). Only documentation mentions them (the Age-Sex Pyramid article,
-      `vignettes/articles/age-sex-pyramid.qmd:69`). **Decide when picking it up:** a new `errorLst` category
-      (changes the shape of an exported list) or a separate notice that leaves `errorLst` alone; where it
-      shows (after upload, on the Summary page); whether it counts every animal or only living ones; the
-      wording. S931 added only the Genetic Diversity tab's own note (under the heat map, shown when animals
-      in the groups lack a birth date); this item stays separate.
+- [ ] **Warn the user on the Input tab that animals in the uploaded pedigree have no birth date (owner-requested
+      S931, 2026-10-07; owner ruled S932, 2026-10-07; READY, Effort M as an estimate; strict TDD)** -- the owner
+      believed the app already warns; **it does not (searched S931).** The Input tab's error list has 11 categories
+      (`getEmptyErrorLst()`, `R/getEmptyErrorLst.R:19-46`) and none is a blank birth date (`invalidDateRows` is a
+      date that cannot be read); no Shiny module says anything about missing birth dates; the parent-age check
+      silently skips such animals (`R/checkParentAge.R:17`); only documentation mentions them (the Age-Sex Pyramid
+      article, `vignettes/articles/age-sex-pyramid.qmd:69`). **Owner ruled S932 (all three recommended options):**
+      (1) *Where:* the Input tab's existing Warnings list gets one row: the QC Summary's Warnings count
+      (`R/modInput.R:575-641`) turns yellow and the Warnings sub-tab table (`:660-663`, download `:678-683`) lists
+      it; it never stops an upload (only `errors` make `isReady()` false, `:721-724`); `getEmptyErrorLst()`,
+      `checkErrorLst()` and the Error List tab are untouched; no line is added to the green QC Summary message. (2)
+      *Who counts:* every animal in the cleaned pedigree with no birth date, not only living ones. (3) *Wording:*
+      the warning is "Animals with no birth date" and its details read "<n> of <N> animals have no birth date, so
+      their age is unknown. Age-based checks and counts (the parent-age check, the Age-Sex Pyramid, breeding-age
+      counts) cannot use them." ("has" when n is 1). The first draft of this item offered "a new `errorLst` category
+      or a separate notice"; both missed the existing Warnings list (found S932). **Measured S932, for the build:**
+      the warnings table is built in `processQcStudbookResult()` (`R/processQcStudbookResult.R:197`; exported),
+      which receives only the error list and so has no birth dates to count; `runQcStudbook()` (exported) holds the
+      cleaned pedigree after its second pass (`R/runQcStudbook.R:198`), clears `warnings` when `reportChanges` is
+      FALSE (`:182`; the app passes TRUE, `R/modInput.R:519-524`), and returns `cleaned = NULL` when errors exist,
+      so there is nothing to count then. Today the only warnings are two column-name changes, and the shipped
+      example passes with 0 errors and 0 warnings. Counts: `ExamplePedigree.csv` 1,432 of 3,694 (39%; all 1,432 are
+      founders with no listed parents, 1,401 are male, 1,399 are a parent of someone, none has status ALIVE, 1,372
+      have no exit date); `rhesusPedigree` and the four `obfuscated_rhesus_mhc_ped*.csv` files 85 of 375; `qcPed` 47
+      of 280; `deidentified_jmac_ped.csv` 60 of 2,791 (it does not load today, see the item that names it); the
+      8-animal pedigrees (`pedGood`, `pedSix`, `pedOne`, ...) and the six small `example_*.csv` files none;
+      `lacy1989Ped` and `smallPed` have no birth column. A missing birth **column** is already an error ("Missing
+      required columns", fixture `pedMissingBirth`). `tests/testthat/test_examplePedigreeFixtures.R:343` expects 0
+      warnings from the small exemplar pedigrees, which all have complete birth dates (`:324`), so it should not
+      change. **Left for the build session, each with a RED test first:** whether `runQcStudbook(reportChanges =
+      FALSE)` adds the row (today that argument clears every warning, so the natural answer is no);
+      `summarizeMissingBirthDates()` (S931) counts only animals in groups, so it is not reused as is. "Living" has
+      two meanings in the package (no exit date, `R/getPyramidAgeDist.R:60`; `status == "ALIVE"`) and they disagree
+      on this example (1,372 of 1,704 by exit date, 0 of 332 by status); not used here because every animal counts,
+      noted in case the item widens. S931 added only the Genetic Diversity tab's own note (under the heat map, shown
+      when animals in the groups lack a birth date); this item stays separate.
 
 - [ ] **The Genetic Diversity heat map's column labels are cut off and its labels are too small to read
       (owner-reported S930, 2026-10-07; READY, Effort S as an estimate; strict TDD for the fix)** -- the owner
@@ -118,7 +142,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
       capture, was NOT done and moves to Phase 3c; Phases 3a and 3b still need D2 and D3 answered; take
-      Phase 3c's `genetic_diversity_heatmap.png` after the heat map label fix, `BACKLOG.md:33`; that picture also lacks S931's note under the heat map, and the guide's heat map paragraph now describes it). Measured S927:
+      Phase 3c's `genetic_diversity_heatmap.png` after the heat map label fix, `BACKLOG.md:57`; that picture also lacks S931's note under the heat map, and the guide's heat map paragraph now describes it). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window

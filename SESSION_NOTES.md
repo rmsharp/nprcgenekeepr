@@ -99,14 +99,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 932 Did
-**Deliverable:** the Input-tab missing-birth-date warning's open design decisions (`BACKLOG.md:20`; DECISION NEEDED, Effort M;
-docs only, no `R/` or test change) (IN PROGRESS; owner pick at the Phase 0 picker, option 3 of 4).
-**Started:** 2026-10-07 08:58 CDT; TDD phase PRE-RED (a decision session: no RED test unless the owner then asks for a build).
-**Status:** Session claimed. Work beginning: re-measure the item's stored claims (the 1,432-of-3,694 count, where the error list
-shows on the Input tab and the Summary page, how many such animals are alive), then put the decisions to the owner in plain words and
-record the rulings beside the item.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (a decision session, docs only; owner pick at the Phase 0 picker, option 3 of 4):** the Input-tab
+missing-birth-date warning is ruled and recorded in `BACKLOG.md:20-55`, now READY (Effort M as an estimate; strict TDD for the
+build). The owner took all three recommended options in one answer: (1) one row in the Input tab's **existing Warnings list**
+(the QC Summary count and the Warnings sub-tab), which never stops an upload and leaves the exported error list alone; (2)
+**every animal** with no birth date, not only living ones; (3) the wording "Animals with no birth date: <n> of <N> animals have
+no birth date, so their age is unknown. Age-based checks and counts (the parent-age check, the Age-Sex Pyramid, breeding-age
+counts) cannot use them." No `R/`, test or site file changed; nothing was built.
+**Measured first:** the item's two routes (a new `errorLst` category, or a separate notice) missed the Warnings list that
+already exists (`R/modInput.R:575-641`, `R/processQcStudbookResult.R:197`); `ExamplePedigree.csv` passes with 0 errors and 0
+warnings, and 1,432 of 3,694 animals have no birth date (S928's count held): all founders, 1,401 male, 1,399 a parent of
+someone, none ALIVE, 1,372 with no exit date; `rhesusPedigree` 85 of 375, `qcPed` 47 of 280; "living" has two meanings (1,372 of
+1,704 by exit date, 0 of 332 by status). Claim `c2b42bd40`, close-out (the commit carrying this note).
+**Verified:** receipt-placement gate 7/7 after the claim; ratchet 1/1, results `3832fc7e4a2d`; no test parses `BACKLOG.md`; no
+runtime verification, because nothing at runtime changed (Phase 3E).
+**Handoff evaluation of S931: 9/10.** Helped: the A-E order with cites (all held: `:8 :20 :33 :52 :73 :89 :97 :157 :332`); the
+notes-size gotcha (about 90 B of room, so I condensed S931's block at the claim); "Chrome connected". Missing: nothing it could
+know. Wrong: nothing found; the item it wrote (`:20`) listed two routes and left out the Warnings list.
+**Self-assessment: 8/10.** + counted the class before asking (Learning 897); found the unlisted route by reading the display
+code; three answers in one box; corrected an unmeasured claim (`pedSix`) before the commit; shifted cites re-grepped. - my
+column matcher missed `Birth Date` (Learning 898); a zsh `=====` echo cost a command (the S900 gotcha again); two status nudges
+after silent chains; the item grew from 13 to 36 lines (+2.85 KB) against the BACKLOG compression item.
+
+**Next steps (recommended, not ruled on):** (A) the heat map label fix (`BACKLOG.md:57`, READY as an estimate, Effort S). (B)
+BUILD the Input-tab warning (`:20`, READY, Effort M as an estimate; strict TDD; RED tests: a row in `runQcStudbook()`'s
+`warnings` with the count, "has" for one animal, no row when every animal has a birth date, no row when errors exist; ask the
+owner at the Pre-RED gate whether `reportChanges = FALSE` adds it). (C) The Inbreeding cell's rule (`:8`, DECISION NEEDED, S).
+(D) Docs-audit slice 2 (`:121`): D2 and D3, then Phases 3a, 3b, 3c, 4a, 4b. (E) Origin-and-funding reword (`:76`);
+`getAncestors()` (`:97`). Cites now: `:113` version, `:181` tutorial, `:356` upstream #93 (grep; the item starts above).
+**Key files:** `BACKLOG.md:20-55` (the ruling and the measurements), `R/runQcStudbook.R:182,198`,
+`R/processQcStudbookResult.R:197`, `R/modInput.R:575-641,660-663,721-724`, `tests/testthat/test_examplePedigreeFixtures.R:343`.
+**Gotchas:** `ExamplePedigree.csv` goes from 0 to 1 warning when the build lands (I grepped tests for the example pedigree
+beside a warnings expectation and found none; the full suite at GREEN checks the rest); `summarizeMissingBirthDates()` counts
+only animals in groups; quote `echo` separators in zsh; the full suite takes 6-12 minutes and runs alone; take `wc -c` after the
+last edit.
 
 ### What Session 931 Did (condensed S932; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Production cell and a Genetic Diversity tab note shipped (strict TDD; the owner ruled the rule and the scope): a female with no
@@ -525,43 +551,11 @@ corrected. Phase 0 backfill `9a1224603`; claim `1cd71ab9c`; deliverable `67c83de
 unchanged, 5 pinned fixtures). Claim `d5ccda82c`, RED `b446143ac` + `8509d4b7d`, GREEN `5d9dbbfa9`, REFACTOR `8add079bb`.
 Handoff evaluation of S880: 9/10. Self 8/10.
 **Gotchas kept:** never regenerate `gpp_pinned_*.rds` from post-split code; name helper parameters unlike any column.
-### What Session 880 Did (condensed S881; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`getPotentialParents()` entries now carry `damBasis` (NEW-55 closed); owner chose to split the function later. Claim `9dbf45d61`,
-RED `a0388e5f6`, GREEN `ed344a83a`. Handoff evaluation of S879: 8/10. Self 8/10.
-**Gotchas kept:** `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (stale vs `DESCRIPTION`); revert it. `fallbackPed()` needs one female with an offspring.
-
-### What Session 879 Did (condensed S880; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`sexCodes` adoption stage 6 of 6 shipped: `test_sexCodes.R` scans every `R/*.R` minus an allowlist; PED-2, NEW-29,
-PED-7 closed. Claim `e9823c856`, RED `2ea50611a`, GREEN `9c6c034a6`. Handoff evaluation of S878: 9/10. Self 8/10.
-**Gotchas kept:** a new bare letter in `R/` fails `test_sexCodes.R`; allowlist entries match trimmed line text.
-
-### What Session 878 Did (condensed S879; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`sexCodes` adoption stage 5 of 6 shipped: 6 bare letters in `makePedigreeDiagramData.R`; claim `4ea9aed71`, RED
-`40a8e53de`, GREEN `b3f3a3ad5`. Handoff evaluation of S877: 9/10. Self-score 8/10.
-
-### What Session 877 Did (condensed S878; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`sexCodes` adoption stage 4 of 6 shipped: 14 bare letters in 3 R files; claim `df4767656`, RED `4295ec5b4`,
-GREEN `3040c6d8a`. Handoff evaluation of S876: 9/10. Self-score 8/10.
-
-### What Session 876 Did (condensed S877; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`sexCodes` adoption stage 3 of 6 shipped: 7 bare letters in 4 R files; claim `f4a645440`, RED `6fafbcd30`,
-GREEN `01600af88`. Handoff evaluation of S875: 9/10. Self-score 8/10.
-
-### What Session 875 Did (condensed S876; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** `sexCodes` adoption stage 2 of 6: argument-form pattern added to the guard; 8 bare letters in 4 R
-files converted. Claim `b7f865a4c`; close-out `ed93a7182`. Self 8/10.
-**Gotchas kept:** `argumentPattern` also matches `correctParentSex:108-109`; macOS `sed -i` needs `-i ''`.
-
-### What Session 874 Did (condensed S875; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** `sexCodes` adoption stage 1 of 6: guard widened (`==`/`!=` both sides, `%in%`, `identical()`),
-new `test_getSexRatioWithAdditions.R`, 7 bare letters in 4 R files converted. Claim `cc22c5ce6`;
-close-out `878c89851`. Self 8/10.
-**Gotchas kept:** the commit hook caps `SESSION_NOTES.md` at 25,000 tokens; `test_createColonySnapshot.R`
-emits two gene-drop warnings outside `test_that()` (unrelated).
-
-### What Session 873 Did (condensed S874; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-**DONE:** scoping plan `docs/planning/sexcodes-adoption-plan.md` (43 code lines, 17 files, six
-staged sessions); owner approved it (literal `groupAddAssign` default kept and allowlisted;
-`convertSexCodes.R` and two fixtures left). Planning only. Claim `6a84d5abe`. Self 8/10.
-**Gotchas kept:** single-bracket `sexCodes["male"]` is named and breaks `identical()`; `.shapeForVec`
-at `makePedigreeDiagramData.R:1840` has a parameter named `sexCodes`.
+### Sessions 873-880 (condensed S932; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The `sexCodes` adoption (plan `docs/planning/sexcodes-adoption-plan.md`; stages 1-6, S874-S879): the guard widened, 43 bare sex
+letters in 17 R files converted, `test_sexCodes.R` scans every `R/*.R` against an allowlist (PED-2, NEW-29, PED-7 closed). S880
+added `damBasis` to `getPotentialParents()` entries (NEW-55); S881 split it (above).
+**Gotchas kept:** single-bracket `sexCodes["male"]` is named and breaks `identical()`; a new bare letter in `R/` fails
+`test_sexCodes.R` and allowlist entries match trimmed line text; macOS `sed -i` needs `-i ''`; `devtools::document()` rewrites
+`man/nprcgenekeepr-package.Rd` (revert it); `fallbackPed()` needs one female with an offspring; the commit hook caps
+`SESSION_NOTES.md` at 25,000 tokens.
