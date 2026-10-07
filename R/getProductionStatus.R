@@ -87,7 +87,8 @@ getProductionStatus <- function(ped, minDamAge = 3L,
   ## damIds is first read here, before ped is reduced below.
   isFemale <- ped$sex == sexCodes[["female"]]
   nDam <- sum(isFemale & ped$age >= minDamAge,
-              isFemale & is.na(ped$age) & ped$id %in% damIds,
+              isCountedMotherWithoutBirthDate(ped$id, ped$sex, is.na(ped$age),
+                                              damIds),
               na.rm = TRUE)
   if (is.null(maxOffspringAge)) {
     # nolint start: nonportable_path_linter

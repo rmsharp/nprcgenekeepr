@@ -22,13 +22,33 @@ summarizeMissingBirthDates <- function(groups, ped) {
   members <- unique(unlist(groups, use.names = FALSE))
   inGroups <- ped[ped$id %in% members, ]
   noBirth <- inGroups[is.na(inGroups$birth), ]
-  females <- noBirth[which(noBirth$sex == sexCodes[["female"]]), ]
-  counted <- sum(females$id %in% ped$dam)
+  nFemales <- length(which(noBirth$sex == sexCodes[["female"]]))
+  counted <- sum(
+    isCountedMotherWithoutBirthDate(noBirth$id, noBirth$sex,
+                                    is.na(noBirth$birth), ped$dam),
+    na.rm = TRUE
+  )
   list(
     animals = nrow(noBirth),
     total = length(unique(inGroups$id)),
-    females = nrow(females),
+    females = nFemales,
     femalesCounted = counted,
-    femalesLeftOut = nrow(females) - counted
+    femalesLeftOut = nFemales - counted
+  )
+}
+
+#' The sentence the Genetic Diversity tab shows about animals with no birth date
+#'
+#' @param summary list returned by \code{summarizeMissingBirthDates()}.
+#' @return A character vector of length 1.
+#' @noRd
+makeBirthDateNoteText <- function(summary) {
+  paste0(
+    summary$animals, " of the ", summary$total, " animals in these groups ",
+    if (summary$animals == 1L) "has" else "have",
+    " no birth date, so their age is unknown. In the Production ",
+    "column, a female with no birth date counts as a breeding-age ",
+    "female only when the pedigree lists an offspring for her (",
+    summary$femalesCounted, " counted, ", summary$femalesLeftOut, " left out)."
   )
 }

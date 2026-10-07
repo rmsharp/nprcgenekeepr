@@ -142,17 +142,7 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
       if (s$animals == 0L) {
         return(NULL)
       }
-      div(
-        class = "alert alert-warning",
-        paste0(
-          s$animals, " of the ", s$total, " animals in these groups ",
-          if (s$animals == 1L) "has" else "have",
-          " no birth date, so their age is unknown. In the Production ",
-          "column, a female with no birth date counts as a breeding-age ",
-          "female only when the pedigree lists an offspring for her (",
-          s$femalesCounted, " counted, ", s$femalesLeftOut, " left out)."
-        )
-      )
+      div(class = "alert alert-warning", makeBirthDateNoteText(s))
     })
 
     # Signal data-ready when the heat map is rendered (for E2E testing). An
