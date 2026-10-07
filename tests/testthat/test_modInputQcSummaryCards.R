@@ -135,3 +135,31 @@ test_that("zero records and zero errors still draws three green-or-blue boxes", 
   html <- renderSummaryHtml(storedWith(0L, 0L, nRecords = 0L))
   expect_false(grepl("Data passed quality control", html, fixed = TRUE))
 })
+
+# --- the internal box function ----------------------------------------------
+
+test_that("qcSummaryBox() draws a card whose colour is the one it is given", {
+  for (colour in c("primary", "danger", "warning", "success")) {
+    html <- as.character(qcSummaryBox("Errors", 3L, colour))
+    expect_match(html, paste0("class=\"card border-", colour, "\""),
+                 fixed = TRUE)
+    expect_match(html,
+                 paste0("class=\"card-header bg-", colour, " text-white\""),
+                 fixed = TRUE)
+  }
+})
+
+test_that("qcSummaryBox() shows the title in the header and the count in the body", {
+  # shiny writes nested tags on separate lines; drop the white space between
+  # tags so the nesting can be matched as one string
+  html <- gsub(">\\s+<", "><",
+               as.character(qcSummaryBox("Records Processed", 3694L, "primary")))
+  expect_match(html, "<h4>Records Processed</h4>", fixed = TRUE)
+  expect_match(html, "<div class=\"card-body\"><h2>3694</h2></div>",
+               fixed = TRUE)
+})
+
+test_that("qcSummaryBox() shows a count of zero as text, not as nothing", {
+  html <- as.character(qcSummaryBox("Warnings", 0L, "success"))
+  expect_match(html, "<h2>0</h2>", fixed = TRUE)
+})

@@ -597,23 +597,9 @@ modInputServer <- function(id) {
 
       div(
         fluidRow(
-          column(4L,
-                 div(class = "card border-primary",
-                     div(class = "card-header bg-primary text-white",
-                         h4("Records Processed")),
-                     div(class = "card-body", h2(nRecords)))),
-          column(4L,
-                 div(class = paste0("card border-", errorsColour),
-                     div(class = paste0("card-header bg-", errorsColour,
-                                        " text-white"),
-                         h4("Errors")),
-                     div(class = "card-body", h2(nErrors)))),
-          column(4L,
-                 div(class = paste0("card border-", warningsColour),
-                     div(class = paste0("card-header bg-", warningsColour,
-                                        " text-white"),
-                         h4("Warnings")),
-                     div(class = "card-body", h2(nWarnings))))
+          column(4L, qcSummaryBox("Records Processed", nRecords, "primary")),
+          column(4L, qcSummaryBox("Errors", nErrors, errorsColour)),
+          column(4L, qcSummaryBox("Warnings", nWarnings, warningsColour))
         ),
         if (nErrors == 0L && nRecords > 0L) {
           div(
