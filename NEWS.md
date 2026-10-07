@@ -367,13 +367,13 @@ export workflows, and longitudinal monitoring of colony genetic health.
   females were counted or left out.
 
 - New: the Input tab now warns when animals in the uploaded pedigree
-  have no birth date. The Warnings count turns yellow, and the Warnings
-  tab says how many animals have none (1,432 of 3,694 in the shipped
-  example pedigree) and that their age is unknown, so age-based checks
-  and counts, such as the parent-age check, the Age-Sex Pyramid and the
-  breeding-age counts, cannot use them. It is only a warning: the
-  pedigree can still be used. `runQcStudbook(reportChanges = TRUE)`
-  returns the same warning.
+  have no birth date. The app shows its yellow warning notice and opens
+  the Warnings tab, which says how many animals have none (1,432 of
+  3,694 in the shipped example pedigree) and that their age is unknown,
+  so age-based checks and counts, such as the parent-age check, the
+  Age-Sex Pyramid and the breeding-age counts, cannot use them. It is
+  only a warning: the pedigree can still be used.
+  `runQcStudbook(reportChanges = TRUE)` returns the same warning.
 
 - Fixed: a real animal whose id starts with a capital U (such as `U1`,
   `U123` or `Uma`) was mistaken for a stand-in for an unknown parent, so
