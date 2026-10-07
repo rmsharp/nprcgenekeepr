@@ -350,3 +350,30 @@ test_that("assembler output feeds makeGeneticDiversityHeatmap end to end", {
   p <- makeGeneticDiversityHeatmap(res)
   expect_s3_class(p, "ggplot")
 })
+
+## Animals with no birth date (S928): the group is still assessed. The
+## Inbreeding metric leaves such animals out of its breeding-age counts. Found
+## on the shipped example pedigree, where 1,432 of 3,694 animals have no birth
+## date and the default top-ranked group has none on any of its 20 animals.
+
+test_that("a group whose animals have no birth date completes; Inbreeding is undefined, so red", {
+  pedNoBirth <- ped
+  pedNoBirth$birth[pedNoBirth$id %in% g1] <- as.Date(NA)
+  res <- getGeneticDiversityStats(list(g1), pedNoBirth, gv, kmat,
+                                  currentDate = currentDate)
+  expect_identical(nrow(res), 1L)
+  expect_identical(res$Inbreeding, 1L)
+  expect_s3_class(makeGeneticDiversityHeatmap(res), "ggplot")
+})
+
+test_that("an animal with no birth date does not count as a breeding-age female", {
+  ## Only f1 is unrelated to the adult male m1; f2 is related to him. With f2's
+  ## birth date removed she is left out, so f1 alone decides: 1 of 1 -> green
+  ## (3). If f2 were counted as breeding age the group would be 1 of 2 -> red.
+  kmatF1 <- makeKmat(ped$id, list(c("f1", "m1")))
+  pedOneNoBirth <- ped
+  pedOneNoBirth$birth[pedOneNoBirth$id == "f2"] <- as.Date(NA)
+  res <- getGeneticDiversityStats(list(g1), pedOneNoBirth, gv, kmatF1,
+                                  currentDate = currentDate)
+  expect_identical(res$Inbreeding, 3L)
+})

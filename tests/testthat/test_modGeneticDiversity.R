@@ -325,3 +325,30 @@ test_that("modGeneticDiversityServer hides guidance once data is present", {
     }
   )
 })
+
+## The module also works out the heat map in the background, only to tell the
+## end-to-end tests that it is ready. An error there is an unhandled observer
+## error, which ends a real user's whole session (found S928). Output errors do
+## not: shiny shows them in the output and carries on, and the test session
+## mirrors that (output errors are signalled with close = FALSE).
+test_that("modGeneticDiversityServer: a failing heat-map calculation does not end the session", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      ## A member that is not in the pedigree makes the calculation stop.
+      groups = shiny::reactive({ list(c("f1", "not-in-pedigree")) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$flushReact()
+      expect_false(session$isClosed())
+      ## The problem is not hidden: reading the stats still reports it.
+      expect_error(session$getReturned()$stats(), "ped has no rows")
+    }
+  )
+})

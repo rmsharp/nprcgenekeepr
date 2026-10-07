@@ -153,3 +153,56 @@ test_that("a group id absent from the kinship matrix is an error", {
     "kmat is missing kinship"
   )
 })
+
+## An animal with no birth date has no age (NA). It cannot be shown to be old
+## enough to breed, so it is left out of both counts (S928 owner decision).
+## Found S928: an NA age made the id subscript return an NA id, and the kinship
+## lookup then stopped with "subscript out of bounds" (the shipped example
+## pedigree's default top-ranked group has no birth date on any of its 20
+## animals, so the Genetic Diversity heat map ended the user's session).
+
+test_that("a female with no age is left out of the check, not an error", {
+  ## f1 (age 4) is unrelated to m1; f2 has no age and is related to m1. If f2
+  ## were counted the fraction would be 0.5 (red); left out it is 1 (green).
+  ids <- c("f1", "f2", "m1")
+  group <- makeGroup(ids, c("F", "F", "M"), c(4, NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat)
+  expect_equal(status$fraction, 1)
+  expect_identical(status$colorIndex, 3L)
+})
+
+test_that("a male with no age is not an eligible mate, not an error", {
+  ## m1 has no age and is unrelated to f1; m2 (age 6) is related to f1. If m1
+  ## were counted as a mate the fraction would be 1; left out, f1 has no
+  ## unrelated eligible mate, so it is 0 (red).
+  ids <- c("f1", "m1", "m2")
+  group <- makeGroup(ids, c("F", "M", "M"), c(4, NA, 6))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat)
+  expect_equal(status$fraction, 0)
+  expect_identical(status$colorIndex, 1L)
+})
+
+test_that("a group where no animal has an age -> NA fraction / NA colour / NA index", {
+  ids <- c("f1", "f2", "m1")
+  group <- makeGroup(ids, c("F", "F", "M"), rep(NA_real_, 3L))
+  kmat <- makeKmat(ids, list(c("f1", "m1")))
+  status <- getKinshipWithMaleStatus(group, kmat)
+  expect_true(is.na(status$fraction))
+  expect_true(is.na(status$color))
+  expect_true(is.na(status$colorIndex))
+})
+
+test_that("an animal with no sex is neither a female nor an eligible male", {
+  ## f1 is related to m1 but unrelated to x1, whose sex is missing. If x1 were
+  ## treated as a mate the fraction would be 1; excluded, f1 has no unrelated
+  ## eligible mate, so it is 0 (red). Same mechanism as a missing age: an NA in
+  ## the logical subscript.
+  ids <- c("f1", "m1", "x1")
+  group <- makeGroup(ids, c("F", "M", NA), c(4, 6, 8))
+  kmat <- makeKmat(ids, list(c("f1", "x1")))
+  status <- getKinshipWithMaleStatus(group, kmat)
+  expect_equal(status$fraction, 0)
+  expect_identical(status$colorIndex, 1L)
+})
