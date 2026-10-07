@@ -26,6 +26,12 @@
 #   NOT_CRAN=true Rscript vignettes/articles/pedigree-diagram-screenshots.R
 #
 # Requires Chrome (chromote) and the package loadable via pkgload::load_all().
+#
+# Pictures are written to NPRC_SHOT_DIR when that environment variable is set
+# (for example a scratch folder, to review a run before it replaces the
+# guide's own pictures); otherwise to vignettes/articles/shiny_app_use/.
+#   NPRC_SHOT_DIR=/path/to/scratch NOT_CRAN=true Rscript \
+#     vignettes/articles/pedigree-diagram-screenshots.R
 
 suppressMessages(pkgload::load_all(".", quiet = TRUE))
 library(shinytest2)
@@ -41,43 +47,22 @@ library(shinytest2)
 # colony-manager-guide-screenshots.R's own pattern).
 source(file.path("tests", "testthat", "helper-shinytest2.R"))
 
-SHOT_DIR <- file.path("vignettes", "articles", "shiny_app_use")
-if (!dir.exists(SHOT_DIR)) dir.create(SHOT_DIR, recursive = TRUE)
+# Shared screenshot/step/summary code (shot(), do_step(), the end-of-run
+# report, the NPRC_SHOT_DIR folder setting, the page-marker reset and the
+# pop-up wait), used by both guide-screenshot scripts and tested without a
+# browser in tests/testthat/test_captureHarness.R.
+source(file.path("tests", "testthat", "helper-captureHarness.R"))
 
-results <- list()
+SHOT_DIR <- capture_shot_dir(
+  file.path("vignettes", "articles", "shiny_app_use")
+)
 
-## shot(): capture a screenshot, tolerating failure so one bad step does not
-## abort the whole run. See colony-manager-guide-screenshots.R for the
-## rationale on tolerating app$wait_for_idle()'s own timeout throw.
-shot <- function(app, filename, selector = NULL, idle_timeout = 15000) {
-  tryCatch(app$wait_for_idle(timeout = idle_timeout), error = function(e) {
-    message("idle-wait timed out before ", filename,
-            " -- capturing anyway: ", conditionMessage(e))
-  })
-  ok <- tryCatch({
-    path <- file.path(SHOT_DIR, filename)
-    if (file.exists(path)) unlink(path)
-    app$get_screenshot(path, selector = selector)
-    TRUE
-  }, error = function(e) {
-    message("FAILED: ", filename, " -- ", conditionMessage(e))
-    FALSE
-  })
-  results[[filename]] <<- ok
-  cat(if (ok) "captured: " else "FAILED:   ", filename, "\n", sep = "")
-  invisible(ok)
-}
-
-## do_step(): run a non-screenshot interaction step defensively, logging
-## failure under a step label rather than a filename.
-do_step <- function(label, expr) {
-  ok <- tryCatch({ force(expr); TRUE }, error = function(e) {
-    message("STEP FAILED: ", label, " -- ", conditionMessage(e))
-    FALSE
-  })
-  results[[paste0("[step] ", label)]] <<- ok
-  invisible(ok)
-}
+## shot() and do_step() come from the shared helper; see the header of
+## helper-captureHarness.R for what each one records and why an idle-wait
+## timeout before a picture is listed in the end-of-run summary.
+recorder <- new_capture_recorder(SHOT_DIR)
+shot <- recorder$shot
+do_step <- recorder$do_step
 
 app_dir <- system.file("shinytest", package = "nprcgenekeepr")
 
@@ -146,6 +131,13 @@ if (ok) {
   # its offspring, so the marked mate-line is legible rather than lost
   # among the full 375-animal/28-union diagram.
   set_focal(app, c("8LKBV9", "FJIB3R", "GA204Z"), "consanguineous union")
+
+  # set_focal() ends with the "Updated focal animals: N IDs" pop-up on screen;
+  # in a fresh capture it overlapped the "Twin/Zygosity Relations" heading of
+  # the legend (S927), so wait for it to clear before the picture below.
+  do_step("wait for the focal-animals pop-up to clear", {
+    wait_for_notifications_clear(app)
+  })
 
   # 1. Default view -- sex-shaped nodes, mating-unit/duplicate-node
   #    convention, consanguineous vermillion mate-lines, legend. Replaces
@@ -234,14 +226,4 @@ app$stop()
 # --------------------------------------------------------------------------
 # Summary
 # --------------------------------------------------------------------------
-cat("\n--- Summary ---\n")
-for (nm in names(results)) {
-  cat(if (results[[nm]]) "OK   " else "FAIL ", nm, "\n")
-}
-failed <- names(results)[!unlist(results)]
-if (length(failed) > 0) {
-  cat("\nFAILED steps/screenshots:\n")
-  cat(paste(" -", failed), sep = "\n")
-} else {
-  cat("\nAll steps and screenshots succeeded.\n")
-}
+recorder$summary()

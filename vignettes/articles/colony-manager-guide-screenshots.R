@@ -40,6 +40,12 @@
 #
 # Requires Chrome (chromote) and the package loadable via pkgload::load_all().
 #
+# Pictures are written to NPRC_SHOT_DIR when that environment variable is set
+# (for example a scratch folder, to review a run before it replaces the
+# guide's own pictures); otherwise to vignettes/articles/shiny_app_use/.
+#   NPRC_SHOT_DIR=/path/to/scratch NOT_CRAN=true Rscript \
+#     vignettes/articles/colony-manager-guide-screenshots.R
+#
 # Filename disposition (Phase B decision, matching Phase A's per-screenshot
 # gap-inventory dispositions): "regenerate as-is" / "regenerate with updated
 # framing" entries keep their ORIGINAL filename (replaced in place) so a later
@@ -77,50 +83,22 @@ library(shinytest2)
 # testthat dependency, so source()-ing them outside the test harness is safe.
 source(file.path("tests", "testthat", "helper-shinytest2.R"))
 
-SHOT_DIR <- file.path("vignettes", "articles", "shiny_app_use")
-if (!dir.exists(SHOT_DIR)) dir.create(SHOT_DIR, recursive = TRUE)
+# Shared screenshot/step/summary code (shot(), do_step(), the end-of-run
+# report, the NPRC_SHOT_DIR folder setting, the page-marker reset and the
+# pop-up wait), used by both guide-screenshot scripts and tested without a
+# browser in tests/testthat/test_captureHarness.R.
+source(file.path("tests", "testthat", "helper-captureHarness.R"))
 
-results <- list()
+SHOT_DIR <- capture_shot_dir(
+  file.path("vignettes", "articles", "shiny_app_use")
+)
 
-## shot(): capture a screenshot, tolerating failure so one bad step does not
-## abort the whole run. Every screenshot call in this script goes through it.
-shot <- function(app, filename, selector = NULL, idle_timeout = 15000) {
-  # app$wait_for_idle() (the AppDriver built-in) THROWS on timeout, rather
-  # than returning FALSE -- observed after breeding-group formation, where a
-  # secondary render wave (group tables/selectInput choices updating) can
-  # keep Shiny "busy" past the timeout even though the page is already
-  # visually complete. Treat that as a soft warning, not a reason to skip
-  # the screenshot -- attempt the capture regardless.
-  tryCatch(app$wait_for_idle(timeout = idle_timeout), error = function(e) {
-    message("idle-wait timed out before ", filename,
-            " -- capturing anyway: ", conditionMessage(e))
-  })
-  ok <- tryCatch({
-    path <- file.path(SHOT_DIR, filename)
-    # get_screenshot() refuses to overwrite; this script always replaces
-    # in place (see the filename-disposition note above).
-    if (file.exists(path)) unlink(path)
-    app$get_screenshot(path, selector = selector)
-    TRUE
-  }, error = function(e) {
-    message("FAILED: ", filename, " -- ", conditionMessage(e))
-    FALSE
-  })
-  results[[filename]] <<- ok
-  cat(if (ok) "captured: " else "FAILED:   ", filename, "\n", sep = "")
-  invisible(ok)
-}
-
-## do_step(): run a non-screenshot interaction step defensively, logging
-## failure under a step label rather than a filename.
-do_step <- function(label, expr) {
-  ok <- tryCatch({ force(expr); TRUE }, error = function(e) {
-    message("STEP FAILED: ", label, " -- ", conditionMessage(e))
-    FALSE
-  })
-  results[[paste0("[step] ", label)]] <<- ok
-  invisible(ok)
-}
+## shot() and do_step() come from the shared helper; see the header of
+## helper-captureHarness.R for what each one records and why an idle-wait
+## timeout before a picture is listed in the end-of-run summary.
+recorder <- new_capture_recorder(SHOT_DIR)
+shot <- recorder$shot
+do_step <- recorder$do_step
 
 app_dir <- system.file("shinytest", package = "nprcgenekeepr")
 
@@ -368,9 +346,12 @@ do_step("run Genetic Value Analysis (1000 iterations, default threshold)", {
   # on Shiny returning within its ~4s default -- far too short for a
   # 1000-iteration gene drop. click_element_safe() (this project's own E2E
   # helper) performs a raw selector click instead, which does not block the
-  # same way; the real wait happens in the explicit step below.
+  # same way; the real wait happens in the explicit step below. The click's
+  # own 30 s idle wait always times out while the run is busy, so
+  # click_element_safe() returns FALSE here (measured S930) and the step is
+  # told to expect that.
   click_element_safe(app, "#geneticValue-runAnalysis")
-})
+}, allow_false = TRUE)
 do_step("wait for Genetic Value Analysis to complete", {
   if (!wait_for_module_ready(app, "geneticValue", timeout = 300000)) {
     stop("Genetic Value Analysis did not complete within 300s")
@@ -433,6 +414,10 @@ shot(app, "breeding_group_first_view.png",
 # breeding_group_1.png -- kept name, updated framing (1 group desired)
 do_step("set Number of groups = 1 and Form Groups", {
   app$set_inputs(`breedingGroups-nGroups` = 1, wait_ = FALSE)
+  # The app sets this module's ready marker to true after the first formation
+  # and never back, so every Form Groups click resets it first or
+  # wait_for_module_ready() returns at once (measured S927, S930).
+  reset_module_ready(app, "breedingGroups")
   click_element_safe(app, "#breedingGroups-formGroups")
 })
 do_step("wait for 1-group formation to complete", {
@@ -461,6 +446,7 @@ shot(app, "breeding_group_6_infants_with_dam.png",
      selector = "#breedingGroups-moduleContainer")
 
 do_step("form 6 seeded groups", {
+  reset_module_ready(app, "breedingGroups")
   click_element_safe(app, "#breedingGroups-formGroups")
 })
 do_step("wait for 6-group formation to complete", {
@@ -481,6 +467,7 @@ shot(app, "breeding_group_first_group_no_kinship_seeds_indicated.png",
 # (with-kinship + group 6 selected)
 do_step("enable Include kinship and re-form groups", {
   app$set_inputs(`breedingGroups-withKinship` = TRUE, wait_ = FALSE)
+  reset_module_ready(app, "breedingGroups")
   click_element_safe(app, "#breedingGroups-formGroups")
 })
 do_step("wait for kinship-enabled group formation to complete", {
@@ -489,9 +476,10 @@ do_step("wait for kinship-enabled group formation to complete", {
   }
 })
 do_step("select group 6 in Group Detail", {
-  click_element_safe(app, "a[data-value='Group Detail']")
+  clicked <- click_element_safe(app, "a[data-value='Group Detail']")
   app$set_inputs(`breedingGroups-viewGrp` = "Group 6", wait_ = FALSE)
   app$wait_for_idle(timeout = 10000)
+  clicked
 })
 shot(app, "breeding_group_6_seed_grps_grp_6_kinship.png",
      selector = "#breedingGroups-moduleContainer")
@@ -529,7 +517,10 @@ do_step("click Find Potential Parents", {
   click_element_safe(app, "#potentialParents-findParents")
 })
 do_step("wait for potential-parents results", {
-  wait_for_element(app, "#potentialParents-resultsTable", timeout = 15000)
+  if (!wait_for_element(app, "#potentialParents-resultsTable",
+                        timeout = 15000)) {
+    stop("potential-parents results did not render within 15s")
+  }
   app$wait_for_idle(timeout = 15000)
 })
 shot(app, "potential_parents_results.png")
@@ -556,6 +547,7 @@ do_step("set Custom ratio 2.5, 6 groups, form (N7 demo)", {
                  `breedingGroups-customSexRatio` = 2.5,
                  `breedingGroups-seedGroups` = FALSE,
                  `breedingGroups-withKinship` = FALSE, wait_ = FALSE)
+  reset_module_ready(app, "breedingGroups")
   click_element_safe(app, "#breedingGroups-formGroups")
 })
 do_step("wait for custom-ratio group formation to complete", {
@@ -643,13 +635,4 @@ shot(app, "mate_pair_analysis_excluded.png",
 # --------------------------------------------------------------------------
 # Summary
 # --------------------------------------------------------------------------
-cat("\n==================== capture summary ====================\n")
-n_ok <- sum(vapply(results, isTRUE, logical(1L)))
-n_total <- length(results)
-cat(sprintf("%d/%d steps succeeded\n", n_ok, n_total))
-if (n_ok < n_total) {
-  cat("Failed steps:\n")
-  for (nm in names(results)) {
-    if (!isTRUE(results[[nm]])) cat("  - ", nm, "\n", sep = "")
-  }
-}
+recorder$summary()
