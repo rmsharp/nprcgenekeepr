@@ -99,46 +99,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 937 Did
-**Deliverable:** fix `NEWS.Rmd:330`, undefined Inbreeding is red not gray (`BACKLOG.md:49`) (IN PROGRESS)
-**Started:** 2026-10-07 17:47 CDT. **Ledger:** `CHANGELOG: pending`
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** `NEWS.Rmd:327-331` no longer says the Production
+cell is gray "as the Inbreeding cell already was"; it says "An undefined Inbreeding cell is red, so missing data there stands out."
+(the code has scored it red since S282, before 2.0.0; `NEWS.md` re-knitted). Docs only, no `R/` change. Claim `6fe6b7cfc`, RED
+`0ff9e48b2` (4 blocks in `tests/testthat/test_newsReleaseState.R`: 2 check the checkers on made-up sentences and pass at once, 2 read the
+real `NEWS.Rmd` and failed as measured beforehand: 1 sentence called the cell gray, 0 said red; 30 blocks, 2 failed, 0 errors), GREEN
+`b515f6d6f`, REFACTOR none (owner: leave the two sentence splitters, which differ by one lookahead), close-out (the commit carrying this note).
+**Verified:** full suite 3,264 tests, 0 failed, 0 errors, 187 skipped; `check()` 0/0/0; `lint_package` 0; ratchet 1/1 (results
+`2ecd7a6d1608`); word list 3/3; NEWS guard 30/30. App runtime: n/a (a release-note sentence; no app code changed).
+**Went wrong:** my first claim commit (454 B stub) was refused by the context-budget hook, a token cap S924's note already named
+(Learning 903); the 200 B stub passed. **Handoff evaluation of S936: 9/10.** Helped: every `BACKLOG.md` cite held (`:8`, `:21`, `:30`,
+`:49`, `:56`, `:77`, `:93`, `:101`, `:171`), the ratchet citation (`77510354ff23`), the `NEWS.Rmd:330` and rule cites, the re-knit
+command. Missing: the item did not say the rule was already pinned (`test_getGeneticDiversityStats.R:154`) or predates 2.0.0, and the
+notes-size cap was not repeated among S936's gotchas. **Self-assessment: 8/10.** + measured before RED so the 2 predicted failures were
+exact; dated the rule (`cb7eb1a6a`, in `v2.0.0`); checkers tested on made-up text; every gate asked in plain words; the re-knit diff was only
+the sentence. - the stub bounced on a known cap; the REFACTOR gate cost the owner an answer for no change.
 
-### What Session 936 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** the Input tab's QC Summary boxes (Records
-Processed, Errors, Warnings) are colored by what the check found, as Bootstrap 4 cards drawn by one internal
-`qcSummaryBox(title, count, colour)` (`R/qcSummaryBox.R:18`, called at `R/modInput.R:600-602`). **Cause, new:** the theme is Bootstrap 4
-(`R/appUI.R:69`); its compiled stylesheet has 0 `.panel` rules and 113 `.card` rules, and the code wrote Bootstrap 3 `panel panel-*`
-boxes: 10 old-style sites in 3 files. **Owner scope pick: the 3 QC boxes only**; the 6 Home-tab boxes and the per-group Breeding Groups
-boxes stay plain (`BACKLOG.md:8`). Claim `a658da981`, RED `6fa5f478a` (7 blocks, 67 failed checks, 0 errors; one old assertion moved),
-GREEN `777503703`, REFACTOR `e335cf5ba` (3 more tests; rendered HTML byte-identical to GREEN on 5 cases), docs `0c8034a11`, NEWS
-`969e8aa20`, close-out (the commit carrying this note).
-**Owner mid-turn:** a picture of the pop-up cut off at "QC found 2 warning(s). Check the" was the guide's own
-`read_and_check_pedigree.png` (S933's retake): the crop to `#dataInput-moduleContainer` clips the notice. The capture script now waits
-for it to close (`vignettes/articles/colony-manager-guide-screenshots.R:202`, 82/82 steps); the guide names the five sub-tabs, each box's
-color and both notices' wording (`colony-manager-guide.qmd:221-233`). The owner took the QC picture and words (option 1) and said "I know
-expected behavior" (memory saved: do not explain the app to them).
-**Verified:** full suite 3,260 tests, 0 failed, 0 errors, 187 skipped (run after the NEWS commit; only notes files changed since);
-`check()` 0/0/0; `lint_package` 0; ratchet 1/1 (results `77510354ff23`); word list 3/3, NEWS 26/26. Real app (headless Chrome): 3 pedigrees
-(clean, the example, one with errors) and the guide's script, pictures opened for the owner before any long run.
-**Went wrong:** a blanket replace made `renderSummaryHtml()` call itself (caught before a run); my first RED helper reported a missing
-box twice and two negative checks passed only because the box was absent (tightened); two spelling slips ("coloured", "grey") found by the
-word-list guard; I explained the app's behavior to an owner who wrote it. Learning 902.
-**Handoff evaluation of S935: 9/10.** Helped: every `BACKLOG.md` cite held (`:8`, `:21`, `:40`, `:47`, `:68`, `:84`, `:92`, `:159`), the ratchet
-citation, `wc -c`, and the stale `gh run list` gotcha (a fourth time). Missing: the QC item named 3 boxes of a 10-site cause, which one
-grep shows. **Self-assessment: 8/10.** + the cause found by counting theme rules; scope asked in plain words with the 10-site count; a
-no-change proof for REFACTOR; pictures shown before long runs; the clipped pop-up traced with an uncropped capture. - the app
-explanation the owner did not need; the noisy first helper; two spelling slips.
+**Next steps (recommended, not ruled on):** (A) Placeholder sires in breeding groups and the unexplained app path (`BACKLOG.md:30`,
+DECISION NEEDED, S; reproduce the app's default ranking first). (B) Docs-audit slice 2 (`:94`): D2 and D3, then Phases 3a, 3b, 3c (9
+pictures left), 4a, 4b. (C) Seven more old-style boxes (`:8`, DECISION NEEDED, M); an optional Warnings-sub-tab picture (`:21`, READY, S).
+(D) Origin-and-funding reword (`:49`); `getAncestors()` (`:70`). Cites: `:86` version, `:164` contributor tutorial.
+**Key files:** `NEWS.Rmd:327-331`; `tests/testthat/test_newsReleaseState.R:683-766` (helpers and 4 blocks);
+`tests/testthat/test_getGeneticDiversityStats.R:154` (the pinned rule); `R/getGeneticDiversityStats.R:122` (undefined Inbreeding to 1).
+**Gotchas:** write a claim stub in 2-3 lines when this file is above about 56,400 B (cap 25,000 tokens, about 2.27 B each) and condense the
+newest full section at close-out; a BACKLOG removal shifts later cites, so re-grep them; local `master` was 82 commits ahead at Phase 0
+(last push S923, `7d85f4b89`) and is 86 ahead with this commit, so CI has not run on S924-S937 (the owner pushes; no push-only
+sessions); read the Actions API if plain `gh run list` looks stale; one R job at a time; `wc -c` after the last edit.
 
-**Next steps (recommended, not ruled on):** (A) NEWS says an undefined Inbreeding cell is gray, but it is red (`BACKLOG.md:49`, READY, S,
-docs only). (B) Placeholder sires in breeding groups and the unexplained app path (`:30`, DECISION NEEDED, S; reproduce the app's default
-ranking first). (C) Docs-audit slice 2 (`:101`): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a, 4b. (D) Seven more old-style
-boxes (`:8`, DECISION NEEDED, M); an optional Warnings-sub-tab picture (`:21`, READY, S). (E) Origin-and-funding reword (`:56`);
-`getAncestors()` (`:77`). Cites: `:93` version, `:171` contributor tutorial.
-**Key files:** `R/qcSummaryBox.R:18`; `R/modInput.R:595-602`; `tests/testthat/test_modInputQcSummaryCards.R`;
-`test_modInput_coverage.R:230`; `vignettes/articles/colony-manager-guide.qmd:221-233`; `colony-manager-guide-screenshots.R:202`; `NEWS.Rmd:364`.
-**Gotchas:** a picture cropped to a container clips a notice at its edge (wait with `wait_for_notifications_clear()`, then look at all four
-edges); shiny prints nested tags on separate lines, so match with `gsub(">\\s+<", "><", html)`; count theme rules with
-`sass::sass(bslib::bs_theme(version = 4L, bootswatch = "flatly"))`; docs spell American ("colored", "gray"), the word-list guard fails
-on "coloured" and "grey"; plain `gh run list` is stale (read the Actions API); one R job at a time; `wc -c` after the last edit.
+### What Session 936 Did (condensed S937; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Input tab's QC Summary boxes (Records Processed, Errors, Warnings) are colored by what the check found, as Bootstrap 4 cards drawn
+by one internal `qcSummaryBox(title, count, colour)` (`R/qcSummaryBox.R:18`, called at `R/modInput.R:600-602`); owner scope pick: the 3
+QC boxes only. Cause: the theme is Bootstrap 4 (0 `.panel` rules, 113 `.card`), so 10 old-style `panel panel-*` sites show no color
+(`BACKLOG.md:8`). Strict TDD. Claim `a658da981`, close-out `7cca7e985`. Handoff evaluation of S935: 9/10. Self 8/10.
+**Gotchas kept:** a picture cropped to a container clips a notice at its edge (wait with `wait_for_notifications_clear()`, then look at all
+four edges); shiny prints nested tags on separate lines, so match with `gsub(">\\s+<", "><", html)`; count theme rules with
+`sass::sass(bslib::bs_theme(version = 4L, bootswatch = "flatly"))`; docs spell American ("colored", "gray"); the owner knows the app's
+expected behavior (do not explain it back).
 
 ### What Session 935 Did (condensed S936; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Inbreeding cell counts a female with no birth date by the Production cell's offspring rule, through one internal

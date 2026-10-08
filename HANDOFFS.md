@@ -194,10 +194,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S937
 date: 2026-10-07
-status: pending
-active_task: IN PROGRESS -- NEWS.Rmd:330 says an undefined Inbreeding cell is gray, but the code scores it red (BACKLOG.md:49; READY, S, docs only; owner pick at the Phase 0 picker, option 1 of 4; strict TDD).
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the NEWS entry for the Production cell no longer says the Inbreeding cell was gray; it says an undefined Inbreeding cell is red (BACKLOG.md:49 item; owner pick at the Phase 0 picker, option 1 of 4; strict TDD; docs only; item removed).
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, S936's ratchet citation (results 77510354ff23) matched, CI green on the Actions API, dashboard 96/100, no file over its ceiling). Claim 6fe6b7cfc (the first, 454 B stub was refused by the context-budget token cap; a 200 B stub passed). Measured before RED: 1 NEWS sentence calls the Inbreeding cell gray, 0 say an undefined one is red; the code's rule dates from S282 (cb7eb1a6a), is in v2.0.0 and pinned by test_getGeneticDiversityStats.R:154. RED 0ff9e48b2 (4 blocks; 2 check the checkers on made-up sentences and pass at once, 2 read the real NEWS.Rmd and failed; 30 blocks, 2 failed, 0 errors). GREEN b515f6d6f (NEWS.Rmd:327-331 reworded, NEWS.md re-knitted, diff only the sentence). REFACTOR none (owner chose to leave the two sentence splitters, which differ by one lookahead). Verified: full suite 3,264 tests, 0 failed, 0 errors, 187 skipped; check 0/0/0; lint 0; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 2ecd7a6d1608 · manifest aa983075d6a2; word list 3/3, NEWS 30/30. BACKLOG: item removed. Learning 903.
+next_steps: Recommended order (not ruled on). (A) Placeholder sires in breeding groups and the unexplained app path (BACKLOG.md:30, DECISION NEEDED, S: reproduce the app's default ranking first). (B) Docs-audit slice 2 (BACKLOG.md:94): D2 and D3, then Phases 3a, 3b, 3c (9 pictures left), 4a, 4b. (C) Seven more old-style boxes (BACKLOG.md:8, DECISION NEEDED, M); optional Warnings-tab picture (BACKLOG.md:21, READY, S). (D) Origin-and-funding reword (BACKLOG.md:49); getAncestors() (BACKLOG.md:70). Cites: BACKLOG.md:86 version, BACKLOG.md:164 contributor tutorial. A BACKLOG removal shifts later cites: re-grep.
+key_files: NEWS.Rmd:327-331 (the reworded entry); tests/testthat/test_newsReleaseState.R:683-766 (three helpers and the 4 new blocks); tests/testthat/test_getGeneticDiversityStats.R:154 (the pinned rule); R/getGeneticDiversityStats.R:122 (undefined Inbreeding becomes 1, red); PROJECT_LEARNINGS.md Learning 903.
+gotchas: write a claim stub in 2-3 lines when SESSION_NOTES.md is above about 56,400 B (the hook caps it at 25,000 tokens, about 2.27 B each) and condense the newest full section at close-out; a BACKLOG removal shifts later cites, so re-grep them; a NEWS clause "as X already was" is a claim about X, so read X's rule and pinned test first; local master was 82 commits ahead at Phase 0 (last push S923, 7d85f4b89) and is 86 ahead with this commit, so CI has not run on S924-S937 (the owner pushes; no push-only sessions); read the Actions API if plain gh run list looks stale; one R job at a time; take wc -c after the last edit.
+runtime_smoke: n/a -- docs-only (a release-note sentence; no app code changed); the real NEWS.Rmd is read by the 30-block guard and NEWS.md was re-knitted from it.
+changelog_ref: S937 DONE entry
+commit: the close-out commit that carries this receipt; claim 6fe6b7cfc
 ```
 
 ```handoff

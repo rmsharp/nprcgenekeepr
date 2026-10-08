@@ -46,13 +46,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       default ranking (through the real app), then choose: leave placeholders in the pool, drop them from the
       candidate pool, or drop them only from the Genetic Diversity counts.
 
-- [ ] **`NEWS.Rmd` says an undefined Inbreeding cell is gray, but the code scores it red (found S935, 2026-10-07;
-      READY, Effort S; docs only)** -- the Production entry says its cell "is now gray, as the Inbreeding cell
-      already was" (`NEWS.Rmd:330`). `R/getGeneticDiversityStats.R:122-124` sets an undefined Inbreeding to 1
-      (red), its help text says "scored red", the guide says so, and the picture S935 retook shows Production
-      gray and Inbreeding red for groups with no counted females. Reword the NEWS sentence, re-knit `NEWS.md`,
-      run the 26 NEWS guard tests.
-
 - [ ] **Reword where the repo says the package was developed at ONPRC and funded by NIH grants
       (owner-reported S930, 2026-10-07; DECISION NEEDED, Effort S; docs and `DESCRIPTION`, plus one displayed
       line in the app)** -- the owner wrote: "Only version one was developed at Oregon National Primate Research
