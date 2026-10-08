@@ -72,6 +72,21 @@ to write it. Every number below was measured this session unless it says "S821" 
 > gate is `tests/testthat/test_guideExportTables.R` (the shown cells must equal what the buttons write; strict TDD: RED
 > `4e012db43`, GREEN `ba9c31501`, REFACTOR `4e99a432b`). Only Phase 4b (Decision 5) remains.
 
+> **Update S944 (2026-10-08): Phase 4b is DONE; Decision 5 was ruled: script all nine. Slice 2 is finished.** Measured first,
+> in the real app (headless): every number in all nine Marker Genetics pictures still matched; what had changed was the
+> page around them (8 sub-tabs and 4 upload boxes now; the five oldest pictures showed 0 to 5 sub-tabs and 1 or 2 boxes).
+> The four pictures on shipped files and the five on made-up data all reproduced, the five from fixtures
+> `test_modMarkerGenetics.R` already holds, so no data file was added under `vignettes/articles/data/` (the "add one small
+> data file" step above was not needed). New: `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per
+> picture; the colony script's single session holds the 3,694-animal example pedigree, which the P/C/U pictures cannot
+> use), `tests/testthat/helper-markerPictureFixtures.R` and the gate `tests/testthat/test_markerPictureScreenshots.R` (16
+> blocks; strict TDD: RED `9d42987b4`, GREEN `edd8f8584`, `183dfdebb`, `9f415d50a`; REFACTOR skipped by the owner's pick).
+> The four long pictures use shinytest2's `"viewport"` selector (the default takes the whole page, which made the coverage and
+> LD-block pictures one picture twice in the first run). Wording fixed: the Heterozygosity caption, the Candidate tab's
+> "Current limitation" note (issue #155 fixed it 2026-08-10) and its caption's "10 shared loci"; the abstract is dated
+> 2026-10-08. All 46 pictures in `shiny_app_use/` are now taken by one of the three capture scripts. One finding is in
+> `BACKLOG.md` (the Candidate tab is silently empty without a `fromCenter` column).
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article

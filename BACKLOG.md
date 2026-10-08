@@ -87,6 +87,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       or add one exported function that the app and the guide both call (the exported API grows by one, and the
       guide chunk and the two modules shrink).
 
+- [ ] **The Candidate Parent Assignment tab shows an empty table, with no explanation, when the pedigree has no
+      `fromCenter` column (found S944, 2026-10-08; DECISION NEEDED, Effort S; strict TDD, a displayed-text change)** --
+      measured S944 in the real app (headless): issue #155's own fixture, a recorded-but-wrong sire, which the module test
+      says gives 2 candidate rows, loaded through the Input tab as a file without `fromCenter`, shows "No data available in
+      table"; the same pedigree with the column shows the 2 rows (SireTrue, SireWrong). The cause is documented
+      (`getPotentialParents()` returns NULL without the column, `R/getPotentialParents.R:101-102`), and the Potential
+      Parents tab already says so in words (`R/modPotentialParents.R:303-306`, "This dataset has no colony-origin
+      ('fromCenter') field, ..."); this tab does not. The guide's Candidate note now says the column is needed.
+      **Decide when picking it up:** give the Candidate tab the same sentence (a test first; one displayed line), or leave
+      the table empty and the guide's note as the only explanation.
+
 - [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
       kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
       2026-10-07; DECISION NEEDED, Effort S; the guide's words, or the app with a test first)** -- seen in
@@ -177,8 +188,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       released 3.0.0.
 
 - [ ] **Audit the internal and user-facing documentation for stale information and stale
-      diagrams** (owner-requested 2026-09-26; READY, Effort L -- one audit report per session,
-      so expect several slices) -- the owner noticed that two article PDFs showed stale figures.
+      diagrams** (owner-requested 2026-09-26; DECISION NEEDED (part 2 only; part 1, slice 2, finished S944), Effort S each) -- the owner noticed that two article PDFs showed stale figures.
       **Method** (each slice is its own report, `docs/audits/DOCS_STALENESS_AUDIT_SLICE*`, per
       `AUDIT_WORKSTREAM.md`): check every claim, number, screenshot and diagram against today's
       code or output (regenerate the figure from the current source and compare; count, don't
@@ -196,12 +206,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S862; 8 (S868) `docs/research/` and older `docs/audits/`, a status banner on 26 files, S870.
       **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped
       S927 into 7-8 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its owner decisions
-      D2, D3 and D4 are ruled and D5 is pending; D1, the order, was followed as the plan recommended; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
+      D2 to D5 are all ruled; D1, the order, was followed as the plan recommended; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
       capture, needed no script change (S940: the fixed script's capture is 1300 x 7121, the committed
       height; S927's 900 px was the crashed run); Phases 3a (S941; D2 ruled: delete the orphan), 3b (S942; D3 ruled:
-      accept the install date), 3c (S940) and 4a (S943; D4 ruled: build the tables) are DONE; 4b remains, see below). Measured S927:
+      accept the install date), 3c (S940) 4a (S943; D4 ruled: build the tables) and 4b (S944; D5 ruled: script all nine) are DONE, so slice 2 is finished). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
@@ -255,10 +265,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       first-order picture matched 0 of its 22 rows (cause not looked into), the founders picture lacked
       `fromCenter` and `placeholder`, the kinship picture listed the animals in another order. The gate is
       `tests/testthat/test_guideExportTables.R` (9 blocks): what the guide shows must equal the same cells of
-      what the buttons write. **Only Phase 4b remains (D5 first: script the 9 Marker Genetics pictures, or leave
-      them as hand-taken pictures with the capture date recorded; view each against the live tab first; one to
-      two sessions). When 4b ends, re-date the abstract's "current as of 2026-09-30"
-      (`colony-manager-guide.qmd:37`), which the slice-2 retakes have outrun.**
+      what the buttons write. S944 did Phase 4b (D5 ruled: script all nine): the nine Marker Genetics pictures are retaken by a new script,
+      `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture; its five made-up data sets come from
+      `tests/testthat/helper-markerPictureFixtures.R`, copies of the hand-checked fixtures in `test_modMarkerGenetics.R`, and the
+      other four use files the package ships). Measured first in the real app (headless): every number in all nine old
+      pictures still matched; what had changed was the page (8 sub-tabs and 4 upload boxes now; the five oldest pictures
+      showed 0 to 5 sub-tabs and 1 or 2 boxes). The gate is `tests/testthat/test_markerPictureScreenshots.R` (16 blocks, 72
+      expectations): the script's pictures equal the guide's nine, every picture goes through a pop-up wait, and the data
+      run through the real module give the numbers the captions quote. **Slice 2 is finished:** all 46 pictures in
+      `shiny_app_use/` (measured S944: each is taken by one of the three capture scripts and cited by the guide or the Diagram
+      article) now come from a script, and the guide's abstract says "current as of 2026-10-08". Wording fixed in the
+      same pass: the Heterozygosity caption (its animals are X, Y, Z), the Candidate tab's "Current limitation" note
+      (issue #155 had fixed it), and the caption's "10 shared loci" (3 of 10 disagree). One finding for the owner is the
+      Candidate-tab item below the export-tables item.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
