@@ -37,7 +37,7 @@ it), shaped by sex: dot = Female, square = Male, star =
 Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded. A legend to the
 right of the diagram shows the same mapping, so it never has to be memorized.
 
-![The Diagram tab on a small, real 21-animal pedigree, with its shape-to-sex legend. The two connector lines joining 8LKBV9 to his daughter FJIB3R (third row from the top) render thicker and in a distinct vermillion color -- see "Consanguineous mating marker" below.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing a small interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded, hexagon=Affected) to the right of the diagram."}
+![The Diagram tab on a small, real 21-animal pedigree, with its shape-to-sex legend. The two connector lines joining `8LKBV9` to his daughter `FJIB3R` (third row from the top) render thicker and in a distinct vermillion color -- see "Consanguineous mating marker" below.](shiny_app_use/pb_diagram_legend.png){fig-alt="Pedigree Browser Diagram tab showing a small interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded, hexagon=Affected) to the right of the diagram."}
 
 Diagrams render up to **400 animals** under the default Rectilinear edge
 style (**750** if switched to Direct, below) -- for a larger population,
