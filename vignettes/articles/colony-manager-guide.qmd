@@ -34,7 +34,7 @@ defect that could silently corrupt sire/dam IDs, a "Custom" breeding-group
 sex ratio option with no numeric input, and a shipped example pedigree
 missing a column the Potential Parents tab needs to demonstrate populated
 results -- each described where it arose rather than glossed over. All
-claims in this article are current as of 2026-09-30.
+claims in this article are current as of 2026-10-08.
 
 ## Introduction {#sec-introduction}
 
@@ -843,7 +843,7 @@ expected across the population points toward inbreeding or population
 substructure; observed running above expected points the other way, toward
 outbreeding.
 
-![The Heterozygosity tab for the same example trio: observed heterozygosity (ho) per animal alongside the population's expected heterozygosity (he).](shiny_app_use/marker_genetics_heterozygosity.png){fig-alt="Marker Genetics Heterozygosity tab showing a table with three rows (X, Y, Z) and two columns, ho and he, with per-animal observed heterozygosity values and the same population-wide expected heterozygosity value repeated on every row."}
+![The Heterozygosity tab for a second small example, animals X, Y and Z: observed heterozygosity (ho) per animal alongside the population's expected heterozygosity (he).](shiny_app_use/marker_genetics_heterozygosity.png){fig-alt="Marker Genetics Heterozygosity tab showing a table with three rows (X, Y, Z) and two columns, ho and he, with per-animal observed heterozygosity values and the same population-wide expected heterozygosity value repeated on every row."}
 
 A third **Parentage Exclusion** tab (also part of issue #130) cross-references
 the current pedigree's recorded dam and sire against the same uploaded
@@ -908,17 +908,18 @@ rewrites the pedigree's recorded dam or sire, and any change to the colony's
 records remains a curator decision made outside the tool.
 
 ::: {.callout-note}
-**Current limitation.** Candidate lists come from the same demographic
-screening the Potential Parents tab uses (age, sex, presence date,
-gestation window), which only proposes candidates for an animal with an
-*unrecorded* parent slot. An animal whose recorded parent is present but
-wrong -- the case this tab exists for -- will show no candidates unless its
-*other* parent slot is also unrecorded, or unless a curator explicitly
-supplies a candidate list (a script-callable option not yet exposed in this
-tab). This is being tracked as a follow-on improvement.
+**What the candidate list needs.** Candidate lists come from the same
+demographic screening the Potential Parents tab uses (age, sex, presence
+date, gestation window), which needs the pedigree's `fromCenter` column;
+without that column the table is empty. For an animal whose recorded parent
+is present but wrong -- the case this tab exists for -- the tab sets that
+recorded parent aside, screens candidates for the freed slot, and keeps the
+recorded parent in the list, so it appears with its own score beside the
+others. A curator can also supply a candidate list explicitly (a
+script-callable option not exposed in this tab).
 :::
 
-![The Candidate Parent Assignment tab for a small example trio: C's falsely-recorded sire (Q) is Mendelian-excluded across all 10 shared loci, so its LOD score is negative infinity -- a true genetic impossibility, not merely "unlikely" (blank cells in the LOD/delta columns above render that infinite value).](shiny_app_use/marker_genetics_candidate_assignment.png){fig-alt="Marker Genetics Candidate Parent Assignment tab showing a table with one row: offspring C, role sire, candidate Q, LOD blank (negative infinity), nLociUsed 10, excluded true, lowPower false."}
+![The Candidate Parent Assignment tab for a small example trio: C's falsely-recorded sire (Q) is Mendelian-excluded (the two disagree at 3 of the 10 shared loci), so its LOD score is negative infinity -- a true genetic impossibility, not merely "unlikely" (blank cells in the LOD/delta columns above render that infinite value).](shiny_app_use/marker_genetics_candidate_assignment.png){fig-alt="Marker Genetics Candidate Parent Assignment tab showing a table with one row: offspring C, role sire, candidate Q, LOD blank (negative infinity), nLociUsed 10, excluded true, lowPower false."}
 
 A sixth **Linkage and LD Block Metrics** tab (issue
 [#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)) answers a
@@ -1001,7 +1002,7 @@ SNPs, a scaled-down version of PLINK's default of 100, and 1,000,000 base
 pairs, which is PLINK's own default). F_ROH is the proportion of the genome covered by
 qualifying segments.
 
-![The Genomic ROH (F_ROH) tab computed on the bundled 50-individual, 1,000-locus synthetic sequence-scale example panel, with the minimum-SNP threshold lowered from its default of 50 to 3 so the small synthetic panel still yields non-trivial segments: per-individual segment counts, total ROH length, and F_ROH.](shiny_app_use/marker_genetics_genomic_roh.png){fig-alt="Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count and minimum ROH segment span inputs above a table of 50 rows (S001 through S050 visible in part), each with nSegments, totalRohLength, and fRoh columns populated with real, non-zero example values."}
+![The Genomic ROH (F_ROH) tab computed on the bundled 50-individual, 1,000-locus synthetic sequence-scale example panel, with the minimum-SNP threshold lowered from its default of 50 to 3 so the small synthetic panel still yields non-trivial segments: per-individual segment counts, total ROH length, and F_ROH.](shiny_app_use/marker_genetics_genomic_roh.png){fig-alt="Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count and minimum ROH segment span inputs above the first page of a table of 50 individuals (S001 through S010 of 5 pages), each with nSegments, totalRohLength, and fRoh columns populated with real, non-zero example values."}
 
 Like the Linkage and LD Block Metrics tab, any export from this tab is
 de-identified and routed through the same curator confirm-gate pattern:
