@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 939 Did
+**Deliverable:** Breeding Groups builds its pool from living animals only (`BACKLOG.md:30`; strict TDD; owner pick at the Phase 0
+picker, option 1 of 4) (IN PROGRESS). **Started:** 2026-10-07. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 938 Did
 **Deliverable, DONE (decision session, docs only; owner pick at the Phase 0 picker, option 1 of 4):** reproduced the app's default Top
 ranked 20 in the real app (headless, current source, `ExamplePedigree.csv`, 3 groups) and recorded the owner's ruling. **Found:** with no

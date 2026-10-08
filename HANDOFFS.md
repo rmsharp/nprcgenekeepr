@@ -192,6 +192,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S939
+date: 2026-10-07
+status: pending
+active_task: Breeding Groups builds its pool from living animals only (BACKLOG.md:30; strict TDD; owner pick at the Phase 0 picker, option 1 of 4) -- IN PROGRESS
+```
+
+```handoff
 session: S938
 date: 2026-10-07
 status: complete
