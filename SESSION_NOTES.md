@@ -99,43 +99,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 940 Did
-**Deliverable:** retake the Phase 3c guide pictures (docs-audit slice 2; owner pick, option 1 of 4) (IN PROGRESS).
-**Started:** 2026-10-07. **Ledger:** `CHANGELOG: pending`.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD for the one script fix):** docs-audit slice 2, Phase 3c:
+10 guide pictures retaken (the six Breeding Groups ones, `genetic_diversity_heatmap.png`, `potential_parents_results.png`, both Mate Pair
+ones) from one full 82/82 capture run into a scratch folder, copied by name. Every animal read off the pictures (the 20 in the sex-ratio
+picture, plus the Group 1 and Group 6 members) is ALIVE in `examplePedigree` with matching sex and birth date. **Found:** (1) the script
+typed "Group 6" into the Group Detail box, whose values are numbers (`R/modBreedingGroups.R:1048`), so the box was blank in the old and in
+the first retaken picture: RED `8d6ebbaba` (`test_captureHarness.R:421-452`, 33 blocks, 1 failing as read), GREEN `883e23c46` (`"6"`,
+`colony-manager-guide-screenshots.R:488`); the second run reads "Group 6". (2) The heat map was stale again (S935's no-birth-date note
+described dead animals): 10 pictures, not the 9 the notes said. (3) Potential Parents needed no script change: 1300 x 7121, the committed
+height (S927's 900 px was the crashed run). (4) The Mate Pair caption said "all alive animals" (the picture is a custom list of six); fixed
+with the heat map's alt text, `colony-manager-guide.qmd:621,719`. Two more mismatches went to the owner as `BACKLOG.md:30`: the Group Detail
+"no kinship shown" caption, and the unused animals headed "Group 7". Claim `a52e8fd02`, pictures `6d1b08b4f` and `784346d6d`, captions
+`9be966cd7`, docs `4604e4c69`, close-out = the commit carrying this note. **Verified:** full suite 3,282 blocks, 0 failed, 0 errors, 187
+skipped (S939: 3,280); `check` 0/0/0; `lint_package` 0; ratchet 1/1 pass (results 440e8ec24fc6, manifest aa983075d6a2; tarball 3,742,479
+B, the pictures are build-ignored); CI on S939's push (`66c6df335`): all four workflows green. Learning 906. **Went wrong:** copied 11 files
+before the first commit (the 5-file cap is per commit; committed in batches after); the first 5-min capture run was spent before the Group 6
+defect was seen in it, so a second was needed; not a hand run in Chrome. **Handoff evaluation of S939: 8/10.** Helped: every `BACKLOG.md`
+cite held (`:8`, `:21`, `:30`, `:36`, `:55`, `:76`, `:92`, `:100`, `:172`); the note that the Breeding Groups pictures were due. Missing: the
+heat map picture (retaken S935) was made stale by S939's own change, so "9 left" was 10; nothing said the script's Group 6 step was broken.
+Wrong: "9 pictures left" and S930's item (e) as a script change (no change was needed). **Self-assessment: 8/10.** + the blank box found by
+viewing old and new side by side, IDs checked against the pedigree, the pictures opened for the owner before the long tests, a fix with a
+test first. - the over-cap copy, a second capture run, no hand check in Chrome.
 
-### What Session 939 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** Breeding Groups draws its pool from living animals
-only, for every source, before the top-N or floor cut. New internal `isLivingAnimal()` (`R/isLivingAnimal.R:22`): Status ALIVE if the
-pedigree has a Status column, else no exit date, else everyone. Pool step `R/modBreedingGroups.R:544`; nobody alive gives one error notice
-("None of the N animals in this source is alive, ...", `:682`) and no groups. **Owner choices at the Pre-RED gate:** a file with no Status
-column uses the exit date; a typed seed animal that is not alive stays accepted. **Real app** (headless, example pedigree, 3 groups, run
-again after the REFACTOR): default Top ranked 20 all alive (they were dead or shipped); floor 61; All available 332; All available with the
-floor 61; the 20 are the first 20 living animals of that run's report (places 519-1025 of 3,694). Claim `81f4c1f19`, RED `bc3585117`
-(15 blocks, 13 failing, 2 green-at-HEAD pins), GREEN `63518b606`, docs `82e7739d9` and `07def6ecc` (module help, manual, guide, in-app
-guidance, NEWS), REFACTOR `7e7c1ffef` (one shared `noGroupsResult` in `runFormation`; plus a pin for the formation-error path, which no
-test reached, passing with the patch reverted), close-out = the commit carrying this note. **Verified:** new file 16 blocks, 27 checks;
-full suite 3,280 blocks, 0 failed, 0 errors, 187 skipped (S937: 3,264); check 0/0/0; `lint_package` 0; ratchet 1/1 pass. Learning 905.
-**Went wrong:** ran the ratchet before comparing the receipt's citation (the order the S911 note warns against), then found its `results`
-hash is not reproducible (Learning 905), so counts were compared; my derived default 20 did not match a later real run (the ranking is
-re-simulated each run) until I saved that run's report; the gate said one file, about 10 blocks, and shipped one file, 16; a scratch edit
-failed on an unexported shell variable (one wasted run). **Handoff evaluation of S938: 9/10.** Helped: `BACKLOG.md` item with the Pre-RED
-questions and cites (`:522-527`, `:538-553`) held; the scratch run from S938 (`run1.rds`) gave a Pre-RED preview without a new run.
-Missing: `status` is an optional column (`qcPed`, `smallPed` and every one of the 68 Form Groups clicks in the tests lack it), the biggest
-Pre-RED question. Wrong: nothing found. **Self-assessment: 8/10.** + counts measured before asking, plain-words gates with a
-recommendation, RED failures read one by one (a spurious cascade removed), real-app check before and after the refactor, docs and NEWS in
-the same session. - three process slips above; Breeding Groups guide pictures still show the old groups (retake in Phase 3c).
+**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2 (`BACKLOG.md:119`): two yes/no answers (D2 delete the unused
+`pb_unknown_displayed.png`; D3 accept the install date on the Home picture), then Phases 3a (15 pictures) and 3b (12); 3c is done.
+(B) The owner ruling on the two guide statements (`:30`, DECISION NEEDED, S). (C) Default-population item (`:55`, DECISION NEEDED, M).
+(D) Seven old-style boxes (`:8`); optional Warnings picture (`:21`); the "None of the 1 animals" wording (`:49`). (E) Origin-and-funding
+reword (`:74`); `getAncestors()` (`:95`). Cites: `:111` version, `:197` contributor tutorial.
+**Key files:** `vignettes/articles/colony-manager-guide-screenshots.R:484-490` (the Group 6 step); `tests/testthat/test_captureHarness.R:421-452`
+(`viewGrpValues()` and 2 blocks); `vignettes/articles/colony-manager-guide.qmd:621,719` (captions); `docs/planning/docs-audit-slice2-screenshot-plan.md:36-43`
+(update banner); `PROJECT_LEARNINGS.md` Learning 906.
+**Gotchas:** the capture scratch folders (`shots1`, `shots2`, `run1.log`, `run2.log`) live only in the S940 scratchpad; one Chrome session and one
+R job at a time; view each retaken picture beside its old one before copying (that is how the blank box was found); the ratchet citation's
+`results` hash changes every run; `master` was level with `origin` at Phase 0 (the owner pushed S939) and is 8 ahead after this close-out (the
+owner pushes; no push-only sessions); a BACKLOG edit shifts cites, so re-grep them.
 
-**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2 (`BACKLOG.md:100`): two yes/no answers (D2 delete the unused
-`pb_unknown_displayed.png`; D3 accept the install date on the Home picture), then Phases 3a and 3b; Phase 3c's Breeding Groups pictures
-are now due. (B) Default-population item (`:36`, DECISION NEEDED, M). (C) Seven old-style boxes (`:8`); optional Warnings picture
-(`:21`); the "None of the 1 animals" wording (`:30`). (D) Origin-and-funding reword (`:55`); `getAncestors()` (`:76`). Cites: `:92`
-version, `:172` contributor tutorial.
-**Key files:** `R/isLivingAnimal.R:22`; `R/modBreedingGroups.R:529-548,666-686`; `tests/testthat/test_modBreedingGroups_livingPool.R`
-(16 blocks); `vignettes/manual_components/_breeding_group_formation.Rmd:26-40`; `NEWS.Rmd` (Breeding Group Formation, first Major bullet).
-**Gotchas:** the ratchet citation's `results` hash changes every run (compare counts and the manifest hash); the simulated Genetic Value
-ranking moves between runs, so compare a derived list with the same run's report; scratch driver and app live in the S939 scratchpad
-(`drive.R`, `app/app.R`; copy, do not rely on them); local `master` was 89 ahead of `origin` at Phase 0 and is 97 after this close-out
-(last push S923; the owner pushes; no push-only sessions); one R job at a time; write a claim stub in 2-3 lines; a BACKLOG edit shifts
-cites, so re-grep them.
+### What Session 939 Did (condensed S940; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Breeding Groups draws its pool from living animals only, for every source, before the top-N or floor cut (strict TDD): internal
+`isLivingAnimal()` (`R/isLivingAnimal.R:22`), pool step `R/modBreedingGroups.R:544`, one notice when nobody is alive. Claim `81f4c1f19`, RED
+`bc3585117`, GREEN `63518b606`, REFACTOR `7e7c1ffef`, close-out `66c6df335` (pushed; CI green). Handoff evaluation of S938: 9/10. Self 8/10.
+**Gotchas kept:** the `status` column is optional (Learning 905); the simulated Genetic Value ranking moves between runs, so compare a derived
+list with the same run's report.
 
 ### What Session 938 Did (condensed S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 A decision session, docs only: reproduced the app's default Top ranked 20 in the real app (all dead or shipped, because with no focal
