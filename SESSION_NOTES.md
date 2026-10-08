@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 938 Did
+**Deliverable:** placeholder sires in groups, `BACKLOG.md:30` (IN PROGRESS). **Started:** 2026-10-07 20:26 CDT. `CHANGELOG: pending`
+
 ### What Session 937 Did
 **Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** `NEWS.Rmd:327-331` no longer says the Production
 cell is gray "as the Inbreeding cell already was"; it says "An undefined Inbreeding cell is red, so missing data there stands out."
