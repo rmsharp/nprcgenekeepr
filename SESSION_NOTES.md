@@ -98,33 +98,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 945 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "three real pictures" and all three gates):** the guide's three Summary Statistics pictures,
-one file three times (md5 `0f0c1ceeca80`, 1270 x 7598 px, 1.8 MB each; the S942 item), are three pictures: `ss_first_view.png` the window as the tab opens (1300 x 1330),
-`ss_trimmed_all_plots.png` the block of six plots (1300 x 1422), `ss_export_mean_kinship_coefficient_histogram.png` the real file the Export button writes (800 x 600, `app$get_download()`).
-5.3 MB to 0.48 MB. Script: `vignettes/articles/colony-manager-guide-screenshots.R:387-415`; guide alt texts `colony-manager-guide.qmd:454,576,578`. **Measured first** (real app, headless probe): the
-candidate shots and the Export file, opened for the owner before the question.
-**Gate:** 7 new blocks in `tests/testthat/test_captureHarness.R` (6 red + 1 control for the PNG-size reader; the file is 42 blocks, 128 expectations). Claim `852ba501c`, RED `7a5bff54f`,
-GREEN `82e6b170a`, REFACTOR `e0ce6e865` (one `codeOf()`, one `pictureDir`), close-out = the commit carrying this note. **Verified:** full colony run 85/85 (twice), full suite 3,316 blocks, 0 failed,
-0 errors (187 skipped; 6 warnings, the same count as S944, not traced); lint 0; `check` 0/0/0; ratchet 1/1 (results c34b2dc0150d, manifest aa983075d6a2); guide renders (exit 0), 42 of 42 image links, rendered
-page opened. No hand check in Chrome; published pages not opened. `BACKLOG.md` item removed (58,158 to 56,930 B, still about 180 B over its read budget). Learning 911.
-**Went wrong:** the first window height (1400 px) left a sliver of the first plot's title, seen only after a full 8-minute run, so a second run; the control test's 7 x 5 px PNG device was too small
-to draw on and the six-plots test errored instead of failing (both fixed before the RED commit); my gate text said 6 test blocks and I wrote 7 (a control).
-**Handoff evaluation of S944: 9/10.** Helped: every `BACKLOG.md` line cite matched the file (`:57`, `:70`, `:80`, `:90`, `:30`, `:101`, `:126`, `:145`, `:166`, `:190`, `:281`); the picker list; the gotcha that
-a window picture needs `selector = "viewport"`; the size warning; counts that held (3,309 blocks, 6 warnings, 37 ahead). Missing: that the notes file had only about 130 B of room, so my stub needed four entries merged
-first; the colony script's run time (about 8 min) and that `get_download()` can fetch an export. Wrong: nothing in the handoff; the S942 item's own guide cites (`:486,488`) were stale (the figures sit at `:576,578`).
-**Self-assessment: 8/10.** + measured the claim by hash and in the real app before the question, put both options and the pictures in front of the owner, tests first with a control, a test that derives the tag id from
-the script, looked at each new picture and trimmed the first view. - two full script runs (the height could have come from the probe); the gate-count slip; two first-draft test errors.
+### What Session 946 Did
+**Deliverable:** The Genetic Value results table's leftover row numbers (`BACKLOG.md:57`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-08 16:30
+**Status:** Session claimed. Work beginning. Strict TDD; the owner decides hide-or-leave first.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on):** the docs-audit item (`BACKLOG.md:177`) holds only part 2, the owner decisions about code (`:268`). (A) Owner findings: Genetic Value row names (`BACKLOG.md:57`),
-the export-tables chunk (`:67`), the Candidate tab's missing-`fromCenter` message (`:77`), Direct-style picture (`:30`), Breeding Groups statements (`:88`). (B) Default population (`:113`, M); old-style boxes
-(`:8`, M); origin-and-funding (`:132`); `getAncestors()` (`:153`). Housekeeping: `BACKLOG.md` is about 180 B over its read budget (compression item `:514`). After a push, open the published guide and confirm the
-three Summary Statistics pictures, the retaken Marker pictures and the 3 export tables load.
-**Key files:** `vignettes/articles/colony-manager-guide-screenshots.R:387` (window, tag, download steps), `tests/testthat/test_captureHarness.R:488` (`ssPictures`, the new pins), `:497` (`blockContaining`),
-`R/modSummaryStats.R:894` (the Export histogram handler); `PROJECT_LEARNINGS.md` Learning 911.
-**Gotchas:** the colony script takes about 8 min into `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/colony-manager-guide-screenshots.R`; its summary counts steps and shots together;
-restore the 900 px window after a taller shot; the six-plot block is tagged by script (`closest('.row')`); run `Rscript` from the repo root for the guide render (renv's library); `master` is 37 ahead of
-`origin` plus this session's 5 commits (the owner pushes); keep this file under ~56,750 B.
+### What Session 945 Did (condensed S946; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The guide's three Summary Statistics pictures are three different pictures (strict TDD; owner ruled "three real pictures"): `vignettes/articles/colony-manager-guide-screenshots.R:387-415`,
+7 new blocks in `test_captureHarness.R` (42 blocks); 5.3 MB to 0.48 MB. Claim `852ba501c`, RED `7a5bff54f`, GREEN `82e6b170a`, REFACTOR `e0ce6e865`, close-out `f28369f2c`.
+Handoff evaluation of S944: 9/10. Self 8/10. **Gotchas kept:** the colony script takes about 8 min (`NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/colony-manager-guide-screenshots.R`);
+restore the 900 px window after a taller shot; `app$get_download()` fetches the Export file itself; `master` is 42 ahead of `origin` (the owner pushes).
 
 ### What Session 944 Did (condensed S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 4b (D5 ruled: script all nine): the 9 Marker Genetics pictures are retaken by `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture, 44/44 steps; data from
