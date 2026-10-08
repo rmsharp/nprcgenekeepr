@@ -332,12 +332,16 @@ test_that("start_capture_run() installs into the calling environment by default"
 scriptDir <- testthat::test_path("..", "..", "vignettes", "articles")
 colonyScript <- file.path(scriptDir, "colony-manager-guide-screenshots.R")
 diagramScript <- file.path(scriptDir, "pedigree-diagram-screenshots.R")
+pictureDir <- file.path(scriptDir, "shiny_app_use")
 
 readScript <- function(path) {
   skip_if_not(file.exists(path),
               "capture script not present (it is build-ignored)")
   readLines(path, warn = FALSE)
 }
+
+## The comment-free code of a script.
+codeOf <- function(lines) lines[!grepl("^\\s*#", lines)]
 
 ## The lines of one top-level step: from the line matching `startPattern` to
 ## the line before the next top-level do_step( / shot( call.
@@ -391,8 +395,7 @@ test_that("only the Genetic Value run step may return FALSE", {
 
 test_that("no wait_for_element() or wait_for_module_ready() result is ignored", {
   for (path in c(colonyScript, diagramScript)) {
-    lines <- readScript(path)
-    lines <- lines[!grepl("^\\s*#", lines)]
+    lines <- codeOf(readScript(path))
     calls <- grep("wait_for_(element|module_ready)\\(", lines, value = TRUE)
     for (call in calls) {
       expect_match(call, "^\\s*if \\(!wait_for_(element|module_ready)\\(",
@@ -425,7 +428,7 @@ test_that("the Diagram legend picture waits for the pop-up to clear first", {
 ## not the label. "Group 6" matches no choice and leaves the box blank (found
 ## S940: the committed picture and the retake both showed a blank box).
 viewGrpValues <- function(lines) {
-  lines <- lines[!grepl("^\\s*#", lines)]
+  lines <- codeOf(lines)
   hits <- regmatches(lines, regexpr("-viewGrp`\\s*=\\s*[^,)]+", lines))
   trimws(sub("^-viewGrp`\\s*=\\s*", "", hits))
 }
@@ -456,15 +459,13 @@ test_that("the colony script types the group's number, not its label, into the G
 ## pb_unknown_displayed.png, a same-size twin nothing displays (plan decision
 ## D2; the owner ruled "delete" in S941).
 test_that("the colony script no longer writes the unused pb_unknown_displayed.png", {
-  lines <- readScript(colonyScript)
-  code <- lines[!grepl("^\\s*#", lines)]
+  code <- codeOf(readScript(colonyScript))
   expect_false(any(grepl("pb_unknown_displayed", code)))
   expect_length(
     grep('shot\\(app, "pb_10_rows_display_unknown_ids\\.png"', code), 1L)
 })
 
 test_that("the unused pb_unknown_displayed.png is gone from the picture folder", {
-  pictureDir <- file.path(scriptDir, "shiny_app_use")
   skip_if_not(dir.exists(pictureDir),
               "picture folder not present (it is build-ignored)")
   expect_false(file.exists(file.path(pictureDir, "pb_unknown_displayed.png")))
@@ -489,9 +490,6 @@ ssPictures <- c(
   sixPlots = "ss_trimmed_all_plots.png",
   exported = "ss_export_mean_kinship_coefficient_histogram.png"
 )
-
-## The comment-free code of a script.
-codeOf <- function(lines) lines[!grepl("^\\s*#", lines)]
 
 ## The top-level do_step( / shot( statement that holds the first line matching
 ## `pattern`: from its first line to the line before the next top-level call,
@@ -561,7 +559,6 @@ test_that("the exported-histogram picture is the file the Export button writes, 
 })
 
 test_that("the three Summary Statistics pictures are three different files", {
-  pictureDir <- file.path(scriptDir, "shiny_app_use")
   skip_if_not(dir.exists(pictureDir),
               "picture folder not present (it is build-ignored)")
   sums <- tools::md5sum(file.path(pictureDir, ssPictures))
@@ -570,7 +567,6 @@ test_that("the three Summary Statistics pictures are three different files", {
 })
 
 test_that("the three Summary Statistics pictures have the sizes of what they show", {
-  pictureDir <- file.path(scriptDir, "shiny_app_use")
   skip_if_not(dir.exists(pictureDir),
               "picture folder not present (it is build-ignored)")
   size <- function(name) pngSize(file.path(pictureDir, ssPictures[[name]]))
