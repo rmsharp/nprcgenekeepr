@@ -454,30 +454,119 @@ Error"](fg-se-validation.html)).
 ![Summary Statistics, first view.](shiny_app_use/ss_first_view.png){fig-alt="Summary Statistics tab showing the first view of genetic diversity metrics."}
 
 The tab has several export buttons producing CSV files, three of which are
-illustrated below (opened in a spreadsheet program, not captured from the app
-itself, since these depict exported file contents rather than application
-UI): **Export Kinship Matrix**, **Export First-Order Relationships**, and
-**Export Female Founders** (a separate **Export Male Founders** button
-produces the same column structure for males). The tab also has **Export All
-Relationships** and **Export Relationship Classes** buttons, plus six further
-buttons for exporting the six summary plots below as PNGs, not illustrated
-here:
+shown below: **Export Kinship Matrix**, **Export First-Order Relationships**,
+and **Export Female Founders** (a separate **Export Male Founders** button
+produces the same column structure for males). These tables are not
+screenshots. This article builds them each time it is rendered, from the
+example pedigree and the same package functions the export buttons call, and
+shows each file's own contents (`NA` marks a blank value). The tab also has
+**Export All Relationships** and **Export Relationship Classes** buttons, plus
+six further buttons for exporting the six summary plots below as PNGs, not
+illustrated here:
 
-- The kinship matrix has a row and column for every analyzed individual, plus
-  a first row and first column of IDs.
+```{r}
+#| label: summary-export-tables
+#| include: false
+library(nprcgenekeepr)
 
-  ![First few rows of an exported kinship matrix CSV.](shiny_app_use/ss_kinship_matrix.png){fig-alt="Spreadsheet view of an exported kinship matrix CSV file."}
+# The pedigree the Summary Statistics tab receives for the example file: read
+# as the Input tab reads a CSV, checked with both age floors set to 2 (as in the
+# Input steps above), then given the population, pedigree-number and
+# generation columns the Pedigree Browser adds (R/modInput.R, R/modPedigree.R).
+exampleFile <- makeExamplePedigreeFile(
+  file.path(tempdir(), "Example_Pedigree.csv"), fileType = "csv"
+)
+exportPed <- runQcStudbook(
+  read.csv(exampleFile, stringsAsFactors = FALSE, na.strings = c("", "NA")),
+  minSireAge = 2, minDamAge = 2, reportChanges = TRUE
+)$cleaned
+exportPed <- setPopulation(exportPed, character(0L))
+exportPed$pedNum <- findPedigreeNumber(
+  exportPed$id, exportPed$sire, exportPed$dam
+)
+if (!"gen" %in% names(exportPed)) {
+  exportPed$gen <- findGeneration(exportPed$id, exportPed$sire, exportPed$dam)
+}
 
-- The first-order relationships file has columns `id`, `parents`,
-  `offspring`, `siblings`, and `total`, counted from known relationships.
+# The two row-based files, written with the export buttons' own lines
+# (R/modSummaryStats.R) and read back as text, the way a spreadsheet shows them.
+firstOrder <- countFirstOrder(exportPed, NULL)
+firstOrderFile <- tempfile(fileext = ".csv")
+write.csv(firstOrder, firstOrderFile, row.names = FALSE)
+femaleFile <- tempfile(fileext = ".csv")
+write.csv(exportPed[exportPed$sex == "F" & isFounder(exportPed), ],
+          femaleFile, row.names = FALSE)
+readRows <- function(path, n) {
+  read.csv(path, colClasses = "character", check.names = FALSE, nrows = n)
+}
+shownFirstOrder <- readRows(firstOrderFile, 8L)
+shownFemaleFounders <- readRows(femaleFile, 8L)
+nFirstOrder <- length(readLines(firstOrderFile)) - 1L
+nFemaleFounders <- length(readLines(femaleFile)) - 1L
 
-  ![First few rows of an exported first-order-relationships CSV.](shiny_app_use/ss_first_order_relationships.png){fig-alt="Spreadsheet view of an exported first-order relationships CSV file."}
+# The kinship file has a row and a column for every animal, so only a few cells
+# are taken: the first animal with three or more offspring and its first three
+# offspring, in the file's own order.
+kmat <- kinship(exportPed$id, exportPed$sire, exportPed$dam, exportPed$gen,
+                sparse = FALSE)
+parentId <- firstOrder$id[firstOrder$offspring >= 3L][1L]
+stopifnot(!is.na(parentId))
+offspringIds <- exportPed$id[exportPed$sire %in% parentId |
+                               exportPed$dam %in% parentId][1:3]
+shownIds <- rownames(kmat)[rownames(kmat) %in% c(parentId, offspringIds)]
+shownKinship <- kmat[shownIds, shownIds]
+nAnimals <- nrow(kmat)
+```
 
-- The founders files have columns `id`, `sire`, `dam`, `sex`, `gen`, `birth`,
-  `exit`, `age`, `ancestry`, `origin`, `status`, `recordStatus`, `fromCenter`,
-  `placeholder`, `population`, and `pedNum`.
+**Kinship matrix.** The file has a row and column for every analyzed
+individual, plus a first row and first column of IDs. Most pairs of animals are
+unrelated and show 0, so the table below shows only a corner: the first animal
+with three or more offspring (`r parentId`) and its first three offspring,
+where the values are not zero.
 
-  ![First few rows of an exported female-founders CSV.](shiny_app_use/ss_female_founders.png){fig-alt="Spreadsheet view of an exported female-founders CSV file."}
+```{r}
+#| echo: false
+knitr::kable(
+  matrix(as.character(shownKinship), nrow(shownKinship),
+         dimnames = dimnames(shownKinship)),
+  align = "r",
+  caption = sprintf(
+    "A corner of the kinship matrix file (%s rows and columns in all).",
+    format(nAnimals, big.mark = ",")
+  )
+)
+```
+
+**First-order relationships.** The file has columns `id`, `parents`,
+`offspring`, `siblings`, and `total`, counted from known relationships, one row
+per animal.
+
+```{r}
+#| echo: false
+knitr::kable(
+  shownFirstOrder, row.names = FALSE,
+  caption = sprintf(
+    "The first rows of the first-order relationships file (%s rows in all).",
+    format(nFirstOrder, big.mark = ",")
+  )
+)
+```
+
+**Founders.** The founders files have columns `id`, `sire`, `dam`, `sex`,
+`gen`, `birth`, `exit`, `age`, `ancestry`, `origin`, `status`, `recordStatus`,
+`fromCenter`, `placeholder`, `population`, and `pedNum`. The table scrolls
+sideways to show every column.
+
+```{r}
+#| echo: false
+knitr::kable(
+  shownFemaleFounders, row.names = FALSE,
+  caption = sprintf(
+    "The first rows of the female-founders file (%s rows in all).",
+    format(nFemaleFounders, big.mark = ",")
+  )
+)
+```
 
 Six plots -- histograms and boxplots of kinship coefficients, their Z-scores,
 and genome uniqueness scores -- are shown together and can each be exported

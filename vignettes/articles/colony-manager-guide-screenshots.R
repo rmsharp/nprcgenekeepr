@@ -385,15 +385,16 @@ shot(app, "ss_trimmed_all_plots.png", selector = "#summaryStats-moduleContainer"
 shot(app, "ss_export_mean_kinship_coefficient_histogram.png",
      selector = "#summaryStats-moduleContainer")
 
-## NOTE -- three files this script deliberately does NOT touch, a Phase B
-## correction to Phase A's own "regenerate as-is" disposition for them:
-## ss_kinship_matrix.png, ss_first_order_relationships.png, and
-## ss_female_founders.png illustrate the CONTENTS of an exported CSV opened
-## in a spreadsheet program ("The first few rows of such a file are shown
-## below" -- the now-retired ColonyManagerTutorial.Rmd's original L549,
-## L564, L580), not app UI -- shinytest2::AppDriver cannot produce these,
-## and they are unaffected by the Shiny-module migration. The sibling
-## examplePedigreeTutorial.png / examplePedigreeTutorial_with_alleles.png
+## NOTE -- the three exported-file illustrations (the kinship matrix, the
+## first-order relationships and the female founders files) are not pictures
+## any more. They were screenshots of an exported CSV opened in a spreadsheet
+## program (not app UI, so shinytest2::AppDriver could not produce them) and
+## went stale: measured S943, the first-order picture matched 0 of its 22 rows
+## against what the Export First-Order Relationships button writes. The guide
+## now builds them when it renders, in its chunk labelled
+## `summary-export-tables`, and tests/testthat/test_guideExportTables.R fails
+## if what the guide shows stops equalling what the export buttons write. The
+## sibling examplePedigreeTutorial.png / examplePedigreeTutorial_with_alleles.png
 ## files (same category, static data-file illustrations) were deleted in
 ## Session 398 once retiring ColonyManagerTutorial.Rmd left them with zero
 ## references anywhere in the repo.
