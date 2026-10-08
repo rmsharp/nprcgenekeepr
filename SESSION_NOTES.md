@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 944 Did
+**Deliverable:** docs-audit slice 2, Phase 4b, the 9 Marker Genetics guide pictures (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4). **Started:** 2026-10-08. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 943 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled D4 "build the tables in the guide"):** docs-audit slice 2,
 Phase 4a. The 3 spreadsheet pictures are deleted; one hidden chunk, `summary-export-tables` (`colony-manager-guide.qmd:468`), rebuilds the app's pedigree and
@@ -363,26 +366,14 @@ S904: 9/10. Self 8/10. **Gotchas kept:** to run a test file against another fixt
 `testthat::test_file()`; put R code containing `\s` in a script file; the QC'd copy has `sex` as a factor, `birth` as `Date` and two extra
 columns (`recordStatus`, `placeholder`).
 
-### What Session 904 Did (condensed S905; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Pushed S903's 2 local commits (`6f4733c78..42b4fb0b8`, a fast-forward, by SHA) at the owner's pick; all 3 changed files were on the
-21-entry `paths-ignore` list and **no CI run started** (nothing for `42b4fb0b8` 65 s later, a control on `f43ff9501` listed 4, the newest 4
-still S899's): the fifth confirmation. Claim `64ef6bf03`, close-out `5ec2d5ebb` (still local; the owner ruled in S905 to stop offering a
-push-only session). Handoff evaluation of S903: 9/10. Self 8/10.
+### Sessions 902-904 (condensed S905 and S944; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Three push-only sessions, each a fast-forward by SHA at the owner's pick (S902 `529bb031b..7acce42cf`, S903 `7acce42cf..6f4733c78`,
+S904 `6f4733c78..42b4fb0b8`); every changed file was on the 21-entry `paths-ignore` list and **no CI run started** (the third, fourth and
+fifth confirmations). Claims `ee54ef006`, `ee5632c86`, `64ef6bf03`; close-outs `6f4733c78`, `42b4fb0b8`, `5ec2d5ebb`. Handoff evaluations
+9/10 each, self 8/10 each. The owner ruled in S905 to stop offering push-only sessions.
 **Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date ledger entries by
 local time (`date`), not UTC; push by SHA so the claim commit stays local; a `sleep N; <query>` as the `run_in_background` command itself
 re-invokes the session on exit.
-
-### What Session 903 Did (condensed S904; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Pushed S902's 2 local commits (`7acce42cf..6f4733c78`, a fast-forward, by SHA) at the owner's pick; all 3 changed files were
-on the 21-entry `paths-ignore` list and **no CI run started** (nothing for `6f4733c78` 60 s later, a control on `f43ff9501`
-listed 4, the newest 4 still S899's): the fourth confirmation, and the first measured on that exact range. Claim
-`ee5632c86`, close-out `42b4fb0b8` (pushed S904). Handoff evaluation of S902: 9/10. Self 8/10.
-
-### What Session 902 Did (condensed S903; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Pushed S901's 4 local commits (`529bb031b..7acce42cf`, a fast-forward, by SHA) at the owner's pick; all 6 changed files were
-on the 21-entry `paths-ignore` list and **no CI run started** (nothing for `7acce42cf` 60 s later, a control on `f43ff9501`
-listed 4, the newest 4 still S899's): the third confirmation. Claim `ee54ef006` (amended once, to fix its UTC date),
-close-out `6f4733c78` (pushed S903). Handoff evaluation of S901: 9/10. Self 8/10.
 
 ### What Session 901 Did (condensed S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Characterized the 10 red shard verify scripts (of 54): none is a real loss; reported upstream as `KJ5HST/methodology#93`
