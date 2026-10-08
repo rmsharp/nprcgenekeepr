@@ -127,7 +127,7 @@ which 20 show by default. (B) Docs-audit slice 2 (`:118`): D2, D3, then Phases 3
 `R/setPopulation.R:30-39`; `R/groupAddAssign.R:91-97` (last list element = unused candidates).
 **Gotchas:** to read the app's shared state, use a scratch `app.R` outside the repo (Learning 904) and start `Rscript` from the repo
 directory; the groups list ends with unused candidates; `data-ready` never resets, so reset it before each Form Groups click; local
-`master` is 87 ahead of `origin` with this commit (last push S923, `7d85f4b89`; the owner pushes; no push-only sessions); one R job at a
+`master` was 86 ahead of `origin` at Phase 0, before S938's two commits (last push S923, `7d85f4b89`; the owner pushes; no push-only sessions); one R job at a
 time; write a claim stub in 2-3 lines and condense the newest section at close-out; a BACKLOG edit shifts cites, so re-grep them.
 
 ### What Session 937 Did (condensed S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
