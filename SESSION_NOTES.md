@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 945 Did
+**Deliverable:** the Summary Statistics duplicate-pictures item (`BACKLOG.md:57`): the guide's three Summary Statistics pictures (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4). **Started:** 2026-10-08. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 944 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled D5 "script all nine"):** docs-audit slice 2, Phase 4b. The 9 Marker Genetics
 pictures come from a new script, `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture, 44/44 steps); its five made-up data sets come from
@@ -516,27 +519,14 @@ record 8, `71b1ce4c0`); claim `a5cc50a5d`. Handoff evaluation of S885: 9/10. Sel
 open count by script (43 ids, `\**` for bold, subtract closure rows and "CLOSED" decision rows); BACKLOG PED_GV lines
 24-25 are very long: edit them with short single-line `old_string`s.
 
-### What Session 885 Did (condensed S886; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-11 PED_GV audit ids already fixed in code closed (Closure record 7, `482729a74`); BACKLOG count corrected 28 -> 15.
-Claim `c618eaab3`. Handoff evaluation of S884: 8/10. Self 8/10.
-**Gotchas kept:** recompute the open count from the report's table, never carry it; attribute a fix with
-`git log -S'<old text>' -- <file>`, since an audit id never appears in a commit message.
-
-### What Session 884 Did (condensed S885; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Tracked `kinship2-fidelity-validation.pdf` deleted (`4e7bb2725`) and `trackC-nprc-rectilinear.png` regenerated (`5bbad09e3`)
-by owner choice; claim `61b8978e8`. Handoff evaluation of S883: 9/10. Self 8/10.
-**Gotchas kept:** the generator `data-raw/kinship2FidelityValidation.R` writes all 8 images and hard-codes `outDir` (line 67):
-review a copy with `outDir` redirected and copy only the changed file; `git show HEAD:<png>` gives the committed image.
-
-### What Session 883 Did (condensed S884; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Stale `@noRd` roxygen of `.addRectilinearWaypoints()` fixed at `R/makePedigreeDiagramData.R:2109-2113` (comment only; parsed
-code identical). Claim `5fa503303`; deliverable `13ab22bc1`. Handoff evaluation of S882: 9/10. Self 8/10.
-**Gotchas kept:** the BACKLOG docs-audit item is one very long line per cluster: edit it with short single-line `old_string`s.
-
-### What Session 882 Did (condensed S883; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Stale "defaulting to direct" comment in `R/modPedigree.R:459-462` fixed (parsed code identical) and BACKLOG's stale BB14 note
-corrected. Phase 0 backfill `9a1224603`; claim `1cd71ab9c`; deliverable `67c83def8`. Handoff evaluation of S881: 7/10. Self 8/10.
-**Gotchas kept:** a single-line grep for "default ... direct" misses comments that wrap; read the comment lines that name the old value.
+### Sessions 882-885 (condensed S886 and S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Four small docs sessions: S882 fixed a stale "defaulting to direct" comment (`R/modPedigree.R:459-462`) and BACKLOG's BB14 note; S883 the
+stale `@noRd` roxygen of `.addRectilinearWaypoints()` (`R/makePedigreeDiagramData.R:2109-2113`); S884 deleted the tracked
+`kinship2-fidelity-validation.pdf` and regenerated `trackC-nprc-rectilinear.png` (owner choice); S885 closed 11 PED_GV ids already fixed in
+code (BACKLOG count 28 -> 15). Claims `1cd71ab9c`, `5fa503303`, `61b8978e8`, `c618eaab3`. Handoff evaluations 7, 9, 9 and 8/10; self 8/10 each.
+**Gotchas kept:** a one-line grep for "default ... direct" misses wrapped comments; `data-raw/kinship2FidelityValidation.R` writes all 8 images
+and hard-codes `outDir` (line 67), so review a copy with `outDir` redirected; recompute an open count from the report's table, never carry it;
+attribute a fix with `git log -S'<old text>' -- <file>`.
 
 ### What Session 881 Did (condensed S882; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `getPotentialParents()` split into five internal helpers in `R/getPotentialParentsHelpers.R` (PED-4, NEW-54 closed; output
