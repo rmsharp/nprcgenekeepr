@@ -662,6 +662,11 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           .effectiveAncestryRules(ancestryRulesRun, ancestryOverridesRun)
         }
 
+        # What a blocked or failed run returns: one candidate with no groups.
+        noGroupsResult <- list(
+          candidates = list(list(group = list(character(0L)), score = 0L))
+        )
+
         # Run the MIS-based group formation algorithm. When any seed ID is not
         # in the pedigree, block formation with a clear notification rather than
         # forming a group with a phantom member.
@@ -671,7 +676,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
             type = "error",
             duration = 10L
           )
-          list(candidates = list(list(group = list(character(0L)), score = 0L)))
+          noGroupsResult
         } else if (length(rawPool) == 0L) {
           showNotification(
             paste0("None of the ", poolSize, " animals in this source is ",
@@ -679,7 +684,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
             type = "error",
             duration = 10L
           )
-          list(candidates = list(list(group = list(character(0L)), score = 0L)))
+          noGroupsResult
         } else {
           tryCatch({
             groupAddAssign(
@@ -708,9 +713,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               type = "error",
               duration = 10L
             )
-            list(candidates = list(
-              list(group = list(character(0L)), score = 0L)
-            ))
+            noGroupsResult
           })
         }
 

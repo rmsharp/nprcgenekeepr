@@ -290,3 +290,20 @@ test_that("a blank Status column means nobody is alive, whatever the exit date",
   expect_length(rec$notes, 1L)
   expect_true(any(grepl("None of the 14 animals", rec$texts(), fixed = TRUE)))
 })
+
+test_that("a formation error shows its notice and forms no groups", {
+  skip_on_cran()
+
+  # Green-at-HEAD coverage (NOT a RED), added with the S939 REFACTOR that
+  # shares the "no groups" result between three paths: no existing test reached
+  # the formation-error path. Exhaustive mode needs exactly one group, so two
+  # groups make groupAddAssign() stop and the tab reports it.
+  ped <- lpPed()
+  rec <- lpNotices(ped)
+
+  got <- lpCandidates(ped, animalSource = "all", exhaustive = TRUE)
+
+  expect_length(got$groups, 0L)
+  expect_true(any(grepl("Could not form breeding groups", rec$texts(),
+                        fixed = TRUE)))
+})
