@@ -422,7 +422,10 @@ modGeneticValueServer <- function(id, pedigree,
       req(gvaView())
       data <- gvaView()
       if (input$topN < nrow(data)) data <- data[1L:input$topN, ]
-      data
+      # No row names: the report is reordered above, so they would be an
+      # unlabeled column of leftover positions, not the rank (the rank column
+      # is the last one). The Export buttons already write none.
+      DT::datatable(data, rownames = FALSE)
     })
 
     output$gvSummary <- renderTable({
