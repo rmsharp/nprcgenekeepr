@@ -102,7 +102,7 @@ suppressWarnings(getSiteInfo())
 #> [1] "#22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm8df0l"
+#> [1] "runnervmmprz5"
 #> 
 #> $machine
 #> [1] "x86_64"
@@ -170,7 +170,7 @@ getSiteInfo(expectConfigFile = FALSE)
 #> [1] "#22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm8df0l"
+#> [1] "runnervmmprz5"
 #> 
 #> $machine
 #> [1] "x86_64"

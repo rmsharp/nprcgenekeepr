@@ -198,6 +198,12 @@ a fixed seed already makes `gu` bit-identical run to run; that is
 reproducibility of the *process*, whereas this function reports the
 sampling reproducibility of the *estimate*.
 
+The population of interest (see `pop`) must hold at least 2 animals, as
+for
+[`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
+With fewer, `gvaConvergence` stops before doing any calculation, with a
+message giving the number of animals.
+
 ## See also
 
 [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),

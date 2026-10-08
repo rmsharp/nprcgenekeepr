@@ -49,10 +49,14 @@ runQcStudbook(
 
 - reportChanges:
 
-  logical whether to report column name changes in the result (default
-  FALSE). When TRUE, `changedCols` and `hasChangedCols` in the qcResult
-  report all renamed columns, while `warnings` lists only the case and
-  space changes.
+  logical whether to put notices in the result (default FALSE). When
+  TRUE, `changedCols` and `hasChangedCols` in the qcResult report all
+  renamed columns, while `warnings` lists the case and space changes
+  and, when animals in the cleaned pedigree have no birth date, one
+  warning, "Animals with no birth date", that says how many. That
+  warning is a notice only: it never makes `hasErrors` TRUE, and it is
+  left out when errors were found, because no cleaned pedigree exists
+  then. When FALSE, `warnings` is empty.
 
 ## Value
 

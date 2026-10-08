@@ -154,6 +154,15 @@ an <code>ancestry</code> column: each consumer (formation here,
     <p>The module supports multiple configuration options:</p><ul><li><p><strong>Animal source</strong>: "Top ranked", "Upload list" or "All
 available". "Upload list" has no upload control and currently behaves
 exactly like "All available"</p></li>
+<li><p><strong>Living animals only</strong>: Every source draws only on animals
+that are alive: those with a <code>status</code> of <code>ALIVE</code> when the
+pedigree has a <code>status</code> column, otherwise those with no
+<code>exit</code> date, and every animal when it has neither column. The cut
+to the top N animals or the genetic-value floor comes after this, so
+"Top ranked" takes the best-ranked living animals. When no animal in
+the source is alive the tab shows an error notice and forms no groups.
+Animals typed into a seed group are not drawn from this pool and are
+accepted as typed</p></li>
 <li><p><strong>Inclusion criterion</strong>: Include animals by "Top N ranked"
 (with the number of top animals) or "Genetic-value floor"</p></li>
 <li><p><strong>Group counts and ages</strong>: The number of groups and the

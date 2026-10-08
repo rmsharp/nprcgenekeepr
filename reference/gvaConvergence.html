@@ -223,6 +223,9 @@ of reproducibility at <code>N</code>. This changes nothing about seeding: a fixe
 seed already makes <code>gu</code> bit-identical run to run; that is
 reproducibility of the <em>process</em>, whereas this function reports the
 sampling reproducibility of the <em>estimate</em>.</p>
+<p>The population of interest (see <code>pop</code>) must hold at least 2 animals, as
+for <code><a href="reportGV.html">reportGV</a></code>. With fewer, <code>gvaConvergence</code> stops before
+doing any calculation, with a message giving the number of animals.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

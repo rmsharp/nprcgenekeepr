@@ -14168,3 +14168,631 @@ unquoted `$VAR` (use `${=VAR}`; two runs failed with “`path` does not
 exist”); a `nohup ... &` started inside a `run_in_background` shell
 reports “completed” when that launcher exits, not when the job does
 (check `pgrep` and the output file).
+
+#### Learning 889
+
+**To price a “make it work” option, patch the shared sites in memory one
+failure at a time until the call succeeds; one error message is not one
+cause.** (S924, 2026-10-06.) The BACKLOG item read as one cause
+([`rowSums()`](https://rdrr.io/r/base/colSums.html) on a single row in
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)),
+so “return a one-row report” looked like a one-line fix. Measured on
+`examplePedigree` and `qcPed`: all 327 one-animal populations fail the
+same way and 2 or 3 animals run; none fails in
+[`alleleFreq()`](https://github.com/rmsharp/nprcgenekeepr/reference/alleleFreq.md)
+with another message; a lone living founder (the app’s own path: one
+living animal gives a one-row trimmed pedigree) fails in
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md);
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+fails with “incorrect number of dimensions”. Patching
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md)
+(a matrix back for one animal) in the loaded namespace let
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
+and
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+through, then
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+failed again in `calcFounderContributions()` (`d[currentDesc, ]` drops
+to a vector, [`colMeans()`](https://rdrr.io/r/base/colSums.html));
+patching that too gave one row (genome uniqueness 100, mean kinship 0.5,
+z-score NaN, rank 1, “High Value”). Those counts went into the option
+text, so the owner chose the message knowing the other option’s real
+cost. **(1)** Step the patch until the call succeeds before saying how
+wide a fix is; I had drafted “a third place” for
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+and the next probe showed
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md)
+alone fixed it (caught before it reached the owner). **(2)** One check
+placed right after the population is worked out cured four failures (one
+animal, none, a lone founder,
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
+because it sits ahead of every function that fails; the mutation that
+moves the call after the kinship step fails exactly the one-row-pedigree
+test, which pins the placement. **(3)** A calling handler placed outside
+an inner [`tryCatch()`](https://rdrr.io/r/base/conditions.html) never
+runs (the exiting handler wins); to capture the stack put
+[`withCallingHandlers()`](https://rdrr.io/r/base/conditions.html) inside
+[`tryCatch()`](https://rdrr.io/r/base/conditions.html) (my first stack
+probe printed nothing). **(4)** Measure the “still runs” pins on today’s
+code first (both ran), so they pin unchanged behaviour instead of a
+guess.
+
+#### Learning 890
+
+**Before offering “one check per function” for a degenerate input, read
+the failing functions for a shared cause; three one-line shape fixes
+beat a check in each of eight functions.** (S925, 2026-10-06.) The S924
+BACKLOG item offered three options for one-animal input to
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+and
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+(leave them, a message in each, or the one-animal value, “wider than it
+looks”), and my first explanation at the picker repeated them; the owner
+asked for “a more robust cleaner solution”. Reading the functions showed
+one cause, R’s default simplification of a one-row result to a bare
+vector: [`apply()`](https://rdrr.io/r/base/apply.html) in
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+`kmat[1L:n, 1L:n]` in
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
+`d[currentDesc, ]` in `calcFounderContributions()` (the same class S923
+fixed in
+[`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)).
+Fixing those three lines made eight exported functions work for one
+animal
+([`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
+and
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+were broken too and not listed) and covered every caller, the app’s four
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+calls included, with 18 of 18 results for 2+ animals byte-identical;
+S924’s message stays in
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+for a reason that is now explicit (one animal gives a z-score of NaN).
+**(1)** “Wider than it looks” was the same cause showing up twice: count
+causes, not failing call sites. **(2)** A tempting nearby cleanup can be
+load-bearing:
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)’s
+`1L:max(pdepth)` runs at depth 0 when every animal is a founder, the
+only pass that applies the MZ-twin correction to twin founders;
+[`seq_len()`](https://rdrr.io/r/base/seq.html) turns their kinship 0.5
+into 0 (measured). **(3)** A wrap-and-compare regression check
+([`tryCatch()`](https://rdrr.io/r/base/conditions.html) both runs, then
+[`identical()`](https://rdrr.io/r/base/identical.html)) reports
+“identical” when both runs failed the same way; my
+`gvaConvergence(qcPed, guIter = 20L)` check “passed” because the
+function has no `guIter` argument. Print each run’s status before
+trusting the comparison. **(4)** When a picker option is the leftover of
+the previous session’s pick, say so in the option: the owner bounced the
+picker to ask.
+
+#### Learning 891
+
+**A paragraph typed by hand into four files needs a test that compares
+the copies, and the website copy’s colon is a YAML rule, not a style
+choice.** (S926, 2026-10-06.) `DESCRIPTION`’s Description was typed by
+hand into the help page, `_pkgdown.yml` and `CITATION.cff`; S830
+(`73c00d1ec`) reworded it in two of the four and the other two stayed
+behind for 96 sessions with nothing to say so (`devtools::check()` is
+0/0/0 either way). `tests/testthat/test_descriptionCopies.R` now
+compares each copy with `DESCRIPTION`, line breaks ignored
+([`yaml::read_yaml()`](https://yaml.r-lib.org/reference/read_yaml.html)
+for the two YAML files, a line scan for the Rd file; each test skips
+where its file is not shipped). Mutation 4 of 4. Two traps: (1)
+`_pkgdown.yml` writes “functions -” where `DESCRIPTION` writes
+“functions:” because a plain multi-line YAML value cannot hold a line
+ending in a colon (measured: “mapping values are not allowed in this
+context”); the value is now a folded block (`>-`), which parses to the
+exact `DESCRIPTION` text, so “give the copy the same wording” needed a
+YAML-style change, not a word change; (2) `read.dcf(...)[1, 1]` carries
+the name “Description”, so
+[`identical()`](https://rdrr.io/r/base/identical.html) against a text
+built without [`paste()`](https://rdrr.io/r/base/paste.html) or
+[`unname()`](https://rdrr.io/r/base/unname.html) says FALSE for equal
+strings (my first independent pkgdown check did exactly that; the
+strings were equal, 1,120 characters each). Tests that call `yaml::`
+need `yaml` in `Suggests` or `R CMD check` warns; it was already in
+`renv.lock` through pkgdown. **How to apply:** when a BACKLOG item says
+“give copy N the same wording”, check that the copy’s file format can
+hold that wording before promising it; when one text lives in several
+files, test the copies against the one source instead of listing the
+copies in a BACKLOG item.
+
+#### Learning 892
+
+**A shinytest2 page that stays `shiny-busy` while the server sits at 0%
+CPU is a dead session, and the server’s stderr names the cause; the
+`wait_for_idle` timeouts and “Server did not update any output values”
+messages are symptoms.** (S927, 2026-10-06.) S821 wrote that the colony
+capture script’s tail “fails the same way every time” and left open
+whether the app hung or the waits were too short. Four cheap probes
+settled it: `ps` on the app server process (0.0% CPU), `sample <pid> 3`
+on macOS (main thread in the normal event wait: not computing, not
+blocked), `as.data.frame(app$get_logs())` filtered to
+`location == "shiny"` (a `Warning: Error in [: subscript out of bounds`
+whose stack ends in an `observe()`), and
+`document.getElementById('shiny-disconnected-overlay')` plus
+`Shiny.shinyapp.$socket` (overlay present, socket gone: Shiny ends a
+session on an unhandled observer error). Changing one factor at a time
+(fixture, Genetic Value run first or not, source) found the trigger in
+three runs, which reading code would not have. Traps in the same files:
+`click_element_safe()` turns its own timeout into `FALSE` and
+`do_step()` ignores that value, so a timed-out step logs as success; the
+`data-ready` attribute is a one-way latch (nothing in `R/` resets it),
+so `wait_for_module_ready()` returned in 0 s for every formation after
+the first; the E2E tests use the small rhesus fixture and pass while the
+shipped example pedigree crashes, so a green E2E run says nothing about
+the large example; `app$get_value()` returned a 404 once the session had
+ended (a symptom, not missing test mode: the server log says “Running
+application in test mode”). **When to use:** any wait timeout or “did
+not update” message that repeats at every step after one particular
+action: stop tuning waits and read the server log first. Read an input
+from the browser with `app$get_js("Shiny.shinyapp.$inputValues.<id>")`.
+Evidence: `docs/planning/docs-audit-slice2-screenshot-plan.md` (“The
+tail failure, explained”, Appendix B).
+
+#### Learning 893
+
+**When a function-call model of an app bug disagrees with the app,
+capture the real arguments from the running app instead of refining the
+model.** (S928, 2026-10-06.) S927 left the session-ending crash with its
+cause “not determined” and a suspect list (S923-S925’s shape changes).
+Four function-call models of it (living-only kinship matrix, threshold
+0.015625, un-reranked report) each gave a different answer from the app:
+“Top ranked” was fine in the model and crashed in the app, and “All
+available” gave “kmat is missing kinship” where the app gave
+`subscript out of bounds`. The model had three silent differences: the
+app’s pedigree already carries a `population` column, so its Genetic
+Value matrix is the full 3,694 x 3,694 and not the 1,704 living animals;
+the Breeding Groups default threshold is 0.25; and the Genetic Value tab
+re-ranks the report (`R/modGeneticValue.R:383-390`), which is what puts
+the animals of unknown birth in the top 20. What settled it in one run
+was a scratch `app.R` outside the repo
+([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+on the working tree, then
+[`unlockBinding()`](https://rdrr.io/r/base/bindenv.html) and
+[`assign()`](https://rdrr.io/r/base/assign.html) on the target in the
+namespace to [`saveRDS()`](https://rdrr.io/r/base/readRDS.html) its
+arguments before calling the original), driven with the plan’s Appendix
+B snippet; `AppDriver$new()` accepts that folder. The saved arguments
+showed 20 of 20 animals with no birth date. **The cause was an `NA` in a
+logical subscript:** `group$id[sex == "F" & age >= 3]` keeps an `NA` for
+an unknown age, and `kmat[NA_character_, ...]` is
+`subscript out of bounds`;
+[`which()`](https://rdrr.io/r/base/which.html) drops it. The line dates
+from 2026-07-05, so S927’s “bisect from S923-S925” would have found
+nothing. The “trigger” S927 recorded (a Genetic Value run first, the
+example pedigree) was a symptom: the heat map needs the Genetic Value
+results, and the example has 1,432 of 3,694 animals with no birth date;
+the small rhesus fixture has 85 of 375 without one, its test groups just
+never contain one. **When to use:** any bug seen only in the running
+app; capture first, model second. Related: Learning 892.
+
+#### Learning 894
+
+**A `testServer()` session closes on an unhandled observer error but not
+on an output error, so a test can tell the two apart; patch a function
+for such a test by passing it in, not by assigning into the namespace.**
+(S928, 2026-10-06.) The Genetic Diversity module has a background
+`observe()` whose only job is to tell the end-to-end tests the heat map
+is ready (`R/modGeneticDiversity.R:138-144`); an error in it ends a real
+user’s session, while an error in `output$heatmap` is shown in the tab.
+Shiny’s mock session mirrors this: `defineOutput()` reports an output
+error with `unhandledError(e, close = FALSE)` and an `observe()` error
+with the default `close = TRUE`, so `session$flushReact()` then
+`session$isClosed()` is a faithful check (TRUE today, FALSE with the
+fix, FALSE for good data). Two traps measured while proving that: after
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+the namespace binding and the attached `package:` copy of an exported
+function are different objects, so
+`assign("modGeneticDiversityServer", patched, envir = asNamespace(...))`
+changed nothing for a test that calls `modGeneticDiversityServer` from
+the global search path (pass `patched` to `testServer()` directly); and
+once the session is closed, reading a reactive raises
+`shiny.destroyed.error` (“module session has been destroyed”), not the
+original message, so assert the original message only after asserting
+the session is still open. A function-call test of the cause
+(`getKinshipWithMaleStatus()` with an `NA` age) is the fast regression
+guard; this one covers the “no error may end the session” property that
+the first cannot. Related: Learning 893.
+
+#### Learning 895
+
+**Probe the Chrome extension at Phase 0 before offering an option that
+needs it; when it is not connected, hand the owner the exact clicks and
+a running app.** (S929, 2026-10-07.) S928 left the by-hand browser check
+as “the owner, or a session whose Chrome extension is connected”, and
+the S929 picker offered it first (“not checked this session”) and
+recommended it. The extension was not connected again
+(`list_connected_browsers` returned `[]`; `tabs_context_mcp` said
+“Browser extension is not connected”), so the recommended option could
+not be done as offered; one probe call at Phase 0 would have said so.
+The check still got done in a few minutes: the session started the
+working-tree app and listed the clicks, and the owner sent screenshots.
+What worked: a scratch launcher outside the repo
+([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+on the working tree, then
+`runGeneKeepR(port = 6013L, launch.browser = FALSE)`), started with
+plain `Rscript` **from the repo directory** (from the scratchpad it
+stopped with “The package quadprog is required”, because `.Rprofile`
+sources `renv/activate.R` only when R starts in the repo); Gene Drop
+Iterations has a minimum of 100 (`R/modGeneticValue.R:39-41`); the Input
+tab takes `inst/extdata/examples/ExamplePedigree.csv` (3,694 records, 0
+errors, 0 warnings), which is the upload path, not S928’s data-object
+path. Evidence read from the owner’s screenshots and then checked on the
+server: the heat map is server-rendered, so a drawn map proves a live
+session; `lsof -nP -iTCP:6013` showed Chrome’s connections ESTABLISHED;
+the app’s log had no error line; the colours matched what `BACKLOG.md:8`
+had predicted for the Production cell (gray, red, red), and Inbreeding
+red for every group is the documented score for a group with no
+breeding-age females (`R/getGeneticDiversityStats.R:18-21`), not a
+second symptom. What the screenshots did not show (the Genetic Value
+step, the “All available” source) is recorded as unseen, not as passed.
+**When to use:** any picker option that needs the Chrome extension: run
+`list_connected_browsers` at Phase 0, say in the option text whether it
+connected, and if not offer it as an owner action with the clicks.
+Related: Learning 893.
+
+#### Learning 896
+
+**A harness that records only success cannot show it works: measure what
+it hides before changing it, and test its reporting against a stand-in
+for the browser.** (S930, 2026-10-07.) Phase 2’s “done” test (every step
+succeeds, no idle-wait timeout) was already true before any change: two
+runs of the colony screenshot script on the S928-fixed tree gave 81/81
+in 92.6 s and 92.1 s. The old `do_step()` threw away the value of its
+last action, so a click that timed out (`click_element_safe()` returns
+FALSE) or a wait that returned FALSE could not show. Timing wrappers on
+a scratch copy (one PROBE line per helper call, no behaviour change)
+showed what was hidden: the Genetic Value run click returns FALSE after
+exactly 30.0 s every run (expected), the other 10 clicks settle in
+0.5-5.1 s, and 5 of 6 `wait_for_module_ready()` calls return in 0.0 s
+because the click’s own idle wait had already finished the work. The
+ready-marker reset works in a real page (a stale marker: the wait
+returns in 0.00 s; after `reset_module_ready()` the marker reads false
+and the wait waits 0.51 s) but changes nothing in a run on this machine,
+since each formation ends inside the click’s own idle wait; the GREEN
+gate’s promise that the waits would “now take real time” was a
+prediction the probe did not bear out, so say what a probe showed, not
+what the design predicts. **To test a top-level script under strict
+TDD,** move its recording code into a sourced helper
+(`tests/testthat/helper-captureHarness.R`) and drive it with a stand-in
+`app` (a list of the few `AppDriver` methods it calls): 31 tests in
+about a second, plus script-text pins that skip where the build-ignored
+scripts are absent (`devtools::check()` 0/0/0 confirms they skip). A
+regex scan of R source for `do_step` blocks mis-parsed an apostrophe
+inside a comment as a string; read the 11 click sites by hand. **When to
+use:** any capture or end-to-end driver whose summary says “all passed”:
+ask what it would say if the page were slow.
+
+#### Learning 897
+
+**Before offering options about a group of records, count the one
+attribute the owner will ask about first; and write a rule that two
+places must agree on once.** (S931, 2026-10-07.) The Production-cell
+item (a female with no birth date counted as a breeding-age mother,
+found S928) went to the owner as “leave them out, or keep today’s
+count”. The owner’s first question, “Are these animals that have no
+offspring?”, had not been measured: in the shipped example pedigree 27
+of the 31 females with no birth date are listed as the dam of at least
+one animal (1 to 14 each, 171 offspring, every offspring with a birth
+date), 4 have none, and none of the 31 is ALIVE. The premise under
+“leave them out” was weaker than I had presented it, and the owner’s
+ruling was a third option I had not offered: a female with no birth date
+counts only if the pedigree lists an offspring for her. Two question
+boxes were declined before a plain-prose measurement answered it. **What
+to do:** when a decision is about a class of records, count the class
+and its obvious attributes (offspring? alive? exited?) before writing
+options. **Also:** the rule and the note’s “counted / left out” numbers
+were written twice at GREEN and moved into one internal function at
+REFACTOR (`isCountedMotherWithoutBirthDate()`,
+`R/isCountedMotherWithoutBirthDate.R`), so the note cannot describe a
+count the cell does not use. `testServer()` errors when a test reads an
+output that is not defined yet (“The test referenced an output that
+hasn’t been defined yet”), so a “no note” test fails before the output
+exists instead of passing without checking anything. **The real-app
+run** (the colony guide script into a scratch folder, 81 of 81 steps)
+showed the note under the heat map: all 20 animals in the six groups
+lack a birth date, 0 mothers counted, Production gray in all six groups.
+The guide’s picture `genetic_diversity_heatmap.png` does not show the
+note yet (docs-audit Phase 3c retakes it). **When to use:** any option
+list about a subset of records; any figure shown in two places.
+
+#### Learning 898
+
+**A BACKLOG item’s list of routes can leave out a mechanism the app
+already has: read the neighbouring display code before turning the list
+into a question, and write down which definition a word like “living”
+uses.** (S932, 2026-10-07.) The Input-tab warning item (found S931)
+offered two routes, “a new `errorLst` category or a separate notice”.
+Reading `qcSummaryUI` and
+[`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)
+(`R/modInput.R:575-641`, `R/processQcStudbookResult.R:197`) before
+drafting the options showed a third that already exists and is the
+cheapest: the QC Summary’s Warnings count and the Warnings sub-tab, fed
+by the `warnings` table of
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+(today used for two column-name changes only). A new `errorLst` field
+would have needed
+[`checkErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkErrorLst.md)
+to open an Error List tab for the shipped example, where 1,432 of 3,694
+animals have no birth date. The owner took all three recommended options
+in one answer and no box was declined, because the class was counted
+first (Learning 897): all 1,432 are founders with no listed parents,
+1,401 are male, 1,399 are a parent of someone, none has status ALIVE.
+**“Living” has two meanings here:** no exit date
+(`R/getPyramidAgeDist.R:60`, the Age-Sex Pyramid article) gives 1,372 of
+1,704; `status == "ALIVE"` gives 0 of 332. A warning that counted only
+living animals would have been loud under one meaning and silent on the
+example under the other, so option text named the meaning. **A
+measurement script’s column matcher is a claim:** mine matched `birth`,
+`birth_date`, `birthdate` and `Birth`, so it reported `pedSix` (column
+`Birth Date`) as having no birth column; I measured it (8 of 8 present)
+before “the small pedigrees have none” went into the backlog. Match with
+`grep("^birth", names(d), ignore.case = TRUE)` and print what each file
+matched. **When to use:** any item that lists implementation routes; any
+count over “living”, “active” or “current” animals; any fixture sweep by
+column name.
+
+#### Learning 899
+
+**A number or a colour written into the docs from a test on one fixture
+is a claim about another: run the flow the docs describe, and list the
+readers of a count before adding to it.** (S933, 2026-10-07.) Building
+the Input-tab warning, three premises inherited from the S932 ruling
+failed in the real app. **(1) Which example:** the backlog said the
+shipped example “passes with 0 errors and 0 warnings”. That is
+`inst/extdata/examples/ExamplePedigree.csv`. The guide and its capture
+script use
+[`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md),
+which writes the `examplePedigree` data object with camel-case columns
+(`recordStatus`, `fromCenter`), and that file already carried a “Column
+name case changed” warning, so the guide’s “Warnings: 1” was true before
+and the app now shows 2. My module test passed on the extdata file
+(exactly one warning) and I wrote “The one warning” into the guide from
+it; a small driver that uploaded the guide’s file and read the pane text
+showed 2, and the sentence was corrected the same session (`9f93834b7`,
+never pushed). Both files give 1,432 of 3,694. **(2) The readers of the
+count:** `R/appServer.R:183-205` reads `qcSummary$warnings`: with no
+errors and any warning it shows a yellow “QC found N warning(s)” pop-up
+and opens the Warnings sub-tab instead of “QC passed!” on QC Summary.
+The item named the producer
+([`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md))
+and the display (`qcSummaryUI`) but not this reader; a grep for
+`$warnings` found it, and it became a second Pre-RED question (owner:
+like any warning). **(3) “Turns yellow”:** `panel-warning` has no fill
+under the app’s theme (heading background transparent, border the same
+grey as the other boxes, read with `getComputedStyle`), for any warning,
+ever; the claim came out of NEWS and the finding is a backlog item. **A
+missing function hides a broken fixture:** RED’s “could not find
+function” error came before my zero-animal fixture was built, and
+`paste0("A", seq_along(character(0)))` is `"A"`, not an empty vector, so
+the fixture errored at GREEN. Build each fixture on its own before the
+RED commit, or use `sprintf("A%d", seq_along(x))`. **When to use:** any
+count shown in the docs; any new row in a table that other code counts;
+any claim about how the app looks; any test fixture with an empty case.
+
+#### Learning 900
+
+**A look-only fix needs the owner’s eyes on a real picture, delivered
+where they can see it, before the long verification; and test a look by
+its resolved theme settings, not by pixels.** (S934, 2026-10-07.) The
+heat map item (cut-off column names, tiny labels) was reproduced outside
+the app first, at the app’s own size (900 x 500, 72 dpi, the `png`
+default `renderPlot` uses): the 45-degree column names run up and to the
+right and the top edge of the drawing cuts them (“Va”, “Or”, “Pro”,
+“Inb”), and both axes were at 8.8 pt
+(`ggplot2::calc_element("axis.text.x.top", p$theme)` gave angle 45,
+hjust 0, plain, 8.8 under ggplot2 4.0.3). The backlog item’s reading was
+right about the missing size and room; *why* the strip above the grid is
+too short for slanted names was never traced, because removing the slant
+(level, centred, bold names) made it unnecessary. **(1) Delivery:**
+pictures I `Read` reached only me; I wrote “shown above” twice and the
+owner chose the look from text alone, then asked “where is the image”.
+`open <png>` plus the path is the delivery (memory
+`show-visual-result-before-long-tests`). **(2) Order:** the owner wanted
+the real-app picture before any full suite, lint or check (“if the size
+is wrong, full testing is a waste of resources”); I had a 6-minute suite
+running and had to kill it. **(3) A stated size is a requirement:** the
+owner said the labels needed “about 2.5 times larger”; my floors were 15
+and 14 pt (1.6-1.7 x) and moved to 22 pt before RED was committed. **(4)
+Test a look by its resolved settings:**
+`ggplot2::calc_element(element, p$theme)$angle` / `$hjust` / `$face` /
+`$size` (readable under ggplot2 4.0.3’s S7 elements) is deterministic; a
+check on the top pixel rows would depend on platform fonts. **(5) Limit
+found, not built for:** 22 pt bold with 5 columns in a 600 px window
+collides (“Production” over “Inbreeding”); the app has 4 metrics (a
+Flags column is issue \#116), and 4 columns fit at 600 and 900 px and 5
+fit at 900. A fifth column would need `guide_axis(n.dodge = 2)` or
+smaller names in a narrow window. **(6)** In zsh a `rm -f dir/*.png`
+with no match aborts the whole `&&` chain, so a “started” line printed
+after it proves nothing: check `pgrep` before trusting a background
+start.
+
+#### Learning 901
+
+**A probe that rebuilds the app’s path at function level must be held
+against one real-app output before its numbers reach option text, and
+the receipt’s “0 failed” must be of the last commit.** (S935,
+2026-10-07.) **(1) The probe:** to measure “how many groups’ Inbreeding
+colour would change” I rebuilt the path (QC, Genetic Value,
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+with the Breeding Groups defaults, 21 formations, 66 groups). It said
+the default Top ranked 20 hold no animal without a birth date, and
+running `modGeneticValueServer` itself on the cleaned example agreed; I
+put “0 of 66 groups” into the picker text. The real app, the guide’s
+capture run, drew a heat map whose note read “20 of the 20 animals in
+these groups have no birth date” (deceased founders such as `77EUZ7`,
+exit 1968; the Genetic Value picture `gva_first_high_value.png` shows
+their blank ages), and S928’s recorded note said the same. I found that
+only when the owner-approved picture came back; the decision survived
+(the two females with no birth date there have no offspring, so
+Inbreeding is red before and after) but the figure did not. The app path
+that differs from the module run was not found (open question in the
+`BACKLOG.md` placeholder item). **How to apply:** before quoting a
+probe-derived count as “the app’s”, look at one real-app picture or
+table for the same path, and when the probe contradicts a note already
+in the repo, reconcile the two first. **(2) What the sires are:** 1,370
+of the example’s 1,372 no-birth-date males listed as a sire are
+placeholders (`placeholder` TRUE, status UNKNOWN, no exit date); they
+fill about 450 of each ~460-animal group when the pool is “Genetic-value
+floor” or “All available”. **(3) The last commit:** S934’s full suite
+(3,231, 0 failed) ended at REFACTOR; its NEWS entry, committed
+afterwards, quotes the cut-off label “Inb”, which
+`test_wordlist_coverage.R` flags, so HEAD was red and unpushed until
+S935’s first full run (fixed `c0eb99c53`). Run the full suite after the
+last commit that changes tracked text. **(4) A helper extracted from
+`(a & b) | c` keeps its NA:** a female with no age and no offspring
+listing returns `NA`, not `FALSE`; callers drop it, so helper tests
+compare `%in% TRUE`.
+[`mockery::stub()`](https://rdrr.io/pkg/mockery/man/stub.html) reaches
+only calls made inside the test, so a wrapper defined outside the test
+bypasses the stub. **(5) The no-change proof:** 400 seeded cases and 6
+example group sets, saved and compared with
+[`identical()`](https://rdrr.io/r/base/identical.html), the baseline
+itself identical across two runs at one commit.
+
+#### Learning 902
+
+**“Never changes colour” is one cause until a count proves it, and a
+picture cropped to a container clips whatever overlaps the container’s
+edge.** (S936, 2026-10-07.) **(1) The cause:** `BACKLOG.md` said the
+Input tab’s QC Summary boxes never changed colour (S933 measured the
+Warnings box). Compiling the theme,
+`sass::sass(bslib::bs_theme(version = 4L, bootswatch = "flatly"))`, and
+counting rules gave `.panel` 0, `.panel-danger` 0, `.card` 113: the
+app’s theme is Bootstrap 4, which has no `panel` styles, and the code
+wrote Bootstrap 3 `panel panel-*` boxes. One `grep "panel panel-" R/`
+then found 10 sites in 3 files (3 QC boxes, 6 Home tab boxes, one per
+breeding group), so the backlog item named 3 boxes of a 10-site cause.
+Fixed for the 3 QC boxes only (the owner’s scope pick); the rest is
+`BACKLOG.md:8`. **(2) The picture:** the guide’s
+`read_and_check_pedigree.png` is cropped to
+`#dataInput-moduleContainer`; the yellow notice (“QC found 2 warning(s).
+Check the Warnings tab.”) sits fixed in the window’s lower right for 8
+seconds (errors 10), overlapping that container’s edge, so the picture
+showed “QC found 2 warning(s). Check the” from S933’s retake until S936
+and nobody read the edge. The owner saw it in a picture opened for
+review. A full-window capture (no selector) showed the whole notice, 286
+px wide, inside a 1300 x 900 window. The harness already had
+`wait_for_notifications_clear()` (S930, used by the Diagram script); the
+colony script never called it after the check. **How to apply:** after
+any step that ends in `showNotification()`, wait for the notifications
+to clear before a cropped shot; look at the four edges of a picture you
+retake for clipped text, not only at the subject; and when an owner says
+a picture is wrong, capture the uncropped window before explaining the
+app.
+
+#### Learning 903
+
+**A NEWS clause “as X already was” is a claim about X: read X’s rule in
+the code and its pinned test before keeping it, and the commit hook
+counts tokens, not bytes.** (S937, 2026-10-07.) **(1) The false
+clause:** the S931 entry said the Production cell “is now gray, as the
+Inbreeding cell already was”. The Inbreeding rule (undefined result
+becomes 1, red) was written S282 (`cb7eb1a6a`), is in the `v2.0.0` tag
+(`git show v2.0.0:R/getGeneticDiversityStats.R`), is pinned by
+`test_getGeneticDiversityStats.R:154` (“undefined Inbreeding (no
+breeding-age females) scores red”), and the help text and the guide say
+red: the clause was never true, S935 only noticed it. **(2) The guard:**
+test the checker on made-up sentences first (they pass at once, so the
+real-file checks cannot pass by finding nothing), then check the real
+file in both directions, each measured before RED (1 sentence calls the
+Inbreeding cell gray; 0 say an undefined one is red) so both fail for
+the stated reason; split on a full stop so “gray” in one sentence and
+“Inbreeding” in the next do not combine. **(3) The cap:** `.git/hooks`
+context-budget counts tokens (`SESSION_NOTES.md` ceiling 25,000, about
+2.27 B per token here). At 56,495 B the room was 113 tokens (about 250
+B), so a 454 B claim stub was REFUSED (24,887 to 25,087 tok) and a 200 B
+stub passed (56,695 B); S924’s note (“under about 56,700 B”) already
+said so. **How to apply:** when a changelog line compares a new behavior
+to another thing’s, grep that thing’s rule and test (`git log -S`,
+`git show <tag>:<file>`) before it stands; write the claim stub in two
+or three lines whenever the notes file is above about 56,400 B, and
+condense the newest full section at close-out.
+
+#### Learning 904
+
+**When a function-level probe and the app disagree, read the app’s own
+shared state in a real run before guessing which step differs; and a
+“groups” list ends with the unused candidates, so do not count its last
+element as members.** (S938, 2026-10-07.) **(1) The mismatch:** S928
+recorded the app’s default Top ranked 20 as animals with no birth date,
+S935’s probe (the Genetic Value module’s steps on the cleaned example)
+gave 20 animals that all have birth dates, and `BACKLOG.md` carried both
+as “not understood” (Learning 893, S928, had already seen that the app’s
+pedigree carries a `population` column and a 3,694-animal matrix, but
+had not traced who that puts at the top). A headless real-app run
+reproduced S928 exactly (20 animals, all dead or shipped) and showed the
+step the probe skipped: the Pedigree Browser’s
+[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+flags every animal when no focal animals are entered
+(`R/modPedigree.R:363-366`), so the module’s `is.na(exit)` fallback
+(`R/modGeneticValue.R:296-300`) never runs in the app. A replay of the
+probe on the app’s own pedigree without a `population` column reproduced
+its shape (top 20 all with birth dates, none dead) and not its stored
+1,382 (it gave 1,592): replay a stored count before it is called the
+cause. **(2) The method, no repo change:** a scratch `app.R` outside the
+repo that
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)s
+the tree, evaluates a copy of `R/appServer.R` with a
+[`shiny::exportTestValues()`](https://rdrr.io/pkg/shiny/man/exportTestValues.html)
+call (reading `shared$currentPedigree`, `shared$geneticValues`,
+`shared$breedingGroups`) inserted before the function’s last `}`, driven
+by
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+and read with `app$get_values(export = TRUE)$export`; start `Rscript`
+from the repo directory (renv) and keep the scratch files in the
+scratchpad. A full run (upload, check, Genetic Value at 1,000
+iterations, three formations) took about 90 s. **(3) Traps:** the
+Pedigree Browser’s focal-file input is a `renderUI`, so
+`wait_for_element(app, "#pedigree-focalAnimalFile")` is needed after the
+tab opens; the
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+group list holds `numGp` groups plus a final element of unused
+candidates (`R/groupAddAssign.R:91-97`), and my first table counted that
+element as group members (floor 3,008 instead of 2,998), caught only
+because I read the return documentation before writing the numbers into
+`BACKLOG.md`. **(4) Late fact:** a count that bears on the owner’s pick
+(271 of the 332 living animals labelled Low Value in the default run)
+turned up after the pick; it went in as its own `BACKLOG.md` item and
+was told to the owner rather than folded into the ruled one.
+
+#### Learning 905
+
+**A filter on an optional pedigree column needs its no-column behavior
+settled before RED; a real app’s Genetic Value ranking is re-simulated
+on every run, so compare a derived list with the same run’s report; and
+the ratchet’s `results` hash is not reproducible.** (S939, 2026-10-07.)
+**(1) The optional column:** the `status` column is optional
+(`R/qcStudbook.R:307` converts it only `if` present); `qcPed`,
+`pedWithGenotype`, `smallPed` and `lacy1989Ped` have none, and none of
+the 68 Form Groups clicks in the 7 Breeding Groups test files uses a
+pedigree with one. A bare “Status is ALIVE” filter would have stopped
+every one of them. The Pre-RED gate asked the owner for the no-Status
+rule (exit date, else everyone) with counts measured first (68 clicks;
+89 of 280 `qcPed` animals have no exit date) and the answer became
+`isLivingAnimal()` (`R/isLivingAnimal.R`). **(2) A derived list vs the
+real run:** the default Top ranked 20 after the filter were first
+derived from S938’s saved real-app ranking (`run1.rds`), and a later
+real run did NOT match that derivation (`setequal` FALSE), because the
+simulated ranking moves between runs (the 20 sat at places 547-1033,
+then 519-1025, then 537-1032 of 3,694). Saving the whole report from the
+run being checked and comparing against it gave TRUE. A saved earlier
+ranking is good for a Pre-RED preview in plain words, not for an exact
+assertion. **(3) The hash:** `quality_ratchet.py` computes `results` as
+`sha12(gates)` (`quality_ratchet.py:308`), and `gates` carries the
+measured tarball size as a float, so two `--run`s a minute apart gave
+`2f38e6385a77` and `5a46dca45c17` with the same printed 3.73799e+06; the
+receipt citation’s hash can never match a fresh run. Compare the
+pass/fail/unmeasured counts and the `manifest` hash (stable). **(4) A
+refactor of an untested path:** the “no groups” result literal appeared
+on three paths and no test reached the formation-error one; a
+green-at-HEAD pin was added and run with the refactor patch reverted
+(`git diff > patch; git checkout -- file; run; git apply patch`) and
+applied, 27 checks both ways. **How to apply:** before a filter on an
+optional column, count which fixtures lack it; derive nothing exact from
+an earlier run’s simulated ranking; cite the ratchet’s counts, not its
+results hash.

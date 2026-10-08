@@ -264,6 +264,11 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- Groups are formed from living animals only, whatever the **Source**,
+  so the default **Top ranked** 20 are animals that can breed. An animal
+  counts as alive when its Status is ALIVE (or, in a pedigree with no
+  Status column, when it has no exit date). If none is alive, the tab
+  says so and forms no groups.
 - Several candidate groupings are shown per run, with a selector and
   comparison table (issue
   [\#125](https://github.com/rmsharp/nprcgenekeepr/issues/125)).
@@ -412,8 +417,49 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - Fixed: a breeding group with no breeding-age females was shown as a
   green Production cell in the Genetic Diversity dashboard, as healthy
   as a group that meets its birth target. Production cannot be
-  calculated for such a group, so its cell is now gray, as the
-  Inbreeding cell already was.
+  calculated for such a group, so its cell is now gray. An undefined
+  Inbreeding cell is red, so missing data there stands out.
+
+- Fixed: forming breeding groups that include animals with no birth
+  date, after running the genetic value analysis, could turn the page
+  gray and end the session (the shipped example pedigree does this with
+  the default settings). A male with no birth date is now left out of
+  the Inbreeding count of potential mates, a female with no birth date
+  is counted as described in the next entry, and a problem while the
+  Genetic Diversity heat map is being worked out no longer ends the
+  session.
+
+- Fixed: in the Genetic Diversity dashboard, a female with no birth date
+  was always counted as a breeding-age female in the Production cell,
+  whether or not she had any offspring, which lowered Production. In
+  both the Production and the Inbreeding cells she now counts only when
+  the pedigree lists an offspring for her, wherever that offspring is; a
+  female with no birth date and no offspring is left out of both. A
+  group whose only female is left out has no Production value, so its
+  cell is gray. A note under the heat map now says how many animals in
+  the groups have no birth date, and how many of those females were
+  counted or left out.
+
+- Fixed: the column names above the Genetic Diversity heat map were
+  slanted and cut off by the top edge of the picture (they read “Va”,
+  “Or”, “Pro” and “Inb”), and both the column names and the group names
+  were too small to read comfortably. The names are now written level,
+  in bold and whole, at 2.5 times the old size.
+
+- New: the Input tab now warns when animals in the uploaded pedigree
+  have no birth date. The app shows its yellow warning notice and opens
+  the Warnings tab, which says how many animals have none (1,432 of
+  3,694 in the shipped example pedigree) and that their age is unknown,
+  so age-based checks and counts, such as the parent-age check, the
+  Age-Sex Pyramid and the breeding-age counts, cannot use them. It is
+  only a warning: the pedigree can still be used.
+  `runQcStudbook(reportChanges = TRUE)` returns the same warning.
+
+- Fixed: the three count boxes on the Input tab’s QC Summary (Records
+  Processed, Errors and Warnings) were plain gray whatever the check
+  found. They are now colored: Errors is red when there is at least one
+  error, Warnings is orange when there is at least one warning, both are
+  green when the count is 0, and Records Processed is dark blue.
 
 - Fixed: a real animal whose id starts with a capital U (such as `U1`,
   `U123` or `Uma`) was mistaken for a stand-in for an unknown parent, so
@@ -527,6 +573,33 @@ export workflows, and longitudinal monitoring of colony genetic health.
   missing column, when the pedigree lacks `id`, `sire`, `dam`, `gen` or
   `sex`. A missing `id`, `sire`, `dam` or `gen` used to give an
   unexplained R error.
+- Fixed:
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  and
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  now stop before doing any calculation, with a message giving the
+  number of animals, when the population of interest has fewer than 2
+  animals (none, or one). They used to stop with an unexplained R error.
+  Ranking needs at least two animals to compare.
+- Fixed:
+  [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+  [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+  [`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md)
+  and
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  now work for a single animal, and
+  [`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+  [`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+  [`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
+  and
+  [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+  for a population with one living descendant, instead of stopping with
+  an unexplained R error.
+  [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+  [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+  and
+  [`alleleFreq()`](https://github.com/rmsharp/nprcgenekeepr/reference/alleleFreq.md)
+  return an empty table when given no animals or no alleles.
 
 ## nprcgenekeepr 2.0.0 (20260721)
 

@@ -233,6 +233,10 @@ candidates for this correction).</p>
 <code>dam</code>, <code>gen</code> (generation number) and <code>sex</code>. If any is
 missing, <code>reportGV</code> stops before doing any calculation, with a message
 naming every missing column.</p>
+<p>The population of interest (see <code>pop</code>) must hold at least 2 animals,
+because the report ranks animals against one another. With fewer,
+<code>reportGV</code> stops before doing any calculation, with a message giving
+the number of animals.</p>
 <p>Reported genome uniqueness (<code>gu</code>) is set to 0 for "Undetermined"
 animals – those with both parents unknown (U-id aware) and no recorded
 origin – because their apparent uniqueness is an artifact of unknown

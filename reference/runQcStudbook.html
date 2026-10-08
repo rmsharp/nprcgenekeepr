@@ -101,10 +101,14 @@ minimum parent age. Supplying it sets both <code>minSireAge</code> and
 
 
 <dt id="arg-reportchanges">reportChanges<a class="anchor" aria-label="anchor" href="#arg-reportchanges"></a></dt>
-<dd><p>logical whether to report column name changes in the
-result (default FALSE). When TRUE, <code>changedCols</code> and
-<code>hasChangedCols</code> in the qcResult report all renamed columns, while
-<code>warnings</code> lists only the case and space changes.</p></dd>
+<dd><p>logical whether to put notices in the result (default
+FALSE). When TRUE, <code>changedCols</code> and <code>hasChangedCols</code> in the
+qcResult report all renamed columns, while <code>warnings</code> lists the case
+and space changes and, when animals in the cleaned pedigree have no birth
+date, one warning, "Animals with no birth date", that says how many. That
+warning is a notice only: it never makes <code>hasErrors</code> TRUE, and it is
+left out when errors were found, because no cleaned pedigree exists then.
+When FALSE, <code>warnings</code> is empty.</p></dd>
 
 </dl></div>
     <div class="section level2">

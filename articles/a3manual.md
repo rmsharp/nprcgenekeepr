@@ -248,8 +248,14 @@ and displays results across multiple tabs:
 - **QC Summary**: Shows counts of records processed, errors found, and
   warnings
 - **Errors**: Lists critical issues that must be fixed before proceeding
-- **Warnings**: Lists potential issues that may need review
+- **Warnings**: Lists potential issues that may need review, such as
+  renamed columns and animals with no birth date (the warning says how
+  many; their age is unknown, so age-based checks and counts cannot use
+  them). A warning never stops the pedigree from being used
 - **Cleaned Data**: Preview of the validated studbook data
+
+When the check finds errors, the app opens the Errors tab; when it finds
+only warnings, it opens the Warnings tab and shows a yellow notice.
 
 The Errors, Warnings and Cleaned Data tabs each include a download
 button to export the data for offline review.
@@ -641,13 +647,22 @@ The left panel provides controls for group formation:
 
 - **Source**: Select which animals to use as candidates:
 
-  - *Top ranked*: Use the highest-ranked animals from the Genetic Value
-    Analysis
+  - *Top ranked*: Use the highest-ranked living animals from the Genetic
+    Value Analysis
   - *Upload list*: Currently behaves exactly like “All available”; the
     choice does not yet provide a way to upload or type a list of
     candidate IDs
-  - *All available*: Use every animal in the current pedigree (not
-    limited to the living population)
+  - *All available*: Use every living animal in the current pedigree
+
+  Whatever the source, only animals that are alive are used. When the
+  pedigree has a Status column, an animal counts as alive when its
+  Status is ALIVE (so deceased, shipped and placeholder animals are
+  skipped). When it has no Status column, an animal with no exit date
+  counts as alive. When it has neither column, every animal is used. The
+  cut to the top N animals or the genetic-value floor comes after this,
+  so “Top ranked” takes the best-ranked living animals. If no animal in
+  the source is alive, the tab shows an error notice and forms no
+  groups. Animals you type into a seed group are accepted as typed.
 
 - **Include animals by**: Choose how candidates are screened for
   eligibility, independent of Source:

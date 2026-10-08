@@ -189,6 +189,11 @@ The pedigree `ped` must have the columns `id`, `sire`, `dam`, `gen`
 before doing any calculation, with a message naming every missing
 column.
 
+The population of interest (see `pop`) must hold at least 2 animals,
+because the report ranks animals against one another. With fewer,
+`reportGV` stops before doing any calculation, with a message giving the
+number of animals.
+
 Reported genome uniqueness (`gu`) is set to 0 for "Undetermined" animals
 – those with both parents unknown (U-id aware) and no recorded origin –
 because their apparent uniqueness is an artifact of unknown parentage

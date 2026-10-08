@@ -6,6 +6,116 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
+**Seven more old-style `panel panel-*` boxes still show no colour: 6 on
+the Home tab and one per breeding group (found S936, 2026-10-07;
+DECISION NEEDED, Effort M; strict TDD for any change)** – the cause S936
+found for the QC Summary boxes holds for every box written the old way:
+the app’s theme is Bootstrap 4
+(`bslib::bs_theme(version = 4L, bootswatch = "flatly")`,
+`R/appUI.R:69`), whose compiled stylesheet has 0 `.panel` rules and 113
+`.card` rules (measured S936), so a `panel panel-primary`, `-info`,
+`-success`, `-warning`, `-danger` or `-default` box shows no colour.
+S936 rewrote only the 3 QC Summary boxes, as cards, through the internal
+`qcSummaryBox()` (`R/qcSummaryBox.R`). **Left as written:** the six
+workflow boxes on the Home tab (`R/appUI.R:98-158`; their picture is
+`home_tab_landing.png`) and the group boxes in Breeding Groups
+(`R/modBreedingGroups.R:956`, one per group, `panel panel-primary`). Not
+looked at in the real app, only from the stylesheet. **Decide when
+picking it up:** give them cards too (the Home and Breeding Groups pages
+change, so the pictures that show them go stale and need retaking, and
+the class-name tests move), or leave them plain on purpose.
+
+**Optional: a guide picture of the Warnings sub-tab as the app opens it
+after a check (raised S936, 2026-10-07; READY (optional), Effort S; docs
+and the capture script only)** – the guide’s paragraph on Read and Check
+Pedigree now says in words where the Errors and Warnings sub-tabs are
+and what the red and yellow notices say, but it has no picture of either
+sub-tab (measured S936: none in `vignettes/articles/shiny_app_use/`). A
+full-window capture right after the check, with the Warnings sub-tab
+open and the whole notice showing, was taken S936 as a scratch file only
+(1300 x 900; the notice is 286 px wide and fits). Adding it means a new
+capture step, a new image file and a sentence in the guide. Pick it up
+only if the owner wants the picture; the QC Summary picture and the
+words are done.
+
+**The Breeding Groups “nobody is alive” notice reads “None of the 1
+animals” when the source has one animal (found S939, 2026-10-07; READY
+(optional), Effort S; strict TDD, a displayed-text change)** – the
+notice (`R/modBreedingGroups.R`, the `length(rawPool) == 0L` branch)
+builds its text from the source’s animal count; the S939 tests pin “None
+of the 14 animals”, not the count of one (or zero). A pool of one animal
+cannot form groups anyway, so this is wording only: pick it up with the
+next Breeding Groups change.
+
+**With no focal animals the Genetic Value run ranks every animal ever
+recorded, so 271 of the 332 living animals are labelled Low Value (found
+S938, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any
+change)** – measured S938 in the real app on the example with no focal
+animals: High / Low / Undetermined by status: ALIVE 56 / 271 / 5,
+DECEASED 1,026 / 404 / 195, SHIPPED 314 / 10 / 41, UNKNOWN (placeholder)
+0 / 0 / 1,372. The Genetic-value floor groups then held 60 living
+animals; with the 332 living animals entered as focal they held 270
+(group counts, not label counts). The whole-colony default is the
+documented behavior of the exported
+[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+(empty `ids` flags everyone) and of
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+([`getGVPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGVPopulation.md)),
+while the package’s own
+[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+example defines the population as living animals with a known parent.
+The guide says to define the population before Genetic Value
+(`vignettes/articles/colony-manager-guide.qmd:328`), then continues with
+the focal list cleared (`:329-332`). Readers of the flag:
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+(`R/reportGV.R:195`),
+[`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md)
+(`R/offspringCounts.R:47`),
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
+[`createColonySnapshot()`](https://github.com/rmsharp/nprcgenekeepr/reference/createColonySnapshot.md).
+Declined at S938 as the fix for the group pool (the owner took the
+narrower Breeding Groups filter, shipped S939; in a real-app run after
+it, the default Top ranked 20 were the first 20 living animals of this
+ranking, at places 519 to 1025 of 3,694, all of them alive). **Decide
+when picking it up:** leave the whole-colony default and say so in the
+Genetic Value help and the guide; or make the Pedigree Browser flag only
+the living animals (status ALIVE) when no focal animals are entered (the
+exported
+[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+stays), which moves every default ranking, mean kinship and value count.
+
+**Reword where the repo says the package was developed at ONPRC and
+funded by NIH grants (owner-reported S930, 2026-10-07; DECISION NEEDED,
+Effort S; docs and `DESCRIPTION`, plus one displayed line in the app)**
+– the owner wrote: “Only version one was developed at Oregon National
+Primate Research Center and funded by NIH grants P51 RR13986 and P51
+OD011092.” Today most places say the whole package was “initially
+conceived and developed” at ONPRC and pair the grants with different
+centers (P51 RR13986 to the Southwest National Primate Research Center,
+P51 OD011092 to the Oregon center), while the in-app About tab
+(`R/appUI.R:323-324`) says “Developed at Oregon National Primate
+Research Center” and “Funded by NIH grants P51 RR13986 and P51 OD011092”
+(both grants together, which fits the owner’s sentence but carries no
+“version one” limit). **Places carrying the wording (grep S930; re-grep
+before editing, the lines shift):**
+`vignettes/manual_components/_introduction.Rmd:17-27` (the source
+`README.Rmd` pulls in as a child; `README.md:32-40` is generated from
+it); `DESCRIPTION:14-17` (two `fnd` entries;
+`man/nprcgenekeepr-package.Rd:36-37` is generated from it);
+`CLAUDE.md:19-21` (Project Overview, inside its protected fence);
+`vignettes/articles/colony-manager-guide.qmd:68`, `:86-87`,
+`:1108-1109`;
+`vignettes/articles/engineering-the-2.0.0-release.qmd:794-795`;
+`R/appUI.R:323-324`;
+`docs/planning/nprc-outreach-announcement-plan.md:48`, `:426`,
+`:493-494` (a plan, not a shipped file). **Decide when picking it up:**
+the exact wording and what “version one” means here (the 1.x releases?);
+whether each grant is credited to a center, as now, or to the
+version-one work, as the owner’s sentence and the About tab read;
+whether `DESCRIPTION`’s two funder entries change (they set the
+package’s funder list); and whether the About tab’s two lines change (a
+displayed-text change, so strict TDD needs a test first).
+
 **[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
 fails cryptically on an id or parent that is absent from the tree, and
 cannot resolve a very deep acyclic chain (found S783, 2026-09-26,
@@ -33,40 +143,6 @@ and
 [`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)).
 Callers: only `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither
 reached from the app.
-
-**[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-with a one-animal population stops with “‘x’ must be an array of at
-least two dimensions” (found S923, DECISION NEEDED, Effort S)** –
-measured S923 on `examplePedigree`
-([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
-then the trimming in the
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-example; 327 animals in the population):
-`reportGV(ped, guIter = 10L, pop = <one id>)` stops in
-[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
-([`rowSums()`](https://rdrr.io/r/base/colSums.html) on a single row);
-two ids run. The message is the same before and after S923’s
-[`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
-change, so it is a second cause that change did not touch. Not probed:
-whether the app can build a one-animal population, and
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
-which builds its proband matrix the same way (`R/gvaConvergence.R:149`).
-**Decision for the owner:** stop with a message that names the
-population size, or return a one-row report. Do not use `smallPed` to
-test it: `reportGV(smallPed)` failed with “sire and dam must have had
-alleles assigned: logic error” on all 5 calls tried in S923 (with and
-without `age` and `pop`): the carried, unfiled `reportGV(smallPed)`
-finding.
-
-**`man/nprcgenekeepr-package.Rd` is stale against `DESCRIPTION` (found
-S923, READY, Effort S)** – `devtools::document()` rewrites its
-description paragraph (“five groups” becomes “these main groups”, plus a
-sentence on the further tabs): `DESCRIPTION` was reworded in S830
-(`73c00d1ec`) and the man page was not regenerated. One file; S923
-restored it rather than commit it with an unrelated change.
-`devtools::check()` does not flag it (0/0/0). Fix: run
-`devtools::document()` in its own commit and confirm no other file
-changes.
 
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
@@ -101,38 +177,64 @@ fixed S853; 7c (S860) live `docs/planning/` plans, fixed S861, and a
 header sweep of all 84 plans (31 bannered), S862; 8 (S868)
 `docs/research/` and older `docs/audits/`, a status banner on 26 files,
 S870. **Still open.** (1) *Slice 2* (S821,
-`DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was never acted on, and no
-slice is scoped to act on it: 31 of 38 regenerable `shiny_app_use/`
-images differ from the app (Pedigree Browser family +147 px; Home,
-Input, Summary Statistics, Breeding Groups, GVA); the colony script’s
-tail fails identically every run (diagnose first, then regenerate by
-module); 12 images have no generator; `pb_unknown_displayed.png` is an
-orphan. The owner decides whether to scope a regeneration slice. S921
-added a legend row (“Same animal, again”) that `pb_diagram_legend.png`
-(`colony-manager-guide.qmd:347`, `pedigree-diagram.qmd:40`) does not
-show; whether it is one of the 31 was not checked. When it is
-regenerated, add a sentence naming that entry to the article’s
-dashed-line paragraph (`pedigree-diagram.qmd:50-55`); the manual
-(`_pedigree_browser.Rmd:91-92`) already does. (2) *Owner decisions about
-code, found by slices 6-8* (DECISION NEEDED, Effort S each; reword the
-docs if the code changes; carried as recorded S870 and not re-checked
-against today’s code, except where a present-day check is named; the ids
-are in each slice’s report): 6a MB3 (unknown-sex founder kinship; MC1,
-`filterKinMatrix` without `drop = FALSE`, was fixed S923), and MA3/MB14
-cite only `e1071` for `type = 2` from recall, not a run (neither
-`moments` nor `e1071` is installed here); 6b PB4, PB7, PB11 (docs
-untouched), and PB13, PA4, PD12, PD1 (S837 documented today’s behavior);
-6c 8 candidates (`markerExpectedHeterozygosity` He = 1.0 for an all-NA
-locus, `computeGenomicROH` silent locus drop, `hasGenotype`
-`First`/`Second`, `checkSequenceGenotypeFile` sidecar not reconciled,
-plus candidates 5-8); 6d 22 candidates CA1-CA5, CB1-CB5, CC1-CC5,
-CD1-CD6 (esp. RA3/RA4/RA6 (CA1, CA3), RA8 (CA2), RB10 (CB1), RC7 (CC1)),
-and the R `helpText` at `R/modGeneticValue.R:88` still says “Summary
-Statistics relationship table” (present S890); 6e 46 candidates CE-CL,
-and `R/makeGroupNum.R` still says `numGp` “Default is 1” while the
-examples in `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R`
-still pass deprecated `minParentAge` (all three present S890); 7b/8 CV1
-and CV2
+`DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped S927 into 7-8
+sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its
+owner decisions D1-D5 are pending; Phase 1, the session-ending crash,
+was fixed S928 and Phase 2, the capture scripts’ honest reporting, S930:
+one shared helper, `tests/testthat/helper-captureHarness.R`, and the
+`NPRC_SHOT_DIR` folder setting; Phase 2’s item (e), the full-height
+`potential_parents_results.png` capture, was NOT done and moves to Phase
+3c; Phases 3a and 3b still need D2 and D3 answered; Phase 3c has 9
+pictures left, `genetic_diversity_heatmap.png` having been retaken S934,
+see below; its Breeding Groups pictures show the old default groups of
+dead animals and are retaken here now that the living-animals-only pool
+shipped, S939). Measured S927: 37 of the 38 script-written
+`shiny_app_use/` images differ from the app (S821 said 31); the colony
+script’s tail failure was that crash (an animal with no birth date in a
+group), not a script bug, and it is fixed; S928 checked it in the
+headless test driver, S929 by hand in a real Chrome window (the owner:
+`ExamplePedigree.csv` on the Input tab, Form Groups with the defaults,
+Top ranked; the page stayed live and the Genetic Diversity tab drew the
+heat map; “All available” was checked only in S928’s headless run, not
+by hand). Also: 12 images have no script (2 of the 3 CSV pictures are
+stale from the code alone); `pb_unknown_displayed.png` is an orphan;
+`pb_diagram_legend.png` is stale (it lacks S921’s “Same animal, again”
+row). When it is regenerated, add a sentence naming that entry to the
+article’s dashed-line paragraph (`pedigree-diagram.qmd:50-55`); the
+manual (`_pedigree_browser.Rmd:91-92`) already does. S933 retook
+`read_and_check_pedigree.png` alone (the Input tab’s new no-birth-date
+warning made the old picture show Warnings 1; the app now shows 2 and
+the guide text says 2), with the guide’s own script into a scratch
+folder (81/81 steps), copied alone. S934 retook
+`genetic_diversity_heatmap.png` alone (the heat map’s names were cut off
+and tiny; the new picture shows them whole at 22 pt, and S931’s note),
+with the guide’s own script into a scratch folder, copied alone; that
+run was stopped after the heat map step, so it is not an 81/81 run. S935
+retook it again (the note under the grid now names the Production and
+Inbreeding columns), from a full 81/81 run, copied alone. S936 retook
+`read_and_check_pedigree.png` (the QC Summary boxes are colored now, and
+the capture script waits for the yellow pop-up to close, which the
+container crop had cut off mid-sentence), from a full 82/82 run, copied
+alone. (2) *Owner decisions about code, found by slices 6-8* (DECISION
+NEEDED, Effort S each; reword the docs if the code changes; carried as
+recorded S870 and not re-checked against today’s code, except where a
+present-day check is named; the ids are in each slice’s report): 6a MB3
+(unknown-sex founder kinship; MC1, `filterKinMatrix` without
+`drop = FALSE`, was fixed S923), and MA3/MB14 cite only `e1071` for
+`type = 2` from recall, not a run (neither `moments` nor `e1071` is
+installed here); 6b PB4, PB7, PB11 (docs untouched), and PB13, PA4,
+PD12, PD1 (S837 documented today’s behavior); 6c 8 candidates
+(`markerExpectedHeterozygosity` He = 1.0 for an all-NA locus,
+`computeGenomicROH` silent locus drop, `hasGenotype` `First`/`Second`,
+`checkSequenceGenotypeFile` sidecar not reconciled, plus candidates
+5-8); 6d 22 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6
+(esp. RA3/RA4/RA6 (CA1, CA3), RA8 (CA2), RB10 (CB1), RC7 (CC1)), and the
+R `helpText` at `R/modGeneticValue.R:88` still says “Summary Statistics
+relationship table” (present S890); 6e 46 candidates CE-CL, and
+`R/makeGroupNum.R` still says `numGp` “Default is 1” while the examples
+in `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still
+pass deprecated `minParentAge` (all three present S890); 7b/8 CV1 and
+CV2
 ([`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
 exports with no `@examples`; the `savePlotToFile` example uses
 `\dontrun`); 8 four likely code defects (candidate “Upload list” uploads

@@ -17,7 +17,8 @@ modGeneticDiversityUI(id)
 ## Value
 
 A `div` containing the genetic diversity heat-map UI: a housing-type
-selector, a guidance area, and the heat-map plot.
+selector, a guidance area, the heat-map plot, and a note about animals
+with no birth date (shown only when there are any).
 
 ## See also
 

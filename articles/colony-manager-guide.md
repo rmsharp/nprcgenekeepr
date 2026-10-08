@@ -230,12 +230,34 @@ Minimum sire and dam age fields filled in.
 Selecting **Read and Check Pedigree** reads the file and validates it –
 checking that every required column is present and that the pedigree is
 internally consistent (parent-of-the-right-sex, no duplicate IDs, valid
-dates, and more; the full set of checks is listed below). Results appear
-on the “QC Summary” sub-tab. For the shipped example pedigree read as
-CSV, this reports **Records Processed: 3,694, Errors: 0, Warnings: 1**.
+dates, and more; the full set of checks is listed below). The counts are
+on the “QC Summary” sub-tab, the second of the five sub-tabs along the
+top of the results (“Input Format”, “QC Summary”, “Errors”, “Warnings”
+and “Cleaned Data”). Each count box is colored by what the check found:
+Records Processed is always dark blue; Errors is red when there is at
+least one error and green when there are none; Warnings is orange when
+there is at least one warning and green when there are none. When the
+check finds errors, the app opens the “Errors” sub-tab for you and shows
+a red notice in the lower right corner, “QC found N error(s). Check the
+Errors tab.” (N is the number of errors); when it finds only warnings,
+it opens the “Warnings” sub-tab and shows a yellow notice, “QC found 2
+warning(s). Check the Warnings tab.” (here 2 is the number of warnings).
+The notice closes by itself after a few seconds, and the sub-tab it
+names is already open; you click “QC Summary” for the counts. For the
+shipped example pedigree read as CSV, the counts are **Records
+Processed: 3,694, Errors: 0, Warnings: 2**. The first warning, “Column
+name case changed”, names the two columns (`recordStatus` and
+`fromCenter`) whose names were changed to lowercase. The second,
+“Animals with no birth date”, says that 1,432 of the 3,694 animals (all
+of them founders) have no birth date, so their age is unknown and the
+age-based checks and counts – the parent-age check, the Age-Sex Pyramid
+and the breeding-age counts – cannot use them. A warning never stops the
+pedigree from being used.
 
-![QC Summary sub-tab showing Records Processed 3694, Errors 0, Warnings
-1.](shiny_app_use/read_and_check_pedigree.png)
+![QC Summary sub-tab showing Records Processed 3694 in a dark blue box,
+Errors 0 in a green box and Warnings 2 in an orange box, above a green
+message that the data passed quality
+control.](shiny_app_use/read_and_check_pedigree.png)
 
 QC Summary after reading and checking the example pedigree.
 
@@ -562,7 +584,10 @@ The **Breeding Groups** tab forms candidate breeding groups from a
 source population you choose (top-ranked animals from Genetic Value
 Analysis, an uploaded list, or all available animals), subject to a
 maximum kinship threshold, a target number of groups, and a minimum
-breeding age.
+breeding age. Only living animals are used: an animal counts as alive
+when its Status is ALIVE (or, in a pedigree with no Status column, when
+it has no exit date), so deceased, shipped and placeholder animals are
+skipped.
 
 ![Breeding Group Formation tab showing the configuration panel: source,
 number of groups, kinship threshold, sex ratio, and minimum
@@ -815,12 +840,22 @@ type**, “Shelter pens” or “Corral”), and **Inbreeding** (within-group
 kinship risk involving the group’s male). A group with no assessed
 value, or an undefined Inbreeding result, is scored red rather than
 shown as healthy, so missing data surfaces instead of hiding as a false
-green. Until groups are formed and an analysis has run, the tab shows
-guidance instead of an empty plot.
+green. A breeding-age female is one at least 3 years old. A female with
+no birth date has no age, so, in both the Production and the Inbreeding
+column, she counts as a breeding-age female only when the pedigree lists
+an offspring for her, wherever that offspring is; with no offspring she
+is left out. A male with no birth date is never counted as a potential
+mate in the Inbreeding column. A group with no breeding-age females has
+no Production value, and its cell is gray. When any animal in the groups
+has no birth date, a note under the heat map says how many, and how many
+of those females were counted or left out. Until groups are formed and
+an analysis has run, the tab shows guidance instead of an empty plot.
 
 ![Genetic Diversity heat map with 6 rows (one per breeding group) and 4
 columns (Value, Origin, Production, Inbreeding), each cell colored red,
-yellow, or green.](shiny_app_use/genetic_diversity_heatmap.png)
+yellow, or green (gray where a value is undefined), with a note under
+the grid about animals that have no birth
+date.](shiny_app_use/genetic_diversity_heatmap.png)
 
 The Genetic Diversity heat map for the 6 breeding groups formed above.
 

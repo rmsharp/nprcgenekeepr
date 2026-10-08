@@ -112,7 +112,8 @@ Defaults to <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external
     <p>A data frame with one row per group: the first column <code>group</code>
 holds the group label and each remaining column (<code>Value</code>,
 <code>Origin</code> when available, <code>Production</code>, <code>Inbreeding</code>) holds an
-integer color index in <code>c(1, 2, 3)</code>.</p>
+integer color index in <code>c(1, 2, 3)</code>. <code>Production</code> is <code>NA</code> for
+a group with no breeding-age females.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -133,6 +134,20 @@ Inbreeding metric is undefined (no breeding-age females), are both scored
 red so that missing data is surfaced rather than shown as healthy green.
 When the pedigree has no <code>ancestry</code> column the Origin metric cannot be
 computed and its column is omitted.</p>
+<p>Production is the number of births in the two calendar years ending the year
+before <code>currentDate</code> that lived at least 30 days, divided by the number
+of breeding-age females in the group: females at least 3 years old. A female
+with no birth date has no age. She counts as a breeding-age female only when
+the pedigree (<code>ped</code>) lists at least one animal as her offspring, looked
+up in the whole pedigree and not only in her group, so a mother whose
+offspring are in another group still counts. A female with no birth date and
+no offspring is left out, and so is an animal with a blank sex. A group with
+no breeding-age females has no Production value: its entry is <code>NA</code>, and
+the heat map draws that cell gray.</p>
+<p>The Inbreeding column counts breeding-age females by the same rule: a female
+with no birth date counts when the pedigree lists an offspring for her, and
+is left out otherwise. A male with no birth date is never counted as a
+potential mate.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
