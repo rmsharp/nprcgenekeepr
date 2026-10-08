@@ -99,36 +99,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 944 Did
-**Deliverable:** docs-audit slice 2, Phase 4b, the 9 Marker Genetics guide pictures (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4). **Started:** 2026-10-08. **Ledger:** `CHANGELOG: pending`.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled D5 "script all nine"):** docs-audit slice 2, Phase 4b. The 9 Marker Genetics
+pictures come from a new script, `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture, 44/44 steps); its five made-up data sets come from
+`tests/testthat/helper-markerPictureFixtures.R` (copies of `test_modMarkerGenetics.R`'s hand-checked fixtures, no new data file); the other four use shipped example files.
+**Measured first** (real app, headless): every number in all nine old pictures still matched; the page had changed (8 sub-tabs and 4 upload boxes; the five oldest showed 0 to 5 sub-tabs).
+**Gate:** `tests/testthat/test_markerPictureScreenshots.R` (16 blocks, 72 expectations). Claim `0f7bb7092`, RED `9d42987b4` (15 red: 8 fail, 7 error on the missing helper; 1 control passes),
+GREEN `edd8f8584`, `183dfdebb`, `9f415d50a`; REFACTOR skipped by the owner's pick; close-out = the commit carrying this note. **Fixed in the guide:** the Candidate note (stale since
+issue #155), its caption ("10 shared loci": 3 disagree), the Heterozygosity caption (X, Y, Z), the ROH alt text, the abstract date (2026-10-08). **Verified:** full suite 3,309 blocks,
+0 failed, 0 errors (187 skipped; 6 warnings, none from the new file, not traced); lint 0; `check` 0/0/0; ratchet 1/1 (results 443d97e35d72, manifest aa983075d6a2, tarball
+3,751,782 B); guide renders (exit 0), 42 of 42 image links, rendered section opened for the owner. No hand check in Chrome; published pages not opened. Learning 910.
+**Went wrong:** my first script took the long tabs with no selector (the whole page: coverage and LD block byte-identical, 1571 x 2251), caught by checking sizes before copying and fixed
+with `selector = "viewport"`; my first gate header read RED→GREEN for PRE-RED→RED.
+**Handoff evaluation of S943: 8/10.** Helped: the Phase 4b scope and "view each against the live tab first"; `BACKLOG.md:179`; the render recipe (first try); the note-size warning.
+Missing: its key files were all 4a's; the notes file had 36 B of room, so my stub needed the S902-S904 entries condensed first; nothing on how the old Marker pictures were made.
+Wrong: nothing found (the plan's "add one small data file" was unnecessary). **Self-assessment: 8/10.** + measured all nine against the live tab before the D5 question, tests first
+with a control, tightened a pin that matched alt text, viewed all nine new beside old, found three wrong statements. - two extra script runs from the selector mistake; the gate-header slip.
 
-### What Session 943 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled D4 "build the tables in the guide"):** docs-audit slice 2,
-Phase 4a. The 3 spreadsheet pictures are deleted; one hidden chunk, `summary-export-tables` (`colony-manager-guide.qmd:468`), rebuilds the app's pedigree and
-the export files with the buttons' own `write.csv` lines, and the guide shows 3 tables (kinship corner: `0ZX29Q` and its first 3 offspring; first 8 rows of
-first-order and female founders). **Measured first** (real app headless, the 3 export buttons): exported functions alone rebuild all 3 files byte for byte
-(~5 s); the old first-order picture matched 0 of 22 rows (`01QRQ4`: picture 0,0,0,0, file 2,3,0,5; **cause not looked into**), the founders picture lacked
-`fromCenter` and `placeholder`, the kinship picture's animal order differs. **Gate:** `tests/testthat/test_guideExportTables.R` (9 blocks, 35 expectations): shown cells must equal what the buttons
-write (`shiny::testServer`). Claim `c58040571`, RED `4e012db43` (6 fail, 3 helper controls pass by design), GREEN `ba9c31501`, REFACTOR `4e99a432b`
-(`shownRows`), close-out = the commit carrying this note. **Verified:** full suite 3,293 blocks, 0 failed, 0 errors (187 skipped); lint 0; `check` 0/0/0;
-ratchet 1/1 (results 4547e74c5ae8, manifest aa983075d6a2, tarball 3,746,222 B); guide renders (exit 0), tables identical before and after the refactor,
-page opened for the owner (scratch copy). No hand check in Chrome; published pages not opened. Learning 909. **Went wrong:** my first screenshot caught the
-page top (chromote `evaluate` needs `returnByValue = TRUE`); a `.table-responsive` wrapper was needless (Quarto already scrolls it).
-**Handoff evaluation of S942: 9/10.** Helped: "D4 first, check whether the article can call the same functions" (it can); the handler cites; `R_LIBS` for the
-render (first try); the note-size warning (my stub landed at 56,725 B). Missing: the first kinship rows are all zero, so "first rows" shows nothing. Wrong:
-nothing found (the plan's "2 of 3 stale from the code alone" was low: all 3). **Self-assessment: 8/10.** + measured the ground truth before offering the
-option, tests first with controls, viewed the render. - first screenshot missed, the old pictures' number differences unexplained.
+**Next steps (recommended, not ruled on):** slice 2 is finished; the docs-audit item (`BACKLOG.md:190`) now holds only part 2, the owner decisions about code (`:281`).
+(A) Owner findings: Summary Statistics duplicates (`BACKLOG.md:57`), Genetic Value row names (`:70`), the export-tables chunk (`:80`), the Candidate tab's missing-`fromCenter` message
+(`:90`, new), Direct-style picture (`:30`), Breeding Groups statements (`:101`). (B) Default population (`:126`, M); old-style boxes (`:8`, M); origin-and-funding (`:145`); `getAncestors()` (`:166`).
+After a push, open the published guide and Diagram pages and confirm the retaken images load and the 3 tables show.
+**Key files:** `vignettes/articles/marker-genetics-screenshots.R` (scenes, `marker_shot()`), `tests/testthat/helper-markerPictureFixtures.R`, `tests/testthat/test_markerPictureScreenshots.R`,
+`vignettes/articles/colony-manager-guide.qmd:37` (date), `:910-922` (Candidate note and caption), `R/getPotentialParents.R:101-102` (the `fromCenter` rule); `PROJECT_LEARNINGS.md` Learning 910.
+**Gotchas:** run the script with `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/marker-genetics-screenshots.R` (about 4 min); window pictures need `selector = "viewport"`;
+a pedigree for the Candidate tab needs a `fromCenter` column; render from a scratch copy with `R_LIBS` = first `.libPaths()`; `master` is 37 ahead of `origin` (the owner pushes);
+keep this file under ~56,750 B (the commit hook counts tokens; Read truncates past 25,000).
 
-**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2, Phase 4b (`BACKLOG.md:179`; D5 first: script the 9 Marker Genetics pictures or leave them dated;
-view each against the live tab first; 1-2 sessions); when it ends, re-date "current as of 2026-09-30" (`colony-manager-guide.qmd:37`). (B) Owner findings:
-Summary Statistics duplicates (`BACKLOG.md:57`), Genetic Value row names (`:70`), the chunk repeating the app's pedigree preparation (`:80`, new), Direct-style
-picture (`:30`), Breeding Groups statements (`:90`). (C) Default population (`:115`, M); old-style boxes (`:8`); origin-and-funding (`:134`); `getAncestors()`
-(`:155`). After a push, open the published guide and Diagram pages and confirm the retaken images load and the 3 tables show.
-**Key files:** `vignettes/articles/colony-manager-guide.qmd:468` (chunk), `:522,541,556` (the three paragraphs), `:37` (date);
-`tests/testthat/test_guideExportTables.R` (`guideRun()`, `exportButtonLines()`); `R/modSummaryStats.R:837-891` (export handlers); `PROJECT_LEARNINGS.md` Learning 909.
-**Gotchas:** the new test runs the real guide chunk and the 3 handlers (~10 s) and skips when the guide is absent; render from a scratch copy (`cp -R
-vignettes/articles <scratch>`, `R_LIBS` = first `.libPaths()`), the log's own `exit=` line is the result; BACKLOG cites shifted (+10 after `:80`), re-grep; S943
-scratch files live only in that scratchpad; `master` is 30 ahead of `origin` (the owner pushes); keep this file under ~56,750 B (the Read tool truncates past
-25,000 tokens).
+### What Session 943 Did (condensed S944; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, Phase 4a (D4 ruled: build the tables): the 3 spreadsheet pictures are replaced by 3 tables the guide builds from the export buttons' own code (chunk
+`summary-export-tables`, `colony-manager-guide.qmd:468`); gate `test_guideExportTables.R` (9 blocks). Claim `c58040571`, RED `4e012db43`, GREEN `ba9c31501`, REFACTOR `4e99a432b`,
+close-out `50aea544f`. Handoff evaluation of S942: 9/10. Self 8/10. **Gotchas kept:** the kinship file's first rows are all zero, so the guide shows the first animal with 3 or more
+offspring and its first three; a download handler's `output$x` is valid only inside `testServer`.
 
 ### What Session 942 Did (condensed S943; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 3b: 12 guide pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3); D3 ruled accept; the 500-row
