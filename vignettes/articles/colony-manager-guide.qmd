@@ -277,7 +277,7 @@ time by default, adjustable) with a **Display Unknown IDs** option. Unknown IDs
 with the letter U, for the unrecorded parent of an animal with only one
 known parent.
 
-![Pedigree Browser with Display Unknown IDs checked (the default).](shiny_app_use/pb_10_rows_display_unknown_ids.png){fig-alt="Pedigree Browser table with Display Unknown IDs checked, showing UNKNOWN placeholder IDs."}
+![Pedigree Browser with Display Unknown IDs checked (the default).](shiny_app_use/pb_10_rows_display_unknown_ids.png){fig-alt="Pedigree Browser table with Display Unknown IDs checked, showing the first 15 of 3,694 entries; the placeholder animals are in the table, on later pages."}
 
 Which rows are placeholders is recorded in a yes/no `placeholder` column that
 the quality check adds (TRUE for a made-up parent, FALSE for a real animal). If
