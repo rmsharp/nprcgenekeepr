@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 940 Did
+**Deliverable:** retake the Phase 3c guide pictures (docs-audit slice 2; owner pick, option 1 of 4) (IN PROGRESS).
+**Started:** 2026-10-07. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 939 Did
 **Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** Breeding Groups draws its pool from living animals
 only, for every source, before the top-N or floor cut. New internal `isLivingAnimal()` (`R/isLivingAnimal.R:22`): Status ALIVE if the
