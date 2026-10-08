@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 943 Did
+**Deliverable:** docs-audit slice 2, Phase 4a, the 3 spreadsheet pictures (IN PROGRESS). **Started:** 2026-10-08. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 942 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; no code or test change, so no TDD gates):** docs-audit slice 2, Phase 3b: 12 guide
 pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3) from the colony script's full 81/81 run into a scratch
