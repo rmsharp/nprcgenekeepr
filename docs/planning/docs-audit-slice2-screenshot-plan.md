@@ -33,6 +33,14 @@ to write it. Every number below was measured this session unless it says "S821" 
 > click's own idle wait; it matters when a formation runs past 30 s. Take Phase 3c's `genetic_diversity_heatmap.png` after the
 > heat map label fix (`BACKLOG.md:24`), or the guide shows cut-off labels again.
 
+> **Update S940 (2026-10-07): Phase 3c is DONE.** Ten pictures retaken from one full 82/82 run (the six Breeding Groups
+> ones, `genetic_diversity_heatmap.png`, `potential_parents_results.png` and both Mate Pair ones). **Item (e) needed no
+> script change:** the fixed script's Potential Parents capture is 1300 x 7121, the committed height (the 900 px of S927
+> was the crashed run). The Group Detail picture's "Group to view" box had been blank since 2026-07-10 because the script
+> typed "Group 6" where the box's values are the numbers (fixed with a test first, `test_captureHarness.R`). The heat map
+> was retaken again: the groups are living animals with birth dates now, so S935's no-birth-date note is gone. Phases 3a,
+> 3b, 4a and 4b are untouched.
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article

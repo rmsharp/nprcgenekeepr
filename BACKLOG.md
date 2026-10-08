@@ -27,6 +27,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       is 286 px wide and fits). Adding it means a new capture step, a new image file and a sentence in the
       guide. Pick it up only if the owner wants the picture; the QC Summary picture and the words are done.
 
+- [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
+      kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
+      2026-10-07; DECISION NEEDED, Effort S; the guide's words, or the app with a test first)** -- seen in
+      both the old and the retaken Phase 3c pictures. (1) The caption of
+      `breeding_group_first_group_no_kinship_seeds_indicated.png` says "(no kinship shown)" and the text
+      above it (`colony-manager-guide.qmd:544-546`) says within-group kinship values appear on Group Detail
+      if "Include kinship in display of groups" was checked before forming; the picture, taken with the box
+      unchecked, shows a "Within-group kinship" table, because that table is built from the retained
+      kinship matrix whatever the box says (`R/modBreedingGroups.R:1066-1085`; `withKinship` is read only
+      at `:592` and `:702`). (2) With 6 groups asked for, the Groups tab headed 7 boxes in both retakes
+      ("Group 7 (8 animals)", all males, in the first run; "Group 7 (4 animals)" in the second): the seventh
+      is the list of unused candidates, which the Group Detail selector labels "Unused"
+      (`R/modBreedingGroups.R:1040-1046`) while the Groups tab headings read `Group %d` for every element
+      (`:986`); the guide says the run "produced 7 groups" (`colony-manager-guide.qmd:529`, and its alt
+      text). The group boxes are also the old-style `panel panel-primary` ones (`:8`), so a heading change
+      could go with that item. **Decide when picking it up:** for each, change the guide's words, or change
+      the app (an "Unused animals" heading on the Groups tab; the kinship table only when the box is
+      checked); an app change moves the pictures again and needs a test first.
+
 - [ ] **The Breeding Groups "nobody is alive" notice reads "None of the 1 animals" when the source has one
       animal (found S939, 2026-10-07; READY (optional), Effort S; strict TDD, a displayed-text change)** -- the
       notice (`R/modBreedingGroups.R`, the `length(rawPool) == 0L` branch) builds its text from the source's
@@ -120,10 +139,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       D1-D5 are pending; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
-      capture, was NOT done and moves to Phase 3c; Phases 3a and 3b still need D2 and D3 answered; Phase 3c has 9 pictures
-      left, `genetic_diversity_heatmap.png` having been retaken S934, see below; its Breeding Groups pictures
-      show the old default groups of dead animals and are retaken here now that the living-animals-only pool
-      shipped, S939). Measured S927:
+      capture, needed no script change (S940: the fixed script's capture is 1300 x 7121, the committed
+      height; S927's 900 px was the crashed run); Phases 3a and 3b still need D2 and D3 answered; Phase 3c
+      was DONE S940, see below). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
@@ -145,6 +163,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S936 retook `read_and_check_pedigree.png` (the QC Summary boxes are colored now, and the capture script
       waits for the yellow pop-up to close, which the container crop had cut off mid-sentence), from a full
       82/82 run, copied alone.
+      S940 did Phase 3c: 10 pictures retaken (the six Breeding Groups ones, the heat map, Potential Parents
+      and both Mate Pair ones) from one full 82/82 run, copied by name. The Group Detail picture's "Group to
+      view" box had been blank since 2026-07-10 (the script typed "Group 6"; the box's values are numbers),
+      fixed with a test first (`test_captureHarness.R`); the heat map was retaken again (the groups are
+      living animals with birth dates now, so S935's note is gone); the Mate Pair caption said all alive
+      animals but the picture shows a custom list of six, fixed. Two findings for the owner are in the item
+      about the Group Detail kinship caption and the unused animals' "Group 7" heading.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
