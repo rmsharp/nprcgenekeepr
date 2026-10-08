@@ -618,7 +618,7 @@ specific animals** to open a text area for animals that should never appear
 in a pair regardless of any other eligibility screen. Click **Find Eligible
 Pairs** to compute the result.
 
-![Mate Pair Analysis configuration panel and the Eligible Pairs table for a small example pedigree scoped to all alive animals.](shiny_app_use/mate_pair_analysis_eligible_pairs.png){fig-alt="Mate Pair Analysis tab showing the configuration panel (candidate population, minimum age, exclude list, Find Eligible Pairs button) alongside a sortable Eligible Pairs table with columns for sire ID, dam ID, pedigree kinship, marker kinship, and per-parent genetic-value columns."}
+![Mate Pair Analysis configuration panel and the Eligible Pairs table for six example animals entered as a custom list.](shiny_app_use/mate_pair_analysis_eligible_pairs.png){fig-alt="Mate Pair Analysis tab showing the configuration panel (candidate population, minimum age, exclude list, Find Eligible Pairs button) alongside a sortable Eligible Pairs table with columns for sire ID, dam ID, pedigree kinship, marker kinship, and per-parent genetic-value columns."}
 
 The **Eligible Pairs** table reports, for every opposite-sex pair surviving
 the population, age, and exclude-list screens: pedigree kinship, and --
@@ -716,7 +716,7 @@ no birth date, a note under the heat map says how many, and how many of those
 females were counted or left out. Until groups are formed and an analysis has
 run, the tab shows guidance instead of an empty plot.
 
-![The Genetic Diversity heat map for the 6 breeding groups formed above.](shiny_app_use/genetic_diversity_heatmap.png){fig-alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green (gray where a value is undefined), with a note under the grid about animals that have no birth date."}
+![The Genetic Diversity heat map for the 6 breeding groups formed above.](shiny_app_use/genetic_diversity_heatmap.png){fig-alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green (gray where a value is undefined)."}
 
 ### Marker Genetics
 
