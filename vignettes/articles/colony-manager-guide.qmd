@@ -440,7 +440,7 @@ stochastic gene-drop run, this article does not pin a specific row number to
 it -- widening "Show top N" (to 500 below) shows the full distribution
 instead.
 
-![Genetic Value Analysis results widened to show more of the ranking, including lower-ranked and Undetermined animals.](shiny_app_use/gva_high_and_low_value.png){fig-alt="Genetic Value Analysis results table widened to 500 rows, showing the transition from High Value to Low Value and Undetermined animals sorted to the bottom."}
+![Genetic Value Analysis with Show top N widened to 500: the results table now has 50 pages of 10 rows, and the first page is shown.](shiny_app_use/gva_high_and_low_value.png){fig-alt="Genetic Value Analysis tab with Show top N set to 500; the results table reads Showing 1 to 10 of 500 entries and its pager runs to page 50."}
 
 ### Summary Statistics
 
