@@ -450,3 +450,24 @@ test_that("the colony script types the group's number, not its label, into the G
                  info = paste("viewGrp is set to", value))
   }
 })
+
+## The Pedigree Browser's default view was captured twice: as
+## pb_10_rows_display_unknown_ids.png (the picture the guide shows) and as
+## pb_unknown_displayed.png, a same-size twin nothing displays (plan decision
+## D2; the owner ruled "delete" in S941).
+test_that("the colony script no longer writes the unused pb_unknown_displayed.png", {
+  lines <- readScript(colonyScript)
+  code <- lines[!grepl("^\\s*#", lines)]
+  expect_false(any(grepl("pb_unknown_displayed", code)))
+  expect_length(
+    grep('shot\\(app, "pb_10_rows_display_unknown_ids\\.png"', code), 1L)
+})
+
+test_that("the unused pb_unknown_displayed.png is gone from the picture folder", {
+  pictureDir <- file.path(scriptDir, "shiny_app_use")
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  expect_false(file.exists(file.path(pictureDir, "pb_unknown_displayed.png")))
+  expect_true(file.exists(
+    file.path(pictureDir, "pb_10_rows_display_unknown_ids.png")))
+})
