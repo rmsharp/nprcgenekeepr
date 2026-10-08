@@ -217,14 +217,6 @@ do_step("navigate to Pedigree Browser", {
 shot(app, "pb_10_rows_display_unknown_ids.png",
      selector = "#pedigree-moduleContainer")
 
-# 8. Same state, illustrating UNKNOWN IDs specifically. DT's client-side
-#    search box is not a bound Shiny input in this table's configuration
-#    (confirmed: app$set_inputs("pedigree-pedigreeTable_search", ...) errors
-#    with "Unable to find input binding"), so this is captured as the same
-#    default view as #7 rather than a filtered one -- documented duplication,
-#    not a silent gap.
-shot(app, "pb_unknown_displayed.png", selector = "#pedigree-moduleContainer")
-
 # 9. Display Unknown IDs unchecked
 #    (pb_no_unknown_displayed.png -- kept name, updated framing)
 do_step("uncheck Display Unknown IDs", {
