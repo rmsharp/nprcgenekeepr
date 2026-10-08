@@ -208,6 +208,10 @@ longitudinal monitoring of colony genetic health.
 - The rankings table gained a **flagged** column for animals whose ranking
   correction could not be applied for lack of a comparable peer group (issue
   #127).
+- The rankings table starts with the animal ID. It used to start with an
+  unlabeled column of leftover row numbers (such as 4, 5, 6, 9, 10) that were
+  not the rank; the **rank** column, last in the table, still gives each
+  animal's rank.
 
 ## Breeding Group Formation
 
