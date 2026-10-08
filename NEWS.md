@@ -222,6 +222,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- Groups are formed from living animals only, whatever the **Source**.
+  An animal counts as alive when its Status is ALIVE. A pedigree with no
+  Status column uses the exit date instead (an animal with no exit date
+  counts as alive), and one with neither column is used as it is. **Top
+  ranked** takes the best-ranked living animals, so the default 20 can
+  all breed. If no animal in the source is alive, the tab says so and
+  forms no groups. Animals you type into a seed group are accepted as
+  typed.
 - Several candidate groupings are shown per run, with a selector and
   comparison table (issue \#125). **Candidates to retain** sets how many
   are kept (default 5, 1 to 50). Script users: `groupAddAssign()`

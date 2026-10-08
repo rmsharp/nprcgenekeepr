@@ -492,7 +492,10 @@ as a PNG.
 The **Breeding Groups** tab forms candidate breeding groups from a source
 population you choose (top-ranked animals from Genetic Value Analysis, an
 uploaded list, or all available animals), subject to a maximum kinship
-threshold, a target number of groups, and a minimum breeding age.
+threshold, a target number of groups, and a minimum breeding age. Only
+living animals are used: an animal counts as alive when its Status is
+ALIVE (or, in a pedigree with no Status column, when it has no exit date),
+so deceased, shipped and placeholder animals are skipped.
 
 ![Breeding Group Formation, initial configuration.](shiny_app_use/breeding_group_first_view.png){fig-alt="Breeding Group Formation tab showing the configuration panel: source, number of groups, kinship threshold, sex ratio, and minimum age."}
 
