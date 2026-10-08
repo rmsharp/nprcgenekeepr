@@ -388,6 +388,104 @@ test_that("modGeneticValueServer rankingsTable renders after analysis", {
   )
 })
 
+# ----------------------------------------------------------------------------
+# rankingsTable shows the report's own columns (S946, BACKLOG.md:57)
+# ----------------------------------------------------------------------------
+# DT shows a data frame's row names as an unlabeled first column unless told
+# not to. The report is reordered (Undetermined animals last, then rank), so
+# those row names are leftover positions from the unsorted list (the real
+# app's first ten read 4, 5, 6, 9, 10, ...), not a rank; the real rank column
+# is the last one. The Export buttons already write no row names. The table
+# comes back from testServer() as serialized widget JSON whose container holds
+# the column headings (the rows themselves stay on the server).
+
+# The heading text of every <th> in the widget's container, in order.
+dtHeadings <- function(widgetJson) {
+  json <- as.character(widgetJson)
+  cells <- regmatches(json, gregexpr("<th>[^<]*<\\\\/th>", json))[[1L]]
+  trimws(sub("<\\\\/th>$", "", sub("^<th>", "", cells)))
+}
+
+# Runs the module on a 20-animal pedigree with the given inputs set before
+# Run Analysis, and returns the table's headings, the columns of the view the
+# table shows, and that view's row count.
+gvTableAfterRun <- function(inputs) {
+  testPed <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+  seen <- new.env()
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ testPed })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      do.call(session$setInputs, inputs)
+      session$setInputs(runAnalysis = 1)
+      seen$headings <- dtHeadings(output$rankingsTable)
+      seen$shown <- names(gvaView())
+      seen$nShown <- nrow(gvaView())
+    }
+  )
+  seen
+}
+
+expectHeadingsAreReportColumns <- function(seen) {
+  expect_false("" %in% seen$headings)
+  expect_equal(seen$headings, seen$shown)
+}
+
+test_that("rankingsTable headings are the report's columns, top N equal to the animal count (the default view)", {
+  skip_if_not_installed("shiny")
+
+  seen <- gvTableAfterRun(list(topN = 20))
+
+  expect_equal(seen$nShown, 20L)
+  expectHeadingsAreReportColumns(seen)
+  expect_equal(seen$headings[[1L]], "id")
+})
+
+test_that("rankingsTable headings are the report's columns, top N below the animal count", {
+  skip_if_not_installed("shiny")
+
+  seen <- gvTableAfterRun(list(topN = 5))
+
+  expectHeadingsAreReportColumns(seen)
+})
+
+test_that("rankingsTable headings are the report's columns, top N above the animal count", {
+  skip_if_not_installed("shiny")
+
+  seen <- gvTableAfterRun(list(topN = 100))
+
+  expectHeadingsAreReportColumns(seen)
+})
+
+test_that("rankingsTable headings are the report's columns after Filter View on two IDs", {
+  skip_if_not_installed("shiny")
+
+  seen <- gvTableAfterRun(list(topN = 100, viewIds = "F1, O1", view = 1))
+
+  expect_equal(seen$nShown, 2L)
+  expectHeadingsAreReportColumns(seen)
+})
+
+test_that("rankingsTable headings are the report's columns under the Categorical ranking scheme", {
+  skip_if_not_installed("shiny")
+
+  seen <- gvTableAfterRun(list(topN = 10, rankScheme = "categorical"))
+
+  expectHeadingsAreReportColumns(seen)
+})
+
+test_that("rankingsTable still ends with the rank column (control)", {
+  skip_if_not_installed("shiny")
+
+  seen <- gvTableAfterRun(list(topN = 10))
+
+  expect_equal(utils::tail(seen$headings, 1L), "rank")
+  expect_true("id" %in% seen$headings)
+})
+
 test_that("modGeneticValueServer gvSummary renders after analysis", {
   skip_if_not_installed("shiny")
 
