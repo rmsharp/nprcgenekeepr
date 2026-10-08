@@ -418,3 +418,35 @@ test_that("the Diagram legend picture waits for the pop-up to clear first", {
   expect_length(shotAt, 1L)
   expect_true(any(waitAt > focalAt & waitAt < shotAt))
 })
+
+## The Group Detail box ("Group to view:") lists the groups by number: the app
+## builds its choices as setNames(seq_len(n), labels) (R/modBreedingGroups.R,
+## the viewGrp observe()), so the value a script types must be that number,
+## not the label. "Group 6" matches no choice and leaves the box blank (found
+## S940: the committed picture and the retake both showed a blank box).
+viewGrpValues <- function(lines) {
+  lines <- lines[!grepl("^\\s*#", lines)]
+  hits <- regmatches(lines, regexpr("-viewGrp`\\s*=\\s*[^,)]+", lines))
+  trimws(sub("^-viewGrp`\\s*=\\s*", "", hits))
+}
+
+test_that("viewGrpValues() reads the value a script types into the group box", {
+  made <- c(
+    "  app$set_inputs(`breedingGroups-viewGrp` = \"6\", wait_ = FALSE)",
+    "  app$set_inputs(`breedingGroups-viewGrp` = 2L)",
+    "  # app$set_inputs(`breedingGroups-viewGrp` = \"Group 9\")",
+    "  app$set_inputs(`breedingGroups-viewGrp` = \"Group 6\", wait_ = FALSE)"
+  )
+  expect_identical(viewGrpValues(made), c("\"6\"", "2L", "\"Group 6\""))
+  expect_identical(viewGrpValues("app$click(\"x\")"), character(0))
+})
+
+test_that("the colony script types the group's number, not its label, into the Group Detail box", {
+  lines <- readScript(colonyScript)
+  values <- viewGrpValues(lines)
+  expect_gte(length(values), 1L)
+  for (value in values) {
+    expect_match(value, "^\"?[0-9]+L?\"?$",
+                 info = paste("viewGrp is set to", value))
+  }
+})
