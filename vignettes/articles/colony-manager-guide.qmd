@@ -496,11 +496,12 @@ write.csv(firstOrder, firstOrderFile, row.names = FALSE)
 femaleFile <- tempfile(fileext = ".csv")
 write.csv(exportPed[exportPed$sex == "F" & isFounder(exportPed), ],
           femaleFile, row.names = FALSE)
+shownRows <- 8L
 readRows <- function(path, n) {
   read.csv(path, colClasses = "character", check.names = FALSE, nrows = n)
 }
-shownFirstOrder <- readRows(firstOrderFile, 8L)
-shownFemaleFounders <- readRows(femaleFile, 8L)
+shownFirstOrder <- readRows(firstOrderFile, shownRows)
+shownFemaleFounders <- readRows(femaleFile, shownRows)
 nFirstOrder <- length(readLines(firstOrderFile)) - 1L
 nFemaleFounders <- length(readLines(femaleFile)) - 1L
 
