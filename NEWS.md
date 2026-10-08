@@ -345,8 +345,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - Fixed: a breeding group with no breeding-age females was shown as a
   green Production cell in the Genetic Diversity dashboard, as healthy
   as a group that meets its birth target. Production cannot be
-  calculated for such a group, so its cell is now gray, as the
-  Inbreeding cell already was.
+  calculated for such a group, so its cell is now gray. An undefined
+  Inbreeding cell is red, so missing data there stands out.
 
 - Fixed: forming breeding groups that include animals with no birth
   date, after running the genetic value analysis, could turn the page
