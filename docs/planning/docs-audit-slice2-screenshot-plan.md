@@ -61,6 +61,17 @@ to write it. Every number below was measured this session unless it says "S821" 
 > `vignettes/articles/`). Two findings are in `BACKLOG.md` (the three Summary Statistics pictures are one picture; the
 > Genetic Value table's first column is row names). Phases 4a and 4b are untouched; 4a needs Decision 4 and 4b Decision 5.
 
+> **Update S943 (2026-10-08): Phase 4a is DONE; Decision 4 was ruled: build the tables in the guide.** The article can call
+> the same package functions as the export buttons (`runQcStudbook()`, `setPopulation()`, `findPedigreeNumber()`,
+> `countFirstOrder()`, `kinship()`, `isFounder()`, all exported): measured against the real app's three export files, the
+> rebuilt files are identical byte for byte, in about 5 s. The three pictures are deleted; the guide's chunk
+> `summary-export-tables` builds a kinship corner (the first animal with 3 or more offspring and its first three
+> offspring: the file's first rows are all zero), and the first 8 rows of the first-order and female-founders files.
+> The old pictures were stale by measurement, not only the two this plan named: the first-order picture matched 0 of its
+> 22 rows, the founders picture lacked `fromCenter` and `placeholder`, the kinship picture's animal order differs. The
+> gate is `tests/testthat/test_guideExportTables.R` (the shown cells must equal what the buttons write; strict TDD: RED
+> `4e012db43`, GREEN `ba9c31501`, REFACTOR `4e99a432b`). Only Phase 4b (Decision 5) remains.
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article

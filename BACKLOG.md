@@ -77,6 +77,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the ranking changed since then was not looked into). **Decide when picking it up:** hide the row names (`rownames = FALSE`; the `rank` column already
       holds the rank) or leave it. Either way the three Genetic Value pictures are retaken with the change.
 
+- [ ] **The guide's export-tables chunk repeats the app's pedigree preparation (found S943, 2026-10-08;
+      DECISION NEEDED, Effort S; an exported function, strict TDD)** -- `summary-export-tables`
+      (`vignettes/articles/colony-manager-guide.qmd:468`) copies the app's four steps from the uploaded file to the
+      pedigree the Summary Statistics tab receives: `runQcStudbook()` with both age floors 2, `setPopulation(ped,
+      character(0))`, `findPedigreeNumber()` and `findGeneration()` (`R/modInput.R:511-523`,
+      `R/modPedigree.R:358-377`). `tests/testthat/test_guideExportTables.R` fails if the copy drifts from what the
+      export buttons write, so nothing is wrong today. **Decide when picking it up:** leave the copy with its test,
+      or add one exported function that the app and the guide both call (the exported API grows by one, and the
+      guide chunk and the two modules shrink).
+
 - [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
       kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
       2026-10-07; DECISION NEEDED, Effort S; the guide's words, or the app with a test first)** -- seen in
@@ -186,12 +196,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S862; 8 (S868) `docs/research/` and older `docs/audits/`, a status banner on 26 files, S870.
       **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped
       S927 into 7-8 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its owner decisions
-      D1-D5 are pending; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
+      D2, D3 and D4 are ruled and D5 is pending; D1, the order, was followed as the plan recommended; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
       capture, needed no script change (S940: the fixed script's capture is 1300 x 7121, the committed
       height; S927's 900 px was the crashed run); Phases 3a (S941; D2 ruled: delete the orphan), 3b (S942; D3 ruled:
-      accept the install date) and 3c (S940) are DONE; 4a and 4b remain, see below). Measured S927:
+      accept the install date), 3c (S940) and 4a (S943; D4 ruled: build the tables) are DONE; 4b remains, see below). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
@@ -234,8 +244,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       a recorded origin first, as the prose says (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
       500-row picture's caption and alt text now say rows 1 to 10 of 500, 50 pages, not a High-to-Low transition
       it never showed. Two findings for the owner are the Summary Statistics duplicates item and the Genetic
-      Value row-names item, both below the pop-up item. Phases 4a (3 spreadsheet pictures; D4) and 4b (9 Marker
-      Genetics pictures; D5) remain.
+      Value row-names item, both below the pop-up item. Phases 4a and 4b then remained.
+      S943 did Phase 4a (D4 ruled: build the tables in the guide): the three spreadsheet pictures
+      (`ss_kinship_matrix`, `ss_first_order_relationships`, `ss_female_founders`) are deleted and the guide builds
+      the three tables itself, in the chunk labelled `summary-export-tables`
+      (`vignettes/articles/colony-manager-guide.qmd:468`), from the example file with the export buttons' own
+      `write.csv` lines; a kinship corner (the first animal with 3 or more offspring and its first three), and the
+      first 8 rows of the first-order and female-founders files. Measured first in the real app (the three export
+      buttons, headless): exported functions alone rebuild all three files byte for byte (about 5 s); the old
+      first-order picture matched 0 of its 22 rows (cause not looked into), the founders picture lacked
+      `fromCenter` and `placeholder`, the kinship picture listed the animals in another order. The gate is
+      `tests/testthat/test_guideExportTables.R` (9 blocks): what the guide shows must equal the same cells of
+      what the buttons write. **Only Phase 4b remains (D5 first: script the 9 Marker Genetics pictures, or leave
+      them as hand-taken pictures with the capture date recorded; view each against the live tab first; one to
+      two sessions). When 4b ends, re-date the abstract's "current as of 2026-09-30"
+      (`colony-manager-guide.qmd:37`), which the slice-2 retakes have outrun.**
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
