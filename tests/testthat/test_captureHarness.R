@@ -471,3 +471,117 @@ test_that("the unused pb_unknown_displayed.png is gone from the picture folder",
   expect_true(file.exists(
     file.path(pictureDir, "pb_10_rows_display_unknown_ids.png")))
 })
+
+## ---- the three Summary Statistics pictures (docs-audit slice 2 follow-up) ----
+##
+## ss_first_view.png, ss_trimmed_all_plots.png and
+## ss_export_mean_kinship_coefficient_histogram.png were one picture three
+## times: the script shot the whole #summaryStats-moduleContainer for each
+## (1270 x 7598 px, 1.8 MB each; measured S942 and again S945), so the third
+## caption's "One exported plot" showed the whole tab. The owner ruled (S945)
+## that each picture shows what its caption says: the window as the tab opens,
+## the block holding the six plots, and the mean kinship histogram as the
+## Export button writes it (the real exported file, fetched with
+## app$get_download()).
+
+ssPictures <- c(
+  firstView = "ss_first_view.png",
+  sixPlots = "ss_trimmed_all_plots.png",
+  exported = "ss_export_mean_kinship_coefficient_histogram.png"
+)
+
+## The comment-free code of a script.
+codeOf <- function(lines) lines[!grepl("^\\s*#", lines)]
+
+## The top-level do_step( / shot( statement that holds the first line matching
+## `pattern`: from its first line to the line before the next top-level call,
+## as one string.
+blockContaining <- function(code, pattern) {
+  at <- grep(pattern, code)
+  stopifnot(length(at) >= 1L)
+  tops <- grep("^(do_step|shot)\\(", code)
+  start <- max(tops[tops <= at[[1L]]])
+  nextTop <- tops[tops > start]
+  end <- if (length(nextTop)) nextTop[[1L]] - 1L else length(code)
+  paste(code[start:end], collapse = "\n")
+}
+
+## Width and height of a PNG, from its header (bytes 17 to 24, big-endian).
+pngSize <- function(path) {
+  header <- readBin(path, "raw", 24L)
+  as.integer(c(sum(as.integer(header[17:20]) * 256^(3:0)),
+               sum(as.integer(header[21:24]) * 256^(3:0))))
+}
+
+test_that("pngSize() reads the width and the height from the PNG header", {
+  skip_if_not(capabilities("png"), "no png device here")
+  drawn <- tempfile(fileext = ".png")
+  grDevices::png(drawn, width = 70L, height = 50L)
+  graphics::par(mar = c(0, 0, 0, 0))
+  plot.new()
+  grDevices::dev.off()
+  expect_identical(pngSize(drawn), c(70L, 50L))
+})
+
+test_that("no Summary Statistics picture is shot from the whole tab", {
+  code <- codeOf(readScript(colonyScript))
+  for (name in names(ssPictures)) {
+    block <- blockContaining(code, ssPictures[[name]])
+    expect_false(grepl("summaryStats-moduleContainer", block, fixed = TRUE),
+                 info = ssPictures[[name]])
+  }
+})
+
+test_that("the first-view picture is a window shot", {
+  code <- codeOf(readScript(colonyScript))
+  block <- blockContaining(code, "ss_first_view\\.png")
+  expect_match(block, 'selector = "viewport"')
+})
+
+test_that("the six-plots picture is shot from the block that holds the six plots, after that block is tagged", {
+  code <- codeOf(readScript(colonyScript))
+  tagAt <- grep("summaryStats-mkHist.*closest\\(", code)
+  expect_length(tagAt, 1L)
+  tagLine <- if (length(tagAt) == 1L) code[[tagAt]] else ""
+  tagId <- sub(".*\\.id *= *['\"]([^'\"]+)['\"].*", "\\1", tagLine)
+  expect_false(identical(tagId, tagLine), info = "the tag line assigns an id")
+  shotAt <- grep("ss_trimmed_all_plots\\.png", code)
+  expect_length(shotAt, 1L)
+  expect_true(length(tagAt) == 1L && tagAt < shotAt)
+  expect_match(blockContaining(code, "ss_trimmed_all_plots\\.png"),
+               paste0('selector = "#', tagId, '"'), fixed = TRUE)
+})
+
+test_that("the exported-histogram picture is the file the Export button writes, fetched with get_download()", {
+  code <- codeOf(readScript(colonyScript))
+  expect_false(any(grepl('shot\\(app, "ss_export_mean_kinship', code)))
+  block <- blockContaining(code, "ss_export_mean_kinship_coefficient_histogram\\.png")
+  expect_match(block, 'get_download\\(\\s*"summaryStats-downloadMkHist"')
+  expect_match(block, "file\\.path\\(SHOT_DIR")
+})
+
+test_that("the three Summary Statistics pictures are three different files", {
+  pictureDir <- file.path(scriptDir, "shiny_app_use")
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  sums <- tools::md5sum(file.path(pictureDir, ssPictures))
+  expect_false(anyNA(sums))
+  expect_length(unique(unname(sums)), 3L)
+})
+
+test_that("the three Summary Statistics pictures have the sizes of what they show", {
+  pictureDir <- file.path(scriptDir, "shiny_app_use")
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  size <- function(name) pngSize(file.path(pictureDir, ssPictures[[name]]))
+  ## the window as the tab opens: 1300 px wide, as tall as the window
+  first <- size("firstView")
+  expect_identical(first[[1L]], 1300L)
+  expect_true(first[[2L]] >= 800L && first[[2L]] <= 1600L)
+  ## the block of six plots: far shorter than the whole tab (7,598 px)
+  six <- size("sixPlots")
+  expect_true(six[[2L]] > 1000L && six[[2L]] < 2000L)
+  ## the exported file: ggsave(width = 8, height = 6, dpi = 100)
+  ## (R/modSummaryStats.R downloadMkHist)
+  expect_identical(size("exported"), c(800L, 600L))
+})
