@@ -54,16 +54,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
       `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
 
-- [ ] **The Genetic Value results table's first column is leftover row names, so it reads 4, 5, 6, 9, 10 ...
-      instead of 1 to 10 (found S942, 2026-10-08; DECISION NEEDED, Effort S; strict TDD, a displayed-table
-      change)** -- `output$rankingsTable` is `DT::renderDT()` of the data frame (`R/modGeneticValue.R:421-426`),
-      and DT shows row names by default; the report is reordered with `report[order(demote, report$rank), ]`
-      (`:389`), which keeps each animal's old row name, and only the `rank` column is renumbered 1..n (`:390`). In
-      the retaken `gva_first_high_value.png` the first ten rows read 4, 5, 6, 9, 10, 11, 13, 14, 15, 16 (the
-      committed picture, taken 2026-08-10, read 1 to 10 with no-parent, no-origin animals first; why the top of
-      the ranking changed since then was not looked into). **Decide when picking it up:** hide the row names (`rownames = FALSE`; the `rank` column already
-      holds the rank) or leave it. Either way the three Genetic Value pictures are retaken with the change.
-
 - [ ] **The guide's export-tables chunk repeats the app's pedigree preparation (found S943, 2026-10-08;
       DECISION NEEDED, Effort S; an exported function, strict TDD)** -- `summary-export-tables`
       (`vignettes/articles/colony-manager-guide.qmd:468`) copies the app's four steps from the uploaded file to the
@@ -241,7 +231,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       a recorded origin first, as the prose says (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
       500-row picture's caption and alt text now say rows 1 to 10 of 500, 50 pages, not a High-to-Low transition
       it never showed. Two findings for the owner were the Summary Statistics duplicates item (fixed S945: three
-      different pictures) and the Genetic Value row-names item (below the pop-up item). Phases 4a and 4b then remained.
+      different pictures) and the Genetic Value row-names item (fixed S946: the table is built with no row names). Phases 4a and 4b then remained.
       S943 did Phase 4a (D4 ruled: build the tables in the guide): the three spreadsheet pictures
       (`ss_kinship_matrix`, `ss_first_order_relationships`, `ss_female_founders`) are deleted and the guide builds
       the three tables itself, in the chunk labelled `summary-export-tables`
