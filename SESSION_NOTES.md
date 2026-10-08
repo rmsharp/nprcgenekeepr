@@ -99,37 +99,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 943 Did
-**Deliverable:** docs-audit slice 2, Phase 4a, the 3 spreadsheet pictures (IN PROGRESS). **Started:** 2026-10-08. **Ledger:** `CHANGELOG: pending`.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled D4 "build the tables in the guide"):** docs-audit slice 2,
+Phase 4a. The 3 spreadsheet pictures are deleted; one hidden chunk, `summary-export-tables` (`colony-manager-guide.qmd:468`), rebuilds the app's pedigree and
+the export files with the buttons' own `write.csv` lines, and the guide shows 3 tables (kinship corner: `0ZX29Q` and its first 3 offspring; first 8 rows of
+first-order and female founders). **Measured first** (real app headless, the 3 export buttons): exported functions alone rebuild all 3 files byte for byte
+(~5 s); the old first-order picture matched 0 of 22 rows (`01QRQ4`: picture 0,0,0,0, file 2,3,0,5; **cause not looked into**), the founders picture lacked
+`fromCenter` and `placeholder`, the kinship picture's animal order differs. **Gate:** `tests/testthat/test_guideExportTables.R` (9 blocks, 35 expectations): shown cells must equal what the buttons
+write (`shiny::testServer`). Claim `c58040571`, RED `4e012db43` (6 fail, 3 helper controls pass by design), GREEN `ba9c31501`, REFACTOR `4e99a432b`
+(`shownRows`), close-out = the commit carrying this note. **Verified:** full suite 3,293 blocks, 0 failed, 0 errors (187 skipped); lint 0; `check` 0/0/0;
+ratchet 1/1 (results 4547e74c5ae8, manifest aa983075d6a2, tarball 3,746,222 B); guide renders (exit 0), tables identical before and after the refactor,
+page opened for the owner (scratch copy). No hand check in Chrome; published pages not opened. Learning 909. **Went wrong:** my first screenshot caught the
+page top (chromote `evaluate` needs `returnByValue = TRUE`); a `.table-responsive` wrapper was needless (Quarto already scrolls it).
+**Handoff evaluation of S942: 9/10.** Helped: "D4 first, check whether the article can call the same functions" (it can); the handler cites; `R_LIBS` for the
+render (first try); the note-size warning (my stub landed at 56,725 B). Missing: the first kinship rows are all zero, so "first rows" shows nothing. Wrong:
+nothing found (the plan's "2 of 3 stale from the code alone" was low: all 3). **Self-assessment: 8/10.** + measured the ground truth before offering the
+option, tests first with controls, viewed the render. - first screenshot missed, the old pictures' number differences unexplained.
 
-### What Session 942 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; no code or test change, so no TDD gates):** docs-audit slice 2, Phase 3b: 12 guide
-pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3) from the colony script's full 81/81 run into a scratch
-folder, copied by name; every size matched S927's measurement. **D3 ruled accept** (the owner, in plain words): the Home picture shows install date
-2026-10-07 and a three-row navigation bar (two new tabs). **Caption
-fixed:** `gva_high_and_low_value.png` claimed a High-to-Low transition and Undetermined animals at the bottom; picture (old and new) shows entries 1 to 10 of
-500, so caption and alt text now say that (`colony-manager-guide.qmd:443`). **To the owner** (`BACKLOG.md:57`, `:70`, `:44`): the three Summary Statistics
-pictures are pixel-identical (the third's caption says "one exported plot"); the Genetic Value table's first column is DT row names (4, 5, 6, 9 ...), not
-ranks; 2 more pictures carry a pop-up. The Genetic Value top rows changed kind since the 2026-08-10 pictures (imports with an origin first now; no-parent,
-no-origin animals first then): **cause not looked into.** Claim `b732807cf`, pictures `1c71da59a`, `fd5f11e46`, caption `b939733e8`, docs `3fc5c5230`,
-close-out = the commit carrying this note. **Verified:** full suite 3,284 blocks, 0 failed, 0 errors (187 skipped); `check` 0/0/0; the guide renders (exit 0, 45
-of 45 image links resolve); ratchet 1/1 pass (results 386e39089c79, manifest aa983075d6a2); no `.R` file changed, so no lint owed. Headless driver, no hand check in Chrome; the owner was shown Home, the
-pyramid and the results with `open`; published pages not yet opened. Learning 908. **Went wrong:** the first render failed (Quarto's R had no renv
-library); a wrong cause ("predates the demotion") was drafted into BACKLOG and caught by `git log -S` before the
-commit. **Handoff evaluation of S941: 9/10.** Helped: the 12 pictures and the D3 yes/no as written; the note-size warning (the claim stub fit at 56,532 B);
-"view each pair" found the caption mismatch. Missing: how to render the guide (`R_LIBS`). Wrong: nothing found. **Self-assessment: 8/10.** + all 12 viewed beside
-old, the new ones compared with each other, an unverified cause corrected before commit. - first render failed, the ranking change unexplained, no Chrome hand check.
+**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2, Phase 4b (`BACKLOG.md:179`; D5 first: script the 9 Marker Genetics pictures or leave them dated;
+view each against the live tab first; 1-2 sessions); when it ends, re-date "current as of 2026-09-30" (`colony-manager-guide.qmd:37`). (B) Owner findings:
+Summary Statistics duplicates (`BACKLOG.md:57`), Genetic Value row names (`:70`), the chunk repeating the app's pedigree preparation (`:80`, new), Direct-style
+picture (`:30`), Breeding Groups statements (`:90`). (C) Default population (`:115`, M); old-style boxes (`:8`); origin-and-funding (`:134`); `getAncestors()`
+(`:155`). After a push, open the published guide and Diagram pages and confirm the retaken images load and the 3 tables show.
+**Key files:** `vignettes/articles/colony-manager-guide.qmd:468` (chunk), `:522,541,556` (the three paragraphs), `:37` (date);
+`tests/testthat/test_guideExportTables.R` (`guideRun()`, `exportButtonLines()`); `R/modSummaryStats.R:837-891` (export handlers); `PROJECT_LEARNINGS.md` Learning 909.
+**Gotchas:** the new test runs the real guide chunk and the 3 handlers (~10 s) and skips when the guide is absent; render from a scratch copy (`cp -R
+vignettes/articles <scratch>`, `R_LIBS` = first `.libPaths()`), the log's own `exit=` line is the result; BACKLOG cites shifted (+10 after `:80`), re-grep; S943
+scratch files live only in that scratchpad; `master` is 30 ahead of `origin` (the owner pushes); keep this file under ~56,750 B (the Read tool truncates past
+25,000 tokens).
 
-**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2, Phase 4a (`BACKLOG.md:169`; D4 first: the 3 spreadsheet pictures, retake by hand or build tables
-from the export code; check first whether the article can call the same functions) or 4b (D5, 9 Marker Genetics pictures, 1-2 sessions). (B) Owner findings:
-Summary Statistics duplicates (`:57`), Genetic Value row names (`:70`), Direct-style picture (`:30`), Breeding Groups statements (`:80`). (C) Default population
-(`:105`, M); old-style boxes (`:8`); origin-and-funding (`:124`); `getAncestors()` (`:145`). After a push, open the published guide and Diagram pages
-and confirm the 26 retaken images (14 + 12) load.
-**Key files:** `vignettes/articles/colony-manager-guide.qmd:443` (caption), `:454,486,488` (the duplicate pictures); `vignettes/articles/colony-manager-guide-screenshots.R:154,160,
-378,381,385`; `R/modGeneticValue.R:389-390,421-426` (row names); `PROJECT_LEARNINGS.md` Learning 908.
-**Gotchas:** `quarto render` from `vignettes/articles/` needs `R_LIBS` set to the renv library (first entry of `.libPaths()` from the repo root), and the log's own
-`exit=` line is the result; zsh does not split an unquoted `$LIST` (use a literal list); the S942 scratch folders (`shots_colony`, `cmp`, `sheets`) live only in
-that scratchpad; `master` is 24 ahead of `origin` after this close-out (the owner pushes; no push-only sessions); keep this
-file under ~56,750 B (the Read tool truncates past 25,000 tokens).
+### What Session 942 Did (condensed S943; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, Phase 3b: 12 guide pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3); D3 ruled accept; the 500-row
+picture's caption fixed. Claim `b732807cf`, close-out `ef5d5fb51`. Handoff evaluation of S941: 9/10. Self 8/10. **Gotchas kept:** the three Summary Statistics pictures are
+one picture and the Genetic Value first column is row names (`BACKLOG.md:57`, `:70`).
 
 ### What Session 941 Did (condensed S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 3a: 14 guide pictures retaken (9 Pedigree Browser, 5 Diagram); the owner ruled D2 delete (`pb_unknown_displayed.png` and its capture step
@@ -333,11 +334,8 @@ and the four inline copies call it (`convertDate()`, `removeDuplicates()`, `remo
 behaviour unchanged; `getRecordStatusIndex()` left alone by the owner's ruling. `BACKLOG.md:22-38` removed. Claim `a1813dfdb`,
 RED `1cfee7215`, GREEN `226069212` and `8881aa188`, REFACTOR `7d6ef261e`, close-out `db755d5d3` (all still local). Handoff
 evaluation of S907: 9/10. Self 8/10.
-**Gotchas kept:** save a behaviour baseline's outputs and run it twice at one commit before trusting it (a `tempdir()` path in
-an error message made two runs differ); a delegation test needs a stub whose answer differs from the real rule, with a real-rule
-control first; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` every run (revert it); run the full suite (6.1
-min) and `devtools::check()` (8.3 min) in the background one at a time (`test_markerKinship.R` has a wall-clock benchmark); take
-`wc -c` after the last edit (Learning 871).
+**Gotchas kept:** run a behaviour baseline twice at one commit before trusting it; a delegation test needs a stub whose answer differs from the real rule;
+`devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it); the full suite and `check` run one at a time in the background; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 907 Did (condensed S908; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Reworded the `data-raw/rhesusPedigree.R` docstring (comment only; parsed code identical, 0 lints) so it says only what is true.
@@ -345,10 +343,8 @@ Re-measured first: the object, `rhesusPedigree_fromCenter.csv` and `obfuscated_r
 over 375 rows, so "cannot be re-derived from the CSV" was false; the CSV was first committed six years after the object.
 `BACKLOG.md:415-434` removed. Claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`, close-out `cf537c88d` (all still
 local). Handoff evaluation of S906: 9/10. Self 8/10.
-**Gotchas kept:** a BACKLOG line cite can understate a claim, so grep the whole file for the key word before calling it fixed;
-an `Edit` whose `old_string` ends mid-line leaves a ragged short line, so end the replacement at a line boundary; the first plain
-`gh run list` returned stale June rows and an immediate re-run was current, so re-run it before trusting an old date; take
-`wc -c` after the last edit (Learning 871).
+**Gotchas kept:** a BACKLOG cite can understate a claim, so grep the whole file for the key word before calling it fixed; an `Edit` whose `old_string` ends
+mid-line leaves a ragged line; re-run a stale-looking `gh run list` before trusting an old date; take `wc -c` after the last edit (Learning 871).
 
 ### What Session 906 Did (condensed S907; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Decision only (no code, test or `R/` change): the owner ruled "leave it" on the row-order item after S905's measurements were put
