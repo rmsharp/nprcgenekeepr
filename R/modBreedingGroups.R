@@ -526,6 +526,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           ped$id
         }
 
+        # Only living animals can breed (owner-ruled S938), so the rest are
+        # skipped for every source, before the narrowing below: "Top ranked
+        # 20" is then the best 20 LIVING animals, not the first 20 minus the
+        # dead. A seed animal the user types is not drawn from this pool and
+        # is left alone.
+        poolSize <- length(rawPool)
+        rawPool <- rawPool[rawPool %in% ped$id[isLivingAnimal(ped)]]
+
         # Narrow the raw pool by inclusion criterion (issue #128). A missing
         # input$inclusionCriterion defaults to "topN", reproducing today's
         # exact behavior for all three sources unless the user actively
@@ -651,6 +659,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         result <- if (length(badSeeds) > 0L) {
           showNotification(
             paste("Seed animals not in the pedigree:", toString(badSeeds)),
+            type = "error",
+            duration = 10L
+          )
+          list(candidates = list(list(group = list(character(0L)), score = 0L)))
+        } else if (length(rawPool) == 0L) {
+          showNotification(
+            paste0("None of the ", poolSize, " animals in this source is ",
+                   "alive, so no breeding groups were formed."),
             type = "error",
             duration = 10L
           )
