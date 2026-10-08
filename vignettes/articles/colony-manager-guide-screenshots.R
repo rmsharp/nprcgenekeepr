@@ -483,7 +483,9 @@ do_step("wait for kinship-enabled group formation to complete", {
 })
 do_step("select group 6 in Group Detail", {
   clicked <- click_element_safe(app, "a[data-value='Group Detail']")
-  app$set_inputs(`breedingGroups-viewGrp` = "Group 6", wait_ = FALSE)
+  # The box lists the groups by number ("Group 6" is only a label), so the
+  # value typed here is the number.
+  app$set_inputs(`breedingGroups-viewGrp` = "6", wait_ = FALSE)
   app$wait_for_idle(timeout = 10000)
   clicked
 })
