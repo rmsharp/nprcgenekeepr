@@ -41,6 +41,16 @@ to write it. Every number below was measured this session unless it says "S821" 
 > was retaken again: the groups are living animals with birth dates now, so S935's no-birth-date note is gone. Phases 3a,
 > 3b, 4a and 4b are untouched.
 
+> **Update S941 (2026-10-07): Phase 3a is DONE.** Fourteen pictures retaken (the nine Pedigree Browser ones and the five
+> Diagram ones) from the colony script's full 81/81 run and the diagram script's 18/18 run, into scratch folders, copied by
+> name; each was 147 px taller than the committed picture. **Decision 2 was ruled: delete.** `pb_unknown_displayed.png` and
+> its capture step are gone (test first, `test_captureHarness.R`), so 3a took 14 pictures, not 15. The legend picture
+> now shows the dashed "Same animal, again" row and the Diagram article's dashed-line paragraph names it. Captions fixed:
+> "6-animal" is 21 animals, the vermillion union is 8LKBV9 x his daughter FJIB3R, the affected picture is 12 animals with 4
+> filled, the names picture is its own 12-animal lineage. Both articles render (exit 0, every image link resolves). Two
+> leftovers are in `BACKLOG.md` (the Direct style is never shown; a pop-up covers a heading in 9 pictures). Phases 3b, 4a and
+> 4b are untouched; 3b needs Decision 3.
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article

@@ -27,6 +27,32 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       is 286 px wide and fits). Adding it means a new capture step, a new image file and a sentence in the
       guide. Pick it up only if the owner wants the picture; the QC Summary picture and the words are done.
 
+- [ ] **The Diagram article never shows the Direct edge style, and its "Rectilinear" picture is now the
+      same picture as the first one (found S941, 2026-10-07; DECISION NEEDED, Effort S; strict TDD for a
+      script change)** -- the app opens on Rectilinear (the default since S574, `R/modPedigree.R:460-467`; the
+      article says so, `pedigree-diagram.qmd:42-43`), so the capture script's step "select Rectilinear
+      edge style" (`pedigree-diagram-screenshots.R:148-150`) changes nothing (shinytest2 warns "Server did
+      not update any output values within 4 seconds"), and the retaken `diagram_rectilinear_edge_style.png`
+      is pixel-identical to `pb_diagram_legend.png` (0 of 2,007,870 pixels differ, measured S941; the
+      committed pair differed by 1,933 pixels). The section "Diagram Edge Style: Direct vs.
+      Rectilinear" (`pedigree-diagram.qmd:58-75`) therefore shows one style twice and no picture of Direct;
+      the script's own comment (`:121`) still calls Direct the default. **Decide when picking it up:**
+      capture Direct in that step instead (a test first: the script is pinned by `test_captureHarness.R`;
+      the caption, file name and alt text change with it), or drop the duplicate picture and reword the
+      section.
+
+- [ ] **Optional: a pop-up covers the "Twin/Zygosity Relations" heading in 9 of the 14 pictures S941 retook
+      (found S941, 2026-10-07; READY (optional), Effort S; strict TDD, capture script only)** -- read off
+      the pictures: `pb_5_focal_animals_small`, `pb_selection_large_focal_group`,
+      `pb_select_trim_for_focal_animals`, `pb_trimmed_for_focal_animals`, `pb_focal_animals_before_clear`,
+      `pb_focal_animals_after_clear`, `diagram_show_names`, `diagram_affected_shading` and
+      `diagram_twin_connectors` carry a blue "Updated focal animals: N IDs" (or "Focal animals cleared")
+      pop-up that hides part of the heading (the committed pictures had the same kind of pop-up a little
+      lower, so the plan's "toast noise" allowance covered it). The helper `wait_for_notifications_clear()`
+      (`tests/testthat/helper-captureHarness.R:149`) already clears it before the legend and QC Summary
+      pictures. Pick it up only if the owner wants the guide cleaner; each added wait needs a test pin
+      like `test_captureHarness.R`'s legend block, then a retake of those 9.
+
 - [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
       kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
       2026-10-07; DECISION NEEDED, Effort S; the guide's words, or the app with a test first)** -- seen in
@@ -140,8 +166,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
       capture, needed no script change (S940: the fixed script's capture is 1300 x 7121, the committed
-      height; S927's 900 px was the crashed run); Phases 3a and 3b still need D2 and D3 answered; Phase 3c
-      was DONE S940, see below). Measured S927:
+      height; S927's 900 px was the crashed run); Phase 3a was DONE S941 (D2 ruled: delete the orphan) and 3b still
+      needs D3 answered; Phase 3c was DONE S940, see below). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
@@ -149,10 +175,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       page stayed live and the Genetic Diversity tab drew the heat map; "All available" was checked only
       in S928's headless run, not by hand). Also: 12
       images have no script (2 of the 3 CSV
-      pictures are stale from the code alone); `pb_unknown_displayed.png` is an orphan;
-      `pb_diagram_legend.png` is stale (it lacks S921's "Same animal, again" row). When it is regenerated,
-      add a sentence naming that entry to the article's dashed-line paragraph
-      (`pedigree-diagram.qmd:50-55`); the manual (`_pedigree_browser.Rmd:91-92`) already does. S933 retook `read_and_check_pedigree.png` alone
+      pictures are stale from the code alone). S933 retook `read_and_check_pedigree.png` alone
       (the Input tab's new no-birth-date warning made the old picture show Warnings 1; the app now shows 2 and the
       guide text says 2), with the guide's own script into a scratch folder (81/81 steps), copied alone.
       S934 retook `genetic_diversity_heatmap.png` alone (the heat map's names were cut off and tiny; the new
@@ -170,6 +193,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       living animals with birth dates now, so S935's note is gone); the Mate Pair caption said all alive
       animals but the picture shows a custom list of six, fixed. Two findings for the owner are in the item
       about the Group Detail kinship caption and the unused animals' "Group 7" heading.
+      S941 did Phase 3a: 14 pictures retaken (9 Pedigree Browser, 5 Diagram) from the colony script's full
+      81/81 run and the diagram script's 18/18 run, copied by name; each was 147 px taller than the
+      committed one (the longer Display Unknown IDs text) and now shows the `placeholder` column and no
+      stale QC pop-up. The owner ruled D2 (delete): `pb_unknown_displayed.png` and its capture step are
+      gone (test first, `test_captureHarness.R`). The legend picture shows the dashed "Same animal,
+      again" row and the dashed-line paragraph (`pedigree-diagram.qmd:50-56`) names it. Captions fixed:
+      "6-animal" is 21 animals, "the top union" is 8LKBV9 x his daughter FJIB3R, the affected picture
+      is 12 animals with 4 filled (not three), the names picture is its own 12-animal lineage, and the
+      first Pedigree Browser alt text. Two leftovers for the owner are the two items just below the
+      Warnings-picture item. Phase 3b (Input, Home, Age-Sex Pyramid, Summary Statistics, Genetic Value
+      Analysis; 12 pictures) is next and needs D3 answered.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
