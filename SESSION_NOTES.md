@@ -99,58 +99,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 941 Did
-**Deliverable:** retake the Phase 3a guide pictures, Pedigree Browser and Diagram (slice 2; owner pick) (IN PROGRESS).
-**Started:** 2026-10-07. **Ledger:** `CHANGELOG: pending`.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD for the one script change):** docs-audit slice 2, Phase 3a: 14 guide
+pictures retaken (9 Pedigree Browser, 5 Diagram) from the colony script's 81/81 and the diagram script's 18/18 runs, copied by name. The owner
+ruled D2 (delete): `pb_unknown_displayed.png` and its capture step are gone (RED `a273f86b7`, `test_captureHarness.R:458-473`, 2 of 35 blocks
+failing as read; GREEN `b64075728`; REFACTOR a no-op). Each new picture is 147 px taller (longer Display Unknown IDs text) with the `placeholder`
+column and no stale QC pop-up; the legend shows the dashed "Same animal, again" row, named at `pedigree-diagram.qmd:54`. **Recounted from the
+data:** "6-animal" (2 captions) is 21 animals; the affected picture is 12 animals, 4 filled (caption said three); the vermillion union is `8LKBV9` x
+his daughter `FJIB3R`, third row, not "the top union"; the names picture is its own 12-animal lineage; the guide's first alt text claimed
+placeholder IDs on page 1 (none): fixed at `pedigree-diagram.qmd:40,68,203,217` and `colony-manager-guide.qmd:280`. **To the owner** (`BACKLOG.md:30`,
+`:44`): the new "Rectilinear" picture equals the legend picture and Direct is never shown (rectilinear is the default since S574); a pop-up covers a
+heading in 9 of the 14. Claim `c9e19abdd`, pictures `0bb9d2dd2`, `0e29fbecb`, `0f4e9a0fd`, captions `0685b0f39`, docs `f2269c91f`, spelling fix
+`f8a4bb665`, close-out = the commit carrying this note. **Verified:** full suite 3,284 blocks, 1 failed (`test_wordlist_coverage.R`: the spelling
+guard split `8LKBV9` and `FJIB3R`), fixed with code backticks, the 6 article-reading and guard files then 0 failed; `check` 0/0/0; `lint_package` 0;
+both articles render (55 of 55 image links resolve); ratchet 1/1 pass (results 822e5e17e63f, manifest aa983075d6a2). Not pushed, so no CI.
+Learning 907. **Went wrong:** IDs not in backticks; the duplicate showed only after the copy; headless driver, no hand check in Chrome; the
+published pages are not yet opened. **Handoff evaluation of S940: 9/10.** Helped: every `BACKLOG.md` cite and the plan's counts held; "view each
+picture beside its old one" found the caption errors. Missing: the notes file had ~350 B under the hook's token cap and nothing said so; D3 is for
+3b only. Wrong: nothing found. **Self-assessment: 8/10.** + every pair viewed, counts recounted from data, pictures opened for the owner first. - the
+backtick slip, the late duplicate.
 
-### What Session 940 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD for the one script fix):** docs-audit slice 2, Phase 3c:
-10 guide pictures retaken (the six Breeding Groups ones, `genetic_diversity_heatmap.png`, `potential_parents_results.png`, both Mate Pair
-ones) from one full 82/82 capture run into a scratch folder, copied by name. Every animal read off the pictures (the 20 in the sex-ratio
-picture, plus the Group 1 and Group 6 members) is ALIVE in `examplePedigree` with matching sex and birth date. **Found:** (1) the script
-typed "Group 6" into the Group Detail box, whose values are numbers (`R/modBreedingGroups.R:1048`), so the box was blank in the old and in
-the first retaken picture: RED `8d6ebbaba` (`test_captureHarness.R:421-452`, 33 blocks, 1 failing as read), GREEN `883e23c46` (`"6"`,
-`colony-manager-guide-screenshots.R:488`); the second run reads "Group 6". (2) The heat map was stale again (S935's no-birth-date note
-described dead animals): 10 pictures, not the 9 the notes said. (3) Potential Parents needed no script change: 1300 x 7121, the committed
-height (S927's 900 px was the crashed run). (4) The Mate Pair caption said "all alive animals" (the picture is a custom list of six); fixed
-with the heat map's alt text, `colony-manager-guide.qmd:621,719`. Two more mismatches went to the owner as `BACKLOG.md:30`: the Group Detail
-"no kinship shown" caption, and the unused animals headed "Group 7". Claim `a52e8fd02`, pictures `6d1b08b4f` and `784346d6d`, captions
-`9be966cd7`, docs `4604e4c69`, close-out = the commit carrying this note. **Verified:** full suite 3,282 blocks, 0 failed, 0 errors, 187
-skipped (S939: 3,280); `check` 0/0/0; `lint_package` 0; ratchet 1/1 pass (results 440e8ec24fc6, manifest aa983075d6a2; tarball 3,742,479
-B, the pictures are build-ignored); CI on S939's push (`66c6df335`): all four workflows green. Learning 906. **Went wrong:** copied 11 files
-before the first commit (the 5-file cap is per commit; committed in batches after); the first 5-min capture run was spent before the Group 6
-defect was seen in it, so a second was needed; not a hand run in Chrome. **Handoff evaluation of S939: 8/10.** Helped: every `BACKLOG.md`
-cite held (`:8`, `:21`, `:30`, `:36`, `:55`, `:76`, `:92`, `:100`, `:172`); the note that the Breeding Groups pictures were due. Missing: the
-heat map picture (retaken S935) was made stale by S939's own change, so "9 left" was 10; nothing said the script's Group 6 step was broken.
-Wrong: "9 pictures left" and S930's item (e) as a script change (no change was needed). **Self-assessment: 8/10.** + the blank box found by
-viewing old and new side by side, IDs checked against the pedigree, the pictures opened for the owner before the long tests, a fix with a
-test first. - the over-cap copy, a second capture run, no hand check in Chrome.
+**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2, Phase 3b (`BACKLOG.md:145`; one yes/no first, D3: accept the install date on the
+Home picture): 12 pictures (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3); re-measure first. (B) The two Breeding Groups
+guide statements (`:56`, DECISION NEEDED, S). (C) Direct-style picture (`:30`, DECISION NEEDED, S); pop-up polish (`:44`, optional). (D) Default
+population (`:81`, M); old-style boxes (`:8`); Warnings picture (`:21`); "None of the 1 animals" (`:75`). (E) Origin-and-funding (`:100`);
+`getAncestors()` (`:121`). After a push, open the published Diagram and guide pages and confirm the 14 images load (plan Phase 3a verify).
+**Key files:** `vignettes/articles/pedigree-diagram.qmd:40,54,68,203,217`; `vignettes/articles/colony-manager-guide.qmd:280`;
+`tests/testthat/test_captureHarness.R:458-473`; `vignettes/articles/pedigree-diagram-screenshots.R:148-150` (the no-op step); the slice-2 plan
+banner; `PROJECT_LEARNINGS.md` Learning 907.
+**Gotchas:** put animal IDs in code backticks in `.qmd` text (the spelling guard splits them at digits); the diagram script's "did not update any
+output values" warning is the no-op Rectilinear step; the S941 scratch folders live only in that scratchpad; `master` is 18 ahead of `origin` after this
+close-out (the owner pushes; no push-only sessions); a BACKLOG edit shifts cites; plain `gh run list` can return stale rows (cross-check
+`gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`); keep this file under ~56,750 B (condense before a long claim stub).
 
-**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2 (`BACKLOG.md:119`): two yes/no answers (D2 delete the unused
-`pb_unknown_displayed.png`; D3 accept the install date on the Home picture), then Phases 3a (15 pictures) and 3b (12); 3c is done.
-(B) The owner ruling on the two guide statements (`:30`, DECISION NEEDED, S). (C) Default-population item (`:55`, DECISION NEEDED, M).
-(D) Seven old-style boxes (`:8`); optional Warnings picture (`:21`); the "None of the 1 animals" wording (`:49`). (E) Origin-and-funding
-reword (`:74`); `getAncestors()` (`:95`). Cites: `:111` version, `:197` contributor tutorial.
-**Key files:** `vignettes/articles/colony-manager-guide-screenshots.R:484-490` (the Group 6 step); `tests/testthat/test_captureHarness.R:421-452`
-(`viewGrpValues()` and 2 blocks); `vignettes/articles/colony-manager-guide.qmd:621,719` (captions); `docs/planning/docs-audit-slice2-screenshot-plan.md:36-43`
-(update banner); `PROJECT_LEARNINGS.md` Learning 906.
-**Gotchas:** the capture scratch folders (`shots1`, `shots2`, `run1.log`, `run2.log`) live only in the S940 scratchpad; one Chrome session and one
-R job at a time; view each retaken picture beside its old one before copying (that is how the blank box was found); the ratchet citation's
-`results` hash changes every run; `master` was level with `origin` at Phase 0 (the owner pushed S939) and is 8 ahead after this close-out (the
-owner pushes; no push-only sessions); a BACKLOG edit shifts cites, so re-grep them.
+### What Session 940 Did (condensed S941; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, Phase 3c: 10 guide pictures retaken from one 82/82 run. The capture script typed the label "Group 6" into the Group
+Detail box, whose values are numbers (`R/modBreedingGroups.R:1048`), so the box was blank since 2026-07-10: fixed with a test first (RED
+`8d6ebbaba`, GREEN `883e23c46`); the Mate Pair caption fixed. Claim `a52e8fd02`, close-out `bdb69cc25`. Handoff evaluation of S939: 8/10.
+Self 8/10. **Gotchas kept:** view each retaken picture beside its old one before copying; the ratchet citation's `results` hash changes every run.
 
 ### What Session 939 Did (condensed S940; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Breeding Groups draws its pool from living animals only, for every source, before the top-N or floor cut (strict TDD): internal
 `isLivingAnimal()` (`R/isLivingAnimal.R:22`), pool step `R/modBreedingGroups.R:544`, one notice when nobody is alive. Claim `81f4c1f19`, RED
 `bc3585117`, GREEN `63518b606`, REFACTOR `7e7c1ffef`, close-out `66c6df335` (pushed; CI green). Handoff evaluation of S938: 9/10. Self 8/10.
-**Gotchas kept:** the `status` column is optional (Learning 905); the simulated Genetic Value ranking moves between runs, so compare a derived
-list with the same run's report.
+**Gotchas kept:** the `status` column is optional (Learning 905).
 
 ### What Session 938 Did (condensed S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 A decision session, docs only: reproduced the app's default Top ranked 20 in the real app (all dead or shipped, because with no focal
 animals every animal is the population, `R/modPedigree.R:363-366`); the owner ruled Breeding Groups skips non-living animals (shipped
 S939). Claim `4973b9d1d`, close-out `d65a21e53`. Handoff evaluation of S937: 8/10. Self 8/10. **Gotchas kept:** read the app's shared
-state from a scratch `app.R` outside the repo (Learning 904); the groups list ends with unused candidates (`R/groupAddAssign.R:91-97`);
-`data-ready` never resets, so reset it before each Form Groups click.
+state from a scratch `app.R` outside the repo (Learning 904); `data-ready` never resets, so reset it before each Form Groups click.
 
 ### What Session 937 Did (condensed S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `NEWS.Rmd:327-331` says an undefined Inbreeding cell is red (it had said gray; the code has scored it red since S282); `NEWS.md`
@@ -160,16 +157,13 @@ S936: 9/10. Self 8/10. **Gotchas kept:** a 454 B claim stub was refused by the c
 ### What Session 936 Did (condensed S937 and S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Input tab's QC Summary boxes are colored by what the check found, as Bootstrap 4 cards from one internal `qcSummaryBox()`
 (`R/qcSummaryBox.R:18`); the theme has 0 `.panel` rules, so 10 old-style sites show no color (`BACKLOG.md:8`). Strict TDD. Claim
-`a658da981`, close-out `7cca7e985`. Handoff evaluation of S935: 9/10. Self 8/10. **Gotchas kept:** a picture cropped to a container
-clips a notice at its edge (wait with `wait_for_notifications_clear()`); docs spell American ("colored", "gray"); the owner knows the
-app's expected behavior (do not explain it back).
+`a658da981`, close-out `7cca7e985`. Handoff evaluation of S935: 9/10. Self 8/10. **Gotchas kept:** docs spell American ("colored", "gray").
 
 ### What Session 935 Did (condensed S936 and S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Inbreeding cell counts a female with no birth date by the Production cell's offspring rule, through one internal
 `isBreedingAgeFemale()` (`R/isBreedingAgeFemale.R:25`); a male with no birth date stays out. Strict TDD. Claim `00da310cb`, close-out
 `5fe9acd71`. Handoff evaluation of S934: 8/10. Self 7/10. **Gotchas kept:** a probe that rebuilds the app's path is not the app
-(Learning 904); `isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare `%in% TRUE`); plain
-`gh run list` can return stale rows (read `gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`).
+(Learning 904); `isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare `%in% TRUE`).
 
 ### What Session 934 Did (condensed S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `makeGeneticDiversityHeatmap()` writes its names level, centred and bold, both sets at 22 pt (the owner's "about 2.5 times
