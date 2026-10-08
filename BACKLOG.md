@@ -54,19 +54,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
       `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
 
-- [ ] **The guide's three Summary Statistics pictures are one full-page picture, and the third one's caption
-      says "one exported plot" (found S942, 2026-10-08; DECISION NEEDED, Effort S; strict TDD for a script
-      change)** -- `ss_first_view.png`, `ss_trimmed_all_plots.png` and
-      `ss_export_mean_kinship_coefficient_histogram.png` are pixel-identical (0 pixels differ, measured S942, in
-      the retaken set and in the committed set): the capture script shoots the whole
-      `#summaryStats-moduleContainer` three times (`colony-manager-guide-screenshots.R:378,381,385`). The
-      captions read "Summary Statistics, first view", "All six summary plots together" and "One exported plot: the
-      mean kinship coefficient histogram" (`colony-manager-guide.qmd:454,486,488`), so the third shows a 7,598 px
-      page, not one plot. The two Input pictures `opening_screen_top_red_oval.png` and `input_format_subtab.png`
-      are identical too (`:154,160`), but their captions (the sidebar; the Input Format sub-tab) are both true of
-      the one page. **Decide when picking it up:** crop the plots (the script header says it has no crop tool),
-      drop the two extra pictures from the guide, or reword the captions to say the page is shown once.
-
 - [ ] **The Genetic Value results table's first column is leftover row names, so it reads 4, 5, 6, 9, 10 ...
       instead of 1 to 10 (found S942, 2026-10-08; DECISION NEEDED, Effort S; strict TDD, a displayed-table
       change)** -- `output$rankingsTable` is `DT::renderDT()` of the data frame (`R/modGeneticValue.R:421-426`),
@@ -253,8 +240,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Identified Export and Genetic-Health Trends are new tabs). The Genetic Value results now show imports with
       a recorded origin first, as the prose says (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
       500-row picture's caption and alt text now say rows 1 to 10 of 500, 50 pages, not a High-to-Low transition
-      it never showed. Two findings for the owner are the Summary Statistics duplicates item and the Genetic
-      Value row-names item, both below the pop-up item. Phases 4a and 4b then remained.
+      it never showed. Two findings for the owner were the Summary Statistics duplicates item (fixed S945: three
+      different pictures) and the Genetic Value row-names item (below the pop-up item). Phases 4a and 4b then remained.
       S943 did Phase 4a (D4 ruled: build the tables in the guide): the three spreadsheet pictures
       (`ss_kinship_matrix`, `ss_first_order_relationships`, `ss_female_founders`) are deleted and the guide builds
       the three tables itself, in the chunk labelled `summary-export-tables`

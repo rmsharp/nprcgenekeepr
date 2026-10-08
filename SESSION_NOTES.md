@@ -99,34 +99,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 945 Did
-**Deliverable:** the Summary Statistics duplicate-pictures item (`BACKLOG.md:57`): the guide's three Summary Statistics pictures (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4). **Started:** 2026-10-08. **Ledger:** `CHANGELOG: pending`.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "three real pictures" and all three gates):** the guide's three Summary Statistics pictures,
+one file three times (md5 `0f0c1ceeca80`, 1270 x 7598 px, 1.8 MB each; the S942 item), are three pictures: `ss_first_view.png` the window as the tab opens (1300 x 1330),
+`ss_trimmed_all_plots.png` the block of six plots (1300 x 1422), `ss_export_mean_kinship_coefficient_histogram.png` the real file the Export button writes (800 x 600, `app$get_download()`).
+5.3 MB to 0.48 MB. Script: `vignettes/articles/colony-manager-guide-screenshots.R:387-415`; guide alt texts `colony-manager-guide.qmd:454,576,578`. **Measured first** (real app, headless probe): the
+candidate shots and the Export file, opened for the owner before the question.
+**Gate:** 7 new blocks in `tests/testthat/test_captureHarness.R` (6 red + 1 control for the PNG-size reader; the file is 42 blocks, 128 expectations). Claim `852ba501c`, RED `7a5bff54f`,
+GREEN `82e6b170a`, REFACTOR `e0ce6e865` (one `codeOf()`, one `pictureDir`), close-out = the commit carrying this note. **Verified:** full colony run 85/85 (twice), full suite 3,316 blocks, 0 failed,
+0 errors (187 skipped; 6 warnings, the same count as S944, not traced); lint 0; `check` 0/0/0; ratchet 1/1 (results c34b2dc0150d, manifest aa983075d6a2); guide renders (exit 0), 42 of 42 image links, rendered
+page opened. No hand check in Chrome; published pages not opened. `BACKLOG.md` item removed (58,158 to 56,930 B, still about 180 B over its read budget). Learning 911.
+**Went wrong:** the first window height (1400 px) left a sliver of the first plot's title, seen only after a full 8-minute run, so a second run; the control test's 7 x 5 px PNG device was too small
+to draw on and the six-plots test errored instead of failing (both fixed before the RED commit); my gate text said 6 test blocks and I wrote 7 (a control).
+**Handoff evaluation of S944: 9/10.** Helped: every `BACKLOG.md` line cite matched the file (`:57`, `:70`, `:80`, `:90`, `:30`, `:101`, `:126`, `:145`, `:166`, `:190`, `:281`); the picker list; the gotcha that
+a window picture needs `selector = "viewport"`; the size warning; counts that held (3,309 blocks, 6 warnings, 37 ahead). Missing: that the notes file had only about 130 B of room, so my stub needed four entries merged
+first; the colony script's run time (about 8 min) and that `get_download()` can fetch an export. Wrong: nothing in the handoff; the S942 item's own guide cites (`:486,488`) were stale (the figures sit at `:576,578`).
+**Self-assessment: 8/10.** + measured the claim by hash and in the real app before the question, put both options and the pictures in front of the owner, tests first with a control, a test that derives the tag id from
+the script, looked at each new picture and trimmed the first view. - two full script runs (the height could have come from the probe); the gate-count slip; two first-draft test errors.
 
-### What Session 944 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled D5 "script all nine"):** docs-audit slice 2, Phase 4b. The 9 Marker Genetics
-pictures come from a new script, `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture, 44/44 steps); its five made-up data sets come from
-`tests/testthat/helper-markerPictureFixtures.R` (copies of `test_modMarkerGenetics.R`'s hand-checked fixtures, no new data file); the other four use shipped example files.
-**Measured first** (real app, headless): every number in all nine old pictures still matched; the page had changed (8 sub-tabs and 4 upload boxes; the five oldest showed 0 to 5 sub-tabs).
-**Gate:** `tests/testthat/test_markerPictureScreenshots.R` (16 blocks, 72 expectations). Claim `0f7bb7092`, RED `9d42987b4` (15 red: 8 fail, 7 error on the missing helper; 1 control passes),
-GREEN `edd8f8584`, `183dfdebb`, `9f415d50a`; REFACTOR skipped by the owner's pick; close-out = the commit carrying this note. **Fixed in the guide:** the Candidate note (stale since
-issue #155), its caption ("10 shared loci": 3 disagree), the Heterozygosity caption (X, Y, Z), the ROH alt text, the abstract date (2026-10-08). **Verified:** full suite 3,309 blocks,
-0 failed, 0 errors (187 skipped; 6 warnings, none from the new file, not traced); lint 0; `check` 0/0/0; ratchet 1/1 (results 443d97e35d72, manifest aa983075d6a2, tarball
-3,751,782 B); guide renders (exit 0), 42 of 42 image links, rendered section opened for the owner. No hand check in Chrome; published pages not opened. Learning 910.
-**Went wrong:** my first script took the long tabs with no selector (the whole page: coverage and LD block byte-identical, 1571 x 2251), caught by checking sizes before copying and fixed
-with `selector = "viewport"`; my first gate header read RED→GREEN for PRE-RED→RED.
-**Handoff evaluation of S943: 8/10.** Helped: the Phase 4b scope and "view each against the live tab first"; `BACKLOG.md:179`; the render recipe (first try); the note-size warning.
-Missing: its key files were all 4a's; the notes file had 36 B of room, so my stub needed the S902-S904 entries condensed first; nothing on how the old Marker pictures were made.
-Wrong: nothing found (the plan's "add one small data file" was unnecessary). **Self-assessment: 8/10.** + measured all nine against the live tab before the D5 question, tests first
-with a control, tightened a pin that matched alt text, viewed all nine new beside old, found three wrong statements. - two extra script runs from the selector mistake; the gate-header slip.
+**Next steps (recommended, not ruled on):** the docs-audit item (`BACKLOG.md:177`) holds only part 2, the owner decisions about code (`:268`). (A) Owner findings: Genetic Value row names (`BACKLOG.md:57`),
+the export-tables chunk (`:67`), the Candidate tab's missing-`fromCenter` message (`:77`), Direct-style picture (`:30`), Breeding Groups statements (`:88`). (B) Default population (`:113`, M); old-style boxes
+(`:8`, M); origin-and-funding (`:132`); `getAncestors()` (`:153`). Housekeeping: `BACKLOG.md` is about 180 B over its read budget (compression item `:514`). After a push, open the published guide and confirm the
+three Summary Statistics pictures, the retaken Marker pictures and the 3 export tables load.
+**Key files:** `vignettes/articles/colony-manager-guide-screenshots.R:387` (window, tag, download steps), `tests/testthat/test_captureHarness.R:488` (`ssPictures`, the new pins), `:497` (`blockContaining`),
+`R/modSummaryStats.R:894` (the Export histogram handler); `PROJECT_LEARNINGS.md` Learning 911.
+**Gotchas:** the colony script takes about 8 min into `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/colony-manager-guide-screenshots.R`; its summary counts steps and shots together;
+restore the 900 px window after a taller shot; the six-plot block is tagged by script (`closest('.row')`); run `Rscript` from the repo root for the guide render (renv's library); `master` is 37 ahead of
+`origin` plus this session's 5 commits (the owner pushes); keep this file under ~56,750 B.
 
-**Next steps (recommended, not ruled on):** slice 2 is finished; the docs-audit item (`BACKLOG.md:190`) now holds only part 2, the owner decisions about code (`:281`).
-(A) Owner findings: Summary Statistics duplicates (`BACKLOG.md:57`), Genetic Value row names (`:70`), the export-tables chunk (`:80`), the Candidate tab's missing-`fromCenter` message
-(`:90`, new), Direct-style picture (`:30`), Breeding Groups statements (`:101`). (B) Default population (`:126`, M); old-style boxes (`:8`, M); origin-and-funding (`:145`); `getAncestors()` (`:166`).
-After a push, open the published guide and Diagram pages and confirm the retaken images load and the 3 tables show.
-**Key files:** `vignettes/articles/marker-genetics-screenshots.R` (scenes, `marker_shot()`), `tests/testthat/helper-markerPictureFixtures.R`, `tests/testthat/test_markerPictureScreenshots.R`,
-`vignettes/articles/colony-manager-guide.qmd:37` (date), `:910-922` (Candidate note and caption), `R/getPotentialParents.R:101-102` (the `fromCenter` rule); `PROJECT_LEARNINGS.md` Learning 910.
-**Gotchas:** run the script with `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/marker-genetics-screenshots.R` (about 4 min); window pictures need `selector = "viewport"`;
-a pedigree for the Candidate tab needs a `fromCenter` column; render from a scratch copy with `R_LIBS` = first `.libPaths()`; `master` is 37 ahead of `origin` (the owner pushes);
-keep this file under ~56,750 B (the commit hook counts tokens; Read truncates past 25,000).
+### What Session 944 Did (condensed S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, Phase 4b (D5 ruled: script all nine): the 9 Marker Genetics pictures are retaken by `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture, 44/44 steps; data from
+`tests/testthat/helper-markerPictureFixtures.R`); gate `test_markerPictureScreenshots.R` (16 blocks). Claim `0f7bb7092`, RED `9d42987b4`, GREEN `edd8f8584`, `183dfdebb`, `9f415d50a`, close-out `4126195bc`.
+Handoff evaluation of S943: 8/10. Self 8/10. **Gotchas kept:** a window picture needs `selector = "viewport"` (the default selector is the whole page); a pedigree for the Candidate tab needs a
+`fromCenter` column or the table is silently empty; run the Marker script with `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/marker-genetics-screenshots.R` (about 4 min).
 
 ### What Session 943 Did (condensed S944; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 4a (D4 ruled: build the tables): the 3 spreadsheet pictures are replaced by 3 tables the guide builds from the export buttons' own code (chunk
@@ -497,27 +501,13 @@ runs (`R/reportGV.R:173-183`); the late `sex`-only check is deleted. Claim `419a
 `@param ped` is inherited by 13 man pages (function-specific text goes in details); `lacy1989Ped` has no `sex`; run seeded
 identity checks in a fresh process; the open-count script is not in the repo (Learning 855).
 
-### What Session 888 Did (condensed S889; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-PED_GV error-behavior decisions (PED-5, PED-6, NEW-28, NEW-36): the owner kept the `reportErrors` two-mode pattern (PED-6,
-NEW-36 closed) and chose a clear up-front message in `reportGV()` only (NEW-28 decided; PED-5 closed). Docs only. Claim
-`3dae4cfd2`, Decision record 10 `5a47eb8a3`, probes `b0f748891`. Handoff evaluation of S887: 9/10. Self 8/10.
-**Gotchas kept:** `smallPed` is not a good-input fixture for `reportGV()` (fails unmodified); `reportErrors` is the app's QC
-contract: never change one function's return alone; the ratchet's results hash changes on every run: compare counts and manifest.
-
-### What Session 887 Did (condensed S888; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-NEW-50 shipped: `createSimKinships()` and `cumulateSimKinships()` call one internal `.simulateKinship()`
-(`R/simulateKinship.R`); no change for users. Claim `c7873ece6`, RED `b96bbb45f`, GREEN `de45c8928`, REFACTOR `38c3f713c`.
-Handoff evaluation of S886: 9/10. Self 8/10.
-**Gotchas kept:** `createSimKinships()` converts the pedigree to a data.table once before its loop and `cumulateSimKinships()`
-does not; a twin pair in a delegation test must name ids in the fixture; `( cmd ) &` inside `run_in_background` reports the
-wrapper's exit, so read the job's own last line; `.lintr` excludes `tests`, so test files are linted nowhere.
-
-### What Session 886 Did (condensed S887; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-PED_GV owner decision on the sim driver: share the step (NEW-50, open until shipped), NEW-51 closed accepted (Decision
-record 8, `71b1ce4c0`); claim `a5cc50a5d`. Handoff evaluation of S885: 9/10. Self 8/10.
-**Gotchas kept:** in zsh quote `--include='*.R'` and never `head` a caller grep before saying "no callers"; recompute the
-open count by script (43 ids, `\**` for bold, subtract closure rows and "CLOSED" decision rows); BACKLOG PED_GV lines
-24-25 are very long: edit them with short single-line `old_string`s.
+### Sessions 886-888 (condensed S887, S888, S889 and S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+PED_GV decisions and one build: S886 shared the sim-driver step (NEW-50) and closed NEW-51 (Decision record 8, `71b1ce4c0`); S887 shipped NEW-50, one internal
+`.simulateKinship()` (`R/simulateKinship.R`) for `createSimKinships()` and `cumulateSimKinships()` (RED `b96bbb45f`, GREEN `de45c8928`, REFACTOR `38c3f713c`); S888 kept the
+`reportErrors` two-mode pattern and chose an up-front message in `reportGV()` only (NEW-28; PED-5, PED-6 and NEW-36 closed; Decision record 10). Claims `a5cc50a5d`,
+`c7873ece6`, `3dae4cfd2`. Handoff evaluations 9/10 each, self 8/10 each.
+**Gotchas kept:** `cumulateSimKinships()` does not convert the pedigree to a data.table once as `createSimKinships()` does; `smallPed` is not a good-input fixture for
+`reportGV()`; `reportErrors` is the app's QC contract, so never change one function's return alone; recompute an open count by script; `.lintr` excludes `tests`.
 
 ### Sessions 882-885 (condensed S886 and S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Four small docs sessions: S882 fixed a stale "defaulting to direct" comment (`R/modPedigree.R:459-462`) and BACKLOG's BB14 note; S883 the
