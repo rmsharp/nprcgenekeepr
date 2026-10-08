@@ -27,24 +27,48 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       is 286 px wide and fits). Adding it means a new capture step, a new image file and a sentence in the
       guide. Pick it up only if the owner wants the picture; the QC Summary picture and the words are done.
 
-- [ ] **Breeding groups can hold placeholder sires: names the pedigree gives only as someone's father, with no
-      record of their own (found S935, 2026-10-07; DECISION NEEDED, Effort S to decide, M to change; strict TDD
-      for any change)** -- measured S935 at function level (the Genetic Value module on the cleaned example
-      pedigree, then `groupAddAssign()` with the Breeding Groups defaults; 21 formations, 66 groups): with the
-      default Top ranked / 20 animals the groups hold only animals with birth dates, but with "Genetic-value
-      floor" (1,382 candidates) or "All available" (3,694) about 450 of each group's roughly 460 animals are males
-      with no birth date. In the example, 1,370 of the 1,372 no-birth-date males listed as a sire are
-      placeholders: `placeholder` TRUE, status UNKNOWN, no exit date, no origin, no sire or dam of their own.
-      They enter the pool because it is built from `ped$id` or the whole report
-      (`R/modBreedingGroups.R:522-526`, `:549`). A sire rule for the Inbreeding cell was declined at S935 partly
-      because of them (counting them turned 3 of 9 value-floor groups red to green). **Not understood:** which
-      animals the app's default Top ranked 20 are. S928 recorded the shipped example's default top-ranked group as
-      having no birth date on any of its 20 animals, and the guide's capture run (the focal-animal steps first)
-      shows "20 of the 20 animals ... have no birth date" (deceased founders such as `77EUZ7`), but the Genetic
-      Value module run directly on the cleaned example gave 20 animals that all have birth dates; the app path
-      that differs from the module run was not found. **Decide when picking it up:** first reproduce the app's
-      default ranking (through the real app), then choose: leave placeholders in the pool, drop them from the
-      candidate pool, or drop them only from the Genetic Diversity counts.
+- [ ] **Breeding Groups should build its pool from living animals only (owner-ruled S938, 2026-10-07; READY,
+      Effort S; strict TDD, the Pre-RED gate settles the details below)** -- today a group can be made of
+      animals that cannot breed. Measured S938 in the real app (headless, current source, `ExamplePedigree.csv`,
+      3 groups, no focal animals): the default Top ranked 20 are 20 animals that all died or were shipped (exit
+      dates 1965-1989), none a placeholder, none with a birth date, recorded parents or offspring; the
+      Genetic-value floor puts 2,998 animals in the 3 groups (60 alive, 1,566 dead or shipped, 1,372 placeholder
+      names; 10 more are left unused); All available puts 3,625 in (307 alive, 1,946 dead or shipped, 1,372
+      placeholders; 69 left unused). **Cause:** with no
+      focal animals the Pedigree Browser flags every animal as the population (`R/modPedigree.R:363-366`,
+      `setPopulation()` given an empty list), so Genetic Value ranks all 3,694. The module's own "all living
+      animals" fallback (`R/modGeneticValue.R:296-300`) never runs in the app, because the pedigree it gets always
+      has a `population` column. With the 332 living animals entered as focal, the same three formations hold only
+      living animals with birth dates (20, 270 and 272 in groups). S935's function-level probe (top 20 all with birth dates;
+      "1,382 candidates"; "450 of 460") ran on a pedigree with no `population` column, so the module counted the
+      animals with no exit date (the 332 living plus the 1,372 placeholders); a replay gave 1,592 candidates, so
+      the 1,382 and the 450-of-460 do not hold for the app. S928's note (the default group has no birth dates)
+      was right. **Owner ruling
+      (S938):** Breeding Groups skips every animal that is not alive -- status ALIVE (332 in the example), which
+      also removes the 1,372 placeholders (status UNKNOWN, no exit date, so an exit-date test alone would keep
+      them) -- for every source and whatever population is set; the Genetic Value tab stays as it is. **Pre-RED
+      gate to settle:** where the filter sits (`R/modBreedingGroups.R:522-526`, before the top-N / floor
+      narrowing at `:538-553`) and whether "Top ranked 20" then means the 20 best living animals or the first 20
+      that survive; "Upload list" and "All available" both use `ped$id` today (`:526`), so say what the filter
+      does for each; which existing tests pin today's pools. Which 20 would show by default was NOT measured.
+      Docs-audit Phase 3c's Breeding Groups pictures wait for this change.
+
+- [ ] **With no focal animals the Genetic Value run ranks every animal ever recorded, so 271 of the 332 living
+      animals are labelled Low Value (found S938, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any
+      change)** -- measured S938 in the real app on the example with no focal animals: High / Low / Undetermined by
+      status: ALIVE 56 / 271 / 5, DECEASED 1,026 / 404 / 195, SHIPPED 314 / 10 / 41, UNKNOWN (placeholder) 0 / 0 /
+      1,372. The Genetic-value floor groups then held 60 living animals; with the 332 living animals entered as
+      focal they held 270 (group counts, not label counts). The whole-colony default is the documented
+      behavior of the exported `setPopulation()` (empty `ids` flags everyone) and of `reportGV()`
+      (`getGVPopulation()`), while the package's own `setPopulation()` example defines the population as living
+      animals with a known parent. The guide says to define the population before Genetic Value
+      (`vignettes/articles/colony-manager-guide.qmd:328`), then continues with the focal list cleared (`:329-332`).
+      Readers of the flag: `reportGV()` (`R/reportGV.R:195`), `offspringCounts()` (`R/offspringCounts.R:47`),
+      `gvaConvergence()`, `createColonySnapshot()`. Declined at S938 as the fix for the group pool (the owner took
+      the narrower Breeding Groups filter above). **Decide when picking it up:** leave the whole-colony default and
+      say so in the Genetic Value help and the guide; or make the Pedigree Browser flag only the living animals
+      (status ALIVE) when no focal animals are entered (the exported `setPopulation()` stays), which moves every
+      default ranking, mean kinship and value count.
 
 - [ ] **Reword where the repo says the package was developed at ONPRC and funded by NIH grants
       (owner-reported S930, 2026-10-07; DECISION NEEDED, Effort S; docs and `DESCRIPTION`, plus one displayed
@@ -115,7 +139,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
       capture, was NOT done and moves to Phase 3c; Phases 3a and 3b still need D2 and D3 answered; Phase 3c has 9 pictures
-      left, `genetic_diversity_heatmap.png` having been retaken S934, see below). Measured S927:
+      left, `genetic_diversity_heatmap.png` having been retaken S934, see below; its Breeding Groups pictures wait
+      for the "Breeding Groups should build its pool from living animals only" item above, S938). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window

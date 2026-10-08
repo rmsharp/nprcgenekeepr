@@ -99,55 +99,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 938 Did
-**Deliverable:** placeholder sires in groups, `BACKLOG.md:30` (IN PROGRESS). **Started:** 2026-10-07 20:26 CDT. `CHANGELOG: pending`
+**Deliverable, DONE (decision session, docs only; owner pick at the Phase 0 picker, option 1 of 4):** reproduced the app's default Top
+ranked 20 in the real app (headless, current source, `ExamplePedigree.csv`, 3 groups) and recorded the owner's ruling. **Found:** with no
+focal animals the Pedigree Browser flags all 3,694 animals as the population (`R/modPedigree.R:363-366`), so Genetic Value ranks everyone;
+the default 20 are all dead or shipped, none placeholders, none with a birth date. Floor: 2,998 in groups (60 alive, 1,566 dead or
+shipped, 1,372 placeholders); All available: 3,625 (307 alive). With the 332 living animals as focal: 20, 270, 272, all alive. S935's
+probe had no `population` column, so the module's `is.na(exit)` fallback ran (`R/modGeneticValue.R:296-300`; dead code in the app).
+**Owner ruling:** Breeding Groups skips every non-living animal (status ALIVE, 332), for every source, whatever the population; Genetic
+Value stays. Now `BACKLOG.md:30` (READY, S, strict TDD, Pre-RED details inside). New `BACKLOG.md:56` (DECISION NEEDED, M): the default
+run labels 271 of 332 living animals Low Value. Claim `4973b9d1d`; close-out is the commit carrying this note. No `R/` change, so no
+suite, lint or check run; `test_handoffsReceiptPlacement.R` run (it reads `HANDOFFS.md`). Learning 904.
+**Went wrong:** the first focal run died (the focal-file input is a `renderUI`; `wait_for_element()` first); my table counted a groups
+list's last element (unused candidates) as members, which the owner saw, corrected in the Phase 3G report; the 271 count came after the
+pick, so it is its own item. **Handoff evaluation of S937: 8/10.**
+Helped: `BACKLOG.md:30` was the right item and "reproduce the app's default ranking first" the right first step; the 86-ahead count,
+the Actions-API tip and one-R-job rule held. Missing: the item's function-level numbers (1,382; 450 of 460) did not hold for the app and
+it framed the problem as placeholders, when dead animals from the whole-colony default population were the larger part.
+**Self-assessment: 8/10.** + exact reproduction, cause found, probe replayed instead of assumed, plain-words gate with a recommendation,
+owner ruling recorded as a READY item. - one dead run; a wrong table shown to the owner; a late fact after the pick.
 
-### What Session 937 Did
-**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** `NEWS.Rmd:327-331` no longer says the Production
-cell is gray "as the Inbreeding cell already was"; it says "An undefined Inbreeding cell is red, so missing data there stands out."
-(the code has scored it red since S282, before 2.0.0; `NEWS.md` re-knitted). Docs only, no `R/` change. Claim `6fe6b7cfc`, RED
-`0ff9e48b2` (4 blocks in `tests/testthat/test_newsReleaseState.R`: 2 check the checkers on made-up sentences and pass at once, 2 read the
-real `NEWS.Rmd` and failed as measured beforehand: 1 sentence called the cell gray, 0 said red; 30 blocks, 2 failed, 0 errors), GREEN
-`b515f6d6f`, REFACTOR none (owner: leave the two sentence splitters, which differ by one lookahead), close-out (the commit carrying this note).
-**Verified:** full suite 3,264 tests, 0 failed, 0 errors, 187 skipped; `check()` 0/0/0; `lint_package` 0; ratchet 1/1 (results
-`2ecd7a6d1608`); word list 3/3; NEWS guard 30/30. App runtime: n/a (a release-note sentence; no app code changed).
-**Went wrong:** my first claim commit (454 B stub) was refused by the context-budget hook, a token cap S924's note already named
-(Learning 903); the 200 B stub passed. **Handoff evaluation of S936: 9/10.** Helped: every `BACKLOG.md` cite held (`:8`, `:21`, `:30`,
-`:49`, `:56`, `:77`, `:93`, `:101`, `:171`), the ratchet citation (`77510354ff23`), the `NEWS.Rmd:330` and rule cites, the re-knit
-command. Missing: the item did not say the rule was already pinned (`test_getGeneticDiversityStats.R:154`) or predates 2.0.0, and the
-notes-size cap was not repeated among S936's gotchas. **Self-assessment: 8/10.** + measured before RED so the 2 predicted failures were
-exact; dated the rule (`cb7eb1a6a`, in `v2.0.0`); checkers tested on made-up text; every gate asked in plain words; the re-knit diff was only
-the sentence. - the stub bounced on a known cap; the REFACTOR gate cost the owner an answer for no change.
+**Next steps (recommended, not ruled on):** (A) `BACKLOG.md:30`, strict TDD: Pre-RED gate on where the living filter sits
+(`R/modBreedingGroups.R:522-527`, before the narrowing at `:538-553`), what "Top ranked 20" means after it, what Upload list does; measure
+which 20 show by default. (B) Docs-audit slice 2 (`:118`): D2, D3, then Phases 3a, 3b; Phase 3c's Breeding Groups pictures after (A).
+(C) The default-population item (`:56`, DECISION NEEDED, M). (D) Seven more old-style boxes (`:8`); an optional Warnings picture (`:21`).
+(E) Origin-and-funding reword (`:73`); `getAncestors()` (`:94`). Cites: `:110` version, `:189` contributor tutorial.
+**Key files:** `R/modBreedingGroups.R:522-553` (pool and narrowing); `R/modPedigree.R:362-366`; `R/modGeneticValue.R:296-309`;
+`R/setPopulation.R:30-39`; `R/groupAddAssign.R:91-97` (last list element = unused candidates).
+**Gotchas:** to read the app's shared state, use a scratch `app.R` outside the repo (Learning 904) and start `Rscript` from the repo
+directory; the groups list ends with unused candidates; `data-ready` never resets, so reset it before each Form Groups click; local
+`master` is 87 ahead of `origin` with this commit (last push S923, `7d85f4b89`; the owner pushes; no push-only sessions); one R job at a
+time; write a claim stub in 2-3 lines and condense the newest section at close-out; a BACKLOG edit shifts cites, so re-grep them.
 
-**Next steps (recommended, not ruled on):** (A) Placeholder sires in breeding groups and the unexplained app path (`BACKLOG.md:30`,
-DECISION NEEDED, S; reproduce the app's default ranking first). (B) Docs-audit slice 2 (`:94`): D2 and D3, then Phases 3a, 3b, 3c (9
-pictures left), 4a, 4b. (C) Seven more old-style boxes (`:8`, DECISION NEEDED, M); an optional Warnings-sub-tab picture (`:21`, READY, S).
-(D) Origin-and-funding reword (`:49`); `getAncestors()` (`:70`). Cites: `:86` version, `:164` contributor tutorial.
-**Key files:** `NEWS.Rmd:327-331`; `tests/testthat/test_newsReleaseState.R:683-766` (helpers and 4 blocks);
-`tests/testthat/test_getGeneticDiversityStats.R:154` (the pinned rule); `R/getGeneticDiversityStats.R:122` (undefined Inbreeding to 1).
-**Gotchas:** write a claim stub in 2-3 lines when this file is above about 56,400 B (cap 25,000 tokens, about 2.27 B each) and condense the
-newest full section at close-out; a BACKLOG removal shifts later cites, so re-grep them; local `master` was 82 commits ahead at Phase 0
-(last push S923, `7d85f4b89`) and is 86 ahead with this commit, so CI has not run on S924-S937 (the owner pushes; no push-only
-sessions); read the Actions API if plain `gh run list` looks stale; one R job at a time; `wc -c` after the last edit.
+### What Session 937 Did (condensed S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+`NEWS.Rmd:327-331` says an undefined Inbreeding cell is red (it had said gray; the code has scored it red since S282); `NEWS.md`
+re-knitted. Strict TDD, docs only. Claim `6fe6b7cfc`, RED `0ff9e48b2`, GREEN `b515f6d6f`, close-out `70c4acc56`. Handoff evaluation of
+S936: 9/10. Self 8/10. **Gotchas kept:** a 454 B claim stub was refused by the context-budget hook's token cap (Learning 903).
 
-### What Session 936 Did (condensed S937; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Input tab's QC Summary boxes (Records Processed, Errors, Warnings) are colored by what the check found, as Bootstrap 4 cards drawn
-by one internal `qcSummaryBox(title, count, colour)` (`R/qcSummaryBox.R:18`, called at `R/modInput.R:600-602`); owner scope pick: the 3
-QC boxes only. Cause: the theme is Bootstrap 4 (0 `.panel` rules, 113 `.card`), so 10 old-style `panel panel-*` sites show no color
-(`BACKLOG.md:8`). Strict TDD. Claim `a658da981`, close-out `7cca7e985`. Handoff evaluation of S935: 9/10. Self 8/10.
-**Gotchas kept:** a picture cropped to a container clips a notice at its edge (wait with `wait_for_notifications_clear()`, then look at all
-four edges); shiny prints nested tags on separate lines, so match with `gsub(">\\s+<", "><", html)`; count theme rules with
-`sass::sass(bslib::bs_theme(version = 4L, bootswatch = "flatly"))`; docs spell American ("colored", "gray"); the owner knows the app's
-expected behavior (do not explain it back).
+### What Session 936 Did (condensed S937 and S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Input tab's QC Summary boxes are colored by what the check found, as Bootstrap 4 cards from one internal `qcSummaryBox()`
+(`R/qcSummaryBox.R:18`); the theme has 0 `.panel` rules, so 10 old-style sites show no color (`BACKLOG.md:8`). Strict TDD. Claim
+`a658da981`, close-out `7cca7e985`. Handoff evaluation of S935: 9/10. Self 8/10. **Gotchas kept:** a picture cropped to a container
+clips a notice at its edge (wait with `wait_for_notifications_clear()`); docs spell American ("colored", "gray"); the owner knows the
+app's expected behavior (do not explain it back).
 
-### What Session 935 Did (condensed S936; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### What Session 935 Did (condensed S936 and S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Inbreeding cell counts a female with no birth date by the Production cell's offspring rule, through one internal
-`isBreedingAgeFemale()` (`R/isBreedingAgeFemale.R:25`); `getKinshipWithMaleStatus()` takes `damIds` (`R/getKinshipWithMaleStatus.R:51`);
-a male with no birth date stays out (a sire rule declined: 1,370 of the example's 1,372 such sires are placeholder names). Strict TDD.
-Claim `00da310cb`, close-out `5fe9acd71`. Handoff evaluation of S934: 8/10. Self 7/10. **Gotchas kept:** a probe that rebuilds the app's
-path is not the app (look at a real-app picture before quoting its count); the full suite must follow the last commit;
-`isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare `%in% TRUE`); `mockery::stub()` reaches
-only calls made inside the test; plain `gh run list` returns stale September rows (read
-`gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`); one R job at a time; `wc -c` after the last edit.
+`isBreedingAgeFemale()` (`R/isBreedingAgeFemale.R:25`); a male with no birth date stays out. Strict TDD. Claim `00da310cb`, close-out
+`5fe9acd71`. Handoff evaluation of S934: 8/10. Self 7/10. **Gotchas kept:** a probe that rebuilds the app's path is not the app
+(Learning 904); `isBreedingAgeFemale()` gives `NA`, not `FALSE`, for an uncounted female with no age (compare `%in% TRUE`); plain
+`gh run list` can return stale rows (read `gh api repos/rmsharp/nprcgenekeepr/actions/runs?branch=master`).
 
 ### What Session 934 Did (condensed S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `makeGeneticDiversityHeatmap()` writes its names level, centred and bold, both sets at 22 pt (the owner's "about 2.5 times
@@ -178,23 +178,21 @@ Handoff evaluation of S929: 9/10. Self 8/10. **Gotchas kept:** one Chrome sessio
 ### What Session 929 Did (condensed S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks). Close-out `05673a072`. Handoff
 evaluation of S928: 8/10. Self 7/10.
-**Gotchas kept:** start the app from the repo directory with plain `Rscript` and a scratch launcher (`load_all()`, then
-`runGeneKeepR(port = 6013L, launch.browser = FALSE)`); `list_connected_browsers` at Phase 0 before offering a browser option; a
-background command's exit code is the wrapper's, so read the app's log.
+**Gotchas kept:** `list_connected_browsers` at Phase 0 before offering a browser option; a background command's exit code is the
+wrapper's, so read the app's log.
 
 ### What Session 928 Did (condensed S929, S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Fixed the session-ending crash after a Genetic Value run on the example pedigree (strict TDD): an animal with no birth date has age
 `NA`, so `kmat[NA, males]` stopped (`R/getKinshipWithMaleStatus.R:54-57`); the heat map "ready" step reads through `tryCatch`
 (`R/modGeneticDiversity.R`). Close-out `91e9505d1`. Handoff evaluation of S927: 8/10. Self 8/10. Its Production twin was fixed S931.
-**Gotchas kept:** capture the real arguments with a scratch `app.R` outside the repo when a function-call model disagrees with the app
-(Learning 893); `testServer()` closes on an observer error, not an output error (Learning 894); `pkill -f` takes a regex: kill by PID.
+**Gotchas kept:** a scratch `app.R` outside the repo shows the app's real arguments (Learnings 893, 904); `testServer()` closes on an
+observer error, not an output error (Learning 894); `pkill -f` takes a regex: kill by PID.
 
 ### What Session 927 Did (condensed S928 and S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Planning only: scoped docs-audit slice 2 into `docs/planning/docs-audit-slice2-screenshot-plan.md` (decisions D1-D5, Phases 1-4b).
 Measured: 37 of 38 script-written guide images differ from the app. Found the crash S928 fixed. Claim `95667431e`, deliverable
 `db288efed`, close-out `395298aee`. Handoff evaluation of S926: 8/10. Self 8/10.
-**Gotchas kept:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits; `app$click(selector = )` takes no `wait_`;
-`data-ready` never resets (`R/modBreedingGroups.R:742-745`).
+**Gotchas kept:** read `ps`, `sample <pid> 3` and `app$get_logs()` before tuning waits.
 
 ### What Session 926 Did (condensed S927, S928 and S930; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Description sync shipped (strict TDD): `_pkgdown.yml`, `CITATION.cff` and the help page say what `DESCRIPTION`'s Description says;
