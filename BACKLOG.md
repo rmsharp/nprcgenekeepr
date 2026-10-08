@@ -51,7 +51,31 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       lower, so the plan's "toast noise" allowance covered it). The helper `wait_for_notifications_clear()`
       (`tests/testthat/helper-captureHarness.R:149`) already clears it before the legend and QC Summary
       pictures. Pick it up only if the owner wants the guide cleaner; each added wait needs a test pin
-      like `test_captureHarness.R`'s legend block, then a retake of those 9.
+      like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
+      `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
+
+- [ ] **The guide's three Summary Statistics pictures are one full-page picture, and the third one's caption
+      says "one exported plot" (found S942, 2026-10-08; DECISION NEEDED, Effort S; strict TDD for a script
+      change)** -- `ss_first_view.png`, `ss_trimmed_all_plots.png` and
+      `ss_export_mean_kinship_coefficient_histogram.png` are pixel-identical (0 pixels differ, measured S942, in
+      the retaken set and in the committed set): the capture script shoots the whole
+      `#summaryStats-moduleContainer` three times (`colony-manager-guide-screenshots.R:378,381,385`). The
+      captions read "Summary Statistics, first view", "All six summary plots together" and "One exported plot: the
+      mean kinship coefficient histogram" (`colony-manager-guide.qmd:454,486,488`), so the third shows a 7,598 px
+      page, not one plot. The two Input pictures `opening_screen_top_red_oval.png` and `input_format_subtab.png`
+      are identical too (`:154,160`), but their captions (the sidebar; the Input Format sub-tab) are both true of
+      the one page. **Decide when picking it up:** crop the plots (the script header says it has no crop tool),
+      drop the two extra pictures from the guide, or reword the captions to say the page is shown once.
+
+- [ ] **The Genetic Value results table's first column is leftover row names, so it reads 4, 5, 6, 9, 10 ...
+      instead of 1 to 10 (found S942, 2026-10-08; DECISION NEEDED, Effort S; strict TDD, a displayed-table
+      change)** -- `output$rankingsTable` is `DT::renderDT()` of the data frame (`R/modGeneticValue.R:421-426`),
+      and DT shows row names by default; the report is reordered with `report[order(demote, report$rank), ]`
+      (`:389`), which keeps each animal's old row name, and only the `rank` column is renumbered 1..n (`:390`). In
+      the retaken `gva_first_high_value.png` the first ten rows read 4, 5, 6, 9, 10, 11, 13, 14, 15, 16 (the
+      committed picture, taken 2026-08-10, read 1 to 10 with no-parent, no-origin animals first; why the top of
+      the ranking changed since then was not looked into). **Decide when picking it up:** hide the row names (`rownames = FALSE`; the `rank` column already
+      holds the rank) or leave it. Either way the three Genetic Value pictures are retaken with the change.
 
 - [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
       kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
@@ -166,8 +190,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
       `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
       capture, needed no script change (S940: the fixed script's capture is 1300 x 7121, the committed
-      height; S927's 900 px was the crashed run); Phase 3a was DONE S941 (D2 ruled: delete the orphan) and 3b still
-      needs D3 answered; Phase 3c was DONE S940, see below). Measured S927:
+      height; S927's 900 px was the crashed run); Phases 3a (S941; D2 ruled: delete the orphan), 3b (S942; D3 ruled:
+      accept the install date) and 3c (S940) are DONE; 4a and 4b remain, see below). Measured S927:
       37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
       script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
       and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
@@ -201,9 +225,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       again" row and the dashed-line paragraph (`pedigree-diagram.qmd:50-56`) names it. Captions fixed:
       "6-animal" is 21 animals, "the top union" is 8LKBV9 x his daughter FJIB3R, the affected picture
       is 12 animals with 4 filled (not three), the names picture is its own 12-animal lineage, and the
-      first Pedigree Browser alt text. Two leftovers for the owner are the two items just below the
-      Warnings-picture item. Phase 3b (Input, Home, Age-Sex Pyramid, Summary Statistics, Genetic Value
-      Analysis; 12 pictures) is next and needs D3 answered.
+      first Pedigree Browser alt text. Two leftovers for the owner are the Direct-style item and the pop-up item
+      below the Warnings-picture item.
+      S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic
+      Value x3) from the colony script's full 81/81 run, copied by name; sizes matched S927's measurements. D3
+      was ruled: accept. The Home picture shows the 2026-10-07 install date and a three-row navigation bar (De-
+      Identified Export and Genetic-Health Trends are new tabs). The Genetic Value results now show imports with
+      a recorded origin first, as the prose says (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
+      500-row picture's caption and alt text now say rows 1 to 10 of 500, 50 pages, not a High-to-Low transition
+      it never showed. Two findings for the owner are the Summary Statistics duplicates item and the Genetic
+      Value row-names item, both below the pop-up item. Phases 4a (3 spreadsheet pictures; D4) and 4b (9 Marker
+      Genetics pictures; D5) remain.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's

@@ -51,6 +51,16 @@ to write it. Every number below was measured this session unless it says "S821" 
 > leftovers are in `BACKLOG.md` (the Direct style is never shown; a pop-up covers a heading in 9 pictures). Phases 3b, 4a and
 > 4b are untouched; 3b needs Decision 3.
 
+> **Update S942 (2026-10-08): Phase 3b is DONE; Decision 3 was ruled: accept.** Twelve pictures retaken (Input x4, Home,
+> Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3) from one full 81/81 run of the colony script into a scratch
+> folder, copied by name; every size matched S927's measurement. The Home picture shows the 2026-10-07 install date and a
+> three-row navigation bar (two new tabs). `age_plot.png` was replaced, not left: its in-app help text changed as well as
+> its date. The Genetic Value results now show imports with a recorded origin first, as the guide's prose says; the 500-row
+> picture's caption and alt text now say rows 1 to 10 of 500 (the picture never showed a High-to-Low transition). The guide
+> renders (exit 0, 45 of 45 image links resolve; Quarto's R needs the renv library on `R_LIBS` when started from
+> `vignettes/articles/`). Two findings are in `BACKLOG.md` (the three Summary Statistics pictures are one picture; the
+> Genetic Value table's first column is row names). Phases 4a and 4b are untouched; 4a needs Decision 4 and 4b Decision 5.
+
 ## What this plan is for
 
 The colony-manager guide (`vignettes/articles/colony-manager-guide.qmd`) and the Diagram article
