@@ -99,40 +99,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 939 Did
-**Deliverable:** Breeding Groups builds its pool from living animals only (`BACKLOG.md:30`; strict TDD; owner pick at the Phase 0
-picker, option 1 of 4) (IN PROGRESS). **Started:** 2026-10-07. **Ledger:** `CHANGELOG: pending`.
+**Deliverable, DONE (strict TDD; owner pick at the Phase 0 picker, option 1 of 4):** Breeding Groups draws its pool from living animals
+only, for every source, before the top-N or floor cut. New internal `isLivingAnimal()` (`R/isLivingAnimal.R:22`): Status ALIVE if the
+pedigree has a Status column, else no exit date, else everyone. Pool step `R/modBreedingGroups.R:544`; nobody alive gives one error notice
+("None of the N animals in this source is alive, ...", `:682`) and no groups. **Owner choices at the Pre-RED gate:** a file with no Status
+column uses the exit date; a typed seed animal that is not alive stays accepted. **Real app** (headless, example pedigree, 3 groups, run
+again after the REFACTOR): default Top ranked 20 all alive (they were dead or shipped); floor 61; All available 332; All available with the
+floor 61; the 20 are the first 20 living animals of that run's report (places 519-1025 of 3,694). Claim `81f4c1f19`, RED `bc3585117`
+(15 blocks, 13 failing, 2 green-at-HEAD pins), GREEN `63518b606`, docs `82e7739d9` and `07def6ecc` (module help, manual, guide, in-app
+guidance, NEWS), REFACTOR `7e7c1ffef` (one shared `noGroupsResult` in `runFormation`; plus a pin for the formation-error path, which no
+test reached, passing with the patch reverted), close-out = the commit carrying this note. **Verified:** new file 16 blocks, 27 checks;
+full suite 3,280 blocks, 0 failed, 0 errors, 187 skipped (S937: 3,264); check 0/0/0; `lint_package` 0; ratchet 1/1 pass. Learning 905.
+**Went wrong:** ran the ratchet before comparing the receipt's citation (the order the S911 note warns against), then found its `results`
+hash is not reproducible (Learning 905), so counts were compared; my derived default 20 did not match a later real run (the ranking is
+re-simulated each run) until I saved that run's report; the gate said one file, about 10 blocks, and shipped one file, 16; a scratch edit
+failed on an unexported shell variable (one wasted run). **Handoff evaluation of S938: 9/10.** Helped: `BACKLOG.md` item with the Pre-RED
+questions and cites (`:522-527`, `:538-553`) held; the scratch run from S938 (`run1.rds`) gave a Pre-RED preview without a new run.
+Missing: `status` is an optional column (`qcPed`, `smallPed` and every one of the 68 Form Groups clicks in the tests lack it), the biggest
+Pre-RED question. Wrong: nothing found. **Self-assessment: 8/10.** + counts measured before asking, plain-words gates with a
+recommendation, RED failures read one by one (a spurious cascade removed), real-app check before and after the refactor, docs and NEWS in
+the same session. - three process slips above; Breeding Groups guide pictures still show the old groups (retake in Phase 3c).
 
-### What Session 938 Did
-**Deliverable, DONE (decision session, docs only; owner pick at the Phase 0 picker, option 1 of 4):** reproduced the app's default Top
-ranked 20 in the real app (headless, current source, `ExamplePedigree.csv`, 3 groups) and recorded the owner's ruling. **Found:** with no
-focal animals the Pedigree Browser flags all 3,694 animals as the population (`R/modPedigree.R:363-366`), so Genetic Value ranks everyone;
-the default 20 are all dead or shipped, none placeholders, none with a birth date. Floor: 2,998 in groups (60 alive, 1,566 dead or
-shipped, 1,372 placeholders); All available: 3,625 (307 alive). With the 332 living animals as focal: 20, 270, 272, all alive. S935's
-probe had no `population` column, so the module's `is.na(exit)` fallback ran (`R/modGeneticValue.R:296-300`; dead code in the app).
-**Owner ruling:** Breeding Groups skips every non-living animal (status ALIVE, 332), for every source, whatever the population; Genetic
-Value stays. Now `BACKLOG.md:30` (READY, S, strict TDD, Pre-RED details inside). New `BACKLOG.md:56` (DECISION NEEDED, M): the default
-run labels 271 of 332 living animals Low Value. Claim `4973b9d1d`; close-out is the commit carrying this note. No `R/` change, so no
-suite, lint or check run; `test_handoffsReceiptPlacement.R` run (it reads `HANDOFFS.md`). Learning 904.
-**Went wrong:** the first focal run died (the focal-file input is a `renderUI`; `wait_for_element()` first); my table counted a groups
-list's last element (unused candidates) as members, which the owner saw, corrected in the Phase 3G report; the 271 count came after the
-pick, so it is its own item. **Handoff evaluation of S937: 8/10.**
-Helped: `BACKLOG.md:30` was the right item and "reproduce the app's default ranking first" the right first step; the 86-ahead count,
-the Actions-API tip and one-R-job rule held. Missing: the item's function-level numbers (1,382; 450 of 460) did not hold for the app and
-it framed the problem as placeholders, when dead animals from the whole-colony default population were the larger part.
-**Self-assessment: 8/10.** + exact reproduction, cause found, probe replayed instead of assumed, plain-words gate with a recommendation,
-owner ruling recorded as a READY item. - one dead run; a wrong table shown to the owner; a late fact after the pick.
+**Next steps (recommended, not ruled on):** (A) Docs-audit slice 2 (`BACKLOG.md:100`): two yes/no answers (D2 delete the unused
+`pb_unknown_displayed.png`; D3 accept the install date on the Home picture), then Phases 3a and 3b; Phase 3c's Breeding Groups pictures
+are now due. (B) Default-population item (`:36`, DECISION NEEDED, M). (C) Seven old-style boxes (`:8`); optional Warnings picture
+(`:21`); the "None of the 1 animals" wording (`:30`). (D) Origin-and-funding reword (`:55`); `getAncestors()` (`:76`). Cites: `:92`
+version, `:172` contributor tutorial.
+**Key files:** `R/isLivingAnimal.R:22`; `R/modBreedingGroups.R:529-548,666-686`; `tests/testthat/test_modBreedingGroups_livingPool.R`
+(16 blocks); `vignettes/manual_components/_breeding_group_formation.Rmd:26-40`; `NEWS.Rmd` (Breeding Group Formation, first Major bullet).
+**Gotchas:** the ratchet citation's `results` hash changes every run (compare counts and the manifest hash); the simulated Genetic Value
+ranking moves between runs, so compare a derived list with the same run's report; scratch driver and app live in the S939 scratchpad
+(`drive.R`, `app/app.R`; copy, do not rely on them); local `master` was 89 ahead of `origin` at Phase 0 and is 97 after this close-out
+(last push S923; the owner pushes; no push-only sessions); one R job at a time; write a claim stub in 2-3 lines; a BACKLOG edit shifts
+cites, so re-grep them.
 
-**Next steps (recommended, not ruled on):** (A) `BACKLOG.md:30`, strict TDD: Pre-RED gate on where the living filter sits
-(`R/modBreedingGroups.R:522-527`, before the narrowing at `:538-553`), what "Top ranked 20" means after it, what Upload list does; measure
-which 20 show by default. (B) Docs-audit slice 2 (`:118`): D2, D3, then Phases 3a, 3b; Phase 3c's Breeding Groups pictures after (A).
-(C) The default-population item (`:56`, DECISION NEEDED, M). (D) Seven more old-style boxes (`:8`); an optional Warnings picture (`:21`).
-(E) Origin-and-funding reword (`:73`); `getAncestors()` (`:94`). Cites: `:110` version, `:189` contributor tutorial.
-**Key files:** `R/modBreedingGroups.R:522-553` (pool and narrowing); `R/modPedigree.R:362-366`; `R/modGeneticValue.R:296-309`;
-`R/setPopulation.R:30-39`; `R/groupAddAssign.R:91-97` (last list element = unused candidates).
-**Gotchas:** to read the app's shared state, use a scratch `app.R` outside the repo (Learning 904) and start `Rscript` from the repo
-directory; the groups list ends with unused candidates; `data-ready` never resets, so reset it before each Form Groups click; local
-`master` was 86 ahead of `origin` at Phase 0, before S938's two commits (last push S923, `7d85f4b89`; the owner pushes; no push-only sessions); one R job at a
-time; write a claim stub in 2-3 lines and condense the newest section at close-out; a BACKLOG edit shifts cites, so re-grep them.
+### What Session 938 Did (condensed S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+A decision session, docs only: reproduced the app's default Top ranked 20 in the real app (all dead or shipped, because with no focal
+animals every animal is the population, `R/modPedigree.R:363-366`); the owner ruled Breeding Groups skips non-living animals (shipped
+S939). Claim `4973b9d1d`, close-out `d65a21e53`. Handoff evaluation of S937: 8/10. Self 8/10. **Gotchas kept:** read the app's shared
+state from a scratch `app.R` outside the repo (Learning 904); the groups list ends with unused candidates (`R/groupAddAssign.R:91-97`);
+`data-ready` never resets, so reset it before each Form Groups click.
 
 ### What Session 937 Did (condensed S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 `NEWS.Rmd:327-331` says an undefined Inbreeding cell is red (it had said gray; the code has scored it red since S282); `NEWS.md`
@@ -344,17 +350,12 @@ re-grep the cites; `quality_ratchet.py --run` takes minutes, so run it in the ba
 after the last edit (Learning 871); `gh issue view --comments` fails here (Projects-classic GraphQL), so use
 `gh api repos/<repo>/issues/<n>/comments`.
 
-### What Session 905 Did (condensed S906; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Row-order item, tests only (no `R/` change): the app's QC'd copy of the bundled rhesus fixture differs from the raw CSV in row
-order only, but fed to the 7 layout test files it failed 8 tests in 5 files (4 count or order pins, 4 real differences;
-Learning 870). At the owner's pick, strict TDD added `qcdRhesusPed()` (`tests/testthat/helper-qcdRhesusPed.R`) and two tests
-(`test_makePedigreeMatingLayout.R:780-828`) pinning the QC'd layout (rectilinear 1412 nodes / 142 jog, direct 782). Claim
-`2563a6ee0`, RED `5fd9a72e1`, GREEN `7d1da7d39`, close-out `e569765a3` (all still local). The owner ruled at Phase 0 to stop
-offering push-only sessions; S906: the owner left the item as is. Handoff evaluation of S904: 9/10. Self 8/10.
-**Gotchas kept:** to run an existing test file against a different fixture without editing it, define `read.csv()` in the `env`
-passed to `testthat::test_file()`; put R code containing `\s` in a script file, not `Rscript -e '...'`; tests that pin union ids
-(`__union_97`, ...) or the order of the 5 disconnected families are raw-order specific; the QC'd copy has `sex` as a factor,
-`birth` as `Date` and two extra columns (`recordStatus`, `placeholder`).
+### What Session 905 Did (condensed S906 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Tests only: `qcdRhesusPed()` (`tests/testthat/helper-qcdRhesusPed.R`) and two tests (`test_makePedigreeMatingLayout.R:780-828`) pin the
+QC'd layout of the bundled rhesus fixture (Learning 870). Claim `2563a6ee0`. The owner stopped push-only sessions. Handoff evaluation of
+S904: 9/10. Self 8/10. **Gotchas kept:** to run a test file against another fixture, define `read.csv()` in the `env` given to
+`testthat::test_file()`; put R code containing `\s` in a script file; the QC'd copy has `sex` as a factor, `birth` as `Date` and two extra
+columns (`recordStatus`, `placeholder`).
 
 ### What Session 904 Did (condensed S905; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Pushed S903's 2 local commits (`6f4733c78..42b4fb0b8`, a fast-forward, by SHA) at the owner's pick; all 3 changed files were on the
@@ -377,18 +378,12 @@ on the 21-entry `paths-ignore` list and **no CI run started** (nothing for `7acc
 listed 4, the newest 4 still S899's): the third confirmation. Claim `ee54ef006` (amended once, to fix its UTC date),
 close-out `6f4733c78` (pushed S903). Handoff evaluation of S901: 9/10. Self 8/10.
 
-### What Session 901 Did (condensed S902; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Characterized the 10 red shard verify scripts (of 54: HANDOFFS 2, CHANGELOG 1, SESSION_NOTES 7) by diffing their records:
-**none is a real loss.** Causes: the trim shares a commit with the close-out, so record 0 differs (7 scripts, v1.5.0); a
-baked-in `INJECTED=0` (1 script, v1.1.2, fixed upstream in v1.2.0); a substring L2 leak test (2 scripts). **Reported upstream
-as `KJ5HST/methodology#93`** on the owner's instruction (the fork has issues disabled, so the owner chose the parent);
-`BACKLOG.md:286` is now BLOCKED on it. Report `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; Learning 869. Claim
-`14a59bb4b`, report `360f1aa6d`, currency check `3b780513a`, close-out `7acce42cf` (pushed S902). Handoff evaluation of S900:
-9/10. Self 8/10.
-**Gotchas kept:** run `gh repo view <repo> --json hasIssuesEnabled` before promising to post; read upstream's current file
-with `gh api ".../contents/<path>?ref=main" --jq .content | base64 -d` (the trimmer is `starter-kit/methodology_trim.py`); to
-see what a `.verify.sh` matched, run a patched scratch copy, never the shipped script; diff a HANDOFFS record by `session:
-S<N>`, not the first handoff block (the front matter holds a format example).
+### What Session 901 Did (condensed S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Characterized the 10 red shard verify scripts (of 54): none is a real loss; reported upstream as `KJ5HST/methodology#93`
+(`BACKLOG.md` item BLOCKED on it). Report `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; Learning 869. Claim `14a59bb4b`.
+Handoff evaluation of S900: 9/10. Self 8/10. **Gotchas kept:** run `gh repo view <repo> --json hasIssuesEnabled` before promising to
+post; to see what a `.verify.sh` matched, run a patched scratch copy, never the shipped script; diff a HANDOFFS record by `session:
+S<N>`, not the first handoff block.
 
 ### What Session 900 Did (condensed S901; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Pushed S899's 6 local commits (`77ccb50f6..f43ff9501`, by SHA) and read CI: all four push workflows and all 8 jobs green on
@@ -479,18 +474,12 @@ Handoff evaluation of S891: 8/10. Self 8/10.
 `.verify.sh` and `CHANGELOG.md` together; 262,144 B is the Read tool's refusal, not a repo setting; do not hand-edit its
 "currently holds" line; the harness nags after a silent tool chain, so post one line every few calls.
 
-### What Session 891 Did (condensed S892; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Diagnosed the red CI on master after the S890 push (`2e2046efd`): two separate causes, each reproduced, in
-`docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. (1) R-CMD-check oldrel-1/devel, flaky: `test_positionMatingUnitForest.R:645`
-allows 1e-6, but the QP (`R/makePedigreeDiagramData.R:1578`, cond 1.6e9) puts one pair over it in 12 of 100 variable
-re-orderings (max 1.1e-4). (2) test-coverage, deterministic: `test_sexCodes.R:110`/`:115` skip only when `../../R` is missing,
-but under covr it holds only `.rdb`/`.rdx`. Claim `b2df5c4fb`, diagnosis `ca78f413f`, BACKLOG item and Learnings 858-860
-`7e900ec72`. Handoff evaluation of S890: 8/10. Self 7/10. Both fixes are the top `BACKLOG.md` item (S893).
-**Gotchas kept:** in zsh an unquoted `$var` of several flags is NOT split (have a probe print its own configuration); `gh run view
---log-failed` omits test-coverage's "Show testthat output" (use `--log`); `gh api .../logs` returns an empty body (use `curl -sL
--H "Authorization: Bearer $(gh auth token)"` on `.../actions/jobs/<id>/logs`); Rosetta amd64 containers have AVX2/FMA, not
-AVX-512; use `grep -c '^status: pending' HANDOFFS.md` (the unanchored form hits prose); `core.hooksPath` is unset (the
-context-budget hook is in `.git/hooks`); Docker image `rocker/r-ver:4.5.3` (about 1 GB) was left (`docker rmi` removes it).
+### What Session 891 Did (condensed S892 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Diagnosed the red CI after the S890 push (`2e2046efd`): two reproduced causes (a flaky 1e-6 bound in `test_positionMatingUnitForest.R:645`;
+`test_sexCodes.R:110` under covr), report `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. Claim `b2df5c4fb`. Handoff evaluation of
+S890: 8/10. Self 7/10. **Gotchas kept:** in zsh an unquoted `$var` of several flags is NOT split; `gh run view --log-failed` omits
+test-coverage's testthat output (use `--log`); use `grep -c '^status: pending' HANDOFFS.md`; `core.hooksPath` is unset (the context-budget
+hook is in `.git/hooks`).
 
 ### What Session 890 Did (condensed S891; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Compressed the docs-audit item and the compression item's pass history in `BACKLOG.md` (552 -> 533 lines, 58,228 -> 46,731 B;
