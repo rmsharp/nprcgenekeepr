@@ -451,7 +451,7 @@ founder-genome-equivalent definitions are at the bottom of this tab (see also
 ["Validating the Founder-Genome-Equivalent Standard
 Error"](fg-se-validation.html)).
 
-![Summary Statistics, first view.](shiny_app_use/ss_first_view.png){fig-alt="Summary Statistics tab showing the first view of genetic diversity metrics."}
+![Summary Statistics, first view.](shiny_app_use/ss_first_view.png){fig-alt="Summary Statistics tab as it opens: the guidance box, the Export buttons, the Population Summary and the Effective Population Size tables."}
 
 The tab has several export buttons producing CSV files, three of which are
 shown below: **Export Kinship Matrix**, **Export First-Order Relationships**,
@@ -573,9 +573,9 @@ Six plots -- histograms and boxplots of kinship coefficients, their Z-scores,
 and genome uniqueness scores -- are shown together and can each be exported
 as a PNG.
 
-![All six summary plots together.](shiny_app_use/ss_trimmed_all_plots.png){fig-alt="Six summary plots: histograms and boxplots of kinship coefficients, Z-scores, and genome uniqueness."}
+![All six summary plots together.](shiny_app_use/ss_trimmed_all_plots.png){fig-alt="The six summary plots, histograms on the left and box plots on the right, of kinship coefficients, Z-scores, and genome uniqueness, each with its Export button."}
 
-![One exported plot: the mean kinship coefficient histogram.](shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png){fig-alt="Exported mean kinship coefficient histogram plot."}
+![One exported plot: the mean kinship coefficient histogram.](shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png){fig-alt="The mean kinship coefficient histogram exactly as the Export Mean Kinship Histogram button writes it, an 800 by 600 pixel PNG."}
 
 ### Breeding Group Formation
 

@@ -374,16 +374,46 @@ shot(app, "gva_high_and_low_value.png", selector = "#geneticValue-moduleContaine
 do_step("navigate to Summary Statistics", {
   app$set_inputs(mainNavbar = "Summary Statistics")
 })
-# ss_first_view.png -- kept name, regenerate as-is
-shot(app, "ss_first_view.png", selector = "#summaryStats-moduleContainer")
-# ss_trimmed_all_plots.png -- kept name, regenerate as-is (the six
-# histogram/boxplot panel)
-shot(app, "ss_trimmed_all_plots.png", selector = "#summaryStats-moduleContainer")
-# ss_export_mean_kinship_coefficient_histogram.png -- kept name, regenerate
-# as-is (same panel; the original screenshot illustrates the exported plot,
-# which is this panel's live rendering, not a separate app state)
-shot(app, "ss_export_mean_kinship_coefficient_histogram.png",
-     selector = "#summaryStats-moduleContainer")
+# The tab as a whole is about 7,600 px tall, two thirds of it the definitions at
+# its bottom, and shooting it whole made these three pictures one picture three
+# times (found S942). Each now shows what the guide's caption says;
+# tests/testthat/test_captureHarness.R pins the three apart.
+#
+# ss_first_view.png -- the window as the tab opens: the guidance box, the export
+# buttons and the Population Summary. The window is made taller for this one
+# picture so the Population Summary and the two tables under it show whole: the
+# Mean Kinship and Genome Uniqueness table ends at about 1,320 px (measured
+# S945 at 1,400, where the first plot's title showed as a cut-off sliver).
+do_step("make the window tall enough to show the Population Summary", {
+  app$set_window_size(width = 1300, height = 1330)
+})
+do_step("wait for pop-ups to clear before the Summary Statistics window picture", {
+  wait_for_notifications_clear(app, timeout = 15000)
+})
+shot(app, "ss_first_view.png", selector = "viewport")
+do_step("restore the window height", {
+  app$set_window_size(width = 1300, height = 900)
+})
+# ss_trimmed_all_plots.png -- the block that holds the six plots (histograms
+# down the left, box plots down the right, each with its Export button). The
+# block has no id of its own, so one line of page script gives it one: the
+# nearest `.row` above the first plot.
+do_step("tag the block that holds the six summary plots", {
+  app$run_js("document.getElementById('summaryStats-mkHist').closest('.row').id = 'ssPlotsRow';")
+})
+shot(app, "ss_trimmed_all_plots.png", selector = "#ssPlotsRow")
+# ss_export_mean_kinship_coefficient_histogram.png -- the file the Export Mean
+# Kinship Histogram button writes (ggsave(width = 8, height = 6, dpi = 100) in
+# R/modSummaryStats.R, so 800 x 600), fetched through the button's own download
+# handler instead of photographed from the page.
+do_step("fetch the mean kinship histogram the Export button writes", {
+  exported <- app$get_download(
+    "summaryStats-downloadMkHist",
+    filename = file.path(SHOT_DIR,
+                         "ss_export_mean_kinship_coefficient_histogram.png")
+  )
+  file.exists(exported)
+})
 
 ## NOTE -- the three exported-file illustrations (the kinship matrix, the
 ## first-order relationships and the female founders files) are not pictures
