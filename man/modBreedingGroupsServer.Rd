@@ -87,6 +87,15 @@ The module supports multiple configuration options:
 \item \strong{Animal source}: "Top ranked", "Upload list" or "All
 available". "Upload list" has no upload control and currently behaves
 exactly like "All available"
+\item \strong{Living animals only}: Every source draws only on animals
+that are alive: those with a \code{status} of \code{ALIVE} when the
+pedigree has a \code{status} column, otherwise those with no
+\code{exit} date, and every animal when it has neither column. The cut
+to the top N animals or the genetic-value floor comes after this, so
+"Top ranked" takes the best-ranked living animals. When no animal in
+the source is alive the tab shows an error notice and forms no groups.
+Animals typed into a seed group are not drawn from this pool and are
+accepted as typed
 \item \strong{Inclusion criterion}: Include animals by "Top N ranked"
 (with the number of top animals) or "Genetic-value floor"
 \item \strong{Group counts and ages}: The number of groups and the
