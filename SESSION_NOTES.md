@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 941 Did
+**Deliverable:** retake the Phase 3a guide pictures, Pedigree Browser and Diagram (slice 2; owner pick) (IN PROGRESS).
+**Started:** 2026-10-07. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 940 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD for the one script fix):** docs-audit slice 2, Phase 3c:
 10 guide pictures retaken (the six Breeding Groups ones, `genetic_diversity_heatmap.png`, `potential_parents_results.png`, both Mate Pair
