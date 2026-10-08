@@ -666,3 +666,101 @@ test_that("NEWS.Rmd describes issue #168 (ancestry guardrails) in one entry", {
                info = paste("entries mentioning #168 start at lines:",
                             paste(mentions, collapse = ", ")))
 })
+
+## The colour of an undefined Inbreeding cell (S937, BACKLOG.md:49). The
+## Genetic Diversity dashboard scores a group whose Inbreeding metric is
+## undefined (no breeding-age females) red, never gray: the assembler maps the
+## undefined result to 1 (red), pinned by test_getGeneticDiversityStats.R
+## ("undefined Inbreeding (no breeding-age females) scores red"), the same
+## rule had been in the code since before 2.0.0, and the function's help and
+## the colony-manager guide both say red. A Production entry in NEWS.Rmd said
+## the new gray Production cell was "gray, as the Inbreeding cell already
+## was". The two checkers below are tested on made-up sentences first, so the
+## checks on the real file cannot pass by finding nothing.
+
+## The sentences of one entry text; a sentence ends at a full stop followed by
+## a space.
+newsSentences <- function(text) {
+  unlist(strsplit(text, "(?<=\\.)\\s+", perl = TRUE))
+}
+
+## The sentences that name the Inbreeding cell and call it gray (or "grey").
+grayInbreedingSentences <- function(text) {
+  s <- newsSentences(text)
+  s[grepl("\\bInbreeding cells?\\b", s) &
+      grepl("\\bgr[ae]y\\b", s, ignore.case = TRUE)]
+}
+
+## The sentences that say an undefined Inbreeding cell is red: they name the
+## Inbreeding cell, say "red", and say "undefined" or "no breeding-age
+## females".
+redUndefinedInbreedingSentences <- function(text) {
+  s <- newsSentences(text)
+  s[grepl("\\bInbreeding cells?\\b", s) & grepl("\\bred\\b", s) &
+      grepl("\\bundefined\\b|\\bno breeding-age females\\b", s)]
+}
+
+test_that("the Inbreeding-colour checkers fire on the wording they look for", {
+  old <- paste("Production cannot be calculated for such a group, so its",
+               "cell is now gray, as the Inbreeding cell already was.")
+  expect_equal(length(grayInbreedingSentences(old)), 1L)
+  expect_equal(length(grayInbreedingSentences(
+    "The Inbreeding cell is Grey.")), 1L)
+  ## Only the sentence that calls the Inbreeding cell gray is returned.
+  expect_equal(grayInbreedingSentences(
+    "The Value cell is red. The Inbreeding cell is gray. The rest is green."),
+    "The Inbreeding cell is gray.")
+  expect_equal(length(redUndefinedInbreedingSentences(
+    "An undefined Inbreeding cell is red.")), 1L)
+  expect_equal(length(redUndefinedInbreedingSentences(
+    "The Inbreeding cell of a group with no breeding-age females is red.")),
+    1L)
+})
+
+test_that("the Inbreeding-colour checkers stay silent on other wording", {
+  expect_equal(length(grayInbreedingSentences(
+    "An undefined Inbreeding cell is red.")), 0L)
+  ## A gray Production cell is not a gray Inbreeding cell.
+  expect_equal(length(grayInbreedingSentences(
+    "Production cannot be calculated for such a group, so its cell is gray.")),
+    0L)
+  ## Gray in one sentence and the Inbreeding cell in the next.
+  expect_equal(length(grayInbreedingSentences(
+    "A group with no assessed value is gray. The Inbreeding cell is red.")),
+    0L)
+  ## Red without the Inbreeding cell, or without saying it is undefined.
+  expect_equal(length(redUndefinedInbreedingSentences(
+    "An undefined Production cell is red.")), 0L)
+  expect_equal(length(redUndefinedInbreedingSentences(
+    "The Inbreeding cell turns red when kinship is high.")), 0L)
+  ## "red" inside another word does not count.
+  expect_equal(length(redUndefinedInbreedingSentences(
+    "An undefined Inbreeding cell is considered.")), 0L)
+})
+
+test_that("NEWS.Rmd never calls the Inbreeding cell gray", {
+  path <- testthat::test_path("..", "..", "NEWS.Rmd")
+  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
+  entries <- newsEntries(newsTopBlock(readLines(path, warn = FALSE)))
+  expect_gt(nrow(entries), 0L)
+  for (i in seq_len(nrow(entries))) {
+    expect_equal(length(grayInbreedingSentences(entries$text[i])), 0L,
+                 info = sprintf(
+                   "the entry that starts at line %d calls the Inbreeding cell gray",
+                   entries$line[i]))
+  }
+})
+
+test_that("NEWS.Rmd says an undefined Inbreeding cell is red", {
+  path <- testthat::test_path("..", "..", "NEWS.Rmd")
+  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
+  entries <- newsEntries(newsTopBlock(readLines(path, warn = FALSE)))
+  expect_gt(nrow(entries), 0L)
+  said <- vapply(entries$text, function(x) {
+    length(redUndefinedInbreedingSentences(x))
+  }, integer(1L))
+  expect_equal(sum(said), 1L,
+               info = paste("entries that say an undefined Inbreeding cell",
+                            "is red start at lines:",
+                            paste(entries$line[said > 0L], collapse = ", ")))
+})
