@@ -281,14 +281,20 @@ test_that("guideChunkCode stops, naming the label, when no chunk carries it", {
 ## change to the app's steps (a new column, a changed check) would leave the guide
 ## stale with every block above green. The blocks below close that gap.
 ##
-## The helpers these blocks use (defined above them once they exist):
-##   appPedigree(file)        sends the CSV `file` through the real appServer in
-##                            shiny::testServer (Input tab with both age floors
-##                            2, as the guide's chunk does, then the Pedigree
-##                            Browser) and returns shared$currentPedigree, the
-##                            pedigree every analysis tab receives; stops, naming
-##                            the file, with "no pedigree" when the app hands on
-##                            none
+## The helpers these blocks use (defined right below this comment):
+##   appPedigree(file)        sends the CSV `file` through the real Input tab
+##                            (both age floors 2, as the guide's chunk does) and
+##                            the real Pedigree Browser, the two modules the
+##                            pedigree passes through, wired as appServer wires
+##                            them (R/appServer.R:168-170, :302-315), in
+##                            shiny::testServer, and returns the Browser's
+##                            analysisPedigree(), the pedigree every analysis tab
+##                            receives; stops, naming the file, with "no
+##                            pedigree" when the app hands on none. It does not
+##                            mount appServer itself: measured S947, with every
+##                            tab mounted testServer renders the Summary
+##                            Statistics relationship table, and
+##                            convertRelationships() alone took about 70 s
 ##   guideAppPedigree()       appPedigree() of the example file the guide's chunk
 ##                            reads, run once and kept
 ##   pedigreeDifference(guide, app)
@@ -297,6 +303,87 @@ test_that("guideChunkCode stops, naming the label, when no chunk carries it", {
 ##                            else one line saying what differs: a missing or
 ##                            extra column by name, the two row counts, or the
 ##                            first column whose values differ
+
+## The one warning this helper expects: read.csv() warns before the Input tab
+## turns an unreadable file into a File Read Error. Any other warning still
+## shows.
+expectedAppWarnings <- "cannot open file"
+
+## The Input tab and the Pedigree Browser, wired as appServer wires them.
+inputToPedigreeServer <- function(input, output, session) {
+  inputResults <- modInputServer("dataInput")
+  pedigreeResults <- modPedigreeServer(
+    "pedigree", studbook = shiny::reactive(inputResults$cleanedStudbook())
+  )
+}
+
+appPedigree <- function(file) {
+  found <- NULL
+  withCallingHandlers(
+    shiny::testServer(inputToPedigreeServer, {
+      session$setInputs(`dataInput-fileContent` = "pedFile",
+                        `dataInput-fileType` = "fileTypeExcel",
+                        `dataInput-minSireAge` = "2",
+                        `dataInput-minDamAge` = "2",
+                        ## the Pedigree Browser's own defaults on the screen
+                        `pedigree-trimPedigree` = FALSE,
+                        `pedigree-displayUnknownIds` = TRUE)
+      session$setInputs(`dataInput-pedigreeFileOne` = list(
+        name = basename(file), datapath = file
+      ))
+      session$setInputs(`dataInput-getData` = 1)
+      session$flushReact()
+      ## no studbook yet (an unreadable file) halts analysisPedigree() silently
+      found <<- tryCatch(pedigreeResults$analysisPedigree(),
+                         shiny.silent.error = function(e) NULL)
+    }),
+    warning = function(w) {
+      if (any(vapply(expectedAppWarnings, grepl, logical(1L),
+                     x = conditionMessage(w), fixed = TRUE))) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+  if (is.null(found)) {
+    stop("the app handed on no pedigree for ", basename(file), call. = FALSE)
+  }
+  found
+}
+
+guideAppPedigree <- local({
+  cache <- NULL
+  function() {
+    if (is.null(cache)) {
+      cache <<- appPedigree(guideRun()$env$exampleFile)
+    }
+    cache
+  }
+})
+
+pedigreeDifference <- function(guide, app) {
+  if (is.null(guide)) return("the guide's chunk built no pedigree")
+  if (is.null(app)) return("the app handed on no pedigree")
+  onlyApp <- setdiff(names(app), names(guide))
+  if (length(onlyApp) > 0L) {
+    return(paste0("columns only the app's pedigree has: ",
+                  paste(onlyApp, collapse = ", ")))
+  }
+  onlyGuide <- setdiff(names(guide), names(app))
+  if (length(onlyGuide) > 0L) {
+    return(paste0("columns only the guide's pedigree has: ",
+                  paste(onlyGuide, collapse = ", ")))
+  }
+  if (nrow(guide) != nrow(app)) {
+    return(paste0("the guide's pedigree has ", nrow(guide),
+                  " rows, the app's has ", nrow(app), " rows"))
+  }
+  for (column in names(app)) {
+    if (!identical(unname(guide[[column]]), unname(app[[column]]))) {
+      return(paste0("column '", column, "' holds different values"))
+    }
+  }
+  ""
+}
 
 test_that("the guide's pedigree is the pedigree the app hands to the other tabs", {
   skipWithoutGuide()
