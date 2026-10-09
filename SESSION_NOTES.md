@@ -98,28 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 949 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "show Direct instead", and all three gates):** the Diagram article's edge-style section shows a Direct picture
-(`BACKLOG.md:30` removed). The script's step types `"direct"` and shoots `diagram_direct_edge_style.png` (`vignettes/articles/pedigree-diagram-screenshots.R:148-155`); `pedigree-diagram.qmd:68-71` captions it and says the
-first picture ("Node shapes and the legend") shows the Rectilinear default; the duplicate `diagram_rectilinear_edge_style.png` (byte-identical to `pb_diagram_legend.png`, `cmp` and one md5) is deleted.
-**Gate:** claim `5e306e1d2`, RED `330c8f686` (9 new blocks in `test_captureHarness.R`, 8 red, 1 green by design), GREEN `d692e2cc1`, REFACTOR `441245b40` (one test helper, `typedValues()`), close-out = the commit carrying this note.
-**Verified:** the diagram script ran 18/18 into a scratch folder; the new picture was viewed beside the committed first picture (Direct radio on, sloped lines, same 21 animals) and opened for the owner; `test_captureHarness.R`
-51 blocks 0 failed; 8 mutants each turn 1 or 2 blocks red, files restored byte-identical. **CLEAN:** full suite 3,352 blocks, 0 failed, 0 errors (187 skipped) at load about 4 (both S948 benchmark blocks passed); package
-lint 0; `devtools::check(document = FALSE)` Status OK, 0 errors, 0 warnings, 0 notes; ratchet 1/1 (results 06a8a0a755ce). Learning 915.
-**Not done:** the picture's edges were not traced against the data (it is the app's own drawing, unchanged); published pages unopened (63 commits unpushed); no hand check in Chrome.
-**Went wrong:** a test bug hidden by my own RED guard (`if (length(shotAt) == 1L)` around `blockContaining()`, which sees only column-0 calls) surfaced in GREEN and was fixed there, said in the commit; one inline `Rscript -e` with `\s`
-failed (known gotcha). **Handoff evaluation of S948: 9/10.** Helped: every `BACKLOG.md` line cite matched (`:8,:30,:57,:82,:101,:122,:146,:237`); counts held (59 ahead; notes 55,750 B); the three stale `runGeneKeepR` pids
-(29511, 82416, 92900) were as named; the benchmark baseline note saved a false alarm. Wrong or missing: nothing that cost time. **Self-assessment: 8/10.** + plain decision question, two pictures opened for the owner,
-mutation controls, a clean full read. - the guarded RED assertion; a slipped working directory (a `cd` into `vignettes/articles`).
+### What Session 950 Did
+**Deliverable:** the two Breeding Groups statements in the guide that the app does not match (`BACKLOG.md:43`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-09 16:21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on; lines re-grepped after this session's removal):** owner findings, each a short decision session: the Breeding Groups statements (`BACKLOG.md:43`; the READY (optional)
-"None of the 1 animals" wording, `:62`, can ride along). Larger: default population (`:68`, M), old-style boxes (`:8`, M), origin-and-funding wording (`:87`), `getAncestors()` (`:108`). The docs-audit item (`:132`) holds
-only part 2 (`:224`). After the owner pushes (63 ahead before this close-out commit, 64 with it), read the CI run and open the published Diagram article to confirm the Direct picture loads.
-**Key files:** `vignettes/articles/pedigree-diagram-screenshots.R:148-155`; `vignettes/articles/pedigree-diagram.qmd:58-78`; `vignettes/articles/shiny_app_use/diagram_direct_edge_style.png`;
-`tests/testthat/test_captureHarness.R:425-433` (`typedValues()`), `:591-710` (the 9 blocks); `PROJECT_LEARNINGS.md` Learning 915.
-**Gotchas:** a guarded assertion in a RED test is unrun until GREEN, so run its body once against made-up passing text before the RED commit; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls and the diagram
-script indents its shots; this run's first picture (`pb_diagram_legend.png`) differs from the committed one by 15,533 pixels (legend panel 38 px left), so view a retake beside the old one first; put R code with `\s` in a
-script file; three old `runGeneKeepR` processes are not from any recent session and were left alone; keep this file under ~56,700 B.
+### What Session 949 Did (condensed S950; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Diagram article's edge-style section shows a Direct picture instead of a second copy of the Rectilinear one (strict TDD; owner ruled "show Direct instead"): the script's
+step types `"direct"` and shoots `diagram_direct_edge_style.png` (`vignettes/articles/pedigree-diagram-screenshots.R:148-155`); `pedigree-diagram.qmd:68-71` captions it.
+Claim `5e306e1d2`, RED `330c8f686`, GREEN `d692e2cc1`, REFACTOR `441245b40`, close-out `cb13b01f7`. Handoff evaluation of S948: 9/10. Self 8/10. **Not done:** the picture's
+edges were not traced against the data; published pages unopened (64 commits unpushed). **Gotchas kept:** a guarded assertion in a RED test is unrun until GREEN, so run its
+body once against made-up passing text before the RED commit; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; three old
+`runGeneKeepR` processes (pids 29511, 82416, 92900) are not from any recent session and were left alone; keep this file under ~56,700 B.
 
 ### What Session 948 Did (condensed S949; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Candidate Parent Assignment tab says why its table is blank when the pedigree has no `fromCenter` column (strict TDD; owner-ruled): new internal

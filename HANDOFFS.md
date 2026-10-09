@@ -192,6 +192,20 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S950
+date: 2026-10-09
+status: pending
+active_task: the two Breeding Groups statements in the guide that the app does not match (BACKLOG.md:43; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S949
 date: 2026-10-09
 status: complete
