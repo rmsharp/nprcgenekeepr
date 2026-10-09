@@ -116,6 +116,9 @@ multilocus likelihood (LOD) score. This tab needs no new file input --
 it reads the same uploaded genotype file and \code{pedigree} already
 wired to the other tabs -- and is report-only, matching the Parentage
 Exclusion tab's own precedent: it never writes to \code{pedigree}.
+Candidates come from \code{\link{getPotentialParents}}, which needs the
+pedigree's \code{fromCenter} column; without it the table is blank, and the
+tab says so above the table.
 }
 \details{
 A sixth tab, "Linkage and LD Block Metrics" (issue #153 Slice 5), wires in
