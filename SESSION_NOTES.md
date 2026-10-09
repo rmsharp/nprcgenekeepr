@@ -99,10 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 947 Did
-**Deliverable:** The guide's export-tables chunk repeats the app's pedigree preparation (`BACKLOG.md:57`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-08 19:20
-**Status:** Session claimed. Work beginning. Strict TDD; the owner decides keep-the-copy or one exported function first.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "drift check only" and all three gates):** the guide's export-tables chunk (`BACKLOG.md:57`) has a check that the pedigree it builds
+is the pedigree the app hands to the other tabs (last four blocks of `tests/testthat/test_guideExportTables.R`; 13 blocks, 51 expectations). **Measured first** (real app, headless probe): the guide's three export files equal
+the app's line for line (3,695 / 3,695 / 125 lines), so nothing was wrong; the item's claim that the old test catches drift was half true, because it runs the export handlers on the guide's own pedigree.
+**Gate:** claim `44d57865e`, RED `8e43e1b5d` (4 new blocks red), GREEN `55fdff610` (three helpers), REFACTOR `343003134` (header comment), close-out = the commit carrying this note. Tests only: no `R/`, guide or NEWS change.
+**Verified:** full suite 3,326 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, as S946); lint 0; `check` 0/0/0; ratchet 1/1 (results b5b2ab1b06a1, manifest aa983075d6a2). No hand check in Chrome. Learning 913.
+**Two limits (in the file's header):** the helper chains the Input tab and Pedigree Browser instead of mounting `appServer`; column order is not compared (owner passed on a fifth block at the GREEN gate).
+**Went wrong:** my first helper mounted `appServer`: 10+ minutes of CPU before I stopped it and profiled (70 of 72 s in `convertRelationships()`); a transient `setTimeLimit` in my profiling script limited nothing.
+**Handoff evaluation of S946: 9/10.** Helped: all 10 `BACKLOG.md` line cites matched (`:57,:67,:30,:78,:103,:8,:122,:143,:167,:258`); counts held (3,322 blocks plus my 4 = 3,326; 187; 6); the picker order. Missing: nothing
+that cost time. Wrong: "46 ahead plus the close-out commit" was 47; `master` was 48 ahead of `origin` at Phase 0.
+**Self-assessment: 8/10.** + read the old test and found the item's claim half wrong before offering options; measured in the real app; controls prove the check can fail; said both limits at the gate. - the avoidable
+10-minute `appServer` run; the profiling-script slip.
+
+**Next steps (recommended, not ruled on; lines re-grepped after this session's removal):** the owner findings, each a short decision session: the Candidate tab's missing-`fromCenter` message (`BACKLOG.md:57`), the Diagram
+article's missing Direct picture (`:30`), the Breeding Groups statements (`:68`). Larger: default population (`:93`, M), old-style boxes (`:8`, M), origin-and-funding wording (`:112`), `getAncestors()` (`:133`). The
+docs-audit item (`:157`) holds only part 2 (`:248`). After the owner pushes (`master` is 53 ahead of `origin`), open the published guide and confirm the Genetic Value, Summary Statistics and Marker pictures load.
+**Key files:** `tests/testthat/test_guideExportTables.R` (header; the section "the guide's pedigree is the pedigree the app hands on"), `R/appServer.R:168-170,:302-315` (the wiring the helper copies), `R/modPedigree.R:358-377,:419-422`,
+`PROJECT_LEARNINGS.md` Learning 913.
+**Gotchas:** under `testServer()` an unset input is `NULL`, so set the screen's defaults; never mount `appServer` in a test that
+gives it a full pedigree (every tab renders); an old `runGeneKeepR` process (pid 29511, port 6111) is not from this session and
+was left alone; keep this file under ~56,700 B.
 
 ### What Session 946 Did (condensed S947; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Genetic Value results table is built with no row names (`R/modGeneticValue.R:421-429`), so its first column is `id` and `rank` stays last (strict TDD; owner ruled "hide that column"):

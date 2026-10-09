@@ -54,16 +54,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
       `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
 
-- [ ] **The guide's export-tables chunk repeats the app's pedigree preparation (found S943, 2026-10-08;
-      DECISION NEEDED, Effort S; an exported function, strict TDD)** -- `summary-export-tables`
-      (`vignettes/articles/colony-manager-guide.qmd:468`) copies the app's four steps from the uploaded file to the
-      pedigree the Summary Statistics tab receives: `runQcStudbook()` with both age floors 2, `setPopulation(ped,
-      character(0))`, `findPedigreeNumber()` and `findGeneration()` (`R/modInput.R:511-523`,
-      `R/modPedigree.R:358-377`). `tests/testthat/test_guideExportTables.R` fails if the copy drifts from what the
-      export buttons write, so nothing is wrong today. **Decide when picking it up:** leave the copy with its test,
-      or add one exported function that the app and the guide both call (the exported API grows by one, and the
-      guide chunk and the two modules shrink).
-
 - [ ] **The Candidate Parent Assignment tab shows an empty table, with no explanation, when the pedigree has no
       `fromCenter` column (found S944, 2026-10-08; DECISION NEEDED, Effort S; strict TDD, a displayed-text change)** --
       measured S944 in the real app (headless): issue #155's own fixture, a recorded-but-wrong sire, which the module test
@@ -254,7 +244,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       article) now come from a script, and the guide's abstract says "current as of 2026-10-08". Wording fixed in the
       same pass: the Heterozygosity caption (its animals are X, Y, Z), the Candidate tab's "Current limitation" note
       (issue #155 had fixed it), and the caption's "10 shared loci" (3 of 10 disagree). One finding for the owner is the
-      Candidate-tab item below the export-tables item.
+      Candidate-tab item below.
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
