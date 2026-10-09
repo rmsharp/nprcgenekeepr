@@ -98,30 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 948 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "add the one-line reason", as one sentence shared with the Potential Parents tab, and all three gates):** the Candidate Parent Assignment tab
-says why its table is blank when the pedigree has no `fromCenter` column (`BACKLOG.md:57` removed). New internal `fromCenterNotice()` (`R/fromCenterNotice.R:13`); `output$candidateNotice` (`R/modMarkerGenetics.R:1022`, slot `:225`)
-shows it for a data frame with rows and no column, before any genotype file too; `R/modPotentialParents.R:304` takes the same sentence from the helper. Guide note (`colony-manager-guide.qmd:914`) and a NEWS line (`NEWS.Rmd:138`).
-**Read the code first:** four causes of a blank table (no genotype file, nothing flagged, no column, no eligible candidate); the owner chose the missing-column notice only, so the other two stay unexplained by decision.
-**Gate:** claim `60def83ed`, RED `b660db5d9` (17 new blocks, 15 red, 2 green by design), GREEN `c58cd2ac7`, REFACTOR `0e4ebcba4` (roxygen, `man/modMarkerGeneticsServer.Rd`), docs `1f8a9eced` (guide note, NEWS), close-out = the commit carrying this note.
-**Verified:** real app, headless: notice with the column missing, none with it; the guide's Candidate picture is pixel-identical (0 of 740,410), none retaken. Three touched files 125 blocks 0 failed; four mutants of the render turn 4, 6, 1, 1
-blocks red; lint 0; spelling 0; ratchet 1/1 (results 2e43edea9612). **NOT CLEAN:** the full suite (3,343 blocks, 0 errors) and `check` (0 warnings, 0 notes) each show 2 failed blocks, the wall-clock benchmarks
-`test_markerKinship.R:177` and `test_markerParentageLikelihood.R:647`, at a desktop load of about 10; the same two fail at the pre-change commit `597cc727e` and alone. The CI run after the owner pushes is the clean read. Learning 914.
-**Went wrong:** two bugs in my first tests (a pane-name regex that missed newlines; htmltools breaks a two-argument `div()` across lines), found by running RED; a mutation script's `on.exit()` never ran and left a mutant in
-`R/modMarkerGenetics.R`, caught by the file-change notice and restored byte-identical before any commit.
-**Handoff evaluation of S947: 9/10.** Helped: all `BACKLOG.md` line cites matched (`:57,:30,:68,:93,:8,:112,:133,:157`); counts held (53 ahead; notes 56,637 B); the picker order. Wrong: one stale `runGeneKeepR` process
-(pid 29511); there were three (29511, 92900, 82416). Missing: nothing that cost time.
-**Self-assessment: 8/10.** + found the four blanks in the code before asking; plain question; mutation controls and a baseline for the benchmark failures; looked at the real app and opened it. - two test bugs; the left-behind
-mutant; no clean 0 failed.
+### What Session 949 Did
+**Deliverable:** the Diagram article's missing Direct picture (`BACKLOG.md:30`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-09 15:20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on; lines re-grepped after this session's removal):** owner findings, each a short decision session: the Diagram article's missing Direct picture (`BACKLOG.md:30`), the Breeding Groups statements
-(`:57`). Larger: default population (`:82`, M), old-style boxes (`:8`, M), origin-and-funding wording (`:101`), `getAncestors()` (`:122`). The docs-audit item (`:146`) holds only part 2 (`:237`). After the owner pushes (`master` is
-58 ahead of `origin` before this close-out commit, 59 with it), read the CI run for the two benchmark blocks, and open the published guide to confirm the Genetic Value, Summary Statistics and Marker pictures load.
-**Key files:** `R/fromCenterNotice.R:13`; `R/modMarkerGenetics.R:225,:1019-1028,:396-398`; `R/modPotentialParents.R:304`; `tests/testthat/test_fromCenterNotice.R`; `test_modMarkerGenetics.R:1732` (10 blocks);
-`test_modPotentialParents.R:164-251` (3 blocks); `PROJECT_LEARNINGS.md` Learning 914.
-**Gotchas:** restore a mutated file in `tryCatch(finally =)`, never `on.exit()` in a script; tests of shown text collapse whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session
-(no renv library in the export); compare a benchmark failure with the previous commit before reading it; do not re-offer the other two blank causes as a new item (the owner declined); three old `runGeneKeepR` processes are not from any
-recent session and were left alone; keep this file under ~56,700 B.
+### What Session 948 Did (condensed S949; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Candidate Parent Assignment tab says why its table is blank when the pedigree has no `fromCenter` column (strict TDD; owner-ruled): new internal
+`fromCenterNotice()` (`R/fromCenterNotice.R:13`), `output$candidateNotice` (`R/modMarkerGenetics.R:1022`); the Potential Parents tab takes the same sentence
+from it (`R/modPotentialParents.R:304`). Claim `60def83ed`, RED `b660db5d9`, GREEN `c58cd2ac7`, REFACTOR `0e4ebcba4`, docs `1f8a9eced`, close-out `6a732d134`.
+Handoff evaluation of S947: 9/10. Self 8/10. **NOT CLEAN:** the 2 wall-clock benchmark blocks (`test_markerKinship.R:177`, `test_markerParentageLikelihood.R:647`)
+fail under desktop load and at the pre-change commit too; the CI run after the push is the clean read. **Gotchas kept:** restore a mutated file in
+`tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it
+from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; keep this file under ~56,700 B.
 
 ### What Session 947 Did (condensed S948; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The guide's export-tables chunk has a drift check against the pedigree the app hands to the other tabs (strict TDD; tests only): the last 4 blocks of `tests/testthat/test_guideExportTables.R` (13 blocks). Claim `44d57865e`,
