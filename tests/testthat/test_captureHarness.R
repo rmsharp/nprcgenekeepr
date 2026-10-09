@@ -581,3 +581,126 @@ test_that("the three Summary Statistics pictures have the sizes of what they sho
   ## (R/modSummaryStats.R downloadMkHist)
   expect_identical(size("exported"), c(800L, 600L))
 })
+
+## ---- the Diagram article's edge-style picture (BACKLOG.md:30, found S941) ----
+##
+## The app opens on the Rectilinear edge style (R/modPedigree.R, the default
+## since S574), so the diagram script's step "select Rectilinear edge style"
+## changed nothing: diagram_rectilinear_edge_style.png was the same file, byte
+## for byte, as pb_diagram_legend.png (measured S949; S941 found 0 of 2,007,870
+## pixels differing). The article's section "Diagram Edge Style: Direct vs.
+## Rectilinear" therefore showed one style twice and never showed Direct. The
+## owner ruled (S949): show Direct instead -- the section's picture is the
+## Direct style, and the article's first picture stays the Rectilinear default.
+
+diagramArticle <- file.path(scriptDir, "pedigree-diagram.qmd")
+directPicture <- "diagram_direct_edge_style.png"
+oldRectilinearPicture <- "diagram_rectilinear_edge_style.png"
+
+## The values a script types into the Diagram Edge Style buttons.
+edgeStyleValues <- function(lines) {
+  lines <- codeOf(lines)
+  hits <- regmatches(lines,
+                     regexpr("-pedigreeEdgeStyle`\\s*=\\s*[^,)]+", lines))
+  trimws(sub("^-pedigreeEdgeStyle`\\s*=\\s*", "", hits))
+}
+
+readArticle <- function() {
+  skip_if_not(file.exists(diagramArticle),
+              "article not present (it is build-ignored)")
+  readLines(diagramArticle, warn = FALSE)
+}
+
+test_that("edgeStyleValues() reads the value a script types into the edge-style buttons", {
+  made <- c(
+    "    app$set_inputs(`pedigree-pedigreeEdgeStyle` = \"direct\")",
+    "  # app$set_inputs(`pedigree-pedigreeEdgeStyle` = \"rectilinear\")",
+    "    app$set_inputs(`pedigree-pedigreeEdgeStyle` = \"rectilinear\", wait_ = FALSE)"
+  )
+  expect_identical(edgeStyleValues(made), c("\"direct\"", "\"rectilinear\""))
+  expect_identical(edgeStyleValues("app$click(\"x\")"), character(0))
+})
+
+test_that("the Diagram script never types Rectilinear into the edge-style buttons (the app opens on it)", {
+  values <- edgeStyleValues(readScript(diagramScript))
+  expect_gte(length(values), 1L)
+  expect_false("\"rectilinear\"" %in% values)
+})
+
+test_that("the Diagram script's edge-style step picks Direct and shoots diagram_direct_edge_style.png from the container", {
+  code <- codeOf(readScript(diagramScript))
+  expect_identical(edgeStyleValues(code), "\"direct\"")
+  setAt <- grep("-pedigreeEdgeStyle`", code)
+  shotAt <- grep(paste0('shot\\(app, "', directPicture, '"'), code)
+  expect_length(setAt, 1L)
+  expect_length(shotAt, 1L)
+  expect_true(length(setAt) == 1L && length(shotAt) == 1L && setAt < shotAt)
+  if (length(shotAt) == 1L) {
+    expect_match(blockContaining(code, paste0('shot\\(app, "', directPicture)),
+                 "#pedigree-moduleContainer", fixed = TRUE)
+  }
+  expect_false(any(grepl(oldRectilinearPicture, code, fixed = TRUE)))
+})
+
+test_that("the Diagram script's comments do not call Direct the default", {
+  lines <- readScript(diagramScript)
+  comments <- sub("^\\s*#\\s*", "", lines[grepl("^\\s*#", lines)])
+  expect_false(grepl('default "direct"', paste(comments, collapse = " "),
+                     fixed = TRUE))
+})
+
+test_that("the Diagram article cites the Direct picture and no longer cites the old Rectilinear one", {
+  text <- paste(readArticle(), collapse = "\n")
+  expect_match(text, paste0("shiny_app_use/", directPicture), fixed = TRUE)
+  expect_false(grepl(oldRectilinearPicture, text, fixed = TRUE))
+})
+
+test_that("the edge-style section captions its picture as Direct and points to the first picture for Rectilinear", {
+  lines <- readArticle()
+  start <- grep("^## Diagram Edge Style", lines)
+  expect_length(start, 1L)
+  heads <- grep("^## ", lines)
+  end <- min(c(heads[heads > start[[1L]]] - 1L, length(lines)))
+  section <- lines[start[[1L]]:end]
+  picture <- grep("shiny_app_use/", section, value = TRUE)
+  expect_length(picture, 1L)
+  if (length(picture) == 1L) {
+    expect_match(picture, "Diagram Edge Style set to Direct", fixed = TRUE)
+    alt <- sub('.*fig-alt="([^"]*)".*', "\\1", picture)
+    expect_match(alt, "Direct")
+    expect_false(grepl("Rectilinear edge style selected", alt, fixed = TRUE))
+  }
+  expect_match(paste(section, collapse = "\n"), "Node shapes and the legend",
+               fixed = TRUE)
+})
+
+test_that("the Diagram article's pictures are all different files", {
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  text <- readArticle()
+  cited <- unique(unlist(regmatches(
+    text, gregexpr("shiny_app_use/[A-Za-z0-9_.-]+\\.png", text))))
+  expect_gte(length(cited), 5L)
+  sums <- tools::md5sum(file.path(scriptDir, cited))
+  expect_false(anyNA(sums))
+  expect_identical(anyDuplicated(unname(sums)), 0L)
+})
+
+test_that("diagram_direct_edge_style.png is in the picture folder and the old Rectilinear copy is gone", {
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  expect_true(file.exists(file.path(pictureDir, directPicture)))
+  expect_false(file.exists(file.path(pictureDir, oldRectilinearPicture)))
+})
+
+test_that("the Direct picture is as wide as the legend picture (the same container in the same window)", {
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  direct <- file.path(pictureDir, directPicture)
+  expect_true(file.exists(direct))
+  if (file.exists(direct)) {
+    expect_identical(
+      pngSize(direct)[[1L]],
+      pngSize(file.path(pictureDir, "pb_diagram_legend.png"))[[1L]])
+  }
+})
