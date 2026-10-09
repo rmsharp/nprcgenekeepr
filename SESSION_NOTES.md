@@ -98,30 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 946 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "hide that column" after seeing the measured table, and all three gates):** the Genetic Value results table is built
-with no row names (`R/modGeneticValue.R:421-429`), so its first column is `id` and `rank` stays last. **Measured first** (real app, headless probe, example pedigree, 100 iterations): the first column had no heading and
-read 4, 5, 6, 9, 10, 11, 13, 14, 15, 16 for the top ten; `rank` was the 20th and last of 20 columns and read 1 to 10; both Export buttons already write no row names. Only 2 of the 3 Genetic Value pictures show the
-table (the `BACKLOG.md` item said 3; `gva_calculating.png` is taken before the run). **Gate:** 6 new blocks in `tests/testthat/test_modGeneticValue.R:391-487` (5 red, each "16 is not 15", plus 1 control; the file is 76
-blocks, 188 expectations). Claim `b76679cac`, RED `a76844c22`, GREEN `bfafb1bc6` (the code) and `eca040c4d` (the two pictures), REFACTOR none (nothing to change), close-out = the commit carrying this note.
-**Verified:** colony script 85/85; full suite 3,322 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, both as S945); lint 0; `check` 0/0/0; ratchet 1/1 (results d03f941254bc, manifest aa983075d6a2); guide renders (exit 0),
-42 of 42 image links, rendered page opened. No hand check in Chrome; published pages not opened. One `NEWS.Rmd`/`NEWS.md` line under Genetic Value Analysis (`NEWS.Rmd:211`); `BACKLOG.md` item removed (56,930 to 55,918 B,
-now under its read budget). Learning 912.
-**Went wrong:** I guessed the table's rows were in the widget JSON (it is `serverSide`, so only headings are), one extra probe, and the tests moved to headings; a `cd` into the pictures folder carried into later
-calls (use absolute paths); a zsh glob error on a `grep --include`; a `sleep` poll the harness refused.
-**Handoff evaluation of S945: 9/10.** Helped: all 12 `BACKLOG.md` line cites and all 7 key-file cites matched the files; the picker order; counts that held (3,316 blocks, 187 skipped, 6 warnings, 42 ahead);
-the colony-script run line (it ran 85/85 as stated). Missing: nothing that cost time. Wrong: nothing in the handoff; the older item's "three Genetic Value pictures" was wrong (two show the table).
-**Self-assessment: 8/10.** + measured the real table before asking, with the animals' numbers and the Export comparison; tests first with a control and the right failure; looked at each new picture beside the
-old one before copying; one full capture run. - the wrong guess about the widget JSON; the shell slips.
+### What Session 947 Did
+**Deliverable:** The guide's export-tables chunk repeats the app's pedigree preparation (`BACKLOG.md:57`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-08 19:20
+**Status:** Session claimed. Work beginning. Strict TDD; the owner decides keep-the-copy or one exported function first.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-**Next steps (recommended, not ruled on; lines re-grepped after this session's removal):** the owner findings, each a short decision session: the guide's export-tables chunk (`BACKLOG.md:57`), the Candidate tab's
-missing-`fromCenter` message (`:67`), the Diagram article's missing Direct picture (`:30`), the Breeding Groups statements (`:78`). Larger: default population (`:103`, M), old-style boxes (`:8`, M),
-origin-and-funding wording (`:122`), `getAncestors()` (`:143`). The docs-audit item (`:167`) holds only part 2 (`:258`). After the owner pushes (`master` is 46 ahead of `origin` plus the close-out commit), open the
-published guide and confirm the Genetic Value, Summary Statistics and Marker pictures load.
-**Key files:** `R/modGeneticValue.R:421` (the table), `tests/testthat/test_modGeneticValue.R:403` (`dtHeadings()`), `:412` (`gvTableAfterRun()`), `vignettes/articles/colony-manager-guide.qmd:429,443` (the two pictures),
-`NEWS.Rmd:211`, `PROJECT_LEARNINGS.md` Learning 912.
-**Gotchas:** under `testServer()` a DT output is widget JSON with no rows (headings and `columnDefs` only); `gva_calculating.png` has no table, so a table change never needs it retaken; `Rscript -e 'rmarkdown::render("NEWS.Rmd",
-quiet = TRUE)'` re-knits `NEWS.md`; `devtools::check(document = FALSE)` leaves `man/` alone; keep this file under ~56,750 B.
+### What Session 946 Did (condensed S947; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+The Genetic Value results table is built with no row names (`R/modGeneticValue.R:421-429`), so its first column is `id` and `rank` stays last (strict TDD; owner ruled "hide that column"):
+6 new blocks in `test_modGeneticValue.R` (76 blocks). Claim `b76679cac`, RED `a76844c22`, GREEN `bfafb1bc6` and `eca040c4d`, close-out `6302757bb`. Handoff evaluation of S945: 9/10. Self 8/10.
+**Gotchas kept:** under `testServer()` a DT output is widget JSON with no rows (headings and `columnDefs` only); `gva_calculating.png` has no table, so a table change never needs it retaken;
+`Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` re-knits `NEWS.md`; `devtools::check(document = FALSE)` leaves `man/` alone; `master` is 48 ahead of `origin` (the owner pushes);
+keep this file under ~56,750 B. **Next steps then (BACKLOG, not ruled on):** Candidate tab message (`:67`), Diagram Direct picture (`:30`), Breeding Groups statements (`:78`), default population (`:103`, M).
 
 ### What Session 945 Did (condensed S946; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The guide's three Summary Statistics pictures are three different pictures (strict TDD; owner ruled "three real pictures"): `vignettes/articles/colony-manager-guide-screenshots.R:387-415`,
