@@ -271,3 +271,94 @@ test_that("guideChunkCode stops, naming the label, when no chunk carries it", {
                 "a <- 1")
   expect_error(guideChunkCode(unclosed, chunkLabel), chunkLabel, fixed = TRUE)
 })
+
+## ---- the guide's pedigree is the pedigree the app hands on -------------------
+
+## S947 (BACKLOG.md:57). Every block above compares what the guide shows with
+## what the export buttons write for the guide's OWN pedigree
+## (exportButtonLines(env$exportPed)). None compares that pedigree with the one
+## the app builds between the uploaded file and the Summary Statistics tab, so a
+## change to the app's steps (a new column, a changed check) would leave the guide
+## stale with every block above green. The blocks below close that gap.
+##
+## The helpers these blocks use (defined above them once they exist):
+##   appPedigree(file)        sends the CSV `file` through the real appServer in
+##                            shiny::testServer (Input tab with both age floors
+##                            2, as the guide's chunk does, then the Pedigree
+##                            Browser) and returns shared$currentPedigree, the
+##                            pedigree every analysis tab receives; stops, naming
+##                            the file, with "no pedigree" when the app hands on
+##                            none
+##   guideAppPedigree()       appPedigree() of the example file the guide's chunk
+##                            reads, run once and kept
+##   pedigreeDifference(guide, app)
+##                            "" when the two pedigrees hold the same columns and
+##                            values in the same row order (row names ignored),
+##                            else one line saying what differs: a missing or
+##                            extra column by name, the two row counts, or the
+##                            first column whose values differ
+
+test_that("the guide's pedigree is the pedigree the app hands to the other tabs", {
+  skipWithoutGuide()
+  expect_identical(
+    pedigreeDifference(guideRun()$env$exportPed, guideAppPedigree()),
+    ""
+  )
+})
+
+test_that("a guide chunk that leaves out the pedigree-number step is caught", {
+  skipWithoutGuide()
+  code <- guideChunkCode(
+    readLines(guide_path, encoding = "UTF-8", warn = FALSE), chunkLabel
+  )
+  ## turn the step into a harmless assignment: the syntax stays, the column goes
+  skipped <- sub("exportPed$pedNum <-", "unused <-", code, fixed = TRUE)
+  expect_false(identical(skipped, code))
+  env <- new.env(parent = globalenv())
+  eval(parse(text = skipped), envir = env)
+  expect_false("pedNum" %in% names(env$exportPed))
+  expect_match(pedigreeDifference(env$exportPed, guideAppPedigree()),
+               "pedNum", fixed = TRUE)
+})
+
+test_that("pedigreeDifference is empty when the pedigrees agree and names what differs", {
+  guide <- controlPed()
+  guide$pedNum <- findPedigreeNumber(guide$id, guide$sire, guide$dam)
+  expect_identical(pedigreeDifference(guide, guide), "")
+
+  ## row names are not part of the pedigree
+  renamed <- guide
+  rownames(renamed) <- paste0("row", seq_len(nrow(renamed)))
+  expect_identical(pedigreeDifference(renamed, guide), "")
+
+  ## a column only the app's pedigree has, and one only the guide's has
+  withoutPedNum <- guide[, setdiff(names(guide), "pedNum"), drop = FALSE]
+  expect_match(pedigreeDifference(withoutPedNum, guide), "pedNum", fixed = TRUE)
+  expect_match(pedigreeDifference(guide, withoutPedNum), "pedNum", fixed = TRUE)
+
+  ## a changed value names its column
+  changed <- guide
+  changed$sex[2L] <- "M"
+  expect_match(pedigreeDifference(changed, guide), "sex", fixed = TRUE)
+
+  ## fewer rows: both counts are given
+  fewer <- pedigreeDifference(guide[-1L, ], guide)
+  expect_match(fewer, "5 rows", fixed = TRUE)
+  expect_match(fewer, "6 rows", fixed = TRUE)
+
+  ## the same animals in another order differ: the export files list animals
+  ## in pedigree order
+  expect_match(pedigreeDifference(guide[rev(seq_len(nrow(guide))), ], guide),
+               "id", fixed = TRUE)
+
+  ## no pedigree on the guide's side
+  expect_match(pedigreeDifference(NULL, guide), "no pedigree", fixed = TRUE)
+})
+
+test_that("appPedigree stops, naming the file, when the app hands on no pedigree", {
+  skip_if_not_installed("shiny")
+  unreadable <- file.path(tempdir(), "no_such_pedigree.csv")
+  expect_false(file.exists(unreadable))
+  expect_error(appPedigree(unreadable), "no pedigree", fixed = TRUE)
+  expect_error(appPedigree(unreadable), "no_such_pedigree.csv", fixed = TRUE)
+})
