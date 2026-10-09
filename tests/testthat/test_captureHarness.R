@@ -422,16 +422,22 @@ test_that("the Diagram legend picture waits for the pop-up to clear first", {
   expect_true(any(waitAt > focalAt & waitAt < shotAt))
 })
 
+## The values a script types into one input, read off its code (comments
+## skipped): for app$set_inputs(`<module>-<input>` = <value>) it returns the
+## text of <value>. `input` is the part of the id after the module name.
+typedValues <- function(lines, input) {
+  lines <- codeOf(lines)
+  typed <- paste0("-", input, "`\\s*=\\s*")
+  hits <- regmatches(lines, regexpr(paste0(typed, "[^,)]+"), lines))
+  trimws(sub(paste0("^", typed), "", hits))
+}
+
 ## The Group Detail box ("Group to view:") lists the groups by number: the app
 ## builds its choices as setNames(seq_len(n), labels) (R/modBreedingGroups.R,
 ## the viewGrp observe()), so the value a script types must be that number,
 ## not the label. "Group 6" matches no choice and leaves the box blank (found
 ## S940: the committed picture and the retake both showed a blank box).
-viewGrpValues <- function(lines) {
-  lines <- codeOf(lines)
-  hits <- regmatches(lines, regexpr("-viewGrp`\\s*=\\s*[^,)]+", lines))
-  trimws(sub("^-viewGrp`\\s*=\\s*", "", hits))
-}
+viewGrpValues <- function(lines) typedValues(lines, "viewGrp")
 
 test_that("viewGrpValues() reads the value a script types into the group box", {
   made <- c(
@@ -598,12 +604,7 @@ directPicture <- "diagram_direct_edge_style.png"
 oldRectilinearPicture <- "diagram_rectilinear_edge_style.png"
 
 ## The values a script types into the Diagram Edge Style buttons.
-edgeStyleValues <- function(lines) {
-  lines <- codeOf(lines)
-  hits <- regmatches(lines,
-                     regexpr("-pedigreeEdgeStyle`\\s*=\\s*[^,)]+", lines))
-  trimws(sub("^-pedigreeEdgeStyle`\\s*=\\s*", "", hits))
-}
+edgeStyleValues <- function(lines) typedValues(lines, "pedigreeEdgeStyle")
 
 readArticle <- function() {
   skip_if_not(file.exists(diagramArticle),
