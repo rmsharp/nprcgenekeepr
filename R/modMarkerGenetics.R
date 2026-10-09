@@ -222,6 +222,7 @@ modMarkerGeneticsUI <- function(id) {
                tabPanel("Cross-Center",
                         DT::DTOutput(ns("crossCenterTable"))),
                tabPanel("Candidate Parent Assignment",
+                        uiOutput(ns("candidateNotice")),
                         DT::DTOutput(ns("candidateAssignmentTable"))),
                tabPanel("Linkage and LD Block Metrics",
                         h4("Locus Metadata Coverage"),
@@ -1010,6 +1011,17 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       tbl <- crossCenter()
       req(tbl)
       tbl
+    })
+
+    ## Without a "fromCenter" column getPotentialParents() finds no candidate,
+    ## so the table below is blank; say why (the pedigree alone decides this,
+    ## so it shows before any genotype file is loaded).
+    output$candidateNotice <- renderUI({
+      ped <- safeRead(pedigree)
+      if (is.data.frame(ped) && nrow(ped) > 0L &&
+            !"fromCenter" %in% names(ped)) {
+        fromCenterNotice()
+      }
     })
 
     output$candidateAssignmentTable <- DT::renderDT({

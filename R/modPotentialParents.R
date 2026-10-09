@@ -301,11 +301,7 @@ modPotentialParentsServer <- function(id, pedigree = NULL,
         ))
       }
       if (!"fromCenter" %in% names(ped)) {
-        return(div(
-          class = "alert alert-warning",
-          "This dataset has no colony-origin ('fromCenter') field, so ",
-          "potential parents cannot be identified."
-        ))
+        return(fromCenterNotice())
       }
       td <- tableData()
       if (nrow(td) == 0L) {
