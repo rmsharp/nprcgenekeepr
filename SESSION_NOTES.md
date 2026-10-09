@@ -99,48 +99,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 948 Did
-**Deliverable:** the Candidate Parent Assignment tab shows an empty table with no explanation when the pedigree has no `fromCenter` column (`BACKLOG.md:57`; owner pick at the Phase 0 picker, option 1 of 4): decide with the owner, then build by strict TDD only if they rule to add the sentence (IN PROGRESS)
-**Started:** 2026-10-08 21:10 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "add the one-line reason", as one sentence shared with the Potential Parents tab, and all three gates):** the Candidate Parent Assignment tab
+says why its table is blank when the pedigree has no `fromCenter` column (`BACKLOG.md:57` removed). New internal `fromCenterNotice()` (`R/fromCenterNotice.R:13`); `output$candidateNotice` (`R/modMarkerGenetics.R:1022`, slot `:225`)
+shows it for a data frame with rows and no column, before any genotype file too; `R/modPotentialParents.R:304` takes the same sentence from the helper. Guide note (`colony-manager-guide.qmd:914`) and a NEWS line (`NEWS.Rmd:138`).
+**Read the code first:** four causes of a blank table (no genotype file, nothing flagged, no column, no eligible candidate); the owner chose the missing-column notice only, so the other two stay unexplained by decision.
+**Gate:** claim `60def83ed`, RED `b660db5d9` (17 new blocks, 15 red, 2 green by design), GREEN `c58cd2ac7`, REFACTOR `0e4ebcba4` (roxygen, `man/modMarkerGeneticsServer.Rd`), docs `1f8a9eced` (guide note, NEWS), close-out = the commit carrying this note.
+**Verified:** real app, headless: notice with the column missing, none with it; the guide's Candidate picture is pixel-identical (0 of 740,410), none retaken. Three touched files 125 blocks 0 failed; four mutants of the render turn 4, 6, 1, 1
+blocks red; lint 0; spelling 0; ratchet 1/1 (results 2e43edea9612). **NOT CLEAN:** the full suite (3,343 blocks, 0 errors) and `check` (0 warnings, 0 notes) each show 2 failed blocks, the wall-clock benchmarks
+`test_markerKinship.R:177` and `test_markerParentageLikelihood.R:647`, at a desktop load of about 10; the same two fail at the pre-change commit `597cc727e` and alone. The CI run after the owner pushes is the clean read. Learning 914.
+**Went wrong:** two bugs in my first tests (a pane-name regex that missed newlines; htmltools breaks a two-argument `div()` across lines), found by running RED; a mutation script's `on.exit()` never ran and left a mutant in
+`R/modMarkerGenetics.R`, caught by the file-change notice and restored byte-identical before any commit.
+**Handoff evaluation of S947: 9/10.** Helped: all `BACKLOG.md` line cites matched (`:57,:30,:68,:93,:8,:112,:133,:157`); counts held (53 ahead; notes 56,637 B); the picker order. Wrong: one stale `runGeneKeepR` process
+(pid 29511); there were three (29511, 92900, 82416). Missing: nothing that cost time.
+**Self-assessment: 8/10.** + found the four blanks in the code before asking; plain question; mutation controls and a baseline for the benchmark failures; looked at the real app and opened it. - two test bugs; the left-behind
+mutant; no clean 0 failed.
+
+**Next steps (recommended, not ruled on; lines re-grepped after this session's removal):** owner findings, each a short decision session: the Diagram article's missing Direct picture (`BACKLOG.md:30`), the Breeding Groups statements
+(`:57`). Larger: default population (`:82`, M), old-style boxes (`:8`, M), origin-and-funding wording (`:101`), `getAncestors()` (`:122`). The docs-audit item (`:146`) holds only part 2 (`:237`). After the owner pushes (`master` is
+58 ahead of `origin` before this close-out commit, 59 with it), read the CI run for the two benchmark blocks, and open the published guide to confirm the Genetic Value, Summary Statistics and Marker pictures load.
+**Key files:** `R/fromCenterNotice.R:13`; `R/modMarkerGenetics.R:225,:1019-1028,:396-398`; `R/modPotentialParents.R:304`; `tests/testthat/test_fromCenterNotice.R`; `test_modMarkerGenetics.R:1732` (10 blocks);
+`test_modPotentialParents.R:164-251` (3 blocks); `PROJECT_LEARNINGS.md` Learning 914.
+**Gotchas:** restore a mutated file in `tryCatch(finally =)`, never `on.exit()` in a script; tests of shown text collapse whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session
+(no renv library in the export); compare a benchmark failure with the previous commit before reading it; do not re-offer the other two blank causes as a new item (the owner declined); three old `runGeneKeepR` processes are not from any
+recent session and were left alone; keep this file under ~56,700 B.
 
 ### What Session 947 Did (condensed S948; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The guide's export-tables chunk has a check that its pedigree is the pedigree the app hands to the other tabs (strict TDD; owner ruled "drift check only"): the last 4 blocks of `tests/testthat/test_guideExportTables.R`
-(13 blocks; tests only). Measured first: the guide's three export files equal the app's line for line. Claim `44d57865e`, RED `8e43e1b5d`, GREEN `55fdff610`, REFACTOR `343003134`, close-out `597cc727e`.
-Handoff evaluation of S946: 9/10. Self 8/10. **Gotchas kept:** under `testServer()` an unset input is `NULL`, so set the screen's defaults; never mount `appServer` in a test that gives it a full pedigree
-(every tab renders; 70 of 72 s in `convertRelationships()`); old `runGeneKeepR` processes (pids 29511, 92900, 82416) are not from any recent session and were left alone; `master` is 53 ahead of `origin` (the owner pushes;
-after they push, open the published guide and confirm the Genetic Value, Summary Statistics and Marker pictures load); keep this file under ~56,700 B.
-**Next steps then (BACKLOG, not ruled on):** Candidate tab message (`:57`), Diagram Direct picture (`:30`), Breeding Groups statements (`:68`), default population (`:93`, M), old-style boxes (`:8`, M).
+The guide's export-tables chunk has a drift check against the pedigree the app hands to the other tabs (strict TDD; tests only): the last 4 blocks of `tests/testthat/test_guideExportTables.R` (13 blocks). Claim `44d57865e`,
+RED `8e43e1b5d`, GREEN `55fdff610`, REFACTOR `343003134`, close-out `597cc727e`. Handoff evaluation of S946: 9/10. Self 8/10. **Gotchas kept:** under `testServer()` an unset input is `NULL`, so set the screen's defaults; never mount
+`appServer` in a test that gives it a full pedigree (every tab renders; 70 s in `convertRelationships()`).
 
-### What Session 946 Did (condensed S947; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Genetic Value results table is built with no row names (`R/modGeneticValue.R:421-429`), so its first column is `id` and `rank` stays last (strict TDD; owner ruled "hide that column"):
-6 new blocks in `test_modGeneticValue.R` (76 blocks). Claim `b76679cac`, RED `a76844c22`, GREEN `bfafb1bc6` and `eca040c4d`, close-out `6302757bb`. Handoff evaluation of S945: 9/10. Self 8/10.
-**Gotchas kept:** under `testServer()` a DT output is widget JSON with no rows (headings and `columnDefs` only); `gva_calculating.png` has no table, so a table change never needs it retaken;
-`Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` re-knits `NEWS.md`; `devtools::check(document = FALSE)` leaves `man/` alone; `master` is 48 ahead of `origin` (the owner pushes);
-keep this file under ~56,750 B. **Next steps then (BACKLOG, not ruled on):** Candidate tab message (`:67`), Diagram Direct picture (`:30`), Breeding Groups statements (`:78`), default population (`:103`, M).
-
-### What Session 945 Did (condensed S946; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The guide's three Summary Statistics pictures are three different pictures (strict TDD; owner ruled "three real pictures"): `vignettes/articles/colony-manager-guide-screenshots.R:387-415`,
-7 new blocks in `test_captureHarness.R` (42 blocks); 5.3 MB to 0.48 MB. Claim `852ba501c`, RED `7a5bff54f`, GREEN `82e6b170a`, REFACTOR `e0ce6e865`, close-out `f28369f2c`.
-Handoff evaluation of S944: 9/10. Self 8/10. **Gotchas kept:** the colony script takes about 8 min (`NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/colony-manager-guide-screenshots.R`);
-restore the 900 px window after a taller shot; `app$get_download()` fetches the Export file itself; `master` is 42 ahead of `origin` (the owner pushes).
-
-### What Session 944 Did (condensed S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 4b (D5 ruled: script all nine): the 9 Marker Genetics pictures are retaken by `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture, 44/44 steps; data from
-`tests/testthat/helper-markerPictureFixtures.R`); gate `test_markerPictureScreenshots.R` (16 blocks). Claim `0f7bb7092`, RED `9d42987b4`, GREEN `edd8f8584`, `183dfdebb`, `9f415d50a`, close-out `4126195bc`.
-Handoff evaluation of S943: 8/10. Self 8/10. **Gotchas kept:** a window picture needs `selector = "viewport"` (the default selector is the whole page); a pedigree for the Candidate tab needs a
-`fromCenter` column or the table is silently empty; run the Marker script with `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/marker-genetics-screenshots.R` (about 4 min).
-
-### What Session 943 Did (condensed S944; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 4a (D4 ruled: build the tables): the 3 spreadsheet pictures are replaced by 3 tables the guide builds from the export buttons' own code (chunk
-`summary-export-tables`, `colony-manager-guide.qmd:468`); gate `test_guideExportTables.R` (9 blocks). Claim `c58040571`, RED `4e012db43`, GREEN `ba9c31501`, REFACTOR `4e99a432b`,
-close-out `50aea544f`. Handoff evaluation of S942: 9/10. Self 8/10. **Gotchas kept:** the kinship file's first rows are all zero, so the guide shows the first animal with 3 or more
-offspring and its first three; a download handler's `output$x` is valid only inside `testServer`.
-
-### What Session 942 Did (condensed S943; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 3b: 12 guide pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic Value x3); D3 ruled accept; the 500-row
-picture's caption fixed. Claim `b732807cf`, close-out `ef5d5fb51`. Handoff evaluation of S941: 9/10. Self 8/10. **Gotchas kept:** the three Summary Statistics pictures are
-one picture and the Genetic Value first column is row names (`BACKLOG.md:57`, `:70`).
+### Sessions 942-946 (condensed S943-S948; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures (D3 ruled accept); S943 replaced the 3 spreadsheet pictures with 3 tables built from the export buttons' own code
+(`colony-manager-guide.qmd:468`, gate `test_guideExportTables.R`); S944 scripted the 9 Marker Genetics pictures (`vignettes/articles/marker-genetics-screenshots.R`, gate `test_markerPictureScreenshots.R`); S945 made the 3 Summary
+Statistics pictures three real pictures (`colony-manager-guide-screenshots.R:387-415`); S946 built the Genetic Value results table with no row names (`R/modGeneticValue.R:421-429`). Claims `b732807cf`, `c58040571`, `0f7bb7092`,
+`852ba501c`, `b76679cac`. Handoff evaluations 8-9/10, self 8/10 each. **Gotchas kept:** the kinship export file's first rows are all zero, so the guide shows the first animal with 3 or more offspring; a download handler's `output$x` is
+valid only inside `testServer`; a window picture needs `selector = "viewport"`; a pedigree for the Candidate tab needs `fromCenter` or the table is blank (the tab now says so, S948); run the scripts as
+`NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/<script>.R` (Marker about 4 min, colony about 8 min); restore the 900 px window after a taller shot; under `testServer()` a DT output is widget JSON with no rows;
+`Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` re-knits `NEWS.md`.
 
 ### What Session 941 Did (condensed S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, Phase 3a: 14 guide pictures retaken (9 Pedigree Browser, 5 Diagram); the owner ruled D2 delete (`pb_unknown_displayed.png` and its capture step

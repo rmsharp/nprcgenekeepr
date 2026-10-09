@@ -54,17 +54,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
       `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
 
-- [ ] **The Candidate Parent Assignment tab shows an empty table, with no explanation, when the pedigree has no
-      `fromCenter` column (found S944, 2026-10-08; DECISION NEEDED, Effort S; strict TDD, a displayed-text change)** --
-      measured S944 in the real app (headless): issue #155's own fixture, a recorded-but-wrong sire, which the module test
-      says gives 2 candidate rows, loaded through the Input tab as a file without `fromCenter`, shows "No data available in
-      table"; the same pedigree with the column shows the 2 rows (SireTrue, SireWrong). The cause is documented
-      (`getPotentialParents()` returns NULL without the column, `R/getPotentialParents.R:101-102`), and the Potential
-      Parents tab already says so in words (`R/modPotentialParents.R:303-306`, "This dataset has no colony-origin
-      ('fromCenter') field, ..."); this tab does not. The guide's Candidate note now says the column is needed.
-      **Decide when picking it up:** give the Candidate tab the same sentence (a test first; one displayed line), or leave
-      the table empty and the guide's note as the only explanation.
-
 - [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
       kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
       2026-10-07; DECISION NEEDED, Effort S; the guide's words, or the app with a test first)** -- seen in
@@ -243,8 +232,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `shiny_app_use/` (measured S944: each is taken by one of the three capture scripts and cited by the guide or the Diagram
       article) now come from a script, and the guide's abstract says "current as of 2026-10-08". Wording fixed in the
       same pass: the Heterozygosity caption (its animals are X, Y, Z), the Candidate tab's "Current limitation" note
-      (issue #155 had fixed it), and the caption's "10 shared loci" (3 of 10 disagree). One finding for the owner is the
-      Candidate-tab item below.
+      (issue #155 had fixed it), and the caption's "10 shared loci" (3 of 10 disagree). Its one finding for the owner, the
+      Candidate tab's blank table without `fromCenter`, was ruled and built S948 (the tab now says why).
       (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
