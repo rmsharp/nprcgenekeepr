@@ -636,8 +636,11 @@ test_that("the Diagram script's edge-style step picks Direct and shoots diagram_
   expect_length(shotAt, 1L)
   expect_true(length(setAt) == 1L && length(shotAt) == 1L && setAt < shotAt)
   if (length(shotAt) == 1L) {
-    expect_match(blockContaining(code, paste0('shot\\(app, "', directPicture)),
-                 "#pedigree-moduleContainer", fixed = TRUE)
+    ## the call runs on to the next line; blockContaining() does not apply
+    ## here (it wants column-0 calls, and this script indents its shots
+    ## inside `if (ok) {`)
+    call <- paste(code[shotAt:(shotAt + 1L)], collapse = " ")
+    expect_match(call, "#pedigree-moduleContainer", fixed = TRUE)
   }
   expect_false(any(grepl(oldRectilinearPicture, code, fixed = TRUE)))
 })

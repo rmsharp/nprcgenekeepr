@@ -65,7 +65,10 @@ to the mating dot, a horizontal bar across the children, and a vertical
 drop into each one) and **Direct** -- a single straight or lightly sloped
 line all the way from parent to mating dot to child.
 
-![The same 21-animal pedigree with Diagram Edge Style set to Rectilinear -- the same relationships, routed in strict right angles.](shiny_app_use/diagram_rectilinear_edge_style.png){fig-alt="Pedigree Browser Diagram tab with the Rectilinear edge style selected, showing the same pedigree routed with horizontal and vertical right-angle connectors instead of straight lines."}
+The picture under "Node shapes and the legend" above shows the Rectilinear
+default; the picture below shows the same pedigree with **Direct** selected.
+
+![The same 21-animal pedigree with Diagram Edge Style set to Direct -- the same relationships, each connector a single straight or lightly sloped line.](shiny_app_use/diagram_direct_edge_style.png){fig-alt="Pedigree Browser Diagram tab with the Direct edge style selected, showing the same pedigree routed with straight or lightly sloped connectors instead of horizontal and vertical right-angle connectors."}
 
 Both styles show the exact same animals and relationships -- the difference
 is purely routing. Rectilinear achieves its right angles with extra,

@@ -117,8 +117,9 @@ set_focal <- function(app, ids, label) {
 # --------------------------------------------------------------------------
 # 1-2. Base fixture (obfuscated_rhesus_mhc_ped.csv, 375 animals, real
 #      consanguineous matings -- the same fixture issue #149's own audit
-#      confirmed carries 28 genuinely consanguineous unions, S555): default
-#      "direct" edge style, then "Rectilinear (kinship2-style)".
+#      confirmed carries 28 genuinely consanguineous unions, S555): the view
+#      the app opens on (the Rectilinear edge style), then the Direct edge
+#      style.
 # --------------------------------------------------------------------------
 app <- new_app("pedigree_diagram_base")
 ok <- load_and_open_diagram(app, "obfuscated_rhesus_mhc_ped.csv")
@@ -144,11 +145,13 @@ if (ok) {
   #    so colony-manager-guide.qmd's own reference needs no path change).
   shot(app, "pb_diagram_legend.png", selector = "#pedigree-moduleContainer")
 
-  # 2. Rectilinear edge style -- kinship2-style right-angle routing.
-  do_step("select Rectilinear edge style", {
-    app$set_inputs(`pedigree-pedigreeEdgeStyle` = "rectilinear")
+  # 2. Direct edge style -- single straight or lightly sloped lines. The app
+  #    opens on Rectilinear (the default since S574), so selecting it here
+  #    changed nothing and the picture repeated the one above (found S941).
+  do_step("select Direct edge style", {
+    app$set_inputs(`pedigree-pedigreeEdgeStyle` = "direct")
   })
-  shot(app, "diagram_rectilinear_edge_style.png",
+  shot(app, "diagram_direct_edge_style.png",
        selector = "#pedigree-moduleContainer")
 }
 app$stop()
