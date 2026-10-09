@@ -194,15 +194,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S949
 date: 2026-10-09
-status: pending
-active_task: the Diagram article's missing Direct picture (BACKLOG.md:30; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the Diagram article's edge-style section shows a Direct picture instead of a second copy of the Rectilinear one (BACKLOG.md:30; owner pick at the Phase 0 picker, option 1 of 4; the owner ruled "show Direct instead"; strict TDD, all three gates asked and answered yes).
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, S948's ratchet citation matched the results file, CI green on all 10 runs, dashboard 96/100, nothing over a context-budget ceiling). Claim 5e306e1d2 (S948 notes entry condensed to fit the stub). Measured first: diagram_rectilinear_edge_style.png and pb_diagram_legend.png are byte-identical (cmp; md5 cda44efa55b4f402db79cf55f518ad6a), because the app opens on Rectilinear and the script's step changed nothing. RED 330c8f686 (9 new blocks in test_captureHarness.R, 8 red, 1 green by design; 42 older blocks pass). GREEN d692e2cc1 (the script's step types direct and shoots diagram_direct_edge_style.png; pedigree-diagram.qmd captions it and points to the first picture as the Rectilinear default; the duplicate file is removed; the diagram script ran 18/18 into a scratch folder and only the Direct picture was copied; one test bug found and fixed in GREEN, said in the commit). REFACTOR 441245b40 (test helper typedValues() shared by viewGrpValues() and edgeStyleValues(); identical output on three scripts). Close-out: BACKLOG.md item removed and the docs-audit item's leftovers sentence updated, Learning 915, notes, ledger.
+next_steps: Recommended order (not ruled on; lines re-grepped after this session's removal). Owner findings, each a short decision session: the Breeding Groups statements (BACKLOG.md:43; the READY (optional) None of the 1 animals wording, :62, can ride along). Larger: default population (:68, M), old-style boxes (:8, M), origin-and-funding wording (:87), getAncestors() (:108). The docs-audit item (:132) holds only part 2 (:224). After the owner pushes (63 commits ahead of origin before this close-out commit, 64 with it), read the CI run and open the published Diagram article to confirm the Direct picture loads.
+key_files: vignettes/articles/pedigree-diagram-screenshots.R:148-155 (the Direct step and shot); vignettes/articles/pedigree-diagram.qmd:58-78 (the section); vignettes/articles/shiny_app_use/diagram_direct_edge_style.png; tests/testthat/test_captureHarness.R:425-433 (typedValues), :591-710 (the 9 blocks); PROJECT_LEARNINGS.md Learning 915.
+gotchas: a guarded assertion in a RED test is unrun until GREEN (run its body once against made-up passing text before the RED commit); blockContaining() finds only column-0 do_step( and shot( calls and the diagram script indents its shots; this run's first picture (pb_diagram_legend.png) differs from the committed one by 15,533 of 2,007,870 pixels (legend panel about 38 px left), so view any retake of it beside the old one first; the edges of the Direct picture were not traced against the data; put R code with a backslash-s in a script file, never inline Rscript -e; three old runGeneKeepR processes (pids 29511, 82416, 92900) are not from any recent session and were left alone; SESSION_NOTES.md must stay under about 56,700 B (56,567 B now).
+runtime_smoke: real app, headless: the diagram capture script ran 18/18 steps into a scratch folder (log has no did-not-update warning); the new picture shows the Direct radio on, sloped connectors, the same 21 animals and layout; the first picture shows Rectilinear on, as the article now says; both opened for the owner. Full suite 3,352 blocks 0 failed 0 errors (187 skipped) at load about 4; package lint 0; devtools::check(document = FALSE) Status OK, 0 errors 0 warnings 0 notes; quality_ratchet: 1/1 pass, 0 fail, 0 unmeasured, results 06a8a0a755ce, manifest aa983075d6a2. Not a hand check in Chrome; published pages not opened (commits unpushed).
+changelog_ref: S949 DONE entry
+commit: the close-out commit that carries this receipt; claim 5e306e1d2
 ```
 
 ```handoff

@@ -27,20 +27,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       is 286 px wide and fits). Adding it means a new capture step, a new image file and a sentence in the
       guide. Pick it up only if the owner wants the picture; the QC Summary picture and the words are done.
 
-- [ ] **The Diagram article never shows the Direct edge style, and its "Rectilinear" picture is now the
-      same picture as the first one (found S941, 2026-10-07; DECISION NEEDED, Effort S; strict TDD for a
-      script change)** -- the app opens on Rectilinear (the default since S574, `R/modPedigree.R:460-467`; the
-      article says so, `pedigree-diagram.qmd:42-43`), so the capture script's step "select Rectilinear
-      edge style" (`pedigree-diagram-screenshots.R:148-150`) changes nothing (shinytest2 warns "Server did
-      not update any output values within 4 seconds"), and the retaken `diagram_rectilinear_edge_style.png`
-      is pixel-identical to `pb_diagram_legend.png` (0 of 2,007,870 pixels differ, measured S941; the
-      committed pair differed by 1,933 pixels). The section "Diagram Edge Style: Direct vs.
-      Rectilinear" (`pedigree-diagram.qmd:58-75`) therefore shows one style twice and no picture of Direct;
-      the script's own comment (`:121`) still calls Direct the default. **Decide when picking it up:**
-      capture Direct in that step instead (a test first: the script is pinned by `test_captureHarness.R`;
-      the caption, file name and alt text change with it), or drop the duplicate picture and reword the
-      section.
-
 - [ ] **Optional: a pop-up covers the "Twin/Zygosity Relations" heading in 9 of the 14 pictures S941 retook
       (found S941, 2026-10-07; READY (optional), Effort S; strict TDD, capture script only)** -- read off
       the pictures: `pb_5_focal_animals_small`, `pb_selection_large_focal_group`,
@@ -201,8 +187,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       again" row and the dashed-line paragraph (`pedigree-diagram.qmd:50-56`) names it. Captions fixed:
       "6-animal" is 21 animals, "the top union" is 8LKBV9 x his daughter FJIB3R, the affected picture
       is 12 animals with 4 filled (not three), the names picture is its own 12-animal lineage, and the
-      first Pedigree Browser alt text. Two leftovers for the owner are the Direct-style item and the pop-up item
-      below the Warnings-picture item.
+      first Pedigree Browser alt text. The two leftovers were the Direct-style item (fixed S949: the article's edge-style
+      section now shows a Direct picture, `diagram_direct_edge_style.png`, and says the first picture is the Rectilinear
+      default) and the pop-up item below the Warnings-picture item.
       S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic
       Value x3) from the colony script's full 81/81 run, copied by name; sizes matched S927's measurements. D3
       was ruled: accept. The Home picture shows the 2026-10-07 install date and a three-row navigation bar (De-
