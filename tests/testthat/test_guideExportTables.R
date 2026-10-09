@@ -15,6 +15,17 @@
 ## (modSummaryStatsServer run in shiny::testServer on the pedigree the chunk
 ## built), so a later change to an export cannot leave the guide stale quietly.
 ##
+## A second gate (S947, BACKLOG.md:57) closes what the first leaves open: those
+## blocks feed the export buttons the guide's OWN pedigree, so a change to the
+## app's steps between the uploaded file and the Summary Statistics tab would
+## not fail them. The last four blocks send the same example file through the
+## real Input tab (both age floors 2) and Pedigree Browser and require the
+## pedigree the app hands on to equal the chunk's `exportPed`. Two limits: the
+## two modules are chained as appServer wires them instead of mounting appServer
+## (with every tab mounted, testServer renders the Summary Statistics
+## relationship table, about 70 s), and the comparison covers column names, row
+## count and values in row order, not the order of the columns.
+##
 ## The chunk's contract: it defines
 ##   exportPed            the pedigree the Summary Statistics tab receives
 ##   shownKinship         numeric matrix, dimnames = animal ids: the cells of
@@ -28,9 +39,10 @@
 ## The tests that read the real guide read ../../vignettes/articles/..., which
 ## .Rbuildignore excludes: a built package holds no copy, so they skip in a
 ## built package and under `devtools::check()`. They run from the source tree,
-## which is where the close-out suite runs. The helper tests at the end run on
-## a six-animal pedigree and a made-up guide text, so they pin the helpers, not
-## the guide (they pass before the guide changes, by design).
+## which is where the close-out suite runs. The helper tests (the ones on a
+## six-animal pedigree, a made-up guide text, or an unreadable file) run without
+## the guide, so they pin the helpers, not the guide (they pass before the guide
+## changes, by design).
 
 pkg_root <- testthat::test_path("..", "..")
 guide_path <- file.path(pkg_root, "vignettes", "articles",
