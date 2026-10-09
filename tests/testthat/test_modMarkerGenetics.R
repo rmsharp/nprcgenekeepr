@@ -1728,3 +1728,147 @@ test_that("modMarkerGenetics's sequence export preview still builds, with no blo
                        fixed = TRUE))
   })
 })
+
+## RED (S948, BACKLOG.md:57): the Candidate Parent Assignment tab says why it
+## is blank when the pedigree has no "fromCenter" column. getPotentialParents()
+## returns NULL without that column, so no candidate is ever found; the
+## Potential Parents tab already says so (found S944 in the real app: the
+## Candidate tab showed "No data available in table" with no reason). The
+## notice is the shared fromCenterNotice() sentence, in a slot of its own
+## inside the Candidate tab. It reads the pedigree only, so it shows whether
+## or not a genotype file has been loaded. The other blank cases (nothing
+## flagged, no eligible candidate) are not covered; the owner chose the
+## missing-column notice only.
+
+noticePedNoColumn <- data.frame(
+  id = c("P", "C", "U"), sire = c(NA, NA, NA), dam = c(NA, "P", NA),
+  stringsAsFactors = FALSE
+)
+noticePedWithColumn <- cbind(noticePedNoColumn, fromCenter = c(TRUE, TRUE, TRUE))
+noticeSentence <- paste0(
+  "This dataset has no colony-origin ('fromCenter') field, so ",
+  "potential parents cannot be identified."
+)
+## The rendered HTML may break the sentence across lines (htmltools indents
+## separate children); a browser shows the same words, so compare the text
+## with its whitespace collapsed.
+noticeText <- function(x) gsub("\\s+", " ", i148Html(x))
+
+test_that("modMarkerGeneticsUI puts the candidate notice inside the Candidate Parent Assignment tab, above its table, and in no other tab", {
+  ui_html <- as.character(modMarkerGeneticsUI("test"))
+  panes <- strsplit(ui_html, '<div class="tab-pane', fixed = TRUE)[[1L]][-1L]
+  paneNames <- sub('data-value="([^"]+)"', "\\1",
+                   regmatches(panes, regexpr('data-value="[^"]+"', panes)))
+  names(panes) <- paneNames
+
+  expect_true("Candidate Parent Assignment" %in% paneNames)
+  candidatePane <- panes[["Candidate Parent Assignment"]]
+  noticeAt <- regexpr("test-candidateNotice", candidatePane, fixed = TRUE)
+  tableAt <- regexpr("test-candidateAssignmentTable", candidatePane,
+                     fixed = TRUE)
+  expect_true(noticeAt > 0L)
+  expect_true(tableAt > 0L)
+  expect_true(noticeAt < tableAt)
+  for (other in setdiff(paneNames, "Candidate Parent Assignment")) {
+    expect_false(grepl("candidateNotice", panes[[other]], fixed = TRUE),
+                 info = other)
+  }
+})
+
+test_that("modMarkerGenetics's candidate notice says there is no fromCenter field when the pedigree has no such column and a genotype file is loaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(noticePedNoColumn)), {
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+    noticeHtml <- noticeText(output$candidateNotice)
+
+    expect_true(grepl(noticeSentence, noticeHtml, fixed = TRUE))
+    expect_true(grepl('class="alert alert-warning"', noticeHtml, fixed = TRUE))
+  })
+})
+
+test_that("modMarkerGenetics's candidate notice shows before any genotype file is loaded, because it reads the pedigree only", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(noticePedNoColumn)), {
+    expect_true(grepl(noticeSentence, noticeText(output$candidateNotice),
+                      fixed = TRUE))
+  })
+})
+
+test_that("modMarkerGenetics's candidate notice is empty when the pedigree has a fromCenter column", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(noticePedWithColumn)), {
+    session$setInputs(genotypeFile = list(
+      name = "markerGenotype.csv", datapath = genotypeFilePath
+    ))
+
+    expect_null(output$candidateNotice)
+  })
+})
+
+noticeNotAPedigree <- list(
+  "NULL" = shiny::reactive(NULL),
+  "not a data frame" = shiny::reactive("no pedigree yet"),
+  "a data frame with no rows" = shiny::reactive(noticePedNoColumn[0L, ]),
+  "an error" = shiny::reactive(stop("pedigree not ready"))
+)
+for (noticeCase in names(noticeNotAPedigree)) {
+  local({
+    caseName <- noticeCase
+    caseReactive <- noticeNotAPedigree[[noticeCase]]
+    test_that(paste0("modMarkerGenetics's candidate notice is empty, and does not fail, when the pedigree is ",
+                     caseName), {
+      skip_if_not_installed("shiny")
+      shiny::testServer(modMarkerGeneticsServer,
+        args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                    pedigree = caseReactive), {
+        expect_null(output$candidateNotice)
+      })
+    })
+  })
+}
+
+test_that("modMarkerGenetics's candidate notice follows the pedigree: it goes when the pedigree gains the column and returns when it loses it", {
+  skip_if_not_installed("shiny")
+  pedRv <- shiny::reactiveVal(noticePedNoColumn)
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = pedRv), {
+    expect_true(grepl(noticeSentence, noticeText(output$candidateNotice),
+                      fixed = TRUE))
+
+    pedRv(noticePedWithColumn)
+    session$flushReact()
+    expect_null(output$candidateNotice)
+
+    pedRv(noticePedNoColumn)
+    session$flushReact()
+    expect_true(grepl(noticeSentence, noticeText(output$candidateNotice),
+                      fixed = TRUE))
+  })
+})
+
+test_that("modMarkerGenetics's candidate notice takes its sentence from fromCenterNotice(), so the two tabs cannot drift", {
+  skip_if_not_installed("shiny")
+  ## A stand-in whose text differs from the real sentence: if the module wrote
+  ## the sentence itself, the stand-in would not appear.
+  testthat::local_mocked_bindings(
+    fromCenterNotice = function() shiny::div("STAND-IN SENTENCE"),
+    .package = "nprcgenekeepr"
+  )
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(noticePedNoColumn)), {
+    noticeHtml <- noticeText(output$candidateNotice)
+
+    expect_true(grepl("STAND-IN SENTENCE", noticeHtml, fixed = TRUE))
+    expect_false(grepl("colony-origin", noticeHtml, fixed = TRUE))
+  })
+})

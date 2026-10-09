@@ -161,6 +161,95 @@ test_that("modPotentialParentsServer degrades to an empty table when fromCenter 
   )
 })
 
+## S948 (BACKLOG.md:57): the sentence this tab shows when the pedigree has no
+## "fromCenter" column is one shared piece of text, fromCenterNotice(), which
+## the Candidate Parent Assignment tab (Marker Genetics) now shows too. The
+## first two blocks pin what the tab says today (they pass before the sentence
+## moves); the third fails until the tab takes its sentence from the helper.
+
+test_that("modPotentialParentsServer tells the user the dataset has no fromCenter field, in the words the Candidate tab shares", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    birth = as.Date(c("2000-01-01", "2000-01-01", "2003-01-01")),
+    exit = as.Date(NA),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
+    {
+      session$setInputs(maxGestationalPeriod = 210, findParents = 1)
+      statusHtml <- gsub("\\s+", " ",
+                         paste(unlist(output$statusMessage), collapse = " "))
+
+      expect_true(grepl(paste0(
+        "This dataset has no colony-origin ('fromCenter') field, so ",
+        "potential parents cannot be identified."
+      ), statusHtml, fixed = TRUE))
+      expect_true(grepl('class="alert alert-warning"', statusHtml,
+                        fixed = TRUE))
+    }
+  )
+})
+
+test_that("modPotentialParentsServer does not show the no-fromCenter notice when the pedigree has the column", {
+  skip_if_not_installed("shiny")
+
+  pedOne <- nprcgenekeepr::rhesusPedigree
+  pedOne$fromCenter <- TRUE
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(pedigree = shiny::reactive(pedOne), minSireAge = 2, minDamAge = 2),
+    {
+      session$setInputs(maxGestationalPeriod = 210, findParents = 1)
+      statusHtml <- gsub("\\s+", " ",
+                         paste(unlist(output$statusMessage), collapse = " "))
+
+      expect_false(grepl("colony-origin", statusHtml, fixed = TRUE))
+    }
+  )
+})
+
+test_that("modPotentialParentsServer takes its no-fromCenter notice from fromCenterNotice(), so the two tabs cannot drift", {
+  skip_if_not_installed("shiny")
+
+  ## A stand-in whose text differs from the real sentence: if the tab wrote the
+  ## sentence itself, the stand-in would not appear.
+  testthat::local_mocked_bindings(
+    fromCenterNotice = function() shiny::div("STAND-IN SENTENCE"),
+    .package = "nprcgenekeepr"
+  )
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    birth = as.Date(c("2000-01-01", "2000-01-01", "2003-01-01")),
+    exit = as.Date(NA),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
+    {
+      session$setInputs(maxGestationalPeriod = 210, findParents = 1)
+      statusHtml <- gsub("\\s+", " ",
+                         paste(unlist(output$statusMessage), collapse = " "))
+
+      expect_true(grepl("STAND-IN SENTENCE", statusHtml, fixed = TRUE))
+      expect_false(grepl("colony-origin", statusHtml, fixed = TRUE))
+    }
+  )
+})
+
 test_that("modPotentialParentsServer degrades to an empty table when there are no unknowns", {
   skip_if_not_installed("shiny")
 
