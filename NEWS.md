@@ -138,6 +138,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - The Candidate Parent Assignment suggestion covers the common case
   where a flagged animal's recorded parent is present but wrong (issue
   \#155).
+- The Candidate Parent Assignment tab says why its table is blank when
+  the pedigree has no `fromCenter` column, which it needs to find any
+  candidate. It uses the same words as the Potential Parents tab.
 - `checkLocusMetadata()` reports each locus's chromosome and position
   data as complete, partial or missing.
   `checkLinkageMarkerGenotypeFile()` accepts panels with more than two

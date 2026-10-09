@@ -911,11 +911,12 @@ records remains a curator decision made outside the tool.
 **What the candidate list needs.** Candidate lists come from the same
 demographic screening the Potential Parents tab uses (age, sex, presence
 date, gestation window), which needs the pedigree's `fromCenter` column;
-without that column the table is empty. For an animal whose recorded parent
-is present but wrong -- the case this tab exists for -- the tab sets that
-recorded parent aside, screens candidates for the freed slot, and keeps the
-recorded parent in the list, so it appears with its own score beside the
-others. A curator can also supply a candidate list explicitly (a
+without that column the table is empty, and the tab says so in a notice above
+the table, in the same words as the Potential Parents tab. For an animal whose
+recorded parent is present but wrong -- the case this tab exists for -- the tab
+sets that recorded parent aside, screens candidates for the freed slot, and
+keeps the recorded parent in the list, so it appears with its own score beside
+the others. A curator can also supply a candidate list explicitly (a
 script-callable option not exposed in this tab).
 :::
 
