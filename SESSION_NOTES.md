@@ -99,11 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 953 Did
-**Deliverable:** the origin-and-funding wording S952 left: the app's About tab (`R/appUI.R:323-324`), `DESCRIPTION`'s two funder entries (`:14-17`) and the outreach plan
-(`docs/planning/nprc-outreach-announcement-plan.md`) (`BACKLOG.md:84`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-10
-**Status:** Session claimed. Work beginning: measure the three places, put one proposed sentence per place in front of the owner, ask one question; strict TDD for the About tab.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, code change in `R/appUI.R` only):** the origin-and-funding wording S952 left (`BACKLOG.md:84`), one
+proposed sentence per place and one yes/no question ("all three as written"): the About tab (`R/appUI.R:323-328`), `DESCRIPTION:14-17` (each funder's name, with the grant and "work up
+to and including version 1.0" as its comment; the package Rd regenerated) and the outreach plan (`docs/planning/nprc-outreach-announcement-plan.md:47-49`, `:426-428`, `:495-498`). The
+owner then asked to check all documentation for the same limit: a `git grep` sweep found no other live page, and it is now the test block "every live page that names a grant number"
+(611 pages, floor 9 files; 12 unscoped hits before GREEN, 0 after).
+**Gates:** claim `ed48bbaf9`, RED `54acc0a30` (16 failed, 0 errors), GREEN `c5f9aca8b`, REFACTOR `9d02737ae` (`expectWording()`; same 36 expectations on HEAD, same 8 blocks fail on the
+pre-GREEN tree); close-out = the commit carrying this note. **Verified:** full suite 3,379 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, unchanged); lint 0;
+`devtools::check(document = FALSE)` 0/0/0; the real app driven to the About tab shows both paragraphs (picture opened for the owner); dashboard 96/100, High+ 0; ratchet 1/1 (results
+`61d75bdcec35`). Learning 919.
+**Left as it was (`BACKLOG.md:84` has the list):** three HTML-commented "joint effort between ONPRC and SNPRC" lines (`_introduction.Rmd:28-30`, `README.md:43-47`), not funding, now an
+optional item. **Went wrong:** a first sweep with `grep -r --exclude-dir=archive` still walked `docs/archive/` and the five `.claude/worktrees/` copies (`git grep` fixed it); two
+real-app driver runs wasted (`NOT_CRAN` unset; a tab click that did not switch); a long Phase 0 report.
+**Handoff evaluation of S952: 9/10.** Helped: every `BACKLOG.md` cite held to the line; "one proposed sentence per place, one question" got a yes first try; the 76-commit count. Wrong
+or missing: "no test reads it" about the About tab (`test-e2e-settings-about.R:60-74` expects "NIH" there; still true); no warning about the worktree noise; nothing cost real work.
+**Self-assessment: 8/10.** + measured every place and reader before asking; every gate asked and answered; the owner's mid-session request became a lasting test; picture shown before
+the long runs; REFACTOR's teeth checked. - noisy first grep, two wasted driver runs, a long first report.
+**Next steps (recommended, not ruled on; `BACKLOG.md` cites re-grepped after this edit):** owner findings: default population (`:65`, M), old-style boxes (`:8`, M), `getAncestors()`
+(`:105`). Optional, S: the hidden joint-effort comment (`:84`), budget `HANDOFFS.md` (`:121`), last-box label (`:49`), "None of the 1 animals" (`:43`), Warnings picture (`:21`), pop-up
+item (`:30`). Docs-audit part 2 is `:235`; the 3.0.0 bump is `:134`. After the owner pushes (76 commits at Phase 0 plus this session's 5), read the CI run: the last push-triggered run
+was S939's.
+**Key files:** `tests/testthat/test_originFundingWording.R:73` (`expectWording`), `:122`, `:146`, `:225`, `:238` (the sweep block); `R/appUI.R:323-328`; `DESCRIPTION:14-17`;
+`man/nprcgenekeepr-package.Rd:36-37`; `BACKLOG.md:84`; `PROJECT_LEARNINGS.md:2601` (Learning 919). **Gotchas:** a new page naming the grants needs "version 1.0" within 250 characters
+(the sweep's skipped pages are named in the test header); the package Rd is generated from `DESCRIPTION`; sweep with `git grep`; a shinytest2 driver needs `NOT_CRAN=true`; the five
+worktrees and four old processes (`runGeneKeepR` pids 29511, 82416, 92900, `until` loop 89205; not re-checked) were left alone; `README.md` is knitted from `_introduction.Rmd`; keep
+this file under about 56,700 B.
 
 ### Sessions 947-952 (condensed S950, S951, S952 and S953; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank

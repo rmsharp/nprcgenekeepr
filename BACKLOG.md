@@ -81,26 +81,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (status ALIVE) when no focal animals are entered (the exported `setPopulation()` stays), which moves every
       default ranking, mean kinship and value count.
 
-- [ ] **Origin-and-funding wording, the part not yet changed: the app's About tab, `DESCRIPTION`'s two funder
-      entries and the outreach plan (owner-reported S930, partly done S952; DECISION NEEDED, Effort S; the
-      About tab is a displayed-text change, so strict TDD there)** -- the owner's rule: only version one was
-      developed at Oregon National Primate Research Center and funded by NIH grants P51 RR13986 and P51 OD011092.
-      **Done S952 (the owner wrote both sentences):** "The primary goal of `nprcgenekeepr` ..." and "Work on this
-      package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest
-      National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center." now stand
-      in the colony guide (the grant sentence twice), the engineering article, the manual introduction,
-      `README.md` (re-knitted from it) and the `CLAUDE.md` overview; gate
-      `tests/testthat/test_originFundingWording.R` (8 blocks). **Still as it was, none asked for yet:** (1) the
-      About tab (`R/appUI.R:323-324`) says "Developed at Oregon National Primate Research Center" and "Funded by
-      NIH grants P51 RR13986 and P51 OD011092" under the line "Version 2.0.0.9000", so it reads as describing
-      the current version (no test reads it); (2) `DESCRIPTION:14-17`, two `fnd` entries that set the package's
-      funder list (the CRAN page and `man/nprcgenekeepr-package.Rd:36-37`, generated from it); (3)
-      `docs/planning/nprc-outreach-announcement-plan.md:47-49`, `:425-427`, `:493-495`, draft announcement text
-      ("built at ONPRC", "supported in part by NIH grants") that would be sent to other centers; (4) "initially
-      conceived and developed ... at ONPRC" (guide `:68`, manual introduction `:17`, `README.md:32`,
-      `CLAUDE.md:19`) was left as it is, since "initially" fits version one. **Decide when picking it up:**
-      whether each of (1) to (3) changes and to what words; the owner answered the last round by writing the
-      exact sentences, so put one proposed sentence per place in front of them rather than a box of forks.
+- [ ] **Optional: three HTML-commented lines in `README.md` and the manual introduction say the package "is now
+      managed and maintained as a joint effort between ONPRC" and SNPRC (found S953, 2026-10-10; DECISION NEEDED,
+      Effort S; docs only, no test reads them)** -- S953 swept every tracked page for NIH, grant, funding and
+      origin wording at the owner's request: every live page now limits the NIH grants to version 1.0 and earlier,
+      and `test_originFundingWording.R` (block "every live page that names a grant number", 611 pages, 9 of them
+      hold the numbers) keeps it so. The sweep found one thing that is not about funding and left it: the three
+      comment lines at `vignettes/manual_components/_introduction.Rmd:28-30`, knitted into `README.md:43-47`,
+      end "... with the coding being done by R. Mark Sharp, Ph.D.". No reader sees them, but they claim who runs
+      the package today. **Decide when picking it up:** delete the three lines (edit the Rmd, re-knit README
+      against a scratch-installed HEAD as Learning 918 says) or keep them as a private note. **Left alone on
+      purpose, do not re-offer:** "initially conceived and developed ... at ONPRC" (guide `:68`, introduction
+      `:17`, `README.md:32`, `CLAUDE.md:19`; "initially" fits version one); the outreach plan's "NIH P51-funded
+      origin" (`nprc-outreach-announcement-plan.md:135`) and "ONPRC/SNPRC origin" (`:381`), which both say
+      origin; two executed plans that only say an acknowledgment goes in a conclusion
+      (`v2-transformation-article-plan.md:183,418`, `document2-colony-manager-guide-plan.md:263,279`); the 2019
+      meeting notes (`dev/extdata-scratch/meeting_notes.qmd:680`, a dated record); the e2e test that expects
+      "NIH" on the About tab (`tests/testthat/test-e2e-settings-about.R:60-74`), still true. Also done S953,
+      from the same item: the About tab, `DESCRIPTION`'s two funders (each centre's name, with the grant and
+      "work up to and including version 1.0" as its comment), the package help page and the outreach plan's three
+      spots (record in `CHANGELOG.md`).
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
