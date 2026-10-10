@@ -108,7 +108,7 @@ shows "Group 7 (4 animals)", four males, for 6 asked.
 **Verified:** the red assertions pass against a scratch guide (11/11); 6 mutants of `R/modBreedingGroups.R` each turn 1 to 4 blocks red, file restored byte-identical; the guide renders with quarto (HEAD installed into a scratch library)
 and the page has every new sentence; **CLEAN:** full suite 3,363 blocks, 0 failed, 0 errors (187 skipped) at load 3.8 to 7.0; package lint 0; `devtools::check(document = FALSE)` 0/0/0; ratchet 1/1 (results 31eb1a07330f). Learning 916.
 **Not done:** no hand check in Chrome; published pages unopened (68 commits unpushed with this one); the app's "Group N" label stays by the owner's ruling (optional, `BACKLOG.md:49`).
-**Went wrong:** a quarto render failed at once (no installed package); I waited on a loop keyed `^EXIT` that a color-coded log line never matches and, asked why it was slow, called it hung without checking `ps`; the app pins were
+**Went wrong:** a quarto render failed at once (no installed package); I waited on a loop keyed `^EXIT` that a color-coded log line never matches (it ran 5 h 41 m until the owner's `/exit` prompt found it) and my `ps | grep -v grep` check hid it, so I wrongly said nothing was running; the app pins were
 mutation-checked only at close-out; two `cd`s slipped the working directory. **Handoff evaluation of S949: 9/10.** Helped: every `BACKLOG.md` cite matched (`:8,:43,:62,:68,:87,:108,:132,:224`); counts held (64 ahead; notes
 56,567 B; the three `runGeneKeepR` pids); the ratchet citation matched. Wrong or missing: nothing that cost time. **Self-assessment: 8/10.** + read four sources before asking; a side-by-side table; two plain questions answered
 first try; a passing prototype of the RED assertions; mutation controls; a render check; a clean full read. - the wrong cause for the wait; the late mutation check; the slipped directory.
@@ -120,7 +120,7 @@ part 2 (`:222`). After the owner pushes (68 ahead with this commit), read the CI
 `vignettes/manual_components/_breeding_group_formation.Rmd:131-137`; `PROJECT_LEARNINGS.md` Learning 916.
 **Gotchas:** a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render of the guide needs the
 package installed; both are in Learning 916; grep a wait sentinel unanchored and run `ps` before giving the owner a cause; use absolute paths after any `cd`; three old `runGeneKeepR` processes (pids 29511, 82416, 92900) are not
-from any recent session and were left alone; keep this file under ~56,700 B (56,510 B now).
+from any recent session and were left alone; keep this file under ~56,700 B (56,584 B now).
 
 ### Sessions 947-949 (condensed S950; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
