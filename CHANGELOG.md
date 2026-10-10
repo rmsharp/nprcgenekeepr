@@ -66,6 +66,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-08.md` (43 record(s), 264,486 B → 30,267 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **43** record(s) (2026-10-05 → 2026-10-08) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-08.md`](docs/archive/HANDOFFS-through-2026-10-08.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh)
+rather than trusting a digest printed here. Live file 264,486 B → 30,267 B (−88.6%).
+
 ### 2026-10-09 · [ad hoc] S951 claim (in progress): trim `HANDOFFS.md` with `methodology_trim.py` (264,118 B, past the Read tool's 262,144 B whole-file refusal; the dashboard's only High+ risk): archive the oldest receipts so the file opens again. Docs and tooling only, no `R/`, test or `man/` change; owner pick at the Phase 0 picker, option 1 of 4. Also condensed the S950 entry in `SESSION_NOTES.md` to make room for the stub under the token cap (Learning 903). Phase 3F records the rest.
 
 ### 2026-10-09 · [ad hoc] S950 correction: the S950 notes, receipt and Learning 916 said no wait loop was running; one was (a render-wait loop keyed `^EXIT`, up 5 h 41 m), hidden from my `ps | grep -v grep` check by its own command line and found by the owner's `/exit` prompt. Stopped it by PID (the unrelated 3-day-old `scratchpad/s292` loop was left alone) and corrected the three records. Model: Sonnet 5.5.
