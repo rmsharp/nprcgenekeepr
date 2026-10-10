@@ -203,6 +203,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- With no focal animals entered, the Pedigree Browser now takes the
+  living animals as the population instead of every animal ever
+  recorded, so the default Genetic Value rankings and founder measures
+  describe the living colony. A pedigree with no living animal still
+  uses every animal. Script users: `setPopulation()` still flags every
+  animal when given no IDs.
 - Fixed: unchecking "Display Unknown IDs" in the Pedigree Browser no
   longer stops the Genetic Value Analysis with a "logic error". The box
   hides rows only in the Pedigree Browser table; every other tab uses

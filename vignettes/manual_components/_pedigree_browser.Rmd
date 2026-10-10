@@ -170,7 +170,8 @@ for downstream modules:
 ### Workflow
 
 1. After data passes QC in the Input tab, navigate to the Pedigree Browser.
-2. Optionally specify focal animals to narrow your analysis.
+2. Optionally specify focal animals; with none entered, the living animals are
+   the population (every animal if none is alive).
 3. Adjust display options as needed.
 4. A population must be defined before proceeding to Genetic Value Analysis.
 

@@ -93,6 +93,7 @@ The `modGeneticValue` module returns reactive values for downstream use:
 ### Performance Notes
 
 Before the analysis begins, the pedigree is always trimmed to the ancestors of
-the current population (the living animals, or every animal when the pedigree
-has no `exit` column). The application sets no fixed limit on pedigree size, so
-a large pedigree simply takes longer to analyze.
+the current population (the focal animals you entered in the Pedigree Browser,
+otherwise the living animals; every animal when the pedigree says nobody is
+alive). The application sets no fixed limit on pedigree size, so a large
+pedigree simply takes longer to analyze.
