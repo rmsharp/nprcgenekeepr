@@ -98,34 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 952 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, docs only):** the owner's two wording changes from `BACKLOG.md:84`, in their own sentences: "The primary goal of
-`nprcgenekeepr` ..." and "Work on this package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to
-the Oregon National Primate Research Center." They stand in the colony guide (goal once, grants twice), the engineering article, the manual introduction, `README.md` (re-knitted from it) and the
-`CLAUDE.md` overview. Gate: `tests/testthat/test_originFundingWording.R`, 8 blocks, 17 expectations.
-**Gates:** claim `fa4d05053`, RED `408997473` (17 failed, 0 skipped, every message a count mismatch), GREEN `a4e259e4b`, REFACTOR skipped at the owner's choice; close-out = the commit carrying this note.
-**Verified:** the 8 blocks pass; full suite 3,371 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); package lint 0; `devtools::check(document = FALSE)` 0/0/0; the guide renders with quarto from a scratch
-copy against a scratch-installed HEAD (exit 0) and its HTML holds both new sentences and none of the old; dashboard 96/100, High+ risk 0; ratchet 1/1 (results `e3c29753b4cd`). Learning 918.
-**Left as it was, by the owner's scope (two sentences):** the About tab (`R/appUI.R:323-324`), `DESCRIPTION`'s two funder entries, the outreach plan (3 spots) and "initially conceived and developed";
-`BACKLOG.md:84` is narrowed to exactly these and stays open.
-**Went wrong:** my first question was a four-question box of forks; the owner rejected it and wrote the two sentences, so one round trip was lost, and the box held a count I had not measured ("6 of the 15
-spots"). I reached close-out without posing the GREEN to REFACTOR gate and asked it then. One long quiet stretch at the start (the harness nudged once).
-**Handoff evaluation of S951: 9/10.** Helped: every `BACKLOG.md` cite matched (`:84,:65,:8,:105,:121,:49,:43,:21,:30,:142,:235,:134`); the 72-commit count; all four old processes were where it said; the order
-of next steps. Wrong or missing: nothing that cost work; the S930 item it pointed at had one stale cite (`colony-manager-guide.qmd:1108-1109`, now `:1237`), which S951 did not write. **Self-assessment: 8/10.**
-+ read the runner, safeguards, notes and backlog in full; measured the places (15 spots in 7 files) before asking; checked the RED failures were for the right reason; built README without touching the owner's
-installed copy; narrowed the BACKLOG item rather than deleting it. - the rejected box with an unmeasured count; the REFACTOR gate posed late.
+### What Session 953 Did
+**Deliverable:** the origin-and-funding wording S952 left: the app's About tab (`R/appUI.R:323-324`), `DESCRIPTION`'s two funder entries (`:14-17`) and the outreach plan
+(`docs/planning/nprc-outreach-announcement-plan.md`) (`BACKLOG.md:84`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-10
+**Status:** Session claimed. Work beginning: measure the three places, put one proposed sentence per place in front of the owner, ask one question; strict TDD for the About tab.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-**Next steps (recommended, not ruled on; `BACKLOG.md` cites hold, the edit kept its 20 lines):** the rest of the origin-and-funding item (`:84`: About tab, `DESCRIPTION` funders, outreach plan): one proposed
-sentence per place, one question. Then owner findings: default population (`:65`, M), old-style boxes (`:8`, M), `getAncestors()` (`:105`). Optional, S: budget `HANDOFFS.md` in the context-budget hook (`:121`),
-the last-box label (`:49`), "None of the 1 animals" (`:43`), the Warnings picture (`:21`), the pop-up item (`:30`). Docs-audit part 2 is `:235`; the 3.0.0 bump is `:134`. After the owner pushes (72 commits at
-Phase 0 plus this session's 4), read the CI run: the last push-triggered run was S939's.
-**Key files:** `tests/testthat/test_originFundingWording.R:1`; `vignettes/articles/colony-manager-guide.qmd:67,86,1237`; `vignettes/manual_components/_introduction.Rmd:16,24`; `README.md:31,38`; `CLAUDE.md:21`;
-`vignettes/articles/engineering-the-2.0.0-release.qmd:794`; `BACKLOG.md:84`; `PROJECT_LEARNINGS.md:2598` (Learning 918).
-**Gotchas:** `README.md` is knitted, so edit `_introduction.Rmd` and re-knit against a scratch-installed HEAD (`R CMD INSTALL --no-docs --library=<scratch> .`, then `.libPaths(c(<scratch>, .libPaths()))`); the
-knit also moves two date lines; `CLAUDE.md`'s overview sits in the protected block (keep both markers); a new receipt goes directly above the newest; keep this file under about 56,700 B; four old processes
-left alone: `runGeneKeepR` pids 29511, 82416, 92900 and the `until` loop, pid 89205.
-
-### Sessions 947-951 (condensed S950, S951 and S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-952 (condensed S950, S951, S952 and S953; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
 without a `fromCenter` column (`fromCenterNotice()`, `R/fromCenterNotice.R:13`; the Potential Parents tab shares the sentence). S949: the Diagram article shows a Direct picture instead of a second copy of the Rectilinear one
 (`diagram_direct_edge_style.png`, `pedigree-diagram-screenshots.R:148-155`). Strict TDD each; claims `44d57865e`, `60def83ed`, `5e306e1d2`; close-outs `597cc727e`, `6a732d134`, `cb13b01f7`. Handoff evaluations 9/10, self 8/10 each.
@@ -133,6 +113,8 @@ S950: the guide's two Breeding Groups statements match the app (`BACKLOG.md:43` 
 gate `test_guideBreedingGroupsWording.R`, 11 blocks). Claim `5c0163714`, RED `e6032b2a8`, GREEN `7cb5a69c0`, close-out `e95fc63ab`, correction `f9db3048e`; evaluation 9/10, self 8/10.
 S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (it had crossed the Read tool's 262,144 B refusal; `methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write`,
 no `--force`; 43 receipts to `docs/archive/HANDOFFS-through-2026-10-08.md`). Claim `4fb0727f9`, trim `ff66b2703`, close-out `dbf5b6fb5`; evaluation 8/10, self 8/10.
+S952: the owner's two sentences ("The primary goal of `nprcgenekeepr`", the NIH grant sentence) in the guide, engineering article, manual introduction, `README.md` and `CLAUDE.md` (strict TDD, docs only;
+gate `test_originFundingWording.R`, 8 blocks; `BACKLOG.md:84` narrowed). Claim `fa4d05053`, RED `408997473`, GREEN `a4e259e4b`, close-out `52b9a985f`; evaluation 9/10, self 8/10.
 **Gotchas kept:** under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,

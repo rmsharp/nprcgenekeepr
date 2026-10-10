@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S953
+date: 2026-10-10
+status: pending
+active_task: IN PROGRESS -- the origin-and-funding wording S952 left (BACKLOG.md:84): the app's About tab, DESCRIPTION's two funder entries and the outreach plan; owner pick at the Phase 0 picker, option 1 of 4; the owner has not ruled on the wording yet
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S952
 date: 2026-10-09
 status: complete
