@@ -17,9 +17,11 @@
 ##  7. NEWS.Rmd and NEWS.md (a release-state entry), and the module's roxygen
 ##     and the man page generated from it.
 ##
-## The guide pictures that predate the change (3 Genetic Value, 2 Summary
-## Statistics, 6 Breeding Groups, 1 Genetic Diversity) are a separate
-## BACKLOG.md item, not covered here.
+## The guide pictures that predate the change are the S956 retake (the
+## BACKLOG.md item "Retake the guide pictures"); the last two blocks pin the
+## numbers the widened Genetic Value picture's caption and alt text quote. The
+## Breeding Groups caption's "seven animals" is pinned in
+## test_guideBreedingGroupsWording.R.
 ##
 ## Every page read here sits outside a built package (.Rbuildignore'd or not
 ## installed), so each block skips where its file is absent and runs from the
@@ -135,4 +137,27 @@ test_that("the guide's 332 is the example pedigree's living count as the app's Q
     minSireAge = 2, minDamAge = 2, reportChanges = TRUE
   )$cleaned
   expect_equal(sum(isLivingAnimal(cleaned)), 332L)
+})
+
+## Show top N is widened to 500, more than the 332 living animals the default
+## ranks, so the table lists every ranked animal, ten rows to a page.
+rankedAnimals <- 332L
+rankedPages <- ceiling(rankedAnimals / 10L)
+
+test_that("the guide's widened Genetic Value caption counts the pages of the living animals", {
+  expectWording(
+    guideText(),
+    now = paste0("widened to 500: the results table now has ", rankedPages,
+                 " pages of 10 rows, and the first page is shown."),
+    gone = "now has 50 pages of 10 rows"
+  )
+})
+
+test_that("the guide's widened Genetic Value alt text counts the entries and the last page", {
+  expectWording(
+    guideText(),
+    now = paste0("the results table reads Showing 1 to 10 of ", rankedAnimals,
+                 " entries and its pager runs to page ", rankedPages, "."),
+    gone = c("of 500 entries", "its pager runs to page 50")
+  )
 })

@@ -19,7 +19,8 @@
 ##     Groups again, so it is a second run (its candidate table's scores differ
 ##     from the first picture's).
 ##  2. "This particular run produced 7 groups" for a request of 6: the seventh
-##     box is the animals that fit no group (four males in that picture), which
+##     box is the animals that fit no group (four in S950's picture, seven in
+##     the S956 retake; the words say the count the picture shows), which
 ##     the Groups and Statistics sub-tabs head "Group 7", the Group Detail
 ##     selector calls "Unused", and the candidate table's Groups column counts.
 ##
@@ -293,7 +294,7 @@ test_that("the sex-ratio paragraph says 6 groups and a seventh box of leftovers"
     paragraph,
     paste0("this particular run produced 6 groups, each drawn toward the ",
            "target ratio where enough candidates of each sex were available, ",
-           "and a seventh box that lists the four animals that fit no group"),
+           "and a seventh box that lists the seven animals that fit no group"),
     fixed = TRUE
   )
   expect_no_match(paragraph, "produced 7 groups", fixed = TRUE)
@@ -304,7 +305,7 @@ test_that("the sex-ratio picture's alt text says 6 groups and a seventh box", {
   pic <- pictureText(text, "breeding_group_sex_ratio_specification.png")
   expect_match(pic$alt, "showing 6 groups formed in one run", fixed = TRUE)
   expect_match(pic$alt,
-               "plus a seventh box listing the four animals that fit no group",
+               "plus a seventh box listing the seven animals that fit no group",
                fixed = TRUE)
   expect_no_match(pic$alt, "7 groups formed", fixed = TRUE)
 })
