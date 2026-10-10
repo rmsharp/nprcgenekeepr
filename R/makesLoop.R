@@ -26,8 +26,8 @@
 #'
 #' @noRd
 makesLoop <- function(id, ptree) {
-  sAnc <- getAncestors(ptree[[id]]$sire, ptree)
-  dAnc <- getAncestors(ptree[[id]]$dam, ptree)
+  sAnc <- .getAncestorsOnPath(ptree[[id]]$sire, ptree, character(0L))
+  dAnc <- .getAncestorsOnPath(ptree[[id]]$dam, ptree, character(0L))
   overlap <- intersect(sAnc, dAnc)
 
   length(overlap) > 0L

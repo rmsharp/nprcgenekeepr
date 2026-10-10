@@ -20,6 +20,12 @@
 #' \code{ptree} contains a cycle (an animal that is its own ancestor), which is
 #' a data error.
 #'
+#' A sire or dam that has no entry of its own in \code{ptree} is treated as an
+#' animal with unknown parents, as \code{qcStudbook()} treats it
+#' (\code{addParents()} adds the entry): it is returned as an ancestor and has
+#' no ancestors of its own. The function stops with an error that names the id
+#' when \code{id} itself is not in \code{ptree}.
+#'
 #' @param id character vector of length 1 having the ID of interest
 #' @param ptree a list of lists forming a pedigree tree as constructed by
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
@@ -47,6 +53,13 @@
 #'   names(allAncestors)[countOfAncestors == max(countOfAncestors)]
 #' allAncestors[idsWithMostAncestors]
 getAncestors <- function(id, ptree) {
+  if (!is.na(id) && !id %in% names(ptree)) {
+    stop(
+      "getAncestors: \"", id, "\" is not in the pedigree tree. Check the id, ",
+      "or add an entry for it to the tree.",
+      call. = FALSE
+    )
+  }
   .getAncestorsOnPath(id, ptree, character(0L))
 }
 
@@ -66,7 +79,7 @@ getAncestors <- function(id, ptree) {
 #' @return A character vector of ancestors for an individual ID.
 #' @noRd
 .getAncestorsOnPath <- function(id, ptree, path) {
-  if (is.na(id)) {
+  if (is.na(id) || !id %in% names(ptree)) {
     return(character(0L))
   }
 

@@ -33,6 +33,12 @@ An ancestor reached through both parents is returned once for each route.
 The function stops with an error that names the ids involved when
 \code{ptree} contains a cycle (an animal that is its own ancestor), which is
 a data error.
+
+A sire or dam that has no entry of its own in \code{ptree} is treated as an
+animal with unknown parents, as \code{qcStudbook()} treats it
+(\code{addParents()} adds the entry): it is returned as an ancestor and has
+no ancestors of its own. The function stops with an error that names the id
+when \code{id} itself is not in \code{ptree}.
 }
 \examples{
 library(nprcgenekeepr)
