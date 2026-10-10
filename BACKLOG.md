@@ -62,25 +62,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-offer:** renaming the "Include kinship in display of groups" box, and making the Group Detail kinship
       table follow it.
 
-- [ ] **Retake the guide pictures, and recount the numbers in their captions, that predate the default-population
-      change: at most 12 (found S955, 2026-10-10; READY, Effort M; capture script only, strict TDD where a test
-      moves)** -- S955 built the owner's S954 ruling: with no focal animals the Pedigree Browser flags the living
-      animals (`R/modPedigree.R:362-372`), so the Genetic Value results, Summary Statistics, Breeding Groups and
-      Genetic Diversity pictures taken before it show the ranking of every animal ever recorded. S954 counted at
-      most 12 (3 Genetic Value, 2 Summary Statistics, 6 Breeding Groups, 1 Genetic Diversity) and S955 did not
-      re-measure the list: retake the colony script (`vignettes/articles/colony-manager-guide-screenshots.R`,
-      about 8 minutes, `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript ...`), put each new picture beside its old
-      one and keep only those that differ. **Numbers that move with them:** the caption of `gva_high_and_low_value.png`
-      (`colony-manager-guide.qmd:445`: "50 pages of 10 rows" at Show top N 500; 332 ranked animals give 34) and any
-      High / Low count a caption or alt text quotes. Real app, S955 (one harness, the same 332 animals): the new
-      default ranks 332 and labels them 267 High / 60 Low / 5 Undetermined (twice, identical); typing the 332 in as
-      focal gave 268 / 59 / 5; median mean kinship 0.0152 both ways (S954's 271 / 56 / 5 came from another driver).
-      **Left as it is, do not re-offer without a reason:** a snapshot made with no focal animals now names its
-      membership rule `focalPopulation` (`R/modSnapshotTrends.R:176`), a series apart from the old `wholePedigree`
-      ones; the in-app line "A population must be defined before proceeding" (`R/modPedigree.R:148`) and the
-      manual's step 4 stay true; `getLivingBreeders()` and the Genetic Value tab's own fallback are untouched.
-      Tests that pin the change: `test_modPedigree_defaultPopulation.R` and `test_defaultPopulationWording.R`.
-
 - [ ] **Optional: three HTML-commented lines in `README.md` and the manual introduction say the package "is now
       managed and maintained as a joint effort between ONPRC" and SNPRC (found S953, 2026-10-10; DECISION NEEDED,
       Effort S; docs only, no test reads them)** -- S953 swept every tracked page for NIH, grant, funding and
@@ -204,9 +185,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic
       Value x3) from the colony script's full 81/81 run, copied by name; sizes matched S927's measurements. D3
       was ruled: accept. The Home picture shows the 2026-10-07 install date and a three-row navigation bar (De-
-      Identified Export and Genetic-Health Trends are new tabs). The Genetic Value results now show imports with
-      a recorded origin first, as the prose says (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
-      500-row picture's caption and alt text now say rows 1 to 10 of 500, 50 pages, not a High-to-Low transition
+      Identified Export and Genetic-Health Trends are new tabs). In S942 the Genetic Value results showed imports with
+      a recorded origin first, as the prose said (S956 retook both for the living-animals default) (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
+      500-row picture's caption and alt text said rows 1 to 10 of 500, 50 pages (S956: 332 entries, 34 pages), not a High-to-Low transition
       it never showed. Two findings for the owner were the Summary Statistics duplicates item (fixed S945: three
       different pictures) and the Genetic Value row-names item (fixed S946: the table is built with no row names). Phases 4a and 4b then remained.
       S943 did Phase 4a (D4 ruled: build the tables in the guide): the three spreadsheet pictures
