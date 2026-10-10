@@ -81,26 +81,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (status ALIVE) when no focal animals are entered (the exported `setPopulation()` stays), which moves every
       default ranking, mean kinship and value count.
 
-- [ ] **Reword where the repo says the package was developed at ONPRC and funded by NIH grants
-      (owner-reported S930, 2026-10-07; DECISION NEEDED, Effort S; docs and `DESCRIPTION`, plus one displayed
-      line in the app)** -- the owner wrote: "Only version one was developed at Oregon National Primate Research
-      Center and funded by NIH grants P51 RR13986 and P51 OD011092." Today most places say the whole package
-      was "initially conceived and developed" at ONPRC and pair the grants with different centers (P51 RR13986
-      to the Southwest National Primate Research Center, P51 OD011092 to the Oregon center), while the in-app
-      About tab (`R/appUI.R:323-324`) says "Developed at Oregon National Primate Research Center" and "Funded
-      by NIH grants P51 RR13986 and P51 OD011092" (both grants together, which fits the owner's sentence but
-      carries no "version one" limit). **Places carrying the wording (grep S930; re-grep before editing, the
-      lines shift):** `vignettes/manual_components/_introduction.Rmd:17-27` (the source `README.Rmd` pulls in as
-      a child; `README.md:32-40` is generated from it); `DESCRIPTION:14-17` (two `fnd` entries;
-      `man/nprcgenekeepr-package.Rd:36-37` is generated from it); `CLAUDE.md:19-21` (Project Overview, inside
-      its protected fence); `vignettes/articles/colony-manager-guide.qmd:68`, `:86-87`, `:1108-1109`;
-      `vignettes/articles/engineering-the-2.0.0-release.qmd:794-795`; `R/appUI.R:323-324`;
-      `docs/planning/nprc-outreach-announcement-plan.md:48`, `:426`, `:493-494` (a plan, not a shipped file).
-      **Decide when picking it up:** the exact wording and what "version one" means here (the 1.x releases?);
-      whether each grant is credited to a center, as now, or to the version-one work, as the owner's sentence and
-      the About tab read; whether `DESCRIPTION`'s two funder entries change (they set the package's funder
-      list); and whether the About tab's two lines change (a displayed-text change, so strict TDD needs a test
-      first).
+- [ ] **Origin-and-funding wording, the part not yet changed: the app's About tab, `DESCRIPTION`'s two funder
+      entries and the outreach plan (owner-reported S930, partly done S952; DECISION NEEDED, Effort S; the
+      About tab is a displayed-text change, so strict TDD there)** -- the owner's rule: only version one was
+      developed at Oregon National Primate Research Center and funded by NIH grants P51 RR13986 and P51 OD011092.
+      **Done S952 (the owner wrote both sentences):** "The primary goal of `nprcgenekeepr` ..." and "Work on this
+      package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest
+      National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center." now stand
+      in the colony guide (the grant sentence twice), the engineering article, the manual introduction,
+      `README.md` (re-knitted from it) and the `CLAUDE.md` overview; gate
+      `tests/testthat/test_originFundingWording.R` (8 blocks). **Still as it was, none asked for yet:** (1) the
+      About tab (`R/appUI.R:323-324`) says "Developed at Oregon National Primate Research Center" and "Funded by
+      NIH grants P51 RR13986 and P51 OD011092" under the line "Version 2.0.0.9000", so it reads as describing
+      the current version (no test reads it); (2) `DESCRIPTION:14-17`, two `fnd` entries that set the package's
+      funder list (the CRAN page and `man/nprcgenekeepr-package.Rd:36-37`, generated from it); (3)
+      `docs/planning/nprc-outreach-announcement-plan.md:47-49`, `:425-427`, `:493-495`, draft announcement text
+      ("built at ONPRC", "supported in part by NIH grants") that would be sent to other centers; (4) "initially
+      conceived and developed ... at ONPRC" (guide `:68`, manual introduction `:17`, `README.md:32`,
+      `CLAUDE.md:19`) was left as it is, since "initially" fits version one. **Decide when picking it up:**
+      whether each of (1) to (3) changes and to what words; the owner answered the last round by writing the
+      exact sentences, so put one proposed sentence per place in front of them rather than a box of forks.
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort

@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S952
 date: 2026-10-09
-status: pending
-active_task: IN PROGRESS -- reword where the repo says the package was developed at ONPRC and funded by NIH grants (BACKLOG.md:84); owner pick at the Phase 0 picker, option 1 of 4; the owner has not ruled on the wording yet
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the owner's two wording changes (BACKLOG.md:84; owner pick at the Phase 0 picker, option 1 of 4; strict TDD, docs only; all three gates asked and answered, REFACTOR skipped at the owner's choice): "The primary goal of nprcgenekeepr" and "Work on this package up to and including version 1.0 was supported in part by NIH grants ..." in the guide, the engineering article, the manual introduction, README.md and the CLAUDE.md overview. BACKLOG.md:84 stays open, narrowed to what was not asked for.
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, CI green on all 10 runs, dashboard 96/100 High+ risk 0, nothing over a context-budget ceiling). Claim fa4d05053 (S951 notes entry condensed into the 947-951 block). My first question (four forks) was rejected and the owner wrote both sentences. RED 408997473: tests/testthat/test_originFundingWording.R, 8 blocks, 17 expectations failed, each a count mismatch. GREEN a4e259e4b: 5 files (guide goal once and grants twice, engineering article, manual introduction, README.md re-knitted from it against a scratch-installed HEAD, CLAUDE.md overview). Verified: 8 blocks pass; full suite 3,371 blocks 0 failed 0 errors; lint 0; devtools::check 0/0/0; guide renders with quarto (exit 0) with only the new sentences. Close-out: BACKLOG.md:84 narrowed (20 lines kept), Learning 918, notes, this receipt, the ledger entry.
+next_steps: Recommended order (not ruled on; BACKLOG.md cites hold). The rest of the origin-and-funding item (BACKLOG.md:84: About tab R/appUI.R:323-324, DESCRIPTION funders, outreach plan): one proposed sentence per place, one question. Then owner findings: default population (BACKLOG.md:65, M), old-style boxes (BACKLOG.md:8, M), getAncestors() (BACKLOG.md:105). Optional, S: budget HANDOFFS.md in the context-budget hook (BACKLOG.md:121), the last-box label (BACKLOG.md:49), None of the 1 animals (BACKLOG.md:43), the Warnings picture (BACKLOG.md:21), the pop-up item (BACKLOG.md:30). Docs-audit part 2 is BACKLOG.md:235; the 3.0.0 bump is BACKLOG.md:134. After the owner pushes (72 commits at Phase 0 plus this session's 4), read the CI run: the last push-triggered run was S939's.
+key_files: tests/testthat/test_originFundingWording.R:1 (the 8 blocks); vignettes/articles/colony-manager-guide.qmd:67 (goal), :86 and :1237 (grants); vignettes/manual_components/_introduction.Rmd:16 and :24 (the source README.md is knitted from); README.md:31 and :38; CLAUDE.md:21; vignettes/articles/engineering-the-2.0.0-release.qmd:794; BACKLOG.md:84 (the open remainder); PROJECT_LEARNINGS.md:2598 (Learning 918).
+gotchas: README.md is knitted, so edit _introduction.Rmd and re-knit against a scratch-installed HEAD (R CMD INSTALL --no-docs --library=<scratch> ., then .libPaths(c(<scratch>, .libPaths())) before rmarkdown::render("README.Rmd")); the knit also moves two date lines (render date, installed build date in UTC); CLAUDE.md's Project Overview sits in the protected block, keep both markers; a new receipt goes directly above the newest one; keep SESSION_NOTES.md under about 56,700 B; four old processes left alone: runGeneKeepR pids 29511, 82416, 92900 and an until loop on scratchpad/s292, pid 89205.
+runtime_smoke: the guide rendered with quarto from a scratch copy of vignettes/articles against a scratch-installed HEAD (exit 0) and its HTML text holds the new grant sentence twice and the new goal sentence once, with none of the old ones; README.md knitted from README.Rmd the same way; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results e3c29753b4cd · manifest aa983075d6a2
+changelog_ref: S952 DONE entry
+commit: the close-out commit that carries this receipt; claim fa4d05053, RED 408997473, GREEN a4e259e4b
 ```
 
 ```handoff

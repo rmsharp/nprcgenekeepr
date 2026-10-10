@@ -99,10 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 952 Did
-**Deliverable:** Reword where the repo says the package was developed at ONPRC and funded by NIH grants (`BACKLOG.md:84`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-09 22:40 CDT
-**Status:** Session claimed. Work beginning. The owner has not ruled on the wording yet; step one is to ask them, in plain words.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, docs only):** the owner's two wording changes from `BACKLOG.md:84`, in their own sentences: "The primary goal of
+`nprcgenekeepr` ..." and "Work on this package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to
+the Oregon National Primate Research Center." They stand in the colony guide (goal once, grants twice), the engineering article, the manual introduction, `README.md` (re-knitted from it) and the
+`CLAUDE.md` overview. Gate: `tests/testthat/test_originFundingWording.R`, 8 blocks, 17 expectations.
+**Gates:** claim `fa4d05053`, RED `408997473` (17 failed, 0 skipped, every message a count mismatch), GREEN `a4e259e4b`, REFACTOR skipped at the owner's choice; close-out = the commit carrying this note.
+**Verified:** the 8 blocks pass; full suite 3,371 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); package lint 0; `devtools::check(document = FALSE)` 0/0/0; the guide renders with quarto from a scratch
+copy against a scratch-installed HEAD (exit 0) and its HTML holds both new sentences and none of the old; dashboard 96/100, High+ risk 0; ratchet 1/1 (results `e3c29753b4cd`). Learning 918.
+**Left as it was, by the owner's scope (two sentences):** the About tab (`R/appUI.R:323-324`), `DESCRIPTION`'s two funder entries, the outreach plan (3 spots) and "initially conceived and developed";
+`BACKLOG.md:84` is narrowed to exactly these and stays open.
+**Went wrong:** my first question was a four-question box of forks; the owner rejected it and wrote the two sentences, so one round trip was lost, and the box held a count I had not measured ("6 of the 15
+spots"). I reached close-out without posing the GREEN to REFACTOR gate and asked it then. One long quiet stretch at the start (the harness nudged once).
+**Handoff evaluation of S951: 9/10.** Helped: every `BACKLOG.md` cite matched (`:84,:65,:8,:105,:121,:49,:43,:21,:30,:142,:235,:134`); the 72-commit count; all four old processes were where it said; the order
+of next steps. Wrong or missing: nothing that cost work; the S930 item it pointed at had one stale cite (`colony-manager-guide.qmd:1108-1109`, now `:1237`), which S951 did not write. **Self-assessment: 8/10.**
++ read the runner, safeguards, notes and backlog in full; measured the places (15 spots in 7 files) before asking; checked the RED failures were for the right reason; built README without touching the owner's
+installed copy; narrowed the BACKLOG item rather than deleting it. - the rejected box with an unmeasured count; the REFACTOR gate posed late.
+
+**Next steps (recommended, not ruled on; `BACKLOG.md` cites hold, the edit kept its 20 lines):** the rest of the origin-and-funding item (`:84`: About tab, `DESCRIPTION` funders, outreach plan): one proposed
+sentence per place, one question. Then owner findings: default population (`:65`, M), old-style boxes (`:8`, M), `getAncestors()` (`:105`). Optional, S: budget `HANDOFFS.md` in the context-budget hook (`:121`),
+the last-box label (`:49`), "None of the 1 animals" (`:43`), the Warnings picture (`:21`), the pop-up item (`:30`). Docs-audit part 2 is `:235`; the 3.0.0 bump is `:134`. After the owner pushes (72 commits at
+Phase 0 plus this session's 4), read the CI run: the last push-triggered run was S939's.
+**Key files:** `tests/testthat/test_originFundingWording.R:1`; `vignettes/articles/colony-manager-guide.qmd:67,86,1237`; `vignettes/manual_components/_introduction.Rmd:16,24`; `README.md:31,38`; `CLAUDE.md:21`;
+`vignettes/articles/engineering-the-2.0.0-release.qmd:794`; `BACKLOG.md:84`; `PROJECT_LEARNINGS.md:2598` (Learning 918).
+**Gotchas:** `README.md` is knitted, so edit `_introduction.Rmd` and re-knit against a scratch-installed HEAD (`R CMD INSTALL --no-docs --library=<scratch> .`, then `.libPaths(c(<scratch>, .libPaths()))`); the
+knit also moves two date lines; `CLAUDE.md`'s overview sits in the protected block (keep both markers); a new receipt goes directly above the newest; keep this file under about 56,700 B; four old processes
+left alone: `runGeneKeepR` pids 29511, 82416, 92900 and the `until` loop, pid 89205.
 
 ### Sessions 947-951 (condensed S950, S951 and S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
@@ -121,31 +142,23 @@ of the guide needs the package installed; grep a wait sentinel unanchored and ru
 the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the next `HANDOFFS.md` trim is due near 196,608 B (about 36
 sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`.
 
-### Sessions 942-946 (condensed S943-S948; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures (D3 ruled accept); S943 replaced the 3 spreadsheet pictures with 3 tables built from the export buttons' own code
-(`colony-manager-guide.qmd:468`, gate `test_guideExportTables.R`); S944 scripted the 9 Marker Genetics pictures (`vignettes/articles/marker-genetics-screenshots.R`, gate `test_markerPictureScreenshots.R`); S945 made the 3 Summary
-Statistics pictures three real pictures (`colony-manager-guide-screenshots.R:387-415`); S946 built the Genetic Value results table with no row names (`R/modGeneticValue.R:421-429`). Claims `b732807cf`, `c58040571`, `0f7bb7092`,
-`852ba501c`, `b76679cac`. Handoff evaluations 8-9/10, self 8/10 each. **Gotchas kept:** the kinship export file's first rows are all zero, so the guide shows the first animal with 3 or more offspring; a download handler's `output$x` is
-valid only inside `testServer`; a window picture needs `selector = "viewport"`; a pedigree for the Candidate tab needs `fromCenter` or the table is blank (the tab now says so, S948); run the scripts as
-`NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/<script>.R` (Marker about 4 min, colony about 8 min); restore the 900 px window after a taller shot; under `testServer()` a DT output is widget JSON with no rows;
-`Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` re-knits `NEWS.md`.
+### Sessions 942-946 (condensed S943-S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures; S943 built 3 export tables from the buttons' own code (`colony-manager-guide.qmd:468`,
+`test_guideExportTables.R`); S944 scripted the 9 Marker Genetics pictures (`vignettes/articles/marker-genetics-screenshots.R`); S945 made the 3 Summary Statistics pictures real
+(`colony-manager-guide-screenshots.R:387-415`); S946 built the Genetic Value results table with no row names (`R/modGeneticValue.R:421-429`). Claims `b732807cf`, `c58040571`, `0f7bb7092`, `852ba501c`, `b76679cac`.
+**Gotchas kept:** a window picture needs `selector = "viewport"`; run the capture scripts as `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/<script>.R` (Marker about 4 min, colony about 8 min);
+restore the 900 px window after a taller shot; under `testServer()` a DT output is widget JSON with no rows; `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` re-knits `NEWS.md`.
 
-### Sessions 939-941 (condensed S940-S951; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S939: Breeding Groups draws its pool from living animals only, before the top-N or floor cut (strict TDD; internal `isLivingAnimal()`, `R/isLivingAnimal.R:22`, pool step `R/modBreedingGroups.R:544`); claim `81f4c1f19`, GREEN
-`63518b606`, close-out `66c6df335` (pushed; CI green). S940: Docs-audit slice 2, Phase 3c: 10 guide pictures retaken; the capture script typed "Group 6" into a box whose values are numbers (`R/modBreedingGroups.R:1048`), fixed with a
-test first (RED `8d6ebbaba`, GREEN `883e23c46`). S941: Phase 3a: 14 guide pictures retaken; the owner ruled D2 delete (RED `a273f86b7`, GREEN `b64075728`). Handoff evaluations 8-9/10, self 8/10 each. **Gotchas kept:** the `status`
-column is optional (Learning 905); view each retaken picture beside its old one before copying; put animal IDs in code backticks in `.qmd` text (the spelling guard splits them at digits); the diagram script's "did not update any
-output values" warning is the no-op Rectilinear step; the ratchet citation's `results` hash changes every run.
+### Sessions 939-941 (condensed S940-S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S939: Breeding Groups draws its pool from living animals only (strict TDD; internal `isLivingAnimal()`, `R/isLivingAnimal.R:22`, pool step `R/modBreedingGroups.R:544`); claim `81f4c1f19`, GREEN `63518b606`,
+close-out `66c6df335`. S940: 10 guide pictures retaken; the capture script typed "Group 6" into a numeric-valued box (`R/modBreedingGroups.R:1048`), fixed test first (RED `8d6ebbaba`, GREEN `883e23c46`). S941: 14
+guide pictures retaken; D2 ruled delete (RED `a273f86b7`, GREEN `b64075728`). **Gotchas kept:** the `status` column is optional (Learning 905); view each retaken picture beside its old one; put animal IDs in code
+backticks in `.qmd` text (the spelling guard splits them at digits); the diagram script's "did not update any output values" warning is the no-op Rectilinear step; the ratchet citation's `results` hash changes every run.
 
-### What Session 938 Did (condensed S939 and S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-A decision session, docs only: reproduced the default Top ranked 20 in the real app (all dead or shipped: with no focal animals every animal is the
-population, `R/modPedigree.R:363-366`); the owner ruled Breeding Groups skips non-living animals (shipped S939). Claim `4973b9d1d`, close-out
-`d65a21e53`. Handoff evaluation of S937: 8/10. Self 8/10. **Gotchas kept:** read the app's shared state from a scratch `app.R` outside the repo (Learning 904).
-
-### What Session 937 Did (condensed S938 and S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`NEWS.Rmd:327-331` now says an undefined Inbreeding cell is red (the code has scored it red since S282); strict TDD, docs only. Claim `6fe6b7cfc`,
-close-out `70c4acc56`. Handoff evaluation of S936: 9/10. Self 8/10. **Gotchas kept:** a 454 B claim stub was refused by the context-budget hook's
-token cap (Learning 903).
+### Sessions 937-938 (condensed S938, S939, S942 and S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S937: `NEWS.Rmd:327-331` says an undefined Inbreeding cell is red (strict TDD, docs only); claim `6fe6b7cfc`, close-out `70c4acc56`. S938: a decision session: with no focal animals every animal is the population
+(`R/modPedigree.R:363-366`), so the default Top ranked 20 were all dead or shipped; the owner ruled Breeding Groups skips non-living animals (shipped S939); claim `4973b9d1d`, close-out `d65a21e53`. **Gotchas
+kept:** read the app's shared state from a scratch `app.R` outside the repo (Learning 904); the commit hook refuses a notes file over about 25,000 tokens (Learning 903).
 
 ### What Session 936 Did (condensed S937 and S938; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Input tab's QC Summary boxes are colored by what the check found, as Bootstrap 4 cards from one internal `qcSummaryBox()`
