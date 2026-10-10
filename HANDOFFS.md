@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S952
+date: 2026-10-09
+status: pending
+active_task: IN PROGRESS -- reword where the repo says the package was developed at ONPRC and funded by NIH grants (BACKLOG.md:84); owner pick at the Phase 0 picker, option 1 of 4; the owner has not ruled on the wording yet
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S951
 date: 2026-10-09
 status: complete

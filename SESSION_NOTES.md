@@ -98,41 +98,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 951 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; docs and tooling only, no `R/`, test or `man/` change, so no TDD phase applied):** `HANDOFFS.md` trimmed, 264,486 B to 30,267 B. It had crossed the Read tool's
-262,144 B whole-file refusal at S950's close-out (259,794 B at the claim, 263,942 B after one receipt) and was the dashboard's only High+ risk. `methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write` (no `--force`: the
-dry run printed no SRF refusal, unlike S917) archived 43 receipts (S905-S947) to `docs/archive/HANDOFFS-through-2026-10-08.md` and kept 4 (S948-S951). Two other cuts were dry-run and not used: `--cut 2026-10-07` (10 kept, 56,116 B,
-refills in about two sessions) and `--cut 2026-10-06` (23 kept, 117,699 B).
-**Gate:** claim `4fb0727f9`, trim `ff66b2703` (the tool's own ledger entry rides in it), close-out = the commit carrying this note. The trim is its own commit, apart from the close-out.
-**Verified:** the shard's verify script passes (47 = 4 retained + 43 archived, 0 added); `test_handoffsReceiptPlacement.R` 7 blocks and `test_workflowPathsIgnore.R` 11 blocks, 0 failed 0 errors; dashboard 96/100, High+ risk 0;
-context budget: no file over a ceiling, and line 111's 303 B finding went with the claim's condensing; ratchet 1/1 (results `7240a9f73000`). Learning 917.
-**Not done:** the full suite, lint and `devtools::check()` (no `R/`, test or `man/` file changed; `docs/` and `HANDOFFS*.md` are build-ignored); no browser; the 69 unpushed commits of Phase 0 plus this session's 3 are still unpushed.
-**Went wrong:** nothing that cost work. Two quiet stretches (the harness nudged twice); a first regex over `dashboard.html` died on a `ugrep` complexity limit and a plainer one found the risk's reason.
-**Handoff evaluation of S950: 8/10.** Helped: every `BACKLOG.md` cite matched (`:8,:21,:30,:43,:49,:65,:84,:105,:129,:222` before my insert); notes 56,584 B; the three `runGeneKeepR` pids; the ratchet citation; the order of
-next steps. Wrong or missing: its close-out took `HANDOFFS.md` from 259,794 B to 263,942 B, over the Read refusal, with no note (`context_budget.py` does not budget that file and no dashboard run followed); the fourth old process (pid
-89205, an `until` loop on `scratchpad/s292`) was in a commit message but not in the notes. **Self-assessment: 8/10.** + read the runner, safeguards and notes in full; found the risk's cause in the dashboard page; dry-ran three cuts
-before choosing; checked losslessness and the two tests that read the file; kept the trim apart; measured the growth behind it. - two quiet stretches; chose the cut without asking (the tool's default, no refusal to override).
+### What Session 952 Did
+**Deliverable:** Reword where the repo says the package was developed at ONPRC and funded by NIH grants (`BACKLOG.md:84`; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-09 22:40 CDT
+**Status:** Session claimed. Work beginning. The owner has not ruled on the wording yet; step one is to ask them, in plain words.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
 
-**Next steps (recommended, not ruled on; lines re-grepped after this session's `BACKLOG.md` insert):** owner findings, each a short decision session: origin-and-funding wording (`BACKLOG.md:84`). Larger: default population (`:65`, M),
-old-style boxes (`:8`, M), `getAncestors()` (`:105`). Optional, S: budget `HANDOFFS.md` in the context-budget hook (`:121`), the app's last-box label (`:49`), "None of the 1 animals" (`:43`), the Warnings picture (`:21`), the pop-up
-item (`:30`). The docs-audit item (`:142`) holds only part 2 (`:235`); the 3.0.0 bump is `:134`. After the owner pushes, read the CI run (the last push-triggered run was S939's).
-**Key files:** `HANDOFFS.md:199` (the S951 receipt, newest first); `docs/archive/HANDOFFS-through-2026-10-08.md` and its `.verify.sh`; `BACKLOG.md:121`; `.context-budget.json` (its `files` list); `PROJECT_LEARNINGS.md` Learning 917.
-**Gotchas:** the trimmer neither stages nor commits (`git add` four files: `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); `HANDOFFS.md` now opens whole (30 KB) and the next trim is due near 196,608 B, about 36 sessions
-out (an estimate from 4.6 KB receipts); a new receipt still goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`; four old processes left alone: `runGeneKeepR` pids 29511, 82416, 92900 and the
-`until` loop, pid 89205; keep this file under ~56,700 B (56,612 B now).
-
-### Sessions 947-950 (condensed S950 and S951; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-951 (condensed S950, S951 and S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
 without a `fromCenter` column (`fromCenterNotice()`, `R/fromCenterNotice.R:13`; the Potential Parents tab shares the sentence). S949: the Diagram article shows a Direct picture instead of a second copy of the Rectilinear one
 (`diagram_direct_edge_style.png`, `pedigree-diagram-screenshots.R:148-155`). Strict TDD each; claims `44d57865e`, `60def83ed`, `5e306e1d2`; close-outs `597cc727e`, `6a732d134`, `cb13b01f7`. Handoff evaluations 9/10, self 8/10 each.
 S950: the guide's two Breeding Groups statements match the app (`BACKLOG.md:43` removed; the owner ruled "fix the guide's words"; `colony-manager-guide.qmd:614-660`;
 gate `test_guideBreedingGroupsWording.R`, 11 blocks). Claim `5c0163714`, RED `e6032b2a8`, GREEN `7cb5a69c0`, close-out `e95fc63ab`, correction `f9db3048e`; evaluation 9/10, self 8/10.
+S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (it had crossed the Read tool's 262,144 B refusal; `methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write`,
+no `--force`; 43 receipts to `docs/archive/HANDOFFS-through-2026-10-08.md`). Claim `4fb0727f9`, trim `ff66b2703`, close-out `dbf5b6fb5`; evaluation 8/10, self 8/10.
 **Gotchas kept:** under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
 `test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
 of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
-`runGeneKeepR` pids 29511, 82416, 92900 and an `until` loop, pid 89205, on `scratchpad/s292`.
+`runGeneKeepR` pids 29511, 82416, 92900 and an `until` loop, pid 89205, on `scratchpad/s292`;
+the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the next `HANDOFFS.md` trim is due near 196,608 B (about 36
+sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`.
 
 ### Sessions 942-946 (condensed S943-S948; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures (D3 ruled accept); S943 replaced the 3 spreadsheet pictures with 3 tables built from the export buttons' own code
