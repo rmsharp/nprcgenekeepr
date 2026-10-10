@@ -98,38 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 950 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD; the owner ruled "fix the guide's words" for both statements, and all three gates; the REFACTOR was skipped at the owner's choice):** the guide's two
-Breeding Groups statements match the app (`BACKLOG.md:43` removed). One file, `vignettes/articles/colony-manager-guide.qmd:614-660`: the Group Detail paragraph (the kinship table shows whether or not the box is checked), both Group
-Detail captions and alt texts (the second is a second run, not "the same 6-group run"), the sex-ratio paragraph and alt text ("6 groups plus a seventh box ... the four animals that fit no group") and a new paragraph after that picture.
-**Read first:** the code, the three pictures, the manual and the roxygen. The manual and roxygen already said the table shows either way (the box only decides whether the module returns `groupKinship`); the first picture
-shows "Group 7 (4 animals)", four males, for 6 asked.
-**Gate:** claim `5c0163714`, RED `e6032b2a8` (new `test_guideBreedingGroupsWording.R`, 11 blocks: 6 red, 5 green by design), GREEN `7cb5a69c0`, close-out = the commit carrying this note. No REFACTOR.
-**Verified:** the red assertions pass against a scratch guide (11/11); 6 mutants of `R/modBreedingGroups.R` each turn 1 to 4 blocks red, file restored byte-identical; the guide renders with quarto (HEAD installed into a scratch library)
-and the page has every new sentence; **CLEAN:** full suite 3,363 blocks, 0 failed, 0 errors (187 skipped) at load 3.8 to 7.0; package lint 0; `devtools::check(document = FALSE)` 0/0/0; ratchet 1/1 (results 31eb1a07330f). Learning 916.
-**Not done:** no hand check in Chrome; published pages unopened (68 commits unpushed with this one); the app's "Group N" label stays by the owner's ruling (optional, `BACKLOG.md:49`).
-**Went wrong:** a quarto render failed at once (no installed package); I waited on a loop keyed `^EXIT` that a color-coded log line never matches (it ran 5 h 41 m until the owner's `/exit` prompt found it) and my `ps | grep -v grep` check hid it, so I wrongly said nothing was running; the app pins were
-mutation-checked only at close-out; two `cd`s slipped the working directory. **Handoff evaluation of S949: 9/10.** Helped: every `BACKLOG.md` cite matched (`:8,:43,:62,:68,:87,:108,:132,:224`); counts held (64 ahead; notes
-56,567 B; the three `runGeneKeepR` pids); the ratchet citation matched. Wrong or missing: nothing that cost time. **Self-assessment: 8/10.** + read four sources before asking; a side-by-side table; two plain questions answered
-first try; a passing prototype of the RED assertions; mutation controls; a render check; a clean full read. - the wrong cause for the wait; the late mutation check; the slipped directory.
+### What Session 951 Did
+**Deliverable:** trim `HANDOFFS.md` with `methodology_trim.py` (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4; docs and tooling only, no `R/`, test or `man/` change)
+**Started:** 2026-10-09
+**Status:** Session claimed. Work beginning. `HANDOFFS.md` is 264,118 B, past the Read tool's 262,144 B whole-file refusal (the dashboard's only High+ risk).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-**Next steps (recommended, not ruled on; lines re-grepped after this session's edit):** owner findings, each a short decision session: origin-and-funding wording (`BACKLOG.md:84`). Larger: default population (`:65`, M),
-old-style boxes (`:8`, M), `getAncestors()` (`:105`). Optional, S: the app's last-box label (`:49`), "None of the 1 animals" (`:43`), the Warnings picture (`:21`), the pop-up item (`:30`). The docs-audit item (`:129`) holds only
-part 2 (`:222`). After the owner pushes (68 ahead with this commit), read the CI run and open the published guide to confirm the Breeding Groups words and pictures.
-**Key files:** `vignettes/articles/colony-manager-guide.qmd:614-660`; `tests/testthat/test_guideBreedingGroupsWording.R` (`bgWordingPed()`, `runBgWording()`); `R/modBreedingGroups.R:984-986,1009-1025,1041-1051,1066-1085`;
-`vignettes/manual_components/_breeding_group_formation.Rmd:131-137`; `PROJECT_LEARNINGS.md` Learning 916.
-**Gotchas:** a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render of the guide needs the
-package installed; both are in Learning 916; grep a wait sentinel unanchored and run `ps` before giving the owner a cause; use absolute paths after any `cd`; three old `runGeneKeepR` processes (pids 29511, 82416, 92900) are not
-from any recent session and were left alone; keep this file under ~56,700 B (56,584 B now).
-
-### Sessions 947-949 (condensed S950; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-950 (condensed S950 and S951; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
 without a `fromCenter` column (`fromCenterNotice()`, `R/fromCenterNotice.R:13`; the Potential Parents tab shares the sentence). S949: the Diagram article shows a Direct picture instead of a second copy of the Rectilinear one
 (`diagram_direct_edge_style.png`, `pedigree-diagram-screenshots.R:148-155`). Strict TDD each; claims `44d57865e`, `60def83ed`, `5e306e1d2`; close-outs `597cc727e`, `6a732d134`, `cb13b01f7`. Handoff evaluations 9/10, self 8/10 each.
+S950: the guide's two Breeding Groups statements match the app (`BACKLOG.md:43` removed; the owner ruled "fix the guide's words"; `colony-manager-guide.qmd:614-660`;
+gate `test_guideBreedingGroupsWording.R`, 11 blocks). Claim `5c0163714`, RED `e6032b2a8`, GREEN `7cb5a69c0`, close-out `e95fc63ab`, correction `f9db3048e`; evaluation 9/10, self 8/10.
 **Gotchas kept:** under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
-`test_markerParentageLikelihood.R:647`) fail under desktop load.
+`test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
+of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
+`runGeneKeepR` pids 29511, 82416, 92900 and an `until` loop, pid 89205, on `scratchpad/s292`.
 
 ### Sessions 942-946 (condensed S943-S948; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures (D3 ruled accept); S943 replaced the 3 spreadsheet pictures with 3 tables built from the export buttons' own code
