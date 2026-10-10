@@ -119,3 +119,51 @@ test_that("findLoops and countLoops surface the cycle message", {
     fixed = TRUE
   )
 })
+
+# A parent listed in the sire or dam column that has no entry of its own in the
+# tree is carried on as an animal with unknown parents, as qcStudbook() does
+# (addParents() adds the entry). Asking about an animal that is not in the tree
+# at all is a mistake by the caller and stops with a message naming it.
+errorMessage <- cycleMessage
+
+test_that("getAncestors stops with a message naming an animal that is not in the tree", {
+  msg <- errorMessage(getAncestors("NOPE", ptree))
+  expect_false(is.na(msg))
+  expect_match(msg, "NOPE", fixed = TRUE)
+  expect_match(msg, "is not in the pedigree tree", fixed = TRUE)
+})
+
+test_that("getAncestors carries on when the sire is not in the tree", {
+  tree <- c(ptree, list(K = list(sire = "GONE", dam = "B")))
+  expect_identical(getAncestors("K", tree), c("GONE", "B"))
+})
+
+test_that("getAncestors carries on when the dam, or both parents, are not in the tree", {
+  damGone <- c(ptree, list(K = list(sire = "A", dam = "GONE")))
+  expect_identical(getAncestors("K", damGone), c("A", "GONE"))
+  bothGone <- list(K = list(sire = "G1", dam = "G2"))
+  expect_identical(getAncestors("K", bothGone), c("G1", "G2"))
+})
+
+test_that("getAncestors carries on when a grandparent is not in the tree", {
+  tree <- list(
+    P = list(sire = "GONE", dam = np),
+    Q = list(sire = np, dam = np),
+    K = list(sire = "P", dam = "Q")
+  )
+  expect_identical(getAncestors("K", tree), c("P", "GONE", "Q"))
+})
+
+test_that("getAncestors on a raw tree equals the answer after qcStudbook() adds the absent parents", {
+  trees <- absentParentTrees()
+  absent <- c("GONE_X", "GONE_Y", "GONE_Z", "GONE_P", "GONE_Q")
+  expect_false(any(absent %in% names(trees$raw)))
+  expect_true(all(absent %in% names(trees$qc)))
+  expect_identical(
+    getAncestors("K", trees$raw),
+    c("S1", "GONE_X", "GONE_Y", "D1", "GONE_X", "GONE_Z")
+  )
+  for (id in names(trees$raw)) {
+    expect_identical(getAncestors(id, trees$raw), getAncestors(id, trees$qc))
+  }
+})
