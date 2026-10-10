@@ -62,24 +62,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-offer:** renaming the "Include kinship in display of groups" box, and making the Group Detail kinship
       table follow it.
 
-- [ ] **With no focal animals the Pedigree Browser flags only the living animals, not every animal ever recorded
-      (owner ruled S954, 2026-10-10; READY, Effort M; strict TDD, a Pre-RED gate first)** -- today `setPopulation(ped,
-      character(0))` flags all 3,694 example animals (`R/modPedigree.R:357-366`), so Genetic Value ranks everyone ever
-      recorded and labels the 332 living animals 55 / 272 / 5 (High / Low / Undetermined); ranked among the living
-      they get 271 / 56 / 5 (216 Low become High, none the other way; real app, S954; S938's 56 / 271 is the same run
-      to within the random gene drop). **Ruling:** when `focalIds()` is empty use the living animals, by the internal
-      `isLivingAnimal()` (`R/isLivingAnimal.R:22`: `status` ALIVE, else no `exit`, else everyone); the exported
-      `setPopulation()` keeps "empty `ids` flags everyone". **Settle at Pre-RED:** a pedigree with no living animal
-      (fall back to everyone, as `R/modGeneticValue.R:306-310` does?). **Moves:** every default ranking, mean kinship
-      (median of the living 0.004 to 0.015), the founder metrics (`ped$population` in `calcFounderContributions.R:65`,
-      `calcFGSE.R:66`, `calcRetention.R:35`), the Breeding Groups floor group (61 living animals, S939, to about 270,
-      S938), the exported `population` column ("Breeding Colony Member"), and a snapshot made with no focal animals
-      (`R/modSnapshotTrends.R:173-177`: `wholePedigree` becomes `focalPopulation`, a separate series). **Words:** Focal
-      Animals help (`R/modPedigree.R:62-66`), comment `:363`, `_genetic_value_analysis.Rmd:96`, `_pedigree_browser.Rmd`,
-      guide `:322` and `:328-332`, NEWS.Rmd. **Tests:** `test_modPedigree_processing.R:46` and `:557` pin all-TRUE on
-      fixtures with no `status` or `exit`, so they stay green (RED needs a fixture with one); the guide chunk
-      `colony-manager-guide.qmd:483` should fail `test_guideExportTables.R:403` (check at RED); up to 12 guide pictures
-      (3 Genetic Value, 2 Summary Statistics, 6 Breeding Groups, 1 Genetic Diversity) predate it.
+- [ ] **Retake the guide pictures, and recount the numbers in their captions, that predate the default-population
+      change: at most 12 (found S955, 2026-10-10; READY, Effort M; capture script only, strict TDD where a test
+      moves)** -- S955 built the owner's S954 ruling: with no focal animals the Pedigree Browser flags the living
+      animals (`R/modPedigree.R:362-372`), so the Genetic Value results, Summary Statistics, Breeding Groups and
+      Genetic Diversity pictures taken before it show the ranking of every animal ever recorded. S954 counted at
+      most 12 (3 Genetic Value, 2 Summary Statistics, 6 Breeding Groups, 1 Genetic Diversity) and S955 did not
+      re-measure the list: retake the colony script (`vignettes/articles/colony-manager-guide-screenshots.R`,
+      about 8 minutes, `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript ...`), put each new picture beside its old
+      one and keep only those that differ. **Numbers that move with them:** the caption of `gva_high_and_low_value.png`
+      (`colony-manager-guide.qmd:445`: "50 pages of 10 rows" at Show top N 500; 332 ranked animals give 34) and any
+      High / Low count a caption or alt text quotes. Real app, S955 (one harness, the same 332 animals): the new
+      default ranks 332 and labels them 267 High / 60 Low / 5 Undetermined (twice, identical); typing the 332 in as
+      focal gave 268 / 59 / 5; median mean kinship 0.0152 both ways (S954's 271 / 56 / 5 came from another driver).
+      **Left as it is, do not re-offer without a reason:** a snapshot made with no focal animals now names its
+      membership rule `focalPopulation` (`R/modSnapshotTrends.R:176`), a series apart from the old `wholePedigree`
+      ones; the in-app line "A population must be defined before proceeding" (`R/modPedigree.R:148`) and the
+      manual's step 4 stay true; `getLivingBreeders()` and the Genetic Value tab's own fallback are untouched.
+      Tests that pin the change: `test_modPedigree_defaultPopulation.R` and `test_defaultPopulationWording.R`.
 
 - [ ] **Optional: three HTML-commented lines in `README.md` and the manual introduction say the package "is now
       managed and maintained as a joint effort between ONPRC" and SNPRC (found S953, 2026-10-10; DECISION NEEDED,

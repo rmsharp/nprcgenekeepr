@@ -99,10 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 955 Did
-**Deliverable:** the default-population build (`BACKLOG.md:65-82`; owner pick at the Phase 0 picker, option 1 of 3; READY, Effort M; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-10
-**Status:** Session claimed; PRE-RED declared. First step: put the one Pre-RED question to the owner (a pedigree with no living animal), then ask for the PRE-RED to RED gate.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 3; strict TDD; every gate asked and answered):** the default-population build (`BACKLOG.md:65-82`, ruled S954). With
+no focal animals entered the Pedigree Browser flags the living animals as the population (`R/modPedigree.R:362-372`: `ped$id[isLivingAnimal(ped)]` into the unchanged `setPopulation()`);
+nobody alive still flags everyone (the one Pre-RED question). Owner scope: the behavior, its tests and every sentence now; the up to 12 guide pictures are the new item at
+`BACKLOG.md:65` (18 lines for 18). Seven sentences approved with one question: Focal Animals help, module roxygen and Rd, the guide (3 places and its export chunk), the manual (2),
+NEWS.
+**Gates:** claim `31837276e`, RED `a14103f25` (20 blocks, 14 fail, 0 errors, 6 guards pass), GREEN `2e7cbcf7c` and `5e2d460e6` (5-file cap), REFACTOR `d6b9a54ba` (`helper-pageText.R`);
+close-out = the commit carrying this note. **Verified:** a mutation check (2 wrong fixes fail the right guards); full suite 3,399 blocks, 0 failed, 0 errors (187 skipped, 6 warnings);
+lint 0; `devtools::check()` 0/0/0 twice; real app, headless: 332 flagged (all ALIVE), 332 ranked, 267 / 60 / 5, median mean kinship 0.0152 (the 332 typed as focal: 268 / 59 / 5); the
+Focal Animals picture opened for the owner; ratchet 1/1. Learning 921.
+**Handoff evaluation of S954: 8/10.** Helped: the item's Moves, Words and Tests lists, every cite held (`modPedigree.R:357-366`, `isLivingAnimal.R:22`, `:46` and `:557`), the
+one-question Pre-RED. Wrong or missing: the guide chunk "should fail at RED" (it fails only after GREEN, Learning 921); the words list missed the Trends membership rule (in the guide)
+and the roxygen; no 5-file-cap warning; the stored 271 / 56 / 5 is another driver's.
+**Self-assessment: 8/10.** + the RED tally predicted before it ran; guards checked by mutation; both scenarios in one harness; every gate asked. - three silent skips in the first
+wording run, a grep with `\s` that matched nothing, several long silent runs.
+**Next steps (recommended, not ruled on):** the pictures item `BACKLOG.md:65` (READY, M; the capture run is about 8 min, an estimate). Owner findings: old-style boxes (`:8`, M),
+`getAncestors()` (`:105`, S). Optional, S: joint-effort comment (`:84`), budget `HANDOFFS.md` (`:121`), last-box label (`:49`), "None of the 1 animals" (`:43`), Warnings picture
+(`:21`), pop-up item (`:30`). The owner's push (83 commits at Phase 0 plus this session's 6) changes `R/`, so CI will run, unlike S902-S904: read it.
+**Key files:** `R/modPedigree.R:62-66,:207-208,:362-372`; `tests/testthat/test_modPedigree_defaultPopulation.R`, `test_defaultPopulationWording.R`, `helper-pageText.R`;
+`colony-manager-guide.qmd:322,:329-334,:478-488,:1202-1204`; `NEWS.Rmd:198`; `PROJECT_LEARNINGS.md:2607` (Learning 921). **Gotchas:** `test_guideExportTables.R:403` fails only after the
+module changes, so change the export chunk with the rule; print `skipped` beside `failed` in a RED tally; `git grep -E` has no `\s`; compare scenarios in one harness; the scratch app
+and driver went with the scratchpad (rebuild from Learnings 904, 920); the five worktrees and four old processes (pids 29511, 82416, 92900, 89205) were not re-checked; keep this file
+under about 56,700 B.
 
 ### Sessions 947-954 (condensed S950 to S955; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
@@ -110,15 +128,14 @@ without a `fromCenter` column (`fromCenterNotice()`, `R/fromCenterNotice.R:13`; 
 (`diagram_direct_edge_style.png`, `pedigree-diagram-screenshots.R:148-155`). Strict TDD each; claims `44d57865e`, `60def83ed`, `5e306e1d2`; close-outs `597cc727e`, `6a732d134`, `cb13b01f7`. Handoff evaluations 9/10, self 8/10 each.
 S950: the guide's two Breeding Groups statements match the app (`BACKLOG.md:43` removed; the owner ruled "fix the guide's words"; `colony-manager-guide.qmd:614-660`;
 gate `test_guideBreedingGroupsWording.R`, 11 blocks). Claim `5c0163714`, RED `e6032b2a8`, GREEN `7cb5a69c0`, close-out `e95fc63ab`, correction `f9db3048e`; evaluation 9/10, self 8/10.
-S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (it had crossed the Read tool's 262,144 B refusal; `methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write`,
-no `--force`; 43 receipts to `docs/archive/HANDOFFS-through-2026-10-08.md`). Claim `4fb0727f9`, trim `ff66b2703`, close-out `dbf5b6fb5`; evaluation 8/10, self 8/10.
+S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write`, no `--force`; 43 receipts to
+`docs/archive/HANDOFFS-through-2026-10-08.md`). Claim `4fb0727f9`, trim `ff66b2703`, close-out `dbf5b6fb5`; evaluation 8/10, self 8/10.
 S952: the owner's two sentences ("The primary goal of `nprcgenekeepr`", the NIH grant sentence) in the guide, engineering article, manual introduction, `README.md` and `CLAUDE.md` (strict TDD, docs only;
 gate `test_originFundingWording.R`, 8 blocks; `BACKLOG.md:84` narrowed). Claim `fa4d05053`, RED `408997473`, GREEN `a4e259e4b`, close-out `52b9a985f`; evaluation 9/10, self 8/10.
-S953: the NIH grants are limited to version 1.0 and earlier everywhere they are stated: the About tab (`R/appUI.R:323-328`), `DESCRIPTION`'s two funders and the outreach plan, plus a test block
-that sweeps 611 live pages (strict TDD; gate `test_originFundingWording.R`, 16 blocks; `BACKLOG.md:84` replaced by one optional item). Claim `ed48bbaf9`, RED `54acc0a30`, GREEN `c5f9aca8b`,
-REFACTOR `9d02737ae`, close-out `14621be03`; evaluation 9/10, self 8/10.
-S954: a decision session (docs only): the owner ruled that with no focal animals entered the Pedigree Browser flags the living animals, not all 3,694 (`R/modPedigree.R:357-366`; real app, the same 332
-living animals: 55 / 272 / 5 against 271 / 56 / 5, High / Low / Undetermined; `BACKLOG.md:65-82` is the READY build). Claim `413abe6ac`, close-out `c2cc3dbb1`; evaluation 9/10, self 8/10.
+S953: the NIH grants are limited to version 1.0 and earlier everywhere they are stated (About tab `R/appUI.R:323-328`, `DESCRIPTION`, outreach plan; a 611-page sweep test, `test_originFundingWording.R`,
+16 blocks; strict TDD). Claim `ed48bbaf9`, RED `54acc0a30`, GREEN `c5f9aca8b`, REFACTOR `9d02737ae`, close-out `14621be03`; evaluation 9/10, self 8/10.
+S954: a decision session (docs only): the owner ruled that with no focal animals the Pedigree Browser flags the living animals, not all 3,694 (built S955). Claim `413abe6ac`, close-out `c2cc3dbb1`;
+evaluation 9/10, self 8/10.
 **Gotchas kept:** under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
@@ -126,10 +143,9 @@ assertion in a RED test is unrun until GREEN; `blockContaining()` finds only col
 of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
 `runGeneKeepR` pids 29511, 82416, 92900 and an `until` loop, pid 89205, on `scratchpad/s292`;
 the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the next `HANDOFFS.md` trim is due near 196,608 B (about 36
-sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`; a new page naming the NIH grants needs "version 1.0" within 250 characters (`test_originFundingWording.R`'s sweep);
+sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`;
 sweep with `git grep`, never `grep -r` (it walks
-`docs/archive/` and five `.claude/worktrees/` copies); the package Rd is generated from `DESCRIPTION`; a shinytest2 driver selects a navbarMenu tab with `app$set_inputs(mainNavbar = "About")`.
-`shared$geneticValues` is the report table, not a list with `$report`; rebuild a scratch `app.R` and driver from Learnings 904 and 920 (a living-only Genetic Value run takes about 5 s, the whole colony 45 s).
+`docs/archive/` and five `.claude/worktrees/` copies).
 
 ### Sessions 942-946 (condensed S943-S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures; S943 built 3 export tables from the buttons' own code (`colony-manager-guide.qmd:468`,
