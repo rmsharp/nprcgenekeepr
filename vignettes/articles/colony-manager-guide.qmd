@@ -616,10 +616,17 @@ candidate animals, a target ratio of 2.5 females per male, and "Number of
 groups" set to 6. Because group formation is a randomized search (the
 default **Number of simulations** is 10), the exact number and composition
 of groups formed varies from run to run rather than reproducing identically
--- this particular run produced 7 groups, each drawn toward the target ratio
-where enough candidates of each sex were available.
+-- this particular run produced 6 groups, each drawn toward the target ratio
+where enough candidates of each sex were available, and a seventh box that
+lists the four animals that fit no group.
 
-![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 7 groups formed in one run using a Custom sex ratio of 2.5 females per male; the exact group count and composition vary between runs."}
+![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the four animals that fit no group; the exact group count and composition vary between runs."}
+
+That last box is not a group: it appears only when some candidates fit in no
+group, and it lists them. The **Groups** and **Statistics** sub-tabs head it
+with the next group number ('Group 7' here), the **Group Detail** selector
+calls it 'Unused', and the Groups count in the candidate table above the tabs
+includes it.
 
 **Seeding groups with specific animals.** Behavioral constraints -- an
 existing social group, or an infant that should stay with its dam -- can be
@@ -631,13 +638,14 @@ before any IDs are typed into them.
 
 ![The six per-group seed text areas (Number of groups = 6), shown empty.](shiny_app_use/breeding_group_6_infants_with_dam.png){fig-alt="Breeding Group Formation showing six empty per-group seed text areas for a 6-group run."}
 
-Each formed group's full membership, and -- if **Include kinship in display
-of groups** was checked before forming -- its within-group kinship values,
-can be reviewed on the **Group Detail** sub-tab, one group at a time.
+Each formed group's full membership and its within-group kinship values
+can be reviewed on the **Group Detail** sub-tab, one group at a time. The
+kinship table is shown whether or not **Include kinship in display of groups**
+is checked; the box does not change what this sub-tab shows.
 
-![Group Detail for one formed group (no kinship shown).](shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png){fig-alt="Group Detail sub-tab showing one formed group's membership without kinship values."}
+![Group Detail for one formed group, with the kinship box unchecked; the kinship table is shown anyway.](shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png){fig-alt="Group Detail sub-tab showing one formed group's membership and its within-group kinship table, with the kinship box unchecked."}
 
-![Group Detail with kinship values included, viewing a different group of the same 6-group run.](shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png){fig-alt="Group Detail sub-tab showing group membership with within-group kinship values included."}
+![Group Detail for group 6 of a second run, formed with the kinship box checked; the kinship table is shown in the same way.](shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png){fig-alt="Group Detail sub-tab showing group 6's membership and within-group kinship table, from a second run formed with the kinship box checked."}
 
 A **Statistics** sub-tab summarizes all formed groups at once. Groups and
 their kinship matrices can each be exported individually to a file and
