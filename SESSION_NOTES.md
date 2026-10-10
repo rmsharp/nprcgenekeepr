@@ -99,10 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 951 Did
-**Deliverable:** trim `HANDOFFS.md` with `methodology_trim.py` (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4; docs and tooling only, no `R/`, test or `man/` change)
-**Started:** 2026-10-09
-**Status:** Session claimed. Work beginning. `HANDOFFS.md` is 264,118 B, past the Read tool's 262,144 B whole-file refusal (the dashboard's only High+ risk).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; docs and tooling only, no `R/`, test or `man/` change, so no TDD phase applied):** `HANDOFFS.md` trimmed, 264,486 B to 30,267 B. It had crossed the Read tool's
+262,144 B whole-file refusal at S950's close-out (259,794 B at the claim, 263,942 B after one receipt) and was the dashboard's only High+ risk. `methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write` (no `--force`: the
+dry run printed no SRF refusal, unlike S917) archived 43 receipts (S905-S947) to `docs/archive/HANDOFFS-through-2026-10-08.md` and kept 4 (S948-S951). Two other cuts were dry-run and not used: `--cut 2026-10-07` (10 kept, 56,116 B,
+refills in about two sessions) and `--cut 2026-10-06` (23 kept, 117,699 B).
+**Gate:** claim `4fb0727f9`, trim `ff66b2703` (the tool's own ledger entry rides in it), close-out = the commit carrying this note. The trim is its own commit, apart from the close-out.
+**Verified:** the shard's verify script passes (47 = 4 retained + 43 archived, 0 added); `test_handoffsReceiptPlacement.R` 7 blocks and `test_workflowPathsIgnore.R` 11 blocks, 0 failed 0 errors; dashboard 96/100, High+ risk 0;
+context budget: no file over a ceiling, and line 111's 303 B finding went with the claim's condensing; ratchet 1/1 (results `7240a9f73000`). Learning 917.
+**Not done:** the full suite, lint and `devtools::check()` (no `R/`, test or `man/` file changed; `docs/` and `HANDOFFS*.md` are build-ignored); no browser; the 69 unpushed commits of Phase 0 plus this session's 3 are still unpushed.
+**Went wrong:** nothing that cost work. Two quiet stretches (the harness nudged twice); a first regex over `dashboard.html` died on a `ugrep` complexity limit and a plainer one found the risk's reason.
+**Handoff evaluation of S950: 8/10.** Helped: every `BACKLOG.md` cite matched (`:8,:21,:30,:43,:49,:65,:84,:105,:129,:222` before my insert); notes 56,584 B; the three `runGeneKeepR` pids; the ratchet citation; the order of
+next steps. Wrong or missing: its close-out took `HANDOFFS.md` from 259,794 B to 263,942 B, over the Read refusal, with no note (`context_budget.py` does not budget that file and no dashboard run followed); the fourth old process (pid
+89205, an `until` loop on `scratchpad/s292`) was in a commit message but not in the notes. **Self-assessment: 8/10.** + read the runner, safeguards and notes in full; found the risk's cause in the dashboard page; dry-ran three cuts
+before choosing; checked losslessness and the two tests that read the file; kept the trim apart; measured the growth behind it. - two quiet stretches; chose the cut without asking (the tool's default, no refusal to override).
+
+**Next steps (recommended, not ruled on; lines re-grepped after this session's `BACKLOG.md` insert):** owner findings, each a short decision session: origin-and-funding wording (`BACKLOG.md:84`). Larger: default population (`:65`, M),
+old-style boxes (`:8`, M), `getAncestors()` (`:105`). Optional, S: budget `HANDOFFS.md` in the context-budget hook (`:121`), the app's last-box label (`:49`), "None of the 1 animals" (`:43`), the Warnings picture (`:21`), the pop-up
+item (`:30`). The docs-audit item (`:142`) holds only part 2 (`:235`); the 3.0.0 bump is `:134`. After the owner pushes, read the CI run (the last push-triggered run was S939's).
+**Key files:** `HANDOFFS.md:199` (the S951 receipt, newest first); `docs/archive/HANDOFFS-through-2026-10-08.md` and its `.verify.sh`; `BACKLOG.md:121`; `.context-budget.json` (its `files` list); `PROJECT_LEARNINGS.md` Learning 917.
+**Gotchas:** the trimmer neither stages nor commits (`git add` four files: `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); `HANDOFFS.md` now opens whole (30 KB) and the next trim is due near 196,608 B, about 36 sessions
+out (an estimate from 4.6 KB receipts); a new receipt still goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`; four old processes left alone: `runGeneKeepR` pids 29511, 82416, 92900 and the
+`until` loop, pid 89205; keep this file under ~56,700 B (56,612 B now).
 
 ### Sessions 947-950 (condensed S950 and S951; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
@@ -126,22 +143,12 @@ valid only inside `testServer`; a window picture needs `selector = "viewport"`; 
 `NPRC_SHOT_DIR=<scratch> NOT_CRAN=true Rscript vignettes/articles/<script>.R` (Marker about 4 min, colony about 8 min); restore the 900 px window after a taller shot; under `testServer()` a DT output is widget JSON with no rows;
 `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` re-knits `NEWS.md`.
 
-### What Session 941 Did (condensed S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 3a: 14 guide pictures retaken (9 Pedigree Browser, 5 Diagram); the owner ruled D2 delete (`pb_unknown_displayed.png` and its capture step
-gone: RED `a273f86b7`, GREEN `b64075728`); captions recounted from the data (21 animals, 12 with 4 filled, `8LKBV9` x `FJIB3R`). Claim `c9e19abdd`, close-out `7439ee148`.
-Handoff evaluation of S940: 9/10. Self 8/10. **Gotchas kept:** put animal IDs in code backticks in `.qmd` text (the spelling guard splits them at digits); the
-diagram script's "did not update any output values" warning is the no-op Rectilinear step.
-
-### What Session 940 Did (condensed S941 and S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 3c: 10 guide pictures retaken; the capture script typed "Group 6" into a box whose values are numbers (`R/modBreedingGroups.R:1048`),
-fixed with a test first (RED `8d6ebbaba`, GREEN `883e23c46`). Claim `a52e8fd02`, close-out `bdb69cc25`. Handoff evaluation of S939: 8/10. Self 8/10.
-**Gotchas kept:** view each retaken picture beside its old one before copying; the ratchet citation's `results` hash changes every run.
-
-### What Session 939 Did (condensed S940; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Breeding Groups draws its pool from living animals only, for every source, before the top-N or floor cut (strict TDD): internal
-`isLivingAnimal()` (`R/isLivingAnimal.R:22`), pool step `R/modBreedingGroups.R:544`, one notice when nobody is alive. Claim `81f4c1f19`, RED
-`bc3585117`, GREEN `63518b606`, REFACTOR `7e7c1ffef`, close-out `66c6df335` (pushed; CI green). Handoff evaluation of S938: 9/10. Self 8/10.
-**Gotchas kept:** the `status` column is optional (Learning 905).
+### Sessions 939-941 (condensed S940-S951; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S939: Breeding Groups draws its pool from living animals only, before the top-N or floor cut (strict TDD; internal `isLivingAnimal()`, `R/isLivingAnimal.R:22`, pool step `R/modBreedingGroups.R:544`); claim `81f4c1f19`, GREEN
+`63518b606`, close-out `66c6df335` (pushed; CI green). S940: Docs-audit slice 2, Phase 3c: 10 guide pictures retaken; the capture script typed "Group 6" into a box whose values are numbers (`R/modBreedingGroups.R:1048`), fixed with a
+test first (RED `8d6ebbaba`, GREEN `883e23c46`). S941: Phase 3a: 14 guide pictures retaken; the owner ruled D2 delete (RED `a273f86b7`, GREEN `b64075728`). Handoff evaluations 8-9/10, self 8/10 each. **Gotchas kept:** the `status`
+column is optional (Learning 905); view each retaken picture beside its old one before copying; put animal IDs in code backticks in `.qmd` text (the spelling guard splits them at digits); the diagram script's "did not update any
+output values" warning is the no-op Rectilinear step; the ratchet citation's `results` hash changes every run.
 
 ### What Session 938 Did (condensed S939 and S942; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 A decision session, docs only: reproduced the default Top ranked 20 in the real app (all dead or shipped: with no focal animals every animal is the

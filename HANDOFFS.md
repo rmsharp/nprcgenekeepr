@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S951
 date: 2026-10-09
-status: pending
-active_task: IN PROGRESS -- trim HANDOFFS.md with methodology_trim.py (264,118 B, past the Read tool's 262,144 B whole-file refusal; the dashboard's only High+ risk); owner pick at the Phase 0 picker, option 1 of 4; docs and tooling only, no R/, test or man/ change
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- HANDOFFS.md trimmed, 264,486 B to 30,267 B (owner pick at the Phase 0 picker, option 1 of 4; docs and tooling only, no R/, test or man/ change, so no TDD phase applied). It had crossed the Read tool's 262,144 B whole-file refusal at S950's close-out and was the dashboard's only High+ risk, now 0.
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, S950's ratchet citation matched the results file, CI green on all 10 runs, dashboard 96/100 with High+ risk 1 = HANDOFFS.md over the read limit; context budget: one over-long notes line, gone with the claim's condensing). Claim 4fb0727f9 (S950 notes entry condensed to fit the stub). Dry-ran three cuts, then ran methodology_trim.py --file HANDOFFS.md --budget-bytes 65536 --write with the default cut (no --force: the dry run printed no SRF refusal): 43 receipts (S905-S947) archived to docs/archive/HANDOFFS-through-2026-10-08.md, 4 kept (S948-S951); its verify script passes (47 = 4 + 43, 0 added); trim commit ff66b2703. Close-out: Learning 917, an optional BACKLOG.md item (:121) to budget HANDOFFS.md in the context-budget hook, notes (S939-S941 condensed into one record), this receipt, the ledger entry.
+next_steps: Recommended order (not ruled on; cites re-grepped after this session's BACKLOG.md insert). Owner findings, each a short decision session: origin-and-funding wording (BACKLOG.md:84), then larger: default population (BACKLOG.md:65, M), old-style boxes (BACKLOG.md:8, M), getAncestors() (BACKLOG.md:105). Optional, S: budget HANDOFFS.md in the context-budget hook (BACKLOG.md:121; two ceilings to choose), the app's last-box label (BACKLOG.md:49), None of the 1 animals (BACKLOG.md:43), the Warnings picture (BACKLOG.md:21), the pop-up item (BACKLOG.md:30). The docs-audit item (BACKLOG.md:142) holds only part 2 (BACKLOG.md:235); the 3.0.0 bump is BACKLOG.md:134. After the owner pushes (69 commits at Phase 0 plus this session's 3), read the CI run: the last push-triggered run was S939's.
+key_files: HANDOFFS.md:199 (this receipt, newest first; the file is 30 KB and opens whole); docs/archive/HANDOFFS-through-2026-10-08.md:1 (the shard, 43 receipts) and docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh:1 (the proof); BACKLOG.md:121 (the optional budget item); .context-budget.json:1 (the files list that item would extend); PROJECT_LEARNINGS.md:2595 (Learning 917).
+gotchas: the trimmer neither stages nor commits (git add HANDOFFS.md, CHANGELOG.md, the shard and its verify script, four files); the next HANDOFFS.md trim is due near the trimmer's 196,608 B line, about 36 sessions out (an estimate from 4.6 KB receipts), and nothing but the dashboard watches it until BACKLOG.md:121 is done, so run the dashboard after a close-out that adds a receipt; a new receipt still goes directly above the newest one; parse dashboard.html with python3 -I and re, not ugrep (complexity error); four old processes were left alone: runGeneKeepR pids 29511, 82416, 92900 and an until loop on scratchpad/s292, pid 89205; keep SESSION_NOTES.md under about 56,700 B (56,612 B now).
+runtime_smoke: n/a -- docs-only. The shard verify script prints OK for L1, L2 and L3; test_handoffsReceiptPlacement.R (7 blocks) and test_workflowPathsIgnore.R (11 blocks) pass, 0 failed 0 errors; the dashboard now reads High+ risk 0 and 96/100; quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 7240a9f73000 · manifest aa983075d6a2
+changelog_ref: S951 DONE entry
+commit: the close-out commit that carries this receipt; claim 4fb0727f9, trim ff66b2703
 ```
 
 ```handoff
