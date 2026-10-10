@@ -436,6 +436,11 @@ longitudinal monitoring of colony genetic health.
 - Fixed: when a pedigree lists an animal as its own ancestor,
   `getAncestors()`, `findLoops()` and `countLoops()` stop with a message
   naming the animals instead of an "infinite recursion" error.
+- Fixed: `getAncestors()`, `findLoops()` and `countLoops()` no longer stop with
+  "argument is of length zero" when a pedigree lists a parent that has no row of
+  its own. Such a parent is treated as an animal with unknown parents, the same
+  way the pedigree check treats it. Asking `getAncestors()` about an animal that
+  is not in the pedigree tree at all stops with a message naming it.
 - Fixed: `getLkDirectAncestors()` no longer runs without end when a pedigree
   lists an animal as its own ancestor; it stops and returns the animals found.
   `getPedDirectRelatives()` no longer runs without end when a pedigree has a
