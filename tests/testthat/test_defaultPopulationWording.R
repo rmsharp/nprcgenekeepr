@@ -34,6 +34,11 @@ guideText <- function() {
   pageText("vignettes", "articles", "colony-manager-guide.qmd")
 }
 
+## The example pedigree's living animals as the app's QC step leaves it (the
+## block near the end checks this count against the app's own code). With no
+## focal animals they are the population, so they are the animals ranked.
+exampleLiving <- 332L
+
 test_that("the Focal Animals help says the living animals are analyzed when none are entered", {
   html <- paste(as.character(modPedigreeUI("pb")), collapse = " ")
   text <- gsub("\\s+", " ", gsub("<[^>]+>", " ", html))
@@ -136,13 +141,12 @@ test_that("the guide's 332 is the example pedigree's living count as the app's Q
     read.csv(exampleFile, stringsAsFactors = FALSE, na.strings = c("", "NA")),
     minSireAge = 2, minDamAge = 2, reportChanges = TRUE
   )$cleaned
-  expect_equal(sum(isLivingAnimal(cleaned)), 332L)
+  expect_equal(sum(isLivingAnimal(cleaned)), exampleLiving)
 })
 
-## Show top N is widened to 500, more than the 332 living animals the default
+## Show top N is widened to 500, more than the living animals the default
 ## ranks, so the table lists every ranked animal, ten rows to a page.
-rankedAnimals <- 332L
-rankedPages <- ceiling(rankedAnimals / 10L)
+rankedPages <- ceiling(exampleLiving / 10L)
 
 test_that("the guide's widened Genetic Value caption counts the pages of the living animals", {
   expectWording(
@@ -156,7 +160,7 @@ test_that("the guide's widened Genetic Value caption counts the pages of the liv
 test_that("the guide's widened Genetic Value alt text counts the entries and the last page", {
   expectWording(
     guideText(),
-    now = paste0("the results table reads Showing 1 to 10 of ", rankedAnimals,
+    now = paste0("the results table reads Showing 1 to 10 of ", exampleLiving,
                  " entries and its pager runs to page ", rankedPages, "."),
     gone = c("of 500 entries", "its pager runs to page 50")
   )
