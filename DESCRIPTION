@@ -11,10 +11,10 @@ Authors@R: c(
     role = c("aut", "cre", "cph", "dtc")),
     person("Matthew", "Schultz", role = c("aut"),
     comment = c(ORCID = "0000-0001-5103-4305")), 
-    person("Southwest National Primate Research Center NIH grant P51 RR13986", 
-    role = "fnd"),
-    person("Oregon National Primate Research Center grant P51 OD011092",
-    role = "fnd"))
+    person("Southwest National Primate Research Center", role = "fnd",
+    comment = "NIH grant P51 RR13986, work up to and including version 1.0"),
+    person("Oregon National Primate Research Center", role = "fnd",
+    comment = "NIH grant P51 OD011092, work up to and including version 1.0"))
 Description: Provides genetic tools for colony management and implements a
     derivation of the work in Amanda Vinson and Michael J Raboin (2015)
     <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/> "A Practical

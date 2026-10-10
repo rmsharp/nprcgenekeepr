@@ -320,8 +320,12 @@ appUI <- function(siteInfo = NULL) {
         icon = icon("info-circle"),
         h3("About GeneKeepR"),
         p(paste("Version", getVersion(date = FALSE))),
-        p("Developed at Oregon National Primate Research Center"),
-        p("Funded by NIH grants P51 RR13986 and P51 OD011092")
+        p(paste("Initially conceived and developed at Oregon National",
+                "Primate Research Center.")),
+        p(paste("Work on this package up to and including version 1.0 was",
+                "supported in part by NIH grants P51 RR13986 to the",
+                "Southwest National Primate Research Center and P51 OD011092",
+                "to the Oregon National Primate Research Center."))
       ),
 
       tabPanel(

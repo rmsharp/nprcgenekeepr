@@ -44,12 +44,13 @@ target event as of this writing), and ready-to-edit draft materials.
   Both went through independent adversarial review and a full live-link sweep before
   this session (see `CHANGELOG.md` Sessions 342–343, 398, 404–408). They are ready to be
   the "read deeper" links in any outreach.
-- **The tool already has NPRC pedigree**, literally: built at ONPRC, funded in part by
-  NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092 (Oregon NPRC), and it
-  operationalizes a peer-reviewed method already known to this exact audience — Vinson,
-  A; Raboin, MJ, *"A Practical Approach for Designing Breeding Groups to Maximize
-  Genetic Diversity in a Large Colony of Captive Rhesus Macaques (Macaca mulatta),"*
-  *JAALAS*, 2015. This is a stronger opening than a generic software pitch: the
+- **The tool already has NPRC pedigree**, literally: version 1.0 was built at ONPRC with
+  support in part from NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092 (Oregon
+  NPRC), and it operationalizes a peer-reviewed method already known to this exact
+  audience — Vinson, A; Raboin, MJ, *"A Practical Approach for Designing Breeding
+  Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques
+  (Macaca mulatta),"* *JAALAS*, 2015. This is a stronger opening than a generic
+  software pitch: the
   Working Group is not being asked to trust a new vendor, only to look at a free,
   citable implementation of a method some of them may already cite.
 
@@ -422,9 +423,10 @@ tools for NPRC colonies
 > an R package I maintain for genetic colony management, reached a major release
 > (2.0.0) and was accepted onto CRAN on July 26, 2026.
 >
-> The package grew out of work at the Oregon National Primate Research Center and is
-> supported in part by NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092
-> (Oregon NPRC). It's a free, open-source (MIT license) implementation of the
+> The package grew out of work at the Oregon National Primate Research Center. Work on
+> it up to and including version 1.0 was supported in part by NIH grants P51 RR13986
+> (Southwest NPRC) and P51 OD011092 (Oregon NPRC). It's a free, open-source (MIT
+> license) implementation of the
 > breeding-group-design approach described in Vinson & Raboin's 2015 *JAALAS* paper
 > ("A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in
 > a Large Colony of Captive Rhesus Macaques"), extended since then with:
@@ -490,9 +492,10 @@ nprcgenekeepr 2.0.0
 **nprcgenekeepr — Genetic Tools for Colony Management**
 *Free · Open-source (MIT) · On CRAN · <https://rmsharp.github.io/nprcgenekeepr/>*
 
-Built at the Oregon National Primate Research Center; supported in part by NIH grants
-P51 RR13986 (Southwest NPRC) and P51 OD011092 (Oregon NPRC). Implements the
-breeding-group-design method of Vinson & Raboin (2015, *JAALAS*).
+Initially built at the Oregon National Primate Research Center; work up to and including
+version 1.0 was supported in part by NIH grants P51 RR13986 (Southwest NPRC) and
+P51 OD011092 (Oregon NPRC). Implements the breeding-group-design method of Vinson &
+Raboin (2015, *JAALAS*).
 
 | Capability | What it does |
 |---|---|
