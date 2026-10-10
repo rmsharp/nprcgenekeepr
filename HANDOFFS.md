@@ -194,15 +194,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S950
 date: 2026-10-09
-status: pending
-active_task: the two Breeding Groups statements in the guide that the app does not match (BACKLOG.md:43; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the guide's two Breeding Groups statements now match the app (BACKLOG.md:43; owner pick at the Phase 0 picker, option 1 of 4; the owner ruled "fix the guide's words" for both; strict TDD, all three gates asked and answered; the REFACTOR was skipped at the owner's choice).
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, S949's ratchet citation matched the results file, CI green on all 10 runs, dashboard 96/100, nothing over a context-budget ceiling). Claim 5c0163714 (S949 notes entry condensed to fit the stub). Read the code, the three committed pictures, the user manual and the roxygen first: the Group Detail kinship table shows whether or not the box is checked (the manual and the roxygen already said so; the box only decides whether the module returns groupKinship); the second caption's "same 6-group run" was a re-formed run (candidate-table scores 2,1,1,1,1 against 2,2,2,2,1); the first picture shows "Group 7 (4 animals)", four males, for 6 groups asked. RED e6032b2a8 (new test_guideBreedingGroupsWording.R, 11 blocks: 6 red, 5 green by design; a scratch copy of the guide with the new words passes 11 of 11). GREEN 7cb5a69c0 (colony-manager-guide.qmd only: the kinship paragraph, both Group Detail captions and alt texts, the sex-ratio paragraph and alt text, a new paragraph after that picture). Close-out: BACKLOG item removed and an optional item added (the app's "Group N" label, BACKLOG.md:49), the docs-audit item's pointer reworded, Learning 916, notes, ledger.
+next_steps: Recommended order (not ruled on; cites re-grepped after this session's edit). Owner findings, each a short decision session: origin-and-funding wording (BACKLOG.md:84), then larger: default population (:65, M), old-style boxes (:8, M), getAncestors() (:105). Optional, S: the app's last-box label (:49), "None of the 1 animals" (:43), the Warnings picture (:21), the pop-up item (:30). The docs-audit item (:129) holds only part 2 (:222). After the owner pushes (68 commits ahead with this close-out commit), read the CI run and open the published guide to confirm the Breeding Groups words and pictures.
+key_files: vignettes/articles/colony-manager-guide.qmd:614-660 (the changed words and the new paragraph); tests/testthat/test_guideBreedingGroupsWording.R (the 11 blocks; bgWordingPed() and runBgWording() are the fixture); R/modBreedingGroups.R:984-986 (Groups heading), :1009-1025 (Statistics), :1041-1051 (selector), :1066-1085 (kinship view); vignettes/manual_components/_breeding_group_formation.Rmd:131-137; BACKLOG.md:49; PROJECT_LEARNINGS.md Learning 916.
+gotchas: a Breeding Groups test pedigree needs an age column (the Input tab's QC adds one), or every pairwise kinship is ignored and no animal is left over; to read a module's selector choices under testServer() mock updateSelectInput with testthat::local_mocked_bindings(.package = "nprcgenekeepr"); a quarto render of the guide needs the package installed (install a git archive of HEAD into a scratch library from the repo directory, then R_LIBS="<scratch lib>:<renv lib>"; --no-execute still runs inline R; the page has curly quotes); grep a wait sentinel unanchored and run ps before telling the owner why something is slow (I called a finished render a hung loop without checking); the shell's working directory slipped twice after a cd, so use absolute paths; three old runGeneKeepR processes (pids 29511, 82416, 92900) are not from any recent session and were left alone; SESSION_NOTES.md must stay under about 56,700 B.
+runtime_smoke: the edited guide rendered with quarto (HEAD installed into a scratch library, exit 0) and the HTML holds every new sentence and none of the old ones ("produced 7 groups", "no kinship shown", "same 6-group run", "was checked before forming" all absent); the app's behavior the words describe is pinned by 5 blocks run in testServer, not a hand check in Chrome. Full suite 3,363 blocks 0 failed 0 errors (187 skipped, 6 warnings) at load 3.8 to 7.0; package lint 0; devtools::check(document = FALSE) 0 errors 0 warnings 0 notes; quality_ratchet: 1/1 pass, 0 fail, 0 unmeasured, results 31eb1a07330f, manifest aa983075d6a2. Six mutants of R/modBreedingGroups.R each turn 1 to 4 blocks red (file restored byte-identical). Published pages not opened (commits unpushed).
+changelog_ref: S950 DONE entry
+commit: the close-out commit that carries this receipt; claim 5c0163714
 ```
 
 ```handoff

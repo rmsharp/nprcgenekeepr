@@ -40,30 +40,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
       `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
 
-- [ ] **Two Breeding Groups statements in the guide that the app does not match: the Group Detail "no
-      kinship shown" caption, and "7 groups" when the seventh is the unused animals (found S940,
-      2026-10-07; DECISION NEEDED, Effort S; the guide's words, or the app with a test first)** -- seen in
-      both the old and the retaken Phase 3c pictures. (1) The caption of
-      `breeding_group_first_group_no_kinship_seeds_indicated.png` says "(no kinship shown)" and the text
-      above it (`colony-manager-guide.qmd:544-546`) says within-group kinship values appear on Group Detail
-      if "Include kinship in display of groups" was checked before forming; the picture, taken with the box
-      unchecked, shows a "Within-group kinship" table, because that table is built from the retained
-      kinship matrix whatever the box says (`R/modBreedingGroups.R:1066-1085`; `withKinship` is read only
-      at `:592` and `:702`). (2) With 6 groups asked for, the Groups tab headed 7 boxes in both retakes
-      ("Group 7 (8 animals)", all males, in the first run; "Group 7 (4 animals)" in the second): the seventh
-      is the list of unused candidates, which the Group Detail selector labels "Unused"
-      (`R/modBreedingGroups.R:1040-1046`) while the Groups tab headings read `Group %d` for every element
-      (`:986`); the guide says the run "produced 7 groups" (`colony-manager-guide.qmd:529`, and its alt
-      text). The group boxes are also the old-style `panel panel-primary` ones (`:8`), so a heading change
-      could go with that item. **Decide when picking it up:** for each, change the guide's words, or change
-      the app (an "Unused animals" heading on the Groups tab; the kinship table only when the box is
-      checked); an app change moves the pictures again and needs a test first.
-
 - [ ] **The Breeding Groups "nobody is alive" notice reads "None of the 1 animals" when the source has one
       animal (found S939, 2026-10-07; READY (optional), Effort S; strict TDD, a displayed-text change)** -- the
       notice (`R/modBreedingGroups.R`, the `length(rawPool) == 0L` branch) builds its text from the source's
       animal count; the S939 tests pin "None of the 14 animals", not the count of one (or zero). A pool of one
       animal cannot form groups anyway, so this is wording only: pick it up with the next Breeding Groups change.
+
+- [ ] **The Breeding Groups last box (the animals that fit no group) is headed "Group N" on the Groups tab
+      and numbered in the Statistics table, but called "Unused" in the Group Detail selector (found S940,
+      raised again S950; READY (optional), Effort S; strict TDD, a displayed-text change)** -- S950 made the
+      guide say so in words (`colony-manager-guide.qmd`, the paragraph after the sex-ratio picture) and pinned
+      the app's behavior in `tests/testthat/test_guideBreedingGroupsWording.R` (fixture: two groups asked
+      for, three boxes, the third `Group 3` / `Unused`). The owner chose the guide's words only; the app was
+      left as it is. Where the labels are: the Groups heading `sprintf("Group %d (%d animals)", ...)`
+      (`R/modBreedingGroups.R:984-986`), the Statistics `Group = i` column (`:1013-1025`) and the selector
+      (`:1041-1051`); the candidate table's Groups column counts the last box too (`:832-833`). Pick it up
+      only if the owner wants the app to say "Unused animals" in all three places: the sex-ratio picture is
+      retaken (the box shows in only some runs, so a retake can take several tries), the block "animals that
+      fit no group end in a last box" in that test file changes with it, and the group boxes are the old-style
+      `panel panel-primary` ones (`:8`), so the two could go together. **Declined by the owner at S950, do not
+      re-offer:** renaming the "Include kinship in display of groups" box, and making the Group Detail kinship
+      table follow it.
 
 - [ ] **With no focal animals the Genetic Value run ranks every animal ever recorded, so 271 of the 332 living
       animals are labelled Low Value (found S938, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any
@@ -177,8 +174,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       view" box had been blank since 2026-07-10 (the script typed "Group 6"; the box's values are numbers),
       fixed with a test first (`test_captureHarness.R`); the heat map was retaken again (the groups are
       living animals with birth dates now, so S935's note is gone); the Mate Pair caption said all alive
-      animals but the picture shows a custom list of six, fixed. Two findings for the owner are in the item
-      about the Group Detail kinship caption and the unused animals' "Group 7" heading.
+      animals but the picture shows a custom list of six, fixed. Its two findings for the owner (the Group
+      Detail kinship caption and the unused animals' "Group 7" heading) were ruled S950: the guide's words
+      changed and the app did not (the app's label is its own optional item).
       S941 did Phase 3a: 14 pictures retaken (9 Pedigree Browser, 5 Diagram) from the colony script's full
       81/81 run and the diagram script's 18/18 run, copied by name; each was 147 px taller than the
       committed one (the longer Display Unknown IDs text) and now shows the `placeholder` column and no
