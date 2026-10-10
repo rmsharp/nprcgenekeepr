@@ -70,22 +70,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       "work up to and including version 1.0" as its comment), the package help page and the outreach plan's three
       spots (record in `CHANGELOG.md`).
 
-- [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
-      cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
-      S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.
-      Probes (S783, hand-built trees; not run through `createPedTree()` of a raw pedigree with a
-      dangling parent): (1) `getAncestors("K", list(K = list(sire = "GONE", dam = NA)))` and
-      `getAncestors("NOPE", tree)` both stop with "argument is of length zero"
-      (`ptree[[id]]$sire` is `NULL`, so `is.na()` is `logical(0)` in `R/getAncestors.R:85-88`);
-      (2) an acyclic single-parent chain resolves up to 2,218 generations and aborts with
-      R's "evaluation nested too deeply" beyond that (997 before the S783 change; `options(expressions)`
-      is 5000; the cause of the increase was not investigated). Real pedigrees are a few dozen
-      generations deep, so (2) is recorded for completeness, not as a defect to fix. **Decision
-      for the owner on (1):** stop with a message naming the absent id (matches F4's wording
-      style), or treat an absent parent as a founder (returns fewer ancestors silently; a behavior
-      change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
-      `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
-
 - [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
       tool's 262,144 B whole-file refusal is refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
       Effort S; config only, `.context-budget.json`)** -- `HANDOFFS.md` crossed 262,144 B in S950's close-out

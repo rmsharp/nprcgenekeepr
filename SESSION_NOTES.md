@@ -99,13 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 958 Did
-**Deliverable:** `getAncestors()` given an animal id or a parent that is absent from the tree (`BACKLOG.md:73`; owner pick at the Phase 0 picker, option 1 of 4;
-DECISION NEEDED, Effort S) (IN PROGRESS)
-**Started:** 2026-10-10 16:50 CDT
-**Status:** Session claimed. Work beginning. PRE-RED declared; strict TDD for any change. Next: re-run the S783 probes, then ask the owner which behavior (stop with a
-message naming the absent id, or treat an absent parent as a founder). Keep this file under about 56,700 B.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR skipped at the owner's choice):** `getAncestors()`
+(`R/getAncestors.R:55-63`, `:81-84`) carries on when a parent has no row of its own in the tree (it is returned as an ancestor with none of its own, the answer `qcStudbook()`'s
+`addParents()` gives) and stops with a message naming an asked-about animal that is not in the tree; `makesLoop()` calls the recursive step directly (`R/makesLoop.R:29-30`), so
+`findLoops()` and `countLoops()` work on a raw `createPedTree()`. The owner took the recommended option first try. `BACKLOG.md:73-87` is removed (later cites move up 16).
+Measured before asking: 7 of 7 inputs stopped with "argument is of length zero"; after QC the same animals gave `GONE, B`; the 5 shipped pedigrees have 0 parents without a row;
+the app calls none of the three functions.
+**Gates:** claim `c0c156f53`; RED `e02da5c1b` (8 new blocks in 3 files plus `helper-absentParentPed.R`; 14 existing pass, 1 fails, 7 error, 0 skipped); GREEN `2fec4215b` (3 files,
+22 of 22); close-out = the commit carrying this note. **Verified:** full suite 3,409 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet
+1/1; the 5 tests that read `NEWS.md` pass. The app was not launched (no app path calls these functions). `NEWS.Rmd`/`NEWS.md` have the bullet. Learning 924.
+**Handoff evaluation of S957: 9/10.** Helped: the recommended order and all 9 `BACKLOG.md` cites held, the 101-commit count matched `git rev-list`, the four old pids were alive. Wrong:
+the item's "treating an absent parent as a founder returns fewer ancestors" (it returns the absent parent itself); missing: that `qcStudbook()` already adds such parents.
+**Self-assessment: 8/10.** + measured 7 inputs, 5 datasets and the QC equivalence before asking; one plain question, answered first try; the `U0001` fixture trap found and measured
+before the tests; every gate asked. - two long silent runs (two nudges); a 353 B notes line caught by the budget check; no app run.
+**Next steps (recommended, not ruled on):** Optional, S: joint-effort comment (`BACKLOG.md:52`, DECISION NEEDED), budget `HANDOFFS.md` (`:73`), last-box label (`:36`), "None of the
+1 animals" (`:30`), Warnings picture (`:8`), pop-up item (`:17`). Docs-audit part 2 is `:187`; the 3.0.0 bump is `:86`. The owner's push (106 commits ahead once this lands, by
+`git rev-list`) changes `R/`, so CI will run: read it.
+**Key files:** `R/getAncestors.R:55-63`; `R/makesLoop.R:29-30`; `tests/testthat/helper-absentParentPed.R:10`; `PROJECT_LEARNINGS.md:2616` (Learning 924). **Gotchas:** `qcStudbook()` gives an
+animal with one known parent a `U0001`-style placeholder for the other, so a raw-versus-QC fixture lists both parents or neither; removing a `BACKLOG.md` block shifts later cites (16 here,
+re-grepped); the four old processes (pids 29511, 82416, 92900, 89205) are alive and left alone; keep this file under about 56,700 B and every line under 280 B.
 
 ### Sessions 947-957 (condensed S950 to S958; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`

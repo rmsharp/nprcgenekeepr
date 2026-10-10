@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S958
 date: 2026-10-10
-status: pending
-active_task: IN PROGRESS -- `getAncestors()` fails cryptically on an animal id or a parent that is absent from the tree (BACKLOG.md:73; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, then strict TDD; PRE-RED declared)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- getAncestors() carries on when a parent has no row of its own in the tree and stops with a message naming an asked-about animal that is not in it (owner pick at the Phase 0 picker, option 1 of 4; the owner chose the recommended rule first try; strict TDD, every gate asked and answered, REFACTOR skipped at the owner's choice). BACKLOG.md:73-87 is removed.
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ risk 0, context budget under every ceiling, ratchet 1/1). Claim c0c156f53. Measured before asking: 7 of 7 inputs stopped with 'argument is of length zero'; after qcStudbook() the same animals gave GONE, B (addParents() adds the row, no error reported); the 5 shipped example pedigrees have 0 parents without a row; the app calls none of getAncestors(), findLoops(), countLoops(). RED e02da5c1b (8 new blocks in test_getAncestors.R 5, test_findLoops.R 2, test_countLoops.R 1, plus helper-absentParentPed.R; 14 existing pass, 1 fails on 2 of 3 expectations, 7 error, 0 skipped). GREEN 2fec4215b (R/getAncestors.R, R/makesLoop.R, man/getAncestors.Rd; 22 of 22). Verified: full suite 3,409 blocks 0 failed 0 errors (187 skipped, 6 warnings); lint 0; devtools::check() 0/0/0; the 5 tests that read NEWS.md pass. Close-out: NEWS.Rmd bullet and NEWS.md re-knit, BACKLOG.md item removed, Learning 924, notes, this receipt, the ledger entry.
+next_steps: Recommended order (not ruled on; BACKLOG.md cites re-grepped after the removal). Optional, S: the hidden joint-effort comment (BACKLOG.md:52, DECISION NEEDED), budget HANDOFFS.md (BACKLOG.md:73, DECISION NEEDED), last-box label (BACKLOG.md:36), None of the 1 animals (BACKLOG.md:30), Warnings picture (BACKLOG.md:8), pop-up item (BACKLOG.md:17). Docs-audit part 2 is BACKLOG.md:187; the 3.0.0 bump is BACKLOG.md:86. After the owner pushes (106 commits ahead of origin/master once this close-out lands, counted by git rev-list): the push changes R/ and tests, so CI will run; read the runs.
+key_files: R/getAncestors.R:55-63 (the asked-about check) and R/getAncestors.R:81-84 (absent parent returns no ancestors); R/makesLoop.R:29-30 (calls the recursive step directly); tests/testthat/helper-absentParentPed.R:10 (the raw-versus-QC fixture); tests/testthat/test_getAncestors.R:129 (the 5 new blocks); NEWS.Rmd:439 (the bullet); PROJECT_LEARNINGS.md:2616 (Learning 924).
+gotchas: qcStudbook() gives an animal with exactly one known parent a placeholder id for the other (K with sire GONE and no dam got dam U0001, measured), so a raw-versus-QC fixture lists both parents or neither; makesLoop() passes a parent id to the recursive step, so the asked-about check must stay in getAncestors() only; removing a BACKLOG.md block shifts later cites (16 here), so re-grep; the full suite takes several minutes and the wall-clock benchmark blocks fail under desktop load, so run nothing heavy beside it; the five worktrees and four old processes (runGeneKeepR pids 29511, 82416, 92900 and an until loop, pid 89205) are still alive, left alone; keep SESSION_NOTES.md under about 56,700 B and every line under 280 B.
+runtime_smoke: n/a for the app -- no app path calls getAncestors(), findLoops() or countLoops() (git grep over R/: getAncestors() is called only by countLoops() at R/countLoops.R:50, and findLoops() and countLoops() appear only in examples), so the app was not launched; the 7 probe inputs were run for real against the loaded package before and after GREEN, and devtools::check() ran the getAncestors() example. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8a8362623462 · manifest aa983075d6a2
+changelog_ref: S958 DONE entry
+commit: the close-out commit that carries this receipt; claim c0c156f53, RED e02da5c1b, GREEN 2fec4215b
 ```
 
 ```handoff
