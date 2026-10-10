@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S955
+date: 2026-10-10
+status: pending
+active_task: IN PROGRESS -- the default-population build (BACKLOG.md:65-82): with no focal animals entered the Pedigree Browser flags the living animals, as the owner ruled S954; owner pick at the Phase 0 picker, option 1 of 3; strict TDD, PRE-RED declared
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S954
 date: 2026-10-10
 status: complete
