@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S956
+date: 2026-10-10
+status: pending
+active_task: IN PROGRESS -- retake the guide pictures, and recount the numbers in their captions, that predate the default-population change (BACKLOG.md:65-82; owner pick at the Phase 0 picker, option 1 of 4; capture script only, strict TDD where a test moves, PRE-RED declared)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S955
 date: 2026-10-10
 status: complete

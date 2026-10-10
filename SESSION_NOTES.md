@@ -98,31 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 955 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 3; strict TDD; every gate asked and answered):** the default-population build (`BACKLOG.md:65-82`, ruled S954). With
-no focal animals entered the Pedigree Browser flags the living animals as the population (`R/modPedigree.R:362-372`: `ped$id[isLivingAnimal(ped)]` into the unchanged `setPopulation()`);
-nobody alive still flags everyone (the one Pre-RED question). Owner scope: the behavior, its tests and every sentence now; the up to 12 guide pictures are the new item at
-`BACKLOG.md:65` (18 lines for 18). Seven sentences approved with one question: Focal Animals help, module roxygen and Rd, the guide (3 places and its export chunk), the manual (2),
-NEWS.
-**Gates:** claim `31837276e`, RED `a14103f25` (20 blocks, 14 fail, 0 errors, 6 guards pass), GREEN `2e7cbcf7c` and `5e2d460e6` (5-file cap), REFACTOR `d6b9a54ba` (`helper-pageText.R`);
-close-out = the commit carrying this note. **Verified:** a mutation check (2 wrong fixes fail the right guards); full suite 3,399 blocks, 0 failed, 0 errors (187 skipped, 6 warnings);
-lint 0; `devtools::check()` 0/0/0 twice; real app, headless: 332 flagged (all ALIVE), 332 ranked, 267 / 60 / 5, median mean kinship 0.0152 (the 332 typed as focal: 268 / 59 / 5); the
-Focal Animals picture opened for the owner; ratchet 1/1. Learning 921.
-**Handoff evaluation of S954: 8/10.** Helped: the item's Moves, Words and Tests lists, every cite held (`modPedigree.R:357-366`, `isLivingAnimal.R:22`, `:46` and `:557`), the
-one-question Pre-RED. Wrong or missing: the guide chunk "should fail at RED" (it fails only after GREEN, Learning 921); the words list missed the Trends membership rule (in the guide)
-and the roxygen; no 5-file-cap warning; the stored 271 / 56 / 5 is another driver's.
-**Self-assessment: 8/10.** + the RED tally predicted before it ran; guards checked by mutation; both scenarios in one harness; every gate asked. - three silent skips in the first
-wording run, a grep with `\s` that matched nothing, several long silent runs.
-**Next steps (recommended, not ruled on):** the pictures item `BACKLOG.md:65` (READY, M; the capture run is about 8 min, an estimate). Owner findings: old-style boxes (`:8`, M),
-`getAncestors()` (`:105`, S). Optional, S: joint-effort comment (`:84`), budget `HANDOFFS.md` (`:121`), last-box label (`:49`), "None of the 1 animals" (`:43`), Warnings picture
-(`:21`), pop-up item (`:30`). The owner's push (83 commits at Phase 0 plus this session's 6) changes `R/`, so CI will run, unlike S902-S904: read it.
-**Key files:** `R/modPedigree.R:62-66,:207-208,:362-372`; `tests/testthat/test_modPedigree_defaultPopulation.R`, `test_defaultPopulationWording.R`, `helper-pageText.R`;
-`colony-manager-guide.qmd:322,:329-334,:478-488,:1202-1204`; `NEWS.Rmd:198`; `PROJECT_LEARNINGS.md:2607` (Learning 921). **Gotchas:** `test_guideExportTables.R:403` fails only after the
-module changes, so change the export chunk with the rule; print `skipped` beside `failed` in a RED tally; `git grep -E` has no `\s`; compare scenarios in one harness; the scratch app
-and driver went with the scratchpad (rebuild from Learnings 904, 920); the five worktrees and four old processes (pids 29511, 82416, 92900, 89205) were not re-checked; keep this file
-under about 56,700 B.
+### What Session 956 Did
+**Deliverable:** retake the guide pictures, and recount the numbers in their captions, that predate the default-population change: at most 12 (`BACKLOG.md:65-82`; owner pick at the
+Phase 0 picker, option 1 of 4; READY, Effort M; capture script only, strict TDD where a test moves) (IN PROGRESS)
+**Started:** 2026-10-10
+**Status:** Session claimed; PRE-RED declared. First steps: re-measure S954's "at most 12" list (S955 did not), retake the colony script into a scratch folder, put each new picture beside its old one.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-954 (condensed S950 to S955; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-955 (condensed S950 to S956; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
 without a `fromCenter` column (`fromCenterNotice()`, `R/fromCenterNotice.R:13`; the Potential Parents tab shares the sentence). S949: the Diagram article shows a Direct picture instead of a second copy of the Rectilinear one
 (`diagram_direct_edge_style.png`, `pedigree-diagram-screenshots.R:148-155`). Strict TDD each; claims `44d57865e`, `60def83ed`, `5e306e1d2`; close-outs `597cc727e`, `6a732d134`, `cb13b01f7`. Handoff evaluations 9/10, self 8/10 each.
@@ -136,7 +119,9 @@ S953: the NIH grants are limited to version 1.0 and earlier everywhere they are 
 16 blocks; strict TDD). Claim `ed48bbaf9`, RED `54acc0a30`, GREEN `c5f9aca8b`, REFACTOR `9d02737ae`, close-out `14621be03`; evaluation 9/10, self 8/10.
 S954: a decision session (docs only): the owner ruled that with no focal animals the Pedigree Browser flags the living animals, not all 3,694 (built S955). Claim `413abe6ac`, close-out `c2cc3dbb1`;
 evaluation 9/10, self 8/10.
-**Gotchas kept:** under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
+S955: with no focal animals the Pedigree Browser flags the living animals as the population (`R/modPedigree.R:362-372`; strict TDD, 20 new blocks; Focal Animals help, guide, manual and NEWS say so;
+`BACKLOG.md:65` is the pictures item). Claim `31837276e`, RED `a14103f25`, GREEN `2e7cbcf7c` and `5e2d460e6`, REFACTOR `d6b9a54ba`, close-out `c1e381f2b`; evaluation 8/10, self 8/10.
+**Gotchas kept:** print `skipped` beside `failed` in a RED tally; under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
 `test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
