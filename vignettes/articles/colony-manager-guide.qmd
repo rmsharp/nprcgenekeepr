@@ -64,7 +64,7 @@ forward uncritically from earlier tutorials.
 
 ## Section 1 -- Purpose: Why nprcgenekeepr Exists {#sec-purpose}
 
-The goal of `nprcgenekeepr` is to implement genetic tools for colony
+The primary goal of `nprcgenekeepr` is to implement genetic tools for colony
 management. It was initially conceived and developed as a Shiny web
 application at the Oregon National Primate Research Center (ONPRC) to
 facilitate analyses that center routinely performs, and has since been
@@ -83,9 +83,9 @@ Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques
 (Macaca mulatta)*, *Journal of the American Association for Laboratory Animal
 Science*, 54(6), 700-707.
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the Oregon
-National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate Research
+Center and P51 OD011092 to the Oregon National Primate Research Center.
 
 ## Section 2 -- Approach: The Five Function Groups and Two Ways to Use Them {#sec-approach}
 
@@ -1234,6 +1234,6 @@ Parents tab needs to demonstrate populated results -- each described where it
 arose in Section 3. Please report any further questions, comments, or bugs
 through the [GitHub issue tracker](https://github.com/rmsharp/nprcgenekeepr/issues).
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the Oregon
-National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate Research
+Center and P51 OD011092 to the Oregon National Primate Research Center.
