@@ -59,11 +59,11 @@ modPedigreeUI <- function(id) {
           h4("Focal Animals"),
           helpText(
             paste0(
-              "IDs of selected focal animals may be manually ",
-              "entered here if analysis of all individuals is ",
-              "not needed. IDs may be pasted from Excel or you ",
-              "can browse for and select a file containing the list ",
-              "of focal animals."
+              "Enter focal animal IDs here to analyze them instead of the ",
+              "living animals; with none entered, the living animals are ",
+              "analyzed (every animal if none is alive). IDs may be pasted ",
+              "from Excel or you can browse for and select a file ",
+              "containing the list of focal animals."
             ),
             style = "color: darkblue; font-weight: bold;"
           ),
@@ -204,7 +204,8 @@ modPedigreeUI <- function(id) {
 #'
 #' This module processes the studbook by:
 #' \itemize{
-#'   \item Adding a \code{population} column via \code{setPopulation()}
+#'   \item Adding a \code{population} column via \code{setPopulation()}:
+#'     the focal animals, or the living animals when none are entered
 #'   \item Adding a \code{pedNum} column via \code{findPedigreeNumber()}
 #'   \item Ensuring a \code{gen} column exists via \code{findGeneration()}
 #'   \item Optionally trimming to the ancestors and descendants of focal
@@ -360,9 +361,14 @@ modPedigreeServer <- function(id, studbook) {
       ped <- studbook()
 
       # Add population column using setPopulation
-      # If no focal animals, all animals are in population
       # If focal animals specified, only those are marked as population
+      # If no focal animals, the living animals are the population; with
+      # nobody alive that is an empty list, which setPopulation() turns into
+      # every animal
       focal <- focalIds()
+      if (length(focal) == 0L) {
+        focal <- ped$id[isLivingAnimal(ped)]
+      }
       ped <- setPopulation(ped, focal)
 
       # Add pedNum column to identify separate pedigrees

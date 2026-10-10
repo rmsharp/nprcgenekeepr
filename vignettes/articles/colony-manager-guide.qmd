@@ -319,17 +319,19 @@ everyone needed to connect them -- **962 animals** in total.
 ![The pedigree trimmed to the larger focal group (962 animals total).](shiny_app_use/pb_trimmed_for_focal_animals.png){fig-alt="Pedigree Browser table trimmed to 962 animals related to the larger focal-animal list."}
 
 Checking **Clear Focal Animals** and selecting **Update Focal Animals** again
-reads an empty ID list, restoring the full, untrimmed pedigree.
+reads an empty ID list, restoring the full, untrimmed pedigree and making the
+living animals the population again.
 
 ![Before clearing the focal-animal list.](shiny_app_use/pb_focal_animals_before_clear.png){fig-alt="Pedigree Browser before clearing the focal-animal list, still trimmed."}
 
 ![After clearing the focal-animal list -- the full pedigree is restored.](shiny_app_use/pb_focal_animals_after_clear.png){fig-alt="Pedigree Browser after clearing the focal-animal list, showing the full untrimmed pedigree."}
 
-A population must be defined here before proceeding to Genetic Value
-Analysis. The rest of this walkthrough continues with the **full, untrimmed**
-example pedigree (the focal-animal trim above illustrates the feature, not
-the population used for the remaining tabs) -- matching the shipped
-`examplePedigree`'s own downstream numbers below.
+With no focal animals entered, the population the other tabs analyze is the
+living animals (every animal if none is alive). The rest of this walkthrough
+continues with the **full, untrimmed** example pedigree and no focal animals,
+so its population is the 332 living animals (the focal-animal trim above
+illustrates the feature, not the population used for the remaining tabs) --
+matching the shipped `examplePedigree`'s own downstream numbers below.
 
 **Diagram view.** Alongside the table, the Pedigree Browser's **Diagram** tab
 renders the same population as an interactive pedigree diagram: one node per
@@ -473,6 +475,8 @@ library(nprcgenekeepr)
 # as the Input tab reads a CSV, checked with both age floors set to 2 (as in the
 # Input steps above), then given the population, pedigree-number and
 # generation columns the Pedigree Browser adds (R/modInput.R, R/modPedigree.R).
+# With no focal animals entered the population is the living animals; the
+# example file has a status column, so those are the animals with status ALIVE.
 exampleFile <- makeExamplePedigreeFile(
   file.path(tempdir(), "Example_Pedigree.csv"), fileType = "csv"
 )
@@ -480,7 +484,8 @@ exportPed <- runQcStudbook(
   read.csv(exampleFile, stringsAsFactors = FALSE, na.strings = c("", "NA")),
   minSireAge = 2, minDamAge = 2, reportChanges = TRUE
 )$cleaned
-exportPed <- setPopulation(exportPed, character(0L))
+living <- exportPed$id[exportPed$status == "ALIVE"]
+exportPed <- setPopulation(exportPed, living)
 exportPed$pedNum <- findPedigreeNumber(
   exportPed$id, exportPed$sire, exportPed$dam
 )
@@ -1195,7 +1200,8 @@ The workflow has three parts:
    worked example file for this tab) or start recording a new one. Each row is one dated
    snapshot -- mean kinship, founder representation, genome uniqueness,
    and the population's make-up -- for a single membership rule (the
-   whole pedigree, or a designated focal population).
+   whole pedigree, or a smaller population: the living animals, or the focal
+   animals you entered).
 2. **Generate Snapshot.** After running Genetic Value Analysis on the
    Genetic Value Analysis tab, clicking **Generate Snapshot** here
    records a new dated row from that analysis and appends it to the
