@@ -98,34 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 953 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, code change in `R/appUI.R` only):** the origin-and-funding wording S952 left (`BACKLOG.md:84`), one
-proposed sentence per place and one yes/no question ("all three as written"): the About tab (`R/appUI.R:323-328`), `DESCRIPTION:14-17` (each funder's name, with the grant and "work up
-to and including version 1.0" as its comment; the package Rd regenerated) and the outreach plan (`docs/planning/nprc-outreach-announcement-plan.md:47-49`, `:426-428`, `:495-498`). The
-owner then asked to check all documentation for the same limit: a `git grep` sweep found no other live page, and it is now the test block "every live page that names a grant number"
-(611 pages, floor 9 files; 12 unscoped hits before GREEN, 0 after).
-**Gates:** claim `ed48bbaf9`, RED `54acc0a30` (16 failed, 0 errors), GREEN `c5f9aca8b`, REFACTOR `9d02737ae` (`expectWording()`; same 36 expectations on HEAD, same 8 blocks fail on the
-pre-GREEN tree); close-out = the commit carrying this note. **Verified:** full suite 3,379 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, unchanged); lint 0;
-`devtools::check(document = FALSE)` 0/0/0; the real app driven to the About tab shows both paragraphs (picture opened for the owner); dashboard 96/100, High+ 0; ratchet 1/1 (results
-`61d75bdcec35`). Learning 919.
-**Left as it was (`BACKLOG.md:84` has the list):** three HTML-commented "joint effort between ONPRC and SNPRC" lines (`_introduction.Rmd:28-30`, `README.md:43-47`), not funding, now an
-optional item. **Went wrong:** a first sweep with `grep -r --exclude-dir=archive` still walked `docs/archive/` and the five `.claude/worktrees/` copies (`git grep` fixed it); two
-real-app driver runs wasted (`NOT_CRAN` unset; a tab click that did not switch); a long Phase 0 report.
-**Handoff evaluation of S952: 9/10.** Helped: every `BACKLOG.md` cite held to the line; "one proposed sentence per place, one question" got a yes first try; the 76-commit count. Wrong
-or missing: "no test reads it" about the About tab (`test-e2e-settings-about.R:60-74` expects "NIH" there; still true); no warning about the worktree noise; nothing cost real work.
-**Self-assessment: 8/10.** + measured every place and reader before asking; every gate asked and answered; the owner's mid-session request became a lasting test; picture shown before
-the long runs; REFACTOR's teeth checked. - noisy first grep, two wasted driver runs, a long first report.
-**Next steps (recommended, not ruled on; `BACKLOG.md` cites re-grepped after this edit):** owner findings: default population (`:65`, M), old-style boxes (`:8`, M), `getAncestors()`
-(`:105`). Optional, S: the hidden joint-effort comment (`:84`), budget `HANDOFFS.md` (`:121`), last-box label (`:49`), "None of the 1 animals" (`:43`), Warnings picture (`:21`), pop-up
-item (`:30`). Docs-audit part 2 is `:235`; the 3.0.0 bump is `:134`. After the owner pushes (76 commits at Phase 0 plus this session's 5), read the CI run: the last push-triggered run
-was S939's.
-**Key files:** `tests/testthat/test_originFundingWording.R:73` (`expectWording`), `:122`, `:146`, `:225`, `:238` (the sweep block); `R/appUI.R:323-328`; `DESCRIPTION:14-17`;
-`man/nprcgenekeepr-package.Rd:36-37`; `BACKLOG.md:84`; `PROJECT_LEARNINGS.md:2601` (Learning 919). **Gotchas:** a new page naming the grants needs "version 1.0" within 250 characters
-(the sweep's skipped pages are named in the test header); the package Rd is generated from `DESCRIPTION`; sweep with `git grep`; a shinytest2 driver needs `NOT_CRAN=true`; the five
-worktrees and four old processes (`runGeneKeepR` pids 29511, 82416, 92900, `until` loop 89205; not re-checked) were left alone; `README.md` is knitted from `_introduction.Rmd`; keep
-this file under about 56,700 B.
+### What Session 954 Did
+**Deliverable:** decide who "the population" is when no focal animals are entered in the Pedigree Browser (`BACKLOG.md:65`; owner pick at the Phase 0 picker, option 1 of 4;
+DECISION NEEDED, Effort M): a decision session, docs only; any code change is its own strict-TDD session after the owner rules (IN PROGRESS)
+**Started:** 2026-10-10
+**Status:** Session claimed. Work beginning: re-check that the S938 measurements still hold (git log on the readers of the flag), put the choice to the owner in plain words, record the ruling.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-952 (condensed S950, S951, S952 and S953; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-953 (condensed S950, S951, S952, S953 and S954; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947: the guide's export-tables chunk has a drift check against the pedigree the app hands the other tabs (tests only, `test_guideExportTables.R`). S948: the Candidate Parent Assignment tab says why its table is blank
 without a `fromCenter` column (`fromCenterNotice()`, `R/fromCenterNotice.R:13`; the Potential Parents tab shares the sentence). S949: the Diagram article shows a Direct picture instead of a second copy of the Rectilinear one
 (`diagram_direct_edge_style.png`, `pedigree-diagram-screenshots.R:148-155`). Strict TDD each; claims `44d57865e`, `60def83ed`, `5e306e1d2`; close-outs `597cc727e`, `6a732d134`, `cb13b01f7`. Handoff evaluations 9/10, self 8/10 each.
@@ -135,6 +115,9 @@ S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (it had crossed the Read tool
 no `--force`; 43 receipts to `docs/archive/HANDOFFS-through-2026-10-08.md`). Claim `4fb0727f9`, trim `ff66b2703`, close-out `dbf5b6fb5`; evaluation 8/10, self 8/10.
 S952: the owner's two sentences ("The primary goal of `nprcgenekeepr`", the NIH grant sentence) in the guide, engineering article, manual introduction, `README.md` and `CLAUDE.md` (strict TDD, docs only;
 gate `test_originFundingWording.R`, 8 blocks; `BACKLOG.md:84` narrowed). Claim `fa4d05053`, RED `408997473`, GREEN `a4e259e4b`, close-out `52b9a985f`; evaluation 9/10, self 8/10.
+S953: the NIH grants are limited to version 1.0 and earlier everywhere they are stated: the About tab (`R/appUI.R:323-328`), `DESCRIPTION`'s two funders and the outreach plan, plus a test block
+that sweeps 611 live pages (strict TDD; gate `test_originFundingWording.R`, 16 blocks; `BACKLOG.md:84` replaced by one optional item). Claim `ed48bbaf9`, RED `54acc0a30`, GREEN `c5f9aca8b`,
+REFACTOR `9d02737ae`, close-out `14621be03`; evaluation 9/10, self 8/10.
 **Gotchas kept:** under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
@@ -142,7 +125,9 @@ assertion in a RED test is unrun until GREEN; `blockContaining()` finds only col
 of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
 `runGeneKeepR` pids 29511, 82416, 92900 and an `until` loop, pid 89205, on `scratchpad/s292`;
 the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the next `HANDOFFS.md` trim is due near 196,608 B (about 36
-sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`.
+sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`; a new page naming the NIH grants needs "version 1.0" within 250 characters (the sweep block of
+`test_originFundingWording.R`); sweep with `git grep`, never `grep -r` (it walks `docs/archive/` and five `.claude/worktrees/` copies); the package Rd is generated from `DESCRIPTION`;
+a shinytest2 driver needs `NOT_CRAN=true` and selects a navbarMenu tab with `app$set_inputs(mainNavbar = "About")`.
 
 ### Sessions 942-946 (condensed S943-S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures; S943 built 3 export tables from the buttons' own code (`colony-manager-guide.qmd:468`,
