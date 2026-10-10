@@ -62,24 +62,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-offer:** renaming the "Include kinship in display of groups" box, and making the Group Detail kinship
       table follow it.
 
-- [ ] **With no focal animals the Genetic Value run ranks every animal ever recorded, so 271 of the 332 living
-      animals are labelled Low Value (found S938, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any
-      change)** -- measured S938 in the real app on the example with no focal animals: High / Low / Undetermined by
-      status: ALIVE 56 / 271 / 5, DECEASED 1,026 / 404 / 195, SHIPPED 314 / 10 / 41, UNKNOWN (placeholder) 0 / 0 /
-      1,372. The Genetic-value floor groups then held 60 living animals; with the 332 living animals entered as
-      focal they held 270 (group counts, not label counts). The whole-colony default is the documented
-      behavior of the exported `setPopulation()` (empty `ids` flags everyone) and of `reportGV()`
-      (`getGVPopulation()`), while the package's own `setPopulation()` example defines the population as living
-      animals with a known parent. The guide says to define the population before Genetic Value
-      (`vignettes/articles/colony-manager-guide.qmd:328`), then continues with the focal list cleared (`:329-332`).
-      Readers of the flag: `reportGV()` (`R/reportGV.R:195`), `offspringCounts()` (`R/offspringCounts.R:47`),
-      `gvaConvergence()`, `createColonySnapshot()`. Declined at S938 as the fix for the group pool (the owner took
-      the narrower Breeding Groups filter, shipped S939; in a real-app run after it, the default Top ranked 20 were
-      the first 20 living animals of this ranking, at places 519 to 1025 of 3,694, all of them alive).
-      **Decide when picking it up:** leave the whole-colony default and
-      say so in the Genetic Value help and the guide; or make the Pedigree Browser flag only the living animals
-      (status ALIVE) when no focal animals are entered (the exported `setPopulation()` stays), which moves every
-      default ranking, mean kinship and value count.
+- [ ] **With no focal animals the Pedigree Browser flags only the living animals, not every animal ever recorded
+      (owner ruled S954, 2026-10-10; READY, Effort M; strict TDD, a Pre-RED gate first)** -- today `setPopulation(ped,
+      character(0))` flags all 3,694 example animals (`R/modPedigree.R:357-366`), so Genetic Value ranks everyone ever
+      recorded and labels the 332 living animals 55 / 272 / 5 (High / Low / Undetermined); ranked among the living
+      they get 271 / 56 / 5 (216 Low become High, none the other way; real app, S954; S938's 56 / 271 is the same run
+      to within the random gene drop). **Ruling:** when `focalIds()` is empty use the living animals, by the internal
+      `isLivingAnimal()` (`R/isLivingAnimal.R:22`: `status` ALIVE, else no `exit`, else everyone); the exported
+      `setPopulation()` keeps "empty `ids` flags everyone". **Settle at Pre-RED:** a pedigree with no living animal
+      (fall back to everyone, as `R/modGeneticValue.R:306-310` does?). **Moves:** every default ranking, mean kinship
+      (median of the living 0.004 to 0.015), the founder metrics (`ped$population` in `calcFounderContributions.R:65`,
+      `calcFGSE.R:66`, `calcRetention.R:35`), the Breeding Groups floor group (61 living animals, S939, to about 270,
+      S938), the exported `population` column ("Breeding Colony Member"), and a snapshot made with no focal animals
+      (`R/modSnapshotTrends.R:173-177`: `wholePedigree` becomes `focalPopulation`, a separate series). **Words:** Focal
+      Animals help (`R/modPedigree.R:62-66`), comment `:363`, `_genetic_value_analysis.Rmd:96`, `_pedigree_browser.Rmd`,
+      guide `:322` and `:328-332`, NEWS.Rmd. **Tests:** `test_modPedigree_processing.R:46` and `:557` pin all-TRUE on
+      fixtures with no `status` or `exit`, so they stay green (RED needs a fixture with one); the guide chunk
+      `colony-manager-guide.qmd:483` should fail `test_guideExportTables.R:403` (check at RED); up to 12 guide pictures
+      (3 Genetic Value, 2 Summary Statistics, 6 Breeding Groups, 1 Genetic Diversity) predate it.
 
 - [ ] **Optional: three HTML-commented lines in `README.md` and the manual introduction say the package "is now
       managed and maintained as a joint effort between ONPRC" and SNPRC (found S953, 2026-10-10; DECISION NEEDED,
