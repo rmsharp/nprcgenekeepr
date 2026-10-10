@@ -442,7 +442,7 @@ stochastic gene-drop run, this article does not pin a specific row number to
 it -- widening "Show top N" (to 500 below) shows the full distribution
 instead.
 
-![Genetic Value Analysis with Show top N widened to 500: the results table now has 50 pages of 10 rows, and the first page is shown.](shiny_app_use/gva_high_and_low_value.png){fig-alt="Genetic Value Analysis tab with Show top N set to 500; the results table reads Showing 1 to 10 of 500 entries and its pager runs to page 50."}
+![Genetic Value Analysis with Show top N widened to 500: the results table now has 34 pages of 10 rows, and the first page is shown.](shiny_app_use/gva_high_and_low_value.png){fig-alt="Genetic Value Analysis tab with Show top N set to 500; the results table reads Showing 1 to 10 of 332 entries and its pager runs to page 34."}
 
 ### Summary Statistics
 
@@ -623,9 +623,9 @@ default **Number of simulations** is 10), the exact number and composition
 of groups formed varies from run to run rather than reproducing identically
 -- this particular run produced 6 groups, each drawn toward the target ratio
 where enough candidates of each sex were available, and a seventh box that
-lists the four animals that fit no group.
+lists the seven animals that fit no group.
 
-![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the four animals that fit no group; the exact group count and composition vary between runs."}
+![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the seven animals that fit no group; the exact group count and composition vary between runs."}
 
 That last box is not a group: it appears only when some candidates fit in no
 group, and it lists them. The **Groups** and **Statistics** sub-tabs head it
