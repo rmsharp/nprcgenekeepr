@@ -99,12 +99,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 957 Did
-**Deliverable:** the seven old-style `panel panel-*` boxes that show no color (six on the Home tab, one per breeding group): the owner's decision first (cards or plain), then the work
-it implies (`BACKLOG.md:8`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort M; strict TDD for any change) (IN PROGRESS)
-**Started:** 2026-10-10
-**Status:** Session claimed; PRE-RED declared. First steps: look at the boxes in the real app (the item was written from the stylesheet alone), count the pictures and tests that show
-them, then ask the owner cards or plain, with a side-by-side picture.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; a decision, so no code and no RED):** the seven old-style `panel panel-*` boxes (the Home tab's six,
+`R/appUI.R:98-158`, and one per breeding group, `R/modBreedingGroups.R:984-989`) **stay plain on purpose**. The owner ruled it from a before/after picture, taking the recommended option
+first try. `BACKLOG.md:8-20` is removed and the last-box item (`BACKLOG.md:36`) says the group boxes stay plain. Measured before asking (the item was written from the stylesheet alone):
+the Home boxes already carry colour on their buttons; 4 guide pictures show the boxes (`home_tab_landing.png`, `breeding_group_1.png`, `breeding_group_6_infants_with_dam.png`,
+`breeding_group_sex_ratio_specification.png`); 0 tests pin a `panel` class; the group-box cite was `:956` and is `:984`.
+**Gates:** claim `e7098f23d`; close-out = the commit carrying this note. **Verified:** ratchet 1/1; `test_handoffsReceiptPlacement.R` (the one test that reads `HANDOFFS.md`) passes; no
+`R/`, test or picture change, so no suite, lint or `devtools::check()` run. The before/after was a scratch mock (`scratchpad/s957/mock.R`, headless Chrome), not the app, and the app was
+not launched. Learning 923. Memory: `old-style-panel-boxes-stay-plain.md`.
+**Handoff evaluation of S956: 9/10.** Helped: the recommended order, every `BACKLOG.md` cite (9 of 9 held), the 99-commit count (matched `git rev-list`), the old-process pids. Missing:
+the item's own stale code cite and any picture or test counts (measured here).
+**Self-assessment: 8/10.** + measured before asking (found 4 pictures, 0 tests, a stale cite, coloured Home buttons); both looks drawn from one template; one plain-words question,
+answered first try; nothing beyond the ruling. - long silent runs (three nudges to say what I was doing); the "after" is a mock (spacing assumed), with no real-app run.
+**Next steps (recommended, not ruled on):** owner finding: `getAncestors()` (`BACKLOG.md:73`, DECISION NEEDED, S). Optional, S: joint-effort comment (`:52`), budget `HANDOFFS.md`
+(`:89`), last-box label (`:36`), "None of the 1 animals" (`:30`), Warnings picture (`:8`), pop-up item (`:17`). Docs-audit part 2 is `:203`; the 3.0.0 bump is `:102`. The owner's push
+(101 commits ahead once this lands, by `git rev-list`) changes `R/`, so CI will run: read it.
+**Key files:** `BACKLOG.md:36-50`; `R/appUI.R:98-158` and `R/modBreedingGroups.R:984-989` (unchanged); `PROJECT_LEARNINGS.md:2613` (Learning 923). **Gotchas:** a `git grep "panel
+panel-"` hit in `R/` is not a defect, the owner ruled it; removing a `BACKLOG.md` block shifts later cites by its length plus one (13 here, re-grepped); `open <png>` is how the owner
+sees an image; the five worktrees and four old processes (pids 29511, 82416, 92900, 89205) are alive and left alone; keep this file under about 56,700 B.
 
 ### Sessions 947-956 (condensed S950 to S957; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`

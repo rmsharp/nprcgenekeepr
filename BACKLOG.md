@@ -5,19 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Seven more old-style `panel panel-*` boxes still show no colour: 6 on the Home tab and one per
-      breeding group (found S936, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any change)** -- the
-      cause S936 found for the QC Summary boxes holds for every box written the old way: the app's theme is
-      Bootstrap 4 (`bslib::bs_theme(version = 4L, bootswatch = "flatly")`, `R/appUI.R:69`), whose compiled
-      stylesheet has 0 `.panel` rules and 113 `.card` rules (measured S936), so a `panel panel-primary`,
-      `-info`, `-success`, `-warning`, `-danger` or `-default` box shows no colour. S936 rewrote only the 3
-      QC Summary boxes, as cards, through the internal `qcSummaryBox()` (`R/qcSummaryBox.R`). **Left as
-      written:** the six workflow boxes on the Home tab (`R/appUI.R:98-158`; their picture is
-      `home_tab_landing.png`) and the group boxes in Breeding Groups (`R/modBreedingGroups.R:956`, one per
-      group, `panel panel-primary`). Not looked at in the real app, only from the stylesheet. **Decide when
-      picking it up:** give them cards too (the Home and Breeding Groups pages change, so the pictures that
-      show them go stale and need retaking, and the class-name tests move), or leave them plain on purpose.
-
 - [ ] **Optional: a guide picture of the Warnings sub-tab as the app opens it after a check (raised S936,
       2026-10-07; READY (optional), Effort S; docs and the capture script only)** -- the guide's paragraph on
       Read and Check Pedigree now says in words where the Errors and Warnings sub-tabs are and what the red
@@ -57,10 +44,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`:1041-1051`); the candidate table's Groups column counts the last box too (`:832-833`). Pick it up
       only if the owner wants the app to say "Unused animals" in all three places: the sex-ratio picture is
       retaken (the box shows in only some runs, so a retake can take several tries), the block "animals that
-      fit no group end in a last box" in that test file changes with it, and the group boxes are the old-style
-      `panel panel-primary` ones (`:8`), so the two could go together. **Declined by the owner at S950, do not
-      re-offer:** renaming the "Include kinship in display of groups" box, and making the Group Detail kinship
-      table follow it.
+      fit no group end in a last box" in that test file changes with it. The group boxes stay plain: the owner
+      ruled at S957 that the old-style `panel panel-primary` boxes (the Home tab's six and one per group) stay
+      as they are, so no card change rides along. **Declined by the owner at S950, do not re-offer:** renaming
+      the "Include kinship in display of groups" box, and making the Group Detail kinship table follow it.
 
 - [ ] **Optional: three HTML-commented lines in `README.md` and the manual introduction say the package "is now
       managed and maintained as a joint effort between ONPRC" and SNPRC (found S953, 2026-10-10; DECISION NEEDED,

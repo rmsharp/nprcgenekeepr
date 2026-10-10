@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S957
 date: 2026-10-10
-status: pending
-active_task: IN PROGRESS -- the seven old-style `panel panel-*` boxes that show no color (BACKLOG.md:8; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, cards or plain, then strict TDD for any change; PRE-RED declared)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the seven old-style `panel panel-*` boxes (the Home tab's six and one per breeding group) stay plain on purpose; the owner ruled it from a before/after picture, option 1 of 4 at the Phase 0 picker, recommended option, first try; a decision, so no code and no RED. BACKLOG.md:8-20 is removed.
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, CI green, dashboard 96/100 High+ risk 0, context budget under every ceiling, ratchet 1/1). Claim e7098f23d. Measured before asking: the Home boxes already carry colour on their buttons, 4 guide pictures show the boxes (home_tab_landing, breeding_group_1, breeding_group_6_infants_with_dam, breeding_group_sex_ratio_specification), 0 tests pin a panel class, the group-box cite was R/modBreedingGroups.R:956 and is :984. A scratch mock (before and after from one bslib flatly page, shot with chromote) was opened for the owner; the owner chose plain on purpose for both places. Close-out: BACKLOG.md item removed and the last-box item (BACKLOG.md:36) updated, Learning 923, memory old-style-panel-boxes-stay-plain, notes, this receipt, the ledger entry.
+next_steps: Recommended order (not ruled on; BACKLOG.md cites re-grepped after the removal). Owner finding: getAncestors() (BACKLOG.md:73, DECISION NEEDED, S). Optional, S: the hidden joint-effort comment (BACKLOG.md:52), budget HANDOFFS.md (BACKLOG.md:89), last-box label (BACKLOG.md:36), None of the 1 animals (BACKLOG.md:30), Warnings picture (BACKLOG.md:8), pop-up item (BACKLOG.md:17). Docs-audit part 2 is BACKLOG.md:203; the 3.0.0 bump is BACKLOG.md:102. After the owner pushes (101 commits ahead of origin/master once this close-out lands, counted by git rev-list): the push changes R/ and tests, so CI will run; read the runs.
+key_files: BACKLOG.md:36-50 (the updated last-box item); R/appUI.R:98-158 and R/modBreedingGroups.R:984-989 (unchanged, plain on purpose); vignettes/articles/shiny_app_use/home_tab_landing.png (unchanged); PROJECT_LEARNINGS.md:2613 (Learning 923); tests/testthat/test_handoffsReceiptPlacement.R:24 (the one test that reads HANDOFFS.md).
+gotchas: a git grep for panel panel- in R/ is not a defect, the owner ruled it (memory old-style-panel-boxes-stay-plain); BACKLOG.md removal shifts later cites by the block length plus one (13 here), so re-grep; an image the model Reads does not reach the owner, `open <png>` does; the before and after were a scratch mock outside the repo (the scratchpad goes with the session), not a run of the app; the five worktrees and four old processes (runGeneKeepR pids 29511, 82416, 92900 and an until loop, pid 89205) are still alive, left alone; keep SESSION_NOTES.md under about 56,700 B and every line under 280 B.
+runtime_smoke: n/a -- a decision with no R/, test, script or picture change; the app was not launched (the "before" was checked against the committed pictures, the "after" is a mock). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 06c3fda69cff · manifest aa983075d6a2
+changelog_ref: S957 DONE entry
+commit: the close-out commit that carries this receipt; claim e7098f23d
 ```
 
 ```handoff
