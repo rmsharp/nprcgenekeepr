@@ -34,20 +34,7 @@
 
 pkg_root <- testthat::test_path("..", "..")
 
-pageText <- function(..., unquote = FALSE) {
-  path <- file.path(pkg_root, ...)
-  skip_if_not(file.exists(path), paste(basename(path), "not present"))
-  lines <- readLines(path, warn = FALSE)
-  if (unquote) lines <- sub("^\\s*>\\s?", "", lines)
-  text <- paste(lines, collapse = " ")
-  text <- gsub("[`*_]", "", text)
-  gsub("\\s+", " ", text)
-}
-
-occurrences <- function(text, phrase) {
-  hits <- gregexpr(phrase, text, fixed = TRUE)[[1L]]
-  sum(hits > 0L)
-}
+## pageText(), occurrences() and expectWording() live in helper-pageText.R.
 
 primaryGoal <- "The primary goal of nprcgenekeepr is to implement"
 oldGoal <- "The goal of nprcgenekeepr is to implement"
@@ -67,12 +54,6 @@ expectPrimaryGoal <- function(text) {
 expectVersionOneGrants <- function(text, n) {
   expect_equal(occurrences(text, versionOneGrants), n)
   expect_equal(occurrences(text, oldGrants), 0L)
-}
-
-## Each phrase in `now` stands exactly once in `text`; each in `gone` nowhere.
-expectWording <- function(text, now, gone) {
-  for (phrase in now) expect_equal(occurrences(text, phrase), 1L, info = phrase)
-  for (phrase in gone) expect_equal(occurrences(text, phrase), 0L, info = phrase)
 }
 
 test_that("the guide's purpose section says the primary goal", {

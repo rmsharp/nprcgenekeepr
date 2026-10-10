@@ -26,28 +26,7 @@
 ## source tree, where the close-out suite runs. Emphasis marks (`, *, _), roxygen
 ## comment marks and line breaks do not count as a difference.
 
-pkg_root <- testthat::test_path("..", "..")
-
-pageText <- function(..., roxygen = FALSE) {
-  path <- file.path(pkg_root, ...)
-  skip_if_not(file.exists(path), paste(basename(path), "not present"))
-  lines <- readLines(path, warn = FALSE)
-  if (roxygen) lines <- sub("^#'\\s?", "", lines)
-  text <- paste(lines, collapse = " ")
-  text <- gsub("[`*_]", "", text)
-  gsub("\\s+", " ", text)
-}
-
-occurrences <- function(text, phrase) {
-  hits <- gregexpr(phrase, text, fixed = TRUE)[[1L]]
-  sum(hits > 0L)
-}
-
-## Each phrase in `now` stands exactly once in `text`; each in `gone` nowhere.
-expectWording <- function(text, now, gone) {
-  for (phrase in now) expect_equal(occurrences(text, phrase), 1L, info = phrase)
-  for (phrase in gone) expect_equal(occurrences(text, phrase), 0L, info = phrase)
-}
+## pageText(), occurrences() and expectWording() live in helper-pageText.R.
 
 guideText <- function() {
   pageText("vignettes", "articles", "colony-manager-guide.qmd")
