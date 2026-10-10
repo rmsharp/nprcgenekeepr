@@ -17,11 +17,10 @@
 ##  7. NEWS.Rmd and NEWS.md (a release-state entry), and the module's roxygen
 ##     and the man page generated from it.
 ##
-## The guide pictures that predate the change are the S956 retake (the
-## BACKLOG.md item "Retake the guide pictures"); the last two blocks pin the
-## numbers the widened Genetic Value picture's caption and alt text quote. The
-## Breeding Groups caption's "seven animals" is pinned in
-## test_guideBreedingGroupsWording.R.
+## The guide pictures that predate the change were retaken in S956 (the record
+## is in CHANGELOG.md); the last two blocks pin the numbers the widened Genetic
+## Value picture's caption and alt text quote. The Breeding Groups caption's
+## "seven animals" is pinned in test_guideBreedingGroupsWording.R.
 ##
 ## Every page read here sits outside a built package (.Rbuildignore'd or not
 ## installed), so each block skips where its file is absent and runs from the
