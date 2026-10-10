@@ -69,6 +69,12 @@ expectVersionOneGrants <- function(text, n) {
   expect_equal(occurrences(text, oldGrants), 0L)
 }
 
+## Each phrase in `now` stands exactly once in `text`; each in `gone` nowhere.
+expectWording <- function(text, now, gone) {
+  for (phrase in now) expect_equal(occurrences(text, phrase), 1L, info = phrase)
+  for (phrase in gone) expect_equal(occurrences(text, phrase), 0L, info = phrase)
+}
+
 test_that("the guide's purpose section says the primary goal", {
   guide <- pageText("vignettes", "articles", "colony-manager-guide.qmd")
   expectPrimaryGoal(guide)
@@ -128,17 +134,12 @@ initiallyDeveloped <- paste(
 )
 
 test_that("the About tab says the package was initially conceived and developed at ONPRC", {
-  about <- aboutPanelText()
-  expect_equal(occurrences(about, initiallyDeveloped), 1L)
-  expect_equal(
-    occurrences(about, "Developed at Oregon National Primate Research Center"),
-    0L)
+  expectWording(aboutPanelText(), initiallyDeveloped,
+                "Developed at Oregon National Primate Research Center")
 })
 
 test_that("the About tab's acknowledgment says version 1.0 and earlier", {
-  about <- aboutPanelText()
-  expect_equal(occurrences(about, versionOneGrants), 1L)
-  expect_equal(occurrences(about, "Funded by NIH grants"), 0L)
+  expectWording(aboutPanelText(), versionOneGrants, "Funded by NIH grants")
 })
 
 ## DESCRIPTION's funders, as utils::person() reads them.
@@ -171,18 +172,11 @@ test_that("DESCRIPTION lists each funder by centre, with the grant and version 1
 })
 
 test_that("the package help page, built from DESCRIPTION, lists the funders with version 1.0 and earlier", {
-  rd <- pageText("man", "nprcgenekeepr-package.Rd")
-  expect_equal(
-    occurrences(rd,
-                "NIH grant P51 RR13986, work up to and including version 1.0"),
-    1L)
-  expect_equal(
-    occurrences(rd,
-                "NIH grant P51 OD011092, work up to and including version 1.0"),
-    1L)
-  expect_equal(
-    occurrences(rd, "Southwest National Primate Research Center NIH grant"),
-    0L)
+  expectWording(
+    pageText("man", "nprcgenekeepr-package.Rd"),
+    c("NIH grant P51 RR13986, work up to and including version 1.0",
+      "NIH grant P51 OD011092, work up to and including version 1.0"),
+    "Southwest National Primate Research Center NIH grant")
 })
 
 ## The outreach plan: draft text for other centres, three spots.
@@ -190,44 +184,33 @@ planFile <- file.path("docs", "planning", "nprc-outreach-announcement-plan.md")
 planText <- function() pageText(planFile, unquote = TRUE)
 
 test_that("the outreach plan's opening note says version 1.0 was built at ONPRC", {
-  plan <- planText()
-  expect_equal(
-    occurrences(plan, paste(
-      "literally: version 1.0 was built at ONPRC with support in part from",
-      "NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092 (Oregon NPRC),",
-      "and it operationalizes")),
-    1L)
-  expect_equal(occurrences(plan, "built at ONPRC, funded in part by NIH grants"),
-               0L)
+  expectWording(
+    planText(),
+    paste("literally: version 1.0 was built at ONPRC with support in part from",
+          "NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092",
+          "(Oregon NPRC), and it operationalizes"),
+    "built at ONPRC, funded in part by NIH grants")
 })
 
 test_that("the outreach plan's announcement text says version 1.0 and earlier", {
-  plan <- planText()
-  expect_equal(
-    occurrences(plan, paste(
-      "The package grew out of work at the Oregon National Primate Research",
-      "Center. Work on it up to and including version 1.0 was supported in",
-      "part by NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092",
-      "(Oregon NPRC).")),
-    1L)
-  expect_equal(
-    occurrences(plan, "Research Center and is supported in part by NIH grants"),
-    0L)
+  expectWording(
+    planText(),
+    paste("The package grew out of work at the Oregon National Primate",
+          "Research Center. Work on it up to and including version 1.0 was",
+          "supported in part by NIH grants P51 RR13986 (Southwest NPRC) and",
+          "P51 OD011092 (Oregon NPRC)."),
+    "Research Center and is supported in part by NIH grants")
 })
 
 test_that("the outreach plan's one-page summary says version 1.0 and earlier", {
-  plan <- planText()
-  expect_equal(
-    occurrences(plan, paste(
-      "Initially built at the Oregon National Primate Research Center; work up",
-      "to and including version 1.0 was supported in part by NIH grants",
-      "P51 RR13986 (Southwest NPRC) and P51 OD011092 (Oregon NPRC).")),
-    1L)
-  expect_equal(
-    occurrences(plan, paste(
-      "Built at the Oregon National Primate Research Center; supported in",
-      "part by NIH grants")),
-    0L)
+  expectWording(
+    planText(),
+    paste("Initially built at the Oregon National Primate Research Center;",
+          "work up to and including version 1.0 was supported in part by",
+          "NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092",
+          "(Oregon NPRC)."),
+    paste("Built at the Oregon National Primate Research Center; supported",
+          "in part by NIH grants"))
 })
 
 ## The sweep (owner request, S953): every live page that names a grant number
