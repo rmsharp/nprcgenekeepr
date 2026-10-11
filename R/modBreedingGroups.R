@@ -679,8 +679,13 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           noGroupsResult
         } else if (length(rawPool) == 0L) {
           showNotification(
-            paste0("None of the ", poolSize, " animals in this source is ",
-                   "alive, so no breeding groups were formed."),
+            if (poolSize == 1L) {
+              paste0("The 1 animal in this source is not alive, so no ",
+                     "breeding groups were formed.")
+            } else {
+              paste0("None of the ", poolSize, " animals in this source is ",
+                     "alive, so no breeding groups were formed.")
+            },
             type = "error",
             duration = 10L
           )
@@ -985,7 +990,8 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         nAnimals <- length(groupIds)
         div(class = "panel panel-primary",
             div(class = "panel-heading",
-                h4(sprintf("%s (%d animals)", labels[i], nAnimals))),
+                h4(sprintf("%s (%d %s)", labels[i], nAnimals,
+                           if (nAnimals == 1L) "animal" else "animals"))),
             div(class = "panel-body",
                 DT::DTOutput(session$ns(paste0("groupTable", i))))
         )
