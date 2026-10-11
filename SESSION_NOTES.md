@@ -98,24 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 960 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; housekeeping, no `R/` or test change, so no TDD gates):** `CHANGELOG.md` is trimmed, 200,518 B to 33,981 B: 135 of 156
-records (2026-10-04 to 2026-10-09) are in `docs/archive/CHANGELOG-through-2026-10-09.md` (168,387 B). It was 199,593 B after S959's close-out, 2,985 B past the 196,608 B archive line; not a `BACKLOG.md` item.
-**Gates:** claim `d79290f13` (carries its own `CHANGELOG.md` entry, so the trimmer's P1_UNDOCUMENTED gate was clear); trim `6f6f669fd` (ledger, shard, verify script; its dry run printed no SRF
-refusal, 0.7508 vs the last archive, so no `--force`); close-out = the commit carrying this note. **Verified:** the verify script passes before and after the commit; the dashboard's MEDIUM flag is
-gone (96/100, High+ 0); full suite 3,410 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, as S959); the 5 test files that read ledgers pass; ratchet 1/1. No lint (no `.R` file); app not launched.
-**Handoff evaluation of S959: 9/10.** Helped: all 7 `BACKLOG.md` cites held (`:8 :17 :30 :36 :52 :65 :73`, text at `:166`), the 111-commit count matched `git rev-list`, every key-file cite held.
-Missing: that its own entry would take `CHANGELOG.md` past the archive line. Wrong: its entry and its receipt cite different ratchet hashes (`7f9b93f92c7d`, `407c0091252c`); counts agree.
-**Self-assessment: 8/10.** + the S951 recipe followed, readers of the ledger checked before committing, trim apart from close-out. - three silent stretches (three nudges); a scripted splice misplaced
-S959's lines in this file (caught on re-read); I guessed Learning 922 for the trim learning before grepping (917). Learning 926 (`PROJECT_LEARNINGS.md:2622`).
-**Next steps (recommended, not ruled on):** Optional, S: budget `HANDOFFS.md` and `CHANGELOG.md` (`BACKLOG.md:52`, DECISION NEEDED, the two byte numbers), last-box label (`:36`), "None of the 1
-animals" (`:30`), Warnings picture (`:8`), pop-up item (`:17`). Docs-audit part 2 is the item at `:73` (text `:166`); the 3.0.0 bump is `:65`. 114 commits ahead of `origin/master` once this lands
-(by `git rev-list`); the owner's push changes `R/`, so CI will run: read it. **Estimates:** the next `HANDOFFS.md` trim in about 28 sessions, `CHANGELOG.md` in about 60.
-**Key files:** `docs/archive/CHANGELOG-through-2026-10-09.md.verify.sh`; `BACKLOG.md:52-63`; `PROJECT_LEARNINGS.md:2622`. **Gotchas:** the trimmer neither stages nor commits (`git add` the ledger, the shard and its
-verify script); the claim commit needs its own `CHANGELOG.md` entry first; commit a trim apart from the close-out; each `quality_ratchet.py --run` prints a new results hash, so cite the last run only; the
-four old processes (pids 29511, 82416, 92900, 89205) are alive and left alone; keep this file under about 56,700 B and every line under 280 B.
+### What Session 961 Did
+**Deliverable:** the Breeding Groups last box (the animals that fit no group) gets one name in the app (`BACKLOG.md:36`; strict TDD; PRE-RED declared) (IN PROGRESS)
+**Started:** 2026-10-11 (owner pick at the Phase 0 picker, option 2 of 4)
+**Status:** Session claimed. Next: re-read `R/modBreedingGroups.R:832-833,984-986,1013-1025,1041-1051`, then one plain scope question to the owner before RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
+**S960 (DONE, folded below):** `CHANGELOG.md` trimmed, 200,518 B to 33,981 B; evaluation of S959 9/10, self 8/10; Learning 926 (`PROJECT_LEARNINGS.md:2622`).
 
-### Sessions 947-959 (condensed S950 to S960; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-960 (condensed S950 to S961; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -125,12 +115,16 @@ S956: the 21 guide pictures that predate that change are retaken and four senten
 S957: a decision, no code: the seven old-style `panel panel-*` boxes (the Home tab's six, `R/appUI.R:98-158`, and one per breeding group, `R/modBreedingGroups.R:984-989`)
 stay plain on purpose (the owner ruled from a before/after picture; `BACKLOG.md:8-20` removed; evaluation of S956 9/10, self 8/10).
 S958: `getAncestors()` carries on when a parent has no row of its own in the tree and stops with a message naming an asked-about animal that is not in it
-(`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`; strict TDD; `BACKLOG.md:73-87` removed; evaluation of S957 9/10, self 8/10). Hashes and scores for S947-S959 are in
+(`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`; strict TDD; `BACKLOG.md:73-87` removed; evaluation of S957 9/10, self 8/10). Hashes and scores for S947-S960 are in
 `CHANGELOG.md` and `HANDOFFS.md`.
 S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are deleted from the manual introduction and the knitted README; a guard block in
 `test_originFundingWording.R` keeps any live page from saying it (strict TDD, REFACTOR taken; evaluation of S958 9/10, self 8/10).
+S960: `CHANGELOG.md` trimmed, 200,518 B to 33,981 B (135 of 156 records in `docs/archive/CHANGELOG-through-2026-10-09.md`; housekeeping, no TDD gates;
+evaluation of S959 9/10, self 8/10). Estimates: the next `HANDOFFS.md` trim in about 28 sessions, `CHANGELOG.md` in about 60.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
+**Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
+results hash, so cite the last run only.
 **Gotchas kept (S959):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a
 scratch-installed HEAD (two render-date lines change).
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder

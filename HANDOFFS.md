@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S961
+date: 2026-10-11
+status: pending
+active_task: IN PROGRESS -- the Breeding Groups last box (the animals that fit no group) gets one name in the app (BACKLOG.md:36; owner pick at the Phase 0 picker, option 2 of 4; READY (optional), Effort S; strict TDD, a displayed-text change; PRE-RED declared, scope question to the owner first)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S960
 date: 2026-10-10
 status: complete
