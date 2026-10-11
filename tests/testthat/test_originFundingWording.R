@@ -239,3 +239,21 @@ test_that("every live page that names a grant number says version 1.0 and earlie
   expect_gte(length(withGrants), 9L)
   expect_equal(unscoped, character(0L))
 })
+
+## S959 (BACKLOG.md:52, decided S959): three HTML-commented lines in the manual
+## introduction, knitted into README.md, said the package "is now managed and
+## maintained as a joint effort between ONPRC and Southwest National Primate
+## Research Center (SNPRC) with the coding being done by R. Mark Sharp". No
+## reader sees them, but they claim who runs the package today; the owner ruled
+## them deleted. Every live page is scanned, so a copy cannot return on another.
+test_that("no live page says the package is now managed as a joint effort", {
+  skip_if_not(dir.exists(file.path(pkg_root, "vignettes")),
+              "source tree not present")
+  pages <- livePages()
+  introduction <- file.path("vignettes", "manual_components", "_introduction.Rmd")
+  expect_true(all(c("README.md", introduction) %in% pages))
+  claim <- "managed and maintained as a joint effort"
+  claimants <- Filter(function(page) occurrences(pageText(page), claim) > 0L,
+                      pages)
+  expect_equal(claimants, character(0L))
+})
