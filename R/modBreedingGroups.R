@@ -978,12 +978,17 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       req(breedingGroups())
       ped <- pedigree()
 
+      lastIsUnused <- isTRUE(selectedCandidate()$hasUnused)
       groupsList <- lapply(seq_along(breedingGroups()), function(i) {
         groupIds <- breedingGroups()[[i]]
         nAnimals <- length(groupIds)
+        heading <- if (lastIsUnused && i == length(breedingGroups())) {
+          sprintf("Unused animals (%d animals)", nAnimals)
+        } else {
+          sprintf("Group %d (%d animals)", i, nAnimals)
+        }
         div(class = "panel panel-primary",
-            div(class = "panel-heading",
-                h4(sprintf("Group %d (%d animals)", i, nAnimals))),
+            div(class = "panel-heading", h4(heading)),
             div(class = "panel-body",
                 DT::DTOutput(session$ns(paste0("groupTable", i))))
         )
@@ -1010,11 +1015,16 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       req(breedingGroups())
       ped <- pedigree()
 
+      lastIsUnused <- isTRUE(selectedCandidate()$hasUnused)
       stats <- lapply(seq_along(breedingGroups()), function(i) {
         groupIds <- breedingGroups()[[i]]
         sexes <- ped$sex[ped$id %in% groupIds]
         data.frame(
-          Group = i,
+          Group = if (lastIsUnused && i == length(breedingGroups())) {
+            "Unused animals"
+          } else {
+            i
+          },
           Total = length(groupIds),
           Males = sum(sexes == sexCodes[["male"]], na.rm = TRUE),
           Females = sum(sexes == sexCodes[["female"]], na.rm = TRUE),
@@ -1037,13 +1047,13 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
     # Populate the group selector when groups are (re)formed. When a non-empty
     # group of unused animals is present it is the last element, labelled
-    # "Unused"; otherwise every element is labelled "Group i".
+    # "Unused animals"; otherwise every element is labelled "Group i".
     observe({
       n <- length(breedingGroups())
       req(n >= 1L)
       labels <- paste("Group", seq_len(n))
       if (isTRUE(selectedCandidate()$hasUnused)) {
-        labels[n] <- "Unused"
+        labels[n] <- "Unused animals"
       }
       updateSelectInput(session, "viewGrp",
                         choices = stats::setNames(seq_len(n), labels),
