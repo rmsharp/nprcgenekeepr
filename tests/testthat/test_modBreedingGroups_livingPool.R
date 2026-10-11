@@ -104,6 +104,13 @@ lpPed <- function() {
 }
 lpLiving <- paste0("A", 1:8)
 
+# The pedigree with every animal given the one Status value named.
+lpWithStatus <- function(ped, value) {
+  ped$status <- factor(rep(value, nrow(ped)),
+                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  ped
+}
+
 # The ids that reached groupAddAssign(), run once with the given inputs.
 lpCandidates <- function(ped, geneticValues = NULL, ...) {
   out <- NULL
@@ -258,9 +265,7 @@ lpNotices <- function(ped, env = parent.frame()) {
 test_that("with nobody alive the tab says so and forms no groups", {
   skip_on_cran()
 
-  ped <- lpPed()
-  ped$status <- factor(rep("DECEASED", 14L),
-                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  ped <- lpWithStatus(lpPed(), "DECEASED")
   rec <- lpNotices(ped)
 
   got <- lpCandidates(ped, animalSource = "all")
@@ -278,9 +283,7 @@ test_that("a blank Status column means nobody is alive, whatever the exit date",
 
   # Status wins over the exit date at the module level too: a file whose
   # Status is all UNKNOWN has no living animal, even though no exit date is set.
-  ped <- lpPed()
-  ped$status <- factor(rep("UNKNOWN", 14L),
-                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  ped <- lpWithStatus(lpPed(), "UNKNOWN")
   ped$exit <- as.Date(NA)
   rec <- lpNotices(ped)
 
@@ -297,9 +300,7 @@ test_that("with one animal in the source, and it not alive, the notice says so i
   # S962 (BACKLOG.md:30): the notice said "None of the 1 animals in this source
   # is alive". A source of exactly one animal gets its own sentence; a source
   # of two or more keeps the plural one (next block).
-  ped <- lpPed()[1L, ]
-  ped$status <- factor("DECEASED",
-                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  ped <- lpWithStatus(lpPed()[1L, ], "DECEASED")
   rec <- lpNotices(ped)
 
   got <- lpCandidates(ped, animalSource = "all")
@@ -317,9 +318,7 @@ test_that("with several animals in the source, none alive, the notice keeps its 
 
   # Green-at-HEAD coverage (NOT a RED): the S962 singular sentence must leave
   # the plural one word for word as it was.
-  ped <- lpPed()
-  ped$status <- factor(rep("DECEASED", 14L),
-                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  ped <- lpWithStatus(lpPed(), "DECEASED")
   rec <- lpNotices(ped)
 
   lpCandidates(ped, animalSource = "all")

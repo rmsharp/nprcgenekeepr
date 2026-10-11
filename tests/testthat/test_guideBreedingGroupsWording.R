@@ -133,9 +133,14 @@ tableCells <- function(html, nCol) {
   matrix(trimws(gsub("<[^>]+>", "", cells)), ncol = nCol, byrow = TRUE)
 }
 
+# The text of the Groups tab's boxes, tags dropped, white space collapsed.
+groupsText <- function(html) {
+  gsub("\\s+", " ", gsub("<[^>]+>", " ", html))
+}
+
 # The numbers in the Groups tab's headings "Group N (M animals)".
 groupHeadings <- function(html) {
-  text <- gsub("\\s+", " ", gsub("<[^>]+>", " ", html))
+  text <- groupsText(html)
   found <- regmatches(
     text, gregexpr("Group [0-9]+ \\([0-9]+ animals\\)", text)
   )[[1L]]
@@ -218,7 +223,7 @@ test_that("animals that fit no group end in a last box named Unused animals", {
   expect_equal(headings$n, 1:2)
   expect_equal(headings$animals, lengths(r$groups[1:2]))
   expect_match(
-    gsub("\\s+", " ", gsub("<[^>]+>", " ", r$groupsHtml)),
+    groupsText(r$groupsHtml),
     sprintf("Unused animals \\(%d animals\\)", length(leftover))
   )
   expect_false(grepl("Group 3", r$groupsHtml, fixed = TRUE))
@@ -259,11 +264,6 @@ test_that("when every animal fits a group there is no last box", {
 })
 
 # ---- one animal in a box: "(1 animal)", not "(1 animals)" (S962) ---------
-
-# The text of the Groups tab's boxes, tags dropped, white space collapsed.
-groupsText <- function(html) {
-  gsub("\\s+", " ", gsub("<[^>]+>", " ", html))
-}
 
 test_that("a last box of one animal is headed (1 animal), not (1 animals)", {
   skip_if_not_installed("shiny")
