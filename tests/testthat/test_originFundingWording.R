@@ -36,6 +36,10 @@ pkg_root <- testthat::test_path("..", "..")
 
 ## pageText(), occurrences() and expectWording() live in helper-pageText.R.
 
+## The manual introduction, which README.md is knitted from.
+introductionFile <- file.path("vignettes", "manual_components",
+                              "_introduction.Rmd")
+
 primaryGoal <- "The primary goal of nprcgenekeepr is to implement"
 oldGoal <- "The goal of nprcgenekeepr is to implement"
 
@@ -65,8 +69,7 @@ test_that("the guide's purpose section says the primary goal", {
 })
 
 test_that("the manual introduction says the primary goal", {
-  expectPrimaryGoal(pageText("vignettes", "manual_components",
-                             "_introduction.Rmd"))
+  expectPrimaryGoal(pageText(introductionFile))
 })
 
 test_that("README.md says the primary goal", {
@@ -85,8 +88,7 @@ test_that("the engineering article's acknowledgment says version 1.0 and earlier
 })
 
 test_that("the manual introduction's acknowledgment says version 1.0 and earlier", {
-  expectVersionOneGrants(
-    pageText("vignettes", "manual_components", "_introduction.Rmd"), 1L)
+  expectVersionOneGrants(pageText(introductionFile), 1L)
 })
 
 test_that("README.md's acknowledgment says version 1.0 and earlier", {
@@ -250,8 +252,7 @@ test_that("no live page says the package is now managed as a joint effort", {
   skip_if_not(dir.exists(file.path(pkg_root, "vignettes")),
               "source tree not present")
   pages <- livePages()
-  introduction <- file.path("vignettes", "manual_components", "_introduction.Rmd")
-  expect_true(all(c("README.md", introduction) %in% pages))
+  expect_true(all(c("README.md", introductionFile) %in% pages))
   claim <- "managed and maintained as a joint effort"
   claimants <- Filter(function(page) occurrences(pageText(page), claim) > 0L,
                       pages)
