@@ -60,7 +60,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       trimmer's 196,608 B archive line) would make `context_budget.py` warn and the pre-commit hook refuse
       growth past the limit. **Decide when picking it up:** the two numbers (an estimate, not a measurement: at
       the recent 3.9 to 5.3 KB per receipt the warn line is about 36 sessions away and the limit about 50), and
-      whether `CHANGELOG.md` (175,694 B at S951, a LOW flag on the dashboard) gets the same entry.
+      whether `CHANGELOG.md` gets the same entry (it crossed the 196,608 B line at S959; S960 trimmed it).
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the

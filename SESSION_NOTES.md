@@ -99,11 +99,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 960 Did
-**Deliverable:** trim `CHANGELOG.md` (199,593 B, 2,985 B past the 196,608 B archive line; the dashboard's MEDIUM flag; not a `BACKLOG.md` item) with `methodology_trim.py` (IN PROGRESS)
-**Started:** 2026-10-10 (owner pick at the Phase 0 picker, option 1 of 4)
-**Status:** Session claimed. No `R/` or test change, so no TDD gates. Plan: dry run, then `--write --budget-bytes 65536` with no `--force` if no SRF refusal, then the verify script.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
-**S959 (DONE, folded below):** the joint-effort comment lines deleted (`BACKLOG.md:52-72` removed); evaluation of S958 9/10, self 8/10; Learning 925 (`PROJECT_LEARNINGS.md:2619`).
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; housekeeping, no `R/` or test change, so no TDD gates):** `CHANGELOG.md` is trimmed, 200,518 B to 33,981 B: 135 of 156
+records (2026-10-04 to 2026-10-09) are in `docs/archive/CHANGELOG-through-2026-10-09.md` (168,387 B). It was 199,593 B after S959's close-out, 2,985 B past the 196,608 B archive line; not a `BACKLOG.md` item.
+**Gates:** claim `d79290f13` (carries its own `CHANGELOG.md` entry, so the trimmer's P1_UNDOCUMENTED gate was clear); trim `6f6f669fd` (ledger, shard, verify script; its dry run printed no SRF
+refusal, 0.7508 vs the last archive, so no `--force`); close-out = the commit carrying this note. **Verified:** the verify script passes before and after the commit; the dashboard's MEDIUM flag is
+gone (96/100, High+ 0); full suite 3,410 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, as S959); the 5 test files that read ledgers pass; ratchet 1/1. No lint (no `.R` file); app not launched.
+**Handoff evaluation of S959: 9/10.** Helped: all 7 `BACKLOG.md` cites held (`:8 :17 :30 :36 :52 :65 :73`, text at `:166`), the 111-commit count matched `git rev-list`, every key-file cite held.
+Missing: that its own entry would take `CHANGELOG.md` past the archive line. Wrong: its entry and its receipt cite different ratchet hashes (`7f9b93f92c7d`, `407c0091252c`); counts agree.
+**Self-assessment: 8/10.** + the S951 recipe followed, readers of the ledger checked before committing, trim apart from close-out. - three silent stretches (three nudges); a scripted splice misplaced
+S959's lines in this file (caught on re-read); I guessed Learning 922 for the trim learning before grepping (917). Learning 926 (`PROJECT_LEARNINGS.md:2622`).
+**Next steps (recommended, not ruled on):** Optional, S: budget `HANDOFFS.md` and `CHANGELOG.md` (`BACKLOG.md:52`, DECISION NEEDED, the two byte numbers), last-box label (`:36`), "None of the 1
+animals" (`:30`), Warnings picture (`:8`), pop-up item (`:17`). Docs-audit part 2 is the item at `:73` (text `:166`); the 3.0.0 bump is `:65`. 114 commits ahead of `origin/master` once this lands
+(by `git rev-list`); the owner's push changes `R/`, so CI will run: read it. **Estimates:** the next `HANDOFFS.md` trim in about 28 sessions, `CHANGELOG.md` in about 60.
+**Key files:** `docs/archive/CHANGELOG-through-2026-10-09.md.verify.sh`; `BACKLOG.md:52-63`; `PROJECT_LEARNINGS.md:2622`. **Gotchas:** the trimmer neither stages nor commits (`git add` the ledger, the shard and its
+verify script); the claim commit needs its own `CHANGELOG.md` entry first; commit a trim apart from the close-out; each `quality_ratchet.py --run` prints a new results hash, so cite the last run only; the
+four old processes (pids 29511, 82416, 92900, 89205) are alive and left alone; keep this file under about 56,700 B and every line under 280 B.
 
 ### Sessions 947-959 (condensed S950 to S960; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`

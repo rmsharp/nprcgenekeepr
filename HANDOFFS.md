@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S960
 date: 2026-10-10
-status: pending
-active_task: IN PROGRESS -- trim `CHANGELOG.md` with `methodology_trim.py` (199,593 B, 2,985 B past the 196,608 B archive line; the dashboard's MEDIUM flag; not a BACKLOG.md item; owner pick at the Phase 0 picker, option 1 of 4). No R/ or test change, so no TDD gates.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- CHANGELOG.md trimmed with methodology_trim.py, 200,518 B to 33,981 B (owner pick at the Phase 0 picker, option 1 of 4; housekeeping, not a BACKLOG.md item; no R/ or test change, so no TDD gates). 135 of 156 records (2026-10-04 to 2026-10-09) are in docs/archive/CHANGELOG-through-2026-10-09.md.
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, CI 10 of 10 green but pushes only up to S939, dashboard 96/100 with a MEDIUM CHANGELOG.md flag, context budget under every ceiling, ratchet 1/1). Claim d79290f13 (carries its own CHANGELOG.md entry, so the trimmer's P1_UNDOCUMENTED gate was clear). Dry run: trigger fires, SRF 0.7508 vs the last archive f4b181c and 0.1906 vs the largest-drop boundary, no refusal, L1/L2/L3 OK, so --write --budget-bytes 65536 ran with no --force; 135 of 156 records archived, shard 168,387 B, 21 kept plus the tool's own entry. Trim commit 6f6f669fd (ledger, shard, verify script), apart from the close-out; the verify script passes before and after it. Readers checked: no test reads CHANGELOG.md content, the new shard is covered by docs/** and ^docs$, 5 ledger-reading test files pass. Verified: full suite 3,410 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, as S959); dashboard MEDIUM flag gone, High+ 0. BACKLOG.md:63 updated (CHANGELOG.md crossed the line at S959, S960 trimmed it). Learning 926.
+next_steps: Recommended order (not ruled on; BACKLOG.md cites re-grepped after the edit, none moved). Optional, S: budget HANDOFFS.md and CHANGELOG.md (BACKLOG.md:52, DECISION NEEDED, the two byte numbers), last-box label (BACKLOG.md:36), None of the 1 animals (BACKLOG.md:30), Warnings picture (BACKLOG.md:8), pop-up item (BACKLOG.md:17). Docs-audit part 2 is inside the item at BACKLOG.md:73 (text at :166); the 3.0.0 bump is BACKLOG.md:65. 114 commits ahead of origin/master once this lands (git rev-list); the owner's push changes R/, so CI will run: read it. Estimates, not measurements: the next HANDOFFS.md trim in about 28 sessions, CHANGELOG.md in about 60.
+key_files: docs/archive/CHANGELOG-through-2026-10-09.md and its .verify.sh; CHANGELOG.md:75-81 (the tool's own entry); BACKLOG.md:52-63 (the budget item, now naming CHANGELOG.md's crossing); PROJECT_LEARNINGS.md:2622 (Learning 926); tests/testthat/test_workflowPathsIgnore.R:41 (one old shard listed as a sample).
+gotchas: the trimmer neither stages nor commits (git add the ledger, the shard and its verify script, three files); the claim commit needs its own CHANGELOG.md entry before --write (Learning 545); commit a trim apart from the close-out so the verify script passes; each quality_ratchet.py --run prints a new results hash (S959 cited two), so cite only the last run; old CHANGELOG.md:NNNN cites in four frozen docs/planning files were already dead; SESSION_NOTES.md is 56,679 B, under about 56,700, so the next stub must fold the S960 entry the way S960 folded S959; the four old processes (pids 29511, 82416, 92900, 89205) are alive and left alone.
+runtime_smoke: n/a -- no R/ change (ledger and notes files only), so the app was not launched; the unfiltered full suite ran from the source tree. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results c7cb9c5626e1 · manifest aa983075d6a2
+changelog_ref: S960 DONE entry
+commit: the close-out commit that carries this receipt; claim d79290f13, trim 6f6f669fd
 ```
 
 ```handoff
