@@ -1,11 +1,11 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2026-10-09
+2026-10-10
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 2.0.0.9000 (2026-10-10)
+Version 2.0.0.9000 (2026-10-11)
 
 <!-- badges: start -->
 
@@ -39,12 +39,6 @@ Work on this package up to and including version 1.0 was supported in
 part by NIH grants P51 RR13986 to the Southwest National Primate
 Research Center and P51 OD011092 to the Oregon National Primate Research
 Center.
-
-<!--It is now managed and maintained as a joint effort between ONPRC-->
-
-<!--and Southwest National Primate Research Center (SNPRC) with the -->
-
-<!--coding being done by R. Mark Sharp, Ph.D.-->
 
 The application’s main functions include:
 
