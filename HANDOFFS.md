@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S960
+date: 2026-10-10
+status: pending
+active_task: IN PROGRESS -- trim `CHANGELOG.md` with `methodology_trim.py` (199,593 B, 2,985 B past the 196,608 B archive line; the dashboard's MEDIUM flag; not a BACKLOG.md item; owner pick at the Phase 0 picker, option 1 of 4). No R/ or test change, so no TDD gates.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S959
 date: 2026-10-10
 status: complete
