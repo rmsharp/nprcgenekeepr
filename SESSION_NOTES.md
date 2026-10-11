@@ -98,24 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 961 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 2 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the Breeding Groups last box (the animals that fit no group) is named "Unused animals"
-on the Groups heading, the Statistics row and the Group Detail selector (`R/modBreedingGroups.R:981-989,1017-1025,1049`). The owner chose "three labels only": the candidate table's Groups count and the `Group-N.csv` names stay.
-Measured before asking: 3 of the 7 guide pictures show the box (the item said 1). `BACKLOG.md:36-51` is removed (later cites move up 13); the old "(1 animals)" plural went into `:30`.
-**Gates:** claim `75910467f`; RED `f0552138a` (2 of 11 blocks fail); GREEN `854561b68` (11 of 11); RED `8b2a6b34a` (the retaken box holds six animals, the guide said seven); GREEN `04e7f7d21` (3 pictures retaken, "six");
-REFACTOR `0a7013150` (one internal `breedingGroupLabels()`, `R/breedingGroupLabels.R:20`; the guard re-proved by breaking it); close-out = the commit carrying this note.
-**Verified:** full suite 3,410 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet 1/1; the guide's capture script drove the real app twice (85 of 85 each, the second after the REFACTOR). One `NEWS.Rmd` line.
-**Handoff evaluation of S960: 9/10.** Helped: all 8 `BACKLOG.md` cites held (`:8 :17 :30 :36 :52 :65 :73`, text `:166`), the 114-commit count matched
-`git rev-list`, the trimmer and notes-size gotchas were true. Missing: nothing found. Wrong: it said four old pids are alive; `89205` is gone.
-**Self-assessment: 8/10.** + measured the pictures and the code's places before asking; one plain scope question with a side-by-side table, answered first try; every gate asked; the guard re-proved; the real app run twice. - several silent stretches (nudged);
-`\.` in `Rscript -e` and a zsh `=====` echo failed again; the suite ran before the NEWS edit, so I re-ran the doc-reading tests after.
-**Next steps (recommended, not ruled on):** Optional, S: budget `HANDOFFS.md` (`BACKLOG.md:39`, DECISION NEEDED), "None of the 1 animals" plus the "(1 animals)" plural (`:30`), Warnings picture (`:8`), pop-up item (`:17`).
-Docs-audit part 2 is the item at `:60` (text `:153`); the 3.0.0 bump is `:52`. 122 commits ahead of `origin/master` once this lands; the owner's push adds `R/breedingGroupLabels.R`, so CI will run: read it.
-**Key files:** `R/breedingGroupLabels.R:20`; `tests/testthat/test_guideBreedingGroupsWording.R:203-228,304-330`; `colony-manager-guide.qmd:626-633`; `PROJECT_LEARNINGS.md:2625` (Learning 927). **Gotchas:** the candidate Groups count and the file names
-are ruled, do not re-offer; selector values stay numbers; a capture run decides the box's count, so the caption pin follows the picture; three old `runGeneKeepR` pids (29511, 82416, 92900) are alive and left alone;
-keep this file under about 56,700 B and every line under 280 B.
+### What Session 962 Did
+**Deliverable:** the Breeding Groups "1 animals" plural reads "1 animal" in the nobody-is-alive notice and the box headings (`BACKLOG.md:30`; strict TDD; PRE-RED declared) (IN PROGRESS)
+**Started:** 2026-10-11 09:04 CDT (owner pick at the Phase 0 picker, option 1 of 4)
+**Status:** Session claimed. Next: re-read `R/modBreedingGroups.R` (the `length(rawPool) == 0L` notice, the heading `sprintf` near `:988`), then show one proposed sentence per place and ask at most one question before RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
+**S961 (DONE, folded below):** the last box is named "Unused animals"; evaluation of S960 9/10, self 8/10; Learning 927 (`PROJECT_LEARNINGS.md:2625`).
 
-### Sessions 947-960 (condensed S950 to S961; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-961 (condensed S950 to S962; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -131,6 +121,9 @@ S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are 
 `test_originFundingWording.R` keeps any live page from saying it (strict TDD, REFACTOR taken; evaluation of S958 9/10, self 8/10).
 S960: `CHANGELOG.md` trimmed, 200,518 B to 33,981 B (135 of 156 records in `docs/archive/CHANGELOG-through-2026-10-09.md`; housekeeping, no TDD gates;
 evaluation of S959 9/10, self 8/10). Estimates: the next `HANDOFFS.md` trim in about 28 sessions, `CHANGELOG.md` in about 60.
+S961: the Breeding Groups last box is named "Unused animals" on the Groups heading, the Statistics row and the Group Detail selector (one internal `breedingGroupLabels()`,
+`R/breedingGroupLabels.R:20`; three guide pictures retaken; strict TDD, REFACTOR taken; claim `75910467f`, RED `f0552138a` and `8b2a6b34a`, GREEN `854561b68` and `04e7f7d21`,
+REFACTOR `0a7013150`; evaluation of S960 9/10, self 8/10). The candidate table's Groups count and the `Group-N.csv` names stay, by ruling.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
