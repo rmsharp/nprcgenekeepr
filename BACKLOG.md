@@ -49,27 +49,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       as they are, so no card change rides along. **Declined by the owner at S950, do not re-offer:** renaming
       the "Include kinship in display of groups" box, and making the Group Detail kinship table follow it.
 
-- [ ] **Optional: three HTML-commented lines in `README.md` and the manual introduction say the package "is now
-      managed and maintained as a joint effort between ONPRC" and SNPRC (found S953, 2026-10-10; DECISION NEEDED,
-      Effort S; docs only, no test reads them)** -- S953 swept every tracked page for NIH, grant, funding and
-      origin wording at the owner's request: every live page now limits the NIH grants to version 1.0 and earlier,
-      and `test_originFundingWording.R` (block "every live page that names a grant number", 611 pages, 9 of them
-      hold the numbers) keeps it so. The sweep found one thing that is not about funding and left it: the three
-      comment lines at `vignettes/manual_components/_introduction.Rmd:28-30`, knitted into `README.md:43-47`,
-      end "... with the coding being done by R. Mark Sharp, Ph.D.". No reader sees them, but they claim who runs
-      the package today. **Decide when picking it up:** delete the three lines (edit the Rmd, re-knit README
-      against a scratch-installed HEAD as Learning 918 says) or keep them as a private note. **Left alone on
-      purpose, do not re-offer:** "initially conceived and developed ... at ONPRC" (guide `:68`, introduction
-      `:17`, `README.md:32`, `CLAUDE.md:19`; "initially" fits version one); the outreach plan's "NIH P51-funded
-      origin" (`nprc-outreach-announcement-plan.md:135`) and "ONPRC/SNPRC origin" (`:381`), which both say
-      origin; two executed plans that only say an acknowledgment goes in a conclusion
-      (`v2-transformation-article-plan.md:183,418`, `document2-colony-manager-guide-plan.md:263,279`); the 2019
-      meeting notes (`dev/extdata-scratch/meeting_notes.qmd:680`, a dated record); the e2e test that expects
-      "NIH" on the About tab (`tests/testthat/test-e2e-settings-about.R:60-74`), still true. Also done S953,
-      from the same item: the About tab, `DESCRIPTION`'s two funders (each centre's name, with the grant and
-      "work up to and including version 1.0" as its comment), the package help page and the outreach plan's three
-      spots (record in `CHANGELOG.md`).
-
 - [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
       tool's 262,144 B whole-file refusal is refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
       Effort S; config only, `.context-budget.json`)** -- `HANDOFFS.md` crossed 262,144 B in S950's close-out

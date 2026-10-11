@@ -99,12 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 959 Did
-**Deliverable:** the three hidden "joint effort between ONPRC and SNPRC" comment lines (`vignettes/manual_components/_introduction.Rmd:28-30`, knitted into `README.md:43-47`;
-`BACKLOG.md:52`, DECISION NEEDED, Effort S): delete them or keep them as a private note (IN PROGRESS)
-**Started:** 2026-10-10 (owner pick at the Phase 0 picker, option 1 of 4)
-**Status:** Session claimed. PRE-RED declared. First step: one plain question to the owner, delete or keep. If delete: strict TDD (a guard block first), then the edit and a README re-knit.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
-**S958 (DONE, folded below):** `R/getAncestors.R:55-63`; evaluation of S957 9/10, self 8/10; Learning 924 (`PROJECT_LEARNINGS.md:2616`).
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken at the owner's choice):** the three hidden "joint effort between
+ONPRC and SNPRC" comment lines are deleted from `vignettes/manual_components/_introduction.Rmd` and from the `README.md` knitted from it; the owner took the recommended "delete" first try.
+`BACKLOG.md:52-72` is removed (later cites move up 21). Measured before asking: 2 copies outside the logs, no test reads them, dated by `git log -L` to the 2018 commit `34a1b9dbd`.
+**Gates:** claim `ceffd887d`; RED `6f91a288f` (1 new block in `test_originFundingWording.R`: 16 of 17 pass, 1 fails on exactly the 2 pages); GREEN `0081d0f5e` (the Rmd, README re-knit; 17 of 17);
+REFACTOR `3462444ca` (one `introductionFile`; the guard re-proved by writing the claim back); close-out = the commit carrying this note. **Verified:** full suite 3,410 blocks, 0 failed, 0 errors
+(187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet 1/1. The app was not launched (no `R/` change). No `NEWS.Rmd` entry (no reader sees a change). Learning 925.
+**Handoff evaluation of S958: 9/10.** Helped: all 8 `BACKLOG.md` cites held (`:8 :17 :30 :36 :52 :73 :86 :187`), the 106-commit count matched `git rev-list`, the four old pids were alive,
+and the item named its test block and Learning 918's re-knit recipe. Missing: the lines' age (2018) and that `pageText()` keeps HTML comments. Wrong: nothing found.
+**Self-assessment: 8/10.** + measured the copies and the tests before asking; one plain scope question, answered first try; every gate asked; the guard re-proved after the refactor; the cites in
+my own receipt and learning re-checked against the files (4 corrected). - two silent stretches (two nudges); a zsh `=====` echo that errored; no app run.
+**Next steps (recommended, not ruled on):** Optional, S: budget `HANDOFFS.md` (`BACKLOG.md:52`, DECISION NEEDED), last-box label (`:36`), "None of the 1 animals" (`:30`), Warnings picture (`:8`),
+pop-up item (`:17`). Docs-audit part 2 is in the item at `:73` (text at `:166`); the 3.0.0 bump is `:65`. The owner's push (111 commits ahead once this lands, by `git rev-list`) changes `R/`,
+so CI will run: read it.
+**Key files:** `tests/testthat/test_originFundingWording.R:40` and `:245-260`; `tests/testthat/helper-pageText.R:14`; `vignettes/manual_components/_introduction.Rmd:24-28`; `README.md:38-43`;
+`PROJECT_LEARNINGS.md:2619` (Learning 925). **Gotchas:** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a
+scratch-installed HEAD (two render-date lines change); removing a `BACKLOG.md` block shifts later cites (21 here, re-grepped); the four old processes (pids 29511, 82416, 92900, 89205) are alive
+and left alone; keep this file under about 56,700 B and every line under 280 B.
 
 ### Sessions 947-958 (condensed S950 to S959; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
