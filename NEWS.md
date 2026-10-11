@@ -262,6 +262,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Minor**
 
+- The last box on the **Groups** tab, which holds the animals that fit
+  no group, is headed **Unused animals** instead of the next group
+  number. The **Statistics** table and the **Group Detail** list use the
+  same name.
 - New **Include animals by** control: a genetic-value floor as an
   alternative to the top-N cutoff (issue \#128).
 - New **Exhaustive enumeration mode**: lists every maximal group that
