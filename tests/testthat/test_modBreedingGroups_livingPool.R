@@ -291,6 +291,45 @@ test_that("a blank Status column means nobody is alive, whatever the exit date",
   expect_true(any(grepl("None of the 14 animals", rec$texts(), fixed = TRUE)))
 })
 
+test_that("with one animal in the source, and it not alive, the notice says so in the singular", {
+  skip_on_cran()
+
+  # S962 (BACKLOG.md:30): the notice said "None of the 1 animals in this source
+  # is alive". A source of exactly one animal gets its own sentence; a source
+  # of two or more keeps the plural one (next block).
+  ped <- lpPed()[1L, ]
+  ped$status <- factor("DECEASED",
+                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  rec <- lpNotices(ped)
+
+  got <- lpCandidates(ped, animalSource = "all")
+
+  expect_length(got$groups, 0L)
+  expect_identical(rec$types(), "error")
+  expect_identical(
+    rec$texts(),
+    "The 1 animal in this source is not alive, so no breeding groups were formed."
+  )
+})
+
+test_that("with several animals in the source, none alive, the notice keeps its plural wording", {
+  skip_on_cran()
+
+  # Green-at-HEAD coverage (NOT a RED): the S962 singular sentence must leave
+  # the plural one word for word as it was.
+  ped <- lpPed()
+  ped$status <- factor(rep("DECEASED", 14L),
+                       levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN"))
+  rec <- lpNotices(ped)
+
+  lpCandidates(ped, animalSource = "all")
+
+  expect_identical(
+    rec$texts(),
+    "None of the 14 animals in this source is alive, so no breeding groups were formed."
+  )
+})
+
 test_that("a formation error shows its notice and forms no groups", {
   skip_on_cran()
 

@@ -257,6 +257,56 @@ test_that("when every animal fits a group there is no last box", {
   expect_equal(tableCells(r$statsHtml, nCol = 4L)[, 1L], c("1", "2"))
 })
 
+# ---- one animal in a box: "(1 animal)", not "(1 animals)" (S962) ---------
+
+# The text of the Groups tab's boxes, tags dropped, white space collapsed.
+groupsText <- function(html) {
+  gsub("\\s+", " ", gsub("<[^>]+>", " ", html))
+}
+
+test_that("a last box of one animal is headed (1 animal), not (1 animals)", {
+  skip_if_not_installed("shiny")
+  # S962 (BACKLOG.md:30). Three groups asked of the nine-animal pedigree at the
+  # fixed seed leave exactly one animal in the last box.
+  r <- runBgWording(bgWordingPed(), nGroups = 3)
+
+  # The fixture must put one animal in the last box and two or more in each
+  # group, or this block would say nothing about the singular.
+  expect_true(r$hasUnused)
+  expect_equal(r$nGroups, 4L)
+  expect_length(r$groups[[4L]], 1L)
+  expect_true(all(lengths(r$groups[1:3]) >= 2L))
+
+  text <- groupsText(r$groupsHtml)
+  expect_match(text, "Unused animals (1 animal)", fixed = TRUE)
+  expect_false(grepl("(1 animals)", text, fixed = TRUE))
+  # The groups of two or more keep the plural.
+  expect_equal(groupHeadings(r$groupsHtml)$animals, lengths(r$groups[1:3]))
+})
+
+test_that("a group of one animal is headed Group n (1 animal), not (1 animals)", {
+  skip_if_not_installed("shiny")
+  # Five groups asked of the same pedigree at the same seed leave two groups
+  # with one animal each and no last box.
+  r <- runBgWording(bgWordingPed(), nGroups = 5)
+
+  sizes <- lengths(r$groups)
+  expect_false(r$hasUnused)
+  expect_equal(r$nGroups, 5L)
+  expect_gte(sum(sizes == 1L), 1L)
+  expect_gte(sum(sizes >= 2L), 1L)
+
+  text <- groupsText(r$groupsHtml)
+  for (i in which(sizes == 1L)) {
+    expect_match(text, sprintf("Group %d (1 animal)", i), fixed = TRUE)
+  }
+  for (i in which(sizes >= 2L)) {
+    expect_match(text, sprintf("Group %d (%d animals)", i, sizes[i]),
+                 fixed = TRUE)
+  }
+  expect_false(grepl("(1 animals)", text, fixed = TRUE))
+})
+
 # ---- the guide's words: these fail until the guide changes ----------------
 
 test_that("the Group Detail paragraph says the kinship table shows either way", {
