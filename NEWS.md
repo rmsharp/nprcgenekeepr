@@ -266,6 +266,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
   no group, is headed **Unused animals** instead of the next group
   number. The **Statistics** table and the **Group Detail** list use the
   same name.
+- A box that holds exactly one animal is headed "(1 animal)" on the
+  **Groups** tab, not "(1 animals)".
 - New **Include animals by** control: a genetic-value floor as an
   alternative to the top-N cutoff (issue \#128).
 - New **Exhaustive enumeration mode**: lists every maximal group that
