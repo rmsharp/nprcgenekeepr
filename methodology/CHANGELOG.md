@@ -20,6 +20,10 @@ keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Put the project's own `SESSION_NOTES.md` ledger spec back into `methodology/methodology_trim.py` (BL-101 P15; local commit, not pushed)
+
+The sync (`4f67cb927`) overlaid `methodology_trim.py` with canonical and dropped this project's 49-line S518 addition (the `_session_notes_date` helper and the `SESSION_NOTES.md` entry of `LEDGERS`), as `CLAUDE.md` "Additional close-out checks" warns; the move had to run first because it refuses a file `bin/status` does not read `current`. Re-applied here at the file's new place with the same diff the project carried: `diff` against canonical `19b9882` is 49 lines added and none removed, the same count as before the sync. **Checked:** `python3 methodology/methodology_trim.py --file methodology/SESSION_NOTES.md --budget-bytes 30000` plans to archive 38 of 39 records (L1, L2, L3 hold), the plan the old file made before the sync, now into `methodology/archive/`; at `--budget-bytes 65536` it answers `NOTHING_TO_DO`. The file is again `locally modified` for `bin/sync`, as it was before this session, so the next `bin/sync` refuses it and needs `--force` (match it against canonical first, as at the sync entry). Not run: an actual trim (`--write`).
+
 ### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 147 files)
 
 `bin/migrate-layout` (KJ5HST/methodology @ 19b9882) moved them in one commit with `git mv`; paths were rewritten in `CLAUDE.md`, `methodology/.context-budget.json`, `methodology/.quality-gates.json`. No older entry or shard was edited, so a link in an older entry is relative to the root, where the ledger sat when it was written.
