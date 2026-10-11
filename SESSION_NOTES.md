@@ -98,28 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 958 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR skipped at the owner's choice):** `getAncestors()`
-(`R/getAncestors.R:55-63`, `:81-84`) carries on when a parent has no row of its own in the tree (it is returned as an ancestor with none of its own, the answer `qcStudbook()`'s
-`addParents()` gives) and stops with a message naming an asked-about animal that is not in the tree; `makesLoop()` calls the recursive step directly (`R/makesLoop.R:29-30`), so
-`findLoops()` and `countLoops()` work on a raw `createPedTree()`. The owner took the recommended option first try. `BACKLOG.md:73-87` is removed (later cites move up 16).
-Measured before asking: 7 of 7 inputs stopped with "argument is of length zero"; after QC the same animals gave `GONE, B`; the 5 shipped pedigrees have 0 parents without a row;
-the app calls none of the three functions.
-**Gates:** claim `c0c156f53`; RED `e02da5c1b` (8 new blocks in 3 files plus `helper-absentParentPed.R`; 14 existing pass, 1 fails, 7 error, 0 skipped); GREEN `2fec4215b` (3 files,
-22 of 22); close-out = the commit carrying this note. **Verified:** full suite 3,409 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet
-1/1; the 5 tests that read `NEWS.md` pass. The app was not launched (no app path calls these functions). `NEWS.Rmd`/`NEWS.md` have the bullet. Learning 924.
-**Handoff evaluation of S957: 9/10.** Helped: the recommended order and all 9 `BACKLOG.md` cites held, the 101-commit count matched `git rev-list`, the four old pids were alive. Wrong:
-the item's "treating an absent parent as a founder returns fewer ancestors" (it returns the absent parent itself); missing: that `qcStudbook()` already adds such parents.
-**Self-assessment: 8/10.** + measured 7 inputs, 5 datasets and the QC equivalence before asking; one plain question, answered first try; the `U0001` fixture trap found and measured
-before the tests; every gate asked. - two long silent runs (two nudges); a 353 B notes line caught by the budget check; no app run.
-**Next steps (recommended, not ruled on):** Optional, S: joint-effort comment (`BACKLOG.md:52`, DECISION NEEDED), budget `HANDOFFS.md` (`:73`), last-box label (`:36`), "None of the
-1 animals" (`:30`), Warnings picture (`:8`), pop-up item (`:17`). Docs-audit part 2 is `:187`; the 3.0.0 bump is `:86`. The owner's push (106 commits ahead once this lands, by
-`git rev-list`) changes `R/`, so CI will run: read it.
-**Key files:** `R/getAncestors.R:55-63`; `R/makesLoop.R:29-30`; `tests/testthat/helper-absentParentPed.R:10`; `PROJECT_LEARNINGS.md:2616` (Learning 924). **Gotchas:** `qcStudbook()` gives an
-animal with one known parent a `U0001`-style placeholder for the other, so a raw-versus-QC fixture lists both parents or neither; removing a `BACKLOG.md` block shifts later cites (16 here,
-re-grepped); the four old processes (pids 29511, 82416, 92900, 89205) are alive and left alone; keep this file under about 56,700 B and every line under 280 B.
+### What Session 959 Did
+**Deliverable:** the three hidden "joint effort between ONPRC and SNPRC" comment lines (`vignettes/manual_components/_introduction.Rmd:28-30`, knitted into `README.md:43-47`;
+`BACKLOG.md:52`, DECISION NEEDED, Effort S): delete them or keep them as a private note (IN PROGRESS)
+**Started:** 2026-10-10 (owner pick at the Phase 0 picker, option 1 of 4)
+**Status:** Session claimed. PRE-RED declared. First step: one plain question to the owner, delete or keep. If delete: strict TDD (a guard block first), then the edit and a README re-knit.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
+**S958 (DONE, folded below):** `R/getAncestors.R:55-63`; evaluation of S957 9/10, self 8/10; Learning 924 (`PROJECT_LEARNINGS.md:2616`).
 
-### Sessions 947-957 (condensed S950 to S958; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-958 (condensed S950 to S959; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -127,11 +114,14 @@ S950: the guide's two Breeding Groups statements match the app (gate `test_guide
 S954: a decision session: with no focal animals the Pedigree Browser flags the living animals; built S955 (`R/modPedigree.R:362-372`, 20 new blocks, strict TDD).
 S956: the 21 guide pictures that predate that change are retaken and four sentences quote them (`colony-manager-guide.qmd:445,:626,:628`; strict TDD).
 S957: a decision, no code: the seven old-style `panel panel-*` boxes (the Home tab's six, `R/appUI.R:98-158`, and one per breeding group, `R/modBreedingGroups.R:984-989`)
-stay plain on purpose (the owner ruled from a before/after picture; `BACKLOG.md:8-20` removed; evaluation of S956 9/10, self 8/10). Hashes and scores for S947-S957 are in
+stay plain on purpose (the owner ruled from a before/after picture; `BACKLOG.md:8-20` removed; evaluation of S956 9/10, self 8/10).
+S958: `getAncestors()` carries on when a parent has no row of its own in the tree and stops with a message naming an asked-about animal that is not in it
+(`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`; strict TDD; `BACKLOG.md:73-87` removed; evaluation of S957 9/10, self 8/10). Hashes and scores for S947-S958 are in
 `CHANGELOG.md` and `HANDOFFS.md`.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
-**Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957);
+**Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
+for the other, so a raw-versus-QC fixture lists both parents or neither (S958);
 print `skipped` beside `failed` in a RED tally; under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,

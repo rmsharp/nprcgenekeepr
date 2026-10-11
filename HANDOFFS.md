@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S959
+date: 2026-10-10
+status: pending
+active_task: IN PROGRESS -- the three hidden "joint effort between ONPRC and SNPRC" comment lines in `vignettes/manual_components/_introduction.Rmd:28-30` and the knitted `README.md:43-47` (BACKLOG.md:52; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, delete or keep, then strict TDD if code or a guard test changes; PRE-RED declared)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S958
 date: 2026-10-10
 status: complete
