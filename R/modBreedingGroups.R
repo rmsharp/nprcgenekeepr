@@ -978,17 +978,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       req(breedingGroups())
       ped <- pedigree()
 
-      lastIsUnused <- isTRUE(selectedCandidate()$hasUnused)
+      labels <- breedingGroupLabels(length(breedingGroups()),
+                                    selectedCandidate()$hasUnused)
       groupsList <- lapply(seq_along(breedingGroups()), function(i) {
         groupIds <- breedingGroups()[[i]]
         nAnimals <- length(groupIds)
-        heading <- if (lastIsUnused && i == length(breedingGroups())) {
-          sprintf("Unused animals (%d animals)", nAnimals)
-        } else {
-          sprintf("Group %d (%d animals)", i, nAnimals)
-        }
         div(class = "panel panel-primary",
-            div(class = "panel-heading", h4(heading)),
+            div(class = "panel-heading",
+                h4(sprintf("%s (%d animals)", labels[i], nAnimals))),
             div(class = "panel-body",
                 DT::DTOutput(session$ns(paste0("groupTable", i))))
         )
@@ -1015,16 +1012,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       req(breedingGroups())
       ped <- pedigree()
 
-      lastIsUnused <- isTRUE(selectedCandidate()$hasUnused)
-      stats <- lapply(seq_along(breedingGroups()), function(i) {
+      nBoxes <- length(breedingGroups())
+      hasUnused <- isTRUE(selectedCandidate()$hasUnused)
+      labels <- breedingGroupLabels(nBoxes, hasUnused)
+      stats <- lapply(seq_len(nBoxes), function(i) {
         groupIds <- breedingGroups()[[i]]
         sexes <- ped$sex[ped$id %in% groupIds]
         data.frame(
-          Group = if (lastIsUnused && i == length(breedingGroups())) {
-            "Unused animals"
-          } else {
-            i
-          },
+          Group = if (hasUnused && i == nBoxes) labels[i] else i,
           Total = length(groupIds),
           Males = sum(sexes == sexCodes[["male"]], na.rm = TRUE),
           Females = sum(sexes == sexCodes[["female"]], na.rm = TRUE),
@@ -1051,10 +1046,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     observe({
       n <- length(breedingGroups())
       req(n >= 1L)
-      labels <- paste("Group", seq_len(n))
-      if (isTRUE(selectedCandidate()$hasUnused)) {
-        labels[n] <- "Unused animals"
-      }
+      labels <- breedingGroupLabels(n, selectedCandidate()$hasUnused)
       updateSelectInput(session, "viewGrp",
                         choices = stats::setNames(seq_len(n), labels),
                         selected = 1L)
