@@ -26,7 +26,10 @@
 ##     S961 (BACKLOG.md:36) changed the app: the Groups sub-tab, the Statistics
 ##     table and the Group Detail selector all call the box "Unused animals"
 ##     now. The candidate table's Groups count and the download file names
-##     (Group-7.csv) are left as they were, by the owner's ruling.
+##     (Group-7.csv) are left as they were, by the owner's ruling. The S961
+##     retake of the three pictures that show the box (breeding_group_1,
+##     breeding_group_6_infants_with_dam, breeding_group_sex_ratio_specification)
+##     has six animals in the sex-ratio picture's box, so its words say six.
 ##
 ## The first group of blocks pins what the app really does, on a nine-animal
 ## pedigree built here (two founders, their three full-brother sons, four
@@ -308,7 +311,7 @@ test_that("the sex-ratio paragraph says 6 groups and a seventh box of leftovers"
     paragraph,
     paste0("this particular run produced 6 groups, each drawn toward the ",
            "target ratio where enough candidates of each sex were available, ",
-           "and a seventh box that lists the seven animals that fit no group"),
+           "and a seventh box that lists the six animals that fit no group"),
     fixed = TRUE
   )
   expect_no_match(paragraph, "produced 7 groups", fixed = TRUE)
@@ -319,7 +322,7 @@ test_that("the sex-ratio picture's alt text says 6 groups and a seventh box", {
   pic <- pictureText(text, "breeding_group_sex_ratio_specification.png")
   expect_match(pic$alt, "showing 6 groups formed in one run", fixed = TRUE)
   expect_match(pic$alt,
-               "plus a seventh box listing the seven animals that fit no group",
+               "plus a seventh box listing the six animals that fit no group",
                fixed = TRUE)
   expect_no_match(pic$alt, "7 groups formed", fixed = TRUE)
 })
