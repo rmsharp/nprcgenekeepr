@@ -63,7 +63,8 @@ A list of reactive values:
 This module processes the studbook by:
 
 - Adding a `population` column via
-  [`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+  [`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md):
+  the focal animals, or the living animals when none are entered
 
 - Adding a `pedNum` column via
   [`findPedigreeNumber()`](https://github.com/rmsharp/nprcgenekeepr/reference/findPedigreeNumber.md)

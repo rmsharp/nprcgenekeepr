@@ -88,19 +88,17 @@ Uniqueness</a></p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The goal of <strong>nprcgenekeepr</strong> is to implement Genetic
-Tools for Colony Management. It was initially conceived and developed as
-a Shiny web application at the Oregon National Primate Research Center
-(ONPRC) to facilitate some of the analyses they perform regularly. It
-has been enhanced to have more capability as a Shiny application and to
-expose the functions so they can be used either interactively or in R
-scripts.</p>
-<p>This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the
-Oregon National Primate Research Center.</p>
-<!--It is now managed and maintained as a joint effort between ONPRC-->
-<!--and Southwest National Primate Research Center (SNPRC) with the -->
-<!--coding being done by R. Mark Sharp, Ph.D.-->
+<p>The primary goal of <strong>nprcgenekeepr</strong> is to implement
+Genetic Tools for Colony Management. It was initially conceived and
+developed as a Shiny web application at the Oregon National Primate
+Research Center (ONPRC) to facilitate some of the analyses they perform
+regularly. It has been enhanced to have more capability as a Shiny
+application and to expose the functions so they can be used either
+interactively or in R scripts.</p>
+<p>Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate
+Research Center and P51 OD011092 to the Oregon National Primate Research
+Center.</p>
 <p>The application’s main functions include:</p>
 <ol style="list-style-type: decimal">
 <li>Quality control of studbooks contained in text files or Excel
@@ -576,7 +574,8 @@ invalid</li>
 <ol style="list-style-type: decimal">
 <li>After data passes QC in the Input tab, navigate to the Pedigree
 Browser.</li>
-<li>Optionally specify focal animals to narrow your analysis.</li>
+<li>Optionally specify focal animals; with none entered, the living
+animals are the population (every animal if none is alive).</li>
 <li>Adjust display options as needed.</li>
 <li>A population must be defined before proceeding to Genetic Value
 Analysis.</li>
@@ -686,10 +685,11 @@ analysis</li>
 <h3 id="performance-notes">Performance Notes<a class="anchor" aria-label="anchor" href="#performance-notes"></a>
 </h3>
 <p>Before the analysis begins, the pedigree is always trimmed to the
-ancestors of the current population (the living animals, or every animal
-when the pedigree has no <code>exit</code> column). The application sets
-no fixed limit on pedigree size, so a large pedigree simply takes longer
-to analyze.</p>
+ancestors of the current population (the focal animals you entered in
+the Pedigree Browser, otherwise the living animals; every animal when
+the pedigree says nobody is alive). The application sets no fixed limit
+on pedigree size, so a large pedigree simply takes longer to
+analyze.</p>
 </div>
 </div>
 <div class="section level2">
@@ -1387,7 +1387,7 @@ badge at the top of the README file.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center, Oregon National Primate Research Center.</p>
 </div>
 
 <div class="pkgdown-footer-right">

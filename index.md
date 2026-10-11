@@ -1,23 +1,24 @@
 # README
 
-R. Mark Sharp, Ph.D. 2026-09-30
+R. Mark Sharp, Ph.D. 2026-10-10
 
 # nprcgenekeepr
 
-Version 2.0.0.9000 (2026-09-28)
+Version 2.0.0.9000 (2026-10-11)
 
 ## Introduction
 
-The goal of **nprcgenekeepr** is to implement Genetic Tools for Colony
-Management. It was initially conceived and developed as a Shiny web
-application at the Oregon National Primate Research Center (ONPRC) to
-facilitate some of the analyses they perform regularly. It has been
+The primary goal of **nprcgenekeepr** is to implement Genetic Tools for
+Colony Management. It was initially conceived and developed as a Shiny
+web application at the Oregon National Primate Research Center (ONPRC)
+to facilitate some of the analyses they perform regularly. It has been
 enhanced to have more capability as a Shiny application and to expose
 the functions so they can be used either interactively or in R scripts.
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the
-Oregon National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate
+Research Center and P51 OD011092 to the Oregon National Primate Research
+Center.
 
 The application’s main functions include:
 

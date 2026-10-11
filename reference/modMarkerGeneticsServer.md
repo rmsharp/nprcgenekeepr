@@ -40,7 +40,10 @@ replacement parents by a CERVUS-style multilocus likelihood (LOD) score.
 This tab needs no new file input – it reads the same uploaded genotype
 file and `pedigree` already wired to the other tabs – and is
 report-only, matching the Parentage Exclusion tab's own precedent: it
-never writes to `pedigree`.
+never writes to `pedigree`. Candidates come from
+[`getPotentialParents`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+which needs the pedigree's `fromCenter` column; without it the table is
+blank, and the tab says so above the table.
 
 ## Usage
 

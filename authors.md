@@ -13,11 +13,11 @@
 
 - **Matthew Schultz**. Author. [](https://orcid.org/0000-0001-5103-4305)
 
-- **Southwest National Primate Research Center NIH grant P51 RR13986**.
-  Funder.
+- **Southwest National Primate Research Center**. Funder.  
+  NIH grant P51 RR13986, work up to and including version 1.0
 
-- **Oregon National Primate Research Center grant P51 OD011092**.
-  Funder.
+- **Oregon National Primate Research Center**. Funder.  
+  NIH grant P51 OD011092, work up to and including version 1.0
 
 ## Citation
 

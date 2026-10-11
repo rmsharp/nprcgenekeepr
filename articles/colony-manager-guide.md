@@ -24,7 +24,7 @@ breeding-group sex ratio option with no numeric input, and a shipped
 example pedigree missing a column the Potential Parents tab needs to
 demonstrate populated results – each described where it arose rather
 than glossed over. All claims in this article are current as of
-2026-09-30.
+2026-10-08.
 
 ## Introduction
 
@@ -57,12 +57,12 @@ Nothing here is carried forward uncritically from earlier tutorials.
 
 ## Section 1 – Purpose: Why nprcgenekeepr Exists
 
-The goal of `nprcgenekeepr` is to implement genetic tools for colony
-management. It was initially conceived and developed as a Shiny web
-application at the Oregon National Primate Research Center (ONPRC) to
-facilitate analyses that center routinely performs, and has since been
-enhanced so that its underlying functions can also be used directly in R
-scripts rather than only through the Shiny interface (see
+The primary goal of `nprcgenekeepr` is to implement genetic tools for
+colony management. It was initially conceived and developed as a Shiny
+web application at the Oregon National Primate Research Center (ONPRC)
+to facilitate analyses that center routinely performs, and has since
+been enhanced so that its underlying functions can also be used directly
+in R scripts rather than only through the Shiny interface (see
 [Section 4](#sec-approach)’s “two ways to use them”).
 
 Captive breeding colonies – rhesus macaques and other nonhuman primates
@@ -76,9 +76,10 @@ Approach for Designing Breeding Groups to Maximize Genetic Diversity in
 a Large Colony of Captive Rhesus Macaques (Macaca mulatta)*, *Journal of
 the American Association for Laboratory Animal Science*, 54(6), 700-707.
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the
-Oregon National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate
+Research Center and P51 OD011092 to the Oregon National Primate Research
+Center.
 
 ## Section 2 – Approach: The Five Function Groups and Two Ways to Use Them
 
@@ -285,9 +286,9 @@ option. Unknown IDs (UIDs) are placeholder IDs the application
 generates, by default starting with the letter U, for the unrecorded
 parent of an animal with only one known parent.
 
-![Pedigree Browser table with Display Unknown IDs checked, showing
-UNKNOWN placeholder
-IDs.](shiny_app_use/pb_10_rows_display_unknown_ids.png)
+![Pedigree Browser table with Display Unknown IDs checked, showing the
+first 15 of 3,694 entries; the placeholder animals are in the table, on
+later pages.](shiny_app_use/pb_10_rows_display_unknown_ids.png)
 
 Pedigree Browser with Display Unknown IDs checked (the default).
 
@@ -354,7 +355,8 @@ focal-animal list.](shiny_app_use/pb_trimmed_for_focal_animals.png)
 The pedigree trimmed to the larger focal group (962 animals total).
 
 Checking **Clear Focal Animals** and selecting **Update Focal Animals**
-again reads an empty ID list, restoring the full, untrimmed pedigree.
+again reads an empty ID list, restoring the full, untrimmed pedigree and
+making the living animals the population again.
 
 ![Pedigree Browser before clearing the focal-animal list, still
 trimmed.](shiny_app_use/pb_focal_animals_before_clear.png)
@@ -367,11 +369,13 @@ pedigree.](shiny_app_use/pb_focal_animals_after_clear.png)
 
 After clearing the focal-animal list – the full pedigree is restored.
 
-A population must be defined here before proceeding to Genetic Value
-Analysis. The rest of this walkthrough continues with the **full,
-untrimmed** example pedigree (the focal-animal trim above illustrates
-the feature, not the population used for the remaining tabs) – matching
-the shipped `examplePedigree`’s own downstream numbers below.
+With no focal animals entered, the population the other tabs analyze is
+the living animals (every animal if none is alive). The rest of this
+walkthrough continues with the **full, untrimmed** example pedigree and
+no focal animals, so its population is the 332 living animals (the
+focal-animal trim above illustrates the feature, not the population used
+for the remaining tabs) – matching the shipped `examplePedigree`’s own
+downstream numbers below.
 
 **Diagram view.** Alongside the table, the Pedigree Browser’s
 **Diagram** tab renders the same population as an interactive pedigree
@@ -504,12 +508,12 @@ to Low is a property of one stochastic gene-drop run, this article does
 not pin a specific row number to it – widening “Show top N” (to 500
 below) shows the full distribution instead.
 
-![Genetic Value Analysis results table widened to 500 rows, showing the
-transition from High Value to Low Value and Undetermined animals sorted
-to the bottom.](shiny_app_use/gva_high_and_low_value.png)
+![Genetic Value Analysis tab with Show top N set to 500; the results
+table reads Showing 1 to 10 of 332 entries and its pager runs to page
+34.](shiny_app_use/gva_high_and_low_value.png)
 
-Genetic Value Analysis results widened to show more of the ranking,
-including lower-ranked and Undetermined animals.
+Genetic Value Analysis with Show top N widened to 500: the results table
+now has 34 pages of 10 rows, and the first page is shown.
 
 ### Summary Statistics
 
@@ -521,60 +525,89 @@ bottom of this tab (see also [“Validating the Founder-Genome-Equivalent
 Standard
 Error”](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.md)).
 
-![Summary Statistics tab showing the first view of genetic diversity
-metrics.](shiny_app_use/ss_first_view.png)
+![Summary Statistics tab as it opens: the guidance box, the Export
+buttons, the Population Summary and the Effective Population Size
+tables.](shiny_app_use/ss_first_view.png)
 
 Summary Statistics, first view.
 
 The tab has several export buttons producing CSV files, three of which
-are illustrated below (opened in a spreadsheet program, not captured
-from the app itself, since these depict exported file contents rather
-than application UI): **Export Kinship Matrix**, **Export First-Order
+are shown below: **Export Kinship Matrix**, **Export First-Order
 Relationships**, and **Export Female Founders** (a separate **Export
 Male Founders** button produces the same column structure for males).
-The tab also has **Export All Relationships** and **Export Relationship
-Classes** buttons, plus six further buttons for exporting the six
-summary plots below as PNGs, not illustrated here:
+These tables are not screenshots. This article builds them each time it
+is rendered, from the example pedigree and the same package functions
+the export buttons call, and shows each file’s own contents (`NA` marks
+a blank value). The tab also has **Export All Relationships** and
+**Export Relationship Classes** buttons, plus six further buttons for
+exporting the six summary plots below as PNGs, not illustrated here:
 
-- The kinship matrix has a row and column for every analyzed individual,
-  plus a first row and first column of IDs.
+**Kinship matrix.** The file has a row and column for every analyzed
+individual, plus a first row and first column of IDs. Most pairs of
+animals are unrelated and show 0, so the table below shows only a
+corner: the first animal with three or more offspring (0ZX29Q) and its
+first three offspring, where the values are not zero.
 
-  ![Spreadsheet view of an exported kinship matrix CSV
-  file.](shiny_app_use/ss_kinship_matrix.png)
+|        | 0ZX29Q | D9MZ4A | LVXPH7 | NF8IQG |
+|:-------|-------:|-------:|-------:|-------:|
+| 0ZX29Q |    0.5 |   0.25 |   0.25 |   0.25 |
+| D9MZ4A |   0.25 |    0.5 |  0.125 |  0.125 |
+| LVXPH7 |   0.25 |  0.125 |    0.5 |  0.125 |
+| NF8IQG |   0.25 |  0.125 |  0.125 |    0.5 |
 
-  First few rows of an exported kinship matrix CSV.
+A corner of the kinship matrix file (3,694 rows and columns in all).
+{.table .caption-top}
 
-- The first-order relationships file has columns `id`, `parents`,
-  `offspring`, `siblings`, and `total`, counted from known
-  relationships.
+**First-order relationships.** The file has columns `id`, `parents`,
+`offspring`, `siblings`, and `total`, counted from known relationships,
+one row per animal.
 
-  ![Spreadsheet view of an exported first-order relationships CSV
-  file.](shiny_app_use/ss_first_order_relationships.png)
+| id     | parents | offspring | siblings | total |
+|:-------|:--------|:----------|:---------|:------|
+| 01WY5E | 0       | 0         | 0        | 0     |
+| 02GZ4L | 0       | 0         | 0        | 0     |
+| 079ZJK | 0       | 2         | 0        | 2     |
+| 08CF4C | 0       | 1         | 0        | 1     |
+| 093AB5 | 0       | 0         | 0        | 0     |
+| 0CRGND | 0       | 0         | 0        | 0     |
+| 0J5JEH | 0       | 0         | 0        | 0     |
+| 0LHU4M | 0       | 0         | 0        | 0     |
 
-  First few rows of an exported first-order-relationships CSV.
+The first rows of the first-order relationships file (3,694 rows in
+all). {.table .caption-top}
 
-- The founders files have columns `id`, `sire`, `dam`, `sex`, `gen`,
-  `birth`, `exit`, `age`, `ancestry`, `origin`, `status`,
-  `recordStatus`, `fromCenter`, `placeholder`, `population`, and
-  `pedNum`.
+**Founders.** The founders files have columns `id`, `sire`, `dam`,
+`sex`, `gen`, `birth`, `exit`, `age`, `ancestry`, `origin`, `status`,
+`recordStatus`, `fromCenter`, `placeholder`, `population`, and `pedNum`.
+The table scrolls sideways to show every column.
 
-  ![Spreadsheet view of an exported female-founders CSV
-  file.](shiny_app_use/ss_female_founders.png)
+| id | sire | dam | sex | gen | birth | exit | age | ancestry | origin | status | recordStatus | fromCenter | placeholder | population | pedNum |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| 079ZJK | NA | NA | F | 0 | NA | 1975-01-16 | NA | JAPANESE | JAPAN MONKEY CENTER PRIMATE ZOO | DECEASED | original | FALSE | FALSE | FALSE | 3 |
+| 08CF4C | NA | NA | F | 0 | NA | 1966-03-19 | NA | JAPANESE | JAPAN MONKEY CENTER PRIMATE ZOO | DECEASED | original | FALSE | FALSE | FALSE | 4 |
+| 0CRGND | NA | NA | F | 0 | 1982-04-01 | 1982-04-27 | 0.1 | JAPANESE | NA | DECEASED | original | TRUE | FALSE | FALSE | 6 |
+| 0J5JEH | NA | NA | F | 0 | 1994-05-20 | 1994-05-20 | -0.1 | JAPANESE | NA | DECEASED | original | TRUE | FALSE | FALSE | 7 |
+| 0LHU4M | NA | NA | F | 0 | 1999-07-28 | 1999-12-19 | 0.4 | JAPANESE | NA | DECEASED | original | TRUE | FALSE | FALSE | 8 |
+| 0M6WB4 | NA | NA | F | 0 | 2009-07-23 | 2009-07-23 | 0 | JAPANESE | NA | DECEASED | original | TRUE | FALSE | FALSE | 9 |
+| 0QD4RS | NA | NA | F | 0 | 1981-06-18 | 1986-07-04 | 5 | JAPANESE | NA | DECEASED | original | TRUE | FALSE | FALSE | 10 |
+| 0RPWWX | NA | NA | F | 0 | NA | 1969-05-13 | NA | JAPANESE | JAPAN MONKEY CENTER PRIMATE ZOO | DECEASED | original | FALSE | FALSE | FALSE | 11 |
 
-  First few rows of an exported female-founders CSV.
+The first rows of the female-founders file (124 rows in all). {.table
+.caption-top}
 
 Six plots – histograms and boxplots of kinship coefficients, their
 Z-scores, and genome uniqueness scores – are shown together and can each
 be exported as a PNG.
 
-![Six summary plots: histograms and boxplots of kinship coefficients,
-Z-scores, and genome
-uniqueness.](shiny_app_use/ss_trimmed_all_plots.png)
+![The six summary plots, histograms on the left and box plots on the
+right, of kinship coefficients, Z-scores, and genome uniqueness, each
+with its Export button.](shiny_app_use/ss_trimmed_all_plots.png)
 
 All six summary plots together.
 
-![Exported mean kinship coefficient histogram
-plot.](shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png)
+![The mean kinship coefficient histogram exactly as the Export Mean
+Kinship Histogram button writes it, an 800 by 600 pixel
+PNG.](shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png)
 
 One exported plot: the mean kinship coefficient histogram.
 
@@ -626,17 +659,25 @@ top-ranked candidate animals, a target ratio of 2.5 females per male,
 and “Number of groups” set to 6. Because group formation is a randomized
 search (the default **Number of simulations** is 10), the exact number
 and composition of groups formed varies from run to run rather than
-reproducing identically – this particular run produced 7 groups, each
+reproducing identically – this particular run produced 6 groups, each
 drawn toward the target ratio where enough candidates of each sex were
-available.
+available, and a seventh box that lists the four animals that fit no
+group.
 
-![Breeding Group Formation Groups sub-tab showing 7 groups formed in one
-run using a Custom sex ratio of 2.5 females per male; the exact group
-count and composition vary between
+![Breeding Group Formation Groups sub-tab showing 6 groups formed in one
+run using a Custom sex ratio of 2.5 females per male, plus a seventh box
+listing the four animals that fit no group; the exact group count and
+composition vary between
 runs.](shiny_app_use/breeding_group_sex_ratio_specification.png)
 
 Breeding groups formed with a Custom sex ratio of 2.5 (females per male)
 – one run of the randomized search.
+
+That last box is not a group: it appears only when some candidates fit
+in no group, and it lists them. The **Groups** sub-tab, the
+**Statistics** table and the **Group Detail** selector all call it
+‘Unused animals’, and the Groups count in the candidate table above the
+tabs includes it.
 
 **Seeding groups with specific animals.** Behavioral constraints – an
 existing social group, or an infant that should stay with its dam – can
@@ -651,23 +692,24 @@ for a 6-group run.](shiny_app_use/breeding_group_6_infants_with_dam.png)
 
 The six per-group seed text areas (Number of groups = 6), shown empty.
 
-Each formed group’s full membership, and – if **Include kinship in
-display of groups** was checked before forming – its within-group
-kinship values, can be reviewed on the **Group Detail** sub-tab, one
-group at a time.
+Each formed group’s full membership and its within-group kinship values
+can be reviewed on the **Group Detail** sub-tab, one group at a time.
+The kinship table is shown whether or not **Include kinship in display
+of groups** is checked; the box does not change what this sub-tab shows.
 
-![Group Detail sub-tab showing one formed group's membership without
-kinship
-values.](shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png)
+![Group Detail sub-tab showing one formed group's membership and its
+within-group kinship table, with the kinship box
+unchecked.](shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png)
 
-Group Detail for one formed group (no kinship shown).
+Group Detail for one formed group, with the kinship box unchecked; the
+kinship table is shown anyway.
 
-![Group Detail sub-tab showing group membership with within-group
-kinship values
-included.](shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png)
+![Group Detail sub-tab showing group 6's membership and within-group
+kinship table, from a second run formed with the kinship box
+checked.](shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png)
 
-Group Detail with kinship values included, viewing a different group of
-the same 6-group run.
+Group Detail for group 6 of a second run, formed with the kinship box
+checked; the kinship table is shown in the same way.
 
 A **Statistics** sub-tab summarizes all formed groups at once. Groups
 and their kinship matrices can each be exported individually to a file
@@ -746,7 +788,7 @@ ID, pedigree kinship, marker kinship, and per-parent genetic-value
 columns.](shiny_app_use/mate_pair_analysis_eligible_pairs.png)
 
 Mate Pair Analysis configuration panel and the Eligible Pairs table for
-a small example pedigree scoped to all alive animals.
+six example animals entered as a custom list.
 
 The **Eligible Pairs** table reports, for every opposite-sex pair
 surviving the population, age, and exclude-list screens: pedigree
@@ -853,9 +895,8 @@ an analysis has run, the tab shows guidance instead of an empty plot.
 
 ![Genetic Diversity heat map with 6 rows (one per breeding group) and 4
 columns (Value, Origin, Production, Inbreeding), each cell colored red,
-yellow, or green (gray where a value is undefined), with a note under
-the grid about animals that have no birth
-date.](shiny_app_use/genetic_diversity_heatmap.png)
+yellow, or green (gray where a value is
+undefined).](shiny_app_use/genetic_diversity_heatmap.png)
 
 The Genetic Diversity heat map for the 6 breeding groups formed above.
 
@@ -907,9 +948,9 @@ heterozygosity values and the same population-wide expected
 heterozygosity value repeated on every
 row.](shiny_app_use/marker_genetics_heterozygosity.png)
 
-The Heterozygosity tab for the same example trio: observed
-heterozygosity (ho) per animal alongside the population’s expected
-heterozygosity (he).
+The Heterozygosity tab for a second small example, animals X, Y and Z:
+observed heterozygosity (ho) per animal alongside the population’s
+expected heterozygosity (he).
 
 A third **Parentage Exclusion** tab (also part of issue \#130)
 cross-references the current pedigree’s recorded dam and sire against
@@ -993,15 +1034,17 @@ remains a curator decision made outside the tool.
 
 > **Note**
 >
-> **Current limitation.** Candidate lists come from the same demographic
-> screening the Potential Parents tab uses (age, sex, presence date,
-> gestation window), which only proposes candidates for an animal with
-> an *unrecorded* parent slot. An animal whose recorded parent is
-> present but wrong – the case this tab exists for – will show no
-> candidates unless its *other* parent slot is also unrecorded, or
-> unless a curator explicitly supplies a candidate list (a
-> script-callable option not yet exposed in this tab). This is being
-> tracked as a follow-on improvement.
+> **What the candidate list needs.** Candidate lists come from the same
+> demographic screening the Potential Parents tab uses (age, sex,
+> presence date, gestation window), which needs the pedigree’s
+> `fromCenter` column; without that column the table is empty, and the
+> tab says so in a notice above the table, in the same words as the
+> Potential Parents tab. For an animal whose recorded parent is present
+> but wrong – the case this tab exists for – the tab sets that recorded
+> parent aside, screens candidates for the freed slot, and keeps the
+> recorded parent in the list, so it appears with its own score beside
+> the others. A curator can also supply a candidate list explicitly (a
+> script-callable option not exposed in this tab).
 
 ![Marker Genetics Candidate Parent Assignment tab showing a table with
 one row: offspring C, role sire, candidate Q, LOD blank (negative
@@ -1009,10 +1052,10 @@ infinity), nLociUsed 10, excluded true, lowPower
 false.](shiny_app_use/marker_genetics_candidate_assignment.png)
 
 The Candidate Parent Assignment tab for a small example trio: C’s
-falsely-recorded sire (Q) is Mendelian-excluded across all 10 shared
-loci, so its LOD score is negative infinity – a true genetic
-impossibility, not merely “unlikely” (blank cells in the LOD/delta
-columns above render that infinite value).
+falsely-recorded sire (Q) is Mendelian-excluded (the two disagree at 3
+of the 10 shared loci), so its LOD score is negative infinity – a true
+genetic impossibility, not merely “unlikely” (blank cells in the
+LOD/delta columns above render that infinite value).
 
 A sixth **Linkage and LD Block Metrics** tab (issue
 [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)) answers a
@@ -1110,9 +1153,9 @@ base pairs, which is PLINK’s own default). F_ROH is the proportion of
 the genome covered by qualifying segments.
 
 ![Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count
-and minimum ROH segment span inputs above a table of 50 rows (S001
-through S050 visible in part), each with nSegments, totalRohLength, and
-fRoh columns populated with real, non-zero example
+and minimum ROH segment span inputs above the first page of a table of
+50 individuals (S001 through S010 of 5 pages), each with nSegments,
+totalRohLength, and fRoh columns populated with real, non-zero example
 values.](shiny_app_use/marker_genetics_genomic_roh.png)
 
 The Genomic ROH (F_ROH) tab computed on the bundled 50-individual,
@@ -1331,8 +1374,8 @@ The workflow has three parts:
     ships a worked example file for this tab) or start recording a new
     one. Each row is one dated snapshot – mean kinship, founder
     representation, genome uniqueness, and the population’s make-up –
-    for a single membership rule (the whole pedigree, or a designated
-    focal population).
+    for a single membership rule (the whole pedigree, or a smaller
+    population: the living animals, or the focal animals you entered).
 2.  **Generate Snapshot.** After running Genetic Value Analysis on the
     Genetic Value Analysis tab, clicking **Generate Snapshot** here
     records a new dated row from that analysis and appends it to the
@@ -1374,6 +1417,7 @@ demonstrate populated results – each described where it arose in Section
 3. Please report any further questions, comments, or bugs through the
 [GitHub issue tracker](https://github.com/rmsharp/nprcgenekeepr/issues).
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the
-Oregon National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate
+Research Center and P51 OD011092 to the Oregon National Primate Research
+Center.

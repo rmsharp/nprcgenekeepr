@@ -43,10 +43,10 @@ diagram with sex-shaped nodes and a shape-to-sex legend panel
 diamond=Other/Unrecorded, hexagon=Affected) to the right of the
 diagram.](shiny_app_use/pb_diagram_legend.png)
 
-The Diagram tab on a small, real 6-animal pedigree, with its
-shape-to-sex legend. The two connector lines joining the top union
-render thicker and in a distinct vermillion color – see “Consanguineous
-mating marker” below.
+The Diagram tab on a small, real 21-animal pedigree, with its
+shape-to-sex legend. The two connector lines joining `8LKBV9` to his
+daughter `FJIB3R` (third row from the top) render thicker and in a
+distinct vermillion color – see “Consanguineous mating marker” below.
 
 Diagrams render up to **400 animals** under the default Rectilinear edge
 style (**750** if switched to Direct, below) – for a larger population,
@@ -60,9 +60,10 @@ An animal that mates more than once, or whose lineage loops back on
 itself (e.g. a consanguineous mating), appears once per mating; each
 occurrence after the first is joined back to its main occurrence by a
 curved, dashed line – visible near the top of the screenshot above,
-where `8LKBV9` appears twice. Hovering, clicking, or searching any
-occurrence behaves identically to the animal’s main occurrence
-(“Interacting with the diagram” below).
+where `8LKBV9` appears twice. The legend’s **Same animal, again** entry
+shows this line’s style. Hovering, clicking, or searching any occurrence
+behaves identically to the animal’s main occurrence (“Interacting with
+the diagram” below).
 
 ## Diagram Edge Style: Direct vs. Rectilinear
 
@@ -74,13 +75,18 @@ vertical drop to the mating dot, a horizontal bar across the children,
 and a vertical drop into each one) and **Direct** – a single straight or
 lightly sloped line all the way from parent to mating dot to child.
 
-![Pedigree Browser Diagram tab with the Rectilinear edge style selected,
-showing the same pedigree routed with horizontal and vertical
-right-angle connectors instead of straight
-lines.](shiny_app_use/diagram_rectilinear_edge_style.png)
+The picture under “Node shapes and the legend” above shows the
+Rectilinear default; the picture below shows the same pedigree with
+**Direct** selected.
 
-The same 6-animal pedigree with Diagram Edge Style set to Rectilinear –
-the same relationships, routed in strict right angles.
+![Pedigree Browser Diagram tab with the Direct edge style selected,
+showing the same pedigree routed with straight or lightly sloped
+connectors instead of horizontal and vertical right-angle
+connectors.](shiny_app_use/diagram_direct_edge_style.png)
+
+The same 21-animal pedigree with Diagram Edge Style set to Direct – the
+same relationships, each connector a single straight or lightly sloped
+line.
 
 Both styles show the exact same animals and relationships – the
 difference is purely routing. Rectilinear achieves its right angles with
@@ -264,14 +270,14 @@ open/unfilled (white) – matching the standard pedigree-drawing
 convention that only a filled node means “affected.” Pedigrees without
 an `affected` column render every node unshaded, as before.
 
-![Pedigree Browser Diagram tab showing three individuals: one filled
-magenta node (affected), and two open/unfilled white nodes (one
+![Pedigree Browser Diagram tab showing twelve individuals: four filled
+magenta nodes (affected) and eight open/unfilled white nodes (seven
 unaffected, one of unknown affected
 status).](shiny_app_use/diagram_affected_shading.png)
 
-Three animals from a pedigree that includes an `affected` column: filled
-(affected), open (unaffected), and open (affected status unknown/NA) –
-all three unaffected/unknown individuals render identically, open.
+A small lineage (12 animals) from a pedigree that includes an `affected`
+column: the 4 affected animals render filled; the 8 others, 7 unaffected
+and 1 of unknown affected status (NA), render identically, open.
 
 ## Showing names
 
@@ -289,9 +295,10 @@ the diagram always lists ids, never names, regardless of the toggle.
 showing several nodes labeled with both id and name, including one long
 name truncated with an ellipsis.](shiny_app_use/diagram_show_names.png)
 
-The same small lineage with Show Names on Diagram enabled – most nodes
-carry an id-plus-name label; the longest is truncated with an ellipsis
-on the diagram itself (the full name is in its hover tooltip).
+A small lineage (12 animals) from a pedigree with a `name` column, with
+Show Names on Diagram enabled – most nodes carry an id-plus-name label;
+the longest is truncated with an ellipsis on the diagram itself (the
+full name is in its hover tooltip).
 
 ## Twin/zygosity relations
 

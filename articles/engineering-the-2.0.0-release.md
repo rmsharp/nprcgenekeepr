@@ -770,6 +770,7 @@ just *what* changed ([Section 6](#sec-methodology)) – a resource future
 sessions, and future maintainers, can read directly rather than
 reconstruct from commit messages alone.
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the
-Oregon National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate
+Research Center and P51 OD011092 to the Oregon National Primate Research
+Center.

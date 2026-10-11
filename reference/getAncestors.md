@@ -37,6 +37,15 @@ route. The function stops with an error that names the ids involved when
 `ptree` contains a cycle (an animal that is its own ancestor), which is
 a data error.
 
+A sire or dam that has no entry of its own in `ptree` is treated as an
+animal with unknown parents, as
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+treats it
+([`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
+adds the entry): it is returned as an ancestor and has no ancestors of
+its own. The function stops with an error that names the id when `id`
+itself is not in `ptree`.
+
 ## Examples
 
 ``` r

@@ -161,6 +161,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - The Candidate Parent Assignment suggestion covers the common case
   where a flagged animal’s recorded parent is present but wrong (issue
   [\#155](https://github.com/rmsharp/nprcgenekeepr/issues/155)).
+- The Candidate Parent Assignment tab says why its table is blank when
+  the pedigree has no `fromCenter` column, which it needs to find any
+  candidate. It uses the same words as the Potential Parents tab.
 - [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
   reports each locus’s chromosome and position data as complete, partial
   or missing.
@@ -237,6 +240,13 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Major**
 
+- With no focal animals entered, the Pedigree Browser now takes the
+  living animals as the population instead of every animal ever
+  recorded, so the default Genetic Value rankings and founder measures
+  describe the living colony. A pedigree with no living animal still
+  uses every animal. Script users:
+  [`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
+  still flags every animal when given no IDs.
 - Fixed: unchecking “Display Unknown IDs” in the Pedigree Browser no
   longer stops the Genetic Value Analysis with a “logic error”. The box
   hides rows only in the Pedigree Browser table; every other tab uses
@@ -259,6 +269,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   ranking correction could not be applied for lack of a comparable peer
   group (issue
   [\#127](https://github.com/rmsharp/nprcgenekeepr/issues/127)).
+- The rankings table starts with the animal ID. It used to start with an
+  unlabeled column of leftover row numbers (such as 4, 5, 6, 9, 10) that
+  were not the rank; the **rank** column, last in the table, still gives
+  each animal’s rank.
 
 ### Breeding Group Formation
 
@@ -296,6 +310,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Minor**
 
+- The last box on the **Groups** tab, which holds the animals that fit
+  no group, is headed **Unused animals** instead of the next group
+  number. The **Statistics** table and the **Group Detail** list use the
+  same name.
+- A box that holds exactly one animal is headed “(1 animal)” on the
+  **Groups** tab, not “(1 animals)”.
 - New **Include animals by** control: a genetic-value floor as an
   alternative to the top-N cutoff (issue
   [\#128](https://github.com/rmsharp/nprcgenekeepr/issues/128)).
@@ -538,6 +558,18 @@ export workflows, and longitudinal monitoring of colony genetic health.
   [`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)
   stop with a message naming the animals instead of an “infinite
   recursion” error.
+- Fixed:
+  [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md),
+  [`findLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/findLoops.md)
+  and
+  [`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)
+  no longer stop with “argument is of length zero” when a pedigree lists
+  a parent that has no row of its own. Such a parent is treated as an
+  animal with unknown parents, the same way the pedigree check treats
+  it. Asking
+  [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+  about an animal that is not in the pedigree tree at all stops with a
+  message naming it.
 - Fixed:
   [`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md)
   no longer runs without end when a pedigree lists an animal as its own

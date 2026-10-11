@@ -6,25 +6,6 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Seven more old-style `panel panel-*` boxes still show no colour: 6 on
-the Home tab and one per breeding group (found S936, 2026-10-07;
-DECISION NEEDED, Effort M; strict TDD for any change)** – the cause S936
-found for the QC Summary boxes holds for every box written the old way:
-the app’s theme is Bootstrap 4
-(`bslib::bs_theme(version = 4L, bootswatch = "flatly")`,
-`R/appUI.R:69`), whose compiled stylesheet has 0 `.panel` rules and 113
-`.card` rules (measured S936), so a `panel panel-primary`, `-info`,
-`-success`, `-warning`, `-danger` or `-default` box shows no colour.
-S936 rewrote only the 3 QC Summary boxes, as cards, through the internal
-`qcSummaryBox()` (`R/qcSummaryBox.R`). **Left as written:** the six
-workflow boxes on the Home tab (`R/appUI.R:98-158`; their picture is
-`home_tab_landing.png`) and the group boxes in Breeding Groups
-(`R/modBreedingGroups.R:956`, one per group, `panel panel-primary`). Not
-looked at in the real app, only from the stylesheet. **Decide when
-picking it up:** give them cards too (the Home and Breeding Groups pages
-change, so the pictures that show them go stale and need retaking, and
-the class-name tests move), or leave them plain on purpose.
-
 **Optional: a guide picture of the Warnings sub-tab as the app opens it
 after a check (raised S936, 2026-10-07; READY (optional), Effort S; docs
 and the capture script only)** – the guide’s paragraph on Read and Check
@@ -38,111 +19,43 @@ capture step, a new image file and a sentence in the guide. Pick it up
 only if the owner wants the picture; the QC Summary picture and the
 words are done.
 
-**The Breeding Groups “nobody is alive” notice reads “None of the 1
-animals” when the source has one animal (found S939, 2026-10-07; READY
-(optional), Effort S; strict TDD, a displayed-text change)** – the
-notice (`R/modBreedingGroups.R`, the `length(rawPool) == 0L` branch)
-builds its text from the source’s animal count; the S939 tests pin “None
-of the 14 animals”, not the count of one (or zero). A pool of one animal
-cannot form groups anyway, so this is wording only: pick it up with the
-next Breeding Groups change.
+**Optional: a pop-up covers the “Twin/Zygosity Relations” heading in 9
+of the 14 pictures S941 retook (found S941, 2026-10-07; READY
+(optional), Effort S; strict TDD, capture script only)** – read off the
+pictures: `pb_5_focal_animals_small`, `pb_selection_large_focal_group`,
+`pb_select_trim_for_focal_animals`, `pb_trimmed_for_focal_animals`,
+`pb_focal_animals_before_clear`, `pb_focal_animals_after_clear`,
+`diagram_show_names`, `diagram_affected_shading` and
+`diagram_twin_connectors` carry a blue “Updated focal animals: N IDs”
+(or “Focal animals cleared”) pop-up that hides part of the heading (the
+committed pictures had the same kind of pop-up a little lower, so the
+plan’s “toast noise” allowance covered it). The helper
+`wait_for_notifications_clear()`
+(`tests/testthat/helper-captureHarness.R:149`) already clears it before
+the legend and QC Summary pictures. Pick it up only if the owner wants
+the guide cleaner; each added wait needs a test pin like
+`test_captureHarness.R`’s legend block, then a retake of those 9. S942’s
+Phase 3b pictures add 2: `age_plot.png` (3 pop-ups over the plot’s right
+edge) and `gva_calculating.png` (2, over empty space).
 
-**With no focal animals the Genetic Value run ranks every animal ever
-recorded, so 271 of the 332 living animals are labelled Low Value (found
-S938, 2026-10-07; DECISION NEEDED, Effort M; strict TDD for any
-change)** – measured S938 in the real app on the example with no focal
-animals: High / Low / Undetermined by status: ALIVE 56 / 271 / 5,
-DECEASED 1,026 / 404 / 195, SHIPPED 314 / 10 / 41, UNKNOWN (placeholder)
-0 / 0 / 1,372. The Genetic-value floor groups then held 60 living
-animals; with the 332 living animals entered as focal they held 270
-(group counts, not label counts). The whole-colony default is the
-documented behavior of the exported
-[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
-(empty `ids` flags everyone) and of
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-([`getGVPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGVPopulation.md)),
-while the package’s own
-[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
-example defines the population as living animals with a known parent.
-The guide says to define the population before Genetic Value
-(`vignettes/articles/colony-manager-guide.qmd:328`), then continues with
-the focal list cleared (`:329-332`). Readers of the flag:
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-(`R/reportGV.R:195`),
-[`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md)
-(`R/offspringCounts.R:47`),
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
-[`createColonySnapshot()`](https://github.com/rmsharp/nprcgenekeepr/reference/createColonySnapshot.md).
-Declined at S938 as the fix for the group pool (the owner took the
-narrower Breeding Groups filter, shipped S939; in a real-app run after
-it, the default Top ranked 20 were the first 20 living animals of this
-ranking, at places 519 to 1025 of 3,694, all of them alive). **Decide
-when picking it up:** leave the whole-colony default and say so in the
-Genetic Value help and the guide; or make the Pedigree Browser flag only
-the living animals (status ALIVE) when no focal animals are entered (the
-exported
-[`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
-stays), which moves every default ranking, mean kinship and value count.
-
-**Reword where the repo says the package was developed at ONPRC and
-funded by NIH grants (owner-reported S930, 2026-10-07; DECISION NEEDED,
-Effort S; docs and `DESCRIPTION`, plus one displayed line in the app)**
-– the owner wrote: “Only version one was developed at Oregon National
-Primate Research Center and funded by NIH grants P51 RR13986 and P51
-OD011092.” Today most places say the whole package was “initially
-conceived and developed” at ONPRC and pair the grants with different
-centers (P51 RR13986 to the Southwest National Primate Research Center,
-P51 OD011092 to the Oregon center), while the in-app About tab
-(`R/appUI.R:323-324`) says “Developed at Oregon National Primate
-Research Center” and “Funded by NIH grants P51 RR13986 and P51 OD011092”
-(both grants together, which fits the owner’s sentence but carries no
-“version one” limit). **Places carrying the wording (grep S930; re-grep
-before editing, the lines shift):**
-`vignettes/manual_components/_introduction.Rmd:17-27` (the source
-`README.Rmd` pulls in as a child; `README.md:32-40` is generated from
-it); `DESCRIPTION:14-17` (two `fnd` entries;
-`man/nprcgenekeepr-package.Rd:36-37` is generated from it);
-`CLAUDE.md:19-21` (Project Overview, inside its protected fence);
-`vignettes/articles/colony-manager-guide.qmd:68`, `:86-87`,
-`:1108-1109`;
-`vignettes/articles/engineering-the-2.0.0-release.qmd:794-795`;
-`R/appUI.R:323-324`;
-`docs/planning/nprc-outreach-announcement-plan.md:48`, `:426`,
-`:493-494` (a plan, not a shipped file). **Decide when picking it up:**
-the exact wording and what “version one” means here (the 1.x releases?);
-whether each grant is credited to a center, as now, or to the
-version-one work, as the owner’s sentence and the About tab read;
-whether `DESCRIPTION`’s two funder entries change (they set the
-package’s funder list); and whether the About tab’s two lines change (a
-displayed-text change, so strict TDD needs a test first).
-
-**[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
-fails cryptically on an id or parent that is absent from the tree, and
-cannot resolve a very deep acyclic chain (found S783, 2026-09-26,
-DECISION NEEDED, Effort S)** – both left out of the F4 (cycle) slice by
-the owner’s decision at its Pre-RED gate. Probes (S783, hand-built
-trees; not run through
-[`createPedTree()`](https://github.com/rmsharp/nprcgenekeepr/reference/createPedTree.md)
-of a raw pedigree with a dangling parent): (1)
-`getAncestors("K", list(K = list(sire = "GONE", dam = NA)))` and
-`getAncestors("NOPE", tree)` both stop with “argument is of length zero”
-(`ptree[[id]]$sire` is `NULL`, so
-[`is.na()`](https://rdrr.io/r/base/NA.html) is `logical(0)` in
-`R/getAncestors.R:85-88`); (2) an acyclic single-parent chain resolves
-up to 2,218 generations and aborts with R’s “evaluation nested too
-deeply” beyond that (997 before the S783 change; `options(expressions)`
-is 5000; the cause of the increase was not investigated). Real pedigrees
-are a few dozen generations deep, so (2) is recorded for completeness,
-not as a defect to fix. **Decision for the owner on (1):** stop with a
-message naming the absent id (matches F4’s wording style), or treat an
-absent parent as a founder (returns fewer ancestors silently; a behavior
-change for the exported
-[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md),
-[`findLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/findLoops.md)
-and
-[`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)).
-Callers: only `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither
-reached from the app.
+**Optional: put `HANDOFFS.md` under the context-budget hook, so a commit
+that pushes it past the Read tool’s 262,144 B whole-file refusal is
+refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
+Effort S; config only, `.context-budget.json`)** – `HANDOFFS.md` crossed
+262,144 B in S950’s close-out commit (259,794 B at the claim, 263,942 B
+after one 4,148 B receipt) and nothing said so until the S951 Phase 0
+dashboard (“High+ Risk 1”): `.context-budget.json` budgets only
+`CLAUDE.md` and `SESSION_NOTES.md`, and the dashboard flags a file only
+once it is already past the limit. S951 trimmed it (264,486 B to 30,267
+B; shard `docs/archive/HANDOFFS-through-2026-10-08.md`); S917 had
+trimmed it 33 sessions earlier (268,350 B to 85,965 B). A `files` entry
+(class `read-mandated`, `max_bytes` 262,144, `warn_bytes` at the
+trimmer’s 196,608 B archive line) would make `context_budget.py` warn
+and the pre-commit hook refuse growth past the limit. **Decide when
+picking it up:** the two numbers (an estimate, not a measurement: at the
+recent 3.9 to 5.3 KB per receipt the warn line is about 36 sessions away
+and the limit about 50), and whether `CHANGELOG.md` gets the same entry
+(it crossed the 196,608 B line at S959; S960 trimmed it).
 
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
@@ -154,10 +67,10 @@ re-knit `NEWS.md`, reinstall the package and re-render `README`
 paper-dependency item below also waits on a released 3.0.0.
 
 **Audit the internal and user-facing documentation for stale information
-and stale diagrams** (owner-requested 2026-09-26; READY, Effort L – one
-audit report per session, so expect several slices) – the owner noticed
-that two article PDFs showed stale figures. **Method** (each slice is
-its own report, `docs/audits/DOCS_STALENESS_AUDIT_SLICE*`, per
+and stale diagrams** (owner-requested 2026-09-26; DECISION NEEDED (part
+2 only; part 1, slice 2, finished S944), Effort S each) – the owner
+noticed that two article PDFs showed stale figures. **Method** (each
+slice is its own report, `docs/audits/DOCS_STALENESS_AUDIT_SLICE*`, per
 `AUDIT_WORKSTREAM.md`): check every claim, number, screenshot and
 diagram against today’s code or output (regenerate the figure from the
 current source and compare; count, don’t recall); list each stale item
@@ -179,29 +92,26 @@ header sweep of all 84 plans (31 bannered), S862; 8 (S868)
 S870. **Still open.** (1) *Slice 2* (S821,
 `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped S927 into 7-8
 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its
-owner decisions D1-D5 are pending; Phase 1, the session-ending crash,
-was fixed S928 and Phase 2, the capture scripts’ honest reporting, S930:
-one shared helper, `tests/testthat/helper-captureHarness.R`, and the
+owner decisions D2 to D5 are all ruled; D1, the order, was followed as
+the plan recommended; Phase 1, the session-ending crash, was fixed S928
+and Phase 2, the capture scripts’ honest reporting, S930: one shared
+helper, `tests/testthat/helper-captureHarness.R`, and the
 `NPRC_SHOT_DIR` folder setting; Phase 2’s item (e), the full-height
-`potential_parents_results.png` capture, was NOT done and moves to Phase
-3c; Phases 3a and 3b still need D2 and D3 answered; Phase 3c has 9
-pictures left, `genetic_diversity_heatmap.png` having been retaken S934,
-see below; its Breeding Groups pictures show the old default groups of
-dead animals and are retaken here now that the living-animals-only pool
-shipped, S939). Measured S927: 37 of the 38 script-written
-`shiny_app_use/` images differ from the app (S821 said 31); the colony
-script’s tail failure was that crash (an animal with no birth date in a
-group), not a script bug, and it is fixed; S928 checked it in the
-headless test driver, S929 by hand in a real Chrome window (the owner:
-`ExamplePedigree.csv` on the Input tab, Form Groups with the defaults,
-Top ranked; the page stayed live and the Genetic Diversity tab drew the
-heat map; “All available” was checked only in S928’s headless run, not
-by hand). Also: 12 images have no script (2 of the 3 CSV pictures are
-stale from the code alone); `pb_unknown_displayed.png` is an orphan;
-`pb_diagram_legend.png` is stale (it lacks S921’s “Same animal, again”
-row). When it is regenerated, add a sentence naming that entry to the
-article’s dashed-line paragraph (`pedigree-diagram.qmd:50-55`); the
-manual (`_pedigree_browser.Rmd:91-92`) already does. S933 retook
+`potential_parents_results.png` capture, needed no script change (S940:
+the fixed script’s capture is 1300 x 7121, the committed height; S927’s
+900 px was the crashed run); Phases 3a (S941; D2 ruled: delete the
+orphan), 3b (S942; D3 ruled: accept the install date), 3c (S940) 4a
+(S943; D4 ruled: build the tables) and 4b (S944; D5 ruled: script all
+nine) are DONE, so slice 2 is finished). Measured S927: 37 of the 38
+script-written `shiny_app_use/` images differ from the app (S821 said
+31); the colony script’s tail failure was that crash (an animal with no
+birth date in a group), not a script bug, and it is fixed; S928 checked
+it in the headless test driver, S929 by hand in a real Chrome window
+(the owner: `ExamplePedigree.csv` on the Input tab, Form Groups with the
+defaults, Top ranked; the page stayed live and the Genetic Diversity tab
+drew the heat map; “All available” was checked only in S928’s headless
+run, not by hand). Also: 12 images have no script (2 of the 3 CSV
+pictures are stale from the code alone). S933 retook
 `read_and_check_pedigree.png` alone (the Input tab’s new no-birth-date
 warning made the old picture show Warnings 1; the app now shows 2 and
 the guide text says 2), with the guide’s own script into a scratch
@@ -215,7 +125,87 @@ Inbreeding columns), from a full 81/81 run, copied alone. S936 retook
 `read_and_check_pedigree.png` (the QC Summary boxes are colored now, and
 the capture script waits for the yellow pop-up to close, which the
 container crop had cut off mid-sentence), from a full 82/82 run, copied
-alone. (2) *Owner decisions about code, found by slices 6-8* (DECISION
+alone. S940 did Phase 3c: 10 pictures retaken (the six Breeding Groups
+ones, the heat map, Potential Parents and both Mate Pair ones) from one
+full 82/82 run, copied by name. The Group Detail picture’s “Group to
+view” box had been blank since 2026-07-10 (the script typed “Group 6”;
+the box’s values are numbers), fixed with a test first
+(`test_captureHarness.R`); the heat map was retaken again (the groups
+are living animals with birth dates now, so S935’s note is gone); the
+Mate Pair caption said all alive animals but the picture shows a custom
+list of six, fixed. Its two findings for the owner (the Group Detail
+kinship caption and the unused animals’ “Group 7” heading) were ruled
+S950: the guide’s words changed and the app did not; S961 then renamed
+the box “Unused animals” on the Groups, Statistics and Group Detail
+tabs. S941 did Phase 3a: 14 pictures retaken (9 Pedigree Browser, 5
+Diagram) from the colony script’s full 81/81 run and the diagram
+script’s 18/18 run, copied by name; each was 147 px taller than the
+committed one (the longer Display Unknown IDs text) and now shows the
+`placeholder` column and no stale QC pop-up. The owner ruled D2
+(delete): `pb_unknown_displayed.png` and its capture step are gone (test
+first, `test_captureHarness.R`). The legend picture shows the dashed
+“Same animal, again” row and the dashed-line paragraph
+(`pedigree-diagram.qmd:50-56`) names it. Captions fixed: “6-animal” is
+21 animals, “the top union” is 8LKBV9 x his daughter FJIB3R, the
+affected picture is 12 animals with 4 filled (not three), the names
+picture is its own 12-animal lineage, and the first Pedigree Browser alt
+text. The two leftovers were the Direct-style item (fixed S949: the
+article’s edge-style section now shows a Direct picture,
+`diagram_direct_edge_style.png`, and says the first picture is the
+Rectilinear default) and the pop-up item below the Warnings-picture
+item. S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex
+Pyramid, Summary Statistics x3, Genetic Value x3) from the colony
+script’s full 81/81 run, copied by name; sizes matched S927’s
+measurements. D3 was ruled: accept. The Home picture shows the
+2026-10-07 install date and a three-row navigation bar (De- Identified
+Export and Genetic-Health Trends are new tabs). In S942 the Genetic
+Value results showed imports with a recorded origin first, as the prose
+said (S956 retook both for the living-animals default) (the committed
+ones, taken 2026-08-10, had no-parent, no-origin animals first; why was
+not looked into); the 500-row picture’s caption and alt text said rows 1
+to 10 of 500, 50 pages (S956: 332 entries, 34 pages), not a High-to-Low
+transition it never showed. Two findings for the owner were the Summary
+Statistics duplicates item (fixed S945: three different pictures) and
+the Genetic Value row-names item (fixed S946: the table is built with no
+row names). Phases 4a and 4b then remained. S943 did Phase 4a (D4 ruled:
+build the tables in the guide): the three spreadsheet pictures
+(`ss_kinship_matrix`, `ss_first_order_relationships`,
+`ss_female_founders`) are deleted and the guide builds the three tables
+itself, in the chunk labelled `summary-export-tables`
+(`vignettes/articles/colony-manager-guide.qmd:468`), from the example
+file with the export buttons’ own `write.csv` lines; a kinship corner
+(the first animal with 3 or more offspring and its first three), and the
+first 8 rows of the first-order and female-founders files. Measured
+first in the real app (the three export buttons, headless): exported
+functions alone rebuild all three files byte for byte (about 5 s); the
+old first-order picture matched 0 of its 22 rows (cause not looked
+into), the founders picture lacked `fromCenter` and `placeholder`, the
+kinship picture listed the animals in another order. The gate is
+`tests/testthat/test_guideExportTables.R` (9 blocks): what the guide
+shows must equal the same cells of what the buttons write. S944 did
+Phase 4b (D5 ruled: script all nine): the nine Marker Genetics pictures
+are retaken by a new script,
+`vignettes/articles/marker-genetics-screenshots.R` (one fresh app per
+picture; its five made-up data sets come from
+`tests/testthat/helper-markerPictureFixtures.R`, copies of the
+hand-checked fixtures in `test_modMarkerGenetics.R`, and the other four
+use files the package ships). Measured first in the real app (headless):
+every number in all nine old pictures still matched; what had changed
+was the page (8 sub-tabs and 4 upload boxes now; the five oldest
+pictures showed 0 to 5 sub-tabs and 1 or 2 boxes). The gate is
+`tests/testthat/test_markerPictureScreenshots.R` (16 blocks, 72
+expectations): the script’s pictures equal the guide’s nine, every
+picture goes through a pop-up wait, and the data run through the real
+module give the numbers the captions quote. **Slice 2 is finished:** all
+46 pictures in `shiny_app_use/` (measured S944: each is taken by one of
+the three capture scripts and cited by the guide or the Diagram article)
+now come from a script, and the guide’s abstract says “current as of
+2026-10-08”. Wording fixed in the same pass: the Heterozygosity caption
+(its animals are X, Y, Z), the Candidate tab’s “Current limitation” note
+(issue \#155 had fixed it), and the caption’s “10 shared loci” (3 of 10
+disagree). Its one finding for the owner, the Candidate tab’s blank
+table without `fromCenter`, was ruled and built S948 (the tab now says
+why). (2) *Owner decisions about code, found by slices 6-8* (DECISION
 NEEDED, Effort S each; reword the docs if the code changes; carried as
 recorded S870 and not re-checked against today’s code, except where a
 present-day check is named; the ids are in each slice’s report): 6a MB3

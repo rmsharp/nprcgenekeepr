@@ -85,7 +85,7 @@
 
     <section class="level2"><h2 id="sec-abstract">Abstract<a class="anchor" aria-label="anchor" href="#sec-abstract"></a>
 </h2>
-<p><code>nprcgenekeepr</code> provides genetic tools for primate-colony management: studbook quality control, pedigree construction and browsing, age-sex demographic display, genetic value analysis, and breeding-group formation, delivered through both a Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) and an exposed R API. This article is a practical, screenshot-illustrated guide for colony managers and primate-center bioinformatics staff, complementing the engineering account in <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a> and the seven feature-depth articles listed in <a href="#sec-approach" class="quarto-xref">Section 4</a>. Section 1 explains why the package exists; Section 2 maps its five function groups onto the app’s tabs and onto the two ways to use them (point-and-click or scripted); Section 3 walks a colony manager through the entire application, tab by tab, using the package’s own shipped example pedigree. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload defect that could silently corrupt sire/dam IDs, a “Custom” breeding-group sex ratio option with no numeric input, and a shipped example pedigree missing a column the Potential Parents tab needs to demonstrate populated results – each described where it arose rather than glossed over. All claims in this article are current as of 2026-09-30.</p>
+<p><code>nprcgenekeepr</code> provides genetic tools for primate-colony management: studbook quality control, pedigree construction and browsing, age-sex demographic display, genetic value analysis, and breeding-group formation, delivered through both a Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) and an exposed R API. This article is a practical, screenshot-illustrated guide for colony managers and primate-center bioinformatics staff, complementing the engineering account in <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a> and the seven feature-depth articles listed in <a href="#sec-approach" class="quarto-xref">Section 4</a>. Section 1 explains why the package exists; Section 2 maps its five function groups onto the app’s tabs and onto the two ways to use them (point-and-click or scripted); Section 3 walks a colony manager through the entire application, tab by tab, using the package’s own shipped example pedigree. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload defect that could silently corrupt sire/dam IDs, a “Custom” breeding-group sex ratio option with no numeric input, and a shipped example pedigree missing a column the Potential Parents tab needs to demonstrate populated results – each described where it arose rather than glossed over. All claims in this article are current as of 2026-10-08.</p>
 </section><section class="level2"><h2 id="sec-introduction">Introduction<a class="anchor" aria-label="anchor" href="#sec-introduction"></a>
 </h2>
 <p>This article is an onboarding guide to <code>nprcgenekeepr</code> for the audience it was built for: primate-center bioinformatics staff and colony managers evaluating or learning to use the package. It answers three questions in order – <strong>why</strong> the package exists, <strong>how</strong> its capabilities are organized, and <strong>what it looks like to actually use it</strong> – using the Shiny application (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) as the walkthrough’s frame of reference.</p>
@@ -93,9 +93,9 @@
 <p><strong>Scope.</strong> Every claim below describing the current application – tab list, control labels, default values, and any number tied to the package’s own <code>data(examplePedigree)</code> example data – was re-verified directly against the source and a live run of the app, as of 2026-09-30. Nothing here is carried forward uncritically from earlier tutorials.</p>
 </section><section class="level2"><h2 id="sec-purpose">Section 1 – Purpose: Why nprcgenekeepr Exists<a class="anchor" aria-label="anchor" href="#sec-purpose"></a>
 </h2>
-<p>The goal of <code>nprcgenekeepr</code> is to implement genetic tools for colony management. It was initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC) to facilitate analyses that center routinely performs, and has since been enhanced so that its underlying functions can also be used directly in R scripts rather than only through the Shiny interface (see <a href="#sec-approach" class="quarto-xref">Section 4</a>’s “two ways to use them”).</p>
+<p>The primary goal of <code>nprcgenekeepr</code> is to implement genetic tools for colony management. It was initially conceived and developed as a Shiny web application at the Oregon National Primate Research Center (ONPRC) to facilitate analyses that center routinely performs, and has since been enhanced so that its underlying functions can also be used directly in R scripts rather than only through the Shiny interface (see <a href="#sec-approach" class="quarto-xref">Section 4</a>’s “two ways to use them”).</p>
 <p>Captive breeding colonies – rhesus macaques and other nonhuman primates at National Primate Research Centers – need to manage genetic diversity across generations: avoiding the mating of closely related animals, preserving rare alleles carried by relatively few individuals, and forming breeding groups that balance those genetic goals against real behavioral and housing constraints. <code>nprcgenekeepr</code>’s ranking and grouping methodology follows Vinson and Raboin (2015), <em>A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques (Macaca mulatta)</em>, <em>Journal of the American Association for Laboratory Animal Science</em>, 54(6), 700-707.</p>
-<p>This work has been supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
+<p>Work on this package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
 </section><section class="level2"><h2 id="sec-approach">Section 2 – Approach: The Five Function Groups and Two Ways to Use Them<a class="anchor" aria-label="anchor" href="#sec-approach"></a>
 </h2>
 <p><code>nprcgenekeepr</code>’s capability is organized around five function groups. Each maps onto one or more tabs in the Shiny application (walked in <a href="#sec-practice" class="quarto-xref">Section 5</a>) and, for readers who want to script rather than click, onto a feature article that demonstrates the same underlying functions directly through the R API.</p>
@@ -289,7 +289,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </h3>
 <p>The <strong>Pedigree Browser</strong> tab displays the pedigree in a paged table (15 rows at a time by default, adjustable) with a <strong>Display Unknown IDs</strong> option. Unknown IDs (UIDs) are placeholder IDs the application generates, by default starting with the letter U, for the unrecorded parent of an animal with only one known parent.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/pb_10_rows_display_unknown_ids.png" alt="Pedigree Browser table with Display Unknown IDs checked, showing UNKNOWN placeholder IDs."></p>
+<figure><p><img src="shiny_app_use/pb_10_rows_display_unknown_ids.png" alt="Pedigree Browser table with Display Unknown IDs checked, showing the first 15 of 3,694 entries; the placeholder animals are in the table, on later pages."></p>
 <figcaption>Pedigree Browser with Display Unknown IDs checked (the default).</figcaption></figure>
 </div>
 <p>Which rows are placeholders is recorded in a yes/no <code>placeholder</code> column that the quality check adds (TRUE for a made-up parent, FALSE for a real animal). If a real animal’s ID looks like a made-up one, such as <code>U1234</code>, enter FALSE for it in that column of your file and it stays visible. The column is kept in the files you download, so the marks survive a save and re-upload.</p>
@@ -321,7 +321,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <figure><p><img src="shiny_app_use/pb_trimmed_for_focal_animals.png" alt="Pedigree Browser table trimmed to 962 animals related to the larger focal-animal list."></p>
 <figcaption>The pedigree trimmed to the larger focal group (962 animals total).</figcaption></figure>
 </div>
-<p>Checking <strong>Clear Focal Animals</strong> and selecting <strong>Update Focal Animals</strong> again reads an empty ID list, restoring the full, untrimmed pedigree.</p>
+<p>Checking <strong>Clear Focal Animals</strong> and selecting <strong>Update Focal Animals</strong> again reads an empty ID list, restoring the full, untrimmed pedigree and making the living animals the population again.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/pb_focal_animals_before_clear.png" alt="Pedigree Browser before clearing the focal-animal list, still trimmed."></p>
 <figcaption>Before clearing the focal-animal list.</figcaption></figure>
@@ -330,7 +330,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <figure><p><img src="shiny_app_use/pb_focal_animals_after_clear.png" alt="Pedigree Browser after clearing the focal-animal list, showing the full untrimmed pedigree."></p>
 <figcaption>After clearing the focal-animal list – the full pedigree is restored.</figcaption></figure>
 </div>
-<p>A population must be defined here before proceeding to Genetic Value Analysis. The rest of this walkthrough continues with the <strong>full, untrimmed</strong> example pedigree (the focal-animal trim above illustrates the feature, not the population used for the remaining tabs) – matching the shipped <code>examplePedigree</code>’s own downstream numbers below.</p>
+<p>With no focal animals entered, the population the other tabs analyze is the living animals (every animal if none is alive). The rest of this walkthrough continues with the <strong>full, untrimmed</strong> example pedigree and no focal animals, so its population is the 332 living animals (the focal-animal trim above illustrates the feature, not the population used for the remaining tabs) – matching the shipped <code>examplePedigree</code>’s own downstream numbers below.</p>
 <p><strong>Diagram view.</strong> Alongside the table, the Pedigree Browser’s <strong>Diagram</strong> tab renders the same population as an interactive pedigree diagram: one node per animal, shaped by sex, connected via a mating-unit convention – a mate’s own matings render as a small connector between the two parents, with a line down to their shared children, the same convention traditional pedigree charts (and the <code>kinship2</code> R package) use. A <strong>Diagram Edge Style</strong> toggle above the diagram switches between a strict-right-angle routing matching <code>kinship2</code>’s own look (the default) and a straight-line routing. A legend to the right of the diagram shows what each shape means. If the pedigree data includes an optional <code>affected</code> column, individuals marked affected are additionally shaded a distinct color, with a matching “Affected” entry in the same legend – pedigrees without an <code>affected</code> column render unshaded, as before. If the pedigree data includes an optional <code>name</code> column, a <strong>Show Names on Diagram</strong> toggle above the diagram (off by default) switches each node’s label from id-only to id plus name on a second line – a name longer than 15 characters is truncated with an ellipsis on the diagram itself, with the full name always available in the hover tooltip. Not every animal needs a name; one with no name, or a pedigree with no <code>name</code> column at all, always renders with just its id, and the “Select by id” search dropdown below always lists ids, never names, regardless of the toggle. A mating between two blood-related animals renders its connector lines thicker and in a distinct color, flagging the consanguineous mating at a glance – no optional column or toggle needed, since it is detected directly from the pedigree’s own sire/dam data. If a colony records twin births, an optional Twin/Zygosity Relations file can be uploaded to draw a distinctly-styled connector between a declared pair’s own nodes – and, for a declared monozygotic pair, corrects their kinship to genetic identity throughout the application, not just this diagram. See <strong>The Pedigree Diagram Tab</strong> article for the full tour of every feature this tab offers, with a screenshot of each.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/pb_diagram_legend.png" alt="Pedigree Browser Diagram tab showing an interactive pedigree diagram with sex-shaped nodes and a shape-to-sex legend panel (dot=Female, square=Male, star=Hermaphrodite, triangle=Unknown, diamond=Other/Unrecorded, hexagon=Affected) to the right of the diagram."></p>
@@ -360,47 +360,332 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </div>
 <p><strong>A correction to an older claim.</strong> Animals with no recorded parentage (“Undetermined”: both parents unknown and no recorded origin; animals that are genuine imports, with a recorded origin, are ranked normally) are <em>not</em> automatically high value. Since issue #9’s ranking correction (the Undetermined demotion in <code>R/modGeneticValue.R</code>), the results table sorts Undetermined animals to the <em>bottom</em> of the ranking, so a genuinely uncertain genome-uniqueness estimate no longer inflates them to the top. Because the exact row at which values transition from High to Low is a property of one stochastic gene-drop run, this article does not pin a specific row number to it – widening “Show top N” (to 500 below) shows the full distribution instead.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/gva_high_and_low_value.png" alt="Genetic Value Analysis results table widened to 500 rows, showing the transition from High Value to Low Value and Undetermined animals sorted to the bottom."></p>
-<figcaption>Genetic Value Analysis results widened to show more of the ranking, including lower-ranked and Undetermined animals.</figcaption></figure>
+<figure><p><img src="shiny_app_use/gva_high_and_low_value.png" alt="Genetic Value Analysis tab with Show top N set to 500; the results table reads Showing 1 to 10 of 332 entries and its pager runs to page 34."></p>
+<figcaption>Genetic Value Analysis with Show top N widened to 500: the results table now has 34 pages of 10 rows, and the first page is shown.</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="summary-statistics">Summary Statistics<a class="anchor" aria-label="anchor" href="#summary-statistics"></a>
 </h3>
 <p>The <strong>Summary Statistics and Plots</strong> tab uses the results from Genetic Value Analysis. Definitions of genome uniqueness and kinship are on the <strong>Genetic Value Analysis and Breeding Group Description</strong> tab; founder-equivalent and founder-genome-equivalent definitions are at the bottom of this tab (see also <a href="fg-se-validation.html">“Validating the Founder-Genome-Equivalent Standard Error”</a>).</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/ss_first_view.png" alt="Summary Statistics tab showing the first view of genetic diversity metrics."></p>
+<figure><p><img src="shiny_app_use/ss_first_view.png" alt="Summary Statistics tab as it opens: the guidance box, the Export buttons, the Population Summary and the Effective Population Size tables."></p>
 <figcaption>Summary Statistics, first view.</figcaption></figure>
 </div>
-<p>The tab has several export buttons producing CSV files, three of which are illustrated below (opened in a spreadsheet program, not captured from the app itself, since these depict exported file contents rather than application UI): <strong>Export Kinship Matrix</strong>, <strong>Export First-Order Relationships</strong>, and <strong>Export Female Founders</strong> (a separate <strong>Export Male Founders</strong> button produces the same column structure for males). The tab also has <strong>Export All Relationships</strong> and <strong>Export Relationship Classes</strong> buttons, plus six further buttons for exporting the six summary plots below as PNGs, not illustrated here:</p>
-<ul>
-<li>
-<p>The kinship matrix has a row and column for every analyzed individual, plus a first row and first column of IDs.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/ss_kinship_matrix.png" alt="Spreadsheet view of an exported kinship matrix CSV file."></p>
-<figcaption>First few rows of an exported kinship matrix CSV.</figcaption></figure>
+<p>The tab has several export buttons producing CSV files, three of which are shown below: <strong>Export Kinship Matrix</strong>, <strong>Export First-Order Relationships</strong>, and <strong>Export Female Founders</strong> (a separate <strong>Export Male Founders</strong> button produces the same column structure for males). These tables are not screenshots. This article builds them each time it is rendered, from the example pedigree and the same package functions the export buttons call, and shows each file’s own contents (<code>NA</code> marks a blank value). The tab also has <strong>Export All Relationships</strong> and <strong>Export Relationship Classes</strong> buttons, plus six further buttons for exporting the six summary plots below as PNGs, not illustrated here:</p>
+<p><strong>Kinship matrix.</strong> The file has a row and column for every analyzed individual, plus a first row and first column of IDs. Most pairs of animals are unrelated and show 0, so the table below shows only a corner: the first animal with three or more offspring (0ZX29Q) and its first three offspring, where the values are not zero.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top">
+<caption>A corner of the kinship matrix file (3,694 rows and columns in all).</caption>
+<thead><tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">0ZX29Q</th>
+<th style="text-align: right;">D9MZ4A</th>
+<th style="text-align: right;">LVXPH7</th>
+<th style="text-align: right;">NF8IQG</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0ZX29Q</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D9MZ4A</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">0.125</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LVXPH7</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.125</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NF8IQG</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+</tbody>
+</table>
 </div>
-</li>
-<li>
-<p>The first-order relationships file has columns <code>id</code>, <code>parents</code>, <code>offspring</code>, <code>siblings</code>, and <code>total</code>, counted from known relationships.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/ss_first_order_relationships.png" alt="Spreadsheet view of an exported first-order relationships CSV file."></p>
-<figcaption>First few rows of an exported first-order-relationships CSV.</figcaption></figure>
 </div>
-</li>
-<li>
-<p>The founders files have columns <code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>, <code>gen</code>, <code>birth</code>, <code>exit</code>, <code>age</code>, <code>ancestry</code>, <code>origin</code>, <code>status</code>, <code>recordStatus</code>, <code>fromCenter</code>, <code>placeholder</code>, <code>population</code>, and <code>pedNum</code>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/ss_female_founders.png" alt="Spreadsheet view of an exported female-founders CSV file."></p>
-<figcaption>First few rows of an exported female-founders CSV.</figcaption></figure>
+<p><strong>First-order relationships.</strong> The file has columns <code>id</code>, <code>parents</code>, <code>offspring</code>, <code>siblings</code>, and <code>total</code>, counted from known relationships, one row per animal.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top">
+<caption>The first rows of the first-order relationships file (3,694 rows in all).</caption>
+<thead><tr class="header">
+<th style="text-align: left;">id</th>
+<th style="text-align: left;">parents</th>
+<th style="text-align: left;">offspring</th>
+<th style="text-align: left;">siblings</th>
+<th style="text-align: left;">total</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">01WY5E</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">02GZ4L</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">079ZJK</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">08CF4C</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">093AB5</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0CRGND</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0J5JEH</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0LHU4M</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+</tbody>
+</table>
 </div>
-</li>
-</ul>
+</div>
+<p><strong>Founders.</strong> The founders files have columns <code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>, <code>gen</code>, <code>birth</code>, <code>exit</code>, <code>age</code>, <code>ancestry</code>, <code>origin</code>, <code>status</code>, <code>recordStatus</code>, <code>fromCenter</code>, <code>placeholder</code>, <code>population</code>, and <code>pedNum</code>. The table scrolls sideways to show every column.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top">
+<caption>The first rows of the female-founders file (124 rows in all).</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 5%">
+<col style="width: 20%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 4%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">id</th>
+<th style="text-align: left;">sire</th>
+<th style="text-align: left;">dam</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">gen</th>
+<th style="text-align: left;">birth</th>
+<th style="text-align: left;">exit</th>
+<th style="text-align: left;">age</th>
+<th style="text-align: left;">ancestry</th>
+<th style="text-align: left;">origin</th>
+<th style="text-align: left;">status</th>
+<th style="text-align: left;">recordStatus</th>
+<th style="text-align: left;">fromCenter</th>
+<th style="text-align: left;">placeholder</th>
+<th style="text-align: left;">population</th>
+<th style="text-align: left;">pedNum</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">079ZJK</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">1975-01-16</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">JAPAN MONKEY CENTER PRIMATE ZOO</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">08CF4C</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">1966-03-19</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">JAPAN MONKEY CENTER PRIMATE ZOO</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0CRGND</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1982-04-01</td>
+<td style="text-align: left;">1982-04-27</td>
+<td style="text-align: left;">0.1</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0J5JEH</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1994-05-20</td>
+<td style="text-align: left;">1994-05-20</td>
+<td style="text-align: left;">-0.1</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0LHU4M</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1999-07-28</td>
+<td style="text-align: left;">1999-12-19</td>
+<td style="text-align: left;">0.4</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0M6WB4</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">2009-07-23</td>
+<td style="text-align: left;">2009-07-23</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0QD4RS</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1981-06-18</td>
+<td style="text-align: left;">1986-07-04</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0RPWWX</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">1969-05-13</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">JAPANESE</td>
+<td style="text-align: left;">JAPAN MONKEY CENTER PRIMATE ZOO</td>
+<td style="text-align: left;">DECEASED</td>
+<td style="text-align: left;">original</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Six plots – histograms and boxplots of kinship coefficients, their Z-scores, and genome uniqueness scores – are shown together and can each be exported as a PNG.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/ss_trimmed_all_plots.png" alt="Six summary plots: histograms and boxplots of kinship coefficients, Z-scores, and genome uniqueness."></p>
+<figure><p><img src="shiny_app_use/ss_trimmed_all_plots.png" alt="The six summary plots, histograms on the left and box plots on the right, of kinship coefficients, Z-scores, and genome uniqueness, each with its Export button."></p>
 <figcaption>All six summary plots together.</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png" alt="Exported mean kinship coefficient histogram plot."></p>
+<figure><p><img src="shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png" alt="The mean kinship coefficient histogram exactly as the Export Mean Kinship Histogram button writes it, an 800 by 600 pixel PNG."></p>
 <figcaption>One exported plot: the mean kinship coefficient histogram.</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="breeding-group-formation">Breeding Group Formation<a class="anchor" aria-label="anchor" href="#breeding-group-formation"></a>
@@ -430,24 +715,25 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <p><strong>Fixed before publication.</strong> An earlier draft of this walkthrough found selecting “Custom” gave no way to enter the desired ratio anywhere in the UI – internally it was treated the same as “None.” <strong>Fixed</strong> by adding the numeric field described above; group formation now uses that value as the target ratio.</p>
 </blockquote>
 </div>
-<p>The screenshot below shows one working example: the default 20 top-ranked candidate animals, a target ratio of 2.5 females per male, and “Number of groups” set to 6. Because group formation is a randomized search (the default <strong>Number of simulations</strong> is 10), the exact number and composition of groups formed varies from run to run rather than reproducing identically – this particular run produced 7 groups, each drawn toward the target ratio where enough candidates of each sex were available.</p>
+<p>The screenshot below shows one working example: the default 20 top-ranked candidate animals, a target ratio of 2.5 females per male, and “Number of groups” set to 6. Because group formation is a randomized search (the default <strong>Number of simulations</strong> is 10), the exact number and composition of groups formed varies from run to run rather than reproducing identically – this particular run produced 6 groups, each drawn toward the target ratio where enough candidates of each sex were available, and a seventh box that lists the four animals that fit no group.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/breeding_group_sex_ratio_specification.png" alt="Breeding Group Formation Groups sub-tab showing 7 groups formed in one run using a Custom sex ratio of 2.5 females per male; the exact group count and composition vary between runs."></p>
+<figure><p><img src="shiny_app_use/breeding_group_sex_ratio_specification.png" alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the four animals that fit no group; the exact group count and composition vary between runs."></p>
 <figcaption>Breeding groups formed with a Custom sex ratio of 2.5 (females per male) – one run of the randomized search.</figcaption></figure>
 </div>
+<p>That last box is not a group: it appears only when some candidates fit in no group, and it lists them. The <strong>Groups</strong> sub-tab, the <strong>Statistics</strong> table and the <strong>Group Detail</strong> selector all call it ‘Unused animals’, and the Groups count in the candidate table above the tabs includes it.</p>
 <p><strong>Seeding groups with specific animals.</strong> Behavioral constraints – an existing social group, or an infant that should stay with its dam – can be accommodated by checking <strong>Seed groups with specific animals</strong>, which opens one text area per group for listing the animals that must be assigned to it; the algorithm fills in the remaining membership around those seeds. The screenshot below shows the six text areas this creates for a 6-group run, before any IDs are typed into them.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/breeding_group_6_infants_with_dam.png" alt="Breeding Group Formation showing six empty per-group seed text areas for a 6-group run."></p>
 <figcaption>The six per-group seed text areas (Number of groups = 6), shown empty.</figcaption></figure>
 </div>
-<p>Each formed group’s full membership, and – if <strong>Include kinship in display of groups</strong> was checked before forming – its within-group kinship values, can be reviewed on the <strong>Group Detail</strong> sub-tab, one group at a time.</p>
+<p>Each formed group’s full membership and its within-group kinship values can be reviewed on the <strong>Group Detail</strong> sub-tab, one group at a time. The kinship table is shown whether or not <strong>Include kinship in display of groups</strong> is checked; the box does not change what this sub-tab shows.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png" alt="Group Detail sub-tab showing one formed group's membership without kinship values."></p>
-<figcaption>Group Detail for one formed group (no kinship shown).</figcaption></figure>
+<figure><p><img src="shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png" alt="Group Detail sub-tab showing one formed group's membership and its within-group kinship table, with the kinship box unchecked."></p>
+<figcaption>Group Detail for one formed group, with the kinship box unchecked; the kinship table is shown anyway.</figcaption></figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png" alt="Group Detail sub-tab showing group membership with within-group kinship values included."></p>
-<figcaption>Group Detail with kinship values included, viewing a different group of the same 6-group run.</figcaption></figure>
+<figure><p><img src="shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png" alt="Group Detail sub-tab showing group 6's membership and within-group kinship table, from a second run formed with the kinship box checked."></p>
+<figcaption>Group Detail for group 6 of a second run, formed with the kinship box checked; the kinship table is shown in the same way.</figcaption></figure>
 </div>
 <p>A <strong>Statistics</strong> sub-tab summarizes all formed groups at once. Groups and their kinship matrices can each be exported individually to a file and location you choose.</p>
 <p><strong>Ancestry guardrails</strong> (issue <a href="https://github.com/rmsharp/nprcgenekeepr/issues/168">#168</a>). Centers that manage geographic ancestry – for example keeping Indian-origin and Chinese-origin rhesus lines separate – can upload an ancestry rules file in the <strong>Ancestry Guardrails</strong> section of the configuration panel (check the box to expand it; the status line beneath always shows what is loaded). Each line of the rules file names two ancestry classifications and a severity: <code>block</code> rules keep matching pairs out of the same group during formation, while <code>flag</code> rules let the groups form and report the matching pairs afterward. After forming groups, the <strong>Ancestry</strong> sub-tab lists every within-group pairing a rule matched, alongside a coverage summary showing how many grouped animals carry each ancestry classification and which classifications no rule reaches – an animal whose ancestry no rule names participates in no conflict, so the coverage view is how a rule set that quietly covers too little stays visible.</p>
@@ -460,7 +746,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <p>Set the <strong>Minimum breeding age</strong> floor and, optionally, check <strong>Exclude specific animals</strong> to open a text area for animals that should never appear in a pair regardless of any other eligibility screen. Click <strong>Find Eligible Pairs</strong> to compute the result.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/mate_pair_analysis_eligible_pairs.png" alt="Mate Pair Analysis tab showing the configuration panel (candidate population, minimum age, exclude list, Find Eligible Pairs button) alongside a sortable Eligible Pairs table with columns for sire ID, dam ID, pedigree kinship, marker kinship, and per-parent genetic-value columns."></p>
-<figcaption>Mate Pair Analysis configuration panel and the Eligible Pairs table for a small example pedigree scoped to all alive animals.</figcaption></figure>
+<figcaption>Mate Pair Analysis configuration panel and the Eligible Pairs table for six example animals entered as a custom list.</figcaption></figure>
 </div>
 <p>The <strong>Eligible Pairs</strong> table reports, for every opposite-sex pair surviving the population, age, and exclude-list screens: pedigree kinship, and – when a genotype file has already been uploaded on the Marker Genetics tab – marker-based kinship for that same pair, alongside each parent’s pedigree-based mean kinship and genome uniqueness (the same <code>indivMeanKin</code>/<code>gu</code> values shown on the Genetic Value Analysis tab). No single blended “compatibility score” is computed; sort or filter the raw columns directly, the same way every other ranked table in this application works. The table is sortable and filterable server-side, and its CSV export downloads exactly the rows currently visible after any filter – not the full, unfiltered table.</p>
 <p>A separate <strong>Excluded</strong> tab shows every pair the age or exclude-list screen dropped, together with its reason, so a curator can see <em>why</em> a pair is missing instead of it silently disappearing. <strong>Export Excluded Pairs</strong> under the table saves them as a CSV file; as with the Eligible Pairs export, the file holds exactly the rows left after any filter.</p>
@@ -477,7 +763,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </h3>
 <p>The <strong>Genetic Diversity</strong> tab (issue <a href="https://github.com/rmsharp/nprcgenekeepr/issues/112">#112</a>) is new since the package’s original tutorial-era documentation. It monitors the diversity of breeding groups <em>after</em> they are formed: once groups exist (Breeding Groups tab) and a Genetic Value Analysis has been run, it renders a red/yellow/green heat map with one row per group and one column per metric – <strong>Value</strong> (the proportion of low-value animals in the group), <strong>Origin</strong> (Indian- vs. Chinese-origin status, shown only when the pedigree has an <code>ancestry</code> column), <strong>Production</strong> (births per breeding-age female over the last two calendar years, scored red/yellow/green against cut-offs that depend on the selected <strong>Housing type</strong>, “Shelter pens” or “Corral”), and <strong>Inbreeding</strong> (within-group kinship risk involving the group’s male). A group with no assessed value, or an undefined Inbreeding result, is scored red rather than shown as healthy, so missing data surfaces instead of hiding as a false green. A breeding-age female is one at least 3 years old. A female with no birth date has no age, so, in both the Production and the Inbreeding column, she counts as a breeding-age female only when the pedigree lists an offspring for her, wherever that offspring is; with no offspring she is left out. A male with no birth date is never counted as a potential mate in the Inbreeding column. A group with no breeding-age females has no Production value, and its cell is gray. When any animal in the groups has no birth date, a note under the heat map says how many, and how many of those females were counted or left out. Until groups are formed and an analysis has run, the tab shows guidance instead of an empty plot.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/genetic_diversity_heatmap.png" alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green (gray where a value is undefined), with a note under the grid about animals that have no birth date."></p>
+<figure><p><img src="shiny_app_use/genetic_diversity_heatmap.png" alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green (gray where a value is undefined)."></p>
 <figcaption>The Genetic Diversity heat map for the 6 breeding groups formed above.</figcaption></figure>
 </div>
 </section><section class="level3"><h3 id="marker-genetics">Marker Genetics<a class="anchor" aria-label="anchor" href="#marker-genetics"></a>
@@ -491,7 +777,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <p>A second <strong>Heterozygosity</strong> tab (also part of issue #130) surfaces a related but distinct diagnostic from the same uploaded genotype file: each animal’s observed heterozygosity (<code>ho</code>, the fraction of its genotyped loci at which it carries two different alleles) alongside the population’s expected heterozygosity (<code>he</code>, Nei’s gene diversity computed from marker allele frequencies and averaged across loci). Observed running below expected across the population points toward inbreeding or population substructure; observed running above expected points the other way, toward outbreeding.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/marker_genetics_heterozygosity.png" alt="Marker Genetics Heterozygosity tab showing a table with three rows (X, Y, Z) and two columns, ho and he, with per-animal observed heterozygosity values and the same population-wide expected heterozygosity value repeated on every row."></p>
-<figcaption>The Heterozygosity tab for the same example trio: observed heterozygosity (ho) per animal alongside the population’s expected heterozygosity (he).</figcaption></figure>
+<figcaption>The Heterozygosity tab for a second small example, animals X, Y and Z: observed heterozygosity (ho) per animal alongside the population’s expected heterozygosity (he).</figcaption></figure>
 </div>
 <p>A third <strong>Parentage Exclusion</strong> tab (also part of issue #130) cross-references the current pedigree’s recorded dam and sire against the same uploaded genotype file: for each animal with a genotyped recorded parent, it counts the marker loci at which the two are Mendelian-inconsistent (both homozygous for a different allele – no shared allele is possible) and flags any recorded parent whose genotype evidence contradicts the pedigree, directly targeting real-world dam/sire misidentification. A single mismatching locus does not trigger a flag on its own, since ordinary genotyping error or mutation can produce an isolated mismatch even for a true parent-offspring pair – the tab flags a recorded parent only once its exclusion count exceeds a conservative, tunable tolerance (3 or more inconsistent loci by default).</p>
 <div class="quarto-figure quarto-figure-center">
@@ -509,12 +795,12 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p><strong>Current limitation.</strong> Candidate lists come from the same demographic screening the Potential Parents tab uses (age, sex, presence date, gestation window), which only proposes candidates for an animal with an <em>unrecorded</em> parent slot. An animal whose recorded parent is present but wrong – the case this tab exists for – will show no candidates unless its <em>other</em> parent slot is also unrecorded, or unless a curator explicitly supplies a candidate list (a script-callable option not yet exposed in this tab). This is being tracked as a follow-on improvement.</p>
+<p><strong>What the candidate list needs.</strong> Candidate lists come from the same demographic screening the Potential Parents tab uses (age, sex, presence date, gestation window), which needs the pedigree’s <code>fromCenter</code> column; without that column the table is empty, and the tab says so in a notice above the table, in the same words as the Potential Parents tab. For an animal whose recorded parent is present but wrong – the case this tab exists for – the tab sets that recorded parent aside, screens candidates for the freed slot, and keeps the recorded parent in the list, so it appears with its own score beside the others. A curator can also supply a candidate list explicitly (a script-callable option not exposed in this tab).</p>
 </blockquote>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/marker_genetics_candidate_assignment.png" alt="Marker Genetics Candidate Parent Assignment tab showing a table with one row: offspring C, role sire, candidate Q, LOD blank (negative infinity), nLociUsed 10, excluded true, lowPower false."></p>
-<figcaption>The Candidate Parent Assignment tab for a small example trio: C’s falsely-recorded sire (Q) is Mendelian-excluded across all 10 shared loci, so its LOD score is negative infinity – a true genetic impossibility, not merely “unlikely” (blank cells in the LOD/delta columns above render that infinite value).</figcaption></figure>
+<figcaption>The Candidate Parent Assignment tab for a small example trio: C’s falsely-recorded sire (Q) is Mendelian-excluded (the two disagree at 3 of the 10 shared loci), so its LOD score is negative infinity – a true genetic impossibility, not merely “unlikely” (blank cells in the LOD/delta columns above render that infinite value).</figcaption></figure>
 </div>
 <p>A sixth <strong>Linkage and LD Block Metrics</strong> tab (issue <a href="https://github.com/rmsharp/nprcgenekeepr/issues/153">#153</a>) answers a question the other five tabs deliberately don’t: whether nearby marker loci carry information about relatedness or linkage beyond what each locus contributes independently. It needs its own dedicated marker genotype upload (separate from the file used by the other five tabs, since it tolerates multiallelic panels – e.g. microsatellite/STR panels – that the other tabs’ biallelic-only KING-robust estimator would reject) plus a locus metadata file describing each locus’s chromosome, physical position, and (optionally) genetic-map position.</p>
 <p>Uploading the locus metadata file first shows a <strong>coverage report</strong>: real colony marker panels rarely have complete positional information, so every locus is classified into one of three explicit tiers – <code>full</code> (chromosome and position both known), <code>partial</code> (only one known), or <code>none</code> – rather than silently requiring complete metadata before anything downstream works.</p>
@@ -532,7 +818,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <p>A seventh <strong>Genomic ROH (F_ROH)</strong> tab (issue <a href="https://github.com/rmsharp/nprcgenekeepr/issues/152">#152</a>, the final slice, closing that issue) computes a marker-based inbreeding estimate independent of the recorded pedigree: the genomic inbreeding coefficient F_ROH, derived from Runs of Homozygosity (ROH) – long stretches of consecutive homozygous loci that are unlikely to occur by chance and typically indicate the two chromosome copies at that stretch are identical by descent. Unlike the Linkage and LD Block Metrics tab above, this one needs <strong>no separate upload</strong>: it reuses the same genotype file already uploaded for the Kinship Comparison tab (now validated by a rule set sized for larger, sequence-scale panels) and the same locus metadata file already uploaded for the Linkage and LD Block Metrics tab, since both tabs share the same <code>locus</code>/<code>chrom</code>/<code>pos</code> vocabulary by design.</p>
 <p>A run of consecutive homozygous, non-missing loci (ordered by physical position along each chromosome) qualifies as an ROH segment only if it meets <em>both</em> a minimum SNP-count threshold and a minimum base-pair span threshold – the same field-standard dual-threshold convention PLINK uses, adjustable via the two fields above the table (pre-filled with 50 SNPs, a scaled-down version of PLINK’s default of 100, and 1,000,000 base pairs, which is PLINK’s own default). F_ROH is the proportion of the genome covered by qualifying segments.</p>
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="shiny_app_use/marker_genetics_genomic_roh.png" alt="Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count and minimum ROH segment span inputs above a table of 50 rows (S001 through S050 visible in part), each with nSegments, totalRohLength, and fRoh columns populated with real, non-zero example values."></p>
+<figure><p><img src="shiny_app_use/marker_genetics_genomic_roh.png" alt="Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count and minimum ROH segment span inputs above the first page of a table of 50 individuals (S001 through S010 of 5 pages), each with nSegments, totalRohLength, and fRoh columns populated with real, non-zero example values."></p>
 <figcaption>The Genomic ROH (F_ROH) tab computed on the bundled 50-individual, 1,000-locus synthetic sequence-scale example panel, with the minimum-SNP threshold lowered from its default of 50 to 3 so the small synthetic panel still yields non-trivial segments: per-individual segment counts, total ROH length, and F_ROH.</figcaption></figure>
 </div>
 <p>Like the Linkage and LD Block Metrics tab, any export from this tab is de-identified and routed through the same curator confirm-gate pattern: generate a preview, confirm via a modal dialog, then download. Three artifacts are available – the de-identified genotype matrix, the de-identified F_ROH table, and a transformation manifest recording the export’s own timestamp, package version, and the SNP-count/base-pair thresholds used, mirroring the De-Identified Export tab’s own manifest convention below.</p>
@@ -587,7 +873,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <p>The workflow has three parts:</p>
 <ol type="1">
 <li>
-<strong>Snapshot history.</strong> Upload a snapshot-history file (the package ships a worked example file for this tab) or start recording a new one. Each row is one dated snapshot – mean kinship, founder representation, genome uniqueness, and the population’s make-up – for a single membership rule (the whole pedigree, or a designated focal population).</li>
+<strong>Snapshot history.</strong> Upload a snapshot-history file (the package ships a worked example file for this tab) or start recording a new one. Each row is one dated snapshot – mean kinship, founder representation, genome uniqueness, and the population’s make-up – for a single membership rule (the whole pedigree, or a smaller population: the living animals, or the focal animals you entered).</li>
 <li>
 <strong>Generate Snapshot.</strong> After running Genetic Value Analysis on the Genetic Value Analysis tab, clicking <strong>Generate Snapshot</strong> here records a new dated row from that analysis and appends it to the history. The membership rule is filled in automatically from the analysis you just ran – it is not a setting you have to get right by hand.</li>
 <li>
@@ -602,7 +888,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </section></section><section class="level2"><h2 id="sec-conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#sec-conclusion"></a>
 </h2>
 <p>This article covered why <code>nprcgenekeepr</code> exists, how its five function groups map onto the Shiny application’s tabs and onto a scriptable R API, and what it looks like to actually use every tab of that application against the package’s own example data. For more depth on any one capability, see the feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a>; for the story of how the current modular application came to be, see <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a>. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload sire/dam corruption defect, a non-functional “Custom” breeding-group sex ratio, and a shipped example pedigree missing the column the Potential Parents tab needs to demonstrate populated results – each described where it arose in Section 3. Please report any further questions, comments, or bugs through the <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a>.</p>
-<p>This work has been supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
+<p>Work on this package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
@@ -692,7 +978,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center, Oregon National Primate Research Center.</p>
 </div>
 
 <div class="pkgdown-footer-right">

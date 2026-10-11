@@ -93,6 +93,11 @@ SIMWALK2 or similar programs.</p>
 The function stops with an error that names the ids involved when
 <code>ptree</code> contains a cycle (an animal that is its own ancestor), which is
 a data error.</p>
+<p>A sire or dam that has no entry of its own in <code>ptree</code> is treated as an
+animal with unknown parents, as <code><a href="qcStudbook.html">qcStudbook()</a></code> treats it
+(<code><a href="addParents.html">addParents()</a></code> adds the entry): it is returned as an ancestor and has
+no ancestors of its own. The function stops with an error that names the id
+when <code>id</code> itself is not in <code>ptree</code>.</p>
     </div>
 
     <div class="section level2">
@@ -152,7 +157,7 @@ a data error.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center, Oregon National Primate Research Center.</p>
 </div>
 
 <div class="pkgdown-footer-right">

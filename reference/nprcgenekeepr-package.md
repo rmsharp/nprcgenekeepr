@@ -50,7 +50,8 @@ Authors:
 
 Other contributors:
 
-- Southwest National Primate Research Center NIH grant P51 RR13986
-  \[funder\]
+- Southwest National Primate Research Center (NIH grant P51 RR13986,
+  work up to and including version 1.0) \[funder\]
 
-- Oregon National Primate Research Center grant P51 OD011092 \[funder\]
+- Oregon National Primate Research Center (NIH grant P51 OD011092, work
+  up to and including version 1.0) \[funder\]

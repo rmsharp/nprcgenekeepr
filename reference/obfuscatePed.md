@@ -102,7 +102,7 @@ ped
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus placeholder
 #> 1 GR1AT5   <NA>   <NA>   F   0 2003-05-10 <NA> 23.4     original       FALSE
-#> 2 NBELFE   <NA>   <NA>   F   0 2002-07-10 <NA> 24.2     original       FALSE
+#> 2 NBELFE   <NA>   <NA>   F   0 2002-07-10 <NA> 24.3     original       FALSE
 #> 3 HHE9LS   <NA>   <NA>   M   0 2000-08-03 <NA> 26.2     original       FALSE
 #> 4 YDEB7Y   <NA>   <NA>   M   0 2005-06-05 <NA> 21.3     original       FALSE
 #> 5 DSRN9G HHE9LS GR1AT5   F   1 2015-02-19 <NA> 11.6     original       FALSE

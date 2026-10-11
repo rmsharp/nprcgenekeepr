@@ -16,16 +16,17 @@ Formation](#algorithm-breeding-group-formation)
 
 ## Introduction
 
-The goal of **nprcgenekeepr** is to implement Genetic Tools for Colony
-Management. It was initially conceived and developed as a Shiny web
-application at the Oregon National Primate Research Center (ONPRC) to
-facilitate some of the analyses they perform regularly. It has been
+The primary goal of **nprcgenekeepr** is to implement Genetic Tools for
+Colony Management. It was initially conceived and developed as a Shiny
+web application at the Oregon National Primate Research Center (ONPRC)
+to facilitate some of the analyses they perform regularly. It has been
 enhanced to have more capability as a Shiny application and to expose
 the functions so they can be used either interactively or in R scripts.
 
-This work has been supported in part by NIH grants P51 RR13986 to the
-Southwest National Primate Research Center and P51 OD011092 to the
-Oregon National Primate Research Center.
+Work on this package up to and including version 1.0 was supported in
+part by NIH grants P51 RR13986 to the Southwest National Primate
+Research Center and P51 OD011092 to the Oregon National Primate Research
+Center.
 
 The application’s main functions include:
 
@@ -444,7 +445,8 @@ reactive values for downstream modules:
 
 1.  After data passes QC in the Input tab, navigate to the Pedigree
     Browser.
-2.  Optionally specify focal animals to narrow your analysis.
+2.  Optionally specify focal animals; with none entered, the living
+    animals are the population (every animal if none is alive).
 3.  Adjust display options as needed.
 4.  A population must be defined before proceeding to Genetic Value
     Analysis.
@@ -535,10 +537,10 @@ The `modGeneticValue` module returns reactive values for downstream use:
 ### Performance Notes
 
 Before the analysis begins, the pedigree is always trimmed to the
-ancestors of the current population (the living animals, or every animal
-when the pedigree has no `exit` column). The application sets no fixed
-limit on pedigree size, so a large pedigree simply takes longer to
-analyze.
+ancestors of the current population (the focal animals you entered in
+the Pedigree Browser, otherwise the living animals; every animal when
+the pedigree says nobody is alive). The application sets no fixed limit
+on pedigree size, so a large pedigree simply takes longer to analyze.
 
 ## Summary Statistics
 
