@@ -62,6 +62,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Synced the methodology files from the methodology repository checkout `19b9882` (v4.2-1739-g19b9882), the first step of moving them under `methodology/` (BL-101 P15; the move itself is the next commit)
+
+`bin/sync --force`: 10 root files and 11 under `docs/methodology/` updated, 2 unchanged; the seeds were left as written. **`--force` was needed for one file, `methodology_trim.py`, which `bin/sync` refused as matching no canonical version.** It is the canonical file at `d7768cbeb` plus 49 added lines and nothing removed (measured by line diff against all 26 distinct canonical revisions; the next nearest is `22ce71b47`): the `_session_notes_date` helper and the `SESSION_NOTES.md` entry of `LEDGERS` (S518, 2026-08-11). The overlay drops them, so until they are put back `methodology_trim.py --file SESSION_NOTES.md` answers `NO_CONFIG` (exit 3) where the old file planned to archive 38 of 39 records at `--budget-bytes 30000`; `CLAUDE.md` "Additional close-out checks" says to re-apply them after any sync, and they are re-applied in a later commit of this session, at the file's new place, once the move has run (the move refuses a file `bin/status` does not read `current`).
+
 **Archived 311 record(s), 2026-09-26 → 2026-10-03** into [`docs/archive/CHANGELOG-through-2026-10-03.md`](docs/archive/CHANGELOG-through-2026-10-03.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
