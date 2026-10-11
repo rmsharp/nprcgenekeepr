@@ -623,9 +623,9 @@ default **Number of simulations** is 10), the exact number and composition
 of groups formed varies from run to run rather than reproducing identically
 -- this particular run produced 6 groups, each drawn toward the target ratio
 where enough candidates of each sex were available, and a seventh box that
-lists the six animals that fit no group.
+lists the four animals that fit no group.
 
-![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the six animals that fit no group; the exact group count and composition vary between runs."}
+![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the four animals that fit no group; the exact group count and composition vary between runs."}
 
 That last box is not a group: it appears only when some candidates fit in no
 group, and it lists them. The **Groups** sub-tab, the **Statistics** table and
