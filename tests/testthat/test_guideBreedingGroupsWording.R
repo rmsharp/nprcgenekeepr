@@ -23,6 +23,10 @@
 ##     the S956 retake; the words say the count the picture shows), which
 ##     the Groups and Statistics sub-tabs head "Group 7", the Group Detail
 ##     selector calls "Unused", and the candidate table's Groups column counts.
+##     S961 (BACKLOG.md:36) changed the app: the Groups sub-tab, the Statistics
+##     table and the Group Detail selector all call the box "Unused animals"
+##     now. The candidate table's Groups count and the download file names
+##     (Group-7.csv) are left as they were, by the owner's ruling.
 ##
 ## The first group of blocks pins what the app really does, on a nine-animal
 ## pedigree built here (two founders, their three full-brother sons, four
@@ -193,7 +197,7 @@ test_that("the kinship box does not change the Group Detail kinship table", {
   expect_false(is.null(checked$groupKinship))
 })
 
-test_that("animals that fit no group end in a last box, numbered like a group", {
+test_that("animals that fit no group end in a last box named Unused animals", {
   skip_if_not_installed("shiny")
   r <- runBgWording(bgWordingPed(), nGroups = 2)
 
@@ -204,20 +208,26 @@ test_that("animals that fit no group end in a last box, numbered like a group", 
   expect_gt(length(leftover), 0L)
   expect_length(intersect(leftover, unlist(r$groups[1:2])), 0L)
 
-  # The Groups sub-tab heads it "Group 3 (n animals)", not "Unused".
+  # The Groups sub-tab heads the two groups "Group n (m animals)" and the last
+  # box "Unused animals (k animals)": no "Group 3".
   headings <- groupHeadings(r$groupsHtml)
-  expect_equal(headings$n, 1:3)
-  expect_equal(headings$animals, lengths(r$groups))
-  expect_false(grepl("Unused", r$groupsHtml, fixed = TRUE))
+  expect_equal(headings$n, 1:2)
+  expect_equal(headings$animals, lengths(r$groups[1:2]))
+  expect_match(
+    gsub("\\s+", " ", gsub("<[^>]+>", " ", r$groupsHtml)),
+    sprintf("Unused animals \\(%d animals\\)", length(leftover))
+  )
+  expect_false(grepl("Group 3", r$groupsHtml, fixed = TRUE))
 
-  # The Statistics sub-tab has a last row numbered 3 for it, not "Unused".
+  # The Statistics sub-tab names its last row "Unused animals", not 3.
   stats <- tableCells(r$statsHtml, nCol = 4L)
-  expect_equal(as.integer(stats[, 1L]), 1:3)
+  expect_equal(stats[, 1L], c("1", "2", "Unused animals"))
   expect_equal(as.integer(stats[, 2L]), lengths(r$groups))
-  expect_false(grepl("Unused", r$statsHtml, fixed = TRUE))
 
-  # Only the Group Detail selector calls it "Unused".
-  expect_equal(names(r$selectorChoices), c("Group 1", "Group 2", "Unused"))
+  # The Group Detail selector calls it "Unused animals"; its values stay the
+  # group numbers (the capture script sets the box by value).
+  expect_equal(names(r$selectorChoices),
+               c("Group 1", "Group 2", "Unused animals"))
   expect_equal(as.integer(r$selectorChoices), 1:3)
 })
 
@@ -238,6 +248,10 @@ test_that("when every animal fits a group there is no last box", {
   expect_equal(r$nGroups, 2L)
   expect_equal(groupHeadings(r$groupsHtml)$n, 1:2)
   expect_equal(names(r$selectorChoices), c("Group 1", "Group 2"))
+  # No box, so nothing is called "Unused animals" on any tab.
+  expect_false(grepl("Unused", r$groupsHtml, fixed = TRUE))
+  expect_false(grepl("Unused", r$statsHtml, fixed = TRUE))
+  expect_equal(tableCells(r$statsHtml, nCol = 4L)[, 1L], c("1", "2"))
 })
 
 # ---- the guide's words: these fail until the guide changes ----------------
@@ -322,9 +336,14 @@ test_that("a paragraph after the sex-ratio picture explains the last box", {
   expect_match(paragraph, "That last box is not a group", fixed = TRUE)
   expect_match(paragraph, "only when some candidates fit in no group",
                fixed = TRUE)
-  expect_match(paragraph, "the next group number ('Group 7' here)",
-               fixed = TRUE)
-  expect_match(paragraph, "calls it 'Unused'", fixed = TRUE)
+  expect_match(
+    paragraph,
+    paste0("The **Groups** sub-tab, the **Statistics** table and the ",
+           "**Group Detail** selector all call it 'Unused animals'"),
+    fixed = TRUE
+  )
+  expect_no_match(paragraph, "'Group 7' here", fixed = TRUE)
+  expect_no_match(paragraph, "calls it 'Unused'", fixed = TRUE)
   expect_match(paragraph, "the Groups count in the candidate table",
                fixed = TRUE)
 })
