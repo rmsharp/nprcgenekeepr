@@ -99,11 +99,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 961 Did
-**Deliverable:** the Breeding Groups last box (the animals that fit no group) gets one name in the app (`BACKLOG.md:36`; strict TDD; PRE-RED declared) (IN PROGRESS)
-**Started:** 2026-10-11 (owner pick at the Phase 0 picker, option 2 of 4)
-**Status:** Session claimed. Next: re-read `R/modBreedingGroups.R:832-833,984-986,1013-1025,1041-1051`, then one plain scope question to the owner before RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
-**S960 (DONE, folded below):** `CHANGELOG.md` trimmed, 200,518 B to 33,981 B; evaluation of S959 9/10, self 8/10; Learning 926 (`PROJECT_LEARNINGS.md:2622`).
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 2 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the Breeding Groups last box (the animals that fit no group) is named "Unused animals"
+on the Groups heading, the Statistics row and the Group Detail selector (`R/modBreedingGroups.R:981-989,1017-1025,1049`). The owner chose "three labels only": the candidate table's Groups count and the `Group-N.csv` names stay.
+Measured before asking: 3 of the 7 guide pictures show the box (the item said 1). `BACKLOG.md:36-51` is removed (later cites move up 13); the old "(1 animals)" plural went into `:30`.
+**Gates:** claim `75910467f`; RED `f0552138a` (2 of 11 blocks fail); GREEN `854561b68` (11 of 11); RED `8b2a6b34a` (the retaken box holds six animals, the guide said seven); GREEN `04e7f7d21` (3 pictures retaken, "six");
+REFACTOR `0a7013150` (one internal `breedingGroupLabels()`, `R/breedingGroupLabels.R:20`; the guard re-proved by breaking it); close-out = the commit carrying this note.
+**Verified:** full suite 3,410 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet 1/1; the guide's capture script drove the real app twice (85 of 85 each, the second after the REFACTOR). One `NEWS.Rmd` line.
+**Handoff evaluation of S960: 9/10.** Helped: all 8 `BACKLOG.md` cites held (`:8 :17 :30 :36 :52 :65 :73`, text `:166`), the 114-commit count matched
+`git rev-list`, the trimmer and notes-size gotchas were true. Missing: nothing found. Wrong: it said four old pids are alive; `89205` is gone.
+**Self-assessment: 8/10.** + measured the pictures and the code's places before asking; one plain scope question with a side-by-side table, answered first try; every gate asked; the guard re-proved; the real app run twice. - several silent stretches (nudged);
+`\.` in `Rscript -e` and a zsh `=====` echo failed again; the suite ran before the NEWS edit, so I re-ran the doc-reading tests after.
+**Next steps (recommended, not ruled on):** Optional, S: budget `HANDOFFS.md` (`BACKLOG.md:39`, DECISION NEEDED), "None of the 1 animals" plus the "(1 animals)" plural (`:30`), Warnings picture (`:8`), pop-up item (`:17`).
+Docs-audit part 2 is the item at `:60` (text `:153`); the 3.0.0 bump is `:52`. 122 commits ahead of `origin/master` once this lands; the owner's push adds `R/breedingGroupLabels.R`, so CI will run: read it.
+**Key files:** `R/breedingGroupLabels.R:20`; `tests/testthat/test_guideBreedingGroupsWording.R:203-228,304-330`; `colony-manager-guide.qmd:626-633`; `PROJECT_LEARNINGS.md:2625` (Learning 927). **Gotchas:** the candidate Groups count and the file names
+are ruled, do not re-offer; selector values stay numbers; a capture run decides the box's count, so the caption pin follows the picture; three old `runGeneKeepR` pids (29511, 82416, 92900) are alive and left alone;
+keep this file under about 56,700 B and every line under 280 B.
 
 ### Sessions 947-960 (condensed S950 to S961; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
@@ -134,7 +144,7 @@ whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
 `test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
 of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
-`runGeneKeepR` pids 29511, 82416, 92900 and an `until` loop, pid 89205, on `scratchpad/s292`;
+`runGeneKeepR` pids 29511, 82416, 92900 (the `until` loop, pid 89205, is gone);
 the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the next `HANDOFFS.md` trim is due near 196,608 B (about 36
 sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`;
 sweep with `git grep`, never `grep -r` (it walks
@@ -175,25 +185,12 @@ larger"; one `labelSize`, `R/makeGeneticDiversityHeatmap.R:64,76-80`). Strict TD
 `f6b8ccf67`. Handoff evaluation of S933: 9/10. Self 7/10. **Gotchas kept:** show a picture with `open <png>` plus its path (a `Read`
 image does not reach the owner); 5 columns in a 600 px window collide at 22 pt (a Flags column, issue #116, needs `guide_axis(n.dodge = 2)`).
 
-### What Session 933 Did (condensed S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`runQcStudbook()` adds the Input tab's "Animals with no birth date" warning (strict TDD; only with `reportChanges = TRUE`). Claim
-`be7537637`, close-out `3075c4bc7`. Handoff evaluation of S932: 7/10. Self 8/10. **Gotchas kept:** `makeExamplePedigreeFile()` and
-`inst/extdata/examples/ExamplePedigree.csv` differ (column case).
-
-### What Session 932 Did (condensed S933, S934 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-A decision session, docs only: the owner ruled the Input-tab missing-birth-date warning (S933 built it). Measured: 1,432 of 3,694
-example animals have no birth date. Claim `c2b42bd40`, close-out `f120ac97c`. Handoff evaluation of S931: 9/10. Self 8/10.
-
-### What Session 931 Did (condensed S932, S933 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The Production cell and a Genetic Diversity tab note shipped (strict TDD; owner-ruled): a female with no birth date counts as a
-breeding-age mother only if the pedigree lists an offspring for her (whole pedigree). Claim `43e1a41c8`, close-out `0be13571a`. Handoff
-evaluation of S930: 9/10. Self 8/10. **Gotchas kept:** the note's counts sentence is constant text (dropping it needs a RED test first);
-in a `testServer` test an undefined output errors.
-
-### What Session 930 Did (condensed S931 and S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Docs-audit slice 2, Phase 2 (strict TDD): both guide screenshot scripts share `tests/testthat/helper-captureHarness.R`;
-`NPRC_SHOT_DIR` names the output folder; item (e), the full-height Potential Parents capture, moved to Phase 3c. Close-out `17eb43401`.
-Handoff evaluation of S929: 9/10. Self 8/10. **Gotchas kept:** one Chrome session at a time; put R code with `\s` in a script file.
+### Sessions 930-933 (condensed S931 to S935; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S930: both guide screenshot scripts share `tests/testthat/helper-captureHarness.R`; `NPRC_SHOT_DIR` names the output folder (strict TDD; close-out `17eb43401`). S931: a female with no birth date counts as a breeding-age
+mother only if the pedigree lists an offspring for her, in the Production cell and a Genetic Diversity note (strict TDD; claim `43e1a41c8`, close-out `0be13571a`). S932: a decision session, docs only: the owner ruled the Input-tab
+missing-birth-date warning (1,432 of 3,694 example animals have none; claim `c2b42bd40`, close-out `f120ac97c`). S933: `runQcStudbook()` adds it (strict TDD; only with `reportChanges = TRUE`; claim `be7537637`, close-out `3075c4bc7`).
+Evaluations 7 to 9/10, self 8/10 each. **Gotchas kept:** one Chrome session at a time; put R code with `\s` in a script file; the note's counts sentence is constant text (dropping it needs a RED test first); in a `testServer` test an
+undefined output errors; `makeExamplePedigreeFile()` and `inst/extdata/examples/ExamplePedigree.csv` differ (column case).
 
 ### What Session 929 Did (condensed S930 and S931; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Verification only: S928's crash fix passed by hand in real Chrome (the owner did the clicks). Close-out `05673a072`. Handoff

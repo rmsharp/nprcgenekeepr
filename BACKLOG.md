@@ -32,22 +32,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       notice (`R/modBreedingGroups.R`, the `length(rawPool) == 0L` branch) builds its text from the source's
       animal count; the S939 tests pin "None of the 14 animals", not the count of one (or zero). A pool of one
       animal cannot form groups anyway, so this is wording only: pick it up with the next Breeding Groups change.
-
-- [ ] **The Breeding Groups last box (the animals that fit no group) is headed "Group N" on the Groups tab
-      and numbered in the Statistics table, but called "Unused" in the Group Detail selector (found S940,
-      raised again S950; READY (optional), Effort S; strict TDD, a displayed-text change)** -- S950 made the
-      guide say so in words (`colony-manager-guide.qmd`, the paragraph after the sex-ratio picture) and pinned
-      the app's behavior in `tests/testthat/test_guideBreedingGroupsWording.R` (fixture: two groups asked
-      for, three boxes, the third `Group 3` / `Unused`). The owner chose the guide's words only; the app was
-      left as it is. Where the labels are: the Groups heading `sprintf("Group %d (%d animals)", ...)`
-      (`R/modBreedingGroups.R:984-986`), the Statistics `Group = i` column (`:1013-1025`) and the selector
-      (`:1041-1051`); the candidate table's Groups column counts the last box too (`:832-833`). Pick it up
-      only if the owner wants the app to say "Unused animals" in all three places: the sex-ratio picture is
-      retaken (the box shows in only some runs, so a retake can take several tries), the block "animals that
-      fit no group end in a last box" in that test file changes with it. The group boxes stay plain: the owner
-      ruled at S957 that the old-style `panel panel-primary` boxes (the Home tab's six and one per group) stay
-      as they are, so no card change rides along. **Declined by the owner at S950, do not re-offer:** renaming
-      the "Include kinship in display of groups" box, and making the Group Detail kinship table follow it.
+      The box headings have the same one-animal plural (found S961, left as it was): "Group 5 (1 animals)" and
+      "Unused animals (1 animals)" come from one `sprintf("%s (%d animals)", ...)` (`R/modBreedingGroups.R:988`),
+      so one change would cover both; the S961 tests pin "(n animals)" for n of 2 or more only.
 
 - [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
       tool's 262,144 B whole-file refusal is refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
@@ -120,7 +107,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       living animals with birth dates now, so S935's note is gone); the Mate Pair caption said all alive
       animals but the picture shows a custom list of six, fixed. Its two findings for the owner (the Group
       Detail kinship caption and the unused animals' "Group 7" heading) were ruled S950: the guide's words
-      changed and the app did not (the app's label is its own optional item).
+      changed and the app did not; S961 then renamed the box "Unused animals" on the Groups, Statistics and Group Detail tabs.
       S941 did Phase 3a: 14 pictures retaken (9 Pedigree Browser, 5 Diagram) from the colony script's full
       81/81 run and the diagram script's 18/18 run, copied by name; each was 147 px taller than the
       committed one (the longer Display Unknown IDs text) and now shows the `placeholder` column and no
