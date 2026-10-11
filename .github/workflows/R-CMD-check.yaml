@@ -27,6 +27,7 @@ on:
       - .context-budget.json
       - .quality-gates.json
       - docs/**
+      - methodology/**
   pull_request:
 
 name: R-CMD-check.yaml

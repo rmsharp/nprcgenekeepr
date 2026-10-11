@@ -41,7 +41,9 @@ skippable_paths <- c(
   "docs/archive/CHANGELOG-through-2026-10-03.md",
   "docs/planning/sexcodes-adoption-plan.md",
   "methodology_trim.py", "quality_ratchet.py",
-  ".quality-gates.json", ".context-budget.json"
+  ".quality-gates.json", ".context-budget.json",
+  "methodology/CHANGELOG.md", "methodology/HANDOFFS.md", "methodology/SESSION_NOTES.md",
+  "methodology/methodology_trim.py", "methodology/.quality-gates.json"
 )
 
 ## Files a workflow reads, whether or not .Rbuildignore lists them. A change to

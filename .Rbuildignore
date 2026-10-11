@@ -159,3 +159,6 @@ README\.*\.png$
 # tree otherwise (S727 tarball audit Finding 2). Mirrored in .gitignore. S728, 2026-09-19.
 ^tests/testthat/_problems$
 ^tests/testthat/testthat-problems\.rds$
+# methodology/ holds the methodology files (bin/migrate-layout moves them there). Like their old places at the
+# root and under docs/ they are project notes and tooling, not package content.
+^methodology$

@@ -21,7 +21,9 @@
 ## the source tree, which is where the close-out suite runs.
 
 pkg_root <- testthat::test_path("..", "..")
-handoffs_path <- file.path(pkg_root, "HANDOFFS.md")
+## methodology/HANDOFFS.md after bin/migrate-layout, the root before it.
+handoffs_candidates <- file.path(pkg_root, c("methodology/HANDOFFS.md", "HANDOFFS.md"))
+handoffs_path <- Find(file.exists, handoffs_candidates, nomatch = handoffs_candidates[2L])
 
 ## One receipt as the file writes it: a `handoff` fence, key lines, a plain
 ## closing fence.

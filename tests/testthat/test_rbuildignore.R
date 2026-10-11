@@ -55,3 +55,11 @@ test_that(".Rbuildignore keeps the repo-root .gitattributes out of the tarball",
     anyPatternMatches(patterns, "inst/extdata/examples/ExamplePedigree.txt")
   )
 })
+
+## The methodology files live under methodology/ (bin/migrate-layout). R CMD build
+## reads the filesystem, so a directory no pattern covers ships whole.
+test_that(".Rbuildignore keeps the methodology/ directory out of the tarball", {
+  skip_if_not(file.exists(rbuildignore_path), no_rbuildignore_msg)
+
+  expect_true(anyPatternMatches(readRbuildignorePatterns(), "methodology"))
+})

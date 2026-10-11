@@ -20,6 +20,9 @@ git <- function(...) {
   system2("git", c(...), stdout = TRUE, stderr = FALSE)
 }
 
+# The ledgers sit under methodology/ after bin/migrate-layout, at the root before it.
+ledger_path <- function(f) if (file.exists(file.path("methodology", f))) file.path("methodology", f) else f
+
 out_dir <- "vignettes/articles/data"
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
@@ -176,19 +179,19 @@ write.csv(commit_timeline, file.path(out_dir, "commit-activity-timeline.csv"), r
 
 # ---- T6: engineering-process metrics ----------------------------------------
 
-changelog <- readLines("CHANGELOG.md", warn = FALSE)
+changelog <- readLines(ledger_path("CHANGELOG.md"), warn = FALSE)
 changelog_dates <- regmatches(changelog, regexpr("^### [0-9]{4}-[0-9]{2}-[0-9]{2}", changelog))
 changelog_dates <- sub("^### ", "", changelog_dates)
 
 learnings <- readLines("PROJECT_LEARNINGS.md", warn = FALSE)
 n_learnings <- sum(grepl("^#### Learning [0-9]+ ", learnings))
 
-handoffs <- readLines("HANDOFFS.md", warn = FALSE)
+handoffs <- readLines(ledger_path("HANDOFFS.md"), warn = FALSE)
 sessions_hd <- regmatches(handoffs, regexpr("^session: S[0-9]+", handoffs))
 statuses_hd <- regmatches(handoffs, regexpr("^status: (complete|pending|reconciled)", handoffs))
 n_receipts_complete <- sum(grepl("complete", statuses_hd))
 
-session_notes <- readLines("SESSION_NOTES.md", warn = FALSE)
+session_notes <- readLines(ledger_path("SESSION_NOTES.md"), warn = FALSE)
 corr_zero <- sum(grepl("0 stakeholder correction", session_notes))
 corr_nonzero <- sum(grepl("[1-9][0-9]* stakeholder correction", session_notes))
 
