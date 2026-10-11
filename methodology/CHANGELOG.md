@@ -18,6 +18,12 @@ it is failure mode #27.
 [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), which `bin/sync`
 keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 
+## 2026-10
+
+### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 147 files)
+
+`bin/migrate-layout` (KJ5HST/methodology @ 19b9882) moved them in one commit with `git mv`; paths were rewritten in `CLAUDE.md`, `methodology/.context-budget.json`, `methodology/.quality-gates.json`. No older entry or shard was edited, so a link in an older entry is relative to the root, where the ledger sat when it was written.
+
 ## 2026-09
 
 **Archived 328 record(s), 2026-08-14 → 2026-09-17** into [`docs/archive/CHANGELOG-through-2026-09-17.md`](docs/archive/CHANGELOG-through-2026-09-17.md) — same format, same order, frozen.

@@ -1,13 +1,13 @@
 ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
 
-**Read and follow `SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+**Read and follow `methodology/SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
 
 **Three rules you will be tempted to violate:**
-1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → check GitHub Issues (or BACKLOG.md if no repo) → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+1. **Orient first** — Read methodology/SAFEGUARDS.md → methodology/SESSION_NOTES.md → check GitHub Issues (or BACKLOG.md if no repo) → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
 2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
 3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP. Read `docs/conventions/CLOSEOUT_CHECKLISTS.md` first (project checklists).
 
-`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
 
 ---
 
@@ -109,7 +109,7 @@ This file supersedes general coding instincts.
 
 ## Build / Test / Verify
 
-The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` during the 2026-05-31 methodology update so the synced `SAFEGUARDS.md` stays byte-identical to canonical; see `SAFEGUARDS.md` "Verify the Build Equivalent"):
+The build-equivalent for this R package (relocated here from `methodology/SAFEGUARDS.md` during the 2026-05-31 methodology update so the synced `methodology/SAFEGUARDS.md` stays byte-identical to canonical; see `methodology/SAFEGUARDS.md` "Verify the Build Equivalent"):
 
 | Purpose | Command | Pass criteria |
 |---|---|---|
@@ -126,7 +126,7 @@ The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` dur
 
 ## Project-Specific Methodology Adaptations
 
-*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from https://github.com/rmsharp/methodology, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here so upstream's `bin/sync` (not in this repo) stays friction-free (see BOOTSTRAP "Updating an existing project").*
+*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from https://github.com/rmsharp/methodology, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here so upstream's `bin/sync` (not in this repo) stays friction-free (see BOOTSTRAP "Updating an existing project").*
 
 ### Additional Phase 0 steps
 
@@ -161,7 +161,7 @@ Current priorities (from BACKLOG, in the order Session N left them):
   because no inline tag exists. A ratified order lives in prose, so the tag-only
   grep misses it entirely (`PROJECT_LEARNINGS.md` Learning 506).
 - This formats the *existing* Phase 0 step 7 report; it adds no new
-  `SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
+  `methodology/SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
   after the report.
 - Keep the `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag inline on each
   `BACKLOG.md` item itself (not only in the rendered report), so the tag survives
@@ -172,7 +172,7 @@ Current priorities (from BACKLOG, in the order Session N left them):
 immediately after rendering the priorities list above, follow it with one
 `AskUserQuestion` call so the user can pick with a click instead of free-typing.
 This *supplements* the prose list (which still renders in full, unchanged) — it
-does not replace it, add a new `SESSION_RUNNER.md` step, or change the mandatory
+does not replace it, add a new `methodology/SESSION_RUNNER.md` step, or change the mandatory
 Phase 0 STOP-and-wait-for-the-user: the question itself **is** the wait.
 
 - **Which items get an option:** one option per priorities-list item that got its
@@ -214,19 +214,19 @@ non-`completed success` run into the step 7 report; diagnosing/fixing it is its 
 deliverable ("1 and done"), never a Phase 0 inline repair. Origin (a red `R-CMD-check.yaml` run
 unnoticed for 13 sessions) is Learning 547; rejected alternatives are recorded in Learning 770.
 
-**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run `python3 context_budget.py`
+**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run `python3 methodology/context_budget.py`
 at Phase 0 step 5, alongside the dashboard. **Report, don't fix** — fold findings into the step 7
 report like any other health signal. Expected state since the S725 reduction campaign: **no file
 over its ceiling** (`CLAUDE.md` may sit in the 24,000 B warn band — headroom, not a defect); a
-`CLAUDE.md` red means new growth is owed a reduction, and a `SESSION_NOTES.md` red means a
-`methodology_trim.py --budget-bytes 65536` trim is owed (the two ceilings are deliberately the
-same number); a per-line finding on `SESSION_NOTES.md` (280 B ceiling) means an over-long
+`CLAUDE.md` red means new growth is owed a reduction, and a `methodology/SESSION_NOTES.md` red means a
+`methodology/methodology_trim.py --budget-bytes 65536` trim is owed (the two ceilings are deliberately the
+same number); a per-line finding on `methodology/SESSION_NOTES.md` (280 B ceiling) means an over-long
 line to wrap. A **missing `budget:protected` fence** finding on `CLAUDE.md` means someone
 removed the Project Overview fence — restore it before anything else. The per-clone pre-commit
-hook (`python3 context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
+hook (`python3 methodology/context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
 file; re-install it on a fresh clone, bypass with `--no-verify` only when a legitimate growth
-commit is owed (the decision then lands as a `.context-budget.json` diff, not a silent override).
-`.context-budget-history.jsonl` stays gitignored (S719 decision).
+commit is owed (the decision then lands as a `methodology/.context-budget.json` diff, not a silent override).
+`methodology/.context-budget-history.jsonl` stays gitignored (S719 decision).
 
 ### Additional task-to-workstream mappings
 
@@ -245,11 +245,11 @@ matches what the session shipped.** One line per checklist (full text in that fi
 - **CI-break tracking** — a live-found CI break gets no issue of its own; fix it or defer via `BACKLOG.md`.
 - **Lint close-out** — any tracked `.R` file added or changed → `lintr::lint_package()` (package loaded first) before close-out.
 - **`_pkgdown.yml` reference coverage** — new exported function → add it to a `_pkgdown.yml` reference group, same session.
-- **BACKLOG completed-item removal** — completing an item → remove its block entirely in the same commit; the record goes to `CHANGELOG.md`.
-- **`CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
-- **`methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
-- **`CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
-- **`SESSION_NOTES.md` archive fence-scanner defect** — resolved S527/S528; historical note only.
+- **BACKLOG completed-item removal** — completing an item → remove its block entirely in the same commit; the record goes to `methodology/CHANGELOG.md`.
+- **`methodology/CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
+- **`methodology/methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `methodology/SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
+- **`methodology/CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
+- **`methodology/SESSION_NOTES.md` archive fence-scanner defect** — resolved S527/S528; historical note only.
 
 ### Development Process Contract override
 
@@ -257,11 +257,11 @@ This project runs **Strict Test-Driven Development** (see the "Development Proce
 
 ### Project-specific Learnings
 
-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 
-(none — the base failure modes #1–28 in `SESSION_RUNNER.md` apply, including #26
+(none — the base failure modes #1–28 in `methodology/SESSION_RUNNER.md` apply, including #26
 "mega-session masquerading as a vertical slice" and #27 "unrecorded action,"
 added by the 2026-07-08 methodology sync to v3.4, and #28 "unbounded mandatory
 read," added by the 2026-08-20 methodology sync to v3.7.)

@@ -35,7 +35,7 @@
       "_": "41,622 B at S720 calibration — RED BY DESIGN, kept at the seed's 28,000 B target (which also matches the file's own stated ~25 KB budget) rather than frozen at current size. The remedy is the BACKLOG.md 'CLAUDE.md reduction campaign' item (filed S720); until it lands, the pre-commit hook's relative rule refuses commits that GROW this file and passes any that shrink it. max_tokens = 28,000 / 2.27. The protected fence wraps the Project Overview (what the package is for) so no future compaction can take it — FM #28's harder-to-see form."
     },
     {
-      "path": "SESSION_NOTES.md",
+      "path": "methodology/SESSION_NOTES.md",
       "class": "read-mandated",
       "max_lines": 1000,
       "max_bytes": 65536,
@@ -53,12 +53,12 @@
 
   "synced": [
     {
-      "path": "SESSION_RUNNER.md",
+      "path": "methodology/SESSION_RUNNER.md",
       "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
       "_": "Drift-checked, never size-checked. Canonical path verified S720: the rmsharp/methodology checkout at ../methodology, the same source bin/sync uses; both synced files reported ok at calibration."
     },
     {
-      "path": "SAFEGUARDS.md",
+      "path": "methodology/SAFEGUARDS.md",
       "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
     }
   ]
