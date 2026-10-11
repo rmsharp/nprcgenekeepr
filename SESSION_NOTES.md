@@ -99,11 +99,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 962 Did
-**Deliverable:** the Breeding Groups "1 animals" plural reads "1 animal" in the nobody-is-alive notice and the box headings (`BACKLOG.md:30`; strict TDD; PRE-RED declared) (IN PROGRESS)
-**Started:** 2026-10-11 09:04 CDT (owner pick at the Phase 0 picker, option 1 of 4)
-**Status:** Session claimed. Next: re-read `R/modBreedingGroups.R` (the `length(rawPool) == 0L` notice, the heading `sprintf` near `:988`), then show one proposed sentence per place and ask at most one question before RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. This line is the crash breadcrumb for the next reconcile.
-**S961 (DONE, folded below):** the last box is named "Unused animals"; evaluation of S960 9/10, self 8/10; Learning 927 (`PROJECT_LEARNINGS.md:2625`).
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** a box that holds exactly one animal is headed "(1 animal)" on the Groups tab,
+and the nobody-is-alive notice for a one-animal source reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689`, `:993-994`). Zero and two or more keep today's words.
+The item said "wording only"; 3 of the 6 guide pictures showed "(1 animals)", so the owner had them retaken here. `BACKLOG.md:30-38` is removed (later cites move up 9). One `NEWS.Rmd` line.
+**Gates:** claim `7c95083a1`; RED `9f3cea521` (3 blocks fail, 6 expectations); GREEN `0fa5a5761`; RED `c268af266` (the retaken sex-ratio box holds four animals, the guide said six; 2 pins);
+GREEN `8c47bdabd` (3 pictures, "four"); REFACTOR `5d9694135` (tests only; guard re-proved by breaking it); NEWS `efa3c7828`; close-out = the commit carrying this note.
+**Verified:** full suite 3,414 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet 1/1. The guide's capture script drove the real app (85 of 85 steps, after GREEN, no `R/` change
+since) and its pictures read "(1 animal)". The one-animal notice was tested with a mocked `showNotification`, not seen in the real app.
+**Handoff evaluation of S961: 8/10.** Helped: every `BACKLOG.md` cite held (`:8 :17 :30 :39 :52 :60`, text `:153`), the 122-commit count matched, the notes-size limit was exact, the three old pids are alive,
+Learning 927 sent me to look at each picture. Missing: the item said "this is wording only", but three committed pictures show "(1 animals)" and a retake redraws the box count (six became four). Wrong: nothing else found.
+**Self-assessment: 7/10.** + looked at all six pictures and probed a one-animal fixture before asking; one plain question with the sentences, answered first try; every gate asked; the guard re-proved.
+- I told the owner before RED that nobody-alive shows "Group 1 (0 animals)" with no probe (false: no box is drawn; my own green-at-HEAD block caught it, I dropped it and said so); my first mutation could not fail;
+two nudges for silence. Learning 928 (`PROJECT_LEARNINGS.md:2628`).
+**Next steps (recommended, not ruled on):** Optional, S: Warnings picture (`BACKLOG.md:8`), pop-up item (`:17`), budget `HANDOFFS.md` (`:30`, DECISION NEEDED). Docs-audit part 2 is the item at `:51` (text `:144`);
+the 3.0.0 bump is `:43`. 130 commits ahead of `origin/master` once this lands; the owner's push changes `R/`, so CI will run: read it.
+**Key files:** `R/modBreedingGroups.R:682-689,993-994`; `tests/testthat/test_guideBreedingGroupsWording.R:137,268-309`; `test_modBreedingGroups_livingPool.R:108,297-330`; `colony-manager-guide.qmd:624-628`.
+**Gotchas:** the nine-animal fixture's one-animal boxes are at seed 7 (3 groups asked: last box; 5 asked: two groups); a retake draws the last box's count, so the pin follows the picture; a mutation must change what the
+tests read (return `""`, not "keep the tags"); zero needs no change (a zero-animal source's notice was not probed); three old `runGeneKeepR` pids (29511, 82416, 92900) are alive and left alone;
+keep this file under about 56,700 B and every line under 280 B.
 
 ### Sessions 947-961 (condensed S950 to S962; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
@@ -421,41 +434,14 @@ pointer, regex the ledger entry body for it; `BACKLOG.md` compression blocks A a
 line; `.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore them in greps; the PED_GV open paragraph has one very
 long line, so edit it with a short `old_string`.
 
-### What Session 895 Did (condensed S896; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Pushed S894's close-out commit `1d8902e32` (`1fd37a244..1d8902e32`, 1 commit) by SHA at the owner's pick; claim `c0b01c3c6`,
-close-out `3d210301b`. The owner then pushed both: origin equalled HEAD at S896's Phase 0. Handoff evaluation of S894: 9/10.
-Self 8/10.
-**Gotchas kept:** to send only the close-out commit when a claim commit sits on top, use `git push origin <sha>:master`; a
-docs-only push still starts four workflows, and the owner's rule is not to wait for them.
-
-### What Session 894 Did (condensed S895; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Pushed `master` (`2e2046efd..1fd37a244`, 18 commits, none touching `R/`, `DESCRIPTION` or `NAMESPACE`) and read CI for S893's two
-red-CI fixes: all four push workflows green on `1fd37a244`, including R-CMD-check oldrel-1 and devel, which had failed on the
-S890 push. Claim `1fd37a244`, close-out `1d8902e32` (pushed S895). Handoff evaluation of S893: 9/10. Self 8/10.
-**Gotchas kept:** a workflow-level "success" does not name the matrix legs (read `gh run view <id> --json jobs`); one green run
-is consistent with the probabilistic oldrel-1/devel fix but is not its proof (the proof is S893's 300-shuffle measurement); the
-harness blocks a foreground `sleep` (use a `run_in_background` loop, Learning 864); zsh reads a leading `=` word as an expansion.
-
-### What Session 893 Did (condensed S894; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Repaired the two red-CI causes, tests only (no `R/` file changed): `test_sexCodes.R` skips its `R/` scans unless `R/` lists a
-`.R`/`.r` file (`sexCodeSourceAvailable()`); the QP floor tolerances now match the solver's measured noise
-(`qpFloorTolerance` 1e-6 -> 1e-2, `qpGapTolerance` 1e-9 -> 1e-6 at `test_solveJointQP.R:437-439`), through the seeded shuffle
-seam `tests/testthat/helper-reorderedSolveQP.R`. Claim `9c445bfa7`, Fix 1 RED `c68ceffc2` GREEN `ff9347e68`, Fix 2 RED
-`71110c5c8` GREEN `3cd3989a4` REFACTOR `9d56803d4`, addendum `b10303c39`, close-out `0a71074e0`. Handoff evaluation of S892:
-8/10. Self 8/10. S894 confirmed both fixes green on CI.
-**Gotchas kept:** use `withr::with_seed` (`testthat::with_seed` is not exported); the shuffle wrapper takes exactly
-`(Dmat, dvec, Amat, bvec, meq)`, so a new argument in the production `solve.QP()` call fails loudly; a constant an existing
-test reads must be defined above that test; `test_markerKinship.R`'s wall-clock benchmark can fail on a loaded machine
-(rerun it alone first); `pgrep -f` wait loops fire early (Learning 864); `rm -f $VAR/*.R` is blocked by the safety check.
-
-### What Session 892 Did (condensed S893; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Trimmed `HANDOFFS.md`: 24 receipts (S789-S812) archived by `methodology_trim.py --force --write` into
-`docs/archive/HANDOFFS-through-2026-09-30.md`, 259,859 B -> 149,289 B. Claim `d5e140140`, trim `4def45b83`.
-Handoff evaluation of S891: 8/10. Self 8/10.
-**Gotchas kept:** `HANDOFFS.md`'s trim needs `--force` (`SRF_RED`; `--budget-bytes` is not the lever) and `--force` without
-`--write` is a safe dry run; the tool writes a `CHANGELOG.md` entry and never commits, so stage the ledger, shard,
-`.verify.sh` and `CHANGELOG.md` together; 262,144 B is the Read tool's refusal, not a repo setting; do not hand-edit its
-"currently holds" line; the harness nags after a silent tool chain, so post one line every few calls.
+### Sessions 892-895 (condensed S896 and S962; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S892: `HANDOFFS.md` trimmed (24 receipts, 259,859 B to 149,289 B, `--force --write`; claim `d5e140140`, trim `4def45b83`). S893: two red-CI causes fixed in tests only
+(`sexCodeSourceAvailable()` in `test_sexCodes.R`; QP tolerances at `test_solveJointQP.R:437-439`; seam `helper-reorderedSolveQP.R`; claim `9c445bfa7`, close-out `0a71074e0`). S894 and S895 pushed
+(`2e2046efd..1fd37a244`, then `1d8902e32`) by SHA and read CI: all four push workflows green on `1fd37a244`. Evaluations 8 to 9/10, self 8/10 each.
+**Gotchas kept:** the `HANDOFFS.md` trim needs `--force` (`SRF_RED`; `--force` without `--write` is a dry run), the tool writes its ledger entry and never commits, and 262,144 B is the Read tool's
+refusal; use `withr::with_seed`; the shuffle wrapper takes exactly `(Dmat, dvec, Amat, bvec, meq)`; a constant an existing test reads is defined above it; push a close-out alone with
+`git push origin <sha>:master`; a workflow-level "success" does not name the matrix legs (`gh run view <id> --json jobs`); `pgrep -f` wait loops fire early (Learning 864); zsh reads a leading `=`
+word as an expansion.
 
 ### What Session 891 Did (condensed S892 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Diagnosed the red CI after the S890 push (`2e2046efd`): two reproduced causes (a flaky 1e-6 bound in `test_positionMatingUnitForest.R:645`;

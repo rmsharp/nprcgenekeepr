@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S962
 date: 2026-10-11
-status: pending
-active_task: IN PROGRESS -- the Breeding Groups "1 animals" plural reads "1 animal" in the nobody-is-alive notice and the box headings (BACKLOG.md:30; owner pick at the Phase 0 picker, option 1 of 4; READY (optional), Effort S; strict TDD, a displayed-text change; PRE-RED declared, one proposed sentence per place to the owner first)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- a box that holds exactly one animal is headed "(1 animal)" on the Breeding Groups tab and the nobody-is-alive notice for a one-animal source reads "The 1 animal in this source is not alive, so no breeding groups were formed." (BACKLOG.md:30-38 item, removed; owner pick at the Phase 0 picker, option 1 of 4; owner chose to retake the 3 pictures in this session; strict TDD, every gate asked and answered, REFACTOR taken).
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, CI 10 of 10 green but pushes only up to S939, dashboard 96/100 High+ 0, context budget under every ceiling, ratchet citation matched). Claim 7c95083a1. Measured first: two code places (R/modBreedingGroups.R:682-689 notice, :993-994 headings); all six Breeding Groups pictures looked at: 3 show "(1 animals)" (the item said wording only); a probe found the one-animal fixture (nine animals, seed 7: 3 groups asked leave a one-animal last box, 5 asked give two one-animal groups). One plain question with the sentences (answered: use them, retake the 3 pictures). RED 9f3cea521 (3 blocks fail, 6 expectations), GREEN 0fa5a5761, RED c268af266 (the retaken sex-ratio box holds four animals, the guide said six; 2 pins), GREEN 8c47bdabd (3 pictures, 85 of 85 steps; six to four), REFACTOR 5d9694135 (tests only; guard re-proved), NEWS efa3c7828. Verified: full suite 3,414 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; devtools::check() 0/0/0. BACKLOG.md:30-38 removed (later cites move up 9); Learning 928.
+next_steps: Recommended order (not ruled on; cites re-grepped after the edit). Optional, S: Warnings picture (BACKLOG.md:8), pop-up item (:17), budget HANDOFFS.md (:30, DECISION NEEDED). Docs-audit part 2 is the item at :51 (text :144); the 3.0.0 bump is :43. 130 commits ahead of origin/master once this lands; the owner's push changes R/, so CI will run: read it.
+key_files: R/modBreedingGroups.R:682-689 (notice), :993-994 (headings); tests/testthat/test_guideBreedingGroupsWording.R:137 (groupsText), :268-309 (the two one-animal blocks); tests/testthat/test_modBreedingGroups_livingPool.R:108 (lpWithStatus), :297-330 (notice blocks); vignettes/articles/colony-manager-guide.qmd:624-628 (sex-ratio paragraph and alt text, "four"); PROJECT_LEARNINGS.md Learning 928.
+gotchas: the nine-animal fixture's one-animal boxes are at seed 7 only; a retake draws the last box's count, so the test pin follows the picture; a mutation check must change what the tests read (return "", not "keep the tags"); zero needs no change (nobody alive draws no box; a zero-animal source's notice was not probed); three old runGeneKeepR pids (29511, 82416, 92900) are alive and left alone; keep SESSION_NOTES.md under about 56,700 B and every line under 280 B.
+runtime_smoke: the guide's capture script drove the real app (headless Chrome), 85 of 85 steps, after GREEN with no R/ change since; breeding_group_1.png and breeding_group_6_infants_with_dam.png of that run show "Unused animals (1 animal)". The one-animal notice was tested with a mocked showNotification, not seen in the real app. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results ed5566ce7b22 · manifest aa983075d6a2
+changelog_ref: S962 DONE entry
+commit: the close-out commit that carries this receipt; claim 7c95083a1, RED 9f3cea521, GREEN 0fa5a5761, RED c268af266, GREEN 8c47bdabd, REFACTOR 5d9694135, NEWS efa3c7828
 ```
 
 ```handoff

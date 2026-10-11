@@ -27,15 +27,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
       `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
 
-- [ ] **The Breeding Groups "nobody is alive" notice reads "None of the 1 animals" when the source has one
-      animal (found S939, 2026-10-07; READY (optional), Effort S; strict TDD, a displayed-text change)** -- the
-      notice (`R/modBreedingGroups.R`, the `length(rawPool) == 0L` branch) builds its text from the source's
-      animal count; the S939 tests pin "None of the 14 animals", not the count of one (or zero). A pool of one
-      animal cannot form groups anyway, so this is wording only: pick it up with the next Breeding Groups change.
-      The box headings have the same one-animal plural (found S961, left as it was): "Group 5 (1 animals)" and
-      "Unused animals (1 animals)" come from one `sprintf("%s (%d animals)", ...)` (`R/modBreedingGroups.R:988`),
-      so one change would cover both; the S961 tests pin "(n animals)" for n of 2 or more only.
-
 - [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
       tool's 262,144 B whole-file refusal is refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
       Effort S; config only, `.context-budget.json`)** -- `HANDOFFS.md` crossed 262,144 B in S950's close-out
