@@ -204,6 +204,65 @@ test_that("a file with no genotype columns is not used and the line says what wa
   expect_identical(res$note, noGenotypeNote)
 })
 
+## S972 (BACKLOG.md:139, point 2). Two or more of the six allele columns can be
+## in a file with no pair that can be read: they do not pair, or the pair has no
+## allele in it. The line then said "No genotype columns were found", which is
+## untrue. Measured through the real Input module before any change: five such
+## cases, one cause (the branch that follows the one-column line). The line now
+## names the columns found, in the order the app looks for them.
+test_that("allele columns that do not pair are not used, and the line names the columns found", {
+  cases <- list(
+    list(ped = oneFileWith(first = oneFileNums1, allele2 = oneFileNums2),
+         found = c("first", "allele2")),
+    list(ped = oneFileWith(first = oneFileNums1, second_name = oneFileLabs2),
+         found = c("first", "second_name")))
+  for (case in cases) {
+    res <- readOneFileGenotypes(case$ped)
+    expect_false(res$used)
+    expect_identical(res$ped, case$ped)
+    expect_identical(res$note, unusablePairNote(case$found))
+  }
+})
+
+test_that("a pair with no allele in it is not used, and the line names the columns found", {
+  cases <- list(
+    list(ped = oneFileWith(first = rep(NA_real_, 8L),
+                           second = rep(NA_real_, 8L)),
+         found = c("first", "second")),
+    list(ped = oneFileWith(allele1 = rep(NA_character_, 8L),
+                           allele2 = rep("", 8L)),
+         found = c("allele1", "allele2")))
+  for (case in cases) {
+    res <- readOneFileGenotypes(case$ped)
+    expect_false(res$used)
+    expect_identical(res$ped, case$ped)
+    expect_identical(res$note, unusablePairNote(case$found))
+  }
+})
+
+test_that("a blank first and second beside one lone allele column are all named in the line", {
+  ped <- oneFileWith(first = rep(NA_real_, 8L), second = rep(NA_real_, 8L),
+                     allele1 = oneFileLabs1)
+  res <- readOneFileGenotypes(ped)
+  expect_false(res$used)
+  expect_identical(res$ped, ped)
+  expect_identical(res$note, unusablePairNote(c("first", "second", "allele1")))
+})
+
+## Must not change: a pair with an allele in only one of its two columns is
+## read, and the line's own count says how few animals have both (measured
+## S972 through the real Input module: "for 0 of 8 animals"). Passes before the
+## change, so no RED failure is claimed for it.
+test_that("a pair with an allele in only one of its columns is still read, and the line counts the animals that have both", {
+  ped <- oneFileWith(first = oneFileNums1, second = rep(NA_real_, 8L))
+  res <- readOneFileGenotypes(ped)
+  expect_true(res$used)
+  expect_identical(
+    res$note,
+    paste0("Genotypes read from first and second: 3 different alleles ",
+           "(1, 2, 3) for 0 of 8 animals."))
+})
+
 test_that("a label that reads as a whole number above 10000 next to text is refused, with the reason", {
   ped <- oneFileWith(allele1 = c("A", "B", "10500", "A", "B", "A", "B", "A"),
                      allele2 = oneFileLabs2)

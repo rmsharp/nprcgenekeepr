@@ -20,6 +20,18 @@ noGenotypeNote <- paste0(
   "first_name and second_name, allele_1 and allele_2), so no genotypes are ",
   "used.")
 
+## The line shown when two or more of the six allele columns are in the file
+## but no pair of them can be read (they do not pair, or the pair has no
+## allele in it), word for word as the owner approved it (S972, the PRE-RED
+## gate). `found` is the names the app has already cleaned (allele2, not
+## allele_2), in the order the app looks for them.
+unusablePairNote <- function(found) {
+  paste0("Genotype columns were found (", toString(found), "), but they are ",
+         "not a usable pair, so no genotypes are used; a pair is first and ",
+         "second, first_name and second_name, or allele_1 and allele_2, with ",
+         "at least one allele in it.")
+}
+
 ## A pedigree the Input tab's check accepts with 0 errors (founders, then six
 ## offspring born at least three years after their parents), as the raw file a
 ## user uploads: plain column names, no genotype columns yet.

@@ -24,13 +24,19 @@
 
 testthat::skip_on_cran()
 
-## Run the Input module on `ped` written to a temporary CSV, in `mode`
-## ("commonPedGenoFile" is the one-file mode), and return what a user gets:
-## the cleaned studbook, the genotype extract, the line, the error and warning
-## tables and the rendered QC Summary as one HTML string.
-runOneFile <- function(ped, mode = "commonPedGenoFile") {
-  path <- tempfile(fileext = ".csv")
-  utils::write.csv(ped, path, row.names = FALSE)
+## Run the Input module on `ped` written to a temporary CSV (or, with
+## ext = "xlsx", a real Excel file, which the module reads as an Excel upload),
+## in `mode` ("commonPedGenoFile" is the one-file mode), and return what a user
+## gets: the cleaned studbook, the genotype extract, the line, the error and
+## warning tables and the rendered QC Summary as one HTML string.
+runOneFile <- function(ped, mode = "commonPedGenoFile", ext = "csv") {
+  path <- tempfile(fileext = paste0(".", ext))
+  if (identical(ext, "xlsx")) {
+    skip_if_not_installed("openxlsx")
+    openxlsx::write.xlsx(ped, path)
+  } else {
+    utils::write.csv(ped, path, row.names = FALSE)
+  }
   uploadId <- if (identical(mode, "pedFile")) {
     "pedigreeFileOne"
   } else {
@@ -158,6 +164,64 @@ test_that("a file with no genotype columns says what the app looked for", {
   expect_null(res$genotype)
   expect_identical(res$note, noGenotypeNote)
   expect_equal(nrow(res$warnings), 0L)
+})
+
+## S972 (BACKLOG.md:139, points 2 and 3). The line for allele columns that are
+## in the file but cannot be read, through the real module and its QC Summary,
+## and the real Excel upload that S971 pinned only at helper level. What each
+## showed before any change (eight animals, S972): the first three below showed
+## noGenotypeNote, which is untrue; the two real-.xlsx reads showed the lines
+## these blocks pin, so those two pass at once and claim no RED failure.
+expectUnusablePairLine <- function(res, found) {
+  expect_null(res$genotype)
+  expect_identical(res$note, unusablePairNote(found))
+  expect_match(res$html, unusablePairNote(found), fixed = TRUE)
+  expect_false(grepl("No genotype columns were found", res$html, fixed = TRUE))
+  expect_equal(nrow(res$warnings), 0L)
+}
+
+test_that("two allele columns that do not pair are not used, and the QC Summary names them", {
+  res <- runOneFile(oneFileWith(first = oneFileNums1, allele_2 = oneFileNums2))
+  expectUnusablePairLine(res, c("first", "allele2"))
+})
+
+test_that("a pair with every cell blank is not used, and the QC Summary names the columns", {
+  res <- runOneFile(oneFileWith(allele_1 = rep(NA, 8L), allele_2 = rep(NA, 8L)))
+  expectUnusablePairLine(res, c("allele1", "allele2"))
+})
+
+test_that("a real Excel upload with a blank first and second shows the same line", {
+  res <- runOneFile(oneFileWith(first = rep(NA, 8L), second = rep(NA, 8L)),
+                    ext = "xlsx")
+  expectUnusablePairLine(res, c("first", "second"))
+})
+
+test_that("a real Excel upload with whole numbers in first and second reads the same alleles as a CSV", {
+  ped <- oneFileWith(first = oneFileNums1, second = oneFileNums2)
+  xlsx <- runOneFile(ped, ext = "xlsx")
+  csv <- runOneFile(ped)
+  expect_identical(
+    xlsx$note,
+    paste0("Genotypes read from first and second: 3 different alleles ",
+           "(1, 2, 3) for 8 of 8 animals."))
+  expect_identical(xlsx$note, csv$note)
+  expect_equal(byId(xlsx$cleaned, "first"), oneFileNums1)
+  expect_equal(byId(xlsx$cleaned, "second"), oneFileNums2)
+  expect_equal(nrow(xlsx$genotype), 8L)
+  expect_equal(nrow(xlsx$warnings), 0L)
+})
+
+test_that("a real Excel upload with text labels in allele_1 and allele_2 gives the codes the separate file gives", {
+  xlsx <- runOneFile(oneFileWith(allele_1 = oneFileLabs1,
+                                 allele_2 = oneFileLabs2), ext = "xlsx")
+  codes <- oneFileCodes(oneFileIds, oneFileLabs1, oneFileLabs2)
+  expect_identical(
+    xlsx$note,
+    paste0("Genotypes read from allele1 and allele2: 3 different alleles ",
+           "(A, B, C) for 8 of 8 animals."))
+  expect_equal(byId(xlsx$cleaned, "first"), codes$first)
+  expect_equal(byId(xlsx$cleaned, "second"), codes$second)
+  expect_equal(nrow(xlsx$genotype), 8L)
 })
 
 test_that("pedigree-only mode is left alone: no conversion, no line", {

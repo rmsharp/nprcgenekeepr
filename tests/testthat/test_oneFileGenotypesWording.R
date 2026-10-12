@@ -65,6 +65,26 @@ test_that("the Input Format page names the one-file genotype columns and describ
                       "No genotype columns were found"))
 })
 
+## S972 (BACKLOG.md:139, points 1 and 2; the sentences are the ones the owner
+## approved at the PRE-RED gate). The two table cells called the column an
+## "integer code of the first allele" while their last cell says whole numbers
+## or text labels, and the pages that describe the line now name its third form.
+test_that("the Input Format page's first and second rows no longer call the column an integer code", {
+  page <- plainSource("inst", "extdata", "ui_guidance", "input_format.html",
+                      html = TRUE)
+  expect_false(grepl("integer code of the", page, fixed = TRUE))
+  expectNames(page, c("First allele: the animal's first allele",
+                      "Second allele: the animal's second allele"))
+})
+
+test_that("the Input Format page and the guide describe the line for allele columns that are found but are not a usable pair", {
+  page <- plainSource("inst", "extdata", "ui_guidance", "input_format.html",
+                      html = TRUE)
+  guide <- plainSource("vignettes", "articles", "colony-manager-guide.qmd")
+  expectNames(page, c("Genotype columns were found", "not a usable pair"))
+  expectNames(guide, c("Genotype columns were found", "not a usable pair"))
+})
+
 test_that("the user manual's Input part names the one-file genotype columns and the line", {
   manual <- plainSource("vignettes", "manual_components", "_input.Rmd")
   expectNames(manual, c("allele_1", "allele_2", "Genotypes read from"))
@@ -160,5 +180,16 @@ test_that("the development-version NEWS entry says the one-file mode reads these
     section <- gsub("\\s+", " ", newsDevSection(file))
     expect_match(section, "allele\\\\?_1", info = file)
     expect_match(section, "genotypes in one file", fixed = TRUE, info = file)
+  }
+})
+
+## S972: the line has a third form, so "or that it found none" no longer says
+## what the Input tab does.
+test_that("the development-version NEWS entry says the line tells why the app read no genotypes, in NEWS.Rmd and in the knitted NEWS.md", {
+  for (file in c("NEWS.Rmd", "NEWS.md")) {
+    section <- gsub("\\s+", " ", newsDevSection(file))
+    expect_match(section, "or why it read none", fixed = TRUE, info = file)
+    expect_false(grepl("or that it found none", section, fixed = TRUE),
+                 info = file)
   }
 })
