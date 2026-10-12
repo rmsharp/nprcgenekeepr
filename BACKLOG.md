@@ -136,18 +136,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Make a one-file pedigree's genotype columns get used (READY, Effort S to M; owner direction S970; strict TDD,
-      every gate asked)** -- with "pedigree and genotypes in one file", columns named `allele_1`/`allele_2` load with
-      0 errors and 0 warnings, the Changed Columns tab lists the rename to `allele1`/`allele2`, and the genotypes are then
-      not used with nothing saying so; `first`/`second` work (measured S966 through the real Input module,
-      `docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md` Finding 4; the cause is the underscore
-      strip at `R/fixColumnNames.R:38` plus `hasGenotype()` needing `first` and `second`; the check runs in `R/modInput.R`
-      near `:505-523`). S968 ruled "show a notice"; at S970 the owner redirected: implement the columns, so the genotypes
-      are used. No calculated number changes for a file that already works. Its own PRE-RED questions: accept only the
-      underscore spelling, or text alleles as well (the page says whole numbers only and text labels go in a separate
-      genotype file, `inst/extdata/ui_guidance/input_format.html:85-90`); whether a notice stays for a file where no usable
-      genotype columns still result (the S968 ruling, kept as the fallback), where it shows (the Warnings list moves the
-      QC Summary count, or a line on the Input tab) and its words. That page, the manual and `NEWS.Rmd` change with it.
+- [ ] **Small leftovers of the one-file genotype work (DECISION NEEDED for points 1 and 5, READY for 2 to 4, Effort S to M;
+      found S971; strict TDD, every gate asked)** -- S971 shipped the feature (`R/readOneFileGenotypes.R:30`, the QC Summary
+      line at `R/modInput.R:617-618`, the Input page, the manual, the guide with one picture, NEWS) and left these. (1) *Owner's
+      wording:* the Input page's `first` and `second` rows still describe the column as an "integer code of the first allele"
+      (`inst/extdata/ui_guidance/input_format.html:178,184`) while their last cell now says "Whole numbers or text labels.".
+      (2) *Two untested edges:* two allele columns that do not pair (for example `first` and `allele2`), and a pair whose cells
+      are all blank, both get the line "No genotype columns were found ...", which is untrue because columns exist; the fix
+      needs a RED test and a new sentence from the owner. (3) *No real `.xlsx` upload* is run through the Input module: Excel
+      text is pinned at helper level only (`test_readOneFileGenotypes.R`, the two blocks of S971's RED amendment 2). (4) The
+      opt-in E2E files (`NPRC_RUN_E2E=true`) were not run. (5) *Tutorials:* the owner said S971 needs "much more documentation
+      and augmentation of the tutorials"; done are the Input page, the manual and the guide; not done are
+      `vignettes/a2interactive.Rmd` (how a script gets the same codes: `addGenotype()` on a pedigree's label columns; nothing
+      new is exported, so the checklist does not require it) and the Genetic Value article and manual (neither mentions
+      genotypes today). Which of (5) the owner wants is the decision.
 
 - [ ] **Let a user give Breeding Groups their own candidate list (DECISION NEEDED -- a file upload or a paste-IDs box,
       Effort M; owner-requested S970; strict TDD, every gate asked)** -- S970 removed the "Upload list" Source choice,
