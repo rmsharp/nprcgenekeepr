@@ -469,8 +469,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
   reads genotypes from columns named `allele_1` and `allele_2` or
   `first_name` and `second_name` as well as `first` and `second`,
   accepts text labels such as A, B, C as well as whole numbers, and
-  shows a line under the QC Summary saying which columns it read or that
-  it found none. A file with text in `first` and `second`, whose
+  shows a line under the QC Summary saying which columns it read or why
+  it read none. A file with text in `first` and `second`, whose
   genotypes were not used before, now uses them, so its Genetic Value
   results can change.
 
