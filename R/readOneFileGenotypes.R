@@ -15,8 +15,8 @@
 #' same rule as the separate genotype file, and text that stood in
 #' \code{first} and \code{second} moves to \code{first_name} and
 #' \code{second_name} where those are absent. Labels are not trimmed or
-#' case-folded, so a misspelt label is its own allele. A label that reads as a
-#' whole number above 10000 next to text labels is refused, as
+#' case-folded, so a misspelled label is its own allele. A label that reads as
+#' a whole number above 10000 next to text labels is refused, as
 #' \code{\link{checkGenotypeFile}} refuses it, because it would collide with
 #' the codes.
 #'
