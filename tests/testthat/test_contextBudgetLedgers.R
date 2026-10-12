@@ -86,17 +86,21 @@ stageLedgers <- function(root, grow = 0L, shrinkTo = NULL) {
   invisible(root)
 }
 
-budgetStatusJson <- function(root) {
+## The tool run from inside `root`, where it finds its config and the git index.
+## A warn or an over verdict is a non-zero exit, which system2() warns about.
+runBudgetTool <- function(root, flags, stderr = TRUE) {
   withr::with_dir(root, suppressWarnings(
-    system2("python3", c("-I", shQuote(budget_tool), "--status", "--json"),
-            stdout = TRUE, stderr = FALSE)))
+    system2("python3", c("-I", shQuote(budget_tool), flags),
+            stdout = TRUE, stderr = stderr)))
+}
+
+budgetStatusJson <- function(root) {
+  runBudgetTool(root, c("--status", "--json"), stderr = FALSE)
 }
 
 ## list(status = exit code, text = everything the hook printed).
 budgetPrecommit <- function(root) {
-  out <- withr::with_dir(root, suppressWarnings(
-    system2("python3", c("-I", shQuote(budget_tool), "--precommit"),
-            stdout = TRUE, stderr = TRUE)))
+  out <- runBudgetTool(root, "--precommit")
   status <- attr(out, "status")
   list(status = if (is.null(status)) 0L else status,
        text = paste(out, collapse = "\n"))
@@ -118,6 +122,17 @@ budgetRowStatus <- function(row) {
   regmatches(row, regexec('"status": "([a-z]+)"', row))[[1L]][2L]
 }
 
+## Each ledger has a row, and its verdict is `status`. Returns the rows by path.
+expectLedgerStatus <- function(json, status) {
+  rows <- lapply(ledger_paths, function(path) budgetRow(json, path))
+  names(rows) <- ledger_paths
+  for (path in ledger_paths) {
+    expect_false(is.na(rows[[path]]), info = paste(path, "has no row"))
+    expect_equal(budgetRowStatus(rows[[path]]), status, info = path)
+  }
+  invisible(rows)
+}
+
 test_that("each ledger has a row with a 196,608 B warn line and a 262,144 B ceiling", {
   skip_unless_budget_tools()
   json <- budgetStatusJson(budgetTree(100000L))
@@ -132,24 +147,16 @@ test_that("each ledger has a row with a 196,608 B warn line and a 262,144 B ceil
 
 test_that("a ledger at 100,000 B is ok and gets no token check", {
   skip_unless_budget_tools()
-  json <- budgetStatusJson(budgetTree(100000L))
+  rows <- expectLedgerStatus(budgetStatusJson(budgetTree(100000L)), "ok")
   for (path in ledger_paths) {
-    row <- budgetRow(json, path)
-    expect_false(is.na(row), info = paste(path, "has no row"))
-    expect_equal(budgetRowStatus(row), "ok", info = path)
-    expect_false(grepl('"tokens"', row, fixed = TRUE), info = path)
+    expect_false(grepl('"tokens"', rows[[path]], fixed = TRUE), info = path)
   }
 })
 
 test_that("a ledger past 196,608 B warns and a commit that grows it still passes", {
   skip_unless_budget_tools()
   root <- budgetTree(200000L)
-  json <- budgetStatusJson(root)
-  for (path in ledger_paths) {
-    row <- budgetRow(json, path)
-    expect_false(is.na(row), info = paste(path, "has no row"))
-    expect_equal(budgetRowStatus(row), "warn", info = path)
-  }
+  expectLedgerStatus(budgetStatusJson(root), "warn")
   verdict <- budgetPrecommit(stageLedgers(root, grow = 1000L))
   expect_equal(verdict$status, 0L, info = verdict$text)
 })
@@ -157,12 +164,7 @@ test_that("a ledger past 196,608 B warns and a commit that grows it still passes
 test_that("a ledger past 262,144 B is over: growth is refused and shrinking passes", {
   skip_unless_budget_tools()
   root <- budgetTree(263000L)
-  json <- budgetStatusJson(root)
-  for (path in ledger_paths) {
-    row <- budgetRow(json, path)
-    expect_false(is.na(row), info = paste(path, "has no row"))
-    expect_equal(budgetRowStatus(row), "over", info = path)
-  }
+  expectLedgerStatus(budgetStatusJson(root), "over")
   grown <- budgetPrecommit(stageLedgers(root, grow = 1000L))
   expect_equal(grown$status, 2L, info = grown$text)
   expect_match(grown$text, "REFUSED", fixed = TRUE)
