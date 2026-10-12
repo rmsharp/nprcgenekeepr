@@ -256,8 +256,9 @@ In "Pedigree(s) and genotypes in one file" mode the QC Summary adds one line
 under the three boxes, saying which columns were read, how many different
 alleles it found and for how many animals: a line beginning "Genotypes read
 from" or, when no usable pair of columns was found, one beginning "No genotype
-columns were found" that names the column names it looked for. Check the number
-of alleles: a misspelled label counts as one more. The picture below reads the
+columns were found" that names the column names it looked for, or one beginning
+"Genotype columns were found" that names the columns that are not a usable
+pair. Check the number of alleles: a misspelled label counts as one more. The picture below reads the
 package's shipped file `obfuscated_rhesus_mhc_ped_with_genotypes.csv` (found
 with `system.file("extdata", "examples",
 "obfuscated_rhesus_mhc_ped_with_genotypes.csv", package = "nprcgenekeepr")`),
