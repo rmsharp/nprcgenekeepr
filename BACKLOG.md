@@ -5,15 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Optional: a guide picture of the Warnings sub-tab as the app opens it after a check (raised S936,
-      2026-10-07; READY (optional), Effort S; docs and the capture script only)** -- the guide's paragraph on
-      Read and Check Pedigree now says in words where the Errors and Warnings sub-tabs are and what the red
-      and yellow notices say, but it has no picture of either sub-tab (measured S936: none in
-      `vignettes/articles/shiny_app_use/`). A full-window capture right after the check, with the Warnings
-      sub-tab open and the whole notice showing, was taken S936 as a scratch file only (1300 x 900; the notice
-      is 286 px wide and fits). Adding it means a new capture step, a new image file and a sentence in the
-      guide. Pick it up only if the owner wants the picture; the QC Summary picture and the words are done.
-
 - [ ] **Optional: a pop-up covers the "Twin/Zygosity Relations" heading in 9 of the 14 pictures S941 retook
       (found S941, 2026-10-07; READY (optional), Effort S; strict TDD, capture script only)** -- read off
       the pictures: `pb_5_focal_animals_small`, `pb_selection_large_focal_group`,
@@ -109,7 +100,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       is 12 animals with 4 filled (not three), the names picture is its own 12-animal lineage, and the
       first Pedigree Browser alt text. The two leftovers were the Direct-style item (fixed S949: the article's edge-style
       section now shows a Direct picture, `diagram_direct_edge_style.png`, and says the first picture is the Rectilinear
-      default) and the pop-up item below the Warnings-picture item.
+      default) and the pop-up item (the first item under Up Next).
       S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic
       Value x3) from the colony script's full 81/81 run, copied by name; sizes matched S927's measurements. D3
       was ruled: accept. The Home picture shows the 2026-10-07 install date and a three-row navigation bar (De-
