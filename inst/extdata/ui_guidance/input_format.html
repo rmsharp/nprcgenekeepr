@@ -83,11 +83,17 @@ The <i>Birth</i> column must be present, but its values may be blank when an
 	</li>
 	<li>
 		Genotype data may be supplied within the pedigree file or in a separate
-		genotype file. When the genotypes are in the pedigree file, add two columns
-		named <i>first</i> and <i>second</i> holding whole-number allele codes;
-		text allele labels in those columns are not converted, and the genotypes
-		are then not used. To use labeled alleles, supply them in a separate
-		genotype file (described below). The columns are described below.
+		genotype file (described below). In a one-file pedigree the two allele
+		columns can be named <i>first</i> and <i>second</i>, <i>first_name</i> and
+		<i>second_name</i>, or <i>allele_1</i> and <i>allele_2</i>, and can hold
+		whole numbers or text labels such as A, B, C, which become whole-number
+		codes the same way as in a separate genotype file. After Read and Check
+		Pedigree the QC Summary says which columns were read, how many different
+		alleles it found and for how many animals, so a misspelt label shows as
+		one extra allele; for example, "Genotypes read from allele1 and allele2: 3
+		different alleles (A, B, C) for 8 of 8 animals." When no usable pair of
+		columns is found it says so instead, in a line that begins "No genotype
+		columns were found" and names the column names it looked for.
 	</li>
 </ul>
 </p>
@@ -170,13 +176,13 @@ The <i>Birth</i> column must be present, but its values may be blank when an
 	<tr bgcolor="#F2FFCC">
 		<td>first</td>
 		<td>First allele: integer code of the first allele</td>
-		<td>Whole numbers only. For labeled alleles use a separate genotype file.
+		<td>Whole numbers or text labels.
 		</td>
 	</tr>
 	<tr bgcolor="#F2FFCC">
 		<td>second</td>
 		<td>Second allele: integer code of the second allele</td>
-		<td>Whole numbers only. For labeled alleles use a separate genotype file.
+		<td>Whole numbers or text labels.
 		</td>
 	</tr>
 </table>

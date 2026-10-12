@@ -26,7 +26,10 @@ The sidebar panel allows you to select how you are submitting data:
 - **File Type**: Choose between Excel (.xlsx, .xls) or Text (.csv, .txt) formats
 - **File Content**: Select from four options:
   - Pedigree(s) file only; genotypes not provided
-  - Pedigree(s) and genotypes in one file
+  - Pedigree(s) and genotypes in one file (name the two allele columns
+    `first` and `second`, `first_name` and `second_name`, or `allele_1` and
+    `allele_2`; the QC Summary then shows a line beginning "Genotypes read from"
+    that says which were read)
   - Pedigree(s) and genotypes in separate files
   - Focal animals only; pedigree built from database
 
