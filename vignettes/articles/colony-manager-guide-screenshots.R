@@ -192,6 +192,23 @@ do_step("click Read and Check Pedigree", {
   app$click("dataInput-getData")
   app$wait_for_idle(timeout = 30000)
 })
+# 6a. The page as the check leaves it (read_and_check_pedigree_warnings.png --
+#     new, S963). With only warnings found, the app opens the Warnings sub-tab
+#     itself and shows the yellow pop-up ("QC found 2 warning(s). Check the
+#     Warnings tab."), which closes after 8 seconds. This window picture is
+#     taken before the switch to QC Summary below, while the pop-up is still
+#     showing. The step fails, so the end-of-run summary says so, if the
+#     pop-up is already gone or the open sub-tab is not Warnings.
+do_step("check the Warnings sub-tab is open and the QC pop-up is showing", {
+  if (!wait_for_element(app, ".shiny-notification", timeout = 5000)) {
+    stop("the QC pop-up is not on screen (it closes after 8 seconds)")
+  }
+  opened <- app$get_value(input = "dataInput-mainTabs")
+  if (!identical(opened, "Warnings")) {
+    stop("the open sub-tab is ", opened, ", not Warnings")
+  }
+})
+shot(app, "read_and_check_pedigree_warnings.png", selector = "viewport")
 do_step("switch to QC Summary sub-tab", {
   app$set_inputs(`dataInput-mainTabs` = "QC Summary")
 })

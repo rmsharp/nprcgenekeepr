@@ -242,6 +242,12 @@ stops the pedigree from being used.
 
 ![QC Summary after reading and checking the example pedigree.](shiny_app_use/read_and_check_pedigree.png){fig-alt="QC Summary sub-tab showing Records Processed 3694 in a dark blue box, Errors 0 in a green box and Warnings 2 in an orange box, above a green message that the data passed quality control."}
 
+The picture below shows the Warnings sub-tab as the app opens it for this
+file: one row for each of the two warnings, with the yellow notice still on
+screen in the lower right corner.
+
+![The Warnings sub-tab as the app opens it after reading and checking the example pedigree.](shiny_app_use/read_and_check_pedigree_warnings.png){fig-alt="Input tab with the Warnings sub-tab open, showing a table of two warnings, Column name case changed and Animals with no birth date, and a yellow notice in the lower right corner that reads QC found 2 warning(s). Check the Warnings tab."}
+
 ```{r}
 #| label: error-defs
 #| echo: false
