@@ -173,6 +173,11 @@ if (ok) {
   do_step("enable Show Names on Diagram", {
     app$set_inputs(`pedigree-pedigreeShowNames` = TRUE)
   })
+  # set_focal() ends with the "Updated focal animals: N IDs" pop-up on screen
+  # (see the legend picture above), so wait for it before this picture too.
+  do_step("wait for the pop-ups to clear before diagram_show_names.png", {
+    wait_for_notifications_clear(app, timeout = 15000)
+  })
   shot(app, "diagram_show_names.png", selector = "#pedigree-moduleContainer")
 }
 app$stop()
@@ -189,6 +194,9 @@ if (ok) {
   # -- all three shading states in one small, legible screenshot.
   set_focal(app, c("677E7M", "BRI2MW", "MND3AC"), "affected/unaffected/NA")
 
+  do_step("wait for the pop-ups to clear before diagram_affected_shading.png", {
+    wait_for_notifications_clear(app, timeout = 15000)
+  })
   shot(app, "diagram_affected_shading.png",
        selector = "#pedigree-moduleContainer")
 }
@@ -220,6 +228,9 @@ if (ok) {
   # short-dash/long-dash-"?") at once, in their real surrounding lineage.
   set_focal(app, c("E06FRB", "HV7LZ3", "8GSXTQ", "P844CW", "BRI2MW",
                     "677E7M"), "all 3 declared twin pairs")
+  do_step("wait for the pop-ups to clear before diagram_twin_connectors.png", {
+    wait_for_notifications_clear(app, timeout = 15000)
+  })
   shot(app, "diagram_twin_connectors.png",
        selector = "#pedigree-moduleContainer")
 }
