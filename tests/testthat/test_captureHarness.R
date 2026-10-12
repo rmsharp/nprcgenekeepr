@@ -510,6 +510,11 @@ blockContaining <- function(code, pattern) {
   paste(code[start:end], collapse = "\n")
 }
 
+## The line numbers of the `shot(app, "<picture>"` calls in `code`.
+shotLineOf <- function(code, picture) {
+  grep(paste0('shot\\(app, "', picture, '"'), code)
+}
+
 ## Width and height of a PNG, from its header (bytes 17 to 24, big-endian).
 pngSize <- function(path) {
   header <- readBin(path, "raw", 24L)
@@ -632,7 +637,7 @@ test_that("the Diagram script's edge-style step picks Direct and shoots diagram_
   code <- codeOf(readScript(diagramScript))
   expect_identical(edgeStyleValues(code), "\"direct\"")
   setAt <- grep("-pedigreeEdgeStyle`", code)
-  shotAt <- grep(paste0('shot\\(app, "', directPicture, '"'), code)
+  shotAt <- shotLineOf(code, directPicture)
   expect_length(setAt, 1L)
   expect_length(shotAt, 1L)
   expect_true(length(setAt) == 1L && length(shotAt) == 1L && setAt < shotAt)
@@ -739,8 +744,8 @@ guideLineOf <- function(lines, picture) {
 
 test_that("the colony script shoots the Warnings sub-tab as a window picture, between the Read and Check click and the switch to QC Summary", {
   code <- codeOf(readScript(colonyScript))
-  shotAt <- grep(paste0('shot\\(app, "', warningsPicture, '"'), code)
-  clickAt <- grep('app\\$click\\("dataInput-getData"\\)', code)
+  shotAt <- shotLineOf(code, warningsPicture)
+  clickAt <-grep('app\\$click\\("dataInput-getData"\\)', code)
   switchAt <- grep('`dataInput-mainTabs` = "QC Summary"', code)
   expect_length(shotAt, 1L)
   expect_length(clickAt, 1L)
@@ -754,10 +759,10 @@ test_that("the colony script shoots the Warnings sub-tab as a window picture, be
 
 test_that("the step before the Warnings picture waits for the notice and checks the Warnings sub-tab is the open one", {
   code <- codeOf(readScript(colonyScript))
-  shotAt <- grep(paste0('shot\\(app, "', warningsPicture, '"'), code)
+  shotAt <- shotLineOf(code, warningsPicture)
   expect_length(shotAt, 1L)
   if (length(shotAt) == 1L) {
-    tops <- grep("^(do_step|shot)\\(", code)
+    tops <-grep("^(do_step|shot)\\(", code)
     before <- tops[tops < shotAt]
     expect_gte(length(before), 1L)
     block <- paste(code[max(before):(shotAt - 1L)], collapse = "\n")
