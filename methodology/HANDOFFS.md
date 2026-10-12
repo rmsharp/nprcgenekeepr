@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S968
+date: 2026-10-12
+status: pending
+active_task: IN PROGRESS -- take and record the owner's three rulings on docs-audit part 2's open code defects (BACKLOG.md:129-133: the "Upload list" choice, R/modBreedingGroups.R:40-43; the two do-nothing checkboxes, R/modGeneticValue.R:63-66; the unused allele_1/allele_2 genotypes, R/fixColumnNames.R:38); owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; PRE-RED, a decision-only session (no code until a ruling needs it, then its own gates)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S967
 date: 2026-10-12
 status: complete

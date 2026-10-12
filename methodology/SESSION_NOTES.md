@@ -98,29 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 967 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the `groupAddAssign()` help says "...the set of groups with the largest minimum group
-size (the score is the size of the smallest group)." instead of "largest average size" (`R/groupAddAssign.R:11-12` and the regenerated `man/groupAddAssign.Rd:153-154`; the code ranks a trial by its smallest group,
-`:285`). The owner approved the one sentence at the PRE-RED gate; the phrase is the one the in-app guide already uses (`inst/extdata/ui_guidance/gvAndBgDesc.html:151`). No logic change, no NEWS line, no pictures.
-New gate `tests/testthat/test_groupAddAssignHelp.R` (7 blocks, 26 expectations): both places say it and neither says "average", the man page paragraph equals the roxygen paragraph, and `numGp = 2` scores by the smallest group.
-**Gates:** claim `014892b04`; RED `8f21aedd8` (6 failed, 0 skipped, 0 errors); GREEN `6d224c590` (two files); REFACTOR `5dfe2fd4f` (tests only); close-out = the commit carrying this note.
-**Verified:** full suite 3,439 blocks, 0 failed, 0 errors (187 skipped, 6 warnings) after GREEN and after REFACTOR; lint 0 after both; `devtools::check()` 0/0/0 after GREEN (not re-run after the tests-only REFACTOR);
-ratchet 1/1, results `e8850bbf6f18`, manifest `aa983075d6a2`; the help page renders the sentence (`tools::Rd2txt`); 3 mutations each fail the blocks that read them (4, 4 and 3 expectations), the same after the REFACTOR.
-**Handoff evaluation of S966: 9/10.** Helped: every `BACKLOG.md` cite held (`:8 :16 :109 :139 :156 :174 :194 :403`) and so did the code cites (`R/groupAddAssign.R:11` and `:284`, `R/modBreedingGroups.R:40-43`,
-`R/modGeneticValue.R:63-66`, `R/fixColumnNames.R:38`); the 22-ahead count and ratchet hashes matched; Finding 3 named the evidence and the exact scope. Missing: a pointer to a model test for help text (I found
-`test_getParentsOffspringHelp.R` myself); its "largest smallest-group size" was clumsier than the phrase the app shows. Wrong: nothing found.
-**Self-assessment: 8/10.** + probed first (a 10-and-9 candidate scores 9, not 9.5); the owner's sentence shown whole in one question, answered first try; a test bug found before the RED commit; a non-reloaded mutation
-distrusted and redone. - the `\s` in `Rscript -e` gotcha hit again; a no-trailing-newline file joined Learning 933 without its blank line (fixed before the commit); two harness nudges. Learning 933 (`PROJECT_LEARNINGS.md`, last).
-**Next steps (recommended, not ruled on):** your three rulings (`BACKLOG.md:129-133`): "Upload list" (`R/modBreedingGroups.R:40-43`: remove, build or leave); the two do-nothing checkboxes (`R/modGeneticValue.R:63-66`:
-remove or leave); `allele_1`/`allele_2` genotypes unused with no notice (`R/fixColumnNames.R:38`: leave, accept the spelling or add a notice; my pick: the notice). One decision-only session takes all three. Part 2 still
-has the 6a-6e and 7b clusters. Other picker options: the contributor tutorial `:139`, the Japanese macaque file `:156`, the Diagram deceased marker `:403`; the snapshot backfill `:194` needs its own scoping session;
-the 3.0.0 bump `:8` waits for release. 27 commits ahead of `origin/master`; the push changes `R/`, `man/` and `tests/`, so all four workflows run: read them.
-**Key files:** `R/groupAddAssign.R:8-12` (the sentence), `:285` (the score); `tests/testthat/test_groupAddAssignHelp.R` (`manParagraph`, `roxygenParagraph`, `helpPlaces`); `BACKLOG.md:125-133`.
-**Gotchas:** a mutation of `R/` code needs `pkgload::load_all()` after it, since a block that reads a file sees it and one that runs a function does not (Learning 933); `devtools::document()` touched only the one man page
-this time, but read `git diff --stat`; `PROJECT_LEARNINGS.md` has no trailing newline until an append, so check the blank line before a new heading; the old `runGeneKeepR` pids 29511, 82416, 92900 still run, left alone;
-keep this file under about 56,700 B and every line under 280 B.
+### What Session 968 Did
+**Deliverable:** the three open code rulings of docs-audit part 2 (`BACKLOG.md:129-133`), taken from the owner and recorded: the "Upload list" choice
+(`R/modBreedingGroups.R:40-43`), the two do-nothing checkboxes (`R/modGeneticValue.R:63-66`), and the unused `allele_1`/`allele_2` genotypes with no notice
+(`R/fixColumnNames.R:38`) (IN PROGRESS)
+**Started:** 2026-10-12 (owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; PRE-RED, a decision-only session: no R code and no tests
+until a ruling needs them, and then each change gets its own PRE-RED question and RED/GREEN gates)
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+**Orientation facts:** HEAD `296d8f331` = both ledger frontiers, 0 pending receipts, no merges; 27 commits ahead of `origin/master`; CI 10 of 10 green; dashboard 96/100;
+context budget OK (this file 55,955 B before the claim); ratchet 1/1, manifest `aa983075d6a2`. Keep this file under about 56,700 B and every line under 280 B.
 
-### Sessions 947-966 (condensed S950 to S967; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-967 (condensed S950 to S968; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -160,6 +150,12 @@ S966: the four likely code defects of docs-audit slice 4 re-checked against toda
 1 minor; an audit, no code change; claim `87ac25207`, report `cdfa78408`); all four are still real; the `groupAddAssign` wording was fixed S967, the three rulings are open (S967 block); evaluation of S965 8/10, self 7/10.
 **Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported, and the column-change note needs `reportChanges = TRUE`; the one-file option's input is
 `pedigreeFileTwo`; a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`; probe scripts live in the scratchpad, never the repo.
+S967: the `groupAddAssign()` help says the groups with the largest minimum group size win, the score being the size of the smallest group (`R/groupAddAssign.R:11-12`,
+`man/groupAddAssign.Rd:153-154`; the owner's sentence; gate `test_groupAddAssignHelp.R`, 7 blocks, 26 expectations; no code logic change; strict TDD, REFACTOR taken;
+claim `014892b04`, RED `8f21aedd8`, GREEN `6d224c590`, REFACTOR `5dfe2fd4f`; evaluation of S966 9/10, self 8/10). **Gotchas kept (S967):** a mutation of `R/` code needs
+`pkgload::load_all()` after it (a block that reads a file sees it, one that runs a function does not; Learning 933); `devtools::document()` touched one man page, so read
+`git diff --stat`; `PROJECT_LEARNINGS.md` has no trailing newline until an append, so check the blank line before a new heading; the old `runGeneKeepR` pids 29511, 82416,
+92900 still run, left alone; the push changes `R/`, `man/` and `tests/`, so all four workflows run.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
