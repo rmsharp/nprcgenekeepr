@@ -126,15 +126,47 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`): all four are still real and the docs
       already say so, except one wording line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
       "largest average size" and now say "largest minimum group size (the score is the size of the smallest group)",
-      gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three open rulings:** the "Upload list" choice that uploads nothing
-      (`R/modBreedingGroups.R:40-43`: remove, build the upload, or leave); the two do-nothing checkboxes
-      (`R/modGeneticValue.R:63-66`: remove or leave); a one-file pedigree with `allele_1`/`allele_2` columns, whose
-      genotypes go unused with no notice (`R/fixColumnNames.R:38`: leave, accept the spelling, or add a notice).
+      gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three rulings, all taken S968** (the owner took the
+      recommended option each time; each is now its own READY item below): remove the "Upload list" choice, remove the two do-nothing
+      Genetic Value checkboxes, and show a notice when a one-file pedigree's genotypes go unused.
       (3) *Left unsettled by the doc slices:* RO8 (Quarto slices 3-4 status) and the other ids in
       RO3 were reworded "not recorded" / "not re-checked"; AR3's "about 53" is attributed to
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
+
+- [ ] **Remove the "Upload list" Source choice from Breeding Groups (READY, Effort S; ruled S968; strict TDD,
+      every gate asked)** -- the choice has no control to give it a list, so it returns exactly what "All
+      available" returns (`R/modBreedingGroups.R:42`; the pool at `:529-536`). Ruled: remove it; building a paste-IDs
+      box (like the Mate Pair tab's, `R/modMatePair.R:44,60,260`) was offered and not taken. No calculated result
+      changes. **What it touches (grepped S968):** the roxygen `R/modBreedingGroups.R:215-216` and the regenerated
+      `man/modBreedingGroupsServer.Rd:87-88`; the manual `vignettes/manual_components/_breeding_group_formation.Rmd:28`
+      and `:46`; two tests that pin the choice (`tests/testthat/test_modBreedingGroups.R:362-390`, `animalSource = "custom"`,
+      and `tests/testthat/test_modBreedingGroups_livingPool.R:18,152-157`); and the six whole-tab pictures
+      (`breeding_group_*.png`, all `#breedingGroups-moduleContainer` at `vignettes/articles/colony-manager-guide-screenshots.R:475-627`;
+      `breeding_group_first_view.png` was opened and shows the three-choice list), retaken with the colony script
+      (about 3 min) and copied by name. Its own PRE-RED question: whether the server keeps a `"custom"` branch for a
+      script that passes it (the pool code treats `"custom"` and `"all"` alike today).
+- [ ] **Remove the two do-nothing Genetic Value checkboxes (READY, Effort S; ruled S968; strict TDD, every gate
+      asked)** -- "Calculate Genome Uniqueness" and "Calculate Mean Kinship" (`R/modGeneticValue.R:63-66`) are read by
+      nothing; `reportGV()` calculates both unconditionally and the tier ranking needs both. Ruled: remove both
+      (wiring them was left out because it cannot mean what the labels say). No calculated result changes.
+      **What it touches (grepped S968):** `tests/testthat/test_modGeneticValue.R:60-61,151-155,799-816`; a comment at
+      `tests/testthat/test-e2e-genetic-value-module.R:59-60`; the manual paragraph
+      `vignettes/manual_components/_genetic_value_analysis.Rmd:41-43` ("They currently have no effect"); and the three
+      Genetic Value pictures (`gva_*.png`, all `#geneticValue-moduleContainer`; `gva_calculating.png` was opened and
+      shows both boxes under Analysis Options), retaken. `docs/planning/shiny-module-conversion-plan.md:186` mentions them
+      in a plan (a dated record; leave it).
+- [ ] **Show a notice when a one-file pedigree's genotype columns go unused (READY, Effort S; ruled S968; strict TDD,
+      every gate asked)** -- with "pedigree and genotypes in one file", columns named `allele_1`/`allele_2` load with
+      0 errors and 0 warnings, the Changed Columns tab lists the rename to `allele1`/`allele2`, and the genotypes are then
+      not used with nothing saying so; `first`/`second` work (measured S966 through the real Input module,
+      `docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md` Finding 4; the cause is the
+      underscore strip at `R/fixColumnNames.R:38` plus `hasGenotype()` needing `first` and `second`). Ruled: add a notice
+      when that option is chosen and no usable genotype columns result, which also covers text alleles; accepting the
+      underscore spelling and leaving it were offered and not taken. No calculated number changes. Its own PRE-RED
+      questions: where the notice shows (the pedigree check's Warnings list, which also moves the QC Summary count, or a
+      line on the Input tab) and its exact words. The check runs in `R/modInput.R` near `:505-523`.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

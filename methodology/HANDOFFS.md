@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S968
 date: 2026-10-12
-status: pending
-active_task: IN PROGRESS -- take and record the owner's three rulings on docs-audit part 2's open code defects (BACKLOG.md:129-133: the "Upload list" choice, R/modBreedingGroups.R:40-43; the two do-nothing checkboxes, R/modGeneticValue.R:63-66; the unused allele_1/allele_2 genotypes, R/fixColumnNames.R:38); owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; PRE-RED, a decision-only session (no code until a ruling needs it, then its own gates)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the owner's three rulings on docs-audit part 2's open code defects taken and recorded (owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; PRE-RED throughout, a decision-only session: no R code, no tests, no man/): remove the "Upload list" Source choice (R/modBreedingGroups.R:42), remove the two do-nothing Genetic Value checkboxes (R/modGeneticValue.R:63-66), show a notice when a one-file pedigree's genotype columns go unused (R/modInput.R:505-523, cause R/fixColumnNames.R:38); the owner took the recommended option on all three. BACKLOG.md:138-169 carries three READY items; the docs-audit item stays open (6a-6e and 7b).
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget OK, ratchet 1/1 manifest matched). Claim 1a1f6652d (S967 folded into the condensed notes block). Measured before asking: the S966 audit report, the three code spots, a grep of every reference to each control (tests, manual, roxygen, pictures), the Mate Pair paste-IDs pattern, the capture selectors of the 6 Breeding Groups and 3 Genetic Value pictures, and gva_calculating.png itself. One AskUserQuestion with three questions, all answered with the recommended option. Recorded: BACKLOG.md three READY items plus the docs-audit item's text (:129-131). Ran the 50 test files that mention BACKLOG.md or a ledger file: 0 failed, 0 errors, 16 skipped, 3,466 passed. Learning 934; the name-the-comparison memory extended. No code, test, man/ or vignette file changed.
+next_steps: Three READY items, each its own strict-TDD session with a PRE-RED gate first (BACKLOG.md:138, :150, :160): the checkboxes (smallest: 2 UI lines, 3 test places, 3 pictures), the Upload-list removal (6 pictures; whether the server keeps a "custom" branch), the notice (where it shows and its words are the PRE-RED questions); my order is an estimate by size, not derived. Other picker options: the contributor tutorial (BACKLOG.md:171), the Japanese macaque file (:188), the harem-sire hole (:206), the Diagram deceased marker (:435); the snapshot backfill (:226) needs its own scoping session; the 3.0.0 bump (:8) waits for release. 29 commits ahead of origin/master with this close-out (S963 to S968, unpushed): the push changes R/, man/ and tests/, so all four workflows run; read them.
+key_files: BACKLOG.md:138-169 (the three items) and :129-131 (the docs-audit text); R/modBreedingGroups.R:42 and :529-536; R/modGeneticValue.R:63-66; R/modInput.R:505-523; R/fixColumnNames.R:38; vignettes/articles/colony-manager-guide-screenshots.R:371-404 and :475-627 (the pictures to retake); PROJECT_LEARNINGS.md Learning 934 (last entry).
+gotchas: a cd in one Bash call persists into the next, so use absolute paths; the new items' line cites were grepped S968 and shift after any edit above them, so re-grep before use; the Upload-list and checkbox items both retake pictures with the colony script (about 3 min; copy by name; run it only after the shown text changes); a decision pick is not a go-ahead, so each item still needs its own PRE-RED question; the old runGeneKeepR pids 29511, 82416, 92900 still run and are left alone; PROJECT_LEARNINGS.md ended with a newline this time.
+runtime_smoke: n/a -- decision-only session, no runtime change (no R, man/, tests/ or vignette file changed); the 50 test files that read the ledger and backlog files passed. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8e49d1237db1 · manifest aa983075d6a2
+changelog_ref: S968 DONE entry
+commit: the close-out commit that carries this receipt; claim 1a1f6652d
 ```
 
 ```handoff
