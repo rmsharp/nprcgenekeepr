@@ -44,7 +44,7 @@ test_that("E2E: Genetic Value has gene drop iterations control", {
   )
 })
 
-test_that("E2E: Genetic Value has metric checkboxes", {
+test_that("E2E: Genetic Value shows the genetic metric wording", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
@@ -56,8 +56,8 @@ test_that("E2E: Genetic Value has metric checkboxes", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  # Matches the static checkbox labels "Calculate Genome Uniqueness" /
-  # "Calculate Mean Kinship" and the threshold selectInput label.
+  # Matches the static "Genome Uniqueness Threshold:" selectInput label and the
+  # "About Genetic Values" panel's "Mean Kinship" / "Genome Uniqueness" lines.
   expect_true(
     assert_active_pane(app, "Genetic Value Analysis",
                        "genome uniqueness|mean kinship|uniqueness|kinship"),

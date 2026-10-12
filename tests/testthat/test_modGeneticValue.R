@@ -146,12 +146,6 @@ test_that("modGeneticValueServer handles input changes", {
       session$setInputs(nIterations = 1000)
       expect_equal(input$nIterations, 1000)
 
-      session$setInputs(calcGenomeUniqueness = FALSE)
-      expect_false(input$calcGenomeUniqueness)
-
-      session$setInputs(calcMeanKinship = TRUE)
-      expect_true(input$calcMeanKinship)
-
       session$setInputs(topN = 15)
       expect_equal(input$topN, 15)
     }
@@ -778,40 +772,6 @@ test_that("modGeneticValueServer handles maximum nIterations", {
       expect_equal(input$nIterations, 1000)
       results <- gvResults()
       expect_true(is.data.frame(results))
-    }
-  )
-})
-
-test_that("modGeneticValueServer handles checkbox combinations", {
-  skip_if_not_installed("shiny")
-
-  test_ped <- makeValidTestPed(nFounders = 4, nOffspring = 6)
-
-  shiny::testServer(
-    modGeneticValueServer,
-    args = list(
-      pedigree = shiny::reactive({ test_ped })
-    ),
-    {
-      # Both enabled
-      session$setInputs(calcGenomeUniqueness = TRUE, calcMeanKinship = TRUE)
-      expect_true(input$calcGenomeUniqueness)
-      expect_true(input$calcMeanKinship)
-
-      # Only genome uniqueness
-      session$setInputs(calcGenomeUniqueness = TRUE, calcMeanKinship = FALSE)
-      expect_true(input$calcGenomeUniqueness)
-      expect_false(input$calcMeanKinship)
-
-      # Only mean kinship
-      session$setInputs(calcGenomeUniqueness = FALSE, calcMeanKinship = TRUE)
-      expect_false(input$calcGenomeUniqueness)
-      expect_true(input$calcMeanKinship)
-
-      # Both disabled
-      session$setInputs(calcGenomeUniqueness = FALSE, calcMeanKinship = FALSE)
-      expect_false(input$calcGenomeUniqueness)
-      expect_false(input$calcMeanKinship)
     }
   )
 })

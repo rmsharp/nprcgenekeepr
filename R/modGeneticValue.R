@@ -60,10 +60,6 @@ modGeneticValueUI <- function(id) {
                               "Low-kinship z-score cutoff:",
                               value = 0.25, step = 0.05)
                ),
-               checkboxInput(ns("calcGenomeUniqueness"),
-                             "Calculate Genome Uniqueness", TRUE),
-               checkboxInput(ns("calcMeanKinship"),
-                             "Calculate Mean Kinship", TRUE),
                actionButton(ns("runAnalysis"), "Run Analysis",
                             icon = icon("play"),
                             class = "btn-primary btn-block")

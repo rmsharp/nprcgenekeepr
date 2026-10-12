@@ -38,8 +38,8 @@ test_that("E2E: Genetic Value has genome uniqueness display", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  # Matches the static "Genome Uniqueness Threshold:" / "Calculate Genome
-  # Uniqueness" labels.
+  # Matches the static "Genome Uniqueness Threshold:" label and the "About
+  # Genetic Values" panel's "Genome Uniqueness" line.
   expect_true(
     assert_active_pane(app, "Genetic Value Analysis",
                        "genome|uniqueness|GU|unique"),
