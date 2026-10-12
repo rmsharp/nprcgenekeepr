@@ -98,23 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 970 Did
-**Deliverable, DONE (owner pick, option 1 of 4; READY, Effort S; strict TDD, every gate asked, REFACTOR taken):** the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`).
-Scope answers: the server's pool code stays (a stale `"custom"` acts as "All available"); the owner approved one NEWS sentence (`NEWS.Rmd:276-278`). Gate `test_breedingGroupsSourceChoices.R` (6 blocks, 30
-expectations); manual (`:28,46,48`) and guide (`:594-595`) prose fixed; six `breeding_group_*.png` retaken; two pinning tests deleted; four comments corrected.
-**Gates:** claim `c34c06317`; RED `3695d512d`; RED amendment `2796a5fd2` (the retaken picture draws six unused animals, the guide said four); GREEN `9db26b4aa` `16acf1713` `0892d075b` `0e6399ed3`; REFACTOR `399edf560`.
-**Verified:** full suite 3,446 blocks, 0 failed, 0 errors (after GREEN the two wall-clock benchmarks timed out under load 195-230; both pass alone); lint 0; `devtools::check()` 0/0/0; ratchet 1/1 (`27e0d83da123`);
-7 mutations each fail only their own block; pictures opened for the owner. The opt-in E2E files were not run.
-**Owner's two instructions:** the "Upload list" feature is a new BACKLOG item (`BACKLOG.md:152`); "implement the one-file genotype columns" rewrote that item (`:139`); not started (1 and done).
-**Handoff evaluation of S969: 8/10.** Helped: cites held; the PRE-RED question; the three-way grep. Missing: prose that counts the choices (manual `:48`, guide `:595`); the random last-box count a test pins.
-**Self-assessment: 7/10.** + grep by count words; both scope questions first try; REFACTOR proved by parsed hash. - repeated the unquoted `echo ======` zsh error; no grep for "four animals" until the retake drew six. Learning 936.
-**Next steps (recommended):** genotype columns (`BACKLOG.md:139`; PRE-RED: underscore spelling only or text alleles too, notice as fallback?), then the candidate list (`:152`). 45 commits ahead of `origin/master`; the push
-changes `R/`, `man/`, `tests/` and `vignettes/`, so all four workflows run: read them.
-**Key files:** `R/modBreedingGroups.R:40-42,214,524-541`; `test_breedingGroupsSourceChoices.R`; `test_guideBreedingGroupsWording.R:355-381`; `NEWS.Rmd:276-278`; `BACKLOG.md:139-165`.
-**Gotchas:** grep a removed choice by id, wrapped label, kind AND count words ("all three", "an uploaded list"), and a picture's random counts before RED (Learning 936); quote `echo` separators in zsh; check `uptime`
-before reading a benchmark failure; keep this file under about 56,700 B, every line under 280 B; the old `runGeneKeepR` pids 29511, 82416, 92900 still run, left alone.
+### What Session 971 Did
+**Deliverable:** make a one-file pedigree's `allele_1`/`allele_2` genotype columns get used (`BACKLOG.md:139`; owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S to M;
+strict TDD, every gate asked) (IN PROGRESS)
+**Started:** 2026-10-12, after the S970 close-out `96cd62c38`.
+**Status:** Session claimed. PRE-RED declared; the scope questions come next (underscore spelling only or text alleles too; does the S968 notice stay as a fallback). No code changed yet.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0:** HEAD `96cd62c38` equals both ledger frontiers, 0 pending receipts, clean tree, CI 10 of 10 green, dashboard 96/100, context budget OK, ratchet 1/1 (manifest `aa983075d6a2`).
+**Carried from S970:** after this, the candidate list (`BACKLOG.md:152`); 45 commits ahead of `origin/master` (the push runs all four workflows: read them); `runGeneKeepR` pids 29511, 82416, 92900 left alone.
 
-### Sessions 947-969 (condensed S950 to S970; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-970 (condensed S950 to S971; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -167,6 +160,10 @@ item's line cites shift after any edit above it, so re-grep.
 S969: the Genetic Value tab no longer has the two do-nothing check boxes (`R/modGeneticValue.R:63-66`; gate `test_geneticValueOptionBoxes.R`; NEWS sentence `NEWS.Rmd:223-225`; 3 `gva_*.png` retaken; strict TDD,
 REFACTOR taken; claim `fb771fc23`, RED `5167d5dfa`, GREEN `1d5e8c07f` `1f7c80114` `a329b2deb`, REFACTOR `5cacf6168`; evaluation of S968 9/10, self 8/10). **Gotchas kept (S969):** grep a removed control by id, by
 wrapped label and by its kind, then check stranded imports (Learning 935); quote `echo` separators in zsh.
+S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; the server's pool code stays, a stale `"custom"` acts as "All available"; gate
+`test_breedingGroupsSourceChoices.R`; NEWS sentence `NEWS.Rmd:276-278`; six `breeding_group_*.png` retaken; strict TDD, REFACTOR taken; claim `c34c06317`, RED `3695d512d`, RED amendment `2796a5fd2`,
+GREEN `9db26b4aa` `16acf1713` `0892d075b` `0e6399ed3`, REFACTOR `399edf560`; evaluation of S969 8/10, self 7/10). **Gotchas kept (S970):** grep a removed choice by id, wrapped label, kind AND count words
+("all three", "an uploaded list") and a picture's random counts before RED (Learning 936); read `uptime` before a benchmark failure; the owner's two instructions are `BACKLOG.md:139,152`.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
