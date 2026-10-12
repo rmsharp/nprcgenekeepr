@@ -149,16 +149,6 @@ test_that("All available forms groups from living animals only", {
   expect_false(any(paste0("A", 9:14) %in% got$unassigned))
 })
 
-test_that("Upload list forms groups from living animals only", {
-  skip_on_cran()
-
-  # Today "Upload list" behaves exactly like "All available" (it has no upload
-  # control), so the living rule must reach it too.
-  got <- lpCandidates(lpPed(), animalSource = "custom")
-
-  expect_setequal(got$candidates, lpLiving)
-})
-
 test_that("Top ranked takes the best living animals, not the first minus the dead", {
   skip_on_cran()
 

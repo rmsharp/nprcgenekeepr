@@ -359,51 +359,6 @@ test_that("valueFloor excludes ids absent from the GV report entirely (Dragon P1
   )
 })
 
-test_that("valueFloor excludes ids absent from the GV report entirely (Dragon P1, animalSource = custom)", {
-  skip_if_not_installed("shiny")
-
-  # Today "custom" (Upload list) falls through to ped$id identically to
-  # "all" (plan Context: the custom source is vestigial/non-functional) --
-  # this pins that the value-floor narrowing applies identically to it.
-  test_ped <- data.frame(
-    id = paste0("Animal", 1:6),
-    sire = rep(NA, 6),
-    dam = rep(NA, 6),
-    sex = rep(c("M", "F"), 3),
-    stringsAsFactors = FALSE
-  )
-
-  test_gv <- data.frame(
-    id = paste0("Animal", 1:4),
-    value = c("High Value", "Low Value", "Undetermined", "High Value"),
-    stringsAsFactors = FALSE
-  )
-
-  shiny::testServer(
-    modBreedingGroupsServer,
-    args = list(
-      pedigree = shiny::reactive({ test_ped }),
-      geneticValues = shiny::reactive({ test_gv })
-    ),
-    {
-      session$setInputs(
-        animalSource = "custom",
-        inclusionCriterion = "valueFloor",
-        nGroups = 1,
-        maxKinship = 0.25,
-        sexRatio = "none"
-      )
-
-      session$setInputs(formGroups = 1)
-
-      result <- session$getReturned()
-      allCandidates <- sort(c(unlist(result$groups()), result$unassigned()))
-
-      expect_setequal(allCandidates, c("Animal1", "Animal3", "Animal4"))
-    }
-  )
-})
-
 # =============================================================================
 # Server Tests - Input Variations
 # =============================================================================

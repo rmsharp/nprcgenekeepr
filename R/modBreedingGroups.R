@@ -39,7 +39,6 @@ modBreedingGroupsUI <- function(id) {
                h4(icon("users"), "Configuration"),
                radioButtons(ns("animalSource"), "Source:",
                             choices = c("Top ranked" = "topRanked",
-                                        "Upload list" = "custom",
                                         "All available" = "all")),
                radioButtons(ns("inclusionCriterion"), "Include animals by:",
                             choices = c("Top N ranked" = "topN",
@@ -212,9 +211,7 @@ modBreedingGroupsUI <- function(id) {
 #'
 #' The module supports multiple configuration options:
 #' \itemize{
-#'   \item \strong{Animal source}: "Top ranked", "Upload list" or "All
-#'     available". "Upload list" has no upload control and currently behaves
-#'     exactly like "All available"
+#'   \item \strong{Animal source}: "Top ranked" or "All available"
 #'   \item \strong{Living animals only}: Every source draws only on animals
 #'     that are alive: those with a \code{status} of \code{ALIVE} when the
 #'     pedigree has a \code{status} column, otherwise those with no
