@@ -38,21 +38,27 @@ readOneFileGenotypes <- function(ped) {
     }
   }
   found <- intersect(unlist(alleleColumns), names(ped))
+  nPairs <- length(genotypePairLabels)
   note <- if (length(found) == 0L) {
-    paste0("No genotype columns were found in this file (looked for first ",
-           "and second, first_name and second_name, allele_1 and allele_2), ",
-           "so no genotypes are used.")
+    paste0("No genotype columns were found in this file (looked for ",
+           toString(genotypePairLabels), "), so no genotypes are used.")
   } else if (length(found) == 1L) {
     paste0("Only one genotype column was found (", found, "); two are ",
            "needed, so no genotypes are used.")
   } else {
     paste0("Genotype columns were found (", toString(found), "), but they ",
-           "are not a usable pair, so no genotypes are used; a pair is first ",
-           "and second, first_name and second_name, or allele_1 and ",
-           "allele_2, with at least one allele in it.")
+           "are not a usable pair, so no genotypes are used; a pair is ",
+           toString(genotypePairLabels[-nPairs]), ", or ",
+           genotypePairLabels[nPairs], ", with at least one allele in it.")
   }
   list(ped = ped, used = FALSE, note = note)
 }
+
+## The three pairs the Input tab reads, as a user names them in a file header
+## (the cleaned studbook has already turned allele_1 into allele1), for the two
+## lines that list them.
+genotypePairLabels <- c("first and second", "first_name and second_name",
+                        "allele_1 and allele_2")
 
 ## A label with nothing in it (NA, "" or spaces only) is a missing allele.
 blankToNa <- function(x) {
