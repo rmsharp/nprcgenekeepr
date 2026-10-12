@@ -304,6 +304,29 @@ test_that("wait_for_notifications_clear() returns FALSE when a pop-up outlasts t
   expect_lt(as.numeric(difftime(Sys.time(), started, units = "secs")), 5)
 })
 
+test_that("wait_for_popups_before() records the step the scripts used to write out by hand, TRUE once the pop-ups are gone", {
+  rec <- new_capture_recorder(withr::local_tempdir())
+  fake <- fakeApp(jsValues = list(2L, 0L))
+  res <- runQuiet(rec$wait_for_popups_before(fake$app, "a.png"))
+  label <- "[step] wait for the pop-ups to clear before a.png"
+  expect_true(res$value)
+  expect_identical(names(rec$results()), label)
+  expect_true(rec$results()[[label]])
+  expect_length(fake$log$get_js, 2L)
+})
+
+test_that("wait_for_popups_before() records a failed step, and says why, when a pop-up outlasts the wait", {
+  rec <- new_capture_recorder(withr::local_tempdir())
+  fake <- fakeApp(jsValues = list(1L))
+  res <- runQuiet(rec$wait_for_popups_before(fake$app, "a.png", timeout = 300))
+  expect_false(res$value)
+  expect_false(
+    rec$results()[["[step] wait for the pop-ups to clear before a.png"]])
+  expect_match(res$messages,
+               "STEP FAILED: wait for the pop-ups to clear before a.png",
+               fixed = TRUE, all = FALSE)
+})
+
 ## ---- start_capture_run() (REFACTOR: the setup both scripts repeated) --------
 
 test_that("start_capture_run() installs shot() and do_step() in the given environment and returns the same recorder", {
@@ -325,6 +348,17 @@ test_that("start_capture_run() installs into the calling environment by default"
     c(exists("shot", inherits = FALSE), exists("do_step", inherits = FALSE))
   }
   expect_identical(installedHere(), c(TRUE, TRUE))
+})
+
+test_that("start_capture_run() also installs wait_for_popups_before() in the given environment", {
+  dir <- withr::local_tempdir()
+  scriptEnv <- new.env()
+  rec <- start_capture_run(dir, envir = scriptEnv)
+  expect_true(is.function(scriptEnv$wait_for_popups_before))
+  runQuiet(scriptEnv$wait_for_popups_before(fakeApp(jsValues = list(0L))$app,
+                                            "a.png"))
+  expect_identical(names(rec$results()),
+                   "[step] wait for the pop-ups to clear before a.png")
 })
 
 ## ---- pins on the two scripts' own text ------------------------------------
@@ -844,15 +878,21 @@ test_that("the Warnings picture is in the picture folder, is a window shot, and 
 ## A picture is taken right after a step that waits for them to clear. The
 ## Warnings picture is the one that keeps its pop-up on purpose (S963).
 
-## TRUE when the last statement before the `picture` shot() call is a
-## do_step() whose last line is the pop-up wait; blank lines and comments in
-## between do not count. `code` is the script's comment-free lines.
+## TRUE when the last statement before the `picture` shot() call is the pop-up
+## wait for that picture: either the recorder's one line,
+## wait_for_popups_before(app, "<picture>"), or a do_step() whose last line is
+## wait_for_notifications_clear(); blank lines and comments in between do not
+## count. `code` is the script's comment-free lines.
 waitsRightBeforeShot <- function(code, picture) {
   at <- shotLineOf(code, picture)
   if (length(at) != 1L) return(FALSE)
   before <- code[seq_len(at - 1L)]
   before <- before[nzchar(trimws(before))]
   n <- length(before)
+  if (n < 1L) return(FALSE)
+  oneLine <- paste0('^\\s*wait_for_popups_before\\(app, "', picture,
+                    '"\\)\\s*$')
+  if (grepl(oneLine, before[[n]])) return(TRUE)
   n >= 2L &&
     grepl("^\\s*\\}\\)\\s*$", before[[n]]) &&
     grepl("^\\s*wait_for_notifications_clear\\(", before[[n - 1L]])
@@ -880,6 +920,18 @@ test_that("waitsRightBeforeShot() is TRUE only when the pop-up wait is the last 
   commented <- sub("wait_for_notifications_clear",
                    "# wait_for_notifications_clear", waited, fixed = TRUE)
   expect_false(waitsRightBeforeShot(codeOf(commented), "a.png"))
+  ## the recorder's one-line form, plain and indented
+  oneLine <- c('wait_for_popups_before(app, "a.png")',
+               "",
+               'shot(app, "a.png", selector = "#x")')
+  expect_true(waitsRightBeforeShot(codeOf(oneLine), "a.png"))
+  expect_true(waitsRightBeforeShot(codeOf(paste0("  ", oneLine)), "a.png"))
+  ## ... but not when it names another picture, or another step follows it
+  expect_false(waitsRightBeforeShot(
+    c('wait_for_popups_before(app, "b.png")', 'shot(app, "a.png")'), "a.png"))
+  expect_false(waitsRightBeforeShot(
+    c(oneLine[1L], 'do_step("toggle", {', "  app$click(\"b\")", "})", oneLine[3L]),
+    "a.png"))
   ## no wait at all, a picture that is not shot, a picture shot twice
   expect_false(waitsRightBeforeShot(c('shot(app, "a.png")'), "a.png"))
   expect_false(waitsRightBeforeShot(codeOf(waited), "other.png"))

@@ -271,9 +271,7 @@ do_step("click Update Focal Animals (5-animal case)", {
 # stays 8 seconds in the lower right corner, where it covered part of the
 # "Twin/Zygosity Relations" heading in the picture (found S941). Every picture
 # below that follows a focal-animals step waits for the pop-ups to clear first.
-do_step("wait for the pop-ups to clear before pb_5_focal_animals_small.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "pb_5_focal_animals_small.png")
 shot(app, "pb_5_focal_animals_small.png", selector = "#pedigree-moduleContainer")
 
 # Reset for the large-group example: clear the typed IDs (the CSV upload
@@ -298,9 +296,7 @@ do_step("upload large focal-group CSV", {
   do.call(app$upload_file,
           stats::setNames(list(large_focal_csv), "pedigree-focalAnimalFile"))
 })
-do_step("wait for the pop-ups to clear before pb_selection_large_focal_group.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "pb_selection_large_focal_group.png")
 shot(app, "pb_selection_large_focal_group.png",
      selector = "#pedigree-moduleContainer")
 
@@ -309,9 +305,7 @@ shot(app, "pb_selection_large_focal_group.png",
 do_step("check Trim pedigree (large-group case)", {
   app$set_inputs(`pedigree-trimPedigree` = TRUE)
 })
-do_step("wait for the pop-ups to clear before pb_select_trim_for_focal_animals.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "pb_select_trim_for_focal_animals.png")
 shot(app, "pb_select_trim_for_focal_animals.png",
      selector = "#pedigree-moduleContainer")
 
@@ -321,9 +315,7 @@ do_step("click Update Focal Animals (large-group case)", {
   app$click("pedigree-updateFocalAnimals")
   app$wait_for_idle(timeout = 30000)
 })
-do_step("wait for the pop-ups to clear before pb_trimmed_for_focal_animals.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "pb_trimmed_for_focal_animals.png")
 shot(app, "pb_trimmed_for_focal_animals.png",
      selector = "#pedigree-moduleContainer")
 
@@ -331,9 +323,7 @@ shot(app, "pb_trimmed_for_focal_animals.png",
 #        hand-composed pb_cleared_focal_animals_combined.png (+ .idraw).
 # No step runs between this picture and the one above, so this wait returns at
 # once today; it keeps the rule the same for every picture of the sequence.
-do_step("wait for the pop-ups to clear before pb_focal_animals_before_clear.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "pb_focal_animals_before_clear.png")
 shot(app, "pb_focal_animals_before_clear.png",
      selector = "#pedigree-moduleContainer")
 do_step("check Clear Focal Animals and Update", {
@@ -341,9 +331,7 @@ do_step("check Clear Focal Animals and Update", {
   app$click("pedigree-updateFocalAnimals")
   app$wait_for_idle(timeout = 30000)
 })
-do_step("wait for the pop-ups to clear before pb_focal_animals_after_clear.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "pb_focal_animals_after_clear.png")
 shot(app, "pb_focal_animals_after_clear.png",
      selector = "#pedigree-moduleContainer")
 
@@ -368,9 +356,7 @@ do_step("navigate to Age-Sex Pyramid", {
 # The restore step above ends with pop-ups too ("Focal animals cleared", and
 # the orange "No focal animal IDs found" that the empty Update raises); three of
 # them sat over the pyramid's right axis in the picture (found S942).
-do_step("wait for the pop-ups to clear before age_plot.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "age_plot.png")
 shot(app, "age_plot.png", selector = "#pyramid-moduleContainer")
 
 # --------------------------------------------------------------------------
@@ -380,9 +366,7 @@ do_step("navigate to Genetic Value Analysis", {
   app$set_inputs(mainNavbar = "Genetic Value Analysis")
 })
 # Pop-ups from the restore step further up can still be on screen here.
-do_step("wait for the pop-ups to clear before gva_calculating.png", {
-  wait_for_notifications_clear(app, timeout = 15000)
-})
+wait_for_popups_before(app, "gva_calculating.png")
 
 # gva_calculating.png -- kept name, updated framing (mandatory). A
 # mid-progress spinner capture is inherently racy under automation; this

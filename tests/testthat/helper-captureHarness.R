@@ -47,6 +47,11 @@ capture_shot_dir <- function(default) {
 ##     a wait that timed out) counts as failed, unless allow_false = TRUE for
 ##     a step where FALSE is expected (the Genetic Value run click, which
 ##     times out at 30 s while the run is busy).
+##   wait_for_popups_before(app, filename, timeout): the step a picture that
+##     follows a pop-up-raising step starts with -- do_step() around
+##     wait_for_notifications_clear(), labelled "wait for the pop-ups to clear
+##     before <filename>", so a pop-up that outlasts `timeout` (default 15 s;
+##     a pop-up stays 8 s) shows up as a failed step in the summary.
 ##   results(), idle_timeouts(): the recorded state.
 ##   summary(): print the end-of-run report and return its counts invisibly.
 new_capture_recorder <- function(shot_dir) {
@@ -90,6 +95,12 @@ new_capture_recorder <- function(shot_dir) {
     invisible(ok)
   }
 
+  wait_for_popups_before <- function(app, filename, timeout = 15000) {
+    do_step(paste("wait for the pop-ups to clear before", filename), {
+      wait_for_notifications_clear(app, timeout = timeout)
+    })
+  }
+
   summary <- function() {
     succeeded <- vapply(results, isTRUE, logical(1L))
     n_ok <- sum(succeeded)
@@ -112,18 +123,23 @@ new_capture_recorder <- function(shot_dir) {
                    idle_timeouts = idle_timeouts))
   }
 
-  list(shot = shot, do_step = do_step, results = function() results,
+  list(shot = shot, do_step = do_step,
+       wait_for_popups_before = wait_for_popups_before,
+       results = function() results,
        idle_timeouts = function() idle_timeouts, summary = summary)
 }
 
 ## start_capture_run(): the setup both scripts begin with -- build the
-## recorder for `shot_dir` and put its shot() and do_step() in `envir` (the
-## calling script's own environment by default), so the script's shot(...) and
-## do_step(...) calls read as before. Returns the recorder, for its summary().
+## recorder for `shot_dir` and put its shot(), do_step() and
+## wait_for_popups_before() in `envir` (the calling script's own environment by
+## default), so the script's shot(...) and do_step(...) calls read as before.
+## Returns the recorder, for its summary().
 start_capture_run <- function(shot_dir, envir = parent.frame()) {
   recorder <- new_capture_recorder(shot_dir)
   assign("shot", recorder$shot, envir = envir)
   assign("do_step", recorder$do_step, envir = envir)
+  assign("wait_for_popups_before", recorder$wait_for_popups_before,
+         envir = envir)
   recorder
 }
 
