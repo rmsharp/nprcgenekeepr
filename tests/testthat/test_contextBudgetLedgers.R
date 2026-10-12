@@ -124,8 +124,9 @@ test_that("each ledger has a row with a 196,608 B warn line and a 262,144 B ceil
   for (path in ledger_paths) {
     row <- budgetRow(json, path)
     expect_false(is.na(row), info = paste(path, "has no row"))
-    expect_match(row, '"max_bytes": 262144,', fixed = TRUE, info = path)
-    expect_match(row, '"warn_bytes": 196608,', fixed = TRUE, info = path)
+    ## `warn_bytes` is the last key of an on-demand row, so no comma follows it.
+    expect_match(row, '"max_bytes": 262144\\b', info = path)
+    expect_match(row, '"warn_bytes": 196608\\b', info = path)
   }
 })
 
