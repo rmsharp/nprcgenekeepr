@@ -98,27 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 962 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** a box that holds exactly one animal is headed "(1 animal)" on the Groups tab,
-and the nobody-is-alive notice for a one-animal source reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689`, `:993-994`). Zero and two or more keep today's words.
-The item said "wording only"; 3 of the 6 guide pictures showed "(1 animals)", so the owner had them retaken here. `BACKLOG.md:30-38` is removed (later cites move up 9). One `NEWS.Rmd` line.
-**Gates:** claim `7c95083a1`; RED `9f3cea521` (3 blocks fail, 6 expectations); GREEN `0fa5a5761`; RED `c268af266` (the retaken sex-ratio box holds four animals, the guide said six; 2 pins);
-GREEN `8c47bdabd` (3 pictures, "four"); REFACTOR `5d9694135` (tests only; guard re-proved by breaking it); NEWS `efa3c7828`; close-out = the commit carrying this note.
-**Verified:** full suite 3,414 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0; ratchet 1/1. The guide's capture script drove the real app (85 of 85 steps, after GREEN, no `R/` change
-since) and its pictures read "(1 animal)". The one-animal notice was tested with a mocked `showNotification`, not seen in the real app.
-**Handoff evaluation of S961: 8/10.** Helped: every `BACKLOG.md` cite held (`:8 :17 :30 :39 :52 :60`, text `:153`), the 122-commit count matched, the notes-size limit was exact, the three old pids are alive,
-Learning 927 sent me to look at each picture. Missing: the item said "this is wording only", but three committed pictures show "(1 animals)" and a retake redraws the box count (six became four). Wrong: nothing else found.
-**Self-assessment: 7/10.** + looked at all six pictures and probed a one-animal fixture before asking; one plain question with the sentences, answered first try; every gate asked; the guard re-proved.
-- I told the owner before RED that nobody-alive shows "Group 1 (0 animals)" with no probe (false: no box is drawn; my own green-at-HEAD block caught it, I dropped it and said so); my first mutation could not fail;
-two nudges for silence. Learning 928 (`PROJECT_LEARNINGS.md:2628`).
-**Next steps (recommended, not ruled on):** Optional, S: Warnings picture (`BACKLOG.md:8`), pop-up item (`:17`), budget `HANDOFFS.md` (`:30`, DECISION NEEDED). Docs-audit part 2 is the item at `:51` (text `:144`);
-the 3.0.0 bump is `:43`. 130 commits ahead of `origin/master` once this lands; the owner's push changes `R/`, so CI will run: read it.
-**Key files:** `R/modBreedingGroups.R:682-689,993-994`; `tests/testthat/test_guideBreedingGroupsWording.R:137,268-309`; `test_modBreedingGroups_livingPool.R:108,297-330`; `colony-manager-guide.qmd:624-628`.
-**Gotchas:** the nine-animal fixture's one-animal boxes are at seed 7 (3 groups asked: last box; 5 asked: two groups); a retake draws the last box's count, so the pin follows the picture; a mutation must change what the
-tests read (return `""`, not "keep the tags"); zero needs no change (a zero-animal source's notice was not probed); three old `runGeneKeepR` pids (29511, 82416, 92900) are alive and left alone;
-keep this file under about 56,700 B and every line under 280 B.
+### What Session 963 Did
+**Deliverable:** a guide picture of the Warnings sub-tab as the app opens it after a check (IN PROGRESS)
+**Started:** 2026-10-11 21:02 CDT (owner pick at the Phase 0 picker, option 1 of 4; `BACKLOG.md:8`; READY (optional), Effort S; docs and the capture script only; strict TDD)
+**Status:** Session claimed. PRE-RED declared; the scope and the guide's sentence go to the owner before RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 facts:** 0 undocumented commits; S962 was followed by 4 ad hoc methodology commits (sync, CI-filter prep, move into `methodology/`, trim-spec restore), each in `CHANGELOG.md` and pushed;
+CI 10 of 10 green; dashboard 96/100, High+ 0; `master` equals `origin/master` (`5a41dbbdd`); keep this file under about 56,700 B (commit hook, 25,000 tokens) and every line under 280 B.
 
-### Sessions 947-961 (condensed S950 to S962; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-962 (condensed S950 to S963; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -137,6 +125,11 @@ evaluation of S959 9/10, self 8/10). Estimates: the next `HANDOFFS.md` trim in a
 S961: the Breeding Groups last box is named "Unused animals" on the Groups heading, the Statistics row and the Group Detail selector (one internal `breedingGroupLabels()`,
 `R/breedingGroupLabels.R:20`; three guide pictures retaken; strict TDD, REFACTOR taken; claim `75910467f`, RED `f0552138a` and `8b2a6b34a`, GREEN `854561b68` and `04e7f7d21`,
 REFACTOR `0a7013150`; evaluation of S960 9/10, self 8/10). The candidate table's Groups count and the `Group-N.csv` names stay, by ruling.
+S962: a box that holds exactly one animal is headed "(1 animal)" and the one-animal nobody-is-alive notice reads "The 1 animal in this source is not alive, ..."
+(`R/modBreedingGroups.R:682-689,993-994`; 3 guide pictures retaken, the sex-ratio box six to four; strict TDD, REFACTOR taken; claim `7c95083a1`, RED `9f3cea521` and `c268af266`,
+GREEN `0fa5a5761` and `8c47bdabd`, REFACTOR `5d9694135`, NEWS `efa3c7828`; evaluation of S961 8/10, self 7/10). Pushed by the owner (`66c6df335..a8b884c81`), CI green.
+**Gotchas kept (S962):** the nine-animal fixture's one-animal boxes are at seed 7; a retake draws the last box's count, so the pin follows the picture; a mutation must change what the tests read
+(return `""`, not "keep the tags"); a zero-animal source's notice was not probed.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
