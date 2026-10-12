@@ -53,13 +53,9 @@ checkGenotypeFile <- function(genotype) {
     stop("Genotype file cannot have a column named 'first' or 'second'.")
   } else {
     for (i in 2L:3L) {
-      alleles <- unique(genotype[, i][!is.na(genotype[, i])])
-      numbers <- suppressWarnings(as.integer(alleles))
-      numbers <- numbers[!is.na(numbers)]
-      if (any(numbers > 10000L)) {
-        numberStr <- stri_c(format(numbers[numbers > 10000L],
-          scientific = FALSE
-        ), sep = ", ")
+      collided <- collidingNumbers(genotype[, i])
+      if (length(collided)) {
+        numberStr <- stri_c(format(collided, scientific = FALSE), sep = ", ")
         stop(stri_c("Possible collision on allele(s) interpreted as a number
                     > 10000: ", numberStr, collapse = ", "))
       }

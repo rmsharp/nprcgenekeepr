@@ -82,7 +82,7 @@ readAllelePair <- function(ped, pair) {
     values <- list(one$values, two$values)
   } else {
     text <- list(blankToNa(ped[[pair[1L]]]), blankToNa(ped[[pair[2L]]]))
-    refused <- collidingNumbers(unlist(text))
+    refused <- unique(collidingNumbers(unlist(text)))
     if (length(refused)) {
       return(list(ped = ped, used = FALSE, note = refusedNote(pair, refused)))
     }
@@ -108,14 +108,6 @@ alleleCodes <- function(id, one, two) {
                        genotype)
   coded <- coded[match(id, coded$id), ]
   list(first = coded$first, second = coded$second)
-}
-
-## The labels that read as a whole number above 10000, the range
-## checkGenotypeFile() refuses because addGenotype() numbers its codes from
-## 10001.
-collidingNumbers <- function(labels) {
-  numbers <- suppressWarnings(as.integer(unique(labels[!is.na(labels)])))
-  unique(numbers[!is.na(numbers) & numbers > 10000L])
 }
 
 refusedNote <- function(pair, numbers) {

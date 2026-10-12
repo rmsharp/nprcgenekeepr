@@ -45,7 +45,7 @@ addGenotype <- function(ped, genotype) {
     genotype[, genotypeNames[1L]],
     genotype[, genotypeNames[2L]]
   )))
-  genoDict <- seq_along(geno) + 10000L
+  genoDict <- seq_along(geno) + alleleCodeBase
   names(genoDict) <- geno
   genotype <- cbind(genotype,
     first = as.integer(genoDict[genotype[, 2L]]),
@@ -53,4 +53,27 @@ addGenotype <- function(ped, genotype) {
   )
   newPed <- merge(ped, genotype, by = "id", all = TRUE)
   newPed
+}
+
+#' The number the allele codes start after
+#'
+#' \code{addGenotype()} numbers its codes from \code{alleleCodeBase + 1}
+#' (10001), so an allele label that reads as a whole number above it could be
+#' taken for one of those codes.
+#' @noRd
+alleleCodeBase <- 10000L
+
+#' The allele labels that would collide with the codes
+#'
+#' The whole numbers above \code{alleleCodeBase} among \code{labels}, in the
+#' order they first appear (a number is repeated if two labels read as it, as
+#' "10500" and "10500.0" do). Used by \code{\link{checkGenotypeFile}} to refuse
+#' them and by the one-file Input mode to refuse them next to text labels.
+#'
+#' @param labels the allele labels of one column; \code{NA} is ignored.
+#' @return an integer vector, empty when no label collides.
+#' @noRd
+collidingNumbers <- function(labels) {
+  numbers <- suppressWarnings(as.integer(unique(labels[!is.na(labels)])))
+  numbers[!is.na(numbers) & numbers > alleleCodeBase]
 }
