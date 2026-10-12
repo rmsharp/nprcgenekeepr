@@ -25,8 +25,6 @@ The left panel provides controls for group formation:
 - **Source**: Select which animals to use as candidates:
   - *Top ranked*: Use the highest-ranked living animals from the Genetic Value
     Analysis
-  - *Upload list*: Currently behaves exactly like "All available"; the
-    choice does not yet provide a way to upload or type a list of candidate IDs
   - *All available*: Use every living animal in the current pedigree
 
   Whatever the source, only animals that are alive are used. When the
@@ -43,9 +41,9 @@ The left panel provides controls for group formation:
   independent of Source:
   - *Top N ranked* (default): Include only the top-N ranked animals when the
     source is "Top ranked" (see "Number of top animals" below); no genetic-
-    value screening for "Upload list"/"All available".
+    value screening for "All available".
   - *Genetic-value floor*: Exclude any animal whose Genetic Value Analysis
-    result is "Low Value", for all three Source choices. Animals labeled
+    result is "Low Value", for both Source choices. Animals labeled
     "Undetermined" (missing parentage/origin data) still pass, since a data
     gap is not evidence of low genetic value. An animal with no Genetic
     Value Analysis result at all (for example, one excluded from that

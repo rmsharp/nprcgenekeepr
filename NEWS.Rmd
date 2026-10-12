@@ -273,6 +273,9 @@ longitudinal monitoring of colony genetic health.
   `ancestryRules` argument of `groupAddAssign()`, and
   `reportAncestryViolations()` for existing groups. An example rules file and
   pedigree ship with the package.
+- The **Source** choice on the Breeding Group Formation tab no longer offers
+  "Upload list". It had no place to give it a list, so it formed groups from
+  every living animal, exactly as "All available" does.
 
 ## Mate Pair Analysis
 
