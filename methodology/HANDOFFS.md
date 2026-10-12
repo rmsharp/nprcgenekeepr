@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S964
+date: 2026-10-11
+status: pending
+active_task: IN PROGRESS -- stop the blue "Updated focal animals" pop-up covering the "Twin/Zygosity Relations" heading in 9 guide pictures (BACKLOG.md:8; owner pick at the Phase 0 picker, option 1 of 4; READY (optional), Effort S; capture script, tests and pictures only; strict TDD; PRE-RED declared, the scope goes to the owner first)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S963
 date: 2026-10-11
 status: complete

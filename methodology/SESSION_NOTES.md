@@ -98,27 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 963 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the guide shows the Warnings sub-tab as the app opens it after a check:
-`read_and_check_pedigree_warnings.png`, the whole 1300 x 900 window with the two warnings listed and the yellow notice still on screen, after the QC Summary picture (`colony-manager-guide.qmd:245-249`),
-with the owner's sentence, caption and an alt text. One new capture step and one shot (`colony-manager-guide-screenshots.R:202,211`). No `R/` change, no NEWS line. `BACKLOG.md:8-16` removed (later cites move up 9).
-**Gates:** claim `ebb288e44`; RED `970c10a20` (5 blocks fail, 0 skipped); GREEN `74491eb77`; REFACTOR `1e3821e63` (tests only, `shotLineOf()`); close-out = the commit carrying this note.
-**Verified:** full suite 3,420 blocks, 0 failed, 0 errors (187 skipped, 6 warnings), run twice; lint 0; `devtools::check()` 0/0/0 on the third run (the first two failed only on the wall-clock benchmark
-`test_markerKinship.R:177` at load 8 and 15 to 20; it passes alone 3 of 3); ratchet 1/1 pass, results `202c62e2937b`, manifest `aa983075d6a2`.
-The full capture script drove the real app: 87 of 87 steps, and the picture shows the notice. 11 mutations broke the block aimed at, before and after the REFACTOR.
-**Handoff evaluation of S962: 9/10.** Helped: every `BACKLOG.md` cite held (`:8 :17 :30 :43 :51 :144`), the picker leftovers were named, the three old pids are alive, the notes-size limit was exact; the item's own
-S936 facts (1300 x 900, the notice 286 px wide) matched. Missing: nothing its author could know (the 4 ad hoc methodology commits and the move into `methodology/` came after). Wrong: nothing found.
-**Self-assessment: 7/10.** + a probe and a plain question with the sentence before RED (answered first try); every gate asked; 11 mutations; a benchmark failure read with `uptime` and `ps` before it was named.
-- Three miscounts written as facts: "7 guarded expectations" (20; amended before any push), "86 steps" (87), "182 expectations" (183); an unneeded `git stash` and `pop` of one file (harmless). Learning 929 (`PROJECT_LEARNINGS.md:2631`).
-**Next steps (recommended, not ruled on):** Optional, S: pop-up item (`BACKLOG.md:8`); budget `HANDOFFS.md` (`:21`, DECISION NEEDED; its file names predate the move: the files are `methodology/HANDOFFS.md` and
-`methodology/.context-budget.json`). Docs-audit part 2 is the item at `:42` (text `:135`); the 3.0.0 bump is `:34`. 5 commits ahead of `origin/master` once this lands; the owner's push changes `tests/` and `vignettes/`, so CI will run: read it.
-**Key files:** `vignettes/articles/colony-manager-guide-screenshots.R:195-211`; `vignettes/articles/colony-manager-guide.qmd:245-249`; `tests/testthat/test_captureHarness.R:514` (`shotLineOf`), `:717-834` (the five new blocks);
-the picture in `vignettes/articles/shiny_app_use/`.
-**Gotchas:** the recorder counts each `do_step` and each `shot` once (87 now); the loop block at `test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; the notice stays 8 s, so the new step is the guard
-(it `stop()`s with the reason); `devtools::check()` failed the `test_markerKinship.R:177` benchmark when the 1-minute load was above about 7 (macOS FSEvents, Spotlight, IDrive): read `uptime` first; the old `stash@{0}` from `dev` is not
-ours, never `pop` it; three old `runGeneKeepR` pids (29511, 82416, 92900) are alive and left alone; keep this file under about 56,700 B and every line under 280 B.
+### What Session 964 Did
+**Deliverable:** stop the pop-up that covers the "Twin/Zygosity Relations" heading in 9 guide pictures (IN PROGRESS)
+**Started:** 2026-10-11 22:03 CDT (owner pick at the Phase 0 picker, option 1 of 4; `BACKLOG.md:8`; READY (optional), Effort S; capture script, tests and pictures only; strict TDD)
+**Status:** Session claimed. PRE-RED declared; the scope goes to the owner before RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 facts:** 0 undocumented commits; ledger and receipt frontiers both `9051a6706`; CI 10 of 10 green; dashboard 96/100, High+ 0; `master` is 5 commits ahead of `origin/master`
+(all S963, unpushed); keep this file under about 56,700 B (commit hook, 25,000 tokens) and every line under 280 B.
 
-### Sessions 947-962 (condensed S950 to S963; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-963 (condensed S950 to S964; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -139,6 +127,11 @@ REFACTOR `0a7013150`; evaluation of S960 9/10, self 8/10); the candidate table's
 one-animal nobody-is-alive notice reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689,993-994`; 3 pictures retaken; claim `7c95083a1`, REFACTOR `5d9694135`;
 evaluation of S961 8/10, self 7/10); pushed by the owner, CI green. **Gotchas kept (S961-S962):** a retake draws the last box's count, so the pin follows the picture; the nine-animal fixture's one-animal boxes
 are at seed 7; a mutation must change what the tests read (return `""`).
+S963: the guide shows the Warnings sub-tab as the app opens it after a check (`read_and_check_pedigree_warnings.png`, after the QC Summary picture, `colony-manager-guide.qmd:245-249`;
+one capture step and one shot, `colony-manager-guide-screenshots.R:195-211`; no `R/` change; strict TDD, REFACTOR taken; claim `ebb288e44`, RED `970c10a20`, GREEN `74491eb77`,
+REFACTOR `1e3821e63`; evaluation of S962 9/10, self 7/10). **Gotchas kept (S963):** the capture recorder counts each `do_step` and each `shot` once (87 now); the loop block at
+`test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; `devtools::check()` failed the `test_markerKinship.R:177` benchmark when the 1-minute load
+was above about 7, so read `uptime` first; the old `stash@{0}` from `dev` is not ours, never `pop` it.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
