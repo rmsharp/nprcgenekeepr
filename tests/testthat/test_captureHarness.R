@@ -832,3 +832,90 @@ test_that("the Warnings picture is in the picture folder, is a window shot, and 
                    unname(tools::md5sum(others)))
   }
 })
+
+## ---- pop-ups must be gone before a picture is taken (S964) -----------------
+##
+## A step that sets a focal-animals list makes the app show a pop-up in the
+## lower right corner ("Updated focal animals: N IDs", "Focal animals cleared",
+## the orange "No focal animal IDs found") and it stays 8 s. Nine pictures
+## were taken while one was up and it hid part of the "Twin/Zygosity Relations
+## (optional)" heading; age_plot.png had three over the pyramid's right axis
+## and gva_calculating.png two over blank space (BACKLOG.md:8, found S941).
+## A picture is taken right after a step that waits for them to clear. The
+## Warnings picture is the one that keeps its pop-up on purpose (S963).
+
+## TRUE when the last statement before the `picture` shot() call is a
+## do_step() whose last line is the pop-up wait; blank lines and comments in
+## between do not count. `code` is the script's comment-free lines.
+waitsRightBeforeShot <- function(code, picture) {
+  at <- shotLineOf(code, picture)
+  if (length(at) != 1L) return(FALSE)
+  before <- code[seq_len(at - 1L)]
+  before <- before[nzchar(trimws(before))]
+  n <- length(before)
+  n >= 2L &&
+    grepl("^\\s*\\}\\)\\s*$", before[[n]]) &&
+    grepl("^\\s*wait_for_notifications_clear\\(", before[[n - 1L]])
+}
+
+test_that("waitsRightBeforeShot() is TRUE only when the pop-up wait is the last step before the picture", {
+  waited <- c('do_step("wait", {',
+              "  wait_for_notifications_clear(app)",
+              "})",
+              "",
+              "# a comment between the wait and the picture",
+              'shot(app, "a.png", selector = "#x")')
+  expect_true(waitsRightBeforeShot(codeOf(waited), "a.png"))
+  ## the same, indented inside `if (ok) {`, as in the Diagram script
+  indented <- paste0("  ", waited)
+  expect_true(waitsRightBeforeShot(codeOf(indented), "a.png"))
+  ## another step between the wait and the picture
+  later <- append(waited, c('do_step("toggle", {', "  app$click(\"b\")", "})"),
+                  after = 3L)
+  expect_false(waitsRightBeforeShot(codeOf(later), "a.png"))
+  ## the wait is not the step's last line
+  notLast <- append(waited, "  TRUE", after = 2L)
+  expect_false(waitsRightBeforeShot(codeOf(notLast), "a.png"))
+  ## a wait that is only mentioned in a comment
+  commented <- sub("wait_for_notifications_clear",
+                   "# wait_for_notifications_clear", waited, fixed = TRUE)
+  expect_false(waitsRightBeforeShot(codeOf(commented), "a.png"))
+  ## no wait at all, a picture that is not shot, a picture shot twice
+  expect_false(waitsRightBeforeShot(c('shot(app, "a.png")'), "a.png"))
+  expect_false(waitsRightBeforeShot(codeOf(waited), "other.png"))
+  expect_false(waitsRightBeforeShot(c(waited, waited), "a.png"))
+})
+
+test_that("the colony script waits for the pop-ups to clear right before each Pedigree Browser picture taken after a focal-animals step", {
+  code <- codeOf(readScript(colonyScript))
+  for (picture in c("pb_5_focal_animals_small.png",
+                    "pb_selection_large_focal_group.png",
+                    "pb_select_trim_for_focal_animals.png",
+                    "pb_trimmed_for_focal_animals.png",
+                    "pb_focal_animals_before_clear.png",
+                    "pb_focal_animals_after_clear.png")) {
+    expect_true(waitsRightBeforeShot(code, picture), info = picture)
+  }
+})
+
+test_that("the colony script waits for the pop-ups to clear right before the Age-Sex Pyramid and Genetic Value pictures", {
+  code <- codeOf(readScript(colonyScript))
+  for (picture in c("age_plot.png", "gva_calculating.png")) {
+    expect_true(waitsRightBeforeShot(code, picture), info = picture)
+  }
+})
+
+test_that("the Diagram script waits for the pop-ups to clear right before each picture taken after a focal-animals step", {
+  code <- codeOf(readScript(diagramScript))
+  for (picture in c("diagram_show_names.png", "diagram_affected_shading.png",
+                    "diagram_twin_connectors.png")) {
+    expect_true(waitsRightBeforeShot(code, picture), info = picture)
+  }
+})
+
+test_that("the pictures that already waited for a pop-up still do, in the form the new pins read", {
+  expect_true(waitsRightBeforeShot(codeOf(readScript(colonyScript)),
+                                   "read_and_check_pedigree.png"))
+  expect_true(waitsRightBeforeShot(codeOf(readScript(diagramScript)),
+                                   "pb_diagram_legend.png"))
+})
