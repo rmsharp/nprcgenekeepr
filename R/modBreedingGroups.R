@@ -523,8 +523,8 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
         # Raw candidate pool based on source selection, unnarrowed (issue
         # #128): "topRanked" yields the full ranked id list in report order;
-        # "custom"/"all" yield every pedigree id. The top-N cutoff moved out
-        # of this step into the inclusion-criterion narrowing below.
+        # any other value ("all") yields every pedigree id. The top-N cutoff
+        # moved out of this step into the inclusion-criterion narrowing below.
         rawPool <- if (input$animalSource == "topRanked") {
           req(geneticValues())
           geneticValues()$id
@@ -542,7 +542,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
         # Narrow the raw pool by inclusion criterion (issue #128). A missing
         # input$inclusionCriterion defaults to "topN", reproducing today's
-        # exact behavior for all three sources unless the user actively
+        # exact behavior for both sources unless the user actively
         # selects the genetic-value floor.
         inclusionCriterion <- if (is.null(input$inclusionCriterion)) {
           "topN"
@@ -550,7 +550,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           input$inclusionCriterion
         }
         candidateIds <- if (inclusionCriterion == "valueFloor") {
-          # req(geneticValues()) gates ALL three sources here -- previously
+          # req(geneticValues()) gates BOTH sources here -- previously
           # only topRanked needed a prior GV run. An id with no row in
           # geneticValues() at all fails the floor (a fail-safe default,
           # distinct from an id present with value == "Undetermined", which

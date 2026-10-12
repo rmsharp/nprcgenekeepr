@@ -15,7 +15,7 @@ library(nprcgenekeepr)
 ##     fallback and the effective-size helpers count the same way);
 ##   - a pedigree with neither column: everyone counts, so the pool is as before.
 ## The module applies it to the raw pool BEFORE the top-N or floor cut, for
-## every source ("Top ranked", "Upload list", "All available"). Animals typed
+## every source ("Top ranked", "All available"). Animals typed
 ## into a seed group are the user's own choice and stay accepted.
 
 # =============================================================================
