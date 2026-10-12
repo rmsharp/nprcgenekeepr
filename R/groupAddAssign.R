@@ -8,7 +8,8 @@
 #' \code{groupAddAssign} finds the largest group that can be formed by adding
 #' unrelated animals from a set of candidate IDs to an existing group, to a new
 #' group it has formed from a set of candidate IDs or if more than 1 group
-#' is desired, it finds the set of groups with the largest average size.
+#' is desired, it finds the set of groups with the largest minimum group size
+#' (the score is the size of the smallest group).
 #'
 #' The function implements a maximal independent set (MIS) algorithm to find
 #' groups of unrelated animals. A set of animals may have many different MISs of
