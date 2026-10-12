@@ -124,9 +124,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       exports with no `@examples`; the `savePlotToFile` example uses `\dontrun`); the four
       likely code defects of *slice 4* (this item's earlier "8" label was wrong), re-checked against today's code S966
       (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`): all four are still real and the docs
-      already say so, except one wording line that needs only a go-ahead (`groupAddAssign` roxygen "largest average
-      size", `R/groupAddAssign.R:11` and `man/groupAddAssign.Rd:153`; the code scores the smallest group, `:284`;
-      "or younger" was fixed S844). **Open rulings:** the "Upload list" choice that uploads nothing
+      already say so, except one wording line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
+      "largest average size" and now say "largest minimum group size (the score is the size of the smallest group)",
+      gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three open rulings:** the "Upload list" choice that uploads nothing
       (`R/modBreedingGroups.R:40-43`: remove, build the upload, or leave); the two do-nothing checkboxes
       (`R/modGeneticValue.R:63-66`: remove or leave); a one-file pedigree with `allele_1`/`allele_2` columns, whose
       genotypes go unused with no notice (`R/fixColumnNames.R:38`: leave, accept the spelling, or add a notice).
