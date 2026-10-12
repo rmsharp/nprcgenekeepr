@@ -98,31 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 965 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** `methodology/HANDOFFS.md` and `methodology/CHANGELOG.md` are under the
-context-budget size check: two `on-demand` rows in `methodology/.context-budget.json:52-65` (`warn_bytes` 196,608, `max_bytes` 262,144; the owner's numbers, and yes to `CHANGELOG.md`), so Phase 0 shows a yellow
-warning from 196,608 B and the hook refuses a commit that grows either file past 262,144 B (a shrinking commit always passes). New gate `tests/testthat/test_contextBudgetLedgers.R` (4 blocks, 26 expectations).
-One sentence in `CLAUDE.md:229-232`. No `R/` change, no NEWS line. `BACKLOG.md:8-19` removed (later cites move up 13).
-**Measured first:** the item said class `read-mandated`; in a scratch copy that adds a token check capped at 25,000 tokens, so `HANDOFFS.md` (87,830 B, about 38,691 tokens) read OVER and a 1,000 B receipt was refused.
-**Gates:** claim `dc5c87394`; RED `226ad5f55` (22 failed, 4 passed, 0 skipped); RED amendment `f0a5f1bcb` (the owner approved GREEN to RED: two patterns no correct config could pass); GREEN `aaaa81515` (config only);
-REFACTOR `505789449` (tests only); close-out = the commit carrying this note.
-**Verified:** full suite 3,432 blocks, 0 failed, 0 errors (187 skipped, 6 warnings), after GREEN and after REFACTOR; lint 0; `devtools::check()` 0/0/0 after GREEN (not re-run after the one-file REFACTOR); ratchet 1/1,
-results `5c8dd26c8285`, manifest `aa983075d6a2`; the live tool reads both rows ok; 7 mutations of the rows each fail a block, before and after the REFACTOR.
-**Handoff evaluation of S964: 9/10.** Helped: every `BACKLOG.md` cite held (`:8 :21 :29 :122`), it had already corrected the item's stale file names, the 13-ahead count and the three old pids held, and its warning
-that the notes file sat at the limit made me fold S964 at the claim. Missing: nothing its author could know (the item's `read-mandated` idea was S951's, and only a probe showed it red). Wrong: nothing found.
-**Self-assessment: 7/10.** + measured the class trap before asking; both questions plain and answered first try; every gate asked; 7 mutations twice. - I never ran my JSON patterns against a real row before RED: a relative
-tool path (caught before the commit) and a comma pattern (found only after GREEN: a GREEN to RED to GREEN loop and two extra questions). Learning 931 (`PROJECT_LEARNINGS.md:2637`).
-**Next steps (recommended, not ruled on):** docs-audit part 2 is the item at `BACKLOG.md:16` (text `:109`); the 3.0.0 bump is `:8` (READY only at release time); other picker options: the Japanese macaque example
-file (`:150`), the Diagram deceased marker (`:397`), the contributor tutorial (`:133`); the snapshot backfill (`:188`) needs its own scoping session. 19 commits ahead of `origin/master` once this lands; the owner's push
-changes `tests/`, so CI will run: read it.
-**Key files:** `methodology/.context-budget.json:52-65`; `tests/testthat/test_contextBudgetLedgers.R` (helpers `budgetTree`, `runBudgetTool`, `expectLedgerStatus`; 4 blocks); `CLAUDE.md:229-232`;
-`methodology/context_budget.py:126` (`WHOLE_READ_CLASSES`) and `:155` (`token_ceiling()`).
-**Gotchas:** a `read-mandated` class adds a token check clamped at 25,000 tokens (about 56,750 B), so a file read in part takes another class (here `on-demand`); `context_budget.py --status` appends to the gitignored
-history on every run (my probes took `growth_run` 187 to 189), so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings (the trimmer's seam): prepend under the first; an on-demand row's JSON ends at
-`warn_bytes`, so match with a digit boundary and run every pattern against one real row before RED; a test that runs the tool in a scratch folder needs absolute paths; the first warning is about 20 to 34 sessions out
-(an estimate: `HANDOFFS.md` about 92 KB after this close-out, 3,205 to 5,557 B a receipt); keep this file under about 56,700 B and every line under 280 B.
+### What Session 966 Did
+**Deliverable:** docs-audit part 2 (`BACKLOG.md:16`, text `:109`; owner pick at the Phase 0 picker, option 1 of 4): re-measure the four likely code defects from docs-audit slice 8
+against today's code and write one audit report for the owner to rule on, per `methodology/workstreams/AUDIT_WORKSTREAM.md` (IN PROGRESS)
+**Started:** 2026-10-12
+**Status:** Session claimed. Work beginning. PRE-RED: an audit, no code change and no fix (a fix is its own strict-TDD session).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 facts:** 0 undocumented commits, ledger and receipt frontiers both `ca674e534`; CI 10 of 10 green; dashboard 96/100, High+ 0; context budget OK; 19 commits ahead of `origin/master`.
 
-### Sessions 947-964 (condensed S950 to S965; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-965 (condensed S950 to S966; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -153,6 +137,11 @@ S964: no guide picture is taken with a pop-up on screen: the colony script waits
 `c2fdce1a9`, REFACTOR `56417b245`; evaluation of S963 9/10, self 8/10. **Gotchas kept (S964):** a step label is a result key, so each wait names its picture; a pop-up is fixed to the viewport
 corner, so in a tall capture it lands over the bottom; run every capture script after a shown-text change; `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture that
 "differs" may only show the random `file<hex>.csv` name.
+S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check: two `on-demand` rows in `methodology/.context-budget.json:52-65` (warn 196,608 B, growth refused past
+262,144 B; gate `tests/testthat/test_contextBudgetLedgers.R`, 4 blocks, 26 expectations); no `R/` change; strict TDD, REFACTOR taken; claim `dc5c87394`, RED `226ad5f55`, RED amendment `f0a5f1bcb`,
+GREEN `aaaa81515`, REFACTOR `505789449`; evaluation of S964 9/10, self 7/10. **Gotchas kept (S965):** a `read-mandated` class adds a token check capped at 25,000 tokens, so a file read in part
+takes `on-demand`; `context_budget.py --status` appends to the gitignored history on every run, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first;
+an on-demand row's JSON ends at `warn_bytes`, so match with a digit boundary and run each pattern against one real row before RED; a test that runs the tool in a scratch folder needs absolute paths.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
@@ -167,8 +156,8 @@ assertion in a RED test is unrun until GREEN; `blockContaining()` finds only col
 `test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
 of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
 `runGeneKeepR` pids 29511, 82416, 92900 (the `until` loop, pid 89205, is gone);
-the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the next `HANDOFFS.md` trim is due near 196,608 B (about 36
-sessions out, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`;
+the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); the first `HANDOFFS.md` size warning is at 196,608 B (about 20 to 34
+sessions out from 91,944 B at 3,205 to 5,557 B a receipt, an estimate); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`;
 sweep with `git grep`, never `grep -r` (it walks
 `docs/archive/` and five `.claude/worktrees/` copies).
 
