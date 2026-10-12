@@ -699,6 +699,35 @@ shot(app, "mate_pair_analysis_excluded.png",
      selector = "#matePair-moduleContainer")
 
 # --------------------------------------------------------------------------
+# Input tab in "Pedigree(s) and genotypes in one file" mode
+# (one_file_genotypes_read.png -- new, S971; BACKLOG.md:139)
+# The shipped MHC pedigree with its 31 animals' genotype labels in the same
+# file; the QC Summary adds a line saying which columns were read, how many
+# different alleles were found and for how many animals. This step loads a
+# different pedigree than the example one used above, so it is taken last:
+# nothing after it may rely on the example pedigree.
+# --------------------------------------------------------------------------
+one_file_path <- system.file("extdata", "examples",
+                             "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
+                             package = "nprcgenekeepr")
+do_step("choose pedigree and genotypes in one file and upload the example", {
+  app$set_inputs(mainNavbar = "Input")
+  app$set_inputs(`dataInput-fileContent` = "commonPedGenoFile")
+  do.call(app$upload_file,
+          stats::setNames(list(one_file_path), "dataInput-pedigreeFileTwo"))
+})
+do_step("click Read and Check Pedigree for the one-file example", {
+  click_element_safe(app, "#dataInput-getData")
+  app$wait_for_idle(timeout = 30000)
+})
+do_step("switch to QC Summary sub-tab for the one-file example", {
+  click_element_safe(app, "a[data-value='QC Summary']")
+})
+wait_for_popups_before(app, "one_file_genotypes_read.png")
+shot(app, "one_file_genotypes_read.png",
+     selector = "#dataInput-moduleContainer")
+
+# --------------------------------------------------------------------------
 # Summary
 # --------------------------------------------------------------------------
 recorder$summary()
