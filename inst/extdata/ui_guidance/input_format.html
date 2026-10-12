@@ -92,8 +92,10 @@ The <i>Birth</i> column must be present, but its values may be blank when an
 		alleles it found and for how many animals, so a misspelled label shows as
 		one extra allele; for example, "Genotypes read from allele1 and allele2: 3
 		different alleles (A, B, C) for 8 of 8 animals." When no usable pair of
-		columns is found it says so instead, in a line that begins "No genotype
-		columns were found" and names the column names it looked for.
+		columns is found it says so instead: a line that begins "No genotype
+		columns were found" and names the column names it looked for, or, when
+		columns were found that are not a usable pair, one that begins "Genotype
+		columns were found" and names them.
 	</li>
 </ul>
 </p>
@@ -175,13 +177,13 @@ The <i>Birth</i> column must be present, but its values may be blank when an
 	</tr>
 	<tr bgcolor="#F2FFCC">
 		<td>first</td>
-		<td>First allele: integer code of the first allele</td>
+		<td>First allele: the animal's first allele</td>
 		<td>Whole numbers or text labels.
 		</td>
 	</tr>
 	<tr bgcolor="#F2FFCC">
 		<td>second</td>
-		<td>Second allele: integer code of the second allele</td>
+		<td>Second allele: the animal's second allele</td>
 		<td>Whole numbers or text labels.
 		</td>
 	</tr>
