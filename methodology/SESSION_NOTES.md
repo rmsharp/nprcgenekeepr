@@ -98,30 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 964 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** no guide picture is taken with a pop-up on screen. The colony script waits
-before 8 pictures (the six Pedigree Browser ones, `age_plot.png`, `gva_calculating.png`) and the Diagram script before 3, one line each: `wait_for_popups_before(app, "<file>.png")` (a new recorder function,
-`tests/testthat/helper-captureHarness.R:98`). 13 pictures retaken: the 11 that carried a pop-up and, by the owner's choice, the 2 other Diagram pictures (the Focal Animals sentence). No `R/` change, no NEWS line.
-`BACKLOG.md:8-20` removed (later cites move up 13).
-**Gates:** claim `f57389c69`; RED `ec50d9e38` (3 blocks fail, 11 expectations, 0 skipped); GREEN `30d725342` (scripts), `d9664c715` (5 Diagram pictures), `cdc79292e` and `c2fdce1a9` (8 colony pictures);
-REFACTOR `56417b245`; close-out = the commit carrying this note.
-**Verified:** full suite 3,428 blocks, 0 failed, 0 errors (187 skipped, 6 warnings); lint 0; `devtools::check()` 0/0/0 on the first run; ratchet 1/1, results `73af0a7ec186`, manifest `aa983075d6a2`. Both capture
-scripts drove the real app twice (colony 95 of 95 steps, diagram 21 of 21); after the REFACTOR 8 of 13 pictures were byte-identical to the committed ones, 5 differed only in a random temporary CSV file name.
-A colour scan of all 47 pictures: only `read_and_check_pedigree_warnings.png` still has a pop-up (S963's choice). 16 mutations each broke the block aimed at.
-**Handoff evaluation of S963: 9/10.** Helped: every `BACKLOG.md` cite held (`:8`, `helper-captureHarness.R:149`), `shotLineOf()` and `codeOf()` sat where named, the notes-size limit was exact. Missing: S956 ran only
-the colony script, so the 5 Diagram pictures still showed the pre-S955 Focal Animals sentence (found in the fresh run). Wrong: nothing found.
-**Self-assessment: 8/10.** + every picture measured before a question; three plain questions answered first try; the old-over-new sheet opened for the owner before the long runs; 16 mutations.
-- `sips -c` wrote full-size copies and I read them as crops (2 wasted image reads); GREEN 3's message quotes 7,925 pop-up pixels from my first scan, the other numbers come from `compare.py` (8,832 for that
-picture); a `--no-manual` check was started and restarted plain. Learning 930 (`PROJECT_LEARNINGS.md:2634`).
-**Next steps (recommended, not ruled on):** budget `HANDOFFS.md` (`BACKLOG.md:8`, DECISION NEEDED; the files are `methodology/HANDOFFS.md` and `methodology/.context-budget.json`); docs-audit part 2 is the item at
-`:29` (text `:122`); the 3.0.0 bump is `:21`. 13 commits ahead of `origin/master` once this lands; the owner's push changes `tests/` and `vignettes/`, so CI will run: read it. The next close-out must condense this file.
-**Key files:** `tests/testthat/helper-captureHarness.R:98,127,141`; `tests/testthat/test_captureHarness.R:307-328` (function blocks), `:886` (`waitsRightBeforeShot`), `:901-973` (pins); the two capture scripts
-(grep `wait_for_popups_before`: 8 and 3 calls); the 13 pictures in `vignettes/articles/shiny_app_use/`.
-**Gotchas:** a step label is a result key, so each wait names its picture (a repeated label overwrites); a pop-up is fixed to the viewport corner, so in a tall capture it lands over whatever the bottom holds; run every
-capture script after a shown-text change (S956 ran only the colony one); `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture that "differs" may only show the random `file<hex>.csv` name; the three
-old `runGeneKeepR` pids (29511, 82416, 92900) are alive and left alone; keep this file under about 56,700 B and every line under 280 B.
+### What Session 965 Did
+**Deliverable:** put `methodology/HANDOFFS.md` under the context-budget size check (IN PROGRESS)
+**Started:** 2026-10-12 02:09 CDT (owner pick at the Phase 0 picker, option 1 of 4; `BACKLOG.md:8`; DECISION NEEDED (the two ceilings, and whether `CHANGELOG.md` gets the same entry), Effort S;
+config in `methodology/.context-budget.json`; strict TDD wherever a test can pin it)
+**Status:** Session claimed. PRE-RED declared; the two numbers go to the owner before RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 facts:** 0 undocumented commits; ledger and receipt frontiers both `382d05a4b`; CI 10 of 10 green; dashboard 96/100, High+ 0; `master` is 13 commits ahead of `origin/master`
+(S963 and S964, unpushed); `HANDOFFS.md` 87,344 B, `CHANGELOG.md` 53,879 B; load average 11.5 at Phase 0; keep this file under about 56,700 B and every line under 280 B.
 
-### Sessions 947-963 (condensed S950 to S964; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-964 (condensed S950 to S965; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -147,6 +133,11 @@ one capture step and one shot, `colony-manager-guide-screenshots.R:195-211`; no 
 REFACTOR `1e3821e63`; evaluation of S962 9/10, self 7/10). **Gotchas kept (S963):** the capture recorder counts each `do_step` and each `shot` once (95 now); the loop block at
 `test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; `devtools::check()` failed the `test_markerKinship.R:177` benchmark when the 1-minute load
 was above about 7, so read `uptime` first; the old `stash@{0}` from `dev` is not ours, never `pop` it.
+S964: no guide picture is taken with a pop-up on screen: the colony script waits before 8 pictures and the Diagram script before 3 (`wait_for_popups_before(app, "<file>.png")`,
+`tests/testthat/helper-captureHarness.R:98`); 13 pictures retaken; no `R/` change; strict TDD, REFACTOR taken; claim `f57389c69`, RED `ec50d9e38`, GREEN `30d725342` `d9664c715` `cdc79292e`
+`c2fdce1a9`, REFACTOR `56417b245`; evaluation of S963 9/10, self 8/10. **Gotchas kept (S964):** a step label is a result key, so each wait names its picture; a pop-up is fixed to the viewport
+corner, so in a tall capture it lands over the bottom; run every capture script after a shown-text change; `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture that
+"differs" may only show the random `file<hex>.csv` name.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new

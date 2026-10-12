@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S965
+date: 2026-10-12
+status: pending
+active_task: IN PROGRESS -- put methodology/HANDOFFS.md under the context-budget size check (BACKLOG.md:8; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED (the two ceilings, and whether CHANGELOG.md gets the same entry), Effort S; config in methodology/.context-budget.json; strict TDD wherever a test can pin it; PRE-RED declared, the numbers go to the owner first)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S964
 date: 2026-10-12
 status: complete
