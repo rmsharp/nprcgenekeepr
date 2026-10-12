@@ -127,39 +127,42 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       already say so, except one wording line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
       "largest average size" and now say "largest minimum group size (the score is the size of the smallest group)",
       gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three rulings, all taken S968** (the owner took the
-      recommended option each time): the two do-nothing Genetic Value checkboxes were removed S969; removing the "Upload list"
-      choice and showing a notice when a one-file pedigree's genotypes go unused are the two READY items below.
+      recommended option each time): the two do-nothing Genetic Value checkboxes were removed S969; the "Upload list" choice
+      was removed S970 (building a candidate list is its own item below); the unused-genotypes notice was redirected S970
+      to making the genotype columns work (its item below).
       (3) *Left unsettled by the doc slices:* RO8 (Quarto slices 3-4 status) and the other ids in
       RO3 were reworded "not recorded" / "not re-checked"; AR3's "about 53" is attributed to
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Remove the "Upload list" Source choice from Breeding Groups (READY, Effort S; ruled S968; strict TDD,
-      every gate asked)** -- the choice has no control to give it a list, so it returns exactly what "All
-      available" returns (`R/modBreedingGroups.R:42`; the pool at `:529-536`). Ruled: remove it; building a paste-IDs
-      box (like the Mate Pair tab's, `R/modMatePair.R:44,60,260`) was offered and not taken. No calculated result
-      changes. **What it touches (grepped S968):** the roxygen `R/modBreedingGroups.R:215-216` and the regenerated
-      `man/modBreedingGroupsServer.Rd:87-88`; the manual `vignettes/manual_components/_breeding_group_formation.Rmd:28`
-      and `:46`; two tests that pin the choice (`tests/testthat/test_modBreedingGroups.R:362-390`, `animalSource = "custom"`,
-      and `tests/testthat/test_modBreedingGroups_livingPool.R:18,152-157`); and the six whole-tab pictures
-      (`breeding_group_*.png`, all `#breedingGroups-moduleContainer` at `vignettes/articles/colony-manager-guide-screenshots.R:475-627`;
-      `breeding_group_first_view.png` was opened and shows the three-choice list), retaken with the colony script
-      (about 3 min; S969's run took about 1.5) and copied by name. Its own PRE-RED question: whether the server keeps a
-      `"custom"` branch for a script that passes it (the pool code treats `"custom"` and `"all"` alike today).
-      **Grep it three ways (S969, Learning 935):** by the id and the value (`custom`, `Upload list`), by the label with a
-      line wrap allowed (a comment can split it across two lines), and by the kind (an E2E test title can say only
-      "source"); then check which `@importFrom` names the removal strands.
-- [ ] **Show a notice when a one-file pedigree's genotype columns go unused (READY, Effort S; ruled S968; strict TDD,
+- [ ] **Make a one-file pedigree's genotype columns get used (READY, Effort S to M; owner direction S970; strict TDD,
       every gate asked)** -- with "pedigree and genotypes in one file", columns named `allele_1`/`allele_2` load with
       0 errors and 0 warnings, the Changed Columns tab lists the rename to `allele1`/`allele2`, and the genotypes are then
       not used with nothing saying so; `first`/`second` work (measured S966 through the real Input module,
-      `docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md` Finding 4; the cause is the
-      underscore strip at `R/fixColumnNames.R:38` plus `hasGenotype()` needing `first` and `second`). Ruled: add a notice
-      when that option is chosen and no usable genotype columns result, which also covers text alleles; accepting the
-      underscore spelling and leaving it were offered and not taken. No calculated number changes. Its own PRE-RED
-      questions: where the notice shows (the pedigree check's Warnings list, which also moves the QC Summary count, or a
-      line on the Input tab) and its exact words. The check runs in `R/modInput.R` near `:505-523`.
+      `docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md` Finding 4; the cause is the underscore
+      strip at `R/fixColumnNames.R:38` plus `hasGenotype()` needing `first` and `second`; the check runs in `R/modInput.R`
+      near `:505-523`). S968 ruled "show a notice"; at S970 the owner redirected: implement the columns, so the genotypes
+      are used. No calculated number changes for a file that already works. Its own PRE-RED questions: accept only the
+      underscore spelling, or text alleles as well (the page says whole numbers only and text labels go in a separate
+      genotype file, `inst/extdata/ui_guidance/input_format.html:85-90`); whether a notice stays for a file where no usable
+      genotype columns still result (the S968 ruling, kept as the fallback), where it shows (the Warnings list moves the
+      QC Summary count, or a line on the Input tab) and its words. That page, the manual and `NEWS.Rmd` change with it.
+
+- [ ] **Let a user give Breeding Groups their own candidate list (DECISION NEEDED -- a file upload or a paste-IDs box,
+      Effort M; owner-requested S970; strict TDD, every gate asked)** -- S970 removed the "Upload list" Source choice,
+      which had no control to give it a list and returned what "All available" returns; the Source box now offers
+      "Top ranked" and "All available". This is the feature that choice promised. Where a pickup starts: the Mate Pair
+      tab already has a paste-IDs box (`R/modMatePair.R:44,60`, parsed at `:410`); the pool step is `R/modBreedingGroups.R:524-541`
+      (any value other than `"topRanked"` yields every pedigree id, then only living animals stay, owner-ruled S938); the
+      module's one `fileInput` is `ancestryRulesFile` (`:78`). Its own PRE-RED questions: a file, a paste box or both; what
+      happens to an id that is not in the pedigree or not alive (say so, or drop it quietly); where the new choice shows and
+      its label. Changes with it: the manual's Source bullets (`vignettes/manual_components/_breeding_group_formation.Rmd`),
+      the guide's Breeding Groups paragraph (`colony-manager-guide.qmd:593-599`), `NEWS.Rmd`, and the six
+      `breeding_group_*.png` pictures (colony script, `colony-manager-guide-screenshots.R:475-627`). A retake draws a new
+      random last-box count that the guide's sex-ratio sentence and `test_guideBreedingGroupsWording.R` pin (six since S970),
+      so grep the count words ("four", "six") before RED. S970's removal grep found prose that counts the choices ("all three
+      Source choices", "an uploaded list"): grep for those words too.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
