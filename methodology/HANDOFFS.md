@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S967
+date: 2026-10-12
+status: pending
+active_task: IN PROGRESS -- reword the groupAddAssign() help sentence that says "largest average size" (R/groupAddAssign.R:11, man/groupAddAssign.Rd:153; the code scores the smallest group, :284) and regenerate the man/ page (owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD, every gate asked with AskUserQuestion)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S966
 date: 2026-10-12
 status: complete

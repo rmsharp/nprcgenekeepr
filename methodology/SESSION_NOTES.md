@@ -98,32 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 966 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; an audit, PRE-RED throughout, no code change and no fix):** the four likely code defects of docs-audit slice 4, re-checked against
-today's code: `docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md` (0 critical, 3 moderate, 1 minor). All four are still real in the code, and the docs already say so (S825 to S844)
-except one wording line: `groupAddAssign` "largest average size" (`R/groupAddAssign.R:11`, `man/groupAddAssign.Rd:153`; the code scores the smallest group, `:284`). "Or younger" was fixed S844.
-`BACKLOG.md:109-132` carries the result; the item's "8" slice label was wrong (the four are slice 4's); the item stays open.
-**Probe:** the real Input module (`shiny::testServer(modInputServer)`, input `pedigreeFileTwo`): a one-file pedigree with `allele_1`/`allele_2` columns gives 0 errors, 0 warnings, no genotypes and one
-column-rename note; `first`/`second` give genotypes. Not driven in a browser; the guide pictures were not opened.
-**Rulings open (yours):** (1) "Upload list" (`R/modBreedingGroups.R:40-43`): remove, build the upload, or leave; (2) the two do-nothing checkboxes (`R/modGeneticValue.R:63-66`): remove or leave;
-(3) `allele_1`/`allele_2` genotypes unused with no notice (`R/fixColumnNames.R:38`): leave, accept the spelling, or add a notice (my pick: the notice); (4) the "average" wording needs only a go-ahead.
-**Gates:** claim `87ac25207`; close-out `cdfa78408` (report, `BACKLOG.md`, Learning 932, ledger) and the commit carrying this note and the receipt. No `R/` or test change, so lint is not owed;
-runtime smoke n/a (docs only); `quality_ratchet.py --run`: 1/1 pass, results `fff75d50c33a`, manifest `aa983075d6a2`; context budget OK at the claim.
-**Handoff evaluation of S965: 8/10.** Helped: every `BACKLOG.md` cite held (`:8 :16 :109 :133 :150 :188 :397`; my edit moved the later ones down 6 lines), `context_budget.py:126` and `:155` held, the ratchet
-hashes and the 19-ahead count matched, and the recommended next step was exact. Missing: the four candidates are slice 4's, not slice 8's (the item's "8" label sent me to a 55,738 B report that holds none of them). Wrong: nothing else found.
-**Self-assessment: 7/10.** + three kinds of evidence per finding; a probe through the real Input module; the "or younger" half found already fixed; every cite re-grepped before the report went out.
-- four wrong line numbers in the first draft (caught by that pass); a retyped scratch path left one stray placeholder file outside the scratchpad (removed within the minute, nothing in the repo);
-`qcStudbook(reportErrors = TRUE)` read as "nothing came back" (two wasted runs); several long silent stretches (the harness nudged three times). Learning 932 (`PROJECT_LEARNINGS.md:2641`).
-**Next steps (recommended, not ruled on):** your four rulings above; the "average" wording is the cheapest (one go-ahead, one small strict-TDD session: roxygen plus the regenerated `man/` page).
-Part 2 still has the 6a-6e, 7b and 8 clusters (`BACKLOG.md:109`). Other picker options (cites after my edit): the Japanese macaque file `:156`, the Diagram deceased marker `:403`, the contributor tutorial `:139`;
-the snapshot backfill `:194` needs its own scoping session; the 3.0.0 bump `:8` waits for release. Local `master` is unpushed from S963 on; the push changes `tests/`, so CI will run: read it.
-**Key files:** `docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; `R/modBreedingGroups.R:40-43,531-536`; `R/modGeneticValue.R:63-66`; `R/groupAddAssign.R:11,37-40,284`;
-`R/fixColumnNames.R:38`; `R/hasGenotype.R:32`; `R/modInput.R:130,523`; `R/appServer.R:236-296`; `inst/extdata/ui_guidance/input_format.html:85-89`.
-**Gotchas:** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported, and the column-change note needs `reportChanges = TRUE` (the app passes it); the one-file option's input is
-`pedigreeFileTwo`; a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`; `.gitignore` tracks `docs/audits/**`; probe scripts live in the scratchpad, never the repo;
-keep this file under about 56,700 B and every line under 280 B; the old `runGeneKeepR` pids 29511, 82416, 92900 are left alone.
+### What Session 967 Did
+**Deliverable:** reword the `groupAddAssign()` help sentence that says the next animal goes to the group with the "largest average size" (`R/groupAddAssign.R:11`, `man/groupAddAssign.Rd:153`;
+the code scores the smallest group, `:284`), with the regenerated `man/` page (IN PROGRESS; owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; the pick is the go-ahead S966 asked for)
+**Started:** 2026-10-12 11:23 CDT
+**Status:** Session claimed. Work beginning. PRE-RED: strict TDD; each gate (PRE-RED to RED, RED to GREEN, GREEN to REFACTOR) is asked with `AskUserQuestion`.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Phase 0 facts:** 1 commit past the `CHANGELOG.md` frontier (`fa4ea47c1`, S966's notes and receipt, covered by the S966 DONE entry), `HANDOFFS.md` frontier at HEAD, 0 pending receipts; CI 10 of 10
+green; dashboard 96/100, High+ 0; context budget OK; ratchet citation matched; 22 commits ahead of `origin/master`; load average 8.2 (the two wall-clock benchmarks may fail).
 
-### Sessions 947-965 (condensed S950 to S966; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-966 (condensed S950 to S967; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -159,6 +143,12 @@ S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check: 
 GREEN `aaaa81515`, REFACTOR `505789449`; evaluation of S964 9/10, self 7/10. **Gotchas kept (S965):** a `read-mandated` class adds a token check capped at 25,000 tokens, so a file read in part
 takes `on-demand`; `context_budget.py --status` appends to the gitignored history on every run, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first;
 an on-demand row's JSON ends at `warn_bytes`, so match with a digit boundary and run each pattern against one real row before RED; a test that runs the tool in a scratch folder needs absolute paths.
+S966: the four likely code defects of docs-audit slice 4 re-checked against today's code (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; 0 critical, 3 moderate,
+1 minor; an audit, no code change; claim `87ac25207`, report `cdfa78408`); all four are still real and the docs already say so except the `groupAddAssign` "largest average size" line (the S967 pick).
+**Rulings still open (yours):** (1) "Upload list" (`R/modBreedingGroups.R:40-43`): remove, build or leave; (2) the two do-nothing checkboxes (`R/modGeneticValue.R:63-66`): remove or leave;
+(3) `allele_1`/`allele_2` genotypes unused with no notice (`R/fixColumnNames.R:38`): leave, accept the spelling or add a notice (my pick); evaluation of S965 8/10, self 7/10.
+**Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported, and the column-change note needs `reportChanges = TRUE`; the one-file option's input is
+`pedigreeFileTwo`; a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`; probe scripts live in the scratchpad, never the repo.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
