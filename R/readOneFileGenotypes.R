@@ -38,13 +38,18 @@ readOneFileGenotypes <- function(ped) {
     }
   }
   found <- intersect(unlist(alleleColumns), names(ped))
-  note <- if (length(found) == 1L) {
-    paste0("Only one genotype column was found (", found, "); two are ",
-           "needed, so no genotypes are used.")
-  } else {
+  note <- if (length(found) == 0L) {
     paste0("No genotype columns were found in this file (looked for first ",
            "and second, first_name and second_name, allele_1 and allele_2), ",
            "so no genotypes are used.")
+  } else if (length(found) == 1L) {
+    paste0("Only one genotype column was found (", found, "); two are ",
+           "needed, so no genotypes are used.")
+  } else {
+    paste0("Genotype columns were found (", toString(found), "), but they ",
+           "are not a usable pair, so no genotypes are used; a pair is first ",
+           "and second, first_name and second_name, or allele_1 and ",
+           "allele_2, with at least one allele in it.")
   }
   list(ped = ped, used = FALSE, note = note)
 }
