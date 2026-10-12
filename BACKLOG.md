@@ -5,19 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
-      tool's 262,144 B whole-file refusal is refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
-      Effort S; config only, `.context-budget.json`)** -- `HANDOFFS.md` crossed 262,144 B in S950's close-out
-      commit (259,794 B at the claim, 263,942 B after one 4,148 B receipt) and nothing said so until the S951
-      Phase 0 dashboard ("High+ Risk 1"): `.context-budget.json` budgets only `CLAUDE.md` and `SESSION_NOTES.md`,
-      and the dashboard flags a file only once it is already past the limit. S951 trimmed it (264,486 B to
-      30,267 B; shard `docs/archive/HANDOFFS-through-2026-10-08.md`); S917 had trimmed it 33 sessions earlier
-      (268,350 B to 85,965 B). A `files` entry (class `read-mandated`, `max_bytes` 262,144, `warn_bytes` at the
-      trimmer's 196,608 B archive line) would make `context_budget.py` warn and the pre-commit hook refuse
-      growth past the limit. **Decide when picking it up:** the two numbers (an estimate, not a measurement: at
-      the recent 3.9 to 5.3 KB per receipt the warn line is about 36 sessions away and the limit about 50), and
-      whether `CHANGELOG.md` gets the same entry (it crossed the 196,608 B line at S959; S960 trimmed it).
-
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
       `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.

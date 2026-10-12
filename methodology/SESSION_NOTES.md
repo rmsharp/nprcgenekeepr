@@ -99,13 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 965 Did
-**Deliverable:** put `methodology/HANDOFFS.md` under the context-budget size check (IN PROGRESS)
-**Started:** 2026-10-12 02:09 CDT (owner pick at the Phase 0 picker, option 1 of 4; `BACKLOG.md:8`; DECISION NEEDED (the two ceilings, and whether `CHANGELOG.md` gets the same entry), Effort S;
-config in `methodology/.context-budget.json`; strict TDD wherever a test can pin it)
-**Status:** Session claimed. PRE-RED declared; the two numbers go to the owner before RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
-**Phase 0 facts:** 0 undocumented commits; ledger and receipt frontiers both `382d05a4b`; CI 10 of 10 green; dashboard 96/100, High+ 0; `master` is 13 commits ahead of `origin/master`
-(S963 and S964, unpushed); `HANDOFFS.md` 87,344 B, `CHANGELOG.md` 53,879 B; load average 11.5 at Phase 0; keep this file under about 56,700 B and every line under 280 B.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** `methodology/HANDOFFS.md` and `methodology/CHANGELOG.md` are under the
+context-budget size check: two `on-demand` rows in `methodology/.context-budget.json:52-65` (`warn_bytes` 196,608, `max_bytes` 262,144; the owner's numbers, and yes to `CHANGELOG.md`), so Phase 0 shows a yellow
+warning from 196,608 B and the hook refuses a commit that grows either file past 262,144 B (a shrinking commit always passes). New gate `tests/testthat/test_contextBudgetLedgers.R` (4 blocks, 26 expectations).
+One sentence in `CLAUDE.md:229-232`. No `R/` change, no NEWS line. `BACKLOG.md:8-19` removed (later cites move up 13).
+**Measured first:** the item said class `read-mandated`; in a scratch copy that adds a token check capped at 25,000 tokens, so `HANDOFFS.md` (87,830 B, about 38,691 tokens) read OVER and a 1,000 B receipt was refused.
+**Gates:** claim `dc5c87394`; RED `226ad5f55` (22 failed, 4 passed, 0 skipped); RED amendment `f0a5f1bcb` (the owner approved GREEN to RED: two patterns no correct config could pass); GREEN `aaaa81515` (config only);
+REFACTOR `505789449` (tests only); close-out = the commit carrying this note.
+**Verified:** full suite 3,432 blocks, 0 failed, 0 errors (187 skipped, 6 warnings), after GREEN and after REFACTOR; lint 0; `devtools::check()` 0/0/0 after GREEN (not re-run after the one-file REFACTOR); ratchet 1/1,
+results `5c8dd26c8285`, manifest `aa983075d6a2`; the live tool reads both rows ok; 7 mutations of the rows each fail a block, before and after the REFACTOR.
+**Handoff evaluation of S964: 9/10.** Helped: every `BACKLOG.md` cite held (`:8 :21 :29 :122`), it had already corrected the item's stale file names, the 13-ahead count and the three old pids held, and its warning
+that the notes file sat at the limit made me fold S964 at the claim. Missing: nothing its author could know (the item's `read-mandated` idea was S951's, and only a probe showed it red). Wrong: nothing found.
+**Self-assessment: 7/10.** + measured the class trap before asking; both questions plain and answered first try; every gate asked; 7 mutations twice. - I never ran my JSON patterns against a real row before RED: a relative
+tool path (caught before the commit) and a comma pattern (found only after GREEN: a GREEN to RED to GREEN loop and two extra questions). Learning 931 (`PROJECT_LEARNINGS.md:2637`).
+**Next steps (recommended, not ruled on):** docs-audit part 2 is the item at `BACKLOG.md:16` (text `:109`); the 3.0.0 bump is `:8` (READY only at release time); other picker options: the Japanese macaque example
+file (`:150`), the Diagram deceased marker (`:397`), the contributor tutorial (`:133`); the snapshot backfill (`:188`) needs its own scoping session. 19 commits ahead of `origin/master` once this lands; the owner's push
+changes `tests/`, so CI will run: read it.
+**Key files:** `methodology/.context-budget.json:52-65`; `tests/testthat/test_contextBudgetLedgers.R` (helpers `budgetTree`, `runBudgetTool`, `expectLedgerStatus`; 4 blocks); `CLAUDE.md:229-232`;
+`methodology/context_budget.py:126` (`WHOLE_READ_CLASSES`) and `:155` (`token_ceiling()`).
+**Gotchas:** a `read-mandated` class adds a token check clamped at 25,000 tokens (about 56,750 B), so a file read in part takes another class (here `on-demand`); `context_budget.py --status` appends to the gitignored
+history on every run (my probes took `growth_run` 187 to 189), so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings (the trimmer's seam): prepend under the first; an on-demand row's JSON ends at
+`warn_bytes`, so match with a digit boundary and run every pattern against one real row before RED; a test that runs the tool in a scratch folder needs absolute paths; the first warning is about 20 to 34 sessions out
+(an estimate: `HANDOFFS.md` about 92 KB after this close-out, 3,205 to 5,557 B a receipt); keep this file under about 56,700 B and every line under 280 B.
 
 ### Sessions 947-964 (condensed S950 to S965; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
@@ -444,55 +459,13 @@ refusal; use `withr::with_seed`; the shuffle wrapper takes exactly `(Dmat, dvec,
 `git push origin <sha>:master`; a workflow-level "success" does not name the matrix legs (`gh run view <id> --json jobs`); `pgrep -f` wait loops fire early (Learning 864); zsh reads a leading `=`
 word as an expansion.
 
-### What Session 891 Did (condensed S892 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Diagnosed the red CI after the S890 push (`2e2046efd`): two reproduced causes (a flaky 1e-6 bound in `test_positionMatingUnitForest.R:645`;
-`test_sexCodes.R:110` under covr), report `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. Claim `b2df5c4fb`. Handoff evaluation of
-S890: 8/10. Self 7/10. **Gotchas kept:** in zsh an unquoted `$var` of several flags is NOT split; `gh run view --log-failed` omits
-test-coverage's testthat output (use `--log`); use `grep -c '^status: pending' HANDOFFS.md`; `core.hooksPath` is unset (the context-budget
-hook is in `.git/hooks`).
-
-### What Session 890 Did (condensed S891; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Compressed the docs-audit item and the compression item's pass history in `BACKLOG.md` (552 -> 533 lines, 58,228 -> 46,731 B;
-High+ risk 0). Claim `d2e36c446`, deliverable `23432b24c`. At the owner's "push" it pushed 128 commits (`f0bcb9f48..2e2046efd`);
-CI came back red and S891 diagnosed it. Handoff evaluation of S889: 9/10. Self 6/10.
-**Gotchas kept:** estimate a compression's line yield from a draft, not block size (Learning 856); `gh run list --commit` needs the
-full SHA (Learning 857); `( cmd ) &` inside `run_in_background` reports the wrapper's exit, so read the job's own last line.
-
-### What Session 889 Did (condensed S890; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-NEW-28 shipped: `reportGV()` checks `id`, `sire`, `dam`, `gen` and `sex` first and names every missing one before `kinship()`
-runs (`R/reportGV.R:173-183`); the late `sex`-only check is deleted. Claim `419a25c3c`, RED `22cc2f63f` + `e86e68b4e`, GREEN
-`7f6216876`, REFACTOR `67b8afd21`. Handoff evaluation of S888: 9/10. Self 7/10.
-**Gotchas kept:** default test runs skip the 34 `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true`; the shared
-`@param ped` is inherited by 13 man pages (function-specific text goes in details); `lacy1989Ped` has no `sex`; run seeded
-identity checks in a fresh process; the open-count script is not in the repo (Learning 855).
-
-### Sessions 886-888 (condensed S887, S888, S889 and S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-PED_GV decisions and one build: S886 shared the sim-driver step (NEW-50) and closed NEW-51 (Decision record 8, `71b1ce4c0`); S887 shipped NEW-50, one internal
-`.simulateKinship()` (`R/simulateKinship.R`) for `createSimKinships()` and `cumulateSimKinships()` (RED `b96bbb45f`, GREEN `de45c8928`, REFACTOR `38c3f713c`); S888 kept the
-`reportErrors` two-mode pattern and chose an up-front message in `reportGV()` only (NEW-28; PED-5, PED-6 and NEW-36 closed; Decision record 10). Claims `a5cc50a5d`,
-`c7873ece6`, `3dae4cfd2`. Handoff evaluations 9/10 each, self 8/10 each.
-**Gotchas kept:** `cumulateSimKinships()` does not convert the pedigree to a data.table once as `createSimKinships()` does; `smallPed` is not a good-input fixture for
-`reportGV()`; `reportErrors` is the app's QC contract, so never change one function's return alone; recompute an open count by script; `.lintr` excludes `tests`.
-
-### Sessions 882-885 (condensed S886 and S945; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Four small docs sessions: S882 fixed a stale "defaulting to direct" comment (`R/modPedigree.R:459-462`) and BACKLOG's BB14 note; S883 the
-stale `@noRd` roxygen of `.addRectilinearWaypoints()` (`R/makePedigreeDiagramData.R:2109-2113`); S884 deleted the tracked
-`kinship2-fidelity-validation.pdf` and regenerated `trackC-nprc-rectilinear.png` (owner choice); S885 closed 11 PED_GV ids already fixed in
-code (BACKLOG count 28 -> 15). Claims `1cd71ab9c`, `5fa503303`, `61b8978e8`, `c618eaab3`. Handoff evaluations 7, 9, 9 and 8/10; self 8/10 each.
-**Gotchas kept:** a one-line grep for "default ... direct" misses wrapped comments; `data-raw/kinship2FidelityValidation.R` writes all 8 images
-and hard-codes `outDir` (line 67), so review a copy with `outDir` redirected; recompute an open count from the report's table, never carry it;
-attribute a fix with `git log -S'<old text>' -- <file>`.
-
-### What Session 881 Did (condensed S882; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`getPotentialParents()` split into five internal helpers in `R/getPotentialParentsHelpers.R` (PED-4, NEW-54 closed; output
-unchanged, 5 pinned fixtures). Claim `d5ccda82c`, RED `b446143ac` + `8509d4b7d`, GREEN `5d9dbbfa9`, REFACTOR `8add079bb`.
-Handoff evaluation of S880: 9/10. Self 8/10.
-**Gotchas kept:** never regenerate `gpp_pinned_*.rds` from post-split code; name helper parameters unlike any column.
-### Sessions 873-880 (condensed S932; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The `sexCodes` adoption (plan `docs/planning/sexcodes-adoption-plan.md`; stages 1-6, S874-S879): the guard widened, 43 bare sex
-letters in 17 R files converted, `test_sexCodes.R` scans every `R/*.R` against an allowlist (PED-2, NEW-29, PED-7 closed). S880
-added `damBasis` to `getPotentialParents()` entries (NEW-55); S881 split it (above).
-**Gotchas kept:** single-bracket `sexCodes["male"]` is named and breaks `identical()`; a new bare letter in `R/` fails
-`test_sexCodes.R` and allowlist entries match trimmed line text; macOS `sed -i` needs `-i ''`; `devtools::document()` rewrites
-`man/nprcgenekeepr-package.Rd` (revert it); `fallbackPed()` needs one female with an offspring; the commit hook caps
-`SESSION_NOTES.md` at 25,000 tokens.
+### Sessions 873-891 (condensed S932 and S965; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S873-S881: the `sexCodes` adoption (plan `docs/planning/sexcodes-adoption-plan.md`; `test_sexCodes.R` scans every `R/*.R` against an allowlist), `damBasis` on `getPotentialParents()` entries (S880) and its split
+into five internal helpers in `R/getPotentialParentsHelpers.R` (S881; PED-2, NEW-29, PED-4, PED-7, NEW-54 closed). S882-S885: four small docs sessions (stale comments, the tracked `kinship2-fidelity-validation.pdf`
+deleted, 11 PED_GV ids closed). S886-S889: PED_GV decisions and builds (NEW-50 `.simulateKinship()`; NEW-28 `reportGV()` names every missing column first, `R/reportGV.R:173-183`). S890-S891: `BACKLOG.md`
+compressed; the owner's push of 128 commits came back red, diagnosed in `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. Evaluations 7 to 9/10, self 6 to 8/10.
+**Gotchas kept:** never regenerate `gpp_pinned_*.rds` from post-split code, and name helper parameters unlike any column; single-bracket `sexCodes["male"]` is named and breaks `identical()`; a new bare sex letter in
+`R/` fails `test_sexCodes.R`; `data-raw/kinship2FidelityValidation.R` hard-codes `outDir` (line 67); `reportErrors` is the app's QC contract, so never change one function's return alone; `smallPed` is not a
+good-input fixture for `reportGV()`; default test runs skip the `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true`; recompute an open count from the report's table, never carry it; in zsh an unquoted
+`$var` of several flags is NOT split; `gh run view --log-failed` omits test-coverage's testthat output (use `--log`); `gh run list --commit` needs the full SHA; `core.hooksPath` is unset (the context-budget hook
+is in `.git/hooks`).

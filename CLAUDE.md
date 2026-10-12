@@ -226,7 +226,10 @@ removed the Project Overview fence — restore it before anything else. The per-
 hook (`python3 methodology/context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
 file; re-install it on a fresh clone, bypass with `--no-verify` only when a legitimate growth
 commit is owed (the decision then lands as a `methodology/.context-budget.json` diff, not a silent override).
-`methodology/.context-budget-history.jsonl` stays gitignored (S719 decision).
+`methodology/.context-budget-history.jsonl` stays gitignored (S719 decision). **`methodology/HANDOFFS.md` and
+`methodology/CHANGELOG.md` have an `on-demand` row** (S965: warn at 196,608 B, growth refused past 262,144 B; bytes only,
+never `read-mandated`, which adds a 25,000-token check): a WARN on either means `python3 methodology/methodology_trim.py
+--file methodology/<it>.md --budget-bytes 65536 --check`, then `--write`, is owed (`test_contextBudgetLedgers.R`).
 
 ### Additional task-to-workstream mappings
 
