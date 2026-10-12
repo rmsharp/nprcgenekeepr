@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S972
+date: 2026-10-12
+status: pending
+active_task: IN PROGRESS -- the leftovers of the one-file genotype work (BACKLOG.md:139; owner pick at the Phase 0 picker, option 2 of 4; DECISION NEEDED for points 1 and 5, READY for 2 to 4, Effort S to M; PRE-RED scope question first, strict TDD with every gate asked)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S971
 date: 2026-10-12
 status: complete

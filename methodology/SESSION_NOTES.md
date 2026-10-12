@@ -98,26 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 971 Did
-**Deliverable, DONE (owner pick, option 1 of 4; READY, Effort S to M, grew to M to L; strict TDD, every gate asked, REFACTOR taken):** a one-file pedigree's genotype columns are read and the QC Summary says what was read
-(`R/readOneFileGenotypes.R:30`, `R/modInput.R:550-572,617-618`).
-Scope answers: whole numbers AND text labels; the line also says when nothing usable was found; "much more documentation and augmentation of the tutorials". The first pair present is read (first/second,
-first_name/second_name, allele1/allele2); text becomes `addGenotype()`'s codes; Excel text that reads as numbers stays numbers. Docs: Input page, manual, guide (one new picture), NEWS, a shipped one-file example.
-**Gates:** claim `6c4f2f755`; RED `195ec5767`, amendments `2f79f45b2` `0eff394d1`; GREEN `3b1c1f71d` `5965ac72b` `e9d5fc0d6` `22ef87520` `4c3b7261e` `5a92cbdf0`; REFACTOR `3a861c85b`.
-**Verified:** full suite 3,488 blocks, 0 failed, 0 errors (187 skipped, 6 warnings, as S970); `devtools::check()` 0/0/0 twice; lint 0; ratchet 1/1 (`300420458e05`); 12 mutations; capture run 100/100;
-picture opened for the owner. The opt-in E2E files and a guide `quarto render` were not run.
-**Handoff evaluation of S970: 8/10.** Helped: the item named the cause (`fixColumnNames.R:38`) and both PRE-RED questions. Missing: Excel uploads arrive as text; an older harness block wants one getData click;
-"no number changes for a working file" clashed with text labels.
-**Self-assessment: 7/10.** + every gate asked and answered; mutations found a real gap. - wrote the Excel-text path in GREEN with no RED test; an over-specific RED pin (amendment 1); "misspelt" failed the wordlist
-test; one comparison request was interrupted by tool calls; unquoted `echo ===` once. Learning 937.
-**Next steps (recommended):** the Breeding Groups candidate list (`BACKLOG.md:154`; PRE-RED questions are in the item), or the leftovers of this work (`:139`: wording of two table cells, two untested edges, which tutorials
-to grow). 56 commits ahead of `origin/master` (57 with this close-out); the push runs all four workflows: read them (pkgdown is the first render of the guide's new paragraphs).
-**Key files:** `R/readOneFileGenotypes.R:30,61-72`; `R/modInput.R:550-572,617-618`; `R/addGenotype.R:64,76`; the three `test_*OneFileGenotypes*.R`/`test_readOneFileGenotypes.R` files; `input_format.html:85-97`;
-`colony-manager-guide.qmd:179-186,255-269`; `BACKLOG.md:139,154`.
-**Gotchas:** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe` (`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout`
-mutation harness; wait on a run's `EXIT=`, not the outer shell; keep this file under about 56,500 B (the 25,000-token ceiling bites first; S971 cut 1.4 KB of old hash lists), every line under 280 B; `runGeneKeepR` pids 29511, 82416, 92900 still run (12-13 days), left alone.
+### What Session 972 Did
+**Deliverable:** the leftovers of the one-file genotype work (`BACKLOG.md:139`; owner pick at the Phase 0 picker, option 2 of 4; DECISION NEEDED for points 1 and 5, READY for 2 to 4,
+Effort S to M) (IN PROGRESS)
+**Started:** 2026-10-12 18:13 CDT
+**Status:** Session claimed. Work beginning: the PRE-RED scope question first (the item has five points and a session has one deliverable); strict TDD, every gate asked via `AskUserQuestion`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-970 (condensed S950 to S971; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-971 (condensed S950 to S972; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -168,6 +156,11 @@ wrapped label and by its kind, then check stranded imports (Learning 935); quote
 S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; the server's pool code stays, a stale `"custom"` acts as "All available"; gate
 `test_breedingGroupsSourceChoices.R`; NEWS sentence `NEWS.Rmd:276-278`; six `breeding_group_*.png` retaken; strict TDD, REFACTOR taken; evaluation of S969 8/10, self 7/10). **Gotchas kept (S970):** grep a removed choice by id, wrapped label, kind AND count words
 ("all three", "an uploaded list") and a picture's random counts before RED (Learning 936); read `uptime` before a benchmark failure; the owner's two instructions are `BACKLOG.md:139,152`.
+S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`, `R/modInput.R:550-572,617-618`; whole numbers and text labels; the first
+pair present of first/second, first_name/second_name, allele1/allele2; Excel text that reads as numbers stays numbers; Input page, manual, guide with one picture, NEWS, a shipped example; strict TDD,
+REFACTOR taken; claim `6c4f2f755`, REFACTOR `3a861c85b`, close-out `e66dd5efa`; evaluation of S970 8/10, self 7/10; leftovers `BACKLOG.md:139`). **Gotchas kept (S971):** mutate new code before the
+REFACTOR gate (Learning 937); new capture steps use `click_element_safe` (`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout` mutation harness; wait on a
+run's `EXIT=`, not the outer shell; keep this file under about 56,500 B (the 25,000-token ceiling bites first), every line under 280 B.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
