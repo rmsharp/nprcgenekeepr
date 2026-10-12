@@ -106,7 +106,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       same pass: the Heterozygosity caption (its animals are X, Y, Z), the Candidate tab's "Current limitation" note
       (issue #155 had fixed it), and the caption's "10 shared loci" (3 of 10 disagree). Its one finding for the owner, the
       Candidate tab's blank table without `fromCenter`, was ruled and built S948 (the tab now says why).
-      (2) *Owner decisions about code, found by slices 6-8* (DECISION NEEDED, Effort S each;
+      (2) *Owner decisions about code, found by slices 4 and 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
       report): 6a MB3 (unknown-sex founder kinship; MC1, `filterKinMatrix` without `drop = FALSE`, was fixed
@@ -121,9 +121,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
-      exports with no `@examples`; the `savePlotToFile` example uses `\dontrun`); 8 four likely
-      code defects (candidate "Upload list" uploads nothing; no-op GU/MK checkboxes;
-      `groupAddAssign` roxygen "average"/"or younger" wording; silent `allele_1/2` genotype drop).
+      exports with no `@examples`; the `savePlotToFile` example uses `\dontrun`); the four
+      likely code defects of *slice 4* (this item's earlier "8" label was wrong), re-checked against today's code S966
+      (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`): all four are still real and the docs
+      already say so, except one wording line that needs only a go-ahead (`groupAddAssign` roxygen "largest average
+      size", `R/groupAddAssign.R:11` and `man/groupAddAssign.Rd:153`; the code scores the smallest group, `:284`;
+      "or younger" was fixed S844). **Open rulings:** the "Upload list" choice that uploads nothing
+      (`R/modBreedingGroups.R:40-43`: remove, build the upload, or leave); the two do-nothing checkboxes
+      (`R/modGeneticValue.R:63-66`: remove or leave); a one-file pedigree with `allele_1`/`allele_2` columns, whose
+      genotypes go unused with no notice (`R/fixColumnNames.R:38`: leave, accept the spelling, or add a notice).
       (3) *Left unsettled by the doc slices:* RO8 (Quarto slices 3-4 status) and the other ids in
       RO3 were reworded "not recorded" / "not re-checked"; AR3's "about 53" is attributed to
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
