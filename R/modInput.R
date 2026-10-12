@@ -547,16 +547,29 @@ modInputServer <- function(id) {
         else qcResult$errorLst
       )
 
+      # One-file mode: read the genotype columns of the cleaned studbook and
+      # keep the line the QC Summary shows about them. Every other mode keeps
+      # the studbook as it is and has no line.
+      cleaned <- qcResult$cleaned
+      genotypeNote <- NULL
+      if (identical(input$fileContent, "commonPedGenoFile") &&
+            !is.null(cleaned)) {
+        oneFile <- readOneFileGenotypes(cleaned)
+        cleaned <- oneFile$ped
+        genotypeNote <- oneFile$note
+      }
+
       # Store results in expected format. genotypeData() exposes the
       # id/first/second extract (getGVGenotype() returns NULL when the cleaned
       # studbook carries no genotype, preserving the prior contract).
       storedResults(list(
-        cleaned = qcResult$cleaned,
+        cleaned = cleaned,
         errors = qcResult$qcResult$errors,
         warnings = qcResult$qcResult$warnings,
         changedCols = qcResult$qcResult$changedCols,
         hasChangedCols = qcResult$qcResult$hasChangedCols,
-        genotype = getGVGenotype(qcResult$cleaned)
+        genotype = getGVGenotype(cleaned),
+        genotypeNote = genotypeNote
       ))
 
       # Signal that QC processing is complete (for E2E testing)
@@ -601,6 +614,9 @@ modInputServer <- function(id) {
           column(4L, qcSummaryBox("Errors", nErrors, errorsColour)),
           column(4L, qcSummaryBox("Warnings", nWarnings, warningsColour))
         ),
+        if (!is.null(results$genotypeNote)) {
+          div(class = "alert alert-info", results$genotypeNote)
+        },
         if (nErrors == 0L && nRecords > 0L) {
           div(
             class = "alert alert-success",
