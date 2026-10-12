@@ -708,3 +708,122 @@ test_that("the Direct picture is as wide as the legend picture (the same contain
       pngSize(file.path(pictureDir, "pb_diagram_legend.png"))[[1L]])
   }
 })
+
+## ---- the guide's Warnings sub-tab picture (BACKLOG.md:8, raised S936) ----
+##
+## The guide's Read and Check Pedigree paragraph says in words that, when the
+## check finds only warnings, the app opens the "Warnings" sub-tab and shows a
+## yellow notice, "QC found 2 warning(s). Check the Warnings tab.", but it had
+## no picture of either. The one picture it has, read_and_check_pedigree.png,
+## is the QC Summary sub-tab cropped to the module container, taken after the
+## notice has closed (S936). The new picture is the whole 1300 x 900 window
+## right after the check, with the Warnings sub-tab open and the notice still
+## on screen (it stays 8 s; measured S963: 1.9 s after the click, 1.3 s of it
+## the check itself). The owner approved the sentence, the caption and the
+## place (after the QC Summary picture) in S963.
+
+guideFile <- file.path(scriptDir, "colony-manager-guide.qmd")
+warningsPicture <- "read_and_check_pedigree_warnings.png"
+qcSummaryPicture <- "read_and_check_pedigree.png"
+
+readGuide <- function() {
+  skip_if_not(file.exists(guideFile),
+              "guide not present (it is build-ignored)")
+  readLines(guideFile, warn = FALSE)
+}
+
+## The guide line that cites `picture` (the picture's own markdown line).
+guideLineOf <- function(lines, picture) {
+  grep(paste0("shiny_app_use/", picture), lines, fixed = TRUE)
+}
+
+test_that("the colony script shoots the Warnings sub-tab as a window picture, between the Read and Check click and the switch to QC Summary", {
+  code <- codeOf(readScript(colonyScript))
+  shotAt <- grep(paste0('shot\\(app, "', warningsPicture, '"'), code)
+  clickAt <- grep('app\\$click\\("dataInput-getData"\\)', code)
+  switchAt <- grep('`dataInput-mainTabs` = "QC Summary"', code)
+  expect_length(shotAt, 1L)
+  expect_length(clickAt, 1L)
+  expect_length(switchAt, 1L)
+  if (length(shotAt) == 1L && length(clickAt) == 1L && length(switchAt) == 1L) {
+    expect_true(clickAt < shotAt && shotAt < switchAt)
+    expect_match(blockContaining(code, "read_and_check_pedigree_warnings\\.png"),
+                 'selector = "viewport"')
+  }
+})
+
+test_that("the step before the Warnings picture waits for the notice and checks the Warnings sub-tab is the open one", {
+  code <- codeOf(readScript(colonyScript))
+  shotAt <- grep(paste0('shot\\(app, "', warningsPicture, '"'), code)
+  expect_length(shotAt, 1L)
+  if (length(shotAt) == 1L) {
+    tops <- grep("^(do_step|shot)\\(", code)
+    before <- tops[tops < shotAt]
+    expect_gte(length(before), 1L)
+    block <- paste(code[max(before):(shotAt - 1L)], collapse = "\n")
+    expect_match(block, "^do_step\\(")
+    ## the notice must be on screen when the picture is taken (it closes
+    ## after 8 s), and the picture is of the Warnings sub-tab
+    expect_match(block, 'wait_for_element\\(app, "\\.shiny-notification"')
+    expect_match(block, 'get_value\\(input = "dataInput-mainTabs"\\)')
+    expect_match(block, '"Warnings"', fixed = TRUE)
+  }
+})
+
+test_that("the guide cites the Warnings picture once, after the QC Summary picture, with the sentence between them and the approved caption", {
+  lines <- readGuide()
+  warningsAt <- guideLineOf(lines, warningsPicture)
+  qcAt <- guideLineOf(lines, qcSummaryPicture)
+  expect_length(warningsAt, 1L)
+  expect_length(qcAt, 1L)
+  if (length(warningsAt) == 1L && length(qcAt) == 1L) {
+    expect_true(qcAt < warningsAt)
+    inBetween <- lines[seq_len(warningsAt - 1L)][-seq_len(qcAt)]
+    between <- gsub("\\s+", " ", paste(inBetween, collapse = " "))
+    expect_match(
+      between,
+      paste("The picture below shows the Warnings sub-tab as the app opens it",
+            "for this file: one row for each of the two warnings, with the",
+            "yellow notice still on screen in the lower right corner."),
+      fixed = TRUE)
+    expect_match(
+      lines[[warningsAt]],
+      paste0("![The Warnings sub-tab as the app opens it after reading and ",
+             "checking the example pedigree.](shiny_app_use/"),
+      fixed = TRUE)
+  }
+})
+
+test_that("the Warnings picture's alt text names the open sub-tab, both warnings and the notice", {
+  lines <- readGuide()
+  warningsAt <- guideLineOf(lines, warningsPicture)
+  expect_length(warningsAt, 1L)
+  if (length(warningsAt) == 1L) {
+    alt <- sub('.*\\{fig-alt="([^"]*)"\\}.*', "\\1", lines[[warningsAt]])
+    expect_false(identical(alt, lines[[warningsAt]]), info = "has fig-alt")
+    expect_match(alt, "Warnings sub-tab", fixed = TRUE)
+    expect_match(alt, "Column name case changed", fixed = TRUE)
+    expect_match(alt, "Animals with no birth date", fixed = TRUE)
+    expect_match(alt, "QC found 2 warning(s). Check the Warnings tab.",
+                 fixed = TRUE)
+    expect_match(alt, "lower right corner", fixed = TRUE)
+  }
+})
+
+test_that("the Warnings picture is in the picture folder, is a window shot, and is not a copy of another picture", {
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  path <- file.path(pictureDir, warningsPicture)
+  expect_true(file.exists(path))
+  if (file.exists(path)) {
+    ## the window the script opens: 1300 px wide, 900 px tall
+    size <- pngSize(path)
+    expect_identical(size[[1L]], 1300L)
+    expect_true(size[[2L]] >= 800L && size[[2L]] <= 1000L)
+    others <- setdiff(list.files(pictureDir, pattern = "\\.png$",
+                                 full.names = TRUE), path)
+    expect_gt(length(others), 40L)
+    expect_false(unname(tools::md5sum(path)) %in%
+                   unname(tools::md5sum(others)))
+  }
+})
