@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S969
 date: 2026-10-12
-status: pending
-active_task: IN PROGRESS -- remove the two do-nothing Genetic Value checkboxes, "Calculate Genome Uniqueness" and "Calculate Mean Kinship" (R/modGeneticValue.R:63-66; ruled S968, BACKLOG.md:150-159); owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; PRE-RED declared, strict TDD with every gate asked
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the two do-nothing Genetic Value check boxes, "Calculate Genome Uniqueness" and "Calculate Mean Kinship", are removed (R/modGeneticValue.R:63-66; ruled S968; owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD, every gate asked and answered, REFACTOR taken); the Upload-list removal and the unused-genotypes notice are the two READY items left
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, no untracked files, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget OK, ratchet citation matched). Claim fb771fc23. Scope question: NEWS sentence approved by the owner (NEWS.Rmd:223-225). RED 5167d5dfa: test_geneticValueOptionBoxes.R, 4 blocks, 19 expectations, 10 failed, 0 skipped, 0 errors. GREEN 1d5e8c07f (two checkboxInput calls, two dead test places, E2E comments and one title), 1f7c80114 (manual bullet, NEWS.Rmd, NEWS.md re-knit), a329b2deb (three gva_*.png retaken, 95/95 capture steps). REFACTOR 5cacf6168 (two unused shiny imports, R/modGeneticValue.R:21; NAMESPACE and man/ identical). Full suite 3,442 blocks 0 failed 0 errors after GREEN and after REFACTOR; lint 0; devtools::check() 0/0/0 twice; 4 mutations each fail only their block. Close-out: the commit carrying this receipt.
+next_steps: Two READY items, each its own strict-TDD session with a PRE-RED gate first: the Upload-list removal (BACKLOG.md:138; 6 pictures, one PRE-RED question: keep a hidden "custom" value for scripts?) then the unused-genotypes notice (BACKLOG.md:153; PRE-RED questions: where it shows and its words); the order is an estimate by size, not ruled on. Other picker options: contributor tutorial, Japanese macaque file, harem-sire hole, Diagram deceased marker; the snapshot backfill needs its own scoping session; the 3.0.0 bump waits for release. 36 commits ahead of origin/master; the push changes R/, tests/ and vignettes/, so all four workflows run: read them.
+key_files: R/modGeneticValue.R:21 (imports) and :63 (the actionButton that followed the boxes); tests/testthat/test_geneticValueOptionBoxes.R:1 (the gate); NEWS.Rmd:223-225; vignettes/manual_components/_genetic_value_analysis.Rmd:41; BACKLOG.md:138-162 (the two items left)
+gotchas: grep a removed control by id, by label with the line wrap allowed, and by the word for its kind, then check the imports it strands (Learning 935); an unquoted echo ====== fails in zsh; the full suite, lint and check run one at a time, and no tracked file is edited while the suite runs (tests read the ledger and backlog files); the machine load was 25 to 46 from other processes and no benchmark block failed; the old runGeneKeepR pids 29511, 82416, 92900 still run, left alone; the BACKLOG line cites shift after any edit above them, so re-grep
+runtime_smoke: the colony capture script drove the real app through Chrome (95 of 95 steps) and the three Genetic Value pictures were read and opened for the owner; the opt-in E2E files (NPRC_RUN_E2E=true) were not run. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 36ef602df86c · manifest aa983075d6a2
+changelog_ref: S969 DONE entry
+commit: the close-out commit that carries this receipt; claim fb771fc23
 ```
 
 ```handoff

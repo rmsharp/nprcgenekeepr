@@ -127,8 +127,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       already say so, except one wording line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
       "largest average size" and now say "largest minimum group size (the score is the size of the smallest group)",
       gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three rulings, all taken S968** (the owner took the
-      recommended option each time; each is now its own READY item below): remove the "Upload list" choice, remove the two do-nothing
-      Genetic Value checkboxes, and show a notice when a one-file pedigree's genotypes go unused.
+      recommended option each time): the two do-nothing Genetic Value checkboxes were removed S969; removing the "Upload list"
+      choice and showing a notice when a one-file pedigree's genotypes go unused are the two READY items below.
       (3) *Left unsettled by the doc slices:* RO8 (Quarto slices 3-4 status) and the other ids in
       RO3 were reworded "not recorded" / "not re-checked"; AR3's "about 53" is attributed to
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
@@ -145,18 +145,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       and `tests/testthat/test_modBreedingGroups_livingPool.R:18,152-157`); and the six whole-tab pictures
       (`breeding_group_*.png`, all `#breedingGroups-moduleContainer` at `vignettes/articles/colony-manager-guide-screenshots.R:475-627`;
       `breeding_group_first_view.png` was opened and shows the three-choice list), retaken with the colony script
-      (about 3 min) and copied by name. Its own PRE-RED question: whether the server keeps a `"custom"` branch for a
-      script that passes it (the pool code treats `"custom"` and `"all"` alike today).
-- [ ] **Remove the two do-nothing Genetic Value checkboxes (READY, Effort S; ruled S968; strict TDD, every gate
-      asked)** -- "Calculate Genome Uniqueness" and "Calculate Mean Kinship" (`R/modGeneticValue.R:63-66`) are read by
-      nothing; `reportGV()` calculates both unconditionally and the tier ranking needs both. Ruled: remove both
-      (wiring them was left out because it cannot mean what the labels say). No calculated result changes.
-      **What it touches (grepped S968):** `tests/testthat/test_modGeneticValue.R:60-61,151-155,799-816`; a comment at
-      `tests/testthat/test-e2e-genetic-value-module.R:59-60`; the manual paragraph
-      `vignettes/manual_components/_genetic_value_analysis.Rmd:41-43` ("They currently have no effect"); and the three
-      Genetic Value pictures (`gva_*.png`, all `#geneticValue-moduleContainer`; `gva_calculating.png` was opened and
-      shows both boxes under Analysis Options), retaken. `docs/planning/shiny-module-conversion-plan.md:186` mentions them
-      in a plan (a dated record; leave it).
+      (about 3 min; S969's run took about 1.5) and copied by name. Its own PRE-RED question: whether the server keeps a
+      `"custom"` branch for a script that passes it (the pool code treats `"custom"` and `"all"` alike today).
+      **Grep it three ways (S969, Learning 935):** by the id and the value (`custom`, `Upload list`), by the label with a
+      line wrap allowed (a comment can split it across two lines), and by the kind (an E2E test title can say only
+      "source"); then check which `@importFrom` names the removal strands.
 - [ ] **Show a notice when a one-file pedigree's genotype columns go unused (READY, Effort S; ruled S968; strict TDD,
       every gate asked)** -- with "pedigree and genotypes in one file", columns named `allele_1`/`allele_2` load with
       0 errors and 0 warnings, the Changed Columns tab lists the rename to `allele1`/`allele2`, and the genotypes are then
