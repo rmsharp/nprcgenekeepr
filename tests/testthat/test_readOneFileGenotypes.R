@@ -251,3 +251,40 @@ test_that("blank and space-only labels count as missing", {
   expect_match(res$note, "3 different alleles (A, B, C) for 4 of 8 animals.",
                fixed = TRUE)
 })
+
+## An Excel upload reads every cell as text (the guide's callout on the Excel
+## read), so whole numbers arrive as "1", "2", "10". They are whole numbers all
+## the same: a file saved as xlsx and as csv has to give the same alleles.
+## Added S971 (RED amendment, owner's answer at the GREEN-to-RED gate): the
+## code was written in GREEN without a test, and a mutation that read such text
+## as labels was caught by no block.
+test_that("text that reads as whole numbers, as an Excel file gives them, is used as numbers", {
+  allele1 <- c("1", "2", "1", "2", "10", "10", "1", "2")
+  allele2 <- c("2", "2", "10", "1", "10", "1", "1", "")
+  ped <- oneFileWith(allele1 = allele1, allele2 = allele2)
+  res <- readOneFileGenotypes(ped)
+  expect_true(res$used)
+  expect_type(res$ped$first, "double")
+  expect_identical(res$ped$first, as.numeric(allele1))
+  expect_identical(res$ped$second, c(2, 2, 10, 1, 10, 1, 1, NA))
+  expect_identical(res$ped[names(ped)], ped)
+  expect_identical(
+    res$note,
+    paste0("Genotypes read from allele1 and allele2: 3 different alleles ",
+           "(1, 2, 10) for 7 of 8 animals."))
+})
+
+test_that("a column that mixes whole-number text with a label is read as labels and coded", {
+  allele1 <- c("1", "A", "1", "A", "B", "B", "1", "A")
+  allele2 <- c("A", "A", "B", "1", "B", "1", "1", "A")
+  ped <- oneFileWith(allele1 = allele1, allele2 = allele2)
+  res <- readOneFileGenotypes(ped)
+  codes <- oneFileCodes(ped$id, allele1, allele2)
+  expect_true(res$used)
+  expect_type(res$ped$first, "integer")
+  expect_identical(res$ped$first, codes$first)
+  expect_identical(res$ped$second, codes$second)
+  expect_setequal(unique(c(res$ped$first, res$ped$second)), 10001:10003)
+  expect_match(res$note, "3 different alleles (1, A, B) for 8 of 8 animals.",
+               fixed = TRUE)
+})
