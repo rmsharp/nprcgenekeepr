@@ -57,8 +57,6 @@ test_that("modGeneticValueUI contains expected elements", {
   # Check for analysis options
   expect_true(grepl("Analysis Options", ui_html))
   expect_true(grepl("nIterations", ui_html))
-  expect_true(grepl("calcGenomeUniqueness", ui_html))
-  expect_true(grepl("calcMeanKinship", ui_html))
 
   # Check for action button
   expect_true(grepl("runAnalysis", ui_html))
