@@ -98,27 +98,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 968 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; PRE-RED throughout, a decision-only session: no R code, tests or `man/`):** the
-owner's three rulings on docs-audit part 2's open code defects, asked as one `AskUserQuestion` of three questions (measured facts and the recommendation first); the owner took the
-recommended option each time: remove the "Upload list" Source choice (`R/modBreedingGroups.R:42`); remove the two do-nothing Genetic Value checkboxes (`R/modGeneticValue.R:63-66`);
-show a notice when a one-file pedigree's genotype columns go unused (`R/modInput.R:505-523`, cause `R/fixColumnNames.R:38`). Recorded as three READY items, `BACKLOG.md:138-169`, each
-with what it touches (grepped); the docs-audit item's "Three open rulings" now says all three were taken (`:129-131`). Nothing was built. Claim `1a1f6652d`; no RED, GREEN or REFACTOR.
-**Verified:** the 50 test files that mention `BACKLOG.md` or a ledger file: 0 failed, 0 errors, 16 skipped, 3,466 passed; `gva_calculating.png` opened (both boxes shown), the six Breeding
-Groups pictures' selectors read (all `#breedingGroups-moduleContainer`); ratchet 1/1, manifest `aa983075d6a2`. Full suite, lint and `devtools::check()` not run: no `R/`, `man/`, `tests/` or `vignettes/` file changed.
-**Handoff evaluation of S967: 9/10.** Helped: the next steps named the three rulings with exact cites and said one decision-only session takes all three, which this was; the S966 audit's
-table made re-probing unneeded; the cites held. Missing: which pictures show each control, and the Mate Pair paste-IDs pattern (`R/modMatePair.R:44,60,260`). Wrong: `BACKLOG.md:129-133` was `:129-132`.
-**Self-assessment: 8/10.** + claimed before probing; three questions answered first try; the picks recorded, not acted on; every new cite grepped. - the picture claims were in the question
-before I opened the pictures (they held; Learning 934); a `cd` drifted the working directory; four harness nudges for silence.
-**Next steps (recommended, not ruled on):** the three READY items, each its own strict-TDD session with a PRE-RED gate first (`BACKLOG.md:138`, `:150`, `:160`): the checkboxes (smallest),
-the "Upload list" removal, the notice (where it shows and its words are PRE-RED questions); the order is an estimate by size. Other options: the tutorial `:171`, the Japanese macaque file `:188`,
-the harem-sire hole `:206`, the Diagram deceased marker `:435`; the snapshot backfill `:226` needs its own scoping session; the 3.0.0 bump `:8` waits for release. 29 commits ahead of
-`origin/master`; the push carries S963-S967's `R/`, `man/` and `tests/` changes, so all four workflows run: read them.
-**Key files:** `BACKLOG.md:138-169`; `R/modBreedingGroups.R:42`, `R/modGeneticValue.R:63-66`, `R/modInput.R:505-523`; `vignettes/articles/colony-manager-guide-screenshots.R:371-404,475-627`.
-**Gotchas:** a `cd` in one Bash call persists, so use absolute paths; the new items' line cites shift after any edit above them, so re-grep; keep this file under about 56,700 B and every line
-under 280 B (the 25,000-token check trips near 56,800 B); the old `runGeneKeepR` pids 29511, 82416, 92900 still run, left alone.
+### What Session 969 Did
+**Deliverable:** remove the two do-nothing Genetic Value checkboxes, "Calculate Genome Uniqueness" and "Calculate Mean Kinship"
+(`R/modGeneticValue.R:63-66`; ruled S968, `BACKLOG.md:150-159`) (IN PROGRESS)
+**Started:** 2026-10-12 (owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; PRE-RED declared, strict TDD, every gate asked with `AskUserQuestion`)
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+**Orientation facts:** HEAD `e91ef493d` = both ledger frontiers, 0 pending receipts, no merges, no untracked files; 29 commits ahead of `origin/master`; CI 10 of 10 green;
+dashboard 96/100; context budget OK (this file 56,092 B before the claim); ratchet 1/1, manifest `aa983075d6a2`. Keep this file under about 56,700 B and every line under 280 B.
 
-### Sessions 947-967 (condensed S950 to S968; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-968 (condensed S950 to S969; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -164,6 +154,10 @@ claim `014892b04`, RED `8f21aedd8`, GREEN `6d224c590`, REFACTOR `5dfe2fd4f`; eva
 `pkgload::load_all()` after it (a block that reads a file sees it, one that runs a function does not; Learning 933); `devtools::document()` touched one man page, so read
 `git diff --stat`; `PROJECT_LEARNINGS.md` has no trailing newline until an append, so check the blank line before a new heading; the old `runGeneKeepR` pids 29511, 82416,
 92900 still run, left alone; the push changes `R/`, `man/` and `tests/`, so all four workflows run.
+S968: a decision session (no code): the owner took the recommended option on all three docs-audit part 2 rulings: remove the "Upload list" choice (`R/modBreedingGroups.R:42`),
+remove the two do-nothing Genetic Value checkboxes (`R/modGeneticValue.R:63-66`), show a notice for unused one-file genotypes (`R/modInput.R:505-523`); recorded as three READY
+items, `BACKLOG.md:138-169`; claim `1a1f6652d`; evaluation of S967 9/10, self 8/10. **Gotchas kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog
+item's line cites shift after any edit above it, so re-grep.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
