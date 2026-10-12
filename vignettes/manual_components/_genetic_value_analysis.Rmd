@@ -38,10 +38,6 @@ The left panel contains controls for configuring the analysis:
   high-uniqueness cutoff (default 10), and the low-kinship z-score cutoff
   (default 0.25).
 
-- **Calculate Genome Uniqueness** and **Calculate Mean Kinship**: Two
-  checkboxes, both checked. They currently have no effect: the analysis always
-  calculates both measures.
-
 - **Kinship Overrides (optional)**: Upload a CSV or Excel file with the columns
   `id1`, `id2` and `kinship` to replace the pedigree-derived kinship for the
   listed pairs.

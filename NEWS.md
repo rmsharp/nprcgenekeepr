@@ -230,6 +230,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   unlabeled column of leftover row numbers (such as 4, 5, 6, 9, 10) that
   were not the rank; the **rank** column, last in the table, still gives
   each animal's rank.
+- The Genetic Value Analysis tab no longer shows the "Calculate Genome
+  Uniqueness" and "Calculate Mean Kinship" check boxes. They did
+  nothing: the analysis works out both numbers whether or not they were
+  ticked.
 
 ## Breeding Group Formation
 
