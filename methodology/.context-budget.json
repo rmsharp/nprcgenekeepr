@@ -48,6 +48,20 @@
           "why": "This project's records open at '### What Session N Did' / '### Session N Handoff Evaluation ...' under the single ACTIVE TASK heading (the seed's '^## ' expect_min 2 pattern matched only 1 here — instrument-failed). If this matches nothing the file was restructured and every other check is measuring the wrong thing. No max: only the floor is asserted (S720 measured that max 0 is a literal bound, not a disable)." }
       ],
       "_": "Ceilings aligned to ONE remedy: max_bytes 65,536 is exactly the methodology_trim.py cadence this project chose (S720, owner-ratified — every trimmer run passes --budget-bytes 65536, recorded in CLAUDE.md), so a red here means a trim is owed, never a judgement call. max_tokens 25,000 is the read-cap fact and binds first for dense content (at 56,750 B). max_lines 1000 ~ 65,536 B / 69 B-per-line (this file's measured density, 79,738 B / 1,150 ln at S720) — the backstop for sparse growth, same trigger in the file's other unit; the seed's 400 was the source project's observed-read ceiling and would have gone red ~550 lines before the trim cadence owed anything, a standing two-trigger disagreement."
+    },
+    {
+      "path": "methodology/HANDOFFS.md",
+      "class": "on-demand",
+      "max_bytes": 262144,
+      "warn_bytes": 196608,
+      "_": "S965, owner-ratified numbers (BACKLOG item 'put HANDOFFS.md under the context-budget hook'). Class on-demand, NOT read-mandated: the protocol reads one receipt block through git, never the whole file, and a read-mandated class would add a token check capped at the 25,000-token read cap (about 56,750 B), which this file was already past at 87,830 B (measured S965: about 38,691 tokens, red on day one, and a 1,000 B receipt refused). warn_bytes 196,608 is the trimmer's Class A archive line; max_bytes 262,144 is the Read tool's whole-file refusal, crossed once, in S950, with nothing to say so. A warn means a trim is due: python3 methodology/methodology_trim.py --file methodology/HANDOFFS.md --budget-bytes 65536 --check, then the same with --write after the claim commit (the tool never commits; if it answers SRF_RED, --force is the owner's call). Pinned by tests/testthat/test_contextBudgetLedgers.R."
+    },
+    {
+      "path": "methodology/CHANGELOG.md",
+      "class": "on-demand",
+      "max_bytes": 262144,
+      "warn_bytes": 196608,
+      "_": "S965, the same two numbers and the same on-demand class as HANDOFFS.md (see its note for why not read-mandated). CHANGELOG.md crossed the 196,608 B line in S959 with no warning and was trimmed in S960. A warn means a trim is due: python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --check, then --write after the claim commit. Pinned by tests/testthat/test_contextBudgetLedgers.R."
     }
   ],
 
