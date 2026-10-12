@@ -70,16 +70,22 @@ roxygenParagraph <- function(pattern = findsParagraph) {
   if (length(hit) == 0L) NA_character_ else collapseSpace(hit[1L])
 }
 
-newGroupSentence <- paste0(
-  "the set of groups with the largest minimum group size"
-)
+newGroupSentence <- "the set of groups with the largest minimum group size"
 newScoreSentence <- "(the score is the size of the smallest group)"
+
+## The two places that carry the sentence, as readers; each is called inside a
+## test, after skipUnlessHelpFiles().
+helpPlaces <- list(
+  "man page" = manParagraph,
+  "roxygen block" = roxygenParagraph
+)
 
 ## Sanity checks on the two readers (green at HEAD). They prove the RED
 ## failures below are about the help text, not about readers that find nothing.
 test_that("both readers return the paragraph that says what groupAddAssign finds", {
   skipUnlessHelpFiles()
-  for (text in c(manParagraph(), roxygenParagraph())) {
+  for (read in helpPlaces) {
+    text <- read()
     expect_false(is.na(text))
     expect_match(text, "finds the largest group that can be formed", fixed = TRUE)
     expect_match(text, "more than 1 group is desired", fixed = TRUE)
@@ -88,31 +94,27 @@ test_that("both readers return the paragraph that says what groupAddAssign finds
 
 test_that("both readers return NA when no paragraph matches", {
   skipUnlessHelpFiles()
-  expect_true(is.na(manParagraph("no paragraph says this")))
-  expect_true(is.na(roxygenParagraph("no paragraph says this")))
+  for (read in helpPlaces) {
+    expect_true(is.na(read("no paragraph says this")))
+  }
 })
 
 ## The failing tests (RED at HEAD): both places still say "largest average
 ## size".
-test_that("the man page names the largest minimum group size and the score", {
-  skipUnlessHelpFiles()
-  text <- manParagraph()
-  expect_false(is.na(text))
-  expect_match(text, newGroupSentence, fixed = TRUE, info = text)
-  expect_match(text, newScoreSentence, fixed = TRUE, info = text)
-})
-
-test_that("the roxygen block names the largest minimum group size and the score", {
-  skipUnlessHelpFiles()
-  text <- roxygenParagraph()
-  expect_false(is.na(text))
-  expect_match(text, newGroupSentence, fixed = TRUE, info = text)
-  expect_match(text, newScoreSentence, fixed = TRUE, info = text)
-})
+for (place in names(helpPlaces)) {
+  test_that(paste0("the ", place, " names the largest minimum group size and the score"), {
+    skipUnlessHelpFiles()
+    text <- helpPlaces[[place]]()
+    expect_false(is.na(text))
+    expect_match(text, newGroupSentence, fixed = TRUE, info = text)
+    expect_match(text, newScoreSentence, fixed = TRUE, info = text)
+  })
+}
 
 test_that("neither the man page nor the roxygen block says average", {
   skipUnlessHelpFiles()
-  for (text in c(manParagraph(), roxygenParagraph())) {
+  for (read in helpPlaces) {
+    text <- read()
     expect_false(is.na(text))
     expect_false(grepl("average", text, ignore.case = TRUE), info = text)
   }
