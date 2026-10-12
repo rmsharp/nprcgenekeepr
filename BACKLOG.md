@@ -5,19 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Optional: a pop-up covers the "Twin/Zygosity Relations" heading in 9 of the 14 pictures S941 retook
-      (found S941, 2026-10-07; READY (optional), Effort S; strict TDD, capture script only)** -- read off
-      the pictures: `pb_5_focal_animals_small`, `pb_selection_large_focal_group`,
-      `pb_select_trim_for_focal_animals`, `pb_trimmed_for_focal_animals`, `pb_focal_animals_before_clear`,
-      `pb_focal_animals_after_clear`, `diagram_show_names`, `diagram_affected_shading` and
-      `diagram_twin_connectors` carry a blue "Updated focal animals: N IDs" (or "Focal animals cleared")
-      pop-up that hides part of the heading (the committed pictures had the same kind of pop-up a little
-      lower, so the plan's "toast noise" allowance covered it). The helper `wait_for_notifications_clear()`
-      (`tests/testthat/helper-captureHarness.R:149`) already clears it before the legend and QC Summary
-      pictures. Pick it up only if the owner wants the guide cleaner; each added wait needs a test pin
-      like `test_captureHarness.R`'s legend block, then a retake of those 9. S942's Phase 3b pictures add 2:
-      `age_plot.png` (3 pop-ups over the plot's right edge) and `gva_calculating.png` (2, over empty space).
-
 - [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
       tool's 262,144 B whole-file refusal is refused (found S951, 2026-10-09; DECISION NEEDED (the two ceilings),
       Effort S; config only, `.context-budget.json`)** -- `HANDOFFS.md` crossed 262,144 B in S950's close-out
