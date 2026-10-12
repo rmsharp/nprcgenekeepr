@@ -18,7 +18,7 @@
 #' \strong{54}(6), 700-707.
 #' @importFrom DT DTOutput renderDT
 #' @importFrom shiny NS div h3 fluidRow column wellPanel h4 icon numericInput
-#' @importFrom shiny checkboxInput sliderInput actionButton tabsetPanel tabPanel
+#' @importFrom shiny actionButton tabsetPanel tabPanel
 #' @importFrom shiny br downloadButton plotOutput tableOutput includeHTML
 #' @importFrom shiny conditionalPanel
 #' @family Shiny modules
