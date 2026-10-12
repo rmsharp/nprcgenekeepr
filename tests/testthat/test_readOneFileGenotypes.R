@@ -249,6 +249,19 @@ test_that("a blank first and second beside one lone allele column are all named 
   expect_identical(res$note, unusablePairNote(c("first", "second", "allele1")))
 })
 
+## Added S972 (RED amendment, owner's answer at the GREEN-to-RED gate): a
+## mutation that listed the names in the file's order instead of the app's
+## lookup order was caught by no block, because every case above has its columns
+## in the lookup order already. This one passes at once, so no RED failure is
+## claimed for it.
+test_that("the line names the columns in the order the app looks for them, not the order they sit in the file", {
+  ped <- oneFileWith(allele2 = oneFileNums2, first = oneFileNums1)
+  expect_identical(names(ped)[6:7], c("allele2", "first"))
+  res <- readOneFileGenotypes(ped)
+  expect_false(res$used)
+  expect_identical(res$note, unusablePairNote(c("first", "allele2")))
+})
+
 ## Must not change: a pair with an allele in only one of its two columns is
 ## read, and the line's own count says how few animals have both (measured
 ## S972 through the real Input module: "for 0 of 8 animals"). Passes before the
