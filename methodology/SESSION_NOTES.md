@@ -98,26 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 969 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD, every gate asked and answered, REFACTOR taken):** the Genetic Value Analysis tab no longer has the two
-do-nothing check boxes, "Calculate Genome Uniqueness" and "Calculate Mean Kinship" (`R/modGeneticValue.R:63-66`; nothing read them). The owner approved one NEWS sentence (`NEWS.Rmd:223-225`; precedent
-`NEWS.Rmd:533`). New gate `tests/testthat/test_geneticValueOptionBoxes.R` (4 blocks, 19 expectations: UI, manual bullet, NEWS.Rmd, NEWS.md). Manual bullet deleted (`_genetic_value_analysis.Rmd:41`), three
-`gva_*.png` retaken (95/95 steps, 93 px shorter), two unused shiny imports dropped (`R/modGeneticValue.R:21`).
-**Gates:** claim `fb771fc23`; RED `5167d5dfa` (10 of 19 failed); GREEN `1d5e8c07f` `1f7c80114` `a329b2deb`; REFACTOR `5cacf6168`; close-out = the commit carrying this note.
-**Verified:** full suite 3,442 blocks, 0 failed, 0 errors after GREEN and REFACTOR; lint 0; `devtools::check()` 0/0/0 twice; ratchet 1/1, results `36ef602df86c`, manifest `aa983075d6a2`; 4 mutations each
-fail only their own block; pictures opened. The opt-in E2E files were not run.
-**Handoff evaluation of S968: 9/10.** Helped: every cite held; the item listed the test places, manual bullet and pictures. Missing: the sibling E2E comment `test-e2e-genetic-value-detailed.R:41-42` (its
-label wraps over two lines), an E2E title saying "checkboxes", the NEWS decision, the stranded imports. Wrong: nothing (the capture took about 1.5 min, not 3).
-**Self-assessment: 8/10.** + claimed first; the owner's sentence shown whole, both questions answered first try; mutation checks; pictures opened before the long checks. - read two of three pictures myself;
-repeated the unquoted `echo ======` zsh error I had just written up; several harness nudges. Learning 935.
-**Next steps (recommended, not ruled on):** the two READY items left, each its own strict-TDD session, PRE-RED first: the "Upload list" removal (`BACKLOG.md:138`; 6 pictures; PRE-RED: keep a hidden
-`"custom"`?) then the notice (`:153`; PRE-RED: where it shows, its words); the order is an estimate by size. 36 commits ahead of `origin/master`; the push changes `R/`, `tests/` and `vignettes/`, so all four
-workflows run: read them.
-**Key files:** `R/modGeneticValue.R:21,63`; `tests/testthat/test_geneticValueOptionBoxes.R`; `NEWS.Rmd:223-225`; `BACKLOG.md:138-162`.
-**Gotchas:** grep a removed control by id, by wrapped label and by its kind, then check stranded imports (Learning 935); quote `echo` separators in zsh; edit no tracked file while the suite runs; BACKLOG cites
-shift after any edit above them; keep this file under about 56,700 B and every line under 280 B; the old `runGeneKeepR` pids 29511, 82416, 92900 still run, left alone.
+### What Session 970 Did
+**Deliverable:** remove the "Upload list" Source choice from Breeding Groups (`R/modBreedingGroups.R:42`; ruled S968, `BACKLOG.md:138`) (IN PROGRESS)
+**Started:** 2026-10-12 (owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; PRE-RED declared, strict TDD, every gate asked with `AskUserQuestion`)
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+**Orientation facts:** HEAD `d0691eafe` = both ledger frontiers, 0 pending receipts, no merges, no untracked files; 36 commits ahead of `origin/master`; CI 10 of 10 green;
+dashboard 96/100; context budget OK (this file 56,266 B before the claim); ratchet 1/1, manifest `aa983075d6a2`. Keep this file under about 56,700 B and every line under 280 B.
 
-### Sessions 947-968 (condensed S950 to S969; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-969 (condensed S950 to S970; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -167,6 +157,10 @@ S968: a decision session (no code): the owner took the recommended option on all
 remove the two do-nothing Genetic Value checkboxes (`R/modGeneticValue.R:63-66`), show a notice for unused one-file genotypes (`R/modInput.R:505-523`); recorded as three READY
 items, `BACKLOG.md:138-169`; claim `1a1f6652d`; evaluation of S967 9/10, self 8/10. **Gotchas kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog
 item's line cites shift after any edit above it, so re-grep.
+S969: the Genetic Value tab no longer has the two do-nothing check boxes "Calculate Genome Uniqueness" and "Calculate Mean Kinship" (`R/modGeneticValue.R:63-66`; gate
+`test_geneticValueOptionBoxes.R`, 4 blocks, 19 expectations; the owner's NEWS sentence `NEWS.Rmd:223-225`; 3 `gva_*.png` retaken; two unused shiny imports dropped; strict TDD, REFACTOR
+taken; claim `fb771fc23`, RED `5167d5dfa`, GREEN `1d5e8c07f` `1f7c80114` `a329b2deb`, REFACTOR `5cacf6168`; evaluation of S968 9/10, self 8/10). **Gotchas kept (S969):** grep a removed
+control by id, by wrapped label and by its kind, then check stranded imports (Learning 935); quote `echo` separators in zsh; edit no tracked file while the suite runs.
 **Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
 caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
 **Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
