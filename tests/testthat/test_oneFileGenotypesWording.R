@@ -115,7 +115,10 @@ test_that("the colony script takes the one-file picture last, after choosing the
   expect_match(script, "dataInput-pedigreeFileTwo", fixed = TRUE)
   expect_match(script, "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
                fixed = TRUE)
-  expect_gte(sum(grepl("app\\$click\\(\"dataInput-getData\"\\)", code)), 2L)
+  ## the older Warnings-picture block needs exactly one app$click(
+  ## "dataInput-getData") and one set_inputs to QC Summary, so this step
+  ## clicks with click_element_safe(): any mention of the button counts
+  expect_gte(sum(grepl("dataInput-getData", code, fixed = TRUE)), 2L)
 })
 
 test_that("the shipped one-file example is the rhesus MHC pedigree with its genotyped animals' labels", {
