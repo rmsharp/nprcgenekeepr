@@ -52,18 +52,24 @@ checkGenotypeFile <- function(genotype) {
   } else if (any(tolower(cols) %in% c("first", "second"))) {
     stop("Genotype file cannot have a column named 'first' or 'second'.")
   } else {
+    collisions <- character(0L)
     for (i in 2L:3L) {
-      collided <- collidingNumbers(genotype[, i])
+      collided <- unique(collidingNumbers(genotype[, i]))
       if (length(collided)) {
-        numberStr <- stri_c(format(collided, scientific = FALSE), sep = ", ")
-        stop(stri_c("Possible collision on allele(s) interpreted as a number
-                    > 10000: ", numberStr, collapse = ", "))
+        numberStr <- stri_c(format(collided, scientific = FALSE, trim = TRUE),
+                            collapse = ", ")
+        collisions <- c(collisions,
+                        stri_c(numberStr, " in column '", cols[i], "'"))
       }
       # Anything goes
       # if (any(stri_detect_regex(alleles, "[;:\"']+"))) {
       #   stop(stri_c("Alleles have one or more of the following characters,
       #               which are not currently supported: ", ";:\"'"))
       # }
+    }
+    if (length(collisions)) {
+      stop("Possible collision on allele(s) interpreted as a number > 10000: ",
+           stri_c(collisions, collapse = "; "), ".")
     }
   }
   names(genotype) <- c("id", cols[2L:length(cols)])

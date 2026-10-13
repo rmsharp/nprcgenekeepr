@@ -11,8 +11,8 @@
 #' \code{"full"} (both \code{chrom} and \code{pos} present; \code{cM} is
 #' optional even within \code{"full"}), \code{"partial"} (exactly one of
 #' \code{chrom}/\code{pos} present), or \code{"none"} (neither present). A
-#' value counts as present when it is not \code{NA}, so an empty-string
-#' \code{chrom} counts as present.
+#' value counts as present when it is not \code{NA}; an empty or all-space
+#' \code{chrom} is treated as missing and is returned as \code{NA}.
 #'
 #' @details
 #' A locus-metadata table has one row per locus (not per individual x
@@ -73,6 +73,10 @@ checkLocusMetadata <- function(locusMetadata) {
 
   locusMetadata$locus <- as.character(locusMetadata$locus)
   locusMetadata$chrom <- as.character(locusMetadata$chrom)
+  ## An empty or all-space chrom names no chromosome. It is missing, as the
+  ## app's reader already makes it (nzchar(NA) is TRUE, so an NA stays NA).
+  isBlankChrom <- !nzchar(trimws(locusMetadata$chrom))
+  locusMetadata$chrom[isBlankChrom] <- NA_character_
 
   hasChrom <- !is.na(locusMetadata$chrom)
   hasPos <- !is.na(locusMetadata$pos)
