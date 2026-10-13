@@ -99,12 +99,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 978 Did
-**Deliverable:** the F_ROH warning plus a notice above the F_ROH table (`BACKLOG.md:139`; `computeGenomicROH()` and `output$sequenceRohTable`; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-13 16:20 CDT
-**Status:** Session claimed. Owner pick at the Phase 0 picker: option 1 of 4, the recommended one (READY, Effort S to M). PRE-RED: one scope question (does `markerLdBlock()` get the same notice) goes to the owner before RED.
-**Phase 0:** HEAD 3b0c27f81 equals both ledger frontiers; 0 pending receipts; no merges; no untracked files; CI 10 of 10 green; dashboard 96/100; context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical);
-ratchet 1/1 (`b7e3fe417ae0`, matches S977's receipt). Measured: the shipped sequence example has all 1,000 sidecar loci in its genotype file, so the notice would not show on it and `marker_genetics_genomic_roh.png` stays (S977's estimate was wrong).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 1 of 4; Pre-RED answer "F_ROH only"; strict TDD, every gate asked and answered, REFACTOR taken):** the F_ROH warning plus a notice (`BACKLOG.md:139`, removed). `computeGenomicROH()` warns once, naming the
+full-coverage locus-file loci the matrix lacks (`R/computeGenomicROH.R:112-118`); the Genomic ROH tab shows an orange box above its table (`R/modMarkerGenetics.R:1102-1128`; "2 loci" / "1 locus", 10 names then "and N more");
+one internal helper feeds both (`R/sidecarLociMissingFromMatrix.R:22,39`). No number, picture or LD Block change; the owner chose no LD Block notice (a missing locus there drops only its own pairs).
+**Found while measuring:** the shipped sequence example has all 1,000 loci in both files, so S977's "the picture may change" was wrong (S001 stays 0.0535). Under `testServer()` the F_ROH table's output observer runs `computeGenomicROH()` at each
+upload, so its warning arrives at `setInputs()`, not at a later read (a RED test corrected in GREEN). Learning 944.
+**Gates:** claim `1c350f152`; RED `6d0c309f5` (17 new blocks, 15 failed with 28 failed expectations, 0 errors, 0 skipped); GREEN `d197e6d13` (code, help), `51497b6e7` (two RED tests corrected), `7fc65dec4` (NEWS, guide), `e14e8a923` (tests
+tightened); REFACTOR `fd6b57544` (`manText()`, `roxygenText()` in `helper-pageText.R`).
+**Verified:** suite 3,589 blocks, 11,748 expectations, 0 failed, 0 errors, 187 skipped (after the REFACTOR, on the final notes); check 0/0/0; lint 0; ratchet 1/1 (`87bf45b84eb8`); real app (full files no notice; 12 missing: 10 names
+and "and 2 more"; 1 missing: "1 locus"; pictures opened for the owner); 18 mutants caught, 4 test gaps closed first.
+**Handoff evaluation of S977: 8/10.** Helped: exact lines, the LD Block question named, the stripped-`coverage` gotcha. Missing: the picture estimate was one read of two CSVs away. Wrong: nothing (the estimate was labelled).
+**Self-assessment: 8/10.** + measured both example pairs before the gate; showed the notice in the real app before the long runs; mutants found 4 test gaps. - a RED test assumed a lazy read; a sanity block asserted a phrase GREEN removes; a wrong background wait.
+**Next (each needs an owner pick):** the two small marker fixes (`BACKLOG.md:139`), the jmac file, the harem-sire hole, the kinship2 features, another audit cluster. 116 commits are ahead of `origin/master`, none seen by CI.
+**Key files:** `R/computeGenomicROH.R:112-118`; `R/sidecarLociMissingFromMatrix.R:22,39`; `R/modMarkerGenetics.R:289,1102-1128`; `test_computeGenomicROH.R:311`; `test_modMarkerGenetics.R:1947`; `test_genomicRohLocusDocs.R`; `helper-pageText.R`.
+**Gotchas:** the helper needs `checkLocusMetadata()`'s output (it reads `coverage`), the opposite of `computeGenomicROH()`'s own input; collect warnings across the whole upload-and-read with `withCallingHandlers()`; read help with `roxygenText()` (only `#'` lines);
+the locus file upload is shared by the Linkage and Genomic ROH tabs, so one combined file would name the linkage-only loci on the F_ROH tab; never `git stash` here.
 
 ### Sessions 947-977 (condensed S950 to S978; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
@@ -382,65 +391,20 @@ fifth confirmations). Claims `ee54ef006`, `ee5632c86`, `64ef6bf03`; close-outs `
 local time (`date`), not UTC; push by SHA so the claim commit stays local; a `sleep N; <query>` as the `run_in_background` command itself
 re-invokes the session on exit.
 
-### What Session 901 Did (condensed S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Characterized the 10 red shard verify scripts (of 54): none is a real loss; reported upstream as `KJ5HST/methodology#93`
-(`BACKLOG.md` item BLOCKED on it). Report `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; Learning 869. Claim `14a59bb4b`.
-Handoff evaluation of S900: 9/10. Self 8/10. **Gotchas kept:** run `gh repo view <repo> --json hasIssuesEnabled` before promising to
-post; to see what a `.verify.sh` matched, run a patched scratch copy, never the shipped script; diff a HANDOFFS record by `session:
-S<N>`, not the first handoff block.
-
-### What Session 900 Did (condensed S901; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Pushed S899's 6 local commits (`77ccb50f6..f43ff9501`, by SHA) and read CI: all four push workflows and all 8 jobs green on
-`f43ff9501` (R-CMD-check 24m46s). At the owner's request it then pushed the two close-out commits (`f43ff9501..ac110d665`)
-and the addendum (`ac110d665..529bb031b`): **no CI run started for either, so GitHub honours the 21-entry `paths-ignore`
-list**; the `BACKLOG.md` live-check item was removed. Claim `16d1fd75d`, close-out `ac110d665`, addendum `529bb031b`.
-Handoff evaluation of S899: 9/10. Self 8/10.
-**Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; a "no run" result needs a wait
-(runs normally queue within 3 s) and a control query on a commit that does have runs; `quality_ratchet.py --run` can pass the
-120 s foreground limit; zsh reads a leading `=` word as an expansion, so quote `echo` separators.
-
-### What Session 899 Did (condensed S900; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-lint, pkgdown, R-CMD-check and test-coverage skip a push that changes only notes and tooling files: each `push:` trigger
-carries the same 21-entry `paths-ignore:` (14 root notes/methodology `.md`, 4 methodology scripts, `.context-budget.json`,
-`.quality-gates.json`, `docs/**`); `pull_request` and every other trigger are unchanged. Owner rulings: notes and tooling
-only, not a literal `.Rbuildignore` mirror; pushes only. Strict TDD: claim `22f45005d`, RED `40f1495f4`, GREEN `3178b741c`,
-REFACTOR `436e656fe`, close-out `f43ff9501` (pushed S900, CI green). New test `tests/testthat/test_workflowPathsIgnore.R`
-(11 tests). Handoff evaluation of S898: 8/10. Self 8/10. Why not a literal mirror (Learning 868): lint reads `data-raw/*.R`
-and `.lintr`, pkgdown builds from `_pkgdown.yml` and `vignettes/articles/`, and R-CMD-check and test-coverage see no
-build-ignored root file.
-**Gotchas kept:** a `*.md` wildcard would match shipped `README.md` and `NEWS.md` (the test refuses it); do not `eval()` a
-whole test file to borrow its helpers, because that runs its tests.
-
-### What Session 898 Did (condensed S899; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The owner ruled on the 7 parked Effort-S items (none declined); each ruling sits beside its item in `BACKLOG.md`:
-`isAddedRecord()`, `highlightNearest` and Candidate C kept open; CI skip = a `paths-ignore` list (S899 shipped it);
-verify-script bug = report it upstream to the `rmsharp/methodology` fork; rhesus comment = reword it; row order = accept it
-and change only the tests. Re-measured first (Learning 867): 10 of 54 verify scripts FAIL (not 1); the raw row-order count
-is 1460 (not 1456). Claim `2fffad3d8`, close-out `77ccb50f6`, push-record addendum `d13665e25` (the owner pushed
-`18610c7e3..77ccb50f6`). Handoff evaluation of S897: 9/10. Self 8/10.
-**Gotchas kept:** count verify scripts with a loop that prints only failures and a tally, never `head`; the first FAIL line
-of each is `bash <s> 2>&1 | grep -m1 '^FAIL'`; a stored BACKLOG number can predate later code, so re-run it before a ruling;
-`AskUserQuestion` takes at most 4 questions per call; BACKLOG items are long wrapped lines, so edit by script with
-asserted anchors.
-
-### What Session 897 Did (condensed S898; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Trimmed `CHANGELOG.md` with `methodology_trim.py --force --cut 2026-10-03 --write`: 311 of 329 entries archived to
-`docs/archive/CHANGELOG-through-2026-10-03.md`, 258,724 B -> 25,172 B. The `--force` override of `SRF_RED` (7.9455) and the
-clean day seam were the owner's calls. Claim `86b537e3e`, trim `f4b181c69`, close-out `18610c7e3` (pushed with S896's
-addendum, `e9d1bdf6e..18610c7e3`); the push-record addendum `4313562b4` is local. Handoff evaluation of S896: 9/10. Self 8/10.
-**Gotchas kept:** `--force` is needed (`SRF_RED`) and the override is the owner's call; `--cut <YYYY-MM-DD>` gives a clean
-day seam and the newest date is refused; the tool re-bases markdown links in archived entries, so a byte compare shows
-false differences (Learning 866); it writes its own ledger entry and never commits, so stage the ledger, shard and
-`.verify.sh` together; use the plain `gh run list` form (a `--json` variant once returned stale S680-era runs).
-
-### What Session 896 Did (condensed S897; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Compressed four `BACKLOG.md` blocks (PED_GV closure narrative 20 -> 13 lines, standalone-package item 37 -> 34, chromote item
-23 -> 17, kinship2 preamble 20 -> 13; file 533 -> 514 lines, 46,731 -> 43,766 B). Claim `0a34f4787`, close-out `e9d1bdf6e`,
-push-record addendum `fa28a54b0`; the owner pushed the first two. Handoff evaluation of S895: 9/10. Self 8/10.
-**Gotchas kept:** search ledger headings for both `S<N>` and `(Session N)` / `[issue #N]`; before replacing a fact with a
-pointer, regex the ledger entry body for it; `BACKLOG.md` compression blocks A and B run into the next item with no blank
-line; `.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore them in greps; the PED_GV open paragraph has one very
-long line, so edit it with a short `old_string`.
+### Sessions 896-901 (condensed S897 to S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S896: four `BACKLOG.md` blocks compressed (file 533 to 514 lines; claim `0a34f4787`, close-out `e9d1bdf6e`). S897: `CHANGELOG.md` trimmed with `methodology_trim.py --force --cut 2026-10-03 --write`, 258,724 B to 25,172 B (the
+`--force` override of `SRF_RED` was the owner's call; claim `86b537e3e`, trim `f4b181c69`, close-out `18610c7e3`). S898: the owner ruled on the 7 parked Effort-S items, none declined (`isAddedRecord()`, `highlightNearest` and
+Candidate C kept open; CI skip = a `paths-ignore` list; verify-script bug reported upstream; rhesus comment reworded; row order accepted); re-measured first: 10 of 54 verify scripts FAIL, the raw row-order count is 1460
+(claim `2fffad3d8`, close-out `77ccb50f6`). S899: lint, pkgdown, R-CMD-check and test-coverage skip a push that changes only notes and tooling files (one 21-entry `paths-ignore:` in each `push:` trigger;
+`test_workflowPathsIgnore.R`, 11 tests; Learning 868; strict TDD: claim `22f45005d`, RED `40f1495f4`, GREEN `3178b741c`, REFACTOR `436e656fe`, close-out `f43ff9501`). S900: pushed S899's 6 commits by SHA
+(`77ccb50f6..f43ff9501`; all four push workflows and 8 jobs green) and two close-outs (`f43ff9501..529bb031b`; no CI run started, so `paths-ignore` is honoured). S901: characterized the 10 red shard verify scripts, none a
+real loss (upstream `KJ5HST/methodology#93`; `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; Learning 869; claim `14a59bb4b`). Evaluations 8 to 9/10, self 8/10 each.
+**Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; a "no run" result needs a wait and a control query on a commit that has runs; `quality_ratchet.py --run` can pass the 120 s
+foreground limit; zsh reads a leading `=` word as an expansion; a `*.md` wildcard would match shipped `README.md` and `NEWS.md`; do not `eval()` a whole test file to borrow its helpers; count verify scripts with a loop that
+prints only failures and a tally; a stored `BACKLOG.md` number can predate later code, so re-run it before a ruling; `AskUserQuestion` takes at most 4 questions per call; `BACKLOG.md` items are long wrapped lines, so edit by
+script with asserted anchors; `--cut <YYYY-MM-DD>` gives a clean day seam and the trimmer re-bases links in archived entries (a byte compare shows false differences, Learning 866); the trimmer writes its own ledger entry and
+never commits, so stage the ledger, shard and `.verify.sh` together; search ledger headings for both `S<N>` and `(Session N)` / `[issue #N]`; `.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore them in greps; run `gh
+repo view <repo> --json hasIssuesEnabled` before promising to post; to see what a `.verify.sh` matched, run a patched scratch copy; diff a `HANDOFFS.md` record by `session: S<N>`.
 
 ### Sessions 892-895 (condensed S896 and S962; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S892: `HANDOFFS.md` trimmed (24 receipts, 259,859 B to 149,289 B, `--force --write`; claim `d5e140140`, trim `4def45b83`). S893: two red-CI causes fixed in tests only
