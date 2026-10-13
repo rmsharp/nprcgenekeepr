@@ -91,9 +91,10 @@
 #' animals, whose apparent uniqueness is an artifact of unknown parentage),
 #' \code{fe} (founder equivalents),
 #' \code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
-#' standard error of \code{fg}, computed from the same gene drop; a single
-#' colony-level number, \code{NA} when a contributing founder is retained in
-#' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{neGD} (gene
+#' standard error of \code{fg}, computed from the same gene drop as
+#' \code{fg}; a single colony-level number, \code{NA} when a contributing
+#' founder is retained in zero gene-drop iterations -- see
+#' \code{\link{calcFGSE}}), \code{neGD} (gene
 #' diversity retained in the founding gene pool, \code{1 - 1 / (2 * fg)}; a
 #' colony-level scalar beside \code{fg}, \code{NA} when \code{fg} is \code{NA};
 #' see \code{\link{calcGeneDiversity}}), \code{neSexRatio} (the demographic
@@ -109,6 +110,9 @@
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
 #' those founders), and \code{total} (the total number of known founders).
+#' \code{fg}, \code{fgSE} and \code{neGD} come from a gene drop that ignores
+#' genotypes; it is the same gene drop that gives \code{gu} when the pedigree
+#' has none.
 #' The founder lists hold only \emph{known} founders: an animal with both
 #' parents unknown whose id was generated to stand in for an unknown parent is
 #' left out, because that placeholder may be a known founder, another animal
@@ -291,8 +295,26 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     detail = "Calculating Founder Equivalents", value = 1L, reset = TRUE
   )
 
+  # S975 (BACKLOG.md:139): founder genome equivalents come from a gene drop that
+  # ignores the genotypes. A genotyped animal starts from its own real alleles,
+  # so a founder whose only descendants are genotyped passes no simulated allele
+  # on, is retained in 0 iterations, and FG, fgSE and neGD were NA. The drop
+  # above (which gu uses) is that drop when no animal has a code; otherwise a
+  # second, silent one is made after it, so gu keeps its random numbers.
+  hasCodes <- !is.null(genotype) &&
+    any(!is.na(genotype$first) | !is.na(genotype$second))
+  founderAlleles <- if (hasCodes) {
+    geneDrop(
+      ids = ped$id, sires = ped$sire, dams = ped$dam,
+      gen = ped$gen, genotype = NULL, n = guIter,
+      updateProgress = NULL
+    )
+  } else {
+    alleles
+  }
+
   # Calculating founder equivalents and founder genome equivalents
-  feFg <- calcFEFG(ped, alleles)
+  feFg <- calcFEFG(ped, founderAlleles)
 
   # Issue #82 Slice 3: the Monte Carlo sampling standard error of the founder
   # genome equivalents (FG), computed from the SAME gene drop that produces fg
@@ -300,7 +322,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # number that rides next to fg -- it is NOT a per-animal report column. NA
   # (with a warning) when a contributing founder is retained in zero iterations,
   # the same degeneracy calcFEFG reports for FG itself.
-  fgSE <- calcFGSE(ped, alleles)
+  fgSE <- calcFGSE(ped, founderAlleles)
 
   # Calculating known founders
   founders <- ped[isFounder(ped), ]
