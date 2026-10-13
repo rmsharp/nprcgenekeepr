@@ -65,3 +65,20 @@ oneFileCodes <- function(ids, first, second) {
   merged <- merged[match(ids, merged$id), ]
   list(first = merged$first, second = merged$second)
 }
+
+## The package's shipped one-file example (375 animals, 31 of them genotyped, in
+## first_name and second_name), shared by test_genotypeTutorialsWording.R and
+## test_reportGVPedigreeOnlyFounderGenome.R.
+oneFileExamplePath <- function() {
+  system.file("extdata", "examples",
+              "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
+              package = "nprcgenekeepr")
+}
+
+## That file as the Input tab's QC step leaves it, before its genotype columns
+## are read (readOneFileGenotypes() does that).
+oneFileExampleStudbook <- function() {
+  suppressWarnings(suppressMessages(
+    qcStudbook(getPedigree(oneFileExamplePath()), reportErrors = FALSE,
+               reportChanges = FALSE)))
+}

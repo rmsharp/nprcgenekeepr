@@ -47,21 +47,14 @@ articlePath <- file.path("vignettes", "articles", "genetic-value-analysis.qmd")
 manualPath <- file.path("vignettes", "manual_components",
                         "_genetic_value_analysis.Rmd")
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
-exampleFile <- "obfuscated_rhesus_mhc_ped_with_genotypes.csv"
 chunkLabel <- "genotypes-from-label-columns"
-
-examplePath <- function() {
-  system.file("extdata", "examples", exampleFile, package = "nprcgenekeepr")
-}
 
 ## What the Genetic Value tab does with the example's genotypes: the same
 ## pedigree through reportGV() with and without them, the same seed, 200
 ## drops. Returns how many animals have genotypes and how many of those got a
 ## different genome uniqueness.
 exampleGenotypeEffect <- function() {
-  ped <- suppressWarnings(suppressMessages(
-    qcStudbook(getPedigree(examplePath()), reportErrors = FALSE,
-               reportChanges = FALSE)))
+  ped <- oneFileExampleStudbook()
   withGenotypes <- readOneFileGenotypes(ped)$ped
   without <- ped[, setdiff(names(ped), c("first", "second", "first_name",
                                          "second_name")), drop = FALSE]
@@ -105,7 +98,7 @@ inputTabStudbook <- function() {
                       fileType = "fileTypeExcel", separator = ",",
                       minSireAge = "0.1", minDamAge = "0.1")
     session$setInputs(pedigreeFileTwo = list(
-      name = basename(examplePath()), datapath = examplePath()))
+      name = basename(oneFileExamplePath()), datapath = oneFileExamplePath()))
     session$setInputs(getData = 1)
     session$flushReact()
     out <<- session$getReturned()$cleanedStudbook()

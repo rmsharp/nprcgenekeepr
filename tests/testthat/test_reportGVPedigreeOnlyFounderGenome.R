@@ -53,12 +53,7 @@ smallGenotypedPed <- function(codes = TRUE, allNA = FALSE, only = "both") {
 ## The shipped one-file example, read as the Input tab reads it (375 animals,
 ## 31 genotyped), every animal in the population.
 exampleGenotypedPed <- function() {
-  path <- system.file("extdata", "examples",
-                      "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
-                      package = "nprcgenekeepr")
-  ped <- suppressWarnings(suppressMessages(
-    qcStudbook(getPedigree(path), reportErrors = FALSE, reportChanges = FALSE)))
-  ped <- readOneFileGenotypes(ped)$ped
+  ped <- readOneFileGenotypes(oneFileExampleStudbook())$ped
   setPopulation(ped, ids = ped$id)
 }
 
