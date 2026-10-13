@@ -98,21 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 972 Did
-**Deliverable, DONE (owner pick, option 2 of 4; Effort S to M; scope: points 1 to 3 plus the four Input-tab E2E files; strict TDD, every gate asked, REFACTOR taken):** the one-file genotype leftovers (`BACKLOG.md:139`). The QC
-Summary line for allele columns that are found but cannot be read now names them (`R/readOneFileGenotypes.R:41-54`); it said "No genotype columns were found" in five measured cases of one cause. The Input page's two cells,
-the Input page, guide and NEWS say it; a real `.xlsx` upload is pinned.
-**Gates:** claim `df994cc95`; RED `f0c095fe1` (12 blocks, 9 failed); GREEN `3b2e3f821` `4e373676b` `d9f3604d5` `e7f44dc02`; RED amendment `c20735b89`; REFACTOR `7bacac579`.
-**Verified:** full suite 3,501 blocks, 0 failed, 0 errors; `devtools::check()` 0/0/0; lint 0; ratchet 1/1 (`83639fc42269`); 10 mutations caught; real app driven from a scratch install; four Input E2E files 21 blocks, 0 failed.
-**Handoff evaluation of S971: 9/10.** Helped: exact lines, test files, gotchas. Missing: "two untested edges" were five cases of one cause; no word that a real-app or E2E run needs a scratch install. Wrong: nothing.
-**Self-assessment: 8/10.** + ten real-app cases measured before the scope question; every gate asked; a mutation found a gap. - two wasted harness runs; an unquoted `echo =====` again; a drive without `NOT_CRAN`. Learning 938.
-**Next steps (recommended):** the Breeding Groups candidate list (`BACKLOG.md:149`), or the tutorials item (`BACKLOG.md:139`, DECISION NEEDED). 65 commits ahead of `origin/master` (66 with this close-out); the push runs
-all four workflows: read them (pkgdown is the first render of the guide's new paragraphs).
-**Key files:** `R/readOneFileGenotypes.R:41-61`; `test_readOneFileGenotypes.R`, `test_modInputOneFileGenotypes.R` (`runOneFile(ext = "xlsx")`), `test_oneFileGenotypesWording.R`, `helper-oneFileGenotypes.R`; `input_format.html:94-99,180,186`.
-**Gotchas:** a real-app or E2E run loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`;
-check a surviving mutation for equivalence; wait for `uptime` before E2E (other projects reached load 145); keep this file under about 56,500 B, lines under 280 B; `runGeneKeepR` pids 29511, 82416, 92900 left alone.
+### What Session 973 Did
+**Deliverable:** let a user give Breeding Groups their own candidate list (`BACKLOG.md:149`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort M; strict TDD, every gate asked) (IN PROGRESS)
+**Started:** 2026-10-12
+**Status:** Session claimed. Work beginning: the PRE-RED scope questions come first (a file, a paste box or both; what to say about an id not in the pedigree or not alive; where the choice shows and its label).
+**Ledger:** `CHANGELOG: pending` -- the claim entry says in progress; Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-971 (condensed S950 to S972; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-972 (condensed S950 to S973; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -163,6 +155,10 @@ S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreed
 S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`, `R/modInput.R:550-572,617-618`; whole numbers and text labels; Excel text that reads as
 numbers stays numbers; strict TDD, REFACTOR taken; evaluation of S970 8/10, self 7/10). **Gotchas kept (S971):** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe`
 (`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout` mutation harness; wait on a run's `EXIT=`, not the outer shell.
+S972: the QC Summary names allele columns that are found but cannot be read, instead of saying none were found (`R/readOneFileGenotypes.R:41-61`, `genotypePairLabels`); the Input page's two cells,
+the guide and NEWS say it; a real `.xlsx` upload and the four Input E2E files are pinned (strict TDD, REFACTOR taken; evaluation of S971 9/10, self 8/10). **Gotchas kept (S972):** a real-app or E2E run
+loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`;
+a surviving mutation can be equivalent (`[1:2]` equals `[-3]` with 3 labels); wait for `uptime` before E2E.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
