@@ -369,6 +369,7 @@ getEmptyErrorLst
 getErrorTab
 getFocalAnimalPed
 getGenotypes
+getGVGenotype
 getIdsWithOneParent
 getIndianOriginStatus
 getLkDirectAncestors
