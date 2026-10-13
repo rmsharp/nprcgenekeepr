@@ -99,10 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 973 Did
-**Deliverable:** let a user give Breeding Groups their own candidate list (`BACKLOG.md:149`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort M; strict TDD, every gate asked) (IN PROGRESS)
-**Started:** 2026-10-12
-**Status:** Session claimed. Work beginning: the PRE-RED scope questions come first (a file, a paste box or both; what to say about an id not in the pedigree or not alive; where the choice shows and its label).
-**Ledger:** `CHANGELOG: pending` -- the claim entry says in progress; Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 1 of 4; Effort M; strict TDD, every gate asked, REFACTOR taken):** the Breeding Groups Source box has a third choice, "My own list", with an "Animal IDs:" box that forms
+groups from exactly the living animals typed (`R/modBreedingGroups.R:43,51,546,564,703,711,733`; `R/parseIdList.R`). An id not in the pedigree stops the run and is named; an animal not alive is left out and named; a
+blank box asks for an id.
+**Gates:** claim `a805ec60d`; RED `82c1f1b1e` (36 blocks); GREEN `902529459` `00a074939` `c29bc2c29` `c39d16a28` `172117939` `c8111f71f` `798cb9a0e`; RED amendments `54d30d9ec` (guidance box), `2738da038` ("seven
+animals"), `755593927` (the other Sources stay silent); REFACTOR `d7dccdf4a` (three copies of the ID reader become one).
+**Verified:** full suite 3,533 blocks, 11,534 expectations, 0 failed, 0 errors; `devtools::check()` 0/0/0; lint 0; ratchet 1/1 (`2e899e57794c`); 14 of 14 mutants caught (M8 survived the first run); real app driven
+from a scratch install; 7 pictures viewed, 2 opened.
+**Handoff evaluation of S972: 9/10.** Helped: the item's own pre-RED questions, its line cites, its warning that a retake draws a new count, the scratch-install recipe. Missing: the in-app guidance page
+`group_formation.html` in its change list. Wrong: nothing.
+**Self-assessment: 7/10.** + facts measured before each question; four gates answered first try; a mutation found a real gap. - two RED amendments from an incomplete inventory (the guidance box; the count word the
+item warned of); a skipped mutant; an unquoted `echo =====` again. Learning 939.
+**Next steps (recommended):** the tutorials item (`BACKLOG.md:139`, DECISION NEEDED), the jmac file, or the harem-sire hole. 80 commits are ahead of `origin/master` (with this close-out); the push runs all four
+workflows: read them (pkgdown is the first render of the guide's S971 to S973 paragraphs; an estimate, no local quarto render).
+**Key files:** `R/modBreedingGroups.R:43-52,538-564,698-740`; `R/parseIdList.R`; `test_modBreedingGroups_ownList.R`, `test_parseIdList.R`, `test_breedingGroupsSourceChoices.R`, `test_captureHarness.R` (the `ownList`
+blocks); `colony-manager-guide.qmd:614-628,658`; `inst/extdata/ui_guidance/group_formation.html:7-11`.
+**Gotchas:** no opt-in E2E block was added (the real-app drive script was scratch); `obfuscated_rhesus_mhc_ped.csv` has no dead animals; a retake draws the last box's count, so `test_guideBreedingGroupsWording.R`
+follows the picture (seven now); grep a choice's prose by meaning, not only by label; `runGeneKeepR` pids 29511, 82416, 92900 left alone.
 
 ### Sessions 947-972 (condensed S950 to S973; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`

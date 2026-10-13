@@ -128,7 +128,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       "largest average size" and now say "largest minimum group size (the score is the size of the smallest group)",
       gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three rulings, all taken S968** (the owner took the
       recommended option each time): the two do-nothing Genetic Value checkboxes were removed S969; the "Upload list" choice
-      was removed S970 (building a candidate list is its own item below); the unused-genotypes notice was redirected S970
+      was removed S970 and the candidate list it promised was built S973 ("My own list"); the unused-genotypes notice was redirected S970
       to making the genotype columns work (its item below).
       (3) *Left unsettled by the doc slices:* RO8 (Quarto slices 3-4 status) and the other ids in
       RO3 were reworded "not recorded" / "not re-checked"; AR3's "about 53" is attributed to
@@ -145,21 +145,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (how a script gets the same codes: `addGenotype()` on a pedigree's label columns; nothing new is exported, so the
       checklist does not require it) and the Genetic Value article and manual (neither mentions genotypes today). Which of
       these the owner wants is the decision.
-
-- [ ] **Let a user give Breeding Groups their own candidate list (DECISION NEEDED -- a file upload or a paste-IDs box,
-      Effort M; owner-requested S970; strict TDD, every gate asked)** -- S970 removed the "Upload list" Source choice,
-      which had no control to give it a list and returned what "All available" returns; the Source box now offers
-      "Top ranked" and "All available". This is the feature that choice promised. Where a pickup starts: the Mate Pair
-      tab already has a paste-IDs box (`R/modMatePair.R:44,60`, parsed at `:410`); the pool step is `R/modBreedingGroups.R:524-541`
-      (any value other than `"topRanked"` yields every pedigree id, then only living animals stay, owner-ruled S938); the
-      module's one `fileInput` is `ancestryRulesFile` (`:78`). Its own PRE-RED questions: a file, a paste box or both; what
-      happens to an id that is not in the pedigree or not alive (say so, or drop it quietly); where the new choice shows and
-      its label. Changes with it: the manual's Source bullets (`vignettes/manual_components/_breeding_group_formation.Rmd`),
-      the guide's Breeding Groups paragraph (`colony-manager-guide.qmd:593-599`), `NEWS.Rmd`, and the six
-      `breeding_group_*.png` pictures (colony script, `colony-manager-guide-screenshots.R:475-627`). A retake draws a new
-      random last-box count that the guide's sex-ratio sentence and `test_guideBreedingGroupsWording.R` pin (six since S970),
-      so grep the count words ("four", "six") before RED. S970's removal grep found prose that counts the choices ("all three
-      Source choices", "an uploaded list"): grep for those words too.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
