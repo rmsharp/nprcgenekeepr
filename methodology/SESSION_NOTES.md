@@ -98,25 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 977 Did
-**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** a blank allele is missing, not the text `"NA/NA"` (`BACKLOG.md:139`, removed): `buildMarkerGenotypeMatrix()` gives `NA` when either allele is `NA`
-(`R/buildMarkerGenotypeMatrix.R:54`); `markerExpectedHeterozygosity()` gives `NA` for a locus nobody is typed at, `meanHe` over the typed loci, `NA_real_` when none (`R/markerHeterozygosity.R:105-119`). Pre-RED answers, both the recommended option: `NA` not `NaN`; a
-one-allele-blank record is fully missing.
-**Found while measuring:** the shipped `example_sequence_genotypes.csv` has 2,070 blank-allele records, so every number on it moves (mean He 0.5332 to 0.4951; mean F_ROH at 3 SNPs 0.0808 to 0.0560); `marker_genetics_genomic_roh.png` retaken, the other 8 pictures
-unchanged; no test pinned them. Learning 943.
-**Gates:** claim `cc73b35dc`; RED `417fc941e` (17 blocks, 39 expectations failed, 0 errors); GREEN `abf2a7864`, NEWS `c0bacf00a`, picture `2be38cc0a`; REFACTOR `c27900010` (`helper-markerBlankAlleleFixtures.R`).
-**Verified:** suite 3,571 blocks, 11,683 expectations, 0 failed, 0 errors, 187 skipped (before and after the REFACTOR); check 0/0/0; lint 0; ratchet 1/1 (`b7e3fe417ae0`); real app (X/Y/Z with a blank `Y,L4`: Ho 0.75, 0.3333, 0.25, mean He 0.3993; shipped example mean He
-0.4951); 9 mutants of the two functions caught, twice.
-**Handoff evaluation of S976: 8/10.** Helped: exact lines, the "ship together" gotcha, both Pre-RED questions named. Missing: the sequence example's 2,070 blank records and the stale picture (item tagged Effort S). Wrong: nothing.
-**Self-assessment: 8/10.** + measured the shipped example before the gate; every number in the gate text was probe-measured; RED and the mutants failed for the right reasons. - my Phase 0 report said the ratchet results file was absent (wrong path,
-`methodology/.quality-gates-results.json`; its hash matched); two probes failed first; long silent waits.
-**Next (each needs an owner pick):** the F_ROH warning plus notice (first `BACKLOG.md` item after the docs-audit item; its notice may change the picture retaken here, an estimate, not measured), the two small marker fixes, the jmac file, the harem-sire hole, the
-kinship2 features, another audit cluster. 108 commits are ahead of `origin/master`, none seen by CI.
-**Key files:** `R/buildMarkerGenotypeMatrix.R:54`; `R/markerHeterozygosity.R:105-119`; `tests/testthat/helper-markerBlankAlleleFixtures.R`; `test_markerBlankAlleleHelp.R`; `vignettes/articles/marker-genetics-screenshots.R:259-277`.
-**Gotchas:** a script's `read.csv()` keeps `""` in a text column, which the ruling did not cover (the app reads it as `NA`); `computeGenomicROH()` takes the raw sidecar, not `checkLocusMetadata()`'s output (`R/modMarkerGenetics.R:817`); run a capture before a mutation
-harness, never together; never `git stash` here.
+### What Session 978 Did
+**Deliverable:** the F_ROH warning plus a notice above the F_ROH table (`BACKLOG.md:139`; `computeGenomicROH()` and `output$sequenceRohTable`; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-13 16:20 CDT
+**Status:** Session claimed. Owner pick at the Phase 0 picker: option 1 of 4, the recommended one (READY, Effort S to M). PRE-RED: one scope question (does `markerLdBlock()` get the same notice) goes to the owner before RED.
+**Phase 0:** HEAD 3b0c27f81 equals both ledger frontiers; 0 pending receipts; no merges; no untracked files; CI 10 of 10 green; dashboard 96/100; context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical);
+ratchet 1/1 (`b7e3fe417ae0`, matches S977's receipt). Measured: the shipped sequence example has all 1,000 sidecar loci in its genotype file, so the notice would not show on it and `marker_genetics_genomic_roh.png` stays (S977's estimate was wrong).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-976 (condensed S950 to S977; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-977 (condensed S950 to S978; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -170,6 +160,9 @@ S976: the eight marker-genetics code candidates of docs-audit part 2 re-checked 
 claims still real, 2 moderate: a blank allele becomes `"NA/NA"`, F_ROH follows the genotype file's locus list; the owner took the recommended option on all three rulings, now three READY `BACKLOG.md` items;
 evaluation of S975 9/10, self 8/10). **Gotchas kept (S976):** fix the builder and He together (else an all-blank locus gives He 1.0 in the app); the Marker Genetics tab has no warning handler; the module never
 passes the sidecar to the checker (`R/modMarkerGenetics.R:553,633`); `getGenotypes()` reads blanks as NA but `read.csv()` keeps `""` in a text column; start probe scripts in the project root.
+S977: a blank allele is missing, not the text `"NA/NA"` (`R/buildMarkerGenotypeMatrix.R:54`; `R/markerHeterozygosity.R:105-119`; the shipped sequence example has 2,070 blank-allele records, so its numbers moved and
+`marker_genetics_genomic_roh.png` was retaken; strict TDD, REFACTOR taken; evaluation of S976 8/10, self 8/10). **Gotchas kept (S977):** a script's `read.csv()` keeps `""` in a text column, which the ruling did not cover;
+`computeGenomicROH()` takes the raw sidecar, not `checkLocusMetadata()`'s output (`R/modMarkerGenetics.R:817`); run a capture before a mutation harness, never together.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder

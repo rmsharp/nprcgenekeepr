@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S978
+date: 2026-10-13
+status: pending
+active_task: IN PROGRESS -- the F_ROH warning plus a notice above the F_ROH table (BACKLOG.md:139; R/computeGenomicROH.R:105-115,132-134 and R/modMarkerGenetics.R output$sequenceRohTable; owner pick at the Phase 0 picker, option 1 of 4, the recommended one; strict TDD, PRE-RED)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S977
 date: 2026-10-13
 status: complete
