@@ -24,8 +24,8 @@
 #' alleles at that locus, sorted (by string collation, so locale-dependent
 #' for mixed-case alleles) and joined by \code{"/"} (e.g. \code{"A/B"}), or
 #' \code{NA} when that individual has no genotype record at that locus. A
-#' record with a missing allele gives the string \code{"NA/NA"} (not
-#' \code{NA}); \code{\link{checkMarkerGenotypeFile}} does not reject such
+#' record with a missing allele gives \code{NA}, the same as a record that is
+#' not in the file; \code{\link{checkMarkerGenotypeFile}} does not reject such
 #' rows.
 #'
 #' @seealso \code{\link{checkMarkerGenotypeFile}}, \code{\link{markerKinship}}
@@ -51,6 +51,7 @@ buildMarkerGenotypeMatrix <- function(genotype) {
   hi <- pmax(genotype$allele1, genotype$allele2)
   # A "lo/hi" genotype string, not a file path -- file.path() doesn't apply.
   genoStr <- paste0(lo, "/", hi) # nolint: paste_linter.
+  genoStr[is.na(genotype$allele1) | is.na(genotype$allele2)] <- NA_character_
 
   mat[cbind(match(genotype$id, ids), match(genotype$locus, loci))] <- genoStr
   mat

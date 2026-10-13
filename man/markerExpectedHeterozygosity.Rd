@@ -17,11 +17,11 @@ that locus).}
 A list with two elements: \code{perLocus}, a named numeric vector
 of expected heterozygosity per locus (names taken from
 \code{colnames(genotypeMatrix)}); and \code{meanHe}, the unweighted mean
-of \code{perLocus} across all loci. A locus with no genotyped individual
-gets \code{1} (the empty sum of squared frequencies is 0), not \code{NA},
-and that value is included in \code{meanHe}; unlike
-\code{\link{markerObservedHeterozygosity}}, which returns \code{NA} for
-an individual with no genotyped locus.
+of \code{perLocus} across the loci that have a value. A locus with no
+genotyped individual gets \code{NA} and is left out of \code{meanHe};
+\code{meanHe} is \code{NA} when no locus has a genotyped individual, the
+same treatment \code{\link{markerObservedHeterozygosity}} gives an
+individual with no genotyped locus.
 }
 \description{
 Computes Nei's gene diversity (the standard \eqn{He = 1 - \sum p_i^2}

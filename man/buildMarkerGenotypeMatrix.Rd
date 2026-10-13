@@ -17,8 +17,8 @@ column per unique \code{locus}. Each cell holds that individual's two
 alleles at that locus, sorted (by string collation, so locale-dependent
 for mixed-case alleles) and joined by \code{"/"} (e.g. \code{"A/B"}), or
 \code{NA} when that individual has no genotype record at that locus. A
-record with a missing allele gives the string \code{"NA/NA"} (not
-\code{NA}); \code{\link{checkMarkerGenotypeFile}} does not reject such
+record with a missing allele gives \code{NA}, the same as a record that is
+not in the file; \code{\link{checkMarkerGenotypeFile}} does not reject such
 rows.
 }
 \description{
