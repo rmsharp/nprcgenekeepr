@@ -99,24 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 972 Did
-**Deliverable:** the leftovers of the one-file genotype work (`BACKLOG.md:139`; owner pick at the Phase 0 picker, option 2 of 4; DECISION NEEDED for points 1 and 5, READY for 2 to 4,
-Effort S to M) (IN PROGRESS)
-**Started:** 2026-10-12 18:13 CDT
-**Status:** Session claimed. Work beginning: the PRE-RED scope question first (the item has five points and a session has one deliverable); strict TDD, every gate asked via `AskUserQuestion`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 2 of 4; Effort S to M; scope: points 1 to 3 plus the four Input-tab E2E files; strict TDD, every gate asked, REFACTOR taken):** the one-file genotype leftovers (`BACKLOG.md:139`). The QC
+Summary line for allele columns that are found but cannot be read now names them (`R/readOneFileGenotypes.R:41-54`); it said "No genotype columns were found" in five measured cases of one cause. The Input page's two cells,
+the Input page, guide and NEWS say it; a real `.xlsx` upload is pinned.
+**Gates:** claim `df994cc95`; RED `f0c095fe1` (12 blocks, 9 failed); GREEN `3b2e3f821` `4e373676b` `d9f3604d5` `e7f44dc02`; RED amendment `c20735b89`; REFACTOR `7bacac579`.
+**Verified:** full suite 3,501 blocks, 0 failed, 0 errors; `devtools::check()` 0/0/0; lint 0; ratchet 1/1 (`83639fc42269`); 10 mutations caught; real app driven from a scratch install; four Input E2E files 21 blocks, 0 failed.
+**Handoff evaluation of S971: 9/10.** Helped: exact lines, test files, gotchas. Missing: "two untested edges" were five cases of one cause; no word that a real-app or E2E run needs a scratch install. Wrong: nothing.
+**Self-assessment: 8/10.** + ten real-app cases measured before the scope question; every gate asked; a mutation found a gap. - two wasted harness runs; an unquoted `echo =====` again; a drive without `NOT_CRAN`. Learning 938.
+**Next steps (recommended):** the Breeding Groups candidate list (`BACKLOG.md:149`), or the tutorials item (`BACKLOG.md:139`, DECISION NEEDED). 65 commits ahead of `origin/master` (66 with this close-out); the push runs
+all four workflows: read them (pkgdown is the first render of the guide's new paragraphs).
+**Key files:** `R/readOneFileGenotypes.R:41-61`; `test_readOneFileGenotypes.R`, `test_modInputOneFileGenotypes.R` (`runOneFile(ext = "xlsx")`), `test_oneFileGenotypesWording.R`, `helper-oneFileGenotypes.R`; `input_format.html:94-99,180,186`.
+**Gotchas:** a real-app or E2E run loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`;
+check a surviving mutation for equivalence; wait for `uptime` before E2E (other projects reached load 145); keep this file under about 56,500 B, lines under 280 B; `runGeneKeepR` pids 29511, 82416, 92900 left alone.
 
 ### Sessions 947-971 (condensed S950 to S972; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
 (`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
 --budget-bytes 65536 --write`, no `--force`). S952-S953: the owner's origin and funding sentences everywhere, the NIH grants limited to version 1.0 and earlier (`test_originFundingWording.R`, 16 blocks).
-S954: a decision session: with no focal animals the Pedigree Browser flags the living animals; built S955 (`R/modPedigree.R:362-372`, 20 new blocks, strict TDD).
-S956: the 21 guide pictures that predate that change are retaken and four sentences quote them (`colony-manager-guide.qmd:445,:626,:628`; strict TDD).
-S957: a decision, no code: the seven old-style `panel panel-*` boxes (the Home tab's six, `R/appUI.R:98-158`, and one per breeding group, `R/modBreedingGroups.R:984-989`)
-stay plain on purpose (the owner ruled from a before/after picture; `BACKLOG.md:8-20` removed; evaluation of S956 9/10, self 8/10).
-S958: `getAncestors()` carries on when a parent has no row of its own in the tree and stops with a message naming an asked-about animal that is not in it
-(`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`; strict TDD; `BACKLOG.md:73-87` removed; evaluation of S957 9/10, self 8/10). Hashes and scores for S947-S960 are in
-`CHANGELOG.md` and `HANDOFFS.md`.
+S954-S955: with no focal animals the Pedigree Browser flags the living animals (decided S954, built S955: `R/modPedigree.R:362-372`, 20 new blocks). S956: the 21 guide pictures that predate it are retaken and four
+sentences quote them (`colony-manager-guide.qmd:445,:626,:628`). S957: a decision, no code: the seven old-style `panel panel-*` boxes (`R/appUI.R:98-158`, `R/modBreedingGroups.R:984-989`) stay plain on purpose
+(the owner ruled from a before/after picture). S958: `getAncestors()` carries on when a parent has no row of its own and stops with a message naming an asked-about animal that is not in the tree
+(`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`). Strict TDD where code changed; evaluations 9/10, self 8/10. Hashes and scores for S947-S960 are in `CHANGELOG.md` and `HANDOFFS.md`.
 S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are deleted from the manual introduction and the knitted README; a guard block in
 `test_originFundingWording.R` keeps any live page from saying it (strict TDD, REFACTOR taken; evaluation of S958 9/10, self 8/10).
 S960: `CHANGELOG.md` trimmed, 200,518 B to 33,981 B (135 of 156 records in `docs/archive/CHANGELOG-through-2026-10-09.md`; housekeeping, no TDD gates;
@@ -156,24 +160,18 @@ wrapped label and by its kind, then check stranded imports (Learning 935); quote
 S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; the server's pool code stays, a stale `"custom"` acts as "All available"; gate
 `test_breedingGroupsSourceChoices.R`; NEWS sentence `NEWS.Rmd:276-278`; six `breeding_group_*.png` retaken; strict TDD, REFACTOR taken; evaluation of S969 8/10, self 7/10). **Gotchas kept (S970):** grep a removed choice by id, wrapped label, kind AND count words
 ("all three", "an uploaded list") and a picture's random counts before RED (Learning 936); read `uptime` before a benchmark failure; the owner's two instructions are `BACKLOG.md:139,152`.
-S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`, `R/modInput.R:550-572,617-618`; whole numbers and text labels; the first
-pair present of first/second, first_name/second_name, allele1/allele2; Excel text that reads as numbers stays numbers; Input page, manual, guide with one picture, NEWS, a shipped example; strict TDD,
-REFACTOR taken; claim `6c4f2f755`, REFACTOR `3a861c85b`, close-out `e66dd5efa`; evaluation of S970 8/10, self 7/10; leftovers `BACKLOG.md:139`). **Gotchas kept (S971):** mutate new code before the
-REFACTOR gate (Learning 937); new capture steps use `click_element_safe` (`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout` mutation harness; wait on a
-run's `EXIT=`, not the outer shell; keep this file under about 56,500 B (the 25,000-token ceiling bites first), every line under 280 B.
-**Gotchas kept (S956):** diff a fresh capture run against the committed pictures before listing what to retake; a change to shown text stales every picture of it; a random run decides its
-caption's number, so change the test pin first; the colony script takes about 3 min; removing a `BACKLOG.md` block shifts later cites, so re-grep.
-**Gotchas kept (S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new
-results hash, so cite the last run only.
-**Gotchas kept (S959):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a
-scratch-installed HEAD (two render-date lines change).
+S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`, `R/modInput.R:550-572,617-618`; whole numbers and text labels; Excel text that reads as
+numbers stays numbers; strict TDD, REFACTOR taken; evaluation of S970 8/10, self 7/10). **Gotchas kept (S971):** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe`
+(`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout` mutation harness; wait on a run's `EXIT=`, not the outer shell.
+**Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
+`CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
 for the other, so a raw-versus-QC fixture lists both parents or neither (S958);
 print `skipped` beside `failed` in a RED tally; under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
 whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
 assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
 `test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
-of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; use absolute paths after any `cd`; old processes left alone:
+of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause; old processes left alone:
 `runGeneKeepR` pids 29511, 82416, 92900;
 the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`;
 sweep with `git grep`, never `grep -r` (it walks

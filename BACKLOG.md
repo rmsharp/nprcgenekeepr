@@ -136,20 +136,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Small leftovers of the one-file genotype work (DECISION NEEDED for points 1 and 5, READY for 2 to 4, Effort S to M;
-      found S971; strict TDD, every gate asked)** -- S971 shipped the feature (`R/readOneFileGenotypes.R:30`, the QC Summary
-      line at `R/modInput.R:617-618`, the Input page, the manual, the guide with one picture, NEWS) and left these. (1) *Owner's
-      wording:* the Input page's `first` and `second` rows still describe the column as an "integer code of the first allele"
-      (`inst/extdata/ui_guidance/input_format.html:178,184`) while their last cell now says "Whole numbers or text labels.".
-      (2) *Two untested edges:* two allele columns that do not pair (for example `first` and `allele2`), and a pair whose cells
-      are all blank, both get the line "No genotype columns were found ...", which is untrue because columns exist; the fix
-      needs a RED test and a new sentence from the owner. (3) *No real `.xlsx` upload* is run through the Input module: Excel
-      text is pinned at helper level only (`test_readOneFileGenotypes.R`, the two blocks of S971's RED amendment 2). (4) The
-      opt-in E2E files (`NPRC_RUN_E2E=true`) were not run. (5) *Tutorials:* the owner said S971 needs "much more documentation
-      and augmentation of the tutorials"; done are the Input page, the manual and the guide; not done are
-      `vignettes/a2interactive.Rmd` (how a script gets the same codes: `addGenotype()` on a pedigree's label columns; nothing
-      new is exported, so the checklist does not require it) and the Genetic Value article and manual (neither mentions
-      genotypes today). Which of (5) the owner wants is the decision.
+- [ ] **Grow the tutorials for the one-file genotype work (DECISION NEEDED, Effort S to M; owner-requested S971, left open
+      S972; strict TDD where a sentence is pinned)** -- S971 shipped the feature and the owner said it needs "much more
+      documentation and augmentation of the tutorials"; S972 finished the item's other four points (the Input page's two
+      cells, the third form of the QC Summary line, a real-`.xlsx` pin, the four Input-tab E2E files; `CHANGELOG.md` S972
+      DONE). Done for the tutorials: the Input page, the manual (`vignettes/manual_components/_input.Rmd:29-32`) and the
+      guide (`vignettes/articles/colony-manager-guide.qmd:255-269`, one picture). Not done: `vignettes/a2interactive.Rmd`
+      (how a script gets the same codes: `addGenotype()` on a pedigree's label columns; nothing new is exported, so the
+      checklist does not require it) and the Genetic Value article and manual (neither mentions genotypes today). Which of
+      these the owner wants is the decision.
 
 - [ ] **Let a user give Breeding Groups their own candidate list (DECISION NEEDED -- a file upload or a paste-IDs box,
       Effort M; owner-requested S970; strict TDD, every gate asked)** -- S970 removed the "Upload list" Source choice,
