@@ -28,8 +28,9 @@
 ## from D x E) plus a second family, founders H and I and their only child J,
 ## who is genotyped. H and I have no other descendant, so with J's real alleles
 ## neither can pass a simulated allele on. `codes = FALSE` leaves the genotype
-## columns off; `allNA = TRUE` gives the columns with no code in them.
-smallGenotypedPed <- function(codes = TRUE, allNA = FALSE) {
+## columns off; `allNA = TRUE` gives the columns with no code in them; `only`
+## codes J on both alleles ("both"), or on one allele only ("first", "second").
+smallGenotypedPed <- function(codes = TRUE, allNA = FALSE, only = "both") {
   ped <- data.frame(
     id   = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"),
     sire = c(NA, NA, "A", "A", NA, "D", "D", NA, NA, "H"),
@@ -42,8 +43,8 @@ smallGenotypedPed <- function(codes = TRUE, allNA = FALSE) {
     ped$first <- rep(NA_integer_, nrow(ped))
     ped$second <- rep(NA_integer_, nrow(ped))
     if (!allNA) {
-      ped$first[ped$id == "J"] <- 10001L
-      ped$second[ped$id == "J"] <- 10002L
+      if (only != "second") ped$first[ped$id == "J"] <- 10001L
+      if (only != "first") ped$second[ped$id == "J"] <- 10002L
     }
   }
   ped
@@ -168,6 +169,24 @@ test_that("genome uniqueness on the example is still the genotype drop's", {
   ## 18 of the 375 animals have a nonzero gu at threshold 1 (measured S975).
   expect_gt(sum(nonzero), 10L)
   expect_equal(unname(shown[nonzero]), unname(by$gu[nonzero]))
+})
+
+## Passes before and after the change. The Input tab accepts a row with one
+## allele only ("at least one allele in it"), so a code in either column counts:
+## S975 mutants that read `first` only, or needed both codes, survived the
+## blocks above without this one.
+test_that("an animal coded on one allele only still gives the pedigree-only FG, SE and GD", {
+  for (only in c("first", "second")) {
+    ped <- smallGenotypedPed(only = only)
+    run <- runGV(ped)
+    expect_false(any(grepl(founderWarning, run$warnings, fixed = TRUE)),
+                 info = only)
+    hand <- handRun(ped)
+    want <- founderScalars(hand$ped, hand$pedigreeOnly)
+    expect_equal(run$gv$fg, want$fg, info = only)
+    expect_equal(run$gv$fgSE, want$fgSE, info = only)
+    expect_equal(run$gv$neGD, want$neGD, info = only)
+  }
 })
 
 ## Passes before and after the change: with no codes there is one drop, so the
