@@ -191,6 +191,17 @@ test_that("a2interactive.Rmd has a 'Using known genotypes' subsection inside the
                          "reportGV", "Pedigree(s) and genotypes in one file"))
 })
 
+## S974, the owner's ruling at the GREEN finding: with the genotypes the
+## example gives reportGV() two "Founder genome equivalents undefined"
+## warnings (fg, fgSE and neGD are NA), and the tutorial hides them and shows
+## genome uniqueness only. The finding is a BACKLOG item of its own.
+test_that("the subsection's chunk hides the reportGV() warnings, as the owner ruled", {
+  header <- grep(paste0("^```\\{r ", chunkLabel, "[,}]"),
+                 sourceLines(scriptPath), value = TRUE)
+  expect_length(header, 1L)
+  expect_true(any(grepl("warning = FALSE", header, fixed = TRUE)))
+})
+
 test_that("the subsection's chunk runs on its own and gives reportGV() genotypes", {
   skip_on_cran()
   env <- chunkEnv()
