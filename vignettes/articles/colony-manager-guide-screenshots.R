@@ -475,6 +475,24 @@ do_step("navigate to Breeding Groups", {
 shot(app, "breeding_group_first_view.png",
      selector = "#breedingGroups-moduleContainer")
 
+# breeding_group_own_list.png -- the Source box on "My own list" with eight
+# living animals of the example pedigree pasted into the Animal IDs box
+# (BACKLOG.md:149, S973). The typed ids are pinned by test_captureHarness.R:
+# eight different living animals of data(examplePedigree), on one line.
+do_step("choose My own list and paste eight animal IDs", {
+  app$set_inputs(`breedingGroups-animalSource` = "custom", wait_ = FALSE)
+  app$set_inputs(
+    `breedingGroups-customAnimalIds` = "1QBKW9, Y3CJ5A, 1SPLS8, S5H1GC, R5AYJK, YFCIHJ, 5XVTVH, WKY2SZ",
+    wait_ = FALSE)
+  app$wait_for_idle(timeout = 10000)
+})
+shot(app, "breeding_group_own_list.png",
+     selector = "#breedingGroups-moduleContainer")
+# The 1-group formation below ranks by genetic value, so the Source goes back.
+do_step("put the Source back on Top ranked", {
+  app$set_inputs(`breedingGroups-animalSource` = "topRanked", wait_ = FALSE)
+})
+
 # breeding_group_1.png -- kept name, updated framing (1 group desired)
 do_step("set Number of groups = 1 and Form Groups", {
   app$set_inputs(`breedingGroups-nGroups` = 1, wait_ = FALSE)
