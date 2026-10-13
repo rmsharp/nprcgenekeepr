@@ -273,9 +273,10 @@ longitudinal monitoring of colony genetic health.
   `ancestryRules` argument of `groupAddAssign()`, and
   `reportAncestryViolations()` for existing groups. An example rules file and
   pedigree ship with the package.
-- The **Source** choice on the Breeding Group Formation tab no longer offers
-  "Upload list". It had no place to give it a list, so it formed groups from
-  every living animal, exactly as "All available" does.
+- The **Source** choice "Upload list", which had no place to give it a list, is
+  now "My own list". Paste the animal IDs into the box that appears. Groups are
+  formed from those that are alive; an ID that is not in the pedigree stops the
+  run and is named, and an animal that is not alive is left out and named.
 
 ## Mate Pair Analysis
 
