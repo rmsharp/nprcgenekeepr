@@ -476,6 +476,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   genotypes were not used before, now uses them, so its Genetic Value
   results can change.
 
+- Fixed: Founder genome equivalents, their standard error and gene
+  diversity are worked out from the pedigree alone, so genotypes no
+  longer make them NA.
+
 **Minor**
 
 - Fixed: on the Marker Genetics tab, building the de-identified export

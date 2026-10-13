@@ -758,7 +758,7 @@ runs __reportGV__ and counts the genotyped animals at each genome uniqueness
 value. Each of those animals starts the gene drop from its own two alleles;
 the alleles of every other animal are simulated or passed down from them.
 
-```{r genotypes-from-label-columns, warning = FALSE}
+```{r genotypes-from-label-columns}
 genotypeFile <- system.file("extdata", "examples",
   "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
   package = "nprcgenekeepr"
