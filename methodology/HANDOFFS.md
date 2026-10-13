@@ -198,10 +198,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S976
 date: 2026-10-13
-status: pending
-active_task: IN PROGRESS -- re-check the 8 marker-genetics code candidates of docs-audit part 2 (BACKLOG.md:109-132; DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md:74-91) against today's code, one ruling question per candidate; an audit report, no code change (owner pick at the Phase 0 picker, option 3 of 4, then the scope question "Marker genetics: 8")
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the eight marker-genetics code candidates of docs-audit part 2 (BACKLOG.md:115-117, slice 6c) re-checked against today's code (an audit, PRE-RED throughout, no code change; owner pick at the Phase 0 picker, option 3 of 4, then the scope answer "Marker genetics: 8"): docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md; all 11 claims still real, 0 critical, 2 moderate, 6 minor; the owner took the recommended option on all three rulings, now three READY items in BACKLOG.md
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, no untracked files, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget WARN only for SESSION_RUNNER.md one commit behind canonical, ratchet 1/1). Claim 35628c5cd; report checkpoint 516a27478; the close-out commit adds the report's rulings section, three BACKLOG items, Learning 942 and the ledgers. Every number comes from scratch probe scripts run from the project root and from shiny::testServer(modMarkerGeneticsServer) on the repo's own fixture: a blank allele becomes "NA/NA" and moves Y's Ho 0.3333 to 0.25 and mean He 0.3993 to 0.4583; F_ROH 0.2857 to 0.4444 with no warning when the genotype file lacks a sidecar locus. Five of the eight candidates are script-only (getGenotypes() and fixColumnNames() close them in the app); two pairs share one cause. Three over-claims in the first draft were fixed before the commit.
+next_steps: Each needs an owner pick: (1) build the first ruling, a blank allele as missing plus NA for a locus nobody is typed at, shipped together (BACKLOG.md item after the docs-audit item; start at R/buildMarkerGenotypeMatrix.R:50-55 and R/markerHeterozygosity.R:105-114; Pre-RED asks what meanHe is with no typed locus and what a one-allele-missing record does); (2) the F_ROH warning plus a notice above the table (R/computeGenomicROH.R:105-115, R/modMarkerGenetics.R output$sequenceRohTable); (3) the empty-chromosome check and the collision message; or the jmac file, the harem-sire hole, the kinship2 drawing features, or another audit cluster (6a and 6b 10 candidates, 6d 22, 6e 46). 101 commits are ahead of origin/master, none seen by CI.
+key_files: docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md; R/buildMarkerGenotypeMatrix.R:50-55; R/markerHeterozygosity.R:105-114; R/computeGenomicROH.R:105-115; R/modMarkerGenetics.R:553; R/checkLocusMetadata.R:77; R/checkGenotypeFile.R:55-61; tests/testthat/test_modMarkerGenetics.R:137; BACKLOG.md:139
+gotchas: Fixing the matrix builder alone makes an all-blank locus reach the app as He 1.0, so ship the He change with it; the Marker Genetics tab has no warning handler, so a function warning is console-only; the module never passes the sidecar to checkSequenceGenotypeFile() (R/modMarkerGenetics.R:553, :633); getGenotypes() reads blanks as NA but read.csv() keeps "" in a text column; fixColumnNames() needs errorLst = getEmptyErrorLst(); start probe scripts in the project root with an absolute script path; a bare cat > with no input hangs a Bash call; SESSION_NOTES.md sits about 120 B under its 25,000-token ceiling (56,750 B at 2.27 B/token, below the trimmer's 65,536 B budget, so the trimmer will not fire first): the next close-out must condense as much as it adds; never git stash here (stash@{0} is the old dev WIP).
+runtime_smoke: n/a -- docs only (no R/ or test change; the numbers in the report come from probe scripts and the real module's server on the repo's fixture)
+changelog_ref: S976 DONE entry
+commit: the close-out commit that carries this receipt; claim 35628c5cd
 ```
 
 ```handoff

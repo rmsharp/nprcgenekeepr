@@ -212,3 +212,12 @@ the other six were run as functions and read in their callers.
    today. Effort S each.
 4. **Findings 3 and 8:** leave, unless you want finding 3 (b)'s tidy of the case tests.
 5. Each ruling is its own session. Only findings 1, 2 and 7 can change a calculated number.
+
+## Rulings taken (S976, the same day; the owner took the recommended option each time)
+
+- **Findings 7 and 1:** treat a blank allele as missing (the matrix gives `NA`), and `markerExpectedHeterozygosity()` gives `NA` for
+  a locus nobody is typed at. Built in a later session; the two ship together.
+- **Findings 2 and 4:** warn, naming the sidecar loci the genotype file lacks, and show a one-line notice above the F_ROH table.
+  Every number stays. Built in a later session.
+- **Findings 6 and 5 only:** fix the empty-chromosome check and the collision message; leave findings 3 and 8.
+- The three build items are in `BACKLOG.md` ("Up Next", just after the docs-audit item). No code was changed in S976.

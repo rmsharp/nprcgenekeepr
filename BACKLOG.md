@@ -112,9 +112,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       report): 6a MB3 (unknown-sex founder kinship; MC1, `filterKinMatrix` without `drop = FALSE`, was fixed
       S923), and MA3/MB14 cite only `e1071` for `type = 2` from recall, not a run (neither
       `moments` nor `e1071` is installed here); 6b PB4, PB7, PB11 (docs untouched), and PB13, PA4,
-      PD12, PD1 (S837 documented today's behavior); 6c 8 candidates (`markerExpectedHeterozygosity`
-      He = 1.0 for an all-NA locus, `computeGenomicROH` silent locus drop, `hasGenotype`
-      `First`/`Second`, `checkSequenceGenotypeFile` sidecar not reconciled, plus candidates 5-8);
+      PD12, PD1 (S837 documented today's behavior); 6c 8 candidates, re-checked S976
+      (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
+      owner ruled on all of them S976, and the three build items just below carry the rulings);
       6d 22 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 (esp. RA3/RA4/RA6 (CA1, CA3), RA8
       (CA2), RB10 (CB1), RC7 (CC1)), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890); 6e 46 candidates CE-CL, and
@@ -135,6 +135,45 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
+
+- [ ] **Marker files: a blank allele becomes the text `"NA/NA"` and is counted as a real genotype
+      (found S838, re-checked S976, owner ruled S976: treat it as missing; READY, Effort S; strict
+      TDD)** -- `buildMarkerGenotypeMatrix()` (`R/buildMarkerGenotypeMatrix.R:50-55`) turns a record
+      with a missing allele into `"NA/NA"`, which the Heterozygosity and Kinship Comparison tabs read
+      as a homozygote of an allele named NA. Measured S976 in the real module, on the
+      `test_modMarkerGenetics.R:137` fixture: a blank `Y,L4` record moves Y's Ho from 0.3333 to 0.25
+      and mean He from 0.3993 to 0.4583 (the file without that record is the right answer); 4 animals
+      x 6 loci, random alleles (seed 11), one blank record: kinship moves by up to 0.125, no warning.
+      **The ruling:** a record with either allele missing gives `NA` in the matrix, and
+      `markerExpectedHeterozygosity()` (`R/markerHeterozygosity.R:105-114`) gives `NA`, not 1.0, for a
+      locus nobody is typed at, with `meanHe` over the typed loci. **Ship the two together:** fixing the
+      builder alone makes an all-blank locus reach the app as He 1.0. Files with no blank allele keep
+      their numbers. Left for the pickup's Pre-RED: what `meanHe` is when no locus is typed, and the
+      one-allele-missing record (also `"NA/NA"` today). Touch: both roxygen blocks
+      (`R/buildMarkerGenotypeMatrix.R:25-29`, `R/markerHeterozygosity.R:75-82`), a `NEWS.Rmd` entry; the
+      Marker Genetics guide pictures were not checked. Report findings 1 and 7.
+
+- [ ] **F_ROH: a genotype file with fewer loci than its sidecar changes every animal's F_ROH with no
+      message (found S838, re-checked S976, owner ruled S976: warn and show a notice; READY, Effort S
+      to M; strict TDD)** -- `computeGenomicROH()` builds its denominator only from sidecar loci that
+      are matrix columns (`R/computeGenomicROH.R:114-115,132-134`): the help example gives 0.2857 and,
+      without its last locus, 0.4444, 0 warnings, in the function and in the real module. **The
+      ruling:** a warning naming the sidecar loci the matrix lacks (the converse already warns,
+      `:105-109`) plus a one-line notice above the F_ROH table (`output$sequenceRohTable` in
+      `R/modMarkerGenetics.R`; the tab shows no warnings today); every number stays. Not part of the
+      ruling, ask at the pickup: the same notice for `markerLdBlock()` (slice 6c's QC3 says it drops
+      such loci silently). The checker's `locusMetadata` argument stays as it is (the module never
+      passes it, `R/modMarkerGenetics.R:553,633`). Report findings 2 and 4.
+
+- [ ] **Two small marker-function fixes (found S838, re-checked S976, owner ruled S976; READY, Effort
+      S each; strict TDD)** -- (1) `checkLocusMetadata()` (`R/checkLocusMetadata.R:77`) counts an empty
+      chromosome name as present: treat an empty or all-space `chrom` as missing, as the app's reader
+      already does (a script's `read.csv()` on text chromosome names keeps the `""`). (2)
+      `checkGenotypeFile()` (`R/checkGenotypeFile.R:55-61`): the collision message repeats its sentence
+      once per allele, carries source indentation and names the first bad column only; make it one
+      list, one line, and name the column. Left as they are by the same ruling: `hasGenotype()`
+      (`First`/`Second` give FALSE; the help says so) and `chooseAlleles()` /
+      `.markerAlleleFrequencyTable()` (no package path reaches them). Report findings 3, 5, 6 and 8.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
