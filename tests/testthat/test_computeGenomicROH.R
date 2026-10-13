@@ -376,22 +376,23 @@ test_that("computeGenomicROH warns naming a full-coverage locus the genotype mat
 })
 
 test_that("computeGenomicROH names every missing locus in one warning, in locus-file order", {
+  ## The locus file lists L1, L6, L3, L5, L2, L4 -- not alphabetical -- and
+  ## the matrix holds L2, L1, L3 (a third order), so the names below can
+  ## come only from the locus file's own order: L6, L5, L4.
   meta <- data.frame(
-    locus = paste0("L", 1L:6L),
+    locus = c("L1", "L6", "L3", "L5", "L2", "L4"),
     chrom = rep("1", 6L),
     pos = seq(0, by = 500000, length.out = 6L),
     stringsAsFactors = FALSE
   )
-  ## The matrix holds L5, L1, L3 -- not in locus-file order -- so the names
-  ## below cannot come from the matrix's own order.
   genotypeMatrix <- matrix(
     c("A/A", "A/A", "A/A"),
-    nrow = 1L, dimnames = list("Z1", c("L5", "L1", "L3"))
+    nrow = 1L, dimnames = list("Z1", c("L2", "L1", "L3"))
   )
   out <- rohWithWarnings(genotypeMatrix, meta, minSnp = 2L, minBp = 500000)
 
   expect_equal(missingLociCount(out$warnings), 1L)
-  expect_match(missingLociMessage(out$warnings), "L2, L4, L6", fixed = TRUE)
+  expect_match(missingLociMessage(out$warnings), "L6, L5, L4", fixed = TRUE)
 })
 
 test_that("computeGenomicROH cuts a long list of missing loci at 10 and says how many more", {

@@ -1984,6 +1984,33 @@ i978BadGenotypePath <- tempfile(fileext = ".csv")
 write.csv(data.frame(foo = 1L:2L, bar = 3L:4L), i978BadGenotypePath,
           row.names = FALSE)
 
+## No locus column at all: the locus file fails validation.
+i978BadLocusPath <- tempfile(fileext = ".csv")
+write.csv(data.frame(foo = 1L:2L, bar = 3L:4L), i978BadLocusPath,
+          row.names = FALSE)
+
+## 14 loci in the locus file (one chromosome), 3 animals typed at the first 2
+## only: 12 loci the genotype file lacks, more than the 10 the notice names.
+i978FourteenLocusMetadata <- data.frame(
+  locus = sprintf("L%02d", 1L:14L),
+  chrom = rep("1", 14L),
+  pos = seq(0, by = 100000, length.out = 14L),
+  stringsAsFactors = FALSE
+)
+i978FourteenLocusMetadataPath <- tempfile(fileext = ".csv")
+write.csv(i978FourteenLocusMetadata, i978FourteenLocusMetadataPath,
+          row.names = FALSE)
+i978TwoLocusGenotypePath <- tempfile(fileext = ".csv")
+write.csv(
+  data.frame(
+    id = rep(c("I1", "I2", "I3"), each = 2L),
+    locus = rep(c("L01", "L02"), 3L),
+    allele1 = rep("A", 6L), allele2 = rep("A", 6L),
+    stringsAsFactors = FALSE
+  ),
+  i978TwoLocusGenotypePath, row.names = FALSE
+)
+
 ## Under testServer() the table's output observer runs on every upload, so
 ## computeGenomicROH()'s warning for a missing locus is raised by the
 ## setInputs() of the second file, not by a later read of the table; `quiet`
@@ -2042,7 +2069,8 @@ test_that("modMarkerGenetics's F_ROH notice says how many locus-file loci are no
     expect_match(notice, "alert-warning", fixed = TRUE)
     expect_match(notice, "2 loci", fixed = TRUE)
     expect_match(notice, "L8, L9", fixed = TRUE)
-    expect_match(notice, "not in the genotype file", fixed = TRUE)
+    expect_match(notice, "file are not in the genotype file", fixed = TRUE)
+    expect_match(notice, "calculated without them", fixed = TRUE)
   })
 })
 
@@ -2057,7 +2085,8 @@ test_that("modMarkerGenetics's F_ROH notice says '1 locus', not '1 loci', for on
     expect_match(notice, "1 locus", fixed = TRUE)
     expect_false(grepl("1 loci", notice, fixed = TRUE))
     expect_match(notice, "L9", fixed = TRUE)
-    expect_match(notice, "not in the genotype file", fixed = TRUE)
+    expect_match(notice, "file is not in the genotype file", fixed = TRUE)
+    expect_match(notice, "calculated without it", fixed = TRUE)
   })
 })
 
@@ -2136,5 +2165,28 @@ test_that("modMarkerGenetics's F_ROH notice is empty, and nothing fails, while a
                 pedigree = shiny::reactive(NULL)), {
     i978Upload(session, i978BadGenotypePath, i152RohLocusMetadataFilePath)
     expect_equal(i978Notice(output), "")
+  })
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i152RohGenotypeFilePath, i978BadLocusPath)
+    expect_equal(i978Notice(output), "")
+  })
+})
+
+test_that("modMarkerGenetics's F_ROH notice names the first 10 loci and says how many more when the genotype file lacks 12", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i978TwoLocusGenotypePath,
+               i978FourteenLocusMetadataPath)
+    notice <- i978Notice(output)
+
+    expect_match(notice, "12 loci", fixed = TRUE)
+    expect_match(notice,
+                 "(L03, L04, L05, L06, L07, L08, L09, L10, L11, L12, and 2 more)",
+                 fixed = TRUE)
+    expect_false(grepl("L13", notice, fixed = TRUE))
   })
 })
