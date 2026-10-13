@@ -99,10 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 979 Did
-**Deliverable:** the two small marker fixes (`BACKLOG.md:139`; `checkLocusMetadata()` reads a blank chromosome as missing, `checkGenotypeFile()` gives its collision error as one line naming the column; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-13 18:05 CDT
-**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4, the recommended one. Pre-RED scope question (both fixes this session, or one) not yet asked.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 1 of 4; Pre-RED answers "both fixes" and "a blank chromosome missing everywhere"; strict TDD, every gate asked and answered, REFACTOR taken):** the two small marker fixes (`BACKLOG.md:139`, removed).
+`checkLocusMetadata()` returns an empty, all-space or all-tab `chrom` as `NA` (`R/checkLocusMetadata.R:76-79`); `computeGenomicROH()` then leaves the locus out with its existing warning and `markerLdBlock()` leaves it out as it does for `NA`. Neither changed; the app did not.
+`checkGenotypeFile()` stops once, on one line, naming every column with a collision, each number once and unpadded (`R/checkGenotypeFile.R:55-73`); which files pass is unchanged. NEWS has one sentence for the blank chromosome, none for the message.
+**Found while measuring:** `computeGenomicROH()` keys on `coverage` but `markerLdBlock()` on `chrom`, so a label-only fix would have left LD Block pairing blank-chromosome loci (probe: fRoh 0.6 where 1 is right; 2 LD pairs where 1 is right). Learning 945.
+**Gates:** claim `64ddb4cb1`; RED `f418579af` (21 new blocks in 5 files, 18 failed with 25 failed expectations, 0 errors, 0 skipped, 3 guards green);
+GREEN `12e1dd927` (code, help, man page), `666b59690` (NEWS); REFACTOR `ac65bc4b5` (`helpPlaces()`, `skipUnlessHelpInSourceTree()`).
+**Verified:** suite 3,610 blocks, 11,783 expectations, 0 failed, 0 errors, 187 skipped (before and after the REFACTOR);
+check 0/0/0; lint 0; ratchet 1/1 (`c7f83e2f1a6a`); real app (three blank chromosomes: S001-S003 equal the script to 1e-12; shipped example S001 0.0535 unchanged); 16 mutants caught.
+**Handoff evaluation of S978: 8/10.** Helped: exact lines (all matched), the `markerLdBlock()` note, the testServer and `git stash` gotchas. Missing: the fix's reach (which field each consumer reads; "one line" was the label-only fix). Wrong: nothing.
+**Self-assessment: 8/10.** + measured before asking; RED failed for the stated reasons and the one predicted number held; 16 mutants; app and script compared numerically; REFACTOR re-proved by mutation.
+- my Phase 0 report flagged a ratchet "mismatch" that was not one (I re-ran the gate instead of reading the stored results file, which Learning 943 (c) names); a mutation harness died on a parse error; the first app run used the 50-SNP default (all zeros); a `cd` persisted twice.
+**Next (each needs an owner pick):** the jmac file, the harem-sire hole, the kinship2 drawing features, another docs-audit cluster, the contributor tutorial. 122 commits are ahead of `origin/master`, none seen by CI.
+**Key files:** `R/checkLocusMetadata.R:76-79`; `R/checkGenotypeFile.R:55-73`; `test_checkLocusMetadata.R:153`; `test_checkGenotypeFile.R:82`; `test_computeGenomicROH.R:475`; `test_markerLdBlock.R:192`; `test_blankChromosomeHelp.R`; `helper-pageText.R:112-130`.
+**Gotchas:** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" classification fix; `nzchar(NA)` is TRUE; `format()` pads (`trim = TRUE`) and `collidingNumbers()` repeats a number two labels read as (`unique()`);
+read the ratchet results from `methodology/.quality-gates-results.json`, since each `--run` prints a new hash and overwrites it; the real app at the default 50-SNP minimum shows zeros on the shipped sequence example, set `markerGenetics-rohMinSnp` to 3;
+two blank chromosomes in a probe must be the same string; a `cd` persists between Bash calls; never `git stash` here.
 
 ### Sessions 947-978 (condensed S950 to S979; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
