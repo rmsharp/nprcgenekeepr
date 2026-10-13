@@ -39,7 +39,18 @@ modBreedingGroupsUI <- function(id) {
                h4(icon("users"), "Configuration"),
                radioButtons(ns("animalSource"), "Source:",
                             choices = c("Top ranked" = "topRanked",
-                                        "All available" = "all")),
+                                        "All available" = "all",
+                                        "My own list" = "custom")),
+               conditionalPanel(
+                 # ns = ns already scopes this panel's input lookups to the
+                 # module namespace client-side, so the condition uses the
+                 # unprefixed field name (a ns()-built condition
+                 # double-prefixes and never matches; Learning 324).
+                 condition = "input.animalSource == 'custom'",
+                 ns = ns,
+                 textAreaInput(ns("customAnimalIds"), "Animal IDs:", rows = 4L,
+                               placeholder = "e.g. A1, A2, A3")
+               ),
                radioButtons(ns("inclusionCriterion"), "Include animals by:",
                             choices = c("Top N ranked" = "topN",
                                         "Genetic-value floor" = "valueFloor"),
@@ -523,11 +534,15 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
         # Raw candidate pool based on source selection, unnarrowed (issue
         # #128): "topRanked" yields the full ranked id list in report order;
-        # any other value ("all") yields every pedigree id. The top-N cutoff
-        # moved out of this step into the inclusion-criterion narrowing below.
+        # "custom" ("My own list", BACKLOG.md:149) yields the ids typed into
+        # the Animal IDs box, each once, in the order typed; any other value
+        # ("all") yields every pedigree id. The top-N cutoff moved out of this
+        # step into the inclusion-criterion narrowing below.
         rawPool <- if (input$animalSource == "topRanked") {
           req(geneticValues())
           geneticValues()$id
+        } else if (input$animalSource == "custom") {
+          unique(parseIdList(input$customAnimalIds))
         } else {
           ped$id
         }
@@ -538,7 +553,20 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         # dead. A seed animal the user types is not drawn from this pool and
         # is left alone.
         poolSize <- length(rawPool)
+        typedIds <- rawPool
         rawPool <- rawPool[rawPool %in% ped$id[isLivingAnimal(ped)]]
+
+        # My own list: a typed id that is not in the pedigree stops the run
+        # and is named (as a seed id does, below); a typed id that is in the
+        # pedigree but not alive is left out and named, and the rest form
+        # groups. Both are empty for the other sources.
+        ownList <- input$animalSource == "custom"
+        unknownIds <- if (ownList) setdiff(typedIds, ped$id) else character(0L)
+        leftOutIds <- if (ownList) {
+          setdiff(typedIds, c(unknownIds, rawPool))
+        } else {
+          character(0L)
+        }
 
         # Narrow the raw pool by inclusion criterion (issue #128). A missing
         # input$inclusionCriterion defaults to "topN", reproducing today's
@@ -674,6 +702,22 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
             duration = 10L
           )
           noGroupsResult
+        } else if (length(unknownIds) > 0L) {
+          showNotification(
+            paste("Candidate animals not in the pedigree:",
+                  toString(unknownIds)),
+            type = "error",
+            duration = 10L
+          )
+          noGroupsResult
+        } else if (ownList && poolSize == 0L) {
+          showNotification(
+            paste("Type or paste at least one animal ID into the box, then",
+                  "click Form Groups."),
+            type = "error",
+            duration = 10L
+          )
+          noGroupsResult
         } else if (length(rawPool) == 0L) {
           showNotification(
             if (poolSize == 1L) {
@@ -688,6 +732,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           )
           noGroupsResult
         } else {
+          if (length(leftOutIds) > 0L) {
+            showNotification(
+              paste("Left out because they are not alive:",
+                    toString(leftOutIds)),
+              type = "warning",
+              duration = 10L
+            )
+          }
           tryCatch({
             groupAddAssign(
               candidates = candidateIds,
