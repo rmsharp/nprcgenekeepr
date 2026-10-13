@@ -174,6 +174,89 @@ test_that("modMarkerGenetics computes the per-animal Ho vs. population He hetero
   })
 })
 
+## RED (S977; BACKLOG.md:139, S976 audit findings 1 and 7): a blank allele in
+## an uploaded file is a genotype that was not read. Before, the builder made
+## it the text "NA/NA", so a blank Y,L4 record moved Y's Ho from 1/3 to 0.25
+## and the mean He from 115/288 (0.3993) to 0.4583, and shifted the marker
+## kinship, with no warning. The files below hold the cells blank
+## (write.csv(na = "")), as a colony manager's file does.
+blankAlleleXyz <- data.frame(
+  id = rep(c("X", "Y", "Z"), each = 4L),
+  locus = rep(paste0("L", 1L:4L), 3L),
+  allele1 = c("A", "A", "A", "A", "A", "A", "B", NA, "B", "A", "A", "A"),
+  allele2 = c("A", "B", "B", "B", "B", "A", "B", NA, "B", "A", "B", "A"),
+  stringsAsFactors = FALSE
+)
+
+test_that("modMarkerGenetics reads a blank allele as missing: a blank Y,L4 record gives the same Ho, He and kinship as a file without it", {
+  skip_if_not_installed("shiny")
+  blankPath <- tempfile(fileext = ".csv")
+  write.csv(blankAlleleXyz, blankPath, row.names = FALSE, na = "")
+  absentPath <- tempfile(fileext = ".csv")
+  write.csv(blankAlleleXyz[!(blankAlleleXyz$id == "Y" &
+                               blankAlleleXyz$locus == "L4"), ],
+            absentPath, row.names = FALSE, na = "")
+  ## Guard: the first file really holds a blank cell, the second does not.
+  expect_true(any(grepl(",,", readLines(blankPath), fixed = TRUE)))
+  expect_false(any(grepl(",,", readLines(absentPath), fixed = TRUE)))
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "blank.csv", datapath = blankPath
+    ))
+    blankTbl <- result$heterozygosityTable()
+    blankKin <- suppressWarnings(result$markerKinshipMatrix())
+
+    session$setInputs(genotypeFile = list(
+      name = "absent.csv", datapath = absentPath
+    ))
+    absentTbl <- result$heterozygosityTable()
+    absentKin <- suppressWarnings(result$markerKinshipMatrix())
+
+    blankTbl <- blankTbl[order(blankTbl$id), ]
+    expect_equal(blankTbl$ho[blankTbl$id == "X"], 0.75)
+    expect_equal(blankTbl$ho[blankTbl$id == "Y"], 1 / 3)
+    expect_equal(blankTbl$ho[blankTbl$id == "Z"], 0.25)
+    expect_equal(blankTbl$he, rep(115 / 288, 3L))
+    expect_equal(blankTbl, absentTbl[order(absentTbl$id), ])
+    expect_equal(blankKin, absentKin)
+  })
+})
+
+test_that("modMarkerGenetics: a locus where every record is blank does not move the mean He", {
+  skip_if_not_installed("shiny")
+  blankLocus <- data.frame(id = c("X", "Y", "Z"), locus = "L5",
+                           allele1 = NA_character_, allele2 = NA_character_,
+                           stringsAsFactors = FALSE)
+  ## Y keeps no L4 record, as in the test above.
+  withBlankLocus <- rbind(
+    blankAlleleXyz[!(blankAlleleXyz$id == "Y" & blankAlleleXyz$locus == "L4"), ],
+    blankLocus
+  )
+  blankLocusPath <- tempfile(fileext = ".csv")
+  write.csv(withBlankLocus, blankLocusPath, row.names = FALSE, na = "")
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "blankLocus.csv", datapath = blankLocusPath
+    ))
+    tbl <- result$heterozygosityTable()
+    tbl <- tbl[order(tbl$id), ]
+    expect_equal(tbl$ho[tbl$id == "X"], 0.75)
+    expect_equal(tbl$ho[tbl$id == "Y"], 1 / 3)
+    expect_equal(tbl$ho[tbl$id == "Z"], 0.25)
+    ## L5 is untyped for everyone: the mean covers L1 to L4 only (a fix of
+    ## the builder alone would give 0.5194, the old reading 0.3194).
+    expect_equal(tbl$he, rep(115 / 288, 3L))
+  })
+})
+
 test_that("modMarkerGenetics computes a Mendelian-exclusion parentage table against the recorded pedigree", {
   skip_if_not_installed("shiny")
   ## Same P/C/U fixture as above. C's recorded dam is P (the true

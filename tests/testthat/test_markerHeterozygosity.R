@@ -107,3 +107,75 @@ test_that("markerExpectedHeterozygosity returns 0 for a monomorphic locus", {
   expect_equal(he$perLocus[["L1"]], 0)
   expect_equal(he$meanHe, 0)
 })
+
+## RED (S977; BACKLOG.md:139, S976 audit findings 1 and 7): a locus nobody is
+## typed at has no allele frequencies, so its expected heterozygosity is NA,
+## not 1.0 (the empty sum of squared frequencies is 0, so 1 - 0), and meanHe
+## averages the typed loci only. With no typed locus meanHe is NA_real_ (owner
+## ruling, S977 Pre-RED: the same as markerObservedHeterozygosity() gives an
+## animal with nothing typed), not NaN. The builder change (a blank allele is
+## missing) must ship with this one: alone, an all-blank locus would reach the
+## app as He 1.0 and lift the mean.
+
+genotypeMatrixWithUntypedLocus <- cbind(genotypeMatrix, L5 = NA_character_)
+
+test_that("markerExpectedHeterozygosity gives NA for a locus nobody is typed at and leaves the other loci alone", {
+  he <- markerExpectedHeterozygosity(genotypeMatrixWithUntypedLocus)
+  expect_identical(names(he$perLocus), paste0("L", 1L:5L))
+  expect_true(is.na(he$perLocus[["L5"]]))
+  expect_equal(he$perLocus[["L1"]], 0.5)
+  expect_equal(he$perLocus[["L2"]], 5 / 18)
+  expect_equal(he$perLocus[["L3"]], 4 / 9)
+  expect_equal(he$perLocus[["L4"]], 0.375)
+})
+
+test_that("meanHe averages the typed loci only, so an untyped locus does not move it", {
+  he <- markerExpectedHeterozygosity(genotypeMatrixWithUntypedLocus)
+  expect_equal(he$meanHe, 115 / 288)
+  expect_equal(he$meanHe, markerExpectedHeterozygosity(genotypeMatrix)$meanHe)
+})
+
+test_that("meanHe is NA, not NaN or 1, when no locus is typed", {
+  none <- matrix(NA_character_, nrow = 2L, ncol = 2L,
+                 dimnames = list(c("a", "b"), c("L1", "L2")))
+  he <- markerExpectedHeterozygosity(none)
+  expect_identical(he$meanHe, NA_real_)
+  expect_identical(he$perLocus, c(L1 = NA_real_, L2 = NA_real_))
+})
+
+test_that("meanHe is NA for a matrix with no loci", {
+  noLoci <- matrix(character(0L), nrow = 2L, ncol = 0L,
+                   dimnames = list(c("a", "b"), NULL))
+  he <- markerExpectedHeterozygosity(noLoci)
+  expect_identical(he$meanHe, NA_real_)
+  expect_length(he$perLocus, 0L)
+})
+
+## The same X/Y/Z data as the long-format file a colony manager uploads, with
+## Y's L4 record present and its alleles blank, through the builder.
+blankRecordGenotype <- data.frame(
+  id = rep(c("X", "Y", "Z"), each = 4L),
+  locus = rep(paste0("L", 1L:4L), 3L),
+  allele1 = c("A", "A", "A", "A", "A", "A", "B", NA, "B", "A", "A", "A"),
+  allele2 = c("A", "B", "B", "B", "B", "A", "B", NA, "B", "A", "B", "A"),
+  stringsAsFactors = FALSE
+)
+
+test_that("a file with a blank Y,L4 record gives the hand-verified Ho and mean He of the file without it", {
+  mat <- buildMarkerGenotypeMatrix(blankRecordGenotype)
+  ho <- markerObservedHeterozygosity(mat)
+  expect_equal(ho[["X"]], 0.75)
+  expect_equal(ho[["Y"]], 1 / 3)
+  expect_equal(ho[["Z"]], 0.25)
+  expect_equal(markerExpectedHeterozygosity(mat)$meanHe, 115 / 288)
+})
+
+test_that("a locus whose every record is blank does not move meanHe (builder and He fixed together)", {
+  blankLocus <- data.frame(id = c("X", "Y", "Z"), locus = "L5",
+                           allele1 = NA_character_, allele2 = NA_character_,
+                           stringsAsFactors = FALSE)
+  mat <- buildMarkerGenotypeMatrix(rbind(blankRecordGenotype, blankLocus))
+  he <- markerExpectedHeterozygosity(mat)
+  expect_true(is.na(he$perLocus[["L5"]]))
+  expect_equal(he$meanHe, 115 / 288)
+})
