@@ -161,14 +161,29 @@ test_that("a2interactive.Rmd has a 'Using known genotypes' subsection inside the
 })
 
 ## S974, the owner's ruling at the GREEN finding: with the genotypes the
-## example gives reportGV() two "Founder genome equivalents undefined"
-## warnings (fg, fgSE and neGD are NA), and the tutorial hides them and shows
-## genome uniqueness only. The finding is a BACKLOG item of its own.
-test_that("the subsection's chunk hides the reportGV() warnings, as the owner ruled", {
+## example gave reportGV() two "Founder genome equivalents undefined"
+## warnings (fg, fgSE and neGD were NA), and the tutorial hid them and showed
+## genome uniqueness only. S975 fixed their cause (BACKLOG.md:139; the
+## numbers now come from a gene drop that ignores the genotypes, see
+## test_reportGVPedigreeOnlyFounderGenome.R), so the chunk hides nothing and,
+## run with its warnings kept, gives none.
+test_that("the subsection's chunk hides no warning, and gives none", {
   header <- grep(paste0("^```\\{r ", chunkLabel, "[,}]"),
                  sourceLines(scriptPath), value = TRUE)
   expect_length(header, 1L)
-  expect_true(any(grepl("warning = FALSE", header, fixed = TRUE)))
+  expect_false(any(grepl("warning = FALSE", header, fixed = TRUE)))
+  skip_on_cran()
+  code <- chunkCode(sourceLines(scriptPath), chunkLabel)
+  expect_false(is.null(code), info = paste("no chunk labelled", chunkLabel))
+  kept <- character(0L)
+  withCallingHandlers(
+    suppressMessages(eval(parse(text = code), envir = new.env(parent = globalenv()))),
+    warning = function(w) {
+      kept <<- c(kept, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+  expect_length(kept, 0L)
 })
 
 test_that("the subsection's chunk runs on its own and gives reportGV() genotypes", {
