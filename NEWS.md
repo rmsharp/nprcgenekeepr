@@ -134,7 +134,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - `checkMarkerGenotypeFile()` checks a genotype file with one row per
   animal and locus (`id`, `locus`, `allele1`, `allele2`) and rejects a
   locus with more than two alleles; `buildMarkerGenotypeMatrix()` turns
-  it into the animal-by-locus table the marker functions use.
+  it into the animal-by-locus table the marker functions use. A blank
+  allele counts as not typed: a record with one or both alleles blank is
+  treated like a missing record, and a locus nobody is typed at shows
+  `NA` for expected heterozygosity and stays out of the mean.
 - The Candidate Parent Assignment suggestion covers the common case
   where a flagged animal's recorded parent is present but wrong (issue
   \#155).
