@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S975
+date: 2026-10-13
+status: pending
+active_task: IN PROGRESS -- founder genome equivalents come out undefined (NA) when genotypes are present (BACKLOG.md:139, found S974; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED -- first measure the real app, then the owner decides what the colony manager should see)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S974
 date: 2026-10-13
 status: complete
