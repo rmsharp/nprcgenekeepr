@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S977
+date: 2026-10-13
+status: pending
+active_task: IN PROGRESS -- a blank allele is missing, not the text "NA/NA" (BACKLOG.md:139; R/buildMarkerGenotypeMatrix.R:50-55 and R/markerHeterozygosity.R:105-114 together; owner pick at the Phase 0 picker, option 1 of 4; strict TDD, PRE-RED)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S976
 date: 2026-10-13
 status: complete

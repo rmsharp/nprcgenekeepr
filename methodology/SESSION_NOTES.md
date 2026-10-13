@@ -98,21 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 976 Did
-**Deliverable, DONE (owner pick, option 3 of 4, then "Marker genetics: 8"; an audit, no code change):** the eight marker-genetics code candidates of docs-audit part 2 (`BACKLOG.md:115-117`) re-checked against today's code in
-`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`. All 11 claims are still real: 0 critical, 2 moderate, 6 minor. Five of the eight are script-only (`getGenotypes()` and `fixColumnNames()` close them in the app).
-**Moderate:** a blank allele becomes `"NA/NA"` and counts as a genotype (real module: Y's Ho 0.3333 to 0.25, mean He 0.3993 to 0.4583); F_ROH follows the genotype file's locus list with no warning (0.2857 to 0.4444).
-**Rulings, all the recommended option, each a later build session (three `BACKLOG.md` items after the docs-audit item):** a blank allele is missing and He is NA
-for an untyped locus (together); an F_ROH warning plus a notice; fix the empty chromosome and the collision message only. Learning 942.
-**Gates:** claim `35628c5cd`, report `516a27478`; ratchet 1/1 (`8c7f5ed3b992`); docs only, so no suite, lint or smoke run.
-**Handoff evaluation of S975: 9/10.** Helped: the options in BACKLOG order, "98 ahead" exact. Missing: the docs-audit clusters (3 to 46 candidates) were not sized. Wrong: nothing.
-**Self-assessment: 8/10.** + a module-level run; two shared causes cut eight candidates to three questions; three over-claims fixed before the commit. - a stray `cat >` hung a call; a probe missed an argument; long silent reads.
-**Next (each needs an owner pick):** the three build sessions in that order, or the jmac file, the harem-sire hole, the kinship2 features, another audit cluster (6a and 6b 10, 6d 22, 6e 46). 101 commits are ahead of `origin/master`, none seen by CI.
-**Key files:** `R/buildMarkerGenotypeMatrix.R:50-55`; `R/markerHeterozygosity.R:105-114`; `R/computeGenomicROH.R:105-115,132-134`; `R/modMarkerGenetics.R:553,633`; `R/checkLocusMetadata.R:77`; `R/checkGenotypeFile.R:55-61`.
-**Gotchas:** fix the builder and He together (else an all-blank locus gives He 1.0 in the app); the tab has no warning handler; the module never passes the sidecar to the checker;
-this file sits about 120 B under its token ceiling (56,750 B, below the trimmer's 65,536 B), so condense as much as you add; never `git stash` here.
+### What Session 977 Did
+**Deliverable:** a blank allele is missing, not the text `"NA/NA"` (`BACKLOG.md:139`; `buildMarkerGenotypeMatrix()` and `markerExpectedHeterozygosity()` together; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-13 15:00 CDT
+**Status:** Session claimed. Owner pick at the Phase 0 picker: option 1 of 4. PRE-RED: two scope questions (the mean when no locus is typed; the one-allele-missing record) go to the owner before RED.
+**Phase 0:** HEAD 023f2b8b3 equals both ledger frontiers; 0 pending receipts; no merges; no untracked files; CI 10 of 10 green; dashboard 96/100; context budget WARN only for `methodology/SESSION_RUNNER.md`; ratchet results file absent (gitignored).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-975 (condensed S950 to S976; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-976 (condensed S950 to S977; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -170,6 +163,10 @@ rerun a load-failed benchmark file alone.
 S975: founder genome equivalents, their standard error and gene diversity come from the pedigree alone, so the Summary tab shows numbers, not `NA` and `N/A` (`R/reportGV.R:294-318`;
 strict TDD, REFACTOR taken; evaluation of S974 9/10, self 8/10). **Gotchas kept (S975):** `hasGenotype()` is TRUE for numeric columns
 with no code; the second drop runs after the first; click `a[data-value='Summary']` first; `test_oneFileGenotypesWording.R:135` builds the example's path itself.
+S976: the eight marker-genetics code candidates of docs-audit part 2 re-checked against today's code (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`; an audit, no code change; all 11
+claims still real, 2 moderate: a blank allele becomes `"NA/NA"`, F_ROH follows the genotype file's locus list; the owner took the recommended option on all three rulings, now three READY `BACKLOG.md` items;
+evaluation of S975 9/10, self 8/10). **Gotchas kept (S976):** fix the builder and He together (else an all-blank locus gives He 1.0 in the app); the Marker Genetics tab has no warning handler; the module never
+passes the sidecar to the checker (`R/modMarkerGenetics.R:553,633`); `getGenotypes()` reads blanks as NA but `read.csv()` keeps `""` in a text column; start probe scripts in the project root.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
