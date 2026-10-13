@@ -222,7 +222,8 @@ modBreedingGroupsUI <- function(id) {
 #'
 #' The module supports multiple configuration options:
 #' \itemize{
-#'   \item \strong{Animal source}: "Top ranked" or "All available"
+#'   \item \strong{Animal source}: "Top ranked", "All available" or
+#'     "My own list" (animal IDs typed or pasted by the user)
 #'   \item \strong{Living animals only}: Every source draws only on animals
 #'     that are alive: those with a \code{status} of \code{ALIVE} when the
 #'     pedigree has a \code{status} column, otherwise those with no
