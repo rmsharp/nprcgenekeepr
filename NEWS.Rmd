@@ -145,7 +145,8 @@ longitudinal monitoring of colony genetic health.
   pedigree has no `fromCenter` column, which it needs to find any candidate.
   It uses the same words as the Potential Parents tab.
 - `checkLocusMetadata()` reports each locus's chromosome and position data as
-  complete, partial or missing. `checkLinkageMarkerGenotypeFile()` accepts
+  complete, partial or missing; a chromosome name left blank counts as
+  missing. `checkLinkageMarkerGenotypeFile()` accepts
   panels with more than two alleles per locus, such as microsatellites.
 - `markerRealizedRelatednessVariance()` estimates how far DNA-based relatedness
   can vary around the pedigree prediction. `markerLdBlock()` and
