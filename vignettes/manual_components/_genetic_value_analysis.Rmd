@@ -64,6 +64,10 @@ uniqueness can change for those animals. On the shipped one-file example, 18 of
 its 31 genotyped animals scored differently with the genotypes than without
 (one run, same random seed, 200 drops).
 
+Founder genome equivalents, their standard error and gene diversity ignore the
+genotypes: they are worked out from the pedigree alone, so a genotyped animal
+never makes them undefined.
+
 ### Results Tabs
 
 After running the analysis, results are displayed across three tabs:
