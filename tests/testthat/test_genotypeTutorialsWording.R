@@ -39,7 +39,7 @@
 ## The blocks that read the three tutorial files read ../../vignettes/...,
 ## which .Rbuildignore excludes, so they skip in a built package and run from
 ## the source tree. The two that run the example (the numbers the article
-## quotes, and the chunk) are skipped on CRAN, as they take seconds.
+## and the manual quote, and the chunk) are skipped on CRAN, as they take seconds.
 
 pkgRoot <- testthat::test_path("..", "..")
 articlePath <- file.path("vignettes", "articles", "genetic-value-analysis.qmd")
@@ -63,9 +63,10 @@ plainText <- function(lines) {
   gsub("\\s+", " ", text)
 }
 
-expectNames <- function(text, phrases) {
+expectNames <- function(text, phrases, where = "") {
   for (phrase in phrases) {
-    expect_true(grepl(phrase, text, fixed = TRUE), info = phrase)
+    expect_true(grepl(phrase, text, fixed = TRUE),
+                info = trimws(paste(where, phrase)))
   }
 }
 
@@ -159,15 +160,18 @@ test_that("the Genetic Value manual says the same", {
                         "genome uniqueness can change"))
 })
 
-test_that("the article's example numbers are what the same run gives", {
+test_that("the example numbers in the article and the manual are what the same run gives", {
   skip_on_cran()
-  article <- plainText(sourceLines(articlePath))
+  pages <- list(article = plainText(sourceLines(articlePath)),
+                manual = plainText(sourceLines(manualPath)))
   effect <- exampleGenotypeEffect()
   expect_gt(effect$nChanged, 0L)
-  expectNames(article, c(
-    sprintf("%d of its %d genotyped animals", effect$nChanged,
-            effect$nGenotyped),
-    "one run, same random seed, 200 drops"))
+  for (page in names(pages)) {
+    expectNames(pages[[page]], c(
+      sprintf("%d of its %d genotyped animals", effect$nChanged,
+              effect$nGenotyped),
+      "one run, same random seed, 200 drops"), where = page)
+  }
 })
 
 test_that("a2interactive.Rmd has a 'Using known genotypes' subsection inside the Genetic Value section", {
