@@ -98,24 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 978 Did
-**Deliverable, DONE (owner pick, option 1 of 4; Pre-RED answer "F_ROH only"; strict TDD, every gate asked and answered, REFACTOR taken):** the F_ROH warning plus a notice (`BACKLOG.md:139`, removed). `computeGenomicROH()` warns once, naming the
-full-coverage locus-file loci the matrix lacks (`R/computeGenomicROH.R:112-118`); the Genomic ROH tab shows an orange box above its table (`R/modMarkerGenetics.R:1102-1128`; "2 loci" / "1 locus", 10 names then "and N more");
-one internal helper feeds both (`R/sidecarLociMissingFromMatrix.R:22,39`). No number, picture or LD Block change; the owner chose no LD Block notice (a missing locus there drops only its own pairs).
-**Found while measuring:** the shipped sequence example has all 1,000 loci in both files, so S977's "the picture may change" was wrong (S001 stays 0.0535). Under `testServer()` the F_ROH table's output observer runs `computeGenomicROH()` at each
-upload, so its warning arrives at `setInputs()`, not at a later read (a RED test corrected in GREEN). Learning 944.
-**Gates:** claim `1c350f152`; RED `6d0c309f5` (17 new blocks, 15 failed with 28 failed expectations, 0 errors, 0 skipped); GREEN `d197e6d13` (code, help), `51497b6e7` (two RED tests corrected), `7fc65dec4` (NEWS, guide), `e14e8a923` (tests
-tightened); REFACTOR `fd6b57544` (`manText()`, `roxygenText()` in `helper-pageText.R`).
-**Verified:** suite 3,589 blocks, 11,748 expectations, 0 failed, 0 errors, 187 skipped (after the REFACTOR, on the final notes); check 0/0/0; lint 0; ratchet 1/1 (`87bf45b84eb8`); real app (full files no notice; 12 missing: 10 names
-and "and 2 more"; 1 missing: "1 locus"; pictures opened for the owner); 18 mutants caught, 4 test gaps closed first.
-**Handoff evaluation of S977: 8/10.** Helped: exact lines, the LD Block question named, the stripped-`coverage` gotcha. Missing: the picture estimate was one read of two CSVs away. Wrong: nothing (the estimate was labelled).
-**Self-assessment: 8/10.** + measured both example pairs before the gate; showed the notice in the real app before the long runs; mutants found 4 test gaps. - a RED test assumed a lazy read; a sanity block asserted a phrase GREEN removes; a wrong background wait.
-**Next (each needs an owner pick):** the two small marker fixes (`BACKLOG.md:139`), the jmac file, the harem-sire hole, the kinship2 features, another audit cluster. 116 commits are ahead of `origin/master`, none seen by CI.
-**Key files:** `R/computeGenomicROH.R:112-118`; `R/sidecarLociMissingFromMatrix.R:22,39`; `R/modMarkerGenetics.R:289,1102-1128`; `test_computeGenomicROH.R:311`; `test_modMarkerGenetics.R:1947`; `test_genomicRohLocusDocs.R`; `helper-pageText.R`.
-**Gotchas:** the helper needs `checkLocusMetadata()`'s output (it reads `coverage`), the opposite of `computeGenomicROH()`'s own input; collect warnings across the whole upload-and-read with `withCallingHandlers()`; read help with `roxygenText()` (only `#'` lines);
-the locus file upload is shared by the Linkage and Genomic ROH tabs, so one combined file would name the linkage-only loci on the F_ROH tab; never `git stash` here.
+### What Session 979 Did
+**Deliverable:** the two small marker fixes (`BACKLOG.md:139`; `checkLocusMetadata()` reads a blank chromosome as missing, `checkGenotypeFile()` gives its collision error as one line naming the column; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-13 18:05 CDT
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4, the recommended one. Pre-RED scope question (both fixes this session, or one) not yet asked.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-977 (condensed S950 to S978; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-978 (condensed S950 to S979; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -172,6 +161,10 @@ passes the sidecar to the checker (`R/modMarkerGenetics.R:553,633`); `getGenotyp
 S977: a blank allele is missing, not the text `"NA/NA"` (`R/buildMarkerGenotypeMatrix.R:54`; `R/markerHeterozygosity.R:105-119`; the shipped sequence example has 2,070 blank-allele records, so its numbers moved and
 `marker_genetics_genomic_roh.png` was retaken; strict TDD, REFACTOR taken; evaluation of S976 8/10, self 8/10). **Gotchas kept (S977):** a script's `read.csv()` keeps `""` in a text column, which the ruling did not cover;
 `computeGenomicROH()` takes the raw sidecar, not `checkLocusMetadata()`'s output (`R/modMarkerGenetics.R:817`); run a capture before a mutation harness, never together.
+S978: the F_ROH warning plus a notice above the F_ROH table (`R/computeGenomicROH.R:112-118`, `R/sidecarLociMissingFromMatrix.R:22,39`, `R/modMarkerGenetics.R:1102-1128`; no number or picture changed, the owner chose no LD Block notice;
+strict TDD, REFACTOR taken; evaluation of S977 8/10, self 8/10). **Gotchas kept (S978):** `sidecarLociMissingFromMatrix()` reads `coverage`, so it takes `checkLocusMetadata()`'s output, the opposite of `computeGenomicROH()`'s raw input;
+under `testServer()` the table's observer runs the function at each `setInputs()`, so collect warnings across the upload and the read with `withCallingHandlers()`; read help with `roxygenText()` (only `#'` lines);
+the locus file upload is shared by the Linkage and Genomic ROH tabs.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
