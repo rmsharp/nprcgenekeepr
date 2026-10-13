@@ -114,7 +114,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `moments` nor `e1071` is installed here); 6b PB4, PB7, PB11 (docs untouched), and PB13, PA4,
       PD12, PD1 (S837 documented today's behavior); 6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
-      owner ruled on all of them S976, and the three build items just below carry the rulings);
+      owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, and the two build items just below carry the rest);
       6d 22 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 (esp. RA3/RA4/RA6 (CA1, CA3), RA8
       (CA2), RB10 (CB1), RC7 (CC1)), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890); 6e 46 candidates CE-CL, and
@@ -135,23 +135,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **Marker files: a blank allele becomes the text `"NA/NA"` and is counted as a real genotype
-      (found S838, re-checked S976, owner ruled S976: treat it as missing; READY, Effort S; strict
-      TDD)** -- `buildMarkerGenotypeMatrix()` (`R/buildMarkerGenotypeMatrix.R:50-55`) turns a record
-      with a missing allele into `"NA/NA"`, which the Heterozygosity and Kinship Comparison tabs read
-      as a homozygote of an allele named NA. Measured S976 in the real module, on the
-      `test_modMarkerGenetics.R:137` fixture: a blank `Y,L4` record moves Y's Ho from 0.3333 to 0.25
-      and mean He from 0.3993 to 0.4583 (the file without that record is the right answer); 4 animals
-      x 6 loci, random alleles (seed 11), one blank record: kinship moves by up to 0.125, no warning.
-      **The ruling:** a record with either allele missing gives `NA` in the matrix, and
-      `markerExpectedHeterozygosity()` (`R/markerHeterozygosity.R:105-114`) gives `NA`, not 1.0, for a
-      locus nobody is typed at, with `meanHe` over the typed loci. **Ship the two together:** fixing the
-      builder alone makes an all-blank locus reach the app as He 1.0. Files with no blank allele keep
-      their numbers. Left for the pickup's Pre-RED: what `meanHe` is when no locus is typed, and the
-      one-allele-missing record (also `"NA/NA"` today). Touch: both roxygen blocks
-      (`R/buildMarkerGenotypeMatrix.R:25-29`, `R/markerHeterozygosity.R:75-82`), a `NEWS.Rmd` entry; the
-      Marker Genetics guide pictures were not checked. Report findings 1 and 7.
 
 - [ ] **F_ROH: a genotype file with fewer loci than its sidecar changes every animal's F_ROH with no
       message (found S838, re-checked S976, owner ruled S976: warn and show a notice; READY, Effort S

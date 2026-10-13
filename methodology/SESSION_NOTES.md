@@ -99,11 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 977 Did
-**Deliverable:** a blank allele is missing, not the text `"NA/NA"` (`BACKLOG.md:139`; `buildMarkerGenotypeMatrix()` and `markerExpectedHeterozygosity()` together; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-13 15:00 CDT
-**Status:** Session claimed. Owner pick at the Phase 0 picker: option 1 of 4. PRE-RED: two scope questions (the mean when no locus is typed; the one-allele-missing record) go to the owner before RED.
-**Phase 0:** HEAD 023f2b8b3 equals both ledger frontiers; 0 pending receipts; no merges; no untracked files; CI 10 of 10 green; dashboard 96/100; context budget WARN only for `methodology/SESSION_RUNNER.md`; ratchet results file absent (gitignored).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** a blank allele is missing, not the text `"NA/NA"` (`BACKLOG.md:139`, removed): `buildMarkerGenotypeMatrix()` gives `NA` when either allele is `NA`
+(`R/buildMarkerGenotypeMatrix.R:54`); `markerExpectedHeterozygosity()` gives `NA` for a locus nobody is typed at, `meanHe` over the typed loci, `NA_real_` when none (`R/markerHeterozygosity.R:105-119`). Pre-RED answers, both the recommended option: `NA` not `NaN`; a
+one-allele-blank record is fully missing.
+**Found while measuring:** the shipped `example_sequence_genotypes.csv` has 2,070 blank-allele records, so every number on it moves (mean He 0.5332 to 0.4951; mean F_ROH at 3 SNPs 0.0808 to 0.0560); `marker_genetics_genomic_roh.png` retaken, the other 8 pictures
+unchanged; no test pinned them. Learning 943.
+**Gates:** claim `cc73b35dc`; RED `417fc941e` (17 blocks, 39 expectations failed, 0 errors); GREEN `abf2a7864`, NEWS `c0bacf00a`, picture `2be38cc0a`; REFACTOR `c27900010` (`helper-markerBlankAlleleFixtures.R`).
+**Verified:** suite 3,571 blocks, 11,683 expectations, 0 failed, 0 errors, 187 skipped (before and after the REFACTOR); check 0/0/0; lint 0; ratchet 1/1 (`b7e3fe417ae0`); real app (X/Y/Z with a blank `Y,L4`: Ho 0.75, 0.3333, 0.25, mean He 0.3993; shipped example mean He
+0.4951); 9 mutants of the two functions caught, twice.
+**Handoff evaluation of S976: 8/10.** Helped: exact lines, the "ship together" gotcha, both Pre-RED questions named. Missing: the sequence example's 2,070 blank records and the stale picture (item tagged Effort S). Wrong: nothing.
+**Self-assessment: 8/10.** + measured the shipped example before the gate; every number in the gate text was probe-measured; RED and the mutants failed for the right reasons. - my Phase 0 report said the ratchet results file was absent (wrong path,
+`methodology/.quality-gates-results.json`; its hash matched); two probes failed first; long silent waits.
+**Next (each needs an owner pick):** the F_ROH warning plus notice (first `BACKLOG.md` item after the docs-audit item; its notice may change the picture retaken here, an estimate, not measured), the two small marker fixes, the jmac file, the harem-sire hole, the
+kinship2 features, another audit cluster. 108 commits are ahead of `origin/master`, none seen by CI.
+**Key files:** `R/buildMarkerGenotypeMatrix.R:54`; `R/markerHeterozygosity.R:105-119`; `tests/testthat/helper-markerBlankAlleleFixtures.R`; `test_markerBlankAlleleHelp.R`; `vignettes/articles/marker-genetics-screenshots.R:259-277`.
+**Gotchas:** a script's `read.csv()` keeps `""` in a text column, which the ruling did not cover (the app reads it as `NA`); `computeGenomicROH()` takes the raw sidecar, not `checkLocusMetadata()`'s output (`R/modMarkerGenetics.R:817`); run a capture before a mutation
+harness, never together; never `git stash` here.
 
 ### Sessions 947-976 (condensed S950 to S977; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
@@ -121,45 +132,37 @@ of S960 9/10, self 8/10); the candidate table's Groups count and the `Group-N.cs
 one-animal nobody-is-alive notice reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689,993-994`; 3 pictures retaken;
 evaluation of S961 8/10, self 7/10). **Gotchas kept (S961-S962):** a retake draws the last box's count, so the pin follows the picture; the nine-animal fixture's one-animal boxes
 are at seed 7; a mutation must change what the tests read (return `""`).
-S963: the guide shows the Warnings sub-tab as the app opens it after a check (`read_and_check_pedigree_warnings.png`, after the QC Summary picture, `colony-manager-guide.qmd:245-249`;
-one capture step and one shot, `colony-manager-guide-screenshots.R:195-211`; no `R/` change; strict TDD, REFACTOR taken; evaluation of S962 9/10, self 7/10). **Gotchas kept (S963):** the capture recorder counts each `do_step` and each `shot` once (95 now); the loop block at
-`test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; `devtools::check()` failed the `test_markerKinship.R:177` benchmark when the 1-minute load
-was above about 7, so read `uptime` first; the old `stash@{0}` from `dev` is not ours, never `pop` it.
-S964: no guide picture is taken with a pop-up on screen: the colony script waits before 8 pictures and the Diagram script before 3 (`wait_for_popups_before(app, "<file>.png")`,
-`tests/testthat/helper-captureHarness.R:98`); 13 pictures retaken; no `R/` change; strict TDD, REFACTOR taken; evaluation of S963 9/10, self 8/10. **Gotchas kept (S964):** a step label is a result key, so each wait names its picture; a pop-up is fixed to the viewport
-corner, so in a tall capture it lands over the bottom; run every capture script after a shown-text change; `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture that
-"differs" may only show the random `file<hex>.csv` name.
-S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check (two `on-demand` rows, `methodology/.context-budget.json:52-65`, warn 196,608 B, growth refused past 262,144 B; gate
-`test_contextBudgetLedgers.R`; strict TDD, REFACTOR taken; evaluation of S964 9/10, self 7/10). **Gotchas kept (S965):** a `read-mandated` class adds a 25,000-token check, so a file read in part takes `on-demand`;
-`context_budget.py --status` appends to the gitignored history on every run, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
+S963: the guide shows the Warnings sub-tab as the app opens it after a check (`read_and_check_pedigree_warnings.png`, `colony-manager-guide.qmd:245-249`; no `R/` change; strict TDD, REFACTOR taken; evaluation of S962 9/10, self 7/10).
+**Gotchas kept (S963):** the capture recorder counts each `do_step` and each `shot` once (95 now); `test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; read `uptime` before a `test_markerKinship.R:177` benchmark failure (load above
+about 7 fails it); the old `stash@{0}` from `dev` is not ours, never `pop` it.
+S964: no guide picture is taken with a pop-up on screen (`wait_for_popups_before(app, "<file>.png")`, `tests/testthat/helper-captureHarness.R:98`; 13 pictures retaken; strict TDD, REFACTOR taken; evaluation of S963 9/10, self 8/10). **Gotchas kept (S964):** a step label
+is a result key, so each wait names its picture;
+a pop-up is fixed to the viewport corner; run every capture script after a shown-text change; `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture may only differ by the random `file<hex>.csv` name.
+S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check (two `on-demand` rows, `methodology/.context-budget.json:52-65`; gate `test_contextBudgetLedgers.R`; strict TDD, REFACTOR taken; evaluation of S964 9/10, self 7/10).
+**Gotchas kept (S965):** a file read in part takes `on-demand`, not `read-mandated`; `context_budget.py --status` appends to the gitignored history, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
 S966: the four likely code defects of docs-audit slice 4 re-checked (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; all four still real; an audit, no code change; evaluation of S965 8/10, self 7/10).
-**Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported, and the column-change note needs `reportChanges = TRUE`; the one-file option's input is `pedigreeFileTwo`;
-a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`; probe scripts live in the scratchpad.
-S967: the `groupAddAssign()` help says the groups with the largest minimum group size win (`R/groupAddAssign.R:11-12`; the owner's sentence; gate `test_groupAddAssignHelp.R`; strict TDD, REFACTOR taken; evaluation of
-S966 9/10, self 8/10). **Gotchas kept (S967):** a mutation of `R/` code needs `pkgload::load_all()` after it (Learning 933); `devtools::document()` touched one man page, so read `git diff --stat`;
-`PROJECT_LEARNINGS.md` has no trailing newline until an append, so check the blank line before a new heading.
+**Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; the one-file option's input is `pedigreeFileTwo`; a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`.
+S967: the `groupAddAssign()` help says the groups with the largest minimum group size win (`R/groupAddAssign.R:11-12`; the owner's sentence; gate `test_groupAddAssignHelp.R`; strict TDD, REFACTOR taken; evaluation of S966 9/10, self 8/10).
+**Gotchas kept (S967):** a mutation of `R/` code needs `pkgload::load_all()` after it (Learning 933); `devtools::document()` touched one man page, so read `git diff --stat`; check the blank line before an appended `PROJECT_LEARNINGS.md` heading.
 S968: a decision session (no code): the owner took the recommended option on all three docs-audit part 2 rulings (done S969, S970, S971, S973; evaluation of S967 9/10, self 8/10). **Gotchas kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog item's
 line cites shift after any edit above it, so re-grep.
-S969: the Genetic Value tab no longer has the two do-nothing check boxes (`R/modGeneticValue.R:63-66`; gate `test_geneticValueOptionBoxes.R`; strict TDD,
-REFACTOR taken; evaluation of S968 9/10, self 8/10). **Gotchas kept (S969):** grep a removed control by id, by
-wrapped label and by its kind, then check stranded imports (Learning 935); quote `echo` separators in zsh.
-S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; the server's pool code stays, a stale `"custom"` acts as "All available"; gate
-`test_breedingGroupsSourceChoices.R`; NEWS sentence `NEWS.Rmd:276-278`; six `breeding_group_*.png` retaken; strict TDD, REFACTOR taken; evaluation of S969 8/10, self 7/10). **Gotchas kept (S970):** grep a removed choice by id, wrapped label, kind AND count words
-("all three", "an uploaded list") and a picture's random counts before RED (Learning 936); read `uptime` before a benchmark failure; the owner's two instructions are `BACKLOG.md:139,152`.
+S969: the Genetic Value tab no longer has the two do-nothing check boxes (`R/modGeneticValue.R:63-66`; gate `test_geneticValueOptionBoxes.R`; strict TDD, REFACTOR taken; evaluation of S968 9/10, self 8/10).
+**Gotchas kept (S969):** grep a removed control by id, wrapped label and kind, then check stranded imports (Learning 935).
+S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; a stale `"custom"` acts as "All available"; gate `test_breedingGroupsSourceChoices.R`; NEWS sentence `NEWS.Rmd:276-278`; six `breeding_group_*.png` retaken; strict TDD,
+REFACTOR taken; evaluation of S969 8/10, self 7/10).
+**Gotchas kept (S970):** grep a removed choice by id, wrapped label, kind AND count words ("all three", "an uploaded list") and a picture's random counts before RED (Learning 936).
 S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`; strict TDD, REFACTOR taken; evaluation of S970 8/10, self 7/10).
-**Gotchas kept (S971):** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe`
-(`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout` mutation harness; wait on a run's `EXIT=`, not the outer shell.
-S972: the QC Summary names allele columns that are found but cannot be read, instead of saying none were found (`R/readOneFileGenotypes.R:41-61`, `genotypePairLabels`); the Input page's two cells,
-the guide and NEWS say it; a real `.xlsx` upload and the four Input E2E files are pinned (strict TDD, REFACTOR taken; evaluation of S971 9/10, self 8/10). **Gotchas kept (S972):** a real-app or E2E run
-loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`;
-a surviving mutation can be equivalent (`[1:2]` equals `[-3]` with 3 labels); wait for `uptime` before E2E.
-S973: the Breeding Groups Source box has a third choice, "My own list", with an "Animal IDs:" box; an id not in the pedigree stops the run and is named, an animal not alive is left out and named,
-a blank box asks for an id (`R/parseIdList.R`, one ID reader in place of three; strict TDD, REFACTOR taken; evaluation of S972 9/10, self 7/10).
-**Gotchas kept (S973):** grep a choice's prose by MEANING as well as by label (the in-app guidance box escaped the label greps; Learning 939); a retake draws the last box's count, so
-`test_guideBreedingGroupsWording.R` follows the picture (seven now); `obfuscated_rhesus_mhc_ped.csv` has no dead animals.
-S974: the one-file genotype tutorials: the article and manual say a genotyped animal's own alleles replace simulated ones, and `a2interactive.Rmd:742-785` shows `addGenotype()` then `reportGV()` (gate
-`test_genotypeTutorialsWording.R`; strict TDD, REFACTOR taken; evaluation of S973 9/10, self 8/10); it found the NA founder numbers. **Gotchas kept (S974):** the chunk's counts change with any edit above it (one seed);
-rerun a load-failed benchmark file alone.
+**Gotchas kept (S971):** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe` (`test_captureHarness.R:779`); copy a file before a `git checkout` mutation harness; wait on a run's `EXIT=`, not the outer shell.
+S972: the QC Summary names allele columns that are found but cannot be read (`R/readOneFileGenotypes.R:41-61`, `genotypePairLabels`); the Input page's two cells, the guide and NEWS say it; a real `.xlsx` upload and the four Input E2E files are pinned (strict TDD,
+REFACTOR taken; evaluation of S971 9/10, self 8/10).
+**Gotchas kept (S972):** a real-app or E2E run loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`; a surviving mutation can
+be equivalent; wait for `uptime` before E2E.
+S973: the Breeding Groups Source box has a third choice, "My own list", with an "Animal IDs:" box (`R/parseIdList.R`, one ID reader in place of three; an id not in the pedigree stops the run and is named, an animal not alive is left out and named, a blank box asks for
+an id; strict TDD, REFACTOR taken; evaluation of S972 9/10, self 7/10).
+**Gotchas kept (S973):** grep a choice's prose by MEANING as well as by label (Learning 939); a retake draws the last box's count, so `test_guideBreedingGroupsWording.R` follows the picture (seven now).
+S974: the one-file genotype tutorials: the article and manual say a genotyped animal's own alleles replace simulated ones, and `a2interactive.Rmd:742-785` shows `addGenotype()` then `reportGV()` (gate `test_genotypeTutorialsWording.R`; strict TDD, REFACTOR taken;
+evaluation of S973 9/10, self 8/10); it found the NA founder numbers.
+**Gotchas kept (S974):** the chunk's counts change with any edit above it (one seed); rerun a load-failed benchmark file alone.
 S975: founder genome equivalents, their standard error and gene diversity come from the pedigree alone, so the Summary tab shows numbers, not `NA` and `N/A` (`R/reportGV.R:294-318`;
 strict TDD, REFACTOR taken; evaluation of S974 9/10, self 8/10). **Gotchas kept (S975):** `hasGenotype()` is TRUE for numeric columns
 with no code; the second drop runs after the first; click `a[data-value='Summary']` first; `test_oneFileGenotypesWording.R:135` builds the example's path itself.
@@ -258,24 +261,12 @@ MZ-twin founders their kinship); probe with `qcPed` or `examplePedigree`, never 
 "identical" when both runs failed the same way, so print each run's status first; the full suite and `devtools::check()` run one at
 a time.
 
-### What Session 924 Did (condensed S925 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-`reportGV()` and `gvaConvergence()` stop with a message giving the number of animals when the population of interest has fewer than 2
-(strict TDD; `assertPopulationSize()`, `R/reportGV.R:199`, `R/gvaConvergence.R:154`; 13 tests). Close-out `65c0a7346`. Handoff
-evaluation of S923: 9/10. Self 8/10. **Gotchas kept:** preview a fix by patching the loaded namespace (`unlockBinding` + `assign` on
-`asNamespace(...)`), which does not change the attached `package:` copy (Learning 894); `devtools::document()` rewrites
-`man/nprcgenekeepr-package.Rd`: restore it; `SESSION_NOTES.md` must stay under about 56,700 B (25,000 tokens by the commit hook).
-
-### What Session 923 Did (condensed S924; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The one-id `convertRelationships()` and empty `makeRelationClassesTable()` finding shipped (strict TDD): `filterKinMatrix()`
-always returns a matrix (`R/filterKinMatrix.R:28`, `drop = FALSE`) plus two empty-table guards; 14 new tests. Claim `24239d31d`,
-RED `831050908`, GREEN `19d976b45`, REFACTOR `9ad69b78f`, close-out `7d85f4b89`. Handoff evaluation of S922: 9/10. Self 8/10.
-**Gotchas kept:** `rmarkdown::render("NEWS.Rmd")` (no extra arguments) re-knits `NEWS.md`; in zsh use `${=VAR}` to split.
-
-### What Session 922 Did (condensed S923 and S925; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-The receipt-placement gate shipped (strict TDD; tests only): `tests/testthat/test_handoffsReceiptPlacement.R` (7 tests) fails
-unless the format-example box of `HANDOFFS.md` holds exactly one receipt. Close-out `325e0c480`. Handoff evaluation of S921: 9/10.
-Self 8/10. **Gotchas kept:** after writing a claim receipt run that test (source tree only); a new receipt goes directly above
-the newest one, below the archive pointers; take `wc -c` after the last edit (Learning 871).
+### Sessions 922-924 (condensed S923 to S925 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S922: the receipt-placement gate `test_handoffsReceiptPlacement.R` (7 tests; close-out `325e0c480`). S923: `filterKinMatrix()` always returns a matrix (`R/filterKinMatrix.R:28`, `drop = FALSE`) plus two empty-table guards (claim `24239d31d`,
+close-out `7d85f4b89`). S924: `reportGV()` and `gvaConvergence()` stop with a message giving the animal count when the population of interest has fewer than 2 (`assertPopulationSize()`, `R/reportGV.R:199`, `R/gvaConvergence.R:154`; close-out `65c0a7346`).
+Strict TDD; evaluations 8-9/10, self 8/10. **Gotchas kept:** after writing a claim receipt run `test_handoffsReceiptPlacement.R` (source tree only); a new receipt goes directly above the newest one, below the archive pointers; take `wc -c` after the last edit
+(Learning 871); preview a fix by patching the loaded namespace (`unlockBinding` + `assign` on `asNamespace(...)`; Learning 894); `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd`: restore it; `SESSION_NOTES.md` must stay under about 56,700 B
+(25,000 tokens by the commit hook); `rmarkdown::render("NEWS.Rmd")` re-knits `NEWS.md`; in zsh use `${=VAR}` to split.
 
 ### What Session 921 Did (condensed S922, S925 and S928; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 The Pedigree Browser Diagram legend has a dashed row, "Same animal, again" (`R/modPedigree.R:707-710`; strict TDD). Close-out
