@@ -286,6 +286,7 @@ modMarkerGeneticsUI <- function(id) {
                                    value = 1000000.0, min = 1.0
                                  ))
                         ),
+                        uiOutput(ns("sequenceRohNotice")),
                         DT::DTOutput(ns("sequenceRohTable")),
                         actionButton(
                           ns("sequenceExportPreview"),
@@ -1097,6 +1098,34 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
         write.csv(ldBlockExportRaw(), file, row.names = FALSE)
       }
     )
+
+    ## computeGenomicROH() divides every animal's F_ROH by one genome length
+    ## built from the genotype file's loci only, so a locus the locus file
+    ## lists (with a chromosome and a position) that the genotype file lacks
+    ## moves every number. The function warns, but this tab has no warning
+    ## handler, so the same loci are named here, from the same helper. Quiet
+    ## while a file is missing or fails validation (the table shows that).
+    output$sequenceRohNotice <- renderUI({
+      gmat <- safeRead(genotypeMatrixR)
+      lmeta <- safeRead(locusMetadata)
+      if (is.null(gmat) || is.null(lmeta)) {
+        return(NULL)
+      }
+      absentLoci <- sidecarLociMissingFromMatrix(gmat, lmeta)
+      if (length(absentLoci) == 0L) {
+        return(NULL)
+      }
+      one <- length(absentLoci) == 1L
+      div(class = "alert alert-warning",
+          paste0(length(absentLoci), if (one) " locus" else " loci",
+                 " with a chromosome and position in the locus metadata",
+                 " file ", if (one) "is" else "are",
+                 " not in the genotype file (", nameLoci(absentLoci), ").",
+                 " F_ROH is calculated without ", if (one) "it" else "them",
+                 ", so every animal's F_ROH is relative to a shorter",
+                 " stretch of genome than the locus metadata file",
+                 " describes."))
+    })
 
     output$sequenceRohTable <- DT::renderDT({
       tbl <- sequenceRohTable()

@@ -26,10 +26,12 @@
 #' \code{genotypeMatrix} (Ceballos et al. 2018's \eqn{L_{autosome}}
 #' convention). The denominator is fixed across individuals within one call,
 #' which avoids conflating an individual's own missingness with inbreeding,
-#' but it changes with the matrix's locus set: a full-coverage locus in
-#' \code{locusMetadata} that is absent from the matrix is excluded silently
-#' (only matrix loci lacking full coverage warn), so \code{fRoh} is
-#' comparable across a cohort only when the same loci are used.
+#' but it changes with the matrix's locus set: full-coverage loci of
+#' \code{locusMetadata} that are not columns of \code{genotypeMatrix} are left
+#' out of that length, with one warning naming them (at most 10 are named,
+#' then "and N more"), so \code{fRoh} is comparable across a cohort only when
+#' the same loci are used. A locus without a position never enters the
+#' length, so its absence is not reported.
 #'
 #' Only loci with full \code{locusMetadata} coverage (both \code{chrom} and
 #' \code{pos} present, per \code{\link{checkLocusMetadata}}'s own
@@ -106,6 +108,13 @@ computeGenomicROH <- function(genotypeMatrix, locusMetadata,
   if (length(droppedLoci) > 0L) {
     warning("computeGenomicROH: locus/loci excluded from ROH analysis (no ",
             "full chrom + pos coverage): ", toString(droppedLoci), ".")
+  }
+  absentLoci <- sidecarLociMissingFromMatrix(genotypeMatrix, locusMetadata)
+  if (length(absentLoci) > 0L) {
+    warning("computeGenomicROH: locus/loci in locusMetadata with full chrom + ",
+            "pos coverage are not columns of genotypeMatrix, so they are left ",
+            "out of the genome length every animal's fRoh is divided by: ",
+            nameLoci(absentLoci), ".")
   }
 
   ## Restrict to full-coverage loci actually present in genotypeMatrix,
