@@ -1943,3 +1943,183 @@ test_that("modMarkerGenetics's candidate notice takes its sentence from fromCent
     expect_false(grepl("colony-origin", noticeHtml, fixed = TRUE))
   })
 })
+
+## RED (S978; BACKLOG.md:139, S976 audit finding 2, the owner's S976 ruling
+## "warn and show a notice"): when the locus file lists loci (with a chromosome
+## and a position) that the genotype file does not hold, every animal's F_ROH
+## is divided by a shorter genome length than the locus file describes, and the
+## tab said nothing. The Genomic ROH tab now shows a notice above its table
+## naming how many such loci there are and which; every number stays (the
+## function's own warning is pinned in test_computeGenomicROH.R). The LD Block
+## table gets no notice (the owner's S978 pre-RED answer: F_ROH only).
+##
+## Fixture: the i152Roh* files above (9 loci, 3 animals, two chromosomes),
+## with L8 and L9 (or L9 alone) left out of the genotype file. With L9 absent
+## the genome length is 2,000,000 + 400,000 = 2,400,000 (it was 2,000,000 +
+## 900,000 = 2,900,000); at minSnp 3 and minBp 1e6 I1's one segment is
+## 1,100,000 (11/24), I2 has none (0), and I3's is 2,000,000 (20/24).
+
+i978GenotypeWithout <- function(loci) {
+  path <- tempfile(fileext = ".csv")
+  write.csv(i152RohGenotype[!i152RohGenotype$locus %in% loci, ], path,
+            row.names = FALSE)
+  path
+}
+i978LacksL8L9Path <- i978GenotypeWithout(c("L8", "L9"))
+i978LacksL9Path <- i978GenotypeWithout("L9")
+
+## A tenth locus with a chromosome but no position ("partial" coverage) that
+## the genotype file does not hold.
+i978PartialLocusMetadata <- rbind(
+  i152RohLocusMetadata,
+  data.frame(locus = "L10", chrom = "2", pos = NA_real_,
+             stringsAsFactors = FALSE)
+)
+i978PartialLocusMetadataPath <- tempfile(fileext = ".csv")
+write.csv(i978PartialLocusMetadata, i978PartialLocusMetadataPath,
+          row.names = FALSE)
+
+## No allele columns at all: the upload fails validation.
+i978BadGenotypePath <- tempfile(fileext = ".csv")
+write.csv(data.frame(foo = 1L:2L, bar = 3L:4L), i978BadGenotypePath,
+          row.names = FALSE)
+
+i978Upload <- function(session, genotypePath = NULL, locusPath = NULL) {
+  if (!is.null(genotypePath)) {
+    suppressWarnings(session$setInputs(genotypeFile = list(
+      name = "i978_genotype.csv", datapath = genotypePath
+    )))
+  }
+  if (!is.null(locusPath)) {
+    session$setInputs(locusMetadataFile = list(
+      name = "i978_locus_metadata.csv", datapath = locusPath
+    ))
+  }
+}
+
+## The notice's text, or "ERROR: <message>": a missing or failing output must
+## fail an expectation (RED), not stop the file.
+i978Notice <- function(output) {
+  tryCatch(trimws(noticeText(output$sequenceRohNotice)),
+           error = function(e) paste("ERROR:", conditionMessage(e)))
+}
+
+test_that("modMarkerGeneticsUI puts the F_ROH notice inside the Genomic ROH tab, above its table, and in no other tab", {
+  ui_html <- as.character(modMarkerGeneticsUI("test"))
+  panes <- strsplit(ui_html, '<div class="tab-pane', fixed = TRUE)[[1L]][-1L]
+  paneNames <- sub('data-value="([^"]+)"', "\\1",
+                   regmatches(panes, regexpr('data-value="[^"]+"', panes)))
+  names(panes) <- paneNames
+
+  expect_true("Genomic ROH (F_ROH)" %in% paneNames)
+  rohPane <- panes[["Genomic ROH (F_ROH)"]]
+  noticeAt <- regexpr("test-sequenceRohNotice", rohPane, fixed = TRUE)
+  tableAt <- regexpr("test-sequenceRohTable", rohPane, fixed = TRUE)
+  expect_true(noticeAt > 0L)
+  expect_true(tableAt > 0L)
+  expect_true(noticeAt < tableAt)
+  for (other in setdiff(paneNames, "Genomic ROH (F_ROH)")) {
+    expect_false(grepl("sequenceRohNotice", panes[[other]], fixed = TRUE),
+                 info = other)
+  }
+})
+
+test_that("modMarkerGenetics's F_ROH notice says how many locus-file loci are not in the genotype file and names them", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i978LacksL8L9Path, i152RohLocusMetadataFilePath)
+    notice <- i978Notice(output)
+
+    expect_match(notice, "alert-warning", fixed = TRUE)
+    expect_match(notice, "2 loci", fixed = TRUE)
+    expect_match(notice, "L8, L9", fixed = TRUE)
+    expect_match(notice, "not in the genotype file", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's F_ROH notice says '1 locus', not '1 loci', for one missing locus", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i978LacksL9Path, i152RohLocusMetadataFilePath)
+    notice <- i978Notice(output)
+
+    expect_match(notice, "1 locus", fixed = TRUE)
+    expect_false(grepl("1 loci", notice, fixed = TRUE))
+    expect_match(notice, "L9", fixed = TRUE)
+    expect_match(notice, "not in the genotype file", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's F_ROH table keeps its hand-checked numbers when a locus is missing, and the function's warning still reaches the console", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i978Upload(session, i978LacksL9Path, i152RohLocusMetadataFilePath)
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    expect_warning(tbl <- result$sequenceRohTable(),
+                   "not columns of genotypeMatrix", fixed = TRUE)
+    byId <- function(col) stats::setNames(tbl[[col]], tbl$id)
+    expect_equal(byId("totalRohLength")[["I1"]], 1100000)
+    expect_equal(byId("fRoh")[["I1"]], 11 / 24, tolerance = 1e-6)
+    expect_equal(byId("nSegments")[["I2"]], 0L)
+    expect_equal(byId("fRoh")[["I2"]], 0, tolerance = 1e-6)
+    expect_equal(byId("totalRohLength")[["I3"]], 2000000)
+    expect_equal(byId("fRoh")[["I3"]], 20 / 24, tolerance = 1e-6)
+  })
+})
+
+test_that("modMarkerGenetics's F_ROH notice is empty when the genotype file holds every locus of the locus file", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i152RohGenotypeFilePath, i152RohLocusMetadataFilePath)
+
+    expect_equal(i978Notice(output), "")
+  })
+})
+
+test_that("modMarkerGenetics's F_ROH notice does not count a locus-file locus that has no position", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i152RohGenotypeFilePath, i978PartialLocusMetadataPath)
+
+    expect_equal(i978Notice(output), "")
+  })
+})
+
+test_that("modMarkerGenetics's F_ROH notice is empty, and nothing fails, while a file is missing or the genotype upload is invalid", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    expect_equal(i978Notice(output), "")
+  })
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, genotypePath = i978LacksL9Path)
+    expect_equal(i978Notice(output), "")
+  })
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, locusPath = i152RohLocusMetadataFilePath)
+    expect_equal(i978Notice(output), "")
+  })
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    i978Upload(session, i978BadGenotypePath, i152RohLocusMetadataFilePath)
+    expect_equal(i978Notice(output), "")
+  })
+})

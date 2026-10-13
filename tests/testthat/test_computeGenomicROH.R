@@ -307,3 +307,165 @@ test_that("computeGenomicROH defaults to minSnp = 50L and minBp = 1e6", {
   expect_true(all(result$totalRohLength == 0))
   expect_true(all(result$fRoh == 0))
 })
+
+## RED (S978; BACKLOG.md:139, S976 audit finding 2, the owner's S976 ruling
+## "warn and show a notice"): every animal's F_ROH is its summed ROH length
+## over ONE genome length, built only from the full-coverage locus-file loci
+## that are columns of the genotype matrix. A genotype file with fewer loci
+## than its locus file therefore moved every animal's F_ROH with no message
+## (the help example gives 2/7 with four loci and 4/9 without L4, 0 warnings).
+## The ruling: a warning naming the loci the matrix lacks; every number stays.
+## Only a locus that would have counted (full coverage: chromosome AND
+## position) is named -- a locus without a position never entered the genome
+## length, so its absence changes nothing. The names come in locus-file order,
+## at most 10, then "and N more" (a 1,000-locus locus file against a 12-locus
+## genotype file would otherwise name 988).
+
+## The value of computeGenomicROH(...) and every warning it raised, in order.
+rohWithWarnings <- function(...) {
+  warnings <- character(0L)
+  result <- withCallingHandlers(
+    computeGenomicROH(...),
+    warning = function(w) {
+      warnings <<- c(warnings, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+  list(result = result, warnings = warnings)
+}
+
+## The warnings about locus-file loci the matrix lacks, as one string.
+missingLociMessage <- function(warnings) {
+  hits <- warnings[grepl("not columns of genotypeMatrix", warnings,
+                         fixed = TRUE)]
+  paste(hits, collapse = " | ")
+}
+
+## How many of the warnings are about locus-file loci the matrix lacks.
+missingLociCount <- function(warnings) {
+  sum(grepl("not columns of genotypeMatrix", warnings, fixed = TRUE))
+}
+
+helpExampleMeta <- data.frame(
+  locus = paste0("L", 1L:4L),
+  chrom = rep("1", 4L),
+  pos = c(0, 400000, 900000, 1400000),
+  stringsAsFactors = FALSE
+)
+helpExampleMatrix <- matrix(
+  c("A/A", "A/A", "A/B", "A/A"),
+  nrow = 1L, dimnames = list("Animal1", helpExampleMeta$locus)
+)
+
+test_that("computeGenomicROH warns naming a full-coverage locus the genotype matrix lacks, and every number stays", {
+  ## All four loci: L1-L2 is the one run (2 SNPs >= minSnp 2, 400,000 bp >=
+  ## minBp 300,000; L3 is heterozygous), genomeLength 1,400,000: fRoh 2/7.
+  full <- rohWithWarnings(helpExampleMatrix, helpExampleMeta,
+                          minSnp = 2L, minBp = 300000)
+  expect_equal(full$result$fRoh, 2 / 7, tolerance = 1e-6)
+  expect_equal(missingLociCount(full$warnings), 0L)
+
+  ## L4 left out of the matrix: the same run, genomeLength 900,000: fRoh 4/9.
+  lacking <- rohWithWarnings(helpExampleMatrix[, 1L:3L, drop = FALSE],
+                             helpExampleMeta, minSnp = 2L, minBp = 300000)
+  expect_equal(lacking$result$nSegments, 1L)
+  expect_equal(lacking$result$totalRohLength, 400000)
+  expect_equal(lacking$result$fRoh, 4 / 9, tolerance = 1e-6)
+  expect_equal(missingLociCount(lacking$warnings), 1L)
+  expect_match(missingLociMessage(lacking$warnings), "L4", fixed = TRUE)
+})
+
+test_that("computeGenomicROH names every missing locus in one warning, in locus-file order", {
+  meta <- data.frame(
+    locus = paste0("L", 1L:6L),
+    chrom = rep("1", 6L),
+    pos = seq(0, by = 500000, length.out = 6L),
+    stringsAsFactors = FALSE
+  )
+  ## The matrix holds L5, L1, L3 -- not in locus-file order -- so the names
+  ## below cannot come from the matrix's own order.
+  genotypeMatrix <- matrix(
+    c("A/A", "A/A", "A/A"),
+    nrow = 1L, dimnames = list("Z1", c("L5", "L1", "L3"))
+  )
+  out <- rohWithWarnings(genotypeMatrix, meta, minSnp = 2L, minBp = 500000)
+
+  expect_equal(missingLociCount(out$warnings), 1L)
+  expect_match(missingLociMessage(out$warnings), "L2, L4, L6", fixed = TRUE)
+})
+
+test_that("computeGenomicROH cuts a long list of missing loci at 10 and says how many more", {
+  meta <- data.frame(
+    locus = sprintf("L%02d", 1L:14L),
+    chrom = rep("1", 14L),
+    pos = seq(0, by = 100000, length.out = 14L),
+    stringsAsFactors = FALSE
+  )
+
+  ## 12 missing (L03-L14): the first 10, then "and 2 more".
+  twelveMissing <- matrix(
+    c("A/A", "A/A"),
+    nrow = 1L, dimnames = list("Z1", meta$locus[1L:2L])
+  )
+  msg <- missingLociMessage(
+    rohWithWarnings(twelveMissing, meta, minSnp = 2L,
+                    minBp = 100000)$warnings
+  )
+  expect_match(msg, "L03, L04, L05, L06, L07, L08, L09, L10, L11, L12, and 2 more",
+               fixed = TRUE)
+  expect_false(grepl("L13", msg, fixed = TRUE))
+
+  ## Exactly 10 missing (L05-L14): all ten named, no "more".
+  tenMissing <- matrix(
+    rep("A/A", 4L),
+    nrow = 1L, dimnames = list("Z1", meta$locus[1L:4L])
+  )
+  msg10 <- missingLociMessage(
+    rohWithWarnings(tenMissing, meta, minSnp = 2L, minBp = 100000)$warnings
+  )
+  expect_match(msg10, "L05, L06, L07, L08, L09, L10, L11, L12, L13, L14",
+               fixed = TRUE)
+  expect_false(grepl("[0-9]+ more", msg10))
+})
+
+test_that("computeGenomicROH does not warn about a locus-file locus with no position that the matrix lacks", {
+  ## L3 has a chromosome but no position ("partial" coverage): it never
+  ## entered the genome length, so leaving it out of the matrix changes
+  ## nothing and nothing is said. L1-L2: 400,000 bp over a genome of
+  ## 400,000 bp, fRoh 1.
+  meta <- data.frame(
+    locus = c("L1", "L2", "L3"),
+    chrom = rep("1", 3L),
+    pos = c(0, 400000, NA),
+    stringsAsFactors = FALSE
+  )
+  genotypeMatrix <- matrix(
+    c("A/A", "A/A"),
+    nrow = 1L, dimnames = list("Y1", c("L1", "L2"))
+  )
+  out <- rohWithWarnings(genotypeMatrix, meta, minSnp = 2L, minBp = 300000)
+
+  expect_length(out$warnings, 0L)
+  expect_equal(out$result$fRoh, 1, tolerance = 1e-6)
+})
+
+test_that("computeGenomicROH still returns NA for a locus file that shares no loci with the matrix, and now names the locus-file loci", {
+  ## The wrong locus file uploaded: M1, M2 in the locus file, L1, L2 in the
+  ## matrix. The two existing warnings stay (the matrix loci have no coverage;
+  ## the genome length is 0, so fRoh is NA); the missing locus-file loci are
+  ## named too.
+  meta <- data.frame(
+    locus = c("M1", "M2"),
+    chrom = rep("1", 2L),
+    pos = c(0, 900000),
+    stringsAsFactors = FALSE
+  )
+  genotypeMatrix <- matrix(
+    c("A/A", "A/A"),
+    nrow = 1L, dimnames = list("X1", c("L1", "L2"))
+  )
+  out <- rohWithWarnings(genotypeMatrix, meta, minSnp = 2L, minBp = 300000)
+
+  expect_true(is.na(out$result$fRoh))
+  expect_match(missingLociMessage(out$warnings), "M1, M2", fixed = TRUE)
+})
