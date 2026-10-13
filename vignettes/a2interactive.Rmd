@@ -739,6 +739,51 @@ summary(trimmedGeneticValue)
 It is clear that limiting your analysis to the animals of interest
 reduces the effort required to examine the animals of interest.
 
+### Using known genotypes
+
+Known genotypes give the gene drop real alleles to start from in place of
+simulated ones. The Input tab reads them when "Pedigree(s) and genotypes in
+one file" is chosen and the file has two allele columns (_first_ and _second_,
+_first_name_ and _second_name_, or _allele_1_ and _allele_2_), and its QC
+Summary says which it read. A script gives a pedigree the same integer codes
+with __addGenotype__. It numbers each distinct allele label from 10001, in
+sorted order over both columns, and adds the codes as the integer columns
+_first_ and _second_. __reportGV__ finds those two columns by itself, and
+__getGVGenotype__ shows what it finds.
+
+The next chunk reads the package's one-file example, a rhesus MHC pedigree in
+which some animals have allele labels in _first_name_ and _second_name_. It
+hands __addGenotype__ the rows that have labels, counts the animals with codes,
+runs __reportGV__ and counts the genotyped animals at each genome uniqueness
+value. Each of those animals starts the gene drop from its own two alleles;
+the alleles of every other animal are simulated or passed down from them.
+
+```{r genotypes-from-label-columns, warning = FALSE}
+genotypeFile <- system.file("extdata", "examples",
+  "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
+  package = "nprcgenekeepr"
+)
+labelPed <- qcStudbook(getPedigree(genotypeFile),
+  reportErrors = FALSE, reportChanges = FALSE
+)
+labelColumns <- c("first_name", "second_name")
+hasLabels <- !is.na(labelPed$first_name) | !is.na(labelPed$second_name)
+genotypePed <- addGenotype(
+  labelPed[, !(names(labelPed) %in% labelColumns)],
+  labelPed[hasLabels, c("id", labelColumns)]
+)
+c(animals = nrow(genotypePed), with_codes = sum(!is.na(genotypePed$first)))
+genotypeGV <- reportGV(genotypePed,
+  guIter = 200L,
+  guThresh = 3L,
+  byID = TRUE,
+  updateProgress = NULL
+)
+genotypedGu <- genotypeGV$report$gu[genotypeGV$report$id %in%
+  genotypePed$id[!is.na(genotypePed$first)]]
+table(genotypedGu)
+```
+
 ### Detailed look at the Genetic Value Report object
 
 The names of the object within the genetic value report object 
