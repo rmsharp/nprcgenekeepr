@@ -60,8 +60,10 @@ newsBullet <- function() {
 ## Sanity checks on the four readers (green at HEAD): each finds the text the
 ## RED tests below are about, so a reader that finds nothing cannot pass them.
 test_that("the readers find the Genomic ROH help, guide paragraph and NEWS bullet", {
-  expect_match(manPage(), "excluded silently", fixed = TRUE)
-  expect_match(roxygenBlock(), "excluded silently", fixed = TRUE)
+  ## A sentence both help places keep before and after the change.
+  keeps <- "comparable across a cohort only when the same loci are used"
+  expect_match(manPage(), keeps, fixed = TRUE)
+  expect_match(roxygenBlock(), keeps, fixed = TRUE)
   expect_match(guideParagraph(), "F_ROH is the proportion of the genome",
                fixed = TRUE)
   expect_match(newsBullet(), "de-identified export", fixed = TRUE)

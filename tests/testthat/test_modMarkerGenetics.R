@@ -1984,16 +1984,23 @@ i978BadGenotypePath <- tempfile(fileext = ".csv")
 write.csv(data.frame(foo = 1L:2L, bar = 3L:4L), i978BadGenotypePath,
           row.names = FALSE)
 
-i978Upload <- function(session, genotypePath = NULL, locusPath = NULL) {
+## Under testServer() the table's output observer runs on every upload, so
+## computeGenomicROH()'s warning for a missing locus is raised by the
+## setInputs() of the second file, not by a later read of the table; `quiet`
+## says whether to hush it. The genotype upload is always hushed (I3 is
+## homozygous everywhere, see the fixture note above).
+i978Upload <- function(session, genotypePath = NULL, locusPath = NULL,
+                       quiet = TRUE) {
+  hush <- if (quiet) suppressWarnings else identity
   if (!is.null(genotypePath)) {
     suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i978_genotype.csv", datapath = genotypePath
     )))
   }
   if (!is.null(locusPath)) {
-    session$setInputs(locusMetadataFile = list(
+    hush(session$setInputs(locusMetadataFile = list(
       name = "i978_locus_metadata.csv", datapath = locusPath
-    ))
+    )))
   }
 }
 
@@ -2060,11 +2067,19 @@ test_that("modMarkerGenetics's F_ROH table keeps its hand-checked numbers when a
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    i978Upload(session, i978LacksL9Path, i152RohLocusMetadataFilePath)
-    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    i978Upload(session, genotypePath = i978LacksL9Path)
+    seen <- character(0L)
+    tbl <- withCallingHandlers({
+      i978Upload(session, locusPath = i152RohLocusMetadataFilePath,
+                 quiet = FALSE)
+      session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+      result$sequenceRohTable()
+    }, warning = function(w) {
+      seen <<- c(seen, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    })
 
-    expect_warning(tbl <- result$sequenceRohTable(),
-                   "not columns of genotypeMatrix", fixed = TRUE)
+    expect_true(any(grepl("not columns of genotypeMatrix", seen, fixed = TRUE)))
     byId <- function(col) stats::setNames(tbl[[col]], tbl$id)
     expect_equal(byId("totalRohLength")[["I1"]], 1100000)
     expect_equal(byId("fRoh")[["I1"]], 11 / 24, tolerance = 1e-6)
