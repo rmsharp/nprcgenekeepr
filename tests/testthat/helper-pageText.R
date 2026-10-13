@@ -3,9 +3,11 @@
 ##
 ## Shared by the tests that pin a page's wording (test_originFundingWording.R,
 ## test_defaultPopulationWording.R, test_oneFileGenotypesWording.R,
-## test_genotypeTutorialsWording.R): read a page of the source tree as lines or
+## test_genotypeTutorialsWording.R, test_markerBlankAlleleHelp.R,
+## test_genomicRohLocusDocs.R): read a page of the source tree as lines or
 ## as one line of text, count a phrase in it, say which phrases a page now holds
-## and which it no longer holds, and pull a code chunk out of a .qmd or .Rmd.
+## and which it no longer holds, pull a code chunk out of a .qmd or .Rmd, and
+## read a function's help in the two places it lives (manText(), roxygenText()).
 
 ## The lines of one tracked file of the source tree. The file sits outside a
 ## built package (.Rbuildignore'd or not installed), so the block skips where
@@ -81,3 +83,29 @@ expectWording <- function(text, now, gone) {
   for (phrase in now) expect_equal(occurrences(text, phrase), 1L, info = phrase)
   for (phrase in gone) expect_equal(occurrences(text, phrase), 0L, info = phrase)
 }
+
+## A function's help, in the two places it lives: the generated man page
+## and the roxygen block in R/. Both read the source tree (man/ and R/ do not
+## exist under an installed package) and give NA there, so the caller skips.
+
+manText <- function(topic) {
+  path <- testthat::test_path("..", "..", "man", paste0(topic, ".Rd"))
+  if (!file.exists(path)) {
+    return(NA_character_)
+  }
+  collapseSpace(paste(unlist(tools::parse_Rd(path)), collapse = ""))
+}
+
+## Every roxygen line of R/<file>.R with the `#'` prefix and the \code{}
+## markup removed, white space collapsed.
+roxygenText <- function(file) {
+  path <- testthat::test_path("..", "..", "R", file)
+  if (!file.exists(path)) {
+    return(NA_character_)
+  }
+  lines <- readLines(path, warn = FALSE)
+  text <- sub("^#' ?", "", lines[startsWith(lines, "#'")])
+  collapseSpace(gsub("\\\\code\\{([^}]*)\\}", "\\1", paste(text, collapse = " ")))
+}
+
+collapseSpace <- function(x) trimws(gsub("\\s+", " ", x))

@@ -20,10 +20,6 @@
 ## the file). All four sources sit outside a built package, so the blocks skip
 ## there (sourceLines() in helper-pageText.R) and run from the source tree.
 
-## The Rd and roxygen markup around a name removed: \code{genotypeMatrix}
-## reads as genotypeMatrix.
-stripCode <- function(text) gsub("\\\\code\\{([^}]*)\\}", "\\1", text)
-
 ## The text from the first `from` to just before the next `to` after it, or
 ## NA (`to` may also stand earlier in the page, as "Script users:" does in
 ## NEWS.Rmd).
@@ -40,12 +36,16 @@ between <- function(text, from, to) {
   substr(rest, 1L, end - 1L)
 }
 
-manPage <- function() {
-  stripCode(plainSource("man", "computeGenomicROH.Rd"))
+manPage <- function() manText("computeGenomicROH")
+roxygenBlock <- function() roxygenText("computeGenomicROH.R")
+
+skipUnlessSourceTree <- function() {
+  testthat::skip_if(
+    is.na(manPage()) || is.na(roxygenBlock()),
+    "man/*.Rd or R/*.R not available (installed package)"
+  )
 }
-roxygenBlock <- function() {
-  stripCode(pageText("R", "computeGenomicROH.R", roxygen = TRUE))
-}
+
 guideParagraph <- function() {
   between(plainSource("vignettes", "articles", "colony-manager-guide.qmd"),
           "A seventh Genomic ROH (F_ROH) tab",
@@ -60,6 +60,7 @@ newsBullet <- function() {
 ## Sanity checks on the four readers (green at HEAD): each finds the text the
 ## RED tests below are about, so a reader that finds nothing cannot pass them.
 test_that("the readers find the Genomic ROH help, guide paragraph and NEWS bullet", {
+  skipUnlessSourceTree()
   ## A sentence both help places keep before and after the change.
   keeps <- "comparable across a cohort only when the same loci are used"
   expect_match(manPage(), keeps, fixed = TRUE)
@@ -72,6 +73,7 @@ test_that("the readers find the Genomic ROH help, guide paragraph and NEWS bulle
 ## The failing tests (RED at HEAD).
 for (place in c("man page", "roxygen block")) {
   test_that(paste0("the computeGenomicROH ", place, " says a locus-file locus the matrix lacks is warned about, not excluded silently"), {
+    skipUnlessSourceTree()
     text <- if (place == "man page") manPage() else roxygenBlock()
     expect_false(grepl("excluded silently", text, fixed = TRUE), info = text)
     expect_match(text, "not columns of genotypeMatrix", fixed = TRUE,

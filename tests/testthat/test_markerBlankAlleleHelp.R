@@ -17,27 +17,8 @@
 ## source tree (man/ and R/ do not exist under an installed package) and skip
 ## without it.
 
-manText <- function(topic) {
-  path <- testthat::test_path("..", "..", "man", paste0(topic, ".Rd"))
-  if (!file.exists(path)) {
-    return(NA_character_)
-  }
-  collapseSpace(paste(unlist(tools::parse_Rd(path)), collapse = ""))
-}
 
-## Every roxygen line of R/<file>.R with the `#'` prefix and the \code{}
-## markup removed, white space collapsed.
-roxygenText <- function(file) {
-  path <- testthat::test_path("..", "..", "R", file)
-  if (!file.exists(path)) {
-    return(NA_character_)
-  }
-  lines <- readLines(path, warn = FALSE)
-  text <- sub("^#' ?", "", lines[startsWith(lines, "#'")])
-  collapseSpace(gsub("\\\\code\\{([^}]*)\\}", "\\1", paste(text, collapse = " ")))
-}
-
-collapseSpace <- function(x) trimws(gsub("\\s+", " ", x))
+## manText(), roxygenText() and collapseSpace() are in helper-pageText.R.
 
 skipUnlessSourceTree <- function() {
   testthat::skip_if(
