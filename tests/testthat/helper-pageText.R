@@ -7,7 +7,8 @@
 ## test_genomicRohLocusDocs.R): read a page of the source tree as lines or
 ## as one line of text, count a phrase in it, say which phrases a page now holds
 ## and which it no longer holds, pull a code chunk out of a .qmd or .Rmd, and
-## read a function's help in the two places it lives (manText(), roxygenText()).
+## read a function's help in the two places it lives (manText(), roxygenText(),
+## helpPlaces(), skipUnlessHelpInSourceTree()).
 
 ## The lines of one tracked file of the source tree. The file sits outside a
 ## built package (.Rbuildignore'd or not installed), so the block skips where
@@ -106,6 +107,25 @@ roxygenText <- function(file) {
   lines <- readLines(path, warn = FALSE)
   text <- sub("^#' ?", "", lines[startsWith(lines, "#'")])
   collapseSpace(gsub("\\\\code\\{([^}]*)\\}", "\\1", paste(text, collapse = " ")))
+}
+
+## The two readers of one function's help, as the help tests name them: the
+## generated man page (man/<topic>.Rd) and the roxygen block in R/<file>.
+helpPlaces <- function(topic, file) {
+  force(topic)
+  force(file)
+  list(
+    "man page" = function() manText(topic),
+    "roxygen block" = function() roxygenText(file)
+  )
+}
+
+## Skip unless every reader in `places` (see helpPlaces()) finds its source.
+skipUnlessHelpInSourceTree <- function(places) {
+  testthat::skip_if(
+    any(vapply(places, function(read) is.na(read()), logical(1L))),
+    "man/*.Rd or R/*.R not available (installed package)"
+  )
 }
 
 collapseSpace <- function(x) trimws(gsub("\\s+", " ", x))

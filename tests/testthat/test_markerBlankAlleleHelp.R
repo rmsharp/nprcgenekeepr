@@ -18,30 +18,17 @@
 ## without it.
 
 
-## manText(), roxygenText() and collapseSpace() are in helper-pageText.R.
+## helpPlaces() and skipUnlessHelpInSourceTree() are in helper-pageText.R.
 
-skipUnlessSourceTree <- function() {
-  testthat::skip_if(
-    is.na(manText("buildMarkerGenotypeMatrix")) ||
-      is.na(roxygenText("buildMarkerGenotypeMatrix.R")),
-    "man/*.Rd or R/*.R not available (installed package)"
-  )
-}
-
-builderPlaces <- list(
-  "man page" = function() manText("buildMarkerGenotypeMatrix"),
-  "roxygen block" = function() roxygenText("buildMarkerGenotypeMatrix.R")
-)
-
-heterozygosityPlaces <- list(
-  "man page" = function() manText("markerExpectedHeterozygosity"),
-  "roxygen block" = function() roxygenText("markerHeterozygosity.R")
-)
+builderPlaces <- helpPlaces("buildMarkerGenotypeMatrix",
+                            "buildMarkerGenotypeMatrix.R")
+heterozygosityPlaces <- helpPlaces("markerExpectedHeterozygosity",
+                                   "markerHeterozygosity.R")
 
 ## Sanity checks on the four readers (green at HEAD): they find the sentences
 ## the RED tests below are about, so a reader that finds nothing cannot pass.
 test_that("the readers find the builder's and the heterozygosity function's help", {
-  skipUnlessSourceTree()
+  skipUnlessHelpInSourceTree(c(builderPlaces, heterozygosityPlaces))
   for (read in builderPlaces) {
     expect_match(read(), "no genotype record at that locus", fixed = TRUE)
   }
@@ -53,7 +40,7 @@ test_that("the readers find the builder's and the heterozygosity function's help
 ## The failing tests (RED at HEAD).
 for (place in names(builderPlaces)) {
   test_that(paste0("the builder's ", place, " says a missing allele gives NA, not the text \"NA/NA\""), {
-    skipUnlessSourceTree()
+    skipUnlessHelpInSourceTree(builderPlaces)
     text <- builderPlaces[[place]]()
     expect_false(grepl("NA/NA", text, fixed = TRUE), info = text)
     expect_match(text, "missing allele gives NA", fixed = TRUE, info = text)
@@ -62,7 +49,7 @@ for (place in names(builderPlaces)) {
 
 for (place in names(heterozygosityPlaces)) {
   test_that(paste0("the expected-heterozygosity ", place, " says an untyped locus gets NA and is left out of meanHe"), {
-    skipUnlessSourceTree()
+    skipUnlessHelpInSourceTree(heterozygosityPlaces)
     text <- heterozygosityPlaces[[place]]()
     expect_false(grepl("gets 1", text, fixed = TRUE), info = text)
     expect_false(grepl("included in meanHe", text, fixed = TRUE), info = text)
