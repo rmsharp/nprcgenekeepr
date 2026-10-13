@@ -32,22 +32,7 @@
 
 pkgRoot <- testthat::test_path("..", "..")
 
-## One tracked file as plain text: tags, backticks and asterisks dropped,
-## underscores and line breaks kept as written / collapsed.
-plainSource <- function(..., html = FALSE) {
-  path <- file.path(pkgRoot, ...)
-  skip_if_not(file.exists(path), paste(basename(path), "not present"))
-  text <- paste(readLines(path, warn = FALSE), collapse = " ")
-  if (html) text <- gsub("<[^>]+>", "", text)
-  text <- gsub("[`*]", "", text)
-  gsub("\\s+", " ", text)
-}
-
-expectNames <- function(text, phrases) {
-  for (phrase in phrases) {
-    expect_true(grepl(phrase, text, fixed = TRUE), info = phrase)
-  }
-}
+## plainSource() and expectNames() are in helper-pageText.R.
 
 test_that("the Input Format page no longer says text labels are not converted and the genotypes then not used", {
   page <- plainSource("inst", "extdata", "ui_guidance", "input_format.html",

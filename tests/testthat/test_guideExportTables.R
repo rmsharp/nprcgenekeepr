@@ -55,18 +55,14 @@ contractObjects <- c("exportPed", "shownKinship", "shownFirstOrder",
                      "shownFemaleFounders")
 
 ## The R code of the chunk whose `#| label:` line is `label`, without its `#|`
-## option lines. Stops, naming the label, when no chunk carries it.
+## option lines (chunkCode() in helper-pageText.R). Stops, naming the label,
+## when no chunk carries it.
 guideChunkCode <- function(lines, label) {
-  fence <- "```"
-  for (start in grep(paste0("^", fence, "\\{r"), lines)) {
-    closing <- which(lines == fence & seq_along(lines) > start)
-    if (length(closing) == 0L) next
-    body <- lines[seq_len(closing[1L] - start - 1L) + start]
-    if (any(body == paste0("#| label: ", label))) {
-      return(body[!startsWith(body, "#|")])
-    }
+  code <- chunkCode(lines, label)
+  if (is.null(code)) {
+    stop("no R chunk labelled '", label, "' in the guide", call. = FALSE)
   }
-  stop("no R chunk labelled '", label, "' in the guide", call. = FALSE)
+  code
 }
 
 ## Run that chunk in a fresh environment and return the environment.

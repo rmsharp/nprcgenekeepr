@@ -41,45 +41,14 @@
 ## the source tree. The two that run the example (the numbers the article
 ## and the manual quote, and the chunk) are skipped on CRAN, as they take seconds.
 
-pkgRoot <- testthat::test_path("..", "..")
+## sourceLines(), plainText(), chunkCode() and expectNames() are in
+## helper-pageText.R.
 articlePath <- file.path("vignettes", "articles", "genetic-value-analysis.qmd")
 manualPath <- file.path("vignettes", "manual_components",
                         "_genetic_value_analysis.Rmd")
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
 exampleFile <- "obfuscated_rhesus_mhc_ped_with_genotypes.csv"
 chunkLabel <- "genotypes-from-label-columns"
-
-## One tracked file as lines, or a skip where it is not present.
-sourceLines <- function(path) {
-  full <- file.path(pkgRoot, path)
-  skip_if_not(file.exists(full), paste(basename(full), "not present"))
-  readLines(full, warn = FALSE)
-}
-
-## The lines as plain text: backticks and asterisks dropped, underscores kept
-## (first_name needs its own), line breaks collapsed.
-plainText <- function(lines) {
-  text <- gsub("[`*]", "", paste(lines, collapse = " "))
-  gsub("\\s+", " ", text)
-}
-
-expectNames <- function(text, phrases, where = "") {
-  for (phrase in phrases) {
-    expect_true(grepl(phrase, text, fixed = TRUE),
-                info = trimws(paste(where, phrase)))
-  }
-}
-
-## The R code of the chunk whose header is "```{r <label>" in an Rmd file;
-## character(0) when no chunk carries the label.
-rmdChunkCode <- function(lines, label) {
-  fence <- "```"
-  start <- grep(paste0("^", fence, "\\{r ", label, "[,}]"), lines)
-  if (length(start) != 1L) return(character(0))
-  closing <- which(lines == fence & seq_along(lines) > start)
-  if (length(closing) == 0L) return(character(0))
-  lines[seq_len(closing[1L] - start - 1L) + start]
-}
 
 examplePath <- function() {
   system.file("extdata", "examples", exampleFile, package = "nprcgenekeepr")
@@ -117,7 +86,7 @@ chunkEnv <- local({
   cache <- NULL
   function() {
     if (is.null(cache)) {
-      code <- rmdChunkCode(sourceLines(scriptPath), chunkLabel)
+      code <- chunkCode(sourceLines(scriptPath), chunkLabel)
       if (length(code) == 0L) return(NULL)
       env <- new.env(parent = globalenv())
       suppressWarnings(suppressMessages(eval(parse(text = code), envir = env)))
