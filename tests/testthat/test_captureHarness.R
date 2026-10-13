@@ -867,6 +867,142 @@ test_that("the Warnings picture is in the picture folder, is a window shot, and 
   }
 })
 
+## ---- the guide's "My own list" picture (BACKLOG.md:149, S973) -------------
+##
+## The Breeding Groups Source box has a third choice, "My own list", that shows
+## an "Animal IDs:" box. The six pictures of the tab are retaken because they
+## show the Source box; one new picture shows the box in use. The owner approved
+## the sentence, the caption and the alt text at the S973 PRE-RED to RED gate.
+## The script picks the choice, types eight living animals of the example
+## pedigree, shoots the container, then puts the Source back on Top ranked, so
+## the 1-group formation that follows is the same as before (it needs the
+## Genetic Value ranking).
+
+ownListPicture <- "breeding_group_own_list.png"
+ownListFirstView <- "breeding_group_first_view.png"
+ownListSentence <- paste(
+  "To use only animals you name, choose **My own list** under **Source** and",
+  "paste their IDs into the **Animal IDs** box that appears.")
+ownListCaption <- paste(
+  "Breeding Group Formation with My own list chosen and animal IDs pasted",
+  "into the box.")
+ownListAlt <- paste(
+  "The Breeding Group Formation configuration panel with the Source choice",
+  "My own list selected and the Animal IDs box below it holding a pasted list",
+  "of animal IDs.")
+
+## The one string a script types into the Animal IDs box, on one line.
+typedOwnList <- function(code) {
+  hit <- grep('`breedingGroups-customAnimalIds`\\s*=\\s*"[^"]*"', code,
+              value = TRUE)
+  sub('.*`breedingGroups-customAnimalIds`\\s*=\\s*"([^"]*)".*', "\\1", hit)
+}
+
+test_that("the colony script shoots the own-list picture from the Breeding Groups container, after the first-view picture and before the 1-group formation", {
+  code <- codeOf(readScript(colonyScript))
+  firstAt <- shotLineOf(code, ownListFirstView)
+  shotAt <- shotLineOf(code, ownListPicture)
+  formAt <- grep('^do_step\\("set Number of groups = 1 and Form Groups', code)
+  expect_length(firstAt, 1L)
+  expect_length(shotAt, 1L)
+  expect_length(formAt, 1L)
+  if (length(firstAt) == 1L && length(shotAt) == 1L && length(formAt) == 1L) {
+    expect_true(firstAt < shotAt && shotAt < formAt)
+    expect_match(blockContaining(code, "breeding_group_own_list\\.png"),
+                 'selector = "#breedingGroups-moduleContainer"', fixed = TRUE)
+  }
+})
+
+test_that("the step before the own-list picture chooses My own list and types the IDs on one line", {
+  code <- codeOf(readScript(colonyScript))
+  shotAt <- shotLineOf(code, ownListPicture)
+  expect_length(shotAt, 1L)
+  if (length(shotAt) == 1L) {
+    tops <- grep("^(do_step|shot)\\(", code)
+    before <- tops[tops < shotAt]
+    expect_gte(length(before), 1L)
+    block <- paste(code[max(before):(shotAt - 1L)], collapse = "\n")
+    expect_match(block, "^do_step\\(")
+    expect_match(block, '`breedingGroups-animalSource`\\s*=\\s*"custom"')
+    expect_length(typedOwnList(code), 1L)
+  }
+})
+
+test_that("the IDs the script types are eight different living animals of the example pedigree", {
+  typed <- typedOwnList(codeOf(readScript(colonyScript)))
+  expect_length(typed, 1L)
+  if (length(typed) == 1L) {
+    ids <- strsplit(typed, "[ ,;\t\n]+")[[1L]]
+    expect_length(ids, 8L)
+    expect_false(any(duplicated(ids)))
+    ped <- nprcgenekeepr::examplePedigree
+    expect_true(all(ids %in% ped$id))
+    expect_true(all(isLivingAnimal(ped)[match(ids, ped$id)]))
+  }
+})
+
+test_that("a step after the own-list picture puts the Source back on Top ranked before the 1-group formation", {
+  code <- codeOf(readScript(colonyScript))
+  shotAt <- shotLineOf(code, ownListPicture)
+  formAt <- grep('^do_step\\("set Number of groups = 1 and Form Groups', code)
+  expect_length(shotAt, 1L)
+  expect_length(formAt, 1L)
+  if (length(shotAt) == 1L && length(formAt) == 1L) {
+    at <- seq_along(code)
+    between <- paste(code[at > shotAt & at < formAt], collapse = "\n")
+    expect_match(between, '`breedingGroups-animalSource`\\s*=\\s*"topRanked"')
+  }
+})
+
+test_that("the guide cites the own-list picture once, after the first-view picture, with the approved sentence before it and the approved caption", {
+  lines <- readGuide()
+  ownAt <- guideLineOf(lines, ownListPicture)
+  firstAt <- guideLineOf(lines, ownListFirstView)
+  formAt <- grep(paste0("^Selecting \\*\\*Form Groups\\*\\* with the number ",
+                        "of groups set to 1"), lines)
+  expect_length(ownAt, 1L)
+  expect_length(firstAt, 1L)
+  expect_length(formAt, 1L)
+  if (length(ownAt) == 1L && length(firstAt) == 1L && length(formAt) == 1L) {
+    expect_true(firstAt < ownAt && ownAt < formAt)
+    at <- seq_along(lines)
+    between <- gsub("\\s+", " ",
+                    paste(lines[at > firstAt & at < ownAt], collapse = " "))
+    expect_match(between, ownListSentence, fixed = TRUE)
+    expect_match(lines[[ownAt]],
+                 paste0("![", ownListCaption, "](shiny_app_use/"),
+                 fixed = TRUE)
+  }
+})
+
+test_that("the own-list picture's alt text is the approved one", {
+  lines <- readGuide()
+  ownAt <- guideLineOf(lines, ownListPicture)
+  expect_length(ownAt, 1L)
+  if (length(ownAt) == 1L) {
+    alt <- sub('.*\\{fig-alt="([^"]*)"\\}.*', "\\1", lines[[ownAt]])
+    expect_false(identical(alt, lines[[ownAt]]), info = "has fig-alt")
+    expect_identical(alt, ownListAlt)
+  }
+})
+
+test_that("the own-list picture is in the picture folder, as wide as the first view, and not a copy of another picture", {
+  skip_if_not(dir.exists(pictureDir),
+              "picture folder not present (it is build-ignored)")
+  path <- file.path(pictureDir, ownListPicture)
+  expect_true(file.exists(path))
+  if (file.exists(path)) {
+    expect_identical(
+      pngSize(path)[[1L]],
+      pngSize(file.path(pictureDir, ownListFirstView))[[1L]])
+    others <- setdiff(list.files(pictureDir, pattern = "\\.png$",
+                                 full.names = TRUE), path)
+    expect_gt(length(others), 40L)
+    expect_false(unname(tools::md5sum(path)) %in%
+                   unname(tools::md5sum(others)))
+  }
+})
+
 ## ---- pop-ups must be gone before a picture is taken (S964) -----------------
 ##
 ## A step that sets a focal-animals list makes the app show a pop-up in the
