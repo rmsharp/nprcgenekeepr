@@ -64,20 +64,9 @@ test_that("buildMarkerGenotypeMatrix cells are NA for a missing id x locus", {
 ## way (owner ruling, S977 Pre-RED): a half-typed animal can be scored neither
 ## homozygous nor heterozygous.
 ##
-## Fixture: the X/Y/Z, four-locus data of test_markerHeterozygosity.R (Y has
-## no L4 record there). Here Y's L4 record is present, with its alleles blank.
-
-xyzGenotype <- function(y4Allele1 = NA_character_, y4Allele2 = NA_character_) {
-  data.frame(
-    id = rep(c("X", "Y", "Z"), each = 4L),
-    locus = rep(paste0("L", 1L:4L), 3L),
-    allele1 = c("A", "A", "A", "A", "A", "A", "B", y4Allele1,
-                "B", "A", "A", "A"),
-    allele2 = c("A", "B", "B", "B", "B", "A", "B", y4Allele2,
-                "B", "A", "B", "A"),
-    stringsAsFactors = FALSE
-  )
-}
+## Fixture: helper-markerBlankAlleleFixtures.R (the X/Y/Z, four-locus data of
+## test_markerHeterozygosity.R, with Y's L4 record present and its alleles
+## blank).
 
 test_that("a record with both alleles blank gives an NA cell, not the text \"NA/NA\"", {
   mat <- buildMarkerGenotypeMatrix(xyzGenotype())
@@ -102,7 +91,7 @@ test_that("a record with only one allele blank gives an NA cell, whichever allel
 
 test_that("a blank record gives the matrix of the file without that record", {
   blank <- xyzGenotype()
-  absent <- blank[!(blank$id == "Y" & blank$locus == "L4"), ]
+  absent <- xyzGenotypeWithoutY4()
   ## Guard: the record really is gone from the second file.
   expect_identical(nrow(blank) - nrow(absent), 1L)
   expect_identical(buildMarkerGenotypeMatrix(blank),
@@ -110,12 +99,8 @@ test_that("a blank record gives the matrix of the file without that record", {
 })
 
 test_that("an animal or a locus with only blank records keeps its row or column, all NA", {
-  blankAnimal <- data.frame(id = "W", locus = paste0("L", 1L:4L),
-                            allele1 = NA_character_, allele2 = NA_character_,
-                            stringsAsFactors = FALSE)
-  blankLocus <- data.frame(id = c("X", "Y", "Z", "W"), locus = "L5",
-                           allele1 = NA_character_, allele2 = NA_character_,
-                           stringsAsFactors = FALSE)
+  blankAnimal <- blankRecords("W", paste0("L", 1L:4L))
+  blankLocus <- blankRecords(c("X", "Y", "Z", "W"), "L5")
   mat <- buildMarkerGenotypeMatrix(rbind(xyzGenotype(), blankAnimal, blankLocus))
   expect_identical(dim(mat), c(4L, 5L))
   expect_identical(rownames(mat), c("X", "Y", "Z", "W"))

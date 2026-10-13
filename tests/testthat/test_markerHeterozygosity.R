@@ -152,17 +152,11 @@ test_that("meanHe is NA for a matrix with no loci", {
 })
 
 ## The same X/Y/Z data as the long-format file a colony manager uploads, with
-## Y's L4 record present and its alleles blank, through the builder.
-blankRecordGenotype <- data.frame(
-  id = rep(c("X", "Y", "Z"), each = 4L),
-  locus = rep(paste0("L", 1L:4L), 3L),
-  allele1 = c("A", "A", "A", "A", "A", "A", "B", NA, "B", "A", "A", "A"),
-  allele2 = c("A", "B", "B", "B", "B", "A", "B", NA, "B", "A", "B", "A"),
-  stringsAsFactors = FALSE
-)
+## Y's L4 record present and its alleles blank, through the builder
+## (xyzGenotype(), helper-markerBlankAlleleFixtures.R).
 
 test_that("a file with a blank Y,L4 record gives the hand-verified Ho and mean He of the file without it", {
-  mat <- buildMarkerGenotypeMatrix(blankRecordGenotype)
+  mat <- buildMarkerGenotypeMatrix(xyzGenotype())
   ho <- markerObservedHeterozygosity(mat)
   expect_equal(ho[["X"]], 0.75)
   expect_equal(ho[["Y"]], 1 / 3)
@@ -171,10 +165,8 @@ test_that("a file with a blank Y,L4 record gives the hand-verified Ho and mean H
 })
 
 test_that("a locus whose every record is blank does not move meanHe (builder and He fixed together)", {
-  blankLocus <- data.frame(id = c("X", "Y", "Z"), locus = "L5",
-                           allele1 = NA_character_, allele2 = NA_character_,
-                           stringsAsFactors = FALSE)
-  mat <- buildMarkerGenotypeMatrix(rbind(blankRecordGenotype, blankLocus))
+  blankLocus <- blankRecords(c("X", "Y", "Z"), "L5")
+  mat <- buildMarkerGenotypeMatrix(rbind(xyzGenotype(), blankLocus))
   he <- markerExpectedHeterozygosity(mat)
   expect_true(is.na(he$perLocus[["L5"]]))
   expect_equal(he$meanHe, 115 / 288)
