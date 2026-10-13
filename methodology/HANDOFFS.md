@@ -197,11 +197,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S974
-date: 2026-10-12
-status: pending
-active_task: IN PROGRESS -- grow the tutorials for the one-file genotype work (BACKLOG.md:139; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED -- which of vignettes/a2interactive.Rmd and the Genetic Value article and manual get a section, Effort S to M; strict TDD where a sentence is pinned)
-what_was_done: pending
-commit: pending
+date: 2026-10-13
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the tutorials for the one-file genotype work (BACKLOG.md:139, removed; owner pick at the Phase 0 picker, option 1 of 4; scope: both places; strict TDD, every gate asked, REFACTOR taken): the Genetic Value article and manual say genotyped animals' own alleles replace simulated ones, and a2interactive.Rmd shows a script giving a pedigree the Input tab's codes with addGenotype() and running reportGV()
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, no untracked files, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget OK, ratchet citation matched). Claim 71b439ff8; RED 25691ed4d (6 blocks) and amendment ac27e29c4; GREEN 34ed1d51f 86af89f1b e4a76e02a efa3582e9; RED amendment 2 67987dec1; REFACTOR 54c7faf6a. Measured: 18 of 31 genotyped animals change genome uniqueness (set.seed(1), 200 drops); FOUND, not fixed: with the genotypes the shipped example gives reportGV() two warnings and NA fg, fgSE, neGD (new BACKLOG item); the owner ruled the tutorial hides the warnings and pinned it. Full suite 3,540 blocks, 11,565 expectations, 0 errors, 2 failed = the two wall-clock benchmark blocks under load (pass alone); check 0/0/0; lint 0; ratchet 1/1.
+next_steps: Pick from BACKLOG.md: (1) the founder-genome-equivalents item (BACKLOG.md:139, DECISION NEEDED: first measure the real app, separate-files mode and the Genetic Value tab, then decide what the colony manager should see; when fixed, drop warning = FALSE at a2interactive.Rmd:761 and block 5 of test_genotypeTutorialsWording.R); (2) the jmac example file (67 parent-age errors, re-measured S974); (3) the harem-sire hole; (4) the docs-audit part 2 remainder or the two kinship2 drawing features. 90 commits are ahead of origin/master (with this close-out) and CI has not run on any of them; the push runs all four workflows: read them (pkgdown is the first render of the new Genetic Value paragraph; an estimate, no local quarto render).
+key_files: vignettes/a2interactive.Rmd:742-785 (chunk label :761); vignettes/articles/genetic-value-analysis.qmd:53-58; vignettes/manual_components/_genetic_value_analysis.Rmd:60-65; tests/testthat/test_genotypeTutorialsWording.R; tests/testthat/helper-pageText.R (sourceLines, plainText, plainSource, chunkCode, expectNames); R/checkFgDegeneracy.R:22-31, R/calcFG.R:81, R/calcFGSE.R:89, R/calcFEFG.R:81; inst/WORDLIST
+gotchas: the chunk's printed counts (4, 15, 12) change with any edit above it (the vignette seeds once, line 30); the article's 18-of-31 is a fresh-run check with threshold 1 while the chunk uses threshold 3; plainText(html = TRUE) is unpinned (mutant H3, inherited); a full-suite benchmark failure under load passes alone, so rerun that file; an Rscript from a scratch folder does not activate renv (start in the project root, absolute paths); a mutation harness restoring with git checkout restores from the index, so stage first; never git stash here (the old stash@{0} from dev is not ours); runGeneKeepR pids 29511, 82416, 92900 left alone (Learning 940)
+runtime_smoke: the full a2interactive.Rmd rendered from HEAD installed in a scratch library (R_LIBS=<scratch>:<renv library>): the new section shows 375 animals, 31 with codes and the counts 4, 15, 12 with no warnings; its 6 Error strings are the vignette's own error = TRUE demos; the Input tab was driven through shiny::testServer in block 7. No browser drive: no app change
+changelog_ref: S974 DONE entry
+commit: the close-out commit that carries this receipt; claim 71b439ff8
 ```
 
 ```handoff

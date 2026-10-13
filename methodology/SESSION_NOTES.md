@@ -99,10 +99,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 974 Did
-**Deliverable:** grow the tutorials for the one-file genotype work (`BACKLOG.md:139`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S to M; strict TDD where a sentence is pinned) (IN PROGRESS)
-**Started:** 2026-10-12
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 1 of 4; both places; strict TDD, every gate asked, REFACTOR taken):** the one-file genotype tutorials (`BACKLOG.md:139`, removed): the Genetic Value article and manual say a
+genotyped animal's own alleles replace simulated ones (`genetic-value-analysis.qmd:53-58`, `_genetic_value_analysis.Rmd:60-65`; 18 of 31 genotyped animals scored differently on the shipped example);
+`a2interactive.Rmd:742-785` shows a script giving the Input tab's codes with `addGenotype()` and running `reportGV()`. **Found, not fixed:** with the genotypes that example gives `reportGV()` two warnings and NA
+`fg`, `fgSE`, `neGD` (new item, `BACKLOG.md:139`, DECISION NEEDED); the owner ruled the tutorial hides the warnings.
+**Gates:** claim `71b439ff8`; RED `25691ed4d`, amendment `ac27e29c4`; GREEN `34ed1d51f` `86af89f1b` `e4a76e02a` `efa3582e9`; RED amendment 2 `67987dec1` (pins `warning = FALSE`); REFACTOR `54c7faf6a` (one page reader, one chunk extractor).
+**Verified:** suite 3,540 blocks, 0 errors, 2 failed = the two benchmark blocks under load (pass alone); check 0/0/0; lint 0; ratchet 1/1 (`13eebfdfece0`);
+full `a2interactive` render from a scratch install; 10 mutants (9 caught, 1 equivalent); 7 helper mutants (5 caught, 1 equivalent, H3 inherited).
+**Handoff evaluation of S973: 9/10.** Helped: the item named the two places and the decision; the scratch-install recipe. Missing: the example had never been run through `reportGV()`. Wrong: nothing.
+**Self-assessment: 8/10.** + facts measured before each question; a real defect asked about, not hidden; every gate first try; a mutation found the M6 gap.
+- a `git stash push`/`pop` (old stash not ours; no harm); a probe outside a test runner; a miscounted commit message (amended). Learning 940.
+**Next steps (recommended):** the NA founder-numbers item (`BACKLOG.md:139`, measure the real app first), the jmac file, the harem-sire hole, or the docs-audit remainder.
+90 commits ahead of `origin/master` (with this close-out), none seen by CI; read all four workflows after the push.
+**Key files:** `a2interactive.Rmd:742-785` (chunk :761); `genetic-value-analysis.qmd:53-58`; `_genetic_value_analysis.Rmd:60-65`; `test_genotypeTutorialsWording.R`; `helper-pageText.R`; `R/checkFgDegeneracy.R:22-31`.
+**Gotchas:** the chunk's counts change with any edit above it (one seed, line 30); `warning = FALSE` goes when the NA item is fixed; rerun a load-failed benchmark file alone;
+an `Rscript` outside the project root skips renv; never `git stash` here; `runGeneKeepR` pids 29511, 82416, 92900 left alone.
 
 ### Sessions 947-973 (condensed S950 to S974; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
@@ -113,10 +124,8 @@ S954-S955: with no focal animals the Pedigree Browser flags the living animals (
 sentences quote them (`colony-manager-guide.qmd:445,:626,:628`). S957: a decision, no code: the seven old-style `panel panel-*` boxes (`R/appUI.R:98-158`, `R/modBreedingGroups.R:984-989`) stay plain on purpose
 (the owner ruled from a before/after picture). S958: `getAncestors()` carries on when a parent has no row of its own and stops with a message naming an asked-about animal that is not in the tree
 (`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`). Strict TDD where code changed; evaluations 9/10, self 8/10. Hashes and scores for S947-S960 are in `CHANGELOG.md` and `HANDOFFS.md`.
-S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are deleted from the manual introduction and the knitted README; a guard block in
-`test_originFundingWording.R` keeps any live page from saying it (strict TDD, REFACTOR taken; evaluation of S958 9/10, self 8/10).
-S960: `CHANGELOG.md` trimmed, 200,518 B to 33,981 B (135 of 156 records in `docs/archive/CHANGELOG-through-2026-10-09.md`; housekeeping, no TDD gates;
-evaluation of S959 9/10, self 8/10).
+S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are deleted (guard block in `test_originFundingWording.R`; evaluation of S958 9/10, self 8/10). S960: `CHANGELOG.md` trimmed, 200,518 B to
+33,981 B (`docs/archive/CHANGELOG-through-2026-10-09.md`; housekeeping; evaluation of S959 9/10, self 8/10).
 S961: the Breeding Groups last box is named "Unused animals" on the Groups heading, the Statistics row and the Group Detail selector (`R/breedingGroupLabels.R:20`; evaluation
 of S960 9/10, self 8/10); the candidate table's Groups count and the `Group-N.csv` names stay, by ruling. S962: a box of exactly one animal is headed "(1 animal)" and the
 one-animal nobody-is-alive notice reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689,993-994`; 3 pictures retaken;
@@ -130,22 +139,18 @@ S964: no guide picture is taken with a pop-up on screen: the colony script waits
 `tests/testthat/helper-captureHarness.R:98`); 13 pictures retaken; no `R/` change; strict TDD, REFACTOR taken; evaluation of S963 9/10, self 8/10. **Gotchas kept (S964):** a step label is a result key, so each wait names its picture; a pop-up is fixed to the viewport
 corner, so in a tall capture it lands over the bottom; run every capture script after a shown-text change; `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture that
 "differs" may only show the random `file<hex>.csv` name.
-S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check: two `on-demand` rows in `methodology/.context-budget.json:52-65` (warn 196,608 B, growth refused past
-262,144 B; gate `tests/testthat/test_contextBudgetLedgers.R`, 4 blocks, 26 expectations); no `R/` change; strict TDD, REFACTOR taken; evaluation of S964 9/10, self 7/10.
-**Gotchas kept (S965):** a `read-mandated` class adds a token check capped at 25,000 tokens, so a file read in part
-takes `on-demand`; `context_budget.py --status` appends to the gitignored history on every run, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
-S966: the four likely code defects of docs-audit slice 4 re-checked against today's code (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; 0 critical, 3 moderate,
-1 minor; an audit, no code change); all four are still real; the `groupAddAssign` wording was fixed S967, the three rulings are open (S967 block); evaluation of S965 8/10, self 7/10.
-**Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported, and the column-change note needs `reportChanges = TRUE`; the one-file option's input is
-`pedigreeFileTwo`; a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`; probe scripts live in the scratchpad, never the repo.
-S967: the `groupAddAssign()` help says the groups with the largest minimum group size win, the score being the size of the smallest group (`R/groupAddAssign.R:11-12`,
-`man/groupAddAssign.Rd:153-154`; the owner's sentence; gate `test_groupAddAssignHelp.R`, 7 blocks, 26 expectations; no code logic change; strict TDD, REFACTOR taken; evaluation of S966 9/10, self 8/10). **Gotchas kept (S967):** a mutation of `R/` code needs
-`pkgload::load_all()` after it (a block that reads a file sees it, one that runs a function does not; Learning 933); `devtools::document()` touched one man page, so read
-`git diff --stat`; `PROJECT_LEARNINGS.md` has no trailing newline until an append, so check the blank line before a new heading.
-S968: a decision session (no code): the owner took the recommended option on all three docs-audit part 2 rulings: remove the "Upload list" choice (`R/modBreedingGroups.R:42`),
-remove the two do-nothing Genetic Value checkboxes (`R/modGeneticValue.R:63-66`), show a notice for unused one-file genotypes (`R/modInput.R:505-523`); recorded as three READY
-items, `BACKLOG.md:138-169`; evaluation of S967 9/10, self 8/10. **Gotchas kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog
-item's line cites shift after any edit above it, so re-grep.
+S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check (two `on-demand` rows, `methodology/.context-budget.json:52-65`, warn 196,608 B, growth refused past 262,144 B; gate
+`test_contextBudgetLedgers.R`; strict TDD, REFACTOR taken; evaluation of S964 9/10, self 7/10). **Gotchas kept (S965):** a `read-mandated` class adds a 25,000-token check, so a file read in part takes `on-demand`;
+`context_budget.py --status` appends to the gitignored history on every run, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
+S966: the four likely code defects of docs-audit slice 4 re-checked (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; all four still real; an audit, no code change; evaluation of S965 8/10, self 7/10).
+**Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported, and the column-change note needs `reportChanges = TRUE`; the one-file option's input is `pedigreeFileTwo`;
+a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`; probe scripts live in the scratchpad.
+S967: the `groupAddAssign()` help says the groups with the largest minimum group size win (`R/groupAddAssign.R:11-12`; the owner's sentence; gate `test_groupAddAssignHelp.R`; strict TDD, REFACTOR taken; evaluation of
+S966 9/10, self 8/10). **Gotchas kept (S967):** a mutation of `R/` code needs `pkgload::load_all()` after it (Learning 933); `devtools::document()` touched one man page, so read `git diff --stat`;
+`PROJECT_LEARNINGS.md` has no trailing newline until an append, so check the blank line before a new heading.
+S968: a decision session (no code): the owner took the recommended option on all three docs-audit part 2 rulings (remove "Upload list", remove the two do-nothing Genetic Value checkboxes, read the unused one-file
+genotypes instead of a notice; done S969, S970 with S973's own list, and S971; evaluation of S967 9/10, self 8/10). **Gotchas kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog item's
+line cites shift after any edit above it, so re-grep.
 S969: the Genetic Value tab no longer has the two do-nothing check boxes (`R/modGeneticValue.R:63-66`; gate `test_geneticValueOptionBoxes.R`; NEWS sentence `NEWS.Rmd:223-225`; 3 `gva_*.png` retaken; strict TDD,
 REFACTOR taken; evaluation of S968 9/10, self 8/10). **Gotchas kept (S969):** grep a removed control by id, by
 wrapped label and by its kind, then check stranded imports (Learning 935); quote `echo` separators in zsh.
