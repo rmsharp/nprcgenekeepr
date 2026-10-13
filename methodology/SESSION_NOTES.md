@@ -98,21 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 975 Did
-**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked, REFACTOR taken):** founder genome equivalents with genotypes (`BACKLOG.md:139`, removed): `reportGV()` works out `fg`, `fgSE` and `neGD`
-from a gene drop that ignores the genotypes (`R/reportGV.R:294-318`; a second, silent drop after the genotype drop, only when some animal has a code), so the Summary tab shows FG and GD, not `NA` and `N/A`.
-**Real app first:** one-file and separate-files modes gave FG `NA`, GD `N/A`, two warnings (pedigree-only 52.09 +/- 0.09, 0.9904); after the fix 51.93-52.14, 0.9904, no warnings in all modes. **Cause (function level):**
-3 founders whose only descendant is genotyped had retention 0; S974's guess (a genotyped founder) was wrong. Pages: article, manual, in-app guidance, `reportGV()` help, NEWS; the chunk lost `warning = FALSE`.
-**Gates:** claim `60969cb1a`; RED `94f29ff42`; GREEN `ffaa2033c` `410288e62` `62ceb619c`; RED amendment `467e259f0` (one-allele animal; mutants M8, M9); REFACTOR `04ac9f1e4` (`oneFileExampleStudbook`).
-**Verified:** suite 3,553 blocks, 0 failed, 0 errors; check 0/0/0; lint 0; ratchet 1/1 (`76f219786f9e`); real app 4 runs; `a2interactive` render from a scratch install; 8 mutants of `R/reportGV.R` caught.
-**Handoff evaluation of S974: 9/10.** Helped: measurement first, exact numbers, the lines to undo. Missing: the Summary figures sit on a hidden sub-tab. Wrong: the labelled guess about the cause.
-**Self-assessment: 8/10.** + real app measured before asking; one listing found the cause; a mutation found a real hole. - my gate said "7 of 17" blocks (9 of 19); two loops hung on zsh word-splitting. Learning 941.
-**Next (each needs an owner pick):** the jmac file, the harem-sire hole, the docs-audit remainder, or the two kinship2 drawing features. 98 commits are ahead of `origin/master`, none seen by CI; read all four workflows after the push.
-**Key files:** `R/reportGV.R:294-318`; `test_reportGVPedigreeOnlyFounderGenome.R`; `test_pedigreeOnlyFounderGenomeWording.R`; `helper-oneFileGenotypes.R`.
-**Gotchas:** `hasGenotype()` is TRUE for numeric columns with no code (test `any(!is.na(first) | !is.na(second))`); the second drop runs after the first so `gu` keeps its random numbers; click `a[data-value='Summary']` first;
-zsh does not split `$spec`; `test_oneFileGenotypesWording.R:135` still builds the example's path itself; never `git stash` here.
+### What Session 976 Did
+**Deliverable:** re-check the 8 marker-genetics code candidates of docs-audit part 2 (`BACKLOG.md:109-132`, the slice 6c list, `docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md:74-91`)
+against today's code, one ruling question per candidate; an audit report, no code change (IN PROGRESS)
+**Started:** 2026-10-13 13:58 CDT
+**Status:** Session claimed. Owner picks at the Phase 0 picker: option 3 of 4 (docs-audit part 2 remainder), then the scope question: "Marker genetics: 8". Same shape as S966 (re-check) then S968 (rulings); any fix is a later session.
+**Phase 0:** HEAD 2ab441db1 equals both ledger frontiers; 0 pending receipts; no merges; no untracked files; CI 10 of 10 green; dashboard 96/100; context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical); ratchet 1/1.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-974 (condensed S950 to S975; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-975 (condensed S950 to S976; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -168,6 +162,10 @@ a blank box asks for an id (`R/parseIdList.R`, one ID reader in place of three; 
 S974: the one-file genotype tutorials: the Genetic Value article and manual say a genotyped animal's own alleles replace simulated ones, and `a2interactive.Rmd:742-785` shows `addGenotype()` then `reportGV()`
 (gate `test_genotypeTutorialsWording.R`; strict TDD, REFACTOR taken; evaluation of S973 9/10, self 8/10); it found the NA founder numbers, fixed S975. **Gotchas kept (S974):** the chunk's counts change with any edit
 above it (one seed, line 30); rerun a load-failed benchmark file alone; an `Rscript` outside the project root skips renv; never `git stash` here.
+S975: founder genome equivalents, their standard error and gene diversity come from the pedigree alone, so the Genetic Value Summary tab shows FG and GD, not `NA` and `N/A` (`R/reportGV.R:294-318`;
+gates `test_reportGVPedigreeOnlyFounderGenome.R`, `test_pedigreeOnlyFounderGenomeWording.R`; strict TDD, REFACTOR taken; evaluation of S974 9/10, self 8/10). **Gotchas kept (S975):** `hasGenotype()` is TRUE for numeric
+columns with no code (test `any(!is.na(first) | !is.na(second))`); the second drop runs after the first so `gu` keeps its random numbers; click `a[data-value='Summary']` first; zsh does not split `$spec`;
+`test_oneFileGenotypesWording.R:135` still builds the example's path itself.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
