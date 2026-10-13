@@ -122,7 +122,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   de-identified export (issue \#153).
 - **Genomic ROH (F_ROH)** shows the sequence-based inbreeding
   calculation below, with de-identified export via
-  `obfuscateGenomicROH()` (issue \#152).
+  `obfuscateGenomicROH()` (issue \#152). Loci that are in the locus file
+  but not in the genotype file are named in a notice above the table
+  (and in a warning from `computeGenomicROH()`), because F_ROH is
+  calculated without them.
 - Script users: `markerObservedHeterozygosity()` and
   `markerExpectedHeterozygosity()`; `markerParentageExclusion()`, which
   flags a parent when more than `maxExclusions` loci (default 2)

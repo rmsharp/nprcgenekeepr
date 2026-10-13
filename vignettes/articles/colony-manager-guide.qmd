@@ -1047,6 +1047,12 @@ SNPs, a scaled-down version of PLINK's default of 100, and 1,000,000 base
 pairs, which is PLINK's own default). F_ROH is the proportion of the genome covered by
 qualifying segments.
 
+F_ROH is calculated only from the loci that are in the genotype file. If the
+locus metadata file lists loci with a chromosome and position that are not in
+the genotype file, a notice above the table says how many and names them,
+because every animal's F_ROH is then relative to a shorter stretch of genome
+than the locus file describes.
+
 ![The Genomic ROH (F_ROH) tab computed on the bundled 50-individual, 1,000-locus synthetic sequence-scale example panel, with the minimum-SNP threshold lowered from its default of 50 to 3 so the small synthetic panel still yields non-trivial segments: per-individual segment counts, total ROH length, and F_ROH.](shiny_app_use/marker_genetics_genomic_roh.png){fig-alt="Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count and minimum ROH segment span inputs above the first page of a table of 50 individuals (S001 through S010 of 5 pages), each with nSegments, totalRohLength, and fRoh columns populated with real, non-zero example values."}
 
 Like the Linkage and LD Block Metrics tab, any export from this tab is
