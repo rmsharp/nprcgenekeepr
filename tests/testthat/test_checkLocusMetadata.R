@@ -148,3 +148,68 @@ test_that("the committed STR genotype fixture is genuinely multiallelic and pivo
   mat <- buildMarkerGenotypeMatrix(genotype)
   expect_identical(dim(mat), c(10L, 12L))
 })
+
+## ---------------------------------------------------------------------
+## RED (S979; BACKLOG.md:139, S976 audit finding 6, the owner's S976 ruling
+## "treat an empty or all-space chromosome as missing, as the app's reader
+## already does", and the S979 Pre-RED answer "missing everywhere"): a blank
+## chrom is no chromosome. checkLocusMetadata() counted any non-NA value as
+## present, so "" read as a chromosome of its own: coverage "full",
+## computeGenomicROH() grouped those loci as chromosome "", and markerLdBlock()
+## paired them with each other. Now an empty, all-space or all-tab chrom is
+## returned as NA and its locus is read as having no chrom (so "partial" with a
+## pos, "none" without one). A script's read.csv() keeps "" in a text column;
+## the app's reader already gives NA (S976 probe), so the app does not change.
+## ---------------------------------------------------------------------
+blankChromLocusMetadata <- function() {
+  data.frame(
+    locus = c("L1", "L2", "L3", "L4", "L5", "L6"),
+    chrom = c("chr1", "", "  ", "\t", NA, "X"),
+    pos   = c(100, 200, 300, 400, 500, NA),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that("checkLocusMetadata reads an empty chrom as missing: partial with a pos, none without", {
+  out <- checkLocusMetadata(data.frame(
+    locus = c("L1", "L2", "L3"),
+    chrom = c("", "", "1"),
+    pos = c(100, NA, 300),
+    stringsAsFactors = FALSE
+  ))
+  expect_identical(out$coverage, c("partial", "none", "full"))
+})
+
+test_that("checkLocusMetadata reads an all-space or all-tab chrom as missing, like an empty one", {
+  out <- checkLocusMetadata(blankChromLocusMetadata())
+  expect_identical(
+    out$coverage,
+    c("full", "partial", "partial", "partial", "partial", "partial")
+  )
+})
+
+test_that("checkLocusMetadata returns NA, not the blank text, for a blank chrom and leaves real names alone", {
+  out <- checkLocusMetadata(blankChromLocusMetadata())
+  expect_identical(out$chrom, c("chr1", NA, NA, NA, NA, "X"))
+  expect_type(out$chrom, "character")
+})
+
+test_that("checkLocusMetadata gives a blank chrom exactly what an NA chrom gets", {
+  blank <- blankChromLocusMetadata()
+  asNa <- blank
+  asNa$chrom[blank$chrom %in% c("", "  ", "\t")] <- NA
+  expect_identical(checkLocusMetadata(blank), checkLocusMetadata(asNa))
+})
+
+test_that("checkLocusMetadata keeps a chrom with a blank inside or around real text as the name it is", {
+  ## Only a chrom that is nothing but white space is missing; "chr 1" and
+  ## "1" are names (S976 ruling: "empty or all-space").
+  out <- checkLocusMetadata(data.frame(
+    locus = c("L1", "L2"),
+    chrom = c("chr 1", "1"),
+    pos = c(100, 200),
+    stringsAsFactors = FALSE
+  ))
+  expect_identical(out$chrom, c("chr 1", "1"))
+  expect_identical(out$coverage, c("full", "full"))
+})

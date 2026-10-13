@@ -187,3 +187,49 @@ test_that("markerLdBlock returns NA with a named warning when a pair has fewer t
   expect_true(is.na(row12$r2))
   expect_equal(row12$nUsed, 1L)
 })
+
+## ---------------------------------------------------------------------
+## RED (S979; BACKLOG.md:139, S976 audit finding 6, S979 Pre-RED answer
+## "missing everywhere"): markerLdBlock() leaves out a locus whose chrom is NA
+## ("Loci with NA chrom are excluded from pairing"). A script's locus file can
+## carry a blank chrom ("" from read.csv() on a text column); checkLocusMetadata()
+## now returns it as NA, so the locus is left out here too instead of being
+## paired with the other blank-chrom loci as a chromosome named "".
+## ---------------------------------------------------------------------
+blankChromLdMatrix <- function() {
+  genotype <- checkLinkageMarkerGenotypeFile(data.frame(
+    id = rep(c("W", "X", "Y", "Z"), 4L),
+    locus = rep(c("L1", "L2", "L3", "L4"), each = 4L),
+    allele1 = c("A", "A", "A", "A", "M", "M", "N", "N",
+                "P", "P", "Q", "Q", "R", "R", "S", "S"),
+    allele2 = c("A", "B", "A", "B", "M", "N", "M", "N",
+                "P", "Q", "P", "Q", "R", "S", "R", "S"),
+    stringsAsFactors = FALSE
+  ))
+  buildMarkerGenotypeMatrix(genotype)
+}
+blankChromLdMeta <- function(blank = "") {
+  data.frame(
+    locus = c("L1", "L2", "L3", "L4"),
+    chrom = c("chr1", "chr1", blank, blank),
+    pos = c(100, 200, 300, 400),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that("markerLdBlock pairs only the loci with a chromosome once checkLocusMetadata() has read a blank chrom as missing", {
+  checked <- checkLocusMetadata(blankChromLdMeta(""))
+  result <- suppressWarnings(markerLdBlock(blankChromLdMatrix(), checked))
+  expect_identical(paste(result$locus1, result$locus2), "L1 L2")
+  expect_identical(result$chrom, "chr1")
+})
+
+test_that("markerLdBlock gives a blank chrom exactly what an NA chrom gets", {
+  blank <- suppressWarnings(markerLdBlock(
+    blankChromLdMatrix(), checkLocusMetadata(blankChromLdMeta(""))
+  ))
+  asNa <- suppressWarnings(markerLdBlock(
+    blankChromLdMatrix(), checkLocusMetadata(blankChromLdMeta(NA_character_))
+  ))
+  expect_identical(blank, asNa)
+})

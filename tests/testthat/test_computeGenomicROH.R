@@ -470,3 +470,50 @@ test_that("computeGenomicROH still returns NA for a locus file that shares no lo
   expect_true(is.na(out$result$fRoh))
   expect_match(missingLociMessage(out$warnings), "M1, M2", fixed = TRUE)
 })
+
+## ---------------------------------------------------------------------
+## RED (S979; BACKLOG.md:139, S976 audit finding 6, the owner's S976 ruling and
+## S979 Pre-RED answer "missing everywhere"): a locus whose chrom is blank is
+## a locus without a chromosome. computeGenomicROH() re-runs
+## checkLocusMetadata() and keeps only "full" loci, so once a blank chrom reads
+## as missing the function leaves those loci out and warns, naming them (its
+## existing "no full chrom + pos coverage" warning), instead of treating "" as a
+## chromosome of its own and adding that chromosome's span to the genome length.
+## ---------------------------------------------------------------------
+blankChromRohMeta <- function(blank = "") {
+  data.frame(
+    locus = c("L1", "L2", "L3", "L4"),
+    chrom = c("1", "1", blank, blank),
+    pos = c(0, 1200000, 100000, 900000),
+    stringsAsFactors = FALSE
+  )
+}
+blankChromRohMatrix <- matrix(
+  rep("A/A", 4L), nrow = 1L, dimnames = list("Y1", paste0("L", 1L:4L))
+)
+
+test_that("computeGenomicROH leaves out loci with a blank chrom and warns naming them, so the genome length is chromosome 1's alone", {
+  ## Chromosome "1": L1 (0) to L2 (1,200,000), 2 SNPs >= minSnp 2 and
+  ## 1,200,000 bp >= minBp 1,000,000: one segment of 1,200,000. L3 and L4 have
+  ## no chromosome, so genomeLength = 1,200,000 and fRoh = 1. (Read as a
+  ## chromosome "", they would add 900,000 - 100,000 = 800,000 to the genome
+  ## length and give fRoh 1.2 / 2.0 = 0.6.)
+  out <- rohWithWarnings(blankChromRohMatrix, blankChromRohMeta(),
+                         minSnp = 2L, minBp = 1000000)
+  expect_equal(out$result$nSegments, 1L)
+  expect_equal(out$result$totalRohLength, 1200000)
+  expect_equal(out$result$fRoh, 1, tolerance = 1e-6)
+  expect_true(any(grepl("excluded from ROH analysis", out$warnings,
+                        fixed = TRUE)), info = toString(out$warnings))
+  expect_true(any(grepl("L3, L4", out$warnings, fixed = TRUE)),
+              info = toString(out$warnings))
+})
+
+test_that("computeGenomicROH gives a blank chrom exactly what an NA chrom gets, numbers and warnings", {
+  blank <- rohWithWarnings(blankChromRohMatrix, blankChromRohMeta(""),
+                           minSnp = 2L, minBp = 1000000)
+  asNa <- rohWithWarnings(blankChromRohMatrix, blankChromRohMeta(NA_character_),
+                          minSnp = 2L, minBp = 1000000)
+  expect_identical(blank$result, asNa$result)
+  expect_identical(blank$warnings, asNa$warnings)
+})
