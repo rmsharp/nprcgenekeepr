@@ -22,7 +22,12 @@
 ##  4. the module's roxygen and its man page name the three choices;
 ##  5. NEWS.Rmd says "Upload list" is now "My own list" in one sentence, under
 ##     Breeding Group Formation, and the S970 sentence is gone;
-##  6. NEWS.md, knitted from it, says the same.
+##  6. NEWS.md, knitted from it, says the same;
+##  7. the in-app guidance box under the form (inst/extdata/ui_guidance/
+##     group_formation.html) lists the pasted list among the ways candidates
+##     are chosen (added S973 at the GREEN-to-RED gate, after the retaken
+##     pictures showed the box saying nothing of it; the owner took the
+##     recommended clause).
 ##
 ## The guide's pictures of the tab (breeding_group_*.png) are retaken with the
 ## change; a picture cannot be pinned here, so the record is in CHANGELOG.md
@@ -135,4 +140,16 @@ test_that("NEWS.Rmd says Upload list is now My own list, under Breeding Groups, 
 test_that("NEWS.md says it too", {
   expectWording(pageText("NEWS.md"), now = ownListSentence,
                 gone = removedSentence)
+})
+
+test_that("the guidance box under the form lists the pasted list among the ways candidates are chosen", {
+  text <- pageText("inst", "extdata", "ui_guidance", "group_formation.html")
+  expectWording(
+    text,
+    now = c(paste("every animal not labeled Low Value (the genetic-value floor),",
+                  "every animal in the current pedigree, or only the animals",
+                  "whose IDs you paste into the Animal IDs box."),
+            "Only living animals are used, whatever the Source:"),
+    gone = "(the genetic-value floor), or every animal in the current pedigree"
+  )
 })
