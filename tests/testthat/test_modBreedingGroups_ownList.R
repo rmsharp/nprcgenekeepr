@@ -307,3 +307,23 @@ test_that("a list left in the hidden box is ignored while another Source is chos
 
   expect_setequal(got$candidates, paste0("A", 1:8))
 })
+
+test_that("the other two Sources never show a left-out notice, though the pedigree holds animals that are not alive", {
+  skip_on_cran()
+
+  # Green-at-HEAD coverage (NOT a RED), added at the S973 GREEN-to-RED gate
+  # (amendment 3) after a mutation (the notice made to apply to every Source)
+  # survived all 16 blocks: the pedigree has six animals that are not alive
+  # (A9-A14), and "Left out because they are not alive" belongs to My own list
+  # alone. For "All available" it would name every dead animal in a colony.
+  gv <- data.frame(id = paste0("A", 1:14), value = "High Value",
+                   stringsAsFactors = FALSE)
+
+  everyone <- olRun(olPed(), animalSource = "all")
+  ranked <- olRun(olPed(), geneticValues = gv, animalSource = "topRanked",
+                  inclusionCriterion = "topN", nTopAnimals = 20)
+
+  expect_length(everyone$texts, 0L)
+  expect_length(ranked$texts, 0L)
+  expect_setequal(ranked$candidates, paste0("A", 1:8))
+})
