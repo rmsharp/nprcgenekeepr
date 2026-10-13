@@ -253,17 +253,9 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
                               ancestryRules = NULL) {
   moduleServer(id, function(input, output, session) {
 
-    # Delimiter-separated id parsing, mirroring modBreedingGroupsServer's own
-    # seed-textarea convention (R/modBreedingGroups.R:380) -- reused here for
-    # both the "custom" population-source textarea and the exclude-list
-    # textarea.
-    parseIdList <- function(raw) {
-      if (is.null(raw) || !nzchar(trimws(raw))) {
-        return(character(0L))
-      }
-      ids <- trimws(unlist(strsplit(raw, "[ ,;\t\n]")))
-      ids[nzchar(ids)]
-    }
+    # The "custom" population-source textarea and the exclude-list textarea
+    # are read with the shared parseIdList() (R/parseIdList.R), the same rule
+    # the Breeding Groups seed and Animal IDs boxes use.
 
     matchResults <- reactiveVal(NULL)
     # Issue #169 Slice 3a (D8c): what the displayed run's ancestry screen used

@@ -6,10 +6,11 @@ library(nprcgenekeepr)
 
 ## parseIdList(raw) (S973; BACKLOG.md:149, the Breeding Groups "My own list"
 ## choice): the one internal rule for reading a box of pasted animal IDs. The
-## Mate Pair tab's "Custom list (paste IDs)" box and the Breeding Groups seed
-## boxes each carry their own copy of it (R/modMatePair.R:260-266,
-## R/modBreedingGroups.R:613-622); the new "Animal IDs:" box is the third
-## reader, so the rule gets a name and a test of its own.
+## Mate Pair tab's "Custom list (paste IDs)" and exclude boxes, the Breeding
+## Groups seed boxes and the new "Animal IDs:" box all read their text with it
+## (R/modMatePair.R:402,407, R/modBreedingGroups.R:546,644). The Mate Pair
+## boxes and the seed boxes each carried their own copy until the S973
+## REFACTOR, so the rule has a name and a test of its own.
 ##
 ## The rule, as both copies already apply it: split on a space, comma,
 ## semicolon, tab or new line; trim; drop what is empty. The result is a

@@ -641,12 +641,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         # never exceed numGp (its length guard).
         currentGroups <- if (isTRUE(input$seedGroups)) {
           lapply(seq_len(numGp), function(i) {
-            raw <- input[[paste0("curGrp", i)]]
-            if (is.null(raw) || !nzchar(trimws(raw))) {
-              return(character(0L))
-            }
-            ids <- trimws(unlist(strsplit(raw, "[ ,;\t\n]")))
-            ids[nzchar(ids)]
+            parseIdList(input[[paste0("curGrp", i)]])
           })
         } else {
           list(character(0L))
