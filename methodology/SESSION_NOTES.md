@@ -99,21 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 975 Did
-**Deliverable:** founder genome equivalents come out undefined (NA) when genotypes are present (`BACKLOG.md:139`, found S974; owner pick at the Phase 0 picker, option 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-13
-**Status:** Session claimed. Work beginning: measure the real app first (the one-file mode, the separate-files mode and the Genetic Value tab), then the PRE-RED question; strict TDD where code changes.
-**Phase 0:** HEAD bde078409 equals both ledger frontiers; 0 pending receipts; CI 10 of 10 green; dashboard 96/100; context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked, REFACTOR taken):** founder genome equivalents with genotypes (`BACKLOG.md:139`, removed): `reportGV()` works out `fg`, `fgSE` and `neGD`
+from a gene drop that ignores the genotypes (`R/reportGV.R:294-318`; a second, silent drop after the genotype drop, only when some animal has a code), so the Summary tab shows FG and GD, not `NA` and `N/A`.
+**Real app first:** one-file and separate-files modes gave FG `NA`, GD `N/A`, two warnings (pedigree-only 52.09 +/- 0.09, 0.9904); after the fix 51.93-52.14, 0.9904, no warnings in all modes. **Cause (function level):**
+3 founders whose only descendant is genotyped had retention 0; S974's guess (a genotyped founder) was wrong. Pages: article, manual, in-app guidance, `reportGV()` help, NEWS; the chunk lost `warning = FALSE`.
+**Gates:** claim `60969cb1a`; RED `94f29ff42`; GREEN `ffaa2033c` `410288e62` `62ceb619c`; RED amendment `467e259f0` (one-allele animal; mutants M8, M9); REFACTOR `04ac9f1e4` (`oneFileExampleStudbook`).
+**Verified:** suite 3,553 blocks, 0 failed, 0 errors; check 0/0/0; lint 0; ratchet 1/1 (`76f219786f9e`); real app 4 runs; `a2interactive` render from a scratch install; 8 mutants of `R/reportGV.R` caught.
+**Handoff evaluation of S974: 9/10.** Helped: measurement first, exact numbers, the lines to undo. Missing: the Summary figures sit on a hidden sub-tab. Wrong: the labelled guess about the cause.
+**Self-assessment: 8/10.** + real app measured before asking; one listing found the cause; a mutation found a real hole. - my gate said "7 of 17" blocks (9 of 19); two loops hung on zsh word-splitting. Learning 941.
+**Next (each needs an owner pick):** the jmac file, the harem-sire hole, the docs-audit remainder, or the two kinship2 drawing features. 98 commits are ahead of `origin/master`, none seen by CI; read all four workflows after the push.
+**Key files:** `R/reportGV.R:294-318`; `test_reportGVPedigreeOnlyFounderGenome.R`; `test_pedigreeOnlyFounderGenomeWording.R`; `helper-oneFileGenotypes.R`.
+**Gotchas:** `hasGenotype()` is TRUE for numeric columns with no code (test `any(!is.na(first) | !is.na(second))`); the second drop runs after the first so `gu` keeps its random numbers; click `a[data-value='Summary']` first;
+zsh does not split `$spec`; `test_oneFileGenotypesWording.R:135` still builds the example's path itself; never `git stash` here.
 
 ### Sessions 947-974 (condensed S950 to S975; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`
-(`R/fromCenterNotice.R:13`); the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
+S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
+the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
 --budget-bytes 65536 --write`, no `--force`). S952-S953: the owner's origin and funding sentences everywhere, the NIH grants limited to version 1.0 and earlier (`test_originFundingWording.R`, 16 blocks).
-S954-S955: with no focal animals the Pedigree Browser flags the living animals (decided S954, built S955: `R/modPedigree.R:362-372`, 20 new blocks). S956: the 21 guide pictures that predate it are retaken and four
-sentences quote them (`colony-manager-guide.qmd:445,:626,:628`). S957: a decision, no code: the seven old-style `panel panel-*` boxes (`R/appUI.R:98-158`, `R/modBreedingGroups.R:984-989`) stay plain on purpose
+S954-S955: with no focal animals the Pedigree Browser flags the living animals (decided S954, built S955; 20 new blocks). S956: the 21 guide pictures that predate it are retaken and four
+sentences quote them. S957: a decision, no code: the seven old-style `panel panel-*` boxes stay plain on purpose
 (the owner ruled from a before/after picture). S958: `getAncestors()` carries on when a parent has no row of its own and stops with a message naming an asked-about animal that is not in the tree
-(`R/getAncestors.R:55-63`, `R/makesLoop.R:29-30`). Strict TDD where code changed; evaluations 9/10, self 8/10. Hashes and scores for S947-S960 are in `CHANGELOG.md` and `HANDOFFS.md`.
+Strict TDD where code changed; evaluations 9/10, self 8/10. Hashes and scores for S947-S960 are in `CHANGELOG.md` and `HANDOFFS.md`.
 S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are deleted (guard block in `test_originFundingWording.R`; evaluation of S958 9/10, self 8/10). S960: `CHANGELOG.md` trimmed, 200,518 B to
 33,981 B (`docs/archive/CHANGELOG-through-2026-10-09.md`; housekeeping; evaluation of S959 9/10, self 8/10).
 S961: the Breeding Groups last box is named "Unused animals" on the Groups heading, the Statistics row and the Group Detail selector (`R/breedingGroupLabels.R:20`; evaluation
@@ -147,21 +154,20 @@ wrapped label and by its kind, then check stranded imports (Learning 935); quote
 S970: the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; the server's pool code stays, a stale `"custom"` acts as "All available"; gate
 `test_breedingGroupsSourceChoices.R`; NEWS sentence `NEWS.Rmd:276-278`; six `breeding_group_*.png` retaken; strict TDD, REFACTOR taken; evaluation of S969 8/10, self 7/10). **Gotchas kept (S970):** grep a removed choice by id, wrapped label, kind AND count words
 ("all three", "an uploaded list") and a picture's random counts before RED (Learning 936); read `uptime` before a benchmark failure; the owner's two instructions are `BACKLOG.md:139,152`.
-S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`, `R/modInput.R:550-572,617-618`; whole numbers and text labels; Excel text that reads as
-numbers stays numbers; strict TDD, REFACTOR taken; evaluation of S970 8/10, self 7/10). **Gotchas kept (S971):** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe`
+S971: a one-file pedigree's genotype columns are read and the QC Summary says what was read (`R/readOneFileGenotypes.R:30`; strict TDD, REFACTOR taken; evaluation of S970 8/10, self 7/10).
+**Gotchas kept (S971):** mutate new code before the REFACTOR gate (Learning 937); new capture steps use `click_element_safe`
 (`test_captureHarness.R:779`); American spellings in the .qmd; copy a file before a `git checkout` mutation harness; wait on a run's `EXIT=`, not the outer shell.
 S972: the QC Summary names allele columns that are found but cannot be read, instead of saying none were found (`R/readOneFileGenotypes.R:41-61`, `genotypePairLabels`); the Input page's two cells,
 the guide and NEWS say it; a real `.xlsx` upload and the four Input E2E files are pinned (strict TDD, REFACTOR taken; evaluation of S971 9/10, self 8/10). **Gotchas kept (S972):** a real-app or E2E run
 loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`;
 a surviving mutation can be equivalent (`[1:2]` equals `[-3]` with 3 labels); wait for `uptime` before E2E.
 S973: the Breeding Groups Source box has a third choice, "My own list", with an "Animal IDs:" box; an id not in the pedigree stops the run and is named, an animal not alive is left out and named,
-a blank box asks for an id (`R/modBreedingGroups.R:43,51,546,564,703,711,733`; `R/parseIdList.R`; three copies of the ID reader became one; strict TDD, REFACTOR taken; evaluation of S972 9/10, self 7/10).
+a blank box asks for an id (`R/parseIdList.R`, one ID reader in place of three; strict TDD, REFACTOR taken; evaluation of S972 9/10, self 7/10).
 **Gotchas kept (S973):** grep a choice's prose by MEANING as well as by label (the in-app guidance box escaped the label greps; Learning 939); a retake draws the last box's count, so
 `test_guideBreedingGroupsWording.R` follows the picture (seven now); `obfuscated_rhesus_mhc_ped.csv` has no dead animals.
-S974: the one-file genotype tutorials: the Genetic Value article and manual say a genotyped animal's own alleles replace simulated ones (`genetic-value-analysis.qmd:53-58`,
-`_genetic_value_analysis.Rmd:60-65`), and `a2interactive.Rmd:742-785` shows `addGenotype()` then `reportGV()` (gate `test_genotypeTutorialsWording.R`; strict TDD, REFACTOR taken; evaluation of S973 9/10, self 8/10).
-Found, not fixed: the NA founder numbers (`BACKLOG.md:139`; the owner ruled the tutorial hides the warnings). **Gotchas kept (S974):** the chunk's counts change with any edit above it (one seed, line 30);
-`warning = FALSE` goes when the NA item is fixed; rerun a load-failed benchmark file alone; an `Rscript` outside the project root skips renv; never `git stash` here.
+S974: the one-file genotype tutorials: the Genetic Value article and manual say a genotyped animal's own alleles replace simulated ones, and `a2interactive.Rmd:742-785` shows `addGenotype()` then `reportGV()`
+(gate `test_genotypeTutorialsWording.R`; strict TDD, REFACTOR taken; evaluation of S973 9/10, self 8/10); it found the NA founder numbers, fixed S975. **Gotchas kept (S974):** the chunk's counts change with any edit
+above it (one seed, line 30); rerun a load-failed benchmark file alone; an `Rscript` outside the project root skips renv; never `git stash` here.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder

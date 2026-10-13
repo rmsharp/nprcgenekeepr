@@ -136,22 +136,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Founder genome equivalents come out undefined (NA) when genotypes are present (found S974, DECISION NEEDED,
-      Effort M; strict TDD; the first step is a measurement in the real app)** -- measured S974 on the shipped one-file
-      example (`inst/extdata/examples/obfuscated_rhesus_mhc_ped_with_genotypes.csv`, 375 animals, 31 genotyped; codes from
-      `addGenotype()`; `set.seed(1)`, then `reportGV(guIter = 200L, guThresh = 3L, byID = TRUE)`): with the genotypes `fg`,
-      `fgSE` and `neGD` are `NA` and `reportGV()` gives 2 warnings, "Founder genome equivalents undefined: founder(s) with
-      positive contribution were retained in 0 of the gene-drop iterations; raise the number of iterations (K)"
-      (`R/checkFgDegeneracy.R:22-31`, called from `R/calcFG.R:81`, `R/calcFGSE.R:89`, `R/calcFEFG.R:81`); without them there
-      are 0 warnings and `fg` 52.05, `fgSE` 0.092, `neGD` 0.990, while `fe`, `neSexRatio` and `neVariance` are the same either
-      way. 1000 drops give the same two warnings, so the message's advice does not help. **Not measured:** whether the
-      separate-files mode and the Genetic Value tab show the same NA; and why (a guess, unchecked: a genotyped founder
-      carries its real code, 10001 or more, not one of the simulated founder codes 1, 2, 3, ..., so its retention counts as
-      0). **Decide**, after measuring the app, what the colony manager should see when some founders carry real alleles.
-      The tutorial chunk `genotypes-from-label-columns` (`vignettes/a2interactive.Rmd:761`) hides these two warnings on the
-      owner's S974 ruling, pinned by `test_genotypeTutorialsWording.R` block 5; when this is fixed, drop `warning = FALSE`
-      and that block.
-
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
       `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
