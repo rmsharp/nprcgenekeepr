@@ -20,34 +20,18 @@
 ## with a message that names both settings and the ratio given, as exhaustive
 ## mode already does for the settings it cannot take.
 ##
-## The pedigree is small and built here (the same shape as
-## test_haremPartialSeeds.R): six unrelated adult males M1-M5 and MR, eight
-## unrelated adult females F1-F8, and FR, a young female whose sire is MR
-## (kinship 0.25, at the Max kinship used below). Female-female kinship is
-## ignored (the app's setting).
+## The pedigree is small and built by haremFixturePedigree()
+## (helper-haremPedigree.R, shared with test_haremPartialSeeds.R): six
+## unrelated adult males M1-M5 and MR, eight unrelated adult females F1-F8, and
+## FR, a young female whose sire is MR (kinship 0.25, at the Max kinship used
+## below). Female-female kinship is ignored (the app's setting).
 ##
 ## Guards that pass at HEAD and must still pass: a harem alone and a ratio
 ## alone form the same groups for the same seed, exhaustive mode keeps its own
 ## messages, and too few males still stops with the existing message.
 
-stopPed <- function() {
-  ids <- c("M1", "M2", "M3", "M4", "M5", "MR", paste0("F", 1:8), "FR")
-  raw <- data.frame(
-    id = ids,
-    sire = c(rep(NA, 14), "MR"),
-    dam = c(rep(NA, 14), "F8"),
-    sex = c(rep("M", 6), rep("F", 9)),
-    birth = c(rep("2005-01-01", 14), "2010-01-01"),
-    stringsAsFactors = FALSE
-  )
-  suppressWarnings(qcStudbook(raw, reportChanges = FALSE, reportErrors = FALSE))
-}
-
-stopPedData <- stopPed()
-stopKmat <- kinship(
-  stopPedData$id, stopPedData$sire, stopPedData$dam, stopPedData$gen,
-  sparse = FALSE
-)
+stopPedData <- haremFixturePedigree()
+stopKmat <- haremFixtureKinship(stopPedData)
 stopFemales <- paste0("F", 1:8)
 
 formHaremRatio <- function(sexRatio, numGp = 3L, seed = 1L, harem = TRUE,
@@ -72,14 +56,6 @@ stopMessage <- function(...) {
 ## The formed groups, each sorted, without the unused-animals box.
 formedGroups <- function(res, numGp) {
   lapply(res$group[seq_len(numGp)], sort)
-}
-
-sameGroups <- function(found, expected) {
-  length(found) == length(expected) &&
-    all(mapply(
-      function(f, e) setequal(f, e) && length(f) == length(e),
-      found, expected
-    ))
 }
 
 test_that(paste(
@@ -197,4 +173,18 @@ test_that("too few males in the pool still stops with the existing message", {
     formHaremRatio(0, candidates = c("M1", stopFemales)),
     "form 3 harems with only 1 males at least 1 years old in the list"
   )
+})
+
+test_that(paste(
+  "a harem with a custom sex ratio and too few males stops on the ratio",
+  "first"
+), {
+  ## The settings are wrong whatever the pool holds, so the stop that names
+  ## them comes before the one that counts the males.
+  msg <- stopMessage(5, candidates = c("M1", stopFemales))
+  expect_false(is.na(msg), info = "the run did not stop")
+  if (!is.na(msg)) {
+    expect_match(msg, "sexRatio", fixed = TRUE)
+    expect_false(grepl("males at least", msg, fixed = TRUE), info = msg)
+  }
 })

@@ -17,35 +17,19 @@
 ## gave "Could not form breeding groups. Error: subscript out of bounds", and
 ## a male in Group 3's box only gave Groups 1 and 2 with 0 males each.
 ##
-## The pedigree is small and built here. Six unrelated adult males M1-M5 and
-## MR, eight unrelated adult females F1-F8, and FR, a young female whose sire
-## is MR (kinship 0.25, at the Max kinship used below), so a seeded FR keeps
-## MR out of the pool. Female-female kinship is ignored (the app's setting).
+## The pedigree is small and built by haremFixturePedigree()
+## (helper-haremPedigree.R): six unrelated adult males M1-M5 and MR, eight
+## unrelated adult females F1-F8, and FR, a young female whose sire is MR
+## (kinship 0.25, at the Max kinship used below), so a seeded FR keeps MR out
+## of the pool. Female-female kinship is ignored (the app's setting).
 ##
 ## Guards that pass at HEAD and must still pass: the same-seed groups for no
 ## seeded male and for a male in every group stay as HEAD gave them, too few
 ## males still stops with the existing message, and two males in one seed
 ## group still stops.
 
-partialPed <- function() {
-  ids <- c("M1", "M2", "M3", "M4", "M5", "MR", paste0("F", 1:8), "FR")
-  raw <- data.frame(
-    id = ids,
-    sire = c(rep(NA, 14), "MR"),
-    dam = c(rep(NA, 14), "F8"),
-    sex = c(rep("M", 6), rep("F", 9)),
-    birth = c(rep("2005-01-01", 14), "2010-01-01"),
-    stringsAsFactors = FALSE
-  )
-  suppressWarnings(qcStudbook(raw, reportChanges = FALSE, reportErrors = FALSE))
-}
-
-partialPedData <- partialPed()
-partialKmat <- kinship(
-  partialPedData$id, partialPedData$sire, partialPedData$dam,
-  partialPedData$gen,
-  sparse = FALSE
-)
+partialPedData <- haremFixturePedigree()
+partialKmat <- haremFixtureKinship(partialPedData)
 allMales <- partialPedData$id[partialPedData$sex == "M"]
 allFemales <- paste0("F", 1:8)
 
@@ -77,14 +61,6 @@ nMales <- function(group) sum(group %in% allMales)
 ## The formed harems are the first numGp groups; the last box is the unused
 ## animals.
 haremGroups <- function(res, numGp = 3L) res$group[seq_len(numGp)]
-
-sameGroups <- function(found, expected) {
-  length(found) == length(expected) &&
-    all(mapply(
-      function(f, e) setequal(f, e) && length(f) == length(e),
-      found, expected
-    ))
-}
 
 partialSeedPatterns <- list(
   `male in group 1 only` = list("M1", character(0), character(0)),
