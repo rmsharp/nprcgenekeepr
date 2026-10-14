@@ -12,7 +12,9 @@
 #' use in the group.
 #' @inheritParams getPotentialSires
 #' @param harem logical variable when set to \code{TRUE}, the formed groups
-#' have a single male at least \code{minAge} old.
+#' have a single male at least \code{minAge} old. A group with no male in
+#' \code{currentGroups} is given a sire chosen at random from
+#' \code{candidates}; a group that has one keeps him.
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal younger than this age are
 #' ignored; an animal exactly this old is not ignored. There is no default.

@@ -66,7 +66,9 @@ have a single male at least \code{minAge} old. A harem's sire is held to
 the same rules as every other animal: animals related to him at or above
 \code{threshold} (and, with \code{ancestryRules}, animals a block rule bars
 from him) are not placed in his group, and when that leaves no one the group
-is the sire alone.}
+is the sire alone. A group whose seed animals (\code{currentGroups}) include
+a male at least \code{minAge} old keeps him as its sire; a group with no
+seeded male is given a sire chosen at random from \code{candidates}.}
 
 \item{sexRatio}{Numeric value indicating the number of non-males (females
 and animals of other or unknown sex) per male. Values from 0.5 to 20 in

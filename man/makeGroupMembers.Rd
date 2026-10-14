@@ -21,7 +21,9 @@ use in the group.}
 information including the IDs listed in \code{ids}.}
 
 \item{harem}{logical variable when set to \code{TRUE}, the formed groups
-have a single male at least \code{minAge} old.}
+have a single male at least \code{minAge} old. A group with no male in
+\code{currentGroups} is given a sire chosen at random from
+\code{candidates}; a group that has one keeps him.}
 
 \item{minAge}{integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal younger than this age are
