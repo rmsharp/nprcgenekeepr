@@ -17,14 +17,25 @@
 ## The first two blocks fail until the file is edited; the third is green at
 ## HEAD and stays green: the edit changes nothing else.
 
+## jmacExamplePath() is in helper-jmacExample.R.
 jmacExample <- function() {
-  path <- system.file("extdata", "examples", "deidentified_jmac_ped.csv",
-                      package = "nprcgenekeepr")
+  path <- jmacExamplePath()
   skip_if(path == "", "shipped jmac example not found")
   ped <- read.csv(path, stringsAsFactors = FALSE, na.strings = c("", "NA"),
                   check.names = FALSE)
   ped$birth <- as.Date(ped$birth)
   ped
+}
+
+## The ids of the animals whose `parent` (the "sire" or the "dam" column) was
+## born after them. An animal with no birth date, or whose parent has none in
+## the file, cannot be checked and is not reported.
+bornAfterOffspring <- function(ped, parent) {
+  named <- !is.na(ped[[parent]])
+  parentBirth <- ped$birth[match(ped[[parent]][named], ped$id)]
+  late <- !is.na(parentBirth) & !is.na(ped$birth[named]) &
+    parentBirth > ped$birth[named]
+  ped$id[named][late]
 }
 
 impossibleSireOffspring <- c("8PPD8", "82I5M")
@@ -41,22 +52,12 @@ test_that("the jmac example's two impossible sire entries are blank", {
 })
 
 test_that("no sire entry of the jmac example names an animal born after its offspring", {
-  ped <- jmacExample()
-  named <- !is.na(ped$sire)
-  sireBirth <- ped$birth[match(ped$sire[named], ped$id)]
-  ## An animal whose sire has no birth date in the file cannot be checked.
-  late <- !is.na(sireBirth) & !is.na(ped$birth[named]) &
-    sireBirth > ped$birth[named]
-  expect_identical(ped$id[named][late], character(0))
+  expect_identical(bornAfterOffspring(jmacExample(), "sire"), character(0))
 })
 
 test_that("the jmac example keeps its 2,791 animals and 2,448 named dams, each born before her offspring", {
   ped <- jmacExample()
   expect_identical(nrow(ped), 2791L)
   expect_identical(sum(!is.na(ped$dam)), 2448L)
-  named <- !is.na(ped$dam)
-  damBirth <- ped$birth[match(ped$dam[named], ped$id)]
-  late <- !is.na(damBirth) & !is.na(ped$birth[named]) &
-    damBirth > ped$birth[named]
-  expect_identical(ped$id[named][late], character(0))
+  expect_identical(bornAfterOffspring(ped, "dam"), character(0))
 })

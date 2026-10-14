@@ -163,10 +163,7 @@ test_that("the shipped ancestry example uploads with U1 as UNKNOWN", {
   expect_identical(sum(res$cleaned$ancestry == "OTHER"), 1L) # O1 (mauritius)
   expect_identical(sum(res$cleaned$ancestry == "UNKNOWN"), 1L)
 })
-jmacExamplePath <- function() {
-  system.file("extdata", "examples", "deidentified_jmac_ped.csv",
-              package = "nprcgenekeepr")
-}
+## jmacExamplePath() is in helper-jmacExample.R.
 test_that("the shipped jmac example no longer reports the id \"\" as both a sire and a dam", {
   skip_if_not_installed("shiny")
   path <- jmacExamplePath()
