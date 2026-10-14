@@ -11,14 +11,15 @@ library(testthat)
 # Flag rules never touch the search (D3). D7 pins: `ancestryRules = NULL`
 # and flag-only rules are same-seed identical to the pre-change behavior.
 #
-# HAREM LIMITATION (owner-ratified this session): a harem's sire is sampled
-# into the group at initialization (initializeHaremGroups()), and the fill
-# loop applies conflict exclusions only for animals the loop itself places
-# (fillGroupMembers.R). The existing KINSHIP machinery therefore does not
-# exclude the sire's own conflicts either -- ancestry blocking inherits
-# exactly that seam: blocks among loop-placed members are enforced; blocks
-# against the sampled sire are not. The limitation is pinned by an explicit
-# test below and documented in the roxygen for `ancestryRules`.
+# HAREM SIRE (S764 pinned a limitation; the owner ruled it closed S983,
+# BACKLOG.md:156): a harem's sire is sampled into the group at
+# initialization (initializeHaremGroups()), and the fill loop used to apply
+# conflict exclusions only for animals the loop itself placed, so neither the
+# kinship nor the ancestry conflicts of the sampled sire were enforced. The
+# sire is now held to the same rules as every other animal: blocks and
+# kinship against him keep those animals out of his harem, and when that
+# leaves nobody the harem is the sire alone. The two tests below that used to
+# pin the gap now pin the fix (test_haremSireConflicts.R covers kinship).
 
 ancestryPed <- function() {
   raw <- read.csv(
@@ -158,7 +159,7 @@ test_that("block rules are never violated in sexRatio mode across seeds", {
   }
 })
 
-test_that("block rules bind harem members placed by the fill loop", {
+test_that("block rules bind every member of a harem, the sampled sire too", {
   ped <- ancestryPed()
   kmat <- ancestryKmat(ped)
   rules <- exampleAncestryRules()
@@ -168,30 +169,31 @@ test_that("block rules bind harem members placed by the fill loop", {
       candidates = ped$id, kmat = kmat, ped = ped,
       iter = 10L, numGp = 1L, harem = TRUE, ancestryRules = rules
     )
-    ## the sire is seeded first; the loop-placed remainder must be block-free
-    loopPlaced <- res$group[[1L]][-1L]
+    ## the whole group, the sire (seeded first) included, must be block-free
     expect_identical(
-      violatingPairKeys(list(loopPlaced), ped, rules),
+      violatingPairKeys(res$group[1L], ped, rules),
       character(0L)
     )
   }
 })
 
-test_that("harem sire seeding bypasses ancestry blocking (documented limitation)", {
-  ## The only possible sire (I1, INDIAN) plus the only fillable female
-  ## (C2, CHINESE) match a block rule, yet ARE co-placed: the sampled sire's
-  ## conflicts are never applied to the fill loop's available list -- the
-  ## same seam the kinship machinery has. Pinned deliberately; a change in
-  ## this behavior must be its own gated decision.
+test_that("a harem's sampled sire is held to the ancestry block rules", {
+  ## The only possible sire (I1, INDIAN) and the only fillable female (C2,
+  ## CHINESE) match a block rule, so the harem is the sire alone and C2 is
+  ## left to the unused animals (S764 pinned them co-placed; the owner ruled
+  ## that closed S983, BACKLOG.md:156).
   ped <- ancestryPed()
   kmat <- ancestryKmat(ped)
   rules <- exampleAncestryRules()
-  set_seed(1L)
-  res <- groupAddAssign(
-    candidates = c("I1", "C2"), kmat = kmat, ped = ped,
-    iter = 5L, numGp = 1L, harem = TRUE, ancestryRules = rules
-  )
-  expect_setequal(res$group[[1L]], c("I1", "C2"))
+  for (s in 1L:3L) {
+    set_seed(s)
+    res <- groupAddAssign(
+      candidates = c("I1", "C2"), kmat = kmat, ped = ped,
+      iter = 5L, numGp = 1L, harem = TRUE, ancestryRules = rules
+    )
+    expect_identical(res$group[[1L]], "I1")
+    expect_identical(res$group[[2L]], "C2")
+  }
 })
 
 test_that("candidates ancestry-blocked against a current group member are never placed", {
