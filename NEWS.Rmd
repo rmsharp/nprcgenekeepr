@@ -448,6 +448,12 @@ longitudinal monitoring of colony genetic health.
 
 **Minor**
 
+- Fixed: the Japanese macaque example file `deidentified_jmac_ped.csv` could not
+  be loaded in the app. Its only two sire entries named animals born decades
+  after their offspring and are removed, so the file records no sire for any
+  animal. Its remaining 65 flagged mothers were between 3.43 and 3.99 years old
+  at the birth, under the 4-year default for Japanese macaque females, so it
+  loads once Minimum Dam Age is set to 3.4 or lower.
 - Fixed: on the Marker Genetics tab, building the de-identified export preview
   could end the session when the genotype file had an animal missing from the
   loaded pedigree or had failed its format check. The app now stays connected,

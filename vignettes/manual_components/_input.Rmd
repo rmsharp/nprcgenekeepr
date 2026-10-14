@@ -49,7 +49,11 @@ You can specify a minimum sire age and a minimum dam age (in years) that
 parents must have reached at the birthdate of an offspring. Both fields are
 optional: leave one blank to use the species-specific default for that sex
 (2 years when the species is missing or unknown). This helps identify
-potential data entry errors where parents appear too young.
+potential data entry errors where parents appear too young. For example, 65 of
+the mothers in the Japanese macaque example file `deidentified_jmac_ped.csv`
+were between 3.43 and 3.99 years old at the birth, under the built-in 4-year
+floor for Japanese macaque females, so that file loads only once the minimum
+dam age is set to 3.4 or lower.
 
 ### Quality Control Results
 
