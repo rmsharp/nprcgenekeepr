@@ -198,10 +198,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S984
 date: 2026-10-14
-status: pending
-active_task: IN PROGRESS -- a male seed animal in only some harems stops the run with "subscript out of bounds" (BACKLOG.md:156; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; strict TDD)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- a male seeded in only some harems no longer stops the run or leaves harems without a male: every harem group with no seeded male is given a sampled sire (BACKLOG.md:156, removed; owner pick at the Phase 0 picker, option 1 of 4; owner ruling on the approach; strict TDD, every gate asked, REFACTOR taken)
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget WARN only for SESSION_RUNNER.md, ratchet citation matched). Claim 0ecf998f9 (notes wrap 794e81c6e). Measured first on the example (3 harems, 332 living, 12 seeding patterns): 4 ran, 7 stopped with "subscript out of bounds", 1 (a male in the last box only) ran with two harems that had no male; the real app showed both. One question on the approach (sample a sire, recommended, taken). RED b7f609626 (10 blocks, 6 failing, 69 failed expectations, 0 skipped, 4 guards green) and 214846775 (wording, 7 blocks, 5 failing), GREEN a0cdbcd51 (R/initializeHaremGroups.R, new R/groupsWithoutSire.R, R/groupAddAssign.R), fa7e8aeb7 (help, man pages) and 7fa7a0db2 (NEWS, manual, guide; sentences as approved), REFACTOR c6a558244 (groupSeeds() helper, a block for the mutation survivor). Close-out: BACKLOG item removed, Learning 950.
+next_steps: Each needs an owner pick: the custom-sex-ratio harem defect (BACKLOG.md:156 now; script-only, harem plus sexRatio places one animal in total), the kinship2 drawing features (which pedigree column means deceased), a docs-audit part 2 cluster (6a and 6b 10 candidates, 6d 22, 6e 46), or the contributor tutorial. Not an option: pushing (the owner ruled no push-only sessions); 159 commits are ahead of origin/master with this close-out, none seen by CI.
+key_files: R/initializeHaremGroups.R:37-63 (the per-group sire sampling); R/groupsWithoutSire.R:1-35 (groupSeeds(), groupsWithoutSire()); R/groupAddAssign.R:46-53 (harem help), :253-255 (the stop-check count); R/makeGroupMembers.R:14-17 (help); tests/testthat/test_haremPartialSeeds.R (11 blocks); tests/testthat/test_haremPartialSeedsWording.R (7); NEWS.Rmd:265-268; vignettes/manual_components/_breeding_group_formation.Rmd:92-95; vignettes/articles/colony-manager-guide.qmd:649-653
+gotchas: makeGroupMembers() now returns only the first numGp groups (it returned as many as currentGroups had; groupAddAssign() stops first); a Shiny output in a hidden tab is not computed until its tab is active, so click the pane's own tab link (two tabs share data-value "Statistics") before get_value(output =); a real-app probe needs R CMD INSTALL --no-docs --library=<scratch> with R_LIBS=<scratch>:<renv libs>; SESSION_NOTES.md lines over 280 B read OVER in context_budget.py, run it before the claim commit; the same-seed pins in test_haremPartialSeeds.R come from HEAD before GREEN; the studbook stays untracked in inst/extdata/examples/ (never git add -A); never git stash here
+runtime_smoke: the real app (shinytest2 AppDriver, the code installed into a scratch library) on Breeding Groups, ExamplePedigree.csv, 3 groups, Harem, 5 simulations, Seed groups on, one male typed in one box: before the fix, box 1 only gave "Could not form breeding groups. Error: subscript out of bounds" and box 3 only gave Statistics 69/0, 69/0, 72/1 (animals/males); after (GREEN code), both gave 1/1/1 males in the three groups. Run at the GREEN code, not the REFACTOR code (REFACTOR verified by the suite, the check and a 12-mutant check).
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3ba0b3090c4d · manifest aa983075d6a2
+changelog_ref: S984 DONE entry
+commit: the close-out commit that carries this receipt; claim 0ecf998f9
 ```
 
 ```handoff

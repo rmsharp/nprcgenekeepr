@@ -153,23 +153,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **A male seed animal in only some harems stops the run with "subscript out of
-      bounds" (found S983, 2026-10-14; DECISION NEEDED -- give the other groups
-      sampled sires, or stop with a message that says what is wrong, Effort S)** --
-      `initializeHaremGroups()` samples sires only when no supplied group holds a male
-      (`R/initializeHaremGroups.R:47`); with a male seed in group 1 and seed animals
-      with no male in group 3, its `else` branch reads `groupMembers[[3]]` of a
-      one-element list (`:63`) and `makeGroupMembers()` stops with "subscript out of
-      bounds" (probed S983 on the example pedigree, 3 harems, `currentGroups =
-      list(c(male, f1, f2), character(0), c(f3, f4))`, before and after the S983 fix
-      alike). The Breeding Groups tab builds `currentGroups` from its Seed animals
-      boxes, one per group (the block commented "Seed groups ... parity" in
-      `R/modBreedingGroups.R`), so a user
-      who seeds a male in one box and females in another with Harem selected should
-      hit it; not run in the app. The owner's call: sample a sire for each group that
-      has none (a change in what a partial seeding means), or stop with a message
-      naming the cause.
-
 - [ ] **Harem with a custom sex ratio places one animal in total (found S983,
       2026-10-14; script-only; DECISION NEEDED -- make the combination work, or stop
       with a message, Effort S to M)** -- `groupAddAssign(harem = TRUE, sexRatio = 5)`,

@@ -98,12 +98,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 984 Does
-**Deliverable:** a male seed animal in only some harems no longer stops the run with "subscript out of bounds" (`BACKLOG.md:156`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED --
-give the other groups sampled sires, or stop with a message naming the cause; Effort S; strict TDD wherever code or a test changes) (IN PROGRESS)
-**Started:** 2026-10-14
-**Status:** Session claimed. PRE-RED. Work beginning: measure first (a function probe, then the real app's Seed animals boxes), then ask the owner the approach.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+### What Session 984 Did
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; ruling: every harem group with no seeded male is given a sampled sire; strict TDD, every gate asked, REFACTOR taken):** a male seeded in only some harems no
+longer stops the run or leaves harems without a male (`BACKLOG.md:156`, removed): `initializeHaremGroups()` samples a sire for each group whose seed animals hold no male (`R/initializeHaremGroups.R:37-63`); the too-few-males stop
+there and in `groupAddAssign()` (`:253-255`) counts only those groups; help, NEWS, manual and guide say so.
+**Measured (example, 3 harems, 12 seeding patterns):** 4 ran, 7 stopped ("subscript out of bounds"), 1 (a male in the last box only) ran with two sireless harems; the real app showed both; after, 1/1/1 males. Learning 950.
+**Gates:** claim `0ecf998f9`; RED `b7f609626` (6 of 10 blocks failing, 69 failed expectations, 0 errors, 0 skipped), `214846775` (wording); GREEN `a0cdbcd51`, `fa7e8aeb7`, `7fa7a0db2`; REFACTOR `c6a558244`.
+**Verified:** suite 3,689 blocks, 12,340 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0; lint_package 0; ratchet 1/1 (`3ba0b3090c4d`); real app (GREEN code) 1/1/1; mutation 10 of 11, then 12 of 12.
+**Handoff evaluation of S983: 8/10.** Helped: the item's line cites, the real-app recipe. Missing: the defect's size (7 of 12 shapes stop, 1 silent), the second stop-check. Wrong: "a male in some groups, females in others" was one shape of a family.
+**Self-assessment: 8/10.** + measured 12 shapes and the real app before asking; the shared cause; the mutation check found a gap. - the real-app probe took six tries (hidden tab not computed); two claim-stub lines over 280 B.
+**Next:** owner picks: the custom-sex-ratio harem defect (script-only), the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 159 commits ahead of `origin/master`.
+**Gotchas:** `makeGroupMembers()` returns only the first `numGp` groups now; a real-app probe needs a scratch `R CMD INSTALL` and the pane's own tab link; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-983 (condensed S950 to S984; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
