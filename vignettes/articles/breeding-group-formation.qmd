@@ -160,7 +160,8 @@ sexRatioGrp <- groupAddAssign(
 lengths(sexRatioGrp$group)
 ```
 
-`harem` and `sexRatio` are alternative strategies -- use one or the other.
+`harem` and `sexRatio` are alternative strategies -- use one or the other;
+passing both to `groupAddAssign()` stops with a message.
 Because the sex-ratio constraint caps how many animals of each sex a group can
 hold, more candidates may be left in the trailing unplaced element than in the
 harem case; raising `iter` lets the search place more of them.

@@ -278,6 +278,11 @@ export workflows, and longitudinal monitoring of colony genetic health.
   longer stops the run with "subscript out of bounds" or forms harems
   with no male. A group with a seeded male keeps him as its sire; a
   group with no seeded male is given a sire chosen at random.
+- A script that passes `harem = TRUE` and a non-zero `sexRatio` to
+  `groupAddAssign()` now stops with a message naming both settings,
+  instead of returning groups of one or two animals; use one or the
+  other. The Breeding Groups tab was never affected, since its radio
+  takes **Harem** or **Custom**, not both.
 
 **Minor**
 
