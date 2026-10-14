@@ -99,11 +99,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 982 Did
-**Deliverable:** detect a death date earlier than the birth date in the pedigree check (`BACKLOG.md:156`; the owner's own request after S980; DECISION NEEDED -- error or warning, Effort S to M; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-13 23:05 CDT
-**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker (option 1 of 4). Pre-RED: measure first (what the check and the cleaned table do with an early death today), then ask in plain
-words: error or warning, which date counts, whether a same-day death is flagged.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4, the owner's own request after S980; Pre-RED answers: a warning not an error, strictly earlier only, read the cleaned `exit`; strict TDD, every gate asked,
+REFACTOR taken):** the Input tab warns about a death or departure before the birth date (`BACKLOG.md:156`, removed). New internal `getExitBeforeBirthWarning()` (`R/getExitBeforeBirthWarning.R`) gives the row "Animals with a death or
+departure before birth" (count, first 5 ids); `runQcStudbook()` adds it after the no-birth-date row when `reportChanges` is TRUE (`R/runQcStudbook.R:241-249`); `qcStudbook()` is unchanged. Help, manual (`_input.Rmd:66-71`), guide
+(`colony-manager-guide.qmd:251-256`) and `NEWS.Rmd:401-406` say so, in the owner's four approved sentences.
+**Found:** no Input file ships an early date, but the data objects `qcPed` and `pedWithGenotype` each hold one (`Y7PPEZ`); same-day exits are common (226 of 1,930; 370 of 1,839); `ExamplePedigree.csv`'s own `age` column is kept as given. Learning 948.
+**Gates:** claim `c91695032`; RED `885e08bf1` (28 new blocks, 21 failing for the stated reasons, 0 skipped, 7 guards green); GREEN `9e6dc67c7` (code, amended once for a lint finding), `af8db6852` (docs); REFACTOR `827337f7f`.
+**Verified:** suite 3,653 blocks, 11,917 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0 (`--no-manual`); lint_package 0; ratchet 1/1 (`7cf2c07e5890`); real app at GREEN and at REFACTOR: Warnings sub-tab opens with the row,
+QC Summary 8 / 0 / 1; mutation: 10 of 12 caught, then 13 of 13.
+**Handoff evaluation of S981: 8/10.** Helped: the item's cites held (`qcStudbook.R:356,329`, `runQcStudbook.R:243`), the model function, the three decisions framed. Missing: `qcStudbook()` keeps a file's own `age` column; `departure_date` is
+not renamed. Wrong: "no shipped example has an early date" left out the two data objects.
+**Self-assessment: 7/10.** + measured before asking, every question answered first try, mutation survivors fixed, real app run twice. - committed GREEN after a lint finding (a piped `tail` hid it; message said "lintr 0", amended); the
+first probe read the file's own age column; the claim script wrote two of three files before an anchor failed; stale mutant strings after REFACTOR.
+**Next:** owner picks: the harem-sire hole (design gate first), the kinship2 drawing features (which column means deceased), a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 143 commits are ahead of `origin/master`.
+**Gotchas:** `ped$exit` partial-matches `exitDate` (use `[[`); read the lint count before `git commit`; assert every anchor before writing any file; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-981 (condensed S950 to S982; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
