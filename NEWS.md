@@ -459,6 +459,15 @@ export workflows, and longitudinal monitoring of colony genetic health.
   `qcStudbook(reportErrors = TRUE)` keeps the record. The Changed
   Columns tab does not list this rename.
 
+- Fixed: `checkRequiredCols()` stopped with the message "missing value
+  where TRUE/FALSE needed" when it was given five or more column names,
+  one of them missing (`NA`), and a required column was absent. It now
+  treats the missing name like any other name that does not match, so it
+  returns the absent required columns, or, with `reportErrors = FALSE`,
+  stops naming them. The Input tab is not affected: a blank header in a
+  pedigree file is read as `X`, and the tab still reports the missing
+  column.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
   found. They are now colored: Errors is red when there is at least one
