@@ -105,22 +105,9 @@ test_that(paste0(
 ## single date column whose first value was invalid stopped with "character
 ## string is not in a standard unambiguous format". The pedigrees above have
 ## one date column and a valid first value, so they never reached it, and
-## test_qcStudbook.R makes every row invalid, which skips the conversion.
-datePedBirth <- c(
-  "2000-01-05", "2000-02-06", "2005-03-07", "2006-04-08", "2007-05-09",
-  "2008-06-10"
-)
-datePedExit <- c(NA, NA, "2015-03-07", NA, "2016-05-09", NA)
-datePed <- function(birth = datePedBirth, exit = datePedExit) {
-  data.frame(
-    id = paste0("a", 1L:6L),
-    sire = c(NA, NA, "a1", "a1", "a1", "a1"),
-    dam = c(NA, NA, "a2", "a2", "a2", "a2"),
-    sex = c("M", "F", "M", "F", "M", "F"),
-    birth = birth, exit = exit, recordStatus = "original",
-    stringsAsFactors = FALSE
-  )
-}
+## test_qcStudbook.R makes every row invalid, which skips the conversion. The
+## six-animal pedigree, datePed(), is in helper-datePedigree.R.
+
 ## Both date columns come back as Date, with blanks only where the file's own
 ## text was invalid and every other date unchanged.
 expectConvertedDates <- function(result, birth, exit) {
@@ -174,4 +161,30 @@ test_that(paste0(
   expect_identical(result$errorLst$invalidDateRows, "1")
   expect_s3_class(result$sb$birth, "Date")
   expect_identical(as.character(result$sb$birth), replace(datePedBirth, 1L, NA))
+})
+
+## S987 REFACTOR: the blanking step hands convertDate() one date column plus the
+## recordStatus column when there is one. Every block above has recordStatus, so
+## a mutation that dropped `drop = FALSE` from that slice survived them; with no
+## recordStatus column (the exported function's own example has none) the slice
+## is a single column and must stay a data frame.
+test_that(paste0(
+  "getDateErrorsAndConvertDatesInPed lists invalid dates in a pedigree with no ",
+  "recordStatus column"
+), {
+  birth <- replace(datePedBirth, 3L, "2010-16-22")
+  exit <- replace(datePedExit, 5L, "2016-13-40")
+  twoDateColumns <- runDateQc(datePed(birth, exit, recordStatus = NULL))
+  expect_identical(twoDateColumns$errorLst$invalidDateRows, c("3", "5"))
+  expectConvertedDates(
+    twoDateColumns, replace(datePedBirth, 3L, NA), replace(datePedExit, 5L, NA)
+  )
+  ped <- datePed(birth, recordStatus = NULL)
+  ped$exit <- NULL
+  oneDateColumn <- runDateQc(ped)
+  expect_false(inherits(oneDateColumn, "error"), info = errorText(oneDateColumn))
+  expect_identical(oneDateColumn$errorLst$invalidDateRows, "3")
+  expect_identical(
+    as.character(oneDateColumn$sb$birth), replace(datePedBirth, 3L, NA)
+  )
 })

@@ -869,33 +869,26 @@ test_that("the shipped example pedigree gets no exit-before-birth warning", {
 # "Data Processing Error: do not know how to convert ..." and no row number.
 # One date column gave "Invalid date values" with the row; two must too.
 
-## Six animals with a birth and an exit column, as a CSV; `birth` and `exit`
-## are the file's own text for each date.
+## The six-animal pedigree with a birth and an exit column (datePed(), in
+## helper-datePedigree.R), written as a CSV; `birth` and `exit` are the file's
+## own text for each date.
 writePedBirthAndExit <- function(birth, exit) {
-  ped <- data.frame(
-    id = paste0("a", 1L:6L),
-    sire = c(NA, NA, "a1", "a1", "a1", "a1"),
-    dam = c(NA, NA, "a2", "a2", "a2", "a2"),
-    sex = c("M", "F", "M", "F", "M", "F"),
-    birth = birth, exit = exit,
-    stringsAsFactors = FALSE
-  )
   path <- tempfile(fileext = ".csv")
-  write.csv(ped, path, row.names = FALSE, na = "")
+  write.csv(datePed(birth, exit, recordStatus = NULL), path,
+            row.names = FALSE, na = "")
   path
 }
 
 test_that("the Input tab lists one invalid date by row in a file with birth and exit columns", {
   skip_if_not_installed("shiny")
-  goodBirth <- c("2000-01-05", "2000-02-06", "2005-03-07", "2006-04-08",
-                 "2007-05-09", "2008-06-10")
-  goodExit <- c(NA, NA, "2015-03-07", NA, "2016-05-09", NA)
   cases <- list(
     "bad birth, row 3" = list(
-      birth = replace(goodBirth, 3L, "2010-16-22"), exit = goodExit, row = "3"
+      birth = replace(datePedBirth, 3L, "2010-16-22"), exit = datePedExit,
+      row = "3"
     ),
     "bad exit, row 5" = list(
-      birth = goodBirth, exit = replace(goodExit, 5L, "2016-13-40"), row = "5"
+      birth = datePedBirth, exit = replace(datePedExit, 5L, "2016-13-40"),
+      row = "5"
     )
   )
   for (label in names(cases)) {
