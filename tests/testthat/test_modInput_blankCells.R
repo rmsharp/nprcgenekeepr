@@ -22,11 +22,12 @@ uploadPedigree <- function(lines, fileExt = "csv", fileType = "fileTypeExcel",
   uploadPedigreeFile(path, fileType = fileType, separator = separator)
 }
 uploadPedigreeFile <- function(path, fileType = "fileTypeExcel",
-                               separator = ",", minDamAge = "") {
+                               separator = ",", minDamAge = "",
+                               minSireAge = "") {
   got <- new.env()
   shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = fileType,
-                      separator = separator, minSireAge = "",
+                      separator = separator, minSireAge = minSireAge,
                       minDamAge = minDamAge)
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
@@ -164,43 +165,71 @@ test_that("the shipped ancestry example uploads with U1 as UNKNOWN", {
   expect_identical(sum(res$cleaned$ancestry == "UNKNOWN"), 1L)
 })
 ## jmacExamplePath() is in helper-jmacExample.R.
+##
+## RED (S981; BACKLOG.md:179, the owner's S980 request "reconstruct in the next
+## session"; Pre-RED rulings: replace the old file, keep the species column):
+## the shipped Japanese macaque example is now the 2018-07-11 studbook,
+## de-identified with obfuscatePed() (dev/buildJmacExample.R, seed 20180711):
+## 2,590 animals, 819 of them with a sire. The numbers below were measured on a
+## scratch build through this module; the studbook itself is neither in git nor
+## in the package. The species column (JAPANESE MACAQUE) brings the built-in
+## floors: 4 years for a mother and 5 for a father. 62 mothers and 18 fathers
+## are under them, 79 rows in the Errors table, so the file loads only once both
+## Minimum Dam Age and Minimum Sire Age are lowered (test_jmacExampleWording.R
+## pins the guide, manual and NEWS sentences).
 test_that("the shipped jmac example no longer reports the id \"\" as both a sire and a dam", {
   skip_if_not_installed("shiny")
   path <- jmacExamplePath()
   skip_if(path == "")
   res <- uploadPedigreeFile(path)
   expect_false("Animal is both sire and dam" %in% res$errors$Error)
-  ## The file's remaining errors are real: 65 mothers aged 3.43 to 3.99 years
-  ## at the birth, under the Japanese macaque 4-year floor, which the script
-  ## path reports too. (S980, BACKLOG.md:156: the file's only two sire
-  ## entries named animals born 35 and 37 years after their offspring, 2 more
-  ## errors, and are blank now; the count was 67.)
   expect_identical(unique(res$errors$Error), "Parent age too young")
-  expect_identical(nrow(res$errors), 65L)
+  expect_identical(nrow(res$errors), 79L)
+  expect_null(res$cleaned)
 })
-## Minimum Dam Age 3.4 is the largest round value under the youngest mother
-## (3.43), so the file loads whole: nothing is dropped and the check adds a
-## placeholder row for each unknown parent (the cleaned table holds 5,239 rows,
-## 2,791 of them the file's own animals). The guide, the manual and NEWS name
-## this setting (test_jmacExampleWording.R).
-test_that("the shipped jmac example loads once Minimum Dam Age is 3.4", {
+## Each box alone is not enough: Minimum Dam Age 3.3 leaves the 18 fathers
+## under 5 years, Minimum Sire Age 4.3 leaves the 62 mothers under 4.
+test_that("the shipped jmac example needs both Minimum Dam Age and Minimum Sire Age lowered", {
   skip_if_not_installed("shiny")
   path <- jmacExamplePath()
   skip_if(path == "")
-  res <- uploadPedigreeFile(path, minDamAge = "3.4")
+  damOnly <- uploadPedigreeFile(path, minDamAge = "3.3")
+  expect_identical(nrow(damOnly$errors), 18L)
+  expect_null(damOnly$cleaned)
+  sireOnly <- uploadPedigreeFile(path, minSireAge = "4.3")
+  expect_identical(nrow(sireOnly$errors), 62L)
+  expect_null(sireOnly$cleaned)
+})
+## Minimum Dam Age 3.3 and Minimum Sire Age 4.3 are the largest round values
+## under the youngest mother (3.38) and father (4.36), so the file loads whole:
+## nothing is dropped and the check adds a placeholder row for each unknown
+## parent (the cleaned table holds 4,055 rows, 2,592 of them real animals: the
+## file's 2,590 and the 2 mothers it names but gives no row). The guide, the
+## manual and NEWS name these settings (test_jmacExampleWording.R).
+test_that("the shipped jmac example loads once Minimum Dam Age is 3.3 and Minimum Sire Age is 4.3", {
+  skip_if_not_installed("shiny")
+  path <- jmacExamplePath()
+  skip_if(path == "")
+  res <- uploadPedigreeFile(path, minDamAge = "3.3", minSireAge = "4.3")
   expect_identical(nrow(res$errors), 0L)
   expect_false(is.null(res$cleaned))
-  expect_identical(sum(!(res$cleaned$placeholder %in% TRUE)), 2791L)
+  expect_identical(nrow(res$cleaned), 4055L)
+  expect_identical(sum(!(res$cleaned$placeholder %in% TRUE)), 2592L)
 })
-## The boundary: 3.5 is above the 2 youngest mothers (3.43 and under 3.5), so
-## those two are still flagged and the file does not load. This is what keeps
-## "3.4 or lower" in the wording from being a loose number.
-test_that("Minimum Dam Age 3.5 still flags the file's two youngest mothers", {
+## The boundaries: 3.4 is above the youngest mother (3.38) and 4.4 above the
+## youngest father (4.36), so one row is still flagged and the file does not
+## load. This is what keeps "3.3 or lower" and "4.3 or lower" in the wording
+## from being loose numbers.
+test_that("Minimum Dam Age 3.4 and Minimum Sire Age 4.4 each still flag one row", {
   skip_if_not_installed("shiny")
   path <- jmacExamplePath()
   skip_if(path == "")
-  res <- uploadPedigreeFile(path, minDamAge = "3.5")
-  expect_identical(unique(res$errors$Error), "Parent age too young")
-  expect_identical(nrow(res$errors), 2L)
-  expect_null(res$cleaned)
+  damTooHigh <- uploadPedigreeFile(path, minDamAge = "3.4", minSireAge = "4.3")
+  expect_identical(unique(damTooHigh$errors$Error), "Parent age too young")
+  expect_identical(nrow(damTooHigh$errors), 1L)
+  expect_null(damTooHigh$cleaned)
+  sireTooHigh <- uploadPedigreeFile(path, minDamAge = "3.3", minSireAge = "4.4")
+  expect_identical(unique(sireTooHigh$errors$Error), "Parent age too young")
+  expect_identical(nrow(sireTooHigh$errors), 1L)
+  expect_null(sireTooHigh$cleaned)
 })
