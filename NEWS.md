@@ -274,6 +274,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   one an ancestry block rule bars from him, now stays out of his harem,
   and if that leaves no one the harem is the sire alone. Results for a
   given random seed differ from earlier versions.
+- With **Harem** selected, seeding a male in some groups but not all no
+  longer stops the run with "subscript out of bounds" or forms harems
+  with no male. A group with a seeded male keeps him as its sire; a
+  group with no seeded male is given a sire chosen at random.
 
 **Minor**
 

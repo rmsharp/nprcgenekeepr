@@ -648,7 +648,9 @@ constrained:
 - **None** -- sex is not considered when filling groups.
 - **Harem (1M:NF)** -- each group is seeded with a single male and filled
   with females; as for every other animal, the Max kinship threshold keeps
-  his close relatives out of his group.
+  his close relatives out of his group. A male you type into a group's seed
+  box is that group's sire; a group whose box holds no male is given one
+  chosen at random.
 - **Custom** -- a "Custom ratio (F per M):" numeric field appears (default
   1.0, range 0.5-20.0) targeting an arbitrary females-per-male ratio.
 
