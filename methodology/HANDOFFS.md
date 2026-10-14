@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S990
+date: 2026-10-14
+status: pending
+active_task: IN PROGRESS -- two help sentences: R/kinship.R:57-59 (an animal of unrecognized sex) and R/hasBothParents.R:6-7 (the id argument), the wording the owner approved S986 (BACKLOG.md:169, flags MB3 and PD12; owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD, help text only)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S989
 date: 2026-10-14
 status: complete
