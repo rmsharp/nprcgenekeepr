@@ -810,3 +810,53 @@ test_that("the shipped example pedigree gets one no-birth-date warning, 1432 of 
     "^1432 of 3694 animals have no birth date, so their age is unknown\\."
   )
 })
+
+# Animals with a death or departure before birth (S982)
+# ============================================================================
+# The Input tab's Warnings list gets one row, "Animals with a death or
+# departure before birth", when animals in the uploaded pedigree have an exit
+# date (a death or a departure) earlier than their birth date (BACKLOG.md:156,
+# owner ruled at Pre-RED: a warning, strictly earlier only). It is a warning:
+# it never stops the upload. pedEarlyExits() is in helper-pedEarlyExits.R.
+
+writePedEarlyExits <- function() {
+  path <- tempfile(fileext = ".csv")
+  write.csv(pedEarlyExits(), path, row.names = FALSE, na = "")
+  path
+}
+
+test_that("the Input tab counts the exit-before-birth warning and still lets the user proceed", {
+  skip_if_not_installed("shiny")
+  path <- writePedEarlyExits()
+  on.exit(unlink(path))
+  got <- uploadForQc(path)
+  expect_identical(got$summary$errors, 0L)
+  expect_identical(got$summary$warnings, 1L)
+  expect_identical(got$summary$records, 8L)
+  expect_true(got$ready)
+})
+
+test_that("the Input tab's Warnings table lists the exit-before-birth warning", {
+  skip_if_not_installed("shiny")
+  path <- writePedEarlyExits()
+  on.exit(unlink(path))
+  got <- uploadForQc(path)
+  expect_identical(got$results$warnings$Warning,
+                   "Animals with a death or departure before birth")
+  expect_match(
+    got$results$warnings$Details,
+    "^2 of 8 animals have an exit date earlier than their birth date \\(o1, o3\\)\\."
+  )
+})
+
+test_that("the shipped example pedigree gets no exit-before-birth warning", {
+  skip_if_not_installed("shiny")
+  path <- system.file("extdata", "examples", "ExamplePedigree.csv",
+                      package = "nprcgenekeepr")
+  skip_if(path == "")
+  got <- uploadForQc(path)
+  ## 226 of its 1930 dated animals leave on their birth day; none leaves before.
+  expect_identical(got$summary$warnings, 1L)
+  expect_false("Animals with a death or departure before birth" %in%
+                 got$results$warnings$Warning)
+})

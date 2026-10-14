@@ -139,3 +139,97 @@ test_that("runQcStudbook puts the no-birth-date warning after a column-rename wa
   expect_identical(res$qcResult$warnings$Warning,
                    c("Column name case changed", noBirthWarning))
 })
+
+## S982 (BACKLOG.md:156): the Input tab's "Animals with a death or departure
+## before birth" warning. The owner ruled at Pre-RED: a warning (the file still
+## loads), strictly earlier only, read from the cleaned exit column. Like the
+## no-birth-date warning, runQcStudbook() adds the row to qcResult$warnings
+## after its second pass, only when reportChanges is TRUE, after the
+## no-birth-date row, and never when errors exist or the second pass fails,
+## because then there is no cleaned pedigree to read. The row never makes
+## hasErrors TRUE, and qcStudbook() itself stays as it was. pedEarlyExits() is
+## in helper-pedEarlyExits.R: o1 and o3 leave before their births, o2 on its
+## birth day.
+exitBeforeBirthWarning <- "Animals with a death or departure before birth"
+
+test_that("runQcStudbook adds the exit-before-birth warning when reportChanges is TRUE", {
+  res <- runQcStudbook(pedEarlyExits(), reportChanges = TRUE)
+  expect_false(res$qcResult$hasErrors)
+  expect_identical(nrow(res$qcResult$errors), 0L)
+  expect_identical(nrow(res$cleaned), 8L)
+  expect_identical(res$qcResult$warnings$Warning, exitBeforeBirthWarning)
+  expect_match(
+    res$qcResult$warnings$Details,
+    "^2 of 8 animals have an exit date earlier than their birth date \\(o1, o3\\)\\."
+  )
+})
+
+test_that("runQcStudbook leaves the exit-before-birth warning out unless reportChanges is TRUE", {
+  ped <- pedEarlyExits()
+  resDefault <- runQcStudbook(ped)
+  ## The two animals do leave before their births; only the argument keeps the
+  ## row out, and the pedigree still loads.
+  expect_identical(
+    sum(resDefault$cleaned$exit < resDefault$cleaned$birth, na.rm = TRUE), 2L
+  )
+  expect_identical(nrow(resDefault$qcResult$warnings), 0L)
+  resFalse <- runQcStudbook(ped, reportChanges = FALSE)
+  expect_identical(nrow(resFalse$qcResult$warnings), 0L)
+})
+
+test_that("runQcStudbook adds no exit-before-birth warning when no exit is before its birth", {
+  ## No exit column at all, then one same-day exit only (not flagged).
+  expect_identical(
+    nrow(runQcStudbook(pedGood, reportChanges = TRUE)$qcResult$warnings), 0L
+  )
+  sameDay <- pedEarlyExits()
+  sameDay$death_date[sameDay$ego_id == "o1"] <- as.Date("2015-02-04")
+  sameDay$departure[sameDay$ego_id == "o3"] <- as.Date("2012-04-11")
+  res <- runQcStudbook(sameDay, reportChanges = TRUE)
+  expect_identical(sum(res$cleaned$exit == res$cleaned$birth, na.rm = TRUE), 3L)
+  expect_identical(nrow(res$qcResult$warnings), 0L)
+})
+
+test_that("runQcStudbook reads the dates, so a file's own age column does not hide the warning", {
+  ped <- pedEarlyExits()
+  ped$age <- 5
+  res <- runQcStudbook(ped, reportChanges = TRUE)
+  ## qcStudbook() keeps a file's own age column as given.
+  expect_identical(unique(res$cleaned$age), 5)
+  expect_identical(res$qcResult$warnings$Warning, exitBeforeBirthWarning)
+  expect_match(res$qcResult$warnings$Details, "^2 of 8 animals have")
+})
+
+test_that("runQcStudbook puts the exit-before-birth warning after the no-birth-date warning", {
+  ped <- pedEarlyExits()
+  ped$birth_date[1L] <- NA
+  res <- runQcStudbook(ped, reportChanges = TRUE)
+  expect_false(res$qcResult$hasErrors)
+  expect_identical(res$qcResult$warnings$Warning,
+                   c(noBirthWarning, exitBeforeBirthWarning))
+})
+
+test_that("runQcStudbook adds no exit-before-birth warning when there are errors or the second pass fails", {
+  ## Parent ages of 100 years flag every parent: errors, no cleaned pedigree.
+  res <- runQcStudbook(pedEarlyExits(), minSireAge = 100, minDamAge = 100,
+                       reportChanges = TRUE)
+  expect_true(res$qcResult$hasErrors)
+  expect_null(res$cleaned)
+  expect_false(exitBeforeBirthWarning %in% res$qcResult$warnings$Warning)
+  local_mocked_bindings(
+    qcStudbook = function(ped, ..., reportErrors) {
+      if (reportErrors) getEmptyErrorLst() else stop("second pass failed")
+    }
+  )
+  failed <- runQcStudbook(pedEarlyExits(), reportChanges = TRUE)
+  expect_null(failed$cleaned)
+  expect_identical(nrow(failed$qcResult$warnings), 0L)
+})
+
+test_that("qcStudbook itself stays silent about an exit before its birth", {
+  ped <- pedEarlyExits()
+  expect_no_warning(cleaned <- qcStudbook(ped))
+  expect_identical(nrow(cleaned), 8L)
+  expect_identical(sum(cleaned$exit < cleaned$birth, na.rm = TRUE), 2L)
+  expect_null(qcStudbook(ped, reportErrors = TRUE))
+})
