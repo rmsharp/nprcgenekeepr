@@ -50,10 +50,14 @@
 #' from him) are not placed in his group, and when that leaves no one the group
 #' is the sire alone. A group whose seed animals (\code{currentGroups}) include
 #' a male at least \code{minAge} old keeps him as its sire; a group with no
-#' seeded male is given a sire chosen at random from \code{candidates}.
+#' seeded male is given a sire chosen at random from \code{candidates}. It
+#' cannot be combined with a non-zero \code{sexRatio}; the call stops with a
+#' message naming both settings.
 #' @param sexRatio Numeric value indicating the number of non-males (females
 #' and animals of other or unknown sex) per male. Values from 0.5 to 20 in
-#' steps of 0.5 are typical, but the range is not enforced.
+#' steps of 0.5 are typical, but the range is not enforced. A non-zero
+#' \code{sexRatio} cannot be combined with \code{harem = TRUE}; the call stops
+#' with a message.
 #' @param withKin Logical variable when set to \code{TRUE}, the kinship
 #' matrix for the group is returned along with the group and score.
 #' Defaults to not return the kinship matrix. This maintains compatibility with
