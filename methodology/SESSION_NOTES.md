@@ -98,25 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 979 Did
-**Deliverable, DONE (owner pick, option 1 of 4; Pre-RED answers "both fixes" and "a blank chromosome missing everywhere"; strict TDD, every gate asked and answered, REFACTOR taken):** the two small marker fixes (`BACKLOG.md:139`, removed).
-`checkLocusMetadata()` returns an empty, all-space or all-tab `chrom` as `NA` (`R/checkLocusMetadata.R:76-79`); `computeGenomicROH()` then leaves the locus out with its existing warning and `markerLdBlock()` leaves it out as it does for `NA`. Neither changed; the app did not.
-`checkGenotypeFile()` stops once, on one line, naming every column with a collision, each number once and unpadded (`R/checkGenotypeFile.R:55-73`); which files pass is unchanged. NEWS has one sentence for the blank chromosome, none for the message.
-**Found while measuring:** `computeGenomicROH()` keys on `coverage` but `markerLdBlock()` on `chrom`, so a label-only fix would have left LD Block pairing blank-chromosome loci (probe: fRoh 0.6 where 1 is right; 2 LD pairs where 1 is right). Learning 945.
-**Gates:** claim `64ddb4cb1`; RED `f418579af` (21 new blocks in 5 files, 18 failed with 25 failed expectations, 0 errors, 0 skipped, 3 guards green);
-GREEN `12e1dd927` (code, help, man page), `666b59690` (NEWS); REFACTOR `ac65bc4b5` (`helpPlaces()`, `skipUnlessHelpInSourceTree()`).
-**Verified:** suite 3,610 blocks, 11,783 expectations, 0 failed, 0 errors, 187 skipped (before and after the REFACTOR);
-check 0/0/0; lint 0; ratchet 1/1 (`c7f83e2f1a6a`); real app (three blank chromosomes: S001-S003 equal the script to 1e-12; shipped example S001 0.0535 unchanged); 16 mutants caught.
-**Handoff evaluation of S978: 8/10.** Helped: exact lines (all matched), the `markerLdBlock()` note, the testServer and `git stash` gotchas. Missing: the fix's reach (which field each consumer reads; "one line" was the label-only fix). Wrong: nothing.
-**Self-assessment: 8/10.** + measured before asking; RED failed for the stated reasons and the one predicted number held; 16 mutants; app and script compared numerically; REFACTOR re-proved by mutation.
-- my Phase 0 report flagged a ratchet "mismatch" that was not one (I re-ran the gate instead of reading the stored results file, which Learning 943 (c) names); a mutation harness died on a parse error; the first app run used the 50-SNP default (all zeros); a `cd` persisted twice.
-**Next (each needs an owner pick):** the jmac file, the harem-sire hole, the kinship2 drawing features, another docs-audit cluster, the contributor tutorial. 122 commits are ahead of `origin/master`, none seen by CI.
-**Key files:** `R/checkLocusMetadata.R:76-79`; `R/checkGenotypeFile.R:55-73`; `test_checkLocusMetadata.R:153`; `test_checkGenotypeFile.R:82`; `test_computeGenomicROH.R:475`; `test_markerLdBlock.R:192`; `test_blankChromosomeHelp.R`; `helper-pageText.R:112-130`.
-**Gotchas:** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" classification fix; `nzchar(NA)` is TRUE; `format()` pads (`trim = TRUE`) and `collidingNumbers()` repeats a number two labels read as (`unique()`);
-read the ratchet results from `methodology/.quality-gates-results.json`, since each `--run` prints a new hash and overwrites it; the real app at the default 50-SNP minimum shows zeros on the shipped sequence example, set `markerGenetics-rohMinSnp` to 3;
-two blank chromosomes in a probe must be the same string; a `cd` persists between Bash calls; never `git stash` here.
+### What Session 980 Did
+**Deliverable:** the jmac example file's decision (`BACKLOG.md:156`; DECISION NEEDED, Effort S): the shipped `deidentified_jmac_ped.csv` still stops the pedigree check on parent-age errors;
+the owner chooses to document it as a QC example, correct its 2 sire records, or review the Japanese macaque dam floor (IN PROGRESS)
+**Started:** 2026-10-13 19:17 CDT
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4. Pre-RED: re-measure the 67 errors (stored S800), then ask the three-way choice and the scope
+(decide only, or build this session) in plain words.
 
-### Sessions 947-978 (condensed S950 to S979; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-979 (condensed S950 to S980; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -177,6 +166,10 @@ S978: the F_ROH warning plus a notice above the F_ROH table (`R/computeGenomicRO
 strict TDD, REFACTOR taken; evaluation of S977 8/10, self 8/10). **Gotchas kept (S978):** `sidecarLociMissingFromMatrix()` reads `coverage`, so it takes `checkLocusMetadata()`'s output, the opposite of `computeGenomicROH()`'s raw input;
 under `testServer()` the table's observer runs the function at each `setInputs()`, so collect warnings across the upload and the read with `withCallingHandlers()`; read help with `roxygenText()` (only `#'` lines);
 the locus file upload is shared by the Linkage and Genomic ROH tabs.
+S979: a blank chromosome is missing in `checkLocusMetadata()` (`R/checkLocusMetadata.R:76-79`), so `computeGenomicROH()` and `markerLdBlock()` leave the locus out; `checkGenotypeFile()` stops once, on one line,
+naming every column with a collision (`R/checkGenotypeFile.R:55-73`); strict TDD, REFACTOR taken (`helpPlaces()`, `skipUnlessHelpInSourceTree()`); evaluation of S978 8/10, self 8/10.
+**Gotchas kept (S979):** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" fix; `nzchar(NA)` is TRUE; read the ratchet results from `methodology/.quality-gates-results.json`;
+the real app at the default 50-SNP minimum shows zeros on the shipped sequence example (set `markerGenetics-rohMinSnp` to 3); never `git stash` here.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
