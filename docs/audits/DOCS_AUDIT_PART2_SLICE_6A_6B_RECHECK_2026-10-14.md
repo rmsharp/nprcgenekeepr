@@ -56,13 +56,14 @@ fix below is a code or help-text change and needs your ruling and its own sessio
   at least 3 complete observations"); the help already says "Returns `NA`", so no claim differs.
 - **Ruling:** none. The slice's "from recall, not a run" caveat is closed.
 
-### Finding 3 (PB4): `checkRequiredCols()` tolerates an `NA` name only when `cols` is shorter than the required set; the help and a test say it always does (minor; script-only)
+### Finding 3 (PB4): `checkRequiredCols()` tolerates an `NA` name only when `cols` has fewer elements than the required set; the help and a test say it always does (minor; script-only)
 
 - **Location:** code `R/checkRequiredCols.R:40-41` (the `if`), `:51-53` (the only use of `ignore_na = TRUE`); help `:6-10`; `R/str_detect_fixed_all.R:21`.
-- **Evidence (probe):** required are id, sire, dam, sex, birth. With `birth` missing: 4 names plus `NA` returns `sex, birth`
-  (no error); **5 names plus `NA` stops "missing value where TRUE/FALSE needed"**, and so does `reportErrors = FALSE`. It works
-  below 5 only because `length(cols) < length(requiredCols)` makes the `if` true before the `NA` is read. The test
-  (`test_checkRequiredCols.R:15-29`) uses 4 and 2 names, so it passes. The same error reaches `qcStudbook()` and, through
+- **Evidence (probe):** required are id, sire, dam, sex, birth; the trouble needs a required column missing and an `NA` in `cols`.
+  `c("id", "sire", "dam", NA)` (4 elements) returns `sex, birth` (no error); **`c("id", "sire", "dam", "sex", NA)` (5 elements) stops
+  "missing value where TRUE/FALSE needed"**, and so does `reportErrors = FALSE`; with every required name present and an `NA`
+  added it returns `NULL`. It works below 5 elements only because `length(cols) < length(requiredCols)` makes the `if` true before
+  the `NA` is read. The test (`test_checkRequiredCols.R:15-29`) uses 4 and 2 elements, so it passes. The same error reaches `qcStudbook()` and, through
   `runQcStudbook()`, the Input tab as "Data Processing Error: missing value where TRUE/FALSE needed" (probe, a data frame whose
   sixth name is `NA`).
 - **Reach:** not from a CSV upload: `read.csv()` names a blank header `X` (run). An `NA` name needs a data frame edited in a script
@@ -213,3 +214,13 @@ were run as functions and read in their callers; finding 9 was run and its two c
 4. **One docs-only session (Effort S):** findings 1 (a) and 8 (a), one sentence each, as proposed above.
 5. **Leave:** findings 2 (closed), 6, 7 and 9, as documented.
 6. Each build is its own session. Only findings 4 and 5 can change what an upload shows.
+
+## Rulings taken (S986, the same day; the owner took the recommended option each time)
+
+- **Finding 5 (PB11):** convert each date column on its own, so every invalid date is listed by row, and correct the help
+  sentence. Built in a later session (strict TDD; a test with two date columns first).
+- **Finding 4 (PB7):** `checkChangedColsLst()` counts any non-empty field of the list it is given. Built in a later session.
+- **Finding 3 (PB4):** make the code match the help and the test (one line, a test with 5 or more names). Built in a later session.
+- **Findings 1 and 8 (MB3, PD12):** reword both help sentences as proposed above; one docs-only session. The code stays.
+- **Findings 2, 6, 7 and 9 (MA3 and MB14, PB13, PA4, PD1):** leave (finding 2 is closed; the other three are documented).
+- The four build items are in `BACKLOG.md` ("Up Next", just after the docs-audit item). No code was changed in S986.

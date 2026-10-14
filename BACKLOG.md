@@ -109,13 +109,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (2) *Owner decisions about code, found by slices 4 and 6-8* (DECISION NEEDED, Effort S each;
       reword the docs if the code changes; carried as recorded S870 and not re-checked against
       today's code, except where a present-day check is named; the ids are in each slice's
-      report): 6a MB3 (unknown-sex founder kinship; MC1, `filterKinMatrix` without `drop = FALSE`, was fixed
-      S923), and MA3/MB14 cite only `e1071` for `type = 2` from recall, not a run (neither
-      `moments` nor `e1071` is installed here); 6b PB4, PB7, PB11 (docs untouched), and PB13, PA4,
-      PD12, PD1 (S837 documented today's behavior); 6c 8 candidates, re-checked S976
+      report): 6a-6b, the ten oldest flags, re-checked S986
+      (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9 findings, 1 moderate, an invalid date in a
+      file with two date columns; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
+      now four READY items below this one; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
+      6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
       owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
-      6d 22 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 (esp. RA3/RA4/RA6 (CA1, CA3), RA8
+      6d 21 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 (S986 counted 21 rows in the report; this item said 22; the
+      session notes show three shipped since, CA4 S928, CB2 S969, CA1 S970, not re-checked) (esp. RA3/RA4/RA6 (CA1, CA3), RA8
       (CA2), RB10 (CB1), RC7 (CC1)), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
@@ -135,6 +137,50 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
+
+- [ ] **Input tab: one invalid date in a file with two date columns lists the bad rows, not a cryptic
+      error (READY, Effort S-M; strict TDD)** (docs-audit part 2, S986 finding 5, flag PB11; the owner
+      ruled S986: fix) -- `getDateErrorsAndConvertDatesInPed()` runs one `as.Date()` over every date
+      column at once (`R/getDateErrorsAndConvertDatesInPed.R:43-45`); `as.Date()` has no method for a data
+      frame of two or more columns and, for one column, reads the format from its first non-blank value.
+      Measured S986 in the real Input module on `ExamplePedigree.csv` (`birth` and `exit`): row 12's birth set
+      to `2010-16-22` gives "Data Processing Error: do not know how to convert 'sb[, names(sb) %in%
+      getDateColNames()]' to class Date" and 0 records; without `exit` it gives "Invalid date values: 12"; an
+      invalid `exit` date gives the cryptic error too; one date column whose first value is invalid gives
+      "character string is not in a standard unambiguous format". Wanted: convert each date column on its own,
+      so every invalid date is listed by row, as `vignettes/articles/studbook-quality-control.qmd:181` says; a
+      file with no invalid date changes nothing. RED first: two date columns, and a first value invalid (the
+      existing tests use `pedInvalidDates`, one date column). Also correct the help sentence at
+      `R/getDateErrorsAndConvertDatesInPed.R:9-10` ("otherwise the pedigree is not updated"): with some invalid
+      rows the pedigree is converted and the invalid dates become `NA`; it stays unconverted only when every
+      original record is invalid (`test_getDateErrorsAndConvertDatesInPed.R:26-36,82-96`).
+
+- [ ] **`checkChangedColsLst()` counts every kind of rename (READY, Effort S; strict TDD)** (docs-audit
+      part 2, S986 finding 4, flag PB7; the owner ruled S986: count every kind) -- it checks 12 of the 13 fields
+      of `getEmptyErrorLst()$changedCols` (`R/checkChangedColsLst.R:36-52`), so a lowercase `geographicorigin`
+      header is renamed with no notice (`hasChangedCols` FALSE; `qcStudbook()` returns `NULL`, so `runQcStudbook()`
+      keeps no record of the rename). Wanted: `any(lengths(changedCols) > 0L)`, a test with that header, and the help
+      sentence at `:8-9` kept true. Visible effect today: one flag and one heading. Not part of it: `summary()`
+      lists 10 of the 13 fields (`R/summary.nprcgenekeeprErr.R:111-165`), a separate question.
+
+- [ ] **`checkRequiredCols()` tolerates an `NA` column name at any length (READY, Effort S; strict TDD)**
+      (docs-audit part 2, S986 finding 3, flag PB4; the owner ruled S986: make the code match) -- the help
+      (`R/checkRequiredCols.R:6-10`) and `test_checkRequiredCols.R:15-29` say an `NA` name is an ordinary
+      non-match, but the first test (`:40-41`) has no `ignore_na = TRUE`, so a `cols` of 5 or more elements with an `NA`
+      and a required name missing stops "missing value where TRUE/FALSE needed" (4 elements work only because
+      `length(cols) < 5` is read first). Wanted: `ignore_na = TRUE` there and a test with 5 or more elements.
+      Script-only: a CSV blank header becomes `X`.
+
+- [ ] **Two help sentences (READY, Effort S; help text only, strict TDD with a wording gate as
+      `test_groupAddAssignHelp.R` has)** (docs-audit part 2, S986 findings 1 and 8, flags MB3 and PD12; the owner
+      approved these sentences S986) -- in `R/kinship.R:57-59` replace "An individual with unrecognized \code{sex}
+      gets \code{NA} kinship with everyone, including their own self-kinship value." with "A founder of unrecognized
+      \code{sex} gets \code{NA} only on its own diagonal cell and 0 with the other founders, as in kinship2; an animal
+      of unrecognized \code{sex} that has parents in the pedigree gets \code{NA} kinship with everyone, itself
+      included."; in `R/hasBothParents.R:6-7` replace the `id` sentence with "a single ID to examine for parents. A
+      vector of IDs is not supported: the result is not one value per ID, and a recycling warning appears only when
+      the number of IDs does not divide the number of rows of \code{ped}." Then `devtools::document()`, and read
+      `git diff --stat` (it rewrites `man/nprcgenekeepr-package.Rd`: restore it).
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

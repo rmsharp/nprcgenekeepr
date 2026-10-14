@@ -98,14 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 986 Does
-**Deliverable:** re-check the ten slice 6a-6b flags of docs-audit part 2 against today's code (6a MB3, MA3, MB14; 6b PB4, PB7, PB11, PB13, PA4, PD12, PD1; `BACKLOG.md:109-115`;
-owner pick at the Phase 0 picker, option 1 of 3, then the group, 6a-6b, option 1 of 3; DECISION NEEDED, Effort S; an audit, no code change; PRE-RED) (IN PROGRESS)
-**Started:** 2026-10-14 10:48 CDT
-**Status:** Session claimed. Work beginning; nothing read or probed yet.
-**Phase 0:** HEAD `d40bb0db3` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet citation `b595fe808231` matches,
-context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical), no untracked files, 167 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 986 Did
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 3, then the group, 6a-6b, option 1 of 3; an audit, no code change):** the ten slice 6a-6b flags of docs-audit part 2 re-checked against today's code
+(`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`; 9 findings: 0 critical, 1 moderate, 7 minor, 1 closed; the owner took the recommended option on all four rulings).
+**The moderate one (PB11):** one invalid date in a file with two date columns stops the Input tab with "do not know how to convert ..." and 0 records, not "Invalid date values: 12"; run in the real Input module on
+`ExamplePedigree.csv` (`R/getDateErrorsAndConvertDatesInPed.R:43-45`). Also: MA3/MB14 closed by a run against `e1071`; X-linked `kinship()` equals kinship2 (only a help sentence is wrong); Learning 952.
+**Gates:** claim `736c3b241`; checkpoint `a6387d8a4`; close-out (this commit). No code, test, `man/` or vignette file changed; four READY `BACKLOG.md` items follow the docs-audit item (`:141-184`).
+**Verified:** `test_handoffsReceiptPlacement.R` 10 passed; ratchet 1/1 (`e6bef2b57066`); lint, suite and `check` not run (no `.R` file changed); no runtime change, the probes ran the real Input module.
+**Handoff evaluation of S985: 8/10.** Helped: the three owner picks with their cluster counts (6a-6b 10 and 6e 46 held), the scratch-install recipe. Missing: nothing found.
+Wrong: "6d 22" (the report lists 21; the count was copied from `BACKLOG.md` without a recount).
+**Self-assessment: 8/10.** + ran every claim (a scratch `e1071`, kinship2 side by side, the real Input module) and found a moderate defect the fixtures hid; corrected a stored count before offering a cluster; one question per
+ruling with the sentences shown. - a probe file went to a mistyped scratchpad path (moved at once); `cd` moved the working directory twice; three silent stretches while probing.
+**Next:** owner picks: the four READY builds (the date fix is the only one a colony manager sees), the kinship2 drawing features, a docs-audit cluster (6d 21, 6e 46), the contributor tutorial. 170 commits ahead of `origin/master`.
+**Gotchas:** `runQcStudbook()` needs `reportChanges = TRUE` to show renames (the module passes it); `qcStudbook(reportErrors = TRUE)` is `NULL` for a clean file; a probe installs a package into a scratch library, never
+into renv; start every Bash command with an absolute `cd`; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-985 (condensed S950 to S986; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;

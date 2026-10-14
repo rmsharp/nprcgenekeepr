@@ -198,10 +198,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S986
 date: 2026-10-14
-status: pending
-active_task: IN PROGRESS -- re-check the ten slice 6a-6b flags of docs-audit part 2 against today's code (BACKLOG.md:109-115; owner pick at the Phase 0 picker, option 1 of 3, then 6a-6b; DECISION NEEDED, Effort S; an audit, no code change)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- the ten slice 6a-6b flags of docs-audit part 2 re-checked against today's code (docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md; BACKLOG.md:109-117; owner pick at the Phase 0 picker, option 1 of 3, then 6a-6b; an audit, no code change; the owner took the recommended option on all four rulings)
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, no untracked files, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget WARN only for SESSION_RUNNER.md, ratchet citation matched). Two picker questions; a recount before the second found slice 6d lists 21 candidates, not the 22 the backlog and S985 carried. Claim 736c3b241. Probed the 9 findings from scratch scripts started at the project root: e1071 1.7.17 and moments 0.14.1 in a scratch library (MA3 and MB14 equal e1071 type = 2 on 7 vectors), kinship2 1.9.6.2 side by side (X-linked kinship equal cell for cell), and the real Input module on ExamplePedigree.csv (one invalid birth with an exit column: 1 error, 0 records, cryptic text; without exit: Invalid date values: 12). Report and ledger checkpoint a6387d8a4: 0 critical, 1 moderate (PB11), 7 minor, 1 closed. One AskUserQuestion of four rulings, all the recommended option. BACKLOG.md: the docs-audit text updated (6a-6b done, 6d 21) and four READY items added; Learning 952
+next_steps: Each needs an owner pick: build the four READY items (the date fix, BACKLOG.md:141-157, is the only one a colony manager sees; then BACKLOG.md:158-165 and :166-173, two one-line fixes with a test each; then BACKLOG.md:174-184, two help sentences with a wording gate), the kinship2 drawing features item (which pedigree column means deceased), a docs-audit cluster (6d 21, 6e 46; re-check against today's code first), or the contributor tutorial. Not an option: pushing (the owner ruled no push-only sessions); 170 commits are ahead of origin/master with this close-out, none seen by CI.
+key_files: docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md; R/getDateErrorsAndConvertDatesInPed.R:43-45 (the one as.Date() over every date column), :9-10 (the stale sentence); R/checkChangedColsLst.R:36-52, R/getEmptyErrorLst.R:31-45, R/summary.nprcgenekeeprErr.R:111-165; R/checkRequiredCols.R:40-41 and :51-53; R/kinship.R:57-59, R/hasBothParents.R:6-7; tests/testthat/test_getDateErrorsAndConvertDatesInPed.R (one date column only), test_checkRequiredCols.R:15-29, test_kinship.R:170-180
+gotchas: runQcStudbook() defaults to reportChanges = FALSE, which clears hasChangedCols and the warnings; modInput passes TRUE (R/modInput.R:520); qcStudbook(reportErrors = TRUE) returns NULL for a clean file and runQcStudbook() swaps in the empty list (R/runQcStudbook.R:153-156); a bad date test needs two date columns (ExamplePedigree.csv has birth and exit) and a first-value-invalid case; checkRequiredCols() fails only with 5 or more elements, an NA and a required name missing; install a probe's packages into a scratch library, never renv; a cd in one Bash call persists, so start each command with an absolute cd; the studbook stays untracked in inst/extdata/examples/ (never git add -A); never git stash here
+runtime_smoke: none needed, no runtime behavior changed (docs and an audit only); the probes ran the real Input module (shiny::testServer(modInputServer)) on ExamplePedigree.csv as shipped (0 errors, 3,694 records, ready) and with one invalid birth
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results e6bef2b57066 · manifest aa983075d6a2
+changelog_ref: S986 DONE entry
+commit: the close-out commit that carries this receipt; claim 736c3b241, checkpoint a6387d8a4
 ```
 
 ```handoff
