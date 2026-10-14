@@ -252,6 +252,13 @@ groupAddAssign <- function(candidates,
     ))
   }
 
+  if (harem && sexRatio != 0.0) {
+    stop(
+      "A harem (harem = TRUE) cannot be formed with a non-zero sexRatio ",
+      "(got sexRatio = ", sexRatio, "); use one or the other."
+    )
+  }
+
   if (harem &&
       length(getPotentialSires(candidates, ped, minAge)) <
         sum(groupsWithoutSire(numGp, currentGroups, ped, minAge))) {
