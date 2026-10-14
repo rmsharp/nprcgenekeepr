@@ -176,6 +176,34 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       their birth day, plausible for a stillbirth, so flag only strictly earlier; (4) *the example* --
       leave the jmac file as it is (it then shows the warning) or fix its dates.
 
+- [ ] **Rebuild the Japanese macaque example from its studbook (owner-requested 2026-10-13: "reconstruct
+      in the next session"; DECISION NEEDED -- the method, Effort M, its own session; strict TDD)** -- the
+      owner added the source studbook, `inst/extdata/examples/Jmac_studbook_20180711.txt` (untracked), to
+      rebuild `deidentified_jmac_ped.csv` with its sires. **First, before anything else: keep that file out
+      of git and out of the package.** It is real, identifiable colony data in a folder that ships
+      (neither `.gitignore` nor `.Rbuildignore` covers it; `devtools::check()` bundles it into its local
+      tarball); never `git add -A`. Move it outside the repo, or exclude it in `.git/info/exclude` and
+      `.Rbuildignore`, with the owner's say-so. **Measured S980 (aggregates only):** the studbook is 2,590
+      animals, 7 tab-separated columns (`Ego ID`, `Sire ID`, `Dam ID`, `Departure`, `Sex`, `Birth`, `Death`),
+      with a sire id for 819 (32%), a dam id for 2,276 (88%), a birth date for 2,530, a death date for 1,886
+      and a departure for 365; `Sex` is Male 1,250, Female 1,209, Unknown 111, Hermaphrodite 19, blank 1.
+      The example has 2,791 animals and 13 columns (adds `species`, `geographic.origin`, `status`,
+      `dam.type`, `sire.type`, `from.center`), a dam id for 2,448 (88%) and no sire id but 919 sire types: a
+      different, larger export, so the studbook alone cannot fill six of its columns.
+      **Decide at Pre-RED:** (1) *method* -- run the package's own de-identifier (De-Identified Export tab,
+      `R/modDeidentifiedExport.R`, `R/obfuscatePed.R`, `R/obfuscateDate.R`) on the studbook: fresh scrambled
+      ids and shifted dates, not the old ones (the old mapping is unknown); first check that it shifts a
+      row's `birth`, `death` and `departure` by the same amount (the example's 251 early deaths, item above,
+      suggest the old file's did not); (2) *columns* -- fill, derive or drop the six missing ones (`species`
+      is a constant, `status` follows from death and departure; origin, the types and `from.center` have no
+      source); (3) *Sex* -- how "Hermaphrodite" and "Unknown" map to M, F and U; (4) *scope* -- the new file
+      replaces `deidentified_jmac_ped.csv` (then `test_jmacExampleData.R`, the jmac blocks of
+      `test_modInput_blankCells.R`, `test_jmacExampleWording.R`, the guide and manual sentences and the NEWS
+      entry take its new numbers) or sits beside it. **Checks:** no studbook id and no studbook date appears
+      in the new file; the new file loads at the default floors, or its errors are counted and documented;
+      its death-before-birth count is 0. The fallback, deleting the example and its 12 test blocks, was
+      costed S980.
+
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
       design gate, Effort M)** -- a harem's sampled sire is seeded into the group

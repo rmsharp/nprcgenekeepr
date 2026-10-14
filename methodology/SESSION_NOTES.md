@@ -107,7 +107,8 @@ Minimum Dam Age 3.4 loads all 2,791 animals; 3.5 still flags 2. One sentence eac
 **Verified:** suite 3,620 blocks, 11,805 expectations, 0 failed, 0 errors, 187 skipped (before and after); check 0/0/0; lint 0; ratchet 1/1 (`cd2bd9399018`); real app: default "of 65 entries", 3.4 loads; 3 mutants caught.
 **Handoff evaluation of S979: 8/10.** Helped: the pinned test line, the 67 count (held), the `git stash` warning. Missing: the 2 sire cells are the file's only sire data. Wrong: nothing.
 **Self-assessment: 7/10.** + re-measured stored numbers; the 2x2 made the question answerable. - counted the sire cells after the owner's pick; a RED guard assumed the manual's spelling; the real-app script took four tries.
-**Next (owner picks):** the harem-sire hole (design gate first), the kinship2 drawing features, another docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 128 commits are ahead of `origin/master`, none seen by CI.
+**Next:** the owner's pick is to rebuild the jmac example from the studbook (`BACKLOG.md`; the studbook is untracked real data in `inst/extdata/examples/`: keep it out of git and the package first). Then owner picks: the harem-sire hole,
+the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial, the death-before-birth check. 130 commits are ahead of `origin/master`, none seen by CI.
 **Gotchas:** count a field's rows before offering to blank it; `#dataInput-qcSummaryUI` is empty until its sub-tab is active (open Input, read Errors and Warnings); `textContent`, not `innerText`;
 a wording guard matches the page's own spelling; `dev/extdata-scratch/deidentified_jmac_ped_edited.csv` (build-ignored) still holds the two sire cells; never `git stash` here.
 
