@@ -443,6 +443,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
   is not flagged, and the pedigree can still be used.
   `runQcStudbook(reportChanges = TRUE)` returns the same warning.
 
+- Fixed: a pedigree file with an invalid date stopped the Input tab with
+  a message that gave no row number, such as "do not know how to convert
+  ... to class Date", whenever the file had more than one date column
+  (birth and exit dates, as the shipped example pedigree has) or the
+  first date in a column was the invalid one. The Input tab now lists
+  every invalid date by row, in every date column, so the rows can be
+  found and corrected in the file.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
   found. They are now colored: Errors is red when there is at least one
