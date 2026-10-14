@@ -266,9 +266,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
   violations list, marked "overridden". A downloadable audit record
   lists the rules in effect, overrides with reasons, and the warning
   shown.
-- Caveat: in harem formation the automatically chosen sire is not
-  checked against the rules (his groupmates are checked against each
-  other).
+- A harem's automatically chosen sire is now kept apart from his
+  relatives like every other animal. Before, nothing stopped his mother,
+  daughter or sister from joining his harem (on the example pedigree
+  with the default settings, most runs put at least one such relative in
+  a harem). An animal at or above the Max kinship threshold to him, or
+  one an ancestry block rule bars from him, now stays out of his harem,
+  and if that leaves no one the harem is the sire alone. Results for a
+  given random seed differ from earlier versions.
 
 **Minor**
 
