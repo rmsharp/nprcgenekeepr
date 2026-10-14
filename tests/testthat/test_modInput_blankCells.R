@@ -22,11 +22,12 @@ uploadPedigree <- function(lines, fileExt = "csv", fileType = "fileTypeExcel",
   uploadPedigreeFile(path, fileType = fileType, separator = separator)
 }
 uploadPedigreeFile <- function(path, fileType = "fileTypeExcel",
-                               separator = ",") {
+                               separator = ",", minDamAge = "") {
   got <- new.env()
   shiny::testServer(modInputServer, {
     session$setInputs(fileContent = "pedFile", fileType = fileType,
-                      separator = separator, minSireAge = "", minDamAge = "")
+                      separator = separator, minSireAge = "",
+                      minDamAge = minDamAge)
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
     session$setInputs(getData = 1L)
@@ -162,15 +163,47 @@ test_that("the shipped ancestry example uploads with U1 as UNKNOWN", {
   expect_identical(sum(res$cleaned$ancestry == "OTHER"), 1L) # O1 (mauritius)
   expect_identical(sum(res$cleaned$ancestry == "UNKNOWN"), 1L)
 })
+jmacExamplePath <- function() {
+  system.file("extdata", "examples", "deidentified_jmac_ped.csv",
+              package = "nprcgenekeepr")
+}
 test_that("the shipped jmac example no longer reports the id \"\" as both a sire and a dam", {
   skip_if_not_installed("shiny")
-  path <- system.file("extdata", "examples", "deidentified_jmac_ped.csv",
-                      package = "nprcgenekeepr")
+  path <- jmacExamplePath()
   skip_if(path == "")
   res <- uploadPedigreeFile(path)
   expect_false("Animal is both sire and dam" %in% res$errors$Error)
-  ## The file's remaining errors are real: 67 parents younger than the
-  ## species breeding-age floor, which the script path reports too.
+  ## The file's remaining errors are real: 65 mothers aged 3.43 to 3.99 years
+  ## at the birth, under the Japanese macaque 4-year floor, which the script
+  ## path reports too. (S980, BACKLOG.md:156: the file's only two sire
+  ## entries named animals born 35 and 37 years after their offspring, 2 more
+  ## errors, and are blank now; the count was 67.)
   expect_identical(unique(res$errors$Error), "Parent age too young")
-  expect_identical(nrow(res$errors), 67L)
+  expect_identical(nrow(res$errors), 65L)
+})
+## Minimum Dam Age 3.4 is the largest round value under the youngest mother
+## (3.43), so the file loads whole: nothing is dropped and the check adds a
+## placeholder row for each unknown parent (the cleaned table holds 5,239 rows,
+## 2,791 of them the file's own animals). The guide, the manual and NEWS name
+## this setting (test_jmacExampleWording.R).
+test_that("the shipped jmac example loads once Minimum Dam Age is 3.4", {
+  skip_if_not_installed("shiny")
+  path <- jmacExamplePath()
+  skip_if(path == "")
+  res <- uploadPedigreeFile(path, minDamAge = "3.4")
+  expect_identical(nrow(res$errors), 0L)
+  expect_false(is.null(res$cleaned))
+  expect_identical(sum(!(res$cleaned$placeholder %in% TRUE)), 2791L)
+})
+## The boundary: 3.5 is above the 2 youngest mothers (3.43 and under 3.5), so
+## those two are still flagged and the file does not load. This is what keeps
+## "3.4 or lower" in the wording from being a loose number.
+test_that("Minimum Dam Age 3.5 still flags the file's two youngest mothers", {
+  skip_if_not_installed("shiny")
+  path <- jmacExamplePath()
+  skip_if(path == "")
+  res <- uploadPedigreeFile(path, minDamAge = "3.5")
+  expect_identical(unique(res$errors$Error), "Parent age too young")
+  expect_identical(nrow(res$errors), 2L)
+  expect_null(res$cleaned)
 })
