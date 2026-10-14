@@ -111,8 +111,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       today's code, except where a present-day check is named; the ids are in each slice's
       report): 6a-6b, the ten oldest flags, re-checked S986
       (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9 findings, 1 moderate, an invalid date in a
-      file with two date columns; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
-      now four READY items below this one; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
+      file with two date columns, fixed S987; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
+      now three READY items below this one; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
       6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
       owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
@@ -137,23 +137,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **Input tab: one invalid date in a file with two date columns lists the bad rows, not a cryptic
-      error (READY, Effort S-M; strict TDD)** (docs-audit part 2, S986 finding 5, flag PB11; the owner
-      ruled S986: fix) -- `getDateErrorsAndConvertDatesInPed()` runs one `as.Date()` over every date
-      column at once (`R/getDateErrorsAndConvertDatesInPed.R:43-45`); `as.Date()` has no method for a data
-      frame of two or more columns and, for one column, reads the format from its first non-blank value.
-      Measured S986 in the real Input module on `ExamplePedigree.csv` (`birth` and `exit`): row 12's birth set
-      to `2010-16-22` gives "Data Processing Error: do not know how to convert 'sb[, names(sb) %in%
-      getDateColNames()]' to class Date" and 0 records; without `exit` it gives "Invalid date values: 12"; an
-      invalid `exit` date gives the cryptic error too; one date column whose first value is invalid gives
-      "character string is not in a standard unambiguous format". Wanted: convert each date column on its own,
-      so every invalid date is listed by row, as `vignettes/articles/studbook-quality-control.qmd:181` says; a
-      file with no invalid date changes nothing. RED first: two date columns, and a first value invalid (the
-      existing tests use `pedInvalidDates`, one date column). Also correct the help sentence at
-      `R/getDateErrorsAndConvertDatesInPed.R:9-10` ("otherwise the pedigree is not updated"): with some invalid
-      rows the pedigree is converted and the invalid dates become `NA`; it stays unconverted only when every
-      original record is invalid (`test_getDateErrorsAndConvertDatesInPed.R:26-36,82-96`).
 
 - [ ] **`checkChangedColsLst()` counts every kind of rename (READY, Effort S; strict TDD)** (docs-audit
       part 2, S986 finding 4, flag PB7; the owner ruled S986: count every kind) -- it checks 12 of the 13 fields

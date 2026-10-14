@@ -98,14 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 987 Does
-**Deliverable:** Input tab: one invalid date in a file with two date columns lists the bad rows, not a cryptic error (`BACKLOG.md:141-156`, flag PB11; owner pick at the Phase 0 picker, option 1 of 4;
-READY, Effort S-M; strict TDD; PRE-RED) (IN PROGRESS)
-**Started:** 2026-10-14 11:16 CDT
-**Status:** Session claimed. Work beginning; nothing read or probed yet.
-**Phase 0:** HEAD `473dc4756` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet citation `e6bef2b57066` matches,
-context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical), no untracked files, 170 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 987 Did
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the Input tab lists every invalid date by row, in every date column
+(`BACKLOG.md` item removed). `R/getDateErrorsAndConvertDatesInPed.R:48-55` blanks each date column's own invalid cells with `convertDate(reportErrors = TRUE)` on a one-column slice, in place of one `as.Date()`
+over all of them; help sentence `:9-12` (owner-approved); NEWS `NEWS.Rmd:423`.
+**Measured:** `ExamplePedigree.csv` in the real Input module: a bad birth in row 12 gave "do not know how to convert ...", 0 records; now "Invalid date values: 12" (bad exit row 21: "21"; both: "12, 21"); as shipped 0 errors, 3,694 records, ready.
+**Gates:** claim `a8151e930`; RED `a0ac4a355` (30 expectations, 6 blocks); GREEN `0d15bc1fe`; REFACTOR `b6d19d81c`; NEWS `ca85dc20d`.
+**Verified:** suite 3,710 blocks, 12,463 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0 at GREEN only; ratchet 1/1 (`5b58afd99825`); mutation of the new loop 3 of 5 caught, `drop = FALSE` closed in REFACTOR, 1 harmless.
+**Handoff evaluation of S986: 9/10.** Helped: the cause line, error texts and cites (`:43-45`, `:9-10`) reproduced exactly. Missing: why the fixtures missed it (`test_qcStudbook.R:283-292` makes every row invalid, which skips the conversion); the
+`uploadForQc()` helper (`test_modInput_qcStudbook.R:752`). Wrong: nothing found.
+**Self-assessment: 8/10.** + each RED failure read for its cause; the mutation check found a real gap; the real module on the shipped example. - a stray phrase in the RED commit message (amended, local); a mistyped mutation pattern; a no-op background call.
+**Next:** owner picks: the three READY builds (`BACKLOG.md:141-148`, `:149-156`, `:157-167`), the kinship2 drawing features, a docs-audit cluster (6d 21, 6e 46), the contributor tutorial. 176 commits ahead of `origin/master`.
+**Gotchas:** `drop = FALSE` on the loop's slice is pinned only by the no-`recordStatus` block (`test_getDateErrorsAndConvertDatesInPed.R:170`); an "added" record with unreadable date text still stops in `convertDate()`'s last `rbind` (not filed);
+15 test files read `NEWS.Rmd`/`NEWS.md`; S905-S910 were condensed to bring this file to 54,644 B (the hook refuses growth past about 56,700 B); the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-986 (condensed S950 to S987; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
@@ -353,52 +358,17 @@ were 7 sites in 4 files). Decision record 12. Docs only. Claim `1e4e858a1`, clos
 Self 6/10. **Gotchas kept:** a triage row scoped to one file understates a repeated idiom, so grep across `R/` first; compare the last
 receipt's ratchet citation with `.quality-gates-results.json` at Phase 0, before any `--run`.
 
-### What Session 910 Did (condensed S911; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Measured the mate-line row span on the app's 375-animal rhesus layout: 0 of 474 mate-lines span a generation row, so the owner closed
-Candidate C and replaced it with a smaller item about the dashed duplicate-animal links (its legend row shipped S921). Report
-`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`. Claim `e2fdd492a`. Handoff evaluation of S909: 9/10. Self 8/10. **Gotchas kept:**
-classify edges by endpoint kind (`real`, `dup`, `union`); rows are 150 apart in `y`; macOS `sed -i` needs an extension argument, so edit
-scratch files with Python; take `wc -c` after the last edit (Learning 871).
-
-### What Session 909 Did (condensed S910; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Measured how often the rectilinear diagram's `highlightNearest` degree-6 hover falls short (375-animal rhesus): 373 of 375 animals light
-everything the direct style's degree 1 lights. The owner closed the item, kept degree 6 and documented the limit. Report
-`docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md`. Claim `a3c8d174a`. Handoff evaluation of S908: 9/10. Self 8/10.
-
-### What Session 908 Did (condensed S909; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-One internal `isAddedRecord(recordStatus, n = length(recordStatus))` (`R/isAddedRecord.R`) now says which records are "added",
-and the four inline copies call it (`convertDate()`, `removeDuplicates()`, `removeUnknownAnimals()`, `correctParentSex()`);
-behaviour unchanged; `getRecordStatusIndex()` left alone by the owner's ruling. `BACKLOG.md:22-38` removed. Claim `a1813dfdb`,
-RED `1cfee7215`, GREEN `226069212` and `8881aa188`, REFACTOR `7d6ef261e`, close-out `db755d5d3` (all still local). Handoff
-evaluation of S907: 9/10. Self 8/10.
-**Gotchas kept:** run a behaviour baseline twice at one commit before trusting it; a delegation test needs a stub whose answer differs from the real rule;
-`devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it); the full suite and `check` run one at a time in the background; take `wc -c` after the last edit (Learning 871).
-
-### What Session 907 Did (condensed S908; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Reworded the `data-raw/rhesusPedigree.R` docstring (comment only; parsed code identical, 0 lints) so it says only what is true.
-Re-measured first: the object, `rhesusPedigree_fromCenter.csv` and `obfuscated_rhesus_mhc_ped.csv` agree on all 8 shared columns
-over 375 rows, so "cannot be re-derived from the CSV" was false; the CSV was first committed six years after the object.
-`BACKLOG.md:415-434` removed. Claim `3a59ed844`, deliverable `7f4648d8c`, follow-up `32cde29cb`, close-out `cf537c88d` (all still
-local). Handoff evaluation of S906: 9/10. Self 8/10.
-**Gotchas kept:** a BACKLOG cite can understate a claim, so grep the whole file for the key word before calling it fixed; an `Edit` whose `old_string` ends
-mid-line leaves a ragged line; re-run a stale-looking `gh run list` before trusting an old date; take `wc -c` after the last edit (Learning 871).
-
-### What Session 906 Did (condensed S907; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Decision only (no code, test or `R/` change): the owner ruled "leave it" on the row-order item after S905's measurements were put
-to them in plain words (rectilinear 1460 nodes / 190 jog in raw order vs 1412 / 142 in the app's QC order; direct 782 either
-way; four real QC-order differences left unexamined and unguarded by decision). `BACKLOG.md:415-430` removed. Claim `31493f61d`,
-close-out `c651882ed` (both still local). Handoff evaluation of S905: 9/10. Self 8/10.
-**Gotchas kept:** a pure decision pick is a short session; removing a BACKLOG block shifts every later cite by its length, so
-re-grep the cites; `quality_ratchet.py --run` takes minutes, so run it in the background and read its output file; take `wc -c`
-after the last edit (Learning 871); `gh issue view --comments` fails here (Projects-classic GraphQL), so use
-`gh api repos/<repo>/issues/<n>/comments`.
-
-### What Session 905 Did (condensed S906 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Tests only: `qcdRhesusPed()` (`tests/testthat/helper-qcdRhesusPed.R`) and two tests (`test_makePedigreeMatingLayout.R:780-828`) pin the
-QC'd layout of the bundled rhesus fixture (Learning 870). Claim `2563a6ee0`. The owner stopped push-only sessions. Handoff evaluation of
-S904: 9/10. Self 8/10. **Gotchas kept:** to run a test file against another fixture, define `read.csv()` in the `env` given to
-`testthat::test_file()`; put R code containing `\s` in a script file; the QC'd copy has `sex` as a factor, `birth` as `Date` and two extra
-columns (`recordStatus`, `placeholder`).
+### Sessions 905-910 (condensed S911 to S987; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S905: tests only: `qcdRhesusPed()` (`tests/testthat/helper-qcdRhesusPed.R`) and two tests (`test_makePedigreeMatingLayout.R:780-828`) pin the QC'd layout of the bundled rhesus fixture (Learning 870); the owner stopped push-only sessions.
+S906: a decision, no code: the owner ruled "leave it" on the row-order item (rectilinear 1460 nodes / 190 jog in raw order vs 1412 / 142 in QC order; direct 782 either way). S907: the `data-raw/rhesusPedigree.R` docstring says only what is true
+(the object, `rhesusPedigree_fromCenter.csv` and `obfuscated_rhesus_mhc_ped.csv` agree on all 8 shared columns over 375 rows). S908: one internal `isAddedRecord()` (`R/isAddedRecord.R`) replaces four inline copies
+(`convertDate()`, `removeDuplicates()`, `removeUnknownAnimals()`, `correctParentSex()`); `getRecordStatusIndex()` left alone by ruling. S909: `highlightNearest` degree 6 lights everything degree 1 does for 373 of 375 animals; the owner kept it
+(`docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md`). S910: 0 of 474 mate-lines span a generation row, so the owner closed Candidate C (`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`; its dashed-link legend row shipped S921).
+Evaluations 9/10, self 8/10 each; hashes are in `CHANGELOG.md`. **Gotchas kept:** to run a test file against another fixture, define `read.csv()` in the `env` given to `testthat::test_file()`; the QC'd rhesus copy has `sex` as a factor,
+`birth` as `Date`, plus `recordStatus` and `placeholder`; run a behaviour baseline twice at one commit; a delegation test needs a stub whose answer differs from the real rule; classify diagram edges by endpoint kind (`real`, `dup`, `union`),
+rows are 150 apart in `y`; macOS `sed -i` needs an extension argument, so edit scratch files with Python; an `Edit` whose `old_string` ends mid-line leaves a ragged line; a BACKLOG cite can understate a claim, so grep the whole file for the key word;
+removing a BACKLOG block shifts every later cite, so re-grep; re-run a stale-looking `gh run list` before trusting an old date; `quality_ratchet.py --run` takes minutes (background it); `gh issue view --comments` fails here, use
+`gh api repos/<repo>/issues/<n>/comments`; take `wc -c` after the last edit (Learning 871).
 
 ### Sessions 902-904 (condensed S905 and S944; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Three push-only sessions, each a fast-forward by SHA at the owner's pick (S902 `529bb031b..7acce42cf`, S903 `7acce42cf..6f4733c78`,
