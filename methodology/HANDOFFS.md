@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S982
+date: 2026-10-13
+status: pending
+active_task: IN PROGRESS -- detect a death date earlier than the birth date in the pedigree check (BACKLOG.md:156; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED -- error or warning, Effort S to M; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S981
 date: 2026-10-13
 status: complete

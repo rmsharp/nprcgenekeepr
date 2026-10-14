@@ -98,29 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 981 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4, the owner's own S980 request; Pre-RED answers: replace the old file, keep the studbook out of git and the package, keep species; strict TDD, every gate asked,
-REFACTOR taken):** rebuild the Japanese macaque example from its studbook (`BACKLOG.md:179`, removed).
-`inst/extdata/examples/deidentified_jmac_ped.csv` is now the 2018-07-11 studbook, de-identified: 2,590 animals, nine columns, 819 sires (all male), 0 deaths before birth; recipe `data-raw/buildJmacExample.R` (seed 20180711, sha1
-`e9476e2d3df1`).
-At the default floors 79 rows are flagged (62 mothers under 4 years; 13 fathers, 18 births, under 5); it loads once Minimum Dam Age is 3.3 and Minimum Sire Age is 4.3 (3.4 or 4.4 flags 1 row). The guide
-(`colony-manager-guide.qmd:222`), manual (`_input.Rmd:48`) and `NEWS.Rmd:451` say so, in the owner's three approved sentences.
-**Found:** the owner's pointer found the 2018 copies in git (`.txt` byte-identical to the untracked file, `.csv` the same with `NA` sires), in a PUBLIC repo since 2018-08-03 (`b5619b38e`); the old example was a later export (201
-more animals, born to 2021). Learning 947.
-**Gates:** claim `a3381ea63`; studbook exclusion `76abfc7f0`; RED `5887cd71d` (12 of 19 jmac blocks failing, 30 failed expectations, 0 errors, 0 skipped, 2 guards green); GREEN `8bd9a7fc9` (data), `e64540b86` (docs); REFACTOR
-`9de227efe` (`uploadJmac()`, `expectStoppedByParentAge()`).
-**Verified:** suite 3,623 blocks, 11,835 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0 (`--no-manual`); lint_package 0; ratchet 1/1 (`c4895ad8e72a`); real app: "of 79 entries", then 3.3 and 4.3 gave Records 4,055,
-Errors 0; a built tarball holds no studbook; 8 of 8 mutants caught.
-**Handoff evaluation of S980: 8/10.** Helped: the aggregates held to the digit (2,590, 819, 2,276), the Pre-RED list, the gotchas. Missing: the studbook is already public in 2018 history and the example is a later export. Wrong:
-nothing.
-**Self-assessment: 8/10.** + followed the owner's pointer at once and proved the copies by hash; measured before asking (three answers, all first try); RED failed for the stated reasons. - a sire-age probe indexed by position, a
-"shared id" false alarm (NA), three shell errors, a wrong `dev/` path in comments (fixed at REFACTOR).
-**Next:** owner picks: the death-before-birth check (BACKLOG, refreshed S981: no shipped example has one now), the harem-sire hole, the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor
-tutorial. 137 commits are ahead of `origin/master`, none seen by CI.
-**Gotchas:** the studbook stays untracked in `inst/extdata/examples/` (local exclude plus a `.Rbuildignore` line; never `git add -A`); `install.packages(".")` ignores `.Rbuildignore`; `data-raw/buildJmacExample.R` takes the
-studbook path and needs `pkgload`; the Errors table counts births, not animals; never `git stash` here.
+### What Session 982 Did
+**Deliverable:** detect a death date earlier than the birth date in the pedigree check (`BACKLOG.md:156`; the owner's own request after S980; DECISION NEEDED -- error or warning, Effort S to M; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-13 23:05 CDT
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker (option 1 of 4). Pre-RED: measure first (what the check and the cleaned table do with an early death today), then ask in plain
+words: error or warning, which date counts, whether a same-day death is flagged.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-980 (condensed S950 to S981; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-981 (condensed S950 to S982; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -188,6 +173,9 @@ S980: the jmac example's two impossible sire cells (the file's only sire data) a
 (`inst/extdata/examples/deidentified_jmac_ped.csv:2485,2612`; the guide, manual and NEWS say so; strict TDD, REFACTOR taken; evaluation of S979 8/10, self 7/10). **Gotchas kept (S980):** count a field's rows before offering to blank it;
 `#dataInput-qcSummaryUI` is empty until its sub-tab is active (open Input, read Errors and Warnings); read `textContent`, not `innerText`; a wording guard matches the page's own spelling;
 `dev/extdata-scratch/deidentified_jmac_ped_edited.csv` (build-ignored) still holds the two sire cells; never `git stash` here.
+S981: the jmac example is the 2018 studbook, de-identified (`inst/extdata/examples/deidentified_jmac_ped.csv`, 2,590 animals, 819 sires; recipe `data-raw/buildJmacExample.R`, seed 20180711); it loads once Minimum Dam Age is 3.3 and
+Minimum Sire Age is 4.3 (strict TDD, REFACTOR taken; evaluation of S980 8/10, self 8/10). **Gotchas kept (S981):** the studbook stays untracked in `inst/extdata/examples/` (local exclude plus a `.Rbuildignore` line; never
+`git add -A`); `install.packages(".")` ignores `.Rbuildignore`; `data-raw/buildJmacExample.R` takes the studbook path and needs `pkgload`; the Errors table counts births, not animals.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
