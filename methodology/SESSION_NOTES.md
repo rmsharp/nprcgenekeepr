@@ -98,23 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 985 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; ruling: stop with a message; strict TDD, every gate asked, REFACTOR taken):** `groupAddAssign(harem = TRUE)` with a non-zero `sexRatio` stops before
-forming anything, naming both settings and the ratio (`R/groupAddAssign.R:259-264`, after the exhaustive branch); the help of `harem` and `sexRatio`, NEWS and the article say so (`BACKLOG.md:156`, removed).
-**Measured (332 living, 3 groups, ratio 5):** harem plus ratio gave sizes 1, 1, 2 in 5 of 5 seeds (1 group: 2 animals); a harem alone about 70 per group, a ratio alone 81 to 90 with 14 or 15 males.
-The ordinary ratio path stops a group when its males run out, by design. Learning 951.
-**Gates:** claim `803b3d463`; RED `ba6c542f1`, `8d072a4d4` (wording); GREEN `a4e32e0df`, `601cc8949`, `91a9d0e1e`; REFACTOR `d5c08fd57`.
-**Verified:** suite 3,702 blocks, 12,418 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0; lint_package 0; ratchet 1/1 (`b595fe808231`); real app (GREEN code) Harem 73/71/68 with 1 male each,
-Custom 5 86/85/79, None 114/105/106, no error; mutation 7 of 8, then 8 of 8.
-**Handoff evaluation of S984: 9/10.** Helped: the item's cause line and 5-of-5 sizes reproduced, the scratch-install recipe, the hidden-tab trick. Missing: the article already called the two alternatives; exhaustive mode's stops as the precedent.
-Wrong: nothing found.
-**Self-assessment: 8/10.** + measured first and ruled out a second defect before asking; one question per decision; the mutation survivor closed, 8 of 8; real app on the GREEN code. - the first real-app output was cut by
-`tail`, so the run was repeated; a detached `( cmd ) &` made the harness report completed at once; the Groups tab text read stale.
-**Next:** owner picks: the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 167 commits ahead of `origin/master`.
-**Gotchas:** the stop is after the exhaustive branch and before the too-few-males count, both pinned; `sameGroups()` is a global test helper now; watch a background job's own `EXIT=` line; the studbook stays untracked
-(never `git add -A`); never `git stash` here.
+### What Session 986 Does
+**Deliverable:** re-check the ten slice 6a-6b flags of docs-audit part 2 against today's code (6a MB3, MA3, MB14; 6b PB4, PB7, PB11, PB13, PA4, PD12, PD1; `BACKLOG.md:109-115`;
+owner pick at the Phase 0 picker, option 1 of 3, then the group, 6a-6b, option 1 of 3; DECISION NEEDED, Effort S; an audit, no code change; PRE-RED) (IN PROGRESS)
+**Started:** 2026-10-14 10:48 CDT
+**Status:** Session claimed. Work beginning; nothing read or probed yet.
+**Phase 0:** HEAD `d40bb0db3` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet citation `b595fe808231` matches,
+context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical), no untracked files, 167 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-984 (condensed S950 to S985; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-985 (condensed S950 to S986; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -190,6 +183,9 @@ runs had a sire's mother, daughter or full sister in his harem before, 0 after; 
 S984: a harem group with no seeded male is given a sampled sire, so a male seeded in only some groups no longer stops the run ("subscript out of bounds") or leaves harems without a male
 (`R/initializeHaremGroups.R:37-63`, `R/groupsWithoutSire.R:1-35`; strict TDD, REFACTOR taken; evaluation of S983 8/10, self 8/10). **Gotchas kept (S984):** `makeGroupMembers()` returns only
 the first `numGp` groups now; a real-app probe needs a scratch `R CMD INSTALL` and the pane's own tab link; the studbook stays untracked (never `git add -A`); never `git stash` here.
+S985: `groupAddAssign(harem = TRUE)` with a non-zero `sexRatio` stops before forming anything and names both settings and the ratio (`R/groupAddAssign.R:259-264`; harem plus ratio gave sizes 1, 1, 2
+in 5 of 5 seeds; strict TDD, REFACTOR taken; evaluation of S984 9/10, self 8/10). **Gotchas kept (S985):** the stop is after the exhaustive branch and before the too-few-males count, both pinned;
+`sameGroups()` is a global test helper (`helper-haremPedigree.R`); a detached `( cmd ) &` returns at once, so watch the job's own `EXIT=` line; never `git add -A`, never `git stash`.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
