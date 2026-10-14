@@ -153,19 +153,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Harem with a custom sex ratio places one animal in total (found S983,
-      2026-10-14; script-only; DECISION NEEDED -- make the combination work, or stop
-      with a message, Effort S to M)** -- `groupAddAssign(harem = TRUE, sexRatio = 5)`,
-      3 groups, the 332 living animals of the example: sizes 1, 1, 2 in 5 of 5 seeds,
-      that is one animal beyond the three sires. Cause (read in the code, and it fits
-      the five probes): `fillGroupMembers()` takes every potential sire out of the
-      pool, so `fillGroupMembersWithSexRatio()` has no available males, and its
-      `removeGroupIfNoAvailableAnimals(grpNum, availableMales)`
-      (`R/fillGroupMembersWithSexRatio.R:123`) drops every group after the first
-      placement. The app's radio cannot pick Harem and Custom together, so only script
-      callers reach it; the help of `harem` and `sexRatio` says nothing about the
-      combination. The S983 sire rule does not touch this path.
-
 - [ ] **(Optional, owner decision) Retrospective colony-snapshot backfill for
       longitudinal genetic-health monitoring** (deferred S760, 2026-09-22, from the
       closed issue #167's plan §5 Slice 5, DECISION NEEDED, Effort L, its own scoping

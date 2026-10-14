@@ -198,10 +198,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S985
 date: 2026-10-14
-status: pending
-active_task: IN PROGRESS -- harem with a custom sex ratio places one animal in total (BACKLOG.md:156; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S-M; strict TDD)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- groupAddAssign(harem = TRUE) with a non-zero sexRatio stops before forming anything, naming both settings and the ratio (BACKLOG.md:156, removed; owner pick at the Phase 0 picker, option 1 of 4; owner ruling: stop with a message; strict TDD, every gate asked, REFACTOR taken)
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget WARN only for SESSION_RUNNER.md, ratchet citation matched). Claim 803b3d463. Measured first on the 332 living example animals (threshold 0.25, 5 iterations): harem plus ratio 5, 3 groups, sizes 1, 1, 2 in 5 of 5 seeds; 1 group 2 animals; ratios 1 and 20 the same; a harem alone about 70 per group, a ratio alone 81 to 90 with 14 or 15 males; the ordinary ratio path stops a group when its males run out, by design, so no second defect. Two questions, both the recommended option: approach (stop, not sire plus N), then the five sentences at the RED to GREEN gate. RED ba6c542f1 (8 blocks, 15 failed), 8d072a4d4 (wording, 7 failed); GREEN a4e32e0df (the stop, R/groupAddAssign.R:259-264), 601cc8949 (help, man page), 91a9d0e1e (NEWS, article); REFACTOR d5c08fd57 (one helper for the test pedigree, one block for the mutation survivor). Learning 951.
+next_steps: Each needs an owner pick: the kinship2 drawing features item (which pedigree column means deceased), a docs-audit part 2 cluster (6a and 6b 10 candidates, 6d 22, 6e 46; re-check against today's code first, as S966 and S976 did), or the contributor tutorial (form and home, how much internal discipline, audience). Not an option: pushing (the owner ruled no push-only sessions); 167 commits are ahead of origin/master with this close-out, none seen by CI. Not an option: sire plus N non-males for a harem (the owner took the stop).
+key_files: R/groupAddAssign.R:259-264 (the stop), :46-61 (harem and sexRatio help); R/fillGroupMembers.R:41-57 (harem removes the potential sires, then the ratio path); R/fillGroupMembersWithSexRatio.R:123 (the line that dropped every harem group); tests/testthat/test_haremSexRatioStop.R (9 blocks); tests/testthat/test_haremSexRatioStopWording.R (4); tests/testthat/helper-haremPedigree.R; NEWS.Rmd:269-273; vignettes/articles/breeding-group-formation.qmd:163-164
+gotchas: the stop sits after the exhaustive branch on purpose (a guard pins exhaustive mode's own messages) and before the too-few-males count (a block pins the order); any ratio other than 0 stops, a negative one too; sameGroups() is now a global test helper (helper-haremPedigree.R); a background ( cmd ) & inside a run_in_background Bash returns at once, so its completed notice is not the job, watch the job's own EXIT line with Monitor; a real-app probe's Groups tab text can be stale after a short idle wait, read the Statistics table; the studbook stays untracked in inst/extdata/examples/ (never git add -A); never git stash here
+runtime_smoke: the real app (shinytest2 AppDriver, GREEN code installed into a scratch library with R_LIBS and RENV_CONFIG_AUTOLOADER_ENABLED=false) on Breeding Groups, ExamplePedigree.csv, 3 groups, 5 simulations, all available: Harem gave 73, 71, 68 animals with 1 male each, Custom 5 gave 86, 85, 79 with 14, 14, 13 males, None gave 114, 105, 106, no error shown in any; the app cannot reach the new stop (its radio takes Harem or Custom), so the smoke shows the three radio choices still form groups.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results b595fe808231 · manifest aa983075d6a2
+changelog_ref: S985 DONE entry
+commit: the close-out commit that carries this receipt; claim 803b3d463
 ```
 
 ```handoff

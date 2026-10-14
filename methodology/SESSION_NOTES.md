@@ -98,14 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 985 Does
-**Deliverable:** harem with a custom sex ratio places one animal in total (`BACKLOG.md:156`; owner pick at the Phase 0 picker, option 1 of 4;
-DECISION NEEDED -- make the combination work, or stop with a message; Effort S-M; strict TDD wherever code or a test changes; PRE-RED) (IN PROGRESS)
-**Started:** 2026-10-14 09:20 CDT
-**Status:** Session claimed. Work beginning; nothing probed or changed yet.
-**Phase 0:** HEAD `8ab862546` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet citation
-`3ba0b3090c4d` matches, context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical), 159 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 985 Did
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; ruling: stop with a message; strict TDD, every gate asked, REFACTOR taken):** `groupAddAssign(harem = TRUE)` with a non-zero `sexRatio` stops before
+forming anything, naming both settings and the ratio (`R/groupAddAssign.R:259-264`, after the exhaustive branch); the help of `harem` and `sexRatio`, NEWS and the article say so (`BACKLOG.md:156`, removed).
+**Measured (332 living, 3 groups, ratio 5):** harem plus ratio gave sizes 1, 1, 2 in 5 of 5 seeds (1 group: 2 animals); a harem alone about 70 per group, a ratio alone 81 to 90 with 14 or 15 males.
+The ordinary ratio path stops a group when its males run out, by design. Learning 951.
+**Gates:** claim `803b3d463`; RED `ba6c542f1`, `8d072a4d4` (wording); GREEN `a4e32e0df`, `601cc8949`, `91a9d0e1e`; REFACTOR `d5c08fd57`.
+**Verified:** suite 3,702 blocks, 12,418 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0; lint_package 0; ratchet 1/1 (`b595fe808231`); real app (GREEN code) Harem 73/71/68 with 1 male each,
+Custom 5 86/85/79, None 114/105/106, no error; mutation 7 of 8, then 8 of 8.
+**Handoff evaluation of S984: 9/10.** Helped: the item's cause line and 5-of-5 sizes reproduced, the scratch-install recipe, the hidden-tab trick. Missing: the article already called the two alternatives; exhaustive mode's stops as the precedent.
+Wrong: nothing found.
+**Self-assessment: 8/10.** + measured first and ruled out a second defect before asking; one question per decision; the mutation survivor closed, 8 of 8; real app on the GREEN code. - the first real-app output was cut by
+`tail`, so the run was repeated; a detached `( cmd ) &` made the harness report completed at once; the Groups tab text read stale.
+**Next:** owner picks: the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 167 commits ahead of `origin/master`.
+**Gotchas:** the stop is after the exhaustive branch and before the too-few-males count, both pinned; `sameGroups()` is a global test helper now; watch a background job's own `EXIT=` line; the studbook stays untracked
+(never `git add -A`); never `git stash` here.
 
 ### Sessions 947-984 (condensed S950 to S985; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
@@ -403,13 +410,8 @@ local time (`date`), not UTC; push by SHA so the claim commit stays local; a `sl
 re-invokes the session on exit.
 
 ### Sessions 896-901 (condensed S897 to S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S896: four `BACKLOG.md` blocks compressed (file 533 to 514 lines; claim `0a34f4787`, close-out `e9d1bdf6e`). S897: `CHANGELOG.md` trimmed with `methodology_trim.py --force --cut 2026-10-03 --write`, 258,724 B to 25,172 B (the
-`--force` override of `SRF_RED` was the owner's call; claim `86b537e3e`, trim `f4b181c69`, close-out `18610c7e3`). S898: the owner ruled on the 7 parked Effort-S items, none declined (`isAddedRecord()`, `highlightNearest` and
-Candidate C kept open; CI skip = a `paths-ignore` list; verify-script bug reported upstream; rhesus comment reworded; row order accepted); re-measured first: 10 of 54 verify scripts FAIL, the raw row-order count is 1460
-(claim `2fffad3d8`, close-out `77ccb50f6`). S899: lint, pkgdown, R-CMD-check and test-coverage skip a push that changes only notes and tooling files (one 21-entry `paths-ignore:` in each `push:` trigger;
-`test_workflowPathsIgnore.R`, 11 tests; Learning 868; strict TDD: claim `22f45005d`, RED `40f1495f4`, GREEN `3178b741c`, REFACTOR `436e656fe`, close-out `f43ff9501`). S900: pushed S899's 6 commits by SHA
-(`77ccb50f6..f43ff9501`; all four push workflows and 8 jobs green) and two close-outs (`f43ff9501..529bb031b`; no CI run started, so `paths-ignore` is honoured). S901: characterized the 10 red shard verify scripts, none a
-real loss (upstream `KJ5HST/methodology#93`; `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; Learning 869; claim `14a59bb4b`). Evaluations 8 to 9/10, self 8/10 each.
+S896-S901: `BACKLOG.md` compression (S896), a `HANDOFFS.md` trim (S897), the CI `paths-ignore` list and its gate `test_workflowPathsIgnore.R` (S899), the verify-script failures reported
+upstream (`KJ5HST/methodology#93`, `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`); hashes and counts are in `CHANGELOG.md`.
 **Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; a "no run" result needs a wait and a control query on a commit that has runs; `quality_ratchet.py --run` can pass the 120 s
 foreground limit; zsh reads a leading `=` word as an expansion; a `*.md` wildcard would match shipped `README.md` and `NEWS.md`; do not `eval()` a whole test file to borrow its helpers; count verify scripts with a loop that
 prints only failures and a tally; a stored `BACKLOG.md` number can predate later code, so re-run it before a ruling; `AskUserQuestion` takes at most 4 questions per call; `BACKLOG.md` items are long wrapped lines, so edit by
@@ -427,10 +429,8 @@ refusal; use `withr::with_seed`; the shuffle wrapper takes exactly `(Dmat, dvec,
 word as an expansion.
 
 ### Sessions 873-891 (condensed S932 and S965; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S873-S881: the `sexCodes` adoption (plan `docs/planning/sexcodes-adoption-plan.md`; `test_sexCodes.R` scans every `R/*.R` against an allowlist), `damBasis` on `getPotentialParents()` entries (S880) and its split
-into five internal helpers in `R/getPotentialParentsHelpers.R` (S881; PED-2, NEW-29, PED-4, PED-7, NEW-54 closed). S882-S885: four small docs sessions (stale comments, the tracked `kinship2-fidelity-validation.pdf`
-deleted, 11 PED_GV ids closed). S886-S889: PED_GV decisions and builds (NEW-50 `.simulateKinship()`; NEW-28 `reportGV()` names every missing column first, `R/reportGV.R:173-183`). S890-S891: `BACKLOG.md`
-compressed; the owner's push of 128 commits came back red, diagnosed in `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. Evaluations 7 to 9/10, self 6 to 8/10.
+S873-S891: the `sexCodes` adoption (plan `docs/planning/sexcodes-adoption-plan.md`; `test_sexCodes.R` scans every `R/*.R`), `getPotentialParents()` split into helpers (S881), PED_GV
+decisions and builds, `BACKLOG.md` compression, and the red CI diagnosed in `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`; the record is in `CHANGELOG.md`.
 **Gotchas kept:** never regenerate `gpp_pinned_*.rds` from post-split code, and name helper parameters unlike any column; single-bracket `sexCodes["male"]` is named and breaks `identical()`; a new bare sex letter in
 `R/` fails `test_sexCodes.R`; `data-raw/kinship2FidelityValidation.R` hard-codes `outDir` (line 67); `reportErrors` is the app's QC contract, so never change one function's return alone; `smallPed` is not a
 good-input fixture for `reportGV()`; default test runs skip the `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true`; recompute an open count from the report's table, never carry it; in zsh an unquoted
