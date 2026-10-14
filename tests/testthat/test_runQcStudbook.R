@@ -233,3 +233,20 @@ test_that("qcStudbook itself stays silent about an exit before its birth", {
   expect_identical(sum(cleaned$exit < cleaned$birth, na.rm = TRUE), 2L)
   expect_null(qcStudbook(ped, reportErrors = TRUE))
 })
+
+## S988 (BACKLOG.md:141-147, flag PB7): a lowercase `geographicorigin` header is
+## renamed to geographicOrigin, and the renamed-column flag must say so.
+test_that("runQcStudbook reports a lowercase geographicorigin header as a renamed column", {
+  res <- runQcStudbook(pedLowercaseGeographicOrigin(), reportChanges = TRUE)
+  expect_true(res$qcResult$hasChangedCols)
+  expect_identical(res$qcResult$changedCols$geographicoriginToGeographicOrigin,
+                   "geographicorigin to geographicOrigin")
+  expect_false(res$qcResult$hasErrors)
+  expect_true("geographicOrigin" %in% names(res$cleaned))
+})
+
+test_that("runQcStudbook reports no renamed column when every header is already right", {
+  res <- runQcStudbook(datePed(recordStatus = NULL), reportChanges = TRUE)
+  expect_false(res$qcResult$hasChangedCols)
+  expect_false(any(lengths(res$qcResult$changedCols) > 0L))
+})

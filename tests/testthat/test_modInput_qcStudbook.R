@@ -903,3 +903,21 @@ test_that("the Input tab lists one invalid date by row in a file with birth and 
     expect_false(got$ready, info = label)
   }
 })
+
+# ============================================================================
+# A lowercase geographicorigin header is a renamed column (S988)
+# ============================================================================
+# BACKLOG.md:141-147 (S986 flag PB7): the file's `geographicorigin` header is
+# renamed to geographicOrigin; the Input module must flag the rename, and a
+# rename never stops the upload.
+
+test_that("the Input tab flags a lowercase geographicorigin header as a rename and lets the user proceed", {
+  skip_if_not_installed("shiny")
+  path <- tempfile(fileext = ".csv")
+  write.csv(pedLowercaseGeographicOrigin(), path, row.names = FALSE, na = "")
+  got <- uploadForQc(path)
+  unlink(path)
+  expect_true(got$results$hasChangedCols)
+  expect_identical(got$summary$errors, 0L)
+  expect_true(got$ready)
+})
