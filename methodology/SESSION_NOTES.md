@@ -98,21 +98,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 987 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the Input tab lists every invalid date by row, in every date column
-(`BACKLOG.md` item removed). `R/getDateErrorsAndConvertDatesInPed.R:48-55` blanks each date column's own invalid cells with `convertDate(reportErrors = TRUE)` on a one-column slice, in place of one `as.Date()`
-over all of them; help sentence `:9-12` (owner-approved); NEWS `NEWS.Rmd:423`.
-**Measured:** `ExamplePedigree.csv` in the real Input module: a bad birth in row 12 gave "do not know how to convert ...", 0 records; now "Invalid date values: 12" (bad exit row 21: "21"; both: "12, 21"); as shipped 0 errors, 3,694 records, ready.
-**Gates:** claim `a8151e930`; RED `a0ac4a355` (30 expectations, 6 blocks); GREEN `0d15bc1fe`; REFACTOR `b6d19d81c`; NEWS `ca85dc20d`.
-**Verified:** suite 3,710 blocks, 12,463 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0 at GREEN only; ratchet 1/1 (`5b58afd99825`); mutation of the new loop 3 of 5 caught, `drop = FALSE` closed in REFACTOR, 1 harmless.
-**Handoff evaluation of S986: 9/10.** Helped: the cause line, error texts and cites (`:43-45`, `:9-10`) reproduced exactly. Missing: why the fixtures missed it (`test_qcStudbook.R:283-292` makes every row invalid, which skips the conversion); the
-`uploadForQc()` helper (`test_modInput_qcStudbook.R:752`). Wrong: nothing found.
-**Self-assessment: 8/10.** + each RED failure read for its cause; the mutation check found a real gap; the real module on the shipped example. - a stray phrase in the RED commit message (amended, local); a mistyped mutation pattern; a no-op background call.
-**Next:** owner picks: the three READY builds (`BACKLOG.md:141-148`, `:149-156`, `:157-167`), the kinship2 drawing features, a docs-audit cluster (6d 21, 6e 46), the contributor tutorial. 176 commits ahead of `origin/master`.
-**Gotchas:** `drop = FALSE` on the loop's slice is pinned only by the no-`recordStatus` block (`test_getDateErrorsAndConvertDatesInPed.R:170`); an "added" record with unreadable date text still stops in `convertDate()`'s last `rbind` (not filed);
-15 test files read `NEWS.Rmd`/`NEWS.md`; S905-S910 were condensed to bring this file to 54,644 B (the hook refuses growth past about 56,700 B); the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 988 Does
+**Deliverable:** `checkChangedColsLst()` counts every kind of rename, so a lowercase `geographicorigin` header is reported (`BACKLOG.md:141-147`, flag PB7; the owner ruled "count every kind" S986;
+owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD; PRE-RED) (IN PROGRESS)
+**Started:** 2026-10-14 13:31 CDT
+**Status:** Session claimed. Work beginning; nothing read or probed yet.
+**Phase 0:** HEAD `78c6f1004` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green (all before the 176 local commits), dashboard 96/100 High+ 0, ratchet 1/1 pass,
+context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical) and the growth run, no untracked files, 176 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-986 (condensed S950 to S987; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-987 (condensed S950 to S988; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -195,6 +190,10 @@ S986: the ten slice 6a-6b flags of docs-audit part 2 re-checked against today's 
 a file with two date columns stops the Input tab with a cryptic error; an audit, no code change; the owner took the recommended option on all four rulings, now four READY `BACKLOG.md` items; evaluation of
 S985 8/10, self 8/10). **Gotchas kept (S986):** `runQcStudbook()` needs `reportChanges = TRUE` to show renames (the module passes it); `qcStudbook(reportErrors = TRUE)` is `NULL` for a clean file; a probe
 installs a package into a scratch library, never into renv; start every Bash command with an absolute `cd`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+S987: the Input tab lists every invalid date by row, in every date column (`R/getDateErrorsAndConvertDatesInPed.R:48-55`: each date column's own invalid cells blanked with `convertDate(reportErrors = TRUE)`
+on a one-column slice; help sentence `:9-12`; NEWS `NEWS.Rmd:423`; the real Input module on `ExamplePedigree.csv`: a bad birth in row 12 now reads "Invalid date values: 12"; strict TDD, REFACTOR taken;
+evaluation of S986 9/10, self 8/10). **Gotchas kept (S987):** `drop = FALSE` on the loop's slice is pinned only by the no-`recordStatus` block (`test_getDateErrorsAndConvertDatesInPed.R:170`); an "added" record
+with unreadable date text still stops in `convertDate()`'s last `rbind` (not filed); 15 test files read `NEWS.Rmd`/`NEWS.md`.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
