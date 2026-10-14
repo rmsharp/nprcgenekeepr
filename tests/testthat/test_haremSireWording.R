@@ -22,10 +22,7 @@
 ## NEWS.Rmd is .Rbuildignore'd), so each block skips where its page is absent
 ## and runs from the source tree.
 
-staleStatements <- c(
-  "Known limitation", "are not enforced", "is not checked against the rules",
-  "Caveat: in harem formation"
-)
+staleStatements <- c("Known limitation", "Caveat", "not enforced", "not checked")
 
 ## True when some stretch of `text` around the word "sire" names the harem,
 ## names relatives (or kinship) and carries none of the stale phrases.
@@ -37,8 +34,7 @@ sayingTheSireRule <- function(text) {
     grepl("harem", around, fixed = TRUE) &&
       grepl("relative|related|kinship", around) &&
       !any(vapply(staleStatements, grepl, logical(1L), x = around,
-                  fixed = TRUE)) &&
-      !grepl("not enforced|not checked", around)
+                  fixed = TRUE))
   }, logical(1L)))
 }
 

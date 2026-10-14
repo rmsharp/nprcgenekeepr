@@ -228,6 +228,62 @@ test_that("a supplied seed animal's relatives stay out of its group (guard)", {
   }
 })
 
+test_that("every animal already in a group keeps his relatives out, not only the first", {
+  ## S983 REFACTOR: the group is seeded with U1 (no relatives) and S1, in
+  ## that order, so S1's mother, full sister and daughter are in the pool
+  ## and only the second animal's relatives matter.
+  ped <- haremPed()
+  kmat <- haremKmat(ped)
+  seeded <- list(c("U1", "S1"))
+  pool <- c("F0", "FS", "D1", "HS", "U2")
+  kin <- getAnimalsWithHighKinship(
+    filterKinMatrix(c(pool, seeded[[1L]]), kmat), ped, 0.25, seeded,
+    list(c("F", "F")), 1
+  )
+  kin <- addAnimalsWithNoRelative(kin, pool)
+  for (seed in 1L:5L) {
+    set_seed(seed)
+    group <- nprcgenekeepr:::fillGroupMembers(
+      pool, seeded, kin, ped, FALSE, 1, 1L, 0
+    )[[1L]]
+    expect_true(sameMembers(group, c("U1", "S1", "HS", "U2")),
+      info = paste("seed", seed, "group", toString(group))
+    )
+  }
+})
+
+test_that("a seed animal with no relatives in the kin list does not stop the fill", {
+  ## U1 has no relative at or above 0.25, so the kin list has no entry for
+  ## him; asking it for his entry with `[[` would stop with an error.
+  ped <- haremPed()
+  kmat <- haremKmat(ped)
+  seeded <- list("U1")
+  pool <- c("S1", "HS", "U2")
+  kin <- getAnimalsWithHighKinship(
+    filterKinMatrix(c(pool, "U1"), kmat), ped, 0.25, seeded,
+    list(c("F", "F")), 1
+  )
+  kin <- addAnimalsWithNoRelative(kin, pool)
+  expect_false("U1" %in% names(kin))
+  for (seed in 1L:3L) {
+    set_seed(seed)
+    group <- tryCatch(
+      nprcgenekeepr:::fillGroupMembers(
+        pool, seeded, kin, ped, FALSE, 1, 1L, 0
+      )[[1L]],
+      error = function(e) e
+    )
+    expect_false(inherits(group, "error"),
+      info = if (inherits(group, "error")) conditionMessage(group) else ""
+    )
+    if (!inherits(group, "error")) {
+      expect_true(sameMembers(group, c("U1", "S1", "HS", "U2")),
+        info = paste("seed", seed, "group", toString(group))
+      )
+    }
+  }
+})
+
 test_that("a sire with no relatives in the pool gives HEAD's same-seed groups (guard)", {
   ped <- haremPed()
   kmat <- haremKmat(ped)
