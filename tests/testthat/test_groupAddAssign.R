@@ -141,8 +141,12 @@ test_that(
     expect_true(length(group) == 4L)
     expect_identical(sum(seq_along(group[[1L]][[3L]])[group[[1L]][[3L]] %in%
                                                   sires]), 0L)
-    expect_identical(sum(seq_along(group[[1L]][[3L]])[group[[1L]][[2L]] %in%
-                                                    sires]), 1L)
+    ## group 2 holds exactly one sire and he is the one seeded first (S983:
+    ## the old check indexed the unused box by group 2's sire flags, which
+    ## recycles when group 2 is shorter than the unused box, so it held only
+    ## while group 2 was at least as long)
+    expect_identical(sum(group[[1L]][[2L]] %in% sires), 1L)
+    expect_true(group[[1L]][[2L]][1L] %in% sires)
   }
 )
 test_that(
