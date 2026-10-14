@@ -111,8 +111,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       today's code, except where a present-day check is named; the ids are in each slice's
       report): 6a-6b, the ten oldest flags, re-checked S986
       (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9 findings, 1 moderate, an invalid date in a
-      file with two date columns, fixed S987; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
-      now three READY items below this one; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
+      file with two date columns, fixed S987, and PB7, `checkChangedColsLst()` counting every rename, fixed S988; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
+      now two READY items below this one; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
       6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
       owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
@@ -138,13 +138,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **`checkChangedColsLst()` counts every kind of rename (READY, Effort S; strict TDD)** (docs-audit
-      part 2, S986 finding 4, flag PB7; the owner ruled S986: count every kind) -- it checks 12 of the 13 fields
-      of `getEmptyErrorLst()$changedCols` (`R/checkChangedColsLst.R:36-52`), so a lowercase `geographicorigin`
-      header is renamed with no notice (`hasChangedCols` FALSE; `qcStudbook()` returns `NULL`, so `runQcStudbook()`
-      keeps no record of the rename). Wanted: `any(lengths(changedCols) > 0L)`, a test with that header, and the help
-      sentence at `:8-9` kept true. Visible effect today: one flag and one heading. Not part of it: `summary()`
-      lists 10 of the 13 fields (`R/summary.nprcgenekeeprErr.R:111-165`), a separate question.
+- [ ] **The Changed Columns tab and `summary()` skip some rename fields (DECISION NEEDED -- should the
+      tab list every rename, Effort S-M; strict TDD)** (found S988, while `checkChangedColsLst()` was made to
+      count every rename) -- `getEmptyErrorLst()$changedCols` has 13 fields. `shouldShowChangedColsTab()` checks 12
+      (`R/shouldShowChangedColsTab.R:36-42`, none for `geographicoriginToGeographicOrigin`); `summary()` writes a sentence
+      for 10 (`R/summary.nprcgenekeeprErr.R:111-165`, none for `recordstatusToRecordStatus`, `fromcenterToFromCenter` or
+      `geographicoriginToGeographicOrigin`); `processQcStudbookResult()` makes a warning row only for `caseChange` and
+      `spaceRemoved` (`R/processQcStudbookResult.R:198-215`). Measured S988: a list with only the `geographicorigin`
+      field filled gives a blank `summary()$txt` and an empty `<ul>` from `insertChangedColsTab()`, so the owner ruled at
+      the PRE-RED scope question to leave the tab alone: with an all-lowercase `geographicorigin` header
+      `hasChangedCols` is now TRUE but the tab stays hidden (`NEWS.Rmd` says so). The same gap for `recordstatus` and
+      `fromcenter` headers was read from the code, not run. **Decision:** open the tab and list every rename (three
+      new `summary()` sentences, 13 fields in `shouldShowChangedColsTab()`), or leave it. If it changes,
+      `test_appServer_dynamicTabs.R:189-209` ("both functions should agree", a 12-field list) needs a 13-field list
+      and the `NEWS.Rmd` sentence changes.
 
 - [ ] **`checkRequiredCols()` tolerates an `NA` column name at any length (READY, Effort S; strict TDD)**
       (docs-audit part 2, S986 finding 3, flag PB4; the owner ruled S986: make the code match) -- the help

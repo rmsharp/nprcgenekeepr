@@ -98,14 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 988 Does
-**Deliverable:** `checkChangedColsLst()` counts every kind of rename, so a lowercase `geographicorigin` header is reported (`BACKLOG.md:141-147`, flag PB7; the owner ruled "count every kind" S986;
-owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD; PRE-RED) (IN PROGRESS)
-**Started:** 2026-10-14 13:31 CDT
-**Status:** Session claimed. Work beginning; nothing read or probed yet.
-**Phase 0:** HEAD `78c6f1004` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green (all before the 176 local commits), dashboard 96/100 High+ 0, ratchet 1/1 pass,
-context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical) and the growth run, no untracked files, 176 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 988 Did
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** `checkChangedColsLst()` counts every kind of rename, so a lowercase `geographicorigin`
+header is flagged (`BACKLOG.md` item removed; docs-audit part 2 flag PB7). `R/checkChangedColsLst.R:37` is `any(lengths(changedCols) > 0L)` in place of a 12-clause `if`; NEWS `NEWS.Rmd:430`.
+**Measured:** all-lowercase `geographicorigin` header: before, `qcStudbook(reportErrors = TRUE)` `NULL` and `hasChangedCols` FALSE; after TRUE, record "geographicorigin to geographicOrigin". Real Input module on `ExamplePedigree.csv`:
+as shipped FALSE, 0 errors, 3,694 records, ready; with the lowercase header TRUE, 0 errors, ready.
+**Scope (owner, PRE-RED question, the recommended option):** the check only. `shouldShowChangedColsTab()` (`R/shouldShowChangedColsTab.R:36-42`) repeats the 12-name list and `summary()` has 10 of 13 sentences, so a list with
+only that field opens an empty tab; both stay, as a new decision item (`BACKLOG.md:141`).
+**Gates:** claim `5dea6ce95`; RED `62d37daac` (7 blocks, 5 fail, 8 expectations); GREEN `4566b1e99`; REFACTOR `a1c47808f`; NEWS `0e3a6256a`.
+**Verified:** suite 3,717 blocks, 12,495 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0 at GREEN only (`vignettes = FALSE`); ratchet 1/1 (`e315c8b09228`); mutation 5 of 5 caught (in memory); 15 NEWS-reading files pass.
+**Handoff evaluation of S987: 9/10.** Helped: the three READY items' cites (`R/checkChangedColsLst.R:36-52`, help `:8-9`, 12 of 13) reproduced exactly; `uploadForQc()` and `datePed()` were reused. Missing: that
+`shouldShowChangedColsTab()` repeats the 12-name list (a grep found it and it set the scope); that the flag is `res$qcResult$hasChangedCols`. Wrong: nothing found.
+**Self-assessment: 8/10.** + found the sibling list and measured the empty tab before asking; each RED failure read for its cause; mutation 5 of 5; real module on the shipped example. - first `check` used
+`--no-build-vignettes` (2 spurious warnings, rerun); a file list passed as an argument (rerun); a zsh `===` echo; three early notices from detached jobs (a monitor on `EXIT=` handled them).
+**Next:** owner picks: `checkRequiredCols()` NA name (`BACKLOG.md:156`), two help sentences (`:164`), the Changed Columns tab decision (`:141`), kinship2 drawing features (`:401`), a docs-audit cluster (6d 21, 6e 46), the
+contributor tutorial (`:175`). 182 commits ahead of `origin/master`.
+**Gotchas:** with that header the flag is TRUE but the tab stays hidden and the Warnings list has no row (NEWS says so); the flag is `res$qcResult$hasChangedCols`; `export VAR` before `Rscript`, a trailing `VAR=x` is an
+argument; 15 test files read `NEWS.Rmd`/`NEWS.md`; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-987 (condensed S950 to S988; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
