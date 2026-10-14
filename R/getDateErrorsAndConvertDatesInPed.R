@@ -6,8 +6,10 @@
 #' Finds date errors in columns defined in
 #' \code{convertDate} as dates and converts date strings to \code{Date} objects.
 #'
-#' If there are no errors that prevent the calculation of exit dates, they are
-#' calculated and added to the pedigree otherwise the pedigree is not updated.
+#' Every date column is checked on its own and each invalid date is listed by
+#' row; the invalid dates become \code{NA} in the converted pedigree, and exit
+#' dates are calculated and added, unless every original record has an invalid
+#' date, in which case the pedigree is returned unchanged.
 #'
 #' @param sb A dataframe containing a table of pedigree and demographic
 #' information.
@@ -41,8 +43,16 @@ getDateErrorsAndConvertDatesInPed <- function(sb, errorLst) { # nolint: object_l
       getRecordStatusIndex(sb, "added")
     )
     if (nrow(sb[-invalidAndAdded, ]) > 0L) {
-      sb[, names(sb) %in% getDateColNames()] <-
-        as.Date(sb[, names(sb) %in% getDateColNames()], origin = "1970-01-01")
+      ## Blank each date column's own invalid cells, so the conversion below
+      ## never meets one (it stops on the first).
+      for (dateCol in intersect(names(sb), getDateColNames())) {
+        badRows <- as.integer(convertDate(
+          sb[, intersect(names(sb), c(dateCol, "recordStatus")), drop = FALSE],
+          timeOrigin = as.Date("1970-01-01"),
+          reportErrors = TRUE
+        ))
+        sb[badRows, dateCol] <- NA
+      }
       sb <- convertDate(sb,
         timeOrigin = as.Date("1970-01-01"),
         reportErrors = FALSE

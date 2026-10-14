@@ -24,8 +24,10 @@ Finds date errors in columns defined in
 \code{convertDate} as dates and converts date strings to \code{Date} objects.
 }
 \details{
-If there are no errors that prevent the calculation of exit dates, they are
-calculated and added to the pedigree otherwise the pedigree is not updated.
+Every date column is checked on its own and each invalid date is listed by
+row; the invalid dates become \code{NA} in the converted pedigree, and exit
+dates are calculated and added, unless every original record has an invalid
+date, in which case the pedigree is returned unchanged.
 }
 \examples{
 library(nprcgenekeepr)
