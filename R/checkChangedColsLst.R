@@ -34,20 +34,5 @@
 #' errorLst <- qcStudbook(pedOne, reportErrors = TRUE, reportChanges = TRUE)
 #' checkChangedColsLst(errorLst$changedCols)
 checkChangedColsLst <- function(changedCols) {
-  if (length(changedCols$caseChange) > 0L ||
-    length(changedCols$spaceRemoved) > 0L ||
-    length(changedCols$periodRemoved) > 0L ||
-    length(changedCols$underScoreRemoved) > 0L ||
-    length(changedCols$egoToId) > 0L ||
-    length(changedCols$egoidToId) > 0L ||
-    length(changedCols$sireIdToSire) > 0L ||
-    length(changedCols$damIdToDam) > 0L ||
-    length(changedCols$birthdateToBirth) > 0L ||
-    length(changedCols$deathdateToDeath) > 0L ||
-    length(changedCols$recordstatusToRecordStatus) > 0L ||
-    length(changedCols$fromcenterToFromCenter) > 0L) {
-    TRUE
-  } else {
-    FALSE
-  }
+  any(lengths(changedCols) > 0L)
 }
