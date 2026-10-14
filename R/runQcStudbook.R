@@ -25,10 +25,13 @@
 #'   FALSE). When TRUE, \code{changedCols} and \code{hasChangedCols} in the
 #'   qcResult report all renamed columns, while \code{warnings} lists the case
 #'   and space changes and, when animals in the cleaned pedigree have no birth
-#'   date, one warning, "Animals with no birth date", that says how many. That
-#'   warning is a notice only: it never makes \code{hasErrors} TRUE, and it is
-#'   left out when errors were found, because no cleaned pedigree exists then.
-#'   When FALSE, \code{warnings} is empty.
+#'   date, one warning, "Animals with no birth date", that says how many. When
+#'   animals have an exit date earlier than their birth date, one more warning,
+#'   "Animals with a death or departure before birth", says how many and names
+#'   the first five. These warnings are notices only: they never make
+#'   \code{hasErrors} TRUE, and they are left out when errors were found,
+#'   because no cleaned pedigree exists then. When FALSE, \code{warnings} is
+#'   empty.
 #'
 #' @return A list with the following components:
 #' \itemize{
@@ -235,12 +238,14 @@ runQcStudbook <- function(ped,
     name = "nprcgenekeepr"
   )
 
-  # The warning about animals with no birth date counts the cleaned pedigree,
-  # so it is added here, after the second pass, and only for a caller that
-  # wants notices in the result
+  # The warnings about animals with no birth date and about animals that leave
+  # before they are born read the cleaned pedigree, so they are added here,
+  # after the second pass, and only for a caller that wants notices in the
+  # result
   if (reportChanges && !is.null(cleanedPed)) {
     qcResult$warnings <- rbind(qcResult$warnings,
-                               getNoBirthDateWarning(cleanedPed))
+                               getNoBirthDateWarning(cleanedPed),
+                               getExitBeforeBirthWarning(cleanedPed))
   }
 
   list(cleaned = cleanedPed, qcResult = qcResult, errorLst = errorLst)
