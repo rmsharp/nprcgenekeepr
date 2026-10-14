@@ -153,24 +153,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **The shipped `deidentified_jmac_ped.csv` still does not load: 67 "Parent age too young"
-      errors (split out S800 from the blank-cells item, which S800 fixed; DECISION NEEDED,
-      Effort S)** -- since S800 the app reads its 2,789 blank sire cells as unknown parents,
-      so the old "appears as both a sire and a dam" error is gone, but the pedigree check
-      still stops on 67 parent-age errors, on the app path and the `getPedigree()` path
-      alike (measured S800, `qcStudbook(getPedigree(f), reportErrors = TRUE)$suspiciousParents`,
-      67 rows): 65 dams aged 3.43-3.99 years at the birth, under the 4-year female floor
-      `getSpeciesMinBreedingAge("JAPANESE MACAQUE", "F")` returns, and 2 sires with
-      negative ages (sire `3A34N` of `82I5M`, -37.10 years; sire `NX5RM` of `8PPD8`, -34.77:
-      born after their offspring, a data error in the file).
-      **Decide:** (1) leave the file as a QC example and say in its documentation that it
-      loads only with Minimum Dam Age lowered and still shows the 2 sire errors; (2) correct
-      the 2 impossible sire records in the example; (3) review the 4-year Japanese macaque
-      dam floor (5 for sires) against the literature -- a species-table change moves every
-      Japanese macaque result. The pinned test is
-      `tests/testthat/test_modInput_blankCells.R` (last test: exactly 67 errors, all
-      "Parent age too young"), which moves with (2) or (3).
-
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
       design gate, Effort M)** -- a harem's sampled sire is seeded into the group

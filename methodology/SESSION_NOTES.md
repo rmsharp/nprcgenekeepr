@@ -99,11 +99,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 980 Did
-**Deliverable:** the jmac example file's decision (`BACKLOG.md:156`; DECISION NEEDED, Effort S): the shipped `deidentified_jmac_ped.csv` still stops the pedigree check on parent-age errors;
-the owner chooses to document it as a QC example, correct its 2 sire records, or review the Japanese macaque dam floor (IN PROGRESS)
-**Started:** 2026-10-13 19:17 CDT
-**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4. Pre-RED: re-measure the 67 errors (stored S800), then ask the three-way choice and the scope
-(decide only, or build this session) in plain words.
+**Deliverable, DONE (owner pick, option 1 of 4; Pre-RED: "Fix 2 sires, one sentence", a NEWS line, guide and manual; strict TDD, every gate asked, REFACTOR taken):** the jmac example file (`BACKLOG.md:156`, removed).
+The sire and sire-type cells of `8PPD8` and `82I5M` (`deidentified_jmac_ped.csv:2485,2612`, the file's only sire entries, both impossible) are empty. The check reports 65 errors (mothers aged 3.43-3.99, under the 4-year floor);
+Minimum Dam Age 3.4 loads all 2,791 animals; 3.5 still flags 2. One sentence each in the guide (`colony-manager-guide.qmd:222`), manual (`_input.Rmd:48-56`) and `NEWS.Rmd:451`. The built-in floor stays 4.
+**Found:** the example records no sire for any animal now; `82I5M` died 12 days before its birth and no check flags it (not filed). Learning 946.
+**Gates:** claim `b5e0e0824`; RED `05f88bfb1` (9 blocks failing, 2 guards green); GREEN `e70deb889` (data), `e4774f8ad` (docs); REFACTOR `2f0833deb` (`jmacExamplePath()`, `bornAfterOffspring()`).
+**Verified:** suite 3,620 blocks, 11,805 expectations, 0 failed, 0 errors, 187 skipped (before and after); check 0/0/0; lint 0; ratchet 1/1 (`cd2bd9399018`); real app: default "of 65 entries", 3.4 loads; 3 mutants caught.
+**Handoff evaluation of S979: 8/10.** Helped: the pinned test line, the 67 count (held), the `git stash` warning. Missing: the 2 sire cells are the file's only sire data. Wrong: nothing.
+**Self-assessment: 7/10.** + re-measured stored numbers; the 2x2 made the question answerable. - counted the sire cells after the owner's pick; a RED guard assumed the manual's spelling; the real-app script took four tries.
+**Next (owner picks):** the harem-sire hole (design gate first), the kinship2 drawing features, another docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 128 commits are ahead of `origin/master`, none seen by CI.
+**Gotchas:** count a field's rows before offering to blank it; `#dataInput-qcSummaryUI` is empty until its sub-tab is active (open Input, read Errors and Warnings); `textContent`, not `innerText`;
+a wording guard matches the page's own spelling; `dev/extdata-scratch/deidentified_jmac_ped_edited.csv` (build-ignored) still holds the two sire cells; never `git stash` here.
 
 ### Sessions 947-979 (condensed S950 to S980; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
@@ -166,10 +172,9 @@ S978: the F_ROH warning plus a notice above the F_ROH table (`R/computeGenomicRO
 strict TDD, REFACTOR taken; evaluation of S977 8/10, self 8/10). **Gotchas kept (S978):** `sidecarLociMissingFromMatrix()` reads `coverage`, so it takes `checkLocusMetadata()`'s output, the opposite of `computeGenomicROH()`'s raw input;
 under `testServer()` the table's observer runs the function at each `setInputs()`, so collect warnings across the upload and the read with `withCallingHandlers()`; read help with `roxygenText()` (only `#'` lines);
 the locus file upload is shared by the Linkage and Genomic ROH tabs.
-S979: a blank chromosome is missing in `checkLocusMetadata()` (`R/checkLocusMetadata.R:76-79`), so `computeGenomicROH()` and `markerLdBlock()` leave the locus out; `checkGenotypeFile()` stops once, on one line,
-naming every column with a collision (`R/checkGenotypeFile.R:55-73`); strict TDD, REFACTOR taken (`helpPlaces()`, `skipUnlessHelpInSourceTree()`); evaluation of S978 8/10, self 8/10.
-**Gotchas kept (S979):** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" fix; `nzchar(NA)` is TRUE; read the ratchet results from `methodology/.quality-gates-results.json`;
-the real app at the default 50-SNP minimum shows zeros on the shipped sequence example (set `markerGenetics-rohMinSnp` to 3); never `git stash` here.
+S979: a blank chromosome is missing in `checkLocusMetadata()` (`R/checkLocusMetadata.R:76-79`); `checkGenotypeFile()` stops once, on one line, naming every column with a collision (`R/checkGenotypeFile.R:55-73`);
+strict TDD, REFACTOR taken; evaluation of S978 8/10, self 8/10. **Gotchas kept (S979):** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" fix;
+read the ratchet results from `methodology/.quality-gates-results.json`; set `markerGenetics-rohMinSnp` to 3 on the shipped sequence example.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
