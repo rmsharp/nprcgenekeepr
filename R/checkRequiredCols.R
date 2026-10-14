@@ -36,9 +36,10 @@
 #' checkRequiredCols(setdiff(cols, "birth"), reportErrors = TRUE)
 checkRequiredCols <- function(cols, reportErrors) {
   requiredCols <- getRequiredCols()
-  # Checking for the required fields (id, sire, dam, sex, birth)
-  if (!all(str_detect_fixed_all(cols, requiredCols, ignore_na = TRUE)) ||
-    length(cols) < length(requiredCols)) {
+  # Checking for the required fields (id, sire, dam, sex, birth); an NA name
+  # is an ordinary non-match
+  found <- str_detect_fixed_all(cols, requiredCols, ignore_na = TRUE)
+  if (!all(found) || length(cols) < length(requiredCols)) {
     if (reportErrors) {
       missingColumns <- requiredCols[!requiredCols %in% cols]
       if (length(missingColumns) > 0L) {
@@ -46,11 +47,7 @@ checkRequiredCols <- function(cols, reportErrors) {
       }
     } else {
       stop(
-        "Required field(s) missing: ",
-        toString(
-          requiredCols[!str_detect_fixed_all(cols, requiredCols,
-            ignore_na = TRUE
-          )]), "."
+        "Required field(s) missing: ", toString(requiredCols[!found]), "."
       )
     }
   }
