@@ -197,11 +197,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S983
-date: 2026-10-13
-status: pending
-active_task: IN PROGRESS -- close the harem-sire conflict enforcement hole, kinship and ancestry (BACKLOG.md:156; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, design gate first, Effort M; strict TDD)
-what_was_done: pending
-commit: pending
+date: 2026-10-14
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- a harem's sire keeps his relatives out of his harem, kinship and ancestry alike, and a harem whose sire excludes everyone left is the sire alone (BACKLOG.md:156, removed; owner pick at the Phase 0 picker, option 1 of 4; owner rulings: kinship and ancestry together, sire alone when nobody is left; strict TDD, every gate asked, REFACTOR taken)
+what_was_done: Phase 0 (0 undocumented commits, 0 pending receipts, no merges, CI 10 of 10 green, dashboard 96/100 High+ 0, context budget WARN only for SESSION_RUNNER.md, ratchet citation matched). Claim efdf0698d. Measured first with the app's defaults on the shipped example (332 living, 3 harems, Max kinship 0.25, 10 simulations): 29 of 40 seeded runs put the sire's mother (27), daughter (13) or full sister (1) in his harem, 41 animals in 120 harems; seen in the real app at seed 6; a fix previewed in a scratch session gave 0, group sizes unchanged, and 38 of 40 same-seed results different with no gentler fix possible (0 of 40 seeds conflict-free in all 10 simulations); supplied seed animals need no special case (15 of 15 identical, three setups). Two questions (scope; an empty pool), both answered with the recommended option. RED dad6b6b5c (16 new blocks, 2 changed, 111 failed expectations, 0 skipped, 5 guards green), RED repair c28a406da (an old index check that recycled a logical index, owner-approved step back), GREEN ad445e20c (R/fillGroupMembers.R, R/groupAddAssign.R help, man page) and 2aaf06c9c (NEWS, manual, guide; sentences as approved), REFACTOR 86c28865c ([ not [[ and no names(kin) guard, two blocks for the mutation survivors). Close-out: BACKLOG item removed, two sibling-defect items filed, Learning 949.
+next_steps: Each needs an owner pick: the two new BACKLOG defects (a male seed in only some harems stops with "subscript out of bounds", reachable from the app; harem with a custom sex ratio places one animal in total, script-only), the kinship2 drawing features (which pedigree column means deceased), a docs-audit part 2 cluster (6a and 6b 10 candidates, 6d 22, 6e 46), or the contributor tutorial. Not an option: pushing (the owner ruled no push-only sessions); 150 commits are ahead of origin/master with this close-out, none seen by CI. Open only if the owner asks: removing the 2018 studbook from public history.
+key_files: R/fillGroupMembers.R:58-67 (the new per-group filter); R/groupAddAssign.R:46-51 (harem help), :77-88 (ancestryRules help); R/initializeHaremGroups.R:47,63 (the male-seed defect); R/fillGroupMembersWithSexRatio.R:123 (the sex-ratio defect); tests/testthat/test_haremSireConflicts.R (12 blocks); tests/testthat/test_haremSireWording.R (6); tests/testthat/test_groupAddAssignAncestry.R (the flipped limitation test); tests/testthat/test_groupAddAssign.R:144-149 (the repaired check); NEWS.Rmd:257-264; vignettes/manual_components/_breeding_group_formation.Rmd:92-94; vignettes/articles/colony-manager-guide.qmd:649-651
+gotchas: kin from getAnimalsWithHighKinship() is a 1-d array: kin["absent"] returns nothing, kin[["absent"]] errors, so read it with [ for a group; x[logical shorter than x] recycles (an old test passed only while group 2 was at least as long as the unused box); a real-app DT table is server-side, ask each for every row with $(el).DataTable().page.len(-1).draw() before reading; the real-app run was at the GREEN code, REFACTOR was verified by the suite and a six-mutant check; the harem-sex-ratio defect is script-only and the male-seed one is user-reachable but was not run in the app; the studbook stays untracked in inst/extdata/examples/ (never git add -A); never git stash here
+runtime_smoke: the real app (shinytest2 AppDriver, HEAD installed into a scratch library) on Breeding Groups, All available, Harem, the app's defaults, seeds 6 and 1: before the fix seed 6 had YHHVC7 with his daughters H9HL2V and KEA4QG in group 3 (72 animals; sizes 70/70/72); after, 0 members at kinship 0.25 or more to the sire in all six harems (seed 6 sizes 71/69/72, seed 1 unchanged at 67/74/71). Run at the GREEN code, not the REFACTOR code.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 2a31eba82fbf · manifest aa983075d6a2
+changelog_ref: S983 DONE entry
+commit: the close-out commit that carries this receipt; claim efdf0698d
 ```
 
 ```handoff

@@ -153,25 +153,35 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
-      2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
-      design gate, Effort M)** -- a harem's sampled sire is seeded into the group
-      before the fill loop (`initializeHaremGroups()`), and the loop applies
-      `kin[[id]]` exclusions only for animals it places itself
-      (`R/fillGroupMembers.R:60-77`), so the sire's own conflicts are never
-      enforced against his group: a female with 0.25 kinship to the sire can join
-      his harem today (M-F pairs are not F-F-exempt, yet go unenforced), and #168
-      ancestry blocking inherits the identical hole (owner-ratified S764 as
-      "inherit + document": pinned by
-      `tests/testthat/test_groupAddAssignAncestry.R`'s harem-limitation test,
-      documented in `groupAddAssign()`'s `ancestryRules` roxygen and the NEWS
-      caveat). The candidate fix — filtering each group's `available` by its
-      pre-seeded members' `kin` entries after `makeGroupMembers()` — changes
-      no-rules harem results (a D7-class zero-change violation if done casually)
-      and alters `sample()` streams, so it needs its own Pre-RED design gate
-      deciding kinship-side scope, RNG posture, and whether `currentGroups` seeds
-      in position >1 share the fix. Full mechanics: Learning 778; the S764 harem
-      scope gate recorded the "inherit + document" decision.
+- [ ] **A male seed animal in only some harems stops the run with "subscript out of
+      bounds" (found S983, 2026-10-14; DECISION NEEDED -- give the other groups
+      sampled sires, or stop with a message that says what is wrong, Effort S)** --
+      `initializeHaremGroups()` samples sires only when no supplied group holds a male
+      (`R/initializeHaremGroups.R:47`); with a male seed in group 1 and seed animals
+      with no male in group 3, its `else` branch reads `groupMembers[[3]]` of a
+      one-element list (`:63`) and `makeGroupMembers()` stops with "subscript out of
+      bounds" (probed S983 on the example pedigree, 3 harems, `currentGroups =
+      list(c(male, f1, f2), character(0), c(f3, f4))`, before and after the S983 fix
+      alike). The Breeding Groups tab builds `currentGroups` from its Seed animals
+      boxes, one per group (the block commented "Seed groups ... parity" in
+      `R/modBreedingGroups.R`), so a user
+      who seeds a male in one box and females in another with Harem selected should
+      hit it; not run in the app. The owner's call: sample a sire for each group that
+      has none (a change in what a partial seeding means), or stop with a message
+      naming the cause.
+
+- [ ] **Harem with a custom sex ratio places one animal in total (found S983,
+      2026-10-14; script-only; DECISION NEEDED -- make the combination work, or stop
+      with a message, Effort S to M)** -- `groupAddAssign(harem = TRUE, sexRatio = 5)`,
+      3 groups, the 332 living animals of the example: sizes 1, 1, 2 in 5 of 5 seeds,
+      that is one animal beyond the three sires. Cause (read in the code, and it fits
+      the five probes): `fillGroupMembers()` takes every potential sire out of the
+      pool, so `fillGroupMembersWithSexRatio()` has no available males, and its
+      `removeGroupIfNoAvailableAnimals(grpNum, availableMales)`
+      (`R/fillGroupMembersWithSexRatio.R:123`) drops every group after the first
+      placement. The app's radio cannot pick Harem and Custom together, so only script
+      callers reach it; the help of `harem` and `sexRatio` says nothing about the
+      combination. The S983 sire rule does not touch this path.
 
 - [ ] **(Optional, owner decision) Retrospective colony-snapshot backfill for
       longitudinal genetic-health monitoring** (deferred S760, 2026-09-22, from the
