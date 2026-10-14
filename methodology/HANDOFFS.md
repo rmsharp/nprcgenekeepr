@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S984
+date: 2026-10-14
+status: pending
+active_task: IN PROGRESS -- a male seed animal in only some harems stops the run with "subscript out of bounds" (BACKLOG.md:156; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S983
 date: 2026-10-14
 status: complete

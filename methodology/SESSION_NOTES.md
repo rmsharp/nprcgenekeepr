@@ -98,26 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 983 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4; rulings: kinship and ancestry together, the sire alone when nobody is left; strict TDD, every gate asked, REFACTOR taken):** a harem's sire keeps his
-relatives out of his harem (`BACKLOG.md:156`, removed): `fillGroupMembers()` drops from each group's pool the relatives of the animals already in it, then drops an empty-pool group (`R/fillGroupMembers.R:60-67`); the help,
-NEWS, manual and guide say so.
-**Measured (app defaults, shipped example, 332 living):** 29 of 40 seeded runs had a sire's mother (27), daughter (13) or full sister (1) in his harem (41 in 120 harems; real app at seed 6: `YHHVC7` with `H9HL2V`, `KEA4QG`);
-after, 0, mean group size 70.7 either way; 38 of 40 same-seed results differ, unavoidably (0 of 40 seeds conflict-free in all 10 simulations). Learning 949.
-**Gates:** claim `efdf0698d`; RED `dad6b6b5c` (111 failed expectations, 0 errors, 0 skipped, 5 guard blocks green); repair `c28a406da` (an old recycled-index check, owner-approved step back to RED); GREEN `ad445e20c`,
-`2aaf06c9c` (docs); REFACTOR `86c28865c`.
-**Verified:** suite 3,671 blocks, 12,094 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0; lint_package 0; ratchet 1/1 (`2a31eba82fbf`); real app (GREEN code) 0 sire-relatives in six harems; mutation 4 of 6, then 6
-of 6.
-**Handoff evaluation of S982: 8/10.** Helped: the four-option Next, the item's mechanics, the gotchas. Missing: the hole's size at the app's 0.25 default, two sibling defects. Wrong: it implied same-seed results could be
-kept.
-**Self-assessment: 8/10.** + measured before asking, in the real app; one question per decision; mutation found two gaps; two defects filed, not fixed. - the old index check surfaced only in the GREEN suite (I grepped pinned
-numbers, not index expressions); my first reader check accepted a legitimate sentence.
-**Next:** owner picks: the two new BACKLOG defects (a male seed in only some harems, reachable from the app; harem with a custom sex ratio, script-only), the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22,
-6e 46), the contributor tutorial. 150 commits ahead of `origin/master` with this close-out.
-**Gotchas:** read `kin` with `[` (`kin[[absent]]` errors); a real-app DT table is server-side (ask for all rows); the real-app run was at the GREEN code; the studbook stays untracked (never `git add -A`); never `git stash`
-here.
+### What Session 984 Does
+**Deliverable:** a male seed animal in only some harems no longer stops the run with "subscript out of bounds" (`BACKLOG.md:156`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED -- give the other groups sampled sires, or stop with a message naming the cause; Effort S; strict TDD wherever code or a test changes) (IN PROGRESS)
+**Started:** 2026-10-14
+**Status:** Session claimed. PRE-RED. Work beginning: measure first (a function probe, then the real app's Seed animals boxes), then ask the owner the approach.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-982 (condensed S950 to S983; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-983 (condensed S950 to S984; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -187,6 +174,7 @@ S981: the jmac example is the 2018 studbook, de-identified (2,590 animals; recip
 self 8/10). **Gotchas kept (S981):** the studbook stays untracked (local exclude plus a `.Rbuildignore` line; never `git add -A`); `install.packages(".")` ignores `.Rbuildignore`; the Errors table counts births, not animals.
 S982: the Input tab warns about a death or departure before the birth date (`R/getExitBeforeBirthWarning.R:21-44`, called from `R/runQcStudbook.R:241-249`; strict TDD; evaluation of S981 8/10, self 7/10). **Gotchas kept
 (S982):** `ped$exit` partial-matches `exitDate` (read with `[[ ]]`); `qcStudbook()` keeps a file's own `age` column; read the lint count before `git commit`; assert every anchor before writing any file.
+S983: a harem's sire keeps his relatives out of his harem, kinship and ancestry alike, and a harem whose sire excludes everyone left is the sire alone (`R/fillGroupMembers.R:60-67`; 29 of 40 seeded runs had a sire's mother, daughter or full sister in his harem before, 0 after; strict TDD, REFACTOR taken; evaluation of S982 8/10, self 8/10). **Gotchas kept (S983):** read `kin` with `[` (`kin[[absent]]` errors); a real-app DT table is server-side (ask for all rows); the studbook stays untracked (never `git add -A`); never `git stash` here.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
