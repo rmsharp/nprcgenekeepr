@@ -240,7 +240,7 @@ test_that("runQcStudbook reports a lowercase geographicorigin header as a rename
   res <- runQcStudbook(pedLowercaseGeographicOrigin(), reportChanges = TRUE)
   expect_true(res$qcResult$hasChangedCols)
   expect_identical(res$qcResult$changedCols$geographicoriginToGeographicOrigin,
-                   "geographicorigin to geographicOrigin")
+                   lowercaseGeographicOriginRename)
   expect_false(res$qcResult$hasErrors)
   expect_true("geographicOrigin" %in% names(res$cleaned))
 })

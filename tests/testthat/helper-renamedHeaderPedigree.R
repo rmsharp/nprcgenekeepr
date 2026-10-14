@@ -8,6 +8,10 @@
 ## renames that header to geographicOrigin, and that rename is the only change
 ## it makes to this file's headers.
 
+## The text qcStudbook() records for that rename in
+## changedCols$geographicoriginToGeographicOrigin.
+lowercaseGeographicOriginRename <- "geographicorigin to geographicOrigin"
+
 pedLowercaseGeographicOrigin <- function() {
   ped <- datePed(recordStatus = NULL)
   ped$geographicorigin <- rep(c("India", "China"), 3L)

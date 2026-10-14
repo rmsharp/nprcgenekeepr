@@ -63,6 +63,6 @@ test_that("qcStudbook keeps a lowercase geographicorigin rename in its error lis
                          reportErrors = TRUE, reportChanges = TRUE)
   expect_false(is.null(errorLst))
   expect_identical(errorLst$changedCols$geographicoriginToGeographicOrigin,
-                   "geographicorigin to geographicOrigin")
+                   lowercaseGeographicOriginRename)
   expect_true(checkChangedColsLst(errorLst$changedCols))
 })
