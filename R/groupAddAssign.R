@@ -251,7 +251,8 @@ groupAddAssign <- function(candidates,
   }
 
   if (harem &&
-      length(getPotentialSires(candidates, ped, minAge)) < numGp) {
+      length(getPotentialSires(candidates, ped, minAge)) <
+        sum(groupsWithoutSire(numGp, currentGroups, ped, minAge))) {
     stop(
       "User selected to form ",
       numGp,

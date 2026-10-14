@@ -34,35 +34,35 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
       }
     }
   }
-  if (length(getPotentialSires(candidates, ped, minAge)) < numGp &&
-    length(getPotentialSires(unlist(currentGroups), ped, minAge)) == 0L) {
+  needsSire <- groupsWithoutSire(numGp, currentGroups, ped, minAge)
+  availableSires <- setdiff(
+    getPotentialSires(candidates, ped, minAge), unlist(currentGroups)
+  )
+  if (length(availableSires) < sum(needsSire)) {
     stop(
       "User selected to form harems in ", numGp, " groups with ",
-      "only ", length(getPotentialSires(candidates, ped, minAge)),
+      "only ", length(availableSires),
       " males at least ",
       minAge, " years old in the list of candidates."
     )
   }
 
-  if (length(getPotentialSires(unlist(currentGroups), ped, minAge)) == 0L) {
-    ped <- ped[!is.na(ped$birth), ]
-    sires <- sample(getPotentialSires(candidates, ped, minAge), numGp,
-      replace = FALSE
-    )
-    for (i in 1L:numGp) {
-      groupMembers[[i]] <- sires[i]
-    }
+  sires <- character(0L)
+  if (any(needsSire)) {
+    sires <- sample(availableSires, sum(needsSire), replace = FALSE)
   }
-  if (length(currentGroups) > 0L) {
-    for (i in seq_along(currentGroups)) {
-      currentGroup <- currentGroups[[i]]
-      if (length(currentGroup) > 0L) {
-        if (length(getPotentialSires(currentGroup, ped, minAge)) > 0L) {
-          groupMembers[[i]] <- currentGroup
-        } else {
-          groupMembers[[i]] <- c(groupMembers[[i]], currentGroup)
-        }
-      }
+  nextSire <- 0L
+  for (i in seq_len(numGp)) {
+    seeds <- if (i <= length(currentGroups)) {
+      currentGroups[[i]]
+    } else {
+      character(0L)
+    }
+    if (needsSire[i]) {
+      nextSire <- nextSire + 1L
+      groupMembers[[i]] <- c(sires[nextSire], seeds)
+    } else {
+      groupMembers[[i]] <- seeds
     }
   }
   groupMembers
