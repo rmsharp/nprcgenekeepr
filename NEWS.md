@@ -422,6 +422,13 @@ export workflows, and longitudinal monitoring of colony genetic health.
   only a warning: the pedigree can still be used.
   `runQcStudbook(reportChanges = TRUE)` returns the same warning.
 
+- New: the Input tab now warns when an animal's death or departure date
+  is earlier than its birth date. The Warnings tab says how many animals
+  and names the first five; their age comes out zero or negative, so the
+  dates need a look in the file. A death or departure on the birth day
+  is not flagged, and the pedigree can still be used.
+  `runQcStudbook(reportChanges = TRUE)` returns the same warning.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
   found. They are now colored: Errors is red when there is at least one

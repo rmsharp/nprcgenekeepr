@@ -248,8 +248,12 @@ changed", names the two columns (`recordStatus` and `fromCenter`) whose names
 were changed to lowercase. The second, "Animals with no birth date", says that
 1,432 of the 3,694 animals (all of them founders) have no birth date, so their
 age is unknown and the age-based checks and counts -- the parent-age check, the
-Age-Sex Pyramid and the breeding-age counts -- cannot use them. A warning never
-stops the pedigree from being used.
+Age-Sex Pyramid and the breeding-age counts -- cannot use them. Another warning,
+"Animals with a death or departure before birth", appears only when a file has
+animals whose death or departure date is earlier than their birth date: it says
+how many, names the first five, and notes that their age comes out zero or
+negative. The shipped example has none, and a death or departure on the birth
+day is not flagged. A warning never stops the pedigree from being used.
 
 ![QC Summary after reading and checking the example pedigree.](shiny_app_use/read_and_check_pedigree.png){fig-alt="QC Summary sub-tab showing Records Processed 3694 in a dark blue box, Errors 0 in a green box and Warnings 2 in an orange box, above a green message that the data passed quality control."}
 
