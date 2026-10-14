@@ -44,7 +44,11 @@
 #' @param numGp Integer value indicating the number of groups that should be
 #' formed from the list of IDs. Default is 1.
 #' @param harem Logical variable when set to \code{TRUE}, the formed groups
-#' have a single male at least \code{minAge} old.
+#' have a single male at least \code{minAge} old. A harem's sire is held to
+#' the same rules as every other animal: animals related to him at or above
+#' \code{threshold} (and, with \code{ancestryRules}, animals a block rule bars
+#' from him) are not placed in his group, and when that leaves no one the group
+#' is the sire alone.
 #' @param sexRatio Numeric value indicating the number of non-males (females
 #' and animals of other or unknown sex) per male. Values from 0.5 to 20 in
 #' steps of 0.5 are typical, but the range is not enforced.
@@ -81,10 +85,7 @@
 #' exhaustive, and \code{sexRatio} modes, and sex-blind (deliberately
 #' bypassing the female-female kinship exemption in \code{ignore}).
 #' \code{flag}-severity rules never affect the search; compute them
-#' afterward with \code{\link{reportAncestryViolations}}. Known limitation
-#' (shared with the kinship machinery): a harem's sampled sire is seeded
-#' into the group before the fill loop, so conflicts against the sire
-#' himself are not enforced -- only pairs among loop-placed members are.
+#' afterward with \code{\link{reportAncestryViolations}}.
 #' @param updateProgress Function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.

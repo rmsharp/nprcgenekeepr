@@ -57,6 +57,15 @@ fillGroupMembers <- function(candidates,
   }
   available <- makeAvailable(candidates, numGp)
 
+  # Whoever is already in a group (a harem's sampled sire, a supplied seed
+  # animal) keeps his relatives out of that group's pool, as an animal the
+  # loop places does below; a group left with no pool is finished.
+  for (i in seq_len(numGp)) {
+    inGroup <- intersect(groupMembers[[i]], names(kin))
+    available[[i]] <- setdiff(available[[i]], unlist(kin[inGroup]))
+  }
+  grpNum <- removeGroupIfNoAvailableAnimals(grpNum, available)
+
   repeat {
     if (isEmpty(grpNum)) {
       break
