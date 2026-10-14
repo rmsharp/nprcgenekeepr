@@ -451,6 +451,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
   every invalid date by row, in every date column, so the rows can be
   found and corrected in the file.
 
+- Fixed: when a pedigree file's geographic origin column was headed in
+  all lowercase (`geographicorigin`), the column was renamed to
+  `geographicOrigin` with no notice at all, so `runQcStudbook()`
+  reported no changed columns. It is now counted as a column change like
+  every other rename, so `runQcStudbook()` reports it and
+  `qcStudbook(reportErrors = TRUE)` keeps the record. The Changed
+  Columns tab does not list this rename.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
   found. They are now colored: Errors is red when there is at least one
