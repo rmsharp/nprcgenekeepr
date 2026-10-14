@@ -111,8 +111,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       today's code, except where a present-day check is named; the ids are in each slice's
       report): 6a-6b, the ten oldest flags, re-checked S986
       (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9 findings, 1 moderate, an invalid date in a
-      file with two date columns, fixed S987, and PB7, `checkChangedColsLst()` counting every rename, fixed S988; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
-      now two READY items below this one; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
+      file with two date columns, fixed S987, PB7, `checkChangedColsLst()` counting every rename, fixed S988, and PB4, `checkRequiredCols()` ignoring an `NA` name, fixed S989; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
+      now one READY item below this one (the two help sentences); MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
       6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
       owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
@@ -153,13 +153,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `test_appServer_dynamicTabs.R:189-209` ("both functions should agree", a 12-field list) needs a 13-field list
       and the `NEWS.Rmd` sentence changes.
 
-- [ ] **`checkRequiredCols()` tolerates an `NA` column name at any length (READY, Effort S; strict TDD)**
-      (docs-audit part 2, S986 finding 3, flag PB4; the owner ruled S986: make the code match) -- the help
-      (`R/checkRequiredCols.R:6-10`) and `test_checkRequiredCols.R:15-29` say an `NA` name is an ordinary
-      non-match, but the first test (`:40-41`) has no `ignore_na = TRUE`, so a `cols` of 5 or more elements with an `NA`
-      and a required name missing stops "missing value where TRUE/FALSE needed" (4 elements work only because
-      `length(cols) < 5` is read first). Wanted: `ignore_na = TRUE` there and a test with 5 or more elements.
-      Script-only: a CSV blank header becomes `X`.
+- [ ] **A nameless (`NA`) column header stops `qcStudbook()` before any column check (DECISION NEEDED -- leave it,
+      fix each site, or check once at the front, Effort S-M; strict TDD)** (found S989, while `checkRequiredCols()` was
+      made to ignore an `NA` name, docs-audit part 2 flag PB4) -- script-only: a CSV blank header is read as `X`, so only
+      `names(ped)[k] <- NA` reaches it. Measured S989 on `examplePedigree`: `qcStudbook()` with `reportErrors` TRUE and
+      FALSE stops "missing value where TRUE/FALSE needed" in `fixColumnNames()` (`R/fixColumnNames.R:43` and `:46`,
+      `if (any(tolower(newCols) == "firstname"))`), before `checkRequiredCols()` is reached. With `na.rm = TRUE` at both
+      (previewed in memory, nothing committed) a nameless `birth` header gives `missingColumns` "birth" (and "Required
+      field(s) missing: birth." with `reportErrors = FALSE`), but a nameless `origin` header still stops "undefined
+      columns selected" at `R/addParents.R:47` (`ped[, names(ped) != "recordStatus"]`), and more sites may follow (not
+      searched). The owner ruled S989, at the PRE-RED scope question, to fix `checkRequiredCols()` only (shipped S989).
+      **Decision:** (a) leave it (script-only); (b) fix each site, each with a test; (c) check once at the front of
+      `qcStudbook()` and stop with one message naming the column's position (the wording is the owner's).
 
 - [ ] **Two help sentences (READY, Effort S; help text only, strict TDD with a wording gate as
       `test_groupAddAssignHelp.R` has)** (docs-audit part 2, S986 findings 1 and 8, flags MB3 and PD12; the owner

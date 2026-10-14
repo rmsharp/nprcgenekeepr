@@ -98,15 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 989 Does
-**Deliverable:** `checkRequiredCols()` tolerates an `NA` column name at any length (`BACKLOG.md:156`, flag PB4; the owner ruled "make the code match" S986;
-owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD; PRE-RED) (IN PROGRESS)
-**Started:** 2026-10-14 15:22 CDT
-**Status:** Session claimed. Work beginning; the function and its test were read at Phase 1, nothing probed yet.
-**Phase 0:** HEAD `84c56fa13` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green (all before the 182 local commits), dashboard 96/100 High+ 0,
-ratchet 1/1 pass (the newest receipt's citation matches the results file), context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical) and the growth run,
-no untracked files, 182 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 989 Did
+**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** `checkRequiredCols()` ignores an `NA` column name at any length (`BACKLOG.md` item
+removed; flag PB4). `R/checkRequiredCols.R:41-42`: one `found <- str_detect_fixed_all(..., ignore_na = TRUE)` for the condition and the stop message; NEWS `NEWS.Rmd:437`.
+**Measured:** before, 5 of 5 direct calls (an `NA`, 5+ names, a required name missing) stopped "missing value where TRUE/FALSE needed", both `reportErrors`; after, they return or name the missing
+columns. `qcStudbook()` with an `NA` header never reaches it: `fixColumnNames()` stops first (`R/fixColumnNames.R:43`, `:46`). Real Input module on `ExamplePedigree.csv`: as shipped 0 errors, 3,694
+records, ready (a path the fix cannot change).
+**Scope (owner, PRE-RED, the recommended option):** `checkRequiredCols()` only; the nameless-header stop is a new decision item (`BACKLOG.md:156`).
+**Gates:** claim `eec26f1d6`; RED `861f931b6` (22 of 39 failed); GREEN `b897b71a6`; REFACTOR `d8b79d6fc`; NEWS `9f49dc063`.
+**Verified:** suite 3,721 blocks, 12,531 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; ratchet 1/1 (`dfecbde31261`); mutation 4 of 4 (GREEN), 6 of 6 (REFACTOR).
+**Handoff evaluation of S988: 8/10.** Helped: the item's cites and "4 elements work only because `length(cols) < 5`" reproduced exactly; `uploadForQc()` reused. Missing: `qcStudbook()` never reaches
+the function with an `NA` header, so "script-only" understated it. Wrong: nothing found.
+**Self-assessment: 8/10.** + measured the caller and previewed both fixes in memory before the scope question; a RED block that ended at its first error was restructured; 10 mutants. - two reruns (an
+attached old copy in a probe; quoted CSV header fields); two long silent waits.
+**Next:** owner picks: the two help sentences (`BACKLOG.md:169`), the Changed Columns tab decision (`:141`), the nameless-header decision (`:156`), kinship2 drawing features (`:406`), a docs-audit
+cluster (6d 21, 6e 46), the contributor tutorial (`:180`). 188 commits ahead of `origin/master`.
+**Gotchas:** an error inside a `test_that()` block ends it at the first error, so each RED case goes through `answer()` (`test_checkRequiredCols.R:38`); a namespace patch leaves the attached copy old
+(`get("fn", ns)`); the example CSV's header fields are quoted; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-988 (condensed S950 to S989; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
