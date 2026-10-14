@@ -98,23 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 982 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4, the owner's own request after S980; Pre-RED answers: a warning not an error, strictly earlier only, read the cleaned `exit`; strict TDD, every gate asked,
-REFACTOR taken):** the Input tab warns about a death or departure before the birth date (`BACKLOG.md:156`, removed). New internal `getExitBeforeBirthWarning()` (`R/getExitBeforeBirthWarning.R`) gives the row "Animals with a death or
-departure before birth" (count, first 5 ids); `runQcStudbook()` adds it after the no-birth-date row when `reportChanges` is TRUE (`R/runQcStudbook.R:241-249`); `qcStudbook()` is unchanged. Help, manual (`_input.Rmd:66-71`), guide
-(`colony-manager-guide.qmd:251-256`) and `NEWS.Rmd:401-406` say so, in the owner's four approved sentences.
-**Found:** no Input file ships an early date, but the data objects `qcPed` and `pedWithGenotype` each hold one (`Y7PPEZ`); same-day exits are common (226 of 1,930; 370 of 1,839); `ExamplePedigree.csv`'s own `age` column is kept as given. Learning 948.
-**Gates:** claim `c91695032`; RED `885e08bf1` (28 new blocks, 21 failing for the stated reasons, 0 skipped, 7 guards green); GREEN `9e6dc67c7` (code, amended once for a lint finding), `af8db6852` (docs); REFACTOR `827337f7f`.
-**Verified:** suite 3,653 blocks, 11,917 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0 (`--no-manual`); lint_package 0; ratchet 1/1 (`7cf2c07e5890`); real app at GREEN and at REFACTOR: Warnings sub-tab opens with the row,
-QC Summary 8 / 0 / 1; mutation: 10 of 12 caught, then 13 of 13.
-**Handoff evaluation of S981: 8/10.** Helped: the item's cites held (`qcStudbook.R:356,329`, `runQcStudbook.R:243`), the model function, the three decisions framed. Missing: `qcStudbook()` keeps a file's own `age` column; `departure_date` is
-not renamed. Wrong: "no shipped example has an early date" left out the two data objects.
-**Self-assessment: 7/10.** + measured before asking, every question answered first try, mutation survivors fixed, real app run twice. - committed GREEN after a lint finding (a piped `tail` hid it; message said "lintr 0", amended); the
-first probe read the file's own age column; the claim script wrote two of three files before an anchor failed; stale mutant strings after REFACTOR.
-**Next:** owner picks: the harem-sire hole (design gate first), the kinship2 drawing features (which column means deceased), a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial. 143 commits are ahead of `origin/master`.
-**Gotchas:** `ped$exit` partial-matches `exitDate` (use `[[`); read the lint count before `git commit`; assert every anchor before writing any file; the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 983 Did
+**Deliverable:** close the harem-sire conflict enforcement hole, kinship and ancestry (`BACKLOG.md:156`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED -- a behavior change that needs its own design gate, Effort M; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-13 23:59 CDT
+**Status:** Session claimed. Work beginning. PRE-RED: read the code and measure first (what a harem sire's conflicts do today, how many results a fix would move),
+then ask in plain words: kinship-side scope, random-number behavior, whether other pre-seeded group members share the fix.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-981 (condensed S950 to S982; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-982 (condensed S950 to S983; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -185,6 +176,10 @@ S980: the jmac example's two impossible sire cells (the file's only sire data) a
 S981: the jmac example is the 2018 studbook, de-identified (`inst/extdata/examples/deidentified_jmac_ped.csv`, 2,590 animals, 819 sires; recipe `data-raw/buildJmacExample.R`, seed 20180711); it loads once Minimum Dam Age is 3.3 and
 Minimum Sire Age is 4.3 (strict TDD, REFACTOR taken; evaluation of S980 8/10, self 8/10). **Gotchas kept (S981):** the studbook stays untracked in `inst/extdata/examples/` (local exclude plus a `.Rbuildignore` line; never
 `git add -A`); `install.packages(".")` ignores `.Rbuildignore`; `data-raw/buildJmacExample.R` takes the studbook path and needs `pkgload`; the Errors table counts births, not animals.
+S982: the Input tab warns about a death or departure before the birth date (internal `getExitBeforeBirthWarning()`, `R/getExitBeforeBirthWarning.R:21-44`, added by `runQcStudbook()` when
+`reportChanges` is TRUE, `R/runQcStudbook.R:241-249`; a warning, strictly earlier only, read the cleaned `exit`; strict TDD, REFACTOR taken; evaluation of S981 8/10, self 7/10). **Gotchas kept (S982):**
+`ped$exit` partial-matches `exitDate`, so read columns with `[[ ]]`; `qcStudbook()` keeps a file's own `age` column and does not rename `departure_date`; read the lint count before `git commit`; assert every anchor before
+writing any file.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
