@@ -99,7 +99,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 984 Does
-**Deliverable:** a male seed animal in only some harems no longer stops the run with "subscript out of bounds" (`BACKLOG.md:156`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED -- give the other groups sampled sires, or stop with a message naming the cause; Effort S; strict TDD wherever code or a test changes) (IN PROGRESS)
+**Deliverable:** a male seed animal in only some harems no longer stops the run with "subscript out of bounds" (`BACKLOG.md:156`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED --
+give the other groups sampled sires, or stop with a message naming the cause; Effort S; strict TDD wherever code or a test changes) (IN PROGRESS)
 **Started:** 2026-10-14
 **Status:** Session claimed. PRE-RED. Work beginning: measure first (a function probe, then the real app's Seed animals boxes), then ask the owner the approach.
 **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
@@ -174,7 +175,9 @@ S981: the jmac example is the 2018 studbook, de-identified (2,590 animals; recip
 self 8/10). **Gotchas kept (S981):** the studbook stays untracked (local exclude plus a `.Rbuildignore` line; never `git add -A`); `install.packages(".")` ignores `.Rbuildignore`; the Errors table counts births, not animals.
 S982: the Input tab warns about a death or departure before the birth date (`R/getExitBeforeBirthWarning.R:21-44`, called from `R/runQcStudbook.R:241-249`; strict TDD; evaluation of S981 8/10, self 7/10). **Gotchas kept
 (S982):** `ped$exit` partial-matches `exitDate` (read with `[[ ]]`); `qcStudbook()` keeps a file's own `age` column; read the lint count before `git commit`; assert every anchor before writing any file.
-S983: a harem's sire keeps his relatives out of his harem, kinship and ancestry alike, and a harem whose sire excludes everyone left is the sire alone (`R/fillGroupMembers.R:60-67`; 29 of 40 seeded runs had a sire's mother, daughter or full sister in his harem before, 0 after; strict TDD, REFACTOR taken; evaluation of S982 8/10, self 8/10). **Gotchas kept (S983):** read `kin` with `[` (`kin[[absent]]` errors); a real-app DT table is server-side (ask for all rows); the studbook stays untracked (never `git add -A`); never `git stash` here.
+S983: a harem's sire keeps his relatives out of his harem, kinship and ancestry alike, and a harem whose sire excludes everyone left is the sire alone (`R/fillGroupMembers.R:60-67`; 29 of 40 seeded
+runs had a sire's mother, daughter or full sister in his harem before, 0 after; strict TDD, REFACTOR taken; evaluation of S982 8/10, self 8/10). **Gotchas kept (S983):** read `kin` with `[`
+(`kin[[absent]]` errors); a real-app DT table is server-side (ask for all rows); the studbook stays untracked (never `git add -A`); never `git stash` here.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
