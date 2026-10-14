@@ -98,21 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 980 Did
-**Deliverable, DONE (owner pick, option 1 of 4; Pre-RED: "Fix 2 sires, one sentence", a NEWS line, guide and manual; strict TDD, every gate asked, REFACTOR taken):** the jmac example file (`BACKLOG.md:156`, removed).
-The sire and sire-type cells of `8PPD8` and `82I5M` (`deidentified_jmac_ped.csv:2485,2612`, the file's only sire entries, both impossible) are empty. The check reports 65 errors (mothers aged 3.43-3.99, under the 4-year floor);
-Minimum Dam Age 3.4 loads all 2,791 animals; 3.5 still flags 2. One sentence each in the guide (`colony-manager-guide.qmd:222`), manual (`_input.Rmd:48-56`) and `NEWS.Rmd:451`. The built-in floor stays 4.
-**Found:** the example records no sire for any animal now; 251 jmac animals died before their birth date and no check flags it (BACKLOG item filed after close-out). Learning 946.
-**Gates:** claim `b5e0e0824`; RED `05f88bfb1` (9 blocks failing, 2 guards green); GREEN `e70deb889` (data), `e4774f8ad` (docs); REFACTOR `2f0833deb` (`jmacExamplePath()`, `bornAfterOffspring()`).
-**Verified:** suite 3,620 blocks, 11,805 expectations, 0 failed, 0 errors, 187 skipped (before and after); check 0/0/0; lint 0; ratchet 1/1 (`cd2bd9399018`); real app: default "of 65 entries", 3.4 loads; 3 mutants caught.
-**Handoff evaluation of S979: 8/10.** Helped: the pinned test line, the 67 count (held), the `git stash` warning. Missing: the 2 sire cells are the file's only sire data. Wrong: nothing.
-**Self-assessment: 7/10.** + re-measured stored numbers; the 2x2 made the question answerable. - counted the sire cells after the owner's pick; a RED guard assumed the manual's spelling; the real-app script took four tries.
-**Next:** the owner's pick is to rebuild the jmac example from the studbook (`BACKLOG.md`; the studbook is untracked real data in `inst/extdata/examples/`: keep it out of git and the package first). Then owner picks: the harem-sire hole,
-the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor tutorial, the death-before-birth check. 130 commits are ahead of `origin/master`, none seen by CI.
-**Gotchas:** count a field's rows before offering to blank it; `#dataInput-qcSummaryUI` is empty until its sub-tab is active (open Input, read Errors and Warnings); `textContent`, not `innerText`;
-a wording guard matches the page's own spelling; `dev/extdata-scratch/deidentified_jmac_ped_edited.csv` (build-ignored) still holds the two sire cells; never `git stash` here.
+### What Session 981 Did
+**Deliverable:** rebuild the Japanese macaque example from its studbook (`BACKLOG.md:179`; DECISION NEEDED -- the method, Effort M; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-13 21:53 CDT
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4 (the owner's own S980 request, "reconstruct in the next session"). Pre-RED: first the owner's say-so
+to keep the untracked studbook (real data, a shipped folder) out of git and the package; then the method, the six columns the studbook cannot fill, the Sex mapping and the scope, asked in plain words.
+**Found at the claim (owner pointed to a second studbook in git):** `inst/extdata/Jmac_studbook_20180711.csv` and `.txt` were committed 2018-08-03 (`b5619b38e`), deleted 2019-06-19 (`b03761f19`), and are reachable from `origin/master`; the untracked file is byte-identical to that `.txt` (sha1 `62f9e6b71325`); the `.csv` differs only by the text `NA` in the sire column of 1,771 rows, so it holds no extra sire data.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-979 (condensed S950 to S980; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-980 (condensed S950 to S981; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -176,6 +170,10 @@ the locus file upload is shared by the Linkage and Genomic ROH tabs.
 S979: a blank chromosome is missing in `checkLocusMetadata()` (`R/checkLocusMetadata.R:76-79`); `checkGenotypeFile()` stops once, on one line, naming every column with a collision (`R/checkGenotypeFile.R:55-73`);
 strict TDD, REFACTOR taken; evaluation of S978 8/10, self 8/10. **Gotchas kept (S979):** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" fix;
 read the ratchet results from `methodology/.quality-gates-results.json`; set `markerGenetics-rohMinSnp` to 3 on the shipped sequence example.
+S980: the jmac example's two impossible sire cells (the file's only sire data) are blank, so Minimum Dam Age 3.4 loads all 2,791 animals and the default floor reports 65 errors
+(`inst/extdata/examples/deidentified_jmac_ped.csv:2485,2612`; the guide, manual and NEWS say so; strict TDD, REFACTOR taken; evaluation of S979 8/10, self 7/10). **Gotchas kept (S980):** count a field's rows before offering to blank it;
+`#dataInput-qcSummaryUI` is empty until its sub-tab is active (open Input, read Errors and Warnings); read `textContent`, not `innerText`; a wording guard matches the page's own spelling;
+`dev/extdata-scratch/deidentified_jmac_ped_edited.csv` (build-ignored) still holds the two sire cells; never `git stash` here.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
