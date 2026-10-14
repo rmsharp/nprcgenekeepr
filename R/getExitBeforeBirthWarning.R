@@ -19,15 +19,14 @@
 #' order of \code{ped}.
 #' @noRd
 getExitBeforeBirthWarning <- function(ped) {
-  if (!all(c("birth", "exit") %in% names(ped))) {
-    return(getEmptyWarningsTable())
-  }
-  early <- which(ped$exit < ped$birth)
+  # [[ matches a column name exactly and gives NULL for a missing column, so a
+  # pedigree with no birth or no exit column has nothing to flag
+  early <- which(ped[["exit"]] < ped[["birth"]])
   nEarly <- length(early)
   if (nEarly == 0L) {
     return(getEmptyWarningsTable())
   }
-  ids <- toString(ped$id[early[seq_len(min(nEarly, 5L))]])
+  ids <- toString(ped[["id"]][early[seq_len(min(nEarly, 5L))]])
   one <- nEarly == 1L
   data.frame(
     Row = NA_integer_,

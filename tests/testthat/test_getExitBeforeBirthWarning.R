@@ -139,6 +139,33 @@ test_that("getExitBeforeBirthWarning names all five when there are exactly five"
   )
 })
 
+test_that("getExitBeforeBirthWarning says 'first 5' from the sixth animal on", {
+  ped <- makeExitPed(
+    birth = rep("2010-01-01", 7L),
+    exit = c(rep("2009-01-01", 6L), "2011-01-01")
+  )
+  res <- getExitBeforeBirthWarning(ped)
+  expect_identical(
+    res$Details,
+    paste0("6 of 7 animals have an exit date earlier than their birth date ",
+           "(first 5: A1, A2, A3, A4, A5). Their age comes out zero or ",
+           "negative. Check those dates in your file.")
+  )
+})
+
+test_that("getExitBeforeBirthWarning reads the date columns by their exact names", {
+  ## ped$exit would also find a column called exitDate, and ped$birth one
+  ## called birthDate; the cleaned pedigree's two columns are exit and birth.
+  noExit <- data.frame(id = "A1", birth = as.Date("2001-01-02"),
+                       exitDate = as.Date("2001-01-01"),
+                       stringsAsFactors = FALSE)
+  noBirth <- data.frame(id = "A1", birthDate = as.Date("2001-01-02"),
+                        exit = as.Date("2001-01-01"),
+                        stringsAsFactors = FALSE)
+  expect_identical(nrow(getExitBeforeBirthWarning(noExit)), 0L)
+  expect_identical(nrow(getExitBeforeBirthWarning(noBirth)), 0L)
+})
+
 test_that("getExitBeforeBirthWarning writes the counts as plain numbers", {
   ped <- makeExitPed(
     birth = rep("2010-01-01", 1500L),
