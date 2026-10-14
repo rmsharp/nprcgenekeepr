@@ -157,52 +157,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       2026-10-13 after S980; DECISION NEEDED -- error or warning, Effort S to M; strict TDD)** --
       `qcStudbook()` and the Input tab say nothing about an animal whose `death` (or `exit`) is before
       its `birth`: it loads, and `calcAge()` gives it age 0 or a negative age (`R/qcStudbook.R:356`).
-      **Measured S980, raw files:** `deidentified_jmac_ped.csv` has 251 of its 2,021 animals with both
-      dates dead before they were born (all status Dead, 1 to 56 days early, median 15, none further;
-      6 more died on their birth day) and 2 of 352 departures before birth; in the cleaned table 102
-      animals have a negative age (minimum -0.2 years) and 306 have age 0. `ExamplePedigree.csv` has
-      1,930 animals with both dates and none early; the rhesus example files have no animal with both
-      dates. The jmac early deaths all fall within 56 days of the birth, which fits date shifting in the
-      de-identification more than data entry (an inference, not checked against the source).
+      **Measured:** the old `deidentified_jmac_ped.csv` (replaced S981; in git before `8bd9a7fc9`) had
+      251 of its 2,021 animals with both dates dead before they were born (all status Dead, 1 to 56
+      days early) and 102 negative ages in the cleaned table, none flagged. The 2018 studbook of the
+      same colony, which the rebuilt example comes from, has none (S981: 0 deaths before birth, 370 on
+      the birth day), which fits those early deaths coming from the old de-identification shifting each
+      date column on its own (an inference); `obfuscatePed()` now moves an animal's dates together
+      (issue #150) and the rebuilt example keeps 0. No shipped example
+      has an early death (S980: `ExamplePedigree.csv` and the rhesus files; S981: the rebuilt jmac), so
+      the check would find nothing in them today; it matters for a colony manager's own file.
       **Where the code is:** dates are converted in `R/getDateErrorsAndConvertDatesInPed.R`
       (`errorLst$invalidDateRows` holds unparseable dates, `R/getEmptyErrorLst.R`), `exit` is set by
       `setExit()` (`R/qcStudbook.R:329`), and the model for a data-quality warning that does not stop the
-      load is `getNoBirthDateWarning()` (`R/runQcStudbook.R:243`). No existing test counts the jmac
-      example's warnings (`test_modInput_blankCells.R:187-194` asserts 0 errors only).
-      **Decide:** (1) *error or warning* -- an error would stop the shipped jmac example loading again
-      (251 rows); a warning loads the file and shows the count and the first ids, which suits a colony
-      manager's own file with a data-entry slip; (2) *which date* -- `death` only, or `exit` (death or
-      departure, which also catches the 2 departures); (3) *the same day* -- 6 jmac animals died on
-      their birth day, plausible for a stillbirth, so flag only strictly earlier; (4) *the example* --
-      leave the jmac file as it is (it then shows the warning) or fix its dates.
-
-- [ ] **Rebuild the Japanese macaque example from its studbook (owner-requested 2026-10-13: "reconstruct
-      in the next session"; DECISION NEEDED -- the method, Effort M, its own session; strict TDD)** -- the
-      owner added the source studbook, `inst/extdata/examples/Jmac_studbook_20180711.txt` (untracked), to
-      rebuild `deidentified_jmac_ped.csv` with its sires. **First, before anything else: keep that file out
-      of git and out of the package.** It is real, identifiable colony data in a folder that ships
-      (neither `.gitignore` nor `.Rbuildignore` covers it; `devtools::check()` bundles it into its local
-      tarball); never `git add -A`. Move it outside the repo, or exclude it in `.git/info/exclude` and
-      `.Rbuildignore`, with the owner's say-so. **Measured S980 (aggregates only):** the studbook is 2,590
-      animals, 7 tab-separated columns (`Ego ID`, `Sire ID`, `Dam ID`, `Departure`, `Sex`, `Birth`, `Death`),
-      with a sire id for 819 (32%), a dam id for 2,276 (88%), a birth date for 2,530, a death date for 1,886
-      and a departure for 365; `Sex` is Male 1,250, Female 1,209, Unknown 111, Hermaphrodite 19, blank 1.
-      The example has 2,791 animals and 13 columns (adds `species`, `geographic.origin`, `status`,
-      `dam.type`, `sire.type`, `from.center`), a dam id for 2,448 (88%) and no sire id but 919 sire types: a
-      different, larger export, so the studbook alone cannot fill six of its columns.
-      **Decide at Pre-RED:** (1) *method* -- run the package's own de-identifier (De-Identified Export tab,
-      `R/modDeidentifiedExport.R`, `R/obfuscatePed.R`, `R/obfuscateDate.R`) on the studbook: fresh scrambled
-      ids and shifted dates, not the old ones (the old mapping is unknown); first check that it shifts a
-      row's `birth`, `death` and `departure` by the same amount (the example's 251 early deaths, item above,
-      suggest the old file's did not); (2) *columns* -- fill, derive or drop the six missing ones (`species`
-      is a constant, `status` follows from death and departure; origin, the types and `from.center` have no
-      source); (3) *Sex* -- how "Hermaphrodite" and "Unknown" map to M, F and U; (4) *scope* -- the new file
-      replaces `deidentified_jmac_ped.csv` (then `test_jmacExampleData.R`, the jmac blocks of
-      `test_modInput_blankCells.R`, `test_jmacExampleWording.R`, the guide and manual sentences and the NEWS
-      entry take its new numbers) or sits beside it. **Checks:** no studbook id and no studbook date appears
-      in the new file; the new file loads at the default floors, or its errors are counted and documented;
-      its death-before-birth count is 0. The fallback, deleting the example and its 12 test blocks, was
-      costed S980.
+      load is `getNoBirthDateWarning()` (`R/runQcStudbook.R:243`); the rebuilt jmac example loads with
+      that one warning (real app, S981), and its blocks in `test_modInput_blankCells.R` count errors and
+      rows, not warnings.
+      **Decide:** (1) *error or warning* -- an error stops a file with a data-entry slip until it is
+      fixed; a warning loads it and shows the count and the first ids; (2) *which date* -- `death`
+      only, or `exit` (death or departure, which also catches an early departure); (3) *the same day*
+      -- 370 jmac animals died on their birth day, plausible for a stillbirth, so flag only strictly
+      earlier.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own

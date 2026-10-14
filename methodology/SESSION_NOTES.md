@@ -99,12 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 981 Did
-**Deliverable:** rebuild the Japanese macaque example from its studbook (`BACKLOG.md:179`; DECISION NEEDED -- the method, Effort M; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-13 21:53 CDT
-**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, option 1 of 4 (the owner's own S980 request, "reconstruct in the next session"). Pre-RED: first the owner's say-so
-to keep the untracked studbook (real data, a shipped folder) out of git and the package; then the method, the six columns the studbook cannot fill, the Sex mapping and the scope, asked in plain words.
-**Found at the claim (owner pointed to a second studbook in git):** `inst/extdata/Jmac_studbook_20180711.csv` and `.txt` were committed 2018-08-03 (`b5619b38e`), deleted 2019-06-19 (`b03761f19`), and are reachable from `origin/master`; the untracked file is byte-identical to that `.txt` (sha1 `62f9e6b71325`); the `.csv` differs only by the text `NA` in the sire column of 1,771 rows, so it holds no extra sire data.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, option 1 of 4, the owner's own S980 request; Pre-RED answers: replace the old file, keep the studbook out of git and the package, keep species; strict TDD, every gate asked,
+REFACTOR taken):** rebuild the Japanese macaque example from its studbook (`BACKLOG.md:179`, removed).
+`inst/extdata/examples/deidentified_jmac_ped.csv` is now the 2018-07-11 studbook, de-identified: 2,590 animals, nine columns, 819 sires (all male), 0 deaths before birth; recipe `data-raw/buildJmacExample.R` (seed 20180711, sha1
+`e9476e2d3df1`).
+At the default floors 79 rows are flagged (62 mothers under 4 years; 13 fathers, 18 births, under 5); it loads once Minimum Dam Age is 3.3 and Minimum Sire Age is 4.3 (3.4 or 4.4 flags 1 row). The guide
+(`colony-manager-guide.qmd:222`), manual (`_input.Rmd:48`) and `NEWS.Rmd:451` say so, in the owner's three approved sentences.
+**Found:** the owner's pointer found the 2018 copies in git (`.txt` byte-identical to the untracked file, `.csv` the same with `NA` sires), in a PUBLIC repo since 2018-08-03 (`b5619b38e`); the old example was a later export (201
+more animals, born to 2021). Learning 947.
+**Gates:** claim `a3381ea63`; studbook exclusion `76abfc7f0`; RED `5887cd71d` (12 of 19 jmac blocks failing, 30 failed expectations, 0 errors, 0 skipped, 2 guards green); GREEN `8bd9a7fc9` (data), `e64540b86` (docs); REFACTOR
+`9de227efe` (`uploadJmac()`, `expectStoppedByParentAge()`).
+**Verified:** suite 3,623 blocks, 11,835 expectations, 0 failed, 0 errors, 187 skipped; check 0/0/0 (`--no-manual`); lint_package 0; ratchet 1/1 (`c4895ad8e72a`); real app: "of 79 entries", then 3.3 and 4.3 gave Records 4,055,
+Errors 0; a built tarball holds no studbook; 8 of 8 mutants caught.
+**Handoff evaluation of S980: 8/10.** Helped: the aggregates held to the digit (2,590, 819, 2,276), the Pre-RED list, the gotchas. Missing: the studbook is already public in 2018 history and the example is a later export. Wrong:
+nothing.
+**Self-assessment: 8/10.** + followed the owner's pointer at once and proved the copies by hash; measured before asking (three answers, all first try); RED failed for the stated reasons. - a sire-age probe indexed by position, a
+"shared id" false alarm (NA), three shell errors, a wrong `dev/` path in comments (fixed at REFACTOR).
+**Next:** owner picks: the death-before-birth check (BACKLOG, refreshed S981: no shipped example has one now), the harem-sire hole, the kinship2 drawing features, a docs-audit cluster (6a-6b 10, 6d 22, 6e 46), the contributor
+tutorial. 137 commits are ahead of `origin/master`, none seen by CI.
+**Gotchas:** the studbook stays untracked in `inst/extdata/examples/` (local exclude plus a `.Rbuildignore` line; never `git add -A`); `install.packages(".")` ignores `.Rbuildignore`; `data-raw/buildJmacExample.R` takes the
+studbook path and needs `pkgload`; the Errors table counts births, not animals; never `git stash` here.
 
 ### Sessions 947-980 (condensed S950 to S981; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
