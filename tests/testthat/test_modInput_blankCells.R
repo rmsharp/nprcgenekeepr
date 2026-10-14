@@ -166,39 +166,43 @@ test_that("the shipped ancestry example uploads with U1 as UNKNOWN", {
 })
 ## jmacExamplePath() is in helper-jmacExample.R.
 ##
-## RED (S981; BACKLOG.md:179, the owner's S980 request "reconstruct in the next
+## S981 (BACKLOG.md:179, the owner's S980 request "reconstruct in the next
 ## session"; Pre-RED rulings: replace the old file, keep the species column):
-## the shipped Japanese macaque example is now the 2018-07-11 studbook,
-## de-identified with obfuscatePed() (dev/buildJmacExample.R, seed 20180711):
-## 2,590 animals, 819 of them with a sire. The numbers below were measured on a
-## scratch build through this module; the studbook itself is neither in git nor
-## in the package. The species column (JAPANESE MACAQUE) brings the built-in
+## the shipped Japanese macaque example is the 2018-07-11 studbook,
+## de-identified with obfuscatePed() (data-raw/buildJmacExample.R, seed
+## 20180711): 2,590 animals, 819 of them with a sire. The numbers below were
+## measured through this module; the studbook itself is neither in git nor in
+## the package. The species column (JAPANESE MACAQUE) brings the built-in
 ## floors: 4 years for a mother and 5 for a father. 62 mothers and 18 fathers
 ## are under them, 79 rows in the Errors table, so the file loads only once both
 ## Minimum Dam Age and Minimum Sire Age are lowered (test_jmacExampleWording.R
 ## pins the guide, manual and NEWS sentences).
-test_that("the shipped jmac example no longer reports the id \"\" as both a sire and a dam", {
+
+## Uploads the shipped jmac example through the real Input module with the two
+## minimum-age boxes as given; skips where shiny or the example is absent.
+uploadJmac <- function(minDamAge = "", minSireAge = "") {
   skip_if_not_installed("shiny")
   path <- jmacExamplePath()
   skip_if(path == "")
-  res <- uploadPedigreeFile(path)
-  expect_false("Animal is both sire and dam" %in% res$errors$Error)
+  uploadPedigreeFile(path, minDamAge = minDamAge, minSireAge = minSireAge)
+}
+## The upload stopped on `rows` parent-age errors and loaded nothing.
+expectStoppedByParentAge <- function(res, rows) {
   expect_identical(unique(res$errors$Error), "Parent age too young")
-  expect_identical(nrow(res$errors), 79L)
+  expect_identical(nrow(res$errors), rows)
   expect_null(res$cleaned)
+}
+
+test_that("the shipped jmac example no longer reports the id \"\" as both a sire and a dam", {
+  res <- uploadJmac()
+  expect_false("Animal is both sire and dam" %in% res$errors$Error)
+  expectStoppedByParentAge(res, 79L)
 })
 ## Each box alone is not enough: Minimum Dam Age 3.3 leaves the 18 fathers
 ## under 5 years, Minimum Sire Age 4.3 leaves the 62 mothers under 4.
 test_that("the shipped jmac example needs both Minimum Dam Age and Minimum Sire Age lowered", {
-  skip_if_not_installed("shiny")
-  path <- jmacExamplePath()
-  skip_if(path == "")
-  damOnly <- uploadPedigreeFile(path, minDamAge = "3.3")
-  expect_identical(nrow(damOnly$errors), 18L)
-  expect_null(damOnly$cleaned)
-  sireOnly <- uploadPedigreeFile(path, minSireAge = "4.3")
-  expect_identical(nrow(sireOnly$errors), 62L)
-  expect_null(sireOnly$cleaned)
+  expectStoppedByParentAge(uploadJmac(minDamAge = "3.3"), 18L)
+  expectStoppedByParentAge(uploadJmac(minSireAge = "4.3"), 62L)
 })
 ## Minimum Dam Age 3.3 and Minimum Sire Age 4.3 are the largest round values
 ## under the youngest mother (3.38) and father (4.36), so the file loads whole:
@@ -207,10 +211,7 @@ test_that("the shipped jmac example needs both Minimum Dam Age and Minimum Sire 
 ## file's 2,590 and the 2 mothers it names but gives no row). The guide, the
 ## manual and NEWS name these settings (test_jmacExampleWording.R).
 test_that("the shipped jmac example loads once Minimum Dam Age is 3.3 and Minimum Sire Age is 4.3", {
-  skip_if_not_installed("shiny")
-  path <- jmacExamplePath()
-  skip_if(path == "")
-  res <- uploadPedigreeFile(path, minDamAge = "3.3", minSireAge = "4.3")
+  res <- uploadJmac(minDamAge = "3.3", minSireAge = "4.3")
   expect_identical(nrow(res$errors), 0L)
   expect_false(is.null(res$cleaned))
   expect_identical(nrow(res$cleaned), 4055L)
@@ -221,15 +222,6 @@ test_that("the shipped jmac example loads once Minimum Dam Age is 3.3 and Minimu
 ## load. This is what keeps "3.3 or lower" and "4.3 or lower" in the wording
 ## from being loose numbers.
 test_that("Minimum Dam Age 3.4 and Minimum Sire Age 4.4 each still flag one row", {
-  skip_if_not_installed("shiny")
-  path <- jmacExamplePath()
-  skip_if(path == "")
-  damTooHigh <- uploadPedigreeFile(path, minDamAge = "3.4", minSireAge = "4.3")
-  expect_identical(unique(damTooHigh$errors$Error), "Parent age too young")
-  expect_identical(nrow(damTooHigh$errors), 1L)
-  expect_null(damTooHigh$cleaned)
-  sireTooHigh <- uploadPedigreeFile(path, minDamAge = "3.3", minSireAge = "4.4")
-  expect_identical(unique(sireTooHigh$errors$Error), "Parent age too young")
-  expect_identical(nrow(sireTooHigh$errors), 1L)
-  expect_null(sireTooHigh$cleaned)
+  expectStoppedByParentAge(uploadJmac(minDamAge = "3.4", minSireAge = "4.3"), 1L)
+  expectStoppedByParentAge(uploadJmac(minDamAge = "3.3", minSireAge = "4.4"), 1L)
 })

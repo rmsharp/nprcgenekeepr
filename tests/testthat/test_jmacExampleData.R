@@ -9,7 +9,7 @@
 ## animals, born to 2021) that records no sire for any animal and has 251
 ## animals dying before they were born (its dates were shifted one column at a
 ## time). The rebuild is the studbook's 2,590 animals, de-identified with
-## obfuscatePed() (dev/buildJmacExample.R, seed 20180711): new ids, and each
+## obfuscatePed() (data-raw/buildJmacExample.R, seed 20180711): new ids, and each
 ## animal's birth, death and departure dates moved together by up to 30 days,
 ## so no animal's dates fall out of order. The studbook itself is neither in
 ## git nor in the package; the counts below are the studbook's own, measured
