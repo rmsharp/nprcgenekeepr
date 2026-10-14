@@ -229,6 +229,29 @@ test_that(paste(
   }
 })
 
+test_that("a seeded male under the minimum age is not his group's sire", {
+  ## M1 is 100 days old, under minAge 1: he stays in group 1, which is still
+  ## given an adult sire, and every harem holds exactly one adult male.
+  youngPed <- partialPedData
+  youngPed$birth[youngPed$id == "M1"] <- Sys.Date() - 100L
+  for (seed in 1L:4L) {
+    info <- paste("seed", seed)
+    set_seed(seed)
+    members <- makeGroupMembers(
+      numGp = 3L, currentGroups = list("M1", character(0), character(0)),
+      candidates = youngPed$id, ped = youngPed, harem = TRUE, minAge = 1
+    )
+    expect_equal(
+      vapply(members, function(m) length(getPotentialSires(m, youngPed, 1)),
+             integer(1L)),
+      c(1L, 1L, 1L),
+      info = info
+    )
+    expect_true("M1" %in% members[[1L]], info = info)
+    expect_equal(sum(unlist(members) == "M1"), 1L, info = info)
+  }
+})
+
 ## ---- Guards: these pass at HEAD and must still pass ----------------------
 
 test_that("with no male seeded the same-seed groups stay as they were", {

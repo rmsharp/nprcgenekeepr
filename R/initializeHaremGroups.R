@@ -51,18 +51,14 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
   if (any(needsSire)) {
     sires <- sample(availableSires, sum(needsSire), replace = FALSE)
   }
+  seeds <- groupSeeds(numGp, currentGroups)
   nextSire <- 0L
   for (i in seq_len(numGp)) {
-    seeds <- if (i <= length(currentGroups)) {
-      currentGroups[[i]]
-    } else {
-      character(0L)
-    }
     if (needsSire[i]) {
       nextSire <- nextSire + 1L
-      groupMembers[[i]] <- c(sires[nextSire], seeds)
+      groupMembers[[i]] <- c(sires[nextSire], seeds[[i]])
     } else {
-      groupMembers[[i]] <- seeds
+      groupMembers[[i]] <- seeds[[i]]
     }
   }
   groupMembers
