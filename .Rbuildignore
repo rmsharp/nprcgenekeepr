@@ -162,3 +162,7 @@ README\.*\.png$
 # methodology/ holds the methodology files (bin/migrate-layout moves them there). Like their old places at the
 # root and under docs/ they are project notes and tooling, not package content.
 ^methodology$
+
+# Real colony studbook the owner keeps next to the Japanese macaque example it is rebuilt from (S981, 2026-10-13, owner-ruled):
+# never shipped. It is already public in the 2018 history (b5619b38e); this keeps a second copy out of the tarball.
+^inst/extdata/examples/Jmac_studbook_20180711\.txt$
