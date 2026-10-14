@@ -153,6 +153,29 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
+- [ ] **Detect a death date earlier than the birth date in the pedigree check (owner-requested
+      2026-10-13 after S980; DECISION NEEDED -- error or warning, Effort S to M; strict TDD)** --
+      `qcStudbook()` and the Input tab say nothing about an animal whose `death` (or `exit`) is before
+      its `birth`: it loads, and `calcAge()` gives it age 0 or a negative age (`R/qcStudbook.R:356`).
+      **Measured S980, raw files:** `deidentified_jmac_ped.csv` has 251 of its 2,021 animals with both
+      dates dead before they were born (all status Dead, 1 to 56 days early, median 15, none further;
+      6 more died on their birth day) and 2 of 352 departures before birth; in the cleaned table 102
+      animals have a negative age (minimum -0.2 years) and 306 have age 0. `ExamplePedigree.csv` has
+      1,930 animals with both dates and none early; the rhesus example files have no animal with both
+      dates. The jmac early deaths all fall within 56 days of the birth, which fits date shifting in the
+      de-identification more than data entry (an inference, not checked against the source).
+      **Where the code is:** dates are converted in `R/getDateErrorsAndConvertDatesInPed.R`
+      (`errorLst$invalidDateRows` holds unparseable dates, `R/getEmptyErrorLst.R`), `exit` is set by
+      `setExit()` (`R/qcStudbook.R:329`), and the model for a data-quality warning that does not stop the
+      load is `getNoBirthDateWarning()` (`R/runQcStudbook.R:243`). No existing test counts the jmac
+      example's warnings (`test_modInput_blankCells.R:187-194` asserts 0 errors only).
+      **Decide:** (1) *error or warning* -- an error would stop the shipped jmac example loading again
+      (251 rows); a warning loads the file and shows the count and the first ids, which suits a colony
+      manager's own file with a data-entry slip; (2) *which date* -- `death` only, or `exit` (death or
+      departure, which also catches the 2 departures); (3) *the same day* -- 6 jmac animals died on
+      their birth day, plausible for a stillbirth, so flag only strictly earlier; (4) *the example* --
+      leave the jmac file as it is (it then shows the warning) or fix its dates.
+
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
       design gate, Effort M)** -- a harem's sampled sire is seeded into the group

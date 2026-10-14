@@ -102,7 +102,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Deliverable, DONE (owner pick, option 1 of 4; Pre-RED: "Fix 2 sires, one sentence", a NEWS line, guide and manual; strict TDD, every gate asked, REFACTOR taken):** the jmac example file (`BACKLOG.md:156`, removed).
 The sire and sire-type cells of `8PPD8` and `82I5M` (`deidentified_jmac_ped.csv:2485,2612`, the file's only sire entries, both impossible) are empty. The check reports 65 errors (mothers aged 3.43-3.99, under the 4-year floor);
 Minimum Dam Age 3.4 loads all 2,791 animals; 3.5 still flags 2. One sentence each in the guide (`colony-manager-guide.qmd:222`), manual (`_input.Rmd:48-56`) and `NEWS.Rmd:451`. The built-in floor stays 4.
-**Found:** the example records no sire for any animal now; `82I5M` died 12 days before its birth and no check flags it (not filed). Learning 946.
+**Found:** the example records no sire for any animal now; 251 jmac animals died before their birth date and no check flags it (BACKLOG item filed after close-out). Learning 946.
 **Gates:** claim `b5e0e0824`; RED `05f88bfb1` (9 blocks failing, 2 guards green); GREEN `e70deb889` (data), `e4774f8ad` (docs); REFACTOR `2f0833deb` (`jmacExamplePath()`, `bornAfterOffspring()`).
 **Verified:** suite 3,620 blocks, 11,805 expectations, 0 failed, 0 errors, 187 skipped (before and after); check 0/0/0; lint 0; ratchet 1/1 (`cd2bd9399018`); real app: default "of 65 entries", 3.4 loads; 3 mutants caught.
 **Handoff evaluation of S979: 8/10.** Helped: the pinned test line, the 67 count (held), the `git stash` warning. Missing: the 2 sire cells are the file's only sire data. Wrong: nothing.
