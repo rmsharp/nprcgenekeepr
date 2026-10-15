@@ -122,9 +122,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (CA2: the owner took the recommended ruling S993 and it is fixed, `R/appServer.R:448` passes `sharedKinshipMatrix`, `NEWS.Rmd:451`),
       and Download Plot on the Age-Sex Pyramid tab saved the packaged example's pyramid when nothing was loaded (CD5: the owner
       took the recommended ruling S992 and it is fixed, `R/modPyramid.R:141,146`, `NEWS.Rmd:445`); 14 minor; one new stale help clause
-      (N1, `R/modGeneticDiversity.R:81-84`); **the owner's other rulings are not yet taken**, the report proposes one per finding with a
-      recommendation (the housekeeping session's list loses the `R/appServer.R` comment, rewritten S993, and keeps CA5's two alert
-      sentences, now that CA2 took (a))), and the R `helpText` at `R/modGeneticValue.R:88` still says
+      (N1, `R/modGeneticDiversity.R:81-84`); **the housekeeping list was done S994** (N1's clause, CD1's `darkblue`, the CD2 and CC1 comments, CD4's ten
+      popovers, CA5's two alert sentences; gate `test_docsAuditHousekeepingWording.R`; the pyramid line still shows gray, the theme forces it);
+      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: builds CC1 (a),
+      CB1 (a), CB5 (a) and CA3 (a), CC5 is the owner's call, and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
@@ -143,6 +144,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
+
+- [ ] **Every Summary Statistics popover header reads the text "character(0)" (READY, Effort S; strict TDD)** (found S994,
+      2026-10-15, in a real-app look at the export popovers) -- all 12 popovers of the tab are built with
+      `shinyBS::popify(..., title = NULL, ...)` (`R/modSummaryStats.R`, the only file that calls `popify`), and the page draws a title bar
+      reading "character(0)" above each sentence (headless Chrome, `.popover:visible` text; the picture was opened for the owner).
+      **Decision (the owner's):** drop the title bar (content only) or give each popover its own short title. The fix needs a render-level
+      test of the popover title; `tests/testthat/test_docsAuditHousekeepingWording.R` already reads the rendered `addTooltip` calls.
+
+- [ ] **The Genetic Diversity page shows an error line twice (DECISION NEEDED -- needs the owner's example first, Effort S)**
+      (reported by the owner S994, 2026-10-15, mid-session; not reproduced) -- `output$heatmap` (`R/modGeneticDiversity.R:123`) and
+      `output$guidance` (`:128-129`) both read `diversityStats()` with no guard, so any error from `getGeneticDiversityStats()` prints in both
+      places (S993's real-app "before" run printed "kmat is missing kinship ..." twice). Which error the owner saw, and the steps, are not
+      recorded: ask first. **Decision once known:** read the error once (the guidance through `tryCatch`, as `birthDateNote` does) or leave.
 
 - [ ] **The Changed Columns tab and `summary()` skip some rename fields (DECISION NEEDED -- should the
       tab list every rename, Effort S-M; strict TDD)** (found S988, while `checkChangedColsLst()` was made to
