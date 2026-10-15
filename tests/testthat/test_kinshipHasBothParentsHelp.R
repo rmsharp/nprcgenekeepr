@@ -19,130 +19,50 @@
 ## recycles the IDs down the rows), and the warning appears only when the
 ## number of IDs does not divide the number of rows of ped.
 ##
-## The help assertions read one argument's text, so a mention elsewhere on the
-## page cannot make them pass by accident (Learning 89). They read the
-## generated man/*.Rd and the R source (source/dev context; under an
-## installed package neither directory exists and they skip). The behavior
-## locks at the end pass at HEAD: they keep the new sentences true.
+## Each page is read whole, in the two places the help lives, and must hold the
+## approved sentence exactly once and the old one nowhere; a sentence this long
+## cannot be matched by accident (Learning 89). Both readers need the source
+## tree (man/ and R/ do not exist under an installed package) and skip without
+## it. The behavior locks at the end pass at HEAD: they keep the new sentences
+## true.
+
+## helpPlaces(), skipUnlessHelpInSourceTree() and expectWording() are in
+## helper-pageText.R.
 
 helpCases <- list(
   kinship = list(
-    rd = "kinship.Rd",
-    src = "kinship.R",
-    param = "chrtype",
+    places = helpPlaces("kinship", "kinship.R"),
     unchanged = "computes X-chromosome kinship instead",
-    newSentence = paste(
+    now = paste(
       "A founder of unrecognized sex gets NA only on its own diagonal cell",
       "and 0 with the other founders, as in kinship2; an animal of",
       "unrecognized sex that has parents in the pedigree gets NA kinship",
       "with everyone, itself included."
     ),
-    oldSentence = paste(
+    gone = paste(
       "An individual with unrecognized sex gets NA kinship with everyone,",
       "including their own self-kinship value."
     )
   ),
   hasBothParents = list(
-    rd = "hasBothParents.Rd",
-    src = "hasBothParents.R",
-    param = "id",
+    places = helpPlaces("hasBothParents", "hasBothParents.R"),
     unchanged = "a single ID to examine for parents.",
-    newSentence = paste(
+    now = paste(
       "A vector of IDs is not supported: the result is not one value per",
       "ID, and a recycling warning appears only when the number of IDs",
       "does not divide the number of rows of ped."
     ),
-    oldSentence = "A vector of IDs is not supported and gives a recycling"
+    gone = "A vector of IDs is not supported and gives a recycling"
   )
 )
 
-manPath <- function(case) {
-  testthat::test_path("..", "..", "man", case$rd)
-}
-
-sourcePath <- function(case) {
-  testthat::test_path("..", "..", "R", case$src)
-}
-
-skipUnlessHelpFiles <- function() {
-  paths <- unlist(lapply(helpCases, function(case) {
-    c(manPath(case), sourcePath(case))
-  }))
-  testthat::skip_if(
-    !all(file.exists(paths)),
-    "man/*.Rd or R/*.R not available (installed package)"
-  )
-}
-
-collapseSpace <- function(x) trimws(gsub("\\s+", " ", x))
-
-## The text of the man page's \item for the case's argument, white space
-## collapsed (the \code{} markup is already gone after parse_Rd); NA_character_
-## when there is none.
-manText <- function(case) {
-  parsed <- tools::parse_Rd(manPath(case))
-  tags <- vapply(parsed, function(x) attr(x, "Rd_tag"), character(1L))
-  section <- which(tags == "\\arguments")
-  if (length(section) == 0L) {
-    return(NA_character_)
-  }
-  items <- Filter(
-    function(x) identical(attr(x, "Rd_tag"), "\\item"),
-    parsed[[section[1L]]]
-  )
-  for (item in items) {
-    name <- collapseSpace(paste(unlist(item[[1L]]), collapse = ""))
-    if (identical(name, case$param)) {
-      return(collapseSpace(paste(unlist(item[[2L]]), collapse = "")))
-    }
-  }
-  NA_character_
-}
-
-## The roxygen @param block in the R source for the case's argument, with the
-## `#'` prefix, the tag and the \code{} markup removed and white space
-## collapsed (the man page keeps the code text without the markup);
-## NA_character_ when there is none. The block ends at the next roxygen tag or
-## at the first line that is not roxygen.
-roxygenText <- function(case) {
-  lines <- readLines(sourcePath(case), warn = FALSE)
-  start <- grep(paste0("^#' @param ", case$param, "( |$)"), lines)
-  if (length(start) == 0L) {
-    return(NA_character_)
-  }
-  rest <- lines[start[1L]:length(lines)]
-  ends <- which(!startsWith(rest, "#'") |
-    (seq_along(rest) > 1L & grepl("^#' @", rest)))
-  block <- rest[seq_len(c(ends, length(rest) + 1L)[1L] - 1L)]
-  text <- paste(sub("^#' ?", "", block), collapse = " ")
-  text <- sub(paste0("^@param ", case$param, "\\s*"), "", text)
-  collapseSpace(gsub("\\\\code\\{([^}]*)\\}", "\\1", text))
-}
-
-helpPlaces <- list(
-  "man page" = manText,
-  "roxygen block" = roxygenText
-)
-
-## Sanity checks on the two readers (green at HEAD). They prove the RED
-## failures below are about the help text, not about readers that find nothing.
-test_that("both readers return the text of the argument they are asked for", {
-  skipUnlessHelpFiles()
+## Sanity check on the readers (green at HEAD). It proves the RED failures
+## below are about the help text, not about readers that find nothing.
+test_that("the readers find each function's help", {
   for (case in helpCases) {
-    for (read in helpPlaces) {
-      text <- read(case)
-      expect_false(is.na(text), info = case$param)
-      expect_match(text, case$unchanged, fixed = TRUE, info = text)
-    }
-  }
-})
-
-test_that("both readers return NA when the argument is not documented", {
-  skipUnlessHelpFiles()
-  for (case in helpCases) {
-    case$param <- "noSuchArgument"
-    for (read in helpPlaces) {
-      expect_true(is.na(read(case)))
+    skipUnlessHelpInSourceTree(case$places)
+    for (read in case$places) {
+      expect_match(read(), case$unchanged, fixed = TRUE)
     }
   }
 })
@@ -150,21 +70,11 @@ test_that("both readers return NA when the argument is not documented", {
 ## The failing tests (RED at HEAD): both places of both functions still carry
 ## the old wording and lack the approved sentence.
 for (name in names(helpCases)) {
-  for (place in names(helpPlaces)) {
-    test_that(paste0("the ", place, " of ", name, " has the approved sentence"), {
-      skipUnlessHelpFiles()
-      text <- helpPlaces[[place]](helpCases[[name]])
-      expect_false(is.na(text))
-      expect_match(text, helpCases[[name]]$newSentence, fixed = TRUE, info = text)
-    })
-
-    test_that(paste0("the ", place, " of ", name, " drops the old wording"), {
-      skipUnlessHelpFiles()
-      text <- helpPlaces[[place]](helpCases[[name]])
-      expect_false(is.na(text))
-      expect_false(grepl(helpCases[[name]]$oldSentence, text, fixed = TRUE),
-        info = text
-      )
+  for (place in names(helpCases[[name]]$places)) {
+    test_that(paste0("the ", place, " of ", name, " has the approved sentence only"), {
+      case <- helpCases[[name]]
+      skipUnlessHelpInSourceTree(case$places)
+      expectWording(case$places[[place]](), now = case$now, gone = case$gone)
     })
   }
 }
@@ -176,7 +86,8 @@ for (name in names(helpCases)) {
 ## fixture that does not show the case.
 
 ## Founders A (M), B (F), C (unrecognized); D and E are known-sex children of
-## A and B. C has no descendants.
+## A and B. C has no descendants. With `withUnknownChild`, F is an
+## unrecognized-sex child of A and B.
 xKinship <- function(withUnknownChild) {
   id <- c("A", "B", "C", "D", "E")
   sire <- c(NA, NA, NA, "A", "A")
