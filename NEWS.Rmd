@@ -448,6 +448,16 @@ longitudinal monitoring of colony genetic health.
   pedigree is loaded: the download fails. Once a pedigree is loaded the button
   works as before.
 
+- Fixed: after focal animals were chosen on the Pedigree Browser, the Genetic
+  Diversity tab showed "kmat is missing kinship for group member(s)" instead of
+  the heat map whenever a breeding group (from the "All available" source, for
+  one) held a living animal that was not one of the focal animals. The tab now
+  scores every group, using the kinship of the whole pedigree, as Summary
+  Statistics and Breeding Groups do. An animal with no row in the genetic value
+  report is left out of the Value column's share of low-value animals, as an
+  "Undetermined" one is, so a group made only of such animals has no assessed
+  value and its Value cell is red.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check found.
   They are now colored: Errors is red when there is at least one error,
