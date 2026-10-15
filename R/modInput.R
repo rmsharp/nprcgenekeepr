@@ -487,41 +487,23 @@ modInputServer <- function(id) {
 
       # Merge an uploaded genotype file (separate pedigree/genotype mode) into
       # the raw pedigree BEFORE qcStudbook, mirroring the monolith
-      # (inst/application/server.r:117-156): read with getGenotypes, validate
-      # with checkGenotypeFile, then merge with addGenotype so the integer
-      # first/second columns ride the cleaned studbook into reportGV via
-      # getGVGenotype()/hasGenotype(). A file that cannot be read (an error),
-      # or that the check refuses (an error or a warning), is not merged and
-      # the QC Summary says why (separateGenotypeNote); a warning while only
-      # reading the file does not drop it. The merge is guarded against a NULL
-      # genotype (addGenotype(ped, NULL) errors).
+      # (inst/application/server.r:117-156): addGenotype puts the integer
+      # first/second columns into the pedigree so they ride the cleaned
+      # studbook into reportGV via getGVGenotype()/hasGenotype().
+      # readSeparateGenotypeFile() reads and checks the file; one that is not
+      # used is not merged and the QC Summary says why (separateGenotypeNote).
+      # The merge is guarded against a NULL genotype (addGenotype(ped, NULL)
+      # errors).
       separateGenotypeNote <- NULL
       if (identical(input$fileContent, "separatePedGenoFile") &&
             !is.null(input$genotypeFile)) {
         sep <- if (is.null(input$separator)) "," else input$separator
-        genotype <- tryCatch(
-          getGenotypes(input$genotypeFile$datapath, sep = sep),
-          error = function(e) e
+        separateGenotype <- readSeparateGenotypeFile(
+          input$genotypeFile$datapath, sep = sep
         )
-        if (!inherits(genotype, "condition")) {
-          genotype <- tryCatch(
-            checkGenotypeFile(genotype),
-            warning = function(w) w,
-            error = function(e) e
-          )
-        }
-        if (inherits(genotype, "condition")) {
-          reason <- conditionMessage(genotype)
-          separateGenotypeNote <- paste0(
-            "The genotype file was not used, so no genotypes are used.",
-            if (nzchar(reason)) {
-              paste0(" Reason: ", reason, if (!grepl("[.!?]$", reason)) ".")
-            }
-          )
-          genotype <- NULL
-        }
-        if (!is.null(genotype)) {
-          rawData <- addGenotype(rawData, genotype)
+        separateGenotypeNote <- separateGenotype$note
+        if (!is.null(separateGenotype$genotype)) {
+          rawData <- addGenotype(rawData, separateGenotype$genotype)
         }
       }
 
