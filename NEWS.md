@@ -87,7 +87,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - A twin/zygosity file uploaded on the Diagram tab applies this
   throughout the app, whichever tab is opened first. Fraternal and
   identical pairs must share both recorded parents, and identical pairs
-  must be the same sex.
+  must be the same sex. With a focal-animal trim on, a pair with an
+  animal outside the trim is left out while the trim is on and the other
+  pairs still apply; an id that is not in the pedigree at all still
+  rejects the file.
 - Script users: `kinship()`, `reportGV()`, `gvaConvergence()`,
   `createSimKinships()` and `cumulateSimKinships()` take
   `twinRelations`. `readTwinRelations()`, `checkTwinRelations()` and
