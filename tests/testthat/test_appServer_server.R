@@ -692,6 +692,205 @@ test_that(paste("appServer passes the SAME shared kinship reactive to both",
 })
 
 # =============================================================================
+# 7b. The Genetic Diversity tab gets the same full-pedigree kinship (S993,
+#     docs-audit part 2 flag CA2). It used to be handed gvResults$kinshipMatrix,
+#     which holds only the Genetic Value population: with focal animals set,
+#     a group holding a living animal that is not a focal animal stopped the
+#     tab with "kmat is missing kinship for group member(s): ...". The groups
+#     are drawn from every living animal of the analysis pedigree, so the tab
+#     needs the matrix of that pedigree, as Summary Statistics and Breeding
+#     Groups already get (section 7).
+#
+#     The fixture is a mother (f1), a father (m1) and their daughter (o1),
+#     all alive. The two parents are the focal animals, so the stand-in
+#     Genetic Value stub returns what modGeneticValueServer() returns for
+#     them: a 2 x 2 matrix and a report of two rows. The group is all three.
+# =============================================================================
+
+diversityDate <- as.Date("2020-07-01")
+diversityPed <- data.frame(
+  id = c("f1", "m1", "o1"),
+  sire = c(NA, NA, "m1"),
+  dam = c(NA, NA, "f1"),
+  sex = c("F", "M", "F"),
+  birth = as.Date(c("2010-01-01", "2008-01-01", "2018-01-01")),
+  exit = as.Date(c(NA, NA, NA)),
+  population = c(TRUE, TRUE, FALSE),
+  stringsAsFactors = FALSE
+)
+diversityReport <- data.frame(
+  id = c("f1", "m1"),
+  value = c("High Value", "High Value"),
+  stringsAsFactors = FALSE
+)
+diversityGroups <- list(c("f1", "m1", "o1"))
+
+# The focal animals' own matrix, as reportGV() builds it: the full kinship
+# of the pedigree cut down to the population animals.
+diversityPopulationKinship <- function() {
+  full <- kinship(diversityPed$id, diversityPed$sire, diversityPed$dam,
+                  findGeneration(diversityPed$id, diversityPed$sire,
+                                 diversityPed$dam))
+  full[c("f1", "m1"), c("f1", "m1")]
+}
+
+# stubGV() with the population-filtered matrix. Like the real reactive it
+# waits (a silent req() error) until the analysis has been run.
+stubGVPopulationKinship <- function(id, ...) {
+  out <- stubGV(id, ...)
+  out$kinshipMatrix <- shiny::reactive({
+    shiny::req(ctl$gv())
+    diversityPopulationKinship()
+  })
+  out
+}
+
+# The real Genetic Diversity module, mounted by appServer as usual, with its
+# return kept in ctl so a test can read stats() inside the live session and
+# the date pinned so the ages are the same on every day.
+realDiversityServer <- modGeneticDiversityServer
+mountRealDiversity <- function(id, ...) {
+  ctl$diversity <- realDiversityServer(id, ..., currentDate = diversityDate)
+  invisible(NULL)
+}
+
+test_that(paste("appServer hands the Genetic Diversity tab the same shared",
+                "full-pedigree kinship reactive as Summary Statistics",
+                "(CA2, S993)"), {
+  capturedSummaryKin <- NULL
+  capturedDiversityKin <- NULL
+  capturedDiversityValue <- NULL
+  captureSummaryStats <- function(id, ..., kinshipMatrix) {
+    capturedSummaryKin <<- kinshipMatrix
+    invisible(NULL)
+  }
+  captureDiversity <- function(id, ..., kinshipMatrix) {
+    capturedDiversityKin <<- kinshipMatrix
+    invisible(NULL)
+  }
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGVPopulationKinship,
+    modBreedingGroupsServer = stubBG,
+    modSummaryStatsServer = captureSummaryStats,
+    modPyramidServer = noopServer,
+    modGeneticDiversityServer = captureDiversity,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$ped(diversityPed)
+        ctl$gv(diversityReport)
+        session$flushReact()
+        capturedDiversityValue <<- capturedDiversityKin()
+      }))
+    }
+  )
+
+  expect_true(is.function(capturedDiversityKin))
+  # The SAME reactive object Summary Statistics gets, not the Genetic Value
+  # tab's own matrix.
+  expect_identical(capturedDiversityKin, capturedSummaryKin)
+  # Every animal of the pedigree, not only the two focal animals.
+  expect_setequal(rownames(capturedDiversityValue), diversityPed$id)
+})
+
+test_that(paste("with two focal animals and a living animal that is not focal",
+                "in the group, the Genetic Diversity tab scores the group",
+                "instead of stopping (CA2, S993)"), {
+  result <- NULL
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGVPopulationKinship,
+    modBreedingGroupsServer = stubBG,
+    modSummaryStatsServer = noopServer,
+    modPyramidServer = noopServer,
+    modGeneticDiversityServer = mountRealDiversity,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$ped(diversityPed)
+        ctl$gv(diversityReport)
+        ctl$grp(diversityGroups)
+        session$flushReact()
+        result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+      }))
+    }
+  )
+
+  # Said once, so a failure prints the stop's own text.
+  info <- if (inherits(result, "error")) conditionMessage(result) else ""
+  expect_s3_class(result, "data.frame")
+  expect_equal(nrow(result), 1L, info = info)
+  expect_true(all(c("group", "Value", "Production", "Inbreeding") %in%
+                    names(result)), info = info)
+})
+
+test_that(paste("the Genetic Diversity tab still waits, without an error,",
+                "while no pedigree is loaded (CA2, S993)"), {
+  result <- "not read"
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGVPopulationKinship,
+    modBreedingGroupsServer = stubBG,
+    modSummaryStatsServer = noopServer,
+    modPyramidServer = noopServer,
+    modGeneticDiversityServer = mountRealDiversity,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$gv(diversityReport)
+        ctl$grp(diversityGroups)
+        session$flushReact()
+        result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+      }))
+    }
+  )
+
+  expect_null(result)
+})
+
+test_that(paste("the Genetic Diversity tab still waits for the Genetic Value",
+                "analysis to be run, although the kinship no longer comes",
+                "from it (CA2, S993)"), {
+  result <- "not read"
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGVPopulationKinship,
+    modBreedingGroupsServer = stubBG,
+    modSummaryStatsServer = noopServer,
+    modPyramidServer = noopServer,
+    modGeneticDiversityServer = mountRealDiversity,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$ped(diversityPed)
+        ctl$grp(diversityGroups)
+        session$flushReact()
+        result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+      }))
+    }
+  )
+
+  expect_null(result)
+})
+
+# =============================================================================
 # 8. Contract guards surface genuine errors; only Shiny's own not-ready signal
 #    is silently absorbed (issue #122 Phase 4 -- replaces the blanket
 #    tryCatch(..., error = function(e) NULL) swallow with explicit
