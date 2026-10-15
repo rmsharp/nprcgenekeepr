@@ -20,6 +20,14 @@ keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `methodology/HANDOFFS.md` → `methodology/archive/HANDOFFS-through-2026-10-14.md` (40 record(s), 197,004 B → 28,966 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **40** record(s) (2026-10-08 → 2026-10-14) out of [`methodology/HANDOFFS.md`](HANDOFFS.md) into
+[`methodology/archive/HANDOFFS-through-2026-10-14.md`](archive/HANDOFFS-through-2026-10-14.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`methodology/archive/HANDOFFS-through-2026-10-14.md.verify.sh`](archive/HANDOFFS-through-2026-10-14.md.verify.sh)
+rather than trusting a digest printed here. Live file 197,004 B → 28,966 B (−85.3%).
+
 ### 2026-10-14 · [ad hoc] S991 claim (in progress): the 21 candidates of docs-audit part 2 slice 6d (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6) re-checked against today's code (`BACKLOG.md:119-125`; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED; Effort S; an audit report, PRE-RED throughout, no code change)
 Phase 0: HEAD `933ae62b5` equals the `CHANGELOG.md`, `HANDOFFS.md` and `SESSION_NOTES.md` frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet 1/1 pass (citation matches the results file), context budget nothing over a ceiling (`methodology/SESSION_RUNNER.md` one commit behind canonical, and the growth run), no untracked files, 193 commits ahead of `origin/master`. Claim only; the DONE entry follows at close-out.
 
