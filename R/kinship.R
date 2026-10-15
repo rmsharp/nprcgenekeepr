@@ -54,9 +54,11 @@
 #' \code{"x"}, computes X-chromosome kinship instead: a male's X comes from
 #' his mother only (self-kinship 1, since he carries a single copy); a
 #' female's X-linked kinship follows the same average-of-parents formula as
-#' the autosomal case (self-kinship 0.5, as usual). An individual with
-#' unrecognized \code{sex} gets \code{NA} kinship with everyone, including
-#' their own self-kinship value. The MZ-twin correction
+#' the autosomal case (self-kinship 0.5, as usual). A founder of unrecognized
+#' \code{sex} gets \code{NA} only on its own diagonal cell and 0 with the other
+#' founders, as in kinship2; an animal of unrecognized \code{sex} that has
+#' parents in the pedigree gets \code{NA} kinship with everyone, itself
+#' included. The MZ-twin correction
 #' (\code{twinRelations}) applies inside this branch identically to the
 #' autosomal branch. Ported from kinship2's
 #' own \code{kinship.default()} X-linked branch; see

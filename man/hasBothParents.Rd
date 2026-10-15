@@ -8,7 +8,9 @@ hasBothParents(id, ped)
 }
 \arguments{
 \item{id}{a single ID to examine for parents. A vector of IDs is not
-supported and gives a recycling warning.}
+supported: the result is not one value per ID, and a recycling warning
+appears only when the number of IDs does not divide the number of rows of
+\code{ped}.}
 
 \item{ped}{The pedigree information in data.frame format}
 }
