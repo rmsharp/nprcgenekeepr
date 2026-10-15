@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1000
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- CA3 of `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` (owner pick at the Phase 0 picker, item 1 of 4): the Genetic Diversity heat map labels the "Unused animals" bucket "Group N" like a real breeding group (`R/getGeneticDiversityStats.R:44,92` takes labels from `names(groups)`; the app passes an unnamed list); audit recommends (a), name the last element "Unused animals"; PRE-RED, scope question next
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S999
 date: 2026-10-15
 status: complete
