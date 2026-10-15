@@ -129,8 +129,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `test_modPedigree_twinRelationsTrimmed.R`); **CB1 was built S998** (the owner chose "both cases, one sentence": with "separate files" the QC Summary says
       "The genotype file was not used, so no genotypes are used. Reason: ..." for a genotype file the check refuses or the app cannot read, and a file with a short row
       no longer greys out the page and ends the session; `R/readSeparateGenotypeFile.R`, `R/modInput.R:488-504`, `NEWS.Rmd:525`; gate `test_modInputSeparateGenotypeNote.R`);
-      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: builds
-      CB5 (a) and CA3 (a), CC5 is the owner's call, and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
+      **CB5 was built S999** (the owner took option (a): the Marker Genetics module's returned `isReady` answers FALSE, not an error, for a genotype file the module cannot use;
+      nothing in `R/` reads `isReady`, so the running app looks the same; `R/modMarkerGenetics.R:595,1347`, help `:479-481`, `NEWS.Rmd` Minor; gates `test_modMarkerGenetics.R`,
+      `test_modMarkerGeneticsIsReadyHelp.R`);
+      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: the build
+      CA3 (a), CC5 is the owner's call, and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
