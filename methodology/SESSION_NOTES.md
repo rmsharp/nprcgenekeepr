@@ -98,22 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 993 Does
-**Deliverable:** the Genetic Diversity tab no longer stops when a group holds a living animal outside the Genetic Value population (CA2 of docs-audit part 2 slice 6d,
-`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` Finding 1; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, ruling (a), (b) or (c), recommended (a),
-is asked at PRE-RED; Effort S; strict TDD, PRE-RED first) (IN PROGRESS)
-**Started:** 2026-10-15 01:15 CDT
-**Status:** Session claimed. Work beginning; nothing probed yet. PRE-RED: a look at the `Value` column for an animal outside the report first (the report asks for it), then the ruling
-question, then the first gate (PRE-RED to RED) with `AskUserQuestion`.
-**Phase 0:** HEAD `c2dd1b4ae` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, the newest receipt's ratchet citation matches
-the results file (results `022fc9e13caa`, manifest `aa983075d6a2`), context budget nothing over a ceiling (`methodology/SESSION_RUNNER.md` one commit behind canonical, and the growth run),
-no untracked files, 204 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 993 Did
+**Deliverable, DONE (owner pick, option 1 of 4; the PRE-RED scope question ruled (a), every gate asked and answered, REFACTOR taken):** the Genetic Diversity tab scores a group that holds a living
+animal outside the Genetic Value population instead of stopping "kmat is missing kinship ..." (docs-audit flag CA2; `R/appServer.R:448` passes `sharedKinshipMatrix`; help `R/modGeneticDiversity.R:73-75`; `NEWS.Rmd:451`).
+**Value look (the report's ask):** an animal with no Genetic Value row is left out of the low-value share like an "Undetermined" one (`R/getGeneticDiversityStats.R:105-106`); detail in the audit report's S993 update.
+**Gates:** claim `3f0202ddd`; RED `e173926b2`; GREEN `4d94fb492`; REFACTOR `4c782a60a`; NEWS `62b9e5581`; checkpoint `74ddd2354`. Learning 959. Suite 3,742 blocks, 0 failed, 0 errors; lint 0; `check` 0/0/0;
+mutation 2 of 2; real app (5 focal animals, 9 living non-focal): before the stop text and no picture, after a 2-row heat map (both pictures opened for the owner).
+**Handoff evaluation of S992: 9/10.** Helped: CA2 first with the `Value` look named as owed, the cites, the gotchas. Missing: issue #122's plan (Dragon 1) and `test_appServer_server.R` section 7 already covered the wiring.
+**Self-assessment: 8/10.** + the `Value` look measured, not read; each RED failure checked for its reason; real-app before/after from a `git archive` of the RED commit. - the claim's receipt was pasted into `CHANGELOG.md`
+too (caught before the commit); the first test helper hid the `testServer()` block; a muddled stub and a no-op line in my scripts; the picture was opened after the suite had started.
+**Next:** the owner rules on the rest of the S991 report: one housekeeping session (N1, `darblue`, two comments, ten popovers, CA5's two alert sentences; PRE-RED asks for the sentences), the CC1, CB1, CB5 and CA3
+builds, CC5 is the owner's call; or 6e (46, CE-CL), `BACKLOG.md:147`, `:162`, `:175`, `:401`. 211 commits ahead of `origin/master`.
+**Gotchas:** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call, because `testServer()` captures its block unevaluated; the suite shows 6 warnings outside the
+files touched (not examined); start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-992 (condensed S950 to S993; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (`R/modPyramid.R:141,146`, flag CD5; `NEWS.Rmd:445`; strict TDD, REFACTOR taken; evaluation of S991 9/10, self 8/10).
-**Gotchas kept (S992):** a failing `req()` in a download handler answers HTTP 500 and a blank page; `testServer()` deletes a handler's output when the block exits; 31 of 45 download handlers have no
-`req()` near the top (not examined); `getPyramidPlot(NULL)` draws `qcPed`, other `ped = NULL` callers not searched.
+**Gotchas kept (S992):** a failing `req()` in a download handler answers HTTP 500 and a blank page; `testServer()` deletes a handler's output when the block exits; `getPyramidPlot(NULL)` draws `qcPed`.
 S991: the 21 slice 6d code candidates of docs-audit part 2 re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`; 5 closed, 16 still true: 2 moderate, CA2 and CD5, 14 minor, 1 new, N1;
 an audit, no code change; evaluation of S990 9/10, self 8/10). **Gotchas kept (S991):** CC1 fix (a) needs a layout-builder probe with pairs outside the view; `methodology_trim.py` v1.8.0 writes a `methodology/` shard to `methodology/archive/`.
 S990: the help for `kinship()` chrtype and `hasBothParents()` id says what the code does (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; gate `test_kinshipHasBothParentsHelp.R`; strict TDD, REFACTOR taken;
@@ -121,16 +122,11 @@ evaluation of S989 9/10, self 8/10). **Gotchas kept (S990):** a "revert to `HEAD
 S989: `checkRequiredCols()` ignores an `NA` column name at any length (`R/checkRequiredCols.R:41-42`, docs-audit flag PB4; NEWS `NEWS.Rmd:437`; strict TDD, REFACTOR taken; evaluation of S988 8/10,
 self 8/10). **Gotchas kept (S989):** an error inside a `test_that()` block ends it at the first error, so route each RED case through `answer()` (`test_checkRequiredCols.R:38`); a namespace patch leaves the
 attached copy old (`get("fn", ns)`); `qcStudbook()` with an `NA` header stops earlier in `fixColumnNames()` (decision item `BACKLOG.md:159`).
-S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
-the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
-S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
---budget-bytes 65536 --write`, no `--force`). S952-S953: the owner's origin and funding sentences everywhere, the NIH grants limited to version 1.0 and earlier (`test_originFundingWording.R`, 16 blocks).
-S954-S955: with no focal animals the Pedigree Browser flags the living animals (decided S954, built S955; 20 new blocks). S956: the 21 guide pictures that predate it are retaken and four
-sentences quote them. S957: a decision, no code: the seven old-style `panel panel-*` boxes stay plain on purpose
-(the owner ruled from a before/after picture). S958: `getAncestors()` carries on when a parent has no row of its own and stops with a message naming an asked-about animal that is not in the tree
-Strict TDD where code changed; evaluations 9/10, self 8/10. Hashes and scores for S947-S960 are in `CHANGELOG.md` and `HANDOFFS.md`.
-S959: the three hidden "joint effort between ONPRC and SNPRC" comment lines are deleted (`test_originFundingWording.R`). S960: `CHANGELOG.md` trimmed, 200,518 B to 33,981 B
-(`docs/archive/CHANGELOG-through-2026-10-09.md`). Evaluations 9/10, self 8/10.
+S947-S960 (hashes and scores in `CHANGELOG.md` and `HANDOFFS.md`): drift gates for the guide's export tables and Breeding Groups statements (`test_guideExportTables.R`, `test_guideBreedingGroupsWording.R`);
+the Candidate Parent Assignment tab says why its table is blank without `fromCenter`; the Diagram article shows a Direct picture; `HANDOFFS.md` (S951) and `CHANGELOG.md` (S960) trimmed with
+`methodology_trim.py --budget-bytes 65536 --write`, no `--force`; the owner's origin and funding sentences everywhere (`test_originFundingWording.R`); with no focal animals the Pedigree Browser flags
+the living animals (S954-S955); 21 guide pictures retaken (S956); the seven old-style `panel panel-*` boxes stay plain by ruling (S957); `getAncestors()` carries on when a parent has no row (S958);
+the hidden ONPRC/SNPRC comment lines deleted (S959). Strict TDD where code changed; evaluations 9/10, self 8/10.
 S961: the Breeding Groups last box is named "Unused animals" on the Groups heading, the Statistics row and the Group Detail selector (`R/breedingGroupLabels.R:20`; evaluation
 of S960 9/10, self 8/10); the candidate table's Groups count and the `Group-N.csv` names stay, by ruling. S962: a box of exactly one animal is headed "(1 animal)" and the
 one-animal nobody-is-alive notice reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689,993-994`; 3 pictures retaken;
