@@ -99,13 +99,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 999 Did
-**Deliverable:** CB5 of `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` (owner pick at the Phase 0 picker, item 1 of 4): in the Marker Genetics tab
-`isReady = reactive(!is.null(comparison()))` (`R/modMarkerGenetics.R:1340`) is not read through `safeRead`, so a shared genotype file with a short row makes `isReady()` and
-`comparisonTable()` throw "line 3 did not have 3 elements"; the audit recommends (a), read `comparison()` through `safeRead` inside `isReady` only (one line and a test) (IN PROGRESS)
-**Started:** 2026-10-15
-**Status:** Session claimed. Phase 0 done (clean tree, 246 ahead of `origin/master`, no ghost sessions, CI green, `CHANGELOG.md` at 200,954 B is in its warn band and a trim is owed,
-`SESSION_RUNNER.md` is one commit behind canonical). TDD phase: PRE-RED; the scope question is not yet asked.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; option (a) of two at the PRE-RED scope question; the NEWS bullet and the help clause approved as written; every gate asked and answered, REFACTOR taken):**
+CB5 of the slice 6d re-check: the Marker Genetics module's returned `isReady` answers FALSE, not an error, for a genotype file the module cannot use (a short row, the wrong columns, an empty file).
+Measured first: nothing in `R/` reads `isReady` (`R/appServer.R:477` takes only `markerKinshipMatrix`), so the running app could not show the throw; the owner's question said so. `isReady` now reads the
+comparison through `safeRead()` under one name, `comparisonOrNull` (`R/modMarkerGenetics.R:595`; observer `:1331`, `isReady` `:1347`); `comparisonTable()` and the tab keep showing the real error. The help
+says it (`:479-481`, `man/modMarkerGeneticsServer.Rd`, its own TDD cycle) and `NEWS.Rmd:545` has a Minor bullet. Real app before (RED-sha worktree) and after (HEAD): identical pictures, no disconnect.
+**Gates:** claim `9c002247d`; RED `dba687eca` (4 blocks added, file 91 blocks, 346 expectations; 3 red, 4 failed, 0 errors); GREEN `480d1a9fa`; REFACTOR `f63725aa0`; NEWS `b8f9b068d`; help RED
+`1604a8df9` (`test_modMarkerGeneticsIsReadyHelp.R`, 3 blocks), help GREEN `f3902d18d`; close-out 1 `48ac67e71`. Mutants 6 of 6 and 5 of 5. Full suite 3,795 blocks, 12,806 expectations, 0 failed, 0 errors;
+lint 0; `devtools::check()` 0/0/0.
+**Handoff evaluation of S998: 8/10.** Helped: the Next list put CB5 second with `R/modMarkerGenetics.R:1340`, which held; the audit row's recommended (a) was right; the `NOT_CRAN=true`, scratch-`app.R`
+and `git worktree` "before" recipes worked first time; the S709 tests gave the fixture and idiom. Missing: that nothing reads `isReady` (the row said surface "app (Marker Genetics upload)"); the tab's driver
+ids (found in the capture script in minutes). Wrong: nothing in the handoff.
+**Self-assessment: 8/10.** + grepped the readers before asking, so the plain question said the app shows no difference; RED reasons read per block and reworded to carry the thrown message; 11 of 11 mutants;
+the real app before and after (and the second red element found by measuring, not assuming); the help clause run as its own cycle with its own gates. - my first "good" probe file had three columns (the module
+wants four) and cost a rerun; my first Learning claim about where the error shows was wrong until I listed `.shiny-output-error`; two long reads ran with no word to you.
+**Next:** the CA3 build (`R/getGeneticDiversityStats.R:44,92`, Effort M, PRE-RED first; CC5 is the owner's call); the popover title item (`BACKLOG.md:156`, READY, S); the 6e re-check; the guide-sentence
+item (`BACKLOG.md:163`, DECISION NEEDED). Housekeeping owed: trim `methodology/CHANGELOG.md` (200,954 B, past its 196,608 B warn line) with `methodology_trim.py --budget-bytes 65536`; re-sync
+`SESSION_RUNNER.md`. Ahead of `origin/master` by 255 commits (state only).
+**Gotchas:** see the `HANDOFFS.md` receipt and Learning 965 (grep the readers before describing reach; two elements carry the Marker Genetics error; a help clause is its own cycle; `git worktree` for "before").
 
 
 ### Sessions 947-998 (condensed S950 to S999; full record in `CHANGELOG.md` and `HANDOFFS.md`)
