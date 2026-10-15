@@ -134,10 +134,7 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
     ## A formed group can hold an animal the loaded pedigree no longer has
     ## (the groups outlive a new file or a trimmed view).
     groupsOutsidePedigree <- reactive({
-      grps <- safeRead(groups)
-      ped <- safeRead(pedigree)
-      !is.null(grps) && !is.null(ped) &&
-        length(.groupMembersMissingFromPedigree(grps, ped)) > 0L
+      .anyGroupMemberMissingFromPedigree(safeRead(groups), safeRead(pedigree))
     })
 
     output$heatmap <- renderPlot({

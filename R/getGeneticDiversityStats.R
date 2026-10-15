@@ -138,19 +138,3 @@ getGeneticDiversityStats <- function(groups, ped, geneticValues, kmat,
   stats$Inbreeding <- vapply(rows, function(r) r$Inbreeding, integer(1L))
   stats
 }
-
-#' Group members that have no row in the pedigree
-#'
-#' The one definition of "a formed group holds an animal the pedigree lacks":
-#' \code{\link{getGeneticDiversityStats}} stops on it and the Genetic Diversity
-#' page says so in one sentence, so the two cannot disagree.
-#'
-#' @param groups list of character vectors of animal IDs.
-#' @param ped data frame with an \code{id} column.
-#' @return character vector of the distinct member IDs with no row in
-#'   \code{ped} (zero length when every member has one).
-#' @noRd
-.groupMembersMissingFromPedigree <- function(groups, ped) {
-  members <- unlist(groups, use.names = FALSE)
-  unique(members[!members %in% ped$id])
-}

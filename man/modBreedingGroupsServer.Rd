@@ -116,6 +116,12 @@ each run's rule violations (overridden rules stay visible, marked
 offers the run's downloadable audit manifest
 }
 
+The formed groups stay in memory when a new file is read or the Pedigree
+Browser is trimmed. When a group then holds an animal the loaded pedigree no
+longer has, the Groups, Statistics and Group Detail pages say so in one
+sentence in place of their tables, and bringing the earlier pedigree back
+shows the groups again. The returned \code{groups} are not changed.
+
 Up to \code{maxCandidates} (the "Candidates to retain" input; default 5,
 range 1-50) distinct candidate groupings are formed per run (issue #125);
 fewer are returned when the run finds fewer distinct ones. A "Candidate
