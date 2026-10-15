@@ -288,8 +288,8 @@ modDeidentifiedExportServer <- function(id, pedigree) {
     output$exportGateUI <- renderUI({
       if (!confirmed()) {
         div(class = "alert alert-info",
-            "Confirm the export on the Configure & Preview tab to unlock",
-            "downloads.")
+            "Confirm the export on the Configure & Preview tab before you",
+            "share these files.")
       }
     })
 

@@ -376,7 +376,8 @@ modCrossCenterIdentityServer <- function(id) {
     output$exportGateUI <- renderUI({
       if (!confirmed()) {
         div(class = "alert alert-info",
-            "Confirm the merge on the Preview tab to unlock exports.")
+            "Confirm the merge on the Preview tab before you share these",
+            "exports.")
       }
     })
 

@@ -520,8 +520,9 @@ modPedigreeServer <- function(id, studbook) {
     # R/checkTwinRelations.R), so a warning handler here would be dead
     # code. Validated against pedigreeData() -- the same, possibly-trimmed
     # pedigree diagramLayout() itself renders -- so a twin pair with one
-    # member trimmed out of view is correctly treated as unknown/ignored,
-    # not as a hidden-but-still-tracked relationship.
+    # member trimmed out of view fails validation: an error notification
+    # names the id and the whole sidecar becomes NULL, a second pair with
+    # both members in view included (the twinRelations help says so).
     # nolint end
     twinRelationsData <- reactive({
       if (is.null(input$twinRelationsFile)) {
