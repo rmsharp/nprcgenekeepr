@@ -98,21 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 993 Did
-**Deliverable, DONE (owner pick, option 1 of 4; the PRE-RED scope question ruled (a), every gate asked and answered, REFACTOR taken):** the Genetic Diversity tab scores a group that holds a living
-animal outside the Genetic Value population instead of stopping "kmat is missing kinship ..." (docs-audit flag CA2; `R/appServer.R:448` passes `sharedKinshipMatrix`; help `R/modGeneticDiversity.R:73-75`; `NEWS.Rmd:451`).
-**Value look (the report's ask):** an animal with no Genetic Value row is left out of the low-value share like an "Undetermined" one (`R/getGeneticDiversityStats.R:105-106`); detail in the audit report's S993 update.
-**Gates:** claim `3f0202ddd`; RED `e173926b2`; GREEN `4d94fb492`; REFACTOR `4c782a60a`; NEWS `62b9e5581`; checkpoint `74ddd2354`. Learning 959. Suite 3,742 blocks, 0 failed, 0 errors; lint 0; `check` 0/0/0;
-mutation 2 of 2; real app (5 focal animals, 9 living non-focal): before the stop text and no picture, after a 2-row heat map (both pictures opened for the owner).
-**Handoff evaluation of S992: 9/10.** Helped: CA2 first with the `Value` look named as owed, the cites, the gotchas. Missing: issue #122's plan (Dragon 1) and `test_appServer_server.R` section 7 already covered the wiring.
-**Self-assessment: 8/10.** + the `Value` look measured, not read; each RED failure checked for its reason; real-app before/after from a `git archive` of the RED commit. - the claim's receipt was pasted into `CHANGELOG.md`
-too (caught before the commit); the first test helper hid the `testServer()` block; a muddled stub and a no-op line in my scripts; the picture was opened after the suite had started.
-**Next:** the owner rules on the rest of the S991 report: one housekeeping session (N1, `darblue`, two comments, ten popovers, CA5's two alert sentences; PRE-RED asks for the sentences), the CC1, CB1, CB5 and CA3
-builds, CC5 is the owner's call; or 6e (46, CE-CL), `BACKLOG.md:147`, `:162`, `:175`, `:401`. 211 commits ahead of `origin/master`.
-**Gotchas:** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call, because `testServer()` captures its block unevaluated; the suite shows 6 warnings outside the
-files touched (not examined); start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 994 Did
+**Deliverable:** the housekeeping pass over the seven small wrong statements of the S991 audit report (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`, Recommendation 3; owner
+pick at the Phase 0 picker, option 1 of 4): N1's stale help clause (`R/modGeneticDiversity.R:83`), CD1's `darblue` (`R/modPyramid.R:46`), the two stale comments
+(`R/modSummaryStats.R:393-395`, `R/modPedigree.R:521-524`), CD4's ten "user selected directory" popovers (`R/modSummaryStats.R`), and CA5's two "unlock" alert sentences
+(`R/modDeidentifiedExport.R:291-292`, `R/modCrossCenterIdentity.R:379`); Effort S; strict TDD, PRE-RED first, the owner approves one proposed sentence per place (IN PROGRESS)
+**Started:** 2026-10-15 09:55 CDT
+**Status:** Session claimed. Work beginning (PRE-RED scope question next).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-992 (condensed S950 to S993; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-993 (condensed S950 to S994; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S993: the Genetic Diversity tab scores a group that holds a living animal outside the Genetic Value population (`R/appServer.R:448` passes `sharedKinshipMatrix`, flag CA2; `NEWS.Rmd:451`; an
+animal with no report row is left out of the low-value share, `R/getGeneticDiversityStats.R:105-106`; strict TDD, REFACTOR taken; claim `3f0202ddd`, GREEN `4d94fb492`; evaluation of S992
+9/10, self 8/10). **Gotchas kept (S993):** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call, because `testServer()` captures its block
+unevaluated; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
 S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (`R/modPyramid.R:141,146`, flag CD5; `NEWS.Rmd:445`; strict TDD, REFACTOR taken; evaluation of S991 9/10, self 8/10).
 **Gotchas kept (S992):** a failing `req()` in a download handler answers HTTP 500 and a blank page; `testServer()` deletes a handler's output when the block exits; `getPyramidPlot(NULL)` draws `qcPed`.
 S991: the 21 slice 6d code candidates of docs-audit part 2 re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`; 5 closed, 16 still true: 2 moderate, CA2 and CD5, 14 minor, 1 new, N1;
@@ -143,7 +142,8 @@ S966: the four likely code defects of docs-audit slice 4 re-checked (`docs/audit
 **Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; the one-file option's input is `pedigreeFileTwo`.
 S967: the `groupAddAssign()` help says the groups with the largest minimum group size win (`R/groupAddAssign.R:11-12`; the owner's sentence; gate `test_groupAddAssignHelp.R`; strict TDD, REFACTOR taken; evaluation of S966 9/10, self 8/10).
 **Gotchas kept (S967):** a mutation of `R/` code needs `pkgload::load_all()` after it (Learning 933); check the blank line before an appended `PROJECT_LEARNINGS.md` heading.
-S968: a decision session (no code): the owner took the recommended option on all three docs-audit part 2 rulings (done S969, S970, S971, S973; evaluation of S967 9/10, self 8/10). **Gotchas kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog item's
+S968: a decision session (no code): the owner took the recommended option on all three docs-audit part 2 rulings (done S969, S970, S971, S973; evaluation of S967 9/10, self 8/10). **Gotchas
+kept (S968):** a `cd` in one Bash call persists, so use absolute paths; a backlog item's
 line cites shift after any edit above it, so re-grep.
 S969: the Genetic Value tab no longer has the two do-nothing check boxes (`R/modGeneticValue.R:63-66`; gate `test_geneticValueOptionBoxes.R`; strict TDD, REFACTOR taken; evaluation of S968 9/10, self 8/10).
 **Gotchas kept (S969):** grep a removed control by id, wrapped label and kind, then check stranded imports (Learning 935).

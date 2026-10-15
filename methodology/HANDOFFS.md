@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S994
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- the housekeeping pass over the seven small wrong statements of the S991 audit report (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`, Recommendation 3; owner pick at the Phase 0 picker, option 1 of 4): N1's stale help clause (`R/modGeneticDiversity.R:83`), CD1's `darblue` (`R/modPyramid.R:46`), the two stale comments (`R/modSummaryStats.R:393-395`, `R/modPedigree.R:521-524`), CD4's ten "user selected directory" popovers (`R/modSummaryStats.R`), and CA5's two "unlock" alert sentences (`R/modDeidentifiedExport.R:291-292`, `R/modCrossCenterIdentity.R:379`); Effort S; strict TDD, PRE-RED first, the owner approves one proposed sentence per place
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S993
 date: 2026-10-15
 status: complete
