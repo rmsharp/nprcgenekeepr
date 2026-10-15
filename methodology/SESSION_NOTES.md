@@ -99,12 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 998 Did
-**Deliverable:** CB1 -- in "separate pedigree and genotype files" mode a bad genotype file is dropped with no message (`R/modInput.R:490-507`) (IN PROGRESS)
-**Started:** 2026-10-15 (owner pick at the Phase 0 picker, "CB1: bad genotype file dropped silently", item 1 of 4;
-`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`, row CB1, proposed ruling (a): say why in the QC Summary, as S971 did for a one-file pedigree)
-**Status:** Session claimed. PRE-RED: read `R/modInput.R:256-258,490-507` and `test_modInput_qcStudbook.R:705-725`, measure the real app's separate-file mode with a bad genotype file,
-then the scope and wording ruling is the owner's. Strict TDD; every gate asked and answered.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; "both cases, one sentence" ruled at the scope question; the owner approved the NEWS sentence as written; every gate asked and answered, REFACTOR taken):**
+CB1 of the slice 6d re-check: with "separate pedigree and genotype files" the Input tab now says why a genotype file was not used, and a file that cannot be read no longer ends the session. The audit row said the
+check's `tryCatch` dropped the file silently; the read one line above it (`getGenotypes()`) was unguarded, so a short row greyed out the page (real app: Shiny's disconnected overlay; `testServer` showed only a warning).
+`readSeparateGenotypeFile()` (`R/readSeparateGenotypeFile.R:22`, called at `R/modInput.R:501`) returns the genotype or a note; the S971 `genotypeNote` slot (`R/modInput.R:556`, box at `:620`) shows "The genotype
+file was not used, so no genotypes are used. Reason: <why>". Real app (bundled 375-animal MHC pedigree): before, a 2-column file and a good file gave identical QC Summary words and a short row ended the session;
+after, the sentence and the session stays up (run again on the final code). `NEWS.Rmd:525` ("grayed": one letter changed from the approved "greyed" because two spelling gates flagged it).
+**Gates:** claim `3b81eb4c0`; RED `2dae8676b` (11 blocks, 73 expectations, 9 blocks fail, 30 failed, 0 errors; the good-file and pedigree-only pins pass); GREEN `1561812f0`; guard block `67f0a23e7`; REFACTOR
+`8006e9ff4`; NEWS `a86eecb78`, spelling `3f3aeee6e`; close-out 1 `24283d2df`. `test_modInputSeparateGenotypeNote.R` 13 blocks, 84 expectations, 0 failed. Full suite 3,788 blocks, 12,792 expectations, 0 errors,
+187 skipped, 1 failed: the `test_markerParentageLikelihood.R` timing benchmark at load 100+ (other projects' `vitest`), 25 blocks, 117 expectations, 0 failed alone at load 5.5; lint 0; `devtools::check()` 0/0/0 on
+the second run (the first found "greyed" in two spelling gates); mutation 8 of 8 at GREEN and 11 of 11 on the helper and module; before and after pictures opened for the owner.
+**Handoff evaluation of S997: 8/10.** Helped: the Next list put CB1 first with `R/modInput.R:490-507`, which held; the S971 one-file precedent (`genotypeNote`, `readOneFileGenotypes.R`,
+`test_modInputOneFileGenotypes.R`) gave the shape and the test idiom; the `NOT_CRAN=true` and scratch-`app.R` gotchas worked first time. Missing: the Input-tab driver ids and the hidden-tab trap (now Learning 964);
+the CB1 row was true but incomplete (the unguarded read). Wrong: nothing found.
+**Self-assessment: 8/10.** + measured the real app before asking and found the larger case; a plain scope question with a table; RED reasons read per block; the mutant planning found two missing pins; the final
+code run in the real app again. - about 4 min lost waiting on a hidden tab's `innerText`; a `cat >` with no input hung a call 120 s; a lift script's assert had the wrong count (caught before any write); said check
+would run twice and ran it once (disclosed at the gate); my own NEWS word failed the spelling gates because the NEWS-reading test files do not include `test_wordlist_coverage.R`.
+**Next:** the CB5 build (`R/modMarkerGenetics.R:1340`, Effort S) and the CA3 build (Effort M), each its own PRE-RED ruling (CC5 is the owner's call); the popover title item (`BACKLOG.md:153`, READY, S); the 6e re-check;
+the guide-sentence item (`BACKLOG.md:160`, DECISION NEEDED). Ahead of `origin/master` by 245 commits (state only).
+**Gotchas:** see the `HANDOFFS.md` receipt and Learning 964 (read the line above a guard; show the QC Summary tab before reading its text; `app$click(wait_ = FALSE)`; run `test_wordlist_coverage.R` with any NEWS edit).
 
 
 ### Sessions 947-997 (condensed S950 to S998; full record in `CHANGELOG.md` and `HANDOFFS.md`)
