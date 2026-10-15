@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S999
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- CB5 of `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` (owner pick at the Phase 0 picker, item 1 of 4): in the Marker Genetics tab `isReady = reactive(!is.null(comparison()))` (`R/modMarkerGenetics.R:1340`) is not read through `safeRead`, so a shared genotype file with a short row makes `isReady()` and `comparisonTable()` throw "line 3 did not have 3 elements"; the audit recommends (a), read `comparison()` through `safeRead` inside `isReady` only (one line and a test).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S998
 date: 2026-10-15
 status: complete
