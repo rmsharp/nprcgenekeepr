@@ -119,9 +119,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       6d 21 candidates, re-checked S991
       (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`: 5 closed by later sessions (CA1, CA4, CB2, CC4, CD6), 16 still
       true, 2 moderate: the Genetic Diversity tab stops when a group holds a living animal outside the Genetic Value population
-      (CA2), and Download Plot on the Age-Sex Pyramid tab saves the packaged example's pyramid when nothing is loaded (CD5, clicked
-      in the real app); 14 minor; one new stale help clause (N1, `R/modGeneticDiversity.R:80-83`); **the owner's rulings are not
-      yet taken**, the report proposes one per finding with a recommendation), and the R `helpText` at `R/modGeneticValue.R:88` still says
+      (CA2), and Download Plot on the Age-Sex Pyramid tab saved the packaged example's pyramid when nothing was loaded (CD5: the owner
+      took the recommended ruling S992 and it is fixed, `R/modPyramid.R:141,146`, `NEWS.Rmd:445`); 14 minor; one new stale help clause
+      (N1, `R/modGeneticDiversity.R:80-83`); **the owner's other rulings are not yet taken** (CA2 and the rest), the report proposes
+      one per finding with a recommendation), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated

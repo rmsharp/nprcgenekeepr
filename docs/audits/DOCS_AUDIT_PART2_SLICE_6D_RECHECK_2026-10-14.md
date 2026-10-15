@@ -207,3 +207,5 @@ real app; CA4 was run to show it closed; the other nine were read in today's cod
 ## Rulings
 
 None taken yet. The proposed rulings above are recommendations. This report is the S991 deliverable; the rulings are the next step.
+
+**Update S992:** Finding 2 (CD5) was ruled (a), the recommended option, when the owner picked it at the S992 Phase 0 picker, and shipped S992 with the `on.exit` half (`R/modPyramid.R:141,146`, `NEWS.Rmd:445`). With nothing loaded a click now gets an HTTP 500 and a blank "An error has occurred!" page (measured on a stand-in in headless Chrome; Chrome's own display was not watched); with the example loaded it gets a PNG, "Total on 2026-Oct-14: 332". The other findings have no ruling yet.
