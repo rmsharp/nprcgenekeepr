@@ -98,20 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 991 Did
-**Deliverable, DONE (owner pick, option 1 of 4; an audit, PRE-RED throughout, no code change):** the 21 slice 6d code candidates of docs-audit part 2 re-checked against today's code
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`): **5 closed** (CA1, CA4, CB2, CC4, CD6), **16 still true: 2 moderate, 14 minor**, 1 new minor (N1, `R/modGeneticDiversity.R:80-83`, stale since S928).
-**Moderate:** CA2, Genetic Diversity stops when focal animals are set and "All available" holds a living animal outside the focal set (real modules); CD5, with nothing loaded Download Plot saves the
-packaged `qcPed` pyramid, "Total on 2026-Oct-14: 46" (clicked in the real app). **Rulings:** none taken; the report proposes one per finding, recommendation first.
-**Gates:** claim `8ffd6f84f`; `HANDOFFS.md` trim `ceea6dd3a` (verify OK); checkpoint `6dbcbbc7e`. Learning 957. No `R/` change, so no suite, lint or check; ratchet 1/1; receipt test 10 passed.
-**Handoff evaluation of S990: 9/10.** Helped: the trim note (196,607 of 196,608 B) and every cite. Missing: the trimmer is v1.8.0 and writes a `methodology/` shard to `methodology/archive/`.
-**Self-assessment: 8/10.** + module chain, then a real-app click for CD5; two slice claims (CC2, CD3) found wrong and said so. - a stray `cd` cost two reruns; long silent stretches.
-**Next:** the owner rules on the report's Recommendations; each build is its own strict-TDD session, PRE-RED first. Then 6e (46, CE-CL), Changed Columns tab (`BACKLOG.md:144`), nameless header (`:159`),
-contributor tutorial (`:172`), kinship2 drawing features (`:398`). 197 commits ahead of `origin/master`.
-**Gotchas:** the CA2 fix needs a look at the `Value` column for an animal with no Genetic Value row (not examined); CC1 fix (a) needs a layout-builder probe with pairs outside the view; `getPyramidPlot(NULL)`
-draws `qcPed` (other `ped = NULL` callers not searched); `get_download()` needs the tab open and `NOT_CRAN=true`; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 992 Does
+**Deliverable:** the Age-Sex Pyramid tab's Download Plot saves nothing until a pedigree is loaded, instead of a picture of the packaged example (CD5 of docs-audit part 2 slice 6d,
+`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` Finding 2; owner pick at the Phase 0 picker, option 1 of 4, which takes the report's recommended ruling; DECISION NEEDED
+settled by the pick, Effort S; strict TDD, PRE-RED first) (IN PROGRESS)
+**Started:** 2026-10-14 22:12 CDT
+**Status:** Session claimed. Work beginning; nothing probed yet. PRE-RED: the first gate (PRE-RED to RED) is asked with `AskUserQuestion` before any test is written.
+**Phase 0:** HEAD `7725b34a9` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet 1/1 pass (the newest
+receipt's citation matches the results file), context budget nothing over a ceiling (`methodology/SESSION_RUNNER.md` one commit behind canonical, and the growth run), no
+untracked files, 197 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-990 (condensed S950 to S991; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-991 (condensed S950 to S992; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S991: the 21 slice 6d code candidates of docs-audit part 2 re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`; 5 closed, 16 still true: 2 moderate, CA2 and CD5, 14 minor,
+1 new, N1; rulings proposed, none taken; an audit, no code change; evaluation of S990 9/10, self 8/10). **Gotchas kept (S991):** the CA2 fix needs a look at the `Value` column for an
+animal with no Genetic Value row; CC1 fix (a) needs a layout-builder probe with pairs outside the view; `getPyramidPlot(NULL)` draws `qcPed` (other `ped = NULL` callers not searched);
+`get_download()` needs the tab open and `NOT_CRAN=true`; `methodology_trim.py` v1.8.0 writes a `methodology/` ledger's shard to `methodology/archive/`.
 S990: the help for `kinship()` chrtype and `hasBothParents()` id says what the code does (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; gate `test_kinshipHasBothParentsHelp.R`; strict TDD, REFACTOR taken;
 evaluation of S989 9/10, self 8/10). **Gotchas kept (S990):** a "revert to `HEAD`" mutant is a no-op after GREEN (use `HEAD~1`); `sub(fixed = TRUE)` changes one site of two.
 S989: `checkRequiredCols()` ignores an `NA` column name at any length (`R/checkRequiredCols.R:41-42`, docs-audit flag PB4; NEWS `NEWS.Rmd:437`; strict TDD, REFACTOR taken; evaluation of S988 8/10,

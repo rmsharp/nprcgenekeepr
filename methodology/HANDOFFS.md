@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S992
+date: 2026-10-14
+status: pending
+active_task: IN PROGRESS -- the Age-Sex Pyramid tab's Download Plot saves nothing until a pedigree is loaded, instead of a picture of the packaged example (CD5 of docs-audit part 2 slice 6d, `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` Finding 2; owner pick at the Phase 0 picker, option 1 of 4, which takes the report's recommended ruling; DECISION NEEDED settled by the pick, Effort S; strict TDD, PRE-RED first)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S991
 date: 2026-10-14
 status: complete
