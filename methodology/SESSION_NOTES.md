@@ -98,20 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 990 Did
-**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the two help sentences the owner approved S986 are in (`BACKLOG.md` item removed; flags MB3, PD12):
-`R/kinship.R:57-61` (chrtype) and `R/hasBothParents.R:6-9` (id); `man/` regenerated, no code change, no NEWS entry (S967 had none).
-**Measured first:** kinship2's vector `kinship()` equals ours (0 of 25 cells differ), its `pedigree()` route gives 0 on an unknown-sex founder's diagonal (the help names the vector form); two IDs in reverse order give `logical(0)`.
-**Gates:** claim `314243a86`; RED `060f12371` (8 of 15 blocks failed); GREEN `797a2a3f2`; REFACTOR `7a5d715df` (the test uses `helper-pageText.R`'s readers).
-**Verified:** suite 3,731 blocks, 12,562 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; mutation 7 of 7 (GREEN, REFACTOR).
-**Handoff evaluation of S989: 9/10.** Helped: every cite held. Missing: kinship2's two routes. Wrong: `document()` was said to rewrite `man/nprcgenekeepr-package.Rd`; it did not.
-**Self-assessment: 8/10.** + measured before RED; 7 mutants, two reruns caught. - wrote 60 lines of readers `helper-pageText.R` had (Learning 956); a background launcher returned early.
-**Next:** owner picks: Changed Columns tab (`BACKLOG.md:141`), nameless header (`:156`), contributor tutorial (`:169`), kinship2 drawing features (`:395`), docs-audit 6d 21 / 6e 46. 193 commits ahead of `origin/master`.
-**Gotchas:** `HANDOFFS.md` is 1 B under its warn line (196,607 of 196,608), so the next claim crosses it: `python3 methodology/methodology_trim.py --file methodology/HANDOFFS.md --budget-bytes 65536 --check`,
-then `--write`, is owed as its own commit. `test_groupAddAssignHelp.R` keeps its own readers (not touched); a "revert to `HEAD`" mutant is a no-op after GREEN (use `HEAD~1`);
-`sub(fixed = TRUE)` changes one site of two; the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 991 Does
+**Deliverable:** the 21 candidates of docs-audit part 2 slice 6d (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6) re-checked against today's code (`BACKLOG.md:119-125`; owner pick at the Phase 0 picker,
+option 1 of 4; DECISION NEEDED, Effort S; an audit report, PRE-RED throughout, no code change) (IN PROGRESS)
+**Started:** 2026-10-14 21:24 CDT
+**Status:** Session claimed. Work beginning; nothing probed yet. `HANDOFFS.md` crosses its 196,608 B warn line with this claim, so a trim (`methodology_trim.py --file methodology/HANDOFFS.md
+--budget-bytes 65536`) is owed as its own commit, apart from the close-out.
+**Phase 0:** HEAD `933ae62b5` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet 1/1 pass (the newest receipt's
+citation matches the results file), context budget nothing over a ceiling (`methodology/SESSION_RUNNER.md` one commit behind canonical, and the growth run), no untracked files, 193 commits
+ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-989 (condensed S950 to S990; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-990 (condensed S950 to S991; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S990: the help for `kinship()` chrtype and `hasBothParents()` id says what the code does (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; docs-audit flags MB3 and PD12; gate `test_kinshipHasBothParentsHelp.R`;
+strict TDD, REFACTOR taken; evaluation of S989 9/10, self 8/10). **Gotchas kept (S990):** `test_groupAddAssignHelp.R` keeps its own page readers (not touched); a "revert to `HEAD`" mutant is a no-op
+after GREEN (use `HEAD~1`); `sub(fixed = TRUE)` changes one site of two; kinship2 has two routes for an unknown-sex founder (the vector `kinship()` is the one ported).
 S989: `checkRequiredCols()` ignores an `NA` column name at any length (`R/checkRequiredCols.R:41-42`, docs-audit flag PB4; NEWS `NEWS.Rmd:437`; strict TDD, REFACTOR taken;
 evaluation of S988 8/10, self 8/10). **Gotchas kept (S989):** an error inside a `test_that()` block ends it at the first error, so each RED case goes through `answer()`
 (`test_checkRequiredCols.R:38`); a namespace patch leaves the attached copy old (`get("fn", ns)`); `qcStudbook()` with an `NA` header stops earlier in `fixColumnNames()`

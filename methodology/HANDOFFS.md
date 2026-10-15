@@ -196,6 +196,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S991
+date: 2026-10-14
+status: pending
+active_task: IN PROGRESS -- the 21 candidates of docs-audit part 2 slice 6d (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6) re-checked against today's code (BACKLOG.md:119-125; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; an audit report, PRE-RED throughout, no code change)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S990
 date: 2026-10-14
 status: complete
