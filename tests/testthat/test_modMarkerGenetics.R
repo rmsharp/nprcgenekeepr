@@ -2190,3 +2190,88 @@ test_that("modMarkerGenetics's F_ROH notice names the first 10 loci and says how
     expect_false(grepl("L13", notice, fixed = TRUE))
   })
 })
+
+## ---------------------------------------------------------------------
+## RED (S999, CB5 of docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md):
+## the returned isReady() is `!is.null(comparison())`, so for a shared
+## genotype file the module cannot use (the wrong columns, a row too short to
+## read, an empty file) it THROWS instead of answering. The data-ready
+## observer has read comparison() through safeRead() since S709; isReady()
+## must answer FALSE the same way. comparisonTable() and the on-screen table
+## keep surfacing the real error (the comment at the top of
+## modMarkerGeneticsServer()), so that stays pinned. Each isReady() read is
+## wrapped so a throw shows as a failed expectation carrying the message.
+
+cb5RaggedGenotypePath <- tempfile(fileext = ".csv")
+writeLines(c("id,locus,allele1,allele2", "P,L1,A,B", "C,L1,A", "U,L1,B,B"),
+           cb5RaggedGenotypePath)
+cb5EmptyGenotypePath <- tempfile(fileext = ".csv")
+invisible(file.create(cb5EmptyGenotypePath))
+
+cb5Read <- function(f) {
+  tryCatch(f(), error = function(e) paste("threw:", conditionMessage(e)))
+}
+
+cb5Upload <- function(session, path) {
+  session$setInputs(genotypeFile = list(
+    name = basename(path), datapath = path
+  ))
+}
+
+test_that("modMarkerGenetics's isReady is FALSE, not an error, when the genotype file has the wrong columns", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    cb5Upload(session, s709MalformedGenotypePath)
+    got <- cb5Read(result$isReady)
+    expect_identical(got, FALSE, info = paste("isReady() gave:", got))
+  })
+})
+
+test_that("modMarkerGenetics's isReady is FALSE, not an error, when the genotype file has a row too short to read or is empty", {
+  skip_if_not_installed("shiny")
+  paths <- c(ragged = cb5RaggedGenotypePath, empty = cb5EmptyGenotypePath)
+  for (kind in names(paths)) {
+    path <- paths[[kind]]
+    shiny::testServer(modMarkerGeneticsServer,
+      args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                  pedigree = shiny::reactive(NULL)), {
+      result <- session$getReturned()
+      cb5Upload(session, path)
+      got <- cb5Read(result$isReady)
+      expect_identical(got, FALSE,
+                       info = paste(kind, "file, isReady() gave:", got))
+    })
+  }
+})
+
+test_that("modMarkerGenetics still surfaces an unusable genotype file as a real error from comparisonTable()", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    cb5Upload(session, s709MalformedGenotypePath)
+    expect_error(result$comparisonTable(), "exactly four columns")
+    cb5Upload(session, cb5RaggedGenotypePath)
+    expect_error(result$comparisonTable(), "did not have 4 elements")
+  })
+})
+
+test_that("modMarkerGenetics's isReady goes from FALSE to TRUE when a good genotype file replaces one it cannot read", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    cb5Upload(session, cb5RaggedGenotypePath)
+    got <- cb5Read(result$isReady)
+    expect_identical(got, FALSE, info = paste("isReady() gave:", got))
+    cb5Upload(session, genotypeFilePath)
+    got <- cb5Read(result$isReady)
+    expect_identical(got, TRUE, info = paste("isReady() gave:", got))
+    expect_s3_class(result$comparisonTable(), "data.frame")
+  })
+})
