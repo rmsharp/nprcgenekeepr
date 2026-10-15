@@ -45,6 +45,14 @@ modGeneticDiversityUI <- function(id) {
   )
 }
 
+## Said on the page when a formed group holds an animal the loaded pedigree no
+## longer has (a new file was read, or the view was trimmed, after the groups
+## were formed).
+.groupsOutsidePedigreeNote <- paste(
+  "Some animals in the breeding groups are not in the pedigree now loaded",
+  "(a new file or a trimmed view). Form the groups again to see the heat map."
+)
+
 #' Genetic Diversity Module - Server Function
 #'
 #' Assembles the live breeding-group, genetic-value, and kinship reactive
@@ -52,7 +60,11 @@ modGeneticDiversityUI <- function(id) {
 #' \code{\link{getGeneticDiversityStats}}) and renders the red/yellow/green
 #' heat map (via \code{\link{makeGeneticDiversityHeatmap}}). When breeding
 #' groups have not been formed or the genetic value analysis has not been run,
-#' the module shows guidance instead of an empty plot. When any animal in the
+#' the module shows guidance instead of an empty plot. When a formed group
+#' holds an animal the loaded pedigree no longer has (a new file was read, or
+#' the view was trimmed, after the groups were formed), the page says so in one
+#' sentence and asks for the groups to be formed again; any other calculation
+#' error is shown once, where the heat map would be. When any animal in the
 #' groups has no birth date, a note under the heat map says how many, and how
 #' many females among them the Production and Inbreeding columns counted (those
 #' the pedigree lists as a dam) and left out.
@@ -119,14 +131,33 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
       makeGeneticDiversityHeatmap(stats)
     })
 
+    ## A formed group can hold an animal the loaded pedigree no longer has
+    ## (the groups outlive a new file or a trimmed view).
+    groupsOutsidePedigree <- reactive({
+      grps <- safeRead(groups)
+      ped <- safeRead(pedigree)
+      !is.null(grps) && !is.null(ped) &&
+        !all(unlist(grps, use.names = FALSE) %in% ped$id)
+    })
+
     output$heatmap <- renderPlot({
+      ## The guidance says what to do in that case.
+      req(!groupsOutsidePedigree())
       p <- diversityPlot()
       req(p)
       p
     })
 
     output$guidance <- renderUI({
-      if (is.null(diversityStats())) {
+      if (groupsOutsidePedigree()) {
+        return(div(class = "alert alert-info", .groupsOutsidePedigreeNote))
+      }
+      ## Any other failing calculation is reported once, by the heat map.
+      stats <- tryCatch(diversityStats(), error = function(e) e)
+      if (inherits(stats, "error")) {
+        return(NULL)
+      }
+      if (is.null(stats)) {
         div(
           class = "alert alert-info",
           paste(
@@ -138,8 +169,8 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
     })
 
     output$birthDateNote <- renderUI({
-      ## A failing calculation is already reported by the heat map and the
-      ## guidance, so it is read as "not ready" here.
+      ## A failing calculation is already reported on the page (by the heat
+      ## map, or by the guidance sentence), so it is read as "not ready" here.
       if (is.null(tryCatch(diversityStats(), error = function(e) NULL))) {
         return(NULL)
       }
