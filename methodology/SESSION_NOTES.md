@@ -98,15 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 990 Does
-**Deliverable:** two help sentences: `R/kinship.R:57-59` (an animal of unrecognized `sex`) and `R/hasBothParents.R:6-7` (the `id` argument), the wording the owner approved S986
-(`BACKLOG.md:169`, flags MB3 and PD12; owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD, help text only; PRE-RED) (IN PROGRESS)
-**Started:** 2026-10-14 17:47 CDT
-**Status:** Session claimed. Work beginning; nothing probed yet.
-**Phase 0:** HEAD `f908130b8` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet 1/1 pass (the newest receipt's
-citation matches the results file), context budget WARN only for `methodology/SESSION_RUNNER.md` (one commit behind canonical) and the growth run, no untracked files, 188 commits
-ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 990 Did
+**Deliverable, DONE (owner pick, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken):** the two help sentences the owner approved S986 are in (`BACKLOG.md` item removed; flags MB3, PD12):
+`R/kinship.R:57-61` (chrtype) and `R/hasBothParents.R:6-9` (id); `man/` regenerated, no code change, no NEWS entry (S967 had none).
+**Measured first:** kinship2's vector `kinship()` equals ours (0 of 25 cells differ), its `pedigree()` route gives 0 on an unknown-sex founder's diagonal (the help names the vector form); two IDs in reverse order give `logical(0)`.
+**Gates:** claim `314243a86`; RED `060f12371` (8 of 15 blocks failed); GREEN `797a2a3f2`; REFACTOR `7a5d715df` (the test uses `helper-pageText.R`'s readers).
+**Verified:** suite 3,731 blocks, 12,562 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; mutation 7 of 7 (GREEN, REFACTOR).
+**Handoff evaluation of S989: 9/10.** Helped: every cite held. Missing: kinship2's two routes. Wrong: `document()` was said to rewrite `man/nprcgenekeepr-package.Rd`; it did not.
+**Self-assessment: 8/10.** + measured before RED; 7 mutants, two reruns caught. - wrote 60 lines of readers `helper-pageText.R` had (Learning 956); a background launcher returned early.
+**Next:** owner picks: Changed Columns tab (`BACKLOG.md:141`), nameless header (`:156`), contributor tutorial (`:169`), kinship2 drawing features (`:395`), docs-audit 6d 21 / 6e 46. 193 commits ahead of `origin/master`.
+**Gotchas:** `HANDOFFS.md` is 1 B under its warn line (196,607 of 196,608), so the next claim crosses it: `python3 methodology/methodology_trim.py --file methodology/HANDOFFS.md --budget-bytes 65536 --check`,
+then `--write`, is owed as its own commit. `test_groupAddAssignHelp.R` keeps its own readers (not touched); a "revert to `HEAD`" mutant is a no-op after GREEN (use `HEAD~1`);
+`sub(fixed = TRUE)` changes one site of two; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-989 (condensed S950 to S990; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S989: `checkRequiredCols()` ignores an `NA` column name at any length (`R/checkRequiredCols.R:41-42`, docs-audit flag PB4; NEWS `NEWS.Rmd:437`; strict TDD, REFACTOR taken;

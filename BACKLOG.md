@@ -112,7 +112,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       report): 6a-6b, the ten oldest flags, re-checked S986
       (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9 findings, 1 moderate, an invalid date in a
       file with two date columns, fixed S987, PB7, `checkChangedColsLst()` counting every rename, fixed S988, and PB4, `checkRequiredCols()` ignoring an `NA` name, fixed S989; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
-      now one READY item below this one (the two help sentences); MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
+      and the last two, the help sentences for MB3 and PD12, were fixed S990; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
       6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
       owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
@@ -165,17 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       searched). The owner ruled S989, at the PRE-RED scope question, to fix `checkRequiredCols()` only (shipped S989).
       **Decision:** (a) leave it (script-only); (b) fix each site, each with a test; (c) check once at the front of
       `qcStudbook()` and stop with one message naming the column's position (the wording is the owner's).
-
-- [ ] **Two help sentences (READY, Effort S; help text only, strict TDD with a wording gate as
-      `test_groupAddAssignHelp.R` has)** (docs-audit part 2, S986 findings 1 and 8, flags MB3 and PD12; the owner
-      approved these sentences S986) -- in `R/kinship.R:57-59` replace "An individual with unrecognized \code{sex}
-      gets \code{NA} kinship with everyone, including their own self-kinship value." with "A founder of unrecognized
-      \code{sex} gets \code{NA} only on its own diagonal cell and 0 with the other founders, as in kinship2; an animal
-      of unrecognized \code{sex} that has parents in the pedigree gets \code{NA} kinship with everyone, itself
-      included."; in `R/hasBothParents.R:6-7` replace the `id` sentence with "a single ID to examine for parents. A
-      vector of IDs is not supported: the result is not one value per ID, and a recycling warning appears only when
-      the number of IDs does not divide the number of rows of \code{ped}." Then `devtools::document()`, and read
-      `git diff --stat` (it rewrites `man/nprcgenekeepr-package.Rd`: restore it).
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

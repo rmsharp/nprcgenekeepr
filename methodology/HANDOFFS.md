@@ -198,10 +198,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S990
 date: 2026-10-14
-status: pending
-active_task: IN PROGRESS -- two help sentences: R/kinship.R:57-59 (an animal of unrecognized sex) and R/hasBothParents.R:6-7 (the id argument), the wording the owner approved S986 (BACKLOG.md:169, flags MB3 and PD12; owner pick at the Phase 0 picker, option 1 of 4; READY, Effort S; strict TDD, help text only)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the help for kinship() chrtype and hasBothParents() id says what the code does (BACKLOG.md item removed; docs-audit part 2 flags MB3 and PD12, S986 findings 1 and 8; owner pick at the Phase 0 picker, option 1 of 4; strict TDD, every gate asked and answered, REFACTOR taken)
+what_was_done: Phase 0 clean (gap 0, no pending receipt, CI 10 of 10 green). Claim 314243a86. Probed first: both owner-approved sentences against today's code; kinship2's vector kinship() equals ours (0 of 25 cells differ) but its pedigree() route gives 0 on an unknown-sex founder's diagonal; two IDs in reverse order give logical(0). RED 060f12371 (8 of 15 blocks failed); GREEN 797a2a3f2 (the two roxygen blocks, man pages regenerated); REFACTOR 7a5d715df (the test uses helper-pageText.R's readers). Suite 3,731 blocks, 12,562 expectations, 0 failed, 0 errors, 187 skipped; lint 0; check 0/0/0; mutation 7 of 7 at GREEN and REFACTOR. Learning 956.
+next_steps: Each needs an owner pick: the Changed Columns tab and summary() decision (BACKLOG.md:141, DECISION NEEDED), the nameless-header decision (BACKLOG.md:156, DECISION NEEDED: leave it, fix each site, or check once at the front of qcStudbook()), the contributor tutorial (BACKLOG.md:169), the two kinship2 drawing features (BACKLOG.md:395), a docs-audit part 2 cluster (6d 21, 6e 46; 6a-6b has nothing left to rule on). 193 commits ahead of origin/master after this close-out; do not offer a push-only session (owner ruled S905).
+key_files: R/kinship.R:57-61 (the chrtype sentence); R/hasBothParents.R:6-9 (the id sentence); man/kinship.Rd and man/hasBothParents.Rd (regenerated); tests/testthat/test_kinshipHasBothParentsHelp.R:32 (helpCases), :72 (the wording blocks), :91 (xKinship), :143 (hasBothParentsPed); tests/testthat/helper-pageText.R:92-129 (the shared page readers); BACKLOG.md:112-115 (the docs-audit text updated).
+gotchas: test_groupAddAssignHelp.R still has its own copies of collapseSpace and the page readers (not touched, out of scope); a mutant defined as the file at HEAD is a no-op once GREEN is committed (use HEAD~1); sub(fixed = TRUE) changes one site of two (hasBothParents() has ped$id == id twice); kinship2 has two routes for an unknown-sex founder, so the help's "as in kinship2" names the vector kinship() this function ports; a ( cmd ) & inside a background Bash call returns at once, wait on the output file's done marker; the studbook stays untracked (never git add -A); never git stash here.
+runtime_smoke: n/a -- help text only, no runtime behavior changed; the two changed help entries rendered with tools::Rd2txt and read as approved, devtools::check(document = FALSE, vignettes = FALSE, args = "--no-manual") gave 0/0/0.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 2e4a798ff81b · manifest aa983075d6a2
+changelog_ref: S990 DONE entry
+commit: the close-out commit that carries this receipt; claim 314243a86, RED 060f12371, GREEN 797a2a3f2, REFACTOR 7a5d715df
 ```
 
 ```handoff
