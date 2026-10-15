@@ -57,7 +57,7 @@ modSummaryStatsUI <- function(id) {
                title = NULL,
                content = paste0(
                  "This exports the kinship matrix to a CSV file ",
-                 "in the user selected directory."
+                 "your browser saves to its download folder."
                )
              )),
       column(2L,
@@ -67,7 +67,7 @@ modSummaryStatsUI <- function(id) {
                title = NULL,
                content = paste0(
                  "This exports the male founder pedigree records to ",
-                 "a CSV file to the user selected directory."
+                 "a CSV file your browser saves to its download folder."
                )
              )),
       column(2L,
@@ -77,7 +77,7 @@ modSummaryStatsUI <- function(id) {
                title = NULL,
                content = paste0(
                  "This exports the female founder pedigree records ",
-                 "to a CSV file to the user selected directory."
+                 "to a CSV file your browser saves to its download folder."
                )
              )),
       column(3L,
@@ -87,7 +87,7 @@ modSummaryStatsUI <- function(id) {
                title = NULL,
                content = paste0(
                  "This exports all first-order relations to a CSV file ",
-                 "to the user selected directory."
+                 "your browser saves to its download folder."
                )
              ))
     ),
@@ -136,7 +136,7 @@ modSummaryStatsUI <- function(id) {
           title = NULL,
           content = paste0(
             "This exports the Mean Kinship Coefficient histogram as ",
-            "a PNG file to the user selected directory."
+            "a PNG file your browser saves to its download folder."
           )
         ),
         br(), br(),
@@ -148,7 +148,7 @@ modSummaryStatsUI <- function(id) {
           title = NULL,
           content = paste0(
             "This exports the Mean Kinship Z-score histogram as ",
-            "a PNG file to the user selected directory."
+            "a PNG file your browser saves to its download folder."
           )
         ),
         br(), br(),
@@ -161,7 +161,7 @@ modSummaryStatsUI <- function(id) {
           title = NULL,
           content = paste0(
             "This exports the Genome Uniqueness histogram as PNG ",
-            "file to the user selected directory."
+            "file your browser saves to its download folder."
           )
         ),
         br()
@@ -177,7 +177,7 @@ modSummaryStatsUI <- function(id) {
           title = NULL,
           content = paste0(
             "This exports Mean Kinship Coefficient box plot as PNG file ",
-            "to the user selected directory."
+            "your browser saves to its download folder."
           )
         ),
         br(), br(),
@@ -189,7 +189,7 @@ modSummaryStatsUI <- function(id) {
           title = NULL,
           content = paste0(
             "This exports the Mean Kinship Z-score box plot as ",
-            "a PNG file to the user selected directory."
+            "a PNG file your browser saves to its download folder."
           )
         ),
         br(), br(),
@@ -202,7 +202,7 @@ modSummaryStatsUI <- function(id) {
           title = NULL,
           content = paste0(
             "This exports Genome Uniqueness box plot as a PNG ",
-            "file to the user selected directory."
+            "file your browser saves to its download folder."
           )
         ),
         br()
@@ -391,8 +391,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       }
 
       # Calculate kinship from pedigree if not provided (the fallback
-      # recompute, the path the app always takes since appServer passes
-      # kinshipMatrix=NULL).
+      # recompute; the app passes its shared full-pedigree matrix, so this
+      # runs only when that reactive gives no matrix).
       # Issue #13 Slice 3: apply outside-information kinship overrides to this
       # matrix so the relationship table and the kinship CSV export reflect them
       # regardless of tab order. The passed-kinshipMatrix branch above already

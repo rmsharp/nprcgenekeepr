@@ -43,7 +43,7 @@ modPyramidUI <- function(id) {
                helpText(
                  "Increase height for better visibility with many age groups",
                         style =
-                   "font-size: 14px; color: darblue; font-weight: bold;"),
+                   "font-size: 14px; color: darkblue; font-weight: bold;"),
                hr(),
                sliderInput(ns("ageLabelSize"), "Age Label Size:",
                            min = 0.5, max = 2.0, value = 1.0, step = 0.1),

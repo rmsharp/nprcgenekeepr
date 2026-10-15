@@ -43,8 +43,8 @@ A list with two reactive elements: \code{stats}, the per-group
 metric data frame (or \code{NULL} when data are not ready), and
 \code{heatmap}, the \code{ggplot} heat map (or \code{NULL}). Errors
 raised inside \code{getGeneticDiversityStats} (a group member missing
-from the kinship matrix, or a group member with a missing birth date)
-are not caught, so the reactives error instead of returning \code{NULL}.
+from the kinship matrix) are not caught, so the reactives error instead
+of returning \code{NULL}.
 }
 \description{
 Assembles the live breeding-group, genetic-value, and kinship reactive
