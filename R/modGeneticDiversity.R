@@ -70,8 +70,9 @@ modGeneticDiversityUI <- function(id) {
 #' @param kinshipMatrix reactive returning a square kinship matrix (row and
 #'   column names are animal IDs) covering every member of every group;
 #'   \code{\link{getGeneticDiversityStats}} stops when a group member is
-#'   missing from it. In the app this is the genetic-value tab's
-#'   population-filtered matrix, not the full-pedigree matrix.
+#'   missing from it. In the app this is the full-pedigree kinship matrix that
+#'   Summary Statistics and Breeding Groups also use, so it covers every animal
+#'   of the pedigree, not only the Genetic Value population.
 #' @param currentDate Date used to derive age and the production birth window.
 #'   Defaults to \code{Sys.Date()}.
 #'

@@ -437,13 +437,15 @@ appServer <- function(input, output, session) {
 
   # Genetic Diversity Module (issue #112 Slice S4) -- assembles the formed
   # groups, the qc'd pedigree, the genetic value report, and the full kinship
-  # matrix into the red/yellow/green heat map.
+  # matrix into the red/yellow/green heat map. The matrix is the shared
+  # full-pedigree one, never gvResults$kinshipMatrix: that holds only the
+  # focal animals, and a group may hold any living animal (docs-audit CA2).
   modGeneticDiversityServer(
     "geneticDiversity",
     groups = reactive(shared$breedingGroups),
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues),
-    kinshipMatrix = gvResults$kinshipMatrix
+    kinshipMatrix = sharedKinshipMatrix
   )
 
   # Marker Genetics Module (issue #130 Slice 1) -- an independent,
