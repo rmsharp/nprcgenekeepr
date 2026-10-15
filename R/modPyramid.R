@@ -136,10 +136,14 @@ modPyramidServer <- function(id, pedigreeData) {
     output$downloadPlot <- downloadHandler(
       filename = function() paste0("pyramid_", Sys.Date(), ".png"),
       content = function(file) {
+        # With no pedigree loaded getPyramidPlot() would draw the packaged
+        # example, so stop here as the plot and the table above do.
+        req(pedigreeData())
         # Scale PNG dimensions based on user's plot height selection
         plotHeight <- if (!is.null(input$plotHeight)) input$plotHeight else 600L
         # Maintain aspect ratio: width = height * 1.5
         png(file, width = as.integer(plotHeight * 1.5), height = plotHeight)
+        on.exit(dev.off(), add = TRUE)
         getPyramidPlot(
           ped = pedigreeData(),
           binWidth = input$ageBin,
@@ -148,7 +152,6 @@ modPyramidServer <- function(id, pedigreeData) {
           showCounts = input$showCounts,
           ageLabelCex = input$ageLabelSize
         )
-        dev.off()
       }
     )
 
