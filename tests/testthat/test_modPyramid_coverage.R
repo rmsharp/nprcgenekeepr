@@ -68,3 +68,101 @@ test_that("downloadPlot falls back to the default height when unset", {
     }
   )
 })
+
+# Download Plot with nothing loaded (docs-audit part 2 slice 6d, flag CD5).
+#
+# getPyramidPlot(ped = NULL) draws the packaged example, so with no pedigree
+# loaded a click on Download Plot saved a picture of the example (46 animals)
+# as if it were the user's colony. The plot, the statistics table and the
+# height box on the same tab already stop with req(pedigreeData()); the
+# download handler must stop the same way, and must not leave a graphics
+# device open when drawing fails.
+
+pyramidDownloadInputs <- list(
+  plotHeight = 600L, ageBin = 2L, ageUnit = "years",
+  colorScheme = "default", showCounts = TRUE, ageLabelSize = 1.0
+)
+
+# Reads output$downloadPlot for a module whose pedigree is the reactive `ped`
+# and returns what the handler did: `path`, the saved file (NULL when it
+# stopped) and `isPng`, whether that file was a PNG (checked inside the
+# session, which deletes its files when it ends); `stopped`, the condition it
+# stopped with (NULL when it saved a file); and `leaked`, the graphics devices
+# the call left open. Leaked devices are closed here so one failing block
+# cannot disturb the next.
+pyramidDownload <- function(ped) {
+  rec <- new.env()
+  before <- as.integer(grDevices::dev.list())
+  shiny::testServer(
+    modPyramidServer,
+    args = list(pedigreeData = ped),
+    {
+      do.call(session$setInputs, pyramidDownloadInputs)
+      result <- tryCatch(output$downloadPlot, error = function(e) e)
+      if (inherits(result, "condition")) {
+        rec$stopped <- result
+      } else {
+        rec$path <- result
+        rec$isPng <- file.exists(result) && pyramidIsPng(result)
+      }
+    }
+  )
+  leaked <- setdiff(as.integer(grDevices::dev.list()), before)
+  for (device in leaked) grDevices::dev.off(device)
+  list(path = rec$path, isPng = rec$isPng, stopped = rec$stopped,
+       leaked = leaked)
+}
+
+test_that("downloadPlot saves no picture when no pedigree is loaded", {
+  skip_if_not_installed("shiny")
+
+  res <- pyramidDownload(shiny::reactive(NULL))
+
+  expect_s3_class(res$stopped, "shiny.silent.error")
+  expect_null(res$path)
+})
+
+test_that("downloadPlot still saves a PNG and leaves no device when a pedigree is loaded", {
+  skip_if_not_installed("shiny")
+
+  res <- pyramidDownload(shiny::reactive(pyramidTestPed()))
+
+  expect_null(res$stopped)
+  expect_true(res$isPng)
+  expect_length(res$leaked, 0L)
+})
+
+test_that("downloadPlot stops while the module is empty and saves once a pedigree arrives", {
+  skip_if_not_installed("shiny")
+
+  ped <- shiny::reactiveVal(NULL)
+  rec <- new.env()
+  shiny::testServer(
+    modPyramidServer,
+    args = list(pedigreeData = ped),
+    {
+      do.call(session$setInputs, pyramidDownloadInputs)
+      rec$empty <- tryCatch(output$downloadPlot, error = function(e) e)
+      ped(pyramidTestPed())
+      session$flushReact()
+      loaded <- tryCatch(output$downloadPlot, error = function(e) e)
+      rec$loadedIsPng <- is.character(loaded) && pyramidIsPng(loaded)
+    }
+  )
+
+  expect_s3_class(rec$empty, "shiny.silent.error")
+  expect_true(rec$loadedIsPng)
+})
+
+test_that("downloadPlot leaves no graphics device open when drawing fails", {
+  skip_if_not_installed("shiny")
+
+  testthat::local_mocked_bindings(
+    getPyramidPlot = function(...) stop("drawing failed")
+  )
+  res <- pyramidDownload(shiny::reactive(pyramidTestPed()))
+
+  expect_s3_class(res$stopped, "error")
+  expect_match(conditionMessage(res$stopped), "drawing failed", fixed = TRUE)
+  expect_length(res$leaked, 0L)
+})
