@@ -164,6 +164,16 @@ test_that("a reason with no words leaves the sentence without 'Reason:'", {
   expectNotUsed(res, notUsed)
 })
 
+## A guard added at GREEN (S998), not a RED block (a mutation run found it
+## missing): a reason that already ends in "?" or "!" gets no full stop added.
+test_that("a reason that already ends in a question mark gets no full stop added", {
+  local_mocked_bindings(
+    checkGenotypeFile = function(genotype) stop("what is in this file?")
+  )
+  res <- runSeparate(writeLinesTemp(goodGenotypeLines))
+  expectNotUsed(res, expectedNote("what is in this file?"))
+})
+
 ## A guard added at GREEN (S998), not a RED block: it passes before and after
 ## the change. A warning while only reading a file has never dropped it (the
 ## read sat outside the tryCatch); the new tryCatch around the read catches
