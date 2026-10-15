@@ -384,6 +384,122 @@ test_that("modGeneticDiversityServer: a failing heat-map calculation does not en
   )
 })
 
+## ---- One message when the groups do not match the pedigree (S995) ---------
+## Groups formed on one pedigree stay in Breeding Groups after a new file is
+## read or the view is trimmed, so a group can hold an animal the loaded
+## pedigree no longer has. The heat map and the guidance both read the same
+## calculation, so the page printed the same red error twice (the owner's
+## report, S994; both real-app cases measured S995). The page now says one
+## plain sentence for that case, and any other calculation error shows once.
+
+groupsOutsidePedigreeNote <- paste(
+  "Some animals in the breeding groups are not in the pedigree now loaded",
+  "(a new file or a trimmed view). Form the groups again to see the heat map."
+)
+
+## What each of the two places on the page shows, as text: an output that
+## raises an error shows that error's message (a silent error shows nothing).
+slotText <- function(expr) {
+  tryCatch(paste(as.character(expr), collapse = " "),
+           error = function(e) conditionMessage(e))
+}
+slotsOf <- function(output) {
+  list(guidance = slotText(output$guidance), heatmap = slotText(output$heatmap))
+}
+timesIn <- function(pattern, slots) {
+  sum(grepl(pattern, unlist(slots), fixed = TRUE))
+}
+
+test_that("groups that do not match the pedigree show the plain sentence once", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(c("f1", "not-in-pedigree")) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      slots <- slotsOf(output)
+      expect_equal(timesIn(groupsOutsidePedigreeNote, slots), 1L)
+      expect_match(slots$guidance, groupsOutsidePedigreeNote, fixed = TRUE)
+    }
+  )
+})
+
+test_that("with groups outside the pedigree the heat map area shows no error", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(c("f1", "not-in-pedigree")) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      slots <- slotsOf(output)
+      expect_identical(slots$heatmap, "")
+      expect_equal(timesIn("ped has no rows", slots), 0L)
+    }
+  )
+})
+
+test_that("any other calculation error shows once, not in both places", {
+  skip_if_not_installed("shiny")
+
+  ## Every group member is in the pedigree, but one is missing from the
+  ## kinship matrix, so the calculation stops with a different message.
+  kmatShort <- kmat[setdiff(ped$id, "f2"), setdiff(ped$id, "f2")]
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmatShort }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      slots <- slotsOf(output)
+      expect_equal(timesIn("kmat is missing kinship for group member(s): f2",
+                           slots), 1L)
+      expect_equal(timesIn(groupsOutsidePedigreeNote, slots), 0L)
+    }
+  )
+})
+
+## Green by design: the case the note must leave alone.
+test_that("a pedigree that holds every group member shows the heat map and no note", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modGeneticDiversityServer,
+    args = list(
+      groups = shiny::reactive({ list(g1, g2) }),
+      pedigree = shiny::reactive({ ped }),
+      geneticValues = shiny::reactive({ gv }),
+      kinshipMatrix = shiny::reactive({ kmat }),
+      currentDate = currentDate
+    ),
+    {
+      session$setInputs(housing = "shelter_pens")
+      slots <- slotsOf(output)
+      expect_equal(timesIn(groupsOutsidePedigreeNote, slots), 0L)
+      expect_match(slots$heatmap, "^data:image/png;base64,")
+    }
+  )
+})
+
 ## ---- Note about animals with no birth date (S931) -------------------------
 ## The app gave no sign that animals lack a birth date. When any animal in the
 ## breeding groups has none, the tab says how many, and how the Production
