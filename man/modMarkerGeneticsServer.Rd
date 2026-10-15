@@ -42,7 +42,9 @@ are uploaded); \code{candidateAssignmentTable}, the
 \code{\link{markerParentageLikelihood}} ranked-candidate data frame (a
 zero-row, full-column-shape data frame when no pair is flagged; or
 \code{NULL} before a genotype file and a pedigree are both available);
-\code{isReady}, \code{TRUE} once \code{comparisonTable} has a value;
+\code{isReady}, \code{TRUE} once \code{comparisonTable} has a value, and
+\code{FALSE} (never an error) when it has none, including when the
+uploaded genotype file cannot be used;
 \code{locusMetadataTable}, the \code{\link{checkLocusMetadata}} output
 (or \code{NULL} before a locus-metadata file is uploaded);
 \code{realizedRelatednessTable}, the
