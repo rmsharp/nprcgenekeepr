@@ -754,6 +754,26 @@ mountRealDiversity <- function(id, ...) {
   invisible(NULL)
 }
 
+# `code` (a test's own muffleConfig(shiny::testServer(appServer, {...})), which
+# stays written out in the test) runs with the child servers stubbed and the
+# Genetic Value stub returning the focal animals' own matrix. The Genetic
+# Diversity server is the real one unless a test passes a capturing one.
+withDiversityApp <- function(code, diversityServer = mountRealDiversity,
+                             summaryStatsServer = noopServer) {
+  testthat::with_mocked_bindings(
+    code,
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGVPopulationKinship,
+    modBreedingGroupsServer = stubBG,
+    modSummaryStatsServer = summaryStatsServer,
+    modPyramidServer = noopServer,
+    modGeneticDiversityServer = diversityServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr"
+  )
+}
+
 test_that(paste("appServer hands the Genetic Diversity tab the same shared",
                 "full-pedigree kinship reactive as Summary Statistics",
                 "(CA2, S993)"), {
@@ -769,16 +789,7 @@ test_that(paste("appServer hands the Genetic Diversity tab the same shared",
     invisible(NULL)
   }
 
-  testthat::with_mocked_bindings(
-    modInputServer = stubInput,
-    modPedigreeServer = stubPed,
-    modGeneticValueServer = stubGVPopulationKinship,
-    modBreedingGroupsServer = stubBG,
-    modSummaryStatsServer = captureSummaryStats,
-    modPyramidServer = noopServer,
-    modGeneticDiversityServer = captureDiversity,
-    modPotentialParentsServer = noopServer,
-    .package = "nprcgenekeepr",
+  withDiversityApp(
     {
       muffleConfig(shiny::testServer(appServer, {
         session$flushReact()
@@ -787,7 +798,9 @@ test_that(paste("appServer hands the Genetic Diversity tab the same shared",
         session$flushReact()
         capturedDiversityValue <<- capturedDiversityKin()
       }))
-    }
+    },
+    diversityServer = captureDiversity,
+    summaryStatsServer = captureSummaryStats
   )
 
   expect_true(is.function(capturedDiversityKin))
@@ -803,27 +816,16 @@ test_that(paste("with two focal animals and a living animal that is not focal",
                 "instead of stopping (CA2, S993)"), {
   result <- NULL
 
-  testthat::with_mocked_bindings(
-    modInputServer = stubInput,
-    modPedigreeServer = stubPed,
-    modGeneticValueServer = stubGVPopulationKinship,
-    modBreedingGroupsServer = stubBG,
-    modSummaryStatsServer = noopServer,
-    modPyramidServer = noopServer,
-    modGeneticDiversityServer = mountRealDiversity,
-    modPotentialParentsServer = noopServer,
-    .package = "nprcgenekeepr",
-    {
-      muffleConfig(shiny::testServer(appServer, {
-        session$flushReact()
-        ctl$ped(diversityPed)
-        ctl$gv(diversityReport)
-        ctl$grp(diversityGroups)
-        session$flushReact()
-        result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
-      }))
-    }
-  )
+  withDiversityApp({
+    muffleConfig(shiny::testServer(appServer, {
+      session$flushReact()
+      ctl$ped(diversityPed)
+      ctl$gv(diversityReport)
+      ctl$grp(diversityGroups)
+      session$flushReact()
+      result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+    }))
+  })
 
   # Said once, so a failure prints the stop's own text.
   info <- if (inherits(result, "error")) conditionMessage(result) else ""
@@ -837,26 +839,15 @@ test_that(paste("the Genetic Diversity tab still waits, without an error,",
                 "while no pedigree is loaded (CA2, S993)"), {
   result <- "not read"
 
-  testthat::with_mocked_bindings(
-    modInputServer = stubInput,
-    modPedigreeServer = stubPed,
-    modGeneticValueServer = stubGVPopulationKinship,
-    modBreedingGroupsServer = stubBG,
-    modSummaryStatsServer = noopServer,
-    modPyramidServer = noopServer,
-    modGeneticDiversityServer = mountRealDiversity,
-    modPotentialParentsServer = noopServer,
-    .package = "nprcgenekeepr",
-    {
-      muffleConfig(shiny::testServer(appServer, {
-        session$flushReact()
-        ctl$gv(diversityReport)
-        ctl$grp(diversityGroups)
-        session$flushReact()
-        result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
-      }))
-    }
-  )
+  withDiversityApp({
+    muffleConfig(shiny::testServer(appServer, {
+      session$flushReact()
+      ctl$gv(diversityReport)
+      ctl$grp(diversityGroups)
+      session$flushReact()
+      result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+    }))
+  })
 
   expect_null(result)
 })
@@ -866,26 +857,15 @@ test_that(paste("the Genetic Diversity tab still waits for the Genetic Value",
                 "from it (CA2, S993)"), {
   result <- "not read"
 
-  testthat::with_mocked_bindings(
-    modInputServer = stubInput,
-    modPedigreeServer = stubPed,
-    modGeneticValueServer = stubGVPopulationKinship,
-    modBreedingGroupsServer = stubBG,
-    modSummaryStatsServer = noopServer,
-    modPyramidServer = noopServer,
-    modGeneticDiversityServer = mountRealDiversity,
-    modPotentialParentsServer = noopServer,
-    .package = "nprcgenekeepr",
-    {
-      muffleConfig(shiny::testServer(appServer, {
-        session$flushReact()
-        ctl$ped(diversityPed)
-        ctl$grp(diversityGroups)
-        session$flushReact()
-        result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
-      }))
-    }
-  )
+  withDiversityApp({
+    muffleConfig(shiny::testServer(appServer, {
+      session$flushReact()
+      ctl$ped(diversityPed)
+      ctl$grp(diversityGroups)
+      session$flushReact()
+      result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+    }))
+  })
 
   expect_null(result)
 })
