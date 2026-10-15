@@ -299,6 +299,14 @@ longitudinal monitoring of colony genetic health.
   now "My own list". Paste the animal IDs into the box that appears. Groups are
   formed from those that are alive; an ID that is not in the pedigree stops the
   run and is named, and an animal that is not alive is left out and named.
+- Forming groups and then reading a different pedigree, or trimming the
+  pedigree on the Pedigree Browser, no longer leaves the **Groups**,
+  **Statistics** and **Group Detail** pages showing the old group sizes over
+  empty tables, counts of zero males and zero females, and a red error. When a
+  group holds an animal the pedigree now loaded does not have, each page says
+  so in one sentence and asks you to form the groups again or bring back the
+  earlier pedigree. The groups are kept, so bringing that pedigree back shows
+  them again.
 
 ## Mate Pair Analysis
 

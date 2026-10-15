@@ -314,6 +314,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
   appears. Groups are formed from those that are alive; an ID that is
   not in the pedigree stops the run and is named, and an animal that is
   not alive is left out and named.
+- Forming groups and then reading a different pedigree, or trimming the
+  pedigree on the Pedigree Browser, no longer leaves the **Groups**,
+  **Statistics** and **Group Detail** pages showing the old group sizes
+  over empty tables, counts of zero males and zero females, and a red
+  error. When a group holds an animal the pedigree now loaded does not
+  have, each page says so in one sentence and asks you to form the
+  groups again or bring back the earlier pedigree. The groups are kept,
+  so bringing that pedigree back shows them again.
 
 ## Mate Pair Analysis
 
@@ -484,6 +492,15 @@ export workflows, and longitudinal monitoring of colony genetic health.
   out of the Value column's share of low-value animals, as an
   "Undetermined" one is, so a group made only of such animals has no
   assessed value and its Value cell is red.
+
+- Fixed: on the Genetic Diversity tab, forming breeding groups and then
+  reading a different pedigree, or trimming the pedigree on the Pedigree
+  Browser, left the same red error ("ped has no rows for group
+  member(s): ...") on the page twice in place of the heat map. The tab
+  now says once, in a sentence, that some animals in the breeding groups
+  are not in the pedigree now loaded and asks you to form the groups
+  again. Any other error from the heat map's calculation is shown once,
+  where the heat map would be.
 
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
