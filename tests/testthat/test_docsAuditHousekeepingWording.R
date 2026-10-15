@@ -15,7 +15,9 @@
 ##       kinshipMatrix=NULL; appServer passes sharedKinshipMatrix.
 ##   CC1 a comment in modPedigree.R says a twin pair with a member trimmed out
 ##       of view is "ignored"; the call stops and the whole sidecar becomes
-##       NULL (the help already says so).
+##       NULL (the help already says so). S997 then changed the code itself
+##       (the pairs that fit are kept); this file's CC1 guard follows the
+##       comment.
 ##   CD4 ten Summary Statistics export popovers say the file goes "to the user
 ##       selected directory"; they are download buttons, so the browser
 ##       decides.
@@ -58,7 +60,7 @@ test_that("the readers find the seven places this file pins", {
   expect_match(commentText("modSummaryStats.R"),
                "Calculate kinship from pedigree if not provided", fixed = TRUE)
   expect_match(commentText("modPedigree.R"),
-               "Validated against pedigreeData()", fixed = TRUE)
+               "checkTwinRelations() only ever stop()s", fixed = TRUE)
 
   popoverHtml <- as.character(modSummaryStatsUI("x"))
   expect_equal(occurrences(popoverHtml, "shinyBS.addTooltip("), 12L)
@@ -113,17 +115,30 @@ test_that("the Summary Statistics kinship comment says what appServer passes", {
   )
 })
 
-test_that("the twinRelationsData comment says a trimmed-out member stops it", {
+## S997 changed what CC1's comment describes: the S994 sentence ("a pair with
+## a member trimmed out of view fails validation ... the whole sidecar becomes
+## NULL") was true of the code and is now false of it, because the owner ruled
+## the pairs that fit are kept (test_modPedigree_twinRelationsTrimmed.R). The
+## guard follows the comment.
+test_that("the twinRelationsData comment says the file is checked against the
+           whole studbook", {
   expectWording(
     commentText("modPedigree.R"),
-    now = paste(
-      "so a twin pair with one member trimmed out of view fails validation:",
-      "an error notification names the id and the whole sidecar becomes",
-      "NULL, a second pair with both members in view included (the",
-      "twinRelations help says so)."
+    now = c(
+      paste(
+        "Validated against studbook(), the whole pedigree the module",
+        "received, not the focal-trimmed view, so a twin pair with an animal",
+        "outside the view is still a valid pair."
+      ),
+      paste(
+        "Each use gets only the pairs whose two animals it holds: the",
+        "diagram the view, the other tabs the analysis pedigree."
+      )
     ),
     gone = c("is correctly treated as unknown/ignored",
-             "hidden-but-still-tracked")
+             "hidden-but-still-tracked",
+             "Validated against pedigreeData()",
+             "fails validation: an error notification names the id")
   )
 })
 
