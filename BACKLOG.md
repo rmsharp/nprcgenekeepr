@@ -152,20 +152,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Decision (the owner's):** drop the title bar (content only) or give each popover its own short title. The fix needs a render-level
       test of the popover title; `tests/testthat/test_docsAuditHousekeepingWording.R` already reads the rendered `addTooltip` calls.
 
-- [ ] **Formed breeding groups outlive a new pedigree and a trimmed view (DECISION NEEDED -- clear them when the pedigree
-      changes, or leave, Effort M; strict TDD)** (found S995, 2026-10-15, while the Genetic Diversity doubled-error item was
-      resolved) -- Breeding Groups sets its results only when Form Groups is clicked (`R/modBreedingGroups.R:800`,
-      `groupResults(list(...))`) and never clears them, so after a new file is read or the Pedigree Browser is trimmed,
-      `shared$breedingGroups` (`R/appServer.R:435`) still holds animals the loaded pedigree lacks. Measured S995 in the real
-      app (headless Chrome, 1 group on the example pedigree, Top ranked): reading `rhesusPedigree` (375 animals, no ids in
-      common) and trimming to the lineage of one young animal (`YTQBW7`) each left the Genetic Diversity page with the same
-      20-id error twice; since S995 that page says one sentence (`R/modGeneticDiversity.R`, `.groupsOutsidePedigreeNote`).
-      **Not examined:** what the Breeding Groups tab (Groups, Statistics, Group Detail), Genetic Value, Summary Statistics and
-      Potential Parents show with the old groups. **Decision:** measure those tabs first (Effort S), then clear the groups
-      when `shared$currentPedigree` changes (it changes Breeding Groups state that other tabs read), or leave it with the
-      sentence. Also: the guide's Genetic Diversity paragraph (`vignettes/articles/colony-manager-guide.qmd:840-866`) ends
-      "Until groups are formed and an analysis has run, the tab shows guidance instead of an empty plot" and does not name
-      the new sentence (the owner writes the sentence, if wanted).
+- [ ] **The guide does not name the "groups not in the pedigree" sentence (DECISION NEEDED -- add a sentence where the
+      owner wants it, or leave; docs only, Effort S, the owner writes the sentence)** (found S995, widened S996) -- the Genetic
+      Diversity page (`R/modGeneticDiversity.R:48-54`) and the Breeding Groups Groups, Statistics and Group Detail pages
+      (`R/modBreedingGroups.R:222`) say one sentence when a formed group holds an animal the loaded pedigree lacks (after a
+      new file or a trimmed view); `NEWS.Rmd` says it. The guide's Breeding Groups section
+      (`vignettes/articles/colony-manager-guide.qmd:623-700`) and its Genetic Diversity paragraph (`:840-866`, which ends
+      "Until groups are formed and an analysis has run, the tab shows guidance instead of an empty plot") name neither. Also:
+      with that sentence showing, "Export Current Group" stops silently and writes no file (a module-level probe, S996; a
+      browser download was not tried), while "Export Current Group Kinship Matrix" still writes the old group's matrix.
 
 - [ ] **The Changed Columns tab and `summary()` skip some rename fields (DECISION NEEDED -- should the
       tab list every rename, Effort S-M; strict TDD)** (found S988, while `checkChangedColsLst()` was made to

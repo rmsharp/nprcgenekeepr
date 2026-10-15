@@ -99,27 +99,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 996 Did
-**Deliverable:** the stale-groups item (`BACKLOG.md:155`, owner pick at the Phase 0 picker, option 1 of 4): formed breeding groups outlive a new pedigree and a trimmed view. First a read-only
-measurement (a scratch run, no repo code) of what the Breeding Groups tab (Groups, Statistics, Group Detail), Genetic Value, Summary Statistics and Potential Parents show with the old groups;
-then the owner rules: clear the groups when `shared$currentPedigree` changes, or leave them with the S995 sentence. Strict TDD and PRE-RED first if code changes (IN PROGRESS)
-**Started:** 2026-10-15 12:28 CDT
-**Status:** Session claimed. Work beginning (the measurement is the next step).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
-**Carried from S995 (its full block was condensed in this claim; the one-line record is below, the rest is in `HANDOFFS.md`):** the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling; the
-S995 picture shows two rows, Group 1 and Group 2, for one group asked: CA3), CC5 is the owner's call; the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check. 224 commits ahead of `origin/master`.
+**Deliverable, DONE (owner pick, option 1 of 4; "say it, keep the groups" ruled at the approach question; the owner approved the scope and the sentence at PRE-RED; every gate asked and answered, REFACTOR taken):**
+formed breeding groups that outlive a new file or a trimmed view no longer leave the Breeding Groups tab showing old sizes over empty tables. Measured first in the real app: only Genetic Diversity
+reads the groups (`R/appServer.R:445`); the damage was on the Breeding Groups tab itself ("Group 1 (18 animals)" over "No data available", Statistics 18 / 0 / 0, a red "values must be length 1" in
+Group Detail). Now Groups, Statistics and Group Detail each say one sentence (`R/modBreedingGroups.R:222`); the groups stay in memory, so bringing the earlier pedigree back shows them; the kinship
+table, candidate selector and returned groups are unchanged. One shared yes/no function (`R/groupMembersMissingFromPedigree.R`) serves this tab and Genetic Diversity. `NEWS.Rmd` (Breeding Group Formation).
+**Gates:** claim `d52869ae1`; RED `dcae37a3c` (8 blocks, 6 fail); GREEN `a71e7b922`; REFACTOR `aaebccedb`; NEWS `1b19ae49a`. Suite 3,764 blocks, 12,666 expectations, 0 failed, 0 errors, 187 skipped; lint 0;
+`check` 0/0/0; mutation 5 of 5, and 2 of 2 on the shared helper; real app before/after opened for the owner.
+**Handoff evaluation of S995: 8/10.** Helped: the Next list put this item first, every cite held, the scratch-`app.R` and mutation gotchas. Missing: the driver steps, and that "Top ranked" needs a Genetic
+Value run first; `BACKLOG.md:155` named three tabs that never read the groups; `NEWS.md` lacked S995's entry. Wrong: nothing else found.
+**Self-assessment: 8/10.** + searched the readers and measured the real app before asking; a plain question with a side-by-side; RED reasons read; mutations; pictures opened before the long suite; the export
+claim probed. - two avoidable driver failures (no Genetic Value run; the EEXIST trap S995 had written down); said "Export Current Group writes no file" at the gate before probing it (true when probed).
+**Next:** the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling; CC5 is the owner's call); the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check; the guide-sentence item (`BACKLOG.md:155`,
+DECISION NEEDED). 230 commits ahead of `origin/master`.
+**Gotchas:** see the `HANDOFFS.md` receipt and Learning 962 (a fresh picture folder per driver run; read the picture, not `textContent`; read `git diff NEWS.md` after a re-knit).
 
 
 ### Sessions 947-995 (condensed S950 to S996; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S995: the Genetic Diversity page says one plain sentence, once, when a formed group holds an animal the loaded pedigree lacks, instead of the same error twice (`R/modGeneticDiversity.R:48-54,136-169`;
-one helper, `.groupMembersMissingFromPedigree`, `R/getGeneticDiversityStats.R:142-156`; `NEWS.Rmd:461-467`; strict TDD, REFACTOR taken; claim `43f95da59`, RED `660b27ef2`; evaluation of S994 9/10,
-self 7/10). **Gotchas kept (S995):** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); the packaged `inst/shinytest/app.R` loads the
-installed package, so a scratch `app.R` with `load_all()` is needed; the studbook stays untracked (never `git add -A`); never `git stash` here.
+helper `.groupMembersMissingFromPedigree`, now `R/groupMembersMissingFromPedigree.R:17`; `NEWS.Rmd:461-467`; strict TDD, REFACTOR taken; claim `43f95da59`, RED `660b27ef2`; evaluation of S994 9/10,
+self 7/10). **Gotchas kept (S995):** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); real-app runs need a scratch `app.R` with `load_all()`
+(the packaged one loads the installed package); the studbook stays untracked (never `git add -A`); never `git stash` here.
 S994: the seven small wrong statements of the S991 housekeeping list fixed (`test_docsAuditHousekeepingWording.R`; ten popovers share `.browserSavesText`; strict TDD, REFACTOR taken; claim
 `1c332bbf4`, RED `00e84f614`; evaluation of S993 9/10, self 7/10). **Gotchas kept (S994):** `.help-block` color is forced gray, so inline `color:` shows nothing; the alerts sit on the Export
 sub-tab; every popover header reads "character(0)".
 S993: the Genetic Diversity tab scores groups that hold a living animal outside the Genetic Value population (`R/appServer.R:448` passes `sharedKinshipMatrix`, flag CA2; `NEWS.Rmd:451`; strict
 TDD; 9/10, self 8/10). **Gotchas kept:** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call (it captures its block unevaluated); start every R
-call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`.
 S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (flag CD5; `NEWS.Rmd:445`; 9/10, self 8/10). S991: the 21 slice 6d candidates re-checked
 (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`; an audit; 9/10, self 8/10); **gotcha kept:** the CC1 fix needs a layout-builder probe with pairs outside the view.
 S990: the help for `kinship()` chrtype and `hasBothParents()` id (9/10, self 8/10). S989: `checkRequiredCols()` ignores an `NA` column name (flag PB4; `NEWS.Rmd:437`; 8/10, self 8/10).
