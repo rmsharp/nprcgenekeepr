@@ -164,6 +164,27 @@ test_that("a reason with no words leaves the sentence without 'Reason:'", {
   expectNotUsed(res, notUsed)
 })
 
+## A guard added at GREEN (S998), not a RED block: it passes before and after
+## the change. A warning while only reading a file has never dropped it (the
+## read sat outside the tryCatch); the new tryCatch around the read catches
+## errors only, so it must stay that way.
+test_that("a warning while only reading the genotype file does not drop it", {
+  local_mocked_bindings(
+    getGenotypes = function(fileName, sep = ",") {
+      warning("harmless note while reading")
+      data.frame(id = oneFileIds,
+                 first_name = c("A", "B", "A", "B", "C", "C", "A", "B"),
+                 second_name = c("B", "C", "C", "A", "A", "B", "B", "C"),
+                 stringsAsFactors = FALSE)
+    }
+  )
+  res <- suppressWarnings(runSeparate(writeLinesTemp(goodGenotypeLines)))
+  expect_null(res$note)
+  expect_false(grepl("alert-info", res$html, fixed = TRUE))
+  expect_true(all(c("first", "second") %in% names(res$cleaned)))
+  expect_false(is.null(res$genotype))
+})
+
 test_that("the pedigree-only mode says nothing about a genotype file left in the box", {
   res <- runSeparate(writeLinesTemp(c("id,first_name", "s1,A", "d1,B")),
                      mode = "pedFile")

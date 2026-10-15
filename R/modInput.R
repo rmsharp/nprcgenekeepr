@@ -253,9 +253,9 @@ modInputUI <- function(id) {
 #'   \item \code{cleanedStudbook} - The QC-cleaned studbook data
 #'   \item \code{genotypeData} - Genotype data (\code{id}, \code{first},
 #'     \code{second}) taken from the cleaned studbook when it carries
-#'     genotypes. A separately uploaded genotype file that fails
-#'     \code{\link{checkGenotypeFile}} is dropped without a message, leaving
-#'     \code{NULL}
+#'     genotypes. A separately uploaded genotype file that cannot be read, or
+#'     that fails \code{\link{checkGenotypeFile}}, is not used, leaving
+#'     \code{NULL}; the QC Summary says why
 #'   \item \code{qcSummary} - Summary of QC results: a list with
 #'     \code{errors}, \code{warnings} and \code{records} (counts of error
 #'     rows, warning rows and cleaned records)
@@ -488,19 +488,38 @@ modInputServer <- function(id) {
       # Merge an uploaded genotype file (separate pedigree/genotype mode) into
       # the raw pedigree BEFORE qcStudbook, mirroring the monolith
       # (inst/application/server.r:117-156): read with getGenotypes, validate
-      # with checkGenotypeFile (degrade to NULL on warning/error), then merge
-      # with addGenotype so the integer first/second columns ride the cleaned
-      # studbook into reportGV via getGVGenotype()/hasGenotype(). The merge is
-      # guarded against a NULL genotype (addGenotype(ped, NULL) errors).
+      # with checkGenotypeFile, then merge with addGenotype so the integer
+      # first/second columns ride the cleaned studbook into reportGV via
+      # getGVGenotype()/hasGenotype(). A file that cannot be read (an error),
+      # or that the check refuses (an error or a warning), is not merged and
+      # the QC Summary says why (separateGenotypeNote); a warning while only
+      # reading the file does not drop it. The merge is guarded against a NULL
+      # genotype (addGenotype(ped, NULL) errors).
+      separateGenotypeNote <- NULL
       if (identical(input$fileContent, "separatePedGenoFile") &&
             !is.null(input$genotypeFile)) {
         sep <- if (is.null(input$separator)) "," else input$separator
-        genotype <- getGenotypes(input$genotypeFile$datapath, sep = sep)
         genotype <- tryCatch(
-          checkGenotypeFile(genotype),
-          warning = function(w) NULL,
-          error = function(e) NULL
+          getGenotypes(input$genotypeFile$datapath, sep = sep),
+          error = function(e) e
         )
+        if (!inherits(genotype, "condition")) {
+          genotype <- tryCatch(
+            checkGenotypeFile(genotype),
+            warning = function(w) w,
+            error = function(e) e
+          )
+        }
+        if (inherits(genotype, "condition")) {
+          reason <- conditionMessage(genotype)
+          separateGenotypeNote <- paste0(
+            "The genotype file was not used, so no genotypes are used.",
+            if (nzchar(reason)) {
+              paste0(" Reason: ", reason, if (!grepl("[.!?]$", reason)) ".")
+            }
+          )
+          genotype <- NULL
+        }
         if (!is.null(genotype)) {
           rawData <- addGenotype(rawData, genotype)
         }
@@ -549,9 +568,10 @@ modInputServer <- function(id) {
 
       # One-file mode: read the genotype columns of the cleaned studbook and
       # keep the line the QC Summary shows about them. Every other mode keeps
-      # the studbook as it is and has no line.
+      # the studbook as it is; its only line is the separate-files mode's
+      # "genotype file was not used" sentence.
       cleaned <- qcResult$cleaned
-      genotypeNote <- NULL
+      genotypeNote <- separateGenotypeNote
       if (identical(input$fileContent, "commonPedGenoFile") &&
             !is.null(cleaned)) {
         oneFile <- readOneFileGenotypes(cleaned)

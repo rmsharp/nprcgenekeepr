@@ -15,9 +15,9 @@ A list with reactive components:
 \item \code{cleanedStudbook} - The QC-cleaned studbook data
 \item \code{genotypeData} - Genotype data (\code{id}, \code{first},
 \code{second}) taken from the cleaned studbook when it carries
-genotypes. A separately uploaded genotype file that fails
-\code{\link{checkGenotypeFile}} is dropped without a message, leaving
-\code{NULL}
+genotypes. A separately uploaded genotype file that cannot be read, or
+that fails \code{\link{checkGenotypeFile}}, is not used, leaving
+\code{NULL}; the QC Summary says why
 \item \code{qcSummary} - Summary of QC results: a list with
 \code{errors}, \code{warnings} and \code{records} (counts of error
 rows, warning rows and cleaned records)
