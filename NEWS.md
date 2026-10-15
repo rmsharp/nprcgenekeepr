@@ -590,6 +590,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
   missing from the loaded pedigree or had failed its format check. The
   app now stays connected, skips the preview, and explains why next to
   the export controls.
+- Fixed: the Marker Genetics module's "ready" answer (`isReady`), which
+  only a script or app that uses the module itself reads, stopped with
+  an error instead of saying FALSE when the uploaded genotype file could
+  not be used (wrong columns, a row too short to read, an empty file).
+  The Marker Genetics tab looks the same: it still shows the error for
+  such a file.
 - Fixed: the sort order of the Genetic Value Analysis tiers, the main
   pedigree table and the Breeding Group member table could vary with the
   server's regional settings; all three now sort the same way
