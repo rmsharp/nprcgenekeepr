@@ -99,10 +99,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 997 Did
-**Deliverable:** CC1 -- the Pedigree Browser's twin-pairs file: one id outside the focal-trimmed view stops `twinRelationsData()` and drops every pair, including pairs still in view (IN PROGRESS)
-**Started:** 2026-10-15 (owner pick at the Phase 0 picker, "CC1 twin file vs trimmed view", item 1 of 4; `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`, row CC1, proposed ruling (a): validate against the whole studbook, not the view)
-**Status:** Session claimed. PRE-RED: read `R/modPedigree.R:521-544,956-958` and the twin tests, measure the trimmed case, then the scope and approach ruling is the owner's. Strict TDD; every gate asked and answered.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; "keep the pairs that fit, no message" ruled at the approach question; the owner approved the scope and the help sentence at PRE-RED; every gate asked and answered, REFACTOR taken):**
+CC1 of the slice 6d re-check: the Pedigree Browser's twin-pairs file no longer drops every pair when a focal trim leaves one animal outside the view. `twinRelationsData()` checks the file against `studbook()`
+(`R/modPedigree.R:530`); `.twinPairsWithin()` (`R/twinPairsWithin.R:20`) hands the diagram the pairs that fit the view and the returned `twinRelations` the pairs that fit the analysis pedigree. An id not in the
+studbook, or a pair that does not fit, still rejects the whole file. Probe: the layout builder and `kinship()` both stop on a pair with an animal they do not hold, so the audit's option (a) alone would have broken them.
+Real app (bundled example, focal E06FRB and 7U5NJD, trim on, 44 animals): red error naming 3 ids and 0 connector edges before; no error and one DZ edge (8GSXTQ-P844CW) after. Focal H16EC4 and 8GSXTQ: Summary
+Statistics kinship of E06FRB/HV7LZ3 0.125 before, 0.5 after. `NEWS.Rmd:89` (the twin-file bullet).
+**Gates:** claim `0dafa9d68`; RED `f14753b50` (11 blocks, 7 fail, 22 of 38 expectations; plus 1 of 10 in the housekeeping file); GREEN `8f1d4decb`; REFACTOR `7d51a14f2`; NEWS `9e66ce647`. Suite 3,775 blocks,
+12,708 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; mutation 6 of 6 at GREEN and 4 of 4 on the lifted helper; before and after pictures opened for the owner.
+**Handoff evaluation of S996: 8/10.** Helped: the Next list put CC1 first as a PRE-RED item; the S991 gotcha "needs a layout-builder probe with pairs outside the view" was exactly right; the scratch-`app.R` recipe; Learning
+961/962 (fresh picture folder, no `git checkout` mutation). Missing: `AppDriver` needs `NOT_CRAN=true` ("Reason: On CRAN"); the twin fixture names; that `kinship()` also stops on such a pair. Wrong: nothing found.
+**Self-assessment: 8/10.** + real-app before measured and opened before the option text; the probe found the real constraint; RED reasons read; mutations; after pictures before the long suite. - said "6 fail" at the
+gate (7); a RED `expect_setequal(NULL)` error fixed before commit; two wasted driver runs (CRAN, zsh word splitting); the NEWS sentence was mine, not the owner's.
+**Next:** the CB1 (`R/modInput.R:490-507`), CB5 and CA3 builds (each its own PRE-RED ruling; CC5 is the owner's call); the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check; the guide-sentence item
+(`BACKLOG.md:155`, DECISION NEEDED). Optional tidy (not in the backlog): the "both ids held" mask in `R/applyKinshipOverridesToMatrix.R:26` and `R/prepareKinshipOverrides.R:29` (they also warn). Ahead of `origin/master`: see `git status`.
+**Gotchas:** see the `HANDOFFS.md` receipt and Learning 963 (`NOT_CRAN=true` for a scratch `AppDriver`; zsh `${=VAR}`; read a connector from the widget's edge list; a scratch worktree of the RED sha for "before").
 
 
 ### Sessions 947-996 (condensed S950 to S997; full record in `CHANGELOG.md` and `HANDOFFS.md`)
@@ -161,50 +172,21 @@ an id; strict TDD, REFACTOR taken; evaluation of S972 9/10, self 7/10).
 S974: the one-file genotype tutorials: the article and manual say a genotyped animal's own alleles replace simulated ones, and `a2interactive.Rmd:742-785` shows `addGenotype()` then `reportGV()` (gate `test_genotypeTutorialsWording.R`; strict TDD, REFACTOR taken;
 evaluation of S973 9/10, self 8/10); it found the NA founder numbers.
 **Gotchas kept (S974):** the chunk's counts change with any edit above it (one seed); rerun a load-failed benchmark file alone.
-S975: founder genome equivalents, their standard error and gene diversity come from the pedigree alone, so the Summary tab shows numbers, not `NA` and `N/A` (`R/reportGV.R:294-318`;
-strict TDD, REFACTOR taken; evaluation of S974 9/10, self 8/10). **Gotchas kept (S975):** `hasGenotype()` is TRUE for numeric columns
-with no code; the second drop runs after the first; click `a[data-value='Summary']` first; `test_oneFileGenotypesWording.R:135` builds the example's path itself.
-S976: the eight marker-genetics code candidates of docs-audit part 2 re-checked against today's code (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`; an audit, no code change; all 11
-claims still real, 2 moderate: a blank allele becomes `"NA/NA"`, F_ROH follows the genotype file's locus list; the owner took the recommended option on all three rulings, now three READY `BACKLOG.md` items;
-evaluation of S975 9/10, self 8/10). **Gotchas kept (S976):** fix the builder and He together (else an all-blank locus gives He 1.0 in the app); the Marker Genetics tab has no warning handler; the module never
-passes the sidecar to the checker (`R/modMarkerGenetics.R:553,633`); `getGenotypes()` reads blanks as NA but `read.csv()` keeps `""` in a text column; start probe scripts in the project root.
-S977: a blank allele is missing, not the text `"NA/NA"` (`R/buildMarkerGenotypeMatrix.R:54`; `R/markerHeterozygosity.R:105-119`; the shipped sequence example has 2,070 blank-allele records, so its numbers moved and
-`marker_genetics_genomic_roh.png` was retaken; strict TDD, REFACTOR taken; evaluation of S976 8/10, self 8/10). **Gotchas kept (S977):** a script's `read.csv()` keeps `""` in a text column, which the ruling did not cover;
-`computeGenomicROH()` takes the raw sidecar, not `checkLocusMetadata()`'s output (`R/modMarkerGenetics.R:817`); run a capture before a mutation harness, never together.
-S978: the F_ROH warning plus a notice above the F_ROH table (`R/computeGenomicROH.R:112-118`, `R/sidecarLociMissingFromMatrix.R:22,39`, `R/modMarkerGenetics.R:1102-1128`; no number or picture changed, the owner chose no LD Block notice;
-strict TDD, REFACTOR taken; evaluation of S977 8/10, self 8/10). **Gotchas kept (S978):** `sidecarLociMissingFromMatrix()` reads `coverage`, so it takes `checkLocusMetadata()`'s output, the opposite of `computeGenomicROH()`'s raw input;
-under `testServer()` the table's observer runs the function at each `setInputs()`, so collect warnings across the upload and the read with `withCallingHandlers()`; read help with `roxygenText()` (only `#'` lines);
-the locus file upload is shared by the Linkage and Genomic ROH tabs.
-S979: a blank chromosome is missing in `checkLocusMetadata()` (`R/checkLocusMetadata.R:76-79`); `checkGenotypeFile()` stops once, on one line, naming every column with a collision (`R/checkGenotypeFile.R:55-73`);
-strict TDD, REFACTOR taken; evaluation of S978 8/10, self 8/10. **Gotchas kept (S979):** check which field each consumer reads (`coverage` or `chrom`) before sizing a "one line" fix;
-read the ratchet results from `methodology/.quality-gates-results.json`; set `markerGenetics-rohMinSnp` to 3 on the shipped sequence example.
-S980: the jmac example's two impossible sire cells are blank (`inst/extdata/examples/deidentified_jmac_ped.csv:2485,2612`; strict TDD; evaluation of S979 8/10, self 7/10). **Gotchas kept (S980):** count a field's rows before
-offering to blank it; `#dataInput-qcSummaryUI` is empty until its sub-tab is active; read `textContent`, not `innerText`; `dev/extdata-scratch/deidentified_jmac_ped_edited.csv` (build-ignored) still holds the two cells.
-S981: the jmac example is the 2018 studbook, de-identified (2,590 animals; recipe `data-raw/buildJmacExample.R`, seed 20180711); it loads at Minimum Dam Age 3.3 and Minimum Sire Age 4.3 (strict TDD; evaluation of S980 8/10,
-self 8/10). **Gotchas kept (S981):** the studbook stays untracked (local exclude plus a `.Rbuildignore` line; never `git add -A`); `install.packages(".")` ignores `.Rbuildignore`; the Errors table counts births, not animals.
-S982: the Input tab warns about a death or departure before the birth date (`R/getExitBeforeBirthWarning.R:21-44`, called from `R/runQcStudbook.R:241-249`; strict TDD; evaluation of S981 8/10, self 7/10). **Gotchas kept
-(S982):** `ped$exit` partial-matches `exitDate` (read with `[[ ]]`); `qcStudbook()` keeps a file's own `age` column; read the lint count before `git commit`; assert every anchor before writing any file.
-S983: a harem's sire keeps his relatives out of his harem, kinship and ancestry alike, and a harem whose sire excludes everyone left is the sire alone (`R/fillGroupMembers.R:60-67`; 29 of 40 seeded
-runs had a sire's mother, daughter or full sister in his harem before, 0 after; strict TDD, REFACTOR taken; evaluation of S982 8/10, self 8/10). **Gotchas kept (S983):** read `kin` with `[`
-(`kin[[absent]]` errors); a real-app DT table is server-side (ask for all rows); the studbook stays untracked (never `git add -A`); never `git stash` here.
-S984: a harem group with no seeded male is given a sampled sire, so a male seeded in only some groups no longer stops the run ("subscript out of bounds") or leaves harems without a male
-(`R/initializeHaremGroups.R:37-63`, `R/groupsWithoutSire.R:1-35`; strict TDD, REFACTOR taken; evaluation of S983 8/10, self 8/10). **Gotchas kept (S984):** `makeGroupMembers()` returns only
-the first `numGp` groups now; a real-app probe needs a scratch `R CMD INSTALL` and the pane's own tab link; the studbook stays untracked (never `git add -A`); never `git stash` here.
-S985: `groupAddAssign(harem = TRUE)` with a non-zero `sexRatio` stops before forming anything and names both settings and the ratio (`R/groupAddAssign.R:259-264`; harem plus ratio gave sizes 1, 1, 2
-in 5 of 5 seeds; strict TDD, REFACTOR taken; evaluation of S984 9/10, self 8/10). **Gotchas kept (S985):** the stop is after the exhaustive branch and before the too-few-males count, both pinned;
-`sameGroups()` is a global test helper (`helper-haremPedigree.R`); a detached `( cmd ) &` returns at once, so watch the job's own `EXIT=` line; never `git add -A`, never `git stash`.
-S986: the ten slice 6a-6b flags of docs-audit part 2 re-checked against today's code (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`; 9 findings, 1 moderate: one invalid date in
-a file with two date columns stops the Input tab with a cryptic error; an audit, no code change; the owner took the recommended option on all four rulings, now four READY `BACKLOG.md` items; evaluation of
-S985 8/10, self 8/10). **Gotchas kept (S986):** `runQcStudbook()` needs `reportChanges = TRUE` to show renames (the module passes it); `qcStudbook(reportErrors = TRUE)` is `NULL` for a clean file; a probe
-installs a package into a scratch library, never into renv; start every Bash command with an absolute `cd`; the studbook stays untracked (never `git add -A`); never `git stash` here.
-S987: the Input tab lists every invalid date by row, in every date column (`R/getDateErrorsAndConvertDatesInPed.R:48-55`: each date column's own invalid cells blanked with `convertDate(reportErrors = TRUE)`
-on a one-column slice; help sentence `:9-12`; NEWS `NEWS.Rmd:423`; the real Input module on `ExamplePedigree.csv`: a bad birth in row 12 now reads "Invalid date values: 12"; strict TDD, REFACTOR taken;
-evaluation of S986 9/10, self 8/10). **Gotchas kept (S987):** `drop = FALSE` on the loop's slice is pinned only by the no-`recordStatus` block (`test_getDateErrorsAndConvertDatesInPed.R:170`); an "added" record
-with unreadable date text still stops in `convertDate()`'s last `rbind` (not filed); 15 test files read `NEWS.Rmd`/`NEWS.md`.
-S988: `checkChangedColsLst()` counts every kind of rename (`R/checkChangedColsLst.R:37`, `any(lengths(changedCols) > 0L)`), so a lowercase `geographicorigin` header sets
-`hasChangedCols` (docs-audit flag PB7; NEWS `NEWS.Rmd:430`; strict TDD, REFACTOR taken; evaluation of S987 9/10, self 8/10). **Gotchas kept (S988):** with that header the flag is TRUE but the
-Changed Columns tab stays hidden and the Warnings list has no row (NEWS says so; decision item `BACKLOG.md:141`); the flag is `res$qcResult$hasChangedCols`; `export VAR` before `Rscript`,
-a trailing `VAR=x` is an argument; 15 test files read `NEWS.Rmd`/`NEWS.md`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+S975: founder genome equivalents, their standard error and gene diversity come from the pedigree alone (`R/reportGV.R:294-318`; 9/10, self 8/10). S976-S979, marker genetics: the S976 re-check
+(`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`); a blank allele is missing, not `"NA/NA"` (S977, `R/buildMarkerGenotypeMatrix.R:54`, `R/markerHeterozygosity.R:105-119`); the F_ROH warning and
+notice (S978, `R/computeGenomicROH.R:112-118`, `R/sidecarLociMissingFromMatrix.R:22,39`, `R/modMarkerGenetics.R:1102-1128`); a blank chromosome is missing and `checkGenotypeFile()` names every collision once
+(S979, `R/checkLocusMetadata.R:76-79`, `R/checkGenotypeFile.R:55-73`); strict TDD, 8-9/10, self 8/10. **Gotchas kept (S976-S979):** `computeGenomicROH()` takes the raw sidecar but
+`sidecarLociMissingFromMatrix()` takes `checkLocusMetadata()`'s output; under `testServer()` collect warnings with `withCallingHandlers()`; read help with `roxygenText()`; a script's `read.csv()` keeps `""`.
+S980-S982: the jmac example's two impossible sire cells are blank (`inst/extdata/examples/deidentified_jmac_ped.csv:2485,2612`); the example is the 2018 studbook de-identified (`data-raw/buildJmacExample.R`, seed
+20180711; the studbook stays untracked); the Input tab warns about a death before the birth date (`R/getExitBeforeBirthWarning.R:21-44`); 8/10, self 7-8/10. **Gotchas kept:** `ped$exit` partial-matches `exitDate` (read
+with `[[ ]]`); read `textContent`, not `innerText`; count a field's rows before offering to blank it.
+S983-S985, harem groups: a sire's relatives stay out of his harem (`R/fillGroupMembers.R:60-67`); a harem group with no seeded male gets a sampled sire (`R/initializeHaremGroups.R:37-63`,
+`R/groupsWithoutSire.R:1-35`); harem plus a non-zero `sexRatio` stops (`R/groupAddAssign.R:259-264`); strict TDD, REFACTOR taken, 8-9/10, self 8/10. **Gotchas kept:** `kin[[absent]]` errors (read with `[`);
+`makeGroupMembers()` returns only the first `numGp` groups; `sameGroups()` is a global test helper (`helper-haremPedigree.R`).
+S986-S988: the 6a-6b re-check (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`); the Input tab lists every invalid date by row, in every date column
+(`R/getDateErrorsAndConvertDatesInPed.R:48-55`; `NEWS.Rmd:423`); `checkChangedColsLst()` counts every rename (`R/checkChangedColsLst.R:37`; `NEWS.Rmd:430`); 8-9/10, self 8/10. **Gotchas kept:**
+`runQcStudbook()` needs `reportChanges = TRUE` to show renames; `qcStudbook(reportErrors = TRUE)` is `NULL` for a clean file; 15 test files read `NEWS.Rmd`/`NEWS.md`; a probe installs into a scratch library,
+never renv; `export VAR` before `Rscript`; start every Bash command with an absolute `cd`; never `git add -A` (the studbook stays untracked), never `git stash` here.
 **Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
 `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
 **Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
