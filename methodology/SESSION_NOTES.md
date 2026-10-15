@@ -98,25 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 997 Did
-**Deliverable, DONE (owner pick, item 1 of 4; "keep the pairs that fit, no message" ruled at the approach question; the owner approved the scope and the help sentence at PRE-RED; every gate asked and answered, REFACTOR taken):**
-CC1 of the slice 6d re-check: the Pedigree Browser's twin-pairs file no longer drops every pair when a focal trim leaves one animal outside the view. `twinRelationsData()` checks the file against `studbook()`
-(`R/modPedigree.R:530`); `.twinPairsWithin()` (`R/twinPairsWithin.R:20`) hands the diagram the pairs that fit the view and the returned `twinRelations` the pairs that fit the analysis pedigree. An id not in the
-studbook, or a pair that does not fit, still rejects the whole file. Probe: the layout builder and `kinship()` both stop on a pair with an animal they do not hold, so the audit's option (a) alone would have broken them.
-Real app (bundled example, focal E06FRB and 7U5NJD, trim on, 44 animals): red error naming 3 ids and 0 connector edges before; no error and one DZ edge (8GSXTQ-P844CW) after. Focal H16EC4 and 8GSXTQ: Summary
-Statistics kinship of E06FRB/HV7LZ3 0.125 before, 0.5 after. `NEWS.Rmd:89` (the twin-file bullet).
-**Gates:** claim `0dafa9d68`; RED `f14753b50` (11 blocks, 7 fail, 22 of 38 expectations; plus 1 of 10 in the housekeeping file); GREEN `8f1d4decb`; REFACTOR `7d51a14f2`; NEWS `9e66ce647`. Suite 3,775 blocks,
-12,708 expectations, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; mutation 6 of 6 at GREEN and 4 of 4 on the lifted helper; before and after pictures opened for the owner.
-**Handoff evaluation of S996: 8/10.** Helped: the Next list put CC1 first as a PRE-RED item; the S991 gotcha "needs a layout-builder probe with pairs outside the view" was exactly right; the scratch-`app.R` recipe; Learning
-961/962 (fresh picture folder, no `git checkout` mutation). Missing: `AppDriver` needs `NOT_CRAN=true` ("Reason: On CRAN"); the twin fixture names; that `kinship()` also stops on such a pair. Wrong: nothing found.
-**Self-assessment: 8/10.** + real-app before measured and opened before the option text; the probe found the real constraint; RED reasons read; mutations; after pictures before the long suite. - said "6 fail" at the
-gate (7); a RED `expect_setequal(NULL)` error fixed before commit; two wasted driver runs (CRAN, zsh word splitting); the NEWS sentence was mine, not the owner's.
-**Next:** the CB1 (`R/modInput.R:490-507`), CB5 and CA3 builds (each its own PRE-RED ruling; CC5 is the owner's call); the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check; the guide-sentence item
-(`BACKLOG.md:155`, DECISION NEEDED). Optional tidy (not in the backlog): the "both ids held" mask in `R/applyKinshipOverridesToMatrix.R:26` and `R/prepareKinshipOverrides.R:29` (they also warn). Ahead of `origin/master`: see `git status`.
-**Gotchas:** see the `HANDOFFS.md` receipt and Learning 963 (`NOT_CRAN=true` for a scratch `AppDriver`; zsh `${=VAR}`; read a connector from the widget's edge list; a scratch worktree of the RED sha for "before").
+### What Session 998 Did
+**Deliverable:** CB1 -- in "separate pedigree and genotype files" mode a bad genotype file is dropped with no message (`R/modInput.R:490-507`) (IN PROGRESS)
+**Started:** 2026-10-15 (owner pick at the Phase 0 picker, "CB1: bad genotype file dropped silently", item 1 of 4;
+`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`, row CB1, proposed ruling (a): say why in the QC Summary, as S971 did for a one-file pedigree)
+**Status:** Session claimed. PRE-RED: read `R/modInput.R:256-258,490-507` and `test_modInput_qcStudbook.R:705-725`, measure the real app's separate-file mode with a bad genotype file,
+then the scope and wording ruling is the owner's. Strict TDD; every gate asked and answered.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
 
-### Sessions 947-996 (condensed S950 to S997; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-997 (condensed S950 to S998; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S997: the Pedigree Browser's twin-pairs file no longer drops every pair when a focal trim leaves one animal outside the view (`R/modPedigree.R:530`; `.twinPairsWithin()`
+`R/twinPairsWithin.R:20`; `NEWS.Rmd:89`; strict TDD, REFACTOR taken; claim `0dafa9d68`, RED `f14753b50`, GREEN `8f1d4decb`, REFACTOR `7d51a14f2`, NEWS `9e66ce647`; evaluation of S996 8/10,
+self 8/10). **Gotchas kept (S997):** a scratch `AppDriver` needs `NOT_CRAN=true` ("Reason: On CRAN"); zsh needs `${=VAR}`; read a connector from the widget's edge list; a scratch worktree of
+the RED sha gives the "before" run (Learning 963); `kinship()` and the layout builder both stop on a twin pair with an animal they do not hold.
 S996: the Breeding Groups Groups, Statistics and Group Detail pages say one plain sentence when a formed group holds an animal the loaded pedigree lacks, in place of old sizes over empty tables and a red error
 (`R/modBreedingGroups.R:222`; one shared yes/no function `R/groupMembersMissingFromPedigree.R`; `NEWS.Rmd` Breeding Group Formation; strict TDD, REFACTOR taken; claim `d52869ae1`, RED `dcae37a3c`, GREEN
 `a71e7b922`, REFACTOR `aaebccedb`; evaluation of S995 8/10, self 8/10). **Gotchas kept (S996):** a fresh picture folder per driver run; read the picture, not `textContent`; read `git diff NEWS.md` after a

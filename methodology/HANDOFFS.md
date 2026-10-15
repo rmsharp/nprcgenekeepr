@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S998
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- CB1 of `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` (owner pick at the Phase 0 picker, item 1 of 4): in "separate pedigree and genotype files" mode a bad genotype file is dropped with no message (`R/modInput.R:490-507`); proposed ruling (a): say why in the QC Summary; PRE-RED first (the scope and the wording are the owner's)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S997
 date: 2026-10-15
 status: complete
