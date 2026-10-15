@@ -98,24 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 996 Did
-**Deliverable, DONE (owner pick, option 1 of 4; "say it, keep the groups" ruled at the approach question; the owner approved the scope and the sentence at PRE-RED; every gate asked and answered, REFACTOR taken):**
-formed breeding groups that outlive a new file or a trimmed view no longer leave the Breeding Groups tab showing old sizes over empty tables. Measured first in the real app: only Genetic Diversity
-reads the groups (`R/appServer.R:445`); the damage was on the Breeding Groups tab itself ("Group 1 (18 animals)" over "No data available", Statistics 18 / 0 / 0, a red "values must be length 1" in
-Group Detail). Now Groups, Statistics and Group Detail each say one sentence (`R/modBreedingGroups.R:222`); the groups stay in memory, so bringing the earlier pedigree back shows them; the kinship
-table, candidate selector and returned groups are unchanged. One shared yes/no function (`R/groupMembersMissingFromPedigree.R`) serves this tab and Genetic Diversity. `NEWS.Rmd` (Breeding Group Formation).
-**Gates:** claim `d52869ae1`; RED `dcae37a3c` (8 blocks, 6 fail); GREEN `a71e7b922`; REFACTOR `aaebccedb`; NEWS `1b19ae49a`. Suite 3,764 blocks, 12,666 expectations, 0 failed, 0 errors, 187 skipped; lint 0;
-`check` 0/0/0; mutation 5 of 5, and 2 of 2 on the shared helper; real app before/after opened for the owner.
-**Handoff evaluation of S995: 8/10.** Helped: the Next list put this item first, every cite held, the scratch-`app.R` and mutation gotchas. Missing: the driver steps, and that "Top ranked" needs a Genetic
-Value run first; `BACKLOG.md:155` named three tabs that never read the groups; `NEWS.md` lacked S995's entry. Wrong: nothing else found.
-**Self-assessment: 8/10.** + searched the readers and measured the real app before asking; a plain question with a side-by-side; RED reasons read; mutations; pictures opened before the long suite; the export
-claim probed. - two avoidable driver failures (no Genetic Value run; the EEXIST trap S995 had written down); said "Export Current Group writes no file" at the gate before probing it (true when probed).
-**Next:** the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling; CC5 is the owner's call); the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check; the guide-sentence item (`BACKLOG.md:155`,
-DECISION NEEDED). 230 commits ahead of `origin/master`.
-**Gotchas:** see the `HANDOFFS.md` receipt and Learning 962 (a fresh picture folder per driver run; read the picture, not `textContent`; read `git diff NEWS.md` after a re-knit).
+### What Session 997 Did
+**Deliverable:** CC1 -- the Pedigree Browser's twin-pairs file: one id outside the focal-trimmed view stops `twinRelationsData()` and drops every pair, including pairs still in view (IN PROGRESS)
+**Started:** 2026-10-15 (owner pick at the Phase 0 picker, "CC1 twin file vs trimmed view", item 1 of 4; `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`, row CC1, proposed ruling (a): validate against the whole studbook, not the view)
+**Status:** Session claimed. PRE-RED: read `R/modPedigree.R:521-544,956-958` and the twin tests, measure the trimmed case, then the scope and approach ruling is the owner's. Strict TDD; every gate asked and answered.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
 
-### Sessions 947-995 (condensed S950 to S996; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-996 (condensed S950 to S997; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S996: the Breeding Groups Groups, Statistics and Group Detail pages say one plain sentence when a formed group holds an animal the loaded pedigree lacks, in place of old sizes over empty tables and a red error
+(`R/modBreedingGroups.R:222`; one shared yes/no function `R/groupMembersMissingFromPedigree.R`; `NEWS.Rmd` Breeding Group Formation; strict TDD, REFACTOR taken; claim `d52869ae1`, RED `dcae37a3c`, GREEN
+`a71e7b922`, REFACTOR `aaebccedb`; evaluation of S995 8/10, self 8/10). **Gotchas kept (S996):** a fresh picture folder per driver run; read the picture, not `textContent`; read `git diff NEWS.md` after a
+re-knit; "Top ranked" in a scratch driver needs a Genetic Value run before Form Groups (Learning 962).
 S995: the Genetic Diversity page says one plain sentence, once, when a formed group holds an animal the loaded pedigree lacks, instead of the same error twice (`R/modGeneticDiversity.R:48-54,136-169`;
 helper `.groupMembersMissingFromPedigree`, now `R/groupMembersMissingFromPedigree.R:17`; `NEWS.Rmd:461-467`; strict TDD, REFACTOR taken; claim `43f95da59`, RED `660b27ef2`; evaluation of S994 9/10,
 self 7/10). **Gotchas kept (S995):** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); real-app runs need a scratch `app.R` with `load_all()`

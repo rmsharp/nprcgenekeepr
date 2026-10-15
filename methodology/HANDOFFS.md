@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S997
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- CC1 of `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` (owner pick at the Phase 0 picker, item 1 of 4): the Pedigree Browser's twin-pairs file stops `twinRelationsData()` and drops every pair when one id is outside the focal-trimmed view (`R/modPedigree.R:526-544`); proposed ruling (a): validate against the whole studbook the module received, not the view; PRE-RED first (the owner rules scope and approach); strict TDD, every gate asked and answered
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S996
 date: 2026-10-15
 status: complete
