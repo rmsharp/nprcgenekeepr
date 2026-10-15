@@ -98,19 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 992 Did
-**Deliverable, DONE (owner pick, option 1 of 4; the PRE-RED scope question and every gate asked and answered, REFACTOR taken):** Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree
-is loaded (docs-audit flag CD5; `R/modPyramid.R:141,146`: `req(pedigreeData())` first, `on.exit(dev.off(), add = TRUE)` after `png()`; `NEWS.Rmd:445`).
-**Measured first:** a failing `req()` in a download handler answers HTTP 500 and a blank "An error has occurred!" page (stand-in, headless Chrome); Chrome's own display not watched.
-**Gates:** claim `54705dea5`; RED `00945baf5`; GREEN `831383a43`; REFACTOR `f1913449c`; NEWS `662381bcd`; checkpoint `9bb21f15b`. Learning 958. Suite 3,735 blocks, 0 failed, 0 errors; lint 0; `check` 0/0/0; mutation 2 of 2;
-real app: nothing loaded 500 with no PNG (was 200, 45,680 B), example loaded 200 `image/png`.
-**Handoff evaluation of S991: 9/10.** Helped: the CD5 recommendation, the cites, the 45,680 B baseline. Missing: "the browser then reports a failed download" was read, not run (it is a 500 and a blank page).
-**Self-assessment: 8/10.** + the stand-in probe before the question; a wrong-reason RED failure caught before the commit. - the first RED test checked a file `testServer()` had deleted; one mistaken tool call.
-**Next:** the owner rules on the rest of the S991 report (CA2 after a look at the `Value` column, the housekeeping session), or 6e (46, CE-CL), `BACKLOG.md:144`, `:159`, `:172`, `:398`. 204 commits ahead of `origin/master`.
-**Gotchas:** 31 of 45 download handlers have no `req()` near the top (not examined; Learning 958); `getPyramidPlot(NULL)` draws `qcPed`, other `ped = NULL` callers not searched; `testServer()` deletes
-handler output when the block exits; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 993 Does
+**Deliverable:** the Genetic Diversity tab no longer stops when a group holds a living animal outside the Genetic Value population (CA2 of docs-audit part 2 slice 6d,
+`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` Finding 1; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, ruling (a), (b) or (c), recommended (a),
+is asked at PRE-RED; Effort S; strict TDD, PRE-RED first) (IN PROGRESS)
+**Started:** 2026-10-15 01:15 CDT
+**Status:** Session claimed. Work beginning; nothing probed yet. PRE-RED: a look at the `Value` column for an animal outside the report first (the report asks for it), then the ruling
+question, then the first gate (PRE-RED to RED) with `AskUserQuestion`.
+**Phase 0:** HEAD `c2dd1b4ae` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, the newest receipt's ratchet citation matches
+the results file (results `022fc9e13caa`, manifest `aa983075d6a2`), context budget nothing over a ceiling (`methodology/SESSION_RUNNER.md` one commit behind canonical, and the growth run),
+no untracked files, 204 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-991 (condensed S950 to S992; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-992 (condensed S950 to S993; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (`R/modPyramid.R:141,146`, flag CD5; `NEWS.Rmd:445`; strict TDD, REFACTOR taken; evaluation of S991 9/10, self 8/10).
+**Gotchas kept (S992):** a failing `req()` in a download handler answers HTTP 500 and a blank page; `testServer()` deletes a handler's output when the block exits; 31 of 45 download handlers have no
+`req()` near the top (not examined); `getPyramidPlot(NULL)` draws `qcPed`, other `ped = NULL` callers not searched.
 S991: the 21 slice 6d code candidates of docs-audit part 2 re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`; 5 closed, 16 still true: 2 moderate, CA2 and CD5, 14 minor, 1 new, N1;
 an audit, no code change; evaluation of S990 9/10, self 8/10). **Gotchas kept (S991):** CC1 fix (a) needs a layout-builder probe with pairs outside the view; `methodology_trim.py` v1.8.0 writes a `methodology/` shard to `methodology/archive/`.
 S990: the help for `kinship()` chrtype and `hasBothParents()` id says what the code does (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; gate `test_kinshipHasBothParentsHelp.R`; strict TDD, REFACTOR taken;

@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S993
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- the Genetic Diversity tab no longer stops when a group holds a living animal outside the Genetic Value population (CA2 of docs-audit part 2 slice 6d, `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md` Finding 1; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, ruling (a), (b) or (c), recommended (a), asked at PRE-RED; Effort S; strict TDD, PRE-RED first)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S992
 date: 2026-10-15
 status: complete
