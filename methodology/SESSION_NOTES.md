@@ -98,24 +98,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 994 Did
-**Deliverable, DONE (owner pick, option 1 of 4; the owner approved all seven proposed sentences at PRE-RED; every gate asked and answered, REFACTOR taken):** the housekeeping pass of the
-S991 audit report: N1's help clause (`R/modGeneticDiversity.R:82-84`), CD1 `darkblue` (`R/modPyramid.R:46`), the CD2 and CC1 comments (`R/modSummaryStats.R:404-406`,
-`R/modPedigree.R:521-525`), the ten popovers through one constant (`.browserSavesText`, `R/modSummaryStats.R:11`), CA5's two alerts (`R/modDeidentifiedExport.R:291-292`,
-`R/modCrossCenterIdentity.R:379-380`). Gate `tests/testthat/test_docsAuditHousekeepingWording.R` (10 blocks).
-**Gates:** claim `1c332bbf4`; RED `00e84f614`; GREEN `3914265cc` and `41ac8d189` (5-file cap); REFACTOR `d1ef2507b`. Suite 3,752 blocks, 0 failed, 0 errors; lint 0; `check` 0/0/0; mutation 5
-of 5; real app before/after read for the ten popovers and both alerts.
-**Found:** the pyramid line is gray before and after (the theme's `!important` beats the inline color; I had said it would turn dark blue); every Summary Statistics popover header reads
-"character(0)" (`BACKLOG.md:148`). **The owner reported a duplicated error line on the Genetic Diversity page (`BACKLOG.md:155`): not examined; ask what it says.**
-**Handoff evaluation of S993: 9/10.** Helped: the Next list named the seven places and every cite held; the 25 B margin warning made me condense in the claim. Missing: CD1's "fix the
-spelling" had no visible-effect check. Wrong: nothing found.
-**Self-assessment: 7/10.** + each site read before proposing; RED reasons read; before/after in the real app; the correction told at once. - said "turns dark blue" without reading the
-computed style; three real-app runs to find the Export sub-tab; the owner's message left for a later session.
-**Next:** ask the owner for the duplicated line's text and steps; then the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling), CC5 is the owner's call; the popover title item
-(`BACKLOG.md:148`, READY, S); 6e re-check; `BACKLOG.md` decision items. 218 commits ahead of `origin/master`.
-**Gotchas:** `.help-block` is forced gray (read the computed color); the alerts sit on each module's Export sub-tab (`<module>-mainTabs`); read a popover with `.popover('show')` then
-`.popover:visible`; this file closes near its 25,000-token ceiling (about 56,700 B), so the next claim must condense; the studbook stays untracked (never `git add -A`); never `git stash`
-here.
+### What Session 995 Did
+**Deliverable:** the Genetic Diversity page shows one error line twice (`BACKLOG.md:155`; the owner reported it mid-S994, not reproduced; owner pick at the Phase 0 picker, option 1 of 4):
+ask the owner for the error text and the steps, reproduce it, then the owner rules (read the error once, `R/modGeneticDiversity.R:123` and `:128-129`, or leave it); Effort S; strict TDD
+and PRE-RED first if code changes (IN PROGRESS)
+**Started:** 2026-10-15 10:54 CDT
+**Status:** Session claimed. Work beginning (the owner's example is the next question).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Carried from S994 (the full S994 block was condensed in this claim; its one-line record is below, the rest is in `HANDOFFS.md`):** the studbook stays untracked (never `git add -A`); never `git stash`
+here; the next session's Phase 3A evaluation of S994 reads the S994 receipt.
 
 
 ### Sessions 947-994 (condensed S950 to S995; full record in `CHANGELOG.md` and `HANDOFFS.md`)

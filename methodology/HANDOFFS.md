@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S995
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- the Genetic Diversity page shows one error line twice (`BACKLOG.md:155`; the owner reported it mid-S994, not reproduced; owner pick at the Phase 0 picker, option 1 of 4): ask the owner for the error text and the steps, reproduce it, then the owner rules (read the error once, `R/modGeneticDiversity.R:123` and `:128-129`, or leave it); Effort S; strict TDD and PRE-RED first if code changes
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S994
 date: 2026-10-15
 status: complete
