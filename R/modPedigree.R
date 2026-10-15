@@ -547,19 +547,6 @@ modPedigreeServer <- function(id, studbook) {
       )
     })
 
-    # The pairs of twinRelationsData() whose two animals are both in `ped`;
-    # NULL when none are (or when there are no pairs at all).
-    .twinPairsWithin <- function(twins, ped) {
-      if (is.null(twins)) {
-        return(NULL)
-      }
-      keep <- twins$id1 %in% ped$id & twins$id2 %in% ped$id
-      if (!any(keep)) {
-        return(NULL)
-      }
-      twins[keep, , drop = FALSE]
-    }
-
     output$pedigreeDiagramUI <- renderUI({
       req(pedigreeData())
       n <- nrow(pedigreeData())
