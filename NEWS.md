@@ -468,6 +468,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
   pedigree file is read as `X`, and the tab still reports the missing
   column.
 
+- Fixed: on the Age-Sex Pyramid tab, Download Plot with no pedigree
+  loaded saved a picture of the packaged example pedigree, with nothing
+  on it to say so, so it could pass for the colony's own data. It now
+  saves nothing until a pedigree is loaded: the download fails. Once a
+  pedigree is loaded the button works as before.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
   found. They are now colored: Errors is red when there is at least one
