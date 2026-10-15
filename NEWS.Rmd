@@ -458,6 +458,14 @@ longitudinal monitoring of colony genetic health.
   "Undetermined" one is, so a group made only of such animals has no assessed
   value and its Value cell is red.
 
+- Fixed: on the Genetic Diversity tab, forming breeding groups and then reading
+  a different pedigree, or trimming the pedigree on the Pedigree Browser, left
+  the same red error ("ped has no rows for group member(s): ...") on the page
+  twice in place of the heat map. The tab now says once, in a sentence, that
+  some animals in the breeding groups are not in the pedigree now loaded and
+  asks you to form the groups again. Any other error from the heat map's
+  calculation is shown once, where the heat map would be.
+
 - Fixed: the three count boxes on the Input tab's QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check found.
   They are now colored: Errors is red when there is at least one error,
