@@ -116,10 +116,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       6c 8 candidates, re-checked S976
       (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
       owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
-      6d 21 candidates CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6 (S986 counted 21 rows in the report; this item said 22; the
-      session notes show three shipped since, CA4 S928, CB2 S969, CA1 S970, not re-checked) (esp. RA3/RA4/RA6 (CA1, CA3), RA8
-      (CA2), RB10 (CB1), RC7 (CC1)), and the R `helpText` at `R/modGeneticValue.R:88` still says
-      "Summary Statistics relationship table" (present S890); 6e 46 candidates CE-CL, and
+      6d 21 candidates, re-checked S991
+      (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`: 5 closed by later sessions (CA1, CA4, CB2, CC4, CD6), 16 still
+      true, 2 moderate: the Genetic Diversity tab stops when a group holds a living animal outside the Genetic Value population
+      (CA2), and Download Plot on the Age-Sex Pyramid tab saves the packaged example's pyramid when nothing is loaded (CD5, clicked
+      in the real app); 14 minor; one new stale help clause (N1, `R/modGeneticDiversity.R:80-83`); **the owner's rulings are not
+      yet taken**, the report proposes one per finding with a recommendation), and the R `helpText` at `R/modGeneticValue.R:88` still says
+      "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
