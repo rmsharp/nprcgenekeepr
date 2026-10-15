@@ -17,7 +17,7 @@ fix below is a code, comment or help-text change and needs your ruling and its o
   repo, started from the project root so renv is active. The chain behind CA2 and CA3 was run **module by module with the
   app's own wiring** (Pedigree Browser with focal animals, then the Genetic Value report, the Breeding Groups pool and
   the Genetic Diversity module, on `qcPed`, 280 animals, 89 living). CD5 was also run **in the real app** (headless Chrome,
-  `shinytest2`, the installed package, whose pyramid module equals the source). `git log` dated every candidate a later
+  `shinytest2`, the installed package; its pyramid module and UI, `getPyramidPlot()` and `getPyramidAgeDist()` deparse identically to the source, compared across two R processes). `git log` dated every candidate a later
   session touched.
 - **Not done:** no browser click-through for CA2, CA3, CC1 or CC5 (module-level runs and reading only). CB3, CB4, CD4 and
   CA5 are read, not run. "My own list" was not run for CA2 (the same reading applies). The three `downloadButton`s of the

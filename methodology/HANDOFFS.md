@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S991
 date: 2026-10-14
-status: pending
-active_task: IN PROGRESS -- the 21 candidates of docs-audit part 2 slice 6d (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6) re-checked against today's code (BACKLOG.md:119-125; owner pick at the Phase 0 picker, option 1 of 4; DECISION NEEDED, Effort S; an audit report, PRE-RED throughout, no code change)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the 21 slice 6d code candidates of docs-audit part 2 re-checked against today's code (docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md; owner pick at the Phase 0 picker, option 1 of 4; an audit, PRE-RED throughout, no code change; rulings proposed, none taken)
+what_was_done: Phase 0 clean (gap 0, no pending receipt, no merges, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet citation matched). Claim 8ffd6f84f; the owed HANDOFFS.md trim ceea6dd3a (197,004 B to 28,966 B, methodology_trim.py v1.8.0, verify script OK); checkpoint 6dbcbbc7e (report and BACKLOG.md). Result: 5 closed (CA1 S970/S973, CA4 S928, CB2 S969, CC4 S882, CD6 S876), 16 still true (0 critical, 2 moderate, 14 minor), 1 new minor (N1, a help clause stale since S928). Moderate CA2: the Genetic Diversity tab stops for a living animal outside the focal set, run through the real modules on qcPed (GV matrix 2x2, pool 3, 1 outside). Moderate CD5: Download Plot with nothing loaded saves a pyramid of the packaged qcPed example, clicked in the real app (45,680 B, Total 46). Two slice claims did not hold (CC2 never FALSE not reproduced; CD3 lost overrides wrong in the app). Learning 957.
+next_steps: The owner rules on the report's Recommendations (DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md): CD5 req() guard (Effort S), CA2 shared matrix after a look at the Value column, one housekeeping session (N1 clause, darblue, two comments, ten popovers, CA5 alerts), CC1/CB1/CB5/CA3 builds, CC5 is the owner's call, leave CB3/CB4/CC2/CC3/CD3. Each build is its own strict-TDD session with a PRE-RED gate. Other open picks: 6e re-check (46 candidates CE-CL), Changed Columns tab (BACKLOG.md:144), nameless header (BACKLOG.md:159), contributor tutorial (BACKLOG.md:172), kinship2 drawing features (BACKLOG.md:398). 197 commits ahead of origin/master; do not offer a push-only session (owner ruled S905).
+key_files: docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md (Findings 1-3, the minor table); R/appServer.R:441-446 (CA2 wiring, comment :438-440 says full matrix); R/modBreedingGroups.R:548-558 (the living pool); R/modGeneticValue.R:302,552-555; R/modPyramid.R:136-153 (CD5 handler), :46 (darblue); R/getPyramidPlot.R:43-44 (NULL means qcPed); R/modGeneticDiversity.R:80-83 (N1); R/modPedigree.R:521-544 (CC1); R/modSummaryStats.R:393-395,386-391; BACKLOG.md:119-127 (the updated docs-audit text).
+gotchas: The CA2 recommendation rests on a probe that did not look at what the Value column counts for an animal with no Genetic Value row; the CC1 fix (a) needs a probe of the layout builder with twin pairs outside the view; the CA3 groups list is read by other tabs; getPyramidPlot(NULL) draws qcPed and other ped = NULL callers were not searched; get_download() needs the tab open and NOT_CRAN=true; start every R call with cd to the project root (a stray cd tests/testthat turned renv off); methodology_trim.py v1.8.0 writes a methodology/ ledger's shard to methodology/archive/; the scratch probes and the downloaded PNG are in the session scratchpad, not the repo; the studbook stays untracked (never git add -A); never git stash here.
+runtime_smoke: the real app (shinytest2, headless Chrome, the installed package, whose pyramid module equals the source): Download Plot with nothing loaded returned 200 image/png, 45,680 B, "Total on 2026-Oct-14: 46". CA2, CA3, CB5, CC1, CC2, CC3 run at module or function level; the rest read. No R/ change, so no suite, lint or check run.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 5d4a57326d13 · manifest aa983075d6a2
+changelog_ref: S991 DONE entry
+commit: the close-out commit that carries this receipt; claim 8ffd6f84f, trim ceea6dd3a, checkpoint 6dbcbbc7e
 ```
 
 ```handoff

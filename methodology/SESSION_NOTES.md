@@ -98,25 +98,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 991 Does
-**Deliverable:** the 21 candidates of docs-audit part 2 slice 6d (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6) re-checked against today's code (`BACKLOG.md:119-125`; owner pick at the Phase 0 picker,
-option 1 of 4; DECISION NEEDED, Effort S; an audit report, PRE-RED throughout, no code change) (IN PROGRESS)
-**Started:** 2026-10-14 21:24 CDT
-**Status:** Session claimed. Work beginning; nothing probed yet. `HANDOFFS.md` crosses its 196,608 B warn line with this claim, so a trim (`methodology_trim.py --file methodology/HANDOFFS.md
---budget-bytes 65536`) is owed as its own commit, apart from the close-out.
-**Phase 0:** HEAD `933ae62b5` equals the ledger frontier (gap 0, no merges), 0 pending receipts, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet 1/1 pass (the newest receipt's
-citation matches the results file), context budget nothing over a ceiling (`methodology/SESSION_RUNNER.md` one commit behind canonical, and the growth run), no untracked files, 193 commits
-ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### What Session 991 Did
+**Deliverable, DONE (owner pick, option 1 of 4; an audit, PRE-RED throughout, no code change):** the 21 slice 6d code candidates of docs-audit part 2 re-checked against today's code
+(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`): **5 closed** (CA1, CA4, CB2, CC4, CD6), **16 still true: 2 moderate, 14 minor**, 1 new minor (N1, `R/modGeneticDiversity.R:80-83`, stale since S928).
+**Moderate:** CA2, Genetic Diversity stops when focal animals are set and "All available" holds a living animal outside the focal set (real modules); CD5, with nothing loaded Download Plot saves the
+packaged `qcPed` pyramid, "Total on 2026-Oct-14: 46" (clicked in the real app). **Rulings:** none taken; the report proposes one per finding, recommendation first.
+**Gates:** claim `8ffd6f84f`; `HANDOFFS.md` trim `ceea6dd3a` (verify OK); checkpoint `6dbcbbc7e`. Learning 957. No `R/` change, so no suite, lint or check; ratchet 1/1; receipt test 10 passed.
+**Handoff evaluation of S990: 9/10.** Helped: the trim note (196,607 of 196,608 B) and every cite. Missing: the trimmer is v1.8.0 and writes a `methodology/` shard to `methodology/archive/`.
+**Self-assessment: 8/10.** + module chain, then a real-app click for CD5; two slice claims (CC2, CD3) found wrong and said so. - a stray `cd` cost two reruns; long silent stretches.
+**Next:** the owner rules on the report's Recommendations; each build is its own strict-TDD session, PRE-RED first. Then 6e (46, CE-CL), Changed Columns tab (`BACKLOG.md:144`), nameless header (`:159`),
+contributor tutorial (`:172`), kinship2 drawing features (`:398`). 197 commits ahead of `origin/master`.
+**Gotchas:** the CA2 fix needs a look at the `Value` column for an animal with no Genetic Value row (not examined); CC1 fix (a) needs a layout-builder probe with pairs outside the view; `getPyramidPlot(NULL)`
+draws `qcPed` (other `ped = NULL` callers not searched); `get_download()` needs the tab open and `NOT_CRAN=true`; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 ### Sessions 947-990 (condensed S950 to S991; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S990: the help for `kinship()` chrtype and `hasBothParents()` id says what the code does (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; docs-audit flags MB3 and PD12; gate `test_kinshipHasBothParentsHelp.R`;
-strict TDD, REFACTOR taken; evaluation of S989 9/10, self 8/10). **Gotchas kept (S990):** `test_groupAddAssignHelp.R` keeps its own page readers (not touched); a "revert to `HEAD`" mutant is a no-op
-after GREEN (use `HEAD~1`); `sub(fixed = TRUE)` changes one site of two; kinship2 has two routes for an unknown-sex founder (the vector `kinship()` is the one ported).
-S989: `checkRequiredCols()` ignores an `NA` column name at any length (`R/checkRequiredCols.R:41-42`, docs-audit flag PB4; NEWS `NEWS.Rmd:437`; strict TDD, REFACTOR taken;
-evaluation of S988 8/10, self 8/10). **Gotchas kept (S989):** an error inside a `test_that()` block ends it at the first error, so each RED case goes through `answer()`
-(`test_checkRequiredCols.R:38`); a namespace patch leaves the attached copy old (`get("fn", ns)`); `qcStudbook()` with an `NA` header stops earlier in `fixColumnNames()`
-(decision item `BACKLOG.md:156`); the example CSV's header fields are quoted; the studbook stays untracked (never `git add -A`); never `git stash` here.
+S990: the help for `kinship()` chrtype and `hasBothParents()` id says what the code does (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; gate `test_kinshipHasBothParentsHelp.R`; strict TDD, REFACTOR taken;
+evaluation of S989 9/10, self 8/10). **Gotchas kept (S990):** a "revert to `HEAD`" mutant is a no-op after GREEN (use `HEAD~1`); `sub(fixed = TRUE)` changes one site of two.
+S989: `checkRequiredCols()` ignores an `NA` column name at any length (`R/checkRequiredCols.R:41-42`, docs-audit flag PB4; NEWS `NEWS.Rmd:437`; strict TDD, REFACTOR taken; evaluation of S988 8/10,
+self 8/10). **Gotchas kept (S989):** an error inside a `test_that()` block ends it at the first error, so route each RED case through `answer()` (`test_checkRequiredCols.R:38`); a namespace patch leaves the
+attached copy old (`get("fn", ns)`); `qcStudbook()` with an `NA` header stops earlier in `fixColumnNames()` (decision item `BACKLOG.md:159`).
 S947-S949: the guide's export-tables chunk has a drift check (`test_guideExportTables.R`); the Candidate Parent Assignment tab says why its table is blank without `fromCenter`;
 the Diagram article shows a Direct picture (`diagram_direct_edge_style.png`). Strict TDD each; evaluations 9/10, self 8/10.
 S950: the guide's two Breeding Groups statements match the app (gate `test_guideBreedingGroupsWording.R`). S951: `HANDOFFS.md` trimmed, 264,486 B to 30,267 B (`methodology_trim.py --file HANDOFFS.md
@@ -133,13 +133,12 @@ one-animal nobody-is-alive notice reads "The 1 animal in this source is not aliv
 evaluation of S961 8/10, self 7/10). **Gotchas kept (S961-S962):** a retake draws the last box's count, so the pin follows the picture; the nine-animal fixture's one-animal boxes
 are at seed 7; a mutation must change what the tests read (return `""`).
 S963: the guide shows the Warnings sub-tab as the app opens it after a check (`read_and_check_pedigree_warnings.png`, `colony-manager-guide.qmd:245-249`; no `R/` change; strict TDD, REFACTOR taken; evaluation of S962 9/10, self 7/10).
-**Gotchas kept (S963):** the capture recorder counts each `do_step` and each `shot` once (95 now); `test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; read `uptime` before a `test_markerKinship.R:177` benchmark failure (load above
-about 7 fails it); the old `stash@{0}` from `dev` is not ours, never `pop` it.
-S964: no guide picture is taken with a pop-up on screen (`wait_for_popups_before(app, "<file>.png")`, `tests/testthat/helper-captureHarness.R:98`; 13 pictures retaken; strict TDD, REFACTOR taken; evaluation of S963 9/10, self 8/10). **Gotchas kept (S964):** a step label
-is a result key, so each wait names its picture;
-a pop-up is fixed to the viewport corner; run every capture script after a shown-text change; `sips -c` does not crop, use Pillow (`python3 -I`); a CSV-upload picture may only differ by the random `file<hex>.csv` name.
+**Gotchas kept (S963):** the capture recorder counts each `do_step` and each `shot` once (95 now); `test_captureHarness.R:396` gains an expectation for every new `wait_for_element(` line; read `uptime` before a
+`test_markerKinship.R:177` benchmark failure (load above about 7 fails it).
+S964: no guide picture is taken with a pop-up on screen (`wait_for_popups_before(app, "<file>.png")`, `tests/testthat/helper-captureHarness.R:98`; 13 pictures retaken; strict TDD, REFACTOR taken; evaluation of S963 9/10, self 8/10).
+**Gotchas kept (S964):** a step label is a result key, so each wait names its picture; a pop-up is fixed to the viewport corner; `sips -c` does not crop, use Pillow (`python3 -I`).
 S965: `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check (two `on-demand` rows, `methodology/.context-budget.json:52-65`; gate `test_contextBudgetLedgers.R`; strict TDD, REFACTOR taken; evaluation of S964 9/10, self 7/10).
-**Gotchas kept (S965):** a file read in part takes `on-demand`, not `read-mandated`; `context_budget.py --status` appends to the gitignored history, so probe in a scratch copy; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
+**Gotchas kept (S965):** a file read in part takes `on-demand`, not `read-mandated`; `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
 S966: the four likely code defects of docs-audit slice 4 re-checked (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; all four still real; an audit, no code change; evaluation of S965 8/10, self 7/10).
 **Gotchas kept (S966):** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; the one-file option's input is `pedigreeFileTwo`; a slice label in a carried item can be wrong, so grep the candidate's own words across `docs/audits`.
 S967: the `groupAddAssign()` help says the groups with the largest minimum group size win (`R/groupAddAssign.R:11-12`; the owner's sentence; gate `test_groupAddAssignHelp.R`; strict TDD, REFACTOR taken; evaluation of S966 9/10, self 8/10).
