@@ -124,7 +124,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       took the recommended ruling S992 and it is fixed, `R/modPyramid.R:141,146`, `NEWS.Rmd:445`); 14 minor; one new stale help clause
       (N1, `R/modGeneticDiversity.R:81-84`); **the housekeeping list was done S994** (N1's clause, CD1's `darkblue`, the CD2 and CC1 comments, CD4's ten
       popovers, CA5's two alert sentences; gate `test_docsAuditHousekeepingWording.R`; the pyramid line still shows gray, the theme forces it);
-      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: builds CC1 (a),
+      **CC1 was built S997** (the owner chose "keep the pairs that fit, no message": a twin file is checked against the whole studbook and each place
+      gets only the pairs whose two animals it holds, `R/modPedigree.R:530`, `R/twinPairsWithin.R:20`, `NEWS.Rmd:89`; gate
+      `test_modPedigree_twinRelationsTrimmed.R`); **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: builds
       CB1 (a), CB5 (a) and CA3 (a), CC5 is the owner's call, and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
