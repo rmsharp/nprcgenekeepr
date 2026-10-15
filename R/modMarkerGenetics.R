@@ -1337,7 +1337,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       crossCenterGenotypeB = reactive(rawGenotypeB()),
       crossCenterTable = reactive(crossCenter()),
       candidateAssignmentTable = reactive(candidateAssignment()),
-      isReady = reactive(!is.null(comparison())),
+      isReady = reactive(!is.null(safeRead(comparison))),
       locusMetadataTable = reactive(locusMetadata()),
       realizedRelatednessTable = reactive(realizedRelatedness()),
       ldBlockTable = reactive(ldBlock()),
