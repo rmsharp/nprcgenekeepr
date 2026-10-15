@@ -161,11 +161,14 @@ modBreedingGroupsUI <- function(id) {
              ),
              tabsetPanel(
                tabPanel("Groups", br(), uiOutput(ns("groupsDisplay"))),
-               tabPanel("Statistics", br(), tableOutput(ns("groupStats"))),
+               tabPanel("Statistics", br(),
+                        uiOutput(ns("groupStatsNote")),
+                        tableOutput(ns("groupStats"))),
                tabPanel(
                  "Group Detail", br(),
                  selectInput(ns("viewGrp"), "Group to view:", choices = NULL),
                  h4("Group members"),
+                 uiOutput(ns("groupDetailNote")),
                  DT::DTOutput(ns("groupMemberTable")),
                  br(),
                  h4("Within-group kinship"),
@@ -212,6 +215,15 @@ modBreedingGroupsUI <- function(id) {
     )
   )
 }
+
+## Said on the Groups, Statistics and Group Detail pages when a formed group
+## holds an animal the loaded pedigree no longer has (a new file was read, or
+## the view was trimmed, after the groups were formed).
+.breedingGroupsOutsidePedigreeNote <- paste(
+  "Some animals in these breeding groups are not in the pedigree now loaded",
+  "(a new file or a trimmed view). Form the groups again, or bring back the",
+  "earlier pedigree, to see them."
+)
 
 #' Breeding Groups Module - Server Function
 #'
@@ -873,6 +885,20 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       selectedCandidate()$validGroups
     })
 
+    # The formed groups outlive a new file and a trimmed view, so a box can
+    # hold an animal the loaded pedigree no longer has. The three pages say
+    # so in one sentence instead of showing empty tables or an error.
+    groupsOutsidePedigree <- reactive({
+      grps <- tryCatch(breedingGroups(), error = function(e) NULL)
+      ped <- tryCatch(pedigree(), error = function(e) NULL)
+      !is.null(grps) && !is.null(ped) &&
+        length(.groupMembersMissingFromPedigree(grps, ped)) > 0L
+    })
+
+    outsidePedigreeBox <- function() {
+      div(class = "alert alert-info", .breedingGroupsOutsidePedigreeNote)
+    }
+
     output$candidateComparison <- renderTable({
       res <- groupResults()
       req(!is.null(res))
@@ -1026,6 +1052,9 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
     output$groupsDisplay <- renderUI({
       req(breedingGroups())
+      if (groupsOutsidePedigree()) {
+        return(outsidePedigreeBox())
+      }
       ped <- pedigree()
 
       labels <- breedingGroupLabels(length(breedingGroups()),
@@ -1046,6 +1075,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
     observe({
       req(breedingGroups())
+      req(!groupsOutsidePedigree())
       ped <- pedigree()
 
       lapply(seq_along(breedingGroups()), function(i) {
@@ -1059,8 +1089,13 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       })
     })
 
+    output$groupStatsNote <- renderUI({
+      if (groupsOutsidePedigree()) outsidePedigreeBox()
+    })
+
     output$groupStats <- renderTable({
       req(breedingGroups())
+      req(!groupsOutsidePedigree())
       ped <- pedigree()
 
       nBoxes <- length(breedingGroups())
@@ -1104,8 +1139,13 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     })
 
     # Annotated members (Ego ID / Sex / Age in Years) of the selected group.
+    output$groupDetailNote <- renderUI({
+      if (groupsOutsidePedigree()) outsidePedigreeBox()
+    })
+
     bgGroupView <- reactive({
       req(breedingGroups())
+      req(!groupsOutsidePedigree())
       ids <- breedingGroups()[[selectedGroup()]]
       gp <- addSexAndAgeToGroup(ids, pedigree())
       gp$age <- round(gp$age, 1L)
