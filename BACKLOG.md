@@ -152,11 +152,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Decision (the owner's):** drop the title bar (content only) or give each popover its own short title. The fix needs a render-level
       test of the popover title; `tests/testthat/test_docsAuditHousekeepingWording.R` already reads the rendered `addTooltip` calls.
 
-- [ ] **The Genetic Diversity page shows an error line twice (DECISION NEEDED -- needs the owner's example first, Effort S)**
-      (reported by the owner S994, 2026-10-15, mid-session; not reproduced) -- `output$heatmap` (`R/modGeneticDiversity.R:123`) and
-      `output$guidance` (`:128-129`) both read `diversityStats()` with no guard, so any error from `getGeneticDiversityStats()` prints in both
-      places (S993's real-app "before" run printed "kmat is missing kinship ..." twice). Which error the owner saw, and the steps, are not
-      recorded: ask first. **Decision once known:** read the error once (the guidance through `tryCatch`, as `birthDateNote` does) or leave.
+- [ ] **Formed breeding groups outlive a new pedigree and a trimmed view (DECISION NEEDED -- clear them when the pedigree
+      changes, or leave, Effort M; strict TDD)** (found S995, 2026-10-15, while the Genetic Diversity doubled-error item was
+      resolved) -- Breeding Groups sets its results only when Form Groups is clicked (`R/modBreedingGroups.R:800`,
+      `groupResults(list(...))`) and never clears them, so after a new file is read or the Pedigree Browser is trimmed,
+      `shared$breedingGroups` (`R/appServer.R:435`) still holds animals the loaded pedigree lacks. Measured S995 in the real
+      app (headless Chrome, 1 group on the example pedigree, Top ranked): reading `rhesusPedigree` (375 animals, no ids in
+      common) and trimming to the lineage of one young animal (`YTQBW7`) each left the Genetic Diversity page with the same
+      20-id error twice; since S995 that page says one sentence (`R/modGeneticDiversity.R`, `.groupsOutsidePedigreeNote`).
+      **Not examined:** what the Breeding Groups tab (Groups, Statistics, Group Detail), Genetic Value, Summary Statistics and
+      Potential Parents show with the old groups. **Decision:** measure those tabs first (Effort S), then clear the groups
+      when `shared$currentPedigree` changes (it changes Breeding Groups state that other tabs read), or leave it with the
+      sentence. Also: the guide's Genetic Diversity paragraph (`vignettes/articles/colony-manager-guide.qmd:840-866`) ends
+      "Until groups are formed and an analysis has run, the tab shows guidance instead of an empty plot" and does not name
+      the new sentence (the owner writes the sentence, if wanted).
 
 - [ ] **The Changed Columns tab and `summary()` skip some rename fields (DECISION NEEDED -- should the
       tab list every rename, Effort S-M; strict TDD)** (found S988, while `checkChangedColsLst()` was made to

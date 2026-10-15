@@ -99,32 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 995 Did
-**Deliverable:** the Genetic Diversity page shows one error line twice (`BACKLOG.md:155`; the owner reported it mid-S994, not reproduced; owner pick at the Phase 0 picker, option 1 of 4):
-ask the owner for the error text and the steps, reproduce it, then the owner rules (read the error once, `R/modGeneticDiversity.R:123` and `:128-129`, or leave it); Effort S; strict TDD
-and PRE-RED first if code changes (IN PROGRESS)
-**Started:** 2026-10-15 10:54 CDT
-**Status:** Session claimed. Work beginning (the owner's example is the next question).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
-**Carried from S994 (the full S994 block was condensed in this claim; its one-line record is below, the rest is in `HANDOFFS.md`):** the studbook stays untracked (never `git add -A`); never `git stash`
-here; the next session's Phase 3A evaluation of S994 reads the S994 receipt.
+**Deliverable, DONE (owner pick, option 1 of 4; "say it once, in plain words" ruled at the approach question; the owner approved the sentence at PRE-RED; every gate asked and answered, REFACTOR taken):**
+the Genetic Diversity page no longer prints one error twice. The doubled line the owner reported was S993's "before" picture; the one trigger left in the app is formed groups that outlive a new
+file or a trimmed view (measured in the real app, both ways). The page now says "Some animals in the breeding groups are not in the pedigree now loaded (a new file or a trimmed view). Form the
+groups again to see the heat map." once (`R/modGeneticDiversity.R`, `.groupsOutsidePedigreeNote`), the heat map area stays blank, and any other calculation error shows once; one helper,
+`.groupMembersMissingFromPedigree` (`R/getGeneticDiversityStats.R`), serves the stop and the sentence. `NEWS.Rmd:461-467`.
+**Gates:** claim `43f95da59`; RED `660b27ef2` (4 blocks in `test_modGeneticDiversity.R`, 3 fail); GREEN `ad254b899`; REFACTOR `e6affd6ce`; NEWS `ff8d8dccb`. Suite 3,756 blocks, 12,630 expectations,
+0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; mutation 3 of 3 and the helper mutant caught; real app before/after (new file, trimmed view) opened for the owner.
+**Handoff evaluation of S994: 9/10.** Helped: the Next list put the owner question first, every cite held, the "condense in the claim" warning. Missing: `BACKLOG.md:155` could have said the
+S993 before-run was the likely source. Wrong: nothing found.
+**Self-assessment: 7/10.** + asked first; measured two real-app paths; mutation; one helper keeps the stop and the sentence together; pictures opened before the long suite. - a `git checkout`
+reverted my uncommitted REFACTOR edit (caught by `git diff --stat`, re-applied; Learning 961); two BSD `sed` slips; one trim picture lost to my script's file-exists error.
+**Next:** the stale-groups item (`BACKLOG.md:155`, DECISION NEEDED: measure the other tabs first); the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling; the S995 picture shows two
+rows, Group 1 and Group 2, for one group asked: CA3), CC5 is the owner's call; the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check. 224 commits ahead of `origin/master`.
+**Gotchas:** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); the packaged `inst/shinytest/app.R` loads the installed package, so a
+scratch `app.R` with `load_all()` is needed; the studbook stays untracked (never `git add -A`); never `git stash` here.
 
 
 ### Sessions 947-994 (condensed S950 to S995; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S994: the seven small wrong statements of the S991 housekeeping list fixed (`test_docsAuditHousekeepingWording.R`; ten popovers share `.browserSavesText`; strict TDD, REFACTOR taken; claim
 `1c332bbf4`, RED `00e84f614`; evaluation of S993 9/10, self 7/10). **Gotchas kept (S994):** `.help-block` color is forced gray, so inline `color:` shows nothing; the alerts sit on the Export
 sub-tab; every popover header reads "character(0)".
-S993: the Genetic Diversity tab scores a group that holds a living animal outside the Genetic Value population (`R/appServer.R:448` passes `sharedKinshipMatrix`, flag CA2; `NEWS.Rmd:451`; an
-animal with no report row is left out of the low-value share, `R/getGeneticDiversityStats.R:105-106`; strict TDD, REFACTOR taken; claim `3f0202ddd`, GREEN `4d94fb492`; evaluation of S992
-9/10, self 8/10). **Gotchas kept (S993):** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call, because `testServer()` captures its block
-unevaluated; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
-S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (`R/modPyramid.R:141,146`, flag CD5; `NEWS.Rmd:445`; strict TDD; 9/10, self 8/10). **Gotchas kept:** a
-failing `req()` in a download handler answers HTTP 500 and a blank page; `testServer()` deletes a handler's output when the block exits.
-S991: the 21 slice 6d candidates re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`: 2 moderate, 14 minor, 1 new; an audit; 9/10, self 8/10). **Gotchas kept:** CC1 fix
-(a) needs a layout-builder probe with pairs outside the view; `methodology_trim.py` v1.8.0 writes shards to `methodology/archive/`.
-S990: the help for `kinship()` chrtype and `hasBothParents()` id (`R/kinship.R:57-61`, `R/hasBothParents.R:6-9`; gate `test_kinshipHasBothParentsHelp.R`; strict TDD; 9/10, self 8/10).
-**Gotcha kept:** a "revert to `HEAD`" mutant is a no-op after GREEN (use `HEAD~1`).
-S989: `checkRequiredCols()` ignores an `NA` column name (`R/checkRequiredCols.R:41-42`, flag PB4; `NEWS.Rmd:437`; strict TDD; 8/10, self 8/10). **Gotchas kept:** route each RED case through
-`answer()` (`test_checkRequiredCols.R:38`); `qcStudbook()` with an `NA` header stops earlier in `fixColumnNames()` (`BACKLOG.md`).
+S993: the Genetic Diversity tab scores groups that hold a living animal outside the Genetic Value population (`R/appServer.R:448` passes `sharedKinshipMatrix`, flag CA2; `NEWS.Rmd:451`; strict
+TDD; 9/10, self 8/10). **Gotchas kept:** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call (it captures its block unevaluated); start every R
+call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`; the studbook stays untracked (never `git add -A`); never `git stash` here.
+S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (flag CD5; `NEWS.Rmd:445`; 9/10, self 8/10). S991: the 21 slice 6d candidates re-checked
+(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`; an audit; 9/10, self 8/10); **gotcha kept:** the CC1 fix needs a layout-builder probe with pairs outside the view.
+S990: the help for `kinship()` chrtype and `hasBothParents()` id (9/10, self 8/10). S989: `checkRequiredCols()` ignores an `NA` column name (flag PB4; `NEWS.Rmd:437`; 8/10, self 8/10).
+**Gotcha kept:** a "revert to `HEAD`" mutant is a no-op after GREEN (use `HEAD~1`), and `git checkout` of a file with uncommitted work destroys it (Learning 961).
 
 S947-S960 (hashes and scores in `CHANGELOG.md` and `HANDOFFS.md`): drift gates for the guide's export tables and Breeding Groups statements (`test_guideExportTables.R`, `test_guideBreedingGroupsWording.R`);
 the Candidate Parent Assignment tab says why its table is blank without `fromCenter`; the Diagram article shows a Direct picture; `HANDOFFS.md` (S951) and `CHANGELOG.md` (S960) trimmed with
