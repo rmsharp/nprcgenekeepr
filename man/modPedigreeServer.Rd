@@ -30,13 +30,15 @@ With no studbook loaded, \code{isReady()} and \code{nAnimals()} halt
 with a silent \code{\link[shiny]{req}} error instead of returning
 \code{FALSE} and 0
 \item \code{twinRelations} - The validated twin/zygosity sidecar
-(\code{NULL} if none uploaded or invalid). It is validated against the
-filtered \code{pedigree} (focal trim applied, unknown IDs hidden);
-one id outside that pedigree fails the validation, an error
-notification is shown and the whole sidecar becomes \code{NULL}. Unlike
-the Diagram tab's
-own rendering, this is the raw, ungated reactive -- not filtered by
-the "Show Twin Connectors" toggle -- so callers outside this module
+(\code{NULL} if none uploaded, if invalid, or if no pair has both
+animals in \code{analysisPedigree}). Checked against the whole
+studbook, not the trimmed view: an id that is not in the studbook, or
+any other failure of \code{checkTwinRelations()}, shows an error
+notification and makes the whole sidecar \code{NULL}; a valid pair with
+an animal outside \code{analysisPedigree} (a focal-animal trim) is left
+out of this value, with no message. Unlike the Diagram tab's own
+rendering, this is the raw, ungated reactive -- not filtered by the
+"Show Twin Connectors" toggle -- so callers outside this module
 (e.g. \code{appServer}) see the validated data regardless of that
 toggle's state (BL-N Slice 3).
 }

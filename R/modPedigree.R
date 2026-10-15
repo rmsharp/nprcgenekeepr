@@ -233,13 +233,15 @@ modPedigreeUI <- function(id) {
 #'     with a silent \code{\link[shiny]{req}} error instead of returning
 #'     \code{FALSE} and 0
 #'   \item \code{twinRelations} - The validated twin/zygosity sidecar
-#'     (\code{NULL} if none uploaded or invalid). It is validated against the
-#'     filtered \code{pedigree} (focal trim applied, unknown IDs hidden);
-#'     one id outside that pedigree fails the validation, an error
-#'     notification is shown and the whole sidecar becomes \code{NULL}. Unlike
-#'     the Diagram tab's
-#'     own rendering, this is the raw, ungated reactive -- not filtered by
-#'     the "Show Twin Connectors" toggle -- so callers outside this module
+#'     (\code{NULL} if none uploaded, if invalid, or if no pair has both
+#'     animals in \code{analysisPedigree}). Checked against the whole
+#'     studbook, not the trimmed view: an id that is not in the studbook, or
+#'     any other failure of \code{checkTwinRelations()}, shows an error
+#'     notification and makes the whole sidecar \code{NULL}; a valid pair with
+#'     an animal outside \code{analysisPedigree} (a focal-animal trim) is left
+#'     out of this value, with no message. Unlike the Diagram tab's own
+#'     rendering, this is the raw, ungated reactive -- not filtered by the
+#'     "Show Twin Connectors" toggle -- so callers outside this module
 #'     (e.g. \code{appServer}) see the validated data regardless of that
 #'     toggle's state (BL-N Slice 3).
 #' }
@@ -518,20 +520,21 @@ modPedigreeServer <- function(id, studbook) {
     # kinshipOverrideData, there is no warning-handling branch:
     # checkTwinRelations() only ever stop()s, it never warn()s (confirmed,
     # R/checkTwinRelations.R), so a warning handler here would be dead
-    # code. Validated against pedigreeData() -- the same, possibly-trimmed
-    # pedigree diagramLayout() itself renders -- so a twin pair with one
-    # member trimmed out of view fails validation: an error notification
-    # names the id and the whole sidecar becomes NULL, a second pair with
-    # both members in view included (the twinRelations help says so).
+    # code. Validated against studbook(), the whole pedigree the module
+    # received, not the focal-trimmed view, so a twin pair with an animal
+    # outside the view is still a valid pair. Each use gets only the pairs
+    # whose two animals it holds: the diagram the view, the other tabs the
+    # analysis pedigree. The diagram builder and kinship() both stop on an
+    # id they do not hold.
     # nolint end
     twinRelationsData <- reactive({
       if (is.null(input$twinRelationsFile)) {
         return(NULL)
       }
-      req(pedigreeData())
+      req(studbook())
       tryCatch(
         checkTwinRelations(
-          pedigreeData(),
+          studbook(),
           readTwinRelations(input$twinRelationsFile$datapath)
         ),
         error = function(e) {
@@ -543,6 +546,19 @@ modPedigreeServer <- function(id, studbook) {
         }
       )
     })
+
+    # The pairs of twinRelationsData() whose two animals are both in `ped`;
+    # NULL when none are (or when there are no pairs at all).
+    .twinPairsWithin <- function(twins, ped) {
+      if (is.null(twins)) {
+        return(NULL)
+      }
+      keep <- twins$id1 %in% ped$id & twins$id2 %in% ped$id
+      if (!any(keep)) {
+        return(NULL)
+      }
+      twins[keep, , drop = FALSE]
+    }
 
     output$pedigreeDiagramUI <- renderUI({
       req(pedigreeData())
@@ -682,7 +698,7 @@ modPedigreeServer <- function(id, studbook) {
       # name-column gate immediately above -- rather than a post-hoc filter
       # on the builder's own output.
       twinRelations <- if (.currentShowTwinConnectors()) {
-        twinRelationsData()
+        .twinPairsWithin(twinRelationsData(), data)
       } else {
         NULL
       }
@@ -954,8 +970,10 @@ modPedigreeServer <- function(id, studbook) {
       # appServer can thread a declared twin identity into kinship-driven
       # calculations app-wide -- not just this tab's own diagram rendering
       # (which stays gated behind "Show Twin Connectors", untouched here).
+      # Narrowed to the pairs whose two animals are in the analysis pedigree,
+      # the pedigree those calculations run on.
       twinRelations = reactive({
-        twinRelationsData()
+        .twinPairsWithin(twinRelationsData(), analysisPedigreeData())
       })
     )
   })
