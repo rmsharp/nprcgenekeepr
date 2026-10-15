@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S996
+date: 2026-10-15
+status: pending
+active_task: IN PROGRESS -- the stale-groups item (`BACKLOG.md:155`; owner pick at the Phase 0 picker, option 1 of 4): formed breeding groups outlive a new pedigree and a trimmed view; first a read-only measurement (scratch run, no repo code) of what the Breeding Groups, Genetic Value, Summary Statistics and Potential Parents tabs show with the old groups, then the owner rules (clear the groups when `shared$currentPedigree` changes, or leave them with the S995 sentence); Effort M; strict TDD and PRE-RED first if code changes
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S995
 date: 2026-10-15
 status: complete

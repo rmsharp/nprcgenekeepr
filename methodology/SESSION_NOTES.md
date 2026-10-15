@@ -98,25 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 995 Did
-**Deliverable, DONE (owner pick, option 1 of 4; "say it once, in plain words" ruled at the approach question; the owner approved the sentence at PRE-RED; every gate asked and answered, REFACTOR taken):**
-the Genetic Diversity page no longer prints one error twice. The doubled line the owner reported was S993's "before" picture; the one trigger left in the app is formed groups that outlive a new
-file or a trimmed view (measured in the real app, both ways). The page now says "Some animals in the breeding groups are not in the pedigree now loaded (a new file or a trimmed view). Form the
-groups again to see the heat map." once (`R/modGeneticDiversity.R`, `.groupsOutsidePedigreeNote`), the heat map area stays blank, and any other calculation error shows once; one helper,
-`.groupMembersMissingFromPedigree` (`R/getGeneticDiversityStats.R`), serves the stop and the sentence. `NEWS.Rmd:461-467`.
-**Gates:** claim `43f95da59`; RED `660b27ef2` (4 blocks in `test_modGeneticDiversity.R`, 3 fail); GREEN `ad254b899`; REFACTOR `e6affd6ce`; NEWS `ff8d8dccb`. Suite 3,756 blocks, 12,630 expectations,
-0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; mutation 3 of 3 and the helper mutant caught; real app before/after (new file, trimmed view) opened for the owner.
-**Handoff evaluation of S994: 9/10.** Helped: the Next list put the owner question first, every cite held, the "condense in the claim" warning. Missing: `BACKLOG.md:155` could have said the
-S993 before-run was the likely source. Wrong: nothing found.
-**Self-assessment: 7/10.** + asked first; measured two real-app paths; mutation; one helper keeps the stop and the sentence together; pictures opened before the long suite. - a `git checkout`
-reverted my uncommitted REFACTOR edit (caught by `git diff --stat`, re-applied; Learning 961); two BSD `sed` slips; one trim picture lost to my script's file-exists error.
-**Next:** the stale-groups item (`BACKLOG.md:155`, DECISION NEEDED: measure the other tabs first); the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling; the S995 picture shows two
-rows, Group 1 and Group 2, for one group asked: CA3), CC5 is the owner's call; the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check. 224 commits ahead of `origin/master`.
-**Gotchas:** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); the packaged `inst/shinytest/app.R` loads the installed package, so a
-scratch `app.R` with `load_all()` is needed; the studbook stays untracked (never `git add -A`); never `git stash` here.
+### What Session 996 Did
+**Deliverable:** the stale-groups item (`BACKLOG.md:155`, owner pick at the Phase 0 picker, option 1 of 4): formed breeding groups outlive a new pedigree and a trimmed view. First a read-only
+measurement (a scratch run, no repo code) of what the Breeding Groups tab (Groups, Statistics, Group Detail), Genetic Value, Summary Statistics and Potential Parents show with the old groups;
+then the owner rules: clear the groups when `shared$currentPedigree` changes, or leave them with the S995 sentence. Strict TDD and PRE-RED first if code changes (IN PROGRESS)
+**Started:** 2026-10-15 12:28 CDT
+**Status:** Session claimed. Work beginning (the measurement is the next step).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Carried from S995 (its full block was condensed in this claim; the one-line record is below, the rest is in `HANDOFFS.md`):** the CC1, CB1, CB5 and CA3 builds (each its own PRE-RED ruling; the
+S995 picture shows two rows, Group 1 and Group 2, for one group asked: CA3), CC5 is the owner's call; the popover title item (`BACKLOG.md:148`, READY, S); 6e re-check. 224 commits ahead of `origin/master`.
 
 
-### Sessions 947-994 (condensed S950 to S995; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-995 (condensed S950 to S996; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S995: the Genetic Diversity page says one plain sentence, once, when a formed group holds an animal the loaded pedigree lacks, instead of the same error twice (`R/modGeneticDiversity.R:48-54,136-169`;
+one helper, `.groupMembersMissingFromPedigree`, `R/getGeneticDiversityStats.R:142-156`; `NEWS.Rmd:461-467`; strict TDD, REFACTOR taken; claim `43f95da59`, RED `660b27ef2`; evaluation of S994 9/10,
+self 7/10). **Gotchas kept (S995):** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); the packaged `inst/shinytest/app.R` loads the
+installed package, so a scratch `app.R` with `load_all()` is needed; the studbook stays untracked (never `git add -A`); never `git stash` here.
 S994: the seven small wrong statements of the S991 housekeeping list fixed (`test_docsAuditHousekeepingWording.R`; ten popovers share `.browserSavesText`; strict TDD, REFACTOR taken; claim
 `1c332bbf4`, RED `00e84f614`; evaluation of S993 9/10, self 7/10). **Gotchas kept (S994):** `.help-block` color is forced gray, so inline `color:` shows nothing; the alerts sit on the Export
 sub-tab; every popover header reads "character(0)".
