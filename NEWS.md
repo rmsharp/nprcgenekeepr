@@ -568,7 +568,7 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - Fixed: with "Pedigree(s) and genotypes in separate files", a genotype
   file the app could not use was left out without a word: the QC Summary
   showed the same green "Data passed quality control" as for a good
-  file, and a file with a short row greyed out the page and ended the
+  file, and a file with a short row grayed out the page and ended the
   session. The QC Summary now says "The genotype file was not used, so
   no genotypes are used." and gives the reason, and the app keeps
   running.
