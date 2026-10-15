@@ -137,7 +137,7 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
       grps <- safeRead(groups)
       ped <- safeRead(pedigree)
       !is.null(grps) && !is.null(ped) &&
-        !all(unlist(grps, use.names = FALSE) %in% ped$id)
+        length(.groupMembersMissingFromPedigree(grps, ped)) > 0L
     })
 
     output$heatmap <- renderPlot({
