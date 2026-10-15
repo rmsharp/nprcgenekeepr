@@ -587,6 +587,11 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       )
     })
 
+    ## The comparison, or NULL when none can be built (no upload yet, or an
+    ## upload the module cannot use). Only comparison() re-throws that error;
+    ## the answers that mean "is it ready" read this one, so they never throw.
+    comparisonOrNull <- reactive(safeRead(comparison))
+
     heterozygosity <- reactive({
       gmat <- genotypeMatrixR()
       if (is.null(gmat)) {
@@ -1321,7 +1326,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     # error re-thrown here would end the user's session with no export
     # click at all (Learning 758; found by this session's RED tests).
     observe({
-      req(safeRead(comparison))
+      req(comparisonOrNull())
       session$sendCustomMessage("setDataReady", list(
         selector = paste0("#", session$ns("moduleContainer")),
         ready = TRUE
@@ -1337,7 +1342,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       crossCenterGenotypeB = reactive(rawGenotypeB()),
       crossCenterTable = reactive(crossCenter()),
       candidateAssignmentTable = reactive(candidateAssignment()),
-      isReady = reactive(!is.null(safeRead(comparison))),
+      isReady = reactive(!is.null(comparisonOrNull())),
       locusMetadataTable = reactive(locusMetadata()),
       realizedRelatednessTable = reactive(realizedRelatedness()),
       ldBlockTable = reactive(ldBlock()),
