@@ -98,32 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1001 Did
-**Deliverable, DONE (owner pick, item 4 of 4; housekeeping, no `R/` or test change, so no TDD gates, the S960 and S991 precedent):** `methodology/CHANGELOG.md` trimmed
-from 207,203 B to 34,299 B: 120 of 137 records (2026-10-09 to 2026-10-14) now sit in `methodology/archive/CHANGELOG-through-2026-10-14.md` (174,847 B), 17 stay live.
-`methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --cut 2026-10-14 --write`, no `--force`. The default cut would have archived 121 and named the
-shard 2026-10-15 while today's records stayed live (`CUT_STRADDLES_DAY`), so I took the clean day cut. L1/L2/L3 OK; the shard's `verify.sh` and `--reverify` pass.
-**Gates:** claim `b28b5dd57`; trim `27b9da85d` (the ledger, the shard, its verify script); close-out in the next commit. The 12 test files that name the ledgers: 178
-blocks, 886 expectations, 0 failed. No full suite, lint or `devtools::check()`: no `R/`, `tests/`, `NEWS` or `man/` file changed. Ratchet 1/1 pass. Context budget:
-`CHANGELOG.md` 34,299 B, ok.
-**Found, not fixed:** the archive pointers name `docs/archive/` but the shards sit in `methodology/archive/`: 52 dead pointers (`SESSION_NOTES.md` 23 of 23, `HANDOFFS.md`
-17 of 18, the new CHANGELOG shard 12 of 12), every target exists by name; the 12 were dead before this trim. In `BACKLOG.md` as DECISION NEEDED.
-**Handoff evaluation of S1000: 9/10.** Helped: the Housekeeping line gave the exact command and byte figures, and they held (206,559 B, the trigger fires, no SRF
-refusal); the Next list matched the BACKLOG lines; the S960 and S991 precedents (own commit, no TDD gates) were findable by `git log --grep`. Missing: that the default
-cut straddles a day when many sessions share a date (`--cut` to the day before is cleaner); where the methodology repo is for the `SESSION_RUNNER.md` re-sync. Wrong:
-nothing ("267 ahead" was 268 once its own close-out commit landed).
-**Self-assessment: 8/10.** + read the full runner and safeguards, checked the ratchet citation, listed CI, and reported before acting; dry-ran two cuts and compared them;
-checked the shard three ways (verify script, `--reverify`, pointer targets) and found the dead pointers by measuring; ran every test that names the ledgers, including the
-receipt-placement test the claim touched; kept the trim in its own commit. - the claim script was not safe to rerun (it wrote `SESSION_NOTES.md`, then stopped on the
-second `## 2026-10` heading); two test-runner calls failed because zsh does not split `$FILES`; a `cd ..` moved the shell.
-**Next:** the popover title item (`BACKLOG.md:160`, READY, Effort S, strict TDD; you choose: drop the title bar or short titles); the 6e re-check (46 candidates CE-CL, an
-audit, may take two sessions: an estimate); the guide-sentence item (`BACKLOG.md:167`, DECISION NEEDED, docs only, S); CC5 is your call; the dead archive pointers (new,
-DECISION NEEDED); the `SESSION_RUNNER.md` re-sync is still owed. Ahead of `origin/master` by 271 commits (state only).
-**Gotchas:** see the `HANDOFFS.md` receipt and Learning 967 (pass `--cut <day before today>` when today's records stay live; zsh needs `${=VAR}` to split a file list;
-check every anchor before a script writes its first file).
+### What Session 1002 Did
+**Deliverable:** the Summary Statistics popover title bar that reads "character(0)" (`BACKLOG.md:160`) fixed (IN PROGRESS)
+**Started:** 2026-10-15 (owner pick at the Phase 0 picker, item 1 of 4)
+**Status:** Session claimed. Strict TDD, phase PRE-RED. The owner's choice (drop the title bar, or give each popover a short title) is asked at the PRE-RED scope question before RED.
+Next: measure the 12 popovers in the real app, ask, RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
 
-### Sessions 947-1000 (condensed S950 to S1001; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1001 (condensed S950 to S1002; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1001: `methodology/CHANGELOG.md` trimmed from 207,203 B to 34,299 B, 120 of 137 records in `methodology/archive/CHANGELOG-through-2026-10-14.md` (housekeeping, no `R/` or test change;
+claim `b28b5dd57`, trim `27b9da85d`; `methodology_trim.py --cut 2026-10-14`; evaluation of S1000 9/10, self 8/10). **Found, not fixed:** 52 archive pointers name `docs/archive/` while
+the shards sit in `methodology/archive/` (`BACKLOG.md` DECISION NEEDED). **Gotchas kept (S1001):** pass `--cut <day before today>` when today's records stay live (the default cut
+straddles the day); zsh needs `${=VAR}` to split a file list; check every anchor before a script writes its first file.
 S1000: CA3 of the slice 6d re-check: the Genetic Diversity heat map's leftover row reads "Unused animals", not "Group 2" (`R/modBreedingGroups.R:901,1215` `groupLabels`;
 `R/appServer.R:434-439`; `R/nameBreedingGroups.R`; `NEWS.Rmd:279-283`; strict TDD, REFACTOR taken twice; claim `52df1e915`, RED `1daca6924`, GREEN `53169e8c2`, contract-test line `074ba0447`,
 REFACTOR `79195a4ab`, docs RED `846acfdde`, docs GREEN `5a88f9af3` `c6c96972a` `13d02ed81` `c056d713c`, test-only REFACTOR `1230ea6aa`; evaluation of S999 8/10, self 7/10).
