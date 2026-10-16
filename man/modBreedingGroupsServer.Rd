@@ -59,6 +59,10 @@ formed group; when candidates remain unplaced a final "Unused" element
 is appended
 \item \code{nGroups} - Number of elements of \code{groups}, counting the
 "Unused" element when present
+\item \code{groupLabels} - Character vector with one name per element of
+\code{groups}: "Group 1", "Group 2" and so on, and "Unused animals" for
+the final "Unused" element when there is one; \code{groups} itself is
+not named
 \item \code{score} - Optimization score from groupAddAssign
 (minimum group size)
 \item \code{unassigned} - Character vector of candidate IDs that appear
