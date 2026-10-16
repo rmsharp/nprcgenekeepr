@@ -98,35 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1000 Did
-**Deliverable, DONE (owner pick, item 1 of 4; "keep the row, call it Unused animals" and "leave groups() alone, add one item" ruled at the two PRE-RED questions; the six docs sentences
-approved as written; every gate asked and answered, REFACTOR taken twice):**
-CA3 of the slice 6d re-check: the Genetic Diversity heat map's last row, when some animals fit no group, reads "Unused animals" as the three Breeding Groups pages do, not "Group 2".
-Measured first in the real app (bundled example, Top ranked, 1 group): the Groups page said "Group 1 (18 animals)" and "Unused animals (2 animals)", the heat map "Group 1" and "Group
-2". `modBreedingGroupsServer()` returns a new item `groupLabels` (`R/modBreedingGroups.R:901,1215`, the reactive `boxLabels`, which also feeds the Groups, Statistics and Group Detail
-pages); `groups()` is unchanged; `R/appServer.R:434-439` attaches the names with `.nameBreedingGroups()` (`R/nameBreedingGroups.R`) and leaves the rows numbered when the names do not
-fit or a stand-in server returns none. The help of both modules, the manual's Module Interface list, the guide's two paragraphs and `NEWS.Rmd:279-283` say it.
-**Gates:** claim `52df1e915`; RED `1daca6924` (17 blocks, 14 red, 3 guards pass, 0 errors); GREEN `53169e8c2`; contract-test line `074ba0447` (RED proof in a worktree of the RED sha);
-REFACTOR `79195a4ab`; docs RED `846acfdde` (8 blocks, 7 red, plus 1 guide pin); docs GREEN `5a88f9af3`, `c6c96972a`, `13d02ed81`, `c056d713c`; test-only REFACTOR `1230ea6aa`; close-out
-1 `40b025ee0`. Mutants 12 of 12, 6 of 6 and 2 of 3 (the third is equivalent). Full suite 3,820 blocks, 12,853 expectations, 0 failed, 0 errors, 187 skipped; `lint_package()` 0;
-`devtools::check()` 0/0/0; ratchet 1/1 pass.
-**Handoff evaluation of S999: 8/10.** Helped: the Next list put CA3 first with `R/getGeneticDiversityStats.R:44,92`, which held; the audit row's recommended (a) was right in spirit;
-Learning 965's "grep who reads it" and the `git worktree`, scratch `app.R` and `NOT_CRAN=true` recipes worked first time; the S999 tests gave the `tryCatch(..., error = function(e) e)`
-RED idiom. Missing: that a test pins each module's returned names (`test_moduleContract.R:58`) and that the shared `stubBG` returns no new item; that the app's group formation is
-unseeded, so two runs differ. Wrong: "the groups list is read by other tabs too" (BACKLOG and the audit row): only the Genetic Diversity tab reads the returned `groups()`.
-**Self-assessment: 7/10.** + measured the real app before asking and said what the picture showed; found that naming only the last element does nothing; every gate asked; RED reasons
-read per block; 12 of 12 and 6 of 6 mutants; the late contract-test line got RED proof in a worktree; pictures opened for you before the long suite and described as they are (random
-runs, a closed selector). - told you at the gate that no existing test would change (wrong by one line: my PRE-RED search found readers, not pinned name lists); said `glPed` had 3 uses
-(2); the spelling flag on `groupLabels` showed only in the NEWS-test run after commit 1 (a 1b commit); a macOS `sed -i` and a nested-quote script cost two reruns.
-**Next:** the popover title item (`BACKLOG.md:160`, READY, Effort S, strict TDD; you choose: drop the title bar or short titles); the 6e re-check (46 candidates CE-CL, an audit, may
-take two sessions: an estimate); the guide-sentence item (`BACKLOG.md:167`, DECISION NEEDED, docs only, S); CC5 is your call. Housekeeping owed: trim `methodology/CHANGELOG.md` (past
-its 196,608 B warn line) with `methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --check`, then `--write`; re-sync `SESSION_RUNNER.md`. Ahead of `origin/master`
-by 267 commits (state only).
-**Gotchas:** see the `HANDOFFS.md` receipt and Learning 966 (`test_moduleContract.R:56-58` pins each module's returned names; names label heat-map rows only when every element is named;
-stand-in servers lack a new item; unseeded runs differ by chance; name an item `\code{}` in help or the spelling test flags it).
+### What Session 1001 Did
+**Deliverable:** trim `methodology/CHANGELOG.md` (206,559 B, past its 196,608 B warn line) with
+`methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536` (IN PROGRESS)
+**Started:** 2026-10-15 (owner pick at the Phase 0 picker, item 4 of 4)
+**Status:** Session claimed. Housekeeping, no `R/` or test change, so no TDD gates (the S960 and S991 precedent). `--check` fired (206,559 B against 196,608 B).
+Next: dry run, `--write` without `--force`, the shard's verify script, the ledger tests, lint, close-out.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
 
-### Sessions 947-999 (condensed S950 to S1000; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1000 (condensed S950 to S1001; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1000: CA3 of the slice 6d re-check: the Genetic Diversity heat map's leftover row reads "Unused animals", not "Group 2" (`R/modBreedingGroups.R:901,1215` `groupLabels`;
+`R/appServer.R:434-439`; `R/nameBreedingGroups.R`; `NEWS.Rmd:279-283`; strict TDD, REFACTOR taken twice; claim `52df1e915`, RED `1daca6924`, GREEN `53169e8c2`, contract-test line `074ba0447`,
+REFACTOR `79195a4ab`, docs RED `846acfdde`, docs GREEN `5a88f9af3` `c6c96972a` `13d02ed81` `c056d713c`, test-only REFACTOR `1230ea6aa`; evaluation of S999 8/10, self 7/10).
+**Gotchas kept (S1000):** `test_moduleContract.R:56-58` pins each module's returned names (a new returned item needs a line there); names label heat-map rows only when every element
+is named; stand-in servers return no new item (`appServer` reads it behind `is.function`); the app's group formation is unseeded, so two runs differ; name an item `\code{}` in help
+or the spelling test flags it.
 S999: CB5 of the slice 6d re-check: the Marker Genetics module's returned `isReady` answers FALSE, not an error, for a genotype file it cannot use (`R/modMarkerGenetics.R:595,1347`,
 help `:479-481`; `NEWS.Rmd:545`; strict TDD, REFACTOR taken; claim `9c002247d`, RED `dba687eca`, GREEN `480d1a9fa`, REFACTOR `f63725aa0`, NEWS `b8f9b068d`, help RED `1604a8df9`, help GREEN
 `f3902d18d`; evaluation of S998 8/10, self 8/10). **Gotchas kept (S999):** nothing in `R/` reads `isReady` (grep the readers before describing reach); two elements carry the Marker
