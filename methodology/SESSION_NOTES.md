@@ -99,12 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1001 Did
-**Deliverable:** trim `methodology/CHANGELOG.md` (206,559 B, past its 196,608 B warn line) with
-`methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536` (IN PROGRESS)
-**Started:** 2026-10-15 (owner pick at the Phase 0 picker, item 4 of 4)
-**Status:** Session claimed. Housekeeping, no `R/` or test change, so no TDD gates (the S960 and S991 precedent). `--check` fired (206,559 B against 196,608 B).
-Next: dry run, `--write` without `--force`, the shard's verify script, the ledger tests, lint, close-out.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 4 of 4; housekeeping, no `R/` or test change, so no TDD gates, the S960 and S991 precedent):** `methodology/CHANGELOG.md` trimmed
+from 207,203 B to 34,299 B: 120 of 137 records (2026-10-09 to 2026-10-14) now sit in `methodology/archive/CHANGELOG-through-2026-10-14.md` (174,847 B), 17 stay live.
+`methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --cut 2026-10-14 --write`, no `--force`. The default cut would have archived 121 and named the
+shard 2026-10-15 while today's records stayed live (`CUT_STRADDLES_DAY`), so I took the clean day cut. L1/L2/L3 OK; the shard's `verify.sh` and `--reverify` pass.
+**Gates:** claim `b28b5dd57`; trim `27b9da85d` (the ledger, the shard, its verify script); close-out in the next commit. The 12 test files that name the ledgers: 178
+blocks, 886 expectations, 0 failed. No full suite, lint or `devtools::check()`: no `R/`, `tests/`, `NEWS` or `man/` file changed. Ratchet 1/1 pass. Context budget:
+`CHANGELOG.md` 34,299 B, ok.
+**Found, not fixed:** the archive pointers name `docs/archive/` but the shards sit in `methodology/archive/`: 52 dead pointers (`SESSION_NOTES.md` 23 of 23, `HANDOFFS.md`
+17 of 18, the new CHANGELOG shard 12 of 12), every target exists by name; the 12 were dead before this trim. In `BACKLOG.md` as DECISION NEEDED.
+**Handoff evaluation of S1000: 9/10.** Helped: the Housekeeping line gave the exact command and byte figures, and they held (206,559 B, the trigger fires, no SRF
+refusal); the Next list matched the BACKLOG lines; the S960 and S991 precedents (own commit, no TDD gates) were findable by `git log --grep`. Missing: that the default
+cut straddles a day when many sessions share a date (`--cut` to the day before is cleaner); where the methodology repo is for the `SESSION_RUNNER.md` re-sync. Wrong:
+nothing ("267 ahead" was 268 once its own close-out commit landed).
+**Self-assessment: 8/10.** + read the full runner and safeguards, checked the ratchet citation, listed CI, and reported before acting; dry-ran two cuts and compared them;
+checked the shard three ways (verify script, `--reverify`, pointer targets) and found the dead pointers by measuring; ran every test that names the ledgers, including the
+receipt-placement test the claim touched; kept the trim in its own commit. - the claim script was not safe to rerun (it wrote `SESSION_NOTES.md`, then stopped on the
+second `## 2026-10` heading); two test-runner calls failed because zsh does not split `$FILES`; a `cd ..` moved the shell.
+**Next:** the popover title item (`BACKLOG.md:160`, READY, Effort S, strict TDD; you choose: drop the title bar or short titles); the 6e re-check (46 candidates CE-CL, an
+audit, may take two sessions: an estimate); the guide-sentence item (`BACKLOG.md:167`, DECISION NEEDED, docs only, S); CC5 is your call; the dead archive pointers (new,
+DECISION NEEDED); the `SESSION_RUNNER.md` re-sync is still owed. Ahead of `origin/master` by 271 commits (state only).
+**Gotchas:** see the `HANDOFFS.md` receipt and Learning 967 (pass `--cut <day before today>` when today's records stay live; zsh needs `${=VAR}` to split a file list;
+check every anchor before a script writes its first file).
 
 
 ### Sessions 947-1000 (condensed S950 to S1001; full record in `CHANGELOG.md` and `HANDOFFS.md`)

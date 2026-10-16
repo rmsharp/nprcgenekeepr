@@ -24,6 +24,10 @@ keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-14.md.verify.sh`](archive/CHANGELOG-through-2026-10-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
+### 2026-10-15 · [ad hoc] S1001 DONE (owner pick at the Phase 0 picker, item 4 of 4; housekeeping, no `R/` or test change, so no TDD gates; the claim entry below said in progress): `methodology/CHANGELOG.md` trimmed from 207,203 B to 34,299 B, 120 of 137 records archived
+`methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --cut 2026-10-14 --write`, no `--force`: the shard is `methodology/archive/CHANGELOG-through-2026-10-14.md` (174,847 B, with its `.verify.sh`). The default cut would have archived 121 and named the shard 2026-10-15 while records of that day stayed live (`CUT_STRADDLES_DAY`); the day cut keeps all 17 records of 2026-10-15 live. L1/L2/L3 OK, the shard's `verify.sh` and `--reverify` pass, the 12 test files that name the ledgers: 178 blocks, 886 expectations, 0 failed.
+Found and filed, not fixed: 52 archive pointers name `docs/archive/` but the shards sit in `methodology/archive/` (`SESSION_NOTES.md` 23, `HANDOFFS.md` 17, the new CHANGELOG shard 12; the 12 were dead before this trim); the `BACKLOG.md` item is DECISION NEEDED; Learning 967. Gates: claim `b28b5dd57`; trim `27b9da85d`; close-out in the next commit. `SESSION_RUNNER.md` re-sync still owed.
+
 ### 2026-10-15 · [ad hoc] Ledger trim: `methodology/CHANGELOG.md` → `methodology/archive/CHANGELOG-through-2026-10-14.md` (120 record(s), 207,203 B → 34,299 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.

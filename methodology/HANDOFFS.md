@@ -202,11 +202,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1001
 date: 2026-10-15
-status: pending
-active_task: IN PROGRESS -- trim `methodology/CHANGELOG.md` (206,559 B, past its 196,608 B warn line) with `methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536` (owner pick at the Phase 0 picker, item 4 of 4); housekeeping, no TDD gates
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- trimmed `methodology/CHANGELOG.md` (owner pick at the Phase 0 picker, item 4 of 4; housekeeping, no `R/` or test change, so no TDD gates): 207,203 B to 34,299 B, 120 of 137 records in `methodology/archive/CHANGELOG-through-2026-10-14.md`, 17 live. Open items left: the popover title, the 6e re-check, the guide sentence, CC5 (the owner's call), the dead archive pointers (new); `methodology/SESSION_RUNNER.md` behind canonical.
+what_was_done: Phase 0 clean (gap 0 for CHANGELOG.md and HANDOFFS.md, no pending receipt, no merges, no untracked files, CI 10 of 10 green, dashboard 96/100 High+ 0, ratchet citation matched). Claim b28b5dd57. `--check` fired (206,559 B against 196,608 B); dry run of the default cut (121 of 137, CUT_STRADDLES_DAY) and of `--cut 2026-10-14` (120 of 137, 34,299 B, no straddle); `--cut 2026-10-14 --write` with no `--force`; verify.sh and `--reverify` OK; every test that names the ledgers (12 files, 178 blocks, 886 expectations, 0 failed); trim commit 27b9da85d. Found by measuring that 52 archive pointers name docs/archive/ while the shards sit in methodology/archive/ (SESSION_NOTES.md 23, HANDOFFS.md 17 of 18, the new CHANGELOG shard 12); filed in BACKLOG.md, Learning 967.
+next_steps: Candidates (re-grep BACKLOG.md lines, they shift after any edit above): the popover "character(0)" title (BACKLOG.md:160, READY, Effort S, strict TDD: drop the title bar or give each popover a short title, the owner's choice; needs a render-level test of the popover title, test_docsAuditHousekeepingWording.R reads the rendered addTooltip calls); the 6e re-check (46 candidates CE-CL, an audit, may take two sessions: an estimate); the guide-sentence item (BACKLOG.md:167, DECISION NEEDED, docs only, S, the owner writes the sentence); CC5 is the owner's call; the dead archive pointers item (new, DECISION NEEDED); the Changed Columns tab and the nameless header items. Housekeeping: methodology/SESSION_RUNNER.md needs a re-sync from the methodology repo (its location is not recorded in the notes)
+key_files: methodology/CHANGELOG.md:21-34 (the pointer and the trim entry), methodology/archive/CHANGELOG-through-2026-10-14.md:1 (the shard), methodology/archive/CHANGELOG-through-2026-10-14.md.verify.sh:1, methodology/.context-budget.json:1, tests/testthat/test_contextBudgetLedgers.R:1, tests/testthat/test_handoffsReceiptPlacement.R:1, BACKLOG.md:205 (the dead-pointer item), PROJECT_LEARNINGS.md Learning 967, docs/conventions/CLOSEOUT_CHECKLISTS.md (the trim and ledger rules)
+gotchas: pass `--cut <the day before today>` when today's records must stay live (the default is positional and prints CUT_STRADDLES_DAY); a trim writes but never commits or stages (git add the ledger, the shard and its verify.sh by name; the studbook stays untracked, never git add -A); the trim moves the older pointer blocks into the new shard, so the live file shows one pointer; 52 archive pointers are dead (docs/archive/ against methodology/archive/), every target exists by name; zsh needs ${=VAR} to split a file list into arguments; check every anchor before a script writes its first file; cd in a Bash call moves the shell, use absolute paths
+runtime_smoke: n/a -- docs-only ledger housekeeping (no runtime behavior changed; the Shiny app was not launched)
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 7b8c1a1e3500 · manifest aa983075d6a2
+changelog_ref: 27b9da85d
+commit: 27b9da85d
 ```
+Self-score 8: + full orientation incl. the ratchet citation, two dry runs compared, three-way shard proof, dead pointers found by measuring, every ledger-reading test run, the trim in its own commit; - a claim script not safe to rerun, two runs lost to zsh word-splitting, a stray cd. Predecessor (S1000) 9: exact command and figures held; missed the day-straddle cut and the methodology repo's location.
 
 ```handoff
 session: S1000
