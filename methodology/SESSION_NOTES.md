@@ -99,11 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1002 Did
-**Deliverable:** the Summary Statistics popover title bar that reads "character(0)" (`BACKLOG.md:160`) fixed (IN PROGRESS)
-**Started:** 2026-10-15 (owner pick at the Phase 0 picker, item 1 of 4)
-**Status:** Session claimed. Strict TDD, phase PRE-RED. The owner's choice (drop the title bar, or give each popover a short title) is asked at the PRE-RED scope question before RED.
-Next: measure the 12 popovers in the real app, ask, RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; "remove the title bar" ruled at the PRE-RED scope question; every gate asked and answered, REFACTOR taken):** the twelve Export-button
+pop-ups on the Summary Statistics tab no longer draw a gray title bar reading "character(0)" (found S994). `shinyBS::popify(title = NULL)` writes the page text `'title': 'character(0)'`;
+`title = ""` writes `''` and the app's Bootstrap 4 theme hides the bar (measured in headless Chrome: header display "none", 0 px, against 35 px). `R/modSummaryStats.R:16`
+`.exportButtonPopover()` builds all 12 (`:70` on, one call each). The three box-plot pop-ups (added by the server with `addPopover()`, real titles) are untouched. The defect shipped in
+2.0.0 (the same 12 lines are in the tag), so `NEWS.Rmd:599` says it.
+**Gates:** claim `7de14f5ac`; RED `cd0788344` (4 blocks, 2 guards pass, 2 red with 2 and 12 failures, 0 errors); GREEN `6ef86136d` (12 lines `title = NULL` to `title = ""`); NEWS `6911fd504`;
+REFACTOR `82ad057f0` (one helper; the text of `modSummaryStatsUI()` byte for byte identical before and after, 72,112 B). Mutants 3 of 3 killed. Full suite 3,824 blocks, 12,875 expectations,
+0 failed, 0 errors, 187 skipped; `lint_package()` 0; `devtools::check()` 0/0/0; ratchet 1/1 pass. Real app (scratch `app.R`, example pedigree, Genetic Value 10 iterations): two pictures opened for you.
+**One push, as you asked:** `5a41dbbdd..82ad057f0` after the last real-work commit (276 commits, 5 of them this session). This close-out commit starts no CI (its files are all on `paths-ignore`).
+**Handoff evaluation of S1001: 9/10.** Helped: the BACKLOG line named the one file and the cause (`title = NULL`) and both held (12 calls, measured); "`test_docsAuditHousekeepingWording.R` reads the
+rendered `addTooltip` calls" gave the reader pattern; the zsh `${=VAR}` and "check every anchor" gotchas were applied. Missing: that the tab has 15 pop-ups, 3 with real titles already; that an empty
+title hides the bar (it took a measurement); that `test_modSummaryStats_popovers.R` exists. Wrong: nothing.
+**Self-assessment: 8/10.** + claimed before any technical work; measured the defect and the empty-title hide in a browser before asking, and opened both pictures; every gate asked; RED reasons read per
+block; 3 of 3 mutants; the REFACTOR proved by a byte-identical page; one push, timed as asked. - my first search for popover tests was cut by `head -10` and missed
+`test_modSummaryStats_popovers.R` (found when I ran the whole Summary Statistics family); one malformed `AskUserQuestion` call; zsh split no file list once; a wrong `click()` argument cost a driver rerun;
+two long runs went without a status line.
+**Next:** the 6e re-check (46 candidates CE-CL, an audit, READY, Effort M, may take two sessions: an estimate); the guide-sentence item (`BACKLOG.md:160`, DECISION NEEDED, docs only, S); the dead archive
+pointers (`BACKLOG.md:198`, DECISION NEEDED, S); CC5 is your call; the `SESSION_RUNNER.md` re-sync is still owed. Phase 0 lists the CI runs this push started (276 commits, so a red run may come from
+older work, not from this session's five).
+**Gotchas:** see the `HANDOFFS.md` receipt and Learning 968 (`title = ""` hides a Bootstrap 4 popover header, `NULL` prints "character(0)"; run a whole test family before GREEN; `click(wait_ = FALSE)` errors, use
+`run_js`).
 
 
 ### Sessions 947-1001 (condensed S950 to S1002; full record in `CHANGELOG.md` and `HANDOFFS.md`)

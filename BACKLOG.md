@@ -157,13 +157,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Every Summary Statistics popover header reads the text "character(0)" (READY, Effort S; strict TDD)** (found S994,
-      2026-10-15, in a real-app look at the export popovers) -- all 12 popovers of the tab are built with
-      `shinyBS::popify(..., title = NULL, ...)` (`R/modSummaryStats.R`, the only file that calls `popify`), and the page draws a title bar
-      reading "character(0)" above each sentence (headless Chrome, `.popover:visible` text; the picture was opened for the owner).
-      **Decision (the owner's):** drop the title bar (content only) or give each popover its own short title. The fix needs a render-level
-      test of the popover title; `tests/testthat/test_docsAuditHousekeepingWording.R` already reads the rendered `addTooltip` calls.
-
 - [ ] **The guide does not name the "groups not in the pedigree" sentence (DECISION NEEDED -- add a sentence where the
       owner wants it, or leave; docs only, Effort S, the owner writes the sentence)** (found S995, widened S996) -- the Genetic
       Diversity page (`R/modGeneticDiversity.R:48-54`) and the Breeding Groups Groups, Statistics and Group Detail pages

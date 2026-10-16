@@ -202,11 +202,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1002
 date: 2026-10-15
-status: pending
-active_task: IN PROGRESS -- fix the Summary Statistics popover title bar that reads "character(0)" (`BACKLOG.md:160`; owner pick at the Phase 0 picker, item 1 of 4); strict TDD, phase PRE-RED
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the twelve Summary Statistics Export pop-ups no longer draw a "character(0)" title bar (owner pick at the Phase 0 picker, item 1 of 4; "remove the title bar" ruled at the PRE-RED scope question; strict TDD, every gate asked and answered, REFACTOR taken). Open items left: the 6e re-check, the guide sentence, the dead archive pointers, CC5 (the owner's call), the SESSION_RUNNER.md re-sync
+what_was_done: Phase 0 clean (gap 0, no pending receipt, CI 10 of 10 green, dashboard 96/100, ratchet matched). Claim 7de14f5ac. PRE-RED: measured in headless Chrome that title NULL prints "character(0)" (header 35 px) and title "" hides the Bootstrap 4 header (display none, 0 px); the owner chose to remove the bar. RED cd0788344 (test_summaryStatsPopoverTitles.R, 4 blocks, 2 red with 2 and 12 failures). GREEN 6ef86136d (12 lines in R/modSummaryStats.R). NEWS 6911fd504. REFACTOR 82ad057f0 (.exportButtonPopover(); page text byte for byte identical, 72,112 B). Mutants 3 of 3 killed. Full suite 3,824 blocks 0 failed 0 errors; lint_package 0; devtools::check 0/0/0. One push 5a41dbbdd..82ad057f0 as the owner asked; close-out commit local (paths-ignore files only)
+next_steps: Candidates (re-grep BACKLOG.md lines): the 6e re-check (46 candidates CE-CL of docs-audit part 2, an audit, READY, Effort M, may take two sessions: an estimate); the guide sentence for "groups not in the pedigree" (BACKLOG.md:160, DECISION NEEDED, docs only, S, the owner writes the sentence); the dead archive pointers (BACKLOG.md:198, DECISION NEEDED, S: leave, rewrite 52, or fix the trim tool); the Changed Columns tab and the nameless-header items (DECISION NEEDED); CC5 is the owner's call. First, in Phase 0, read the CI runs the push started: gh run list --branch master --limit 10
+key_files: R/modSummaryStats.R:16 (the helper) and :70 (the first of 12 calls), tests/testthat/test_summaryStatsPopoverTitles.R:54-96 (4 blocks), NEWS.Rmd:599 (the entry), BACKLOG.md:160 (next item), PROJECT_LEARNINGS.md Learning 968, tests/testthat/test_modSummaryStats_popovers.R:1 (the older popover tests)
+gotchas: shinyBS popify(title = NULL) prints the text "character(0)"; title = "" hides the header in the app's Bootstrap 4 theme; the three box-plot pop-ups come from addPopover() in the server and keep real titles; run the whole test family (Sys.glob("tests/testthat/test_modSummaryStats*.R")) before GREEN, a head-cut grep missed one file; scratch driver: click(selector, wait_ = FALSE) errors, use run_js; the push carried 276 commits (5 this session), so a red CI run may come from older work; zsh needs ${=VAR} to split a file list
+runtime_smoke: real app run (scratch app.R with load_all, headless Chrome, example pedigree, Genetic Value 10 iterations): Export Kinship Matrix, Export Relationship Classes and Export Genome Uniqueness Box Plot pop-ups show header display none, 0 px; the Mean Kinship box-plot pop-up still shows its header "Mean Kinship Coefficients" (35 px); two pictures opened for the owner
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 1b0bd046300a · manifest aa983075d6a2
+changelog_ref: 82ad057f0
+commit: 82ad057f0
 ```
+Self-score 8: + claimed first, measured the hide in a browser before asking, pictures opened, every gate asked, RED reasons read per block, 3 of 3 mutants, byte-identical REFACTOR proof, one push timed as asked; - a head-cut grep missed test_modSummaryStats_popovers.R, one malformed AskUserQuestion call, one zsh split, a wrong click argument, two long runs without a status line. Predecessor (S1001) 9: the BACKLOG line and the reader pattern held; missed the 15-pop-up count and the empty-title hide.
 
 ```handoff
 session: S1001
