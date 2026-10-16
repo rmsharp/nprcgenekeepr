@@ -353,6 +353,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 - `reportMatePairs()` reports mate-pair candidates with relatedness and
   genetic-value context. Report only (issue \#151).
+- Mate pairs are made only from animals recorded as male or female. The
+  page says how many animals of any other sex it left out, and
+  `reportMatePairs()` leaves them out of both tables.
 
 ## De-Identified Export
 
