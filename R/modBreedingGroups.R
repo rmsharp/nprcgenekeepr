@@ -891,6 +891,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       selectedCandidate()$validGroups
     })
 
+    # The name of each box of breedingGroups(): "Group i", and "Unused animals"
+    # for a last box of animals that fit no group. The one place the Groups,
+    # Statistics and Group Detail pages and the returned groupLabels get it.
+    boxLabels <- reactive({
+      breedingGroupLabels(length(breedingGroups()),
+                          selectedCandidate()$hasUnused)
+    })
+
     # The formed groups outlive a new file and a trimmed view, so a box can
     # hold an animal the loaded pedigree no longer has. The three pages say
     # so in one sentence instead of showing empty tables or an error.
@@ -1062,8 +1070,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       }
       ped <- pedigree()
 
-      labels <- breedingGroupLabels(length(breedingGroups()),
-                                    selectedCandidate()$hasUnused)
+      labels <- boxLabels()
       groupsList <- lapply(seq_along(breedingGroups()), function(i) {
         groupIds <- breedingGroups()[[i]]
         nAnimals <- length(groupIds)
@@ -1105,7 +1112,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
 
       nBoxes <- length(breedingGroups())
       hasUnused <- isTRUE(selectedCandidate()$hasUnused)
-      labels <- breedingGroupLabels(nBoxes, hasUnused)
+      labels <- boxLabels()
       stats <- lapply(seq_len(nBoxes), function(i) {
         groupIds <- breedingGroups()[[i]]
         sexes <- ped$sex[ped$id %in% groupIds]
@@ -1137,7 +1144,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     observe({
       n <- length(breedingGroups())
       req(n >= 1L)
-      labels <- breedingGroupLabels(n, selectedCandidate()$hasUnused)
+      labels <- boxLabels()
       updateSelectInput(session, "viewGrp",
                         choices = stats::setNames(seq_len(n), labels),
                         selected = 1L)
@@ -1201,10 +1208,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     list(
       groups = reactive(breedingGroups()),
       nGroups = reactive(length(breedingGroups())),
-      groupLabels = reactive(
-        breedingGroupLabels(length(breedingGroups()),
-                            selectedCandidate()$hasUnused)
-      ),
+      groupLabels = boxLabels,
       score = reactive({
         res <- groupResults()
         if (is.null(res)) return(0L)
