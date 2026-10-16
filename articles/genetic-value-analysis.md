@@ -52,6 +52,18 @@ is a thin, version-stable wrapper around
 computed deterministically from the pedigree and does not depend on the
 seed.
 
+If the pedigree has genotypes (on the Input tab, “Pedigree(s) and
+genotypes in one file” or “Pedigree(s) and genotypes in separate
+files”), the gene drop uses each genotyped animal’s own alleles in place
+of simulated ones, so genome uniqueness can change for those animals. On
+the shipped one-file example, 18 of its 31 genotyped animals scored
+differently with the genotypes than without (one run, same random seed,
+200 drops).
+
+Founder genome equivalents, their standard error and gene diversity
+ignore the genotypes: they are worked out from the pedigree alone, so a
+genotyped animal never makes them undefined.
+
 ## From studbook to a population
 
 The analysis needs a quality-controlled pedigree and a defined
@@ -247,9 +259,9 @@ round(c(fe = gv$fe, fg = gv$fg, fgSE = gv$fgSE), 2)
   deterministic, so it has no sampling standard error.
 - **Founder genome equivalents** (`fg`) goes further, also accounting
   for the founder alleles *lost* to genetic drift over the generations
-  (estimated from the same gene drop). Because some alleles are always
-  lost, `fg` is smaller than `fe`. Because `fg` is a Monte Carlo
-  estimate,
+  (estimated from a gene drop of the pedigree alone). Because some
+  alleles are always lost, `fg` is smaller than `fe`. Because `fg` is a
+  Monte Carlo estimate,
   [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
   also returns `fgSE`, its sampling standard error (shown above and
   displayed inline as `fg +/- fgSE` wherever FG appears); it shrinks

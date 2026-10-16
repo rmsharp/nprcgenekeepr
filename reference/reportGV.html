@@ -194,9 +194,10 @@ values and a <code>guSE</code> column of their standard errors; <code>gu</code> 
 animals, whose apparent uniqueness is an artifact of unknown parentage),
 <code>fe</code> (founder equivalents),
 <code>fg</code> (founder genome equivalents), <code>fgSE</code> (the Monte Carlo sampling
-standard error of <code>fg</code>, computed from the same gene drop; a single
-colony-level number, <code>NA</code> when a contributing founder is retained in
-zero gene-drop iterations – see <code><a href="calcFGSE.html">calcFGSE</a></code>), <code>neGD</code> (gene
+standard error of <code>fg</code>, computed from the same gene drop as
+<code>fg</code>; a single colony-level number, <code>NA</code> when a contributing
+founder is retained in zero gene-drop iterations – see
+<code><a href="calcFGSE.html">calcFGSE</a></code>), <code>neGD</code> (gene
 diversity retained in the founding gene pool, <code>1 - 1 / (2 * fg)</code>; a
 colony-level scalar beside <code>fg</code>, <code>NA</code> when <code>fg</code> is <code>NA</code>;
 see <code><a href="calcGeneDiversity.html">calcGeneDiversity</a></code>), <code>neSexRatio</code> (the demographic
@@ -212,6 +213,9 @@ and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of
 those founders), and <code>total</code> (the total number of known founders).
+<code>fg</code>, <code>fgSE</code> and <code>neGD</code> come from a gene drop that ignores
+genotypes; it is the same gene drop that gives <code>gu</code> when the pedigree
+has none.
 The founder lists hold only <em>known</em> founders: an animal with both
 parents unknown whose id was generated to stand in for an unknown parent is
 left out, because that placeholder may be a known founder, another animal

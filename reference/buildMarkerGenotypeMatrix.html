@@ -84,8 +84,8 @@ column per unique <code>locus</code>. Each cell holds that individual's two
 alleles at that locus, sorted (by string collation, so locale-dependent
 for mixed-case alleles) and joined by <code>"/"</code> (e.g. <code>"A/B"</code>), or
 <code>NA</code> when that individual has no genotype record at that locus. A
-record with a missing allele gives the string <code>"NA/NA"</code> (not
-<code>NA</code>); <code><a href="checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></code> does not reject such
+record with a missing allele gives <code>NA</code>, the same as a record that is
+not in the file; <code><a href="checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></code> does not reject such
 rows.</p>
     </div>
     <div class="section level2">

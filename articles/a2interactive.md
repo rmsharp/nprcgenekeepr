@@ -800,6 +800,65 @@ summary(trimmedGeneticValue)
 It is clear that limiting your analysis to the animals of interest
 reduces the effort required to examine the animals of interest.
 
+### Using known genotypes
+
+Known genotypes give the gene drop real alleles to start from in place
+of simulated ones. The Input tab reads them when “Pedigree(s) and
+genotypes in one file” is chosen and the file has two allele columns
+(*first* and *second*, *first_name* and *second_name*, or *allele_1* and
+*allele_2*), and its QC Summary says which it read. A script gives a
+pedigree the same integer codes with **addGenotype**. It numbers each
+distinct allele label from 10001, in sorted order over both columns, and
+adds the codes as the integer columns *first* and *second*. **reportGV**
+finds those two columns by itself, and **getGVGenotype** shows what it
+finds.
+
+The next chunk reads the package’s one-file example, a rhesus MHC
+pedigree in which some animals have allele labels in *first_name* and
+*second_name*. It hands **addGenotype** the rows that have labels,
+counts the animals with codes, runs **reportGV** and counts the
+genotyped animals at each genome uniqueness value. Each of those animals
+starts the gene drop from its own two alleles; the alleles of every
+other animal are simulated or passed down from them.
+
+``` r
+
+genotypeFile <- system.file("extdata", "examples",
+  "obfuscated_rhesus_mhc_ped_with_genotypes.csv",
+  package = "nprcgenekeepr"
+)
+labelPed <- qcStudbook(getPedigree(genotypeFile),
+  reportErrors = FALSE, reportChanges = FALSE
+)
+labelColumns <- c("first_name", "second_name")
+hasLabels <- !is.na(labelPed$first_name) | !is.na(labelPed$second_name)
+genotypePed <- addGenotype(
+  labelPed[, !(names(labelPed) %in% labelColumns)],
+  labelPed[hasLabels, c("id", labelColumns)]
+)
+c(animals = nrow(genotypePed), with_codes = sum(!is.na(genotypePed$first)))
+```
+
+    ##    animals with_codes 
+    ##        375         31
+
+``` r
+
+genotypeGV <- reportGV(genotypePed,
+  guIter = 200L,
+  guThresh = 3L,
+  byID = TRUE,
+  updateProgress = NULL
+)
+genotypedGu <- genotypeGV$report$gu[genotypeGV$report$id %in%
+  genotypePed$id[!is.na(genotypePed$first)]]
+table(genotypedGu)
+```
+
+    ## genotypedGu
+    ##   0  50 100 
+    ##   4  15  12
+
 ### Detailed look at the Genetic Value Report object
 
 The names of the object within the genetic value report object
@@ -1064,42 +1123,43 @@ haremGrp$group
 ```
 
     ## [[1]]
-    ##  [1] "S63QDN" "TQEMY6" "XYRDKV" "ZATMEE" "AW400C" "AR5U44" "CHK1ZX" "414N7M"
-    ##  [9] "EZ2F8A" "WLMGS1" "MYUMMX" "DHNQ1W" "1KJ2MG" "KZY6PD" "0SGJ12" "CS23RV"
-    ## [17] "AP1YLW" "38K2SR" "VWC5ZH" "GTLA8R" "1CIRC9" "YLRNIK" "5KWNMZ" "83HQBN"
-    ## [25] "465ERA" "Y6DB6L" "7NE2UT" "EX5K0S" "MTCAIG"
+    ##  [1] "XY2CK7" "1SSCJC" "G8MCV7" "6KWVRI" "3GECJJ" "99BMJW" "8JUUJ9" "AR5U44"
+    ##  [9] "83HQBN" "MX4J7G" "ESUIAF" "N5QBWD" "EZ2F8A" "AP1YLW" "R5AYJK" "0SGJ12"
+    ## [17] "LYSLPP" "MKY9TK" "YFCIHJ" "HE0SCR" "PBAFJF" "IH1KPA" "5EDLL7" "F45799"
+    ## [25] "DI4AHD" "7RA57Q" "CRPXY7" "WI38KZ" "PU7RSG" "FB5L3N" "QWKFBH" "XFWVVX"
+    ## [33] "KX0RJ3" "MH88T6" "QQMBT1" "DPXEQE"
     ## 
     ## [[2]]
-    ##  [1] "CHJ9D2" "T3QPW5" "XEC0M5" "YFCIHJ" "S222R3" "BKWE4D" "S3EBGZ" "8JUUJ9"
-    ##  [9] "72LYDE" "6X6BG9" "CRPXY7" "FB5L3N" "87AQLF" "QCENKM" "MX4J7G" "BCJJKN"
-    ## [17] "WKY2SZ" "QRZK48" "01QRQ4" "SCFSBF" "AFZKBS" "WI38KZ" "DH9WJQ" "BS3RLE"
-    ## [25] "Y0TCYX" "30J3CQ" "MFKT9C"
+    ##  [1] "K7900I" "TQEMY6" "1CZM30" "Y6DB6L" "GIIEUD" "1QVS67" "B1WVCN" "KZY6PD"
+    ##  [9] "5EDIEE" "BKWE4D" "2F6J3U" "1VP3UC" "YTJ2UL" "EX5K0S" "3DTD2N" "LS184H"
+    ## [17] "SCFSBF" "W6MDVK" "M9PVG5" "E5Q33K" "NK802Y" "N4NV8B" "AFZKBS" "I5CI33"
+    ## [25] "XEC0M5" "ZPS15A" "G58RGY" "GTLA8R" "W5WIRP" "ZH3YG1"
     ## 
     ## [[3]]
-    ##  [1] "FX9E4X" "B228Q6" "CMMUKU" "7B9CA6" "N4NV8B" "MH88T6" "I5CI33" "M9PVG5"
-    ##  [9] "1SSCJC" "WNEAS6" "46ZHKN" "967Y3D" "2F6J3U" "E5Q33K" "C18V6I" "3YJIMV"
-    ## [17] "N5QBWD" "AIHJ8Z" "1CZM30" "DI4AHD" "YTJ2UL" "SHG3RB" "AZ3L0D" "X694YR"
-    ## [25] "1FAZ0K" "DRXMW4" "D4B0RM" "Z904TJ" "0XTZQ1" "GCBYDW" "FL170P" "50D77I"
+    ##  [1] "G2GYST" "50D77I" "AIHJ8Z" "PYPM1W" "S056D5" "92UG4N" "GAS52W" "MYUMMX"
+    ##  [9] "Q8U9LB" "EMV4P6" "72LYDE" "WJXIH9" "FL170P" "XYRDKV" "TXZUKC" "9MG040"
+    ## [17] "TYEWF1" "7NE2UT" "VWC5ZH" "LVYYNY" "87AQLF" "DKIM6U" "CHK1ZX" "B134XZ"
+    ## [25] "2Z4YLY" "ZQXZYB" "7ZNY75" "30J3CQ" "I8ABC7"
     ## 
     ## [[4]]
-    ##  [1] "Z25D52" "NK802Y" "IH1KPA" "PJ72W1" "Q8U9LB" "B134XZ" "RJ4JPC" "MKY9TK"
-    ##  [9] "S7IWWA" "QW2Z3R" "D9P18Y" "5W621W" "3GECJJ" "S056D5" "SH3FB7" "HE0SCR"
-    ## [17] "H2J6UA" "TYEWF1" "WTE53B" "GIIEUD" "D33J06" "PU7RSG" "3SKITJ" "6F9FB8"
-    ## [25] "W6MDVK" "J3F6PD" "R5AYJK" "Q7U139" "7RA57Q" "5EDLL7" "RVHVTZ" "WJXIH9"
-    ## [33] "PVY432"
+    ##  [1] "A6A1M1" "AW400C" "FJS7RQ" "Q7U139" "6X6BG9" "1CIRC9" "1FAZ0K" "5KWNMZ"
+    ##  [9] "FG0SFA" "PVY432" "W0GUKI" "3YJIMV" "0X4W26" "SH3FB7" "CMMUKU" "WKY2SZ"
+    ## [17] "X694YR" "S3EBGZ" "MPIQ4N" "DCJJYS" "1GF3GM" "J3F6PD" "AZ3L0D" "0XTZQ1"
+    ## [25] "6F9FB8" "ZATMEE" "AR17R5" "Z904TJ" "C18V6I" "JLFKV8" "WK89I9" "BCJJKN"
+    ## [33] "5ERY5Z" "S7IWWA"
     ## 
     ## [[5]]
-    ##  [1] "YDRD81" "G58RGY" "5ERY5Z" "1SPLS8" "6KWVRI" "321LLB" "K3TNHP" "TEACA3"
-    ##  [9] "2Z4YLY" "FJS7RQ" "9MG040" "JLFKV8" "N79QXB" "5EDIEE" "13B1QL" "QWKFBH"
-    ## [17] "QCA36T" "WK89I9" "I8ABC7" "LYSLPP" "MB6NYQ" "1GF3GM" "DKIM6U" "99BMJW"
-    ## [25] "KX0RJ3" "0HYZ23" "QQMBT1" "92UG4N" "GAS52W" "DPXEQE" "G25E3F" "PYPM1W"
-    ## [33] "EMV4P6" "TXZUKC" "S5H1GC" "1QVS67" "CLSVU6" "LVYYNY" "5BPBUI"
+    ##  [1] "0V4SAC" "S5H1GC" "D4B0RM" "414N7M" "GCBYDW" "RJ4JPC" "0HYZ23" "3SKITJ"
+    ##  [9] "QCENKM" "CS23RV" "D33J06" "Y0TCYX" "NN3GDQ" "TEACA3" "CLSVU6" "KEA4QG"
+    ## [17] "321LLB" "MFKT9C" "WNEAS6" "D9P18Y" "5BPBUI" "PI4VHT" "9P0DES" "38K2SR"
+    ## [25] "7B9CA6" "01QRQ4" "PJ72W1" "1KJ2MG" "MTCAIG" "WLMGS1" "YLRNIK" "QCA36T"
+    ## [33] "QRZK48"
     ## 
     ## [[6]]
-    ##  [1] "XY2CK7" "F45799" "NN3GDQ" "KEA4QG" "LS184H" "9P0DES" "MPIQ4N" "B1WVCN"
-    ##  [9] "W5WIRP" "3DTD2N" "5IAFMK" "DCJJYS" "PI4VHT" "0X4W26" "FG0SFA" "7ZNY75"
-    ## [17] "G8MCV7" "ZQXZYB" "PBAFJF" "ZPS15A" "ILVQVB" "ZH3YG1" "Q17CG3" "W0GUKI"
-    ## [25] "F7I2ED" "AR17R5" "XFWVVX" "1VP3UC" "0IIAEN" "ESUIAF"
+    ##  [1] "BTTHAJ" "465ERA" "WTE53B" "ILVQVB" "QW2Z3R" "RVHVTZ" "G25E3F" "Q17CG3"
+    ##  [9] "46ZHKN" "13B1QL" "SHG3RB" "DHNQ1W" "S222R3" "1SPLS8" "BS3RLE" "5IAFMK"
+    ## [17] "MB6NYQ" "DH9WJQ" "F7I2ED" "T3QPW5" "K3TNHP" "967Y3D" "0IIAEN" "B228Q6"
+    ## [25] "H2J6UA" "N79QXB" "DRXMW4" "5W621W"
     ## 
     ## [[7]]
     ## [1] NA
@@ -1120,22 +1180,22 @@ sapply(haremGrp$group, function(ids) {
 ```
 
     ## [[1]]
-    ## [1] "S63QDN"
+    ## [1] "XY2CK7"
     ## 
     ## [[2]]
-    ## [1] "CHJ9D2"
+    ## [1] "K7900I"
     ## 
     ## [[3]]
-    ## [1] "FX9E4X"
+    ## [1] "G2GYST"
     ## 
     ## [[4]]
-    ## [1] "Z25D52"
+    ## [1] "A6A1M1"
     ## 
     ## [[5]]
-    ## [1] "YDRD81"
+    ## [1] "0V4SAC"
     ## 
     ## [[6]]
-    ## [1] "XY2CK7"
+    ## [1] "BTTHAJ"
     ## 
     ## [[7]]
     ## logical(0)
@@ -1158,12 +1218,12 @@ lines <- sapply(haremGrp$group, function(ids) {
 for (line in lines) print(line)
 ```
 
-    ## [1] "Count: 29 Sex Ratio: 28"
-    ## [1] "Count: 27 Sex Ratio: 26"
-    ## [1] "Count: 32 Sex Ratio: 31"
-    ## [1] "Count: 33 Sex Ratio: 32"
-    ## [1] "Count: 39 Sex Ratio: 38"
+    ## [1] "Count: 36 Sex Ratio: 35"
     ## [1] "Count: 30 Sex Ratio: 29"
+    ## [1] "Count: 29 Sex Ratio: 28"
+    ## [1] "Count: 34 Sex Ratio: 33"
+    ## [1] "Count: 33 Sex Ratio: 32"
+    ## [1] "Count: 28 Sex Ratio: 27"
     ## [1] "Count: 1 Sex Ratio: Inf"
 
 Examination of this table shows that of the 184 females 184 are included
@@ -1190,60 +1250,60 @@ sexRatioGrp$group
 ```
 
     ## [[1]]
-    ##  [1] "SHG3RB" "8TV4MT" "QRZK48" "D9P18Y" "414N7M" "SH3FB7" "0XTZQ1" "3YJIMV"
-    ##  [9] "BKWE4D" "83HQBN" "Z904TJ" "6KWVRI" "NN3GDQ" "KZM9RB" "BS3RLE" "5EDIEE"
-    ## [17] "KEA4QG" "DRXMW4" "87AQLF" "2Z4YLY" "0X4W26" "ESUIAF" "1CIRC9" "WNEAS6"
-    ## [25] "HLQ9SY" "1SPLS8" "PU7RSG" "S7IWWA" "S222R3" "5BPBUI" "WLMGS1" "J3F6PD"
-    ## [33] "MPIQ4N" "WJXIH9" "G2GYST"
+    ##  [1] "QW2Z3R" "5PW7WT" "9MG040" "VWC5ZH" "DH9WJQ" "MPIQ4N" "N5QBWD" "QRZK48"
+    ##  [9] "AW400C" "PI4VHT" "LVYYNY" "SHG3RB" "5IAFMK" "R6HV9A" "5KWNMZ" "PU7RSG"
+    ## [17] "0HYZ23" "D33J06" "AR5U44" "WJXIH9" "72LYDE" "WNEAS6" "WI38KZ" "5BPBUI"
+    ## [25] "ZW2X4N" "GCBYDW" "GIIEUD" "E5Q33K" "QCA36T" "DRXMW4"
     ## 
     ## [[2]]
-    ##  [1] "Y6DB6L" "XY2CK7" "1KJ2MG" "XEC0M5" "DHNQ1W" "KZY6PD" "5KWNMZ" "B228Q6"
-    ##  [9] "5EDLL7" "Y0TCYX" "CRPXY7" "G8MCV7" "GIIEUD" "R6HV9A" "W6MDVK" "CS23RV"
-    ## [17] "1SSCJC" "01QRQ4" "MB6NYQ" "1CZM30" "WKY2SZ" "VWC5ZH" "PBAFJF" "Q7U139"
-    ## [25] "CFD12A" "MYUMMX"
+    ##  [1] "FB5L3N" "3P9BX6" "EZ2F8A" "Q8U9LB" "5EDLL7" "Z904TJ" "DPXEQE" "3DTD2N"
+    ##  [9] "NK802Y" "W0GUKI" "ZH3YG1" "465ERA" "F45799" "KXHGRH" "CRPXY7" "M9PVG5"
+    ## [17] "1VP3UC" "H2J6UA" "N79QXB" "D4B0RM" "YFCIHJ" "MFKT9C" "6KWVRI" "N4NV8B"
+    ## [25] "KZM9RB"
     ## 
     ## [[3]]
-    ##  [1] "XYRDKV" "5XVTVH" "QCA36T" "RVHVTZ" "3SKITJ" "WK89I9" "FG0SFA" "DI4AHD"
-    ##  [9] "WTE53B" "XFWVVX" "C18V6I" "MH88T6" "321LLB" "YHHVC7" "TQEMY6" "Q17CG3"
-    ## [17] "50D77I" "AFZKBS" "3DTD2N" "ZATMEE" "30J3CQ" "EMV4P6" "DPXEQE" "8JUUJ9"
-    ## [25] "K7900I"
+    ##  [1] "967Y3D" "55VDSQ" "YTJ2UL" "3YJIMV" "WTE53B" "IH1KPA" "BKWE4D" "PYPM1W"
+    ##  [9] "1GF3GM" "PJ72W1" "87AQLF" "13B1QL" "PVY432" "3MMZD4" "CS23RV" "B1WVCN"
+    ## [17] "QWKFBH" "EMV4P6" "I5CI33" "DCJJYS" "NN3GDQ" "1CIRC9" "F7I2ED" "Y6DB6L"
+    ## [25] "G2GYST" "R5AYJK" "B228Q6" "6F9FB8"
     ## 
     ## [[4]]
-    ##  [1] "MKY9TK" "2F1IV1" "1QVS67" "MTCAIG" "1GF3GM" "YFCIHJ" "W0GUKI" "465ERA"
-    ##  [9] "EX5K0S" "6F9FB8" "YTJ2UL" "PVY432" "D33J06" "IZDV8K" "99BMJW" "AZ3L0D"
-    ## [17] "R5AYJK" "N5QBWD" "NK802Y" "N79QXB" "46ZHKN" "WI38KZ" "72LYDE" "0HYZ23"
-    ## [25] "3MMZD4"
+    ##  [1] "5ERY5Z" "FFGPS4" "ESUIAF" "S3EBGZ" "2F6J3U" "MKY9TK" "1SPLS8" "S222R3"
+    ##  [9] "01QRQ4" "1QVS67" "1FAZ0K" "G25E3F" "SCFSBF" "K7900I" "CHK1ZX" "HE0SCR"
+    ## [17] "LYSLPP" "X694YR" "EX5K0S" "99BMJW" "MTCAIG" "S056D5" "8JUUJ9" "QCENKM"
+    ## [25] "9FRCIE" "2Z4YLY" "ZQXZYB"
     ## 
     ## [[5]]
-    ##  [1] "DH9WJQ" "XL658N" "QQMBT1" "X694YR" "AIHJ8Z" "7RA57Q" "LVYYNY" "0IIAEN"
-    ##  [9] "1VP3UC" "Q8U9LB" "GCBYDW" "MX4J7G" "FL170P" "T38W6H" "PI4VHT" "S5H1GC"
-    ## [17] "5ERY5Z" "JLFKV8" "ZQXZYB" "13B1QL" "7NE2UT" "GTLA8R" "PJ72W1" "DKIM6U"
-    ## [25] "LN1DLY" "EZ2F8A" "G25E3F" "KX0RJ3" "7ZNY75" "LS184H" "9MG040" "ZH3YG1"
-    ## [33] "N4NV8B" "B134XZ" "Z7NBA2"
+    ##  [1] "AR17R5" "B2CKHA" "ZATMEE" "K3TNHP" "XFWVVX" "AZ3L0D" "BCJJKN" "FL170P"
+    ##  [9] "XEC0M5" "0X4W26" "D9P18Y" "414N7M" "Y0TCYX" "RY1AZM" "G58RGY" "38K2SR"
+    ## [17] "TQEMY6" "7B9CA6" "CLSVU6" "RVHVTZ" "KZY6PD" "TXZUKC" "Q17CG3" "3SKITJ"
+    ## [25] "WQUN84" "TYEWF1" "SH3FB7" "RJ4JPC" "TEACA3" "DI4AHD" "J3F6PD"
     ## 
     ## [[6]]
-    ##  [1] "38K2SR" "B2CKHA" "QCENKM" "AP1YLW" "CHK1ZX" "YLRNIK" "QWKFBH" "D4B0RM"
-    ##  [9] "GAS52W" "TXZUKC" "G58RGY" "967Y3D" "CLSVU6" "7D09WH" "1FAZ0K" "ILVQVB"
-    ## [17] "B1WVCN" "RJ4JPC" "T3QPW5" "S3EBGZ" "AR17R5" "LYSLPP" "F7I2ED" "FJS7RQ"
-    ## [25] "5PW7WT" "FB5L3N" "HE0SCR" "H2J6UA" "BCJJKN" "K3TNHP" "S056D5"
+    ##  [1] "YLRNIK" "J1R2EW" "LS184H" "JLFKV8" "321LLB" "50D77I" "KX0RJ3" "XYRDKV"
+    ##  [9] "ZPS15A" "MH88T6" "92UG4N" "G8MCV7" "ILVQVB" "NHWTJ9" "GAS52W" "Q7U139"
+    ## [17] "KEA4QG" "3GECJJ" "83HQBN" "AFZKBS" "CMMUKU" "1KJ2MG" "WK89I9" "WKY2SZ"
+    ## [25] "JSAP3H" "46ZHKN"
     ## 
     ## [[7]]
-    ##   [1] "5IAFMK" "6X6BG9" "DCJJYS" "GDXWJ1" "JSAP3H" "TR5L57" "XC304E" "1E8KD1"
-    ##   [9] "5KFB90" "A6A1M1" "AEP5EG" "AW400C" "BW10CL" "CHJ9D2" "FTVE03" "IH1KPA"
-    ##  [17] "IRFJ09" "KXHGRH" "LMJWTN" "M9PVG5" "Q9LWGX" "RNQU14" "SCFSBF" "TEACA3"
-    ##  [25] "TYEWF1" "W5WIRP" "ZPS15A" "09LFE4" "2F6J3U" "3GECJJ" "3QHAFI" "55BPSE"
-    ##  [33] "7B9CA6" "8IG767" "9FRCIE" "ER464J" "FFGPS4" "FG6L7S" "NHWTJ9" "P7RBPI"
-    ##  [41] "TBCE78" "YI16QD" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC" "80F2MI" "A98D7P"
-    ##  [49] "AZ4D19" "BTTHAJ" "CHSCFG" "EEGLWY" "FX9E4X" "G91ZM6" "I5CI33" "I8ABC7"
-    ##  [57] "J1R2EW" "LDND6J" "MFKT9C" "MQT080" "NSIC4I" "PHB6TE" "PYPM1W" "QRWYQZ"
-    ##  [65] "QW2Z3R" "RY1AZM" "WHQLH5" "WQUN84" "XX0GYV" "YP910X" "0SGJ12" "0V4SAC"
-    ##  [73] "0X1RZ9" "3YHBC1" "55VDSQ" "5W621W" "653J82" "6MEP2C" "76DIT4" "80KACX"
-    ##  [81] "92UG4N" "9P0DES" "B2YJJP" "CMMUKU" "E3JP0C" "E5Q33K" "F45799" "FLIZQI"
-    ##  [89] "GM371F" "MEUZ85" "PA9F3J" "SXSVEH" "TJN1AD" "WNKKW3" "XZH41H" "YDRD81"
-    ##  [97] "Z25D52" "ZDRSG0" "3P9BX6" "AR5U44" "DGZLV3" "S63QDN" "ZW2X4N"
+    ##   [1] "HLQ9SY" "6X6BG9" "DKIM6U" "GDXWJ1" "MB6NYQ" "TR5L57" "XC304E" "Z7NBA2"
+    ##   [9] "1E8KD1" "5KFB90" "A6A1M1" "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "FTVE03"
+    ##  [17] "IRFJ09" "LMJWTN" "MX4J7G" "MYUMMX" "PBAFJF" "Q9LWGX" "RNQU14" "W5WIRP"
+    ##  [25] "09LFE4" "1CZM30" "3QHAFI" "55BPSE" "5XVTVH" "7RA57Q" "8IG767" "BS3RLE"
+    ##  [33] "ER464J" "FG6L7S" "GTLA8R" "P7RBPI" "S5H1GC" "TBCE78" "YI16QD" "1SSCJC"
+    ##  [41] "2F1IV1" "30J3CQ" "4LHK19" "59NYZE" "5EDIEE" "5IYDXN" "6KLWVC" "7NE2UT"
+    ##  [49] "80F2MI" "8TV4MT" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "DHNQ1W" "EEGLWY"
+    ##  [57] "FG0SFA" "FX9E4X" "G91ZM6" "I8ABC7" "LDND6J" "LN1DLY" "MQT080" "NSIC4I"
+    ##  [65] "PHB6TE" "QRWYQZ" "W6MDVK" "WHQLH5" "WLMGS1" "XL658N" "XX0GYV" "YHHVC7"
+    ##  [73] "YP910X" "0IIAEN" "0SGJ12" "0V4SAC" "0X1RZ9" "0XTZQ1" "3YHBC1" "5W621W"
+    ##  [81] "653J82" "6MEP2C" "76DIT4" "7ZNY75" "80KACX" "9P0DES" "AIHJ8Z" "AP1YLW"
+    ##  [89] "B2YJJP" "C18V6I" "E3JP0C" "FLIZQI" "GM371F" "IZDV8K" "MEUZ85" "PA9F3J"
+    ##  [97] "QQMBT1" "S7IWWA" "SXSVEH" "T38W6H" "T3QPW5" "TJN1AD" "WNKKW3" "XY2CK7"
+    ## [105] "XZH41H" "YDRD81" "Z25D52" "ZDRSG0" "7D09WH" "B134XZ" "DGZLV3" "FJS7RQ"
+    ## [113] "S63QDN"
 
 As before, the last element of the list is not a breeding group. Here it
-holds the 103 candidates that were not placed in any of the six groups.
+holds the 113 candidates that were not placed in any of the six groups.
 
 Again we can identify and list the males in each group with the
 following code.
@@ -1256,34 +1316,34 @@ sapply(sexRatioGrp$group, function(ids) {
 ```
 
     ## [[1]]
-    ## [1] "8TV4MT" "KZM9RB" "HLQ9SY" "G2GYST"
+    ## [1] "5PW7WT" "R6HV9A" "ZW2X4N"
     ## 
     ## [[2]]
-    ## [1] "XY2CK7" "R6HV9A" "CFD12A"
+    ## [1] "3P9BX6" "KXHGRH" "KZM9RB"
     ## 
     ## [[3]]
-    ## [1] "5XVTVH" "YHHVC7" "K7900I"
+    ## [1] "55VDSQ" "3MMZD4" "G2GYST"
     ## 
     ## [[4]]
-    ## [1] "2F1IV1" "IZDV8K" "3MMZD4"
+    ## [1] "FFGPS4" "K7900I" "9FRCIE"
     ## 
     ## [[5]]
-    ## [1] "XL658N" "T38W6H" "LN1DLY" "Z7NBA2"
+    ## [1] "B2CKHA" "RY1AZM" "WQUN84"
     ## 
     ## [[6]]
-    ## [1] "B2CKHA" "7D09WH" "5PW7WT"
+    ## [1] "J1R2EW" "NHWTJ9" "JSAP3H"
     ## 
     ## [[7]]
-    ##  [1] "GDXWJ1" "JSAP3H" "TR5L57" "XC304E" "1E8KD1" "5KFB90" "A6A1M1" "AEP5EG"
-    ##  [9] "BW10CL" "CHJ9D2" "FTVE03" "IRFJ09" "KXHGRH" "LMJWTN" "Q9LWGX" "RNQU14"
-    ## [17] "09LFE4" "3QHAFI" "55BPSE" "8IG767" "9FRCIE" "ER464J" "FFGPS4" "FG6L7S"
-    ## [25] "NHWTJ9" "P7RBPI" "TBCE78" "YI16QD" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC"
-    ## [33] "80F2MI" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "EEGLWY" "FX9E4X" "G91ZM6"
-    ## [41] "J1R2EW" "LDND6J" "MQT080" "NSIC4I" "PHB6TE" "QRWYQZ" "RY1AZM" "WHQLH5"
-    ## [49] "WQUN84" "XX0GYV" "YP910X" "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ" "653J82"
-    ## [57] "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "E3JP0C" "FLIZQI" "GM371F" "MEUZ85"
-    ## [65] "PA9F3J" "SXSVEH" "TJN1AD" "WNKKW3" "XZH41H" "YDRD81" "Z25D52" "ZDRSG0"
-    ## [73] "3P9BX6" "DGZLV3" "S63QDN" "ZW2X4N"
+    ##  [1] "HLQ9SY" "GDXWJ1" "TR5L57" "XC304E" "Z7NBA2" "1E8KD1" "5KFB90" "A6A1M1"
+    ##  [9] "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "FTVE03" "IRFJ09" "LMJWTN" "Q9LWGX"
+    ## [17] "RNQU14" "09LFE4" "3QHAFI" "55BPSE" "5XVTVH" "8IG767" "ER464J" "FG6L7S"
+    ## [25] "P7RBPI" "TBCE78" "YI16QD" "2F1IV1" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC"
+    ## [33] "80F2MI" "8TV4MT" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "EEGLWY" "FX9E4X"
+    ## [41] "G91ZM6" "LDND6J" "LN1DLY" "MQT080" "NSIC4I" "PHB6TE" "QRWYQZ" "WHQLH5"
+    ## [49] "XL658N" "XX0GYV" "YHHVC7" "YP910X" "0V4SAC" "0X1RZ9" "3YHBC1" "653J82"
+    ## [57] "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "E3JP0C" "FLIZQI" "GM371F" "IZDV8K"
+    ## [65] "MEUZ85" "PA9F3J" "SXSVEH" "T38W6H" "TJN1AD" "WNKKW3" "XY2CK7" "XZH41H"
+    ## [73] "YDRD81" "Z25D52" "ZDRSG0" "7D09WH" "DGZLV3" "S63QDN"
 
 We can also see the number of animals and the sex ratios created in each
 group.
@@ -1299,15 +1359,15 @@ lines <- sapply(sexRatioGrp$group, function(ids) {
 for (line in lines) print(line)
 ```
 
-    ## [1] "Count: 35 Sex Ratio: 7.75"
-    ## [1] "Count: 26 Sex Ratio: 7.67"
+    ## [1] "Count: 30 Sex Ratio: 9"
     ## [1] "Count: 25 Sex Ratio: 7.33"
-    ## [1] "Count: 25 Sex Ratio: 7.33"
-    ## [1] "Count: 35 Sex Ratio: 7.75"
+    ## [1] "Count: 28 Sex Ratio: 8.33"
+    ## [1] "Count: 27 Sex Ratio: 8"
     ## [1] "Count: 31 Sex Ratio: 9.33"
-    ## [1] "Count: 103 Sex Ratio: 0.36"
+    ## [1] "Count: 26 Sex Ratio: 7.67"
+    ## [1] "Count: 113 Sex Ratio: 0.45"
 
-Examination of this table shows that of the 184 females 157 are included
+Examination of this table shows that of the 184 females 149 are included
 in the six groups.
 
 ## Individual Mate-Pair Analysis
@@ -1596,7 +1656,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpSKi6EO/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpdkohAf/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2373,7 +2433,7 @@ obfuscateLdBlocks(ldBlockResult, obfuscatedTwinPed$map)
 ```
 
     ##   locus1 locus2 chrom Dprime  r2 nUsed       idsUsed                      caveat
-    ## 1     L1     L2     1    0.5 0.3     2 LYWT67,PYF94A Descriptive statistic only.
+    ## 1     L1     L2     1    0.5 0.3     2 WKDPF4,LM2KHR Descriptive statistic only.
 
 The real ids *F1*/*F2* (reusing the twin-pedigree ids from the
 **Pedigree Diagram** section above) no longer appear in *idsUsed* –
@@ -2430,8 +2490,8 @@ as *id*, or the call stops.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-11 22:47:55.442022. The processing
-time for this document was 23 seconds..
+The current date and time is 2026-10-16 04:31:10.092472. The processing
+time for this document was 26 seconds..
 
 ``` r
 
@@ -2482,7 +2542,7 @@ sessionInfo()
     ## [45] fastmap_1.2.0        grid_4.6.1           cli_3.6.6            magrittr_2.0.5      
     ## [49] withr_3.0.3          shinyBS_0.65.0       scales_1.4.0         promises_1.5.0      
     ## [53] backports_1.5.1      plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0    
-    ## [57] rmarkdown_2.32       lambda.r_1.2.4       httr_1.4.9           otel_0.2.0          
+    ## [57] rmarkdown_2.32       lambda.r_1.2.6       httr_1.4.9           otel_0.2.0          
     ## [61] futile.logger_1.4.9  cellranger_1.1.0     ragg_1.5.2           openxlsx_4.2.9      
     ## [65] shiny_1.14.0         evaluate_1.0.5       rlang_1.3.0          futile.options_1.0.1
     ## [69] Rcpp_1.1.2           xtable_1.8-8         glue_1.8.1           formatR_1.14        

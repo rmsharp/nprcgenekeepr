@@ -74,9 +74,9 @@ of pedigree and genotype data files, and quality control validation.</p>
     <p>A list with reactive components:</p><ul><li><p><code>cleanedStudbook</code> - The QC-cleaned studbook data</p></li>
 <li><p><code>genotypeData</code> - Genotype data (<code>id</code>, <code>first</code>,
 <code>second</code>) taken from the cleaned studbook when it carries
-genotypes. A separately uploaded genotype file that fails
-<code><a href="checkGenotypeFile.html">checkGenotypeFile</a></code> is dropped without a message, leaving
-<code>NULL</code></p></li>
+genotypes. A separately uploaded genotype file that cannot be read, or
+that fails <code><a href="checkGenotypeFile.html">checkGenotypeFile</a></code>, is not used, leaving
+<code>NULL</code>; the QC Summary says why</p></li>
 <li><p><code>qcSummary</code> - Summary of QC results: a list with
 <code>errors</code>, <code>warnings</code> and <code>records</code> (counts of error
 rows, warning rows and cleaned records)</p></li>

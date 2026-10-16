@@ -100,13 +100,15 @@ With no studbook loaded, <code>isReady()</code> and <code>nAnimals()</code> halt
 with a silent <code><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></code> error instead of returning
 <code>FALSE</code> and 0</p></li>
 <li><p><code>twinRelations</code> - The validated twin/zygosity sidecar
-(<code>NULL</code> if none uploaded or invalid). It is validated against the
-filtered <code>pedigree</code> (focal trim applied, unknown IDs hidden);
-one id outside that pedigree fails the validation, an error
-notification is shown and the whole sidecar becomes <code>NULL</code>. Unlike
-the Diagram tab's
-own rendering, this is the raw, ungated reactive – not filtered by
-the "Show Twin Connectors" toggle – so callers outside this module
+(<code>NULL</code> if none uploaded, if invalid, or if no pair has both
+animals in <code>analysisPedigree</code>). Checked against the whole
+studbook, not the trimmed view: an id that is not in the studbook, or
+any other failure of <code><a href="checkTwinRelations.html">checkTwinRelations()</a></code>, shows an error
+notification and makes the whole sidecar <code>NULL</code>; a valid pair with
+an animal outside <code>analysisPedigree</code> (a focal-animal trim) is left
+out of this value, with no message. Unlike the Diagram tab's own
+rendering, this is the raw, ungated reactive – not filtered by the
+"Show Twin Connectors" toggle – so callers outside this module
 (e.g. <code>appServer</code>) see the validated data regardless of that
 toggle's state (BL-N Slice 3).</p></li>
 </ul></div>

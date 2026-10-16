@@ -217,7 +217,10 @@ The sidebar panel allows you to select how you are submitting data:
   formats
 - **File Content**: Select from four options:
   - Pedigree(s) file only; genotypes not provided
-  - Pedigree(s) and genotypes in one file
+  - Pedigree(s) and genotypes in one file (name the two allele columns
+    `first` and `second`, `first_name` and `second_name`, or `allele_1`
+    and `allele_2`; the QC Summary then shows a line beginning
+    “Genotypes read from” that says which were read)
   - Pedigree(s) and genotypes in separate files
   - Focal animals only; pedigree built from database
 
@@ -239,7 +242,13 @@ You can specify a minimum sire age and a minimum dam age (in years) that
 parents must have reached at the birthdate of an offspring. Both fields
 are optional: leave one blank to use the species-specific default for
 that sex (2 years when the species is missing or unknown). This helps
-identify potential data entry errors where parents appear too young.
+identify potential data entry errors where parents appear too young. For
+example, 62 of the mothers in the Japanese macaque example file
+`deidentified_jmac_ped.csv` were between 3.38 and 3.99 years old at a
+birth, under the built-in 4-year floor for Japanese macaque females, and
+13 of its fathers were as young as 4.36, under the 5-year floor for
+males, so that file loads only once the minimum dam age is set to 3.3 or
+lower and the minimum sire age to 4.3 or lower.
 
 ### Quality Control Results
 
@@ -250,9 +259,12 @@ and displays results across multiple tabs:
   warnings
 - **Errors**: Lists critical issues that must be fixed before proceeding
 - **Warnings**: Lists potential issues that may need review, such as
-  renamed columns and animals with no birth date (the warning says how
+  renamed columns, animals with no birth date (the warning says how
   many; their age is unknown, so age-based checks and counts cannot use
-  them). A warning never stops the pedigree from being used
+  them), and animals with a death or departure date earlier than their
+  birth date (the warning says how many and names the first five; their
+  age comes out zero or negative). A warning never stops the pedigree
+  from being used
 - **Cleaned Data**: Preview of the validated studbook data
 
 When the check finds errors, the app opens the Errors tab; when it finds
@@ -477,10 +489,6 @@ The left panel contains controls for configuring the analysis:
   kinship first), the high-uniqueness cutoff (default 10), and the
   low-kinship z-score cutoff (default 0.25).
 
-- **Calculate Genome Uniqueness** and **Calculate Mean Kinship**: Two
-  checkboxes, both checked. They currently have no effect: the analysis
-  always calculates both measures.
-
 - **Kinship Overrides (optional)**: Upload a CSV or Excel file with the
   columns `id1`, `id2` and `kinship` to replace the pedigree-derived
   kinship for the listed pairs.
@@ -501,6 +509,18 @@ The information panel explains the key metrics:
   simulation. It is shown on a 0-100 scale, not as a proportion.
   **Higher values are better** as they indicate the animal carries rare
   genetic material.
+
+If the pedigree has genotypes (on the Input tab, “Pedigree(s) and
+genotypes in one file” or “Pedigree(s) and genotypes in separate
+files”), the gene drop uses each genotyped animal’s own alleles in place
+of simulated ones, so genome uniqueness can change for those animals. On
+the shipped one-file example, 18 of its 31 genotyped animals scored
+differently with the genotypes than without (one run, same random seed,
+200 drops).
+
+Founder genome equivalents, their standard error and gene diversity
+ignore the genotypes: they are worked out from the pedigree alone, so a
+genotyped animal never makes them undefined.
 
 ### Results Tabs
 
@@ -651,10 +671,11 @@ The left panel provides controls for group formation:
 
   - *Top ranked*: Use the highest-ranked living animals from the Genetic
     Value Analysis
-  - *Upload list*: Currently behaves exactly like “All available”; the
-    choice does not yet provide a way to upload or type a list of
-    candidate IDs
   - *All available*: Use every living animal in the current pedigree
+  - *My own list*: Use only the animals whose IDs you type or paste into
+    the Animal IDs box (separated by commas, spaces or new lines). An ID
+    that is not in the pedigree stops the run and is named; an animal
+    that is not alive is left out and named.
 
   Whatever the source, only animals that are alive are used. When the
   pedigree has a Status column, an animal counts as alive when its
@@ -671,7 +692,7 @@ The left panel provides controls for group formation:
 
   - *Top N ranked* (default): Include only the top-N ranked animals when
     the source is “Top ranked” (see “Number of top animals” below); no
-    genetic- value screening for “Upload list”/“All available”.
+    genetic- value screening for “All available” or “My own list”.
   - *Genetic-value floor*: Exclude any animal whose Genetic Value
     Analysis result is “Low Value”, for all three Source choices.
     Animals labeled “Undetermined” (missing parentage/origin data) still
@@ -717,7 +738,11 @@ The left panel provides controls for group formation:
 - **Sex ratio**: Control the male-to-female composition:
 
   - *None*: No sex ratio constraint
-  - *Harem (1M:NF)*: One male per group with multiple females
+  - *Harem (1M:NF)*: One male per group with multiple females; as for
+    every other animal, the Max kinship threshold keeps his close
+    relatives out of his group; a male typed into a group’s seed box is
+    that group’s male, and a group whose box holds no male is given one
+    at random
   - *Custom*: Specify a custom ratio
 
 - **Minimum breeding age (years)**: Kinship involving an animal younger
@@ -786,6 +811,9 @@ The `modBreedingGroups` module returns reactive values:
   group, the last element is the “Unused” group
 - `nGroups`: Number of elements in `groups` (this counts the “Unused”
   group when there is one)
+- `groupLabels`: The name of each element of `groups`: “Group 1”, “Group
+  2” and so on, and “Unused animals” for the “Unused” group when there
+  is one
 - `unassigned`: IDs of candidates that appear in no group, including the
   “Unused” group
 - `score`: Score of the selected candidate grouping (the size of its

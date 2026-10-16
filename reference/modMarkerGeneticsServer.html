@@ -215,7 +215,9 @@ are uploaded); <code>candidateAssignmentTable</code>, the
 <code><a href="markerParentageLikelihood.html">markerParentageLikelihood</a></code> ranked-candidate data frame (a
 zero-row, full-column-shape data frame when no pair is flagged; or
 <code>NULL</code> before a genotype file and a pedigree are both available);
-<code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a value;
+<code>isReady</code>, <code>TRUE</code> once <code>comparisonTable</code> has a value, and
+<code>FALSE</code> (never an error) when it has none, including when the
+uploaded genotype file cannot be used;
 <code>locusMetadataTable</code>, the <code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code> output
 (or <code>NULL</code> before a locus-metadata file is uploaded);
 <code>realizedRelatednessTable</code>, the

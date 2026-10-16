@@ -183,7 +183,11 @@ The Input tab’s “Input Format” documentation sub-tab.
 Choose a **File Type** (Excel or Text) and a **File Content** option –
 pedigree only, pedigree and genotypes together or in separate files, or
 focal animals only (built from a database connection or, offline, from a
-second uploaded pedigree file) – then browse for the file itself.
+second uploaded pedigree file) – then browse for the file itself. With
+“Pedigree(s) and genotypes in one file”, name the two allele columns
+`first` and `second`, `first_name` and `second_name`, or `allele_1` and
+`allele_2`: whole numbers are used as they are and text labels such as
+A, B, C become whole-number codes, as in a separate genotype file.
 
 > **Note**
 >
@@ -228,6 +232,14 @@ set to 2.](shiny_app_use/input_minParentAgeSequence.png)
 
 Minimum sire and dam age fields filled in.
 
+The Japanese macaque example in the package,
+`deidentified_jmac_ped.csv`, shows why this matters: 62 of its mothers
+were between 3.38 and 3.99 years old at a birth, under the built-in
+4-year floor for Japanese macaque females, and 13 of its fathers were as
+young as 4.36, under the 5-year floor for males, so the file loads only
+once Minimum Dam Age is set to 3.3 or lower and Minimum Sire Age to 4.3
+or lower.
+
 Selecting **Read and Check Pedigree** reads the file and validates it –
 checking that every required column is present and that the pedigree is
 internally consistent (parent-of-the-right-sex, no duplicate IDs, valid
@@ -252,7 +264,12 @@ name case changed”, names the two columns (`recordStatus` and
 “Animals with no birth date”, says that 1,432 of the 3,694 animals (all
 of them founders) have no birth date, so their age is unknown and the
 age-based checks and counts – the parent-age check, the Age-Sex Pyramid
-and the breeding-age counts – cannot use them. A warning never stops the
+and the breeding-age counts – cannot use them. Another warning, “Animals
+with a death or departure before birth”, appears only when a file has
+animals whose death or departure date is earlier than their birth date:
+it says how many, names the first five, and notes that their age comes
+out zero or negative. The shipped example has none, and a death or
+departure on the birth day is not flagged. A warning never stops the
 pedigree from being used.
 
 ![QC Summary sub-tab showing Records Processed 3694 in a dark blue box,
@@ -261,6 +278,45 @@ message that the data passed quality
 control.](shiny_app_use/read_and_check_pedigree.png)
 
 QC Summary after reading and checking the example pedigree.
+
+The picture below shows the Warnings sub-tab as the app opens it for
+this file: one row for each of the two warnings, with the yellow notice
+still on screen in the lower right corner.
+
+![Input tab with the Warnings sub-tab open, showing a table of two
+warnings, Column name case changed and Animals with no birth date, and a
+yellow notice in the lower right corner that reads QC found 2
+warning(s). Check the Warnings
+tab.](shiny_app_use/read_and_check_pedigree_warnings.png)
+
+The Warnings sub-tab as the app opens it after reading and checking the
+example pedigree.
+
+In “Pedigree(s) and genotypes in one file” mode the QC Summary adds one
+line under the three boxes, saying which columns were read, how many
+different alleles it found and for how many animals: a line beginning
+“Genotypes read from” or, when no usable pair of columns was found, one
+beginning “No genotype columns were found” that names the column names
+it looked for, or one beginning “Genotype columns were found” that names
+the columns that are not a usable pair. Check the number of alleles: a
+misspelled label counts as one more. The picture below reads the
+package’s shipped file `obfuscated_rhesus_mhc_ped_with_genotypes.csv`
+(found with
+`system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_with_genotypes.csv", package = "nprcgenekeepr")`),
+the rhesus MHC example pedigree of 375 animals with the genotype labels
+of its 31 genotyped animals in `first_name` and `second_name`: 35
+different alleles for 31 of the 375 animals. The one warning is
+unrelated to the genotypes: 85 of the 375 animals have no birth date.
+
+![Input tab with Pedigree(s) and genotypes in one file chosen and the QC
+Summary sub-tab open: Records Processed 375 in a dark blue box, Errors 0
+in a green box and Warnings 1 in an orange box. Below them a blue
+message begins Genotypes read from first_name and second_name: 35
+different alleles, lists the first ten and ends for 31 of 375 animals,
+and a green message says the data passed quality
+control.](shiny_app_use/one_file_genotypes_read.png)
+
+The QC Summary after reading and checking the shipped one-file example.
 
 | Error | Definition |
 |:---|:---|
@@ -615,18 +671,28 @@ One exported plot: the mean kinship coefficient histogram.
 
 The **Breeding Groups** tab forms candidate breeding groups from a
 source population you choose (top-ranked animals from Genetic Value
-Analysis, an uploaded list, or all available animals), subject to a
-maximum kinship threshold, a target number of groups, and a minimum
-breeding age. Only living animals are used: an animal counts as alive
-when its Status is ALIVE (or, in a pedigree with no Status column, when
-it has no exit date), so deceased, shipped and placeholder animals are
-skipped.
+Analysis, all available animals, or a list of animal IDs you paste in),
+subject to a maximum kinship threshold, a target number of groups, and a
+minimum breeding age. Only living animals are used: an animal counts as
+alive when its Status is ALIVE (or, in a pedigree with no Status column,
+when it has no exit date), so deceased, shipped and placeholder animals
+are skipped.
 
 ![Breeding Group Formation tab showing the configuration panel: source,
 number of groups, kinship threshold, sex ratio, and minimum
 age.](shiny_app_use/breeding_group_first_view.png)
 
 Breeding Group Formation, initial configuration.
+
+To use only animals you name, choose **My own list** under **Source**
+and paste their IDs into the **Animal IDs** box that appears.
+
+![The Breeding Group Formation configuration panel with the Source
+choice My own list selected and the Animal IDs box below it holding a
+pasted list of animal IDs.](shiny_app_use/breeding_group_own_list.png)
+
+Breeding Group Formation with My own list chosen and animal IDs pasted
+into the box.
 
 Selecting **Form Groups** with the number of groups set to 1 produces a
 single group under the **Groups** sub-tab.
@@ -641,7 +707,10 @@ constrained:
 
 - **None** – sex is not considered when filling groups.
 - **Harem (1M:NF)** – each group is seeded with a single male and filled
-  with females.
+  with females; as for every other animal, the Max kinship threshold
+  keeps his close relatives out of his group. A male you type into a
+  group’s seed box is that group’s sire; a group whose box holds no male
+  is given one chosen at random.
 - **Custom** – a “Custom ratio (F per M):” numeric field appears
   (default 1.0, range 0.5-20.0) targeting an arbitrary females-per-male
   ratio.
@@ -661,12 +730,12 @@ search (the default **Number of simulations** is 10), the exact number
 and composition of groups formed varies from run to run rather than
 reproducing identically – this particular run produced 6 groups, each
 drawn toward the target ratio where enough candidates of each sex were
-available, and a seventh box that lists the four animals that fit no
+available, and a seventh box that lists the seven animals that fit no
 group.
 
 ![Breeding Group Formation Groups sub-tab showing 6 groups formed in one
 run using a Custom sex ratio of 2.5 females per male, plus a seventh box
-listing the four animals that fit no group; the exact group count and
+listing the seven animals that fit no group; the exact group count and
 composition vary between
 runs.](shiny_app_use/breeding_group_sex_ratio_specification.png)
 
@@ -675,9 +744,9 @@ Breeding groups formed with a Custom sex ratio of 2.5 (females per male)
 
 That last box is not a group: it appears only when some candidates fit
 in no group, and it lists them. The **Groups** sub-tab, the
-**Statistics** table and the **Group Detail** selector all call it
-‘Unused animals’, and the Groups count in the candidate table above the
-tabs includes it.
+**Statistics** table, the **Group Detail** selector and the **Genetic
+Diversity** heat map all call it ‘Unused animals’, and the Groups count
+in the candidate table above the tabs includes it.
 
 **Seeding groups with specific animals.** Behavioral constraints – an
 existing social group, or an infant that should stay with its dam – can
@@ -879,19 +948,22 @@ when the pedigree has an `ancestry` column), **Production** (births per
 breeding-age female over the last two calendar years, scored
 red/yellow/green against cut-offs that depend on the selected **Housing
 type**, “Shelter pens” or “Corral”), and **Inbreeding** (within-group
-kinship risk involving the group’s male). A group with no assessed
-value, or an undefined Inbreeding result, is scored red rather than
-shown as healthy, so missing data surfaces instead of hiding as a false
-green. A breeding-age female is one at least 3 years old. A female with
-no birth date has no age, so, in both the Production and the Inbreeding
-column, she counts as a breeding-age female only when the pedigree lists
-an offspring for her, wherever that offspring is; with no offspring she
-is left out. A male with no birth date is never counted as a potential
-mate in the Inbreeding column. A group with no breeding-age females has
-no Production value, and its cell is gray. When any animal in the groups
-has no birth date, a note under the heat map says how many, and how many
-of those females were counted or left out. Until groups are formed and
-an analysis has run, the tab shows guidance instead of an empty plot.
+kinship risk involving the group’s male). When some animals fit no
+group, the last row is that box of animals, named **Unused animals** as
+on the Breeding Groups tab, and it is scored like a group. A group with
+no assessed value, or an undefined Inbreeding result, is scored red
+rather than shown as healthy, so missing data surfaces instead of hiding
+as a false green. A breeding-age female is one at least 3 years old. A
+female with no birth date has no age, so, in both the Production and the
+Inbreeding column, she counts as a breeding-age female only when the
+pedigree lists an offspring for her, wherever that offspring is; with no
+offspring she is left out. A male with no birth date is never counted as
+a potential mate in the Inbreeding column. A group with no breeding-age
+females has no Production value, and its cell is gray. When any animal
+in the groups has no birth date, a note under the heat map says how
+many, and how many of those females were counted or left out. Until
+groups are formed and an analysis has run, the tab shows guidance
+instead of an empty plot.
 
 ![Genetic Diversity heat map with 6 rows (one per breeding group) and 4
 columns (Value, Origin, Production, Inbreeding), each cell colored red,
@@ -1151,6 +1223,12 @@ uses, adjustable via the two fields above the table (pre-filled with 50
 SNPs, a scaled-down version of PLINK’s default of 100, and 1,000,000
 base pairs, which is PLINK’s own default). F_ROH is the proportion of
 the genome covered by qualifying segments.
+
+F_ROH is calculated only from the loci that are in the genotype file. If
+the locus metadata file lists loci with a chromosome and position that
+are not in the genotype file, a notice above the table says how many and
+names them, because every animal’s F_ROH is then relative to a shorter
+stretch of genome than the locus file describes.
 
 ![Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count
 and minimum ROH segment span inputs above the first page of a table of

@@ -4,7 +4,11 @@ inputs into the per-group heat-map statistics (via
 getGeneticDiversityStats) and renders the red/yellow/green
 heat map (via makeGeneticDiversityHeatmap). When breeding
 groups have not been formed or the genetic value analysis has not been run,
-the module shows guidance instead of an empty plot. When any animal in the
+the module shows guidance instead of an empty plot. When a formed group
+holds an animal the loaded pedigree no longer has (a new file was read, or
+the view was trimmed, after the groups were formed), the page says so in one
+sentence and asks for the groups to be formed again; any other calculation
+error is shown once, where the heat map would be. When any animal in the
 groups has no birth date, a note under the heat map says how many, and how
 many females among them the Production and Inbreeding columns counted (those
 the pedigree lists as a dam) and left out."><meta property="og:description" content="Assembles the live breeding-group, genetic-value, and kinship reactive
@@ -12,7 +16,11 @@ inputs into the per-group heat-map statistics (via
 getGeneticDiversityStats) and renders the red/yellow/green
 heat map (via makeGeneticDiversityHeatmap). When breeding
 groups have not been formed or the genetic value analysis has not been run,
-the module shows guidance instead of an empty plot. When any animal in the
+the module shows guidance instead of an empty plot. When a formed group
+holds an animal the loaded pedigree no longer has (a new file was read, or
+the view was trimmed, after the groups were formed), the page says so in one
+sentence and asks for the groups to be formed again; any other calculation
+error is shown once, where the heat map would be. When any animal in the
 groups has no birth date, a note under the heat map says how many, and how
 many females among them the Production and Inbreeding columns counted (those
 the pedigree lists as a dam) and left out."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
@@ -71,7 +79,11 @@ inputs into the per-group heat-map statistics (via
 <code><a href="getGeneticDiversityStats.html">getGeneticDiversityStats</a></code>) and renders the red/yellow/green
 heat map (via <code><a href="makeGeneticDiversityHeatmap.html">makeGeneticDiversityHeatmap</a></code>). When breeding
 groups have not been formed or the genetic value analysis has not been run,
-the module shows guidance instead of an empty plot. When any animal in the
+the module shows guidance instead of an empty plot. When a formed group
+holds an animal the loaded pedigree no longer has (a new file was read, or
+the view was trimmed, after the groups were formed), the page says so in one
+sentence and asks for the groups to be formed again; any other calculation
+error is shown once, where the heat map would be. When any animal in the
 groups has no birth date, a note under the heat map says how many, and how
 many females among them the Production and Inbreeding columns counted (those
 the pedigree lists as a dam) and left out.</p>
@@ -102,7 +114,10 @@ the pedigree lists as a dam) and left out.</p>
 one per breeding group (the <code>groups</code> returned by
 <code><a href="modBreedingGroupsServer.html">modBreedingGroupsServer</a></code>). That list includes the trailing
 "Unused" element when candidates remain unplaced, and the heat map scores
-it as another group.</p></dd>
+it as another group. If the list is named, the names are the heat map's
+row labels (the app passes the names that the Breeding Groups module
+returns as <code>groupLabels</code>, so the last row reads "Unused animals"); an
+unnamed list gives "Group 1", "Group 2" and so on.</p></dd>
 
 
 <dt id="arg-pedigree">pedigree<a class="anchor" aria-label="anchor" href="#arg-pedigree"></a></dt>
@@ -119,8 +134,9 @@ frame.</p></dd>
 <dd><p>reactive returning a square kinship matrix (row and
 column names are animal IDs) covering every member of every group;
 <code><a href="getGeneticDiversityStats.html">getGeneticDiversityStats</a></code> stops when a group member is
-missing from it. In the app this is the genetic-value tab's
-population-filtered matrix, not the full-pedigree matrix.</p></dd>
+missing from it. In the app this is the full-pedigree kinship matrix that
+Summary Statistics and Breeding Groups also use, so it covers every animal
+of the pedigree, not only the Genetic Value population.</p></dd>
 
 
 <dt id="arg-currentdate">currentDate<a class="anchor" aria-label="anchor" href="#arg-currentdate"></a></dt>
@@ -134,8 +150,8 @@ Defaults to <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external
 metric data frame (or <code>NULL</code> when data are not ready), and
 <code>heatmap</code>, the <code>ggplot</code> heat map (or <code>NULL</code>). Errors
 raised inside <code>getGeneticDiversityStats</code> (a group member missing
-from the kinship matrix, or a group member with a missing birth date)
-are not caught, so the reactives error instead of returning <code>NULL</code>.</p>
+from the kinship matrix) are not caught, so the reactives error instead
+of returning <code>NULL</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

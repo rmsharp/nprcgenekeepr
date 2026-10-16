@@ -148,12 +148,12 @@ best-scoring entry of `candidates`:
 names(haremGrp)
 #> [1] "group"      "score"      "candidates"
 lengths(haremGrp$group) # size of each group; the last is the unplaced pool
-#> [1] 30 33 32 28 39 28  1
+#> [1] 30 31 36 28 37 28  1
 haremGrp$group[[1]]     # the first harem group
-#>  [1] "J1R2EW" "3DTD2N" "FL170P" "465ERA" "99BMJW" "K3TNHP" "DRXMW4" "ESUIAF"
-#>  [9] "1CIRC9" "S056D5" "2F6J3U" "PI4VHT" "WLMGS1" "RVHVTZ" "3SKITJ" "AIHJ8Z"
-#> [17] "3GECJJ" "TXZUKC" "5W621W" "B228Q6" "MTCAIG" "FB5L3N" "13B1QL" "B1WVCN"
-#> [25] "SCFSBF" "5EDLL7" "KZY6PD" "WNEAS6" "AZ3L0D" "0IIAEN"
+#>  [1] "J1R2EW" "1CIRC9" "F45799" "0SGJ12" "AR5U44" "FG0SFA" "B1WVCN" "5ERY5Z"
+#>  [9] "TYEWF1" "PYPM1W" "1KJ2MG" "MKY9TK" "WNEAS6" "RVHVTZ" "5BPBUI" "465ERA"
+#> [17] "3GECJJ" "WLMGS1" "967Y3D" "XFWVVX" "PJ72W1" "GCBYDW" "3SKITJ" "DPXEQE"
+#> [25] "N4NV8B" "I5CI33" "MFKT9C" "ZQXZYB" "AIHJ8Z" "0XTZQ1"
 ```
 
 ## Groups with a target sex ratio
@@ -173,14 +173,16 @@ sexRatioGrp <- groupAddAssign(
   sexRatio = 9.0
 )
 lengths(sexRatioGrp$group)
-#> [1]  35  25  24  30  31  29 106
+#> [1]  31  25  25  25  29  29 116
 ```
 
 `harem` and `sexRatio` are alternative strategies – use one or the
-other. Because the sex-ratio constraint caps how many animals of each
-sex a group can hold, more candidates may be left in the trailing
-unplaced element than in the harem case; raising `iter` lets the search
-place more of them.
+other; passing both to
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+stops with a message. Because the sex-ratio constraint caps how many
+animals of each sex a group can hold, more candidates may be left in the
+trailing unplaced element than in the harem case; raising `iter` lets
+the search place more of them.
 
 ## Key arguments
 

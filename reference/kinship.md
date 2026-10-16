@@ -78,11 +78,13 @@ kinship(
   kinship instead: a male's X comes from his mother only (self-kinship
   1, since he carries a single copy); a female's X-linked kinship
   follows the same average-of-parents formula as the autosomal case
-  (self-kinship 0.5, as usual). An individual with unrecognized `sex`
-  gets `NA` kinship with everyone, including their own self-kinship
-  value. The MZ-twin correction (`twinRelations`) applies inside this
-  branch identically to the autosomal branch. Ported from kinship2's own
-  `kinship.default()` X-linked branch; see
+  (self-kinship 0.5, as usual). A founder of unrecognized `sex` gets
+  `NA` only on its own diagonal cell and 0 with the other founders, as
+  in kinship2; an animal of unrecognized `sex` that has parents in the
+  pedigree gets `NA` kinship with everyone, itself included. The MZ-twin
+  correction (`twinRelations`) applies inside this branch identically to
+  the autosomal branch. Ported from kinship2's own `kinship.default()`
+  X-linked branch; see
   `docs/planning/kinship2-supplement-full-reproduction-plan.md` §3 for
   the full design rationale.
 

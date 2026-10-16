@@ -84,8 +84,10 @@ are converted, <code>sb</code> also gains an <code>exit</code> column.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>If there are no errors that prevent the calculation of exit dates, they are
-calculated and added to the pedigree otherwise the pedigree is not updated.</p>
+    <p>Every date column is checked on its own and each invalid date is listed by
+row; the invalid dates become <code>NA</code> in the converted pedigree, and exit
+dates are calculated and added, unless every original record has an invalid
+date, in which case the pedigree is returned unchanged.</p>
     </div>
 
     <div class="section level2">

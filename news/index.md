@@ -86,7 +86,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - A twin/zygosity file uploaded on the Diagram tab applies this
   throughout the app, whichever tab is opened first. Fraternal and
   identical pairs must share both recorded parents, and identical pairs
-  must be the same sex.
+  must be the same sex. With a focal-animal trim on, a pair with an
+  animal outside the trim is left out while the trim is on and the other
+  pairs still apply; an id that is not in the pedigree at all still
+  rejects the file.
 - Script users:
   [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
   [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
@@ -139,6 +142,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   calculation below, with de-identified export via
   [`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md)
   (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
+  Loci that are in the locus file but not in the genotype file are named
+  in a notice above the table (and in a warning from
+  [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)),
+  because F_ROH is calculated without them.
 - Script users:
   [`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)
   and
@@ -157,7 +164,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   `locus`, `allele1`, `allele2`) and rejects a locus with more than two
   alleles;
   [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
-  turns it into the animal-by-locus table the marker functions use.
+  turns it into the animal-by-locus table the marker functions use. A
+  blank allele counts as not typed: a record with one or both alleles
+  blank is treated like a missing record, and a locus nobody is typed at
+  shows `NA` for expected heterozygosity and stays out of the mean.
 - The Candidate Parent Assignment suggestion covers the common case
   where a flagged animal’s recorded parent is present but wrong (issue
   [\#155](https://github.com/rmsharp/nprcgenekeepr/issues/155)).
@@ -166,7 +176,7 @@ export workflows, and longitudinal monitoring of colony genetic health.
   candidate. It uses the same words as the Potential Parents tab.
 - [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
   reports each locus’s chromosome and position data as complete, partial
-  or missing.
+  or missing; a chromosome name left blank counts as missing.
   [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
   accepts panels with more than two alleles per locus, such as
   microsatellites.
@@ -273,6 +283,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   unlabeled column of leftover row numbers (such as 4, 5, 6, 9, 10) that
   were not the rank; the **rank** column, last in the table, still gives
   each animal’s rank.
+- The Genetic Value Analysis tab no longer shows the “Calculate Genome
+  Uniqueness” and “Calculate Mean Kinship” check boxes. They did
+  nothing: the analysis works out both numbers whether or not they were
+  ticked.
 
 ### Breeding Group Formation
 
@@ -304,16 +318,31 @@ export workflows, and longitudinal monitoring of colony genetic health.
   violations list, marked “overridden”. A downloadable audit record
   lists the rules in effect, overrides with reasons, and the warning
   shown.
-- Caveat: in harem formation the automatically chosen sire is not
-  checked against the rules (his groupmates are checked against each
-  other).
+- A harem’s automatically chosen sire is now kept apart from his
+  relatives like every other animal. Before, nothing stopped his mother,
+  daughter or sister from joining his harem (on the example pedigree
+  with the default settings, most runs put at least one such relative in
+  a harem). An animal at or above the Max kinship threshold to him, or
+  one an ancestry block rule bars from him, now stays out of his harem,
+  and if that leaves no one the harem is the sire alone. Results for a
+  given random seed differ from earlier versions.
+- With **Harem** selected, seeding a male in some groups but not all no
+  longer stops the run with “subscript out of bounds” or forms harems
+  with no male. A group with a seeded male keeps him as its sire; a
+  group with no seeded male is given a sire chosen at random.
+- A script that passes `harem = TRUE` and a non-zero `sexRatio` to
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  now stops with a message naming both settings, instead of returning
+  groups of one or two animals; use one or the other. The Breeding
+  Groups tab was never affected, since its radio takes **Harem** or
+  **Custom**, not both.
 
 **Minor**
 
 - The last box on the **Groups** tab, which holds the animals that fit
   no group, is headed **Unused animals** instead of the next group
-  number. The **Statistics** table and the **Group Detail** list use the
-  same name.
+  number. The **Statistics** table, the **Group Detail** list and the
+  **Genetic Diversity** heat map use the same name.
 - A box that holds exactly one animal is headed “(1 animal)” on the
   **Groups** tab, not “(1 animals)”.
 - New **Include animals by** control: a genetic-value floor as an
@@ -339,6 +368,19 @@ export workflows, and longitudinal monitoring of colony genetic health.
   [`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)
   for existing groups. An example rules file and pedigree ship with the
   package.
+- The **Source** choice “Upload list”, which had no place to give it a
+  list, is now “My own list”. Paste the animal IDs into the box that
+  appears. Groups are formed from those that are alive; an ID that is
+  not in the pedigree stops the run and is named, and an animal that is
+  not alive is left out and named.
+- Forming groups and then reading a different pedigree, or trimming the
+  pedigree on the Pedigree Browser, no longer leaves the **Groups**,
+  **Statistics** and **Group Detail** pages showing the old group sizes
+  over empty tables, counts of zero males and zero females, and a red
+  error. When a group holds an animal the pedigree now loaded does not
+  have, each page says so in one sentence and asks you to form the
+  groups again or bring back the earlier pedigree. The groups are kept,
+  so bringing that pedigree back shows them again.
 
 ### Mate Pair Analysis
 
@@ -475,6 +517,67 @@ export workflows, and longitudinal monitoring of colony genetic health.
   only a warning: the pedigree can still be used.
   `runQcStudbook(reportChanges = TRUE)` returns the same warning.
 
+- New: the Input tab now warns when an animal’s death or departure date
+  is earlier than its birth date. The Warnings tab says how many animals
+  and names the first five; their age comes out zero or negative, so the
+  dates need a look in the file. A death or departure on the birth day
+  is not flagged, and the pedigree can still be used.
+  `runQcStudbook(reportChanges = TRUE)` returns the same warning.
+
+- Fixed: a pedigree file with an invalid date stopped the Input tab with
+  a message that gave no row number, such as “do not know how to convert
+  … to class Date”, whenever the file had more than one date column
+  (birth and exit dates, as the shipped example pedigree has) or the
+  first date in a column was the invalid one. The Input tab now lists
+  every invalid date by row, in every date column, so the rows can be
+  found and corrected in the file.
+
+- Fixed: when a pedigree file’s geographic origin column was headed in
+  all lowercase (`geographicorigin`), the column was renamed to
+  `geographicOrigin` with no notice at all, so
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  reported no changed columns. It is now counted as a column change like
+  every other rename, so
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  reports it and `qcStudbook(reportErrors = TRUE)` keeps the record. The
+  Changed Columns tab does not list this rename.
+
+- Fixed:
+  [`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
+  stopped with the message “missing value where TRUE/FALSE needed” when
+  it was given five or more column names, one of them missing (`NA`),
+  and a required column was absent. It now treats the missing name like
+  any other name that does not match, so it returns the absent required
+  columns, or, with `reportErrors = FALSE`, stops naming them. The Input
+  tab is not affected: a blank header in a pedigree file is read as `X`,
+  and the tab still reports the missing column.
+
+- Fixed: on the Age-Sex Pyramid tab, Download Plot with no pedigree
+  loaded saved a picture of the packaged example pedigree, with nothing
+  on it to say so, so it could pass for the colony’s own data. It now
+  saves nothing until a pedigree is loaded: the download fails. Once a
+  pedigree is loaded the button works as before.
+
+- Fixed: after focal animals were chosen on the Pedigree Browser, the
+  Genetic Diversity tab showed “kmat is missing kinship for group
+  member(s)” instead of the heat map whenever a breeding group (from the
+  “All available” source, for one) held a living animal that was not one
+  of the focal animals. The tab now scores every group, using the
+  kinship of the whole pedigree, as Summary Statistics and Breeding
+  Groups do. An animal with no row in the genetic value report is left
+  out of the Value column’s share of low-value animals, as an
+  “Undetermined” one is, so a group made only of such animals has no
+  assessed value and its Value cell is red.
+
+- Fixed: on the Genetic Diversity tab, forming breeding groups and then
+  reading a different pedigree, or trimming the pedigree on the Pedigree
+  Browser, left the same red error (“ped has no rows for group
+  member(s): …”) on the page twice in place of the heat map. The tab now
+  says once, in a sentence, that some animals in the breeding groups are
+  not in the pedigree now loaded and asks you to form the groups again.
+  Any other error from the heat map’s calculation is shown once, where
+  the heat map would be.
+
 - Fixed: the three count boxes on the Input tab’s QC Summary (Records
   Processed, Errors and Warnings) were plain gray whatever the check
   found. They are now colored: Errors is red when there is at least one
@@ -529,13 +632,46 @@ export workflows, and longitudinal monitoring of colony genetic health.
   and a founder with a blank origin ranked as an import instead of
   “Undetermined”.
 
+- New: with “Pedigree(s) and genotypes in one file”, the Input tab now
+  reads genotypes from columns named `allele_1` and `allele_2` or
+  `first_name` and `second_name` as well as `first` and `second`,
+  accepts text labels such as A, B, C as well as whole numbers, and
+  shows a line under the QC Summary saying which columns it read or why
+  it read none. A file with text in `first` and `second`, whose
+  genotypes were not used before, now uses them, so its Genetic Value
+  results can change.
+
+- Fixed: with “Pedigree(s) and genotypes in separate files”, a genotype
+  file the app could not use was left out without a word: the QC Summary
+  showed the same green “Data passed quality control” as for a good
+  file, and a file with a short row grayed out the page and ended the
+  session. The QC Summary now says “The genotype file was not used, so
+  no genotypes are used.” and gives the reason, and the app keeps
+  running.
+
+- Fixed: Founder genome equivalents, their standard error and gene
+  diversity are worked out from the pedigree alone, so genotypes no
+  longer make them NA.
+
 **Minor**
 
+- Fixed: the Japanese macaque example file `deidentified_jmac_ped.csv`
+  could not be loaded in the app. It is now rebuilt from a 2018 studbook
+  (2,590 animals, de-identified, 819 with a recorded sire) and loads
+  once Minimum Dam Age is set to 3.3 or lower and Minimum Sire Age to
+  4.3 or lower, because Japanese macaque mothers and fathers must by
+  default be at least 4 and 5 years old at a birth.
 - Fixed: on the Marker Genetics tab, building the de-identified export
   preview could end the session when the genotype file had an animal
   missing from the loaded pedigree or had failed its format check. The
   app now stays connected, skips the preview, and explains why next to
   the export controls.
+- Fixed: the Marker Genetics module’s “ready” answer (`isReady`), which
+  only a script or app that uses the module itself reads, stopped with
+  an error instead of saying FALSE when the uploaded genotype file could
+  not be used (wrong columns, a row too short to read, an empty file).
+  The Marker Genetics tab looks the same: it still shows the error for
+  such a file.
 - Fixed: the sort order of the Genetic Value Analysis tiers, the main
   pedigree table and the Breeding Group member table could vary with the
   server’s regional settings; all three now sort the same way
@@ -632,6 +768,11 @@ export workflows, and longitudinal monitoring of colony genetic health.
   and
   [`alleleFreq()`](https://github.com/rmsharp/nprcgenekeepr/reference/alleleFreq.md)
   return an empty table when given no animals or no alleles.
+- Fixed: on the Summary Statistics tab, the pop-up that opens over each
+  of the twelve Export buttons (the kinship matrix, the founders, the
+  relationships, and the six plots) showed a gray title bar reading
+  `character(0)` above its one sentence. The pop-ups now show only the
+  sentence.
 
 ## nprcgenekeepr 2.0.0 (20260721)
 

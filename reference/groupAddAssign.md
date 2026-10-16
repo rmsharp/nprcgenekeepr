@@ -84,13 +84,22 @@ groupAddAssign(
 - harem:
 
   Logical variable when set to `TRUE`, the formed groups have a single
-  male at least `minAge` old.
+  male at least `minAge` old. A harem's sire is held to the same rules
+  as every other animal: animals related to him at or above `threshold`
+  (and, with `ancestryRules`, animals a block rule bars from him) are
+  not placed in his group, and when that leaves no one the group is the
+  sire alone. A group whose seed animals (`currentGroups`) include a
+  male at least `minAge` old keeps him as its sire; a group with no
+  seeded male is given a sire chosen at random from `candidates`. It
+  cannot be combined with a non-zero `sexRatio`; the call stops with a
+  message naming both settings.
 
 - sexRatio:
 
   Numeric value indicating the number of non-males (females and animals
   of other or unknown sex) per male. Values from 0.5 to 20 in steps of
-  0.5 are typical, but the range is not enforced.
+  0.5 are typical, but the range is not enforced. A non-zero `sexRatio`
+  cannot be combined with `harem = TRUE`; the call stops with a message.
 
 - withKin:
 
@@ -144,10 +153,6 @@ groupAddAssign(
   exemption in `ignore`). `flag`-severity rules never affect the search;
   compute them afterward with
   [`reportAncestryViolations`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md).
-  Known limitation (shared with the kinship machinery): a harem's
-  sampled sire is seeded into the group before the fill loop, so
-  conflicts against the sire himself are not enforced – only pairs among
-  loop-placed members are.
 
 - updateProgress:
 
@@ -189,8 +194,8 @@ describing the top-`maxCandidates` cutoff actually applied to
 `groupAddAssign` finds the largest group that can be formed by adding
 unrelated animals from a set of candidate IDs to an existing group, to a
 new group it has formed from a set of candidate IDs or if more than 1
-group is desired, it finds the set of groups with the largest average
-size.
+group is desired, it finds the set of groups with the largest minimum
+group size (the score is the size of the smallest group).
 
 The function implements a maximal independent set (MIS) algorithm to
 find groups of unrelated animals. A set of animals may have many
@@ -253,42 +258,42 @@ haremGrp <- groupAddAssign(
 )
 haremGrp$group
 #> [[1]]
-#>  [1] "653J82" "967Y3D" "1GF3GM" "WNEAS6" "PYPM1W" "NK802Y" "YTJ2UL" "G58RGY"
-#>  [9] "S3EBGZ" "D4B0RM" "AW400C" "PI4VHT" "LS184H" "ZH3YG1" "92UG4N" "1QVS67"
-#> [17] "5EDLL7" "FL170P" "Y0TCYX" "MTCAIG" "321LLB" "T3QPW5" "QCA36T" "Z904TJ"
-#> [25] "W6MDVK" "DCJJYS" "0XTZQ1" "3SKITJ" "1SPLS8" "D9P18Y" "EMV4P6"
+#>  [1] "5XVTVH" "IH1KPA" "G25E3F" "HE0SCR" "92UG4N" "MFKT9C" "MYUMMX" "AP1YLW"
+#>  [9] "3DTD2N" "8JUUJ9" "5BPBUI" "S3EBGZ" "S056D5" "3YJIMV" "MX4J7G" "7RA57Q"
+#> [17] "PVY432" "WI38KZ" "N79QXB" "C18V6I" "DRXMW4" "Y6DB6L" "TEACA3" "CS23RV"
+#> [25] "DPXEQE" "G58RGY" "5EDIEE" "D4B0RM" "0SGJ12" "GTLA8R" "FJS7RQ" "TXZUKC"
 #> 
 #> [[2]]
-#>  [1] "FX9E4X" "2F6J3U" "8JUUJ9" "AP1YLW" "W5WIRP" "HE0SCR" "AZ3L0D" "5ERY5Z"
-#>  [9] "PJ72W1" "414N7M" "83HQBN" "M9PVG5" "S056D5" "5KWNMZ" "BKWE4D" "N79QXB"
-#> [17] "MX4J7G" "EX5K0S" "S7IWWA" "CLSVU6" "RVHVTZ" "JLFKV8" "BS3RLE" "ESUIAF"
-#> [25] "CRPXY7" "6KWVRI" "ZATMEE" "I8ABC7" "SCFSBF" "WI38KZ" "TEACA3" "5EDIEE"
-#> [33] "0SGJ12" "S5H1GC"
+#>  [1] "9FRCIE" "ZQXZYB" "J3F6PD" "SCFSBF" "WJXIH9" "S7IWWA" "1SPLS8" "AZ3L0D"
+#>  [9] "XEC0M5" "PU7RSG" "0XTZQ1" "WNEAS6" "W6MDVK" "0X4W26" "2F6J3U" "QRZK48"
+#> [17] "RJ4JPC" "NN3GDQ" "MTCAIG" "B228Q6" "PYPM1W" "EMV4P6" "WLMGS1" "I5CI33"
+#> [25] "YLRNIK" "7NE2UT" "GIIEUD" "NK802Y" "ZH3YG1"
 #> 
 #> [[3]]
-#>  [1] "9FRCIE" "RJ4JPC" "Q8U9LB" "DRXMW4" "DPXEQE" "7NE2UT" "AR5U44" "1SSCJC"
-#>  [9] "PBAFJF" "WK89I9" "N4NV8B" "9MG040" "1CIRC9" "3GECJJ" "FG0SFA" "465ERA"
-#> [17] "1KJ2MG" "SHG3RB" "MKY9TK" "NN3GDQ" "KX0RJ3" "9P0DES" "5BPBUI" "PVY432"
-#> [25] "SH3FB7" "99BMJW" "DKIM6U" "X694YR" "GIIEUD"
+#>  [1] "B2CKHA" "414N7M" "7B9CA6" "6KWVRI" "1SSCJC" "0HYZ23" "967Y3D" "LYSLPP"
+#>  [9] "465ERA" "QCENKM" "QWKFBH" "ZATMEE" "W0GUKI" "Q8U9LB" "FL170P" "EX5K0S"
+#> [17] "AW400C" "XFWVVX" "ILVQVB" "SHG3RB" "GAS52W" "BCJJKN" "DI4AHD" "YTJ2UL"
+#> [25] "K3TNHP" "321LLB" "D9P18Y" "LVYYNY" "83HQBN"
 #> 
 #> [[4]]
-#>  [1] "80KACX" "Q17CG3" "PU7RSG" "MPIQ4N" "13B1QL" "BCJJKN" "CMMUKU" "C18V6I"
-#>  [9] "ZPS15A" "72LYDE" "H2J6UA" "7RA57Q" "WJXIH9" "AFZKBS" "XEC0M5" "B134XZ"
-#> [17] "CS23RV" "MFKT9C" "FJS7RQ" "6F9FB8" "IH1KPA" "MYUMMX" "GTLA8R" "TXZUKC"
-#> [25] "F7I2ED" "7B9CA6" "DH9WJQ" "GCBYDW" "50D77I" "3DTD2N" "5W621W" "Y6DB6L"
-#> [33] "FB5L3N" "E5Q33K" "AR17R5" "QQMBT1"
+#>  [1] "AEP5EG" "01QRQ4" "E5Q33K" "YFCIHJ" "5IAFMK" "RVHVTZ" "DH9WJQ" "BKWE4D"
+#>  [9] "B1WVCN" "N4NV8B" "MPIQ4N" "EZ2F8A" "Y0TCYX" "JLFKV8" "DKIM6U" "5W621W"
+#> [17] "1GF3GM" "MB6NYQ" "N5QBWD" "6F9FB8" "Z904TJ" "FB5L3N" "3SKITJ" "BS3RLE"
+#> [25] "H2J6UA" "9MG040" "QW2Z3R" "1CZM30" "13B1QL" "ZPS15A" "38K2SR" "DHNQ1W"
+#> [33] "D33J06" "5ERY5Z" "MKY9TK" "KX0RJ3" "W5WIRP" "QQMBT1"
 #> 
 #> [[5]]
-#>  [1] "8IG767" "46ZHKN" "YLRNIK" "WTE53B" "G8MCV7" "DHNQ1W" "ZQXZYB" "0HYZ23"
-#>  [9] "I5CI33" "QWKFBH" "WKY2SZ" "S222R3" "WLMGS1" "B228Q6" "QRZK48" "0IIAEN"
-#> [17] "VWC5ZH" "TYEWF1" "LVYYNY" "G25E3F" "0X4W26" "1FAZ0K" "LYSLPP" "GAS52W"
-#> [25] "F45799" "XYRDKV" "2Z4YLY" "J3F6PD" "TQEMY6"
+#>  [1] "3MMZD4" "R5AYJK" "B134XZ" "AIHJ8Z" "LS184H" "GCBYDW" "2Z4YLY" "30J3CQ"
+#>  [9] "ESUIAF" "I8ABC7" "XYRDKV" "46ZHKN" "AFZKBS" "72LYDE" "KEA4QG" "CMMUKU"
+#> [17] "M9PVG5" "S222R3" "CLSVU6" "7ZNY75" "F7I2ED" "VWC5ZH" "QCA36T" "5EDLL7"
+#> [25] "Q7U139" "G8MCV7" "DCJJYS" "3GECJJ" "0IIAEN" "S5H1GC" "MH88T6" "6X6BG9"
+#> [33] "87AQLF"
 #> 
 #> [[6]]
-#>  [1] "T38W6H" "Q7U139" "XFWVVX" "1VP3UC" "CHK1ZX" "1CZM30" "EZ2F8A" "AIHJ8Z"
-#>  [9] "ILVQVB" "YFCIHJ" "DI4AHD" "K3TNHP" "5IAFMK" "N5QBWD" "3YJIMV" "30J3CQ"
-#> [17] "KZY6PD" "7ZNY75" "87AQLF" "D33J06" "QW2Z3R" "QCENKM" "MH88T6" "01QRQ4"
-#> [25] "MB6NYQ" "6X6BG9" "KEA4QG" "38K2SR" "B1WVCN" "W0GUKI" "R5AYJK"
+#>  [1] "ER464J" "PJ72W1" "KZY6PD" "T3QPW5" "5KWNMZ" "FG0SFA" "CRPXY7" "WTE53B"
+#>  [9] "1KJ2MG" "99BMJW" "PI4VHT" "1VP3UC" "SH3FB7" "X694YR" "TQEMY6" "1CIRC9"
+#> [17] "Q17CG3" "1QVS67" "50D77I" "PBAFJF" "1FAZ0K" "TYEWF1" "F45799" "AR5U44"
+#> [25] "AR17R5" "9P0DES" "CHK1ZX" "WKY2SZ" "WK89I9"
 #> 
 #> [[7]]
 #> [1] NA
@@ -303,57 +308,57 @@ sexRatioGrp <- groupAddAssign(
 )
 sexRatioGrp$group
 #> [[1]]
-#>  [1] "DCJJYS" "5PW7WT" "S056D5" "7ZNY75" "BCJJKN" "CLSVU6" "XFWVVX" "D9P18Y"
-#>  [9] "967Y3D" "AIHJ8Z" "LS184H" "87AQLF" "SCFSBF" "3P9BX6" "30J3CQ" "QCA36T"
-#> [17] "5ERY5Z" "EX5K0S" "TQEMY6" "3DTD2N" "PBAFJF" "ZATMEE" "N5QBWD" "T3QPW5"
-#> [25] "5KFB90" "B1WVCN" "QW2Z3R" "B228Q6" "BS3RLE" "KEA4QG" "QRZK48" "AW400C"
-#> [33] "CHK1ZX" "DRXMW4" "2F1IV1"
+#>  [1] "BKWE4D" "P7RBPI" "JLFKV8" "01QRQ4" "HE0SCR" "B228Q6" "38K2SR" "WI38KZ"
+#>  [9] "MTCAIG" "FJS7RQ" "5W621W" "QWKFBH" "BCJJKN" "NHWTJ9" "0X4W26" "87AQLF"
+#> [17] "6X6BG9" "WK89I9" "CHK1ZX" "W0GUKI" "Z904TJ" "XYRDKV" "1GF3GM" "X694YR"
+#> [25] "ZW2X4N"
 #> 
 #> [[2]]
-#>  [1] "99BMJW" "YHHVC7" "WNEAS6" "AFZKBS" "1CZM30" "BKWE4D" "ESUIAF" "8JUUJ9"
-#>  [9] "MH88T6" "N79QXB" "QCENKM" "CRPXY7" "DPXEQE" "K7900I" "TYEWF1" "RVHVTZ"
-#> [17] "K3TNHP" "5EDIEE" "Q7U139" "N4NV8B" "PI4VHT" "01QRQ4" "1QVS67" "5EDLL7"
-#> [25] "Z7NBA2"
+#>  [1] "MYUMMX" "GM371F" "D4B0RM" "EMV4P6" "I8ABC7" "QQMBT1" "LS184H" "YTJ2UL"
+#>  [9] "G25E3F" "VWC5ZH" "9P0DES" "ESUIAF" "C18V6I" "FFGPS4" "IH1KPA" "Q17CG3"
+#> [17] "9MG040" "1SSCJC" "3GECJJ" "W5WIRP" "Q7U139" "N4NV8B" "3SKITJ" "S5H1GC"
+#> [25] "3MMZD4" "PU7RSG" "DHNQ1W" "MB6NYQ" "1CZM30" "321LLB" "5BPBUI" "1SPLS8"
+#> [33] "PVY432" "AFZKBS"
 #> 
 #> [[3]]
-#>  [1] "YTJ2UL" "1E8KD1" "VWC5ZH" "6KWVRI" "7RA57Q" "R5AYJK" "5IAFMK" "50D77I"
-#>  [9] "46ZHKN" "NK802Y" "13B1QL" "5KWNMZ" "PVY432" "5XVTVH" "DHNQ1W" "Q17CG3"
-#> [17] "1CIRC9" "RJ4JPC" "FG0SFA" "PYPM1W" "X694YR" "LYSLPP" "S222R3" "C18V6I"
-#> [25] "3MMZD4" "SH3FB7" "EMV4P6" "G25E3F" "1GF3GM" "D4B0RM" "414N7M" "5W621W"
-#> [33] "MX4J7G" "J3F6PD" "A6A1M1"
+#>  [1] "ZPS15A" "A98D7P" "MPIQ4N" "0HYZ23" "M9PVG5" "F7I2ED" "G58RGY" "WLMGS1"
+#>  [9] "0XTZQ1" "ILVQVB" "7RA57Q" "Q8U9LB" "MFKT9C" "A6A1M1" "6KWVRI" "I5CI33"
+#> [17] "5EDLL7" "3YJIMV" "WNEAS6" "CLSVU6" "GIIEUD" "967Y3D" "46ZHKN" "GCBYDW"
+#> [25] "IZDV8K" "AIHJ8Z" "CRPXY7" "7ZNY75" "3DTD2N" "SH3FB7" "Y6DB6L" "83HQBN"
+#> [33] "1CIRC9" "72LYDE" "KZM9RB"
 #> 
 #> [[4]]
-#>  [1] "GIIEUD" "G2GYST" "9MG040" "AR5U44" "YLRNIK" "AR17R5" "CS23RV" "0SGJ12"
-#>  [9] "AZ3L0D" "PU7RSG" "ILVQVB" "MYUMMX" "3YJIMV" "BTTHAJ" "7B9CA6" "465ERA"
-#> [17] "B134XZ" "7NE2UT" "H2J6UA" "JLFKV8" "TXZUKC" "MFKT9C" "NN3GDQ" "LVYYNY"
-#> [25] "Z25D52" "TEACA3"
+#>  [1] "FL170P" "BTTHAJ" "1QVS67" "FB5L3N" "QCA36T" "KX0RJ3" "YFCIHJ" "WJXIH9"
+#>  [9] "WTE53B" "7B9CA6" "GAS52W" "5EDIEE" "5KWNMZ" "SXSVEH" "T3QPW5" "TXZUKC"
+#> [17] "99BMJW" "ZATMEE" "NN3GDQ" "LYSLPP" "KZY6PD" "N5QBWD" "AR17R5" "DH9WJQ"
+#> [25] "CFD12A" "K3TNHP" "G8MCV7" "W6MDVK" "MH88T6" "DCJJYS"
 #> 
 #> [[5]]
-#>  [1] "2Z4YLY" "T38W6H" "DKIM6U" "SHG3RB" "G58RGY" "ZH3YG1" "WKY2SZ" "FJS7RQ"
-#>  [9] "321LLB" "S3EBGZ" "1KJ2MG" "KX0RJ3" "PJ72W1" "FLIZQI" "0X4W26" "FL170P"
-#> [17] "GCBYDW" "YFCIHJ" "GTLA8R" "ZPS15A" "IH1KPA" "1FAZ0K" "WI38KZ" "Q8U9LB"
-#> [25] "LN1DLY" "1VP3UC"
+#>  [1] "QW2Z3R" "LMJWTN" "6F9FB8" "414N7M" "RVHVTZ" "DRXMW4" "AR5U44" "ZH3YG1"
+#>  [9] "DPXEQE" "D9P18Y" "5ERY5Z" "XEC0M5" "13B1QL" "R6HV9A" "PJ72W1" "S222R3"
+#> [17] "SHG3RB" "B1WVCN" "AZ3L0D" "PBAFJF" "1FAZ0K" "AW400C" "BS3RLE" "S7IWWA"
+#> [25] "JSAP3H" "YLRNIK" "ZQXZYB" "30J3CQ" "2Z4YLY" "D33J06" "2F6J3U" "EX5K0S"
+#> [33] "MX4J7G" "N79QXB"
 #> 
 #> [[6]]
-#>  [1] "XYRDKV" "80F2MI" "G8MCV7" "W6MDVK" "XEC0M5" "QWKFBH" "WLMGS1" "3GECJJ"
-#>  [9] "6F9FB8" "MKY9TK" "3SKITJ" "2F6J3U" "W0GUKI" "KZM9RB" "Y6DB6L" "EZ2F8A"
-#> [17] "Y0TCYX" "0XTZQ1" "HE0SCR" "AP1YLW" "0HYZ23" "ZQXZYB" "Z904TJ" "GAS52W"
-#> [25] "SXSVEH"
+#>  [1] "PI4VHT" "EEGLWY" "8JUUJ9" "KEA4QG" "EZ2F8A" "MKY9TK" "DKIM6U" "0SGJ12"
+#>  [9] "CMMUKU" "TYEWF1" "GTLA8R" "DI4AHD" "TQEMY6" "K7900I" "S3EBGZ" "AP1YLW"
+#> [17] "R5AYJK" "PYPM1W" "F45799" "B134XZ" "WKY2SZ" "50D77I" "1KJ2MG" "92UG4N"
+#> [25] "G2GYST"
 #> 
 #> [[7]]
-#>   [1] "WTE53B" "1SPLS8" "HLQ9SY" "6X6BG9" "B2CKHA" "FB5L3N" "GDXWJ1" "JSAP3H"
-#>   [9] "MB6NYQ" "TR5L57" "WK89I9" "XC304E" "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2"
-#>  [17] "D33J06" "FTVE03" "IRFJ09" "KXHGRH" "LMJWTN" "M9PVG5" "Q9LWGX" "R6HV9A"
-#>  [25] "RNQU14" "W5WIRP" "09LFE4" "38K2SR" "3QHAFI" "55BPSE" "5BPBUI" "72LYDE"
-#>  [33] "83HQBN" "8IG767" "9FRCIE" "DH9WJQ" "ER464J" "F7I2ED" "FFGPS4" "FG6L7S"
-#>  [41] "NHWTJ9" "P7RBPI" "S5H1GC" "TBCE78" "YI16QD" "1SSCJC" "4LHK19" "59NYZE"
-#>  [49] "5IYDXN" "6KLWVC" "8TV4MT" "A98D7P" "AZ4D19" "CHSCFG" "DI4AHD" "EEGLWY"
-#>  [57] "FX9E4X" "G91ZM6" "I5CI33" "I8ABC7" "J1R2EW" "KZY6PD" "LDND6J" "MPIQ4N"
-#>  [65] "MQT080" "MTCAIG" "NSIC4I" "PHB6TE" "QRWYQZ" "RY1AZM" "WHQLH5" "WQUN84"
-#>  [73] "XL658N" "XX0GYV" "YP910X" "0IIAEN" "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ"
-#>  [81] "653J82" "6MEP2C" "76DIT4" "80KACX" "92UG4N" "9P0DES" "B2YJJP" "CMMUKU"
-#>  [89] "E3JP0C" "E5Q33K" "F45799" "GM371F" "IZDV8K" "MEUZ85" "PA9F3J" "QQMBT1"
-#>  [97] "S7IWWA" "TJN1AD" "WJXIH9" "WNKKW3" "XY2CK7" "XZH41H" "YDRD81" "ZDRSG0"
-#> [105] "7D09WH" "DGZLV3" "S63QDN" "ZW2X4N"
+#>  [1] "5IAFMK" "HLQ9SY" "XFWVVX" "B2CKHA" "GDXWJ1" "RJ4JPC" "TR5L57" "XC304E"
+#>  [9] "Z7NBA2" "1E8KD1" "5KFB90" "5PW7WT" "AEP5EG" "BW10CL" "CHJ9D2" "FTVE03"
+#> [17] "IRFJ09" "J3F6PD" "KXHGRH" "LVYYNY" "Q9LWGX" "RNQU14" "SCFSBF" "TEACA3"
+#> [25] "Y0TCYX" "09LFE4" "3QHAFI" "55BPSE" "5XVTVH" "8IG767" "9FRCIE" "ER464J"
+#> [33] "FG6L7S" "H2J6UA" "QCENKM" "TBCE78" "YI16QD" "1VP3UC" "2F1IV1" "4LHK19"
+#> [41] "59NYZE" "5IYDXN" "6KLWVC" "7NE2UT" "80F2MI" "8TV4MT" "AZ4D19" "CHSCFG"
+#> [49] "FG0SFA" "FX9E4X" "G91ZM6" "J1R2EW" "LDND6J" "LN1DLY" "MQT080" "NK802Y"
+#> [57] "NSIC4I" "PHB6TE" "QRWYQZ" "RY1AZM" "S056D5" "WHQLH5" "WQUN84" "XL658N"
+#> [65] "XX0GYV" "YHHVC7" "YP910X" "0IIAEN" "0V4SAC" "0X1RZ9" "3YHBC1" "465ERA"
+#> [73] "55VDSQ" "653J82" "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "CS23RV" "E3JP0C"
+#> [81] "E5Q33K" "FLIZQI" "MEUZ85" "PA9F3J" "QRZK48" "T38W6H" "TJN1AD" "WNKKW3"
+#> [89] "XY2CK7" "XZH41H" "YDRD81" "Z25D52" "ZDRSG0" "3P9BX6" "7D09WH" "DGZLV3"
+#> [97] "S63QDN"
 #> 
 ```

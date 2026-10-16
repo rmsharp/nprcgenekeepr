@@ -7,8 +7,8 @@ classifies each locus into one of three coverage tiers, following a
 PLINK-style three-state coverage model: `"full"` (both `chrom` and `pos`
 present; `cM` is optional even within `"full"`), `"partial"` (exactly
 one of `chrom`/`pos` present), or `"none"` (neither present). A value
-counts as present when it is not `NA`, so an empty-string `chrom` counts
-as present.
+counts as present when it is not `NA`; an empty or all-space `chrom` is
+treated as missing and is returned as `NA`.
 
 ## Usage
 

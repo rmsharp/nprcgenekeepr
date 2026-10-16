@@ -95,7 +95,8 @@ before both center files are uploaded); `candidateAssignmentTable`, the
 ranked-candidate data frame (a zero-row, full-column-shape data frame
 when no pair is flagged; or `NULL` before a genotype file and a pedigree
 are both available); `isReady`, `TRUE` once `comparisonTable` has a
-value; `locusMetadataTable`, the
+value, and `FALSE` (never an error) when it has none, including when the
+uploaded genotype file cannot be used; `locusMetadataTable`, the
 [`checkLocusMetadata`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
 output (or `NULL` before a locus-metadata file is uploaded);
 `realizedRelatednessTable`, the

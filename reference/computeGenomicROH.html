@@ -132,10 +132,12 @@ full-coverage loci in <code>locusMetadata</code> that are also columns of
 <code>genotypeMatrix</code> (Ceballos et al. 2018's \(L_{autosome}\)
 convention). The denominator is fixed across individuals within one call,
 which avoids conflating an individual's own missingness with inbreeding,
-but it changes with the matrix's locus set: a full-coverage locus in
-<code>locusMetadata</code> that is absent from the matrix is excluded silently
-(only matrix loci lacking full coverage warn), so <code>fRoh</code> is
-comparable across a cohort only when the same loci are used.</p>
+but it changes with the matrix's locus set: full-coverage loci of
+<code>locusMetadata</code> that are not columns of <code>genotypeMatrix</code> are left
+out of that length, with one warning naming them (at most 10 are named,
+then "and N more"), so <code>fRoh</code> is comparable across a cohort only when
+the same loci are used. A locus without a position never enters the
+length, so its absence is not reported.</p>
 <p>Only loci with full <code>locusMetadata</code> coverage (both <code>chrom</code> and
 <code>pos</code> present, per <code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code>'s own
 three-tier classification) can be placed in the ordered walk; a locus

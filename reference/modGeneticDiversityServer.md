@@ -7,10 +7,14 @@ and renders the red/yellow/green heat map (via
 [`makeGeneticDiversityHeatmap`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)).
 When breeding groups have not been formed or the genetic value analysis
 has not been run, the module shows guidance instead of an empty plot.
-When any animal in the groups has no birth date, a note under the heat
-map says how many, and how many females among them the Production and
-Inbreeding columns counted (those the pedigree lists as a dam) and left
-out.
+When a formed group holds an animal the loaded pedigree no longer has (a
+new file was read, or the view was trimmed, after the groups were
+formed), the page says so in one sentence and asks for the groups to be
+formed again; any other calculation error is shown once, where the heat
+map would be. When any animal in the groups has no birth date, a note
+under the heat map says how many, and how many females among them the
+Production and Inbreeding columns counted (those the pedigree lists as a
+dam) and left out.
 
 ## Usage
 
@@ -37,7 +41,11 @@ modGeneticDiversityServer(
   breeding group (the `groups` returned by
   [`modBreedingGroupsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)).
   That list includes the trailing "Unused" element when candidates
-  remain unplaced, and the heat map scores it as another group.
+  remain unplaced, and the heat map scores it as another group. If the
+  list is named, the names are the heat map's row labels (the app passes
+  the names that the Breeding Groups module returns as `groupLabels`, so
+  the last row reads "Unused animals"); an unnamed list gives "Group 1",
+  "Group 2" and so on.
 
 - pedigree:
 
@@ -54,8 +62,9 @@ modGeneticDiversityServer(
   animal IDs) covering every member of every group;
   [`getGeneticDiversityStats`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
   stops when a group member is missing from it. In the app this is the
-  genetic-value tab's population-filtered matrix, not the full-pedigree
-  matrix.
+  full-pedigree kinship matrix that Summary Statistics and Breeding
+  Groups also use, so it covers every animal of the pedigree, not only
+  the Genetic Value population.
 
 - currentDate:
 
@@ -67,9 +76,8 @@ modGeneticDiversityServer(
 A list with two reactive elements: `stats`, the per-group metric data
 frame (or `NULL` when data are not ready), and `heatmap`, the `ggplot`
 heat map (or `NULL`). Errors raised inside `getGeneticDiversityStats` (a
-group member missing from the kinship matrix, or a group member with a
-missing birth date) are not caught, so the reactives error instead of
-returning `NULL`.
+group member missing from the kinship matrix) are not caught, so the
+reactives error instead of returning `NULL`.
 
 ## See also
 

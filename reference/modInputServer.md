@@ -23,9 +23,9 @@ A list with reactive components:
 
 - `genotypeData` - Genotype data (`id`, `first`, `second`) taken from
   the cleaned studbook when it carries genotypes. A separately uploaded
-  genotype file that fails
-  [`checkGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
-  is dropped without a message, leaving `NULL`
+  genotype file that cannot be read, or that fails
+  [`checkGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md),
+  is not used, leaving `NULL`; the QC Summary says why
 
 - `qcSummary` - Summary of QC results: a list with `errors`, `warnings`
   and `records` (counts of error rows, warning rows and cleaned records)

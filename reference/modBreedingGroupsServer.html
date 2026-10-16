@@ -134,6 +134,10 @@ formed group; when candidates remain unplaced a final "Unused" element
 is appended</p></li>
 <li><p><code>nGroups</code> - Number of elements of <code>groups</code>, counting the
 "Unused" element when present</p></li>
+<li><p><code>groupLabels</code> - Character vector with one name per element of
+<code>groups</code>: "Group 1", "Group 2" and so on, and "Unused animals" for
+the final "Unused" element when there is one; <code>groups</code> itself is
+not named</p></li>
 <li><p><code>score</code> - Optimization score from groupAddAssign
 (minimum group size)</p></li>
 <li><p><code>unassigned</code> - Character vector of candidate IDs that appear
@@ -151,9 +155,8 @@ an <code>ancestry</code> column: each consumer (formation here,
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The module supports multiple configuration options:</p><ul><li><p><strong>Animal source</strong>: "Top ranked", "Upload list" or "All
-available". "Upload list" has no upload control and currently behaves
-exactly like "All available"</p></li>
+    <p>The module supports multiple configuration options:</p><ul><li><p><strong>Animal source</strong>: "Top ranked", "All available" or
+"My own list" (animal IDs typed or pasted by the user)</p></li>
 <li><p><strong>Living animals only</strong>: Every source draws only on animals
 that are alive: those with a <code>status</code> of <code>ALIVE</code> when the
 pedigree has a <code>status</code> column, otherwise those with no
@@ -182,7 +185,12 @@ gate requiring a stated reason; the "Ancestry" results tab reports
 each run's rule violations (overridden rules stay visible, marked
 <code>overridden</code> – see <code><a href="reportAncestryViolations.html">reportAncestryViolations</a></code>) and
 offers the run's downloadable audit manifest</p></li>
-</ul><p>Up to <code>maxCandidates</code> (the "Candidates to retain" input; default 5,
+</ul><p>The formed groups stay in memory when a new file is read or the Pedigree
+Browser is trimmed. When a group then holds an animal the loaded pedigree no
+longer has, the Groups, Statistics and Group Detail pages say so in one
+sentence in place of their tables, and bringing the earlier pedigree back
+shows the groups again. The returned <code>groups</code> are not changed.</p>
+<p>Up to <code>maxCandidates</code> (the "Candidates to retain" input; default 5,
 range 1-50) distinct candidate groupings are formed per run (issue #125);
 fewer are returned when the run finds fewer distinct ones. A "Candidate
 grouping" selector lets the user switch among them without re-running

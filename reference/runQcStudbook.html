@@ -105,10 +105,13 @@ minimum parent age. Supplying it sets both <code>minSireAge</code> and
 FALSE). When TRUE, <code>changedCols</code> and <code>hasChangedCols</code> in the
 qcResult report all renamed columns, while <code>warnings</code> lists the case
 and space changes and, when animals in the cleaned pedigree have no birth
-date, one warning, "Animals with no birth date", that says how many. That
-warning is a notice only: it never makes <code>hasErrors</code> TRUE, and it is
-left out when errors were found, because no cleaned pedigree exists then.
-When FALSE, <code>warnings</code> is empty.</p></dd>
+date, one warning, "Animals with no birth date", that says how many. When
+animals have an exit date earlier than their birth date, one more warning,
+"Animals with a death or departure before birth", says how many and names
+the first five. These warnings are notices only: they never make
+<code>hasErrors</code> TRUE, and they are left out when errors were found,
+because no cleaned pedigree exists then. When FALSE, <code>warnings</code> is
+empty.</p></dd>
 
 </dl></div>
     <div class="section level2">

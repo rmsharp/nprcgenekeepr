@@ -82,6 +82,10 @@ List with reactive components:
 - `nGroups` - Number of elements of `groups`, counting the "Unused"
   element when present
 
+- `groupLabels` - Character vector with one name per element of
+  `groups`: "Group 1", "Group 2" and so on, and "Unused animals" for the
+  final "Unused" element when there is one; `groups` itself is not named
+
 - `score` - Optimization score from groupAddAssign (minimum group size)
 
 - `unassigned` - Character vector of candidate IDs that appear in no
@@ -105,9 +109,8 @@ List with reactive components:
 
 The module supports multiple configuration options:
 
-- **Animal source**: "Top ranked", "Upload list" or "All available".
-  "Upload list" has no upload control and currently behaves exactly like
-  "All available"
+- **Animal source**: "Top ranked", "All available" or "My own list"
+  (animal IDs typed or pasted by the user)
 
 - **Living animals only**: Every source draws only on animals that are
   alive: those with a `status` of `ALIVE` when the pedigree has a
@@ -145,6 +148,13 @@ The module supports multiple configuration options:
   visible, marked `overridden` – see
   [`reportAncestryViolations`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md))
   and offers the run's downloadable audit manifest
+
+The formed groups stay in memory when a new file is read or the Pedigree
+Browser is trimmed. When a group then holds an animal the loaded
+pedigree no longer has, the Groups, Statistics and Group Detail pages
+say so in one sentence in place of their tables, and bringing the
+earlier pedigree back shows the groups again. The returned `groups` are
+not changed.
 
 Up to `maxCandidates` (the "Candidates to retain" input; default 5,
 range 1-50) distinct candidate groupings are formed per run (issue

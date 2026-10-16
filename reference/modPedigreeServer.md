@@ -49,14 +49,18 @@ A list of reactive values:
   returning `FALSE` and 0
 
 - `twinRelations` - The validated twin/zygosity sidecar (`NULL` if none
-  uploaded or invalid). It is validated against the filtered `pedigree`
-  (focal trim applied, unknown IDs hidden); one id outside that pedigree
-  fails the validation, an error notification is shown and the whole
-  sidecar becomes `NULL`. Unlike the Diagram tab's own rendering, this
-  is the raw, ungated reactive – not filtered by the "Show Twin
-  Connectors" toggle – so callers outside this module (e.g. `appServer`)
-  see the validated data regardless of that toggle's state (BL-N Slice
-  3).
+  uploaded, if invalid, or if no pair has both animals in
+  `analysisPedigree`). Checked against the whole studbook, not the
+  trimmed view: an id that is not in the studbook, or any other failure
+  of
+  [`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md),
+  shows an error notification and makes the whole sidecar `NULL`; a
+  valid pair with an animal outside `analysisPedigree` (a focal-animal
+  trim) is left out of this value, with no message. Unlike the Diagram
+  tab's own rendering, this is the raw, ungated reactive – not filtered
+  by the "Show Twin Connectors" toggle – so callers outside this module
+  (e.g. `appServer`) see the validated data regardless of that toggle's
+  state (BL-N Slice 3).
 
 ## Details
 

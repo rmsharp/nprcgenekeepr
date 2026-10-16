@@ -53,10 +53,13 @@ runQcStudbook(
   TRUE, `changedCols` and `hasChangedCols` in the qcResult report all
   renamed columns, while `warnings` lists the case and space changes
   and, when animals in the cleaned pedigree have no birth date, one
-  warning, "Animals with no birth date", that says how many. That
-  warning is a notice only: it never makes `hasErrors` TRUE, and it is
-  left out when errors were found, because no cleaned pedigree exists
-  then. When FALSE, `warnings` is empty.
+  warning, "Animals with no birth date", that says how many. When
+  animals have an exit date earlier than their birth date, one more
+  warning, "Animals with a death or departure before birth", says how
+  many and names the first five. These warnings are notices only: they
+  never make `hasErrors` TRUE, and they are left out when errors were
+  found, because no cleaned pedigree exists then. When FALSE, `warnings`
+  is empty.
 
 ## Value
 

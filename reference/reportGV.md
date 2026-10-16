@@ -147,9 +147,9 @@ genome uniqueness values and a `guSE` column of their standard errors;
 "Undetermined" animals, whose apparent uniqueness is an artifact of
 unknown parentage), `fe` (founder equivalents), `fg` (founder genome
 equivalents), `fgSE` (the Monte Carlo sampling standard error of `fg`,
-computed from the same gene drop; a single colony-level number, `NA`
-when a contributing founder is retained in zero gene-drop iterations –
-see
+computed from the same gene drop as `fg`; a single colony-level number,
+`NA` when a contributing founder is retained in zero gene-drop
+iterations – see
 [`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)),
 `neGD` (gene diversity retained in the founding gene pool,
 `1 - 1 / (2 * fg)`; a colony-level scalar beside `fg`, `NA` when `fg` is
@@ -167,7 +167,9 @@ living breeders; `NA` when fewer than two living breeders; see
 `maleFounders` and `femaleFounders` (dataframes of the known male and
 female founder records), `nMaleFounders` and `nFemaleFounders` (the
 counts of those founders), and `total` (the total number of known
-founders). The founder lists hold only *known* founders: an animal with
+founders). `fg`, `fgSE` and `neGD` come from a gene drop that ignores
+genotypes; it is the same gene drop that gives `gu` when the pedigree
+has none. The founder lists hold only *known* founders: an animal with
 both parents unknown whose id was generated to stand in for an unknown
 parent is left out, because that placeholder may be a known founder,
 another animal in the population, or an animal outside it. `fe` and

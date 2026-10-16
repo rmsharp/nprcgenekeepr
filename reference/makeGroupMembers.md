@@ -33,7 +33,9 @@ makeGroupMembers(numGp, currentGroups, candidates, ped, harem, minAge)
 - harem:
 
   logical variable when set to `TRUE`, the formed groups have a single
-  male at least `minAge` old.
+  male at least `minAge` old. A group with no male in `currentGroups` is
+  given a sire chosen at random from `candidates`; a group that has one
+  keeps him.
 
 - minAge:
 

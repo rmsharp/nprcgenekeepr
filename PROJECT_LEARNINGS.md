@@ -15722,3 +15722,1694 @@ and 1) and two one-animal groups at 5 (3, 2, 2, 1, 1); a probe over 1 to
 said “wording only” but 3 of the 6 guide pictures showed “(1 animals)”;
 the retake drew a four-animal last box (the guide said six), so one pin
 moved in a second RED.
+
+#### Learning 929
+
+**A number written into a commit message or a gate is counted from the
+code or the run that produces it, never from the plan; a capture step
+that waits on an 8-second pop-up must fail loudly when the pop-up is
+gone; and a wall-clock benchmark can fail `devtools::check()` twice on a
+loaded desktop while passing alone.** (S963, 2026-10-11; strict TDD, one
+RED/GREEN round and a REFACTOR; a docs picture plus one capture step, no
+`R/` change.) **(1) Three miscounts, all mine:** the RED commit said “7
+guarded expectations” (the code has 20: 2+5+3+6+4, amended before any
+push); the GREEN gate said “86 steps” (the run said 87, because the
+recorder counts each `do_step` and each `shot` once, so a new step and a
+new picture add 2); and I predicted 182 expectations for
+`test_captureHarness.R` (183: the older block that loops over every
+`wait_for_element(` line in the script, `test_captureHarness.R:396`,
+gained one expectation for the new line, and it passed). Count with the
+tool that counts (`as.data.frame(test_file(...))$nb`, the recorder’s
+summary line) before the number goes into text. **(2) The pop-up:** the
+app opens the Warnings sub-tab itself and shows the yellow notice for 8
+seconds; the probe saw it 1.9 s after the click. The new `do_step` calls
+`wait_for_element(app, ".shiny-notification")` and reads
+`app$get_value(input = "dataInput-mainTabs")`, and
+[`stop()`](https://rdrr.io/r/base/stop.html)s with the reason when
+either is wrong, so a slow run reports a failed step in the end-of-run
+summary instead of shipping a picture without the notice (a step that
+returns `FALSE` fails too, but with no reason). **(3) The mutation
+proof:** 11 one-line breakages (shot moved before the click, container
+crop, wait on another element, no sub-tab check, reworded sentence,
+picture above the QC Summary one, changed caption, alt text without the
+corner or the second warning, picture removed, an identical copy in the
+folder) each broke exactly the block aimed at, before and after the
+REFACTOR; each file was restored with `git checkout --` or `unlink`
+inside `tryCatch(finally =)`, and the tree was clean after. **(4) The
+check:** `devtools::check()` ran twice, each time 0 warnings, 0 notes
+and 1 error, `test_markerKinship.R:177` (median 0.115 s, then 0.151 s,
+against 0.100 s) at load averages of about 8 and 15 to 20, caused by
+macOS system processes (FSEvents, Spotlight, IDrive) and not by anything
+of mine; the same file passed 3 of 3 alone at a load of 10 and passed in
+the full suite (Learning 760: runtime-benchmark blocks fail spuriously
+when the machine is shared; read `uptime` and `ps` before calling one a
+flake). **Counts:** full suite 3,420 blocks (S962’s 3,414, plus 5 here
+and 1 in `test_rbuildignore.R` from the layout commit), 0 failed, 0
+errors, 187 skipped, 6 warnings; lint 0; the capture script 87 of 87
+steps. **Also:** an unneeded `git stash push` and `pop` of one test file
+during the REFACTOR changed nothing (the old `stash@{0}` from `dev`
+stayed the only entry), but it was avoidable.
+
+#### Learning 930
+
+**A list of pictures “read off” is checked by a colour scan of every
+committed picture; a retake from a capture script that was not run after
+a shown-text change brings that change along, so run every script; a
+fixed-position pop-up lands over whatever a tall capture’s bottom holds;
+and `sips -c` does not crop.** (S964, 2026-10-12; strict TDD, one
+RED/GREEN round in four commits and a REFACTOR; capture scripts, tests
+and 13 pictures, no `R/` change.) **(1) The scan:** the BACKLOG item
+named 9 pictures plus 2 “read off” by eye. Counting the three pop-up
+background colours (blue 237,245,250; the faded blue 238,245,246; orange
+254,246,234) over the right half of all 47 committed pictures gave 11
+pictures with 8,000 or more pixels and 36 with 438 or fewer (two marker
+pictures carry a few hundred chart-colour pixels), plus the Warnings
+picture S963 keeps on purpose (16,562); so the list was right, and the
+same scan on the 13 retaken pictures read 0. A first scan with the one
+blue missed `age_plot.png` (its pop-ups are the faded blue); a count
+depends on the colour set (the same picture read 7,925, 8,149 and 8,832
+in three scans), so quote counts from one scan only: GREEN 3’s commit
+message mixes two. **(2) The unrun script:** S956 retook the colony
+script’s pictures after S955 replaced the Focal Animals sentence, but
+never ran the Diagram script, so its 5 pictures still showed the old
+sentence; the fresh run showed it only because I opened old and new side
+by side. After a shown-text change, run every capture script (colony,
+Diagram, marker) and diff each fresh folder against the committed one.
+**(3) Where a pop-up lands:** a Shiny pop-up is `position: fixed` at the
+viewport’s lower right, and a capture of a tall container resizes the
+viewport to that container, so in a 2,826 px Pedigree Browser picture it
+sat over the “Twin/Zygosity Relations (optional)” heading and in the 923
+px pyramid over the right axis. Every picture taken after a
+focal-animals click starts with
+`wait_for_popups_before(app, "<file>.png")`; the step label is a result
+key, so it names the picture (a repeated label overwrites the earlier
+result). **(4) Reading a diff:** a CSV-upload picture that “differs” in
+a 124 x 13 px strip shows only the random `file<hex>.csv` temporary
+name, and a rerun after the REFACTOR left 8 of 13 pictures
+byte-identical; locate the changed box before calling a retake wrong.
+**(5) Tooling:** `sips -c H W --cropOffset y x in --out out` wrote
+full-size copies with no error, so I read two uncropped images as crops:
+print the sizes first; Pillow works under `python3 -I`; and zsh turns
+`echo ===` into an error, so use `---`. **(6) What a pixel guard
+needs:** a test that reads the pictures would need `png` declared in
+`DESCRIPTION` (it is installed, not declared), so the pins read the
+script text and the pictures were scanned once by hand. 16 mutations
+(remove each of the 11 waits, a statement between a wait and its
+picture, a wait naming another picture, the label, an always-TRUE wait,
+the install) each broke only the block aimed at.
+
+#### Learning 931
+
+**A size row for a file the protocol reads only in part gets a class
+outside the whole-read classes, and a text pattern is run against one
+real row before RED is committed.** (1) *The class:* the S951
+`BACKLOG.md` item said to give `methodology/HANDOFFS.md` a
+`read-mandated` row with `max_bytes` 262,144. `context_budget.py` gives
+every class in `WHOLE_READ_CLASSES` (`resident`, `read-mandated`,
+`read-set`) a token check clamped at the 25,000-token read cap
+(`token_ceiling()`, derived from `max_bytes` at the 2.27 B/token floor);
+in a scratch copy `HANDOFFS.md` (87,830 B, about 38,691 tokens) read
+OVER and `--precommit` refused a commit that added a 1,000 B receipt
+(exit 2). With class `on-demand` (any other name) the same file read ok,
+warned at 200,001 B (`--status` exit 1, the commit still passed) and was
+refused growth only at 263,001 B; a shrinking commit passed in every
+case. The protocol reads one receipt block through git, never the whole
+ledger, so bytes are the right unit. The numbers are the trimmer’s own:
+`methodology_trim.py --check` calls 196,608 B the Class A archive
+threshold and 262,144 B the hard refusal. (2) *The gate:*
+`tests/testthat/test_contextBudgetLedgers.R` builds scratch git folders
+holding the real config, the real tool and the two ledgers at 100,000 /
+200,000 / 263,000 B, so no test reads a live size (the live files grow
+every session); 7 mutations of the rows (class `read-mandated`, either
+number off by one, `warn_bytes` removed, either entry renamed away, the
+ceiling raised) each fail a block, before and after the REFACTOR. (3)
+*Two RED defects of mine:* the tool path came from
+`testthat::test_path("..", "..")`, which is relative, so inside the
+scratch folder python could not open it and every RED failure was for
+the wrong reason (caught before the commit, by reading the failure text
+and not only the count); and the pattern `"warn_bytes": 196608,` assumed
+a trailing comma, but an on-demand row prints `warn_bytes` last, so no
+correct config could pass it (found only after GREEN, 2 of 26 failing,
+which cost a GREEN to RED to GREEN loop and two extra owner questions).
+Run each match pattern against one real row
+(`python3 methodology/context_budget.py --status --json`) before
+committing RED. (4) *Tooling:* `context_budget.py --status` appends to
+the gitignored history on every run (`growth_run` went 187 to 189 from
+my probes), so probe in a scratch copy; `CHANGELOG.md` has two
+`## 2026-10` headings (the trimmer’s seam) and the newest entries go
+under the first; in zsh `cmd 2>&1 >/dev/null | head` printed the JSON
+anyway (multios), so redirect before you pipe. The gate is the test;
+this row is the pointer to it.
+
+#### Learning 932
+
+**A slice label in a carried item can name the wrong report, so grep the
+candidate’s own words across `docs/audits/` before opening the labeled
+one; `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is
+reported, and the column-change note needs `reportChanges = TRUE`; and
+an audit report’s line numbers are re-grepped after it is written, not
+before.** (S966, 2026-10-12; an audit session, no code change, so no TDD
+gates.) **(1) The label:** `BACKLOG.md` said “8 four likely code
+defects”, so I opened the slice 8 report (55,738 B) and grepped it for
+the four; it holds none of them. They are slice 4’s
+(`docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md:176-179`, rows
+BA1, BA12, BA18, UG2, UG17). The origin of the wrong “8” was not traced.
+One `git grep` over `docs/audits docs/research docs/planning` for the
+candidates’ own words (“Upload list”, “allele_1”) found the real source
+in one call; the item now says slice 4. **(2) The NULL:** my first probe
+called `qcStudbook(d, reportErrors = TRUE)` on a file with no errors and
+got `NULL` twice before I read `@return` (`R/qcStudbook.R:206-209`):
+`NULL` means no errors and no column changes to report, and a column
+change is only reported with `reportChanges = TRUE`, which the app
+passes (`R/modInput.R:523`). A probe of an app path uses the app’s own
+arguments; the closer check is the Input module through
+`shiny::testServer(modInputServer)` with the upload recipe at
+`tests/testthat/test_modInput_blankCells.R:21-36` (the one-file option’s
+input is `pedigreeFileTwo`, `R/modInput.R:130`, not `pedigreeFileOne`).
+**(3) The line numbers:** the first draft of the report had four wrong
+cites (`R/fixColumnNames.R:44` for `:38`, the `minAge` roxygen `:35-38`
+for `:37-40`, `R/reportGV.R:260-262` for `:222` and `:261`, the pool
+`:529-538` for `:531-536`), written from greps run earlier rather than
+from the lines; one `grep -n` pass over every cite before presenting
+caught all four. **Also:** I wrote one placeholder file outside the
+scratchpad (a retyped, shortened path) and removed it within the minute;
+copy the scratchpad path from the environment block instead of retyping
+it.
+
+#### Learning 933
+
+**A mutation check of `R/` code reloads the package after every
+mutation, because
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+runs the loaded functions and not the file on disk; a roxygen-versus-man
+equality block catches a man page that `devtools::document()` did not
+regenerate; and a help sentence uses the phrase the app already shows.**
+(S967, 2026-10-12; strict TDD: claim `014892b04`, RED `8f21aedd8`, GREEN
+`6d224c590`, REFACTOR `5dfe2fd4f`; one roxygen sentence in
+`R/groupAddAssign.R:11-12` and its regenerated `man/groupAddAssign.Rd`,
+no logic change.) **(1) The reload:** my mutation script ran
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+once at its top. The two text mutations (the roxygen sentence back to
+“average”, the man page sentence back to “average”) are read from disk
+and were caught (4 expectations each, blocks 4, 5, 6 and 3, 5, 6), but
+the third, `score <- mean(lengths(groupMembers))` at
+`R/groupAddAssign.R:285` (`:284` before the edit), came back with 0
+failures: the loaded function was still the old one. Rerun with
+`load_all()` inside the mutated state it failed block 7 (3
+expectations); after the restore and a reload the file passed 26 of 26.
+A “not caught” from a mutation run is first a question about the
+harness: say which source each block reads (a file on disk or the loaded
+namespace) and reload before every mutation that touches `R/`. **(2) The
+agreement block:** `tests/testthat/test_groupAddAssignHelp.R` reads the
+roxygen paragraph and the `\details` paragraph of the man page (dropping
+`#'` and `\code{}` from the first) and asserts they are identical, so a
+roxygen edit with no `devtools::document()` fails there. The roxygen
+reader first returned a named string (the names come from
+[`split()`](https://rdrr.io/r/base/split.html) through
+[`vapply()`](https://rdrr.io/r/base/lapply.html)), so
+`expect_identical()` failed on the name in RED:
+[`unname()`](https://rdrr.io/r/base/unname.html) it, and check that a
+block meant to pass at HEAD does pass before the RED commit. The
+assertions read one paragraph, not the page: the next paragraph says
+“finding the largest”. **(3) The phrase:** the in-app guide already said
+“largest minimum group size”
+(`inst/extdata/ui_guidance/gvAndBgDesc.html:151`), so the help uses it
+instead of the audit’s “largest smallest-group size”; look for the
+phrase the app already shows before coining one. **Also:** `document()`
+rewrote only `man/groupAddAssign.Rd` this time (no
+`man/nprcgenekeepr-package.Rd` change), but read `git diff --stat` after
+it anyway; the probe that settled the wording used `qcBreeders` with
+`numGp = 2L`, `iter = 30L` and seed 10: candidate 2 has groups of 10 and
+9, score 9, mean 9.5.
+
+#### Learning 934
+
+**A decision-only session’s option text carries claims about pictures,
+tests and files, so open the one picture and read the capture selector
+before the question goes out, not after (S968); a three-question box of
+real forks, measured facts first, was answered first try.** The three
+code rulings of docs-audit part 2 went to the owner as one
+`AskUserQuestion` with three questions (Upload list: remove, paste-IDs
+box or leave; two checkboxes: remove or leave; `allele_1`/`allele_2`:
+notice, accept the spelling or leave), each option naming its
+consequence, the recommendation first, and a plain paragraph of
+measurements above it; the owner took the recommended option on all
+three at once. Contrast S952, where a four-question box of forks for a
+wording item was rejected: that item was the owner’s sentence to write,
+these were real forks. **The near miss:** the question text said
+`gva_calculating.png` shows the two checkboxes and that the other five
+Breeding Groups pictures are whole-tab captures; at that moment I had
+opened one picture of the six and none of the Genetic Value ones. Both
+claims held when checked afterward (all six use
+`#breedingGroups-moduleContainer`, all three `gva_*` use
+`#geneticValue-moduleContainer`, and `gva_calculating.png` shows both
+boxes under Analysis Options), but the check came after the owner
+answered, which is the S962 rule (print what a state displays before
+saying so) broken again. **What the grep found that the audit had not:**
+the Mate Pair tab already has the paste-IDs pattern an “Upload list”
+would copy (`R/modMatePair.R:44,60,260`), so the build option could be
+priced; and 50 test files mention `BACKLOG.md` or a ledger file, which I
+ran after the edit (0 failed, 0 errors, 16 skipped, 3,466 passed).
+**Gotcha:** a `cd` inside one Bash call persisted into the next calls
+(the working directory became `vignettes/articles`); the harness said
+so, and every later command used an absolute path.
+
+#### Learning 935
+
+**Removing a control leaves traces that a grep by id and a grep by full
+label both miss: grep it by id, by label with the line wrap allowed, and
+by the word for its kind (“checkbox”), then look at what its removal
+strands (S969).** The S968 backlog item listed what removing the two
+Genetic Value check boxes touches, by grep, and every cite held (the UI,
+three test places, one E2E comment, the manual bullet, three pictures).
+Three more traces turned up when I read the neighbours. (1) The sibling
+E2E comment (`tests/testthat/test-e2e-genetic-value-detailed.R:41-42`)
+wrapped the label, “Calculate Genome” and then “Uniqueness” on the next
+comment line, so a grep for the whole label cannot find it. (2) An E2E
+test title, “has metric checkboxes”
+(`test-e2e-genetic-value-module.R:47`), names neither the ids nor the
+labels, only the kind of control. Both E2E regexes still pass without
+the boxes (“kinship\|uniqueness” also matches the threshold label and
+the “About Genetic Values” panel), so only a reader would catch that
+their comments now said something false. (3) `R/modGeneticValue.R:21`
+still imported `checkboxInput`, and also `sliderInput` (stranded since
+the minimum-breeding-age slider went); both are imported by other
+modules, so `devtools::document()` left `NAMESPACE` and `man/`
+byte-identical and the cleanup was one roxygen line (the REFACTOR).
+**The decision a removal hides:** the 2.0.0 NEWS already recorded an
+inert slider’s removal (`NEWS.Rmd:533`), so “does NEWS say so?” was the
+one real scope question; it went to the owner as one sentence and a
+yes/no, and was answered first try. **Numbers:** the colony capture run
+took about 1.5 minutes (95 of 95 steps) with the machine’s load above 30
+from other processes, not the “about 3 min” the backlog said; the three
+retaken pictures are 1270 x 2908, 93 px shorter than before, and the
+widened one still reads “Showing 1 to 10 of 332 entries”; the 4
+mutations (put back the UI calls, the manual bullet, the NEWS.Rmd
+sentence, the NEWS.md sentence) fail 4, 3, 2 and 1 expectations in their
+own block only. **Gotcha:** an unquoted `echo ======` fails in zsh
+(`= not found`: `=word` expands to a command path); quote a separator.
+
+#### Learning 936
+
+**A removed choice also leaves prose that counts the choices, and a
+retaken picture of a random result carries numbers that the words and
+the tests pin: grep for both before RED (S970).** The S968 backlog item
+listed what removing the “Upload list” Source choice touches, and the
+three-way grep of Learning 935 (id and value, wrapped label, kind) held
+every cite. Two traces appeared only when I grepped the words that count
+the choices: the manual’s `_breeding_group_formation.Rmd:48`, “for all
+three Source choices” (the item named `:28` and `:46`), and the guide’s
+`colony-manager-guide.qmd:595`, “top-ranked animals …, an uploaded list,
+or all available animals” (the item named no guide text). The second
+trap came after the retake: the colony capture’s group search is random
+and unseeded, so `breeding_group_sex_ratio_specification.png` drew 6
+groups and a last box of **six** unused animals where the guide’s
+sentence, its alt text and two lines of
+`test_guideBreedingGroupsWording.R` said **four** (S961 drew six, S962
+four). The S961-S962 gotcha “a retake draws the last box’s count, so the
+pin follows the picture” was in the notes I read at Phase 0; I had not
+applied it before RED, so it cost a RED amendment (`2796a5fd2`, 2 of 82
+expectations) and one extra gate; the owner chose “words follow the
+picture” over seeding the search (a larger change to the capture
+script). **Next time, before RED:** grep the guide for the count words
+(“all three”, “both”, “an uploaded list”) and for every number written
+near a picture that will be retaken (`four`, `six`, `N animals`), and
+name the expected wording change in the gate. **Numbers:**
+`breeding_group_1.png` was also a new random draw (Group 1 of 18
+animals, was 19) and the guide’s words carry no count for it, so it
+needed no text change; 7 mutations (the radio, the manual bullet, the
+guide phrase, the roxygen, the man page, the NEWS.Rmd sentence, the
+NEWS.md sentence) each fail only their own block, except the radio,
+which also trips the help-text block because that block reads the whole
+R file; the first full suite ran at a load average of 195 to 230 (Jump
+Desktop Connect and WindowServer, not this project) and its two
+wall-clock benchmarks failed, both passing alone, and the suite after
+REFACTOR was 3,446 blocks, 0 failed. **Gotcha:** the unquoted
+`echo ======` zsh error of Learning 935 happened again in this session’s
+first Bash call, before I had read the notes’ warning back to myself.
+
+#### Learning 937
+
+**Code written in GREEN beyond the RED tests is found by mutating it,
+not by reading it: run the mutation list before the REFACTOR gate, and
+write the paths the tests never use down as mutations while writing RED
+(S971).** The one-file genotype helper
+(`R/readOneFileGenotypes.R:61-72`) reads text in which every value is a
+number (as an Excel upload gives it: every cell arrives as text) as
+whole numbers, so an xlsx and a csv of one file agree. I wrote those
+lines in GREEN with no RED block, all 40 blocks passed, and only the
+mutation “read such text as labels” showed that no block cared. The
+owner allowed a RED amendment (two blocks, proved by failing under that
+mutation and its sibling). The same mutation pass also covers paths a
+pedigree seldom takes: a partly blank column, two columns that do not
+pair, a pair that is all blank (the last two are still untested,
+`BACKLOG.md:139`).
+
+Four traps from the same session. (a) An older capture-harness block
+asserts the colony script holds exactly one
+`app$click("dataInput-getData")` and one `set_inputs` to QC Summary
+(`test_captureHarness.R:779`), so a new step clicks with
+`click_element_safe()`; a RED pin on a script line should count
+mentions, not one spelling. (b)
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+reads the `.qmd` guide, so a British “misspelt” failed
+`test_wordlist_coverage.R` only in the full suite; run the spell check
+after writing prose. (c) A mutation harness that restores with
+`git checkout --` restores the COMMITTED file and silently drops an
+uncommitted edit: copy the edited file aside first; and
+`paste0("x: ", character(0))` is `"x: "`, so an empty failure list
+prints as a failure. (d) A Bash call that starts work with `&` under
+`run_in_background` reports the OUTER shell finishing, not the work:
+wait on the run’s own `EXIT=` line. Also: a generated example file gets
+a `data-raw/` script that reproduces it byte for byte
+(`data-raw/obfuscated_rhesus_mhc_ped_with_genotypes.R`), and a new
+picture is copied by name from a scratch run, then looked at and opened
+for the owner before the guide cites it.
+
+#### Learning 938
+
+**A backlog line that says “two untested edges” can be five cases of one
+cause: run each odd input through the real module and print what the
+user sees before scoping, then fix the shared branch once; and a
+real-app or E2E run loads the INSTALLED package, so install HEAD into a
+scratch library first (S972).** `BACKLOG.md:139` listed two edges where
+the one-file QC Summary line said “No genotype columns were found”
+although columns existed. A probe through the real Input module (CSV and
+a real `.xlsx`, ten cases) showed five cases with the same untrue line
+(columns that do not pair, a blank pair, a lone allele beside a blank
+pair, `first` beside `second_name`, a blank pair in `.xlsx`) and one
+honest line the item had not mentioned (a pair filled in one column only
+reads “for 0 of 8 animals”). All five came from one branch
+(`R/readOneFileGenotypes.R:41-54`: `found` had two or more names and
+fell into the none-found text), so one new branch fixed them and the
+owner was asked one scope question, not five. The same probe showed the
+real `.xlsx` path already matched the CSV path, so the item’s third
+point became a test that passes at once.
+
+Four traps from the same session. (a) The shinytest2 `AppDriver`
+subprocess runs
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+from the installed library, not the working tree, and the renv copy here
+lacked `readOneFileGenotypes()` altogether (Learning 38): install HEAD
+with
+`RENV_CONFIG_AUTOLOADER_ENABLED=false R_LIBS=<scratch>:<the renv .libPaths()> R CMD INSTALL --no-docs --library=<scratch> .`
+(without the renv libraries the install stops on `quadprog`), run with
+the same `R_LIBS`, and set `NOT_CRAN=true` or the driver skips with
+“Reason: On CRAN”. (b) A mutation that survives is not always a gap:
+`[1:2]` equals `[-3]` when there are three labels, so check equivalence
+before adding a block (the real survivor was the names’ order, which a
+test comment promised and no block pinned). (c) Load from other projects
+reached 145 (a `vitest` run elsewhere, `WindowServer`): the suite passed
+at load 91, but an E2E run waits for `uptime` to settle, and a Monitor
+loop on `sysctl -n vm.loadavg` does that without polling. (d)
+`devtools::check(args = "--no-manual")` is not the project’s check; run
+it plain.
+
+#### Learning 939
+
+**When a choice is added to a box, grep the prose by what the choice
+MEANS as well as by its label, view the retaken pictures before the
+documents are written, and pin the silence of the other branches in the
+first RED.** S973 added “My own list” to the Breeding Groups Source box.
+The pre-RED inventory grepped the labels (“Top ranked”, “All available”,
+“Upload list”) and the count words, and found the manual, the guide, the
+module help and NEWS. It missed
+`inst/extdata/ui_guidance/group_formation.html:7-10`, the in-app box
+under the form, which lists the same sources in other words (“every
+animal in the current pedigree”, “the highest-ranked N animals”). That
+box is inside all seven pictures, so it was found only by viewing the
+retake, after GREEN: one GREEN-to-RED gate, one new RED block, a second
+five-minute capture. The BACKLOG item had also warned that a retake
+draws a new random last-box count (Learning 936) and said to grep the
+count words before RED; the guide said “six”, the retake drew seven, and
+the pin went in as a second RED amendment. A third gap came from the
+mutation list: making the “Left out because they are not alive” notice
+apply to every Source survived the four test files the run uses, because
+the hidden-box block asserted which animals were used and nothing about
+notices. With that mutation “All available” would have named every dead
+animal of a colony on each run (1,990 in the shipped example pedigree).
+For a feature that adds a notice to one branch, pin the other branches’
+silence in the first RED.
+
+Four traps from the same session. (a) `obfuscated_rhesus_mhc_ped.csv`
+has no animal with an exit date (375 of 375 living), so a real-app drive
+of a dead-ID case on it types `NA`; the shipped `examplePedigree`
+written as CSV has 1,704 blank and 1,990 dated exits, and
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) reads a blank
+exit as `""`, not `NA`, so split living from dead with
+`is.na(x) | x == ""`. (b) A mutant whose search text matches twice is
+skipped, not run: the harness printed SKIPPED for M4
+(`type = "warning",` stands twice in the file), so read the verdict list
+for SKIPPED before trusting a count. (c) A capture at load 150 to 180
+completed 103 of 103 steps on the second run, while the first had four
+failed steps on unrelated tabs: copy only the pictures this work retook,
+never the whole scratch folder. (d) An unquoted `echo =====` is an error
+in zsh (the S961 gotcha, hit again): quote separators.
+
+#### Learning 940
+
+**Run a tutorial’s example through the whole pipeline before writing the
+sentence that says what it does: the tutorial chunk is the first
+end-to-end run, and S974’s found a defect the feature’s own tests never
+looked at.** S971 shipped one-file genotypes and S972 pinned the Input
+tab’s reading, the QC Summary line, the codes and the `.xlsx` path, all
+up to the cleaned studbook. Nobody had sent the shipped one-file example
+on into
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
+The S974 tutorial step did, to show what the genotypes change, and
+measured (`set.seed(1)`, 200 drops, threshold 3): with the genotypes
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+gives two “Founder genome equivalents undefined” warnings and `fg`,
+`fgSE` and `neGD` are NA; without them 0 warnings and 52.05, 0.092 and
+0.990. It also measured the effect the sentence states: genome
+uniqueness changed for 18 of the 31 genotyped animals and for none of
+the other 344. The defect is a BACKLOG item (DECISION NEEDED). When a
+feature’s output feeds another analysis, the documentation session is
+the place to run that analysis on the shipped example, the sentence is
+written after the run, and the run’s numbers are pinned by a test that
+recomputes them (`test_genotypeTutorialsWording.R` block 3: the
+article’s and the manual’s numbers equal a fresh same-seed run).
+
+Four traps from the same session. (a) `addGenotype(ped, genotype)` keeps
+the label columns it is given in `genotype` (the result holds
+`first_name`, `second_name`, `first` and `second`), and
+[`getGVGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGVGenotype.md)
+returns a row for every animal with NA codes for the ungenotyped, so its
+row count is not the number of animals with codes (`sum(!is.na(first))`
+is). (b) An `Rscript` started from a scratch folder does not activate
+renv (the project `.Rprofile` is not found) and `load_all()` fails with
+“The package quadprog is required”: start from the project root and pass
+absolute paths; a scratch install needs
+`R_LIBS=<scratch>:<renv library>`, the renv library being the first
+[`.libPaths()`](https://rdrr.io/r/base/libPaths.html) entry of an R
+started in the project root. (c) A mutation harness that restores with
+`git checkout -- <file>` restores from the INDEX: stage the refactor
+before mutating a helper, or the restore throws the refactor away. (d)
+`git stash push` then `pop` is a trap in this tree even when it works
+(this session’s did), because `stash@{0}` is the old `dev` WIP that is
+not ours: do not stash here; `git diff --cached --name-only` shows what
+is staged.
+
+#### Learning 941
+
+**A zero-retention founder is a founder whose only descendants are
+genotyped, not a genotyped founder; a handed-over guess about a cause is
+a lead to test, and the test was one listing.** S974 left a labelled
+guess (“a genotyped founder carries its real code, so its retention
+counts as 0”) for why `fg`, `fgSE` and `neGD` were NA with genotypes.
+Listing the founders with `p > 0` and `r == 0` on the shipped one-file
+example (function level, `set.seed(1)`, 200 drops) gave 3 (677E7M,
+FEEN9W, ZZ646X) and none of them genotyped; each had exactly one
+descendant, a genotyped animal, which starts the gene drop from its own
+two real alleles and so never carries a simulated founder allele
+([`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+asks whether the founder’s simulated allele is among the descendants’
+alleles). The real app agreed (Genetic Value Summary: FG `NA`, GD `N/A`,
+two console warnings, in the one-file AND the separate-files mode; 52.09
++/- 0.09 and 0.9904 without genotypes), and the owner chose
+pedigree-only FG:
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+makes a second, silent gene drop with `genotype = NULL` after the
+genotype drop, only when some animal has a code
+(`R/reportGV.R:294-318`), so `gu` keeps its random numbers (pinned by a
+hand run in the same order). After the fix the app shows FG 51.93-52.14
++/- 0.04-0.09 and GD 0.9904 in all modes. A function-level count (3
+founders) belongs to the function-level run; the app’s “113 founders” is
+the known founders only, so do not quote the 3 as an app number.
+
+Five traps from the same session. (a)
+[`hasGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasGenotype.md)
+is TRUE for numeric `first`/`second` columns holding no code at all, so
+“has genotypes” is not “has a code”: the test is
+`any(!is.na(first) | !is.na(second))`; mutants reading `first` only or
+needing both survived until a block gave one animal a single coded
+allele (the Input tab accepts one). (b) The Genetic Value Summary table
+sits on a hidden sub-tab and renders only once it is shown: click
+`a[data-value='Summary']` before reading `#geneticValue-gvSummary`; the
+Rankings table is ready within seconds at 200 iterations (the whole
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+at 1000 is 3.4 s on the example, the gene drop 0.1 s). (c)
+`app$set_inputs()` of a value the input already has
+(`fileContent = "pedFile"`) waits its 4 s and warns: pass
+`wait_ = FALSE`; `app$get_screenshot()` refuses to overwrite (EEXIST),
+so delete old PNGs. (d) zsh does not word-split an unquoted variable:
+`set -- $spec` left `$1` as “one 200” and `iters` as `NA`, and two
+real-app runs hung 15 minutes each and printed nothing before `timeout`
+ended them: pass the arguments explicitly. (e) To render
+`a2interactive.Rmd` outside the tree, recreate
+`vignettes/a2interactive.Rmd` and
+`inst/extdata/examples/ExamplePedigree.csv` side by side in a scratch
+folder, because the vignette reads
+`../inst/extdata/examples/ExamplePedigree.csv`; mutate in a
+`git archive HEAD` copy while a full suite is running, never in the tree
+(the wording tests read `R/` files).
+
+#### Learning 942
+
+**A function-level defect’s reach is decided by the app’s reader and
+header cleaner, so read those before ranking the defect: 5 of the 8
+slice-6c candidates could not happen in the app, and the one that could
+hid behind a sentence that was already documented.** S976 re-checked the
+eight marker-genetics code candidates. The app reads an upload with
+[`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)
+(`na.strings = c("", "NA")`, so a blank cell is `NA` before any checker
+sees it) and lower-cases every header with
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md);
+that alone closes the empty-chromosome case
+([`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)),
+the `First`/`Second` case
+([`hasGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasGenotype.md))
+and the collision message (the app swallows the error,
+`R/modInput.R:499-503`, documented), while a script’s
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) keeps them open.
+The candidate that does reach the app was the one whose help page
+already said the right words: a blank allele becomes the string
+`"NA/NA"` (`R/buildMarkerGenotypeMatrix.R:50-55`), and what the page did
+not say is that Ho, He and kinship then read it as a real homozygote
+(one blank record in the repo’s 3-animal fixture moves Y’s Ho 0.3333 to
+0.25 and the mean He 0.3993 to 0.4583). A help page that states a
+behavior has not measured its consequence.
+
+Four traps from the same session. (a) Two pairs of candidates were one
+cause each: the matrix builder (a blank allele as text, and an all-NA
+locus giving He 1.0, which becomes app-reachable only once the builder
+is fixed) and the sidecar compared nowhere both tables are present (the
+module never passes the sidecar to
+[`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md),
+`R/modMarkerGenetics.R:553,633`, so the fix belongs in
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md));
+ask the shared-cause question before offering a check in each function.
+(b) The Marker Genetics tab has no warning handler
+(`output$sequenceRohTable` is a bare `renderDT`), so a
+[`warning()`](https://rdrr.io/r/base/warning.html) from a computation
+reaches the R console only; a “warn” ruling there needs a page notice to
+reach a colony manager. (c)
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) makes an
+all-numeric text column with a blank into integer plus `NA`, so a blank
+chromosome gives `""` only when some chromosome name is text (`chr1`).
+(d)
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+needs `errorLst = getEmptyErrorLst()`, and a probe script started from a
+scratch folder skips renv, so start it in the project root with an
+absolute script path. The report is
+`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`;
+the three rulings are `BACKLOG.md` items after the docs-audit item.
+
+#### Learning 943
+
+**Before a data-meaning fix ships, run every shipped example through the
+old and the new code: the sequence example holds 2,070 blank-allele
+records, so a “small” matrix-builder fix changed all 50 animals’ numbers
+and made one guide picture stale.** S977 built the S976 ruling (a blank
+allele is a missing genotype, `R/buildMarkerGenotypeMatrix.R:50-56`; an
+untyped locus has expected heterozygosity `NA`,
+`R/markerHeterozygosity.R:105-119`). The item was tagged Effort S and
+said the guide pictures “were not checked”. Checking found
+`inst/extdata/examples/example_sequence_genotypes.csv` has 2,070 of
+50,000 records with a blank allele (1,015 in the first only, 1,032 in
+the second only, 23 in both;
+`data-raw/generate_sequence_fixtures.R:96-101` blanks them on purpose),
+all read as a real allele named `NA` until now. Measured on it, old then
+new: mean expected heterozygosity 0.5332 to 0.4951 (the real app’s
+Heterozygosity tab agrees), mean off-diagonal marker kinship -0.0473 to
+-0.0050 (function level), mean F_ROH at minimum SNP count 3 0.0808 to
+0.0560 with 708 segments falling to 503, every one of the 50 animals
+changing. No test pinned a number from it (the five test files that use
+it check shape, timing or that a table renders), and one guide picture
+shows it: `marker_genetics_genomic_roh.png` (S001 16 segments to 9),
+retaken with the guide’s own script (44 of 44 steps). The other eight
+Marker Genetics pictures use made-up data or the 120-row STR example,
+which has no blank allele. `git grep` the example’s file name (tests,
+capture scripts, articles) before sizing an item that changes what a
+data value means.
+
+Traps from the same session. (a)
+[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+adds a `coverage` column;
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+wants the raw sidecar and the module strips it
+(`R/modMarkerGenetics.R:817`), so a probe passes the
+[`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)
+output. (b) Two of the nine retaken pictures differed from the committed
+ones by one line of 6 to 30 pixels (linkage coverage, LD block): compare
+with `python3 -I` and Pillow `ImageChops.difference().getbbox()` and
+copy only the picture whose box is a real table. (c) The ratchet results
+file is `methodology/.quality-gates-results.json`, not the repo root;
+S977’s Phase 0 report said it was absent because it looked in the root,
+and the hash (`8c7f5ed3b992`) did match S976’s citation. (d) To model a
+colony manager’s blank cell in a test, write the CSV with
+`write.csv(na = "")`: the default writes the text `NA`, and
+[`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)
+reads both as `NA`, so the test would not show the difference between a
+blank and a typed `NA`. (e) A mutation harness that edits `R/` while a
+capture or suite is running reads half-states (FM \#29): run the capture
+first, the mutants after, never together.
+
+#### Learning 944
+
+**Under `testServer()` an output’s observer runs the computation at each
+upload, so a warning arrives at `setInputs()`; and a wording check that
+reads a whole source file reads the code’s strings too.** S978 built the
+F_ROH missing-loci warning (`R/computeGenomicROH.R:112-118`) and notice
+(`R/modMarkerGenetics.R:1102-1128`). (a) The RED test
+`expect_warning(tbl <- result$sequenceRohTable(), ...)` assumed a lazy
+read, but `output$sequenceRohTable`’s observer had already run
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+when the second file was set, so the warning came out of
+`session$setInputs()` and the cached read raised none; the block failed
+in GREEN for that reason, not for a missing warning. Collect warnings
+across the whole upload-and-read with
+[`withCallingHandlers()`](https://rdrr.io/r/base/conditions.html); the
+same effect put 4 stray warnings in the file’s tally until the upload
+helper hushed them (`quiet = TRUE`). (b) A sanity block meant to stay
+green asserted `"excluded silently"`, the phrase GREEN removes: assert a
+sentence the change keeps. (c) `pageText("R", file, roxygen = TRUE)`
+reads every line of the file, code included, so the new warning string
+“… are not columns of genotypeMatrix …” would satisfy a roxygen check
+even with the help sentence gone; `roxygenText()`
+(`tests/testthat/helper-pageText.R`) keeps only the `#'` lines, and
+mutating just the roxygen sentence then fails exactly the roxygen block.
+(d) Mutating the finished code (18 mutants) found four gaps the first
+tests left: a sort of the loci (the locus-file-order fixture was already
+alphabetical), the is/are and it/them grammar, an unsafe
+`locusMetadata()` read (no invalid-locus-file case) and the 10-name cap
+in the module (only the function had it).
+
+Traps from the same session. (a) Two shipped example pairs (the sequence
+genotype file with its locus file, the STR file with its locus file)
+match locus for locus, so the notice never shows on shipped data and no
+picture changes; S977’s “the picture may change” was an estimate that
+one read of two CSVs settles. (b) `Rscript` in the background with
+`( ... ) &` inside a `run_in_background` call returns at once: wait on
+the harness’s own `EXIT=` line. (c) **Open consideration for the
+owner:** the locus file upload is shared by the Linkage tab and the
+Genomic ROH tab (`R/modMarkerGenetics.R:692-698`, read at 726 and 801),
+so one combined locus file for both panels would put a notice on the
+F_ROH tab naming the linkage-only loci; it is true (F_ROH leaves them
+out) but cannot be dismissed.
+
+#### Learning 945
+
+**When a fix changes how a value is classified, find which field each
+consumer reads before sizing it:
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+keys on `coverage`,
+[`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
+on `chrom` itself, so the item’s “one line” (a label-only fix) would
+have left the LD Block table pairing blank-chromosome loci.** S979
+(BACKLOG.md:139, the two small marker fixes) probed a four-locus fixture
+with two blank chromosomes before asking: all four loci read `full`,
+[`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
+paired the two blank ones as a chromosome named `""`, and
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+added that chromosome’s 800,000 bp to the genome length (fRoh 0.6 where
+1 is right) with no warning. The owner chose “missing everywhere”:
+[`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
+returns the blank `chrom` as `NA` (`R/checkLocusMetadata.R:76-79`), and
+both consumers then leave the locus out through paths they already had;
+neither changed.
+[`checkGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)’s
+message (`R/checkGenotypeFile.R:55-73`) had three causes, not one:
+`stri_c(..., sep = ", ")` joins nothing (it needed `collapse`),
+[`format()`](https://rdrr.io/r/base/format.html) pads a vector to a
+common width (`trim = TRUE`), and the loop
+[`stop()`](https://rdrr.io/r/base/stop.html)ped at the first bad column;
+`collidingNumbers()` also repeats a number two labels read as (“10500”
+and “10500.0”), so the list takes
+[`unique()`](https://rdrr.io/r/base/unique.html).
+
+Traps from the same session. (a) My first LD probe used `""` and `" "`
+for the two blank chromosomes: different group names, so nothing paired;
+a probe’s two blanks must be the same string. (b) `nzchar(NA)` is
+`TRUE`, so `!nzchar(trimws(x))` leaves an `NA` alone. (c) The real app
+on the shipped sequence example at the default 50-SNP minimum shows
+every row as 0 segments, so a before/after read is empty: set
+`markerGenetics-rohMinSnp` to 3, as the capture script does. (d) A
+ratchet citation is checked by reading
+`methodology/.quality-gates-results.json`; each `--run` prints a new
+results hash and overwrites that file, so S979’s Phase 0 report flagged
+a “mismatch” that was not one (the pass count and manifest matched), the
+second session to get this wrong (Learning 943 (c)). (e) A mutation
+harness that splits an `if` and its `else` across two top-level lines
+dies on parse before it touches the tree; parse-check the harness, and
+back the originals up first (the backup diff proved nothing had been
+written). (f) A `cd` in one Bash call persisted twice; use absolute
+paths.
+
+#### Learning 946
+
+**Before offering an option that blanks a field, count how many rows
+carry it: the jmac example’s two impossible sire cells were its only
+sire entries (2 of 2,791), so “blank two cells” meant “the example
+records no sire for any animal”, a fact the backlog item held (“2,789
+blank sire cells”) and my option text did not.** S980 (BACKLOG.md:156)
+re-measured the stored S800 numbers before asking: 67 errors on the app
+path and the script path alike; 65 mothers aged 3.43 to 3.99 years at
+the birth, under the 4-year Japanese macaque floor (36 of them
+“Observed”, so not just inferred dams); 2 sires born 35 and 37 years
+after the animals they are listed as siring (`NX5RM` lived 36 days). The
+table that made the three-way question answerable: Minimum Dam Age 3.4
+clears the 65 and leaves the 2 (the file still does not load); blanking
+the 2 sire cells on a scratch copy clears the 2 and leaves the 65; only
+both load it (2,791 animals plus 2,448 placeholder rows, one “no birth
+date” warning for 2,508 of 5,239 rows, 60 of them real animals). The
+owner chose to blank the 2 sires and say the rest in one sentence
+(guide, manual, NEWS); the built-in floor stays 4, so no Japanese
+macaque result moved. The count came after the pick (I said it before
+RED); it belonged in the option text. Found, not filed: `82I5M` died
+1974-05-05, twelve days before its 1974-05-17 birth, and nothing in the
+check flags a death before a birth (0 errors and only the birth-date
+warning on the loaded file). **Correction (after close-out, same day):**
+that was one example, not the size of it: 251 of the file’s 2,021
+animals with both dates died 1 to 56 days before their birth date, 102
+get a negative age, and none is flagged; it is now a `BACKLOG.md` item
+(the date spread fits date shifting in the de-identification, an
+inference). Count the whole file before naming one row as the finding.
+
+Traps from the same session. (a) Shiny does not draw an output in a
+hidden tab, so a real-app read of `#dataInput-qcSummaryUI` stays empty
+until its sub-tab is active: open the Input tab first
+(`app$set_inputs(mainNavbar = "Input")`) and read the Errors and
+Warnings sub-tabs; two 240-second polls on the empty element were wasted
+at a load average of 30. (b) `innerText` of a hidden element is empty;
+use `textContent`. (c) My RED sanity guard assumed the manual says
+“Minimum Dam Age”; it says “a minimum dam age” (the guide capitalizes
+the box): the RED tally’s guard row caught it before the commit, so
+print the guard rows, not only the failures. (d) A file list from
+`git grep -l` is newline-separated: `tr '\n' ' '` before a script splits
+it on spaces. (e) `dev/extdata-scratch/deidentified_jmac_ped_edited.csv`
+(build-ignored, not shipped) still holds the two sire cells. (f) The
+shipped CSV has CRLF line endings, quoted text and unquoted dates, and
+919 animals with a sire type but no sire; a byte-asserted edit kept all
+of it (`git diff`: 1 file, 2 lines).
+
+#### Learning 947
+
+**When the owner adds a raw data file, search every ref of git for
+earlier copies of it by name and by hash before measuring or asking: the
+jmac studbook the owner dropped into `inst/extdata/examples/` was
+byte-identical (sha1 `62f9e6b71325`) to
+`inst/extdata/Jmac_studbook_20180711.txt`, committed 2018-08-03
+(`b5619b38e`), deleted 2019-06-19 (`b03761f19`) and reachable from
+`origin/master` of a PUBLIC repo; the “different studbook” in history
+was its `.csv` twin, the same data with the text `NA` written in the
+sire column.** The BACKLOG item (S980) rightly said “keep it out of git”
+but did not know it was already public, and a one-line
+`git log --all --name-only -i -- '*name*'` plus `shasum` would have
+shown it at the first look. The owner’s mid-turn pointer (“there may be
+a copy of a different studbook for those animals in git”) is what found
+it; the result changed nothing about the build and a little about the
+rule: excluding the untracked copy (`.Rbuildignore` plus
+`.git/info/exclude`) stops a second copy and a tarball ship, it does not
+unpublish 2018.
+
+What the rebuild taught. (a)
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+shifts all of an animal’s dates by one shared offset
+(`linkedDateShift = TRUE`, issue \#150), so the old jmac file’s 251
+deaths before birth came from independent shifts: the studbook has 0
+(370 on the birth day) and the rebuilt file keeps 0 (death minus birth
+kept for 1,839 of 1,839). (b) The shipped example was the same colony’s
+LATER export (same birth counts per period, 60 undated animals in both,
+201 more animals, 181 born after the studbook’s 2018-07-11, to 2021), so
+a rebuild from the studbook replaces it with a smaller file; ask that as
+a scope question with the loss counted. (c) Once a file has a species
+column AND sires, the species floors bind on both sides (Japanese
+macaque: 4 years for a mother, 5 for a father,
+[`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)),
+so the one-box sentence S980 wrote (“loads once Minimum Dam Age is 3.4
+or lower”) became two boxes (3.3 and 4.3); derive the thresholds from
+the real app, each boundary pinned (3.4 or 4.4 flags 1 row). (d) The
+Errors table counts births, not animals: 62 births to 62 mothers, 18
+births to 13 fathers, one birth with both parents too young = 79 rows;
+say “62 of its mothers” only after counting distinct parents.
+
+Traps from the same session. (e)
+[`read.table()`](https://rdrr.io/r/utils/read.table.html) reads
+numeric-looking ids as numbers and `x[ids]` on a named vector then
+indexes by POSITION: my first sire-age probe said “age known for 2 of
+819 sires” until `colClasses = "character"`; cross-check a surprising
+count with a second tool (the Python pass had said 819 male sires in the
+file). (f) `NA %in% c(..., NA)` is TRUE: a “1 shared id” privacy count
+was the `NA` in both lists;
+[`na.omit()`](https://rdrr.io/r/stats/na.fail.html) before counting
+overlaps (the true count is 0 of 2,592). (g) `install.packages(".")` and
+`R CMD INSTALL .` from a directory ignore `.Rbuildignore` (the scratch
+library held the studbook); only `R CMD build` honors it, so prove a
+build-ignore with `tar -tzf` on a built tarball (0 studbook entries, the
+example identical by sha1). (h) zsh aborts a whole `&&` chain on an
+unmatched glob even under `rm -f`, and an unquoted `(` or a leading
+`====` in `echo` is a parse error: use `find`, quote every echo. (i)
+`( cmd > out; echo done >> out ) &` inside a `run_in_background` Bash
+call makes the launcher exit at once, so the completion notice fires at
+LAUNCH: wait with a second background `until grep -q '^done$' out` loop.
+(j) Pin a rebuilt example by properties the studbook fixes (counts, sex,
+status, ordering) and by the real-app thresholds, not by a seed: the
+file is committed, so no test regenerates it, and the recipe
+(`data-raw/buildJmacExample.R`, seed 20180711) reproduces it byte for
+byte (sha1 `e9476e2d3df1`).
+
+#### Learning 948
+
+**A data-quality check on dates must read the date columns by exact name
+and must not trust a file’s own `age` column; mutate the new code before
+the REFACTOR gate, because the survivors were real gaps.** The
+death-before-birth warning (S982) went through the same Pre-RED
+measuring as S980 and S981, and the measurements corrected three stored
+claims. (a) `ExamplePedigree.csv` ships its own `age` column, which
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+keeps as given (it only computes `age` when none exists,
+`R/qcStudbook.R:354`): its 106 negative ages (-0.1, one -0.2) are all
+animals whose exit is on the birth day, not early deaths, so a check on
+`age` would have flagged 106 healthy rows and missed a real early exit
+(the cleaned age of an exit 40 days before birth was 0.2 in the first
+probe, the file’s value, until the column was dropped; then -0.1). Read
+`birth` and `exit`. (b) “No shipped example has an early death” was true
+of the Input files and false of the package data: `qcPed` and
+`pedWithGenotype` each hold one (`Y7PPEZ`, born 2015-03-10, exit
+2015-01-29), already cleaned, so say “file” or “data object”. (c)
+Same-day exits are common (226 of 1,930 dated animals in
+`ExamplePedigree.csv`, 370 of 1,839 in the Japanese macaque example),
+which is the measured reason the owner chose strictly earlier. (d)
+`death_date` is renamed `death` but `departure_date` is not renamed
+`departure` (it stays `departuredate`), so a fixture needs the column
+named `departure`.
+
+Traps from the same session. (e) The first mutation run of the new
+function caught 10 of 12; the two survivors were a boundary the tests
+skipped (exactly six flagged animals, where “first 5:” starts) and a
+real hazard: `ped$exit` on a data frame partial-matches a column called
+`exitDate`, so a guard that looked equivalent (it returned the same
+empty table for the usual input) was the only thing keeping a wrong
+column from being read. A survivor that looks equivalent is worth one
+probe (`d$exit` found the column, `d[["exit"]]` did not). The fix was
+`[[ ]]` plus two tests, not the guard. (f) A command chain
+`lintr::lint(...) | tail && git commit ...` kept going after a printed
+lint finding because `tail` exits 0, and the commit message said “lintr
+0”: read the count before the commit, and amend an unpushed commit when
+its message is wrong. (g) A claim script that writes three files in turn
+and asserts an anchor before the third leaves two files claimed: assert
+every anchor, then write. (h) A mutation harness that asserts each
+mutant’s text occurs once fails at launch after a REFACTOR changes the
+text, which is the safe direction: update the strings, relaunch. (i) A
+shinytest2 `get_screenshot()` to an existing path stops with EEXIST
+after its reads have already succeeded: delete the old picture first or
+read the exit code with the output.
+
+#### Learning 949
+
+**Size a defect with the app’s own defaults before offering options, and
+measure whether a decision has a real alternative before asking it: the
+harem-sire hole (S764) read as a 1/64-kinship edge (119 of 120 harems at
+the script default) but at the app’s default Max kinship of 0.25 it was
+the sire’s mother, daughter or sister in his harem in 29 of 40 seeded
+runs, and the “RNG posture” decision had no alternative once counted.**
+The fix (S983) drops each group’s pool by the relatives of the animals
+already in it. (a) Measured on the shipped example (332 living, 3
+harems, 10 simulations): 41 animals in 120 harems (27 mothers, 13
+daughters, 1 full sister); after the fix 0, mean group size 70.7 before
+and after. A direct
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+call at seed 1 gave the app’s three groups member for member (checked in
+the real app, headless, scratch library); seed 6’s pair (`YHHVC7` with
+`H9HL2V` and `KEA4QG`) was found by the probe and then seen in the app.
+(b) The BACKLOG item asked for an “RNG posture”, implying same-seed
+results could be kept: in 0 of 40 seeds were all 10 simulations
+conflict-free, so every same-seed result changes under any fix (38 of 40
+differed under this one); a gentler “redraw only a bad pick” fix keeps
+none either. Count that before offering a stream-preserving option. (c)
+“Do supplied seed animals share the fix?” had no consequence: applying
+the rule to every pre-seeded member gave results identical to sires-only
+in 15 of 15 seeds in each of three setups, because
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+already drops the relatives of supplied seeds from the pool up front.
+
+Traps from the same session. (d) `x[logical shorter than x]` recycles.
+An old test, `sum(seq_along(unused)[group2 %in% sires]) == 1`, held only
+while group 2 was at least as long as the unused box (sizes 10 and 8
+gave 1; 9 and 10 gave 1 + 10 = 11); it surfaced only when a legitimate
+change moved group sizes, in the GREEN suite. Before RED, read the index
+expressions of the old tests of the function you change, not only their
+pinned numbers. (e) `kin` from
+[`getAnimalsWithHighKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAnimalsWithHighKinship.md)
+is a 1-d array: `kin["absent"]` returns nothing and `kin[["absent"]]`
+errors (Learning 779), so a `names(kin)` guard before `[` was dead code,
+an equivalent mutant. The test that matters is a seed animal with no
+entry in `kin`. (f) A mutation run that leaves survivors is a list of
+questions: one survivor was an equivalent mutant (probed, then removed),
+one a missing test (a group’s second member). (g) A real-app `DT` output
+is server-side: only 10 rows are in the page until
+`$(el).DataTable().page.len(-1).draw()` asks the server for all of them.
+(h) Two sibling defects surfaced while measuring (a male seed in only
+some harems stops with “subscript out of bounds”; harem with a custom
+sex ratio places one animal in total): each was probed, its cause read
+in the code, and filed in `BACKLOG.md`, not fixed in this session.
+
+#### Learning 950
+
+**A defect filed as one shape of input is usually a family of shapes:
+list the shapes and run each before sizing it.** The male-seed item
+(S983) read as “a male in some harems and females in others”. Twelve
+seeding patterns on the example (3 harems, 332 living) gave 4 that ran
+(no male seeded, or a male in every box), 7 that stopped with “subscript
+out of bounds” and 1 (a male only in the last box) that ran and left two
+harems with no male; the real app showed both (box 1 only: the error
+notice; box 3 only: Statistics 69 animals and 0 males, 69 and 0, 72 and
+1). One cause: `initializeHaremGroups()` sampled sires only when no
+group held a male, so a group without one kept none, as a short list
+(the stop) or an empty hole (the sireless harem). S984 samples a sire
+for each group whose seed animals hold no male, with the same
+[`sample()`](https://rdrr.io/r/base/sample.html) call as before when
+none is seeded, so the same-seed groups of the shapes that worked are
+unchanged (pinned from HEAD before GREEN). The same rule had to reach
+the second place that counts sires needed, the stop in
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md),
+which counted every group: males seeded in every box and none in the
+pool stopped with “only 0 males” (a latent defect, same fix).
+
+Traps from the same session. (a) A Shiny output in a hidden tab is not
+computed: `get_value(output =)` is empty until its tab is active; click
+the pane’s own tab link
+(`document.getElementById(out).closest('.tab-pane').id`, then
+`a[href='#<id>']`) because two tabs share one `data-value`
+(“Statistics”). (b) A claim stub’s lines count against
+`SESSION_NOTES.md`’s 280 B per-line ceiling: `context_budget.py` read
+OVER on two lines of the stub; run it before the claim commit. (c) A
+mutation survivor is a branch no test reaches: “a seeded male under the
+minimum age counts as a sire” survived because the fixture had no animal
+younger than `minAge`; the test copies the pedigree and re-dates one
+male.
+
+#### Learning 951
+
+**A shared line that looks like the cause of a second defect may be the
+design: look at what is left over before filing it.** The
+harem-plus-ratio item (S983) named
+`removeGroupIfNoAvailableAnimals(grpNum, availableMales)`
+(`R/fillGroupMembersWithSexRatio.R:123`) as the cause, and the same line
+also runs for a ratio without a harem. S985 formed 3 groups of the 332
+living example animals both ways and counted the unused box: ratio 5
+left 80 to 82 animals, all but one of them males (the females ran out
+first); ratio 1 left 94 to 103, almost all non-males, in groups of about
+38 to 43 males and 37 to 43 others (the males ran out first, and a group
+stops there, as the help says: “as close as possible to the ratio”). So
+the line is the design for a ratio alone and the defect only for a
+harem, whose sires were taken out of the pool first. A settings pair the
+docs already call alternatives (“use one or the other”, the article) is
+closed by a stop, as exhaustive mode does for the settings it cannot
+take, not by a new behavior the owner never asked for; the owner took
+the stop over “sire plus N non-males”.
+
+Traps from the same session. (a) A detached `( cmd ) &` inside a
+`run_in_background` Bash call exits at once, so the harness’s
+“completed” notice is the launcher, not the job: watch the job’s own
+`EXIT=` line with Monitor. (b) A mock of an internal function
+(`local_mocked_bindings(fillGroupMembers = ..., .package = "nprcgenekeepr")`)
+proves that a stop comes before any group is formed. (c) A mutation that
+moves a stop past another stop survives unless one test makes both
+apply; the new block is a harem, a ratio and too few males together.
+
+#### Learning 952
+
+**A test’s fixture can be too small to reach the branch its help
+describes; to re-check one, break one cell of a shipped file and run the
+app’s own call.** Two of S986’s ten docs-audit flags passed their tests
+for the same reason.
+[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)’s
+`NA`-name test uses 4 and 2 names, shorter than the 5 required, so
+`length(cols) < length(requiredCols)` makes the `if` true before the
+`NA` is read; 5 elements with an `NA` and a required name missing stop
+(`R/checkRequiredCols.R:40-41`). The invalid-date tests use
+`pedInvalidDates`, one date column, so
+[`as.Date()`](https://rdrr.io/r/base/as.Date.html) on a data frame never
+sees two (`R/getDateErrorsAndConvertDatesInPed.R:43-45`). The second is
+reachable: `ExamplePedigree.csv` has `birth` and `exit`, and one birth
+set to `2010-16-22` gives “Data Processing Error: do not know how to
+convert …” and 0 records in the real Input module, where the same file
+without `exit` gives “Invalid date values: 12”. Also found by counting:
+the backlog’s 22 candidates for slice 6d were 21 in the report, and the
+session notes show three shipped since (S928, S969, S970).
+
+Traps from the same session. (a) `moments` and `e1071` are not in renv:
+`install.packages(c("e1071", "moments"), lib = <scratch>)` and
+`.libPaths(c(<scratch>, .libPaths()))` inside the probe run a claim
+without touching `renv.lock`. (b)
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+defaults to `reportChanges = FALSE`, which clears `hasChangedCols` and
+the warnings; probe it with `reportChanges = TRUE`, the call
+`R/modInput.R:520` makes, or every rename reads as unreported. (c) A
+`cd` in one Bash call persisted and moved the working directory twice;
+start every command with an absolute `cd`. (d) A mistyped scratchpad
+path writes a stray directory: check the
+`-Users-rmsharp-Development-nprcgenekeepr` spelling.
+
+#### Learning 953
+
+**A fix for a crash is not finished until a mutation of the new code
+shows which of its arguments no test varies; and a fixture that makes
+every row invalid skips the very step it was meant to test.** S986’s
+Learning 952 said the invalid-date tests use one date column. A second
+reason they missed [`as.Date()`](https://rdrr.io/r/base/as.Date.html)
+over several columns: `test_qcStudbook.R:283-292` has three bad date
+columns, but every row is invalid, so
+`nrow(sb[-invalidAndAdded, ]) > 0L` is `FALSE` and the conversion at
+`R/getDateErrorsAndConvertDatesInPed.R` never runs. S987’s fix blanks
+each date column’s own invalid cells with
+`convertDate(reportErrors = TRUE)` on a one-column slice (the rule
+detection uses, so the two cannot disagree), then the existing
+[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
+call converts. A mutation run of that loop caught three of five changes;
+the one that mattered survived, `drop = FALSE` on the slice, because
+every test pedigree had a `recordStatus` column and the exported
+function’s own example has none. The REFACTOR added a block with no
+`recordStatus` column and the mutation then failed 9 expectations. The
+fifth, a slice without `recordStatus`, is harmless for real input: it
+differs only for an “added” record whose date text cannot be read, which
+makes
+[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
+stop in its final `rbind` (a Date column meeting a character row,
+“character string is not in a standard unambiguous format”);
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+never makes one, so it is not filed.
+
+Traps from the same session. (a) To write assertions about the Input
+module’s output for a case that is broken today, probe a working
+analogue first: one date column with a bad value gives one “Invalid date
+values” row with the row number in `Details`, `errors` 1, `records` 0
+and `isReady()` `FALSE`, and any error gives 0 records. (b)
+`expectWording()` does not name the place that failed; count
+`occurrences()` with `info = place` over `helpPlaces()` instead. (c)
+Fifteen test files read `NEWS.Rmd` or `NEWS.md`: do not edit either
+while a suite runs, and run those files after a re-knit. (d) A mutation
+harness that stops on an unmatched search string has already restored
+the file in `finally`; read `RESTORED:` before rerunning. (e) zsh reads
+a bare `=======` echo as an expansion; quote it.
+
+#### Learning 954
+
+**A hard-coded field list has a sibling: grep one rare field name across
+`R/` before sizing a “make it count every field” fix.** S986’s backlog
+item named one function,
+[`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md),
+which checked 12 of the 13 `changedCols` fields. Grepping a field name
+no other code uses (`fromcenterToFromCenter`) found the same 12-name
+list in `R/shouldShowChangedColsTab.R:36-42` (read by
+`R/appServer.R:272` for the Changed Columns tab) and
+[`summary()`](https://rdrr.io/r/base/summary.html) with 10 sentences.
+The measurement decided the scope: a hand-built list with only the
+`geographicorigin` field filled gives a blank `summary()$txt` and an
+empty `<ul>`, so counting that rename in the tab as well would have
+opened an empty tab; the owner ruled to change the check only and the
+tab and [`summary()`](https://rdrr.io/r/base/summary.html) became a
+`BACKLOG.md` item. `any(lengths(changedCols) > 0L)` removes the list
+from
+[`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md),
+so a field added later counts with no edit (a block pins it). Only an
+all-lowercase `geographicorigin` (or `recordstatus`, `fromcenter`)
+header reaches those fields alone; any capital letter also triggers
+`caseChange`, which every consumer lists.
+
+Traps from the same session. (a) `Rscript -e '...' VAR=x` passes `VAR=x`
+as an argument, not an environment variable: the test list came back
+empty and the run printed `TOTAL 0`; `export VAR` first, and read the
+total before trusting it. (b)
+`devtools::check(args = "--no-build-vignettes")` leaves two WARNINGs
+(`vignettes/` has files and `inst/doc` does not);
+`devtools::check(document = FALSE, vignettes = FALSE, manual = FALSE)`
+gave 0/0/0. (c) A mutation run needs no file change: after
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html),
+`utils::assignInNamespace("fn", mutant, ns = "nprcgenekeepr")`, run
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+on the files that reach it, then put the original back and read
+`git status`. (d)
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+returns `list(cleaned, qcResult, errorLst)`: the flag is
+`res$qcResult$hasChangedCols`, and `res$hasChangedCols` is `NULL`, which
+makes `cat(sprintf(...))` print nothing at all.
+
+#### Learning 955
+
+**Before sizing a “make function X tolerate input Y” fix, run Y through
+X’s real caller: the caller may stop earlier, and the fix then changes
+only a direct call.** S986’s item said
+[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
+should tolerate an `NA` column name; probing the function showed 5 of 5
+failures and a one-word fix. Running the same `NA` header through its
+one caller,
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
+showed it never gets there:
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+stops first with the same message (`R/fixColumnNames.R:43`, `:46`), and
+with those patched in memory a nameless non-required header stops next
+at `R/addParents.R:47`. The scope question to the owner carried those
+measured consequences (one option per depth), and the owner kept the
+ruled scope; the rest became one BACKLOG decision item.
+
+Traps from the same session. (a) After
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html),
+patching a function in the namespace (`unlockBinding` + `assign` on
+`asNamespace("nprcgenekeepr")`) changes what code inside the namespace
+calls, not the copy attached to the search path: a probe’s direct call
+from the global environment still ran the old function; fetch the
+patched one with `get("fn", ns)`. (b) An error inside a `test_that()`
+block ends the block at its first error, so five of six RED cases
+recorded 0 expectations; route each case through
+`tryCatch(..., error = function(e) conditionMessage(e))` so each one
+fails alone and its cause is readable. (c) The shipped example’s CSV
+header fields are quoted (`"birth"`); strip the quotes before matching a
+name when a probe edits the header text.
+
+#### Learning 956
+
+**Before writing a RED wording gate for a help page, grep
+`tests/testthat/helper-*.R` for the page readers and use them.** S990’s
+RED test wrote its own man-page and roxygen readers (about 60 lines:
+`manText`, `roxygenText`, `helpPlaces`, `collapseSpace`), four names
+that shadowed `helper-pageText.R`’s versions with other signatures; only
+the REFACTOR found that seven other help tests already use
+`helpPlaces(topic, file)`, `skipUnlessHelpInSourceTree()` and
+`expectWording(text, now, gone)`.
+`grep -n 'helpPlaces(' tests/testthat/*.R` finds them in one second. The
+shared shape reads the page whole and asks for the new sentence exactly
+once and the old one nowhere, so a per-argument reader is not needed for
+a sentence this long.
+
+Traps from the same session. (a) A mutant defined as “the file at
+`HEAD`” is a no-op once GREEN is committed (`HEAD` is then the fix): use
+the parent of GREEN (`HEAD~1`) for the old wording, and say which commit
+holds it. (b) `sub(fixed = TRUE)` replaces only the first of two
+identical sites: `ped$id == id` stands twice in
+[`hasBothParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasBothParents.md),
+and the “vector works” mutant survived with 0 failing blocks; count the
+sites first (`gregexpr`) and use `gsub`. (c) kinship2 has two routes for
+an unrecognized-sex founder with `chrtype = "x"`: the vector
+`kinship(id, dadid, momid, sex = c(1, 2, 3, ...), chrtype = "x")` equals
+this package’s
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+cell for cell (0 of 25 differ, NA on the founder’s own diagonal), but
+`kinship(pedigree(...), chrtype = "x")` gives 0 there, and an `NA` sex
+stops `pedigree()` itself; so “as in kinship2” in the help names the
+vector form, the one this function ports (`kinship.default()`), and the
+help already says so. (d) A `( cmd ) &` inside a `run_in_background`
+Bash call returns at once, so the “completed” notice is the launcher’s,
+not the suite’s: wait with
+`until grep -q '^done' out; do sleep 20; done` on the file the command
+writes last. (e) `Rscript -e '...'` here turned `"\\s+"` into an invalid
+escape: write the R to a scratchpad file and run that.
+
+#### Learning 957
+
+**A function whose `NULL` default means “use the packaged example” turns
+a missing `req()` in a handler into a wrong-data output; find it by
+clicking in the real app, with the tab open.** S991’s re-check of
+docs-audit candidate CD5 found `getPyramidPlot(ped = NULL)` draws
+`qcPed` (`R/getPyramidPlot.R:43-44`, documented), and the pyramid
+module’s download handler (`R/modPyramid.R:136-153`) has no
+`req(pedigreeData())` while the three outputs beside it do (`:104`,
+`:116`, `:129`). In the headless real app with nothing loaded, Download
+Plot answered `200 image/png` and saved a 45,680 B picture headed “Total
+on 2026-Oct-14: 46” (the 46 living animals with a birth date in
+`qcPed`), nothing marking it as example data. Other handlers that call a
+data function with such a fallback were not searched:
+`grep -n 'ped = NULL' R/*.R` lists the functions, then each caller needs
+its `req()` read.
+
+Traps from the same session. (a) `shinytest2`’s
+`app$get_download("pyramid-downloadPlot")` on a button in a tab that is
+not open fails with only “Download from ‘#…’ failed”; open the tab first
+(`app$run_js` clicking the nav link by its text), then it returns the
+file. `AppDriver$new()` also needs `NOT_CRAN=true` or it stops “Reason:
+On CRAN”. (b) A `cd tests/testthat` inside one grep one-liner moved the
+shell for the next Bash call, so the next `Rscript` started outside the
+project root, renv was off and it stopped “The package quadprog is
+required”: begin every R call with
+`cd /Users/rmsharp/Development/nprcgenekeepr &&` (the S968 note,
+repeated). (c) `methodology_trim.py` is v1.8.0 since the sync after S960
+and writes a `methodology/` ledger’s shard to `methodology/archive/`,
+not `docs/archive/` (earlier HANDOFFS shards stay where they are); run
+after the claim and committed alone, its verify script printed
+`OK: L1, L2/front-matter, L3`. (d) Count a probe fixture before naming
+its condition: `qcPed`’s first 36 living animals already include 34 with
+no birth date, so “three animals given an NA birth date” was really 34,
+then 36, of 36 undated.
+
+#### Learning 958
+
+**A `req()` guard in a `downloadHandler` does not stop quietly: Shiny
+answers HTTP 500 and a blank “An error has occurred!” page, so say “the
+download fails” and measure it on a stand-in before telling the owner
+anything gentler.** S992 shipped the CD5 fix (`req(pedigreeData())`
+first in the pyramid handler, `R/modPyramid.R:141,146`); S991’s report
+had said the browser “then reports a failed download”, which was read,
+not run. A stand-in app (one `downloadButton` whose
+`content = function(file) { req(NULL); ... }`), opened in `shinytest2`’s
+headless Chrome and fetched with `curl -D -`: the guarded button answers
+`500 Internal Server Error`, `text/html`, a page reading “An error has
+occurred!” over an empty paragraph; an unguarded one answers `200` with
+`Content-Disposition: attachment`. I did not watch Chrome display it.
+The same guard already sits in three Summary Statistics handlers
+(`R/modSummaryStats.R:847,857,869`); a crude grep (`downloadHandler(`
+with no `req(`, `validate(` or `need(` in the next 30 lines) finds 31 of
+the app’s 45 handlers without one, not examined: most write a reactive
+that stops by itself, and the pyramid one was a defect only because its
+drawing function treats `NULL` as “draw the example” (Learning 957).
+
+Traps from the same session. (a)
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+deletes a handler’s output file when the block exits, so a PNG check
+made after it returns finds no file (“cannot open file … No such file or
+directory”): test [`file.exists()`](https://rdrr.io/r/base/files.html)
+and the PNG signature inside the block and return the answer (the first
+RED run failed two blocks for this wrong reason; fixed in the test
+before the commit). (b) A failing `req()` read through
+`output$downloadPlot` in `testServer()` arrives as a condition of class
+`shiny.silent.error` (also `validation`, `error`), so
+`expect_s3_class(res, "shiny.silent.error")` pins it, and `output$x`
+re-runs the handler on every read: a `reactiveVal(NULL)` filled
+mid-block tests the empty-then-loaded state. (c) The “cannot make the
+draw fail from the inputs” half of S991’s `on.exit` note is testable:
+`testthat::local_mocked_bindings(getPyramidPlot = function(...) stop("..."))`,
+then compare
+[`grDevices::dev.list()`](https://rdrr.io/r/grDevices/dev.html) before
+and after (close any leaked device inside the helper so a failing block
+cannot disturb the next). (d) The `on.exit` mutant leaves a PNG device
+open per call and R stops at exit with “QuartzBitmap_Output - unable to
+open file” once the temp folder is gone; that crash belongs to the
+mutant, and the blocks it errors are listed with 0 failed expectations.
+
+#### Learning 959
+
+**A shared reactive built for one plan reaches only the consumers that
+plan named: issue \#122’s full-pedigree kinship reached Summary
+Statistics and Breeding Groups but not Genetic Diversity, whose tab kept
+gvResults\$kinshipMatrix (focal animals only) and stopped; to move a
+shared value, grep every call that takes the argument by name
+(`kinshipMatrix =`), not the plan’s consumer list.** S993 fixed CA2
+(`R/appServer.R:448` now passes `sharedKinshipMatrix`; help
+`R/modGeneticDiversity.R:73-75`; `NEWS.Rmd:451`). The module’s own help
+had recorded the difference (“population-filtered matrix, not the
+full-pedigree matrix”) and S991 had called it documented, but nothing
+said it was wanted: the module scores groups drawn from every living
+animal, and the plan’s Dragon 1
+(`docs/planning/issue122-module-contract-plan.md:472`) already says
+consumers of the whole pedigree must not get the focal-only matrix.
+Measured in the real app (headless Chrome, 5 focal animals FJS7RQ,
+H6T2FF, HEVL3L, I04JZV, S63QDN, trim on, Genetic Value run, All
+available): 87 animals in the trimmed pedigree, 11 living, 9 living
+non-focal; before, “kmat is missing kinship for group member(s): HLQ9SY,
+GCBYDW, AEP5EG, FTVE03, S222R3, TBCE78, 9P0DES, T3QPW5” in the guidance
+box and the plot area, no picture; after, no error and a 2-row heat map
+(the second row is the Unused box, CA3).
+
+Traps from the same session. (a)
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+captures its `expr` unevaluated, so a helper
+`run(mocks, { session$flushReact() })` that forwards the block fails
+“object ‘session’ not found”; make the helper’s first argument the whole
+`muffleConfig(shiny::testServer(appServer, {...}))` call and hand it on
+to `with_mocked_bindings(code, ...)` (`withDiversityApp()`,
+`tests/testthat/test_appServer_server.R`), so the block stays written
+out in each test and `rlang` (not in `DESCRIPTION`) is not needed. (b)
+To read a real module’s return inside `testServer(appServer)`, copy the
+function before mocking
+(`realDiversityServer <- modGeneticDiversityServer`), mock the binding
+with a function that calls the copy and keeps the return in `ctl`, then
+read `ctl$diversity$stats()` inside the block. (c)
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+labelled every animal “High Value” for 14 and for 30 focal animals of
+the example pedigree, so a Low/High mix for the Value column has to be
+hand-edited into the report: with 2 Low and 1 High the group scores
+Value 1 (red) and stays 1 after adding 1, 6 or 30 animals that have no
+report row (if they counted as not-Low it would be yellow at 2 of 4 and
+green at 2 of 9). (d) A real-app before/after without a worktree or a
+stash:
+`git archive <RED commit> DESCRIPTION NAMESPACE R data inst | tar -x -C <scratch>/base`,
+a scratch `app.R` that runs `pkgload::load_all(Sys.getenv("CA2_SRC"))`
+then `shinyApp(appUI(), appServer)`, and one script run once per source.
+(e) A mutant of `R/` code needs the restore from a saved copy (`cp`),
+then `diff -q` to prove the tree is back; `sed -i` on macOS wants an
+empty backup argument, so use a short `python3` replace with an
+`assert s.count(old) == 1`.
+
+#### Learning 960
+
+**A color set inline on a `helpText()` line never shows in this app,
+because the theme forces `.help-block` to gray with `!important`, so
+read a visible change’s computed style before telling the owner what it
+will look like; an output on a hidden sub-tab stays “recalculating”
+until that sub-tab is shown; and a `shinyBS::popify(title = NULL)`
+popover draws the title “character(0)”.** (S994, 2026-10-15.) **(1) The
+color:** S991’s CD1 (`R/modPyramid.R:46`, `color: darblue`) was offered
+as “fix the spelling” and I told the owner the line would turn dark
+blue. In headless Chrome the line’s computed color is
+`rgb(149, 165, 166)` before and after, because
+`.text-muted, .help-text, .help-block { color: rgb(149, 165, 166) !important }`
+is in the page’s stylesheets (read with `document.styleSheets`); the two
+screenshots are byte-identical. Other `helpText()` calls set an inline
+color too (`R/modInput.R:164`, and the calls near
+`R/modPedigree.R:112,133,147` and `R/modPotentialParents.R:156`); their
+computed colors were NOT read, so whether they are dead the same way is
+unmeasured. **(2) Reading the alerts:** `exportGateUI` of De-Identified
+Export and Cross-Center Identity sits on each module’s “Export” sub-tab,
+so `app$set_inputs(mainNavbar = ...)` alone leaves it empty and
+`recalculating`; set `<module>-mainTabs` to “Export” too, then poll the
+element’s text. **(3) Reading a popover as shown:**
+`$('#id').popover('show')`, then read
+`$('.popover:visible').last().text()`; the stored option is not where
+`d.options.content` looks. Every popover of the Summary Statistics tab
+reads “character(0)” above its sentence (`title = NULL`; `BACKLOG.md`).
+**(4) Process:** a GREEN of 7 `R/` files plus a man page is two commits
+under the 5-file cap (the gate file stays red for the second one’s three
+blocks, which is expected); run a real-app before/after with a scratch
+`app.R` that reads its source from an env var and
+`git archive <RED commit>` for the old side (Learning 959 (d)); the full
+suite and `devtools::check()` run one after the other in one background
+command.
+
+#### Learning 961
+
+**`git checkout -- <file>` as the restore after a mutation run also
+throws away the phase’s uncommitted edit in that file, so commit the
+edit before mutating and restore a mutant from the saved text; and a
+mid-session owner report can be about a picture I opened for them.**
+(S995, 2026-10-15.) **(1) The slip:** in REFACTOR I mutated the new
+helper in `R/getGeneticDiversityStats.R` with a script that saved the
+original text and wrote it back, then ran
+`git checkout -- R/getGeneticDiversityStats.R` “to be sure”. That
+restored HEAD (the GREEN commit), not my uncommitted REFACTOR edit, so
+the file lost the helper while `R/modGeneticDiversity.R` (not checked
+out) still called it. `git diff --stat` listing one file instead of two
+exposed it at once; both edits were re-applied and committed
+(`e6affd6ce`). This is the S990 gotcha (“a revert to `HEAD` mutant is a
+no-op after GREEN”) from the other side: it is also destructive when
+anything is uncommitted. **(2) The owner’s report:** the “duplicated
+error line” of S994 (`BACKLOG.md:155`) was the “before” picture of S993
+that I had opened for the owner (“kmat is missing kinship …” printed
+twice); the owner “did nothing”. Before asking the owner for steps,
+check whether the report matches a picture or output shown in the last
+session; the item’s own text already named that S993 run. **(3) What was
+measured:** the doubling is structural (the heat map and guidance slots
+both read `diversityStats()` unguarded, `R/modGeneticDiversity.R`). The
+one trigger left in the app is formed groups that outlive a new file or
+a trimmed view (`groupResults` is set only at
+`R/modBreedingGroups.R:800` and never cleared): in the real app a new
+pedigree (`rhesusPedigree`) and a one-animal trim (`YTQBW7`) both gave
+the same 20-id “ped has no rows for group member(s)” error twice; the
+tabs after Genetic Diversity were not examined (`BACKLOG.md`). **(4)
+Process:** BSD `sed` here needs `sed -i ''` and has no `\|` (use `-E`);
+a scratch driver that saves a picture under a name that exists fails
+with EEXIST (new names per run); a `testServer()` output raises its
+error inside the test, so read a slot with
+`tryCatch(as.character(output$x), error = function(e) conditionMessage(e))`;
+the packaged `inst/shinytest/app.R` loads the installed package, so a
+scratch `app.R` that `load_all()`s the tree is needed to test source
+changes.
+
+#### Learning 962
+
+**Before measuring “what the other tabs show”, search for who reads the
+state: three of the four tabs the item named never read the groups at
+all; and `textContent` of an output that stopped on a silent error still
+holds the old text, so only a picture says what a page shows.** (S996,
+2026-10-15.) **(1) Consumers first:** `BACKLOG.md:155` asked for a
+measurement of Breeding Groups, Genetic Value, Summary Statistics and
+Potential Parents with the old groups; `git grep` for
+`shared$breedingGroups` found one reader (`R/appServer.R:445`, Genetic
+Diversity) and none in the other three modules, so the damage was on the
+Breeding Groups tab itself, whose Groups, Statistics and Group Detail
+outputs read the old ids against the live `pedigree()`
+(`R/modBreedingGroups.R`). **(2) The measured picture (real app,
+headless Chrome, after a new file or a one-animal trim):** the heading
+“Group 1 (18 animals)” over “No data available”; Statistics 18 / 0 / 0;
+Group Detail “values must be length 1, but FUN(X\[\[1\]\]) result is
+length 0”; the within-group kinship table still the old one (it comes
+from the run’s own matrix). The owner ruled “say it, keep the groups”;
+the fix is one sentence on the three pages (`R/modBreedingGroups.R:222`)
+through one shared yes/no function
+(`R/groupMembersMissingFromPedigree.R`). **(3) The read that misled:**
+after the fix `textContent` of `#breedingGroups-groupMemberTable` still
+held the old animals’ text, because Shiny keeps the old DOM of an output
+that stops on a silent `req()`; the picture showed the table hidden.
+Read the picture, not `textContent`, before saying a table is gone.
+**(4) Driver traps:** “Top ranked” needs a Genetic Value run first or
+formation never ends (my first driver waited out its 240 s);
+`get_screenshot()` refuses an existing file name (S995 recorded this and
+I hit it again): copy old pictures to a `_before` folder and empty the
+output folder before a rerun. **(5) `NEWS.md` can lag `NEWS.Rmd`:** the
+re-knit after my entry also added S995’s Genetic Diversity entry, which
+`NEWS.md` had missed; after any `NEWS.Rmd` edit run
+`rmarkdown::render("NEWS.Rmd")` and read `git diff NEWS.md`: it should
+show your hunk and nothing else. **(6) Testing a kept state:** a
+swap-back block (the earlier pedigree returns) pins “keep”, and
+`groupResults(...)` rebuilt from the real result is how a block puts one
+animal in the Unused box deterministically.
+
+#### Learning 963
+
+**A fix of the form “check against the whole X, not the view” is not
+finished until each consumer is handed only what it holds: the audit’s
+option (a) would have broken the diagram and every kinship tab, and a
+two-call probe found it before any code; a page-scale picture shows
+nothing of a 3-pixel connector, so read the widget’s own edge list.**
+(S997, 2026-10-15.) **(1) The probe:** with a twin pair that has an
+animal outside the view,
+`makePedigreeMatingLayout(view, twinRelations = pairs)` and
+`kinship(view$id, ..., twinRelations = pairs)` both stop “All
+twinRelations id1/id2 values must be present in id” (S991’s gotcha, “the
+CC1 fix needs a layout-builder probe with pairs outside the view”,
+held). So `R/twinPairsWithin.R` keeps, per consumer, the pairs whose two
+animals it holds: the diagram the view, the exported `twinRelations` the
+analysis pedigree (a pair of placeholder ids the Display Unknown IDs box
+hides still reaches the other tabs;
+`test_modPedigree_twinRelationsTrimmed.R` pins the split with
+U0001/U0002). **(2) Measured, real app (bundled
+`obfuscated_rhesus_mhc_ped_twins.csv` and its twin file):** focal E06FRB
+and 7U5NJD with the trim on leaves 44 animals; before, a red error
+naming BRI2MW, HV7LZ3 and 677E7M and 0 connector edges; after, none and
+one DZ edge. Focal H16EC4 and 8GSXTQ: the Summary Statistics kinship
+export of E06FRB/HV7LZ3 0.125 before, 0.5 after. **(3) Reading a
+connector:**
+`HTMLWidgets.find('#pedigree-pedigreeDiagram').network.body.data.edges.get()`
+filtered on label MZ/DZ/? lists them;
+`network.focus(id, {scale: 2.2, animation: false})` then
+`get_screenshot(selector = ...)` gives a crop where the connector shows.
+**(4) Driver traps:** `AppDriver` stops “Reason: On CRAN” unless
+`NOT_CRAN=true`; zsh does not split an unquoted `$VAR` (use `${=VAR}`);
+`git worktree add --detach <scratch dir> <RED sha>` with an `app.R`
+pointed at it gives a clean “before” run with no stash (remove with
+`git worktree remove --force` and `git worktree prune`; the
+`.claude/worktrees/*` entries are not mine). **(5) Process:** I said “6
+fail” at the gate and the count was 7 (five behavior blocks and two help
+blocks): count the blocks from the run before writing the number;
+`expect_setequal(NULL, ...)` is an error, not a failure, so wrap with
+[`as.character()`](https://rdrr.io/r/base/character.html) to keep RED at
+0 errors; a guard that anchors on a comment the fix rewrites (“Validated
+against pedigreeData()”) needs a new anchor in RED.
+
+#### Learning 964
+
+**An audit row that says “X is dropped with no message” can understate
+the defect: read the line above the guard. A module-level `testServer`
+showed a warning and a blank red box where the real app ended the
+session, and only the real app’s disconnected overlay told them apart; a
+“keep the old behavior” rule needs its own pin, and the mutation run is
+how to find the ones missing.** (S998, 2026-10-15.) **(1) The finding:**
+the CB1 row (`DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`)
+described
+`tryCatch(checkGenotypeFile(...), warning = NULL, error = NULL)`
+dropping a bad genotype file silently, and that was true; but
+`getGenotypes(input$genotypeFile$datapath)` sat one line above it,
+unguarded, so a file with a short row (“line 2 did not have 3 elements”)
+stopped `observeEvent(input$getData)`. Real app (headless Chrome):
+`document.getElementById('shiny-disconnected-overlay') !== null` is TRUE
+and the page greys out; the 2-column file in the same driver gives
+FALSE.
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+prints “Warning: Error in scan” and the QC Summary renders “Error
+rendering QC summary:” (`req()`‘s silent error caught by the `renderUI`
+`tryCatch`), so a failure inside an observer must be checked in the real
+app before it goes into option text. **(2) Driving the Input tab:** the
+module id is `dataInput` (`dataInput-fileContent` =
+`separatePedGenoFile`, `dataInput-pedigreeFileThree`,
+`dataInput-genotypeFile`, `dataInput-getData`); show the tab with
+`$('a[data-value="Input"]').tab('show')` and the sub-tab with
+`$('a:contains("QC Summary")').first().tab('show')` BEFORE reading
+`#dataInput-qcSummaryUI` (a hidden tab’s `innerText` is empty, so a
+`wait_for_js` on it timed out for 120 s);
+`app$click(..., wait_ = FALSE)` because the QC step on 375 animals
+outlasts the driver’s 4 s idle wait. **(3) Tests:** `oneFileWith()`
+(`helper-oneFileGenotypes.R`) is an 8-animal pedigree that keeps a
+module run to a second or two;
+`local_mocked_bindings(checkGenotypeFile = ...)` and
+`(getGenotypes = ...)` reach the module’s calls; a warning raised inside
+an observer under `testServer` reaches testthat as an expectation
+warning, so wrap the run in
+[`suppressWarnings()`](https://rdrr.io/r/base/warning.html) when the
+warning is the point. **(4) Two missing pins:** planning the mutants
+showed the RED blocks had no test for “a warning while only reading the
+file does not drop it” (the new `tryCatch` around the read catches
+errors only, as the old code caught nothing there); I added a block that
+passes before and after the change, before the first run. That run
+caught 7 of 8 mutants of the new code; the survivor, `[.]$` for `[.!?]$`
+(a reason ending in “?” got a full stop added), got its own block, then
+8 of 8, and 11 of 11 on the lifted helper and module. Both blocks were
+added at GREEN and the commit messages say so. **(5) Process traps:**
+`cat > file` with no heredoc waits on stdin and the Bash call moved
+itself to the background after 120 s (use the Write tool); a lift
+script’s `assert` caught my wrong count (3 mentions, not 4) before
+anything was written (assert before write); a full-suite run at load 100
+or more (two other projects’ `vitest` runs) failed the
+`test_markerParentageLikelihood.R` timing benchmark, which passes alone
+at load 5.5 (25 blocks, 117 expectations), so poll `uptime` below 6 and
+rerun that file alone.
+
+#### Learning 965
+
+**Before describing how far a defect reaches, grep for who reads the
+thing that throws: the CB5 row listed the surface as “app (Marker
+Genetics upload)”, but nothing in `R/` reads the module’s returned
+`isReady`, so the app showed no difference at all, and that belongs in
+the option text; a help sentence is its own strict-TDD cycle and its own
+gates; a mutant of a guarded reactive that an observer also reads
+destroys the `testServer` session and shows as errors.** (S999,
+2026-10-15.) **(1) Reach:** `grep -rn isReady R/` found only the
+module’s own definition and the `@return` help; `R/appServer.R:477`
+takes `markerKinshipMatrix` and nothing else from
+[`modMarkerGeneticsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md).
+A module-level probe (good file: `isReady()` TRUE; short row, three
+columns, empty file: both `isReady()` and `comparisonTable()` throw)
+plus that grep gave the owner a two-option question that said plainly
+nothing in the running app changes. The real app (“before” from
+`git worktree add --detach <scratch> <RED sha>`, “after” at HEAD, one
+driver script run twice) showed identical pictures: the module’s own red
+“Error: line 2 did not have 4 elements” above the sub-tabs and in the
+Kinship Comparison panel, no `#shiny-disconnected-overlay`, a good file
+afterwards filling the table, which is what the NEWS sentence “the tab
+looks the same” claims. **(2) Two elements carry the error:**
+`document.querySelectorAll('.shiny-output-error')` after a short-row
+upload lists `#markerGenetics-guidance` (a `renderUI` calling
+`comparison()`) and an `htmlwidgets-error` div with no id inside the
+Kinship Comparison table output; the outer
+`#markerGenetics-comparisonTable` has no error class and no rows, so
+test the nested div, not the output id. **(3) Driving the tab:**
+`app$set_inputs(mainNavbar = "Marker Genetics")`, then
+`app$upload_file("markerGenetics-genotypeFile" = path)` (the shared
+upload; `genotypeFileB` is Center B); the shared genotype file needs
+four columns `id, locus, allele1, allele2` (my first probe’s
+three-column “good” file threw). **(4) Tests:** wrap the read in
+`tryCatch(f(), error = function(e) paste("threw:", conditionMessage(e)))`
+and compare with
+`expect_identical(got, FALSE, info = paste("isReady() gave:", got))`, so
+RED reads “threw: line 2 did not have 4 elements” and not “character is
+not logical”; a pin that passes before and after (`comparisonTable()`
+still throws the real error) protects the owner’s ruling from a mutant
+that quiets it. **(5) Mutants:** 6 of 6 at GREEN and 5 of 5 on the
+REFACTOR shape (`comparisonOrNull`); mutants that unguard the observer’s
+read destroy the `testServer` session (7 failed, 2 errors, 5 red blocks,
+an S709 block among them), so a mutant’s error count is not a weak
+result there. **(6) The help clause** (`R/modMarkerGenetics.R:479-481`)
+was its own cycle: gate `test_modMarkerGeneticsIsReadyHelp.R` in the
+`test_markerBlankAlleleHelp.R` shape (`helpPlaces()`, a sanity block,
+one block per reader), RED 2 of 3 blocks, GREEN with
+`devtools::document()` changing one `.Rd` hunk only (read
+`git diff man/`). The NEWS-reading files (17) plus
+`test_wordlist_coverage.R` ran with the NEWS edit: 18 files, 241 blocks,
+0 failed.
+
+#### Learning 966
+
+**When a module gains a returned item, grep the tests for a pinned LIST
+of returned names (`test_moduleContract.R:56-58`) as well as for readers
+of the existing items, and run the module’s whole test family before
+telling the owner no existing test changes; a list’s names label
+heat-map rows only when every element is named; production code must
+tolerate a stand-in server that lacks a new item; a real-app before and
+after of a randomized run differs in its counts by chance.** (S1000,
+2026-10-15.) **(1) The miss:** my PRE-RED search found the readers of
+`groups()` and the gate text said “no existing test changes”; the
+24-file run after GREEN found `test_moduleContract.R`, whose table lists
+every module’s returned names
+(`expect_named(result, spec$names, ignore.order = TRUE)`), so one line
+added `groupLabels`. Proof it is test-first after the fact:
+`git worktree add --detach <scratch> 1daca6924` (the RED commit), copy
+the updated test in, run that file alone: it fails there (1 block, the
+item is missing) and passes at the GREEN tree (15 blocks, 121
+expectations); the worktree was removed afterwards. **(2) Names as
+labels:**
+[`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+uses `names(groups)` only when every name is non-empty
+(`R/getGeneticDiversityStats.R:91-94`), so the audit’s “name the last
+element” would have changed nothing; every box is named, by
+`.nameBreedingGroups()` (`R/nameBreedingGroups.R`), which leaves the
+groups untouched for names that do not fit (wrong length, `NA`, empty,
+not text, groups not a list). **(3) Why a new item and not a named
+`groups()`:** naming the returned list would have given
+`unlist(result$groups())` names such as “Group 11” (5 tests flatten it)
+and changed 3 `expect_equal` against plain lists, and any script that
+flattens it; the owner chose `groupLabels` beside an unchanged
+`groups()`. The only reader of the returned `groups()` in the app is the
+Genetic Diversity tab (`R/appServer.R:435,445`); the other tabs read the
+module’s internal reactive, which the audit row did not say. **(4)
+Stand-in servers:** `stubBG` and other test files’ own stubs return no
+`groupLabels`, so `R/appServer.R:434-439` reads it only
+`if (is.function(bgResults$groupLabels))`; a mutant that drops that
+guard failed 8 expectations. **(5) RED for a function that does not
+exist yet with 0 errors:** wrap the call,
+`tryCatch(.nameBreedingGroups(g, l), error = function(e) e)`, and
+compare, so the missing function reads as a failed comparison (the
+repo’s `result <<- tryCatch(..., error = function(e) e)` idiom); the
+module and appServer tests do the same with `result$groupLabels`. **(6)
+Real app:** group formation is unseeded, so the before run (18 + 2
+animals, 4 candidates) and the after run (19 + 1, 2 candidates) differ
+by chance; read the heat map’s row labels against the same run’s
+Breeding Groups page. A real-app run launched with
+`(Rscript x.R > log 2>&1; echo "EXIT=$?" >> log) &` and a Monitor on
+`EXIT=` is the reliable wait: the `run_in_background` task that launches
+it ends at once. The longer “Unused animals” label narrows the four
+columns by about 19 px. **(7) Docs:** a help sentence that names a
+returned item in plain text is flagged by
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+(`test_wordlist_coverage.R` failed at
+`modGeneticDiversityServer.Rd:25`); mark the name `\code{}`, which
+`roxygenText()` strips, so the pin and the owner’s words are unchanged.
+Run that file with every help or NEWS edit (Learning 964). **(8)
+Mutants:** 12 of 12 at GREEN, 6 of 6 at REFACTOR (the shared `boxLabels`
+reactive and its four uses), 2 of 3 on the shared test fixture (the
+5-animals mutant is equivalent: no test asserts the count). Final
+numbers: full suite 3,820 blocks, 12,853 expectations, 0 failed, 0
+errors, 187 skipped, 6 warnings (7.1 min); `lint_package()` 0;
+`devtools::check()` 0/0/0; ratchet 1/1 pass (tarball 3,888,240 B).
+
+#### Learning 967
+
+**Before `--write` on a ledger trim, dry-run the default cut and a clean
+one (`--cut <the day before today>`), and take the clean one when the
+default prints `CUT_STRADDLES_DAY`: this project closes many sessions on
+one date, so the positional default kept some 2026-10-15 records live,
+archived one more (121 against 120) and would have named the shard
+`through-2026-10-15`, a span label; the day cut kept all 17 records of
+the day live, printed no straddle warning and left `CHANGELOG.md` at
+34,299 B against the 65,536 B budget.** **(1) Pointer chain:** the trim
+moves the older archive-pointer blocks into the new shard, so the live
+file keeps one pointer (the newest shard) and the chain runs live file,
+newest shard, older shards. **(2) Dead pointers, measured S1001:** the
+sync after S960 moved the shard directory from `docs/archive/` to
+`methodology/archive/` and the older pointers were not rewritten: 23 of
+23 in `SESSION_NOTES.md`, 17 of 18 in `HANDOFFS.md` and 12 of 12 in the
+new CHANGELOG shard point at `docs/archive/` and do not resolve, while
+every target exists by name in `methodology/archive/`; the unmodified
+`HEAD` copy of `CHANGELOG.md` had the same 12 links, so the trim broke
+nothing and its proof (`verify.sh`, `--reverify`) holds regardless.
+Resolve each pointer against its own file’s directory to find them; the
+decision is in `BACKLOG.md`. **(3) Tests that name the ledgers:**
+`grep -il changelog tests/testthat/*.R` finds 11 files and
+`HANDOFFS|SESSION_NOTES` adds `test_handoffsReceiptPlacement.R` (the
+claim added a receipt): 12 files, 178 blocks, 886 expectations, 0
+failed. **(4) zsh:** `FILES=$(grep ...)` then `Rscript x.R $FILES`
+passes ONE argument (`file.exists` said FALSE); use `${=FILES}`. **(5) A
+claim script that edits three files must check every anchor before it
+writes the first:** this one wrote `SESSION_NOTES.md`, then stopped on
+`assert t.count("## 2026-10\n\n") == 1` (the ledger has two such
+headings, one above and one below the September block), so the rerun had
+to skip step 1; use `replace(anchor, new, 1)` or check all anchors
+first.

@@ -27,7 +27,7 @@ unique `locus`. Each cell holds that individual's two alleles at that
 locus, sorted (by string collation, so locale-dependent for mixed-case
 alleles) and joined by `"/"` (e.g. `"A/B"`), or `NA` when that
 individual has no genotype record at that locus. A record with a missing
-allele gives the string `"NA/NA"` (not `NA`);
+allele gives `NA`, the same as a record that is not in the file;
 [`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
 does not reject such rows.
 
