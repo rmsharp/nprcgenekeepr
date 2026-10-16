@@ -10,10 +10,11 @@
 #' \code{\link{checkSnapshotHistory}} for the column groups). Excel
 #' (\code{.xls}/\code{.xlsx}) and delimited text (\code{.csv}/\code{.txt})
 #' files are both accepted, mirroring \code{\link{readKinshipOverrides}}.
-#' Excel files are read with every column as text, so the numeric columns
-#' (e.g. \code{schemaVersion}) must be converted before
-#' \code{\link{checkSnapshotHistory}} will accept them. Delimited text files
-#' need no such conversion.
+#' Excel files are read with every column as text and then the numeric columns
+#' (e.g. \code{schemaVersion}) are converted to numbers, so an Excel file and a
+#' delimited text file of the same table give the same result. A numeric column
+#' that holds a value that is not a number is left as text and
+#' \code{\link{checkSnapshotHistory}} stops, naming it.
 #'
 #' This reader does not validate structure or domain — that is
 #' \code{\link{checkSnapshotHistory}}'s job, matching the reader/validator
@@ -38,7 +39,17 @@
 #' history <- checkSnapshotHistory(history)
 readSnapshotHistory <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
-    history <- readExcelPOSIXToCharacter(fileName)
+    history <- convertExcelNumericColumns(
+      readExcelPOSIXToCharacter(fileName),
+      c(
+        "schemaVersion", "guIter", "guThresh", "nAnimals", "nMales",
+        "nFemales", "fe", "fg", "fgSE", "neGD", "neSexRatio", "neVariance",
+        "nMaleFounders", "nFemaleFounders", "nFounders",
+        "meanIndivMeanKin", "medianIndivMeanKin", "skewnessIndivMeanKin",
+        "kurtosisIndivMeanKin", "meanGu", "medianGu", "meanGuSE",
+        "skewnessGu", "kurtosisGu"
+      )
+    )
   } else {
     history <- muffleIncompleteFinalLine(read.table(fileName,
       header = TRUE,

@@ -10,10 +10,11 @@
 #' \code{kinship}, with a header row, so a user can export the current matrix,
 #' edit a few rows, and feed it back. Excel (\code{.xls}/\code{.xlsx}) and
 #' delimited text (\code{.csv}/\code{.txt}) files are both accepted, mirroring
-#' \code{\link{getGenotypes}}. Excel files are read with every column as text,
-#' so after reading one, convert \code{kinship} with \code{as.numeric()}
-#' before calling \code{\link{checkKinshipOverrides}}, which requires a
-#' numeric column. Delimited text files need no such conversion.
+#' \code{\link{getGenotypes}}. Excel files are read with every column as text
+#' and then the \code{kinship} column is converted to numbers, so an Excel file
+#' and a delimited text file of the same table give the same result. If any
+#' value in that column is not a number, the column is left as text and
+#' \code{\link{checkKinshipOverrides}} stops, naming it.
 #'
 #' This reader does not validate structure or domain -- that is
 #' \code{\link{checkKinshipOverrides}}'s job. \code{kinship} is the kinship
@@ -38,7 +39,9 @@
 #' }
 readKinshipOverrides <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
-    overrides <- readExcelPOSIXToCharacter(fileName)
+    overrides <- convertExcelNumericColumns(
+      readExcelPOSIXToCharacter(fileName), "kinship"
+    )
   } else {
     overrides <- muffleIncompleteFinalLine(read.table(fileName,
       header = TRUE,

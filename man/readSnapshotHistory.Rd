@@ -26,10 +26,11 @@ per recorded snapshot in the 27-column version-1 schema (see
 \code{\link{checkSnapshotHistory}} for the column groups). Excel
 (\code{.xls}/\code{.xlsx}) and delimited text (\code{.csv}/\code{.txt})
 files are both accepted, mirroring \code{\link{readKinshipOverrides}}.
-Excel files are read with every column as text, so the numeric columns
-(e.g. \code{schemaVersion}) must be converted before
-\code{\link{checkSnapshotHistory}} will accept them. Delimited text files
-need no such conversion.
+Excel files are read with every column as text and then the numeric columns
+(e.g. \code{schemaVersion}) are converted to numbers, so an Excel file and a
+delimited text file of the same table give the same result. A numeric column
+that holds a value that is not a number is left as text and
+\code{\link{checkSnapshotHistory}} stops, naming it.
 }
 \details{
 This reader does not validate structure or domain — that is
