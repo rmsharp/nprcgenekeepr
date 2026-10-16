@@ -279,7 +279,8 @@ longitudinal monitoring of colony genetic health.
 
 - The last box on the **Groups** tab, which holds the animals that fit no
   group, is headed **Unused animals** instead of the next group number. The
-  **Statistics** table and the **Group Detail** list use the same name.
+  **Statistics** table, the **Group Detail** list and the **Genetic Diversity**
+  heat map use the same name.
 - A box that holds exactly one animal is headed "(1 animal)" on the
   **Groups** tab, not "(1 animals)".
 - New **Include animals by** control: a genetic-value floor as an alternative
