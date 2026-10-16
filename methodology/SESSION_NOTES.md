@@ -99,29 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1005 Did
-**Deliverable:** make an Excel upload of kinship overrides or snapshot history work (`BACKLOG.md:166`, the first of the six fixes ruled S1004) (IN PROGRESS)
-**Started:** 2026-10-16 (owner pick at the Phase 0 picker, item 1 of 4)
-**Status:** Session claimed. Strict TDD: the PRE-RED scope question first, then RED, GREEN, REFACTOR, each behind its own `AskUserQuestion` gate. No test or code yet.
-Next: read `R/readExcelPOSIXToCharacter.R`, `R/readKinshipOverrides.R`, `R/readSnapshotHistory.R`, `R/modGeneticValue.R:250`, `R/modSnapshotTrends.R:158`; ask the scope question before any test.
-**CI at Phase 0:** the scheduled `shinytest2` run of 2026-10-16 07:15 UTC failed in `test-e2e-marker-genetics-genomic-roh-module.R` (known, deferred as `BACKLOG.md:237`); the S1002 push
-workflows are all green; one red so far, so the 2026-10-17 07:15 UTC run decides whether `:237` is real. Phase 0 found no ledger gap (both frontiers at HEAD `a5cc37192`).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, all three gates taken):** an Excel upload of kinship overrides or snapshot history works (the `BACKLOG.md` block is removed). Both readers now convert
+their numeric columns when they read Excel (`kinship`; 24 of the 27 snapshot columns) through one internal function, `R/convertExcelNumericColumns.R`, that converts a column only when every filled cell is a
+number (otherwise it stays text and the checker names it, as for a CSV); the 27 snapshot column names are written once, `R/snapshotSchemaColumns.R`. Help rewritten; `NEWS.Rmd` has a Fixed bullet.
+No scope question was asked: after reading the code the S1004 ruling had settled every fork.
+**Gates:** claim `105d6731a`; owner-directed removal of the `## 2026-10` ledger heading `f8553a894`; RED `13483ab8f` (11 new blocks, 9 fail, 2 guards; shared `helper-excelFixtures.R`); GREEN `5d050b608`; NEWS
+`318eb0d6e`, `9663f9e99`; REFACTOR `514d61384`. Full suite 428 files, 3,835 blocks, 0 failed, 0 errors; lint 0; `devtools::check()` 0/0/0; ratchet 1/1 pass; **real app** (headless Chrome, scratch install): before
+the fix 4 of 6 checks fail, after 6 of 6 pass. No push (16 local commits).
+**Handoff evaluation of S1004: 9/10.** Helped: the Next list and the Gotchas, the S1003 numbers (0.1042 against 0.1375, reproduced as 0.104 and 0.137), `fileInfo()` `:28`, the fold reminder. Missing: that both
+readers' help told users to convert by hand. Wrong: "starts at the PRE-RED scope question" (none was left); "the reader tests pin the text-only read" (they check columns and rows only).
+**Self-assessment: 8/10.** + full Phase 0; claimed first; proved every test shape could pass before RED; both mid-turn questions answered from measurements; the real-app run done before and after the fix.
+- the unexported-variable slip twice more; two real-app runs that tested the wrong tree (Learning 971); a wrong ledger tag; two lint findings in a new file; a three-sentence NEWS bullet.
+**Next:** `BACKLOG.md:166` (Mate Pair, READY, S, strict TDD; "add a reason or a sentence only" is its PRE-RED question), then `:178`, `:189`, `:201`, `:214`. If the 2026-10-17 07:15 UTC `shinytest2` run is red
+again, `:224` goes first. Also open: `:240`, the DECISION NEEDED items `:246`, `:256`, `:271`, `:284`, CC5, the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass (`:470`; the file is 57,139 B).
+**Gotchas:** `BACKLOG.md` cites below `:166` moved up 13 lines; Learning 971 (a smoke run from the repo root tests the working tree; set variables on the `Rscript` command); `writeTestXlsx()` in
+`tests/testthat/helper-excelFixtures.R` builds a temporary workbook for any reader test.
 
 
 ### Sessions 947-1004 (condensed S950 to S1005; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1004: the owner's rulings on the seven slice 6e findings recorded: fix all seven, option (a) each time (a decision session, no `R/`, test or `NEWS` change; `BACKLOG.md` holds six READY fix
 items `:166-:236`, the red-CI item `:237` and the 13-statements item `:253`; claim `ad0b5370b`, rulings `aa6dcbce1`, ledger backfill `6746818ce`; evaluation of S1003 9/10, self 8/10).
-**Gotchas kept (S1004):** `VAR=value Rscript -e`, not `Rscript -e VAR=value`; a CI job log comes from `gh api repos/rmsharp/nprcgenekeepr/actions/jobs/<job id>/logs` when `gh run view --log`
-prints nothing; the ratchet run takes about 2 minutes (background it); fixture cites: `matePairPed()` `test_modMatePair.R:28`, `fileInfo()` `test_modGeneticValue_kinshipOverrides.R:28`,
-`.ccUploadInputs()` `test_modCrossCenterIdentity.R:54`.
 S1003: the 46 slice 6e code candidates re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`; an audit, no code change; 1 closed, 45 still true, 6 moderate plus the new
-N1: the Mate Pair table pairs animals of unknown sex, `R/reportMatePairs.R:198-211`; the seven rulings are `BACKLOG.md:166`; claim `6b1b41a76`, report `8e534818a`; evaluation of S1002 9/10, self 8/10).
-**Gotchas kept (S1003):** each candidate needs a reach check (who calls it) before its weight is set; the excluded table's reasons are a closed list (`R/reportMatePairs.R:32-36`), so reporting
-left-out unknown-sex animals is a design choice; fixtures to copy: `matePairPed()` in `tests/testthat/test_modMatePair.R:28` (S1003 said `:20`).
+N1: the Mate Pair table pairs animals of unknown sex, `R/reportMatePairs.R:198-211`; the seven were ruled S1004; claim `6b1b41a76`, report `8e534818a`; evaluation of S1002 9/10, self 8/10).
 S1002: the twelve Summary Statistics Export pop-ups no longer draw a "character(0)" title bar (`R/modSummaryStats.R:16` `.exportButtonPopover()`; `popify(title = "")`;
 `NEWS.Rmd:599`; strict TDD, REFACTOR taken; claim `7de14f5ac`, RED `cd0788344`, GREEN `6ef86136d`, NEWS `6911fd504`, REFACTOR `82ad057f0`; evaluation of S1001 9/10, self 8/10).
-**Gotchas kept (S1002):** `title = ""` hides a Bootstrap 4 popover header while `NULL` prints "character(0)"; run the whole test family (`Sys.glob("tests/testthat/test_modSummaryStats*.R")`)
-before GREEN; in a scratch driver `click(wait_ = FALSE)` errors, use `run_js`.
 S1001: `methodology/CHANGELOG.md` trimmed from 207,203 B to 34,299 B, 120 of 137 records in `methodology/archive/CHANGELOG-through-2026-10-14.md` (housekeeping, no `R/` or test change;
 claim `b28b5dd57`, trim `27b9da85d`; `methodology_trim.py --cut 2026-10-14`; evaluation of S1000 9/10, self 8/10). **Found, not fixed:** 52 archive pointers name `docs/archive/` while
 the shards sit in `methodology/archive/` (`BACKLOG.md` DECISION NEEDED). **Gotchas kept (S1001):** pass `--cut <day before today>` when today's records stay live (the default cut

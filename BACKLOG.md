@@ -143,8 +143,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       true, 6 moderate (CE2 `fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for kinship overrides and
       snapshot history, CI1 example-config API-key placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
       **one new moderate, N1: the Mate Pair table pairs animals of unknown sex, lists them as sire or dam and pairs an
-      animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time), queued as the six fix items
-      below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
+      animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, the other
+      six queued as five fix items below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
       and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
@@ -162,19 +162,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **Make an Excel upload of kinship overrides or snapshot history work (READY, Effort S-M; strict TDD)** (ruled
-      S1004, 2026-10-16: fix, option (a); slice 6e re-check Finding 1, CF3 with RF1 and RF2,
-      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:50-70`; first of six, in the order the ruling
-      listed them) -- `R/readExcelPOSIXToCharacter.R:16` reads every Excel column as text, so
-      `checkKinshipOverrides()` (`R/modGeneticValue.R:250`) and `checkSnapshotHistory()` (`R/modSnapshotTrends.R:158`)
-      stop "column must be numeric" and the module carries on without the file (mean kinship 0.1042 with no file and
-      with the Excel file, 0.1375 with the same overrides as CSV; S1003); the screens and the guide
-      (`vignettes/articles/colony-manager-guide.qmd:454`) say Excel works. **Ruled fix:** convert the declared numeric
-      columns when the Excel branch reads (`R/readKinshipOverrides.R`, `R/readSnapshotHistory.R`), as the CSV path
-      already does; test through each module with a real `.xlsx` (the reader tests use `.xlsx` but pin the text-only
-      read); the twin-relations Excel upload already works. Fixture to copy: `fileInfo()` in
-      `tests/testthat/test_modGeneticValue_kinshipOverrides.R:28`. `NEWS.Rmd` gets a release-state sentence.
 
 - [ ] **Make the Mate Pair table pair only animals of known sex (READY, Effort S; strict TDD)** (ruled S1004: fix,
       option (a); Finding 2, N1, found S1003, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:72-92`;
