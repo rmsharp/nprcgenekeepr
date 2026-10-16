@@ -10,6 +10,17 @@ utils::globalVariables(c("x", "y"))
 # downloadButton does not choose a directory, the browser does.
 .browserSavesText <- "your browser saves to its download folder."
 
+# An Export button with the popover that says what it writes. The title is
+# empty on purpose: shinyBS writes a NULL title into the page as the text
+# "character(0)", which the page draws as a title bar above the sentence.
+.exportButtonPopover <- function(ns, id, label, content) {
+  shinyBS::popify(
+    downloadButton(ns(id), label),
+    title = "",
+    content = content
+  )
+}
+
 #' Summary Statistics Module - UI Function
 #'
 #' Creates user interface for summary statistics display including
@@ -56,42 +67,35 @@ modSummaryStatsUI <- function(id) {
     # Export buttons row (with popover descriptions)
     fluidRow(
       column(2L, offset = 1L,
-             shinyBS::popify(
-               downloadButton(ns("downloadKinship"), "Export Kinship Matrix"),
-               title = "",
-               content = paste(
+             .exportButtonPopover(
+               ns, "downloadKinship", "Export Kinship Matrix",
+               paste(
                  "This exports the kinship matrix to a CSV file",
                  .browserSavesText
                )
              )),
       column(2L,
-             shinyBS::popify(
-               downloadButton(ns("downloadMaleFounders"),
-                              "Export Male Founders"),
-               title = "",
-               content = paste(
+             .exportButtonPopover(
+               ns, "downloadMaleFounders", "Export Male Founders",
+               paste(
                  "This exports the male founder pedigree records to",
                  "a CSV file",
                  .browserSavesText
                )
              )),
       column(2L,
-             shinyBS::popify(
-               downloadButton(ns("downloadFemaleFounders"),
-                              "Export Female Founders"),
-               title = "",
-               content = paste(
+             .exportButtonPopover(
+               ns, "downloadFemaleFounders", "Export Female Founders",
+               paste(
                  "This exports the female founder pedigree records",
                  "to a CSV file",
                  .browserSavesText
                )
              )),
       column(3L,
-             shinyBS::popify(
-               downloadButton(ns("downloadFirstOrder"),
-                              "Export First-Order Relationships"),
-               title = "",
-               content = paste(
+             .exportButtonPopover(
+               ns, "downloadFirstOrder", "Export First-Order Relationships",
+               paste(
                  "This exports all first-order relations to a CSV file",
                  .browserSavesText
                )
@@ -101,21 +105,17 @@ modSummaryStatsUI <- function(id) {
     # Additional relationship export buttons
     fluidRow(
       column(3L, offset = 1L,
-             shinyBS::popify(
-               downloadButton(ns("downloadRelationships"),
-                              "Export All Relationships"),
-               title = "",
-               content = paste0(
+             .exportButtonPopover(
+               ns, "downloadRelationships", "Export All Relationships",
+               paste0(
                  "This exports all pairwise relationship designations ",
                  "to a CSV file."
                )
              )),
       column(3L,
-             shinyBS::popify(
-               downloadButton(ns("downloadRelationClasses"),
-                              "Export Relationship Classes"),
-               title = "",
-               content = paste0(
+             .exportButtonPopover(
+               ns, "downloadRelationClasses", "Export Relationship Classes",
+               paste0(
                  "This exports the relationship class frequency table ",
                  "to a CSV file."
                )
@@ -137,10 +137,9 @@ modSummaryStatsUI <- function(id) {
         offset = 1L,
         plotOutput(ns("mkHist"), width = "400px", height = "400px"),
         br(),
-        shinyBS::popify(
-          downloadButton(ns("downloadMkHist"), "Export Mean Kinship Histogram"),
-          title = "",
-          content = paste(
+        .exportButtonPopover(
+          ns, "downloadMkHist", "Export Mean Kinship Histogram",
+          paste(
             "This exports the Mean Kinship Coefficient histogram as",
             "a PNG file",
             .browserSavesText
@@ -150,10 +149,9 @@ modSummaryStatsUI <- function(id) {
 
         plotOutput(ns("zscoreHist"), width = "400px", height = "400px"),
         br(),
-        shinyBS::popify(
-          downloadButton(ns("downloadZscoreHist"), "Export Z-Score Histogram"),
-          title = "",
-          content = paste(
+        .exportButtonPopover(
+          ns, "downloadZscoreHist", "Export Z-Score Histogram",
+          paste(
             "This exports the Mean Kinship Z-score histogram as",
             "a PNG file",
             .browserSavesText
@@ -163,11 +161,9 @@ modSummaryStatsUI <- function(id) {
 
         plotOutput(ns("guHist"), width = "400px", height = "400px"),
         br(),
-        shinyBS::popify(
-          downloadButton(ns("downloadGuHist"),
-                         "Export Genome Uniqueness Histogram"),
-          title = "",
-          content = paste(
+        .exportButtonPopover(
+          ns, "downloadGuHist", "Export Genome Uniqueness Histogram",
+          paste(
             "This exports the Genome Uniqueness histogram as PNG",
             "file",
             .browserSavesText
@@ -181,10 +177,9 @@ modSummaryStatsUI <- function(id) {
         5L,
         plotOutput(ns("mkBox"), width = "400px", height = "400px"),
         br(),
-        shinyBS::popify(
-          downloadButton(ns("downloadMkBox"), "Export Mean Kinship Box Plot"),
-          title = "",
-          content = paste(
+        .exportButtonPopover(
+          ns, "downloadMkBox", "Export Mean Kinship Box Plot",
+          paste(
             "This exports Mean Kinship Coefficient box plot as PNG file",
             .browserSavesText
           )
@@ -193,10 +188,9 @@ modSummaryStatsUI <- function(id) {
 
         plotOutput(ns("zscoreBox"), width = "400px", height = "400px"),
         br(),
-        shinyBS::popify(
-          downloadButton(ns("downloadZscoreBox"), "Export Z-Score Box Plot"),
-          title = "",
-          content = paste(
+        .exportButtonPopover(
+          ns, "downloadZscoreBox", "Export Z-Score Box Plot",
+          paste(
             "This exports the Mean Kinship Z-score box plot as",
             "a PNG file",
             .browserSavesText
@@ -206,11 +200,9 @@ modSummaryStatsUI <- function(id) {
 
         plotOutput(ns("guBox"), width = "400px", height = "400px"),
         br(),
-        shinyBS::popify(
-          downloadButton(ns("downloadGuBox"),
-                         "Export Genome Uniqueness Box Plot"),
-          title = "",
-          content = paste(
+        .exportButtonPopover(
+          ns, "downloadGuBox", "Export Genome Uniqueness Box Plot",
+          paste(
             "This exports Genome Uniqueness box plot as a PNG",
             "file",
             .browserSavesText
