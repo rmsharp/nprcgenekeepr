@@ -28,6 +28,12 @@
 #' input -- "scope to nobody" -- and returns a zero-row \code{pairs} frame
 #' with the full column shape, not an error.
 #'
+#' \strong{Sex.} Only animals recorded as male (\code{"M"}) or female
+#' (\code{"F"}) are paired. An animal with any other sex (unknown,
+#' hermaphrodite or missing) is left out before pairs are formed and appears
+#' in neither \code{pairs} nor \code{excluded}; the Mate Pair Analysis tab
+#' says how many animals were left out.
+#'
 #' \strong{Exclusion transparency (D5).} Two independent screens produce
 #' \code{excluded} rows: the age screen (\code{"under minimum age"}) and the
 #' caller-supplied \code{exclude} id list (\code{"user-excluded"}). A pair
@@ -189,6 +195,10 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
   if (!is.null(populationIds)) {
     kmat <- filterKinMatrix(populationIds, kmat)
   }
+  # Only animals recorded male or female are paired. The Mate Pair page counts
+  # the rest with the same function, so the two cannot disagree.
+  paired <- !rownames(kmat) %in% matePairLeftOutIds(ped, kmat)
+  kmat <- kmat[paired, paired, drop = FALSE]
 
   if (nrow(kmat) == 0L || ncol(kmat) == 0L) {
     return(emptyMateResult(ped, ancestry))
@@ -205,8 +215,9 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
   }
 
   # Normalize id1/id2 (whichever happened to land where in the matrix) to
-  # sireId (male) / damId (female) -- filterPairs() above guarantees every
-  # surviving row is opposite-sex.
+  # sireId (male) / damId (female) -- only animals recorded male or female
+  # reach filterPairs() above, which drops male-male and female-female pairs,
+  # so every surviving row is opposite-sex.
   sex1 <- ped$sex[match(kin$id1, ped$id)]
   isSire1 <- sex1 == sexCodes[["male"]]
   kin <- data.frame(

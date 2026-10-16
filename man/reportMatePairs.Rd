@@ -116,6 +116,12 @@ is a candidate). An explicit \code{character(0)} is a valid, distinct
 input -- "scope to nobody" -- and returns a zero-row \code{pairs} frame
 with the full column shape, not an error.
 
+\strong{Sex.} Only animals recorded as male (\code{"M"}) or female
+(\code{"F"}) are paired. An animal with any other sex (unknown,
+hermaphrodite or missing) is left out before pairs are formed and appears
+in neither \code{pairs} nor \code{excluded}; the Mate Pair Analysis tab
+says how many animals were left out.
+
 \strong{Exclusion transparency (D5).} Two independent screens produce
 \code{excluded} rows: the age screen (\code{"under minimum age"}) and the
 caller-supplied \code{exclude} id list (\code{"user-excluded"}). A pair

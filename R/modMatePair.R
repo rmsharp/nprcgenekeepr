@@ -264,6 +264,11 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
     # so the Ancestry tab and manifest describe the displayed run, never live
     # state.
     ancestryRun <- reactiveVal(NULL)
+    # How many animals of the displayed run's population were left out because
+    # their sex is not recorded as male or female (matePairLeftOutIds()). Set
+    # with matchResults at the click, so the sentence describes the displayed
+    # run, never an input edited since.
+    leftOutCount <- reactiveVal(0L)
 
     output$excludeTextarea <- renderUI({
       req(isTRUE(input$useExcludeList))
@@ -439,6 +444,7 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
         overriddenRules = overridesRun
       )
       matchResults(res)
+      leftOutCount(length(matePairLeftOutIds(ped, kmat, popIds)))
       ancestryRun(if (is.null(rulesRun)) {
         NULL
       } else {
@@ -496,6 +502,15 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
                 "Pairs\" to see results.")
         ))
       }
+      nLeftOut <- leftOutCount()
+      leftOutNote <- if (nLeftOut > 0L) {
+        div(
+          class = "alert alert-info",
+          sprintf("%d %s not recorded as male or female %s left out of the pairs.",
+                  nLeftOut, if (nLeftOut == 1L) "animal" else "animals",
+                  if (nLeftOut == 1L) "was" else "were")
+        )
+      }
       if (nrow(res$pairs) == 0L) {
         msg <- paste("No eligible pairs found under the current population",
                      "scope and age settings. Try including more animals or",
@@ -508,8 +523,9 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
                                            "ancestry rules -- see the",
                                            "Excluded tab."), nAncestry))
         }
-        div(class = "alert alert-warning", msg)
+        return(tagList(div(class = "alert alert-warning", msg), leftOutNote))
       }
+      leftOutNote
     })
 
     # The displayed run's downloadable audit record (D8, the #150 manifest
