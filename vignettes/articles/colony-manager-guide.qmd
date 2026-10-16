@@ -674,9 +674,10 @@ lists the seven animals that fit no group.
 ![Breeding groups formed with a Custom sex ratio of 2.5 (females per male) -- one run of the randomized search.](shiny_app_use/breeding_group_sex_ratio_specification.png){fig-alt="Breeding Group Formation Groups sub-tab showing 6 groups formed in one run using a Custom sex ratio of 2.5 females per male, plus a seventh box listing the seven animals that fit no group; the exact group count and composition vary between runs."}
 
 That last box is not a group: it appears only when some candidates fit in no
-group, and it lists them. The **Groups** sub-tab, the **Statistics** table and
-the **Group Detail** selector all call it 'Unused animals', and the Groups
-count in the candidate table above the tabs includes it.
+group, and it lists them. The **Groups** sub-tab, the **Statistics** table, the
+**Group Detail** selector and the **Genetic Diversity** heat map all call it
+'Unused animals', and the Groups count in the candidate table above the tabs
+includes it.
 
 **Seeding groups with specific animals.** Behavioral constraints -- an
 existing social group, or an infant that should stay with its dam -- can be
@@ -850,7 +851,9 @@ Chinese-origin status, shown only when the pedigree has an `ancestry`
 column), **Production** (births per breeding-age female over the last two calendar
 years, scored red/yellow/green against cut-offs that depend on the selected
 **Housing type**, "Shelter pens" or "Corral"), and
-**Inbreeding** (within-group kinship risk involving the group's male). A
+**Inbreeding** (within-group kinship risk involving the group's male). When
+some animals fit no group, the last row is that box of animals, named **Unused
+animals** as on the Breeding Groups tab, and it is scored like a group. A
 group with no assessed value, or an undefined Inbreeding result, is scored
 red rather than shown as healthy, so missing data surfaces instead of hiding
 as a false green. A breeding-age female is one at least 3 years old. A female

@@ -160,6 +160,8 @@ The `modBreedingGroups` module returns reactive values:
   last element is the "Unused" group
 - `nGroups`: Number of elements in `groups` (this counts the "Unused" group
   when there is one)
+- `groupLabels`: The name of each element of `groups`: "Group 1", "Group 2" and
+  so on, and "Unused animals" for the "Unused" group when there is one
 - `unassigned`: IDs of candidates that appear in no group, including the
   "Unused" group
 - `score`: Score of the selected candidate grouping (the size of its smallest
