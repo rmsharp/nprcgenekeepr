@@ -55,8 +55,8 @@ moduleContractServers <- list(
   modBreedingGroups = list(
     server = modBreedingGroupsServer,
     args = list(pedigree = shiny::reactive(NULL)),
-    names = c("groups", "nGroups", "score", "unassigned", "groupKinship",
-              "ancestryRules")
+    names = c("groups", "nGroups", "groupLabels", "score", "unassigned",
+              "groupKinship", "ancestryRules")
   ),
   modPyramid = list(
     server = modPyramidServer,
