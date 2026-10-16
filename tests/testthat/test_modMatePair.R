@@ -604,3 +604,182 @@ test_that("a population scope with zero eligible individuals renders an empty, n
     }
   )
 })
+
+## -- S1006 RED (BACKLOG.md:166): animals not recorded as male or female ------
+## The pairs hold only a male as sire and a female as dam. The page says in one
+## sentence how many animals of the run's population were left out (the owner
+## chose "one sentence only" at the S1006 scope question), so the Excluded tab
+## gains no row. test_reportMatePairsUnknownSex.R covers the function itself.
+
+## matePairPed() plus U1 (sex "U") and N1 (blank sex), both alive and adult.
+matePairPedUnsexed <- function() {
+  rbind(
+    matePairPed(),
+    data.frame(
+      id = c("U1", "N1"),
+      sire = NA_character_,
+      dam = NA_character_,
+      sex = c("U", NA_character_),
+      age = 10,
+      exit = as.Date(NA),
+      stringsAsFactors = FALSE
+    )
+  )
+}
+
+## The visible text of the guidance notice(s): tags dropped, white space
+## collapsed; "" when the notice is empty.
+guidanceText <- function(html) {
+  text <- gsub("<[^>]+>", " ", paste(as.character(html), collapse = " "))
+  trimws(gsub("\\s+", " ", text))
+}
+
+test_that("the page says how many animals were left out and lists none of them as a pair", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPedUnsexed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "allAlive", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      result <- session$getReturned()
+      pairs <- result$pairs()
+      excluded <- result$excluded()
+
+      expect_setequal(paste(pairs$sireId, pairs$damId, sep = "|"),
+                      c("M1|F1", "M1|F2", "M1|F3"))
+      shown <- c(pairs$sireId, pairs$damId, excluded$sireId, excluded$damId)
+      expect_false(any(c("U1", "N1") %in% shown))
+      expect_setequal(unique(excluded$reason), "under minimum age")
+      expect_identical(
+        guidanceText(output$guidance$html),
+        paste("2 animals not recorded as male or female were left out of the",
+              "pairs.")
+      )
+    }
+  )
+})
+
+test_that("the sentence is singular for one animal left out", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPedUnsexed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "custom",
+                        customPopulationIds = "M1, F1\nU1", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      pairs <- session$getReturned()$pairs()
+      expect_identical(paste(pairs$sireId, pairs$damId, sep = "|"), "M1|F1")
+      expect_identical(
+        guidanceText(output$guidance$html),
+        paste("1 animal not recorded as male or female was left out of the",
+              "pairs.")
+      )
+    }
+  )
+})
+
+test_that("the sentence shows beside the no-eligible-pairs message", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPedUnsexed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "custom",
+                        customPopulationIds = "U1, N1", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      expect_identical(nrow(session$getReturned()$pairs()), 0L)
+      text <- guidanceText(output$guidance$html)
+      expect_true(grepl("No eligible pairs found", text, fixed = TRUE))
+      expect_true(grepl(
+        "2 animals not recorded as male or female were left out of the pairs.",
+        text, fixed = TRUE
+      ))
+    }
+  )
+})
+
+test_that("the sentence is the click's, not the box edited afterward", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPedUnsexed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "custom",
+                        customPopulationIds = "M1, F1\nU1", minAge = 1)
+      session$setInputs(analyze = 1)
+      session$setInputs(customPopulationIds = "M1, F1")
+
+      expect_true(grepl("1 animal not recorded as male or female was left out",
+                        guidanceText(output$guidance$html), fixed = TRUE))
+
+      session$setInputs(analyze = 2)
+      expect_false(grepl("left out", guidanceText(output$guidance$html),
+                         fixed = TRUE))
+    }
+  )
+})
+
+test_that("no sentence shows when every animal is recorded as male or female", {
+  skip_if_not_installed("shiny")
+
+  ped <- matePairPed()
+  kmat <- matePairKmat(ped)
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      kinshipMatrix = shiny::reactive(kmat),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL)
+    ),
+    {
+      session$setInputs(populationSource = "allAlive", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      expect_false(grepl("left out", guidanceText(output$guidance$html),
+                         fixed = TRUE))
+    }
+  )
+})
