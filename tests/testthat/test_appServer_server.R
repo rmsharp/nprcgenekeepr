@@ -759,13 +759,14 @@ mountRealDiversity <- function(id, ...) {
 # Genetic Value stub returning the focal animals' own matrix. The Genetic
 # Diversity server is the real one unless a test passes a capturing one.
 withDiversityApp <- function(code, diversityServer = mountRealDiversity,
-                             summaryStatsServer = noopServer) {
+                             summaryStatsServer = noopServer,
+                             breedingGroupsServer = stubBG) {
   testthat::with_mocked_bindings(
     code,
     modInputServer = stubInput,
     modPedigreeServer = stubPed,
     modGeneticValueServer = stubGVPopulationKinship,
-    modBreedingGroupsServer = stubBG,
+    modBreedingGroupsServer = breedingGroupsServer,
     modSummaryStatsServer = summaryStatsServer,
     modPyramidServer = noopServer,
     modGeneticDiversityServer = diversityServer,
@@ -868,6 +869,80 @@ test_that(paste("the Genetic Diversity tab still waits for the Genetic Value",
   })
 
   expect_null(result)
+})
+
+# =============================================================================
+# 7c. The heat map's leftover row is called "Unused animals" (S1000,
+#     docs-audit part 2 flag CA3). Breeding Groups ends a run with a box of
+#     the animals that fit no group and calls it "Unused animals" on its
+#     three pages, but the Genetic Diversity tab handed the same box to
+#     getGeneticDiversityStats() in an unnamed list, so the heat map drew it
+#     as the next group number ("Group 2" for a run of one group). The owner
+#     ruled: keep the row and name it; leave groups() as it is and add one
+#     returned item, groupLabels, that holds the name of each box. appServer
+#     attaches those names to the list it hands the Genetic Diversity tab.
+#
+#     The fixture reuses the three animals above as two boxes: the parents,
+#     and their daughter alone as the leftover box.
+# =============================================================================
+
+diversityTwoBoxes <- list(c("f1", "m1"), "o1")
+
+# The Breeding Groups stub as the real module returns it now: with the item
+# that names each box (ctl$labels() stands in for it, NULL until a test sets
+# it).
+stubBGWithLabels <- function(id, ...) {
+  out <- stubBG(id, ...)
+  ctl$labels <- shiny::reactiveVal(NULL)
+  out$groupLabels <- shiny::reactive(ctl$labels())
+  out
+}
+
+# The heat map's statistics for the two boxes, with `labels` the box names the
+# groups server returns (never set when the stub returns no such item).
+diversityStatsFor <- function(breedingGroupsServer, labels = NULL) {
+  result <- NULL
+  withDiversityApp({
+    muffleConfig(shiny::testServer(appServer, {
+      session$flushReact()
+      ctl$ped(diversityPed)
+      ctl$gv(diversityReport)
+      ctl$grp(diversityTwoBoxes)
+      if (!is.null(labels)) ctl$labels(labels)
+      session$flushReact()
+      result <<- tryCatch(ctl$diversity$stats(), error = function(e) e)
+    }))
+  }, breedingGroupsServer = breedingGroupsServer)
+  result
+}
+
+test_that(paste("the heat map names the leftover box with the box names the",
+                "Breeding Groups server returns (CA3, S1000)"), {
+  result <- diversityStatsFor(stubBGWithLabels,
+                              c("Group 1", "Unused animals"))
+
+  # Said once, so a failure prints the stop's own text.
+  info <- if (inherits(result, "error")) conditionMessage(result) else ""
+  expect_s3_class(result, "data.frame")
+  expect_identical(result$group, c("Group 1", "Unused animals"), info = info)
+})
+
+test_that(paste("a Breeding Groups server that returns no box names still",
+                "gives the numbered rows, without an error (CA3, S1000)"), {
+  result <- diversityStatsFor(stubBG)
+
+  info <- if (inherits(result, "error")) conditionMessage(result) else ""
+  expect_s3_class(result, "data.frame")
+  expect_identical(result$group, c("Group 1", "Group 2"), info = info)
+})
+
+test_that(paste("box names that do not fit the groups (one name for two",
+                "boxes) are ignored, with no error (CA3, S1000)"), {
+  result <- diversityStatsFor(stubBGWithLabels, "Unused animals")
+
+  info <- if (inherits(result, "error")) conditionMessage(result) else ""
+  expect_s3_class(result, "data.frame")
+  expect_identical(result$group, c("Group 1", "Group 2"), info = info)
 })
 
 # =============================================================================
