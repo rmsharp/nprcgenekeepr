@@ -202,11 +202,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1003
 date: 2026-10-15
-status: pending
-active_task: IN PROGRESS -- re-check the 46 slice 6e candidates (CE to CL) of docs-audit part 2 against today's code (`BACKLOG.md:141`; owner pick at the Phase 0 picker, item 1 of 4); an audit, no code change
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the 46 slice 6e code candidates (CE1 to CL11) of docs-audit part 2 re-checked against today's code (owner pick at the Phase 0 picker, item 1 of 4; an audit, no code change, no TDD gates). Open items left: the seven rulings (BACKLOG.md:166), the guide sentence, the Changed Columns tab, the nameless header, the dead archive pointers, CC5 (the owner's call), the SESSION_RUNNER.md re-sync
+what_was_done: Phase 0 clean (gap 0, no pending receipt, CI green, dashboard 96/100, ratchet 1/1 pass). Claim 6b1b41a76. Read the code and ran a probe for each of 46 candidates (8 scratch scripts outside the repo); grepped who calls each function; ran N1, CF3, CE4 through their Shiny modules with testServer, CE2 through qcStudbook, CJ3 through groupAddAssign. Result: 1 closed (CF2, S923), 45 still true, 6 moderate (CE2, CE4, CE5, CF3, CI1, CJ3), 39 minor, plus 1 new moderate (N1, the Mate Pair table pairs animals of unknown sex). Report docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md, BACKLOG.md and the ledger in 8e534818a. 13 ledger-reading test files 130 blocks 0 failed. No push.
+next_steps: The owner rules on BACKLOG.md:166, one ruling per finding, the report recommends option (a) each time: CF3 first (Excel upload), then N1, CE2, CJ3, CE4 with CE5 in one session, CI1 with CI3. Each fix is its own strict-TDD session and starts at the PRE-RED scope question. Other candidates (re-grep BACKLOG.md lines): the guide sentence (DECISION NEEDED, S, the owner writes it), the Changed Columns tab, the nameless header, the dead archive pointers, a housekeeping session for the report's 13 small wrong statements. First, in Phase 0, run gh run list --branch master --limit 10
+key_files: docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:1 (the report), BACKLOG.md:166 (the seven rulings), R/reportMatePairs.R:198-211 (N1), R/readExcelPOSIXToCharacter.R:16 and R/modGeneticValue.R:250 (CF3), R/convertFromCenter.R:34-39 (CE2), R/fillGroupMembersWithSexRatio.R:83 (CJ3), R/resolveCrossCenterIds.R:190 and :484 (CE4 and CE5), R/getConfigApiKey.R:17 (CI1), PROJECT_LEARNINGS.md Learning 969
+gotchas: the excluded table's reasons are a closed list (R/reportMatePairs.R:32-36), so reporting left-out unknown-sex animals is a design choice; fixtures to copy are matePairPed() in tests/testthat/test_modMatePair.R:20, fileInfo() in test_modGeneticValue_kinshipOverrides.R:37 and .ccUploadInputs() in test_modCrossCenterIdentity.R:56; qcPed has no living animal of sex U so probe every sex code; CE2 fix: check the shipped example files for free-text fromCenter values before anchoring the match; zsh needs echo of a quoted triple equals sign, BSD sed needs -i with an empty suffix, so edit in place with python3 -I; local master is ahead of origin by 4 documentation commits, none starts CI; SESSION_NOTES.md sits about 400 tokens under its 25,000-token read limit
+runtime_smoke: n/a -- an audit, no runtime change. The findings were run headless through shiny::testServer (Mate Pair, Genetic Value, Cross-Center modules), qcStudbook and groupAddAssign; no browser click-through, and CI1 and CH4 need a LabKey server
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results ee7e3fe7bf35 · manifest aa983075d6a2
+changelog_ref: 8e534818a
+commit: 8e534818a
 ```
+Self-score 8: + read the runner and safeguards in full, reconciled both ledgers, picked through AskUserQuestion, claimed first; a probe for all 46; found N1, which no list had; five findings run through their module; recounted the report from its own table and fixed three wrong claims before they reached BACKLOG; - a wrong tool name once, three badly built probes, two long stretches with no status line (the owner asked twice), zsh and BSD sed errors. Predecessor (S1002) 9: the Next list and BACKLOG anchors held, the CI instruction was right; the 6e report path was missing and the two-session estimate was one.
 
 ```handoff
 session: S1002

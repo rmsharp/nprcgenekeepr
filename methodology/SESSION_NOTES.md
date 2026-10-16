@@ -99,11 +99,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1003 Did
-**Deliverable:** re-check the 46 slice 6e candidates (CE to CL) of docs-audit part 2 against today's code; one audit report in `docs/audits/` (IN PROGRESS)
-**Started:** 2026-10-15 (owner pick at the Phase 0 picker, item 1 of 4)
-**Status:** Session claimed. An audit: no `R/`, test or `NEWS` change planned, so no TDD gates (the S966, S986 and S991 precedent). Workstream `methodology/workstreams/AUDIT_WORKSTREAM.md`.
-Next: read the 6e source report (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`) and the 6d re-check report for its shape, then check each candidate against today's code.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; an audit, no `R/`, test or `NEWS` change, so no TDD gates):** the 46 slice 6e code candidates of docs-audit part 2 re-checked against
+today's code: `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`. **Result:** 1 closed (CF2, S923); 45 still true: 6 moderate (CE2, CE4, CE5, CF3, CI1, CJ3), 39 minor;
+**one new moderate, N1:** the Mate Pair table pairs animals of sex U, lists them as sire or dam and pairs an animal with itself (`R/reportMatePairs.R:198-211`). Five findings were run
+through their module or entry point. No ruling taken: `BACKLOG.md:166` holds the seven rulings (the report recommends option (a) each time).
+**Gates:** claim `6b1b41a76`; report, BACKLOG and ledger `8e534818a`. 13 ledger-reading test files, 130 blocks, 0 failed; no full suite, lint or check (no `R/`, `tests/`, `NEWS` or
+`man/` change); ratchet 1/1 pass; CI of the S1002 push all green.
+**Handoff evaluation of S1002: 9/10.** Helped: the Next list, the BACKLOG anchors (`:160`, `:198`), the CI instruction. Missing: the 6e report's path; that each candidate needs a reach
+check. Wrong: "two sessions" was one (an estimate).
+**Self-assessment: 8/10.** + full Phase 0, claimed first, a probe for all 46, found N1, recounted the report from its table and fixed three wrong claims. - a wrong tool name, three
+badly built probes, two long stretches with no status line, zsh and BSD errors.
+**Next:** your rulings on `BACKLOG.md:166` (CF3 Excel first); then the guide sentence (`:182`), Changed Columns (`:192`), nameless header (`:207`), archive pointers (`:220`), CC5,
+the `SESSION_RUNNER.md` re-sync, the report's 13 small wrong statements. Ahead of `origin` by 4 documentation commits; no push. **Gotchas:** the `HANDOFFS.md` receipt and Learning 969;
+this file sits about 400 tokens under its 25,000-token read limit, so fold S1003 at the next claim and trim (`methodology_trim.py --budget-bytes 65536`) if the budget check is red.
 
 
 ### Sessions 947-1002 (condensed S950 to S1003; full record in `CHANGELOG.md` and `HANDOFFS.md`)
