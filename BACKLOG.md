@@ -132,8 +132,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **CB5 was built S999** (the owner took option (a): the Marker Genetics module's returned `isReady` answers FALSE, not an error, for a genotype file the module cannot use;
       nothing in `R/` reads `isReady`, so the running app looks the same; `R/modMarkerGenetics.R:595,1347`, help `:479-481`, `NEWS.Rmd` Minor; gates `test_modMarkerGenetics.R`,
       `test_modMarkerGeneticsIsReadyHelp.R`);
-      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: the build
-      CA3 (a), CC5 is the owner's call, and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
+      **CA3 was built S1000** (the owner chose to keep the leftover row and call it "Unused animals", with `groups()` left as it is and one new returned item, `groupLabels`:
+      the Genetic Diversity heat map's last row, when some animals fit no group, now reads "Unused animals" as the three Breeding Groups pages do; `R/modBreedingGroups.R` `boxLabels`,
+      `R/nameBreedingGroups.R`, `R/appServer.R:434-439`, `NEWS.Rmd:279-283`, the guide and the manual say it; gates `test_modBreedingGroups_groupLabels.R`, `test_nameBreedingGroups.R`,
+      `test_appServer_server.R`, `test_unusedAnimalsHeatMapWording.R`);
+      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: CC5 is the owner's call,
+      and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
       "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
       `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
