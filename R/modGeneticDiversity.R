@@ -76,7 +76,7 @@ modGeneticDiversityUI <- function(id) {
 #'   "Unused" element when candidates remain unplaced, and the heat map scores
 #'   it as another group. If the list is named, the names are the heat map's
 #'   row labels (the app passes the names that the Breeding Groups module
-#'   returns as groupLabels, so the last row reads "Unused animals"); an
+#'   returns as \code{groupLabels}, so the last row reads "Unused animals"); an
 #'   unnamed list gives "Group 1", "Group 2" and so on.
 #' @param pedigree reactive returning the quality-controlled pedigree data
 #'   frame.
