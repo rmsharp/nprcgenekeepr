@@ -143,8 +143,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       true, 6 moderate (CE2 `fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for kinship overrides and
       snapshot history, CI1 example-config API-key placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
       **one new moderate, N1: the Mate Pair table pairs animals of unknown sex, lists them as sire or dam and pairs an
-      animal with itself** (`R/reportMatePairs.R:198-211`); **no ruling taken yet**, the report proposes one per finding
-      with a recommendation, and 13 small wrong statements for one housekeeping session; CL9 is the open item below),
+      animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time), queued as the six fix items
+      below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
       and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
@@ -163,21 +163,78 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Rule on the seven findings of the slice 6e re-check (DECISION NEEDED -- one ruling per finding, Effort S to S-M each;
-      strict TDD)** (found S1003, 2026-10-15; `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`, "Findings: still
-      true" and "Recommendations"; the report recommends option (a) each time) -- (1) CF3: an Excel kinship-overrides or
-      snapshot-history upload always stops "column must be numeric" although the Genetic Value panel, the Snapshot Trends panel
-      and the guide invite Excel (convert the numeric columns on the Excel path, or stop offering Excel); (2) N1: the Mate Pair
-      table lists animals of sex U as sire or dam and pairs an animal with itself (pair only known-sex M and F, and say in one
-      sentence how many were left out); (3) CE2: `convertFromCenter()` reads "unknown" and "N/A" as FALSE and "maybe" as TRUE
-      although its help says an unrecognized value stops (match whole values); (4) CJ3: with a sex ratio set, males under the
-      minimum breeding age are placed in groups as non-males (keep them out of both pools; CJ4, a group stops when its male pool
-      is empty, accept with one help sentence); (5) CE4 and (6) CE5, one session: the Cross-Center check says "clean" for a
-      Center B id equal to a mapped Center A id and the merge then holds duplicate ids, and a column recorded by one center only
-      is lost for a mapped animal (flag the collision; carry the one-sided value); (7) CI1 with CI3: `getConfigApiKey()` returns
-      "paste-your-labkey-api-key-here" from the shipped example config's commented line (drop comment lines, as its sibling
-      reader does). Also the report's 13 small wrong statements (its first minor group) for one housekeeping session, and the
-      eight candidates in functions nothing in `R/` calls (issue #37 asks whether to retire such exports).
+- [ ] **Make an Excel upload of kinship overrides or snapshot history work (READY, Effort S-M; strict TDD)** (ruled
+      S1004, 2026-10-16: fix, option (a); slice 6e re-check Finding 1, CF3 with RF1 and RF2,
+      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:50-70`; first of six, in the order the ruling
+      listed them) -- `R/readExcelPOSIXToCharacter.R:16` reads every Excel column as text, so
+      `checkKinshipOverrides()` (`R/modGeneticValue.R:250`) and `checkSnapshotHistory()` (`R/modSnapshotTrends.R:158`)
+      stop "column must be numeric" and the module carries on without the file (mean kinship 0.1042 with no file and
+      with the Excel file, 0.1375 with the same overrides as CSV; S1003); the screens and the guide
+      (`vignettes/articles/colony-manager-guide.qmd:454`) say Excel works. **Ruled fix:** convert the declared numeric
+      columns when the Excel branch reads (`R/readKinshipOverrides.R`, `R/readSnapshotHistory.R`), as the CSV path
+      already does; test through each module with a real `.xlsx` (the reader tests use `.xlsx` but pin the text-only
+      read); the twin-relations Excel upload already works. `NEWS.Rmd` gets a release-state sentence.
+
+- [ ] **Make the Mate Pair table pair only animals of known sex (READY, Effort S; strict TDD)** (ruled S1004: fix,
+      option (a); Finding 2, N1, found S1003, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:72-92`;
+      second of six) -- `R/reportMatePairs.R:198-211` drops only male-male and female-female pairs and reads `isSire1
+      <- sex1 == "M"`, so an animal of sex `U` is listed as the dam and an animal is paired with itself (a colony of
+      M1, M2, F1, F2 and two unsexed living animals: 15 pairs, 7 whose "sire" is not male, 2 self-pairs; `qcPed` with
+      two animals set to `U`: 177 of 1,979 pairs hold a `U` animal); `R/modMatePair.R:392-394,431` passes every living
+      animal. **Ruled fix:** pair only known-sex M and F and say in one sentence how many animals were left out. The
+      `excluded` table's reasons are a closed list (`R/reportMatePairs.R:32-36`), so "add a reason" or "sentence only"
+      is the session's PRE-RED question. `NA` sex is a different case (`filterPairs()` already drops every `NA`-sex
+      pair, `R/filterPairs.R:58,65`). Fixtures: `matePairPed()` in `tests/testthat/test_modMatePair.R:20`; no test
+      uses sex `U` today.
+
+- [ ] **Make `convertFromCenter()` match whole values (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a);
+      Finding 3, CE2, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:94-107`; third of six) --
+      `R/convertFromCenter.R:34-39` matches an unanchored y/t and n/f: through `qcStudbook()` on `examplePedigree`,
+      "unknown", "N/A" and "maybe" become FALSE, FALSE and TRUE with no error, warning or QC Summary line, while its
+      help (`:13`) says an unrecognized value stops naming the rows. **Ruled fix:** accept whole values only (y, yes,
+      t, true; n, no, f, false; any case) so anything else stops naming the rows. A file holding "unknown" then stops
+      until corrected, so `NEWS.Rmd` says so. `R/qcStudbook.R:314` feeds the `fromCenter` column; `fromCenter` drives
+      Candidate Parent Assignment.
+
+- [ ] **Keep males under the minimum breeding age out of groups when a sex ratio is set (READY, Effort S-M; strict
+      TDD)** (ruled S1004: fix, option (a) for CJ3, and CJ4 accepted with one help sentence; Finding 4,
+      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:109-127`; fourth of six) --
+      `R/fillGroupMembersWithSexRatio.R:83` builds the "female" pool as every candidate that is not a potential sire,
+      and a potential sire needs age at least `minAge` (`R/getPotentialSires.R:20-24`), so a younger male is placed as
+      a non-male (40 of 40 `groupAddAssign()` runs, 2 groups, `sexRatio = 3`, `minAge = 1`; S1003) while
+      `calculateSexRatio()` still counts him as a male. **Ruled fix:** leave a male under `minAge` out of both pools.
+      CJ4 stays: a group stops being filled when its male pool is empty (`R/fillGroupMembersWithSexRatio.R:123-124`;
+      about 2 females per group against 4 asked in the S1003 test), with one sentence in the `sexRatio` help
+      (`R/groupAddAssign.R:56-58`). Reached from Breeding Groups "Sex ratio: Custom" (`R/modBreedingGroups.R:104-117`,
+      `:451,544`); check the guide and `NEWS.Rmd` wording (`test_guideBreedingGroupsWording.R`).
+
+- [ ] **Make the Cross-Center check flag an id clash and keep one-sided columns (READY, Effort S-M; strict TDD; one
+      session for both)** (ruled S1004: fix, option (a) for CE4 and CE5; Findings 5 and 6,
+      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:129-155`; fifth of six) --
+      `R/resolveCrossCenterIds.R:190-205` (`.checkCrossCenterCollision`) compares only ids not in the mapping, so an
+      unmapped Center B `T1` against a mapped Center A `T1` shows "Mapping is clean" (0 issues) and the merge holds
+      three rows with id `T1`; `:484-509` resolves only columns present on both sides, so a column one center recorded
+      is `NA` for a mapped animal, and the whole column vanishes when every animal is mapped. The help promises both
+      the check (`:359-363`) and the union of columns (`:382`). **Ruled fix:** also flag a Center B id equal to a
+      mapped Center A id that is not the mapped one, and the mirror case (one more row type, shown with the others);
+      take the non-`NA` side for every column and keep any column an input has. The module calls the function
+      unchanged (`R/modCrossCenterIdentity.R:311`).
+
+- [ ] **Make `getConfigApiKey()` ignore commented lines (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a)
+      for CI1, with CI3 in the same session; Finding 7,
+      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:157-170`; sixth of six) --
+      `R/getConfigApiKey.R:17-24` does not drop `#` lines, so the shipped example config
+      (`inst/extdata/examples/example_nprcgenekeepr_config:53`, a commented `apiKey`) returns
+      "paste-your-labkey-api-key-here", which `R/setLabKeyDefaults.R:47-51` uses before it looks for a netrc file.
+      **Ruled fix:** drop comment lines as `getOptionalConfigToken()` does (`R/getSpeciesOverridesPath.R:23-27`),
+      tested on the shipped file. CI3: `getParamDef(<Center key>, "center")` stops "subscript out of bounds"
+      (`R/getParamDef.R:19`). Not run against a LabKey server.
+
+- [ ] **The 13 small wrong statements of the slice 6e re-check (READY, Effort S)** (found S1003; the report's first
+      minor group, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) -- one housekeeping session in
+      the S994 shape (help or code fixed, one test file; `tests/testthat/test_docsAuditHousekeepingWording.R` is the
+      model). The eight candidates in functions nothing in `R/` calls (the report's "No caller in `R/`") could instead
+      be retired under issue #37; that is the owner's call at pickup.
 
 - [ ] **The guide does not name the "groups not in the pedigree" sentence (DECISION NEEDED -- add a sentence where the
       owner wants it, or leave; docs only, Effort S, the owner writes the sentence)** (found S995, widened S996) -- the Genetic
