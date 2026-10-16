@@ -18,11 +18,11 @@ it is failure mode #27.
 [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), which `bin/sync`
 keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 
-## 2026-10
-
 **Archived 120 record(s), 2026-10-09 → 2026-10-14** into [`methodology/archive/CHANGELOG-through-2026-10-14.md`](archive/CHANGELOG-through-2026-10-14.md) — same format, same order, frozen.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-14.md.verify.sh`](archive/CHANGELOG-through-2026-10-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
+
+### 2026-10-16 · [ad hoc] Removed the `## 2026-10` month heading (line 21 of this file, the only `##` heading), owner-directed during S1005: the owner named it an already-identified error. The ledger now has no month heading, which `FRAMEWORK_APPARATUS.md` §Placement allows (the next new month, or the next `methodology_trim.py` run, opens one); the archive pointer beneath it is unchanged. No `R/`, test or `NEWS` change. Model: Claude Sonnet 5.5
 
 ### 2026-10-16 · [ad hoc] S1005 claim (in progress): make an Excel upload of kinship overrides or snapshot history work (`BACKLOG.md:166`; first of the six fixes ruled S1004; owner pick at the Phase 0 picker, item 1 of 4); strict TDD, so the PRE-RED scope question comes next and no test or code exists yet. Phase 0: `CHANGELOG.md` and `HANDOFFS.md` frontiers both at HEAD `a5cc37192`, no gap, no pending receipt, no merges; S1004's ratchet citation matches the results file; the scheduled `shinytest2` run of 2026-10-16 is red (`BACKLOG.md:237`, deferred, not fixed). The claim folds S1004 into the condensed notes block. Model: Claude Sonnet 5.5
 
