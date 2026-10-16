@@ -50,15 +50,7 @@
 #' ))
 #' history <- checkSnapshotHistory(history)
 checkSnapshotHistory <- function(history) {
-  required <- c(
-    "schemaVersion", "snapshotDate", "packageVersion", "membershipRule",
-    "guIter", "guThresh", "nAnimals", "nMales", "nFemales",
-    "fe", "fg", "fgSE", "neGD", "neSexRatio", "neVariance",
-    "nMaleFounders", "nFemaleFounders", "nFounders",
-    "meanIndivMeanKin", "medianIndivMeanKin", "skewnessIndivMeanKin",
-    "kurtosisIndivMeanKin", "meanGu", "medianGu", "meanGuSE",
-    "skewnessGu", "kurtosisGu"
-  )
+  required <- snapshotSchemaColumns
   missingCols <- setdiff(required, names(history))
   if (length(missingCols) > 0L) {
     stop("Snapshot history must have columns ", toString(required),
@@ -75,11 +67,7 @@ checkSnapshotHistory <- function(history) {
   }
   history$snapshotDate <- dates
 
-  numericCols <- setdiff(
-    required,
-    c("snapshotDate", "packageVersion", "membershipRule")
-  )
-  for (numericCol in numericCols) {
+  for (numericCol in snapshotSchemaNumericColumns) {
     if (!is.numeric(history[[numericCol]])) {
       stop("Snapshot history '", numericCol, "' column must be numeric.")
     }

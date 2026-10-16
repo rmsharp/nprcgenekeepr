@@ -40,15 +40,7 @@
 readSnapshotHistory <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     history <- convertExcelNumericColumns(
-      readExcelPOSIXToCharacter(fileName),
-      c(
-        "schemaVersion", "guIter", "guThresh", "nAnimals", "nMales",
-        "nFemales", "fe", "fg", "fgSE", "neGD", "neSexRatio", "neVariance",
-        "nMaleFounders", "nFemaleFounders", "nFounders",
-        "meanIndivMeanKin", "medianIndivMeanKin", "skewnessIndivMeanKin",
-        "kurtosisIndivMeanKin", "meanGu", "medianGu", "meanGuSE",
-        "skewnessGu", "kurtosisGu"
-      )
+      readExcelPOSIXToCharacter(fileName), snapshotSchemaNumericColumns
     )
   } else {
     history <- muffleIncompleteFinalLine(read.table(fileName,
