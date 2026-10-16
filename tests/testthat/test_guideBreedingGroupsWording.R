@@ -394,8 +394,9 @@ test_that("a paragraph after the sex-ratio picture explains the last box", {
                fixed = TRUE)
   expect_match(
     paragraph,
-    paste0("The **Groups** sub-tab, the **Statistics** table and the ",
-           "**Group Detail** selector all call it 'Unused animals'"),
+    paste0("The **Groups** sub-tab, the **Statistics** table, the ",
+           "**Group Detail** selector and the **Genetic Diversity** heat ",
+           "map all call it 'Unused animals'"),
     fixed = TRUE
   )
   expect_no_match(paragraph, "'Group 7' here", fixed = TRUE)
