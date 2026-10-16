@@ -58,7 +58,7 @@ modSummaryStatsUI <- function(id) {
       column(2L, offset = 1L,
              shinyBS::popify(
                downloadButton(ns("downloadKinship"), "Export Kinship Matrix"),
-               title = NULL,
+               title = "",
                content = paste(
                  "This exports the kinship matrix to a CSV file",
                  .browserSavesText
@@ -68,7 +68,7 @@ modSummaryStatsUI <- function(id) {
              shinyBS::popify(
                downloadButton(ns("downloadMaleFounders"),
                               "Export Male Founders"),
-               title = NULL,
+               title = "",
                content = paste(
                  "This exports the male founder pedigree records to",
                  "a CSV file",
@@ -79,7 +79,7 @@ modSummaryStatsUI <- function(id) {
              shinyBS::popify(
                downloadButton(ns("downloadFemaleFounders"),
                               "Export Female Founders"),
-               title = NULL,
+               title = "",
                content = paste(
                  "This exports the female founder pedigree records",
                  "to a CSV file",
@@ -90,7 +90,7 @@ modSummaryStatsUI <- function(id) {
              shinyBS::popify(
                downloadButton(ns("downloadFirstOrder"),
                               "Export First-Order Relationships"),
-               title = NULL,
+               title = "",
                content = paste(
                  "This exports all first-order relations to a CSV file",
                  .browserSavesText
@@ -104,7 +104,7 @@ modSummaryStatsUI <- function(id) {
              shinyBS::popify(
                downloadButton(ns("downloadRelationships"),
                               "Export All Relationships"),
-               title = NULL,
+               title = "",
                content = paste0(
                  "This exports all pairwise relationship designations ",
                  "to a CSV file."
@@ -114,7 +114,7 @@ modSummaryStatsUI <- function(id) {
              shinyBS::popify(
                downloadButton(ns("downloadRelationClasses"),
                               "Export Relationship Classes"),
-               title = NULL,
+               title = "",
                content = paste0(
                  "This exports the relationship class frequency table ",
                  "to a CSV file."
@@ -139,7 +139,7 @@ modSummaryStatsUI <- function(id) {
         br(),
         shinyBS::popify(
           downloadButton(ns("downloadMkHist"), "Export Mean Kinship Histogram"),
-          title = NULL,
+          title = "",
           content = paste(
             "This exports the Mean Kinship Coefficient histogram as",
             "a PNG file",
@@ -152,7 +152,7 @@ modSummaryStatsUI <- function(id) {
         br(),
         shinyBS::popify(
           downloadButton(ns("downloadZscoreHist"), "Export Z-Score Histogram"),
-          title = NULL,
+          title = "",
           content = paste(
             "This exports the Mean Kinship Z-score histogram as",
             "a PNG file",
@@ -166,7 +166,7 @@ modSummaryStatsUI <- function(id) {
         shinyBS::popify(
           downloadButton(ns("downloadGuHist"),
                          "Export Genome Uniqueness Histogram"),
-          title = NULL,
+          title = "",
           content = paste(
             "This exports the Genome Uniqueness histogram as PNG",
             "file",
@@ -183,7 +183,7 @@ modSummaryStatsUI <- function(id) {
         br(),
         shinyBS::popify(
           downloadButton(ns("downloadMkBox"), "Export Mean Kinship Box Plot"),
-          title = NULL,
+          title = "",
           content = paste(
             "This exports Mean Kinship Coefficient box plot as PNG file",
             .browserSavesText
@@ -195,7 +195,7 @@ modSummaryStatsUI <- function(id) {
         br(),
         shinyBS::popify(
           downloadButton(ns("downloadZscoreBox"), "Export Z-Score Box Plot"),
-          title = NULL,
+          title = "",
           content = paste(
             "This exports the Mean Kinship Z-score box plot as",
             "a PNG file",
@@ -209,7 +209,7 @@ modSummaryStatsUI <- function(id) {
         shinyBS::popify(
           downloadButton(ns("downloadGuBox"),
                          "Export Genome Uniqueness Box Plot"),
-          title = NULL,
+          title = "",
           content = paste(
             "This exports Genome Uniqueness box plot as a PNG",
             "file",
