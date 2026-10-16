@@ -173,7 +173,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`vignettes/articles/colony-manager-guide.qmd:454`) say Excel works. **Ruled fix:** convert the declared numeric
       columns when the Excel branch reads (`R/readKinshipOverrides.R`, `R/readSnapshotHistory.R`), as the CSV path
       already does; test through each module with a real `.xlsx` (the reader tests use `.xlsx` but pin the text-only
-      read); the twin-relations Excel upload already works. `NEWS.Rmd` gets a release-state sentence.
+      read); the twin-relations Excel upload already works. Fixture to copy: `fileInfo()` in
+      `tests/testthat/test_modGeneticValue_kinshipOverrides.R:28`. `NEWS.Rmd` gets a release-state sentence.
 
 - [ ] **Make the Mate Pair table pair only animals of known sex (READY, Effort S; strict TDD)** (ruled S1004: fix,
       option (a); Finding 2, N1, found S1003, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:72-92`;
@@ -184,7 +185,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       animal. **Ruled fix:** pair only known-sex M and F and say in one sentence how many animals were left out. The
       `excluded` table's reasons are a closed list (`R/reportMatePairs.R:32-36`), so "add a reason" or "sentence only"
       is the session's PRE-RED question. `NA` sex is a different case (`filterPairs()` already drops every `NA`-sex
-      pair, `R/filterPairs.R:58,65`). Fixtures: `matePairPed()` in `tests/testthat/test_modMatePair.R:20`; no test
+      pair, `R/filterPairs.R:58,65`). Fixtures: `matePairPed()` in `tests/testthat/test_modMatePair.R:28`; no test
       uses sex `U` today.
 
 - [ ] **Make `convertFromCenter()` match whole values (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a);
@@ -194,7 +195,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       help (`:13`) says an unrecognized value stops naming the rows. **Ruled fix:** accept whole values only (y, yes,
       t, true; n, no, f, false; any case) so anything else stops naming the rows. A file holding "unknown" then stops
       until corrected, so `NEWS.Rmd` says so. `R/qcStudbook.R:314` feeds the `fromCenter` column; `fromCenter` drives
-      Candidate Parent Assignment.
+      Candidate Parent Assignment. **Before anchoring the match** check the shipped files for free-text values
+      (S1003's gotcha; S1004 scanned the CSVs in `inst/extdata/examples/`: only `rhesusPedigree_fromCenter.csv` has
+      the column, 375 of 375 `TRUE`; the `.xlsx`, `.txt` and bundled data objects were not scanned).
 
 - [ ] **Keep males under the minimum breeding age out of groups when a sex ratio is set (READY, Effort S-M; strict
       TDD)** (ruled S1004: fix, option (a) for CJ3, and CJ4 accepted with one help sentence; Finding 4,
@@ -218,7 +221,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the check (`:359-363`) and the union of columns (`:382`). **Ruled fix:** also flag a Center B id equal to a
       mapped Center A id that is not the mapped one, and the mirror case (one more row type, shown with the others);
       take the non-`NA` side for every column and keep any column an input has. The module calls the function
-      unchanged (`R/modCrossCenterIdentity.R:311`).
+      unchanged (`R/modCrossCenterIdentity.R:311`). Fixture to copy: `.ccUploadInputs()` in
+      `tests/testthat/test_modCrossCenterIdentity.R:54`.
 
 - [ ] **Make `getConfigApiKey()` ignore commented lines (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a)
       for CI1, with CI3 in the same session; Finding 7,
@@ -229,6 +233,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Ruled fix:** drop comment lines as `getOptionalConfigToken()` does (`R/getSpeciesOverridesPath.R:23-27`),
       tested on the shipped file. CI3: `getParamDef(<Center key>, "center")` stops "subscript out of bounds"
       (`R/getParamDef.R:19`). Not run against a LabKey server.
+
+- [ ] **Find why the scheduled `shinytest2` run of 2026-10-16 failed in the Marker Genetics Genomic ROH E2E file
+      (READY, Effort S)** (found S1004 Phase 0, reported and not fixed; the CI-break convention gives it no issue,
+      only this item) -- run 38866018831 (schedule, 07:15 UTC, commit `82ad057f0`, job 116858920550), step "Run
+      shinytest2 E2E tier in per-module fresh processes": only
+      `tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R` failed (4 of 11 expectations, 62 s; every other
+      file in the run passed): `:166` `wait_for_element(...)` FALSE ("Confirm-export modal (and its Confirm Export OK
+      button) must render live"), `:171` the click on `#markerGenetics-sequenceConfirmExportOk` finds no element,
+      `:247` and `:249` the export guidance still reads the default "Generate a preview, then confirm the export to
+      unlock the downloads." instead of "not in the loaded pedigree" and "1 animal". The three scheduled runs before
+      it (13 to 15 October) were green, and the push it built (S1002) changed `R/modSummaryStats.R` and nothing in
+      Marker Genetics, so a regression from S1002 is unlikely; a wait that is too short on the shared runner is the
+      likeliest cause, unconfirmed. **First:** `gh run list --branch master --workflow shinytest2 --limit 5` for the
+      nights since (a second red makes it real, a green leaves it a flake to harden), then read the waits around
+      `:166` and `:247` and run the file locally (`NPRC_RUN_E2E=true`). Get a CI log with `gh api
+      repos/rmsharp/nprcgenekeepr/actions/jobs/<job id>/logs` (`gh run view <id> --log` printed nothing here).
 
 - [ ] **The 13 small wrong statements of the slice 6e re-check (READY, Effort S)** (found S1003; the report's first
       minor group, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) -- one housekeeping session in

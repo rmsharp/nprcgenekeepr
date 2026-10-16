@@ -202,11 +202,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1004
 date: 2026-10-16
-status: pending
-active_task: IN PROGRESS -- take the owner's rulings on the seven slice 6e findings (`BACKLOG.md:166`; owner pick at the Phase 0 picker, item 1 of 4); a decision session, no code change, no TDD gates
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the owner's rulings on the seven slice 6e findings recorded: fix all seven, option (a) each time (owner pick at the Phase 0 picker, item 1 of 4; a decision session, no R/, test or NEWS change, no TDD gates). Nothing was fixed. Open items left: the six fix sessions, the red Marker Genetics E2E (BACKLOG.md:237), the housekeeping item (:253), the DECISION NEEDED items (:259, :269, :284, :297), CC5 (the owner's call), the SESSION_RUNNER.md re-sync
+what_was_done: Phase 0: read the runner, safeguards and notes in full; CHANGELOG frontier one commit behind (the S1003 close-out), backfilled 6746818ce, 9 ledger-reading test files 141 blocks 0 failed; HANDOFFS frontier at HEAD; CI: the scheduled shinytest2 run of 2026-10-16 07:15 UTC failed in test-e2e-marker-genetics-genomic-roh-module.R (4 of 11 expectations; reported, deferred as a BACKLOG item). Claim ad0b5370b. Confirmed R/, tests/ and inst/ unchanged since S1003's measurements, read the 6e report's findings, asked one gating question; the owner took Fix all seven. Rulings aa6dcbce1: BACKLOG.md DECISION NEEDED item replaced by six READY fix items, the 13-small-statements item and the CI item; fixtures and the fromCenter gotcha added from S1003's receipt; three stale fixture cites corrected. Learning 970. No push.
+next_steps: The first fix is BACKLOG.md:166 (an Excel upload of kinship overrides or snapshot history works; READY, Effort S-M, strict TDD); it starts at the PRE-RED scope question and each of the six is its own session in the order :166, :179, :191, :202, :214, :227. First, in Phase 0, run gh run list --branch master --workflow shinytest2 --limit 5: a second red makes BACKLOG.md:237 the first pickup. The owner may instead pick the housekeeping item (:253) or one of the DECISION NEEDED items (:259, :269, :284, :297).
+key_files: BACKLOG.md:146-147 (audit clause), :166-236 (six fix items), :237-252 (red CI), :253-257 (housekeeping), :259/:269/:284/:297 (moved items); docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:50-170 (the findings), :241-251 (recommendations); R/readExcelPOSIXToCharacter.R:16 (first fix); tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R:166,171,247,249 (the red lines); PROJECT_LEARNINGS.md Learning 970
+gotchas: BACKLOG.md line cites below :166 moved down 77 lines (S1003's :182, :192, :207, :220 are now :259, :269, :284, :297); the DONE ledger entry belongs in the close-out commit or the next Phase 0 finds a one-commit gap; fixture cites to copy: matePairPed() test_modMatePair.R:28, fileInfo() test_modGeneticValue_kinshipOverrides.R:28, .ccUploadInputs() test_modCrossCenterIdentity.R:54; check the shipped files for free-text fromCenter values before anchoring CE2 (only rhesusPedigree_fromCenter.csv has the column, 375 of 375 TRUE; xlsx, txt and bundled data not scanned); VAR=value Rscript -e not Rscript -e VAR=value; gh api repos/<repo>/actions/jobs/<job id>/logs when gh run view --log is empty; quality_ratchet.py --run takes about 2 minutes; local master is 8 commits ahead of origin, none starts CI
+runtime_smoke: n/a -- a decision session, docs only; no runtime change and nothing was run in the app
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results fd451d36d9f0 · manifest aa983075d6a2
+changelog_ref: aa6dcbce1
+commit: aa6dcbce1
 ```
+Self-score 8: + full Phase 0 with the CI log traced to one file and S1002 cleared as the cause; the ledger backfill and its tests; claimed first; checked R/ unchanged before reusing S1003's counts; one gating question in plain words, one click; recorded the rulings and started no fix; grepped every cite I wrote and found three stale ones; - a first ledger-test run that ran nothing (variable after the R expression), a missed quality-gates path, an empty gh log, few status lines in Phase 0. Predecessor (S1003) 9: the Next list, the report's fix text and the gotchas held; its close-out left the ledger frontier one behind and three fixture cites were off.
 
 ```handoff
 session: S1003

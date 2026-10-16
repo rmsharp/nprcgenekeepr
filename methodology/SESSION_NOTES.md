@@ -99,20 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1004 Did
-**Deliverable:** take the owner's rulings on the seven slice 6e findings (`BACKLOG.md:166`) and record them (IN PROGRESS)
-**Started:** 2026-10-16 (owner pick at the Phase 0 picker, item 1 of 4)
-**Status:** Session claimed. A decision session: no `R/`, test or `NEWS` change, so no TDD gates (the S968 precedent). Phase 0 backfilled the S1003 close-out in the ledger (`6746818ce`).
-Next: read the 6e re-check report's findings and recommendations, ask each ruling in plain words, record the answers. Do not offer the fixes themselves this session.
-**CI at Phase 0:** the scheduled `shinytest2` run of 2026-10-16 07:15 UTC failed in `test-e2e-marker-genetics-genomic-roh-module.R` (4 failures, a confirm-export pop-up not found in time;
-the three runs before it green; reported, not fixed).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4; a decision session, no `R/`, test or `NEWS` change, so no TDD gates):** the owner's rulings on the seven slice 6e findings recorded. **Ruling: fix all seven, option (a)
+each time** (CF3 Excel upload; N1 Mate Pair unknown sex; CE2 `convertFromCenter()`; CJ3 under-age males, CJ4 accepted with one help sentence; CE4 with CE5 Cross-Center; CI1 with CI3 config key). `BACKLOG.md` holds
+six READY strict-TDD fix items in that order (`:166`, `:179`, `:191`, `:202`, `:214`, `:227`), the red-CI item (`:237`) and the 13-small-statements item (`:253`). Nothing was fixed. Items below `:166` moved down
+77 lines: guide sentence `:259`, Changed Columns `:269`, nameless header `:284`, archive pointers `:297`.
+**Gates:** claim `ad0b5370b`; rulings `aa6dcbce1`; Phase 0 ledger backfill `6746818ce`; 9 ledger-reading test files 141 blocks, 0 failed; ratchet 1/1 pass; no push (8 local commits). **CI:** the scheduled
+`shinytest2` run of 2026-10-16 failed in `test-e2e-marker-genetics-genomic-roh-module.R` (4 of 11 expectations; S1002 touched nothing there); deferred as `BACKLOG.md:237`. Learning 970.
+**Handoff evaluation of S1003: 9/10.** Helped: the Next list, the report's per-finding fix text, the `gh run list` instruction, the fixture list. Missing: its close-out left the CHANGELOG frontier one behind.
+Wrong: three fixture cites (`matePairPed()` `:28` not `:20`, `fileInfo()` `:28` not `:37`, `.ccUploadInputs()` `:54` not `:56`); the report's `BACKLOG.md:170` for Changed Columns (it stood at `:192`).
+**Self-assessment: 8/10.** + full Phase 0, CI log traced to one file; claimed first; checked `R/` unchanged before reusing S1003's counts; one plain-words gating question; no fix started; every cite grepped.
+- a first test run that ran nothing (variable after the R expression); a missed `methodology/` path; an empty `gh` log; few status lines in Phase 0.
+**Next:** the Excel-upload fix (`BACKLOG.md:166`, READY, S-M, strict TDD, starts at the PRE-RED scope question), then `:179`, `:191`, `:202`, `:214`, `:227`. In Phase 0 run `gh run list --branch master
+--workflow shinytest2 --limit 5`: a second red makes `:237` the first pickup. Also open: `:253`, the DECISION NEEDED items `:259`, `:269`, `:284`, `:297`, CC5 (the owner's call), the `SESSION_RUNNER.md` re-sync.
+**Gotchas:** the `HANDOFFS.md` receipt and Learning 970 (the DONE ledger entry goes in the close-out commit; `VAR=value Rscript -e`; CI job log by API; the ratchet run takes about 2 minutes, background it).
+This file is about 200 B under its 25,000-token limit: fold S1004 at the next claim.
 
 
 ### Sessions 947-1003 (condensed S950 to S1004; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1003: the 46 slice 6e code candidates re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`; an audit, no code change; 1 closed, 45 still true, 6 moderate plus the new
 N1: the Mate Pair table pairs animals of unknown sex, `R/reportMatePairs.R:198-211`; the seven rulings are `BACKLOG.md:166`; claim `6b1b41a76`, report `8e534818a`; evaluation of S1002 9/10, self 8/10).
 **Gotchas kept (S1003):** each candidate needs a reach check (who calls it) before its weight is set; the excluded table's reasons are a closed list (`R/reportMatePairs.R:32-36`), so reporting
-left-out unknown-sex animals is a design choice; fixtures to copy: `matePairPed()` in `tests/testthat/test_modMatePair.R:20`.
+left-out unknown-sex animals is a design choice; fixtures to copy: `matePairPed()` in `tests/testthat/test_modMatePair.R:28` (S1003 said `:20`).
 S1002: the twelve Summary Statistics Export pop-ups no longer draw a "character(0)" title bar (`R/modSummaryStats.R:16` `.exportButtonPopover()`; `popify(title = "")`;
 `NEWS.Rmd:599`; strict TDD, REFACTOR taken; claim `7de14f5ac`, RED `cd0788344`, GREEN `6ef86136d`, NEWS `6911fd504`, REFACTOR `82ad057f0`; evaluation of S1001 9/10, self 8/10).
 **Gotchas kept (S1002):** `title = ""` hides a Bootstrap 4 popover header while `NULL` prints "character(0)"; run the whole test family (`Sys.glob("tests/testthat/test_modSummaryStats*.R")`)
@@ -385,14 +392,9 @@ rows are 150 apart in `y`; macOS `sed -i` needs an extension argument, so edit s
 removing a BACKLOG block shifts every later cite, so re-grep; re-run a stale-looking `gh run list` before trusting an old date; `quality_ratchet.py --run` takes minutes (background it); `gh issue view --comments` fails here, use
 `gh api repos/<repo>/issues/<n>/comments`; take `wc -c` after the last edit (Learning 871).
 
-### Sessions 902-904 (condensed S905 and S944; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Three push-only sessions, each a fast-forward by SHA at the owner's pick (S902 `529bb031b..7acce42cf`, S903 `7acce42cf..6f4733c78`,
-S904 `6f4733c78..42b4fb0b8`); every changed file was on the 21-entry `paths-ignore` list and **no CI run started** (the third, fourth and
-fifth confirmations). Claims `ee54ef006`, `ee5632c86`, `64ef6bf03`; close-outs `6f4733c78`, `42b4fb0b8`, `5ec2d5ebb`. Handoff evaluations
-9/10 each, self 8/10 each. The owner ruled in S905 to stop offering push-only sessions.
-**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date ledger entries by
-local time (`date`), not UTC; push by SHA so the claim commit stays local; a `sleep N; <query>` as the `run_in_background` command itself
-re-invokes the session on exit.
+### Sessions 902-904 (condensed S905, S944 and S1004; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+Three push-only sessions (fast-forwards `529bb031b..42b4fb0b8`, by SHA); every changed file was on the 21-entry `paths-ignore` list and **no CI run started**. The owner ruled in S905 to stop offering push-only sessions.
+**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date ledger entries by local time (`date`), not UTC; push by SHA so the claim commit stays local.
 
 ### Sessions 896-901 (condensed S897 to S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S896-S901: `BACKLOG.md` compression (S896), a `HANDOFFS.md` trim (S897), the CI `paths-ignore` list and its gate `test_workflowPathsIgnore.R` (S899), the verify-script failures reported
