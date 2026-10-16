@@ -1201,6 +1201,10 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     list(
       groups = reactive(breedingGroups()),
       nGroups = reactive(length(breedingGroups())),
+      groupLabels = reactive(
+        breedingGroupLabels(length(breedingGroups()),
+                            selectedCandidate()$hasUnused)
+      ),
       score = reactive({
         res <- groupResults()
         if (is.null(res)) return(0L)

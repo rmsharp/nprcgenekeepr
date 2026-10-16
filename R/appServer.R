@@ -430,9 +430,14 @@ appServer <- function(input, output, session) {
 
   # Capture the formed breeding groups into shared state (issue #112 Slice S4)
   # so the Genetic Diversity dashboard can read them. Stays NULL until the user
-  # forms groups, which drives the dashboard's graceful degradation.
+  # forms groups, which drives the dashboard's graceful degradation. Each box
+  # carries the name Breeding Groups gives it (the leftover box is "Unused
+  # animals"), so the heat map's rows read as that tab's boxes do (CA3).
   observe({
-    shared$breedingGroups <- bgResults$groups()
+    shared$breedingGroups <- .nameBreedingGroups(
+      bgResults$groups(),
+      if (is.function(bgResults$groupLabels)) bgResults$groupLabels() else NULL
+    )
   })
 
   # Genetic Diversity Module (issue #112 Slice S4) -- assembles the formed
