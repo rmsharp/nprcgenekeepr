@@ -45,3 +45,72 @@ test_that("readKinshipOverrides reads an id1,id2,kinship Excel file", {
   expect_true(all(c("id1", "id2", "kinship") %in% names(res)))
   expect_identical(nrow(res), 2L)
 })
+
+## S1005 (BACKLOG ruling S1004): an Excel file is read as text, so the reader
+## must turn the numeric `kinship` column into numbers, as the CSV path does.
+## `id1` and `id2` are ids and stay text.
+test_that("readKinshipOverrides gives an Excel file the same table as the CSV of the same data", {
+  df <- data.frame(id1 = c("F1", "F3"), id2 = c("F2", "F4"),
+                   kinship = c(0.4, 0.1), stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(df, "ovr")
+  csv <- tempfile(fileext = ".csv")
+  on.exit(unlink(c(xf, csv)), add = TRUE)
+  write.csv(df, csv, row.names = FALSE)
+
+  res <- readKinshipOverrides(xf)
+
+  expect_type(res$kinship, "double")
+  expect_equal(res, readKinshipOverrides(csv))
+})
+
+test_that("an Excel kinship file passes checkKinshipOverrides", {
+  df <- data.frame(id1 = c("F1", "F3"), id2 = c("F2", "F4"),
+                   kinship = c(0.4, 0.1), stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(df, "ovr")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- checkKinshipOverrides(readKinshipOverrides(xf))
+
+  expect_identical(nrow(res), 2L)
+  expect_equal(res$kinship, c(0.4, 0.1))
+})
+
+test_that("readKinshipOverrides converts the Excel kinship column but keeps numeric-looking ids as text", {
+  df <- data.frame(id1 = c("1001", "1002"), id2 = c("1003", "1004"),
+                   kinship = c(0.4, 0.1), stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(df, "ovr")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- readKinshipOverrides(xf)
+
+  expect_equal(res$kinship, c(0.4, 0.1))
+  expect_identical(res$id1, c("1001", "1002"))
+  expect_identical(res$id2, c("1003", "1004"))
+})
+
+## Guard (passes before the fix): a cell that is not a number must not be
+## blanked; the column stays text and the check names it, as for a CSV.
+test_that("a cell that is not a number leaves the Excel kinship column as text, so the check names it", {
+  df <- data.frame(id1 = c("F1", "F3"), id2 = c("F2", "F4"),
+                   kinship = c("0.4", "abc"), stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(df, "ovr")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- readKinshipOverrides(xf)
+
+  expect_identical(res$kinship, c("0.4", "abc"))
+  expect_error(checkKinshipOverrides(res), "'kinship' column must be numeric")
+})
+
+test_that("a blank kinship cell reads as NA in an Excel file, so the check says so", {
+  df <- data.frame(id1 = c("F1", "F3"), id2 = c("F2", "F4"),
+                   kinship = c(0.4, NA), stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(df, "ovr")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- readKinshipOverrides(xf)
+
+  expect_type(res$kinship, "double")
+  expect_true(is.na(res$kinship[2L]))
+  expect_error(checkKinshipOverrides(res), "must not contain NA")
+})

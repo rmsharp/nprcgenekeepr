@@ -234,3 +234,26 @@ test_that("modSnapshotTrendsServer's Download Delta Table writes the current del
     expect_true("comparabilityFlag" %in% names(deltaOut))
   })
 })
+
+## S1005 (BACKLOG ruling S1004): an Excel history upload is read, validated and
+## held exactly as the CSV upload above (before the fix the module showed
+## "Could not read snapshot history" and kept no history).
+test_that("modSnapshotTrendsServer's history upload reads an Excel history as it does the CSV", {
+  skip_if_not_installed("shiny")
+
+  history <- read.csv(exampleHistoryPath, stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(history, "history")
+  on.exit(unlink(xf), add = TRUE)
+
+  shiny::testServer(modSnapshotTrendsServer,
+                     args = list(snapshotSource = shiny::reactive(NULL)), {
+    session$setInputs(historyFile = fileInfo(xf))
+
+    result <- session$getReturned()
+    hist <- result$history()
+    expect_true(is.data.frame(hist))
+    expect_identical(nrow(hist), 4L)
+    expect_s3_class(hist$snapshotDate, "Date")
+    expect_true(result$isReady())
+  })
+})

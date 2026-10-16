@@ -115,3 +115,41 @@ test_that("modGeneticValueServer is unaffected when no override file is uploaded
     }
   )
 })
+
+## S1005 (BACKLOG ruling S1004): an Excel override file must act on the run
+## exactly as the CSV of the same data does (before the fix the module
+## rejected the Excel file and carried on with the pedigree-derived matrix).
+test_that("modGeneticValueServer applies an uploaded Excel kinship override as it does a CSV one", {
+  skip_if_not_installed("shiny")
+  test_ped <- makeOverridePed()
+
+  ovr <- data.frame(id1 = "F1", id2 = "F2", kinship = 0.4,
+                    stringsAsFactors = FALSE)
+  ovrXlsx <- writeTestXlsx(ovr, "ovr")
+  ovrCsv <- tempfile(fileext = ".csv")
+  on.exit(unlink(c(ovrXlsx, ovrCsv)), add = TRUE)
+  write.csv(ovr, ovrCsv, row.names = FALSE)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 100, topN = 10)
+
+      session$setInputs(runAnalysis = 1)
+      baseKin <- f1MeanKin(gvResults())
+
+      session$setInputs(kinshipOverrideFile = fileInfo(ovrCsv))
+      session$setInputs(runAnalysis = 2)
+      csvKin <- f1MeanKin(gvResults())
+
+      session$setInputs(kinshipOverrideFile = fileInfo(ovrXlsx))
+      session$setInputs(runAnalysis = 3)
+      xlsxKin <- f1MeanKin(gvResults())
+
+      expect_gt(csvKin, baseKin)
+      expect_gt(xlsxKin, baseKin)
+      expect_equal(xlsxKin, csvKin)
+    }
+  )
+})

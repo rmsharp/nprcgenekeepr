@@ -75,3 +75,65 @@ test_that("readSnapshotHistory reads an Excel snapshot-history file", {
   expect_identical(names(res), snapshotHistoryColumns)
   expect_identical(nrow(res), 4L)
 })
+
+## S1005 (BACKLOG ruling S1004): an Excel file is read as text, so the reader
+## must turn the 24 numeric columns into numbers, as the CSV path does.
+## snapshotDate, packageVersion and membershipRule are text and stay text.
+snapshotTextColumns <- c("snapshotDate", "packageVersion", "membershipRule")
+snapshotExamplePath <- system.file(
+  "extdata", "examples", "example_snapshot_history.csv",
+  package = "nprcgenekeepr"
+)
+
+test_that("readSnapshotHistory gives an Excel file the same table as the CSV of the same data", {
+  history <- read.csv(snapshotExamplePath, stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(history, "history")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- readSnapshotHistory(xf)
+
+  numericCols <- setdiff(names(res), snapshotTextColumns)
+  expect_length(numericCols, 24L)
+  expect_true(all(vapply(res[numericCols], is.numeric, logical(1L))))
+  expect_type(res$snapshotDate, "character")
+  expect_equal(res, readSnapshotHistory(snapshotExamplePath))
+})
+
+test_that("an Excel snapshot history passes checkSnapshotHistory with the CSV's result", {
+  history <- read.csv(snapshotExamplePath, stringsAsFactors = FALSE)
+  xf <- writeTestXlsx(history, "history")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- checkSnapshotHistory(readSnapshotHistory(xf))
+
+  expect_identical(nrow(res), 4L)
+  expect_equal(res, checkSnapshotHistory(readSnapshotHistory(snapshotExamplePath)))
+})
+
+test_that("a text cell in an Excel numeric column leaves it as text, so the check names that column", {
+  history <- read.csv(snapshotExamplePath, stringsAsFactors = FALSE)
+  history$nAnimals <- as.character(history$nAnimals)
+  history$nAnimals[2L] <- "many"
+  xf <- writeTestXlsx(history, "history")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- readSnapshotHistory(xf)
+
+  expect_type(res$schemaVersion, "double")
+  expect_type(res$nAnimals, "character")
+  expect_error(checkSnapshotHistory(res), "'nAnimals' column must be numeric")
+})
+
+## Guard (passes before the fix): a real Excel date cell keeps reading as an
+## ISO date, so converting the numeric columns must not touch snapshotDate.
+test_that("a real Excel date cell in snapshotDate still reads as an ISO date text", {
+  history <- read.csv(snapshotExamplePath, stringsAsFactors = FALSE)
+  expected <- history$snapshotDate
+  history$snapshotDate <- as.Date(history$snapshotDate)
+  xf <- writeTestXlsx(history, "history")
+  on.exit(unlink(xf), add = TRUE)
+
+  res <- readSnapshotHistory(xf)
+
+  expect_identical(res$snapshotDate, expected)
+})
