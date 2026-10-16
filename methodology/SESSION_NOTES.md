@@ -98,23 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1003 Did
-**Deliverable, DONE (owner pick, item 1 of 4; an audit, no `R/`, test or `NEWS` change, so no TDD gates):** the 46 slice 6e code candidates of docs-audit part 2 re-checked against
-today's code: `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`. **Result:** 1 closed (CF2, S923); 45 still true: 6 moderate (CE2, CE4, CE5, CF3, CI1, CJ3), 39 minor;
-**one new moderate, N1:** the Mate Pair table pairs animals of sex U, lists them as sire or dam and pairs an animal with itself (`R/reportMatePairs.R:198-211`). Five findings were run
-through their module or entry point. No ruling taken: `BACKLOG.md:166` holds the seven rulings (the report recommends option (a) each time).
-**Gates:** claim `6b1b41a76`; report, BACKLOG and ledger `8e534818a`. 13 ledger-reading test files, 130 blocks, 0 failed; no full suite, lint or check (no `R/`, `tests/`, `NEWS` or
-`man/` change); ratchet 1/1 pass; CI of the S1002 push all green.
-**Handoff evaluation of S1002: 9/10.** Helped: the Next list, the BACKLOG anchors (`:160`, `:198`), the CI instruction. Missing: the 6e report's path; that each candidate needs a reach
-check. Wrong: "two sessions" was one (an estimate).
-**Self-assessment: 8/10.** + full Phase 0, claimed first, a probe for all 46, found N1, recounted the report from its table and fixed three wrong claims. - a wrong tool name, three
-badly built probes, two long stretches with no status line, zsh and BSD errors.
-**Next:** your rulings on `BACKLOG.md:166` (CF3 Excel first); then the guide sentence (`:182`), Changed Columns (`:192`), nameless header (`:207`), archive pointers (`:220`), CC5,
-the `SESSION_RUNNER.md` re-sync, the report's 13 small wrong statements. Ahead of `origin` by 4 documentation commits; no push. **Gotchas:** the `HANDOFFS.md` receipt and Learning 969;
-this file sits about 400 tokens under its 25,000-token read limit, so fold S1003 at the next claim and trim (`methodology_trim.py --budget-bytes 65536`) if the budget check is red.
+### What Session 1004 Did
+**Deliverable:** take the owner's rulings on the seven slice 6e findings (`BACKLOG.md:166`) and record them (IN PROGRESS)
+**Started:** 2026-10-16 (owner pick at the Phase 0 picker, item 1 of 4)
+**Status:** Session claimed. A decision session: no `R/`, test or `NEWS` change, so no TDD gates (the S968 precedent). Phase 0 backfilled the S1003 close-out in the ledger (`6746818ce`).
+Next: read the 6e re-check report's findings and recommendations, ask each ruling in plain words, record the answers. Do not offer the fixes themselves this session.
+**CI at Phase 0:** the scheduled `shinytest2` run of 2026-10-16 07:15 UTC failed in `test-e2e-marker-genetics-genomic-roh-module.R` (4 failures, a confirm-export pop-up not found in time;
+the three runs before it green; reported, not fixed).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
 
-### Sessions 947-1002 (condensed S950 to S1003; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1003 (condensed S950 to S1004; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1003: the 46 slice 6e code candidates re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`; an audit, no code change; 1 closed, 45 still true, 6 moderate plus the new
+N1: the Mate Pair table pairs animals of unknown sex, `R/reportMatePairs.R:198-211`; the seven rulings are `BACKLOG.md:166`; claim `6b1b41a76`, report `8e534818a`; evaluation of S1002 9/10, self 8/10).
+**Gotchas kept (S1003):** each candidate needs a reach check (who calls it) before its weight is set; the excluded table's reasons are a closed list (`R/reportMatePairs.R:32-36`), so reporting
+left-out unknown-sex animals is a design choice; fixtures to copy: `matePairPed()` in `tests/testthat/test_modMatePair.R:20`.
 S1002: the twelve Summary Statistics Export pop-ups no longer draw a "character(0)" title bar (`R/modSummaryStats.R:16` `.exportButtonPopover()`; `popify(title = "")`;
 `NEWS.Rmd:599`; strict TDD, REFACTOR taken; claim `7de14f5ac`, RED `cd0788344`, GREEN `6ef86136d`, NEWS `6911fd504`, REFACTOR `82ad057f0`; evaluation of S1001 9/10, self 8/10).
 **Gotchas kept (S1002):** `title = ""` hides a Bootstrap 4 popover header while `NULL` prints "character(0)"; run the whole test family (`Sys.glob("tests/testthat/test_modSummaryStats*.R")`)
