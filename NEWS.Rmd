@@ -536,10 +536,8 @@ longitudinal monitoring of colony genetic health.
 
 - Fixed: uploading kinship overrides on the Genetic Value Analysis tab as an
   Excel file stopped with "'kinship' column must be numeric", and the analysis
-  carried on without the file. An Excel file now works as a CSV of the same
-  table does, and `readKinshipOverrides()` returns the `kinship` column of an
-  Excel file as numbers. A value that is not a number still stops the check and
-  names the column.
+  went on without the file. An Excel file now works as a CSV of the same table
+  does, in the app and in `readKinshipOverrides()`.
 - Fixed: the Japanese macaque example file `deidentified_jmac_ped.csv` could not
   be loaded in the app. It is now rebuilt from a 2018 studbook (2,590 animals,
   de-identified, 819 with a recorded sire) and loads once Minimum Dam Age is set
