@@ -506,7 +506,8 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
       leftOutNote <- if (nLeftOut > 0L) {
         div(
           class = "alert alert-info",
-          sprintf("%d %s not recorded as male or female %s left out of the pairs.",
+          sprintf(paste("%d %s not recorded as male or female %s left out of",
+                        "the pairs."),
                   nLeftOut, if (nLeftOut == 1L) "animal" else "animals",
                   if (nLeftOut == 1L) "was" else "were")
         )
