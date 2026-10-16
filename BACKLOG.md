@@ -138,8 +138,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `test_appServer_server.R`, `test_unusedAnimalsHeatMapWording.R`);
       **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: CC5 is the owner's call,
       and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
-      "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, and
-      `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
+      "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, re-checked S1003
+      (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`: 1 closed by a later session, CF2 in S923; 45 still
+      true, 6 moderate (CE2 `fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for kinship overrides and
+      snapshot history, CI1 example-config API-key placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
+      **one new moderate, N1: the Mate Pair table pairs animals of unknown sex, lists them as sire or dam and pairs an
+      animal with itself** (`R/reportMatePairs.R:198-211`); **no ruling taken yet**, the report proposes one per finding
+      with a recommendation, and 13 small wrong statements for one housekeeping session; CL9 is the open item below),
+      and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
       exports with no `@examples`; the `savePlotToFile` example uses `\dontrun`); the four
@@ -156,6 +162,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
+
+- [ ] **Rule on the seven findings of the slice 6e re-check (DECISION NEEDED -- one ruling per finding, Effort S to S-M each;
+      strict TDD)** (found S1003, 2026-10-15; `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`, "Findings: still
+      true" and "Recommendations"; the report recommends option (a) each time) -- (1) CF3: an Excel kinship-overrides or
+      snapshot-history upload always stops "column must be numeric" although the Genetic Value panel, the Snapshot Trends panel
+      and the guide invite Excel (convert the numeric columns on the Excel path, or stop offering Excel); (2) N1: the Mate Pair
+      table lists animals of sex U as sire or dam and pairs an animal with itself (pair only known-sex M and F, and say in one
+      sentence how many were left out); (3) CE2: `convertFromCenter()` reads "unknown" and "N/A" as FALSE and "maybe" as TRUE
+      although its help says an unrecognized value stops (match whole values); (4) CJ3: with a sex ratio set, males under the
+      minimum breeding age are placed in groups as non-males (keep them out of both pools; CJ4, a group stops when its male pool
+      is empty, accept with one help sentence); (5) CE4 and (6) CE5, one session: the Cross-Center check says "clean" for a
+      Center B id equal to a mapped Center A id and the merge then holds duplicate ids, and a column recorded by one center only
+      is lost for a mapped animal (flag the collision; carry the one-sided value); (7) CI1 with CI3: `getConfigApiKey()` returns
+      "paste-your-labkey-api-key-here" from the shipped example config's commented line (drop comment lines, as its sibling
+      reader does). Also the report's 13 small wrong statements (its first minor group) for one housekeeping session, and the
+      eight candidates in functions nothing in `R/` calls (issue #37 asks whether to retire such exports).
 
 - [ ] **The guide does not name the "groups not in the pedigree" sentence (DECISION NEEDED -- add a sentence where the
       owner wants it, or leave; docs only, Effort S, the owner writes the sentence)** (found S995, widened S996) -- the Genetic
