@@ -502,16 +502,7 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
                 "Pairs\" to see results.")
         ))
       }
-      nLeftOut <- leftOutCount()
-      leftOutNote <- if (nLeftOut > 0L) {
-        div(
-          class = "alert alert-info",
-          sprintf(paste("%d %s not recorded as male or female %s left out of",
-                        "the pairs."),
-                  nLeftOut, if (nLeftOut == 1L) "animal" else "animals",
-                  if (nLeftOut == 1L) "was" else "were")
-        )
-      }
+      leftOutNote <- matePairLeftOutNote(leftOutCount())
       if (nrow(res$pairs) == 0L) {
         msg <- paste("No eligible pairs found under the current population",
                      "scope and age settings. Try including more animals or",

@@ -26,3 +26,25 @@ matePairLeftOutIds <- function(ped, kmat, populationIds = NULL) {
   paired <- ped$id[ped$sex %in% c(sexCodes[["male"]], sexCodes[["female"]])]
   ids[!ids %in% paired]
 }
+
+#' The Mate Pair page's one sentence about the animals left out
+#'
+#' Shown by \code{modMatePairServer} beside the pairs (and beside the
+#' "No eligible pairs found" message), from the count
+#' \code{matePairLeftOutIds()} gave at the click.
+#'
+#' @param n number of animals left out.
+#' @return \code{NULL} when \code{n} is zero; otherwise an info alert holding
+#' the sentence, singular for one animal.
+#' @noRd
+matePairLeftOutNote <- function(n) {
+  if (n > 0L) {
+    div(
+      class = "alert alert-info",
+      sprintf(paste("%d %s not recorded as male or female %s left out of",
+                    "the pairs."),
+              n, if (n == 1L) "animal" else "animals",
+              if (n == 1L) "was" else "were")
+    )
+  }
+}
