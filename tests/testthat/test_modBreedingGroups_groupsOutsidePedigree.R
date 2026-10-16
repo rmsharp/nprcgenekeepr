@@ -22,18 +22,9 @@ gopNote <- paste(
   "earlier pedigree, to see them."
 )
 
-## Twenty unrelated living animals, so every group formation succeeds.
-gopPed <- function(ids = paste0("A", 1:20)) {
-  data.frame(
-    id = ids,
-    sire = NA_character_,
-    dam = NA_character_,
-    sex = rep(c("M", "F"), length.out = length(ids)),
-    birth = as.Date("2015-01-01"),
-    exit = as.Date(NA),
-    stringsAsFactors = FALSE
-  )
-}
+## Twenty unrelated living animals, so every group formation succeeds (the
+## shared fixture in helper-unrelatedLivingPed.R).
+gopPed <- unrelatedLivingPed
 
 ## What an output shows, as text: an output that raises an error shows that
 ## error's message (a silent error shows nothing, and an output the module

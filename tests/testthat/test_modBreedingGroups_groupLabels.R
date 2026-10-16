@@ -12,19 +12,6 @@ library(nprcgenekeepr)
 ## plain, unnamed list it has always been, and return one more item,
 ## groupLabels, holding the name of each box of groups().
 
-## Twenty unrelated living animals, so every group formation succeeds.
-glPed <- function(ids = paste0("A", 1:20)) {
-  data.frame(
-    id = ids,
-    sire = NA_character_,
-    dam = NA_character_,
-    sex = rep(c("M", "F"), length.out = length(ids)),
-    birth = as.Date("2015-01-01"),
-    exit = as.Date(NA),
-    stringsAsFactors = FALSE
-  )
-}
-
 ## What groupAddAssign() returns. It ends every candidate with a box of the
 ## animals that fit no group (empty when none were left over); `candidates` is
 ## a list of such candidates, each one a list of boxes.
@@ -61,7 +48,8 @@ glReturned <- function(candidates, switchTo = character(0L)) {
   testthat::with_mocked_bindings(
     shiny::testServer(
       modBreedingGroupsServer,
-      args = list(pedigree = shiny::reactive(glPed()), geneticValues = NULL),
+      args = list(pedigree = shiny::reactive(unrelatedLivingPed()),
+                  geneticValues = NULL),
       {
         glForm(session)
         result <- session$getReturned()
@@ -138,7 +126,8 @@ test_that("before any run, groupLabels() waits as quietly as groups() does", {
 
   shiny::testServer(
     modBreedingGroupsServer,
-    args = list(pedigree = shiny::reactive(glPed()), geneticValues = NULL),
+    args = list(pedigree = shiny::reactive(unrelatedLivingPed()),
+                geneticValues = NULL),
     {
       result <- session$getReturned()
       silent <- function(r) {
