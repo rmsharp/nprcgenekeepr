@@ -651,6 +651,11 @@ export workflows, and longitudinal monitoring of colony genetic health.
   stopping with an unexplained R error. `calcGU()`, `calcGUSE()` and
   `alleleFreq()` return an empty table when given no animals or no
   alleles.
+- Fixed: on the Summary Statistics tab, the pop-up that opens over each
+  of the twelve Export buttons (the kinship matrix, the founders, the
+  relationships, and the six plots) showed a gray title bar reading
+  `character(0)` above its one sentence. The pop-ups now show only the
+  sentence.
 
 # nprcgenekeepr 2.0.0 (20260721)
 
