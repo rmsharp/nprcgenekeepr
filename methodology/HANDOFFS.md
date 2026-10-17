@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1009
+date: 2026-10-17
+status: pending
+active_task: IN PROGRESS -- find why the scheduled shinytest2 run is red in the Marker Genetics Genomic ROH E2E file (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4); diagnosis first, any fix test-first
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1008
 date: 2026-10-17
 status: complete

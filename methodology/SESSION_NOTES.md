@@ -98,29 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1008 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, the PRE-RED scope question, RED and GREEN taken, REFACTOR skipped by the owner):** with a sex ratio set a male is placed only as a known adult male (the
-`BACKLOG.md` block is removed). The female pool is every non-male candidate (`R/fillGroupMembersWithSexRatio.R:84-89`), so a male under `minAge` or with no birth date fills no place and ends in "Unused animals";
-help `R/groupAddAssign.R:56-63` (with CJ4: a group can end with fewer females than asked), the guide's Custom bullet (`colony-manager-guide.qmd:654-659`), `NEWS.Rmd:277`. **The owner chose "leave undated males
-out too"**: the item named only males known to be under the age, but 43 of the 54 living males in `qcPed` have no birth date and no bundled file has a young one.
-**Gates:** claim `39b307627`; RED `b01415563` (19 blocks, 3 new files, 15 fail, 4 pass, 0 skipped); GREEN `dc4620d33`; NEWS `935326086`, corrected `603efd01b`; 12 of 12 mutants killed. Full suite 433 files, 3,882
-blocks, 0 errors, 187 skipped, **2 failed: the two wall-clock benchmark blocks, which fail the same way on `e29f00a16` at a load of 7 to 9** (another project's `vitest` held about 80% of a CPU); lint 0;
-`devtools::check()` 0/0/0; Breeding Groups E2E 17 of 17; ratchet 1/1. **Real app** (shipped rhesus file, Custom 3, 2 groups): before, 40 of the 83 males in the groups had no birth date (the ratio already read 2.83
-and 2.95); after, none, and all 43 in Unused animals; the groups went from 153 and 170 animals to 114 each. No push (35 local commits).
-**Handoff evaluation of S1007: 9/10.** Helped: every BACKLOG cite landed, the `NOT_CRAN`, scratch-install and repo-root gotchas, the order of the six fixes. Missing: that "males under `minAge`" leaves out the
-undated males `getPotentialSires()` also drops (the real effect), that the app's tables are server-side, and that the 2026-10-17 07:15 UTC run had not happened at midnight. Wrong: nothing found.
-**Self-assessment: 8/10.** + claimed first; measured before the plain-words scope question and found the undated-male gap; every RED block proved passable; mutants before the REFACTOR gate; the real app run on both
-trees with pictures opened before the long runs; a NEWS over-claim corrected from that run; the benchmark failures traced to load, not called clean.
-- slips: the gate text estimated 6 to 8 failing blocks (15 failed, and one "guard" failed too); the NEWS draft ran ahead of the real-app run; three driver runs to read a server-side table; an inline `-e` with `\s`.
-**Next:** `BACKLOG.md:190` first: the scheduled `shinytest2` run is red a second time (2026-10-17 07:10 UTC, run 39012674624), so it is real; read the waits around
-`test-e2e-marker-genetics-genomic-roh-module.R:166` and `:247` and run the file with `NPRC_RUN_E2E=true`. Then `:167` (Cross-Center, fifth of six), `:180` (`getConfigApiKey()`, sixth, closes slice 6e). Also open:
-`:207`, `:220`, the DECISION NEEDED items `:226`, `:236`, `:251`, `:264`, CC5, the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass.
-**Gotchas:** `BACKLOG.md` cites below the old `:166` moved up 11 lines (re-grep); read a box's members in the real app through the Group Detail `DataTable().page.len(-1).draw()` and scope tab clicks to
-`#breedingGroups-moduleContainer`; the ratio on the rhesus file was about 3 before and after, so "0.7" holds only for `qcPed` called directly; `qcPed` has no `status` column; run the benchmark blocks on the previous
-commit too before calling a failure new (Learning 974); the 35 local commits have no CI result.
+### What Session 1009 Did
+**Deliverable:** find why the scheduled `shinytest2` run is red in the Marker Genetics Genomic ROH E2E file (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-17 15:15 (local)
+**Status:** Session claimed. Work beginning: diagnosis first (read the waits at `test-e2e-marker-genetics-genomic-roh-module.R:166` and `:247`, run the file with `NPRC_RUN_E2E=true`); any fix is test-first and
+gets its own gate.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-
-### Sessions 947-1007 (condensed S950 to S1008; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1008 (condensed S950 to S1009; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1008: with a sex ratio set a male is placed only as a known adult male, so one under `minAge` or with no birth date is left out and listed under Unused animals
+(`R/fillGroupMembersWithSexRatio.R:84-89`; `R/groupAddAssign.R:56-63`; `NEWS.Rmd:277`; the owner chose to leave undated males out too; strict TDD, REFACTOR skipped by the owner;
+9/10, self 8/10). **Gotchas kept:** read a box's members in the real app through the Group Detail `DataTable().page.len(-1).draw()` and scope tab clicks to
+`#breedingGroups-moduleContainer`; the ratio on the rhesus file was about 3 before and after, so "0.7" holds only for `qcPed` called directly; `qcPed` has no `status` column;
+run the benchmark blocks on the previous commit too before calling a failure new (Learning 974).
 S1007: `convertFromCenter()` reads only whole values, so a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; `NEWS.Rmd`; the owner kept
 stray spaces; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** `AppDriver` needs `NOT_CRAN=true`; a scratch install needs `R_LIBS=<scratch>:<renv library>` and `Rscript` run from the repo
 root; `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
