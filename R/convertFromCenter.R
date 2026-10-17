@@ -10,9 +10,11 @@
 #' not the animal is from the center.
 #' @return A logical vector specifying TRUE if an animal
 #' is from the center otherwise FALSE. An \code{NA} input stays \code{NA}.
-#' Any other value that is not recognized as a yes or a no (including numbers
-#' such as \code{1L} and empty strings), or that matches both, stops with an
-#' error naming the offending rows.
+#' A value is read only when the whole text, ignoring case and any spaces
+#' around it, is \code{y}, \code{yes}, \code{t} or \code{true} (TRUE), or
+#' \code{n}, \code{no}, \code{f} or \code{false} (FALSE). Any other value,
+#' such as \code{"unknown"}, \code{"maybe"}, a number such as \code{1L} or an
+#' empty string, stops with an error naming the offending rows.
 #'
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @export
@@ -27,27 +29,21 @@ convertFromCenter <- function(fromCenter) {
   trueValues <- c("Y", "YES", "T", "TRUE")
   falseValues <- c("N", "NO", "F", "FALSE")
 
-  # grepl takes comparison to NA as a failure resulting in FALSE
-  # We conpensate for that while looking for ambiguous text and then put the
-  # NA values back before returning.
   if (!is.logical(fromCenter)) {
-    fromCenterTrue <- grepl(paste(trueValues, collapse = "|"), fromCenter,
-      ignore.case = TRUE
-    )
-    fromCenterFalse <- grepl(paste(falseValues, collapse = "|"), fromCenter,
-      ignore.case = TRUE
-    )
-    fromCenterFalse[is.na(fromCenter)] <- TRUE
-    if (any(fromCenterTrue == fromCenterFalse)) {
+    # Only a whole value counts, ignoring case and surrounding space. An NA is
+    # missing, not an offending value.
+    text <- toupper(trimws(as.character(fromCenter)))
+    isTrue <- text %in% trueValues
+    isFalse <- text %in% falseValues
+    unrecognized <- !is.na(text) & !isTrue & !isFalse
+    if (any(unrecognized)) {
       stop(
         "fromCenter field has ambiguous values in row(s) ",
-        get_and_or_list(seq_along(fromCenter)[
-          (fromCenterTrue == fromCenterFalse)
-        ])
+        get_and_or_list(which(unrecognized))
       )
     }
-    fromCenterTrue[is.na(fromCenter)] <- NA
-    fromCenter <- fromCenterTrue
+    isTrue[is.na(text)] <- NA
+    fromCenter <- isTrue
   }
   fromCenter
 }

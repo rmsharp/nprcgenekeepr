@@ -13,9 +13,11 @@ not the animal is from the center.}
 \value{
 A logical vector specifying TRUE if an animal
 is from the center otherwise FALSE. An \code{NA} input stays \code{NA}.
-Any other value that is not recognized as a yes or a no (including numbers
-such as \code{1L} and empty strings), or that matches both, stops with an
-error naming the offending rows.
+A value is read only when the whole text, ignoring case and any spaces
+around it, is \code{y}, \code{yes}, \code{t} or \code{true} (TRUE), or
+\code{n}, \code{no}, \code{f} or \code{false} (FALSE). Any other value,
+such as \code{"unknown"}, \code{"maybe"}, a number such as \code{1L} or an
+empty string, stops with an error naming the offending rows.
 }
 \description{
 Part of Pedigree Curation
