@@ -98,31 +98,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1007 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, the PRE-RED scope question and all three gates taken):** `convertFromCenter()` reads only whole values, so a `fromCenter` cell
-that is not a yes or a no stops the load and names its rows (the `BACKLOG.md` block is removed). It trims the text, upper-cases it and matches the whole value against Y/YES/T/TRUE and
-N/NO/F/FALSE (`R/convertFromCenter.R:28-49`); NA stays NA, a logical passes through, the message "fromCenter field has ambiguous values in row(s) ..." is unchanged. **The owner chose to keep
-accepting stray spaces** ("Yes ", " no"). Help in `man/convertFromCenter.Rd`; `NEWS.Rmd:445` (General Fixes, one Fixed bullet).
-**Gates:** claim `cb11c49e1`; RED `1011bc93b` (11 new blocks in 2 files, 5 fail, 6 guards pass, 0 skipped); GREEN `177c22e3d`; NEWS `e00509c03`; REFACTOR `7ecdfe6a9` (one shared upload helper
-for tests). Full suite 430 files, 3,863 blocks, 0 failed, 0 errors, 187 skipped; lint 0; `devtools::check()` 0/0/0; 20 of 20 mutants killed; ratchet 1/1 pass. **Real app** (scratch installs of
-the RED tree and HEAD): "unknown" in row 3 of `fromCenter`: before, the file loads and the Errors tab is empty; after, "Data Processing Error ... row(s) 3". No push (29 local commits).
-**Handoff evaluation of S1006: 9/10.** Helped: the Next list's exact first step (scan the `.xlsx`, `.txt` and data objects before anchoring), every BACKLOG cite (`:166`, `:177`, `:189`,
-`:202`, `:212` all landed), the `Rscript` variable gotcha. Missing: that `shinytest2` `AppDriver` refuses to run without `NOT_CRAN=true` ("Reason: On CRAN"), that `Rscript` started outside the
-repo root loses renv ("quadprog is required"), and that `qcStudbook(reportErrors = TRUE)` returns `NULL` for "nothing to report" (a silent acceptance shows as `NULL`). Wrong: nothing found.
-**Self-assessment: 8/10.** + full Phase 0 with CI, ledgers and budget; claimed first; measured before the one question (the 3-source scan, a 20-value table of what the old code did, the real
-upload path), answered first try; RED failures read and each proved passable in memory; mutants before the REFACTOR gate; before and after pictures opened for the owner before the long runs;
-copies counted (10) before the REFACTOR offer and the remainder filed.
-- slips: `Rscript` from `tests/testthat` (no renv); the first smoke runs had no `NOT_CRAN` and never opened the Errors tab, so the "fixed" run showed no message (a check that could not pass;
-caught at once); a verification job started where the harness could not report it, and a suite-plus-check job that would pass the 10-minute limit (both stopped and split); `sleep` is blocked.
-**Next:** `BACKLOG.md:166` (keep males under the minimum breeding age out of groups, READY, S-M, strict TDD), then `:178`, `:191`. If the 2026-10-17 07:15 UTC `shinytest2` run is red again,
-`:201` goes first. Also open: `:217` (the seven remaining Input-tab upload helpers, test-only), `:230`, the DECISION NEEDED items `:236`, `:246`, `:261`, `:274`, CC5, the `SESSION_RUNNER.md`
-re-sync, the `BACKLOG.md` compression pass.
-**Gotchas:** `BACKLOG.md` cites above `:217` moved up 11 lines (re-grep); a new Input-tab test calls `uploadPedigreeFile()` from `tests/testthat/helper-inputTabUpload.R`; `AppDriver` needs
-`NOT_CRAN=true`, and a scratch install needs `R_LIBS=<scratch>:<renv library>`; run `Rscript` from the repo root; `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported;
-`pedGood` has 8 rows and renamed headers (`ego_id`), so its Input-tab run also shows a Changed Columns tab.
+### What Session 1008 Did
+**Deliverable:** keep males under the minimum breeding age out of groups when a sex ratio is set (`BACKLOG.md:166`; fourth of the six fixes ruled S1004; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-17 00:15 CDT
+**Status:** Session claimed. Work beginning. Strict TDD: research and the PRE-RED scope question come next; no test or code exists yet.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+**Phase 0 (S1008):** gap 0 (`CHANGELOG.md` and `HANDOFFS.md` frontiers both at `e29f00a16`), no pending receipt, tree clean, 29 local commits; the S1007 ratchet citation matches the results file;
+dashboard 96/100; no file over its budget ceiling; CI: the scheduled `shinytest2` run of 2026-10-16 07:15 UTC is red (`BACKLOG.md:201`, reported, not fixed; the 2026-10-17 07:15 UTC run had not
+happened at 00:10 CDT), every push run green.
+**Carried from S1007 (full receipt in `HANDOFFS.md`):** the order of the remaining fixes is `BACKLOG.md:166`, `:178`, `:191`; if the 2026-10-17 07:15 UTC `shinytest2` run is red again, `:201` goes
+first. Also open: `:217` (the seven Input-tab upload helpers, test-only), `:230`.
 
 
-### Sessions 947-1006 (condensed S950 to S1007; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1007 (condensed S950 to S1008; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1007: `convertFromCenter()` reads only whole values, so a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; `NEWS.Rmd:445`; the owner
+chose to keep accepting stray spaces; strict TDD, REFACTOR taken; predecessor 9/10, self 8/10). **Gotchas kept:** `shinytest2` `AppDriver` needs `NOT_CRAN=true`, and a scratch install needs
+`R_LIBS=<scratch>:<renv library>`; run `Rscript` from the repo root (renv); `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; a new Input-tab test calls
+`uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`); `pedGood` has 8 rows and renamed headers, so its Input-tab run also shows a Changed Columns tab; `BACKLOG.md` cites above
+`:217` moved up 11 lines at S1007 (re-grep).
 S1006: the Mate Pair table pairs only animals recorded male or female; the page says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`, `matePairLeftOutNote()`
 `:40`; `R/modMatePair.R:271,447,505`; `NEWS.Rmd:339`; the owner chose "one sentence only"; strict TDD, REFACTOR taken; predecessor 9/10, self 8/10). **Gotchas kept:** none of the bundled data
 has an unsexed living animal (0 of 89, 1,704 and 375), so showing a defect needs a hand-set U; an in-memory proof must patch the attached `package:` copy as well as the namespace, and a new
