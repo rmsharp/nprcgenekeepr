@@ -11,21 +11,12 @@ library(testthat)
 testthat::skip_on_cran()
 
 ## Writes `lines` to a temporary CSV file and uploads it through the real
-## Input module (read, then runQcStudbook()), returning the module's
-## qcResults().
+## Input module (uploadPedigreeFile(), in helper-inputTabUpload.R), returning
+## the module's qcResults().
 uploadPlaceholderLines <- function(lines) {
   path <- tempfile(fileext = ".csv")
   writeLines(lines, path)
-  got <- new.env()
-  shiny::testServer(modInputServer, {
-    session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      separator = ",", minSireAge = "", minDamAge = "")
-    session$setInputs(pedigreeFileOne = list(name = basename(path),
-                                             datapath = path))
-    session$setInputs(getData = 1L)
-    got$res <- qcResults()
-  })
-  got$res
+  uploadPedigreeFile(path)
 }
 valueOf <- function(ped, id, col) ped[[col]][ped$id == id]
 

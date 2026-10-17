@@ -14,27 +14,13 @@ library(testthat)
 testthat::skip_on_cran()
 
 ## Writes `lines` to a temporary file and uploads it through the real Input
-## module (read, then runQcStudbook()), returning the module's qcResults().
+## module (uploadPedigreeFile(), in helper-inputTabUpload.R), returning the
+## module's qcResults().
 uploadPedigree <- function(lines, fileExt = "csv", fileType = "fileTypeExcel",
                            separator = ",") {
   path <- tempfile(fileext = paste0(".", fileExt))
   writeLines(lines, path)
   uploadPedigreeFile(path, fileType = fileType, separator = separator)
-}
-uploadPedigreeFile <- function(path, fileType = "fileTypeExcel",
-                               separator = ",", minDamAge = "",
-                               minSireAge = "") {
-  got <- new.env()
-  shiny::testServer(modInputServer, {
-    session$setInputs(fileContent = "pedFile", fileType = fileType,
-                      separator = separator, minSireAge = minSireAge,
-                      minDamAge = minDamAge)
-    session$setInputs(pedigreeFileOne = list(name = basename(path),
-                                             datapath = path))
-    session$setInputs(getData = 1L)
-    got$res <- qcResults()
-  })
-  got$res
 }
 ## as.character(): the cleaned ancestry column is a factor.
 valueOf <- function(ped, id, col) as.character(ped[[col]][ped$id == id])

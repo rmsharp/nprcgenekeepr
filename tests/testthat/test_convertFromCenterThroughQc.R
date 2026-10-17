@@ -16,25 +16,13 @@ fromCenterPed <- function(value) {
   ped
 }
 
-# The Input tab's result after "Get Data" on a CSV holding `ped`.
+# The Input tab's result after "Get Data" on a CSV holding `ped`
+# (uploadPedigreeFile(), in helper-inputTabUpload.R).
 inputTabResult <- function(ped) {
   path <- tempfile(fileext = ".csv")
   on.exit(unlink(path), add = TRUE)
   utils::write.csv(ped, path, row.names = FALSE)
-  result <- NULL
-  frame <- environment()
-  shiny::testServer(modInputServer, {
-    session$setInputs(
-      fileContent = "pedFile", fileType = "fileTypeExcel",
-      minSireAge = "2.0", minDamAge = "2.0"
-    )
-    session$setInputs(pedigreeFileOne = list(
-      name = basename(path), datapath = path
-    ))
-    session$setInputs(getData = 1)
-    assign("result", storedResults(), envir = frame)
-  })
-  result
+  uploadPedigreeFile(path)
 }
 
 test_that("qcStudbook() stops on a fromCenter value that is not yes or no", {
