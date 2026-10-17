@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1007
+date: 2026-10-16
+status: pending
+active_task: IN PROGRESS -- make `convertFromCenter()` match whole values (`BACKLOG.md:166`; third of the six fixes ruled S1004; owner pick at the Phase 0 picker, item 1 of 4); strict TDD
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1006
 date: 2026-10-16
 status: complete

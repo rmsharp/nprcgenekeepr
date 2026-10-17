@@ -98,32 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1006 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, the PRE-RED scope question and all three gates taken):** the Mate Pair table pairs only animals recorded male or female (the
-`BACKLOG.md` block is removed). `reportMatePairs()` drops any animal whose sex is not M or F (U, H, missing, or an id the pedigree lacks) before it pairs (`R/reportMatePairs.R:200`);
-one internal function, `matePairLeftOutIds()` (`R/matePairLeftOutIds.R:21`), lists them and both the report and the page read it; `matePairLeftOutNote()` (`:40`) is the page's one
-sentence, "N animals not recorded as male or female were left out of the pairs.", shown from a count taken at the click (`R/modMatePair.R:271,447,505`), also beside "No eligible pairs
-found". **The owner chose "one sentence only"**: the Excluded tab keeps its three reasons and gains no row. Help in both places; `NEWS.Rmd:339` (Minor).
-**Gates:** claim `bd6fdc139`; RED `17ebb9e97` (17 new blocks, 15 fail, 2 guards pass, 0 skipped); GREEN `36b13bacd`, lint wrap `9e8c6f5f5`; NEWS `9adb32d1d`; REFACTOR `78f7e06bc` (the
-sentence into its own function). Full suite 429 files, 3,852 blocks, 0 failed, 0 errors, 187 skipped; lint 0; `devtools::check()` 0/0/0; 14 of 14 mutants killed; **real app** (headless
-Chrome, the example pedigree with two living animals set to U): before 24 pairs, both listed, no notice; after 9 pairs, neither listed, the sentence. No push (23 local commits).
-**Handoff evaluation of S1005: 9/10.** Helped: the Next list and its PRE-RED question (exactly right), every code and fixture cite, the dashboard flag explained, the gotchas. Missing:
-that none of the bundled data has an unsexed living animal (0 of 89, 1,704 and 375), so showing the defect needs a hand-set U; that `SESSION_NOTES.md` was already past one Read. Wrong:
-nothing found.
-**Self-assessment: 8/10.** + full Phase 0 with CI and budget; claimed first; measured before the plain-words scope question (1, 3 and 10 unsexed living animals add 1,704, 5,109 and
-16,995 pairs on the 3,694-animal example), answered first try; every RED shape proved passable (it caught `NULL` against `character(0)`); mutants before the REFACTOR gate; before and
-after pictures opened for the owner ahead of the long runs; the older notes condensed to stay readable.
-- the first in-memory proof patched only the namespace copy; a commit message said "2 new test files" (amended before any push); one line over 80 columns found only at the full lint;
-the first `devtools::check()` used `--no-manual` (the plain run is in the receipt).
-**Next:** `BACKLOG.md:166` (`convertFromCenter()`, READY, S, strict TDD; first scan the shipped `.xlsx`, `.txt` and data objects for free-text values), then `:177`, `:189`, `:202`. If
-the 2026-10-17 07:15 UTC `shinytest2` run is red again, `:212` goes first. Also open: `:228`, the DECISION NEEDED items `:234`, `:244`, `:259`, `:272`, CC5, the `SESSION_RUNNER.md`
-re-sync, the `BACKLOG.md` compression pass.
-**Gotchas:** `BACKLOG.md` cites below `:166` moved up 12 lines (re-grep); an in-memory proof must patch the attached `package:` copy as well as the namespace, and a new function goes in
-`globalenv()`; a `renderUI` that returns `NULL` reads as `""` through `output$x$html`; `rownames()` of a 0 x 0 matrix is `NULL` (wrap in `as.character()`); `R/*.R` may not hold a bare
-"M" or "F" (`test_sexCodes.R`), use `sexCodes[["male"]]`.
+### What Session 1007 Did
+**Deliverable:** make `convertFromCenter()` match whole values (`BACKLOG.md:166`; third of the six fixes ruled S1004; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-16 22:20 CDT
+**Status:** Session claimed. Work beginning. Strict TDD: the PRE-RED scope question comes next; no test or code exists yet.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+**Phase 0 (S1007):** gap 0 (`CHANGELOG.md` and `HANDOFFS.md` frontiers both at `8dfe6f2d6`), no pending receipt, tree clean, 23 local commits; dashboard 96/100; no file over its budget
+ceiling; CI: the scheduled `shinytest2` run of 2026-10-16 07:15 UTC is red (`BACKLOG.md:212`, reported, not fixed), every push run green.
+**Carried from S1006 (full receipt in `HANDOFFS.md`):** the order of the six fixes is `BACKLOG.md:166`, `:177`, `:189`, `:202`; if the 2026-10-17 07:15 UTC `shinytest2` run is red again,
+`:212` goes first. First step of this fix: scan the shipped `.xlsx`, `.txt` and data objects for free-text `fromCenter` values (the CSVs were scanned S1004).
 
 
-### Sessions 947-1005 (condensed S950 to S1006; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1006 (condensed S950 to S1007; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1006: the Mate Pair table pairs only animals recorded male or female; the page says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`, `matePairLeftOutNote()`
+`:40`; `R/modMatePair.R:271,447,505`; `NEWS.Rmd:339`; the owner chose "one sentence only"; strict TDD, REFACTOR taken; predecessor 9/10, self 8/10). **Gotchas kept:** none of the bundled data
+has an unsexed living animal (0 of 89, 1,704 and 375), so showing a defect needs a hand-set U; an in-memory proof must patch the attached `package:` copy as well as the namespace, and a new
+function goes in `globalenv()`; a `renderUI` that returns `NULL` reads as `""` through `output$x$html`; `rownames()` of a 0 x 0 matrix is `NULL` (wrap in `as.character()`); `R/*.R` may not
+hold a bare "M" or "F" (`test_sexCodes.R`), use `sexCodes[["male"]]`; `BACKLOG.md` cites below `:166` moved up 12 lines at S1006 (re-grep).
 S1005: an Excel upload of kinship overrides or snapshot history works: both readers convert their numeric columns on the Excel path (`R/convertExcelNumericColumns.R`; the 27 snapshot
 column names once in `R/snapshotSchemaColumns.R`; `NEWS.Rmd` Fixed bullet; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** Learning 971 (a smoke run from the repo root
 tests the working tree; set variables on the `Rscript` command); `writeTestXlsx()` in `tests/testthat/helper-excelFixtures.R` builds a temporary workbook for any reader test.
