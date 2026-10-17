@@ -98,28 +98,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1009 Did
-**Deliverable, DONE (owner pick, item 1 of 4; a diagnosis, no test or code changed):** why the scheduled `shinytest2` run is red (`BACKLOG.md:190` now holds the fix item). It is a real
-regression, not a short wait: `R/modMarkerGenetics.R:849` reads `req(gmat, rohTable, ped)`, and `shiny::isTruthy()` of a character matrix is FALSE when **every row holds an `NA`** (it runs
-`na.omit()`, which drops those rows). S977 (`abf2a7864`, 2026-10-13) made a blank allele `NA` (`R/buildMarkerGenotypeMatrix.R:54`); the bundled `example_sequence_genotypes.csv` has 2,070 of
-50,000 cells missing, in all 50 animals, so Generate Preview does nothing and the later steps never get a result.
-**Evidence:** the same 4 failures on the first local run at HEAD; `^e2e-marker-genetics-genomic-roh-module` 11 passed at `5a41dbbdd` (last green scheduled run) and at `417fc941e` (S977 RED),
-7 passed, 3 failed, 1 errored at `abf2a7864` (S977 GREEN); the red run built 276 commits (`5a41dbbdd` to `82ad057f0`), not S1002's. Claim `22f1c8483`. Ratchet: 1/1 pass · 0 fail · 0
-unmeasured · results 7dc920ec32c2 · manifest aa983075d6a2. No file under `R/` or `tests/` changed, so no lint and no suite.
-**Handoff evaluation of S1008: 8/10.** Helped: the run and job ids, `gh api .../jobs/<id>/logs` (since `gh run view --log` printed nothing), the four failing lines, the `NPRC_RUN_E2E=true`
-command. Missing: the push range (276 commits, found with `gh run view --json headSha`). Wrong: "the push it built (S1002) changed nothing in Marker Genetics" and "a wait too short is
-likeliest"; the range held S977 and S978, which did change it.
-**Self-assessment: 8/10.** + claimed first; diffed the CI package tables of a green and a red day (3 differences, none a package); reproduced the 4 failures on the first local run; named the
-mechanism with a short probe and proved the commit pair with two E2E runs; the fix item carries measured numbers. - slips: chased a layout-shift idea (the F_ROH notice) before the `req()`
-chain; the first probe run lacked `R_LIBS`; one no-op `Monitor` call.
-**Next:** the new `BACKLOG.md:190` item first (READY, Effort S, strict TDD): the nightly stays red until that fix is pushed (the schedule builds origin/master, still `82ad057f0`; 37 local
-commits unpushed). Then `:167` (Cross-Center, fifth of six), `:180` (`getConfigApiKey()`, sixth, closes slice 6e). Also open: `:214`, `:227`, the DECISION NEEDED items, the
-`SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass.
-**Gotchas:** `req()` of a character matrix with an `NA` in every row is silently FALSE (a data frame or a numeric matrix is not); the unit fixtures `i152Roh*` have no missing calls; to
-bisect an E2E file use a scratch `git worktree`, a per-commit scratch library and `R_LIBS=<lib>:<renv lib>` for a probe too; the ROH E2E file takes about 1.5 min and an install 10 s
-(Learning 975).
+### What Session 1010 Did
+**Deliverable:** make "Generate De-Identified Export Preview" work when every animal has a missing genotype (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-17 18:23 CDT
+**Status:** Session claimed. Work beginning. Strict TDD: PRE-RED now; RED, GREEN and REFACTOR each wait behind their own gate.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1008 (condensed S950 to S1009; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1009 (condensed S950 to S1010; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1009: the red scheduled `shinytest2` run diagnosed (no test or code changed): `R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is silently FALSE for a character matrix with an `NA`
+in every row; S977 made a blank allele `NA` and the bundled `example_sequence_genotypes.csv` has 2,070 of 50,000 cells missing, in all 50 animals (claim `22f1c8483`, close-out `f4a96c40e`;
+8/10, self 8/10). **Gotchas kept:** a data frame or a numeric matrix is not affected by that `req()` rule; the unit fixtures `i152Roh*` have no missing calls; to bisect an E2E file use a
+scratch `git worktree`, a per-commit scratch library and `R_LIBS=<lib>:<renv lib>` for a probe too; the ROH E2E file takes about 1.5 min and an install 10 s (Learning 975).
 S1008: with a sex ratio set a male is placed only as a known adult male, so one under `minAge` or with no birth date is left out and listed under Unused animals
 (`R/fillGroupMembersWithSexRatio.R:84-89`; `R/groupAddAssign.R:56-63`; `NEWS.Rmd:277`; the owner chose to leave undated males out too; strict TDD, REFACTOR skipped by the owner;
 9/10, self 8/10). **Gotchas kept:** read a box's members in the real app through the Group Detail `DataTable().page.len(-1).draw()` and scope tab clicks to

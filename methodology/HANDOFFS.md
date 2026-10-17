@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1010
+date: 2026-10-17
+status: pending
+active_task: IN PROGRESS -- make "Generate De-Identified Export Preview" work when every animal has a missing genotype (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4); strict TDD
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1009
 date: 2026-10-17
 status: complete
