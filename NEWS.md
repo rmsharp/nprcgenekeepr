@@ -465,6 +465,18 @@ export workflows, and longitudinal monitoring of colony genetic health.
   every invalid date by row, in every date column, so the rows can be
   found and corrected in the file.
 
+- Fixed: a pedigree file whose `fromCenter` column held text that is not
+  a yes or a no was read with no message at all: any value containing a
+  `y` or `t` was taken as TRUE and any containing an `n` or `f` as
+  FALSE, so "unknown", "N/A" and "none" became FALSE and "maybe" became
+  TRUE, which changes which animals the Potential Parents and Candidate
+  Parent Assignment tabs treat as born in the colony. Only a whole `y`,
+  `yes`, `t` or `true` (TRUE), or `n`, `no`, `f` or `false` (FALSE), is
+  read now, in any case and with spaces around it; any other value stops
+  the load and names its rows, so a file that holds "unknown" in this
+  column stops until it is corrected. `convertFromCenter()` and
+  `qcStudbook()` behave the same way.
+
 - Fixed: when a pedigree file's geographic origin column was headed in
   all lowercase (`geographicorigin`), the column was renamed to
   `geographicOrigin` with no notice at all, so `runQcStudbook()`
