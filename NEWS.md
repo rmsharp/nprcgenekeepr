@@ -288,14 +288,15 @@ export workflows, and longitudinal monitoring of colony genetic health.
   takes **Harem** or **Custom**, not both.
 - With a **Custom** sex ratio, a male under the **Minimum breeding
   age**, or with no birth date, is left out of the groups and listed
-  under **Unused animals**. Before, such a male filled one of a group's
-  female places while the group's sex ratio still counted him as a male,
-  so a group could hold far more males than the ratio asked for. A group
-  stops filling when no breeding-age male is left for it, so it can end
-  with fewer females than the ratio asks for. Script users:
-  `groupAddAssign()` and `fillGroupMembersWithSexRatio()` follow the
-  same rule. On a pedigree with such males, results for a given random
-  seed differ from earlier versions.
+  under **Unused animals**. Before, such a male could be placed as if he
+  were female while the group's sex ratio still counted him as a male,
+  so a group's males could include animals not known to be of breeding
+  age, and with few females the ratio could come out well below the one
+  asked for. A group stops filling when no breeding-age male is left for
+  it, so it can end with fewer females than the ratio asks for. Script
+  users: `groupAddAssign()` and `fillGroupMembersWithSexRatio()` follow
+  the same rule. On a pedigree with such males, results for a given
+  random seed differ from earlier versions.
 
 **Minor**
 
