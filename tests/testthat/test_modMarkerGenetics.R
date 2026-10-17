@@ -1800,6 +1800,135 @@ test_that("modMarkerGenetics's sequence export preview still builds, with no blo
   })
 })
 
+## RED (S1010, BACKLOG.md:190): Generate Preview does nothing when every
+## animal has at least one missing allele. The observer's
+## req(gmat, rohTable, ped) runs shiny::isTruthy() on the character genotype
+## matrix, and isTruthy() drops every row that holds an NA before it asks
+## whether anything is left. Since S977 a missing allele is NA, so a matrix
+## in which no animal's row is complete is "not ready": the observer exits
+## with no preview and no message. i152RohGenotype leaves out ONE row for
+## ONE animal (I2's L3), so I1 and I3 keep complete matrix rows and no older
+## test reached the condition. These fixtures write a missing allele the way
+## the bundled example_sequence_genotypes.csv does, as the text NA: one per
+## animal (4 NA cells with I2's absent L3), and every allele (all 27 cells).
+
+s1010WriteGenotype <- function(genotype) {
+  path <- tempfile(fileext = ".csv")
+  write.csv(genotype, path, row.names = FALSE)
+  path
+}
+
+s1010OnePerAnimal <- i152RohGenotype
+s1010OnePerAnimal$allele2[
+  s1010OnePerAnimal$id == "I1" & s1010OnePerAnimal$locus == "L9"] <- "NA"
+s1010OnePerAnimal$allele2[
+  s1010OnePerAnimal$id == "I2" & s1010OnePerAnimal$locus == "L1"] <- "NA"
+s1010OnePerAnimal$allele2[
+  s1010OnePerAnimal$id == "I3" & s1010OnePerAnimal$locus == "L5"] <- "NA"
+s1010OnePerAnimalPath <- s1010WriteGenotype(s1010OnePerAnimal)
+
+s1010AllMissing <- i152RohGenotype
+s1010AllMissing$allele1 <- "NA"
+s1010AllMissing$allele2 <- "NA"
+s1010AllMissingPath <- s1010WriteGenotype(s1010AllMissing)
+
+test_that("modMarkerGenetics's sequence export preview builds when every animal has a missing allele", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    suppressWarnings(session$setInputs(genotypeFile = list(
+      name = "s1010_one_missing_allele_each.csv",
+      datapath = s1010OnePerAnimalPath
+    )))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    ## The fixture reaches the condition: no animal's row is complete.
+    expect_equal(unname(apply(genotypeMatrixR(), 1L, anyNA)), rep(TRUE, 3L))
+
+    session$setInputs(sequenceExportPreview = 1)
+
+    exportedMatrix <- result$sequenceExportGenotypeMatrix()
+    expect_equal(dim(exportedMatrix), c(3L, 9L))
+    expect_length(rownames(exportedMatrix), 3L)
+    expect_false(any(grepl("^I[1-3]$", rownames(exportedMatrix))))
+    ## De-identification changes ids only; every cell, missing or not, stays.
+    expect_equal(sum(is.na(exportedMatrix)), 4L)
+
+    exportedRoh <- result$sequenceExportRohTable()
+    expect_s3_class(exportedRoh, "data.frame")
+    expect_false(any(grepl("^I[1-3]$", exportedRoh$id)))
+
+    manifest <- result$sequenceExportManifest()
+    expect_equal(manifest$nIndividuals, 3L)
+    expect_equal(manifest$nLoci, 9L)
+  })
+})
+
+test_that("modMarkerGenetics's sequence export preview names the animals absent from the pedigree when every animal has a missing allele", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(s709PartialRohPed)), {
+    result <- session$getReturned()
+    suppressWarnings(session$setInputs(genotypeFile = list(
+      name = "s1010_one_missing_allele_each.csv",
+      datapath = s1010OnePerAnimalPath
+    )))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+    expect_null(result$sequenceExportRohTable())
+    expect_null(result$sequenceExportManifest())
+    guidanceHtml <- i148Html(output$sequenceExportGuidance)
+    expect_match(guidanceHtml, "not in the loaded pedigree", fixed = TRUE)
+    expect_match(guidanceHtml, "1 animal", fixed = TRUE)
+    expect_match(guidanceHtml, "export was not generated", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's sequence export preview builds when every allele in the file is missing", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    suppressWarnings(session$setInputs(genotypeFile = list(
+      name = "s1010_all_alleles_missing.csv",
+      datapath = s1010AllMissingPath
+    )))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    ## The fixture reaches the condition: every cell is missing.
+    expect_true(all(is.na(genotypeMatrixR())))
+
+    session$setInputs(sequenceExportPreview = 1)
+
+    exportedMatrix <- result$sequenceExportGenotypeMatrix()
+    expect_equal(dim(exportedMatrix), c(3L, 9L))
+    expect_equal(sum(is.na(exportedMatrix)), 27L)
+
+    exportedRoh <- result$sequenceExportRohTable()
+    expect_s3_class(exportedRoh, "data.frame")
+    expect_equal(nrow(exportedRoh), 3L)
+    expect_equal(result$sequenceExportManifest()$nIndividuals, 3L)
+  })
+})
+
 ## RED (S948, BACKLOG.md:57): the Candidate Parent Assignment tab says why it
 ## is blank when the pedigree has no "fromCenter" column. getPotentialParents()
 ## returns NULL without that column, so no candidate is ever found; the
