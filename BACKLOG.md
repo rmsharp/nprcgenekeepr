@@ -163,17 +163,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Make `convertFromCenter()` match whole values (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a);
-      Finding 3, CE2, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:94-107`; third of six) --
-      `R/convertFromCenter.R:34-39` matches an unanchored y/t and n/f: through `qcStudbook()` on `examplePedigree`,
-      "unknown", "N/A" and "maybe" become FALSE, FALSE and TRUE with no error, warning or QC Summary line, while its
-      help (`:13`) says an unrecognized value stops naming the rows. **Ruled fix:** accept whole values only (y, yes,
-      t, true; n, no, f, false; any case) so anything else stops naming the rows. A file holding "unknown" then stops
-      until corrected, so `NEWS.Rmd` says so. `R/qcStudbook.R:314` feeds the `fromCenter` column; `fromCenter` drives
-      Candidate Parent Assignment. **Before anchoring the match** check the shipped files for free-text values
-      (S1003's gotcha; S1004 scanned the CSVs in `inst/extdata/examples/`: only `rhesusPedigree_fromCenter.csv` has
-      the column, 375 of 375 `TRUE`; the `.xlsx`, `.txt` and bundled data objects were not scanned).
-
 - [ ] **Keep males under the minimum breeding age out of groups when a sex ratio is set (READY, Effort S-M; strict
       TDD)** (ruled S1004: fix, option (a) for CJ3, and CJ4 accepted with one help sentence; Finding 4,
       `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:109-127`; fourth of six) --
@@ -224,6 +213,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       nights since (a second red makes it real, a green leaves it a flake to harden), then read the waits around
       `:166` and `:247` and run the file locally (`NPRC_RUN_E2E=true`). Get a CI log with `gh api
       repos/rmsharp/nprcgenekeepr/actions/jobs/<job id>/logs` (`gh run view <id> --log` printed nothing here).
+
+- [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
+      REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
+      minDamAge, minSireAge)`, which uploads a file through the real Input module and returns its `qcResults()`;
+      `test_modInput_blankCells.R`, `test_modInput_placeholder.R` and `test_convertFromCenterThroughQc.R` call it.
+      Seven more local copies of the `shiny::testServer(modInputServer, ...)` block remain. **Three have the same
+      shape** (pedFile, getData, `qcResults()`) and should move: `.uploadExemplar()` (`test_examplePedigreeFixtures.R`),
+      `uploadExample()` (`test_examplePedigreeTxt.R`), `uploadForQc()` (`test_modInput_qcStudbook.R`); check each one's
+      age inputs first. **Four differ:** `inputTabStudbook()` (`test_genotypeTutorialsWording.R`), `runOneFile()` and
+      `runSeparate()` (`test_modInputOneFileGenotypes.R`, `test_modInputSeparateGenotypeNote.R`) use the genotype
+      file-content modes and read the cleaned studbook or genotype data, and `run_upload()`
+      (`test_modInput_incomplete_final_line.R`) reads `qcSummary()` and a warning. One file per commit, run it before
+      and after; a new Input-tab test calls `uploadPedigreeFile()` and writes no new copy.
 
 - [ ] **The 13 small wrong statements of the slice 6e re-check (READY, Effort S)** (found S1003; the report's first
       minor group, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) -- one housekeeping session in
