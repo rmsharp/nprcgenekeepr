@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1009
 date: 2026-10-17
-status: pending
-active_task: IN PROGRESS -- find why the scheduled shinytest2 run is red in the Marker Genetics Genomic ROH E2E file (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4); diagnosis first, any fix test-first
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- found why the scheduled shinytest2 run is red in the Marker Genetics Genomic ROH E2E file (BACKLOG.md:190; owner pick at the Phase 0 picker, item 1 of 4): a real regression from S977, not a short wait; a diagnosis, no test or code changed; the fix is the new BACKLOG.md:190 item
+what_was_done: Phase 0: read the runner, safeguards and notes; CHANGELOG and HANDOFFS frontiers at HEAD d40b055c8 (no gap, no merge, no pending receipt); ratchet citation matched; CI: shinytest2 red 2026-10-16 and 2026-10-17, push runs green. Claim 22f1c8483. Pulled the three job logs (gh api repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs), diffed their session-info tables (green 10-15 against red 10-16: nprcgenekeepr build date, Chrome 155.0.8059.79 to .84, apt; 10-16 against 10-17: xfun only), found the red run built 276 commits (5a41dbbdd to 82ad057f0), reproduced the same 4 failures locally at HEAD with a scratch install and NPRC_RUN_E2E=true, found req(gmat, rohTable, ped) at R/modMarkerGenetics.R:849 exits silently because shiny::isTruthy() of a character matrix is FALSE when every row holds an NA, and S977 (abf2a7864) made 2070 of 50000 fixture cells NA in all 50 rows; proved it with a probe on 417fc941e (0 NA cells, truthy) and abf2a7864 (50 of 50 rows, FALSE) and with the E2E file on the same pair (11 passed; 7 passed, 3 failed, 1 errored). BACKLOG.md:190 now holds a test-first fix item with those numbers. Learning 975.
+next_steps: BACKLOG.md:190 first (READY, Effort S, strict TDD): RED a testServer test beside tests/testthat/test_modMarkerGenetics.R:1132 with a genotype file where every animal has one blank allele, GREEN an explicit is.null() test in place of req() at R/modMarkerGenetics.R:849, then the ROH E2E file (11 expected). The nightly stays red until the fix is pushed (the schedule builds origin/master, still 82ad057f0; derived from the run headSha values). Then BACKLOG.md:167 (Cross-Center id clash and one-sided columns, fifth of six) and :180 (getConfigApiKey(), sixth, closes slice 6e). Also open: :214, :227, the DECISION NEEDED items, the SESSION_RUNNER.md re-sync, the BACKLOG.md compression pass.
+key_files: R/modMarkerGenetics.R:849 (the req), :845-868 (Preview observer), :1143-1173 (sequenceExportGuidance); R/buildMarkerGenotypeMatrix.R:54 (NA for a blank allele, S977); tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R:166,171,247,249 (the four failing expectations); tests/testthat/test_modMarkerGenetics.R:1132 (the unit test to copy); BACKLOG.md:190; PROJECT_LEARNINGS.md Learning 975
+gotchas: shiny::isTruthy() of a character matrix is FALSE only when every row holds an NA (one complete row keeps it TRUE; a data frame or numeric matrix is unaffected), so never req() a genotype matrix; the unit fixtures i152RohGenotypeFilePath have no missing calls, so give the RED test a file with one blank allele per animal; the red run's range is headSha to headSha of the two scheduled runs (gh run view <id> --json headSha), not the last push; gh run view --log printed nothing, gh api .../jobs/<id>/logs works; an E2E or probe run from a scratch worktree needs R_LIBS=<scratch lib>:<renv lib>, RENV_CONFIG_AUTOLOADER_ENABLED=false and NOT_CRAN=true; the machine load was 7 to 10, which did not change the ROH E2E result
+runtime_smoke: diagnosis only, no file under R/ or tests/ changed; the real app was driven headless through shinytest2 as the evidence: the ROH E2E file passed 11 at 5a41dbbdd and 417fc941e and failed 3 with 1 error at abf2a7864 and at HEAD (scratch installs, R 4.6.1, shiny 1.14.0, shinytest2 0.5.1, chromote 0.5.1)
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 7dc920ec32c2 · manifest aa983075d6a2
+changelog_ref: 22f1c8483
+commit: 22f1c8483
 ```
 
 ```handoff

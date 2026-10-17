@@ -187,22 +187,29 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       tested on the shipped file. CI3: `getParamDef(<Center key>, "center")` stops "subscript out of bounds"
       (`R/getParamDef.R:19`). Not run against a LabKey server.
 
-- [ ] **Find why the scheduled `shinytest2` run of 2026-10-16 failed in the Marker Genetics Genomic ROH E2E file
-      (READY, Effort S)** (found S1004 Phase 0, reported and not fixed; the CI-break convention gives it no issue,
-      only this item) -- run 38866018831 (schedule, 07:15 UTC, commit `82ad057f0`, job 116858920550), step "Run
-      shinytest2 E2E tier in per-module fresh processes": only
-      `tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R` failed (4 of 11 expectations, 62 s; every other
-      file in the run passed): `:166` `wait_for_element(...)` FALSE ("Confirm-export modal (and its Confirm Export OK
-      button) must render live"), `:171` the click on `#markerGenetics-sequenceConfirmExportOk` finds no element,
-      `:247` and `:249` the export guidance still reads the default "Generate a preview, then confirm the export to
-      unlock the downloads." instead of "not in the loaded pedigree" and "1 animal". The three scheduled runs before
-      it (13 to 15 October) were green, and the push it built (S1002) changed `R/modSummaryStats.R` and nothing in
-      Marker Genetics, so a regression from S1002 is unlikely; a wait that is too short on the shared runner is the
-      likeliest cause, unconfirmed. **A second red came (read at S1008 close-out):** the run of 2026-10-17 07:10 UTC
-      (run 39012674624, job 117338335770, still commit `82ad057f0`, 40 m 34 s) failed in the same file on the same four
-      expectations (`:166`, `:171`, `:247`, `:249`) and nothing else, so it is real, not a flake. **First:** read the
-      waits around `:166` and `:247` and run the file locally (`NPRC_RUN_E2E=true`). Get a CI log with `gh api
-      repos/rmsharp/nprcgenekeepr/actions/jobs/<job id>/logs` (`gh run view <id> --log` printed nothing here).
+- [ ] **Make "Generate De-Identified Export Preview" work when every animal has a missing genotype (READY, Effort S;
+      strict TDD)** (found S1009, diagnosing the red scheduled `shinytest2` runs of 2026-10-16 and 2026-10-17; the
+      nightly stays red until this is fixed and pushed) -- `R/modMarkerGenetics.R:849` reads `req(gmat, rohTable, ped)`,
+      and `shiny::isTruthy()` of a character matrix is FALSE when **every row holds an `NA`** (it runs `stats::na.omit()`,
+      which drops those rows, then asks `any(nzchar(<no rows>))`; one complete row keeps it TRUE, and a data frame or a
+      numeric matrix is not affected), so the observer exits with no preview and no message. S977 (`abf2a7864`,
+      2026-10-13) made a blank allele `NA` instead of the text "NA/NA" (`R/buildMarkerGenotypeMatrix.R:54`); the bundled
+      `inst/extdata/examples/example_sequence_genotypes.csv` has 2,070 of 50,000 cells missing, in all 50 animals (before
+      S977: 0 `NA` cells, truthy). What the user sees: Generate Preview does nothing, Confirm Export opens no pop-up, and
+      with an animal absent from the pedigree the "not in the loaded pedigree" sentence never shows. **Measured S1009**
+      (local, `NPRC_RUN_E2E=true`, scratch installs; R 4.6.1, shiny 1.14.0, shinytest2 0.5.1, as in CI):
+      `^e2e-marker-genetics-genomic-roh-module` 11 passed at `5a41dbbdd` (the commit the last green scheduled run built)
+      and at `417fc941e` (S977 RED, code unchanged); 7 passed, 3 failed and 1 errored at `abf2a7864` (S977 GREEN) and at
+      HEAD, the same four expectations as CI (`:166`, `:171`, `:247`, `:249`). The CI package tables of the green 10-15 and
+      red 10-16 runs differ only in the build date, Chrome 155.0.8059.79 to .84 and apt, so it is not the environment, and
+      the waits are not the cause (this item's first lead was wrong). The red run built 276 commits at once, not
+      S1002's (`gh run view <id> --json headSha`: `5a41dbbdd` to `82ad057f0`), because pushes batch and the E2E tier runs
+      only on schedule. **Fix, test first:** RED, a `testServer` test beside `tests/testthat/test_modMarkerGenetics.R:1132`
+      with a genotype file where every animal has one blank allele (the `i152Roh*` fixtures have none, which is why no
+      unit test caught S977's change) that clicks Generate Preview and expects the export objects built; GREEN, replace the
+      `req()` with an explicit `is.null()` test of the three values (the only `req()` in `R/` that receives a genotype
+      matrix, by grep). A fix of a regression not yet released needs no NEWS entry (the version is 2.0.0.9000). Then run
+      the E2E file with the command in Learning 975.
 
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
       REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
