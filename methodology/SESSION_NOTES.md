@@ -99,32 +99,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1008 Did
-**Deliverable:** keep males under the minimum breeding age out of groups when a sex ratio is set (`BACKLOG.md:166`; fourth of the six fixes ruled S1004; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-17 00:15 CDT
-**Status:** Session claimed. Work beginning. Strict TDD: research and the PRE-RED scope question come next; no test or code exists yet.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
-**Phase 0 (S1008):** gap 0 (`CHANGELOG.md` and `HANDOFFS.md` frontiers both at `e29f00a16`), no pending receipt, tree clean, 29 local commits; the S1007 ratchet citation matches the results file;
-dashboard 96/100; no file over its budget ceiling; CI: the scheduled `shinytest2` run of 2026-10-16 07:15 UTC is red (`BACKLOG.md:201`, reported, not fixed; the 2026-10-17 07:15 UTC run had not
-happened at 00:10 CDT), every push run green.
-**Carried from S1007 (full receipt in `HANDOFFS.md`):** the order of the remaining fixes is `BACKLOG.md:166`, `:178`, `:191`; if the 2026-10-17 07:15 UTC `shinytest2` run is red again, `:201` goes
-first. Also open: `:217` (the seven Input-tab upload helpers, test-only), `:230`.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, the PRE-RED scope question, RED and GREEN taken, REFACTOR skipped by the owner):** with a sex ratio set a male is placed only as a known adult male (the
+`BACKLOG.md` block is removed). The female pool is every non-male candidate (`R/fillGroupMembersWithSexRatio.R:84-89`), so a male under `minAge` or with no birth date fills no place and ends in "Unused animals";
+help `R/groupAddAssign.R:56-63` (with CJ4: a group can end with fewer females than asked), the guide's Custom bullet (`colony-manager-guide.qmd:654-659`), `NEWS.Rmd:277`. **The owner chose "leave undated males
+out too"**: the item named only males known to be under the age, but 43 of the 54 living males in `qcPed` have no birth date and no bundled file has a young one.
+**Gates:** claim `39b307627`; RED `b01415563` (19 blocks, 3 new files, 15 fail, 4 pass, 0 skipped); GREEN `dc4620d33`; NEWS `935326086`, corrected `603efd01b`; 12 of 12 mutants killed. Full suite 433 files, 3,882
+blocks, 0 errors, 187 skipped, **2 failed: the two wall-clock benchmark blocks, which fail the same way on `e29f00a16` at a load of 7 to 9** (another project's `vitest` held about 80% of a CPU); lint 0;
+`devtools::check()` 0/0/0; Breeding Groups E2E 17 of 17; ratchet 1/1. **Real app** (shipped rhesus file, Custom 3, 2 groups): before, 40 of the 83 males in the groups had no birth date (the ratio already read 2.83
+and 2.95); after, none, and all 43 in Unused animals; the groups went from 153 and 170 animals to 114 each. No push (35 local commits).
+**Handoff evaluation of S1007: 9/10.** Helped: every BACKLOG cite landed, the `NOT_CRAN`, scratch-install and repo-root gotchas, the order of the six fixes. Missing: that "males under `minAge`" leaves out the
+undated males `getPotentialSires()` also drops (the real effect), that the app's tables are server-side, and that the 2026-10-17 07:15 UTC run had not happened at midnight. Wrong: nothing found.
+**Self-assessment: 8/10.** + claimed first; measured before the plain-words scope question and found the undated-male gap; every RED block proved passable; mutants before the REFACTOR gate; the real app run on both
+trees with pictures opened before the long runs; a NEWS over-claim corrected from that run; the benchmark failures traced to load, not called clean.
+- slips: the gate text estimated 6 to 8 failing blocks (15 failed, and one "guard" failed too); the NEWS draft ran ahead of the real-app run; three driver runs to read a server-side table; an inline `-e` with `\s`.
+**Next:** `BACKLOG.md:190` first: the scheduled `shinytest2` run is red a second time (2026-10-17 07:10 UTC, run 39012674624), so it is real; read the waits around
+`test-e2e-marker-genetics-genomic-roh-module.R:166` and `:247` and run the file with `NPRC_RUN_E2E=true`. Then `:167` (Cross-Center, fifth of six), `:180` (`getConfigApiKey()`, sixth, closes slice 6e). Also open:
+`:207`, `:220`, the DECISION NEEDED items `:226`, `:236`, `:251`, `:264`, CC5, the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass.
+**Gotchas:** `BACKLOG.md` cites below the old `:166` moved up 11 lines (re-grep); read a box's members in the real app through the Group Detail `DataTable().page.len(-1).draw()` and scope tab clicks to
+`#breedingGroups-moduleContainer`; the ratio on the rhesus file was about 3 before and after, so "0.7" holds only for `qcPed` called directly; `qcPed` has no `status` column; run the benchmark blocks on the previous
+commit too before calling a failure new (Learning 974); the 35 local commits have no CI result.
 
 
 ### Sessions 947-1007 (condensed S950 to S1008; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1007: `convertFromCenter()` reads only whole values, so a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; `NEWS.Rmd:445`; the owner
-chose to keep accepting stray spaces; strict TDD, REFACTOR taken; predecessor 9/10, self 8/10). **Gotchas kept:** `shinytest2` `AppDriver` needs `NOT_CRAN=true`, and a scratch install needs
-`R_LIBS=<scratch>:<renv library>`; run `Rscript` from the repo root (renv); `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; a new Input-tab test calls
-`uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`); `pedGood` has 8 rows and renamed headers, so its Input-tab run also shows a Changed Columns tab; `BACKLOG.md` cites above
-`:217` moved up 11 lines at S1007 (re-grep).
-S1006: the Mate Pair table pairs only animals recorded male or female; the page says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`, `matePairLeftOutNote()`
-`:40`; `R/modMatePair.R:271,447,505`; `NEWS.Rmd:339`; the owner chose "one sentence only"; strict TDD, REFACTOR taken; predecessor 9/10, self 8/10). **Gotchas kept:** none of the bundled data
-has an unsexed living animal (0 of 89, 1,704 and 375), so showing a defect needs a hand-set U; an in-memory proof must patch the attached `package:` copy as well as the namespace, and a new
-function goes in `globalenv()`; a `renderUI` that returns `NULL` reads as `""` through `output$x$html`; `rownames()` of a 0 x 0 matrix is `NULL` (wrap in `as.character()`); `R/*.R` may not
-hold a bare "M" or "F" (`test_sexCodes.R`), use `sexCodes[["male"]]`; `BACKLOG.md` cites below `:166` moved up 12 lines at S1006 (re-grep).
-S1005: an Excel upload of kinship overrides or snapshot history works: both readers convert their numeric columns on the Excel path (`R/convertExcelNumericColumns.R`; the 27 snapshot
-column names once in `R/snapshotSchemaColumns.R`; `NEWS.Rmd` Fixed bullet; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** Learning 971 (a smoke run from the repo root
-tests the working tree; set variables on the `Rscript` command); `writeTestXlsx()` in `tests/testthat/helper-excelFixtures.R` builds a temporary workbook for any reader test.
+S1007: `convertFromCenter()` reads only whole values, so a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; `NEWS.Rmd`; the owner kept
+stray spaces; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** `AppDriver` needs `NOT_CRAN=true`; a scratch install needs `R_LIBS=<scratch>:<renv library>` and `Rscript` run from the repo
+root; `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
+S1006: the Mate Pair table pairs only animals recorded male or female and says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`; `NEWS.Rmd`; strict TDD, REFACTOR taken; 9/10, self
+8/10). **Gotchas kept:** no bundled data has an unsexed living animal, so showing a defect needs a hand-set U; an in-memory proof patches the attached `package:` copy as well as the namespace; a `renderUI`
+returning `NULL` reads as `""`; `R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`).
+S1005: an Excel upload of kinship overrides or snapshot history works (`R/convertExcelNumericColumns.R`; `R/snapshotSchemaColumns.R`; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** Learning
+971 (a smoke run from the repo root tests the working tree); `writeTestXlsx()` (`tests/testthat/helper-excelFixtures.R`) builds a temporary workbook.
 S1004: the owner's rulings on the seven slice 6e findings recorded: fix all seven, option (a) each time (a decision session, no code; 9/10, self 8/10). S1003: the 46 slice 6e candidates
 re-checked (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`; an audit; 1 closed, 45 still true, plus the new N1 Mate Pair finding that S1006 fixed; 9/10, self 8/10).
 S1002: the twelve Summary Statistics Export pop-ups no longer draw a "character(0)" title bar (`R/modSummaryStats.R:16` `.exportButtonPopover()`; `NEWS.Rmd:599`; strict TDD, REFACTOR

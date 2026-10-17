@@ -143,8 +143,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       true, 6 moderate (CE2 `fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for kinship overrides and
       snapshot history, CI1 example-config API-key placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
       **one new moderate, N1: the Mate Pair table pairs animals of unknown sex, lists them as sire or dam and pairs an
-      animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, and N1, the Mate Pair
-      table, fixed S1006; the other five queued as four fix items below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
+      animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
+      table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
+      the other three (CE4, CE5 and CI1) are the two fix items below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
       and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
@@ -162,18 +163,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **Keep males under the minimum breeding age out of groups when a sex ratio is set (READY, Effort S-M; strict
-      TDD)** (ruled S1004: fix, option (a) for CJ3, and CJ4 accepted with one help sentence; Finding 4,
-      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:109-127`; fourth of six) --
-      `R/fillGroupMembersWithSexRatio.R:83` builds the "female" pool as every candidate that is not a potential sire,
-      and a potential sire needs age at least `minAge` (`R/getPotentialSires.R:20-24`), so a younger male is placed as
-      a non-male (40 of 40 `groupAddAssign()` runs, 2 groups, `sexRatio = 3`, `minAge = 1`; S1003) while
-      `calculateSexRatio()` still counts him as a male. **Ruled fix:** leave a male under `minAge` out of both pools.
-      CJ4 stays: a group stops being filled when its male pool is empty (`R/fillGroupMembersWithSexRatio.R:123-124`;
-      about 2 females per group against 4 asked in the S1003 test), with one sentence in the `sexRatio` help
-      (`R/groupAddAssign.R:56-58`). Reached from Breeding Groups "Sex ratio: Custom" (`R/modBreedingGroups.R:104-117`,
-      `:451,544`); check the guide and `NEWS.Rmd` wording (`test_guideBreedingGroupsWording.R`).
 
 - [ ] **Make the Cross-Center check flag an id clash and keep one-sided columns (READY, Effort S-M; strict TDD; one
       session for both)** (ruled S1004: fix, option (a) for CE4 and CE5; Findings 5 and 6,
@@ -209,9 +198,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       unlock the downloads." instead of "not in the loaded pedigree" and "1 animal". The three scheduled runs before
       it (13 to 15 October) were green, and the push it built (S1002) changed `R/modSummaryStats.R` and nothing in
       Marker Genetics, so a regression from S1002 is unlikely; a wait that is too short on the shared runner is the
-      likeliest cause, unconfirmed. **First:** `gh run list --branch master --workflow shinytest2 --limit 5` for the
-      nights since (a second red makes it real, a green leaves it a flake to harden), then read the waits around
-      `:166` and `:247` and run the file locally (`NPRC_RUN_E2E=true`). Get a CI log with `gh api
+      likeliest cause, unconfirmed. **A second red came (read at S1008 close-out):** the run of 2026-10-17 07:10 UTC
+      (run 39012674624, job 117338335770, still commit `82ad057f0`, 40 m 34 s) failed in the same file on the same four
+      expectations (`:166`, `:171`, `:247`, `:249`) and nothing else, so it is real, not a flake. **First:** read the
+      waits around `:166` and `:247` and run the file locally (`NPRC_RUN_E2E=true`). Get a CI log with `gh api
       repos/rmsharp/nprcgenekeepr/actions/jobs/<job id>/logs` (`gh run view <id> --log` printed nothing here).
 
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
