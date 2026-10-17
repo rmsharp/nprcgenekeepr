@@ -74,9 +74,12 @@ message naming both settings.}
 
 \item{sexRatio}{Numeric value indicating the number of non-males (females
 and animals of other or unknown sex) per male. Values from 0.5 to 20 in
-steps of 0.5 are typical, but the range is not enforced. A non-zero
-\code{sexRatio} cannot be combined with \code{harem = TRUE}; the call stops
-with a message.}
+steps of 0.5 are typical, but the range is not enforced. A male is placed
+only if he is at least \code{minAge} years old; a male younger than that, or
+with no birth date, is left out of the groups. A group stops being filled
+when it has no such male left, so it can end with fewer females than the
+ratio asks for. A non-zero \code{sexRatio} cannot be combined with
+\code{harem = TRUE}; the call stops with a message.}
 
 \item{withKin}{Logical variable when set to \code{TRUE}, the kinship
 matrix for the group is returned along with the group and score.

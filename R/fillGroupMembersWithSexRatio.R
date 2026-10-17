@@ -4,7 +4,9 @@
 #' Form breeding groups to match a target sex ratio
 #'
 #' The sex ratio is the number of non-males (females and animals of other or
-#' unknown sex) per male.
+#' unknown sex) per male. A male is placed only if he is at least
+#' \code{minAge} years old; a male younger than that, or with no birth date,
+#' is left out of the groups.
 #'
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.
@@ -79,9 +81,12 @@ fillGroupMembersWithSexRatio <-
   function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
            sexRatio) {
     potentialSires <- getPotentialSires(candidates, ped, minAge)
+    # A male who is not a potential sire (under minAge, or with no birth date)
+    # is placed nowhere: calculateSexRatio() counts every male as a male, so he
+    # must not fill the female pool.
+    males <- ped$id[ped$sex %in% sexCodes[["male"]]]
     availableMales <- makeAvailable(potentialSires, numGp)
-    availableFemales <- makeAvailable(setdiff(candidates, potentialSires),
-                                      numGp)
+    availableFemales <- makeAvailable(setdiff(candidates, males), numGp)
 
     repeat {
       if (isEmpty(grpNum)) {

@@ -51,7 +51,9 @@ ratio is as close as possible to the ratio specified by
 }
 \description{
 The sex ratio is the number of non-males (females and animals of other or
-unknown sex) per male.
+unknown sex) per male. A male is placed only if he is at least
+\code{minAge} years old; a male younger than that, or with no birth date,
+is left out of the groups.
 }
 \examples{
 library(nprcgenekeepr)
