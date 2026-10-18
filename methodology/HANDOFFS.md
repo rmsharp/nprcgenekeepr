@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1011
+date: 2026-10-18
+status: pending
+active_task: IN PROGRESS -- make the Cross-Center check flag an id clash and keep one-sided columns (`BACKLOG.md:167`; owner pick at the Phase 0 picker, item 1 of 4); strict TDD
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1010
 date: 2026-10-17
 status: complete
