@@ -689,6 +689,17 @@ export workflows, and longitudinal monitoring of colony genetic health.
   relationships, and the six plots) showed a gray title bar reading
   `character(0)` above its one sentence. The pop-ups now show only the
   sentence.
+- Fixed: a site that copied the example configuration file without
+  editing it was treated as having the LabKey API key
+  `paste-your-labkey-api-key-here`, which took the place of its `.netrc`
+  file, so the sign-in failed. A line that starts with `#` is now a
+  comment wherever the configuration file is read, so that site uses its
+  `.netrc` file, or is told that no credential was found. A
+  commented-out `center` above the real one no longer wins, and a
+  comment after the last setting is no longer read as part of its value.
+- Fixed: a setting in the configuration file written with different
+  capitals, such as `Center` for `center`, stopped the program with
+  "subscript out of bounds". It is now read.
 
 # nprcgenekeepr 2.0.0 (20260721)
 
