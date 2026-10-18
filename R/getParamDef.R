@@ -16,5 +16,11 @@ getParamDef <- function(tokenList, param) {
          " in configuration file. ",
          "Check spelling carefully.\n")
   }
-  tokenList$tokenVec[tokenList$param == param][[1L]]
+  # The presence check above ignores case, so the read must too; a name in the
+  # exact case wins when the file holds the setting in more than one case.
+  idx <- tokenList$param == param
+  if (!any(idx)) {
+    idx <- tolower(tokenList$param) == tolower(param)
+  }
+  tokenList$tokenVec[idx][[1L]]
 }
