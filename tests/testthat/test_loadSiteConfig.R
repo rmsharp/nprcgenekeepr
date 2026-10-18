@@ -21,8 +21,7 @@ test_that("loadSiteConfig parses the documented config format (#50)", {
   # ("line 6 did not have 2 elements") and crashed the app on boot.
   tmp <- withr::local_tempdir()
   withr::local_envvar(c(HOME = tmp))
-  example_cfg <- system.file("extdata", "examples", "example_nprcgenekeepr_config",
-                             package = "nprcgenekeepr")
+  example_cfg <- exampleConfigPath()
   cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
   file.copy(example_cfg, file.path(tmp, cfg_name))
 
@@ -40,8 +39,7 @@ test_that("example config keeps the flat SNPRC lkPedColumns form (Rec #2)", {
   # lookup form (which would make the SNPRC example incorrect).
   tmp <- withr::local_tempdir()
   withr::local_envvar(c(HOME = tmp))
-  example_cfg <- system.file("extdata", "examples", "example_nprcgenekeepr_config",
-                             package = "nprcgenekeepr")
+  example_cfg <- exampleConfigPath()
   cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
   file.copy(example_cfg, file.path(tmp, cfg_name))
   cfg <- loadSiteConfig()
@@ -68,8 +66,7 @@ test_that("the documented config format breaks read.table(sep = '=') (#50 root c
   # Characterization guard: documents WHY the observer must not use read.table.
   # Stays green before and after the fix; fails loudly if anyone reintroduces
   # the strict 2-column parser against the documented format.
-  example_cfg <- system.file("extdata", "examples", "example_nprcgenekeepr_config",
-                             package = "nprcgenekeepr")
+  example_cfg <- exampleConfigPath()
   expect_error(
     read.table(example_cfg, header = TRUE, sep = "=", stringsAsFactors = FALSE)
   )

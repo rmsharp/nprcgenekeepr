@@ -171,9 +171,7 @@ test_that("setLabKeyDefaults finds no credential in the shipped example config",
   skip_if_not_installed("mockery")
   skip_if_not_installed("withr")
 
-  example_cfg <- system.file("extdata", "examples",
-                             "example_nprcgenekeepr_config",
-                             package = "nprcgenekeepr")
+  example_cfg <- exampleConfigPath()
   withr::local_envvar(NPRCGENEKEEPR_LABKEY_APIKEY = "", NETRC = "")
   site_info <- make_site_info(configFile = example_cfg)
   set_defaults_mock <- mockery::mock(TRUE)
@@ -187,9 +185,7 @@ test_that("setLabKeyDefaults uses the netrc file with the shipped example config
   skip_if_not_installed("mockery")
   skip_if_not_installed("withr")
 
-  example_cfg <- system.file("extdata", "examples",
-                             "example_nprcgenekeepr_config",
-                             package = "nprcgenekeepr")
+  example_cfg <- exampleConfigPath()
   home_dir <- tempfile("home_")
   dir.create(home_dir)
   withr::defer(unlink(home_dir, recursive = TRUE))

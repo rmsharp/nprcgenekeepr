@@ -30,9 +30,7 @@ test_that("getConfigApiKey returns '' for a missing or NULL config file", {
 ## getConfigApiKey() returned its placeholder text as a live key.
 
 test_that("getConfigApiKey returns '' for the shipped example config", {
-  example_cfg <- system.file("extdata", "examples",
-                             "example_nprcgenekeepr_config",
-                             package = "nprcgenekeepr")
+  example_cfg <- exampleConfigPath()
   expect_true(nzchar(example_cfg))
   expect_identical(nprcgenekeepr:::getConfigApiKey(example_cfg), "")
 })
