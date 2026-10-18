@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1010
 date: 2026-10-17
-status: pending
-active_task: IN PROGRESS -- make "Generate De-Identified Export Preview" work when every animal has a missing genotype (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4); strict TDD
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- "Generate De-Identified Export Preview" builds when every animal has a missing allele (`BACKLOG.md:190` block removed; owner pick at the Phase 0 picker, item 1 of 4); strict TDD, two RED-GREEN passes, REFACTOR taken; not pushed
+what_was_done: Phase 0: read the runner, safeguards and notes; CHANGELOG and HANDOFFS frontiers at HEAD f4a96c40e (no gap, no merge, no pending receipt); ratchet citation matched; CI: shinytest2 red 2026-10-16 and 2026-10-17, push runs green. Claim 1fa4f2e5f. Probed the bundled genotype file (the missing allele is the text NA, 2070 rows, 50 of 50 animals) and a 3 x 9 fixture (isTruthy FALSE with one missing allele per animal, TRUE for the old fixture). RED af33dccc5: three blocks, 14 expectations failed. GREEN 90b78fd64: req(gmat, rohTable, ped) became an is.null() test. A probe then showed a header-only genotype file now built an empty preview; the owner chose keep it quiet; RED 2 82c25196e (3 of 4 failed on 90b78fd64, 4 of 4 pass on the pre-fix source), GREEN 2 9a4b0b9bb (length(gmat) == 0L). Mutation of the guard found is.null(rohTable) unpinned; REFACTOR 1ca7b27a9 added a pass-by-design block, REFACTOR 0f7691a69 dropped the redundant is.null(gmat). Final code: test file 96 blocks, 376 expectations, 0 failed; full suite 433 files, 3887 blocks, 12851 expectations, 0 failed, 0 errors, 187 skipped; devtools::check() 0/0/0; lintr 0 on both files; ROH E2E file 11 passed (was 7 passed, 3 failed, 1 errored). Learning 976.
+next_steps: The push is the owner's call: origin/master is still 82ad057f0 and the scheduled shinytest2 run stays red until a push (estimate: the first scheduled run after it goes green, since the ROH file was the red one in S1009's logs; not measured). Then BACKLOG.md:167 (Cross-Center id clash and one-sided columns, READY, Effort S-M, fifth of six) and :180 (getConfigApiKey(), READY, Effort S, sixth, closes slice 6e). Also open: the Input-tab helper move (:190), the 13 small statements (:203), the DECISION NEEDED items, the SESSION_RUNNER.md re-sync, the BACKLOG.md compression pass.
+key_files: R/modMarkerGenetics.R:845-870 (the Preview observer; guard at :855); tests/testthat/test_modMarkerGenetics.R:1803-1994 (S1010 fixtures and five blocks); tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R (11 pass); BACKLOG.md:167 and :180 (next); PROJECT_LEARNINGS.md Learning 976
+gotchas: req(x) also stops for a length-0 value, so replacing it with is.null() is not neutral: probe each isTruthy() exit on the line being replaced before RED; run a new test on the pre-fix source (git archive <sha> to scratch, copy the test file in, RENV_CONFIG_AUTOLOADER_ENABLED=false and R_LIBS=<renv lib>) to see whether it pins old or new behavior; the bundled example writes a missing allele as the text NA and a blank cell reads the same; i152RohGenotype has one NA cell (I2's L3), not none; two mutants survive on purpose (dropping is.null(ped), and <= 1L: no one-cell test); a cmd & wrapper in a background Bash call reports done early, wait on the job's EXIT= line; the ROH E2E file takes about 1.5 min and a scratch install 10 s
+runtime_smoke: the real app was driven headless through shinytest2 on a scratch install of the final code: the Genomic ROH E2E file passed 11 of 11 (R 4.6.1), including the de-identified export path with the bundled example genotype file, which failed 3 with 1 error before the fix
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 0298bc0eea0f · manifest aa983075d6a2
+changelog_ref: 1fa4f2e5f
+commit: 0f7691a69
 ```
 
 ```handoff

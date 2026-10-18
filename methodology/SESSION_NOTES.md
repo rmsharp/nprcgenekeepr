@@ -99,10 +99,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1010 Did
-**Deliverable:** make "Generate De-Identified Export Preview" work when every animal has a missing genotype (`BACKLOG.md:190`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-17 18:23 CDT
-**Status:** Session claimed. Work beginning. Strict TDD: PRE-RED now; RED, GREEN and REFACTOR each wait behind their own gate.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, two RED-GREEN passes, REFACTOR taken):** "Generate De-Identified Export Preview" builds when every animal has a missing allele: the guard at
+`R/modMarkerGenetics.R:855` is `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`, not `req(gmat, rohTable, ped)`. Five new blocks, `tests/testthat/test_modMarkerGenetics.R:1803-1994`. Claim
+`1fa4f2e5f`, RED `af33dccc5`, GREEN `90b78fd64`, RED 2 `82c25196e`, GREEN 2 `9a4b0b9bb`, REFACTOR `1ca7b27a9` and `0f7691a69`. Not pushed.
+**Owner ruling:** a header-only genotype file stays quiet (the first fix, `is.null()` alone, made it build an empty preview you could confirm; a probe after GREEN found it).
+**Evidence:** full suite 433 files, 3,887 blocks, 0 failed, 0 errors; `devtools::check()` 0/0/0; lintr 0; ROH E2E file 11 passed (7 before). Ratchet: 1/1 pass · 0 fail · 0 unmeasured · results
+0298bc0eea0f · manifest aa983075d6a2. No NEWS entry (never released). Surviving mutants: `is.null(ped)` (no visible effect), `<= 1L` (no one-cell test).
+**Handoff evaluation of S1009: 8/10.** Helped: `:849`, the fix design, Learning 975's command. Missing: the header-only edge; the file's missing allele is the text `NA`. Wrong: "the `i152Roh*` fixtures
+have no missing calls" (I2's L3 is one NA cell).
+**Self-assessment: 8/10.** + probed the real file before RED; asked instead of deciding; a mutation run found an unpinned path. - probed neighbouring inputs only after GREEN (second pass, two extra gates).
+**Next:** the push is the owner's call (origin/master `82ad057f0`; 45 local commits); the nightly stays red until then (estimate: green on the first run after it). Then `BACKLOG.md:167` (Cross-Center,
+fifth of six), `:180` (`getConfigApiKey()`, sixth, closes slice 6e). Also open: `:190`, `:203`, the DECISION NEEDED items, the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass.
+**Gotchas:** `req(x)` also stops for a length-0 value, so `is.null()` is not a neutral swap (probe each `isTruthy()` exit before RED); run a new test on the pre-fix source (`git archive <sha>`, a scratch
+dir, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `R_LIBS=<renv lib>`) to see what it pins; wait on a background job's `EXIT=` line (Learning 976).
 
 ### Sessions 947-1009 (condensed S950 to S1010; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1009: the red scheduled `shinytest2` run diagnosed (no test or code changed): `R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is silently FALSE for a character matrix with an `NA`
