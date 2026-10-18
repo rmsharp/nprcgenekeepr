@@ -1,6 +1,21 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
+#' A length-one NA shaped like a data.frame column
+#'
+#' Indexing a vector with \code{NA_integer_} returns an \code{NA} of the
+#' vector's own class (a \code{Date} stays a \code{Date}, a factor keeps its
+#' levels), where a plain \code{NA} is logical and costs the column its class
+#' when it is bound in with the column's real values.
+#'
+#' @param d a data.frame that has the column.
+#' @param col the column name.
+#' @return A length-one \code{NA} of the class column \code{col} has.
+#' @noRd
+.naLikeColumn <- function(d, col) {
+  d[[col]][NA_integer_]
+}
+
 #' Row-bind pedigree fragments, filling missing columns with \code{NA}
 #'
 #' \code{\link{resolveCrossCenterIds}}'s merged output combines rows sliced
@@ -25,7 +40,7 @@ bindPedigreeRows <- function(dfs) {
   allCols <- unique(unlist(lapply(dfs, names)))
   naOfClass <- function(col) {
     holder <- Filter(function(d) col %in% names(d), dfs)[[1L]]
-    holder[[col]][NA_integer_]
+    .naLikeColumn(holder, col)
   }
   filled <- lapply(dfs, function(d) {
     for (col in setdiff(allCols, names(d))) {
@@ -324,7 +339,7 @@ bindPedigreeRows <- function(dfs) {
 #' @noRd
 .padCrossCenterColumn <- function(row, other, col) {
   if (!col %in% names(row)) {
-    row[[col]] <- other[[col]][NA_integer_]
+    row[[col]] <- .naLikeColumn(other, col)
   }
   row
 }
