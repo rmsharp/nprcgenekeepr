@@ -846,7 +846,13 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       gmat <- safeRead(genotypeMatrixR)
       rohTable <- safeRead(sequenceRohTable)
       ped <- safeRead(pedigree)
-      req(gmat, rohTable, ped)
+      ## S1010: not req(gmat, ...). req() runs shiny::isTruthy(), which drops
+      ## every character-matrix row that holds an NA before it asks whether
+      ## anything is left, and a missing allele is NA (S977), so a matrix in
+      ## which no animal's row is complete would count as "not ready".
+      if (is.null(gmat) || is.null(rohTable) || is.null(ped)) {
+        return()
+      }
       sequenceExportConfirmed(FALSE)
       sequenceExportRaw(NULL)
       missingIds <- setdiff(rownames(gmat), ped$id)
