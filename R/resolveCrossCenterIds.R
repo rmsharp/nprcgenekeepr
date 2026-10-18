@@ -12,7 +12,9 @@
 #' @param dfs a list of data.frames (or \code{NULL} entries, which are
 #' dropped) to combine.
 #' @return A single data.frame over the union of all input columns, with
-#' \code{NA} filled in wherever a source data.frame lacked a column.
+#' \code{NA} filled in wherever a source data.frame lacked a column. The
+#' \code{NA} has the class the column has where it is present, so a column
+#' only one source recorded (a \code{Date}, say) keeps its class.
 #' @noRd
 bindPedigreeRows <- function(dfs) {
   dfs <- Filter(function(d) !is.null(d) && nrow(d) > 0L, dfs)
@@ -21,13 +23,17 @@ bindPedigreeRows <- function(dfs) {
                        dam = character(0L), stringsAsFactors = FALSE))
   }
   allCols <- unique(unlist(lapply(dfs, names)))
-  dfs <- lapply(dfs, function(d) {
+  naOfClass <- function(col) {
+    holder <- Filter(function(d) col %in% names(d), dfs)[[1L]]
+    holder[[col]][NA_integer_]
+  }
+  filled <- lapply(dfs, function(d) {
     for (col in setdiff(allCols, names(d))) {
-      d[[col]] <- NA
+      d[[col]] <- rep(naOfClass(col), nrow(d))
     }
     d[, allCols, drop = FALSE]
   })
-  result <- do.call(rbind, dfs)
+  result <- do.call(rbind, filled)
   rownames(result) <- NULL
   result
 }
@@ -205,6 +211,38 @@ bindPedigreeRows <- function(dfs) {
   )
 }
 
+#' Check for a pedB animal that reuses an id the mapping gives a pedA animal
+#'
+#' A pedB animal with no mapping row passes through the merge unchanged, and
+#' a mapped pair is keyed by its \code{idA} value, so a pedB animal whose id
+#' is a mapped \code{idA} value ends up as a second row with that id. The
+#' mirror case -- a pedA animal with no mapping row whose id is a mapped
+#' \code{idB} value -- merges to one row per id (the mapped pedB animal is
+#' renamed to its \code{idA} value), so it is not a problem and not checked,
+#' and a swap mapping or an id mapped to the same string is never flagged
+#' (S1011, docs-audit part 2 finding CE4).
+#' @param pedB a pedigree data.frame.
+#' @param mapping a mapping data.frame.
+#' @return A \code{.emptyCrossCenterProblems()}-shaped data.frame: zero
+#' rows if clean, else one row (\code{type = "mappedIdClash"}) whose
+#' \code{ids} is \code{toString()} of every clashing id.
+#' @noRd
+.checkCrossCenterMappedIdClash <- function(pedB, mapping) {
+  clash <- intersect(setdiff(pedB$id, mapping$idB), mapping$idA)
+  if (length(clash) == 0L) {
+    return(.emptyCrossCenterProblems())
+  }
+  data.frame(
+    type = "mappedIdClash", ids = toString(clash),
+    message = paste0(
+      "pedB holds its own animal with the id(s) ", toString(clash),
+      ", which 'mapping' uses for a pedA animal it links to a different ",
+      "pedB animal. Rename the pedB animal, or correct 'mapping'."
+    ),
+    stringsAsFactors = FALSE
+  )
+}
+
 #' Rewrite pedB so every mapped id refers to its canonical idA value
 #'
 #' Every mapped id -- its own ego row and any \code{sire}/\code{dam}
@@ -270,6 +308,25 @@ bindPedigreeRows <- function(dfs) {
   } else {
     list(value = b, source = NA_character_, conflict = FALSE)
   }
+}
+
+#' Give a one-row pedigree slice a column only the other center recorded
+#'
+#' Lets \code{\link{.pickCrossCenterParent}} resolve a column that one side
+#' of a mapped pair lacks: the missing side reads as \code{NA}, of the class
+#' the other side's column has, so the side that recorded it wins (S1011,
+#' docs-audit part 2 finding CE5).
+#'
+#' @param row,other single-row data.frames for the same physical animal.
+#' @param col the column name.
+#' @return \code{row}, with \code{col} added as an \code{NA} of \code{other}'s
+#' class when \code{row} lacks it; \code{row} unchanged otherwise.
+#' @noRd
+.padCrossCenterColumn <- function(row, other, col) {
+  if (!col %in% names(row)) {
+    row[[col]] <- other[[col]][NA_integer_]
+  }
+  row
 }
 
 #' Check every mapped pair for a conflicting sire/dam value
@@ -360,10 +417,17 @@ bindPedigreeRows <- function(dfs) {
 #' \code{pedA} and \code{pedB} that is \emph{not} declared in \code{mapping}
 #' is also an error -- per D5, identity is established only by the explicit
 #' mapping table, never assumed from a coincidentally matching id string
-#' across the two centers' independent namespaces. As of issue #149 Slice 1
-#' (D10), a merged pair's other shared columns (beyond \code{id}/
+#' across the two centers' independent namespaces. So is an animal of
+#' \code{pedB} with no \code{mapping} row whose id is one \code{mapping}
+#' gives a \code{pedA} animal: the merged animal is keyed by that \code{idA}
+#' value, so the merge would hold two rows with the same id. (The mirror
+#' case, a \code{pedA} animal with no \code{mapping} row whose id is a mapped
+#' \code{idB} value, is not an error: the mapped \code{pedB} animal is
+#' renamed to its \code{idA} value and every id stays unique.) As of issue
+#' #149 Slice 1 (D10), a merged pair's other columns (beyond \code{id}/
 #' \code{sire}/\code{dam}) follow the identical non-\code{NA}-preferred/
-#' error-on-conflict rule -- previously they were silently dropped.
+#' error-on-conflict rule, and a column only one center recorded is kept as
+#' that center recorded it -- previously these were silently dropped.
 #' The one exception is the \code{placeholder} mark (see
 #' \code{\link{qcStudbook}}): a stand-in for an unknown parent that a curator
 #' links to a known animal is
@@ -446,6 +510,10 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
       call. = FALSE
     )
   }
+  clashProblems <- .checkCrossCenterMappedIdClash(pedB, mapping)
+  if (nrow(clashProblems) > 0L) {
+    stop("resolveCrossCenterIds(): ", clashProblems$message, call. = FALSE)
+  }
 
   pedB <- .rewriteCrossCenterIds(pedB, mapping)
 
@@ -475,17 +543,21 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
     rowData <- list(id = idA, sire = sireResult$value, dam = damResult$value)
 
     # D10: generalize the same "prefer non-NA, error on differing non-NA
-    # values" resolution to every OTHER column present on both sides, so
-    # agreeing metadata (e.g. sex) survives the merge instead of being
-    # silently dropped (previously only id/sire/dam were ever populated;
-    # see docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md
-    # section 2.12 / D10). Columns present on only one side are unaffected
-    # here -- bindPedigreeRows() below NA-fills those as it always has.
+    # values" resolution to every OTHER column either side has, so agreeing
+    # metadata (e.g. sex) survives the merge instead of being silently
+    # dropped (previously only id/sire/dam were ever populated; see
+    # docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md
+    # section 2.12 / D10). A column only one side has reads as NA on the
+    # other side, so the side that recorded it wins (S1011, docs-audit CE5).
     otherCols <- setdiff(
-      intersect(names(rowA), names(rowB)), c("id", "sire", "dam", "placeholder")
+      union(names(rowA), names(rowB)), c("id", "sire", "dam", "placeholder")
     )
     for (col in otherCols) {
-      colResult <- .pickCrossCenterParent(rowA, rowB, col)
+      colResult <- .pickCrossCenterParent(
+        .padCrossCenterColumn(rowA, rowB, col),
+        .padCrossCenterColumn(rowB, rowA, col),
+        col
+      )
       if (colResult$conflict) {
         stop(
           "resolveCrossCenterIds(): mapped id '", idA, "' has conflicting ",

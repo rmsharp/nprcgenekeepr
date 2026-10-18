@@ -51,10 +51,17 @@ silently pick a side on, so it errors instead. Animals not named in
 \code{pedA} and \code{pedB} that is \emph{not} declared in \code{mapping}
 is also an error -- per D5, identity is established only by the explicit
 mapping table, never assumed from a coincidentally matching id string
-across the two centers' independent namespaces. As of issue #149 Slice 1
-(D10), a merged pair's other shared columns (beyond \code{id}/
+across the two centers' independent namespaces. So is an animal of
+\code{pedB} with no \code{mapping} row whose id is one \code{mapping}
+gives a \code{pedA} animal: the merged animal is keyed by that \code{idA}
+value, so the merge would hold two rows with the same id. (The mirror
+case, a \code{pedA} animal with no \code{mapping} row whose id is a mapped
+\code{idB} value, is not an error: the mapped \code{pedB} animal is
+renamed to its \code{idA} value and every id stays unique.) As of issue
+#149 Slice 1 (D10), a merged pair's other columns (beyond \code{id}/
 \code{sire}/\code{dam}) follow the identical non-\code{NA}-preferred/
-error-on-conflict rule -- previously they were silently dropped.
+error-on-conflict rule, and a column only one center recorded is kept as
+that center recorded it -- previously these were silently dropped.
 The one exception is the \code{placeholder} mark (see
 \code{\link{qcStudbook}}): a stand-in for an unknown parent that a curator
 links to a known animal is

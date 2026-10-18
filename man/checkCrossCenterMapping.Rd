@@ -19,19 +19,23 @@ row per curator-proposed cross-center identity link.}
 \value{
 A data.frame of every domain problem found, with columns
 \code{type} (\code{"existence"}, \code{"uniqueness"}, \code{"collision"},
-or \code{"conflict"}), \code{ids} (the offending id(s), as a single
-comma-separated string), and \code{message} (a human-readable
-description). Zero rows means none of these four kinds of problem was
-found. \code{\link{resolveCrossCenterIds}} can still stop on conflicting
+\code{"mappedIdClash"}, or \code{"conflict"}), \code{ids} (the offending
+id(s), as a single comma-separated string), and \code{message} (a
+human-readable description). Zero rows means none of these five kinds of
+problem was found. A \code{"mappedIdClash"} row names an id of a
+\code{pedB} animal with no mapping row that the mapping already uses for a
+\code{pedA} animal; a merge would hold two rows with that id.
+\code{\link{resolveCrossCenterIds}} can still stop on conflicting
 values in other columns shared by both pedigrees (e.g. \code{sex}), which
 this function does not check.
 }
 \description{
 The "show every problem at once" companion to
 \code{\link{resolveCrossCenterIds}} (issue #149 Slice 1), sharing its
-four validation checks -- id existence, mapping uniqueness, undeclared id
-collisions, and conflicting recorded parents -- via the same internal
-helpers (D2,
+five validation checks -- id existence, mapping uniqueness, undeclared id
+collisions, a \code{pedB} animal that reuses an id the mapping gives a
+\code{pedA} animal, and conflicting recorded parents -- via the same
+internal helpers (D2,
 \code{docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md}
 section 3). \code{resolveCrossCenterIds()} \code{stop()}s on the first
 problem it finds; \code{checkCrossCenterMapping()} never \code{stop()}s
@@ -44,11 +48,11 @@ matching every other \code{checkXxx()} function in this package
 }
 \details{
 Existence and uniqueness problems (tier A) are checked first; if either
-is present, only those are returned and collision/conflict checks
-(tier B) are skipped entirely, since a mapped id that does not resolve
-to a real pedigree row makes those checks meaningless. Tier B -- and
-both of its checks, across every mapped pair -- runs only once tier A is
-clean.
+is present, only those are returned and the collision, reused-id and
+conflict checks (tier B) are skipped entirely, since a mapped id that
+does not resolve to a real pedigree row makes those checks meaningless.
+Tier B -- and all three of its checks, across every mapped pair -- runs
+only once tier A is clean.
 }
 \examples{
 library(nprcgenekeepr)
