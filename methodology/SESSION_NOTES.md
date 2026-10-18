@@ -98,23 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1011 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate, REFACTOR taken):** the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (new row type
-`"mappedIdClash"`, `.checkCrossCenterMappedIdClash()`, `R/resolveCrossCenterIds.R:245`; `checkCrossCenterMapping()` tier B, `R/checkCrossCenterMapping.R:77`; `resolveCrossCenterIds()` stops, `:528`), and the merge keeps every column
-either center has (`.padCrossCenterColumn()` `:340`, `.naLikeColumn()` `:15`; `bindPedigreeRows()` `:34` fills with a typed `NA`). Claim `947ee8a38`, RED `b990c3a5a`, GREEN `c8abb20a3`, docs `e4af1205f`, lint `ef4fd80cb`,
-REFACTOR `96b419acd` and `7ef79aaf3`. Not pushed (HEAD 8 commits ahead of origin `9e67602f4`).
-**Owner rulings:** flag only the clash that breaks the file (S1004's "and the mirror case" merges correctly: measured in the tab); the typed-`NA` fix for a Date column only Center B has (day numbers before) is in.
-**Evidence:** 16 new blocks (5 check, 9 resolve, 2 module); full suite 433 files, 3,903 blocks, 0 failed, 0 errors, 187 skipped; `devtools::check()` 0/0/0; lintr 0; the real tab driven headless on `c8abb20a3`; the 10-18 nightly
-`shinytest2` passed 395 (S1010's fix confirmed). Ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 7ea55ae79265 · manifest aa983075d6a2. `NEWS.Rmd:196-203`, the guide `:1146-1151` and `a2interactive.Rmd:1640-1643` say it.
-**Handoff evaluation of S1010: 8/10.** Helped: `:167` with its tags, the fixture cite, the `R_LIBS` recipe, the nightly estimate (held). Missing: the ruled "mirror case" was unmeasured; no way to drive the Cross-Center tab. Wrong: nothing material.
-**Self-assessment: 8/10.** + measured both cases in the module before asking; a mutation run found an unpinned path and a re-run caught a pin block that did not pin it. - a throwing assertion in RED, a driver misstep (`get_download`
-needs the Export tab), one lint finding, "about 13 blocks" said and 15 built.
-**Next:** `BACKLOG.md:168` (`getConfigApiKey()`, sixth, closes slice 6e), then `:178` (Input-tab test helpers) and `:191` (13 small statements). Also open: the DECISION NEEDED items (new, `:235`: a header-only file's extra columns),
-the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass. The push is the owner's call.
-**Gotchas:** run a mutant against a new pin block before committing it (the first one survived: an unmapped Center A animal's Date, bound first, hides the loss); `x[[col]][NA_integer_]` is an `NA` of the column's class
-(`.naLikeColumn()`); the tab has no browser test: scratch `AppDriver`, upload by `crossCenterIdentity-pedAFile`/`-pedBFile`/`-mappingFile`, `app$get_download()` needs the Export tab showing (Learning 977).
+### What Session 1012 Did
+**Deliverable:** make `getConfigApiKey()` ignore commented lines, with the `getParamDef()` Center-key crash (CI3) in the same session (`BACKLOG.md:168`; ruled S1004, option (a) for CI1; sixth of six, closes slice 6e; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-18
+**Status:** Session claimed. Work beginning. Strict TDD: PRE-RED now; RED, GREEN and REFACTOR each wait behind their own gate. S1011's block folded into the condensed list below.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1010 (condensed S950 to S1011; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1011 (condensed S950 to S1012; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1011: the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`; `R/checkCrossCenterMapping.R:77`;
+the stop at `:528`), and the merge keeps every column either center has (`.padCrossCenterColumn()` `:340`, `.naLikeColumn()` `:15`; typed-`NA` fill in `bindPedigreeRows()` `:34`) (the owner ruled: flag only the clash that
+breaks the file, and take the Date-column fix; strict TDD, REFACTOR taken; claim `947ee8a38`, close-out `defa6e9da`; 8/10, self 8/10; 8 commits not pushed at close-out). **Gotchas kept:** measure each named case of a ruled
+fix before RED (the "mirror case" merged correctly); run a mutant against a new pin block before committing it; `x[[col]][NA_integer_]` is an `NA` of the column's class (`.naLikeColumn()`); the Cross-Center tab has no
+browser test: scratch `AppDriver`, upload by `crossCenterIdentity-pedAFile`/`-pedBFile`/`-mappingFile`, `app$get_download()` needs the Export tab showing (Learning 977).
 S1010: "Generate De-Identified Export Preview" builds when every animal has a missing allele: the guard at `R/modMarkerGenetics.R:855` is `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`, not `req(gmat, rohTable, ped)`
 (the owner ruled a header-only genotype file stays quiet; strict TDD, two RED-GREEN passes, REFACTOR taken; claim `1fa4f2e5f`, close-out `9e67602f4`; 8/10, self 8/10). **Gotchas kept:** `req(x)` also stops for a length-0 value, so
 `is.null()` is not a neutral swap; run a new test on the pre-fix source (`git archive <sha>`, `R_LIBS=<renv lib>`) to see what it pins (Learning 976).

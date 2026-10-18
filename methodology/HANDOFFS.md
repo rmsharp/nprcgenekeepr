@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1012
+date: 2026-10-18
+status: pending
+active_task: IN PROGRESS -- make getConfigApiKey() ignore commented lines, with the getParamDef() Center-key crash (CI3) in the same session (`BACKLOG.md:168`; ruled S1004 option (a) for CI1; sixth of six; owner pick at the Phase 0 picker, item 1 of 4); strict TDD
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1011
 date: 2026-10-18
 status: complete
