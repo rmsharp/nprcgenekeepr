@@ -196,3 +196,162 @@ test_that("resolveCrossCenterIds (D10) errors on a conflicting shared column bey
     "conflicting sex"
   )
 })
+
+## S1011 (docs-audit part 2, finding CE4; ruled "fix" S1004, scope ruled at the
+## S1011 PRE-RED question): a pedB animal with no mapping row whose id equals
+## an id the mapping gives a pedA animal made the merge hold two rows with the
+## mapped animal's id. The merge now stops on it, as it already does for an
+## id that is unmapped in both files. The mirror case, a swap mapping and an
+## id mapped to the same string merge to one row per id today and must keep
+## doing so.
+test_that("resolveCrossCenterIds errors on a pedB animal that reuses an id the mapping gives a pedA animal", {
+  clashPedB <- data.frame(
+    id   = c("X9", "T1", "O1"),
+    sire = c(NA_character_, NA_character_, "X9"),
+    dam  = c(NA_character_, NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+
+  expect_error(
+    resolveCrossCenterIds(pedA, clashPedB, mapping),
+    paste0("pedB holds its own animal with the id(s) T1, which 'mapping' ",
+           "uses for a pedA animal it links to a different pedB animal"),
+    fixed = TRUE
+  )
+})
+
+test_that("resolveCrossCenterIds merges the mirror case to one row per id", {
+  ## pedA holds its own, different X9; pedB's mapped X9 is pedA's T1.
+  mirrorPedA <- data.frame(
+    id   = c("P1", "P2", "T1", "X9"),
+    sire = c(NA_character_, NA_character_, "P1", NA_character_),
+    dam  = c(NA_character_, NA_character_, "P2", NA_character_),
+    stringsAsFactors = FALSE
+  )
+  mirrorPedB <- data.frame(
+    id   = c("X9", "O1"),
+    sire = c(NA_character_, "X9"),
+    dam  = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+
+  merged <- resolveCrossCenterIds(mirrorPedA, mirrorPedB, mapping)
+
+  expect_false(anyDuplicated(merged$id) > 0L)
+  expect_setequal(merged$id, c("P1", "P2", "T1", "X9", "O1"))
+  expect_identical(merged$sire[merged$id == "T1"], "P1")
+  expect_identical(merged$sire[merged$id == "O1"], "T1")
+})
+
+test_that("resolveCrossCenterIds merges a swap mapping and an id mapped to the same string to one row per id", {
+  swapPedA <- data.frame(
+    id = c("T1", "X9"), sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  swapPedB <- data.frame(
+    id = c("X9", "T1"), sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  swapMapping <- data.frame(
+    idA = c("T1", "X9"), idB = c("X9", "T1"),
+    stringsAsFactors = FALSE
+  )
+  swapped <- resolveCrossCenterIds(swapPedA, swapPedB, swapMapping)
+  expect_false(anyDuplicated(swapped$id) > 0L)
+  expect_setequal(swapped$id, c("T1", "X9"))
+
+  samePedB <- data.frame(
+    id   = c("T1", "O1"),
+    sire = c(NA_character_, "T1"),
+    dam  = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  sameMapping <- data.frame(idA = "T1", idB = "T1", stringsAsFactors = FALSE)
+  same <- resolveCrossCenterIds(pedA, samePedB, sameMapping)
+  expect_false(anyDuplicated(same$id) > 0L)
+  expect_setequal(same$id, c("P1", "P2", "T1", "S1", "O1"))
+  expect_identical(same$sire[same$id == "T1"], "P1")
+  expect_identical(same$sire[same$id == "O1"], "T1")
+})
+
+## S1011 (docs-audit part 2, finding CE5; ruled "fix" S1004): the help says
+## the merge covers "the union of pedA's and pedB's columns", but a column
+## only one center recorded was lost for a mapped animal (NA-filled by
+## bindPedigreeRows()), and lost altogether when every animal was mapped.
+## The mapped animal now takes the non-NA side for every column, as the
+## shared columns already do, and keeps any column either input has.
+test_that("resolveCrossCenterIds gives a mapped animal the value of a column only pedA recorded", {
+  pedASex <- pedA
+  pedASex$sex <- c("M", "F", "M", "F")
+
+  merged <- resolveCrossCenterIds(pedASex, pedB, mapping)
+
+  expect_identical(merged$sex[merged$id == "T1"], "M")
+  expect_identical(merged$sex[merged$id == "S1"], "F")
+  expect_true(is.na(merged$sex[merged$id == "O1"]))
+})
+
+test_that("resolveCrossCenterIds gives a mapped animal the value of a column only pedB recorded", {
+  pedBSex <- pedB
+  pedBSex$sex <- c("F", "F", "M") # X9, Q1, O1
+
+  merged <- resolveCrossCenterIds(pedA, pedBSex, mapping)
+
+  expect_identical(merged$sex[merged$id == "T1"], "F")
+  expect_identical(merged$sex[merged$id == "O1"], "M")
+  expect_true(is.na(merged$sex[merged$id == "S1"]))
+})
+
+test_that("resolveCrossCenterIds keeps a column only one center recorded when every animal is mapped", {
+  oneA <- data.frame(
+    id = "T1", sire = NA_character_, dam = NA_character_, sex = "M",
+    stringsAsFactors = FALSE
+  )
+  oneB <- data.frame(
+    id = "X9", sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+
+  fromA <- resolveCrossCenterIds(oneA, oneB, mapping)
+  expect_identical(names(fromA), c("id", "sire", "dam", "sex"))
+  expect_identical(fromA$sex, "M")
+
+  oneBSex <- oneB
+  oneBSex$sex <- "F"
+  fromB <- resolveCrossCenterIds(oneA[, c("id", "sire", "dam")], oneBSex,
+                                 mapping)
+  expect_identical(names(fromB), c("id", "sire", "dam", "sex"))
+  expect_identical(fromB$sex, "F")
+})
+
+test_that("resolveCrossCenterIds keeps a one-sided column whose value for the mapped animal is NA", {
+  oneA <- data.frame(
+    id = "T1", sire = NA_character_, dam = NA_character_,
+    sex = NA_character_, stringsAsFactors = FALSE
+  )
+  oneB <- data.frame(
+    id = "X9", sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+
+  merged <- resolveCrossCenterIds(oneA, oneB, mapping)
+
+  expect_true("sex" %in% names(merged))
+  expect_true(is.na(merged$sex))
+})
+
+test_that("resolveCrossCenterIds keeps the class of a one-sided Date column", {
+  pedABirth <- pedA
+  pedABirth$birth <- as.Date(c("2000-01-01", "2000-01-02", "2010-05-06",
+                               "2010-05-07"))
+  fromA <- resolveCrossCenterIds(pedABirth, pedB, mapping)
+  expect_s3_class(fromA$birth, "Date")
+  expect_identical(fromA$birth[fromA$id == "T1"], as.Date("2010-05-06"))
+
+  pedBBirth <- pedB
+  pedBBirth$birth <- as.Date(c("2010-05-06", "2001-02-03", "2012-12-12"))
+  fromB <- resolveCrossCenterIds(pedA, pedBBirth, mapping)
+  expect_s3_class(fromB$birth, "Date")
+  expect_identical(fromB$birth[fromB$id == "T1"], as.Date("2010-05-06"))
+  expect_identical(fromB$birth[fromB$id == "O1"], as.Date("2012-12-12"))
+})

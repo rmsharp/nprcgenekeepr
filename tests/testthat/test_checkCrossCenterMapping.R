@@ -182,3 +182,124 @@ test_that(".pickCrossCenterParent returns value/source/conflict for the A-only, 
   )
   expect_true(conflicting$conflict)
 })
+
+## S1011 (docs-audit part 2, finding CE4; the owner ruled "fix" at S1004 and,
+## at the S1011 scope question, "flag only the clash that breaks the file").
+## A pedB animal with no mapping row whose id equals an id the mapping gives
+## a pedA animal passes the old collision check, which compares only ids that
+## are unmapped on BOTH sides, and the merge then holds two rows with the
+## mapped animal's id. The mirror case (an unmapped pedA animal whose id
+## equals a mapped pedB id) merges to one row per id -- measured S1011 -- so
+## it stays clean, as do a swap mapping and an id mapped to the same string.
+
+clashPedB <- data.frame(
+  id   = c("X9", "T1", "O1"),
+  sire = c(NA_character_, NA_character_, "X9"),
+  dam  = c(NA_character_, NA_character_, NA_character_),
+  stringsAsFactors = FALSE
+)
+
+clashMessage <- paste0(
+  "pedB holds its own animal with the id(s) T1, which 'mapping' uses for a ",
+  "pedA animal it links to a different pedB animal. Rename the pedB animal, ",
+  "or correct 'mapping'."
+)
+
+test_that("checkCrossCenterMapping flags a pedB animal that reuses an id the mapping gives a pedA animal", {
+  problems <- checkCrossCenterMapping(pedA, clashPedB, mapping)
+
+  expect_equal(nrow(problems), 1L)
+  expect_identical(problems$type, "mappedIdClash")
+  expect_identical(problems$ids, "T1")
+  expect_identical(problems$message, clashMessage)
+})
+
+test_that("checkCrossCenterMapping lists every clashing id in one row and keeps the undeclared-collision row beside it", {
+  ## T1 and S1 are mapped pedA ids that pedB also holds as its own animals;
+  ## P1 is an undeclared id present in both files (the old collision).
+  pedB2 <- data.frame(
+    id   = c("X9", "X8", "T1", "S1", "P1"),
+    sire = NA_character_,
+    dam  = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  mapping2 <- data.frame(
+    idA = c("T1", "S1"), idB = c("X9", "X8"),
+    stringsAsFactors = FALSE
+  )
+
+  problems <- checkCrossCenterMapping(pedA, pedB2, mapping2)
+
+  clashRows <- problems[problems$type == "mappedIdClash", ]
+  expect_equal(nrow(clashRows), 1L)
+  expect_setequal(as.character(unlist(strsplit(clashRows$ids, ", ",
+                                               fixed = TRUE))),
+                  c("T1", "S1"))
+  collisionRows <- problems[problems$type == "collision", ]
+  expect_equal(nrow(collisionRows), 1L)
+  expect_identical(collisionRows$ids, "P1")
+  expect_equal(nrow(problems), 2L)
+})
+
+test_that("checkCrossCenterMapping does not report a clash while a tier-A problem remains", {
+  ## With a clean mapping pedB's own "T1" is reported ...
+  expect_true(any(
+    checkCrossCenterMapping(pedA, clashPedB, mapping)$type == "mappedIdClash"
+  ))
+
+  ## ... but idB "X9" mapped twice (uniqueness) keeps tier B from running
+  ## even though the same "T1" is still a real clash.
+  dupMapping <- data.frame(
+    idA = c("T1", "S1"), idB = c("X9", "X9"),
+    stringsAsFactors = FALSE
+  )
+
+  problems <- checkCrossCenterMapping(pedA, clashPedB, dupMapping)
+
+  expect_true(any(problems$type == "uniqueness"))
+  expect_false(any(problems$type == "mappedIdClash"))
+})
+
+test_that("checkCrossCenterMapping keeps the mirror case clean (pedA holds its own X9, pedB's mapped X9 is T1)", {
+  mirrorPedA <- data.frame(
+    id   = c("P1", "P2", "T1", "X9"),
+    sire = c(NA_character_, NA_character_, "P1", NA_character_),
+    dam  = c(NA_character_, NA_character_, "P2", NA_character_),
+    stringsAsFactors = FALSE
+  )
+  mirrorPedB <- data.frame(
+    id   = c("X9", "O1"),
+    sire = c(NA_character_, "X9"),
+    dam  = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+
+  expect_equal(nrow(checkCrossCenterMapping(mirrorPedA, mirrorPedB, mapping)),
+               0L)
+})
+
+test_that("checkCrossCenterMapping keeps a swap mapping and an id mapped to the same string clean", {
+  swapPedA <- data.frame(
+    id = c("T1", "X9"), sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  swapPedB <- data.frame(
+    id = c("X9", "T1"), sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  swapMapping <- data.frame(
+    idA = c("T1", "X9"), idB = c("X9", "T1"),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(nrow(checkCrossCenterMapping(swapPedA, swapPedB, swapMapping)),
+               0L)
+
+  samePedB <- data.frame(
+    id   = c("T1", "O1"),
+    sire = c(NA_character_, "T1"),
+    dam  = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  sameMapping <- data.frame(idA = "T1", idB = "T1", stringsAsFactors = FALSE)
+  expect_equal(nrow(checkCrossCenterMapping(pedA, samePedB, sameMapping)), 0L)
+})

@@ -157,6 +157,36 @@ test_that("modCrossCenterIdentityServer catches a structural upload error withou
   })
 })
 
+test_that("modCrossCenterIdentityServer shows a Center B animal that reuses a mapped Center A id as an issue and holds the merge", {
+  skip_if_not_installed("shiny")
+
+  ## S1011 (docs-audit part 2, finding CE4): Center B also holds its own,
+  ## different "T1" -- the id the mapping gives the Center A animal it links
+  ## to X9. The tab used to say "Mapping is clean" and the merged file held
+  ## T1 three times.
+  clashPedB <- rbind(
+    .ccPedB,
+    data.frame(id = "T1", sire = NA_character_, dam = NA_character_,
+               sex = "F", stringsAsFactors = FALSE)
+  )
+
+  shiny::testServer(modCrossCenterIdentityServer, args = list(), {
+    do.call(session$setInputs, .ccUploadInputs(pedB = clashPedB))
+    session$setInputs(validate = 1)
+
+    result <- session$getReturned()
+    problems <- result$issues()
+    expect_equal(nrow(problems), 1L)
+    expect_identical(problems$type, "mappedIdClash")
+    expect_identical(problems$ids, "T1")
+    expect_error(result$mergedPedigree(), class = "shiny.silent.error")
+
+    session$setInputs(confirmMerge = 1)
+    session$setInputs(confirmMergeOk = 1)
+    expect_false(result$confirmed())
+  })
+})
+
 test_that("modCrossCenterIdentityServer computes the merged pedigree once clean, carrying D10's sex column through", {
   skip_if_not_installed("shiny")
 
@@ -228,6 +258,25 @@ test_that("modCrossCenterIdentityServer resets confirmed to FALSE when the mappi
 })
 
 ## -- Server: exports (D8) -------------------------------------------------
+
+test_that("modCrossCenterIdentityServer's Merged Pedigree download carries a column only one center recorded", {
+  skip_if_not_installed("shiny")
+
+  ## S1011 (docs-audit part 2, finding CE5): Center B's file has no sex
+  ## column, and Center A recorded the transferred animal (T1) as male.
+  pedBNoSex <- .ccPedB[, c("id", "sire", "dam")]
+
+  shiny::testServer(modCrossCenterIdentityServer, args = list(), {
+    do.call(session$setInputs, .ccUploadInputs(pedB = pedBNoSex))
+    session$setInputs(validate = 1)
+    session$setInputs(confirmMerge = 1)
+    session$setInputs(confirmMergeOk = 1)
+
+    merged <- utils::read.csv(output$downloadMergedPedigree,
+                              stringsAsFactors = FALSE)
+    expect_equal(merged$sex[merged$id == "T1"], "M")
+  })
+})
 
 test_that("modCrossCenterIdentityServer's Merged Pedigree/Mapping/Validation Results downloads write the expected artifacts once confirmed", {
   skip_if_not_installed("shiny")
