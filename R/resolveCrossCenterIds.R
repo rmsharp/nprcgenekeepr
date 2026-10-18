@@ -545,8 +545,8 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
     # D10: generalize the same "prefer non-NA, error on differing non-NA
     # values" resolution to every OTHER column either side has, so agreeing
     # metadata (e.g. sex) survives the merge instead of being silently
-    # dropped (previously only id/sire/dam were ever populated; see
-    # docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md
+    # dropped (previously only id/sire/dam were ever populated;
+    # see docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md
     # section 2.12 / D10). A column only one side has reads as NA on the
     # other side, so the side that recorded it wins (S1011, docs-audit CE5).
     otherCols <- setdiff(
