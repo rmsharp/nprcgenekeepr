@@ -1966,6 +1966,33 @@ test_that("modMarkerGenetics's sequence export preview stays blank for a genotyp
   })
 })
 
+## Kept behavior (found by a mutation run, S1010): a genotype file with no
+## locus file gives no F_ROH table, so the preview has nothing to
+## de-identify and exits quietly, as the old req(rohTable) did. Passes before
+## and after the fix.
+test_that("modMarkerGenetics's sequence export preview stays blank when a genotype file is loaded but no locus file", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    suppressWarnings(session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    )))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+
+    ## The fixture reaches the condition: a matrix, but no F_ROH table.
+    expect_true(is.matrix(genotypeMatrixR()))
+    expect_null(sequenceRohTable())
+
+    session$setInputs(sequenceExportPreview = 1)
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+    expect_null(result$sequenceExportRohTable())
+    expect_null(result$sequenceExportManifest())
+  })
+})
+
 ## RED (S948, BACKLOG.md:57): the Candidate Parent Assignment tab says why it
 ## is blank when the pedigree has no "fromCenter" column. getPotentialParents()
 ## returns NULL without that column, so no candidate is ever found; the
