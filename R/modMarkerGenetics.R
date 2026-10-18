@@ -849,8 +849,10 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       ## S1010: not req(gmat, ...). req() runs shiny::isTruthy(), which drops
       ## every character-matrix row that holds an NA before it asks whether
       ## anything is left, and a missing allele is NA (S977), so a matrix in
-      ## which no animal's row is complete would count as "not ready".
-      if (is.null(gmat) || is.null(rohTable) || is.null(ped)) {
+      ## which no animal's row is complete would count as "not ready". A
+      ## matrix with no cells (a header row and no animals) stays not ready.
+      if (is.null(gmat) || length(gmat) == 0L || is.null(rohTable) ||
+            is.null(ped)) {
         return()
       }
       sequenceExportConfirmed(FALSE)
