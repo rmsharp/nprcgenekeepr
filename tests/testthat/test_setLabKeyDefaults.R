@@ -162,3 +162,48 @@ test_that("setLabKeyDefaults treats an empty-string env var as absent", {
   mockery::expect_called(set_defaults_mock, 0)
   expect_equal(result$method, "netrc")
 })
+
+## S1012 (docs-audit part 2 CI1): a site that copies the shipped example config
+## unedited has only a commented apiKey line. Its placeholder text must not be
+## taken as a key, which beat the netrc file.
+
+test_that("setLabKeyDefaults finds no credential in the shipped example config", {
+  skip_if_not_installed("mockery")
+  skip_if_not_installed("withr")
+
+  example_cfg <- system.file("extdata", "examples",
+                             "example_nprcgenekeepr_config",
+                             package = "nprcgenekeepr")
+  withr::local_envvar(NPRCGENEKEEPR_LABKEY_APIKEY = "", NETRC = "")
+  site_info <- make_site_info(configFile = example_cfg)
+  set_defaults_mock <- mockery::mock(TRUE)
+  mockery::stub(setLabKeyDefaults, "labkey.setDefaults", set_defaults_mock)
+
+  expect_error(setLabKeyDefaults(site_info), "No LabKey credential found")
+  mockery::expect_called(set_defaults_mock, 0)
+})
+
+test_that("setLabKeyDefaults uses the netrc file with the shipped example config", {
+  skip_if_not_installed("mockery")
+  skip_if_not_installed("withr")
+
+  example_cfg <- system.file("extdata", "examples",
+                             "example_nprcgenekeepr_config",
+                             package = "nprcgenekeepr")
+  home_dir <- tempfile("home_")
+  dir.create(home_dir)
+  withr::defer(unlink(home_dir, recursive = TRUE))
+  writeLines(
+    "machine example.test login apikey password SECRET",
+    file.path(home_dir, netrc_basename())
+  )
+  withr::local_envvar(NPRCGENEKEEPR_LABKEY_APIKEY = "", NETRC = "")
+  site_info <- make_site_info(configFile = example_cfg, homeDir = home_dir)
+  set_defaults_mock <- mockery::mock(TRUE)
+  mockery::stub(setLabKeyDefaults, "labkey.setDefaults", set_defaults_mock)
+
+  result <- setLabKeyDefaults(site_info)
+
+  mockery::expect_called(set_defaults_mock, 0)
+  expect_equal(result$method, "netrc")
+})

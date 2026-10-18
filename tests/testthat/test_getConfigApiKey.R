@@ -24,3 +24,42 @@ test_that("getConfigApiKey returns '' for a missing or NULL config file", {
   expect_identical(nprcgenekeepr:::getConfigApiKey(withr::local_tempfile()), "")
   expect_identical(nprcgenekeepr:::getConfigApiKey(NULL), "")
 })
+
+## S1012 (docs-audit part 2 CI1): a commented-out apiKey line is not a key. The
+## shipped example config documents the key as a commented line, and
+## getConfigApiKey() returned its placeholder text as a live key.
+
+test_that("getConfigApiKey returns '' for the shipped example config", {
+  example_cfg <- system.file("extdata", "examples",
+                             "example_nprcgenekeepr_config",
+                             package = "nprcgenekeepr")
+  expect_true(nzchar(example_cfg))
+  expect_identical(nprcgenekeepr:::getConfigApiKey(example_cfg), "")
+})
+
+test_that("getConfigApiKey ignores a commented apiKey before the real one", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("# apiKey = \"placeholder\"", "center = SNPRC",
+               "apiKey = realKey"), cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "realKey")
+})
+
+test_that("getConfigApiKey ignores an indented commented apiKey", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("center = SNPRC", "   # apiKey = \"indented\""), cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "")
+})
+
+test_that("getConfigApiKey keeps the real apiKey when a commented one follows", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("center = SNPRC", "apiKey = realKey",
+               "# apiKey = \"placeholder\""), cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "realKey")
+})
+
+test_that("getConfigApiKey reads an apiKey line that ends in a comment", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("center = SNPRC", "apiKey = realKey # from the LabKey site"),
+             cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "realKey")
+})

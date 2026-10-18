@@ -31,3 +31,35 @@ test_that("getParamDef returns the correct values", {
   expect_identical(getParamDef(tokens, "queryName"), "demographics")
   expect_error(getParamDef(tokens, "thisIsNotAParam"))
 })
+
+## S1012 (docs-audit part 2 CI3): the presence check ignored case but the read
+## did not, so a setting written "Center" stopped with "subscript out of
+## bounds" instead of being read (or refused with the "Could not find" text).
+caseTokens <- list(
+  param = c("Center", "baseUrl"),
+  tokenVec = list("SNPRC", "http://vger/labkey")
+)
+
+test_that("getParamDef reads a setting whose name differs only in case", {
+  expect_identical(
+    tryCatch(getParamDef(caseTokens, "center"),
+             error = function(e) conditionMessage(e)),
+    "SNPRC"
+  )
+  expect_identical(
+    tryCatch(getParamDef(caseTokens, "baseurl"),
+             error = function(e) conditionMessage(e)),
+    "http://vger/labkey"
+  )
+})
+
+test_that("getParamDef prefers the exact-case name when both cases exist", {
+  both <- list(param = c("Center", "center"), tokenVec = list("AAA", "BBB"))
+  expect_identical(getParamDef(both, "center"), "BBB")
+  expect_identical(getParamDef(both, "Center"), "AAA")
+})
+
+test_that("getParamDef stops naming the setting when it is absent", {
+  expect_error(getParamDef(caseTokens, "queryName"),
+               "Could not find queryName in configuration file")
+})

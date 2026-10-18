@@ -95,3 +95,73 @@ test_that("getSiteInfo mapPedColumns contains expected fields", {
   expect_true("sire" %in% siteInfo$mapPedColumns)
   expect_true("dam" %in% siteInfo$mapPedColumns)
 })
+
+## S1012 (docs-audit part 2 CI1, the shared cause): getSiteInfo() read every
+## line of the configuration file, comments included, so a commented-out
+## setting above the real one won and a comment after the last setting was
+## glued onto that setting's value. The helper puts a configuration file in a
+## temporary home directory under the name getConfigFileName() expects.
+write_home_config <- function(lines, env = parent.frame()) {
+  tmp <- withr::local_tempdir(.local_envir = env)
+  withr::local_envvar(c(HOME = tmp), .local_envir = env)
+  cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
+  writeLines(lines, file.path(tmp, cfg_name))
+  invisible(tmp)
+}
+
+required_config_lines <- c(
+  "center = \"SNPRC\"",
+  "baseUrl = \"http://deepthought:8080/labkey\"",
+  "schemaName = \"study\"",
+  "folderPath = \"/snprcEHR\"",
+  "queryName = \"demographics\"",
+  "lkPedColumns = (\"Id\", \"gender\", \"birth\", \"death\",",
+  "                \"lastDayAtCenter\", \"dam\", \"sire\")",
+  "mapPedColumns = (\"id\", \"sex\", \"birth\", \"death\",",
+  "                \"exit\", \"dam\", \"sire\")"
+)
+
+test_that("getSiteInfo ignores a commented-out setting above the real one", {
+  write_home_config(c("# center = \"OLD\"", required_config_lines))
+  expect_identical(getSiteInfo()$center, "SNPRC")
+})
+
+test_that("getSiteInfo keeps a comment after the last setting out of its value", {
+  write_home_config(c(required_config_lines, "# the last column is optional"))
+  expect_identical(
+    getSiteInfo()$mapPedColumns,
+    c("id", "sex", "birth", "death", "exit", "dam", "sire")
+  )
+})
+
+test_that("getSiteInfo reads a setting written with a capital first letter", {
+  write_home_config(sub("^center", "Center", required_config_lines))
+  expect_identical(
+    tryCatch(getSiteInfo()$center, error = function(e) conditionMessage(e)),
+    "SNPRC"
+  )
+})
+
+test_that("getSiteInfo reads the shipped example config unchanged", {
+  tmp <- withr::local_tempdir()
+  withr::local_envvar(c(HOME = tmp))
+  example_cfg <- system.file("extdata", "examples",
+                             "example_nprcgenekeepr_config",
+                             package = "nprcgenekeepr")
+  file.copy(example_cfg,
+            file.path(tmp, basename(getConfigFileName(Sys.info())[["configFile"]])))
+  siteInfo <- getSiteInfo()
+  expect_identical(siteInfo$center, "SNPRC")
+  expect_identical(siteInfo$baseUrl, "http://deepthought:8080/labkey")
+  expect_identical(siteInfo$schemaName, "study")
+  expect_identical(siteInfo$folderPath, "/snprcEHR")
+  expect_identical(siteInfo$queryName, "demographics")
+  expect_identical(
+    siteInfo$lkPedColumns,
+    c("Id", "gender", "birth", "death", "lastDayAtCenter", "dam", "sire")
+  )
+  expect_identical(
+    siteInfo$mapPedColumns,
+    c("id", "sex", "birth", "death", "exit", "dam", "sire")
+  )
+})
