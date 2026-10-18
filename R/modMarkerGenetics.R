@@ -850,9 +850,9 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       ## every character-matrix row that holds an NA before it asks whether
       ## anything is left, and a missing allele is NA (S977), so a matrix in
       ## which no animal's row is complete would count as "not ready". A
-      ## matrix with no cells (a header row and no animals) stays not ready.
-      if (is.null(gmat) || length(gmat) == 0L || is.null(rohTable) ||
-            is.null(ped)) {
+      ## failed read (NULL) and a matrix with no cells (a header row and no
+      ## animals) are both length 0, and both stay not ready.
+      if (length(gmat) == 0L || is.null(rohTable) || is.null(ped)) {
         return()
       }
       sequenceExportConfirmed(FALSE)
