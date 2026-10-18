@@ -53,6 +53,20 @@ test_that("getParamDef reads a setting whose name differs only in case", {
   )
 })
 
+test_that("getParamDef reads a lowercase setting asked for in camel case", {
+  # getSiteInfo() asks for "baseUrl", "schemaName" and so on; a file may spell
+  # them in lowercase.
+  lowerTokens <- list(
+    param = c("center", "baseurl"),
+    tokenVec = list("SNPRC", "http://vger/labkey")
+  )
+  expect_identical(
+    tryCatch(getParamDef(lowerTokens, "baseUrl"),
+             error = function(e) conditionMessage(e)),
+    "http://vger/labkey"
+  )
+})
+
 test_that("getParamDef prefers the exact-case name when both cases exist", {
   both <- list(param = c("Center", "center"), tokenVec = list("AAA", "BBB"))
   expect_identical(getParamDef(both, "center"), "BBB")
