@@ -1656,7 +1656,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpdkohAf/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpPdGQKD/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2490,8 +2490,8 @@ as *id*, or the call stops.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-16 04:31:10.092472. The processing
-time for this document was 26 seconds..
+The current date and time is 2026-10-18 03:23:03.558024. The processing
+time for this document was 20 seconds..
 
 ``` r
 
@@ -2528,7 +2528,7 @@ sessionInfo()
     ## [4] stringi_1.8.9           
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.61            bslib_0.12.0        
+    ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.62            bslib_0.12.0        
     ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       quadprog_1.5-8      
     ##  [9] vctrs_0.7.3          tools_4.6.1          generics_0.1.4       tibble_3.3.1        
     ## [13] pkgconfig_2.0.3      Matrix_1.7-5         data.table_1.18.6.1  checkmate_2.3.4     

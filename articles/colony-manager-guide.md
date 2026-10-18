@@ -713,7 +713,10 @@ constrained:
   is given one chosen at random.
 - **Custom** – a “Custom ratio (F per M):” numeric field appears
   (default 1.0, range 0.5-20.0) targeting an arbitrary females-per-male
-  ratio.
+  ratio. A male below the **Minimum breeding age**, or with no birth
+  date, is not placed in any group (he is listed under **Unused
+  animals**), and a group stops filling when no breeding-age male is
+  left for it, so it can end with fewer females than the ratio asks for.
 
 > **Note**
 >

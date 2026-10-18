@@ -17413,3 +17413,343 @@ writes the first:** this one wrote `SESSION_NOTES.md`, then stopped on
 headings, one above and one below the September block), so the rerun had
 to skip step 1; use `replace(anchor, new, 1)` or check all anchors
 first.
+
+#### Learning 968
+
+**`shinyBS::popify(title = NULL)` does not mean “no title”: shinyBS
+writes the NULL into the page as the text `'title': 'character(0)'` and
+the popover draws a gray header bar reading “character(0)” above its
+sentence; `title = ""` writes `'title': ''` and the app’s Bootstrap 4
+theme (bslib flatly) hides the header (measured S1002 in headless
+Chrome: header display “none”, 0 px, against 35 px).** **(1) Measure the
+hide before promising it:** a scratch page with three buttons (NULL,
+empty, short title) and then the real app (scratch `app.R` with
+`load_all()`, example pedigree, Genetic Value with `nIterations` 10,
+`.popover-header` read after `$(el).popover('show')`) showed the 12
+Export pop-ups without a header and the three box-plot pop-ups (added by
+the server with `addPopover()` and real titles) unchanged. **(2) Read
+the rendered page text, not the R call:** the gate reads the
+`shinyBS.addTooltip(...)` calls in
+`as.character(modSummaryStatsUI("x"))`, and every call carries a `title`
+entry, so a test that looks for the text “character(0)” finds a pop-up
+built anywhere in the UI. **(3) Pin the whole page text for a
+REFACTOR:**
+[`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md)
+written to a file before and after the helper was byte for byte
+identical (72,112 B, md5 1760728c…), which proves 12 wrapper copies
+became one helper without reading the diff. **(4) A grep cut by `head`
+hides files:** my first search for tests that name a pop-up stopped at
+10 lines and missed `test_modSummaryStats_popovers.R`; run the whole
+family (`Sys.glob("tests/testthat/test_modSummaryStats*.R")`) before
+GREEN. **(5) Scratch driver:**
+`app$click(selector = ..., wait_ = FALSE)` errors (“`...` must be
+empty”); click with
+`app$run_js("document.querySelector('#id').click();")` when a run must
+not block. **(6) A push during a session:** one push after the last
+real-work commit; `BACKLOG.md`, `CHANGELOG.md`, `HANDOFFS.md`,
+`SESSION_NOTES.md` and `PROJECT_LEARNINGS.md` are on the CI
+`paths-ignore` list, so the close-out commit starts no CI.
+
+#### Learning 969
+
+**A re-check of code candidates that a wording pass left open ages three
+ways, and the wording pass can itself add a false sentence: of 46 slice
+6e candidates 1 was closed by code (CF2, S923), 16 of the 45 left were
+told truthfully by help sentences and 23 were told nowhere or wrongly,
+two of the wrong ones by S844’s own new sentences
+([`convertFromCenter()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertFromCenter.md)
+“stops with an error”,
+[`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
+“other problems are errors”) that a run contradicts.** **(1) Date a
+sentence before blaming a session:** `git log -S"<sentence>" -- <file>`
+named S844 for two and S446 for the “union of columns” sentence (CE5).
+**(2) A filter written as a negation hides the third value:**
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+drops “male-male and female-female”, which was read as “opposite sex”;
+sex code `U` (`R/sexCodes.R:13`) passes, so a living unsexed infant is a
+“sire”, a “dam” and its own mate (N1: 15 pairs, 7 bad “sires” and 2
+self-pairs in the module run); `qcPed` has no living `U`, so probe every
+code of a coded column, not the two a fixture uses. **(3) An upload the
+app invites needs one test through the module:** the reader tests use
+`.xlsx` and pass, while `modGeneticValueServer` ignores an Excel kinship
+override (F1 mean kinship 0.1042 against 0.1375 as CSV) because
+`readExcelPOSIXToCharacter()` reads every column as text; build the file
+with
+[`openxlsx::write.xlsx()`](https://rdrr.io/pkg/openxlsx/man/write.xlsx.html)
+and hand `testServer` a `data.frame(name, size, type, datapath)`. **(4)
+One grep loop gives reach for every candidate:** for each function,
+`grep -l "\bfn("` over `R/appServer.R R/appUI.R R/mod*.R`, then over the
+rest of `R/` (eight candidates sit in functions nothing in `R/` calls;
+issue 37 asks about retiring such exports). **(5) Recount a report from
+its own table before it goes into BACKLOG:** a `python3 -I` parse of the
+audit table showed “17 reachable” was 18 and that the minor groups did
+not partition 39. **(6) zsh and BSD:** `echo ===` fails (“== not found”,
+`=word` expands), so quote it; BSD `sed -i` needs `-i ''`, so edit in
+place with `python3 -I`.
+
+#### Learning 970
+
+**A close-out that adds no ledger entry leaves the next Phase 0 a
+one-commit gap, a red scheduled E2E file is compared with the push
+before the push is blamed, and one gating question can take seven
+rulings in one click.** **(1) Put the DONE ledger entry in the close-out
+commit:** S1003 wrote its DONE entry in the deliverable commit
+(`8e534818a`) and its close-out (notes, receipt, Learning 969) in a
+later commit that did not touch `CHANGELOG.md`, so the S1004 Phase 0
+found the frontier one commit behind HEAD and wrote a backfill
+(`6746818ce`) for content the entry already named; S1002 put the entry
+in its close-out commit and left no gap. The receipt’s `commit:` and
+`changelog_ref:` cite the last real-work commit either way. **(2)
+Compare the failing file with the push:** the scheduled `shinytest2` run
+of 2026-10-16 (07:15 UTC) failed one file,
+`test-e2e-marker-genetics-genomic-roh-module.R` (4 of 11 expectations,
+62 s, a pop-up wait), after three green nights, on a push that changed
+only `R/modSummaryStats.R`; that reads as timing and stays unconfirmed
+until a second night. `gh run view <id> --log` printed nothing here;
+`gh run view <id> --json jobs -q '.jobs[0].databaseId'` and then
+`gh api repos/<repo>/actions/jobs/<job id>/logs` returned 22,030 lines.
+**(3) Check what changed before reusing a stored count:**
+`git diff --stat <audit claim>..HEAD -- R/ tests/ inst/` was empty, so
+S1003’s measured counts (15 pairs, 40 of 40 runs, 0.1042 against 0.1375)
+went into the ruling box and the BACKLOG items without being re-run.
+**(4) One gating question first:** “fix all seven as recommended / one
+at a time / hold”, each fix named in plain words with its tested number,
+took one click (the S968 box of three went the same way). **(5) Verify
+copied cites:** three fixture cites in S1003’s receipt were off by 2 to
+9 lines (`matePairPed()` `:28` not `:20`, `fileInfo()` `:28` not `:37`,
+`.ccUploadInputs()` `:54` not `:56`); grep the `name <- function` line
+before a cite goes into a BACKLOG item. **(6) Shell:**
+`VAR=value Rscript -e '...'` sets the variable, while
+`Rscript -e '...' VAR=value` passes an argument: R saw an empty
+variable, the loop ran no file and printed nothing, so read empty output
+as “ran nothing”.
+
+#### Learning 971
+
+**An end-to-end smoke run from the repository root tests the working
+tree, not the library you pointed it at, a check that cannot fail before
+the fix proves nothing, and a shell variable set on its own line never
+reaches `Rscript`.** **(1) Where the app’s package comes from:**
+shinytest2’s `AppDriver` (`app_start_shiny()`, `dev_pkg_path()`) swaps
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) in
+the app’s child process for
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+of the current directory when that directory is an R package. S1005’s
+first two smoke runs, one against a scratch install of the fix and one
+against a scratch install of the RED commit, both loaded the working
+tree and both passed 6 of 6; only running the pre-fix copy, which was
+meant to fail, exposed it. To test any tree other than the working one:
+`git archive <sha> | tar -x -C <dir>`,
+`install.packages(<dir>, repos = NULL, type = "source", lib = <scratch>)`,
+run the driver with the current directory outside the package and
+`R_LIBS=<scratch>`, give the app an `app.R` that
+[`message()`](https://rdrr.io/r/base/message.html)s
+`find.package("nprcgenekeepr")` and a marker for the change, and assert
+on `app$get_logs()` before trusting a result. Run the same driver on the
+pre-fix tree and see it fail (S1005: 4 of 6 checks fail before, 6 of 6
+pass after). **(2) Variables for `Rscript`:**
+`FILES=...; NOT_CRAN=true Rscript -e '...Sys.getenv("FILES")...'` leaves
+`FILES` unexported, so the script ran 0 blocks; S1005 did it twice after
+S1004 recorded it once (the second time with `OUT` in a command that
+would have run seven minutes and then failed on the save). Put every
+variable on the `Rscript` command itself, begin the script with
+`stopifnot(nzchar(Sys.getenv("VAR")))`, and read “0 blocks” as a failed
+run. **(3) A question the ruling already answered:** a `BACKLOG.md` item
+written before the code was read said it “starts at the PRE-RED scope
+question”, but for the Excel upload the ruling fixed where the fix goes,
+which columns convert and “as the CSV path does”, which also decides a
+bad cell and a blank column; read the code, say that no question is
+left, and go to the gate. **(4) A decision session grows `BACKLOG.md`:**
+S1004’s one DECISION NEEDED block (17 lines) became seven READY blocks
+(74 lines) plus the red-CI block, 518 to 595 lines, past the 56,750 B
+read budget; each fix removes about 13 lines as it lands (S1005: 58,398
+B to 57,139 B, still 389 B over), and the compression pass at
+`BACKLOG.md:470` is the remedy.
+
+#### Learning 972
+
+**A throwaway patch that proves a RED test can pass must reach every
+copy of the function the test calls, and its empty cases decide whether
+the proof means anything.** After
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+a function lives in two places: the namespace (what module code calls)
+and the attached `package:nprcgenekeepr` environment (what
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+calls), so assigning into one patches half the calls; a new internal
+function cannot be added to the sealed namespace (put it in
+[`globalenv()`](https://rdrr.io/r/base/environment.html), which the
+namespace’s parent chain reaches). Evaluate the edited source in a child
+environment of the namespace, then assign every name into both copies.
+S1006’s first throwaway helper returned `NULL` for an empty population
+([`rownames()`](https://rdrr.io/r/base/colnames.html) of a 0 x 0 matrix
+is `NULL`), so the RED block for `character(0)` still failed under the
+patch; the real helper wraps the names in
+[`as.character()`](https://rdrr.io/r/base/character.html), and the
+mutant that removes the wrap is killed by exactly that one block.
+
+#### Learning 973
+
+**A smoke driver proves nothing until it has been seen to pass on the
+fixed tree and fail on the pre-fix tree, and three setup facts cost
+S1007 several calls: `AppDriver` needs `NOT_CRAN=true`, `Rscript` must
+start at the repo root, and `qcStudbook(reportErrors = TRUE)` returns
+`NULL` for “nothing to report”.** **(1) The mirror of Learning 971:**
+S1007’s first driver read the Input tab’s container text after “Get
+Data”, but the fix’s message sits on the Errors sub-tab (the toast says
+“Check the Errors tab”), so the fixed tree printed no message either and
+the check could not pass. Learning 971 asks for a pre-fix run that
+fails; also run the fixed tree first and read what it printed, then the
+pre-fix one, and open a screenshot before trusting a text probe (the
+fixed run’s toast, “QC found 1 error(s)”, showed the gap at once). **(2)
+Setup:** shinytest2’s `AppDriver` stops with “Reason: On CRAN” unless
+`NOT_CRAN=true` is on the command; a scratch install needs
+`R_LIBS=<scratch>:<renv library>`; `Rscript` started in `tests/testthat`
+skips the project `.Rprofile`, so renv is off and `load_all()` stops
+“The package”quadprog” is required” (a `cd` in one Bash call changes the
+shell’s directory for the next, so `cd` to the repo root in every call).
+**(3) `qcStudbook(reportErrors = TRUE)` returns `NULL`** when there is
+nothing to report, so a value read silently looks like `NULL`, not like
+a pedigree; with `reportErrors = FALSE` it returns the data frame. **(4)
+Count before offering a tidy-up:** the Input-tab upload block
+(`shiny::testServer(modInputServer, ...)` plus `setInputs` and
+`getData`) had 9 local copies before S1007’s new one;
+`uploadPedigreeFile()` in `tests/testthat/helper-inputTabUpload.R` is
+now the shared one (three files use it) and the other seven are
+`BACKLOG.md:217`; a new Input-tab test calls it and writes no copy.
+**(5) Long runs:** a job started with `( ... &)` inside a Bash call is
+not tracked, so no notification arrives; start each job with
+`run_in_background`, and keep each under the 10-minute limit (the full
+suite takes 7 to 8 minutes, so run it and `devtools::check()` as two
+jobs).
+
+#### Learning 974
+
+**A probe on one data set can size a fix’s effect wrongly for another,
+so name the number that moves and measure it on the file the app really
+loads; a table the app draws server-side has no rows in its widget
+value; and a failing benchmark needs the previous commit’s run beside it
+under the same load.** **(1) S1008:** the PRE-RED question quoted “about
+0.7 females per male against 3 asked” from a direct
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+call on `qcPed` (35 living females against 43 living males with no birth
+date, too few females for the old code to reach the ratio). In the real
+app on the shipped `obfuscated_rhesus_mhc_ped.csv` (248 living females)
+the pre-fix Statistics tab already read 2.83 and 2.95: what changed was
+who sat in the groups (40 of the 83 males in the two groups had no birth
+date; after the fix none, and all 43 in Unused animals) and the group
+sizes (153 and 170 became 114 and 114). The option text had said “called
+directly”, but the first NEWS draft (“far more males than the ratio
+asked for”) over-claimed until that run and was corrected in its own
+commit. Before an option or a NEWS sentence names an effect, run the
+real app on the file it names and say which number moves for that file.
+**(2) Reading a box’s members in the real app:**
+[`DT::renderDT()`](https://rdrr.io/pkg/DT/man/dataTableOutput.html) is
+server-side here, so `app$get_value(output = "...groupTable1")` returns
+widget JSON with no rows and `app$get_download()` failed (“Download from
+… failed”); what works is the Group Detail table with
+`$('#breedingGroups-groupMemberTable').find('table.dataTable').DataTable().page.len(-1).draw()`
+through `app$run_js()`, then the `td` text through `app$get_js()` (the
+rows read equalled the Statistics tab’s counts, which is the check that
+the read is whole). `a[data-value='Statistics']` also matches the
+Summary Statistics tab, so scope the click to
+`#breedingGroups-moduleContainer`. **(3) Benchmarks:**
+`test_markerKinship.R` and `test_markerParentageLikelihood.R` failed in
+the full suite at a load of about 21 (a `vitest` process of another
+project had run for over a day at about 80% CPU); on a `git archive` of
+`e29f00a16` at a load of 7 to 9 they failed identically (0.21 s against
+0.23 s on HEAD for a 0.1 s limit, 1.00 s against 1.14 s for 0.5 s), and
+at a load of 5 to 14 one passed and one missed by 0.039 s. Run both
+trees through one script that prints `uptime` before and after; the
+machine will not go quiet. **(4)** `expect_equal(x, y, tolerance = t)`
+is relative to the value found, which moves with the defect; for a mean
+against a target use `expect_lt(abs(mean(x) - target), margin)` and put
+the before and after means in a comment.
+
+#### Learning 975
+
+**A red scheduled run’s suspects are the commits between the last green
+scheduled run’s commit and the red one’s, not the last push; `req()` of
+a character matrix with an `NA` in every row is silently FALSE; and a
+mechanism is proved by one probe plus the real E2E file on the commit
+pair either side.** **(1) S1009:** the nightly `shinytest2` E2E tier
+runs only on schedule and builds origin/master, and this project pushes
+in batches, so the red run of 2026-10-16 built 276 commits (S963 to
+S1002) that had never had an E2E run, while `BACKLOG.md` named only the
+last session (S1002) and guessed a short wait.
+`gh run view <id> --json headSha` for the last green and the first red
+scheduled run gives the range (`git log <green>..<red> -- R/ inst/`),
+and the log’s session-info table diffed between those two days shows
+what changed in the environment (here only the build date, Chrome .79 to
+.84 and apt, so nothing to chase there). `gh run view --log` printed
+nothing; `gh api repos/<repo>/actions/jobs/<job id>/logs` works. **(2)
+The mechanism:** `shiny::isTruthy(x)` for a character `x` ends with
+`!any(nzchar(stats::na.omit(x)))`, and
+[`na.omit()`](https://rdrr.io/r/stats/na.fail.html) of a matrix drops
+every row that holds an `NA`; so a genotype matrix in which every animal
+has one missing call is “not truthy” and `req(gmat, ...)` stops the
+observer with no message (`R/modMarkerGenetics.R:849`). One complete row
+keeps it TRUE; a data frame (non-atomic) and a numeric matrix are not
+affected. S977 turned “NA/NA” text into `NA` and thereby made the
+bundled fixture (2,070 of 50,000 cells, all 50 rows) fail; the unit
+tests used `i152Roh*` fixtures with no missing call, so only the E2E
+fixture saw it. Test a matrix with
+[`is.null()`](https://rdrr.io/r/base/NULL.html), never `req()`. **(3)
+The method that took the least:** reproduce locally first (scratch
+install, `R CMD INSTALL --no-docs --library=<scratch> .`,
+`R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`,
+`NOT_CRAN=true`, `NPRC_RUN_E2E=true`, then `Rscript` of
+`testthat::test_dir("tests/testthat", filter = "^e2e-marker-genetics-genomic-roh-module")`
+from the repo root); confirm the good end passes under today’s load;
+read the failing observer for what it requires; probe each required
+value in `Rscript` (here
+[`shiny::isTruthy()`](https://rdrr.io/pkg/shiny/man/isTruthy.html) on
+the matrix); then run the E2E file on the two commits either side of the
+suspect, in a scratch `git worktree` so the working tree is not touched
+(about 1.5 min a run and 10 s an install). Four E2E runs (HEAD, the old
+green end, and the pair either side of S977) and a handful of short
+probes replaced a bisect over 276 commits. The stored lead (“a wait too
+short is likeliest”) was wrong: a recorded guess about cause is
+something to test, not a place to start reading.
+
+#### Learning 976
+
+**Replacing `req(x)` with `is.null(x)` is not behavior-neutral, because
+`req()` also stops for a length-0 value; list every exit of
+[`shiny::isTruthy()`](https://rdrr.io/pkg/shiny/man/isTruthy.html) and
+probe each one against the line being replaced before RED; a mutation
+run of the rewritten guard finds the exits no test pins; and a new test
+is proved to pin old or new behavior by running it on the pre-fix
+source.** **(1) S1010:** `BACKLOG.md` said to replace
+`req(gmat, rohTable, ped)` (`R/modMarkerGenetics.R:849`) with an
+explicit [`is.null()`](https://rdrr.io/r/base/NULL.html) test. A probe
+after GREEN showed that would turn a genotype file with a header row and
+no animals (a 0 x 0 matrix, which `isTruthy()` calls FALSE by length)
+from an accidental quiet exit into an empty preview the user could
+confirm and download. The owner chose to keep it quiet, which cost a
+second RED/GREEN pass and two more gates; the probe belonged before the
+first RED. `isTruthy()` returns FALSE for NULL, length 0, all-NA atomic
+values, a FALSE logical, an empty-string character, and a character
+matrix once [`na.omit()`](https://rdrr.io/r/stats/na.fail.html) has
+dropped its NA rows; a data frame or list is always TRUE. The final
+guard is `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`
+(`length(NULL)` is 0, so a separate `is.null(gmat)` was redundant: that
+mutant changed no result). **(2) Mutating each condition** of the
+committed guard showed `is.null(rohTable)` unpinned (a genotype file
+loaded with no locus file); a pass-by-design block
+(`tests/testthat/test_modMarkerGenetics.R`, 5 expectations) now kills
+it. Two mutants still survive on purpose: dropping `is.null(ped)` has no
+visible effect (the next lines exit and the guidance already says “Load
+a pedigree”), and `<= 1L` for `== 0L` survives because no test uses a
+one-cell matrix. **(3) Facts measured:** the bundled
+`example_sequence_genotypes.csv` spells a missing allele as the text
+`NA` (2,070 of its 50,000 rows, 23 of them with both alleles; all 50
+animals, 23 to 57 each; a blank cell reads the same); `i152RohGenotype`
+is not “free of missing calls”: it leaves out I2’s L3, one NA cell, but
+I1 and I3 keep complete rows, so `isTruthy()` stayed TRUE and no older
+test saw S977’s change. **(4) Method:** to see whether a new test pins
+old or new behavior, `git archive <pre-fix sha> | tar -x -C <scratch>`,
+copy the current test file in, and run it with
+`RENV_CONFIG_AUTOLOADER_ENABLED=false` and `R_LIBS=<renv lib>` (without
+them the scratch directory’s own renv bootstraps and has no `pkgload`);
+a `cmd &` wrapper inside a background Bash call reports done before the
+job does, so wait on the job’s own `EXIT=` line.

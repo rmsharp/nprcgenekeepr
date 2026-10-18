@@ -149,6 +149,12 @@ correctness and table size; the default `NULL` performs no scoping
 is a valid, distinct input – "scope to nobody" – and returns a zero-row
 `pairs` frame with the full column shape, not an error.
 
+**Sex.** Only animals recorded as male (`"M"`) or female (`"F"`) are
+paired. An animal with any other sex (unknown, hermaphrodite or missing)
+is left out before pairs are formed and appears in neither `pairs` nor
+`excluded`; the Mate Pair Analysis tab says how many animals were left
+out.
+
 **Exclusion transparency (D5).** Two independent screens produce
 `excluded` rows: the age screen (`"under minimum age"`) and the
 caller-supplied `exclude` id list (`"user-excluded"`). A pair failing

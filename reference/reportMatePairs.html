@@ -213,6 +213,11 @@ default <code>NULL</code> performs no scoping (every individual in <code>kmat</c
 is a candidate). An explicit <code>character(0)</code> is a valid, distinct
 input – "scope to nobody" – and returns a zero-row <code>pairs</code> frame
 with the full column shape, not an error.</p>
+<p><strong>Sex.</strong> Only animals recorded as male (<code>"M"</code>) or female
+(<code>"F"</code>) are paired. An animal with any other sex (unknown,
+hermaphrodite or missing) is left out before pairs are formed and appears
+in neither <code>pairs</code> nor <code>excluded</code>; the Mate Pair Analysis tab
+says how many animals were left out.</p>
 <p><strong>Exclusion transparency (D5).</strong> Two independent screens produce
 <code>excluded</code> rows: the age screen (<code>"under minimum age"</code>) and the
 caller-supplied <code>exclude</code> id list (<code>"user-excluded"</code>). A pair

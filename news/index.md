@@ -336,6 +336,20 @@ export workflows, and longitudinal monitoring of colony genetic health.
   groups of one or two animals; use one or the other. The Breeding
   Groups tab was never affected, since its radio takes **Harem** or
   **Custom**, not both.
+- With a **Custom** sex ratio, a male under the **Minimum breeding
+  age**, or with no birth date, is left out of the groups and listed
+  under **Unused animals**. Before, such a male could be placed as if he
+  were female while the group’s sex ratio still counted him as a male,
+  so a group’s males could include animals not known to be of breeding
+  age, and with few females the ratio could come out well below the one
+  asked for. A group stops filling when no breeding-age male is left for
+  it, so it can end with fewer females than the ratio asks for. Script
+  users:
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  and
+  [`fillGroupMembersWithSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/fillGroupMembersWithSexRatio.md)
+  follow the same rule. On a pedigree with such males, results for a
+  given random seed differ from earlier versions.
 
 **Minor**
 
@@ -414,6 +428,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   reports mate-pair candidates with relatedness and genetic-value
   context. Report only (issue
   [\#151](https://github.com/rmsharp/nprcgenekeepr/issues/151)).
+- Mate pairs are made only from animals recorded as male or female. The
+  page says how many animals of any other sex it left out, and
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  leaves them out of both tables.
 
 ### De-Identified Export
 
@@ -531,6 +549,21 @@ export workflows, and longitudinal monitoring of colony genetic health.
   first date in a column was the invalid one. The Input tab now lists
   every invalid date by row, in every date column, so the rows can be
   found and corrected in the file.
+
+- Fixed: a pedigree file whose `fromCenter` column held text that is not
+  a yes or a no was read with no message at all: any value containing a
+  `y` or `t` was taken as TRUE and any containing an `n` or `f` as
+  FALSE, so “unknown”, “N/A” and “none” became FALSE and “maybe” became
+  TRUE, which changes which animals the Potential Parents and Candidate
+  Parent Assignment tabs treat as born in the colony. Only a whole `y`,
+  `yes`, `t` or `true` (TRUE), or `n`, `no`, `f` or `false` (FALSE), is
+  read now, in any case and with spaces around it; any other value stops
+  the load and names its rows, so a file that holds “unknown” in this
+  column stops until it is corrected.
+  [`convertFromCenter()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertFromCenter.md)
+  and
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  behave the same way.
 
 - Fixed: when a pedigree file’s geographic origin column was headed in
   all lowercase (`geographicorigin`), the column was renamed to
@@ -655,6 +688,11 @@ export workflows, and longitudinal monitoring of colony genetic health.
 
 **Minor**
 
+- Fixed: uploading kinship overrides on the Genetic Value Analysis tab
+  as an Excel file stopped with “‘kinship’ column must be numeric”, and
+  the analysis went on without the file. An Excel file now works as a
+  CSV of the same table does, in the app and in
+  [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md).
 - Fixed: the Japanese macaque example file `deidentified_jmac_ped.csv`
   could not be loaded in the app. It is now rebuilt from a 2018 studbook
   (2,590 animals, de-identified, 819 with a recorded sire) and loads

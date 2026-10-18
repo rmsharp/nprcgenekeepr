@@ -18,10 +18,11 @@ convertFromCenter(fromCenter)
 ## Value
 
 A logical vector specifying TRUE if an animal is from the center
-otherwise FALSE. An `NA` input stays `NA`. Any other value that is not
-recognized as a yes or a no (including numbers such as `1L` and empty
-strings), or that matches both, stops with an error naming the offending
-rows.
+otherwise FALSE. An `NA` input stays `NA`. A value is read only when the
+whole text, ignoring case and any spaces around it, is `y`, `yes`, `t`
+or `true` (TRUE), or `n`, `no`, `f` or `false` (FALSE). Any other value,
+such as `"unknown"`, `"maybe"`, a number such as `1L` or an empty
+string, stops with an error naming the offending rows.
 
 ## Examples
 

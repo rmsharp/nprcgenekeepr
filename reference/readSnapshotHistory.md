@@ -9,10 +9,13 @@ one row per recorded snapshot in the 27-column version-1 schema (see
 for the column groups). Excel (`.xls`/`.xlsx`) and delimited text
 (`.csv`/`.txt`) files are both accepted, mirroring
 [`readKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md).
-Excel files are read with every column as text, so the numeric columns
-(e.g. `schemaVersion`) must be converted before
+Excel files are read with every column as text and then the numeric
+columns (e.g. `schemaVersion`) are converted to numbers, so an Excel
+file and a delimited text file of the same table give the same result. A
+numeric column that holds a value that is not a number is left as text
+and
 [`checkSnapshotHistory`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSnapshotHistory.md)
-will accept them. Delimited text files need no such conversion.
+stops, naming it.
 
 ## Usage
 

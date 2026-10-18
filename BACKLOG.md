@@ -219,8 +219,22 @@ not yet taken**, the report proposes one per finding with a
 recommendation: CC5 is the owner’s call, and CB3, CB4, CC2, CC3 and CD3
 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88`
 still says “Summary Statistics relationship table” (present S890; not
-re-checked); 6e 46 candidates CE-CL, and `R/makeGroupNum.R` still says
-`numGp` “Default is 1” while the examples in
+re-checked); 6e 46 candidates CE-CL, re-checked S1003
+(`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`: 1 closed
+by a later session, CF2 in S923; 45 still true, 6 moderate (CE2
+`fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for
+kinship overrides and snapshot history, CI1 example-config API-key
+placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
+**one new moderate, N1: the Mate Pair table pairs animals of unknown
+sex, lists them as sire or dam and pairs an animal with itself**
+(`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option
+(a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
+table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3
+with CJ4, males under the age or with no birth date in sex-ratio groups,
+fixed S1008; the other three (CE4, CE5 and CI1) are the two fix items
+below**, and 13 small wrong statements for one housekeeping session (an
+item below); CL9 is the open item below), and `R/makeGroupNum.R` still
+says `numGp` “Default is 1” while the examples in
 `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass
 deprecated `minParentAge` (all three present S890); 7b/8 CV1 and CV2
 ([`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
@@ -245,17 +259,69 @@ Learning 347, not re-counted; slice 8 left open whether to replace stale
 `file:line` cites in the plans and gap analysis with function names, and
 D’s six parent-to-union edges that still differ in row.
 
-**Every Summary Statistics popover header reads the text “character(0)”
-(READY, Effort S; strict TDD)** (found S994, 2026-10-15, in a real-app
-look at the export popovers) – all 12 popovers of the tab are built with
-`shinyBS::popify(..., title = NULL, ...)` (`R/modSummaryStats.R`, the
-only file that calls `popify`), and the page draws a title bar reading
-“character(0)” above each sentence (headless Chrome, `.popover:visible`
-text; the picture was opened for the owner). **Decision (the owner’s):**
-drop the title bar (content only) or give each popover its own short
-title. The fix needs a render-level test of the popover title;
-`tests/testthat/test_docsAuditHousekeepingWording.R` already reads the
-rendered `addTooltip` calls.
+**Make the Cross-Center check flag an id clash and keep one-sided
+columns (READY, Effort S-M; strict TDD; one session for both)** (ruled
+S1004: fix, option (a) for CE4 and CE5; Findings 5 and 6,
+`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:129-155`;
+fifth of six) – `R/resolveCrossCenterIds.R:190-205`
+(`.checkCrossCenterCollision`) compares only ids not in the mapping, so
+an unmapped Center B `T1` against a mapped Center A `T1` shows “Mapping
+is clean” (0 issues) and the merge holds three rows with id `T1`;
+`:484-509` resolves only columns present on both sides, so a column one
+center recorded is `NA` for a mapped animal, and the whole column
+vanishes when every animal is mapped. The help promises both the check
+(`:359-363`) and the union of columns (`:382`). **Ruled fix:** also flag
+a Center B id equal to a mapped Center A id that is not the mapped one,
+and the mirror case (one more row type, shown with the others); take the
+non-`NA` side for every column and keep any column an input has. The
+module calls the function unchanged (`R/modCrossCenterIdentity.R:311`).
+Fixture to copy: `.ccUploadInputs()` in
+`tests/testthat/test_modCrossCenterIdentity.R:54`.
+
+**Make `getConfigApiKey()` ignore commented lines (READY, Effort S;
+strict TDD)** (ruled S1004: fix, option (a) for CI1, with CI3 in the
+same session; Finding 7,
+`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:157-170`;
+sixth of six) – `R/getConfigApiKey.R:17-24` does not drop `#` lines, so
+the shipped example config
+(`inst/extdata/examples/example_nprcgenekeepr_config:53`, a commented
+`apiKey`) returns “paste-your-labkey-api-key-here”, which
+`R/setLabKeyDefaults.R:47-51` uses before it looks for a netrc file.
+**Ruled fix:** drop comment lines as `getOptionalConfigToken()` does
+(`R/getSpeciesOverridesPath.R:23-27`), tested on the shipped file. CI3:
+`getParamDef(<Center key>, "center")` stops “subscript out of bounds”
+(`R/getParamDef.R:19`). Not run against a LabKey server.
+
+**Move the other Input-tab test upload helpers to the shared one (READY,
+Effort S-M; test-only)** (found S1007, REFACTOR) –
+`tests/testthat/helper-inputTabUpload.R` holds
+`uploadPedigreeFile(path, fileType, separator, minDamAge, minSireAge)`,
+which uploads a file through the real Input module and returns its
+`qcResults()`; `test_modInput_blankCells.R`,
+`test_modInput_placeholder.R` and `test_convertFromCenterThroughQc.R`
+call it. Seven more local copies of the
+`shiny::testServer(modInputServer, ...)` block remain. **Three have the
+same shape** (pedFile, getData, `qcResults()`) and should move:
+`.uploadExemplar()` (`test_examplePedigreeFixtures.R`),
+`uploadExample()` (`test_examplePedigreeTxt.R`), `uploadForQc()`
+(`test_modInput_qcStudbook.R`); check each one’s age inputs first.
+**Four differ:** `inputTabStudbook()`
+(`test_genotypeTutorialsWording.R`), `runOneFile()` and `runSeparate()`
+(`test_modInputOneFileGenotypes.R`,
+`test_modInputSeparateGenotypeNote.R`) use the genotype file-content
+modes and read the cleaned studbook or genotype data, and `run_upload()`
+(`test_modInput_incomplete_final_line.R`) reads `qcSummary()` and a
+warning. One file per commit, run it before and after; a new Input-tab
+test calls `uploadPedigreeFile()` and writes no new copy.
+
+**The 13 small wrong statements of the slice 6e re-check (READY, Effort
+S)** (found S1003; the report’s first minor group,
+`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) – one
+housekeeping session in the S994 shape (help or code fixed, one test
+file; `tests/testthat/test_docsAuditHousekeepingWording.R` is the
+model). The eight candidates in functions nothing in `R/` calls (the
+report’s “No caller in `R/`”) could instead be retired under issue \#37;
+that is the owner’s call at pickup.
 
 **The guide does not name the “groups not in the pedigree” sentence
 (DECISION NEEDED – add a sentence where the owner wants it, or leave;

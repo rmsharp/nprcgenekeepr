@@ -1,7 +1,9 @@
 # Form breeding groups to match a target sex ratio
 
 The sex ratio is the number of non-males (females and animals of other
-or unknown sex) per male.
+or unknown sex) per male. A male is placed only if he is at least
+`minAge` years old; a male younger than that, or with no birth date, is
+left out of the groups.
 
 ## Usage
 
