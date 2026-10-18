@@ -14,10 +14,7 @@ getConfigApiKey <- function(configFile) {
   if (is.null(configFile) || !file.exists(configFile)) {
     return("")
   }
-  lines <- readLines(configFile, skipNul = TRUE)
-  # The shipped example config documents apiKey as a commented line; a
-  # commented line is not a key (see getOptionalConfigToken).
-  lines <- lines[!grepl("^\\s*#", lines)]
+  lines <- readConfigLines(configFile)
   tokenList <- getTokenList(lines)
   idx <- tolower(tokenList$param) == "apikey"
   if (!any(idx)) {

@@ -18,12 +18,7 @@ getOptionalConfigToken <- function(configFile, key) {
   if (is.null(configFile) || !file.exists(configFile)) {
     return("")
   }
-  lines <- readLines(configFile, skipNul = TRUE)
-  # Drop full-line comments so a commented-out "key = value" example line is not
-  # parsed as an active key (getTokenList collapses all lines and does not
-  # itself strip '#' comments). The shipped example config documents these
-  # optional keys as commented lines a user uncomments to activate.
-  lines <- lines[!grepl("^\\s*#", lines)]
+  lines <- readConfigLines(configFile)
   tokenList <- getTokenList(lines)
   idx <- tolower(tokenList$param) == tolower(key)
   if (!any(idx)) {

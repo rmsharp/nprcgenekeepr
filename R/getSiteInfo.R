@@ -54,9 +54,7 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
   config <- getConfigFileName(sysInfo)
 
   if (file.exists(config[["configFile"]])) {
-    lines <- readLines(config[["configFile"]], skipNul = TRUE)
-    # A commented-out setting is not a setting (see getOptionalConfigToken).
-    lines <- lines[!grepl("^\\s*#", lines)]
+    lines <- readConfigLines(config[["configFile"]])
     tokenList <- getTokenList(lines)
     list(
       center = getParamDef(tokenList, "center"),
