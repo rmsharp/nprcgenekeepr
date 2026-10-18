@@ -99,16 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1011 Did
-**Deliverable:** make the Cross-Center check flag an id clash and keep one-sided columns (`BACKLOG.md:167`; ruled S1004, option (a) for CE4 and CE5; fifth of six; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-18 00:56 CDT
-**Status:** Session claimed. Work beginning. Strict TDD: PRE-RED now; RED, GREEN and REFACTOR each wait behind their own gate.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate, REFACTOR taken):** the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (new row type
+`"mappedIdClash"`, `.checkCrossCenterMappedIdClash()`, `R/resolveCrossCenterIds.R:245`; `checkCrossCenterMapping()` tier B, `R/checkCrossCenterMapping.R:77`; `resolveCrossCenterIds()` stops, `:528`), and the merge keeps every column
+either center has (`.padCrossCenterColumn()` `:340`, `.naLikeColumn()` `:15`; `bindPedigreeRows()` `:34` fills with a typed `NA`). Claim `947ee8a38`, RED `b990c3a5a`, GREEN `c8abb20a3`, docs `e4af1205f`, lint `ef4fd80cb`,
+REFACTOR `96b419acd` and `7ef79aaf3`. Not pushed (HEAD 8 commits ahead of origin `9e67602f4`).
+**Owner rulings:** flag only the clash that breaks the file (S1004's "and the mirror case" merges correctly: measured in the tab); the typed-`NA` fix for a Date column only Center B has (day numbers before) is in.
+**Evidence:** 16 new blocks (5 check, 9 resolve, 2 module); full suite 433 files, 3,903 blocks, 0 failed, 0 errors, 187 skipped; `devtools::check()` 0/0/0; lintr 0; the real tab driven headless on `c8abb20a3`; the 10-18 nightly
+`shinytest2` passed 395 (S1010's fix confirmed). Ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 7ea55ae79265 · manifest aa983075d6a2. `NEWS.Rmd:196-203`, the guide `:1146-1151` and `a2interactive.Rmd:1640-1643` say it.
+**Handoff evaluation of S1010: 8/10.** Helped: `:167` with its tags, the fixture cite, the `R_LIBS` recipe, the nightly estimate (held). Missing: the ruled "mirror case" was unmeasured; no way to drive the Cross-Center tab. Wrong: nothing material.
+**Self-assessment: 8/10.** + measured both cases in the module before asking; a mutation run found an unpinned path and a re-run caught a pin block that did not pin it. - a throwing assertion in RED, a driver misstep (`get_download`
+needs the Export tab), one lint finding, "about 13 blocks" said and 15 built.
+**Next:** `BACKLOG.md:168` (`getConfigApiKey()`, sixth, closes slice 6e), then `:178` (Input-tab test helpers) and `:191` (13 small statements). Also open: the DECISION NEEDED items (new, `:235`: a header-only file's extra columns),
+the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass. The push is the owner's call.
+**Gotchas:** run a mutant against a new pin block before committing it (the first one survived: an unmapped Center A animal's Date, bound first, hides the loss); `x[[col]][NA_integer_]` is an `NA` of the column's class
+(`.naLikeColumn()`); the tab has no browser test: scratch `AppDriver`, upload by `crossCenterIdentity-pedAFile`/`-pedBFile`/`-mappingFile`, `app$get_download()` needs the Export tab showing (Learning 977).
 
 ### Sessions 947-1010 (condensed S950 to S1011; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1010: "Generate De-Identified Export Preview" builds when every animal has a missing allele: the guard at `R/modMarkerGenetics.R:855` is `length(gmat) == 0L || is.null(rohTable) ||
-is.null(ped)`, not `req(gmat, rohTable, ped)` (the owner ruled a header-only genotype file stays quiet; strict TDD, two RED-GREEN passes, REFACTOR taken; claim `1fa4f2e5f`, close-out
-`9e67602f4`; 8/10, self 8/10). **Gotchas kept:** `req(x)` also stops for a length-0 value, so `is.null()` is not a neutral swap (probe each `isTruthy()` exit before RED); run a new test on
-the pre-fix source (`git archive <sha>`, a scratch dir, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `R_LIBS=<renv lib>`) to see what it pins; wait on a background job's `EXIT=` line (Learning 976).
+S1010: "Generate De-Identified Export Preview" builds when every animal has a missing allele: the guard at `R/modMarkerGenetics.R:855` is `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`, not `req(gmat, rohTable, ped)`
+(the owner ruled a header-only genotype file stays quiet; strict TDD, two RED-GREEN passes, REFACTOR taken; claim `1fa4f2e5f`, close-out `9e67602f4`; 8/10, self 8/10). **Gotchas kept:** `req(x)` also stops for a length-0 value, so
+`is.null()` is not a neutral swap; run a new test on the pre-fix source (`git archive <sha>`, `R_LIBS=<renv lib>`) to see what it pins (Learning 976).
 S1009: the red scheduled `shinytest2` run diagnosed (no test or code changed): `R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is silently FALSE for a character matrix with an `NA`
 in every row; S977 made a blank allele `NA` and the bundled `example_sequence_genotypes.csv` has 2,070 of 50,000 cells missing, in all 50 animals (claim `22f1c8483`, close-out `f4a96c40e`;
 8/10, self 8/10). **Gotchas kept:** a data frame or a numeric matrix is not affected by that `req()` rule; the unit fixtures `i152Roh*` have no missing calls; to bisect an E2E file use a
@@ -212,18 +221,12 @@ S986-S988: the 6a-6b re-check (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK
 (`R/getDateErrorsAndConvertDatesInPed.R:48-55`; `NEWS.Rmd:423`); `checkChangedColsLst()` counts every rename (`R/checkChangedColsLst.R:37`; `NEWS.Rmd:430`); 8-9/10, self 8/10. **Gotchas kept:**
 `runQcStudbook()` needs `reportChanges = TRUE` to show renames; `qcStudbook(reportErrors = TRUE)` is `NULL` for a clean file; 15 test files read `NEWS.Rmd`/`NEWS.md`; a probe installs into a scratch library,
 never renv; `export VAR` before `Rscript`; start every Bash command with an absolute `cd`; never `git add -A` (the studbook stays untracked), never `git stash` here.
-**Gotchas kept (S956-S960):** `pageText()` keeps HTML comments, so a wording guard counts commented-out copies; a README edit is made in the Rmd and re-knit against a scratch-installed HEAD; the claim commit needs its own
-`CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only.
-**Gotchas kept:** a `panel panel-` hit in `R/` is not a defect, the owner ruled it (S957); `qcStudbook()` gives an animal with one known parent a `U0001`-style placeholder
-for the other, so a raw-versus-QC fixture lists both parents or neither (S958);
-print `skipped` beside `failed` in a RED tally; under `testServer()` an unset input is `NULL`, and `appServer` with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; tests of shown text collapse
-whitespace; to run an old commit's tests, `git archive` it to scratch and `setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; a guarded
-assertion in a RED test is unrun until GREEN; `blockContaining()` finds only column-0 `do_step(`/`shot(` calls; put R code with `\s` in a script file; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
-`test_markerParentageLikelihood.R:647`) fail under desktop load; a Breeding Groups test pedigree needs an `age` column; read a module's selector choices by mocking `updateSelectInput` (`local_mocked_bindings(.package = "nprcgenekeepr")`); a quarto render
-of the guide needs the package installed; grep a wait sentinel unanchored and run `ps` without `grep -v grep` before naming a cause;
-the trimmer neither stages nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); a new receipt goes directly above the newest one; read `dashboard.html` with `python3 -I` and `re`, not `ugrep`;
-sweep with `git grep`, never `grep -r` (it walks
-`docs/archive/` and five `.claude/worktrees/` copies).
+**Gotchas kept (S956-S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only; the trimmer neither stages
+nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); a new receipt goes directly above the newest one; a `panel panel-` hit in `R/` is not a defect (the owner ruled it, S957); `qcStudbook()` gives an animal
+with one known parent a `U0001`-style placeholder for the other, so a raw-versus-QC fixture lists both parents or neither (S958); print `skipped` beside `failed` in a RED tally; under `testServer()` an unset input is `NULL`, and `appServer`
+with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; a guarded assertion in a RED test is unrun until GREEN; to run an old commit's tests, `git archive` it to scratch and
+`setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
+`test_markerParentageLikelihood.R:647`) fail under desktop load; put R code with `\s` in a script file; sweep with `git grep`, never `grep -r` (it walks `docs/archive/` and five `.claude/worktrees/` copies).
 
 ### Sessions 942-946 (condensed S943-S952; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 Docs-audit slice 2, phases 3b to 4b, and one table fix (strict TDD where code changed): S942 retook 12 guide pictures; S943 built 3 export tables from the buttons' own code (`colony-manager-guide.qmd:468`,

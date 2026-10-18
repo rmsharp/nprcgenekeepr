@@ -145,7 +145,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **one new moderate, N1: the Mate Pair table pairs animals of unknown sex, lists them as sire or dam and pairs an
       animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
       table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
-      the other three (CE4, CE5 and CI1) are the two fix items below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
+      CE4 and CE5, the Cross-Center check and merge, fixed S1011 (`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`, `NEWS.Rmd`);
+      the last, CI1, is the fix item below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
       and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
@@ -163,19 +164,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **Make the Cross-Center check flag an id clash and keep one-sided columns (READY, Effort S-M; strict TDD; one
-      session for both)** (ruled S1004: fix, option (a) for CE4 and CE5; Findings 5 and 6,
-      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:129-155`; fifth of six) --
-      `R/resolveCrossCenterIds.R:190-205` (`.checkCrossCenterCollision`) compares only ids not in the mapping, so an
-      unmapped Center B `T1` against a mapped Center A `T1` shows "Mapping is clean" (0 issues) and the merge holds
-      three rows with id `T1`; `:484-509` resolves only columns present on both sides, so a column one center recorded
-      is `NA` for a mapped animal, and the whole column vanishes when every animal is mapped. The help promises both
-      the check (`:359-363`) and the union of columns (`:382`). **Ruled fix:** also flag a Center B id equal to a
-      mapped Center A id that is not the mapped one, and the mirror case (one more row type, shown with the others);
-      take the non-`NA` side for every column and keep any column an input has. The module calls the function
-      unchanged (`R/modCrossCenterIdentity.R:311`). Fixture to copy: `.ccUploadInputs()` in
-      `tests/testthat/test_modCrossCenterIdentity.R:54`.
 
 - [ ] **Make `getConfigApiKey()` ignore commented lines (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a)
       for CI1, with CI3 in the same session; Finding 7,
@@ -243,6 +231,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       searched). The owner ruled S989, at the PRE-RED scope question, to fix `checkRequiredCols()` only (shipped S989).
       **Decision:** (a) leave it (script-only); (b) fix each site, each with a test; (c) check once at the front of
       `qcStudbook()` and stop with one message naming the column's position (the wording is the owner's).
+
+- [ ] **The Cross-Center merge drops the extra columns of a pedigree that has a header and no animals (DECISION NEEDED --
+      leave it, or keep every input's columns, Effort S; strict TDD)** (found S1011, left alone at the owner's RED gate) --
+      `bindPedigreeRows()` (`R/resolveCrossCenterIds.R`) removes zero-row frames before it collects column names. Measured
+      S1011 at function level (not in the tab): a Center A file with a header (`id`, `sire`, `dam`, `sex`) and no animals,
+      an empty mapping and a Center B file with animals gives a merged table with `id`, `sire`, `dam` only, and
+      `checkCrossCenterMapping()` reports 0 issues; with one mapping row the merge stops "mapping references idA value(s)
+      not present in pedA$id", so only an empty mapping reaches it. **Decision:** (a) leave it (a file with no animals has
+      nothing to carry); (b) keep the columns of every input, empty or not.
 
 - [ ] **The archive pointers name `docs/archive/`, but the shards sit in `methodology/archive/` (DECISION NEEDED -- leave them, rewrite them, or fix the trim tool, Effort S)** (found S1001, 2026-10-15, while trimming `CHANGELOG.md`) -- measured S1001 by resolving each pointer against its own file's directory: 52 do not resolve -- `methodology/SESSION_NOTES.md` 23 of 23, `methodology/HANDOFFS.md` 17 of 18, and the 12 in `methodology/archive/CHANGELOG-through-2026-10-14.md` (the live `CHANGELOG.md` has one pointer, and it resolves). Every target exists by name in `methodology/archive/`: the sync after S960 moved the shard directory from `docs/archive/` and the older pointers were not rewritten (the S991 and S1001 trims already write `methodology/archive/`). The 12 CHANGELOG pointers were already dead before the S1001 trim (the unmodified `HEAD` copy had the same links), so no proof broke: `verify.sh` and `--reverify` hold. **Decision:** (a) leave it (a reader finds a shard by name in `methodology/archive/`); (b) rewrite the 52 pointers (the 12 sit inside a frozen shard, so that one changes the shard's bytes and its `verify.sh` proof would have to be re-derived, not tried); (c) change `methodology_trim.py` so a pointer is written relative to where the shard really is (a synced file: see the local-customization checklist in `docs/conventions/CLOSEOUT_CHECKLISTS.md`).
 
