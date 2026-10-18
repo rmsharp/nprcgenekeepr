@@ -98,26 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1012 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate, REFACTOR taken):** the shipped example configuration no longer gives `getConfigApiKey()` a key (it returned
-"paste-your-labkey-api-key-here", which beat the netrc file in `setLabKeyDefaults()`), and a setting written in another case is read (CI1 and CI3, the sixth and last slice 6e fix ruled S1004).
-Claim `7aaa8e1d7`, RED `f43d45c26`, GREEN `afaab0499`, NEWS `f8b4d9ea4`, REFACTOR `b2b2269a8`, pin `a5bc350bc`, REFACTOR `e41fdfac8`. Not pushed (HEAD 16 commits ahead of origin `9e67602f4`).
-**Owner rulings (two PRE-RED questions):** fix the shared cause, so `readConfigLines()` (`R/readConfigLines.R:16`) is read by `getConfigApiKey()` (`:17`), `getOptionalConfigToken()`
-(`R/getSpeciesOverridesPath.R:21`) and the exported `getSiteInfo()` (`:57`); `getParamDef()` (`R/getParamDef.R:21-24`) reads the exact-case name first, then ignores case.
-**Evidence:** 18 new blocks (14 RED, 1 pin, 3 helper); full suite 434 files, 3,921 blocks, 0 failed, 0 errors, 187 skipped; `devtools::check()` 0/0/0; `lint_package()` 0; ten mutants, one survivor (M9) now killed by a
-pin; unmocked: the shipped config with no netrc stops "No LabKey credential found", with a `~/.netrc` it uses netrc. Ratchet 1/1 pass. `NEWS.Rmd:633-642` (two "Fixed:" bullets).
-**Handoff evaluation of S1011: 9/10.** Helped: `:168` had the cites and the shipped-file test; "ruled S1004, option (a)" saved a scope question. Missing: which CI3 fix was meant (read `Center` or refuse);
-no hint that `getSiteInfo()` reads the file the same way. Wrong: nothing material.
-**Self-assessment: 8/10.** + measured the named cases and the exported neighbour before RED; plain-words owner questions; RED had no thrown errors; a mutation run found a one-direction pin. - wrote "17 existing"
-and "31 blocks" (20 and 34) in a commit message and a gate; the RED set tested one direction of the case fold.
-**Next:** **the owner asked (after close-out) that the next session revisit the documentation for the config-file parser behind `getConfigApiKey()`, where a standard parser instead of the custom one is under
-consideration: `BACKLOG.md:168` (DECISION NEEDED; one decision, the owner says the documentation and the parser are intertwined; rules traced).** Then `:206` (Input-tab test upload helpers, READY, S-M, test-only) and `:219`
-(13 small statements, READY, S). Also open: `:272` (a trailing `#` comment joins its value; settle with `:168`), `:263` (a header-only file's extra columns), the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md`
-compression pass. The push is the owner's call: `R/` changed, so it starts all four push workflows (estimate: green; not measured on CI), and no nightly `shinytest2` run has built these commits.
-**Gotchas:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does"; test a lowercase file asked for in camel case; config tests put a file under `HOME` with `withr::local_envvar`
-(`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the shipped file (`tests/testthat/helper-exampleConfig.R:8`); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
+### What Session 1013 Did
+**Deliverable:** settle the config-file format and its parser as one decision (`BACKLOG.md:168`; the owner's request after the S1012 close-out; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-18
+**Status:** Session claimed. Work beginning. A decision session: no code and no tests; the ruling is recorded before any code, and any code is a later strict TDD session. S1012's block folded into the condensed list below.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1011 (condensed S950 to S1012; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1012 (condensed S950 to S1013; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1012: the shipped example configuration no longer gives `getConfigApiKey()` a key; one shared reader, `readConfigLines()` (`R/readConfigLines.R:16`), drops comment lines for `getConfigApiKey()`,
+`getOptionalConfigToken()` and `getSiteInfo()`; a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`) (the owner ruled: fix the shared cause, accept another case; strict TDD,
+REFACTOR taken twice plus a pin; claim `7aaa8e1d7`, close-out `2e894b2b4`; evaluation of S1011 9/10, self 8/10). **Gotchas kept:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does";
+test a lowercase file asked for in camel case; config tests put a file under `HOME` with `withr::local_envvar` (`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the shipped file
+(`tests/testthat/helper-exampleConfig.R:8`); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
 S1011: the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`; `R/checkCrossCenterMapping.R:77`), and the
 merge keeps every column either center has (`.padCrossCenterColumn()` `:340`, `.naLikeColumn()` `:15`) (claim `947ee8a38`, close-out `defa6e9da`; 8/10, self 8/10). **Gotchas kept:** measure each named case of a
 ruled fix before RED; run a mutant against a new pin block before committing it; the Cross-Center tab has no browser test (scratch `AppDriver`, Learning 977).
