@@ -99,35 +99,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1012 Did
-**Deliverable:** make `getConfigApiKey()` ignore commented lines, with the `getParamDef()` Center-key crash (CI3) in the same session (`BACKLOG.md:168`; ruled S1004, option (a) for CI1; sixth of six, closes slice 6e; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-18
-**Status:** Session claimed. Work beginning. Strict TDD: PRE-RED now; RED, GREEN and REFACTOR each wait behind their own gate. S1011's block folded into the condensed list below.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate, REFACTOR taken):** the shipped example configuration no longer gives `getConfigApiKey()` a key (it returned
+"paste-your-labkey-api-key-here", which beat the netrc file in `setLabKeyDefaults()`), and a setting written in another case is read (CI1 and CI3, the sixth and last slice 6e fix ruled S1004).
+Claim `7aaa8e1d7`, RED `f43d45c26`, GREEN `afaab0499`, NEWS `f8b4d9ea4`, REFACTOR `b2b2269a8`, pin `a5bc350bc`, REFACTOR `e41fdfac8`. Not pushed (HEAD 16 commits ahead of origin `9e67602f4`).
+**Owner rulings (two PRE-RED questions):** fix the shared cause, so `readConfigLines()` (`R/readConfigLines.R:16`) is read by `getConfigApiKey()` (`:17`), `getOptionalConfigToken()`
+(`R/getSpeciesOverridesPath.R:21`) and the exported `getSiteInfo()` (`:57`); `getParamDef()` (`R/getParamDef.R:21-24`) reads the exact-case name first, then ignores case.
+**Evidence:** 18 new blocks (14 RED, 1 pin, 3 for the helper); full suite 434 files, 3,921 blocks, 0 failed, 0 errors, 187 skipped; `devtools::check()` 0/0/0; `lint_package()` 0; ten mutants, nine killed and
+one survivor (M9) that a pin now kills; the real unmocked path: the shipped config with no netrc stops "No LabKey credential found", with a `~/.netrc` it uses netrc. Ratchet: 1/1 pass · 0 fail · 0 unmeasured ·
+results 3e4f7e3ad012 · manifest aa983075d6a2. `NEWS.Rmd:633-642` says it (two "Fixed:" bullets).
+**Handoff evaluation of S1011: 9/10.** Helped: `:168` was the right block with cites and the shipped-file test; "ruled S1004, option (a)" saved a scope question; the mutation-on-pin-blocks gotcha caught M9.
+Missing: the block did not say which CI3 fix was meant (read `Center` or refuse), so it went to the owner; no hint that `getSiteInfo()` reads the file the same way. Wrong: nothing material.
+**Self-assessment: 8/10.** + measured every named case and the exported neighbour before RED; two plain-words owner questions with measured rows; RED had no thrown errors; a mutation run found a one-direction
+pin and a block now kills it; ran the real unmocked path on the final code. - wrote "17 existing" and "31 blocks" (20 and 34) in a commit message and a gate; the RED set tested one direction of the case fold.
+**Next:** `BACKLOG.md:168` (the other Input-tab test upload helpers, READY, Effort S-M, test-only), then `:181` (13 small statements, READY, Effort S). Also open: the DECISION NEEDED items (new, `:234`: a `#` comment
+at the end of a setting's line is read as part of its value; `:225`: a header-only file's extra columns), the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass. The push is the owner's call:
+`R/` changed, so a push starts all four push workflows (estimate: green, as the local suite and check were; not measured on CI), and no nightly `shinytest2` run has built these commits.
+**Gotchas:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does" (three readers, one filtered); test a lowercase file asked for in camel case (`tests/testthat/test_getParamDef.R`); config tests
+put a file under `HOME` with `withr::local_envvar` (`tests/testthat/test_getSiteInfo.R:98`) and `exampleConfigPath()` (`tests/testthat/helper-exampleConfig.R:8`) is the shipped file; wait on a job's `EXIT=` line,
+not a launcher shell's "completed" notice; `devtools::check()` takes over 10 min (Learning 978).
 
 ### Sessions 947-1011 (condensed S950 to S1012; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1011: the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`; `R/checkCrossCenterMapping.R:77`;
-the stop at `:528`), and the merge keeps every column either center has (`.padCrossCenterColumn()` `:340`, `.naLikeColumn()` `:15`; typed-`NA` fill in `bindPedigreeRows()` `:34`) (the owner ruled: flag only the clash that
-breaks the file, and take the Date-column fix; strict TDD, REFACTOR taken; claim `947ee8a38`, close-out `defa6e9da`; 8/10, self 8/10; 8 commits not pushed at close-out). **Gotchas kept:** measure each named case of a ruled
-fix before RED (the "mirror case" merged correctly); run a mutant against a new pin block before committing it; `x[[col]][NA_integer_]` is an `NA` of the column's class (`.naLikeColumn()`); the Cross-Center tab has no
-browser test: scratch `AppDriver`, upload by `crossCenterIdentity-pedAFile`/`-pedBFile`/`-mappingFile`, `app$get_download()` needs the Export tab showing (Learning 977).
-S1010: "Generate De-Identified Export Preview" builds when every animal has a missing allele: the guard at `R/modMarkerGenetics.R:855` is `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`, not `req(gmat, rohTable, ped)`
-(the owner ruled a header-only genotype file stays quiet; strict TDD, two RED-GREEN passes, REFACTOR taken; claim `1fa4f2e5f`, close-out `9e67602f4`; 8/10, self 8/10). **Gotchas kept:** `req(x)` also stops for a length-0 value, so
-`is.null()` is not a neutral swap; run a new test on the pre-fix source (`git archive <sha>`, `R_LIBS=<renv lib>`) to see what it pins (Learning 976).
-S1009: the red scheduled `shinytest2` run diagnosed (no test or code changed): `R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is silently FALSE for a character matrix with an `NA`
-in every row; S977 made a blank allele `NA` and the bundled `example_sequence_genotypes.csv` has 2,070 of 50,000 cells missing, in all 50 animals (claim `22f1c8483`, close-out `f4a96c40e`;
-8/10, self 8/10). **Gotchas kept:** a data frame or a numeric matrix is not affected by that `req()` rule; the unit fixtures `i152Roh*` have no missing calls; to bisect an E2E file use a
-scratch `git worktree`, a per-commit scratch library and `R_LIBS=<lib>:<renv lib>` for a probe too; the ROH E2E file takes about 1.5 min and an install 10 s (Learning 975).
-S1008: with a sex ratio set a male is placed only as a known adult male, so one under `minAge` or with no birth date is left out and listed under Unused animals
-(`R/fillGroupMembersWithSexRatio.R:84-89`; `R/groupAddAssign.R:56-63`; `NEWS.Rmd:277`; the owner chose to leave undated males out too; strict TDD, REFACTOR skipped by the owner;
-9/10, self 8/10). **Gotchas kept:** read a box's members in the real app through the Group Detail `DataTable().page.len(-1).draw()` and scope tab clicks to
-`#breedingGroups-moduleContainer`; the ratio on the rhesus file was about 3 before and after, so "0.7" holds only for `qcPed` called directly; `qcPed` has no `status` column;
+S1011: the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`; `R/checkCrossCenterMapping.R:77`), and the
+merge keeps every column either center has (`.padCrossCenterColumn()` `:340`, `.naLikeColumn()` `:15`) (claim `947ee8a38`, close-out `defa6e9da`; 8/10, self 8/10). **Gotchas kept:** measure each named case of a
+ruled fix before RED; run a mutant against a new pin block before committing it; the Cross-Center tab has no browser test (scratch `AppDriver`, Learning 977).
+S1010: "Generate De-Identified Export Preview" builds when every animal has a missing allele: the guard at `R/modMarkerGenetics.R:855` is `length(gmat) == 0L || is.null(rohTable) || is.null(ped)` (claim `1fa4f2e5f`,
+close-out `9e67602f4`; 8/10, self 8/10). **Gotchas kept:** `req(x)` also stops for a length-0 value, so `is.null()` is not a neutral swap; run a new test on the pre-fix source (`git archive <sha>`) to see what it pins (Learning 976).
+S1009: the red scheduled `shinytest2` run diagnosed (no code changed): `R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE for a character matrix with an `NA` in every row; the bundled example genotype
+file has 2,070 of 50,000 cells missing, in all 50 animals (claim `22f1c8483`, close-out `f4a96c40e`; 8/10, self 8/10). **Gotchas kept:** to bisect an E2E file use a scratch `git worktree`, a per-commit scratch
+library and `R_LIBS=<lib>:<renv lib>`; the ROH E2E file takes about 1.5 min (Learning 975).
+S1008: with a sex ratio set a male is placed only as a known adult male; one under `minAge` or with no birth date is left out and listed under Unused animals (`R/fillGroupMembersWithSexRatio.R:84-89`;
+`R/groupAddAssign.R:56-63`; `NEWS.Rmd:277`; REFACTOR skipped by the owner; 9/10, self 8/10). **Gotchas kept:** read a box's members in the real app through the Group Detail `DataTable().page.len(-1).draw()`;
 run the benchmark blocks on the previous commit too before calling a failure new (Learning 974).
-S1007: `convertFromCenter()` reads only whole values, so a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; `NEWS.Rmd`; the owner kept
-stray spaces; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** `AppDriver` needs `NOT_CRAN=true`; a scratch install needs `R_LIBS=<scratch>:<renv library>` and `Rscript` run from the repo
-root; `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
-S1006: the Mate Pair table pairs only animals recorded male or female and says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`; `NEWS.Rmd`; strict TDD, REFACTOR taken; 9/10, self
-8/10). **Gotchas kept:** no bundled data has an unsexed living animal, so showing a defect needs a hand-set U; an in-memory proof patches the attached `package:` copy as well as the namespace; a `renderUI`
-returning `NULL` reads as `""`; `R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`).
+S1007: `convertFromCenter()` reads only whole values; a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; 9/10, self 8/10). **Gotchas kept:** `AppDriver`
+needs `NOT_CRAN=true`; a scratch install needs `R_LIBS=<scratch>:<renv library>`; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
+S1006: the Mate Pair table pairs only animals recorded male or female and says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`; 9/10, self 8/10). **Gotchas kept:** no bundled data has
+an unsexed living animal, so a defect needs a hand-set U; `R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`).
 S1005: an Excel upload of kinship overrides or snapshot history works (`R/convertExcelNumericColumns.R`; `R/snapshotSchemaColumns.R`; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** Learning
 971 (a smoke run from the repo root tests the working tree); `writeTestXlsx()` (`tests/testthat/helper-excelFixtures.R`) builds a temporary workbook.
 S1004: the owner's rulings on the seven slice 6e findings recorded: fix all seven, option (a) each time (a decision session, no code; 9/10, self 8/10). S1003: the 46 slice 6e candidates

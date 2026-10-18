@@ -146,7 +146,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
       table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
       CE4 and CE5, the Cross-Center check and merge, fixed S1011 (`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`, `NEWS.Rmd`);
-      the last, CI1, is the fix item below**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
+      CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
       and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
@@ -164,16 +164,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **Make `getConfigApiKey()` ignore commented lines (READY, Effort S; strict TDD)** (ruled S1004: fix, option (a)
-      for CI1, with CI3 in the same session; Finding 7,
-      `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:157-170`; sixth of six) --
-      `R/getConfigApiKey.R:17-24` does not drop `#` lines, so the shipped example config
-      (`inst/extdata/examples/example_nprcgenekeepr_config:53`, a commented `apiKey`) returns
-      "paste-your-labkey-api-key-here", which `R/setLabKeyDefaults.R:47-51` uses before it looks for a netrc file.
-      **Ruled fix:** drop comment lines as `getOptionalConfigToken()` does (`R/getSpeciesOverridesPath.R:23-27`),
-      tested on the shipped file. CI3: `getParamDef(<Center key>, "center")` stops "subscript out of bounds"
-      (`R/getParamDef.R:19`). Not run against a LabKey server.
 
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
       REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
@@ -240,6 +230,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `checkCrossCenterMapping()` reports 0 issues; with one mapping row the merge stops "mapping references idA value(s)
       not present in pedA$id", so only an empty mapping reaches it. **Decision:** (a) leave it (a file with no animals has
       nothing to carry); (b) keep the columns of every input, empty or not.
+
+- [ ] **A `#` comment at the end of a setting's own line is read as part of its value (DECISION NEEDED -- leave it and say
+      so in the example file, or strip it, Effort S; strict TDD)** (found S1012, left alone by design) -- `readConfigLines()`
+      (`R/readConfigLines.R:16`) drops only full-line comments, as ruled S1004. Measured S1012 at function level (not through
+      the app) with `readConfigLines()`, `getTokenList()` and `getParamDef()`: `center = SNPRC # the center` reads `SNPRC`,
+      `#`, `the`, `center`, and `mapPedColumns = ("id", "sex") # two columns` reads `id`, `sex`, `#`, `two`, `columns`, so
+      `getSiteInfo()` would return those vectors; `getConfigApiKey()` and `getOptionalConfigToken()` take the first token and
+      are unaffected. The shipped example file uses full-line comments only. **Decision:** (a) leave it and add a line to the
+      example file saying a comment must start its own line; (b) strip from the first `#` outside quotes to the end of the
+      line (a `#` inside a quoted value, such as a URL fragment, must survive), with tests.
 
 - [ ] **The archive pointers name `docs/archive/`, but the shards sit in `methodology/archive/` (DECISION NEEDED -- leave them, rewrite them, or fix the trim tool, Effort S)** (found S1001, 2026-10-15, while trimming `CHANGELOG.md`) -- measured S1001 by resolving each pointer against its own file's directory: 52 do not resolve -- `methodology/SESSION_NOTES.md` 23 of 23, `methodology/HANDOFFS.md` 17 of 18, and the 12 in `methodology/archive/CHANGELOG-through-2026-10-14.md` (the live `CHANGELOG.md` has one pointer, and it resolves). Every target exists by name in `methodology/archive/`: the sync after S960 moved the shard directory from `docs/archive/` and the older pointers were not rewritten (the S991 and S1001 trims already write `methodology/archive/`). The 12 CHANGELOG pointers were already dead before the S1001 trim (the unmodified `HEAD` copy had the same links), so no proof broke: `verify.sh` and `--reverify` hold. **Decision:** (a) leave it (a reader finds a shard by name in `methodology/archive/`); (b) rewrite the 52 pointers (the 12 sit inside a frozen shard, so that one changes the shard's bytes and its `verify.sh` proof would have to be re-derived, not tried); (c) change `methodology_trim.py` so a pointer is written relative to where the shard really is (a synced file: see the local-customization checklist in `docs/conventions/CLOSEOUT_CHECKLISTS.md`).
 
