@@ -165,6 +165,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
+- [ ] **Revisit the config-file parser: write down its real rules, and decide whether a standard parser should replace the
+      custom one (DECISION NEEDED -- owner-requested for the next session, 2026-10-18, after the S1012 close-out; Effort S
+      to document, M-L to replace)** (the owner asked that the next session revisit the documentation for the parser
+      behind `getConfigApiKey()`, where a standard parser in place of the custom one is under consideration) -- the custom
+      parser is `getTokenList()` (`R/getTokenList.R`, exported; its help names no rules). `readConfigLines()`
+      (`R/readConfigLines.R:16`) drops full-line comments before it, and `getConfigApiKey()`, `getOptionalConfigToken()`
+      and `getSiteInfo()` read through both. **Its rules, traced S1012:** join all lines with a space; delete every double
+      quote; put spaces around every `=`; split on whitespace and commas; the token before an `=` is a setting's name; its
+      value is every token up to the token before the next name (the last runs to the end); remove `(` and `)`.
+      **Where the example file's own format notes (`inst/extdata/examples/example_nprcgenekeepr_config:1-39`) differ from
+      that, measured S1012 at function level:** an unquoted URL stays one term (the notes say it breaks into four:
+      `:` and `/` are not separators); a quoted value that holds a space still splits (`"/my folder/EHR"` gives `/my` and
+      `folder/EHR`, because the quotes are deleted before the split); a semicolon does not separate terms (`Id;` stays
+      `Id;`, the notes say it does). Right as written: parentheses ignored, comma or newline separated, empty lines
+      ignored, full-line `#` ignored. **Also from these rules:** a `#` comment ending a setting's line joins its value (the
+      item below), and a comment that holds an `=` makes a bogus second setting. **To decide:** (a) keep the custom parser
+      and write its rules into the `getTokenList()` help, the example file and the guide, correcting the three statements
+      above (tests that pin each stated rule); (b) move to a standard format (candidates to evaluate: `yaml`, listed under
+      Suggests and called nowhere in `R/`; INI or plain `key=value` readers; TOML or JSON), which settles the comment,
+      quote and separator cases by definition but changes the file every center's existing `~/.nprcgenekeepr_config` is
+      written in, so it needs a migration path (read both for a release, a converter, or a warning) and a decision on the
+      exported `getTokenList()` (keep or deprecate). The trailing-comment decision below is moot under (b): settle the two
+      together. Strict TDD for any code; show the owner one proposed sentence per place for any wording change.
+
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
       REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
       minDamAge, minSireAge)`, which uploads a file through the real Input module and returns its `qcResults()`;
@@ -239,7 +263,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `getSiteInfo()` would return those vectors; `getConfigApiKey()` and `getOptionalConfigToken()` take the first token and
       are unaffected. The shipped example file uses full-line comments only. **Decision:** (a) leave it and add a line to the
       example file saying a comment must start its own line; (b) strip from the first `#` outside quotes to the end of the
-      line (a `#` inside a quoted value, such as a URL fragment, must survive), with tests.
+      line (a `#` inside a quoted value, such as a URL fragment, must survive), with tests. Settle it together with the
+      parser item at the top of this list: a standard parser would make it moot.
 
 - [ ] **The archive pointers name `docs/archive/`, but the shards sit in `methodology/archive/` (DECISION NEEDED -- leave them, rewrite them, or fix the trim tool, Effort S)** (found S1001, 2026-10-15, while trimming `CHANGELOG.md`) -- measured S1001 by resolving each pointer against its own file's directory: 52 do not resolve -- `methodology/SESSION_NOTES.md` 23 of 23, `methodology/HANDOFFS.md` 17 of 18, and the 12 in `methodology/archive/CHANGELOG-through-2026-10-14.md` (the live `CHANGELOG.md` has one pointer, and it resolves). Every target exists by name in `methodology/archive/`: the sync after S960 moved the shard directory from `docs/archive/` and the older pointers were not rewritten (the S991 and S1001 trims already write `methodology/archive/`). The 12 CHANGELOG pointers were already dead before the S1001 trim (the unmodified `HEAD` copy had the same links), so no proof broke: `verify.sh` and `--reverify` hold. **Decision:** (a) leave it (a reader finds a shard by name in `methodology/archive/`); (b) rewrite the 52 pointers (the 12 sit inside a frozen shard, so that one changes the shard's bytes and its `verify.sh` proof would have to be re-derived, not tried); (c) change `methodology_trim.py` so a pointer is written relative to where the shard really is (a synced file: see the local-customization checklist in `docs/conventions/CLOSEOUT_CHECKLISTS.md`).
 

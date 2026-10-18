@@ -104,19 +104,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Claim `7aaa8e1d7`, RED `f43d45c26`, GREEN `afaab0499`, NEWS `f8b4d9ea4`, REFACTOR `b2b2269a8`, pin `a5bc350bc`, REFACTOR `e41fdfac8`. Not pushed (HEAD 16 commits ahead of origin `9e67602f4`).
 **Owner rulings (two PRE-RED questions):** fix the shared cause, so `readConfigLines()` (`R/readConfigLines.R:16`) is read by `getConfigApiKey()` (`:17`), `getOptionalConfigToken()`
 (`R/getSpeciesOverridesPath.R:21`) and the exported `getSiteInfo()` (`:57`); `getParamDef()` (`R/getParamDef.R:21-24`) reads the exact-case name first, then ignores case.
-**Evidence:** 18 new blocks (14 RED, 1 pin, 3 for the helper); full suite 434 files, 3,921 blocks, 0 failed, 0 errors, 187 skipped; `devtools::check()` 0/0/0; `lint_package()` 0; ten mutants, nine killed and
-one survivor (M9) that a pin now kills; the real unmocked path: the shipped config with no netrc stops "No LabKey credential found", with a `~/.netrc` it uses netrc. Ratchet: 1/1 pass · 0 fail · 0 unmeasured ·
-results 3e4f7e3ad012 · manifest aa983075d6a2. `NEWS.Rmd:633-642` says it (two "Fixed:" bullets).
-**Handoff evaluation of S1011: 9/10.** Helped: `:168` was the right block with cites and the shipped-file test; "ruled S1004, option (a)" saved a scope question; the mutation-on-pin-blocks gotcha caught M9.
-Missing: the block did not say which CI3 fix was meant (read `Center` or refuse), so it went to the owner; no hint that `getSiteInfo()` reads the file the same way. Wrong: nothing material.
-**Self-assessment: 8/10.** + measured every named case and the exported neighbour before RED; two plain-words owner questions with measured rows; RED had no thrown errors; a mutation run found a one-direction
-pin and a block now kills it; ran the real unmocked path on the final code. - wrote "17 existing" and "31 blocks" (20 and 34) in a commit message and a gate; the RED set tested one direction of the case fold.
-**Next:** `BACKLOG.md:168` (the other Input-tab test upload helpers, READY, Effort S-M, test-only), then `:181` (13 small statements, READY, Effort S). Also open: the DECISION NEEDED items (new, `:234`: a `#` comment
-at the end of a setting's line is read as part of its value; `:225`: a header-only file's extra columns), the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md` compression pass. The push is the owner's call:
-`R/` changed, so a push starts all four push workflows (estimate: green, as the local suite and check were; not measured on CI), and no nightly `shinytest2` run has built these commits.
-**Gotchas:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does" (three readers, one filtered); test a lowercase file asked for in camel case (`tests/testthat/test_getParamDef.R`); config tests
-put a file under `HOME` with `withr::local_envvar` (`tests/testthat/test_getSiteInfo.R:98`) and `exampleConfigPath()` (`tests/testthat/helper-exampleConfig.R:8`) is the shipped file; wait on a job's `EXIT=` line,
-not a launcher shell's "completed" notice; `devtools::check()` takes over 10 min (Learning 978).
+**Evidence:** 18 new blocks (14 RED, 1 pin, 3 helper); full suite 434 files, 3,921 blocks, 0 failed, 0 errors, 187 skipped; `devtools::check()` 0/0/0; `lint_package()` 0; ten mutants, one survivor (M9) now killed by a
+pin; unmocked: the shipped config with no netrc stops "No LabKey credential found", with a `~/.netrc` it uses netrc. Ratchet 1/1 pass. `NEWS.Rmd:633-642` (two "Fixed:" bullets).
+**Handoff evaluation of S1011: 9/10.** Helped: `:168` had the cites and the shipped-file test; "ruled S1004, option (a)" saved a scope question. Missing: which CI3 fix was meant (read `Center` or refuse);
+no hint that `getSiteInfo()` reads the file the same way. Wrong: nothing material.
+**Self-assessment: 8/10.** + measured the named cases and the exported neighbour before RED; plain-words owner questions; RED had no thrown errors; a mutation run found a one-direction pin. - wrote "17 existing"
+and "31 blocks" (20 and 34) in a commit message and a gate; the RED set tested one direction of the case fold.
+**Next:** **the owner asked (after close-out) that the next session revisit the documentation for the config-file parser behind `getConfigApiKey()`, where a standard parser instead of the custom one is under
+consideration: `BACKLOG.md:168` (DECISION NEEDED; rules traced, three statements in the example file's format notes measured wrong).** Then `:192` (Input-tab test upload helpers, READY, S-M, test-only) and `:205`
+(13 small statements, READY, S). Also open: `:258` (a trailing `#` comment joins its value; settle with `:168`), `:249` (a header-only file's extra columns), the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md`
+compression pass. The push is the owner's call: `R/` changed, so it starts all four push workflows (estimate: green; not measured on CI), and no nightly `shinytest2` run has built these commits.
+**Gotchas:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does"; test a lowercase file asked for in camel case; config tests put a file under `HOME` with `withr::local_envvar`
+(`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the shipped file (`tests/testthat/helper-exampleConfig.R:8`); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
 
 ### Sessions 947-1011 (condensed S950 to S1012; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1011: the Cross-Center check flags a Center B animal that reuses an id the mapping gives a Center A animal (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`; `R/checkCrossCenterMapping.R:77`), and the
