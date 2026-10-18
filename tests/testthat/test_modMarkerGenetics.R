@@ -1832,6 +1832,9 @@ s1010AllMissing$allele1 <- "NA"
 s1010AllMissing$allele2 <- "NA"
 s1010AllMissingPath <- s1010WriteGenotype(s1010AllMissing)
 
+## A header row and no animals (a 0 x 0 matrix).
+s1010HeaderOnlyPath <- s1010WriteGenotype(i152RohGenotype[0L, ])
+
 test_that("modMarkerGenetics's sequence export preview builds when every animal has a missing allele", {
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,
@@ -1926,6 +1929,40 @@ test_that("modMarkerGenetics's sequence export preview builds when every allele 
     expect_s3_class(exportedRoh, "data.frame")
     expect_equal(nrow(exportedRoh), 3L)
     expect_equal(result$sequenceExportManifest()$nIndividuals, 3L)
+  })
+})
+
+## Kept behavior (owner ruled, S1010): a genotype file with a header row and
+## no animals gives a 0 x 0 matrix. The old req() exited quietly for it
+## (isTruthy() of an empty matrix is FALSE), so the explicit NULL test must
+## not start building an empty preview that could be confirmed and
+## downloaded.
+test_that("modMarkerGenetics's sequence export preview stays blank for a genotype file with no animals", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    ## computeGenomicROH() warns about every locus an empty matrix lacks.
+    suppressWarnings({
+      session$setInputs(genotypeFile = list(
+        name = "s1010_header_only.csv", datapath = s1010HeaderOnlyPath
+      ))
+      session$setInputs(locusMetadataFile = list(
+        name = "i152_roh_locus_metadata.csv",
+        datapath = i152RohLocusMetadataFilePath
+      ))
+      session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    })
+
+    ## The fixture reaches the condition: a matrix with no cells.
+    expect_equal(dim(genotypeMatrixR()), c(0L, 0L))
+
+    suppressWarnings(session$setInputs(sequenceExportPreview = 1))
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+    expect_null(result$sequenceExportRohTable())
+    expect_null(result$sequenceExportManifest())
   })
 })
 
