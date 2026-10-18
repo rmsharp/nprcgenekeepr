@@ -201,12 +201,14 @@ export workflows, and longitudinal monitoring of colony genetic health.
   results behind a confirmation step (issue \#149).
 - `resolveCrossCenterIds()` merges records for the same animals using a
   curator-confirmed id-matching table, preserving each animal's own data
-  columns.
+  columns, including a column only one of the two centers recorded.
 
 **Minor**
 
 - `checkCrossCenterMapping()` reports every problem in an id-matching
-  table at once.
+  table at once, including a second-center animal that uses an id the
+  table already gives to a different first-center animal (the merged
+  file would hold that id twice).
 
 ## Genetic Value Analysis
 

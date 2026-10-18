@@ -1145,9 +1145,10 @@ The workflow has three steps, each its own tab:
    Every problem is surfaced at once -- not just the first one found -- so a
    mapping file with several unrelated mistakes (a duplicate mapping row, an
    id that doesn't exist in either pedigree, an id present at both centers
-   but never declared in the mapping, or two centers recording different
-   parents for the same mapped animal) can be fixed in one pass instead of
-   being rejected and resubmitted repeatedly.
+   but never declared in the mapping, a Center B animal whose id the mapping
+   already gives to a different Center A animal, or two centers recording
+   different parents for the same mapped animal) can be fixed in one pass
+   instead of being rejected and resubmitted repeatedly.
 2. **Preview.** Once the mapping validates clean, this tab computes the
    actual proposed merge and shows a lineage-change table: for each mapped
    pair, both centers' originally-recorded sire/dam alongside the resolved

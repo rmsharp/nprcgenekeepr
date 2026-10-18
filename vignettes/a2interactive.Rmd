@@ -1637,7 +1637,9 @@ One subtlety: a genuine undeclared id collision between the two centers
 only ever reported once the existence and uniqueness problems above are
 already clean -- a collision check on a mapping that doesn't resolve to real
 pedigree rows would be meaningless. The same second check also reports a
-mapped pair whose recorded parents conflict. A clean result from this function is what licenses
+_pedB_ animal whose id _mapping_ already gives to a different _pedA_ animal
+(a `"mappedIdClash"` row), and a mapped pair whose recorded parents
+conflict. A clean result from this function is what licenses
 trusting the absence of a collision, not merely the absence of a
 `"collision"` row in a dirty one.
 
