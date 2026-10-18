@@ -165,11 +165,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Revisit the config-file parser: write down its real rules, and decide whether a standard parser should replace the
-      custom one (DECISION NEEDED -- owner-requested for the next session, 2026-10-18, after the S1012 close-out; Effort S
-      to document, M-L to replace)** (the owner asked that the next session revisit the documentation for the parser
-      behind `getConfigApiKey()`, where a standard parser in place of the custom one is under consideration) -- the custom
-      parser is `getTokenList()` (`R/getTokenList.R`, exported; its help names no rules). `readConfigLines()`
+- [ ] **Settle the config-file format and its parser as one decision: what the documentation promises decides which parser
+      fits (DECISION NEEDED -- owner-requested for the next session, 2026-10-18, after the S1012 close-out; Effort S to
+      draft the rules, M-L if the parser is replaced)** (the owner asked that the next session revisit the documentation
+      for the parser behind `getConfigApiKey()`, where a standard parser in place of the custom one is under
+      consideration, and added that the two are intertwined: the documentation can influence which parser behavior is
+      selected) -- the custom parser is `getTokenList()` (`R/getTokenList.R`, exported; its help names no rules). `readConfigLines()`
       (`R/readConfigLines.R:16`) drops full-line comments before it, and `getConfigApiKey()`, `getOptionalConfigToken()`
       and `getSiteInfo()` read through both. **Its rules, traced S1012:** join all lines with a space; delete every double
       quote; put spaces around every `=`; split on whitespace and commas; the token before an `=` is a setting's name; its
@@ -180,14 +181,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `folder/EHR`, because the quotes are deleted before the split); a semicolon does not separate terms (`Id;` stays
       `Id;`, the notes say it does). Right as written: parentheses ignored, comma or newline separated, empty lines
       ignored, full-line `#` ignored. **Also from these rules:** a `#` comment ending a setting's line joins its value (the
-      item below), and a comment that holds an `=` makes a bogus second setting. **To decide:** (a) keep the custom parser
-      and write its rules into the `getTokenList()` help, the example file and the guide, correcting the three statements
-      above (tests that pin each stated rule); (b) move to a standard format (candidates to evaluate: `yaml`, listed under
+      item below), and a comment that holds an `=` makes a bogus second setting. **How the two parts fit (owner,
+      2026-10-18):** the notes in the example file are the only description of the format a center has, so what they
+      promise is the requirement the parser must meet, and the parser chosen decides which promises can be kept. Work in
+      this order, in one session: (1) draft the rules a user may rely on as plain sentences, starting from those notes and
+      the findings above (quotes and spaces, which characters separate list items, whether `#` may end a line, vectors,
+      the case of names), showing the owner one proposed sentence per place; (2) test each candidate against the draft:
+      the custom parser fixed to match it (the `getTokenList()` help, the example file and the guide then say what it
+      does, with a test pinning each stated rule), or a standard format (candidates to evaluate: `yaml`, listed under
       Suggests and called nowhere in `R/`; INI or plain `key=value` readers; TOML or JSON), which settles the comment,
       quote and separator cases by definition but changes the file every center's existing `~/.nprcgenekeepr_config` is
       written in, so it needs a migration path (read both for a release, a converter, or a warning) and a decision on the
-      exported `getTokenList()` (keep or deprecate). The trailing-comment decision below is moot under (b): settle the two
-      together. Strict TDD for any code; show the owner one proposed sentence per place for any wording change.
+      exported `getTokenList()` (keep or deprecate); (3) the owner picks, and the pick is recorded as a ruling before any
+      code. Not measured: how many centers' files rely on a quoted space or a semicolon (the shipped example uses
+      neither). The trailing-comment decision below is part of the same choice and moot under a standard parser. Strict
+      TDD for any code, in its own later session.
 
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
       REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,

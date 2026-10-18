@@ -111,8 +111,8 @@ no hint that `getSiteInfo()` reads the file the same way. Wrong: nothing materia
 **Self-assessment: 8/10.** + measured the named cases and the exported neighbour before RED; plain-words owner questions; RED had no thrown errors; a mutation run found a one-direction pin. - wrote "17 existing"
 and "31 blocks" (20 and 34) in a commit message and a gate; the RED set tested one direction of the case fold.
 **Next:** **the owner asked (after close-out) that the next session revisit the documentation for the config-file parser behind `getConfigApiKey()`, where a standard parser instead of the custom one is under
-consideration: `BACKLOG.md:168` (DECISION NEEDED; rules traced, three statements in the example file's format notes measured wrong).** Then `:192` (Input-tab test upload helpers, READY, S-M, test-only) and `:205`
-(13 small statements, READY, S). Also open: `:258` (a trailing `#` comment joins its value; settle with `:168`), `:249` (a header-only file's extra columns), the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md`
+consideration: `BACKLOG.md:168` (DECISION NEEDED; one decision, the owner says the documentation and the parser are intertwined; rules traced).** Then `:200` (Input-tab test upload helpers, READY, S-M, test-only) and `:213`
+(13 small statements, READY, S). Also open: `:266` (a trailing `#` comment joins its value; settle with `:168`), `:257` (a header-only file's extra columns), the `SESSION_RUNNER.md` re-sync, the `BACKLOG.md`
 compression pass. The push is the owner's call: `R/` changed, so it starts all four push workflows (estimate: green; not measured on CI), and no nightly `shinytest2` run has built these commits.
 **Gotchas:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does"; test a lowercase file asked for in camel case; config tests put a file under `HOME` with `withr::local_envvar`
 (`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the shipped file (`tests/testthat/helper-exampleConfig.R:8`); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
