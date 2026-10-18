@@ -355,3 +355,33 @@ test_that("resolveCrossCenterIds keeps the class of a one-sided Date column", {
   expect_identical(fromB$birth[fromB$id == "T1"], as.Date("2010-05-06"))
   expect_identical(fromB$birth[fromB$id == "O1"], as.Date("2012-12-12"))
 })
+
+## Found by a mutation run of the S1011 GREEN code (padding the missing side
+## with a plain NA survived every test): the mapped rows are bound together
+## first, so an NA of the wrong class on the FIRST mapped animal turns the
+## column into day numbers when the second mapped animal's date is bound in.
+## Needs two mapped animals, the first with an NA, and no unmapped animal at
+## Center A -- an unmapped animal's Date would come first in the final bind
+## and hand its class to the column, hiding the loss.
+test_that("resolveCrossCenterIds keeps a one-sided Date column's class when the first mapped animal's date is NA", {
+  pedATwo <- data.frame(
+    id    = c("T1", "T2"),
+    sire  = NA_character_,
+    dam   = NA_character_,
+    birth = as.Date(c(NA, "2010-05-07")),
+    stringsAsFactors = FALSE
+  )
+  pedBTwo <- data.frame(
+    id = c("X9", "X8"), sire = NA_character_, dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  mappingTwo <- data.frame(
+    idA = c("T1", "T2"), idB = c("X9", "X8"), stringsAsFactors = FALSE
+  )
+
+  merged <- resolveCrossCenterIds(pedATwo, pedBTwo, mappingTwo)
+
+  expect_s3_class(merged$birth, "Date")
+  expect_true(is.na(merged$birth[merged$id == "T1"]))
+  expect_identical(merged$birth[merged$id == "T2"], as.Date("2010-05-07"))
+})
