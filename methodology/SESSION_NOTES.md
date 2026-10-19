@@ -98,25 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1013 Did
-**Deliverable, DONE (owner pick, item 1 of 4; a decision session: no code, no tests):** the config-file format and its reader settled as one decision. **The owner took the recommended option A of three,
-"fix the reader":** a double-quoted value stays whole, a `#` that starts a word begins a comment, a blank value stays blank, semicolons do not separate. Claim `3bf3b438f`, deliverable `977988041`. Not pushed.
-**Evidence (`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`):** the notes' semicolon, quoting and unquoted-address sentences were false the day they were written (2017-09-22; the reader is unchanged
-since 2017-09-13); none of `yaml`, `config`, `configr`, `RcppTOML` or `ini` reads the shipped file as it is (`yaml` returns one string with no error, `configr` `FALSE`, `config` an error); a throwaway prototype
-changes 8 of 19 forms, all wrong today, and the 86 existing blocks of 12 files pass with it. **Found:** `apiKey =` followed by another setting reads that setting's name as its value (`getConfigApiKey()` returned
-`center`); the loadable copy `exampleNprcgenekeeprConfig` is an older 34-line file, not the 87-line shipped one. 125 document-reading test files: 1,661 blocks, 0 failed, 0 errors. Ratchet 1/1. Learning 979.
-**Handoff evaluation of S1012: 9/10.** Helped: `:168`'s traced rules and the three measured-wrong sentences all reproduced; the cites at `:206`, `:219`, `:263`, `:272` held; "`yaml` called nowhere in `R/`" held.
-Missing: the loadable copy as a documentation place; the blank-value trap; which candidate packages are installed (only `yaml`, `ini`, `jsonlite`). Wrong: nothing material (a gotcha cites the stale `:234`).
-**Self-assessment: 8/10.** + tested the owner's question on the real file; a control for the prototype; hunted a counter-example (a whole list in one pair of quotes); caught an unmeasured YAML cell before commit;
-`BACKLOG.md` is now under its read budget. - my first plan tested a converted file and left out `config` and `configr` until the owner named them and said "without preprocessing".
-**Next:** `BACKLOG.md:168` (the ruled build: READY, Effort M, strict TDD; ask the PRE-RED question about a whole list inside one pair of quotes in plain words, then RED, GREEN, REFACTOR, each behind its own gate).
-Then `:197` (Input-tab test upload helpers, READY, S-M, test-only) and `:210` (13 small statements, READY, S). Also open: `:254`, `:263`, the `SESSION_RUNNER.md` re-sync, the compression item `:449`
-(`BACKLOG.md` is 56,092 B, 658 B under its 56,750 B read budget). The push is the owner's call: 22 commits ahead of origin, `R/` changed in earlier ones, so all four push workflows would start (estimate: green; not measured).
-**Gotchas:** the whole-list-in-quotes form reads as three values now and one after the fix, so never write "every working file reads the same"; the 86 existing blocks pin none of the 8 changed forms, so RED
-adds its own; `data/exampleNprcgenekeeprConfig.RData` has no build script and `man/exampleNprcgenekeeprConfig.Rd` is generated (`docs/planning/extdata-reorganization-plan.md:205`); install candidate packages into a
-scratch library (`install.packages(lib = )` plus `.libPaths()`), never renv; a prototype swapped into the namespace needs a control (Learning 979).
+### What Session 1014 Did
+**Deliverable:** build the config-file reader the owner ruled in S1013: `getTokenList()` keeps a double-quoted value whole, a `#` that starts a word begins a comment, a blank value stays blank,
+and the example file's notes, the loadable copy and two help pages say so (`BACKLOG.md:168`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-18
+**Status:** Session claimed. Work beginning. Strict TDD: the one PRE-RED question (a whole list inside one pair of quotes) first, then RED, GREEN, REFACTOR, each behind its own gate. S1013's block folded into the condensed list below.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1012 (condensed S950 to S1013; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1013 (condensed S950 to S1014; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1013: a decision session, no code: the owner took option A for the config-file reader (a double-quoted value stays whole, a `#` that starts a word begins a comment, a blank value stays blank, semicolons do
+not separate); evidence and a throwaway prototype in `docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`; claim `3bf3b438f`, deliverable `977988041`, close-out `7dbcc0b2a`; evaluation of S1012 9/10, self 8/10.
+**Gotchas kept:** the whole-list-in-quotes form reads as three values now and one after the fix, so never write "every working file reads the same"; the 86 existing blocks pin none of the 8 changed forms,
+so RED adds its own; `data/exampleNprcgenekeeprConfig.RData` has no build script and `man/exampleNprcgenekeeprConfig.Rd` is generated (`docs/planning/extdata-reorganization-plan.md:205`); install candidate
+packages into a scratch library (`install.packages(lib = )` plus `.libPaths()`), never renv; a prototype swapped into the namespace needs a control (Learning 979).
 S1012: the shipped example configuration no longer gives `getConfigApiKey()` a key; one shared reader, `readConfigLines()` (`R/readConfigLines.R:16`), drops comment lines for `getConfigApiKey()`,
 `getOptionalConfigToken()` and `getSiteInfo()`; a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`) (the owner ruled: fix the shared cause, accept another case; strict TDD,
 REFACTOR taken twice plus a pin; claim `7aaa8e1d7`, close-out `2e894b2b4`; evaluation of S1011 9/10, self 8/10). **Gotchas kept:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does";
