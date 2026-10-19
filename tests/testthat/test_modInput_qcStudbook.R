@@ -747,22 +747,9 @@ test_that("modInputServer degrades gracefully on a malformed genotype file", {
 # when animals in the uploaded pedigree have no birth date (BACKLOG.md, owner
 # ruled S932 and S933). It is a warning: it never stops the upload.
 
-## Uploads a CSV through the real Input module (read, then runQcStudbook())
-## and returns the module's qcSummary(), qcResults() and isReady().
-uploadForQc <- function(path) {
-  got <- new.env()
-  shiny::testServer(modInputServer, {
-    session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      separator = ",", minSireAge = "", minDamAge = "")
-    session$setInputs(pedigreeFileOne = list(name = basename(path),
-                                             datapath = path))
-    session$setInputs(getData = 1L)
-    got$summary <- session$getReturned()$qcSummary()
-    got$results <- qcResults()
-    got$ready <- session$getReturned()$isReady()
-  })
-  as.list(got)
-}
+## uploadPedigreeFileQc() (in helper-inputTabUpload.R) uploads a CSV through
+## the real Input module (read, then runQcStudbook()) and returns the module's
+## qcSummary(), qcResults() and isReady() as `summary`, `results` and `ready`.
 
 ## pedGood with the first animal's birth date left blank in the file.
 writePedGoodBlankBirth <- function() {
@@ -777,7 +764,7 @@ test_that("the Input tab counts the no-birth-date warning and still lets the use
   skip_if_not_installed("shiny")
   path <- writePedGoodBlankBirth()
   on.exit(unlink(path))
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   expect_identical(got$summary$errors, 0L)
   expect_identical(got$summary$warnings, 1L)
   expect_identical(got$summary$records, 8L)
@@ -788,7 +775,7 @@ test_that("the Input tab's Warnings table lists the no-birth-date warning", {
   skip_if_not_installed("shiny")
   path <- writePedGoodBlankBirth()
   on.exit(unlink(path))
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   expect_identical(got$results$warnings$Warning, "Animals with no birth date")
   expect_match(
     got$results$warnings$Details,
@@ -801,7 +788,7 @@ test_that("the shipped example pedigree gets one no-birth-date warning, 1432 of 
   path <- system.file("extdata", "examples", "ExamplePedigree.csv",
                       package = "nprcgenekeepr")
   skip_if(path == "")
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   expect_identical(got$summary$errors, 0L)
   expect_identical(got$summary$warnings, 1L)
   expect_identical(got$results$warnings$Warning, "Animals with no birth date")
@@ -829,7 +816,7 @@ test_that("the Input tab counts the exit-before-birth warning and still lets the
   skip_if_not_installed("shiny")
   path <- writePedEarlyExits()
   on.exit(unlink(path))
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   expect_identical(got$summary$errors, 0L)
   expect_identical(got$summary$warnings, 1L)
   expect_identical(got$summary$records, 8L)
@@ -840,7 +827,7 @@ test_that("the Input tab's Warnings table lists the exit-before-birth warning", 
   skip_if_not_installed("shiny")
   path <- writePedEarlyExits()
   on.exit(unlink(path))
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   expect_identical(got$results$warnings$Warning,
                    "Animals with a death or departure before birth")
   expect_match(
@@ -854,7 +841,7 @@ test_that("the shipped example pedigree gets no exit-before-birth warning", {
   path <- system.file("extdata", "examples", "ExamplePedigree.csv",
                       package = "nprcgenekeepr")
   skip_if(path == "")
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   ## 226 of its 1930 dated animals leave on their birth day; none leaves before.
   expect_identical(got$summary$warnings, 1L)
   expect_false("Animals with a death or departure before birth" %in%
@@ -893,7 +880,7 @@ test_that("the Input tab lists one invalid date by row in a file with birth and 
   )
   for (label in names(cases)) {
     path <- writePedBirthAndExit(cases[[label]]$birth, cases[[label]]$exit)
-    got <- uploadForQc(path)
+    got <- uploadPedigreeFileQc(path)
     unlink(path)
     expect_identical(got$results$errors$Error, "Invalid date values",
                      info = label)
@@ -915,7 +902,7 @@ test_that("the Input tab flags a lowercase geographicorigin header as a rename a
   skip_if_not_installed("shiny")
   path <- tempfile(fileext = ".csv")
   write.csv(pedLowercaseGeographicOrigin(), path, row.names = FALSE, na = "")
-  got <- uploadForQc(path)
+  got <- uploadPedigreeFileQc(path)
   unlink(path)
   expect_true(got$results$hasChangedCols)
   expect_identical(got$summary$errors, 0L)
