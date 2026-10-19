@@ -251,6 +251,15 @@ test_that("CE3: a minDate inside the range still binds (green at HEAD)", {
   expect_true(all(draws >= as.numeric(as.Date("2020-01-08"))))
 })
 
+test_that("CE3: a range of one day returns that day when minDate is on it
+          (green at HEAD)", {
+  expect_equal(
+    withinSeconds(obfuscateDate(as.Date("2020-01-01"), as.Date("2020-01-01"),
+                                0L)),
+    as.Date("2020-01-01")
+  )
+})
+
 ## -- CE6 ---------------------------------------------------------------------
 
 test_that("CE6: checkCrossCenterMapping names itself in its structural
