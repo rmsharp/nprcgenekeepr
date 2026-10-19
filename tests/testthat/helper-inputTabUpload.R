@@ -20,3 +20,25 @@ uploadPedigreeFile <- function(path, fileType = "fileTypeExcel",
   })
   got$res
 }
+
+## Uploads the file at `path` as uploadPedigreeFile() does and returns what
+## the module holds afterwards: `results`, its qcResults(); `summary`, its
+## qcSummary() (the counts `errors`, `warnings` and `records`); and `ready`,
+## its isReady().
+uploadPedigreeFileQc <- function(path, fileType = "fileTypeExcel",
+                                 separator = ",", minDamAge = "",
+                                 minSireAge = "") {
+  got <- new.env()
+  shiny::testServer(modInputServer, {
+    session$setInputs(fileContent = "pedFile", fileType = fileType,
+                      separator = separator, minSireAge = minSireAge,
+                      minDamAge = minDamAge)
+    session$setInputs(pedigreeFileOne = list(name = basename(path),
+                                             datapath = path))
+    session$setInputs(getData = 1L)
+    got$summary <- session$getReturned()$qcSummary()
+    got$results <- qcResults()
+    got$ready <- session$getReturned()$isReady()
+  })
+  list(summary = got$summary, results = got$results, ready = got$ready)
+}
