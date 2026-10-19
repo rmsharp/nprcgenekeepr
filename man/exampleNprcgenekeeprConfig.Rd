@@ -5,7 +5,7 @@
 \alias{exampleNprcgenekeeprConfig}
 \title{Example nprcgenekeepr configuration file (loadable)}
 \format{
-An object of class \code{character} of length 34.
+An object of class \code{character} of length 89.
 }
 \usage{
 data(exampleNprcgenekeeprConfig)

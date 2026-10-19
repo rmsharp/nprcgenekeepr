@@ -16,9 +16,7 @@
 #' parameter names, and \code{tokenVec}, a list of the token vectors parsed
 #' for each parameter (an empty character vector for a setting with no value).
 #'
-#' @importFrom stringi stri_replace_all_fixed stri_replace_all_regex
-#' @importFrom stringi stri_trim_both stri_split_regex stri_split_boundaries
-#' @importFrom stringi stri_detect_regex
+#' @importFrom stringi stri_split_boundaries stri_detect_regex
 #' @export
 #' @examples
 #' lines <- c(
