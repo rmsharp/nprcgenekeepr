@@ -19,21 +19,6 @@ examplePath <- function(file) {
 txtPath <- examplePath("ExamplePedigree.txt")
 csvPath <- examplePath("ExamplePedigree.csv")
 
-## Uploads a file through the real Input module (read, then runQcStudbook()),
-## returning the module's qcResults().
-uploadExample <- function(path, fileType, separator) {
-  got <- new.env()
-  shiny::testServer(modInputServer, {
-    session$setInputs(fileContent = "pedFile", fileType = fileType,
-                      separator = separator, minSireAge = "", minDamAge = "")
-    session$setInputs(pedigreeFileOne = list(name = basename(path),
-                                             datapath = path))
-    session$setInputs(getData = 1L)
-    got$res <- qcResults()
-  })
-  got$res
-}
-
 test_that("ExamplePedigree.txt holds the same cells as ExamplePedigree.csv", {
   ## Every cell read as the text the file holds ("NA" stays "NA", a blank
   ## stays ""), so this compares the files, not how a reader interprets them.
@@ -103,10 +88,13 @@ test_that("getPedigree() reads ExamplePedigree.txt as it reads the CSV", {
   expect_identical(got, getPedigree(csvPath))
 })
 
+## uploadPedigreeFile() is in helper-inputTabUpload.R: it uploads a file
+## through the real Input module (read, then runQcStudbook()) and returns the
+## module's qcResults().
 test_that("the app's text upload of ExamplePedigree.txt matches the CSV's", {
   skip_if_not_installed("shiny")
-  fromTxt <- uploadExample(txtPath, "fileTypeText", "\t")
-  fromCsv <- uploadExample(csvPath, "fileTypeExcel", ",")
+  fromTxt <- uploadPedigreeFile(txtPath, "fileTypeText", "\t")
+  fromCsv <- uploadPedigreeFile(csvPath, "fileTypeExcel", ",")
   expect_identical(nrow(fromTxt$errors), 0L)
   expect_identical(nrow(fromCsv$errors), 0L)
   expect_identical(nrow(fromCsv$cleaned), 3694L)
