@@ -28,7 +28,7 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
   }
   if (nrow(txt$sp) > 0L) {
     cat(stri_c(
-      "Animal records where parent records are suspicous because ",
+      "Animal records where parent records are suspicious because ",
       "of dates.\n",
       "One or more parents appear too young at time of birth.\n"
     ))

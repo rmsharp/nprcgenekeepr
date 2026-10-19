@@ -23,8 +23,9 @@ are integers unless a limit is not an integer.
 }
 \description{
 Assures that what is returned is an integer within the specified range.
-Real values are truncated. Non-numerics are forced to minimum without
-warning. Character values that look like numbers are converted. The limits
+Real values are truncated. A number too large or too small to be an
+integer is forced to the maximum or the minimum. Non-numerics are forced to
+minimum without warning. Character values that look like numbers are converted. The limits
 themselves are not coerced, so non-integer limits can be returned as
 given. If \code{minimum} is greater than \code{maximum}, \code{maximum}
 wins.

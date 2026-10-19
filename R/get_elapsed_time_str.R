@@ -20,11 +20,11 @@ get_elapsed_time_str <- function(start_time) {
   # To use: collect start_time at the beginning of the script with proc.time(),
   # then at the end call this function with start_time as its sole argument
   # (see the examples in the function documentation).
-  total_seconds <- (proc.time()[[3L]] - start_time[[3L]])
+  total_seconds <- round(proc.time()[[3L]] - start_time[[3L]], 0L)
   total_minutes <- total_seconds / 60L
   hours <- floor(total_minutes / 60L)
   minutes <- floor(total_minutes - hours * 60L)
-  seconds <- round(total_seconds - (hours * 3600L) - (minutes * 60L), 0L)
+  seconds <- total_seconds - (hours * 3600L) - (minutes * 60L)
   hours_str <- ifelse(hours > 0L, stri_c(hours, " hours, "), "")
   minutes_str <- ifelse(minutes > 0L, stri_c(minutes, " minutes and "), "")
   seconds_str <- stri_c(seconds, " seconds.")
