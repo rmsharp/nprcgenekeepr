@@ -1,18 +1,20 @@
 # The formatting in this example file is intentionally sloppy to illustrate
 # the essential features and to point out what has no effect.
-# Lines beginning with "#" are ignored.
+# A # that begins a word starts a comment that runs to the end of the line, on
+# a line of its own or after a setting.
 # Empty lines are ignored
 #
 # It is critical to have the term being defined immediately before an equals
 # symbol "=". The defining term(s) are to follow the equals symbol.
-# Multiple defining terms can be separated with one or more blank characters,
-# commas, semicolons, or newline characters. Parentheses may be used for
-# readability, but they are ignored.
+# Terms are separated by blanks, commas, tabs or line breaks; a semicolon does
+# not separate terms. Parentheses may be used for readability, but they are
+# ignored.
 #
-# In many cases the defining term will need to be in quotes because they will
-# have characters that would serve to break up the definition into multiple
-# tokens. For example http://deepthought:8080/labkey would become a meaningless
-# collection of four terms: http, deepthought, 8080, and labkey.
+# Put a value in double quotes when it holds a blank, a comma, an equals sign
+# or round brackets; it is then read as one term (an address such as
+# http://deepthought:8080/labkey needs no quotes). For a list of names, write
+# each name on its own, in quotes if you like; a whole list inside one pair of
+# quotes is read as a single name.
 #
 # center is a term used to tell the application which features are to be
 # available and to allow custom branding with image files.
@@ -69,8 +71,8 @@
 #   gestationDefault -- integer fallback gestation window (days) for a species
 #     not found in the table (built-in default 210).
 #
-# Example (uncomment and edit; keep the CSV path unquoted-friendly, i.e. no
-# spaces or commas in the path):
+# Example (uncomment and edit). Put the CSV path in double quotes if it holds a
+# blank or a comma:
 # speciesOverridesPath = "/home/you/colony_species_overrides.csv"
 # minBreedingAgeDefault = 2
 # gestationDefault = 210

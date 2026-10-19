@@ -25,6 +25,10 @@ folderPath "/ONPRC/EHR" and queryName "demographics". A warning is
 signaled for the missing file only when \code{expectConfigFile} is
 \code{TRUE}.
 
+The format of the configuration file is described in the notes at the top
+of the example file, \code{example_nprcgenekeepr_config}, in the package's
+\code{extdata/examples} folder.
+
 The returned list contains the following elements.
 \enumerate{
 \item \code{center} -- center name, such as "ONPRC" or "SNPRC"
