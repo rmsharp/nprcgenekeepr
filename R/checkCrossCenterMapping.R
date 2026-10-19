@@ -59,9 +59,9 @@
 #' mapping <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
 #' checkCrossCenterMapping(pedA, pedB, mapping) # zero rows: clean
 checkCrossCenterMapping <- function(pedA, pedB, mapping) {
-  .requireCrossCenterPedColumns(pedA, "pedA")
-  .requireCrossCenterPedColumns(pedB, "pedB")
-  .requireCrossCenterMappingColumns(mapping)
+  .requireCrossCenterPedColumns(pedA, "pedA", "checkCrossCenterMapping")
+  .requireCrossCenterPedColumns(pedB, "pedB", "checkCrossCenterMapping")
+  .requireCrossCenterMappingColumns(mapping, "checkCrossCenterMapping")
 
   tierA <- rbind(
     .checkCrossCenterUniqueness(mapping),

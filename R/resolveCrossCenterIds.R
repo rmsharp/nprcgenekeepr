@@ -105,11 +105,13 @@ bindPedigreeRows <- function(dfs) {
 #' @param p a pedigree data.frame.
 #' @param subject the argument name to name in the error (\code{"pedA"} or
 #' \code{"pedB"}).
+#' @param caller the function name to put at the front of the error
+#' (\code{"resolveCrossCenterIds"} or \code{"checkCrossCenterMapping"}).
 #' @noRd
-.requireCrossCenterPedColumns <- function(p, subject) {
+.requireCrossCenterPedColumns <- function(p, subject, caller) {
   if (!all(c("id", "sire", "dam") %in% names(p))) {
     stop(
-      "resolveCrossCenterIds(): '", subject, "' must contain columns ",
+      caller, "(): '", subject, "' must contain columns ",
       "id, sire, and dam.",
       call. = FALSE
     )
@@ -118,11 +120,12 @@ bindPedigreeRows <- function(dfs) {
 
 #' Require a mapping data.frame to carry idA/idB columns
 #' @param mapping a mapping data.frame.
+#' @param caller the function name to put at the front of the error.
 #' @noRd
-.requireCrossCenterMappingColumns <- function(mapping) {
+.requireCrossCenterMappingColumns <- function(mapping, caller) {
   if (!all(c("idA", "idB") %in% names(mapping))) {
     stop(
-      "resolveCrossCenterIds(): 'mapping' must contain columns idA and ",
+      caller, "(): 'mapping' must contain columns idA and ",
       "idB.",
       call. = FALSE
     )
@@ -482,9 +485,9 @@ bindPedigreeRows <- function(dfs) {
 #' mapping <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
 #' resolveCrossCenterIds(pedA, pedB, mapping)
 resolveCrossCenterIds <- function(pedA, pedB, mapping) {
-  .requireCrossCenterPedColumns(pedA, "pedA")
-  .requireCrossCenterPedColumns(pedB, "pedB")
-  .requireCrossCenterMappingColumns(mapping)
+  .requireCrossCenterPedColumns(pedA, "pedA", "resolveCrossCenterIds")
+  .requireCrossCenterPedColumns(pedB, "pedB", "resolveCrossCenterIds")
+  .requireCrossCenterMappingColumns(mapping, "resolveCrossCenterIds")
 
   if (nrow(.checkCrossCenterUniqueness(mapping)) > 0L) {
     # nolint start: nonportable_path_linter
