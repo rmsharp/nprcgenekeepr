@@ -165,43 +165,34 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Settle the config-file format and its parser as one decision: the documentation and the parser can each change
-      the other (DECISION NEEDED -- owner-requested for the next session, 2026-10-18, after the S1012 close-out; Effort S to
-      draft the rules, M-L if the parser is replaced)** (the owner asked that the next session revisit the documentation
-      for the parser behind `getConfigApiKey()`, where a standard parser in place of the custom one is under
-      consideration, and added that the two are intertwined: the documentation can influence which parser behavior is
-      selected) -- the custom parser is `getTokenList()` (`R/getTokenList.R`, exported; its help names no rules). `readConfigLines()`
-      (`R/readConfigLines.R:16`) drops full-line comments before it, and `getConfigApiKey()`, `getOptionalConfigToken()`
-      and `getSiteInfo()` read through both. **Its rules, traced S1012:** join all lines with a space; delete every double
-      quote; put spaces around every `=`; split on whitespace and commas; the token before an `=` is a setting's name; its
-      value is every token up to the token before the next name (the last runs to the end); remove `(` and `)`.
-      **Where the example file's own format notes (`inst/extdata/examples/example_nprcgenekeepr_config:1-39`) differ from
-      that, measured S1012 at function level:** an unquoted URL stays one term (the notes say it breaks into four:
-      `:` and `/` are not separators); a quoted value that holds a space still splits (`"/my folder/EHR"` gives `/my` and
-      `folder/EHR`, because the quotes are deleted before the split); a semicolon does not separate terms (`Id;` stays
-      `Id;`, the notes say it does). Right as written: parentheses ignored, comma or newline separated, empty lines
-      ignored, full-line `#` ignored. **Also from these rules:** a `#` comment ending a setting's line joins its value (the
-      item below), and a comment that holds an `=` makes a bogus second setting. **How the two parts fit (owner,
-      2026-10-18):** each can change the other, and neither is fixed ahead of the decision. What the documentation says
-      shows what users may already rely on; if the parser changes, the documentation may have to change with it. The
-      format is described in the example file's notes (`...example_nprcgenekeepr_config:1-39`); the manual names the file and
-      links to the example for its contents (`vignettes/a3manual.md:137-147`,
-      `vignettes/manual_components/_summary_of_major_functions.Rmd:57-68`); the colony-manager guide does not mention it;
-      the help of `getSiteInfo()` and `getTokenList()` also bears on it (to inventory at pickup: those pages were not read
-      for format rules). Work in this order, in one session: (1) put side by side what the documentation says and what the
-      parser does (the findings above) and list the rules a user could be told (quotes and spaces, which characters
-      separate list items, whether `#` may end a line, vectors, the case of names), showing the owner one proposed sentence
-      per place; (2) for each candidate, say what the documentation would then say and what changes for an existing file:
-      the custom parser fixed where it differs from what is documented, or the documentation corrected to describe the
-      parser as it is (either way a test pins each stated rule), or a standard format (candidates to evaluate: `yaml`,
-      listed under Suggests and called nowhere in `R/`; INI or plain `key=value` readers; TOML or JSON), which settles the
-      comment, quote and separator cases by definition but changes the file every center's existing
-      `~/.nprcgenekeepr_config` is written in, so it needs a migration path (read both for a release, a converter, or a
-      warning) and a decision on the exported `getTokenList()` (keep or deprecate); (3) the owner picks, recorded as a
-      ruling before any code, and the parser and the documentation then change together as the pick requires. Not
-      measured: how many centers' files rely on a quoted space or a semicolon (the shipped example uses neither). The
-      trailing-comment decision below is part of the same choice and moot under a standard parser. Strict TDD for any
-      code, in its own later session.
+- [ ] **Make the config-file reader keep a quoted value whole, and rewrite the notes to match (READY, Effort M; strict TDD;
+      ruled S1013, 2026-10-18, option A of three)** (the owner's pick at the S1013 decision session, after the owner asked in S1012
+      that the documentation and the parser be settled as one choice; the evidence, the 19-form side-by-side, the standard-format
+      measurements and the throwaway prototype are in `docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`) -- the reader is
+      `getTokenList()` (`R/getTokenList.R`, exported) behind `readConfigLines()` (`R/readConfigLines.R:16`), read by
+      `getConfigApiKey()`, `getOptionalConfigToken()` and `getSiteInfo()`. **The ruled rules:** a double quote keeps a term whole (a
+      blank, comma, `=` or round brackets inside it are kept); blanks, commas, tabs and line breaks outside quotes separate terms;
+      semicolons do not separate (the notes lose that sentence); round brackets outside quotes are ignored; a `#` that starts a word
+      begins a comment to the end of the line, on its own line or after a setting (this settles the former trailing-comment item;
+      `labkey#top` unquoted stays whole); a setting with nothing after its `=` has an empty value instead of taking the next
+      setting's name (`apiKey =` then `center = "SNPRC"` gave `apiKey=<center> <=>`, so `getConfigApiKey()` returned `center`; as the
+      last setting it gave `<NA> <=>`); names stay case-insensitive (S1012). **Measured S1013 with a throwaway prototype (the audit's
+      appendix):** over 19 forms of a file, 11 read as before (the shipped example included) and 8 change, all of them forms that
+      read wrongly today (a quoted blank, comma, `=` or round brackets; an empty value in the middle or last; a trailing comment; a
+      Windows path with a blank); the 86 blocks of the 12 test files that read a config file pass unchanged with it swapped in.
+      **Ask at PRE-RED (one question, plain words):** a whole list inside one pair of quotes (`lkPedColumns = "Id, gender, birth"`)
+      gives three values now and would give one; either `getSiteInfo()` splits the two list settings (`lkPedColumns`,
+      `mapPedColumns`) on commas after reading, or the change is documented (not measured: how many centers' files do this; the
+      shipped example does not). **Places to change in the same build (sentences proposed in the audit's section 4; the owner may
+      rewrite them):** the example file's notes (`inst/extdata/examples/example_nprcgenekeepr_config:3,8-15`: comments, separators,
+      quoting); the loadable copy `data/exampleNprcgenekeeprConfig.RData` (`R/data.R:4-12`), an older 34-line file (the shipped one
+      has 87) that repeats the three wrong statements and has two typos, rebuilt from the shipped file by a new `data-raw/` script
+      (none exists; the README `:166-172` and the manual `vignettes/a3manual.md:137-147` tell users to `View()` it); the
+      `getTokenList()` help (names no rules today) and the `getSiteInfo()` help (one pointer sentence); `R/loadSiteConfig.R:6-10`
+      stays true. A test pins each stated rule; the `NEWS.Rmd` entry is a plain "Fixed:" bullet stating the finished state against
+      the prior release. `getTokenList()` keeps its name and signature. Not chosen, so do not re-offer without the owner: correcting
+      the notes only (option B) and a standard format (option C: none of `yaml`, `config`, `configr`, `RcppTOML` or `ini` reads the
+      shipped file as it is, measured S1013).
 
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
       REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
@@ -268,17 +259,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `checkCrossCenterMapping()` reports 0 issues; with one mapping row the merge stops "mapping references idA value(s)
       not present in pedA$id", so only an empty mapping reaches it. **Decision:** (a) leave it (a file with no animals has
       nothing to carry); (b) keep the columns of every input, empty or not.
-
-- [ ] **A `#` comment at the end of a setting's own line is read as part of its value (DECISION NEEDED -- leave it and say
-      so in the example file, or strip it, Effort S; strict TDD)** (found S1012, left alone by design) -- `readConfigLines()`
-      (`R/readConfigLines.R:16`) drops only full-line comments, as ruled S1004. Measured S1012 at function level (not through
-      the app) with `readConfigLines()`, `getTokenList()` and `getParamDef()`: `center = SNPRC # the center` reads `SNPRC`,
-      `#`, `the`, `center`, and `mapPedColumns = ("id", "sex") # two columns` reads `id`, `sex`, `#`, `two`, `columns`, so
-      `getSiteInfo()` would return those vectors; `getConfigApiKey()` and `getOptionalConfigToken()` take the first token and
-      are unaffected. The shipped example file uses full-line comments only. **Decision:** (a) leave it and add a line to the
-      example file saying a comment must start its own line; (b) strip from the first `#` outside quotes to the end of the
-      line (a `#` inside a quoted value, such as a URL fragment, must survive), with tests. Settle it together with the
-      parser item at the top of this list: a standard parser would make it moot.
 
 - [ ] **The archive pointers name `docs/archive/`, but the shards sit in `methodology/archive/` (DECISION NEEDED -- leave them, rewrite them, or fix the trim tool, Effort S)** (found S1001, 2026-10-15, while trimming `CHANGELOG.md`) -- measured S1001 by resolving each pointer against its own file's directory: 52 do not resolve -- `methodology/SESSION_NOTES.md` 23 of 23, `methodology/HANDOFFS.md` 17 of 18, and the 12 in `methodology/archive/CHANGELOG-through-2026-10-14.md` (the live `CHANGELOG.md` has one pointer, and it resolves). Every target exists by name in `methodology/archive/`: the sync after S960 moved the shard directory from `docs/archive/` and the older pointers were not rewritten (the S991 and S1001 trims already write `methodology/archive/`). The 12 CHANGELOG pointers were already dead before the S1001 trim (the unmodified `HEAD` copy had the same links), so no proof broke: `verify.sh` and `--reverify` hold. **Decision:** (a) leave it (a reader finds a shard by name in `methodology/archive/`); (b) rewrite the 52 pointers (the 12 sit inside a frozen shard, so that one changes the shard's bytes and its `verify.sh` proof would have to be re-derived, not tried); (c) change `methodology_trim.py` so a pointer is written relative to where the shard really is (a synced file: see the local-customization checklist in `docs/conventions/CLOSEOUT_CHECKLISTS.md`).
 
