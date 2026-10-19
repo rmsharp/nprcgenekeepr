@@ -11,7 +11,10 @@
 #' @param minDate optional vector of Date values, the same length as
 #' \code{baseDate}, that has the lower bound of resulting obfuscated dates.
 #' When missing, the lower bound is each \code{baseDate} minus its
-#' \code{maxDelta}, so the bound never binds.
+#' \code{maxDelta}, so the bound never binds. An \code{NA} in \code{minDate}
+#' leaves that element without a lower bound. A \code{minDate} on or after
+#' \code{baseDate} plus \code{maxDelta} (a date no draw can reach) stops with
+#' an error that names the element.
 #' @param maxDelta integer vector of length 1 or the same length as
 #' \code{baseDate} that is used to create min and max arguments
 #' to \code{runif} (\code{runif(n, min = 0, max = 1)})
@@ -34,7 +37,7 @@ obfuscateDate <- function(baseDate, minDate, maxDelta = 30L) {
     maxDelta <- rep(maxDelta, length(baseDate))
   }
   if (length(baseDate) != length(maxDelta)) {
-    stop("Length of minDate must be 1 or the same as baseDate.")
+    stop("Length of maxDelta must be 1 or the same as baseDate.")
   }
   if (missing(minDate)) {
     minDate <- baseDate
@@ -51,12 +54,21 @@ obfuscateDate <- function(baseDate, minDate, maxDelta = 30L) {
     if (is.na(baseDate[[i]])) {
       obfuscatedDate <- NA
     } else {
+      lowest <- minDate[[i]]
+      topOfRange <- baseDate[[i]] + maxDelta[[i]]
+      ## runif() never returns the top of its range unless the range is a
+      ## point, so a minDate at the top is as unreachable as one past it.
+      if (!is.na(lowest) && (lowest > topOfRange ||
+                               (lowest == topOfRange && maxDelta[[i]] > 0L))) {
+        stop("minDate is on or after baseDate + maxDelta for element ", i,
+             ", so no obfuscated date can be chosen.")
+      }
       repeat {
         obfuscatedDate <- as.Date(baseDate[[i]] + ddays(runif(
           1L, -maxDelta[i],
           maxDelta[i]
         )))
-        if (obfuscatedDate >= minDate[[i]]) {
+        if (is.na(lowest) || obfuscatedDate >= lowest) {
           break
         }
       }

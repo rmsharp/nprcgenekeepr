@@ -12,7 +12,10 @@ obfuscateDate(baseDate, minDate, maxDelta = 30L)
 \item{minDate}{optional vector of Date values, the same length as
 \code{baseDate}, that has the lower bound of resulting obfuscated dates.
 When missing, the lower bound is each \code{baseDate} minus its
-\code{maxDelta}, so the bound never binds.}
+\code{maxDelta}, so the bound never binds. An \code{NA} in \code{minDate}
+leaves that element without a lower bound. A \code{minDate} on or after
+\code{baseDate} plus \code{maxDelta} (a date no draw can reach) stops with
+an error that names the element.}
 
 \item{maxDelta}{integer vector of length 1 or the same length as
 \code{baseDate} that is used to create min and max arguments

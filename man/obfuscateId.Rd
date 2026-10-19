@@ -7,7 +7,9 @@
 obfuscateId(id, size = 10L, existingIds = character(0L), placeholder = NULL)
 }
 \arguments{
-\item{id}{character vector of IDs to be obfuscated (alias creation).}
+\item{id}{character vector of IDs to be obfuscated (alias creation). It
+must not contain \code{NA}; an \code{NA} id stops with a message that gives
+its position.}
 
 \item{size}{character length of each alias. An ID that is a placeholder for
 an unknown parent (see \code{\link{removeAutoGenIds}}) gets an alias of the

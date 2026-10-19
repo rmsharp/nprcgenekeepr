@@ -10,7 +10,9 @@
 #' Because aliases are alphanumeric, they never contain a period ("."),
 #' honoring the ID rule enforced at data input by \code{qcStudbook}.
 #'
-#' @param id character vector of IDs to be obfuscated (alias creation).
+#' @param id character vector of IDs to be obfuscated (alias creation). It
+#' must not contain \code{NA}; an \code{NA} id stops with a message that gives
+#' its position.
 #' @param size character length of each alias. An ID that is a placeholder for
 #' an unknown parent (see \code{\link{removeAutoGenIds}}) gets an alias of the
 #' same shape, the placeholder prefix plus random characters; when \code{size}
@@ -39,6 +41,10 @@
 #' obfuscateId(characterIds, size = 4L)
 obfuscateId <- function(id, size = 10L, existingIds = character(0L),
                         placeholder = NULL) {
+  if (anyNA(id)) {
+    stop("id must not contain NA; found at position(s): ",
+         toString(which(is.na(id))), call. = FALSE)
+  }
   if (!is.null(placeholder)) {
     if (!is.logical(placeholder)) {
       stop("obfuscateId(): placeholder must be logical (TRUE, FALSE or NA)",
