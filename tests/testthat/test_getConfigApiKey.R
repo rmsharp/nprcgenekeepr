@@ -61,3 +61,33 @@ test_that("getConfigApiKey reads an apiKey line that ends in a comment", {
              cfg)
   expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "realKey")
 })
+
+## S1014 RED (BACKLOG.md:168, the owner's ruling S1013): a setting with nothing
+## after its "=" took the next setting's name as its value, so
+## "apiKey =" followed by "center = ..." gave the key "center"; as the last
+## setting it gave NA. A quoted key kept only its first word. getConfigApiKey()
+## answers "" for an empty value (no key), like an absent apiKey.
+
+test_that("getConfigApiKey returns '' for a blank apiKey followed by another setting", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("apiKey =", "center = \"SNPRC\""), cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "")
+})
+
+test_that("getConfigApiKey returns '' for a blank apiKey that is the last setting", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("center = \"SNPRC\"", "apiKey ="), cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "")
+})
+
+test_that("getConfigApiKey returns '' for an apiKey in empty quotes", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("apiKey = \"\"", "center = \"SNPRC\""), cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "")
+})
+
+test_that("getConfigApiKey reads a quoted apiKey that holds a blank whole", {
+  cfg <- withr::local_tempfile()
+  writeLines("apiKey = \"two words\"", cfg)
+  expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "two words")
+})

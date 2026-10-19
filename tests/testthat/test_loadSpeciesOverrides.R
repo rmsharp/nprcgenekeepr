@@ -47,6 +47,25 @@ test_that("getSpeciesOverridesPath ignores a commented-out key", {
   expect_identical(nprcgenekeepr:::getSpeciesOverridesPath(cfg), "")
 })
 
+## S1014 RED (BACKLOG.md:168, the owner's ruling S1013): a quoted path that
+## holds a blank is one value, and a path left blank gives "" (it took the
+## next setting's name). getOptionalConfigToken() is the shared lookup.
+
+test_that("getSpeciesOverridesPath reads a quoted path that holds a blank whole", {
+  cfg <- withr::local_tempfile()
+  writeLines("speciesOverridesPath = \"/My Folder/over rides.csv\"", cfg)
+  expect_identical(nprcgenekeepr:::getSpeciesOverridesPath(cfg),
+                   "/My Folder/over rides.csv")
+})
+
+test_that("getSpeciesOverridesPath returns '' for a blank path", {
+  cfg <- withr::local_tempfile()
+  writeLines(c("speciesOverridesPath =", "minBreedingAgeDefault = 2"), cfg)
+  expect_identical(nprcgenekeepr:::getSpeciesOverridesPath(cfg), "")
+  writeLines(c("minBreedingAgeDefault = 2", "speciesOverridesPath ="), cfg)
+  expect_identical(nprcgenekeepr:::getSpeciesOverridesPath(cfg), "")
+})
+
 # ---------------------------------------------------------------------------
 # loadSpeciesOverrides() -- top-level reader (mirrors loadSiteConfig)
 # ---------------------------------------------------------------------------

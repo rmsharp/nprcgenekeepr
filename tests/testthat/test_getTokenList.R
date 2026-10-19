@@ -33,3 +33,138 @@ test_that("getTokenList returns correct lines and vectors", {
   expect_identical(tokenVectors[[6L]], lkVec)
   expect_identical(tokenVectors[[7L]], mapVec)
 })
+
+## S1014 RED (BACKLOG.md:168, the owner's ruling S1013, option A; evidence in
+## docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md): the example file's
+## notes promise that a double-quoted value is kept whole and that a "#"
+## starts a comment, and a blank value is read as the next setting's name.
+## The reader deleted every quote before it split, so none of that was true
+## (the reader is unchanged since 2017-09-13). The rules below are the ruled
+## ones. Blocks marked "pin" pass at HEAD and must keep passing: they hold the
+## readings that do not change (the shipped file, semicolons, quoted names).
+## A quote not closed on its line ending at the end of that line is a rule the
+## RED plan added (the audit's prototype turned 3 settings into 1 on it).
+
+## The value read for setting `name` from `cfgLines`; NULL when the setting is
+## not there (a missing setting then fails an assertion, never throws).
+readSetting <- function(cfgLines, name) {
+  tokenList <- getTokenList(cfgLines)
+  tokenList$tokenVec[match(name, tokenList$param)][[1L]]
+}
+
+test_that("getTokenList keeps a quoted value that holds a blank whole", {
+  cfgLines <- c("folderPath = \"/My Folder/EHR\"", "queryName = \"demographics\"")
+  expect_identical(readSetting(cfgLines, "folderPath"), "/My Folder/EHR")
+  expect_identical(readSetting(cfgLines, "queryName"), "demographics")
+})
+
+test_that("getTokenList keeps a quoted value that holds a comma whole", {
+  cfgLines <- "folderPath = \"/Lab, East/EHR\""
+  expect_identical(readSetting(cfgLines, "folderPath"), "/Lab, East/EHR")
+})
+
+test_that("getTokenList keeps a quoted value that holds an equals sign whole", {
+  cfgLines <- c("baseUrl = \"http://h/labkey?a=b\"", "center = \"SNPRC\"")
+  expect_identical(getTokenList(cfgLines)$param, c("baseUrl", "center"))
+  expect_identical(readSetting(cfgLines, "baseUrl"), "http://h/labkey?a=b")
+})
+
+test_that("getTokenList keeps round brackets inside quotes and drops them outside", {
+  expect_identical(readSetting("folderPath = \"/Lab (old)/EHR\"", "folderPath"),
+                   "/Lab (old)/EHR")
+  expect_identical(readSetting("lkPedColumns = (Id, gender)", "lkPedColumns"),
+                   c("Id", "gender"))
+})
+
+test_that("getTokenList keeps a quoted Windows path with a blank whole", {
+  cfgLines <- "speciesOverridesPath = \"C:/Users/Jane Doe/over rides.csv\""
+  expect_identical(readSetting(cfgLines, "speciesOverridesPath"),
+                   "C:/Users/Jane Doe/over rides.csv")
+})
+
+test_that("getTokenList reads a whole list inside one pair of quotes as one value", {
+  cfgLines <- "lkPedColumns = \"Id, gender, birth\""
+  expect_identical(readSetting(cfgLines, "lkPedColumns"), "Id, gender, birth")
+})
+
+test_that("pin: getTokenList keeps each name in its own quotes separate", {
+  cfgLines <- "lkPedColumns = (\"Id\", \"gender\", \"birth\")"
+  expect_identical(readSetting(cfgLines, "lkPedColumns"),
+                   c("Id", "gender", "birth"))
+})
+
+test_that("pin: getTokenList reads a quoted setting name", {
+  expect_identical(readSetting("\"center\" = \"SNPRC\"", "center"), "SNPRC")
+})
+
+test_that("pin: getTokenList does not separate terms at a semicolon", {
+  expect_identical(readSetting("lkPedColumns = (Id; gender; birth)", "lkPedColumns"),
+                   c("Id;", "gender;", "birth"))
+})
+
+test_that("pin: getTokenList separates terms at blanks, commas, tabs and line breaks", {
+  expect_identical(
+    readSetting(c("lkPedColumns = Id gender,birth\tdeath,", "  dam"), "lkPedColumns"),
+    c("Id", "gender", "birth", "death", "dam")
+  )
+})
+
+test_that("getTokenList ends a setting's line at a comment that follows it", {
+  cfgLines <- c("apiKey = realKey # from the LabKey site", "center = SNPRC")
+  expect_identical(readSetting(cfgLines, "apiKey"), "realKey")
+  expect_identical(readSetting(cfgLines, "center"), "SNPRC")
+})
+
+test_that("getTokenList skips a full-line comment itself, setting-looking text included", {
+  cfgLines <- c("# apiKey = \"placeholder\"", "center = SNPRC")
+  expect_identical(getTokenList(cfgLines)$param, "center")
+})
+
+test_that("pin: getTokenList ends a comment at the end of its line, not the end of the file", {
+  cfgLines <- c("center = SNPRC # first", "baseUrl = http://x", "schemaName = study")
+  expect_identical(getTokenList(cfgLines)$param,
+                   c("center", "baseUrl", "schemaName"))
+  expect_identical(readSetting(cfgLines, "baseUrl"), "http://x")
+})
+
+test_that("pin: getTokenList keeps a # that sits inside a word", {
+  expect_identical(readSetting("baseUrl = http://x/labkey#top", "baseUrl"),
+                   "http://x/labkey#top")
+})
+
+test_that("getTokenList keeps a # that sits inside quotes", {
+  expect_identical(readSetting("queryName = \"demo # not a comment\"", "queryName"),
+                   "demo # not a comment")
+})
+
+test_that("getTokenList gives a blank value in the middle an empty value", {
+  cfgLines <- c("apiKey =", "center = \"SNPRC\"")
+  expect_identical(getTokenList(cfgLines)$param, c("apiKey", "center"))
+  expect_identical(readSetting(cfgLines, "apiKey"), character(0L))
+  expect_identical(readSetting(cfgLines, "center"), "SNPRC")
+})
+
+test_that("getTokenList gives a blank value on the last setting an empty value", {
+  cfgLines <- c("center = \"SNPRC\"", "apiKey =")
+  expect_identical(readSetting(cfgLines, "center"), "SNPRC")
+  expect_identical(readSetting(cfgLines, "apiKey"), character(0L))
+})
+
+test_that("getTokenList reads empty quotes as an empty string", {
+  expect_identical(readSetting("apiKey = \"\"", "apiKey"), "")
+})
+
+test_that("pin: getTokenList ends a quote not closed on its line at the end of that line", {
+  cfgLines <- c("center = \"SNPRC", "baseUrl = \"http://x\"", "schemaName = \"study\"")
+  expect_identical(getTokenList(cfgLines)$param,
+                   c("center", "baseUrl", "schemaName"))
+  expect_identical(readSetting(cfgLines, "center"), "SNPRC")
+  expect_identical(readSetting(cfgLines, "baseUrl"), "http://x")
+  expect_identical(readSetting(cfgLines, "schemaName"), "study")
+})
+
+test_that("pin: getTokenList gives no settings for no lines or only comments", {
+  empty <- list(param = character(0L), tokenVec = list())
+  expect_identical(getTokenList(character(0L)), empty)
+  expect_identical(getTokenList(c("# a", "   # b", "")), empty)
+})

@@ -162,3 +162,57 @@ test_that("getSiteInfo reads the shipped example config unchanged", {
     c("id", "sex", "birth", "death", "exit", "dam", "sire")
   )
 })
+
+## S1014 RED (BACKLOG.md:168, the owner's ruling S1013, option A): the reader
+## keeps a quoted value whole, ends a line at a "#" that starts a word, and
+## gives a blank value an empty value. The blocks reach it through
+## getSiteInfo() (readConfigLines() then getTokenList()), with the setting
+## under test swapped into required_config_lines. A thrown error is turned
+## into its message so a failing block fails an assertion.
+
+swap_config_line <- function(name, newLine) {
+  hit <- startsWith(required_config_lines, name)
+  stopifnot(sum(hit) == 1L)
+  replace(required_config_lines, hit, newLine)
+}
+
+site_value <- function(field) {
+  tryCatch(getSiteInfo()[[field]], error = function(e) conditionMessage(e))
+}
+
+test_that("getSiteInfo reads a quoted folder path with a blank as one value", {
+  write_home_config(swap_config_line("folderPath", "folderPath = \"/My Folder/EHR\""))
+  expect_identical(site_value("folderPath"), "/My Folder/EHR")
+  expect_identical(site_value("queryName"), "demographics")
+})
+
+test_that("getSiteInfo reads a quoted address with an equals sign as one value", {
+  write_home_config(swap_config_line(
+    "baseUrl", "baseUrl = \"http://deepthought:8080/labkey?a=b\""))
+  expect_identical(site_value("baseUrl"), "http://deepthought:8080/labkey?a=b")
+  expect_identical(site_value("center"), "SNPRC")
+})
+
+test_that("getSiteInfo keeps a comment after a setting out of its value", {
+  write_home_config(swap_config_line(
+    "queryName", "queryName = \"demographics\" # the LabKey table"))
+  expect_identical(site_value("queryName"), "demographics")
+})
+
+test_that("getSiteInfo reads each list written in one pair of quotes as one name", {
+  write_home_config(c(
+    required_config_lines[1:5],
+    "lkPedColumns = \"Id, gender, birth, death, lastDayAtCenter, dam, sire\"",
+    "mapPedColumns = \"id, sex, birth, death, exit, dam, sire\""
+  ))
+  expect_identical(site_value("lkPedColumns"),
+                   "Id, gender, birth, death, lastDayAtCenter, dam, sire")
+  expect_identical(site_value("mapPedColumns"),
+                   "id, sex, birth, death, exit, dam, sire")
+})
+
+test_that("getSiteInfo gives a blank setting an empty value and keeps the next one", {
+  write_home_config(swap_config_line("center", "center ="))
+  expect_identical(site_value("center"), character(0L))
+  expect_identical(site_value("baseUrl"), "http://deepthought:8080/labkey")
+})
