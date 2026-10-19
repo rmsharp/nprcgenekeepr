@@ -98,25 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1014 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate, REFACTOR taken):** the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves
-a blank value empty (`apiKey =` no longer reads `center`) and ends a quote not closed on its line at that line's end; the example file's notes, the loadable copy and two help pages say so (S1013 ruling A).
-Claim `41428f309`, RED `ce789a1c7`, GREEN `0145eedf9` `f01f67051` `2691e58d7`, pins `6da22086e`, NEWS `fa6ef2924`, REFACTOR `26309c9b4` `38754182d`. Not pushed (HEAD 34 commits ahead of origin).
-**Owner ruling (the one PRE-RED question):** a whole list inside one pair of quotes reads as ONE value; `getSiteInfo()` does not split on commas (I had recommended splitting). The notes say to quote each name separately.
-**Added by the plan, approved at the RED gate:** a quote not closed on its line ends at that line (the audit prototype turned 3 settings into 1); the species-path note (`example_nprcgenekeepr_config:72-73`) reworded;
-an empty value gives `""` in `getConfigApiKey()` and `getOptionalConfigToken()`, now one lookup (`R/getSpeciesOverridesPath.R:17`). The reader is `scanConfigTerms()` (`R/getTokenList.R:64`) plus `addConfigTerm()` (`:108`).
-**Evidence:** 43 new blocks in 5 files (31 failed at RED, all on wrong values, 0 errors); 15 mutants of the reader, 13 died, the 2 survivors pinned and killed; full suite 435 files, 3,964 blocks, 0 failed, 0 errors,
-187 skipped; `devtools::check()` 0/0/0; `lint_package()` 0; unmocked smoke in a scratch HOME (shipped file; quoted forms; blank `apiKey =`); 20 NEWS and spelling files 238 blocks, 0 failed. `NEWS.Rmd:643-657`. Ratchet 1/1. Learning 980.
-**Handoff evaluation of S1013: 8/10.** Helped: the ruled rules and the prototype reproduced; "86 existing blocks pin none of the 8 changed forms" held (117 = 86 + 31); the PRE-RED question was ready to ask.
-Missing: the unclosed-quote rule; the second reader of a value (`getOptionalConfigToken()` took `[[1L]]` of it); the species-path note at `:72-73`; the generated man page's length line. Wrong: nothing material.
-**Self-assessment: 8/10.** + measured the whole-list case on the real chain before asking; read each RED failure message; the 15-mutant run found two missing pins; a `<<-` lint failure caught before commit.
-- the first RED lacked those two pins; `devtools::document()` was not re-run after the data rebuild until REFACTOR; my recommendation was not taken (fine, recorded).
-**Next:** `BACKLOG.md:168` (Input-tab test upload helpers, READY, S-M, test-only), then `:181` (13 small statements, READY, S). Also open: `:225`, `:234`, the `SESSION_RUNNER.md` re-sync, the compression item `:420`.
-The push is the owner's call: 34 commits ahead of origin, `R/` changed, so all four push workflows would start (estimate: green; not measured on CI).
-**Gotchas:** run `devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run saves the file text and restores it in `finally`, never `git checkout`;
-the BACKLOG cites moved when `:168` was removed (now `:168`, `:181`, `:225`, `:234`, `:420`); `readConfigLines()` still drops full-line comments first, which is safe because a quote never spans lines.
+### What Session 1015 Did
+**Deliverable:** move the other Input-tab test upload helpers to the shared `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`; `BACKLOG.md:168`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-18
+**Status:** Session claimed. Work beginning. Test-only (no `R/` change): the phase shape goes to the owner as one PRE-RED question first. S1014's block folded into the condensed list below.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1013 (condensed S950 to S1014; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1014 (condensed S950 to S1015; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1014: the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves a blank value empty and ends an unclosed quote at its line end
+(`scanConfigTerms()`, `R/getTokenList.R:64`; `addConfigTerm()` `:108`; the owner ruled a whole list inside one pair of quotes is ONE value); strict TDD, REFACTOR taken; claim `41428f309`,
+RED `ce789a1c7`, GREEN `0145eedf9` `f01f67051` `2691e58d7`, REFACTOR `26309c9b4` `38754182d`, close-out `27e33104f`; evaluation of S1013 8/10, self 8/10. **Gotchas kept:** run
+`devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run restores the file text in `finally`, never `git checkout`;
+`readConfigLines()` drops full-line comments first, which is safe because a quote never spans lines.
 S1013: a decision session, no code: the owner took option A for the config-file reader (evidence and prototype: `docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`; claim `3bf3b438f`, deliverable
 `977988041`, close-out `7dbcc0b2a`; evaluation of S1012 9/10, self 8/10); built in S1014. **Gotchas kept:** install candidate packages into a scratch library, never renv; a prototype swapped into the
 namespace needs a control (Learning 979).
