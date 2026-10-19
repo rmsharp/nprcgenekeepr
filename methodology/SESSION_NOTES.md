@@ -98,19 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1016 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the 13 small wrong statements of the slice 6e re-check are fixed and pinned in one new file,
-`tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; its header lists the 13 report ids and the fix for each). New: `assertFileType()` (`R/assertFileType.R:18`). Four NEWS
-entries (`NEWS.Rmd:660-688`; CE6 left out, the function is not in 2.0.0). Claim `5411ddf79`, RED `a4878f0e3`, GREEN `99d0ab451` `2c5670629` `d0d1a6d8b` `caf9cf9f1` `8139774ea` `3baa1f594` `1aee03ad8`,
-REFACTOR `e116f4336` `ffe2f3a3b` `596a3e92d`, NEWS `1c15f6272`. Not pushed (57 ahead). The owner took "fix all 13 as listed" over "retire CK1, CL1, CL6" (CK1 has two browser-test callers, CL6 a vignette caller).
-**Evidence:** RED 16 of 29 blocks failed for the stated reasons; 19 mutants killed; full suite 437 files, 3,999 blocks; `lint_package()` 0; `devtools::check()` 0/0/0; 4 browser files, 20 blocks, 0 failed, on a scratch install.
-**Handoff evaluation of S1015: 8/10.** Helped: the cites `:168`, `:212`, `:221`, `:407` held. Missing: "the eight no-caller candidates" reads as if they sit among the 13 (3 do); "no caller in `R/`"
-left out tests and vignettes; "S994 shape" understated 13 code changes in 13 files.
-**Self: 7/10.** + one probe measured all 13 cases before RED and found wider ones (CL7 `Inf`; CL5 added no column silently); the retire option's cost was grep-measured. - GREEN 1's help passed 80 characters
-(a 3b commit); my first NEWS quoted the typo (a failed 8-minute run); several silent stretches before a status line. Learning 982. Ratchet 1/1 (results `8084662393b1`).
-**Next (my order; the owner gave none):** `BACKLOG.md:168` guide sentence (docs only, the owner writes it), `:178`, `:193`, `:206`, `:215` (all DECISION NEEDED); the compression item is `:401` (READY, L).
+### What Session 1017 Did
+**Deliverable:** the guide sentence for "groups not in the pedigree" (`BACKLOG.md:168`, DECISION NEEDED, Effort S, docs only; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-19 11:12 CDT
+**Status:** Session claimed. Work beginning. Strict TDD: where the sentence goes and its wording are the owner's, asked before RED; the silent "Export Current Group" stop is a code finding, not this deliverable.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1015 (condensed S950 to S1016; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1016 (condensed S950 to S1017; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1016: the 13 small wrong statements of the slice 6e re-check are fixed and pinned in `tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; new `assertFileType()`,
+`R/assertFileType.R:18`; four NEWS entries `NEWS.Rmd:660-688`); the owner took "fix all 13 as listed" over retiring CK1, CL1, CL6; strict TDD, REFACTOR taken; claim `5411ddf79`, RED `a4878f0e3`,
+GREEN `99d0ab451` `2c5670629` `d0d1a6d8b` `caf9cf9f1` `8139774ea` `3baa1f594` `1aee03ad8`, REFACTOR `e116f4336` `ffe2f3a3b` `596a3e92d`, NEWS `1c15f6272`; evaluation of S1015 8/10, self 7/10 (Learning 982).
+**Gotchas kept:** this file sits near the commit hook's limit (about 56,700 B), so condense before adding; a roxygen edit is the R file plus its man page, re-wrapped to 80 characters; never quote a misspelling in
+NEWS or help (`test_wordlist_coverage.R`); the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`.
 S1015: the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R` (`uploadPedigreeFileQc()`, `uploadPedigreeFile()`; the owner chose to widen the helper; strict TDD,
 test files only; hashes in `CHANGELOG.md`; 8/10, self 8/10). **Gotchas kept:** a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
 S1014: the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves a blank value empty and ends an unclosed quote at its line end
