@@ -40,10 +40,7 @@ saveDataframesAsFiles <- function(dfList, baseDir, fileType = "csv") {
     all(vapply(dfList, inherits, logical(1L), what = "data.frame")))) {
     stop("dfList must be a list containing only dataframes.")
   }
-  if (!(length(fileType) == 1L && fileType %in% c("txt", "csv", "excel"))) {
-    stop("fileType must be one of \"txt\", \"csv\" or \"excel\" (a single ",
-         "value).")
-  }
+  assertFileType(fileType)
   filesWritten <- character(0L)
   for (i in seq_along(dfList)) {
     filename <- paste0(baseDir, "/", names(dfList)[i], ".", fileType)

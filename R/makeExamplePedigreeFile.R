@@ -32,10 +32,7 @@ makeExamplePedigreeFile <- function(file = file.path(
                                       )
                                     ),
                                     fileType = "csv") {
-  if (!(length(fileType) == 1L && fileType %in% c("txt", "csv", "excel"))) {
-    stop("fileType must be one of \"txt\", \"csv\" or \"excel\" (a single ",
-         "value).")
-  }
+  assertFileType(fileType)
   if (fileType == "csv") {
     write.csv(nprcgenekeepr::examplePedigree,
       file = file, row.names = FALSE
