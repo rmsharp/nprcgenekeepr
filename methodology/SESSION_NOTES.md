@@ -98,15 +98,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1015 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate; test files only):** the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R`:
-`uploadPedigreeFileQc()` returns `list(summary, results, ready)`; `uploadPedigreeFile()` returns its `$results`. The owner chose to widen the helper (`uploadForQc()` also read the summary and ready flag).
-Claim `066cd78e2`, RED `310a5f221`, GREEN `7d6237678`, REFACTOR `2217419c2` `e448c7f68` `89aa5bdde` `2a699fdd1`. Not pushed (41 commits ahead of origin).
-**Evidence:** 11 mutants killed; 6 helper-using files match baselines; full suite 436 files, 3,969 blocks, 0 failed, 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0.
-**Handoff evaluation of S1014: 8/10.** Helped: the item's named files and "check each age input" held. Wrong: "three have the same shape" (one also read the summary and ready flag). **Self: 8/10.** - option text said 7 callers; it is 5.
-Learning 981. Ratchet 1/1. **Next:** `BACKLOG.md:168` (13 small statements, READY, S), then `:212` and `:221` (both DECISION NEEDED); the compression item is `:407`.
+### What Session 1016 Did
+**Deliverable:** the 13 small wrong statements of the slice 6e re-check (`BACKLOG.md:168`, READY, Effort S; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-19 01:06 CDT
+**Status:** Session claimed. Work beginning. Strict TDD: each of the 13 cases is measured before RED; the fix-or-retire question for CK1, CL1 and CL6 (functions nothing in `R/` calls; issue #37) goes to the owner before RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1014 (condensed S950 to S1015; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1015 (condensed S950 to S1016; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1015: the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R` (`uploadPedigreeFileQc()` returns `summary`, `results`, `ready`;
+`uploadPedigreeFile()` returns its `$results`); three copies moved, the owner chose to widen the helper (strict TDD, test files only); claim `066cd78e2`, RED `310a5f221`,
+GREEN `7d6237678`, REFACTOR `2217419c2` `e448c7f68` `89aa5bdde` `2a699fdd1`; evaluation of S1014 8/10, self 8/10 (Learning 981). **Gotchas kept:** a backlog "same shape" claim is a
+guess until each copy's return and callers are read; the four copies left alone (`inputTabStudbook()`, `runOneFile()`, `runSeparate()`, `run_upload()`) were not re-read.
 S1014: the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves a blank value empty and ends an unclosed quote at its line end
 (`scanConfigTerms()`, `R/getTokenList.R:64`; `addConfigTerm()` `:108`; the owner ruled a whole list inside one pair of quotes is ONE value); strict TDD, REFACTOR taken; claim `41428f309`,
 RED `ce789a1c7`, GREEN `0145eedf9` `f01f67051` `2691e58d7`, REFACTOR `26309c9b4` `38754182d`, close-out `27e33104f`; evaluation of S1013 8/10, self 8/10. **Gotchas kept:** run
