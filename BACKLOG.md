@@ -165,35 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Make the config-file reader keep a quoted value whole, and rewrite the notes to match (READY, Effort M; strict TDD;
-      ruled S1013, 2026-10-18, option A of three)** (the owner's pick at the S1013 decision session, after the owner asked in S1012
-      that the documentation and the parser be settled as one choice; the evidence, the 19-form side-by-side, the standard-format
-      measurements and the throwaway prototype are in `docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`) -- the reader is
-      `getTokenList()` (`R/getTokenList.R`, exported) behind `readConfigLines()` (`R/readConfigLines.R:16`), read by
-      `getConfigApiKey()`, `getOptionalConfigToken()` and `getSiteInfo()`. **The ruled rules:** a double quote keeps a term whole (a
-      blank, comma, `=` or round brackets inside it are kept); blanks, commas, tabs and line breaks outside quotes separate terms;
-      semicolons do not separate (the notes lose that sentence); round brackets outside quotes are ignored; a `#` that starts a word
-      begins a comment to the end of the line, on its own line or after a setting (this settles the former trailing-comment item;
-      `labkey#top` unquoted stays whole); a setting with nothing after its `=` has an empty value instead of taking the next
-      setting's name (`apiKey =` then `center = "SNPRC"` gave `apiKey=<center> <=>`, so `getConfigApiKey()` returned `center`; as the
-      last setting it gave `<NA> <=>`); names stay case-insensitive (S1012). **Measured S1013 with a throwaway prototype (the audit's
-      appendix):** over 19 forms of a file, 11 read as before (the shipped example included) and 8 change, all of them forms that
-      read wrongly today (a quoted blank, comma, `=` or round brackets; an empty value in the middle or last; a trailing comment; a
-      Windows path with a blank); the 86 blocks of the 12 test files that read a config file pass unchanged with it swapped in.
-      **Ask at PRE-RED (one question, plain words):** a whole list inside one pair of quotes (`lkPedColumns = "Id, gender, birth"`)
-      gives three values now and would give one; either `getSiteInfo()` splits the two list settings (`lkPedColumns`,
-      `mapPedColumns`) on commas after reading, or the change is documented (not measured: how many centers' files do this; the
-      shipped example does not). **Places to change in the same build (sentences proposed in the audit's section 4; the owner may
-      rewrite them):** the example file's notes (`inst/extdata/examples/example_nprcgenekeepr_config:3,8-15`: comments, separators,
-      quoting); the loadable copy `data/exampleNprcgenekeeprConfig.RData` (`R/data.R:4-12`), an older 34-line file (the shipped one
-      has 87) that repeats the three wrong statements and has two typos, rebuilt from the shipped file by a new `data-raw/` script
-      (none exists; the README `:166-172` and the manual `vignettes/a3manual.md:137-147` tell users to `View()` it); the
-      `getTokenList()` help (names no rules today) and the `getSiteInfo()` help (one pointer sentence); `R/loadSiteConfig.R:6-10`
-      stays true. A test pins each stated rule; the `NEWS.Rmd` entry is a plain "Fixed:" bullet stating the finished state against
-      the prior release. `getTokenList()` keeps its name and signature. Not chosen, so do not re-offer without the owner: correcting
-      the notes only (option B) and a standard format (option C: none of `yaml`, `config`, `configr`, `RcppTOML` or `ini` reads the
-      shipped file as it is, measured S1013).
-
 - [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
       REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
       minDamAge, minSireAge)`, which uploads a file through the real Input module and returns its `qcResults()`;

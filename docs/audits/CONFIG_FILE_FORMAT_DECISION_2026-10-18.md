@@ -1,8 +1,10 @@
 # The config file's format and its reader: one decision (S1013, 2026-10-18)
 
-**Status: RULED S1013 -- option A, "fix the reader" (the owner took the recommended option).** Decision session, no code, no tests. The ruling is
-recorded in `BACKLOG.md:168` (now the READY build item, strict TDD, a later session); semicolons do not separate terms; the one open question,
-a whole list inside one pair of quotes, is asked at that session's PRE-RED. The owner had said the documentation and the reader can each change
+**Status: RULED S1013 -- option A, "fix the reader" (the owner took the recommended option); BUILT S1014.** Decision session, no code, no tests. The ruling
+was recorded as a READY build item (strict TDD, a later session); semicolons do not separate terms; the one open question, a whole list inside one pair
+of quotes, was asked at S1014's PRE-RED and **the owner ruled it reads as one value** (the notes say to quote each name separately; the alternative, splitting
+the two list settings on commas in `getSiteInfo()`, was not taken). S1014 also made an unclosed quote end at the end of its line (the prototype below turns
+`center = "SNPRC` above two good lines into 1 setting; today's reader gives 3). The owner had said the documentation and the reader can each change
 the other, so neither was fixed ahead of the pick; the candidates, evidence and sentences below are what the pick was made from.
 
 ## 1. Where the format is described today
