@@ -99,31 +99,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1014 Did
-**Deliverable:** build the config-file reader the owner ruled in S1013: `getTokenList()` keeps a double-quoted value whole, a `#` that starts a word begins a comment, a blank value stays blank,
-and the example file's notes, the loadable copy and two help pages say so (`BACKLOG.md:168`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-18
-**Status:** Session claimed. Work beginning. Strict TDD: the one PRE-RED question (a whole list inside one pair of quotes) first, then RED, GREEN, REFACTOR, each behind its own gate. S1013's block folded into the condensed list below.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate, REFACTOR taken):** the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves
+a blank value empty (`apiKey =` no longer reads `center`) and ends a quote not closed on its line at that line's end; the example file's notes, the loadable copy and two help pages say so (S1013 ruling A).
+Claim `41428f309`, RED `ce789a1c7`, GREEN `0145eedf9` `f01f67051` `2691e58d7`, pins `6da22086e`, NEWS `fa6ef2924`, REFACTOR `26309c9b4` `38754182d`. Not pushed (HEAD 34 commits ahead of origin).
+**Owner ruling (the one PRE-RED question):** a whole list inside one pair of quotes reads as ONE value; `getSiteInfo()` does not split on commas (I had recommended splitting). The notes say to quote each name separately.
+**Added by the plan, approved at the RED gate:** a quote not closed on its line ends at that line (the audit prototype turned 3 settings into 1); the species-path note (`example_nprcgenekeepr_config:72-73`) reworded;
+an empty value gives `""` in `getConfigApiKey()` and `getOptionalConfigToken()`, now one lookup (`R/getSpeciesOverridesPath.R:17`). The reader is `scanConfigTerms()` (`R/getTokenList.R:64`) plus `addConfigTerm()` (`:108`).
+**Evidence:** 43 new blocks in 5 files (31 failed at RED, all on wrong values, 0 errors); 15 mutants of the reader, 13 died, the 2 survivors pinned and killed; full suite 435 files, 3,964 blocks, 0 failed, 0 errors,
+187 skipped; `devtools::check()` 0/0/0; `lint_package()` 0; unmocked smoke in a scratch HOME (shipped file; quoted forms; blank `apiKey =`); 20 NEWS and spelling files 238 blocks, 0 failed. `NEWS.Rmd:643-657`. Ratchet 1/1. Learning 980.
+**Handoff evaluation of S1013: 8/10.** Helped: the ruled rules and the prototype reproduced; "86 existing blocks pin none of the 8 changed forms" held (117 = 86 + 31); the PRE-RED question was ready to ask.
+Missing: the unclosed-quote rule; the second reader of a value (`getOptionalConfigToken()` took `[[1L]]` of it); the species-path note at `:72-73`; the generated man page's length line. Wrong: nothing material.
+**Self-assessment: 8/10.** + measured the whole-list case on the real chain before asking; read each RED failure message; the 15-mutant run found two missing pins; a `<<-` lint failure caught before commit.
+- the first RED lacked those two pins; `devtools::document()` was not re-run after the data rebuild until REFACTOR; my recommendation was not taken (fine, recorded).
+**Next:** `BACKLOG.md:168` (Input-tab test upload helpers, READY, S-M, test-only), then `:181` (13 small statements, READY, S). Also open: `:225`, `:234`, the `SESSION_RUNNER.md` re-sync, the compression item `:420`.
+The push is the owner's call: 34 commits ahead of origin, `R/` changed, so all four push workflows would start (estimate: green; not measured on CI).
+**Gotchas:** run `devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run saves the file text and restores it in `finally`, never `git checkout`;
+the BACKLOG cites moved when `:168` was removed (now `:168`, `:181`, `:225`, `:234`, `:420`); `readConfigLines()` still drops full-line comments first, which is safe because a quote never spans lines.
 
 ### Sessions 947-1013 (condensed S950 to S1014; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1013: a decision session, no code: the owner took option A for the config-file reader (a double-quoted value stays whole, a `#` that starts a word begins a comment, a blank value stays blank, semicolons do
-not separate); evidence and a throwaway prototype in `docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`; claim `3bf3b438f`, deliverable `977988041`, close-out `7dbcc0b2a`; evaluation of S1012 9/10, self 8/10.
-**Gotchas kept:** the whole-list-in-quotes form reads as three values now and one after the fix, so never write "every working file reads the same"; the 86 existing blocks pin none of the 8 changed forms,
-so RED adds its own; `data/exampleNprcgenekeeprConfig.RData` has no build script and `man/exampleNprcgenekeeprConfig.Rd` is generated (`docs/planning/extdata-reorganization-plan.md:205`); install candidate
-packages into a scratch library (`install.packages(lib = )` plus `.libPaths()`), never renv; a prototype swapped into the namespace needs a control (Learning 979).
+S1013: a decision session, no code: the owner took option A for the config-file reader (evidence and prototype: `docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`; claim `3bf3b438f`, deliverable
+`977988041`, close-out `7dbcc0b2a`; evaluation of S1012 9/10, self 8/10); built in S1014. **Gotchas kept:** install candidate packages into a scratch library, never renv; a prototype swapped into the
+namespace needs a control (Learning 979).
 S1012: the shipped example configuration no longer gives `getConfigApiKey()` a key; one shared reader, `readConfigLines()` (`R/readConfigLines.R:16`), drops comment lines for `getConfigApiKey()`,
-`getOptionalConfigToken()` and `getSiteInfo()`; a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`) (the owner ruled: fix the shared cause, accept another case; strict TDD,
-REFACTOR taken twice plus a pin; claim `7aaa8e1d7`, close-out `2e894b2b4`; evaluation of S1011 9/10, self 8/10). **Gotchas kept:** `grep 'readLines(.*skipNul' R/` before trusting "as the sibling does";
-test a lowercase file asked for in camel case; config tests put a file under `HOME` with `withr::local_envvar` (`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the shipped file
-(`tests/testthat/helper-exampleConfig.R:8`); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
+`getOptionalConfigToken()` and `getSiteInfo()`; a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`) (strict TDD, REFACTOR taken twice plus a pin; claim `7aaa8e1d7`, close-out
+`2e894b2b4`; evaluation of S1011 9/10, self 8/10). **Gotchas kept:** config tests put a file under `HOME` with `withr::local_envvar` (`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the
+shipped file (`tests/testthat/helper-exampleConfig.R:8`); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
 S1008-S1011 (claims and close-outs in `CHANGELOG.md` and `HANDOFFS.md`; evaluations 8-9/10, self 8/10): S1008, with a sex ratio set a male is placed only as a known adult male (`R/fillGroupMembersWithSexRatio.R:84-89`;
 `NEWS.Rmd:277`); S1009 diagnosed the red `shinytest2` run (`R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE when every row has an `NA` allele); S1010 fixed it (the guard at `:855` is
 `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`); S1011, the Cross-Center check flags a reused id (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`) and the merge keeps every column
-(`.padCrossCenterColumn()` `:340`). **Gotchas kept:** measure each named case of a ruled fix before RED; run a mutant against a new pin block before committing it; `req(x)` also stops for a length-0 value;
-run a new test on the pre-fix source (`git archive <sha>`); to bisect an E2E file use a scratch `git worktree` and `R_LIBS=<lib>:<renv lib>`; read a box's members in the real app through the Group Detail
-`DataTable().page.len(-1).draw()`; the Cross-Center tab has no browser test (scratch `AppDriver`; Learnings 974-977).
+(`.padCrossCenterColumn()` `:340`). **Gotchas kept:** measure each named case of a ruled fix before RED; run a mutant against a new pin block before committing it; `req(x)` also stops for a length-0 value; to bisect an E2E file use a
+scratch `git worktree` and `R_LIBS=<lib>:<renv lib>`; the Cross-Center tab has no browser test (scratch `AppDriver`; Learnings 974-977).
 S1007: `convertFromCenter()` reads only whole values; a `fromCenter` cell that is not a yes or a no stops the load and names its rows (`R/convertFromCenter.R:28-49`; 9/10, self 8/10). **Gotchas kept:** `AppDriver`
-needs `NOT_CRAN=true`; a scratch install needs `R_LIBS=<scratch>:<renv library>`; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
+needs `NOT_CRAN=true`; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
 S1006: the Mate Pair table pairs only animals recorded male or female and says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`; 9/10, self 8/10). **Gotchas kept:** no bundled data has
 an unsexed living animal, so a defect needs a hand-set U; `R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`).
 S1005: an Excel upload of kinship overrides or snapshot history works (`R/convertExcelNumericColumns.R`; `R/snapshotSchemaColumns.R`; strict TDD, REFACTOR taken; 9/10, self 8/10). **Gotchas kept:** Learning

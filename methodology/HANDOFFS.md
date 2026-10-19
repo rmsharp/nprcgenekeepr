@@ -202,12 +202,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1014
 date: 2026-10-18
-status: pending
-active_task: IN PROGRESS -- build the config-file reader the owner ruled in S1013 (`BACKLOG.md:168`, option A: a quoted value stays whole, a `#` that starts a word begins a comment, a blank value stays blank); strict TDD; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- the config-file reader keeps a double-quoted value whole, ends a line at a # that starts a word, leaves a blank value empty and ends an unclosed quote at its line end; the example file's notes, the loadable copy and two help pages say so (BACKLOG item ruled S1013 option A; owner pick at the Phase 0 picker, item 1 of 4; strict TDD with every phase behind its own gate, REFACTOR taken)
+what_was_done: Phase 0 clean (CHANGELOG and HANDOFFS frontiers at HEAD 7dbcc0b2a, no gap). Claim 41428f309. One PRE-RED question, answered by the owner: a whole list inside one pair of quotes reads as one value (I had recommended splitting on commas). RED ce789a1c7 (41 new blocks, 31 failing on wrong values, 0 errors). GREEN 0145eedf9 (scanConfigTerms() in R/getTokenList.R; getConfigApiKey()/getOptionalConfigToken() answer "" for an empty value), f01f67051 (the example file's notes, getSiteInfo() help, readConfigLines() comment), 2691e58d7 (data/exampleNprcgenekeeprConfig.RData rebuilt by data-raw/exampleNprcgenekeeprConfig.R). 15-mutant run: 13 killed, 2 survivors pinned (6da22086e) and killed. NEWS fa6ef2924. REFACTOR 26309c9b4 (one lookup), 38754182d (four unused stringi imports; generated man length line). Full suite 435 files, 3964 blocks, 0 failed, 0 errors, 187 skipped; devtools::check() 0/0/0; lint_package() 0. BACKLOG item removed; Learning 980; audit status updated
+next_steps: BACKLOG.md:168 (the other Input-tab test upload helpers, READY, S-M, test-only: three same-shape copies move to helper-inputTabUpload.R, one file per commit) then :181 (the 13 small wrong statements, READY, S). Also open: :225 (a header-only file's extra columns), :234 (the archive pointers), the SESSION_RUNNER.md re-sync, the compression item at :420. The push is the owner's call: HEAD is 34 commits ahead of origin/master; R/ changed, so all four push workflows would start (estimate: green; not measured on CI)
+key_files: R/getTokenList.R:33-111 (getTokenList(), scanConfigTerms() at :64, addConfigTerm() at :108); R/getSpeciesOverridesPath.R:17-28 (the one first-value lookup), R/getConfigApiKey.R; R/getSiteInfo.R:22-26 and R/readConfigLines.R:4-11 (help); inst/extdata/examples/example_nprcgenekeepr_config:1-18 and :75-76 (notes); data-raw/exampleNprcgenekeeprConfig.R; tests/testthat/test_configFileNotes.R (notes, help and loadable-copy gate), test_getTokenList.R:37 onward; NEWS.Rmd:643-657; docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md:1; PROJECT_LEARNINGS.md Learning 980
+gotchas: run devtools::document() after any data rebuild (man/exampleNprcgenekeeprConfig.Rd carries a generated length: 34 became 89); a mutation run saves the file text and restores it in finally, never git checkout; BACKLOG cites moved when :168 was removed (now :168, :181, :225, :234, :420); the reader keeps a quoted value whole but a quote never spans lines, so readConfigLines() dropping full-line comments first is safe; a list inside one pair of quotes is one name by the owner's ruling (the notes say to quote each name separately)
+runtime_smoke: unmocked, in a scratch HOME, through getSiteInfo() and setLabKeyDefaults(): the shipped example gives the same 7 values per list and stops "No LabKey credential found"; a file with folderPath "/My Folder/EHR" and a trailing comment, apiKey "key with blank" and a quoted species path reads each as one value and setLabKeyDefaults() uses the key; "apiKey =" above the other settings reads "" (was "center") and finds no credential. The Shiny app itself was not launched (the reader is reached only through these functions)
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results ffb206266ac9 · manifest aa983075d6a2
+changelog_ref: 41428f309
+commit: 38754182d
 ```
-
 ```handoff
 session: S1013
 date: 2026-10-18
