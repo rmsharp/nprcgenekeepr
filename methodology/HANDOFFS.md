@@ -206,12 +206,12 @@ status: complete
 self_score: 8
 predecessor_score: 8
 active_task: DONE -- the Input-tab test upload block lives once in helper-inputTabUpload.R; uploadPedigreeFileQc() returns list(summary, results, ready), uploadPedigreeFile() returns its results; three copies moved (owner pick, item 1 of 4; owner chose to widen the helper; strict TDD, test files only)
-what_was_done: Claim 066cd78e2. Measured: .uploadExemplar() and uploadExample() match the helper; uploadForQc() also reads qcSummary()/isReady(). RED 310a5f221, GREEN 7d6237678, REFACTOR 2217419c2 e448c7f68 89aa5bdde 2a699fdd1. 11 mutants killed; 6 files match baselines; full suite 436 files 3969 blocks 0 failed 0 errors; lint 0; check 0/0/0. BACKLOG block removed. Close-out cut short by the usage limit.
-next_steps: BACKLOG.md:168 is now the 13 small wrong statements (READY, S), then :225 and :234 (DECISION NEEDED). Owed from this session: append a Learning to PROJECT_LEARNINGS.md (a backlog "same shape" claim was wrong for 1 of 3 copies: read each copy's return and callers first; count call sites with grep before writing a number in option text); run python3 methodology/quality_ratchet.py --run for the receipt citation. The push is the owner's call (41 commits ahead).
-key_files: tests/testthat/helper-inputTabUpload.R:8-40 (both functions); tests/testthat/test_inputTabUploadHelper.R:1 (5 blocks); tests/testthat/test_modInput_qcStudbook.R:750 (pointer comment, 8 callers); tests/testthat/test_examplePedigreeFixtures.R:56; tests/testthat/test_examplePedigreeTxt.R:106
+what_was_done: Claim 066cd78e2. Measured: .uploadExemplar() and uploadExample() match the helper; uploadForQc() also reads qcSummary()/isReady(). RED 310a5f221, GREEN 7d6237678, REFACTOR 2217419c2 e448c7f68 89aa5bdde 2a699fdd1. 11 mutants killed; 6 files match baselines; full suite 436 files 3969 blocks 0 failed 0 errors; lint 0; check 0/0/0. BACKLOG block removed. Close-out finished after the usage limit reset: Learning 981 appended, ratchet run.
+next_steps: BACKLOG.md:168 is now the 13 small wrong statements (READY, S), then :212 (Cross-Center header-only file) and :221 (archive pointers), both DECISION NEEDED; the compression item is :407. The push is the owner's call (41 commits ahead).
+key_files: PROJECT_LEARNINGS.md Learning 981; tests/testthat/helper-inputTabUpload.R:8-40 (both functions); tests/testthat/test_inputTabUploadHelper.R:1 (5 blocks); tests/testthat/test_modInput_qcStudbook.R:750 (pointer comment, 8 callers); tests/testthat/test_examplePedigreeFixtures.R:56; tests/testthat/test_examplePedigreeTxt.R:106
 gotchas: the four copies left alone (inputTabStudbook(), runOneFile(), runSeparate(), run_upload()) were not re-read this session; zsh reads a leading ===== word as an expansion; a mutation run restores the helper from saved text and git diff is empty after
 runtime_smoke: n/a -- test files only; the full suite is the run
-quality_ratchet: not re-run this session (usage limit); last cited 1/1 pass, results ffb206266ac9
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 455420ea88e4 · manifest aa983075d6a2
 changelog_ref: 066cd78e2
 commit: 2a699fdd1
 ```

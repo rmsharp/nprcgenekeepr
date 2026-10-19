@@ -104,7 +104,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Claim `066cd78e2`, RED `310a5f221`, GREEN `7d6237678`, REFACTOR `2217419c2` `e448c7f68` `89aa5bdde` `2a699fdd1`. Not pushed (41 commits ahead of origin).
 **Evidence:** 11 mutants killed; 6 helper-using files match baselines; full suite 436 files, 3,969 blocks, 0 failed, 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0.
 **Handoff evaluation of S1014: 8/10.** Helped: the item's named files and "check each age input" held. Wrong: "three have the same shape" (one also read the summary and ready flag). **Self: 8/10.** - option text said 7 callers; it is 5.
-**Cut short by the usage limit, owed:** a Learning in `PROJECT_LEARNINGS.md`; `quality_ratchet.py --run`. **Next:** `BACKLOG.md:168` (13 small statements, READY, S), then `:225`, `:234`.
+Learning 981. Ratchet 1/1. **Next:** `BACKLOG.md:168` (13 small statements, READY, S), then `:212` and `:221` (both DECISION NEEDED); the compression item is `:407`.
 
 ### Sessions 947-1014 (condensed S950 to S1015; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1014: the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves a blank value empty and ends an unclosed quote at its line end
