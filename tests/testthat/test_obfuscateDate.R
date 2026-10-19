@@ -75,7 +75,7 @@ test_that(
     )
     expect_error(
       obfuscateDate(targetDate, minBirthDate, c(10L, 20L, 30L)),
-      "Length of minDate must be 1 or the same as baseDate."
+      "Length of maxDelta must be 1 or the same as baseDate."
     )
   }
 )
