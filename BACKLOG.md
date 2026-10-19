@@ -146,7 +146,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
       table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
       CE4 and CE5, the Cross-Center check and merge, fixed S1011 (`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`, `NEWS.Rmd`);
-      CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and 13 small wrong statements for one housekeeping session (an item below); CL9 is the open item below),
+      CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and the 13 small wrong statements fixed S1016 (`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9 is the open item below),
       and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
       `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
       `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
@@ -164,12 +164,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
-
-- [ ] **The 13 small wrong statements of the slice 6e re-check (READY, Effort S)** (found S1003; the report's first
-      minor group, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) -- one housekeeping session in
-      the S994 shape (help or code fixed, one test file; `tests/testthat/test_docsAuditHousekeepingWording.R` is the
-      model). The eight candidates in functions nothing in `R/` calls (the report's "No caller in `R/`") could instead
-      be retired under issue #37; that is the owner's call at pickup.
 
 - [ ] **The guide does not name the "groups not in the pedigree" sentence (DECISION NEEDED -- add a sentence where the
       owner wants it, or leave; docs only, Effort S, the owner writes the sentence)** (found S995, widened S996) -- the Genetic

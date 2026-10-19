@@ -99,16 +99,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1016 Did
-**Deliverable:** the 13 small wrong statements of the slice 6e re-check (`BACKLOG.md:168`, READY, Effort S; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-19 01:06 CDT
-**Status:** Session claimed. Work beginning. Strict TDD: each of the 13 cases is measured before RED; the fix-or-retire question for CK1, CL1 and CL6 (functions nothing in `R/` calls; issue #37) goes to the owner before RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the 13 small wrong statements of the slice 6e re-check are fixed and pinned in one new file,
+`tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; its header lists the 13 report ids and the fix for each). New: `assertFileType()` (`R/assertFileType.R:18`). Four NEWS
+entries (`NEWS.Rmd:660-688`; CE6 left out, the function is not in 2.0.0). Claim `5411ddf79`, RED `a4878f0e3`, GREEN `99d0ab451` `2c5670629` `d0d1a6d8b` `caf9cf9f1` `8139774ea` `3baa1f594` `1aee03ad8`,
+REFACTOR `e116f4336` `ffe2f3a3b` `596a3e92d`, NEWS `1c15f6272`. Not pushed (57 ahead). The owner took "fix all 13 as listed" over "retire CK1, CL1, CL6" (CK1 has two browser-test callers, CL6 a vignette caller).
+**Evidence:** RED 16 of 29 blocks failed for the stated reasons; 19 mutants killed; full suite 437 files, 3,999 blocks; `lint_package()` 0; `devtools::check()` 0/0/0; 4 browser files, 20 blocks, 0 failed, on a scratch install.
+**Handoff evaluation of S1015: 8/10.** Helped: the cites `:168`, `:212`, `:221`, `:407` held. Missing: "the eight no-caller candidates" reads as if they sit among the 13 (3 do); "no caller in `R/`"
+left out tests and vignettes; "S994 shape" understated 13 code changes in 13 files.
+**Self: 7/10.** + one probe measured all 13 cases before RED and found wider ones (CL7 `Inf`; CL5 added no column silently); the retire option's cost was grep-measured. - GREEN 1's help passed 80 characters
+(a 3b commit); my first NEWS quoted the typo (a failed 8-minute run); several silent stretches before a status line. Learning 982. Ratchet 1/1 (results `8084662393b1`).
+**Next (my order; the owner gave none):** `BACKLOG.md:168` guide sentence (docs only, the owner writes it), `:178`, `:193`, `:206`, `:215` (all DECISION NEEDED); the compression item is `:401` (READY, L).
 
 ### Sessions 947-1015 (condensed S950 to S1016; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1015: the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R` (`uploadPedigreeFileQc()` returns `summary`, `results`, `ready`;
-`uploadPedigreeFile()` returns its `$results`); three copies moved, the owner chose to widen the helper (strict TDD, test files only); claim `066cd78e2`, RED `310a5f221`,
-GREEN `7d6237678`, REFACTOR `2217419c2` `e448c7f68` `89aa5bdde` `2a699fdd1`; evaluation of S1014 8/10, self 8/10 (Learning 981). **Gotchas kept:** a backlog "same shape" claim is a
-guess until each copy's return and callers are read; the four copies left alone (`inputTabStudbook()`, `runOneFile()`, `runSeparate()`, `run_upload()`) were not re-read.
+S1015: the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R` (`uploadPedigreeFileQc()`, `uploadPedigreeFile()`; the owner chose to widen the helper; strict TDD,
+test files only; hashes in `CHANGELOG.md`; 8/10, self 8/10). **Gotchas kept:** a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
 S1014: the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves a blank value empty and ends an unclosed quote at its line end
 (`scanConfigTerms()`, `R/getTokenList.R:64`; `addConfigTerm()` `:108`; the owner ruled a whole list inside one pair of quotes is ONE value); strict TDD, REFACTOR taken; claim `41428f309`,
 RED `ce789a1c7`, GREEN `0145eedf9` `f01f67051` `2691e58d7`, REFACTOR `26309c9b4` `38754182d`, close-out `27e33104f`; evaluation of S1013 8/10, self 8/10. **Gotchas kept:** run

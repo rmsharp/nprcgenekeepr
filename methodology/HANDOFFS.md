@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1016
 date: 2026-10-19
-status: pending
-active_task: IN PROGRESS -- fix the 13 small wrong statements of the slice 6e re-check (`BACKLOG.md:168`, READY, test plus help or code fixes); owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- the 13 small wrong statements of the slice 6e re-check are fixed and pinned in tests/testthat/test_docsAuditSlice6eMinorFixes.R (owner pick, item 1 of 4; the owner chose "fix all 13 as listed" over retiring CK1, CL1 and CL6; strict TDD, every phase behind its own gate)
+what_was_done: Claim 5411ddf79. One probe measured all 13 cases (wider than the report for CL7 and CL5). RED a4878f0e3: 29 blocks, 16 failed for the stated reasons, test_obfuscateDate.R:78 now expects the maxDelta message. GREEN 99d0ab451 (CL10 CL6 CL7) 2c5670629 (CL2 CL3 CK1) d0d1a6d8b (CE3 CE7) caf9cf9f1 (help rewrap) 8139774ea (CE6) 3baa1f594 (CL1 CL5) 1aee03ad8 (CJ8 CK2). REFACTOR e116f4336 (one assertFileType()), ffe2f3a3b (two dead class lines), 596a3e92d (a pin; file now 30 blocks, 100 expectations). NEWS 1c15f6272, four entries. 19 mutants killed; full suite 437 files 3999 blocks; lint 0; check 0/0/0; 4 browser files 20 blocks 0 failed on a scratch install. BACKLOG block removed. Learning 982.
+next_steps: No owner order was given; my order: BACKLOG.md:168 (guide sentence for "groups not in the pedigree", DECISION NEEDED, docs only, the owner writes the sentence), :178 (Changed Columns tab), :193 (nameless NA header), :206 (Cross-Center header-only file), :215 (archive pointers), all DECISION NEEDED; the compression item is :401 (READY, L). Issue #37: of CK1, CL1 and CL6 only dataframe2string() has no caller beyond its own test. The push is the owner's call (57 commits ahead).
+key_files: tests/testthat/test_docsAuditSlice6eMinorFixes.R:1 (30 blocks, header lists the 13 ids); R/assertFileType.R:18; R/obfuscateDate.R:58-75; R/setExit.R:59; R/withinIntegerRange.R:53; R/create_wkbk.R:55; R/resolveCrossCenterIds.R:111; R/makeExamplePedigreeFile.R:26; NEWS.Rmd:660-688; PROJECT_LEARNINGS.md Learning 982
+gotchas: SESSION_NOTES.md is 56,504 B against the hook's limit of about 56,700 B (25,000 tokens), so condense a section before adding one; a roxygen edit is the R file plus its man page under the 5-file cap, and the whole paragraph must be re-wrapped to 80 characters (lint covers R/, not tests); do not quote a misspelling in NEWS or help (test_wordlist_coverage.R flags it); this session's devtools::document() rewrote only the touched man pages, check git status after it; zsh does not split an unquoted $F, use ${=F}; a launcher's completed notice is not the job's end, wait on its EXIT= line; the browser tier needs R CMD INSTALL --no-docs --library=<scratch> . then R_LIBS=<scratch>:<renv lib>, RENV_CONFIG_AUTOLOADER_ENABLED=false, NOT_CRAN=true, NPRC_RUN_E2E=true and package = "nprcgenekeepr" in test_file; the first draft of an option's count or cost is a grep result (Learnings 981, 982)
+runtime_smoke: 4 opt-in browser files (test-e2e-breeding-groups-module.R, test-e2e-workflow-integration.R, test-e2e-input-module.R, test-e2e-mate-pair-analysis-module.R), 20 blocks, 0 failed, 0 errors, 0 skipped, against R CMD INSTALL of the working tree in a scratch library; the Cross-Center and Genetic Diversity tabs have no browser file here, their module tests ran in the full suite
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8084662393b1 · manifest aa983075d6a2
+changelog_ref: 5411ddf79
+commit: 1c15f6272
 ```
 
 ```handoff
