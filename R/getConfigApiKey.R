@@ -11,15 +11,5 @@
 #' configuration file is missing or has no \code{apiKey} entry or an empty one.
 #' @noRd
 getConfigApiKey <- function(configFile) {
-  if (is.null(configFile) || !file.exists(configFile)) {
-    return("")
-  }
-  lines <- readConfigLines(configFile)
-  tokenList <- getTokenList(lines)
-  idx <- tolower(tokenList$param) == "apikey"
-  if (!any(idx)) {
-    return("")
-  }
-  value <- tokenList$tokenVec[idx][[1L]]
-  if (length(value) == 0L) "" else value[[1L]]
+  getOptionalConfigToken(configFile, "apiKey")
 }
