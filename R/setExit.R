@@ -8,8 +8,10 @@
 #' An \code{exit} column is added only when the pedigree has a \code{birth}
 #' column and no \code{exit} column. When both \code{death} and
 #' \code{departure} are present the exit is the earlier of the two; it is
-#' \code{NA} if neither column exists. A pedigree without a \code{birth}
-#' column, or with no rows, is returned unchanged.
+#' \code{NA} if neither column exists. The column names are matched without
+#' regard to case (\code{Death} is read as \code{death}), and the new column
+#' is named \code{exit}. A pedigree without a \code{birth} column, or with no
+#' rows, is returned unchanged.
 #'
 #' @param ped dataframe of pedigree and demographic information potentially
 #' containing columns indicating the birth and death dates of an individual.
@@ -52,17 +54,22 @@ setExit <- function(ped, timeOrigin = as.Date("1970-01-01")) {
     return(ped)
   }
   if (("birth" %in% headers) && !("exit" %in% headers)) {
-    if (any("death" %in% headers) && any("departure" %in% headers)) {
+    ## The columns are found without regard to case, so they are read under
+    ## the names they have.
+    deathCol <- names(ped)[match("death", headers)]
+    departureCol <- names(ped)[match("departure", headers)]
+    if (!is.na(deathCol) && !is.na(departureCol)) {
       # Map returns a list of single dates; unlist flattens it (as mapply's
       # default SIMPLIFY = TRUE would), which coerces the Date class to numeric,
       # so as.Date(..., origin = timeOrigin) restores proper Date values.
-      ped$exit <- as.Date(unlist(Map(chooseDate, ped$death, ped$departure)),
+      ped$exit <- as.Date(
+        unlist(Map(chooseDate, ped[[deathCol]], ped[[departureCol]])),
         origin = timeOrigin
       )
-    } else if ("death" %in% headers) {
-      ped$exit <- ped$death
-    } else if ("departure" %in% headers) {
-      ped$exit <- ped$departure
+    } else if (!is.na(deathCol)) {
+      ped$exit <- ped[[deathCol]]
+    } else if (!is.na(departureCol)) {
+      ped$exit <- ped[[departureCol]]
     } else {
       ped$exit <- as.Date(NA, origin = timeOrigin)
     }

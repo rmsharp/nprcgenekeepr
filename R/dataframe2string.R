@@ -27,18 +27,15 @@
 dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
   nRows <- length(row.names(object))
   if (length(object) == 0L) {
-    paste0(
-      sprintf(
-        ngettext(
-          nRows, "data frame with 0 columns and %d row",
-          "data frame with 0 columns and %d rows"
-        ),
-        nRows
+    sprintf(
+      ngettext(
+        nRows, "data frame with 0 columns and %d row",
+        "data frame with 0 columns and %d rows"
       ),
-      "\\n"
+      nRows
     )
   } else if (nRows == 0L) {
-    gettext("<0 rows> (or 0-length row names)\\n")
+    gettext("<0 rows> (or 0-length row names)")
   } else {
     # get text-formatted version of the data.frame
     m <- as.matrix(format.data.frame(object,
