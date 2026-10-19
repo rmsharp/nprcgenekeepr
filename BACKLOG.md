@@ -165,19 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Move the other Input-tab test upload helpers to the shared one (READY, Effort S-M; test-only)** (found S1007,
-      REFACTOR) -- `tests/testthat/helper-inputTabUpload.R` holds `uploadPedigreeFile(path, fileType, separator,
-      minDamAge, minSireAge)`, which uploads a file through the real Input module and returns its `qcResults()`;
-      `test_modInput_blankCells.R`, `test_modInput_placeholder.R` and `test_convertFromCenterThroughQc.R` call it.
-      Seven more local copies of the `shiny::testServer(modInputServer, ...)` block remain. **Three have the same
-      shape** (pedFile, getData, `qcResults()`) and should move: `.uploadExemplar()` (`test_examplePedigreeFixtures.R`),
-      `uploadExample()` (`test_examplePedigreeTxt.R`), `uploadForQc()` (`test_modInput_qcStudbook.R`); check each one's
-      age inputs first. **Four differ:** `inputTabStudbook()` (`test_genotypeTutorialsWording.R`), `runOneFile()` and
-      `runSeparate()` (`test_modInputOneFileGenotypes.R`, `test_modInputSeparateGenotypeNote.R`) use the genotype
-      file-content modes and read the cleaned studbook or genotype data, and `run_upload()`
-      (`test_modInput_incomplete_final_line.R`) reads `qcSummary()` and a warning. One file per commit, run it before
-      and after; a new Input-tab test calls `uploadPedigreeFile()` and writes no new copy.
-
 - [ ] **The 13 small wrong statements of the slice 6e re-check (READY, Effort S)** (found S1003; the report's first
       minor group, `docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) -- one housekeeping session in
       the S994 shape (help or code fixed, one test file; `tests/testthat/test_docsAuditHousekeepingWording.R` is the

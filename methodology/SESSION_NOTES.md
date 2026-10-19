@@ -99,10 +99,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1015 Did
-**Deliverable:** move the other Input-tab test upload helpers to the shared `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`; `BACKLOG.md:168`; owner pick at the Phase 0 picker, item 1 of 4) (IN PROGRESS)
-**Started:** 2026-10-18
-**Status:** Session claimed. Work beginning. Test-only (no `R/` change): the phase shape goes to the owner as one PRE-RED question first. S1014's block folded into the condensed list below.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate; test files only):** the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R`:
+`uploadPedigreeFileQc()` returns `list(summary, results, ready)`; `uploadPedigreeFile()` returns its `$results`. The owner chose to widen the helper (`uploadForQc()` also read the summary and ready flag).
+Claim `066cd78e2`, RED `310a5f221`, GREEN `7d6237678`, REFACTOR `2217419c2` `e448c7f68` `89aa5bdde` `2a699fdd1`. Not pushed (41 commits ahead of origin).
+**Evidence:** 11 mutants killed; 6 helper-using files match baselines; full suite 436 files, 3,969 blocks, 0 failed, 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0.
+**Handoff evaluation of S1014: 8/10.** Helped: the item's named files and "check each age input" held. Wrong: "three have the same shape" (one also read the summary and ready flag). **Self: 8/10.** - option text said 7 callers; it is 5.
+**Cut short by the usage limit, owed:** a Learning in `PROJECT_LEARNINGS.md`; `quality_ratchet.py --run`. **Next:** `BACKLOG.md:168` (13 small statements, READY, S), then `:225`, `:234`.
 
 ### Sessions 947-1014 (condensed S950 to S1015; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1014: the config-file reader keeps a double-quoted value whole, ends a line at a `#` that starts a word, leaves a blank value empty and ends an unclosed quote at its line end
