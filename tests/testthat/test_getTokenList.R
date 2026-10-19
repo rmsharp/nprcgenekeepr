@@ -34,7 +34,7 @@ test_that("getTokenList returns correct lines and vectors", {
   expect_identical(tokenVectors[[7L]], mapVec)
 })
 
-## S1014 RED (BACKLOG.md:168, the owner's ruling S1013, option A; evidence in
+## S1014 RED (the owner's ruling S1013, option A; evidence in
 ## docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md): the example file's
 ## notes promise that a double-quoted value is kept whole and that a "#"
 ## starts a comment, and a blank value is read as the next setting's name.

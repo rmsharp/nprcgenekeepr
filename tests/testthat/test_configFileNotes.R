@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 ##
-## S1014 RED (BACKLOG.md:168; the owner's ruling S1013, option A; evidence in
+## S1014 RED (the owner's ruling S1013, option A; evidence in
 ## docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md): the notes at the top
 ## of the shipped example configuration file said terms may be separated by
 ## semicolons and that a value must be in quotes to hold a blank or a comma, and

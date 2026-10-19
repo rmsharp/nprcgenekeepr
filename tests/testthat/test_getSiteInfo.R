@@ -163,7 +163,7 @@ test_that("getSiteInfo reads the shipped example config unchanged", {
   )
 })
 
-## S1014 RED (BACKLOG.md:168, the owner's ruling S1013, option A): the reader
+## S1014 RED (the owner's ruling S1013, option A): the reader
 ## keeps a quoted value whole, ends a line at a "#" that starts a word, and
 ## gives a blank value an empty value. The blocks reach it through
 ## getSiteInfo() (readConfigLines() then getTokenList()), with the setting

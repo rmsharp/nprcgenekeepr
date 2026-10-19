@@ -62,7 +62,7 @@ test_that("getConfigApiKey reads an apiKey line that ends in a comment", {
   expect_identical(nprcgenekeepr:::getConfigApiKey(cfg), "realKey")
 })
 
-## S1014 RED (BACKLOG.md:168, the owner's ruling S1013): a setting with nothing
+## S1014 RED (the owner's ruling S1013): a setting with nothing
 ## after its "=" took the next setting's name as its value, so
 ## "apiKey =" followed by "center = ..." gave the key "center"; as the last
 ## setting it gave NA. A quoted key kept only its first word. getConfigApiKey()
