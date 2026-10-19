@@ -21,7 +21,6 @@
 #' )
 #' summary(errorLst)
 print.summary.nprcgenekeeprErr <- function(x, ...) {
-  cl <- oldClass(x)
   txt <- x
   for (x in txt$txt) {
     cat(x, "\n")
@@ -34,9 +33,8 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
     ))
     print(txt$sp, digits = 2L, row.names = TRUE, ...)
   }
-  oldClass(txt) <- cl[cl != "nprcgenekeeprErr"]
   # Deliberately does not call NextMethod; this method fully formats its own
-  # output and returns the reclassified object invisibly.
+  # output and returns the summary object invisibly.
   invisible(txt)
 }
 #' @return The summary object, returned invisibly after it is printed.
@@ -49,12 +47,10 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
 #' ped <- suppressWarnings(qcStudbook(ped, reportErrors = FALSE))
 #' summary(reportGV(ped, guIter = 10))
 print.summary.nprcgenekeeprGV <- function(x, ...) {
-  cl <- oldClass(x)
   for (line in x) {
     cat(line, "\n")
   }
-  oldClass(x) <- cl[cl != "nprcgenekeeprGV"]
   # Deliberately does not call NextMethod; this method fully formats its own
-  # output and returns the reclassified object invisibly.
+  # output and returns the summary object invisibly.
   invisible(x)
 }
