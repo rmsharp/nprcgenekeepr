@@ -8,7 +8,7 @@
 #'
 #' @param configFile path to the nprcgenekeepr configuration file.
 #' @return Character scalar with the configured apiKey, or \code{""} when the
-#' configuration file is missing or has no \code{apiKey} entry.
+#' configuration file is missing or has no \code{apiKey} entry or an empty one.
 #' @noRd
 getConfigApiKey <- function(configFile) {
   if (is.null(configFile) || !file.exists(configFile)) {
@@ -20,5 +20,6 @@ getConfigApiKey <- function(configFile) {
   if (!any(idx)) {
     return("")
   }
-  tokenList$tokenVec[idx][[1L]][[1L]]
+  value <- tokenList$tokenVec[idx][[1L]]
+  if (length(value) == 0L) "" else value[[1L]]
 }

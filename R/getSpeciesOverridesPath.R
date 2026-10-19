@@ -12,7 +12,7 @@
 #' @param configFile path to the nprcgenekeepr configuration file.
 #' @param key character scalar, the parameter name (matched case-insensitively).
 #' @return Character scalar with the first configured token for \code{key}, or
-#' \code{""} when the file is missing or has no such entry.
+#' \code{""} when the file is missing, has no such entry or has an empty one.
 #' @noRd
 getOptionalConfigToken <- function(configFile, key) {
   if (is.null(configFile) || !file.exists(configFile)) {
@@ -24,7 +24,8 @@ getOptionalConfigToken <- function(configFile, key) {
   if (!any(idx)) {
     return("")
   }
-  tokenList$tokenVec[idx][[1L]][[1L]]
+  value <- tokenList$tokenVec[idx][[1L]]
+  if (length(value) == 0L) "" else value[[1L]]
 }
 
 #' Read the optional species-overrides CSV path from the configuration file
