@@ -706,6 +706,13 @@ A **Statistics** sub-tab summarizes all formed groups at once. Groups and
 their kinship matrices can each be exported individually to a file and
 location you choose.
 
+If you read a different pedigree, or trim the pedigree on the Pedigree Browser,
+after groups are formed, a formed group may hold an animal the loaded pedigree
+no longer has. The **Groups**, **Statistics** and **Group Detail** sub-tabs then
+show one sentence in place of their tables: "Some animals in these breeding
+groups are not in the pedigree now loaded (a new file or a trimmed view). Form
+the groups again, or bring back the earlier pedigree, to see them."
+
 **Ancestry guardrails** (issue
 [#168](https://github.com/rmsharp/nprcgenekeepr/issues/168)). Centers that
 manage geographic ancestry -- for example keeping Indian-origin and
@@ -869,7 +876,10 @@ Inbreeding column. A group with no breeding-age females has
 no Production value, and its cell is gray. When any animal in the groups has
 no birth date, a note under the heat map says how many, and how many of those
 females were counted or left out. Until groups are formed and an analysis has
-run, the tab shows guidance instead of an empty plot.
+run, the tab shows guidance instead of an empty plot. The tab shows a sentence
+in place of the heat map in one more case: a formed group holds an animal the
+loaded pedigree no longer has (after reading a different pedigree or trimming
+the view). Form the groups again to see the heat map.
 
 ![The Genetic Diversity heat map for the 6 breeding groups formed above.](shiny_app_use/genetic_diversity_heatmap.png){fig-alt="Genetic Diversity heat map with 6 rows (one per breeding group) and 4 columns (Value, Origin, Production, Inbreeding), each cell colored red, yellow, or green (gray where a value is undefined)."}
 
