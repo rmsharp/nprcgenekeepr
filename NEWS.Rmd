@@ -657,6 +657,35 @@ longitudinal monitoring of colony genetic health.
   was true. The notes now describe how the file is read.
   `data("exampleNprcgenekeeprConfig")` is now the shipped example file, not an
   older copy of it.
+- Fixed: the quality-control summary printed in the console misspelled the
+  word "suspicious". `get_elapsed_time_str()` reported 59.6 seconds
+  as "60 seconds." and 119.6 seconds as "1 minutes and 60 seconds."; it now
+  rounds first and says "1 minutes and 0 seconds." and "2 minutes and 0
+  seconds.".
+- Fixed: several helper functions for scripts gave a wrong or confusing
+  answer. `create_wkbk()` returned `TRUE` for a workbook in a folder that does
+  not exist and wrote nothing; it now stops and names the folder.
+  `saveDataframesAsFiles()` and `makeExamplePedigreeFile()` stopped with "the
+  condition has length > 1" for a file type that was not one of "txt", "csv" or
+  "excel"; they now say which three are allowed. `makeExamplePedigreeFile()`
+  named its default file `examplePedigree.csv` for every type; it is now
+  `examplePedigree.csv`, `examplePedigree.txt` or `examplePedigree.xlsx`.
+  `withinIntegerRange()` gave the minimum for a number too large for an
+  integer, such as 3,000,000,000, and now gives the maximum.
+- Fixed: the functions that scramble ids and dates before data are shared had
+  three problems. `obfuscateDate()` ran for ever when its earliest allowed date
+  could not be reached and stopped with an unclear message when that date was
+  missing; it now stops with a message that gives the position of the date, and
+  a missing earliest date means no limit. `obfuscateId()` and `obfuscatePed()`
+  stopped with "missing value where TRUE/FALSE needed" for a missing id; they
+  now say that the id must not contain `NA` and give its position.
+- Fixed: `setExit()` ignored a death or departure column written with capitals,
+  such as `Death`, and either added no exit column or stopped with "replacement
+  has 0 rows"; it now finds the column in any letter case.
+  `makeGeneticDiversityHeatmap()` drew two groups with the same label on one
+  row; it now stops and names the label. `dataframe2string()` ended the text
+  for an empty data frame with a backslash and an n. The help of `focalAnimals`
+  now says that its `id` column is a factor.
 
 # nprcgenekeepr 2.0.0 (20260721)
 - Major changes
