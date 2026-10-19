@@ -8,8 +8,9 @@ makeGeneticDiversityHeatmap(stats)
 }
 \arguments{
 \item{stats}{A data frame with one row per breeding group. The first
-column holds the group label; every remaining column is a metric whose
-values are color indices in \code{c(1, 2, 3)} or \code{NA}.}
+column holds the group label, which must be unique (a repeated label
+stops with an error that names it); every remaining column is a metric
+whose values are color indices in \code{c(1, 2, 3)} or \code{NA}.}
 }
 \value{
 A \code{ggplot} object: a \code{\link[ggplot2]{geom_tile}} heat

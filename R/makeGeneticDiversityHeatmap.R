@@ -19,8 +19,9 @@
 #' default), so both stay whole and readable at the size the app draws the plot.
 #'
 #' @param stats A data frame with one row per breeding group. The first
-#'   column holds the group label; every remaining column is a metric whose
-#'   values are color indices in \code{c(1, 2, 3)} or \code{NA}.
+#'   column holds the group label, which must be unique (a repeated label
+#'   stops with an error that names it); every remaining column is a metric
+#'   whose values are color indices in \code{c(1, 2, 3)} or \code{NA}.
 #' @return A \code{ggplot} object: a \code{\link[ggplot2]{geom_tile}} heat
 #'   map with metric headers across the top and group labels down the left,
 #'   filled red/yellow/green (gray for \code{NA}) from the color indices.
@@ -45,6 +46,11 @@ makeGeneticDiversityHeatmap <- function(stats) {
          "label column plus at least one metric column.")
   }
   groups <- as.character(stats[[1L]])
+  repeated <- unique(groups[duplicated(groups)])
+  if (length(repeated) > 0L) {
+    stop("makeGeneticDiversityHeatmap() requires the group labels to be ",
+         "unique; repeated: ", toString(repeated), ".")
+  }
   metricNames <- names(stats)[-1L]
   metricValues <- unlist(stats[metricNames], use.names = FALSE)
   if (!all(is.na(metricValues) | metricValues %in% c(1L, 2L, 3L))) {

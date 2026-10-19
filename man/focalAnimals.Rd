@@ -15,6 +15,9 @@ A dataframe with one column (\emph{id}) containing the animal
 Ids from the \strong{examplePedigree} pedigree.
 They can be used to illustrate the identification of a population of
 interest as is shown in the example below.
+The \code{id} column is a factor, not a character vector like the \code{id}
+column of \code{examplePedigree}; use \code{as.character(focalAnimals$id)}
+when the two need the same type.
 }
 \examples{
 library(nprcgenekeepr)
