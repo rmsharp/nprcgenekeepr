@@ -168,3 +168,19 @@ test_that("pin: getTokenList gives no settings for no lines or only comments", {
   expect_identical(getTokenList(character(0L)), empty)
   expect_identical(getTokenList(c("# a", "   # b", "")), empty)
 })
+
+## S1014 mutation check: two readings the blocks above left unpinned. A # that
+## follows a closing quote does not begin a word, and a quoted equals sign is a
+## value, not the sign that names a setting.
+
+test_that("pin: getTokenList keeps a # that follows a closing quote in its term", {
+  expect_identical(readSetting("queryName = \"demo\"#tail", "queryName"),
+                   "demo#tail")
+  expect_identical(readSetting("queryName = \"\"#tail", "queryName"), "#tail")
+})
+
+test_that("pin: getTokenList reads a quoted equals sign as a value", {
+  cfgLines <- c("separator = \"=\"", "center = SNPRC")
+  expect_identical(getTokenList(cfgLines)$param, c("separator", "center"))
+  expect_identical(readSetting(cfgLines, "separator"), "=")
+})
