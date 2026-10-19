@@ -700,6 +700,24 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - Fixed: a setting in the configuration file written with different
   capitals, such as `Center` for `center`, stopped the program with
   "subscript out of bounds". It is now read.
+- Fixed: a value in double quotes in the configuration file was split
+  into several values when it held a blank, a comma, an equals sign or
+  round brackets, so a folder path such as `"/My Folder/EHR"` was read
+  as two values. A value in double quotes is now one value. A `#` that
+  starts a word begins a comment that runs to the end of the line, also
+  after a setting, so a note written after a setting is no longer read
+  as part of its value. A list of column names inside one pair of quotes
+  is one name: write each name on its own, in quotes if you like.
+- Fixed: a setting with nothing after its `=` took the name of the next
+  setting as its value, so `apiKey =` above `center = "SNPRC"` gave the
+  API key `center`. Such a setting is now empty, and an empty API key is
+  no key.
+- Fixed: the notes at the top of the example configuration file said
+  that semicolons separate terms and that an address such as
+  `http://deepthought:8080/labkey` falls apart unless it is in quotes;
+  neither was true. The notes now describe how the file is read.
+  `data("exampleNprcgenekeeprConfig")` is now the shipped example file,
+  not an older copy of it.
 
 # nprcgenekeepr 2.0.0 (20260721)
 
