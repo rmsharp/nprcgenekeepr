@@ -54,21 +54,12 @@
 }
 
 ## Uploads a shipped exemplar through the real Input module (read, then
-## runQcStudbook()) and returns the module's qcResults().
+## runQcStudbook()) and returns the module's qcResults()
+## (uploadPedigreeFile(), in helper-inputTabUpload.R).
 .uploadExemplar <- function(name) {
-  path <- system.file("extdata", "examples",
-                      sprintf("example_pedigree_%s.csv", name),
-                      package = "nprcgenekeepr")
-  got <- new.env()
-  shiny::testServer(modInputServer, {
-    session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      separator = ",", minSireAge = "", minDamAge = "")
-    session$setInputs(pedigreeFileOne = list(name = basename(path),
-                                             datapath = path))
-    session$setInputs(getData = 1L)
-    got$res <- qcResults()
-  })
-  got$res
+  uploadPedigreeFile(system.file("extdata", "examples",
+                                 sprintf("example_pedigree_%s.csv", name),
+                                 package = "nprcgenekeepr"))
 }
 
 ## The layout the app's Diagram tab draws for an uploaded (cleaned)
