@@ -5,12 +5,16 @@
 \title{Write copy of nprcgenekeepr::examplePedigree into a file}
 \usage{
 makeExamplePedigreeFile(
-  file = file.path(tempdir(), "examplePedigree.csv"),
+  file = file.path(tempdir(), paste0("examplePedigree.", c(csv = "csv", txt = "txt",
+    excel = "xlsx")[[fileType]])),
   fileType = "csv"
 )
 }
 \arguments{
-\item{file}{character vector of length one providing the file name}
+\item{file}{character vector of length one providing the file name. The
+default file, in the session's temporary directory, is
+\code{examplePedigree.csv}, \code{examplePedigree.txt} or
+\code{examplePedigree.xlsx}, according to \code{fileType}.}
 
 \item{fileType}{character vector of length one with possible values of
 \code{"txt"}, \code{"csv"}, or \code{"excel"}. Default value is \code{"csv"}.}

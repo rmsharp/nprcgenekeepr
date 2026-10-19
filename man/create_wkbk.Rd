@@ -21,8 +21,8 @@ already exist (default is FALSE).}
 \code{FALSE}, with a warning, if the file already exists and
 \code{replace} is \code{FALSE}. Other problems are signaled as errors
 rather than returned as \code{FALSE}; examples are a number of
-\code{sheetnames} that differs from the length of \code{df_list} and an
-invalid worksheet name.
+\code{sheetnames} that differs from the length of \code{df_list}, a folder
+for \code{file} that does not exist and an invalid worksheet name.
 }
 \description{
 Create an Excel workbook with worksheets

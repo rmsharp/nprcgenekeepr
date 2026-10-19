@@ -12,8 +12,8 @@
 #' \code{FALSE}, with a warning, if the file already exists and
 #' \code{replace} is \code{FALSE}. Other problems are signaled as errors
 #' rather than returned as \code{FALSE}; examples are a number of
-#' \code{sheetnames} that differs from the length of \code{df_list} and an
-#' invalid worksheet name.
+#' \code{sheetnames} that differs from the length of \code{df_list}, a folder
+#' for \code{file} that does not exist and an invalid worksheet name.
 #'
 #' @importFrom openxlsx write.xlsx
 #' @export
@@ -50,6 +50,12 @@ create_wkbk <- function(file, df_list, sheetnames, replace = FALSE) {
     stop(
         "Number of 'sheetnames' specified does not equal the number ",
         "of data frames in 'df_list'."
+    )
+  }
+  if (!dir.exists(dirname(file))) {
+    stop(
+      "The folder ", dirname(file), " does not exist; the workbook was not ",
+      "written."
     )
   }
 

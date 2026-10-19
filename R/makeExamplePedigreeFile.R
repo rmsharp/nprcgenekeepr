@@ -8,7 +8,10 @@
 #' they already exist. A file of type \code{"excel"} is never overwritten;
 #' if the file already exists, an error is signaled.
 #'
-#' @param file character vector of length one providing the file name
+#' @param file character vector of length one providing the file name. The
+#' default file, in the session's temporary directory, is
+#' \code{examplePedigree.csv}, \code{examplePedigree.txt} or
+#' \code{examplePedigree.xlsx}, according to \code{fileType}.
 #' @param fileType character vector of length one with possible values of
 #' \code{"txt"}, \code{"csv"}, or \code{"excel"}. Default value is \code{"csv"}.
 #'
@@ -22,10 +25,17 @@
 #' pedigreeFile <- makeExamplePedigreeFile()
 makeExamplePedigreeFile <- function(file = file.path(
                                       tempdir(),
-                                      "examplePedigree.csv"
+                                      paste0(
+                                        "examplePedigree.",
+                                        c(csv = "csv", txt = "txt",
+                                          excel = "xlsx")[[fileType]]
+                                      )
                                     ),
                                     fileType = "csv") {
-  stopifnot(any(fileType %in% c("txt", "csv", "excel")))
+  if (!(length(fileType) == 1L && fileType %in% c("txt", "csv", "excel"))) {
+    stop("fileType must be one of \"txt\", \"csv\" or \"excel\" (a single ",
+         "value).")
+  }
   if (fileType == "csv") {
     write.csv(nprcgenekeepr::examplePedigree,
       file = file, row.names = FALSE
