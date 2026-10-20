@@ -393,19 +393,8 @@ test_that("resolveCrossCenterIds keeps a one-sided Date column's class when the 
 ## piece before it collected column names, so a column only that file had
 ## vanished from the merged table and from the tab's downloaded CSV, against
 ## the help's "union of pedA's and pedB's columns". `emptyPedigree()` is such a
-## file: the three required columns plus any `extra` ones, all zero-row.
-noMapping <- data.frame(
-  idA = character(0L), idB = character(0L), stringsAsFactors = FALSE
-)
-
-emptyPedigree <- function(extra = character(0L)) {
-  cols <- c("id", "sire", "dam", extra)
-  as.data.frame(
-    stats::setNames(rep(list(character(0L)), length(cols)), cols),
-    stringsAsFactors = FALSE
-  )
-}
-
+## file and `noMapping` the mapping it needs
+## (tests/testthat/helper-emptyCrossCenterInputs.R).
 test_that("resolveCrossCenterIds keeps a column only an empty pedA has", {
   merged <- resolveCrossCenterIds(emptyPedigree("sex"), pedB, noMapping)
 

@@ -285,13 +285,11 @@ test_that("modCrossCenterIdentityServer's Merged Pedigree download carries a col
   ## animals, and the mapping is empty -- the only way such a file reaches the
   ## merge. The file is written and read back (a zero-row CSV reads back with
   ## every column logical), the route an upload takes.
-  emptyPedA <- .ccPedA[0L, ]
-  emptyMapping <- .ccMapping[0L, ]
   pedBNoSex <- .ccPedB[, c("id", "sire", "dam")]
 
   shiny::testServer(modCrossCenterIdentityServer, args = list(), {
     do.call(session$setInputs, .ccUploadInputs(
-      pedA = emptyPedA, pedB = pedBNoSex, mapping = emptyMapping
+      pedA = emptyPedigree("sex"), pedB = pedBNoSex, mapping = noMapping
     ))
     session$setInputs(validate = 1)
     session$setInputs(confirmMerge = 1)
