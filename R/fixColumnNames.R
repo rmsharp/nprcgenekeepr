@@ -14,9 +14,11 @@
 #' headers \code{first_name} and \code{second_name} keep their underscore.
 #' The matching is unanchored, so any name that contains one of these strings
 #' is changed (for example, \code{category} becomes \code{catidry}).
+#' A header that is \code{NA} is read as a blank one, so a nameless column is
+#' reported the way a column with a blank header is.
 #'
 #' @param orgCols character vector with ordered list of column names
-#' found in a pedigree file.
+#' found in a pedigree file. A name that is \code{NA} counts as blank.
 #' @param errorLst list object with places to store the various column
 #' name changes, as returned by \code{\link{getEmptyErrorLst}}.
 #' @return A list object with \code{newColNames} and \code{errorLst} with
@@ -29,6 +31,10 @@
 #'   errorLst = getEmptyErrorLst()
 #' )
 fixColumnNames <- function(orgCols, errorLst) {
+  ## A nameless (NA) header is a blank one: the checks below compare each name
+  ## with a text, and an NA would stop them. qcStudbook() reads the names only
+  ## here, so this is the one place that needs it.
+  orgCols[is.na(orgCols)] <- ""
   cols <- tolower(orgCols)
   ## A header already spelled recordStatus, fromCenter or geographicOrigin is
   ## right as it stands: it is lower-cased here and its camel case restored
