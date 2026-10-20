@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1021
+date: 2026-10-20
+status: pending
+active_task: IN PROGRESS -- BACKLOG.md:168 a nameless (NA) column header stops qcStudbook() before any column check: settle leave / fix each site / check once at the front, then build it if the answer is not "leave"; owner pick at the Phase 0 picker, item 1 of 4
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1020
 date: 2026-10-20
 status: complete

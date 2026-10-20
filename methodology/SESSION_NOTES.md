@@ -98,26 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1020 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, the Changed Columns tab, is finished and its block removed. The owner took
-"Fix at the cause" (of four options). `fixColumnNames()` leaves a header already spelled `recordStatus`, `fromCenter` or `geographicOrigin` out of the case-change record and the three restore records
-(`R/fixColumnNames.R:36`, `:78-87`); `summary()` writes a sentence for all 13 kinds of rename (one loop, `R/summary.nprcgenekeeprErr.R:134-139`); `shouldShowChangedColsTab()` takes its field names from
-`names(getEmptyErrorLst()$changedCols)` (`R/shouldShowChangedColsTab.R:43`). Claim `ae48a3dc2`, RED `8f69dcdad` and `3826ed863` (browser), GREEN `1489ad34b` (CI group) and `4423616eb`, REFACTOR `5e8e98797`,
-NEWS `2942378fc` (`NEWS.Rmd:470-486`), test `a58ac200e`. Not pushed (16 ahead of origin after this close-out).
-**Evidence:** real app before: an all-lowercase `recordstatus` or `fromcenter` file opened the tab with a heading and no list, and the shipped example file opened it with a false "case was changed" line (0 of 13 cleaned
-headers differ from the uploaded ones); RED 12 new blocks, 10 failed (31 expectations), browser 4 blocks, 6 of 7 expectations failed; after: all pass, browser tier 7 expectations 0 failed, picture opened; mutants 9 of 9 killed
-before the tidy-up and 8 of 8 after; full suite 439 files, 4,027 blocks, 0 failed, 0 errors, 191 skipped; lint 0; `check` 0/0/0; ratchet 1/1.
-**Handoff evaluation of S1019: 8/10.** Helped: every BACKLOG cite held (`:168`, `:183`, `:196`, `:205`, `:391`); the item's own words "read from the code, not run" sent me to run the two cases first; the 7-ahead state was right.
-Missing: the item said the tab "stays hidden" (S988), but for `recordstatus` and `fromcenter` it opens empty, and nothing flagged the false line on the shipped example file. Wrong: nothing in S1019's own claims.
-**Self: 8/10.** + ran the unrun claim in the function and then the real app before asking, found two defects the item missed and their one cause; the owner took the recommended option; a throwaway copy showed 0 existing
-blocks flip before RED; mutants before and after, no survivor; the picture was opened. - my RED commit lacked its CI group line (the first full run after GREEN found it); long silent stretches (the
-harness nudged several times); two small slips (zsh `echo =====`, a `test_dir(filter=)` pattern). Learning 986.
-**Gotchas:** a new `tests/testthat/test-e2e-*.R` file also needs a line in `.github/workflows/shinytest2.yaml` `groups` (guard `test_shinytest2_workflow_coverage.R`); `test_dir(filter=)` matches the name without `test-` or
-`test_`; the browser tier leaves `tests/testthat/_problems/` (gitignored); `git worktree remove --force` clears a scratch worktree (the `.claude/worktrees/wf_*` ones are not mine). Left as it was:
-`processQcStudbookResult()` still makes warning rows only for case and space changes (`R/processQcStudbookResult.R:198-215`).
-**Next (my order; the owner gave none):** `BACKLOG.md:168` NA column header (DECISION NEEDED, S-M), `:181` Cross-Center header-only pedigree, `:190` archive pointers (both DECISION NEEDED, S); the compression item is `:376` (READY, L).
+### What Session 1021 Did
+**Deliverable:** `BACKLOG.md:168` a nameless (`NA`) column header stops `qcStudbook()` before any column check: settle leave / fix each site / check once at the front, then build it
+under strict TDD if the answer is not "leave" (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4)
+**Started:** 2026-10-20 13:49 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. First step: re-run the S989 measurement (`examplePedigree`, function level, one header set to `NA` at a time) and search the sites
+that item said it had not searched, then put the leave / fix-each / check-once choice to the owner in plain words with the measured result. A CSV blank header is read as `X`, so only a script
+reaches it (S989). `master` is 16 commits ahead of `origin/master` (S1019's 7 and S1020's 9).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1019 (condensed S950 to S1020; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1020 (condensed S950 to S1021; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1020: the Changed Columns tab is finished (owner: "Fix at the cause"): `fixColumnNames()` leaves a header already spelled `recordStatus`, `fromCenter` or `geographicOrigin` out of the rename record
+(`R/fixColumnNames.R:36,78-87`); `summary()` writes a sentence for all 13 kinds of rename, one loop (`R/summary.nprcgenekeeprErr.R:134-139`); `shouldShowChangedColsTab()` takes its field names from
+`names(getEmptyErrorLst()$changedCols)` (`R/shouldShowChangedColsTab.R:43`); strict TDD; claim `ae48a3dc2`, RED `8f69dcdad` + `3826ed863`, GREEN `1489ad34b` + `4423616eb`, REFACTOR `5e8e98797`,
+NEWS `2942378fc` (`NEWS.Rmd:470-486`), test `a58ac200e`; not pushed; evaluation of S1019 8/10, self 8/10 (Learning 986). **Gotchas kept:** a new `tests/testthat/test-e2e-*.R` file also needs a line in
+`.github/workflows/shinytest2.yaml` `groups` (guard `test_shinytest2_workflow_coverage.R`); `test_dir(filter=)` matches the name without `test-` or `test_`; the browser tier leaves `tests/testthat/_problems/`
+(gitignored); `git worktree remove --force` clears a scratch worktree (the `.claude/worktrees/wf_*` ones are not mine); `processQcStudbookResult()` still makes warning rows only for case and space
+changes (`R/processQcStudbookResult.R:198-215`).
 S1019: Export Current Group is finished: while the "groups not in the pedigree" sentence shows, Group Detail holds no table and no Export button (`R/modBreedingGroups.R:1162` `groupDetailBody`,
 `:913` `reqGroupsInPedigree()`); strict TDD; claim `30d16de5f`, REFACTOR `11ce761e6`; 8/10, self 8/10 (Learning 985). **Gotchas kept:** only a picture and `innerText` say what a page shows; wait for a
 job's `EXIT=` line; a mutant run edits `R/` in place, so confirm with `git diff` after.
