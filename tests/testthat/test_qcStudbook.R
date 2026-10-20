@@ -599,3 +599,71 @@ test_that("qcStudbook() stops, naming the rows, on a placeholder value it does n
     "placeholder.*1, 3"
   )
 })
+
+## S1021 (BACKLOG.md:168, a nameless header): a pedigree with a column whose
+## name is NA stopped qcStudbook() with "missing value where TRUE/FALSE needed"
+## before any column check, with both settings of reportErrors. A column whose
+## name is blank ("") gets the real answers (a missing required column is
+## reported, an optional one passes), so an NA name must get the same.
+## qcPed.csv holds the five required headers (id, sire, dam, sex, birth) and
+## three optional ones (gen, exit, age).
+nameless <- getPedigree(system.file("testdata", "qcPed.csv",
+                                    package = "nprcgenekeepr"))
+withHeader <- function(ped, cols, header) {
+  names(ped)[match(cols, names(ped))] <- header
+  ped
+}
+## The value qcStudbook() returns, or `STOP: <message>`, so one case that stops
+## does not end its block before the next.
+qcAnswer <- function(ped, reportErrors) {
+  tryCatch(qcStudbook(ped, reportErrors = reportErrors),
+           error = function(e) paste("STOP:", conditionMessage(e)))
+}
+missingOf <- function(answer) {
+  if (is.list(answer)) answer$missingColumns else answer
+}
+
+test_that("a required header that is NA is reported missing, as a blank one is", {
+  for (col in getRequiredCols()) {
+    naPed <- withHeader(nameless, col, NA_character_)
+    blankPed <- withHeader(nameless, col, "")
+    withList <- qcAnswer(naPed, TRUE)
+    expect_identical(missingOf(withList), col, info = col)
+    expect_identical(withList, qcAnswer(blankPed, TRUE), info = col)
+    shown <- if (is.list(withList)) {
+      paste(capture.output(print(summary(withList))), collapse = " ")
+    } else {
+      withList
+    }
+    expect_match(shown, paste0("The missing column is: ", col, "."),
+                 fixed = TRUE, info = col)
+    stopped <- qcAnswer(naPed, FALSE)
+    expect_identical(
+      stopped, paste0("STOP: Required field(s) missing: ", col, "."),
+      info = col
+    )
+    expect_identical(stopped, qcAnswer(blankPed, FALSE), info = col)
+  }
+})
+
+test_that("an optional header that is NA passes QC, as a blank one does", {
+  for (col in setdiff(names(nameless), getRequiredCols())) {
+    naPed <- withHeader(nameless, col, NA_character_)
+    blankPed <- withHeader(nameless, col, "")
+    expect_null(qcAnswer(naPed, TRUE), info = col)
+    cleaned <- qcAnswer(naPed, FALSE)
+    expect_s3_class(cleaned, "data.frame")
+    expect_false(anyNA(names(cleaned)), info = col)
+    expect_identical(cleaned, qcAnswer(blankPed, FALSE), info = col)
+  }
+})
+
+test_that("two required headers that are NA are both reported missing", {
+  naPed <- withHeader(nameless, c("id", "sire"), NA_character_)
+  blankPed <- withHeader(nameless, c("id", "sire"), "")
+  withList <- qcAnswer(naPed, TRUE)
+  expect_setequal(missingOf(withList), c("id", "sire"))
+  expect_identical(withList, qcAnswer(blankPed, TRUE))
+  expect_identical(qcAnswer(naPed, FALSE),
+                   "STOP: Required field(s) missing: id, sire.")
+})

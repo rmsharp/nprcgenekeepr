@@ -140,3 +140,68 @@ test_that("a camel case header whose spelling really changes still records each 
     c("id", "recordStatus", "recordStatus", "fromCenter")
   )
 })
+
+## S1021 (BACKLOG.md:168, a nameless header): a header that is NA, not a text,
+## made fixColumnNames() stop "missing value where TRUE/FALSE needed" in its
+## two `if (any(tolower(newCols) == ...))` checks, so qcStudbook() never
+## reached its own missing-column check. A blank header ("") already works, so
+## an NA header is read as a blank one before any step sees it. No reader the
+## package has gives NA (getPedigree() gives "", the app "X", an Excel blank
+## cell "...3"); only a script that sets names(ped)[k] <- NA does.
+
+## One failing case must not end its block before the next, so a stop becomes
+## the value (`STOP: <message>`) that the expectation then compares.
+fixNamesOrStop <- function(cols) {
+  tryCatch(fixNames(cols),
+           error = function(e) paste("STOP:", conditionMessage(e)))
+}
+fixAllOrStop <- function(cols) {
+  tryCatch(fixColumnNames(cols, errorLst = getEmptyErrorLst()),
+           error = function(e) paste("STOP:", conditionMessage(e)))
+}
+
+test_that("an NA header is read as a blank one, wherever it stands", {
+  expect_identical(fixNamesOrStop(c(NA, "id")), c("", "id"))
+  expect_identical(fixNamesOrStop(c("id", NA, "Sire")), c("id", "", "sire"))
+  expect_identical(fixNamesOrStop(c("id", "sire", NA)), c("id", "sire", ""))
+  expect_identical(fixNamesOrStop(NA_character_), "")
+  ## the whole answer is the blank header's, not only the names
+  expect_identical(fixAllOrStop(c("id", NA, "Sire")),
+                   fixAllOrStop(c("id", "", "Sire")))
+})
+
+test_that("a vector of only NA headers gives only blank names", {
+  expect_identical(fixNamesOrStop(c(NA, NA, NA)), c("", "", ""))
+})
+
+test_that("an NA header leaves no record in changedCols", {
+  recorded <- function(cols) {
+    tryCatch(any(lengths(changedColsFor(cols)) > 0L), error = function(e) NA)
+  }
+  expect_false(recorded(c("id", NA, "sire")))
+  ## beside a header that does change, only that change is recorded
+  expect_identical(
+    tryCatch(changedColsFor(c("ID", NA)), error = function(e) "STOP"),
+    changedColsFor(c("ID", ""))
+  )
+})
+
+test_that("the text NA is an ordinary header, not a missing one", {
+  ## Passes before and after S1021: only a real NA is read as a blank one.
+  out <- fixColumnNames(c("id", "NA"), errorLst = getEmptyErrorLst())
+  expect_identical(out$newColNames, c("id", "na"))
+  expect_identical(out$errorLst$changedCols$caseChange, "NA to na")
+})
+
+## helpPlaces() and skipUnlessHelpInSourceTree() are in helper-pageText.R.
+fixColumnNamesPlaces <- helpPlaces("fixColumnNames", "fixColumnNames.R")
+
+test_that("the help of fixColumnNames() says an NA header is read as a blank one", {
+  skipUnlessHelpInSourceTree(fixColumnNamesPlaces)
+  for (place in names(fixColumnNamesPlaces)) {
+    expect_equal(
+      occurrences(fixColumnNamesPlaces[[place]](), "is read as a blank one"),
+      1L, info = place
+    )
+  }
+})
