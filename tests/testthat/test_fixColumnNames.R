@@ -81,3 +81,62 @@ test_that("non-genotype headers are untouched by the fix (invariant guard)", {
     "ego_id, dam_id, and birth_date to egoid, damid, and birthdate"
   )
 })
+
+## S1020 (BACKLOG.md:168): every header is lower-cased, then recordStatus,
+## fromCenter and geographicOrigin get their camel case back. A header that
+## came in spelled that way ends up as it began, so no record may name it.
+camelHeaders <- c("recordStatus", "fromCenter", "geographicOrigin")
+camelRenameFields <- c(
+  "recordstatusToRecordStatus", "fromcenterToFromCenter",
+  "geographicoriginToGeographicOrigin"
+)
+
+changedColsFor <- function(cols) {
+  fixColumnNames(cols, errorLst = getEmptyErrorLst())$errorLst$changedCols
+}
+
+test_that("a header already spelled recordStatus, fromCenter or geographicOrigin is no change", {
+  for (hdr in camelHeaders) {
+    out <- fixColumnNames(c("id", hdr), errorLst = getEmptyErrorLst())
+    expect_identical(out$newColNames, c("id", hdr), info = hdr)
+    expect_false(any(lengths(out$errorLst$changedCols) > 0L), info = hdr)
+  }
+  all3 <- fixColumnNames(c("id", camelHeaders), errorLst = getEmptyErrorLst())
+  expect_identical(all3$newColNames, c("id", camelHeaders))
+  expect_false(any(lengths(all3$errorLst$changedCols) > 0L))
+})
+
+test_that("a header spelled right is left out of the records of the headers that did change", {
+  cc <- changedColsFor(c("ID", "recordStatus", "fromCenter", "geographicOrigin"))
+  expect_identical(cc$caseChange, "ID to id")
+  for (field in camelRenameFields) {
+    expect_identical(cc[[field]], character(0L), info = field)
+  }
+})
+
+test_that("an all-lowercase camel case header records its own rename and nothing else", {
+  for (k in seq_along(camelHeaders)) {
+    lower <- tolower(camelHeaders[k])
+    cc <- changedColsFor(c("id", lower))
+    expect_identical(cc[[camelRenameFields[k]]],
+                     paste(lower, "to", camelHeaders[k]), info = lower)
+    expect_identical(names(Filter(length, cc)), camelRenameFields[k],
+                     info = lower)
+  }
+})
+
+test_that("a camel case header whose spelling really changes still records each step", {
+  capital <- changedColsFor(c("id", "RecordStatus"))
+  expect_identical(capital$caseChange, "RecordStatus to recordstatus")
+  expect_identical(capital$recordstatusToRecordStatus,
+                   "recordstatus to recordStatus")
+  underscore <- changedColsFor(c("id", "record_status"))
+  expect_identical(underscore$underScoreRemoved,
+                   "record_status to recordstatus")
+  expect_identical(underscore$recordstatusToRecordStatus,
+                   "recordstatus to recordStatus")
+  expect_identical(
+    fixNames(c("id", "RecordStatus", "record_status", "FromCenter")),
+    c("id", "recordStatus", "recordStatus", "fromCenter")
+  )
+})

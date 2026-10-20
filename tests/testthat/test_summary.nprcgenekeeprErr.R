@@ -85,3 +85,31 @@ test_that("summary.nprcgenekeeprErr reports rows with an invalid placeholder val
   expect_true(stri_detect_fixed(summary(el)$txt, "placeholder"))
   expect_true(stri_detect_fixed(summary(el)$txt, "1 and 3"))
 })
+## S1020 (BACKLOG.md:168): the Changed Columns tab prints this text, so
+## summary() needs a sentence for every kind of column rename; recordstatus,
+## fromcenter and geographicorigin had none.
+test_that("summary.nprcgenekeeprErr has a sentence for each kind of column rename", {
+  fields <- names(getEmptyErrorLst()$changedCols)
+  expect_length(fields, 13L)
+  for (field in fields) {
+    el <- getEmptyErrorLst()
+    el$changedCols[[field]] <- "oldName to newName"
+    expect_true(stri_detect_fixed(summary(el)$txt, "oldName to newName"),
+                info = field)
+  }
+})
+test_that("summary.nprcgenekeeprErr words the camel case renames like the other renames", {
+  el <- getEmptyErrorLst()
+  el$changedCols$recordstatusToRecordStatus <- "recordstatus to recordStatus"
+  el$changedCols$fromcenterToFromCenter <- "fromcenter to fromCenter"
+  el$changedCols$geographicoriginToGeographicOrigin <-
+    "geographicorigin to geographicOrigin"
+  txt <- summary(el)$txt
+  expect_true(stri_detect_fixed(
+    txt, "Change: The column changed from: recordstatus to recordStatus.\n"))
+  expect_true(stri_detect_fixed(
+    txt, "Change: The column changed from: fromcenter to fromCenter.\n"))
+  expect_true(stri_detect_fixed(
+    txt,
+    "Change: The column changed from: geographicorigin to geographicOrigin.\n"))
+})

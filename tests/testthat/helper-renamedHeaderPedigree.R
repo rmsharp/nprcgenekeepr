@@ -17,3 +17,21 @@ pedLowercaseGeographicOrigin <- function() {
   ped$geographicorigin <- rep(c("India", "China"), 3L)
   ped
 }
+
+## The same for the other two camel case headers (S1020, BACKLOG.md:168): a
+## file whose only change is an all-lowercase `recordstatus` or `fromcenter`
+## header, and the text qcStudbook() records for each rename.
+lowercaseRecordStatusRename <- "recordstatus to recordStatus"
+lowercaseFromCenterRename <- "fromcenter to fromCenter"
+
+pedLowercaseRecordStatus <- function() {
+  ped <- datePed(recordStatus = NULL)
+  ped$recordstatus <- "original"
+  ped
+}
+
+pedLowercaseFromCenter <- function() {
+  ped <- datePed(recordStatus = NULL)
+  ped$fromcenter <- rep(c("yes", "no"), 3L)
+  ped
+}

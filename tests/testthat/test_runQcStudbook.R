@@ -250,3 +250,66 @@ test_that("runQcStudbook reports no renamed column when every header is already 
   expect_false(res$qcResult$hasChangedCols)
   expect_false(any(lengths(res$qcResult$changedCols) > 0L))
 })
+
+## S1020 (BACKLOG.md:168): headers spelled recordStatus, fromCenter and
+## geographicOrigin are already right. QC lower-cased them and put the camel
+## case back, and still reported a case change (the shipped example file's
+## Changed Columns tab said "recordStatus and fromCenter to recordstatus and
+## fromcenter").
+test_that("runQcStudbook reports no renamed column for headers spelled recordStatus, fromCenter and geographicOrigin", {
+  ped <- datePed()
+  ped$fromCenter <- rep(c("yes", "no"), 3L)
+  ped$geographicOrigin <- rep(c("India", "China"), 3L)
+  res <- runQcStudbook(ped, reportChanges = TRUE)
+  expect_false(res$qcResult$hasErrors)
+  expect_false(res$qcResult$hasChangedCols)
+  expect_false(any(lengths(res$qcResult$changedCols) > 0L))
+  expect_false("Column name case changed" %in% res$qcResult$warnings$Warning)
+  expect_false(shouldShowChangedColsTab(res$qcResult$changedCols))
+  expect_true(all(c("recordStatus", "fromCenter", "geographicOrigin") %in%
+                    names(res$cleaned)))
+})
+
+test_that("runQcStudbook reports no renamed column for the shipped example pedigree", {
+  res <- runQcStudbook(examplePedigree, reportChanges = TRUE)
+  expect_false(res$qcResult$hasChangedCols)
+  expect_false(any(lengths(res$qcResult$changedCols) > 0L))
+  expect_false("Column name case changed" %in% res$qcResult$warnings$Warning)
+})
+
+test_that("runQcStudbook says in words that a lowercase recordstatus or fromcenter header was renamed", {
+  cases <- list(
+    recordstatus = list(ped = pedLowercaseRecordStatus(),
+                        field = "recordstatusToRecordStatus",
+                        rename = lowercaseRecordStatusRename,
+                        header = "recordStatus"),
+    fromcenter = list(ped = pedLowercaseFromCenter(),
+                      field = "fromcenterToFromCenter",
+                      rename = lowercaseFromCenterRename,
+                      header = "fromCenter")
+  )
+  for (nm in names(cases)) {
+    case <- cases[[nm]]
+    res <- runQcStudbook(case$ped, reportChanges = TRUE)
+    expect_false(res$qcResult$hasErrors, info = nm)
+    expect_true(res$qcResult$hasChangedCols, info = nm)
+    expect_identical(res$qcResult$changedCols[[case$field]], case$rename,
+                     info = nm)
+    expect_identical(names(Filter(length, res$qcResult$changedCols)),
+                     case$field, info = nm)
+    expect_true(shouldShowChangedColsTab(res$qcResult$changedCols), info = nm)
+    expect_true(grepl(
+      paste0("Change: The column changed from: ", case$rename, "."),
+      summary(res$errorLst)$txt, fixed = TRUE), info = nm)
+    expect_true(case$header %in% names(res$cleaned), info = nm)
+  }
+})
+
+test_that("runQcStudbook says in words that a lowercase geographicorigin header was renamed", {
+  res <- runQcStudbook(pedLowercaseGeographicOrigin(), reportChanges = TRUE)
+  expect_true(shouldShowChangedColsTab(res$qcResult$changedCols))
+  expect_true(grepl(
+    paste0("Change: The column changed from: ",
+           lowercaseGeographicOriginRename, "."),
+    summary(res$errorLst)$txt, fixed = TRUE))
+})
