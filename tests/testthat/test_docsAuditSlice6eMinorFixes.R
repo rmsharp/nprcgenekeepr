@@ -147,7 +147,9 @@ test_that("CL2: create_wkbk stops, naming the folder, when the folder is
     create_wkbk(workbook, list(data.frame(a = 1L)), "sheet1")
   ))
   expect_match(message, "does not exist", fixed = TRUE)
-  expect_match(message, folder, fixed = TRUE)
+  ## dirname() is what create_wkbk() prints; on Windows it writes "/" where
+  ## tempfile() wrote "\", so compare with it and not with `folder`.
+  expect_match(message, dirname(workbook), fixed = TRUE)
   expect_false(file.exists(workbook))
 })
 
