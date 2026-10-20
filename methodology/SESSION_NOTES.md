@@ -98,22 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1021 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, a nameless (`NA`) column header, is finished and its block removed. The owner took "Treat NA as a
-blank" (a fourth option beside the item's three): `fixColumnNames()` sets every `NA` name to `""` first (`R/fixColumnNames.R:37`, help `:17`), the one place `qcStudbook()` reads the names. Claim `987df6da1`, RED `4478cda7b`,
-GREEN `787832c2b`, REFACTOR `b7c9872a2` (`stopAsValue()`, `tests/testthat/helper-stopAsValue.R:7`), NEWS `061fb1e50` (`NEWS.Rmd:496-502`). Not pushed (22 ahead of origin after this close-out).
-**Evidence:** no reader makes an `NA` name (`getPedigree()` gives `""`, the app `X`, `readxl` `...3`), so function level is the real surface. Before: 26 of 26 runs (13 headers x 2 settings) stopped in `fixColumnNames()`;
-patching S989's two sites fixed 10, the other 16 stopped in `addParents()`; `NA` to `""` made all 26 match the blank-header runs. RED 8 blocks, 7 failed (47 expectations); mutants 5 of 5 killed before and after the
-tidy-up; full suite 439 files, 4,035 blocks, 0 failed, 0 errors, 191 skipped; lint 0; `check` 0/0/0; browser file (scratch install) 7 expectations, 0 failed; ratchet 1/1 (results `4c1228a6bd31`).
-**Handoff evaluation of S1020: 8/10.** Helped: every BACKLOG cite held (`:168`, `:181`, `:190`, `:376`); "16 ahead" and the notes-ceiling gotcha were right. Missing: removing the CL9 block left `BACKLOG.md:149` saying
-"CL9 is the open item below" (left as it was).
-**Self: 8/10.** + counted runs, not sites; previewed three fixes in memory and found the fourth; asked which reader can make the input; mutants before and after. - `quality_ratchet.py --run` before comparing S1020's
-citation; a handler outside `tryCatch()` (one rerun); a zsh `echo ====` slip. Learning 987.
-**Gotchas:** `--run` overwrites the gitignored `.quality-gates-results.json`, so compare the last receipt's hash first; `withCallingHandlers()` goes inside `tryCatch()`; a scratch `R CMD INSTALL --no-docs
---library=<scratch>` runs the opt-in browser file in about 40 s; `BACKLOG.md:149` still says "CL9 is the open item below".
-**Next (my order; the owner gave none):** `BACKLOG.md:168` Cross-Center header-only pedigree and `:177` archive pointers (both DECISION NEEDED, S); `:363` compression (READY, L); `:179` contributor tutorial (DECISION NEEDED, M).
+### What Session 1022 Did
+**Deliverable:** `BACKLOG.md:168` the Cross-Center merge drops the extra columns of a pedigree that has a header and no animals: settle leave / keep every input's columns, then build it under
+strict TDD if the answer is not "leave" (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4)
+**Started:** 2026-10-20 15:39 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. First step: re-run the S1011 measurement (`bindPedigreeRows()`, `R/resolveCrossCenterIds.R:34`, function level), then run the real Cross-Center
+tab on a header-only file to see whether the Input tab or the tab itself ever lets one reach the merge, and put the leave / keep choice to the owner in plain words with that measured result.
+`master` is 22 commits ahead of `origin/master` (S1019's 7, S1020's 9, S1021's 6).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1020 (condensed S950 to S1021; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1021 (condensed S950 to S1022; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1021: a pedigree column named `NA` is read as a blank one (owner: "Treat NA as a blank"): `fixColumnNames()` sets every `NA` name to `""` first (`R/fixColumnNames.R:37`, help `:17`), the one place
+`qcStudbook()` reads the names; strict TDD; claim `987df6da1`, RED `4478cda7b`, GREEN `787832c2b`, REFACTOR `b7c9872a2` (`stopAsValue()`, `tests/testthat/helper-stopAsValue.R:7`), NEWS `061fb1e50`
+(`NEWS.Rmd:496-502`); not pushed; evaluation of S1020 8/10, self 8/10 (Learning 987). **Gotchas kept:** `quality_ratchet.py --run` overwrites the gitignored `.quality-gates-results.json`, so compare the
+last receipt's hash first; `withCallingHandlers()` goes inside `tryCatch()`; a scratch `R CMD INSTALL --no-docs --library=<scratch>` runs the opt-in browser file in about 40 s; no reader makes an `NA`
+name (`getPedigree()` gives `""`, the app `X`, `readxl` `...3`), so only function level reaches it.
 S1020: the Changed Columns tab opens only for a header QC really changed and lists all 13 renames (owner: "Fix at the cause"; `R/fixColumnNames.R:36,78-87`, `R/summary.nprcgenekeeprErr.R:134-139`,
 `R/shouldShowChangedColsTab.R:43`); strict TDD; claim `ae48a3dc2`, REFACTOR `5e8e98797`, NEWS `2942378fc`; 8/10, self 8/10 (Learning 986). **Gotchas kept:** a new `test-e2e-*.R` file also needs a line in
 `.github/workflows/shinytest2.yaml` `groups`; `test_dir(filter=)` matches the name without `test-` or `test_`; the browser tier leaves `tests/testthat/_problems/`; `git worktree remove --force` clears a scratch worktree;
