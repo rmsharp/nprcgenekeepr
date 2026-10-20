@@ -99,37 +99,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1019 Did
-**Deliverable:** `BACKLOG.md:168` Export Current Group: settle leave-or-fix for the two Breeding Groups exports when a formed group
-holds an animal the loaded pedigree lacks (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4; strict TDD if the answer is "fix")
-**Started:** 2026-10-20 00:26 CDT
-**Status:** Session claimed. Work beginning, phase PRE-RED. First step: run both exports in the real app (S996 used a module-level probe only; no browser
-download was tried), then put the leave-or-fix choice to the owner in plain words. `master` is 1 commit ahead of `origin/master` (S1018's notes-only close-out).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, Export Current Group, is finished: while the "groups not in the pedigree" sentence shows,
+Group Detail holds no table and no Export button (the owner ruled "Sentence only"). The real app (scratch install, `shinytest2`; a 375-animal file, 3 groups, then a 3,694-animal file sharing no id) had shown the sentence
+over an empty member table, the old 121-animal kinship table still on screen, "Export Current Group" answering HTTP 500 and the kinship export writing the old group's matrix. `output$groupDetailBody`
+(`R/modBreedingGroups.R:1162`) is empty while the sentence shows, `bgGroupKinView` (`:1191`) stops like the member view, `reqGroupsInPedigree()` (`:913`) is the one check. Claim `30d16de5f`, RED `9e74ae435`,
+GREEN `011cc0a08`, REFACTOR `11ce761e6`, NEWS `3b849db64` (one sentence, `NEWS.Rmd:324-326`). Not pushed (7 ahead of origin after this close-out).
+**Evidence:** RED failed 7 blocks, each for the intended reason (S996's "the kinship table stays" assertion flipped on purpose); `test_modBreedingGroups_groupsOutsidePedigree.R` 12 blocks, 52 expectations; mutants 5 of 5 killed
+before the tidy-up and 8 of 9 after (survivor: the per-group table `observe()` near `:1092`, no test reads it); full suite 438 files, 4,011 blocks, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; real app after: 0 buttons, no table.
+**Handoff evaluation of S1018: 8/10.** Helped: every BACKLOG cite held (`:168`, `:178`, `:193`, `:206`, `:215`, `:401`); "try a browser download first" was the step that found the kinship table; the notes limit and the 1-ahead state were right.
+Missing: the item never said S996's test pins "the kinship table stays". Wrong: nothing in S1018's claims (the item text it inherited called Group Detail "one sentence" while the page still drew the old kinship table).
+**Self: 8/10.** + measured the real app before asking, then read the page by DOM and picture when my text read looked unchanged; named the reversed S996 assertion at the RED gate; mutants before and after, survivor reported; waited on
+`EXIT=` lines. - a zsh quoting slip in a one-liner; the BACKLOG block stayed visible until close-out without my saying so (the owner had to ask). Learning 985. Ratchet 1/1 (results `09180e687e57`).
+**Gotchas:** only a picture and `innerText` say what a page shows; wait for a job's `EXIT=` line (a launcher's "completed" arrives at once); a mutant run edits `R/modBreedingGroups.R` in place, so confirm with `git diff` after.
+**Next (my order; the owner gave none):** `BACKLOG.md:168` Changed Columns tab (DECISION NEEDED, S-M), `:183`, `:196`, `:205` (all DECISION NEEDED); the compression item is `:391` (READY, L).
 
 ### Sessions 947-1018 (condensed S950 to S1019; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1018: the red `windows-latest` leg of `R-CMD-check.yaml` is green; S1016's CL2 `create_wkbk` test (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152`) compares the message with
-`dirname(workbook)`, the string `R/create_wkbk.R:57` prints (on Windows `dirname()` writes `/` where `tempfile()` wrote `\`); test file only; claim `f1a90cad3`, GREEN `c5545b016`, no RED commit (the red CI
-run `39360845908` was the RED); pushed with the owner's OK, run `39371265700` all 5 legs green; evaluation of S1017 8/10, self 8/10 (Learning 984). **Gotchas kept:** compare a message with the string
-the code derives, not the path the test built; a workflow-level "success" does not name its legs (`gh run view <id> --json jobs`); the close-out commit is notes only and rides with the next push.
-S1017: the colony manager guide names the "groups not in the pedigree" sentence in the two places the owner chose (`vignettes/articles/colony-manager-guide.qmd:709-714` quotes the app's whole Breeding Groups
-sentence, `:879-882` ends the Genetic Diversity paragraph); pinned by `tests/testthat/test_guideGroupsOutsidePedigreeWording.R` (8 blocks, 24 expectations; it reads the app's `.breedingGroupsOutsidePedigreeNote`
-and `.groupsOutsidePedigreeNote`); strict TDD; claim `7f6648751`, RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR `050466d2e`; evaluation of S1016 9/10, self 7/10 (Learning 983). Its Export Current Group finding is `BACKLOG.md:168`.
-**Gotchas kept:** a background command's output goes to a file, never through `grep`, and `ps` must show the work process within a minute.
-S1016: the 13 small wrong statements of the slice 6e re-check are fixed and pinned in `tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; new `assertFileType()`,
-`R/assertFileType.R:18`; four NEWS entries `NEWS.Rmd:660-688`); the owner took "fix all 13 as listed" over retiring CK1, CL1, CL6; strict TDD, REFACTOR taken; claim `5411ddf79`, RED `a4878f0e3`,
-GREEN `99d0ab451` `2c5670629` `d0d1a6d8b` `caf9cf9f1` `8139774ea` `3baa1f594` `1aee03ad8`, REFACTOR `e116f4336` `ffe2f3a3b` `596a3e92d`, NEWS `1c15f6272`; evaluation of S1015 8/10, self 7/10 (Learning 982).
-**Gotchas kept:** this file sits near the commit hook's limit (about 56,700 B), so condense before adding; a roxygen edit is the R file plus its man page, re-wrapped to 80 characters; never quote a misspelling in
+S1018: the red `windows-latest` leg of `R-CMD-check.yaml` is green; S1016's CL2 `create_wkbk` test (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152`) compares the message with `dirname(workbook)`, not the
+path the test built (Windows `dirname()` writes `/`, `tempfile()` wrote `\`); test file only; claim `f1a90cad3`, GREEN `c5545b016`; pushed, run `39371265700` all 5 legs green; 8/10, self 8/10 (Learning 984).
+**Gotchas kept:** a workflow "success" does not name its legs (`gh run view <id> --json jobs`).
+S1017: the colony manager guide names the "groups not in the pedigree" sentence in two places (`vignettes/articles/colony-manager-guide.qmd:709-714`, `:879-882`), pinned by
+`tests/testthat/test_guideGroupsOutsidePedigreeWording.R` (8 blocks, 24 expectations; it reads the app's own constants); claim `7f6648751`, RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR `050466d2e`; 9/10, self 7/10 (Learning 983).
+**Gotchas kept:** a background command's output goes to a file, never through `grep`, and `pgrep` must show the work process within a minute.
+S1016: the 13 small wrong statements of the slice 6e re-check are fixed and pinned in `tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; new `assertFileType()`, `R/assertFileType.R:18`; four NEWS
+entries `NEWS.Rmd:660-688`); the owner took "fix all 13 as listed"; claim `5411ddf79`, RED `a4878f0e3`, NEWS `1c15f6272` (the other hashes are in `CHANGELOG.md`); 8/10, self 7/10 (Learning 982).
+**Gotchas kept:** this file sits near the commit hook's limit (about 56,750 B), so condense before adding; a roxygen edit is the R file plus its man page, re-wrapped to 80 characters; never quote a misspelling in
 NEWS or help (`test_wordlist_coverage.R`); the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`.
 S1015: the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R` (`uploadPedigreeFileQc()`, `uploadPedigreeFile()`; the owner chose to widen the helper; strict TDD,
 test files only; hashes in `CHANGELOG.md`; 8/10, self 8/10). **Gotchas kept:** a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
 S1012-S1014, the config-file reader (strict TDD, REFACTOR taken; evaluations 8-9/10, self 8/10): S1012, the shipped example configuration gives `getConfigApiKey()` no key and one shared reader,
-`readConfigLines()` (`R/readConfigLines.R:16`), drops comment lines for `getConfigApiKey()`, `getOptionalConfigToken()` and `getSiteInfo()`, and a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`);
-S1013, a decision session, no code: the owner took option A (`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`); S1014 built it: a double-quoted value stays whole, a line ends at a `#` that starts a word, a blank
-value stays empty and an unclosed quote ends at its line end (`scanConfigTerms()`, `R/getTokenList.R:64`; `addConfigTerm()` `:108`; a whole list inside one pair of quotes is ONE value). Claims `7aaa8e1d7`, `3bf3b438f`,
-`41428f309`; close-outs `2e894b2b4`, `7dbcc0b2a`, `27e33104f`. **Gotchas kept:** run `devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run
-restores the file text in `finally`, never `git checkout`; config tests put a file under `HOME` with `withr::local_envvar` (`tests/testthat/test_getSiteInfo.R:98`), `exampleConfigPath()` is the shipped file
-(`tests/testthat/helper-exampleConfig.R:8`); install candidate packages into a scratch library, never renv (Learning 979); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
+`readConfigLines()` (`R/readConfigLines.R:16`), drops comment lines, and a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`); S1013, a decision session: the owner took option A
+(`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`); S1014 built it (`scanConfigTerms()`, `R/getTokenList.R:64`; `addConfigTerm()` `:108`). Claims `7aaa8e1d7`, `3bf3b438f`, `41428f309`.
+**Gotchas kept:** run `devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run restores the file text in `finally`, never `git checkout`; config tests put
+a file under `HOME` (`tests/testthat/test_getSiteInfo.R:98`); install candidate packages into a scratch library, never renv (Learning 979); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
 S1008-S1011 (claims and close-outs in `CHANGELOG.md` and `HANDOFFS.md`; evaluations 8-9/10, self 8/10): S1008, with a sex ratio set a male is placed only as a known adult male (`R/fillGroupMembersWithSexRatio.R:84-89`;
 `NEWS.Rmd:277`); S1009 diagnosed the red `shinytest2` run (`R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE when every row has an `NA` allele); S1010 fixed it (the guard at `:855` is
 `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`); S1011, the Cross-Center check flags a reused id (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`) and the merge keeps every column

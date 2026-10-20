@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1019
 date: 2026-10-20
-status: pending
-active_task: IN PROGRESS -- BACKLOG.md:168 Export Current Group: settle leave-or-fix for the two Breeding Groups exports when a formed group holds an animal the loaded pedigree lacks; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- Export Current Group (the former BACKLOG.md:168): Group Detail shows only the "groups not in the pedigree" sentence (owner pick, item 1 of 4; the owner ruled "Sentence only"; strict TDD, every phase behind its own gate)
+what_was_done: Claim 30d16de5f. Real-app run (scratch install, shinytest2; a 375-animal file, 3 groups, then a 3,694-animal file sharing no id): the sentence over an empty member table, the old 121-animal kinship table still on screen, "Export Current Group" HTTP 500, the kinship export wrote the old group's matrix. RED 9e74ae435 (7 blocks failed; S996's "the kinship table stays" assertion flipped on purpose). GREEN 011cc0a08: output$groupDetailBody (R/modBreedingGroups.R:1162) is empty while the sentence shows; bgGroupKinView (:1191) stops like the member view. REFACTOR 11ce761e6: reqGroupsInPedigree() (:913) at 4 call sites; test helpers gopReadPedigree, gopReadNewFile, gopExpectBodyGone. NEWS 3b849db64 (one sentence, NEWS.Rmd:324-326). Mutants 5 of 5 killed before, 8 of 9 after (survivor: the per-group table observe() near :1092, no test reads it). Full suite 438 files 4011 blocks 0 failed 0 errors 187 skipped; lint 0; check 0/0/0. BACKLOG block removed; the item named no GitHub issue. Not pushed.
+next_steps: No owner order was given; my order: BACKLOG.md:168 (Changed Columns tab, 13 rename fields), :183 (NA column header), :196 (Cross-Center header-only pedigree), :205 (52 archive pointers), all DECISION NEEDED; the compression item is :391 (READY, L, recurring, last pass S896). The 7 local commits after c5545b016 (S1018's close-out, this session's claim, RED, GREEN, REFACTOR, NEWS and close-out) have never run on CI, Windows included; a first Windows run can turn only that leg red (Learning 984).
+key_files: R/modBreedingGroups.R:913 (reqGroupsInPedigree), :1155-1175 (note, body), :1191 (kinship view); tests/testthat/test_modBreedingGroups_groupsOutsidePedigree.R:59-112 (helpers), :177 (the flipped S996 assertion); tests/testthat/test_modBreedingGroups.R:1161 (layout block); NEWS.Rmd:324-326; PROJECT_LEARNINGS.md Learning 985; methodology/SESSION_NOTES.md (the S1019 block)
+gotchas: Only a picture and innerText say what a page shows: get_text (textContent) still held the old member rows after the sentence replaced them. A launcher's "completed" notice arrives within seconds of a background start (9 of 9 today); wait for the work's own EXIT= line with a Monitor. The browser recipe works from a scratch script that sources tests/testthat/helper-shinytest2.R (upload_and_wait, navigate_to_tab, wait_for_module_ready); app$get_download("<module>-<id>") shows a server error as an R error. A mutant run edits R/modBreedingGroups.R in place and restores it in finally: confirm with git diff afterward and never read or edit the file while it runs. An earlier session's test can pin the opposite of a new ruling: name it at the RED gate. SESSION_NOTES.md sits near the hook's limit of about 56,750 B: condense before adding.
+runtime_smoke: Real app (headless Chrome, scratch install of the changed package): with groups formed the Group Detail body holds 2 Export buttons, a 25-row member table and the kinship table; after the new file the body is empty (0 buttons, no table) under the sentence; both pictures were opened for the owner.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 09180e687e57 · manifest aa983075d6a2
+changelog_ref: 30d16de5f
+commit: 11ce761e6
 ```
 
 ```handoff

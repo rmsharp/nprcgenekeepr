@@ -165,16 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **With the "groups not in the pedigree" sentence showing, "Export Current Group" writes no file and says nothing, and
-      "Export Current Group Kinship Matrix" writes the old group's matrix (DECISION NEEDED -- leave it, or make both exports stop
-      with the page's sentence, Effort S-M; strict TDD)** (found S996, split out of the guide-sentence item when S1017 finished it) --
-      a formed group holds an animal the loaded pedigree lacks (after a new file or a trimmed view), and the Breeding Groups
-      Groups, Statistics and Group Detail pages show one sentence (`R/modBreedingGroups.R:222`; the guide says it since S1017,
-      `vignettes/articles/colony-manager-guide.qmd:709-714`). Measured S996 with a module-level probe (a browser download was
-      not tried): "Export Current Group" stops silently; "Export Current Group Kinship Matrix" writes the old group's matrix.
-      **Decision:** (a) leave it (the sentence on the page already says to form the groups again); (b) make both exports stop and
-      say that sentence, which users would see, so it needs a `NEWS.Rmd` line and a browser download tried first.
-
 - [ ] **The Changed Columns tab and `summary()` skip some rename fields (DECISION NEEDED -- should the
       tab list every rename, Effort S-M; strict TDD)** (found S988, while `checkChangedColsLst()` was made to
       count every rename) -- `getEmptyErrorLst()$changedCols` has 13 fields. `shouldShowChangedColsTab()` checks 12
