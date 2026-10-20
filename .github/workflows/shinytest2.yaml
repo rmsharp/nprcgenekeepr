@@ -138,6 +138,7 @@ jobs:
             "^app-"
             "^e2e-boundary-conditions"
             "^e2e-breeding-groups-"
+            "^e2e-changed-columns-"
             "^e2e-data-ready"
             "^e2e-error-states"
             "^e2e-genetic-value-"
