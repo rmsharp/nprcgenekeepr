@@ -278,6 +278,37 @@ test_that("modCrossCenterIdentityServer's Merged Pedigree download carries a col
   })
 })
 
+test_that("modCrossCenterIdentityServer's Merged Pedigree download carries a column of a Center file that has headings and no animals", {
+  skip_if_not_installed("shiny")
+
+  ## S1022 (found S1011): Center A's file has its column headings and no
+  ## animals, and the mapping is empty -- the only way such a file reaches the
+  ## merge. The file is written and read back (a zero-row CSV reads back with
+  ## every column logical), the route an upload takes.
+  emptyPedA <- .ccPedA[0L, ]
+  emptyMapping <- .ccMapping[0L, ]
+  pedBNoSex <- .ccPedB[, c("id", "sire", "dam")]
+
+  shiny::testServer(modCrossCenterIdentityServer, args = list(), {
+    do.call(session$setInputs, .ccUploadInputs(
+      pedA = emptyPedA, pedB = pedBNoSex, mapping = emptyMapping
+    ))
+    session$setInputs(validate = 1)
+    session$setInputs(confirmMerge = 1)
+    session$setInputs(confirmMergeOk = 1)
+
+    result <- session$getReturned()
+    expect_equal(nrow(result$issues()), 0L)
+    expect_true(result$confirmed())
+
+    merged <- utils::read.csv(output$downloadMergedPedigree,
+                              stringsAsFactors = FALSE)
+    expect_identical(names(merged), c("id", "sire", "dam", "sex"))
+    expect_identical(merged$id, .ccPedB$id)
+    expect_true(all(is.na(merged$sex)))
+  })
+})
+
 test_that("modCrossCenterIdentityServer's Merged Pedigree/Mapping/Validation Results downloads write the expected artifacts once confirmed", {
   skip_if_not_installed("shiny")
 

@@ -385,3 +385,122 @@ test_that("resolveCrossCenterIds keeps a one-sided Date column's class when the 
   expect_true(is.na(merged$birth[merged$id == "T1"]))
   expect_identical(merged$birth[merged$id == "T2"], as.Date("2010-05-07"))
 })
+
+## S1022 (found S1011; the owner ruled "keep every file's columns"): a
+## pedigree file with its column headings and no animals reaches the merge
+## only with an empty mapping (a mapping row names an animal the file does not
+## have, and the merge stops). bindPedigreeRows() dropped that file's zero-row
+## piece before it collected column names, so a column only that file had
+## vanished from the merged table and from the tab's downloaded CSV, against
+## the help's "union of pedA's and pedB's columns". `emptyPedigree()` is such a
+## file: the three required columns plus any `extra` ones, all zero-row.
+noMapping <- data.frame(
+  idA = character(0L), idB = character(0L), stringsAsFactors = FALSE
+)
+
+emptyPedigree <- function(extra = character(0L)) {
+  cols <- c("id", "sire", "dam", extra)
+  as.data.frame(
+    stats::setNames(rep(list(character(0L)), length(cols)), cols),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that("resolveCrossCenterIds keeps a column only an empty pedA has", {
+  merged <- resolveCrossCenterIds(emptyPedigree("sex"), pedB, noMapping)
+
+  expect_identical(names(merged), c("id", "sire", "dam", "sex"))
+  expect_identical(merged$id, pedB$id)
+  expect_identical(merged$sire, pedB$sire)
+  expect_identical(merged$dam, pedB$dam)
+  expect_identical(merged$sex, rep(NA_character_, 3L))
+})
+
+test_that("resolveCrossCenterIds keeps a column only an empty pedB has", {
+  merged <- resolveCrossCenterIds(pedA, emptyPedigree("sex"), noMapping)
+
+  expect_identical(names(merged), c("id", "sire", "dam", "sex"))
+  expect_identical(merged$id, pedA$id)
+  expect_identical(merged$sire, pedA$sire)
+  expect_identical(merged$dam, pedA$dam)
+  expect_identical(merged$sex, rep(NA_character_, 4L))
+})
+
+test_that("resolveCrossCenterIds gives two empty pedigrees the columns of both", {
+  different <- resolveCrossCenterIds(
+    emptyPedigree("sex"), emptyPedigree("birth"), noMapping
+  )
+  expect_identical(names(different), c("id", "sire", "dam", "sex", "birth"))
+  expect_identical(nrow(different), 0L)
+
+  same <- resolveCrossCenterIds(
+    emptyPedigree("sex"), emptyPedigree("sex"), noMapping
+  )
+  expect_identical(names(same), c("id", "sire", "dam", "sex"))
+  expect_identical(nrow(same), 0L)
+})
+
+test_that("resolveCrossCenterIds keeps the class of a column only an empty file has", {
+  emptyDated <- emptyPedigree()
+  emptyDated$birth <- as.Date(character(0L))
+  emptyAged <- emptyPedigree()
+  emptyAged$age <- numeric(0L)
+
+  fromA <- resolveCrossCenterIds(emptyDated, pedB, noMapping)
+  expect_s3_class(fromA$birth, "Date")
+  expect_identical(length(fromA$birth), 3L)
+  expect_true(all(is.na(fromA$birth)))
+
+  fromB <- resolveCrossCenterIds(pedA, emptyDated, noMapping)
+  expect_s3_class(fromB$birth, "Date")
+  expect_identical(length(fromB$birth), 4L)
+  expect_true(all(is.na(fromB$birth)))
+
+  aged <- resolveCrossCenterIds(emptyAged, pedB, noMapping)
+  expect_type(aged$age, "double")
+  expect_true(all(is.na(aged$age)))
+})
+
+test_that("resolveCrossCenterIds puts a column only an empty file has after the other file's columns", {
+  pedBBirth <- pedB
+  pedBBirth$birth <- as.Date(c("2010-05-06", "2001-02-03", "2012-12-12"))
+  emptySex <- emptyPedigree("sex")
+
+  merged <- resolveCrossCenterIds(emptySex, pedBBirth, noMapping)
+  expect_identical(names(merged), c("id", "sire", "dam", "birth", "sex"))
+  expect_identical(merged$birth, pedBBirth$birth)
+
+  ## the empty file lists its columns in another order: the animals' file
+  ## still sets the order of the columns it has
+  shuffled <- resolveCrossCenterIds(
+    emptySex[, c("sex", "dam", "sire", "id")], pedB, noMapping
+  )
+  expect_identical(names(shuffled), c("id", "sire", "dam", "sex"))
+})
+
+## The three below describe behavior that is already right and must not move.
+test_that("resolveCrossCenterIds adds nothing for an empty file with only id, sire and dam", {
+  merged <- resolveCrossCenterIds(emptyPedigree(), pedB, noMapping)
+
+  expect_identical(names(merged), c("id", "sire", "dam"))
+  expect_identical(merged$id, pedB$id)
+})
+
+test_that("resolveCrossCenterIds leaves a column the animals' file also has as it was", {
+  pedBSex <- pedB
+  pedBSex$sex <- c("M", "F", "M")
+
+  merged <- resolveCrossCenterIds(emptyPedigree("sex"), pedBSex, noMapping)
+
+  expect_identical(names(merged), c("id", "sire", "dam", "sex"))
+  expect_identical(merged$sex, pedBSex$sex)
+})
+
+test_that("resolveCrossCenterIds still stops on a mapping row against an empty pedA", {
+  oneRow <- data.frame(idA = "T1", idB = "X9", stringsAsFactors = FALSE)
+
+  expect_error(
+    resolveCrossCenterIds(emptyPedigree("sex"), pedB, oneRow),
+    "mapping references idA value\\(s\\) not present in pedA\\$id"
+  )
+})
