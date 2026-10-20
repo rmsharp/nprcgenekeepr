@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1021
 date: 2026-10-20
-status: pending
-active_task: IN PROGRESS -- BACKLOG.md:168 a nameless (NA) column header stops qcStudbook() before any column check: settle leave / fix each site / check once at the front, then build it if the answer is not "leave"; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- the former BACKLOG.md:168 item, a nameless (NA) column header stops qcStudbook(): a column named NA is read as a blank one (owner pick at the Phase 0 picker, item 1 of 4; the owner took "Treat NA as a blank"; strict TDD, every phase behind its own gate)
+what_was_done: Claim 987df6da1. Measured first at function level (no reader makes an NA name: getPedigree() gives the empty string, the app X, readxl ...3): all 13 headers of examplePedigree x both reportErrors settings, 26 of 26 runs, stopped in fixColumnNames() with missing value where TRUE/FALSE needed; patching the two sites S989 named fixed 10 and the other 16 (every optional header) stopped in addParents(); mapping NA to the empty string made all 26 match the blank-header runs. RED 4478cda7b (8 new blocks, 7 failed, 47 expectations; the text-NA pin passes). GREEN 787832c2b (R/fixColumnNames.R:37, the help sentence at :17, man page regenerated). REFACTOR b7c9872a2 (stopAsValue(), 3 copies became one test helper). NEWS 061fb1e50 (NEWS.Rmd:496-502). Mutants 5 of 5 killed before and after the tidy-up. Full suite 439 files 4035 blocks 13557 expectations 0 failed 0 errors 191 skipped; lint 0; check 0/0/0.
+next_steps: No owner order was given; my order: BACKLOG.md:168 (Cross-Center header-only pedigree) and :177 (52 archive pointers), both DECISION NEEDED, S; the compression item is :363 (READY, L, recurring); :179 is the contributor tutorial (DECISION NEEDED, M, three owner decisions first). The branch is 22 commits ahead of origin (S1019's 7, S1020's 9 and S1021's 6); none has run on CI, Windows included; no push was asked for.
+key_files: R/fixColumnNames.R:37 (the one line) and :17 (the help sentence); tests/testthat/test_fixColumnNames.R:144-202 (new blocks); tests/testthat/test_qcStudbook.R:603-669 (new blocks); tests/testthat/helper-stopAsValue.R:7 (stopAsValue); NEWS.Rmd:496-502; BACKLOG.md:149 (the stale CL9 sentence) and :168 (the next item); PROJECT_LEARNINGS.md Learning 987
+gotchas: quality_ratchet.py --run overwrites the gitignored .quality-gates-results.json, so compare the last receipt's results hash before any --run. withCallingHandlers() goes inside tryCatch(), or the inner handler takes the error first and the outer one never fires. stopAsValue() is a global test helper. getPedigree() reads with check.names = FALSE, so a blank CSV header is the empty string. A scratch R CMD INSTALL --no-docs --library=<scratch> with R_LIBS=<scratch>:<renv lib> runs the opt-in browser file in about 40 s. BACKLOG.md:149 still says CL9 is the open item below (left as it was). SESSION_NOTES.md sits about 428 bytes under the hook's limit of about 56,700 B: condense before adding.
+runtime_smoke: Function level is the only surface that can reach an NA name, so the new qcStudbook blocks run it (13 headers x 2 settings). The app cannot make one (its readers give the empty string, X and ...3), so the opt-in Changed Columns browser file (4 blocks, 7 expectations, 0 failed) ran against a scratch install of the changed package to show that uploads through fixColumnNames() are unchanged.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4c1228a6bd31 · manifest aa983075d6a2
+changelog_ref: 987df6da1
+commit: 061fb1e50
 ```
 
 ```handoff

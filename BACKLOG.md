@@ -165,19 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **A nameless (`NA`) column header stops `qcStudbook()` before any column check (DECISION NEEDED -- leave it,
-      fix each site, or check once at the front, Effort S-M; strict TDD)** (found S989, while `checkRequiredCols()` was
-      made to ignore an `NA` name, docs-audit part 2 flag PB4) -- script-only: a CSV blank header is read as `X`, so only
-      `names(ped)[k] <- NA` reaches it. Measured S989 on `examplePedigree`: `qcStudbook()` with `reportErrors` TRUE and
-      FALSE stops "missing value where TRUE/FALSE needed" in `fixColumnNames()` (`R/fixColumnNames.R:43` and `:46`,
-      `if (any(tolower(newCols) == "firstname"))`), before `checkRequiredCols()` is reached. With `na.rm = TRUE` at both
-      (previewed in memory, nothing committed) a nameless `birth` header gives `missingColumns` "birth" (and "Required
-      field(s) missing: birth." with `reportErrors = FALSE`), but a nameless `origin` header still stops "undefined
-      columns selected" at `R/addParents.R:47` (`ped[, names(ped) != "recordStatus"]`), and more sites may follow (not
-      searched). The owner ruled S989, at the PRE-RED scope question, to fix `checkRequiredCols()` only (shipped S989).
-      **Decision:** (a) leave it (script-only); (b) fix each site, each with a test; (c) check once at the front of
-      `qcStudbook()` and stop with one message naming the column's position (the wording is the owner's).
-
 - [ ] **The Cross-Center merge drops the extra columns of a pedigree that has a header and no animals (DECISION NEEDED --
       leave it, or keep every input's columns, Effort S; strict TDD)** (found S1011, left alone at the owner's RED gate) --
       `bindPedigreeRows()` (`R/resolveCrossCenterIds.R`) removes zero-row frames before it collects column names. Measured
