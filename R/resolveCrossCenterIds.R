@@ -29,15 +29,18 @@
 #' @return A single data.frame over the union of all input columns, with
 #' \code{NA} filled in wherever a source data.frame lacked a column. The
 #' \code{NA} has the class the column has where it is present, so a column
-#' only one source recorded (a \code{Date}, say) keeps its class.
+#' only one source recorded (a \code{Date}, say) keeps its class. A source
+#' with no rows adds its columns and no rows; its columns follow those of the
+#' sources with rows.
 #' @noRd
 bindPedigreeRows <- function(dfs) {
-  dfs <- Filter(function(d) !is.null(d) && nrow(d) > 0L, dfs)
+  dfs <- Filter(Negate(is.null), dfs)
   if (length(dfs) == 0L) {
     return(data.frame(id = character(0L), sire = character(0L),
                        dam = character(0L), stringsAsFactors = FALSE))
   }
-  allCols <- unique(unlist(lapply(dfs, names)))
+  withRows <- Filter(function(d) nrow(d) > 0L, dfs)
+  allCols <- unique(unlist(lapply(c(withRows, dfs), names)))
   naOfClass <- function(col) {
     holder <- Filter(function(d) col %in% names(d), dfs)[[1L]]
     .naLikeColumn(holder, col)
