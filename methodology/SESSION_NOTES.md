@@ -98,26 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1022 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, a Cross-Center file with column headings and no animals, is finished and its block removed.
-The owner took "Keep every file's columns" (of two): `bindPedigreeRows()` (`R/resolveCrossCenterIds.R:36`) collects column names from every piece (`:42-43`), the pieces with rows first so no current output reorders. Claim
-`7970c5a46`, RED `8b886a903`, GREEN `6b8acbf0a`, REFACTOR `cc5cdf908` (`tests/testthat/helper-emptyCrossCenterInputs.R:6,16`). **No NEWS line** (owner: a sentence was "overly detailed"; "No new NEWS line"); the owner also
-asked for the 45 "Fixed:" bullets to be condensed, now `BACKLOG.md:170`. Not pushed (27 ahead of origin after this close-out).
-**Evidence:** before, 6 function-level cases and the tab's server code gave a downloaded merged CSV headed `"id","sire","dam"` (`sex` gone, no warning); after, a real browser run (scratch `AppDriver`) shows "Mapping is clean",
-"0 mapped pair(s); 3 row(s)", and a download headed `"id","sire","dam","sex"`, `sex` blank for all 3 animals. RED 9 new blocks, 6 failed (14 expectations), 3 pins pass; mutants 6 of 6 killed before and after the tidy-up (a
-first-draft line, "bind only the pieces with rows", survived as dead logic because `rbind()` drops zero-row pieces, and was removed); full suite 439 files, 4,044 blocks, 13,593 expectations, 0 failed, 0 errors, 191 skipped;
-lint 0; `check` 0/0/0; ratchet 1/1 (results `eef2aafbd4a5`, the S1021 citation `4c1228a6bd31` compared first).
-**Handoff evaluation of S1021: 9/10.** Helped: every cite held (`BACKLOG.md:168,177,363,179`, "22 ahead", "428 bytes under the limit"); the item's words "not in the tab" sent me to measure the tab. Missing: nothing that cost
-time. Wrong: nothing; the stale "CL9 is the open item below" sentence it flagged is still at `BACKLOG.md:149`.
-**Self: 8/10.** + counted before asking (6 cases, the tab's code, then a real browser run); a side-by-side table in the question; a surviving mutant sent me back to simplify GREEN; the push was left alone. - my NEWS draft was
-too detailed (one rejected box; a "Fixed" line for a feature new this release was wrong anyway: check the prior release first); the harness nudged me 4 times (silent runs of waits and quick reads); a self-matching `pgrep -f`
-monitor; a zsh `=====` slip again. Learning 988.
-**Gotchas:** a download link in a hidden Shiny tab has `href=""` until the tab is shown (show it, then `fetch()` the link's `href` through `app$get_js()`); BSD `sed -i` needs `''`; wait on a pid with `kill -0`, never a
-`pgrep -f` that matches its own command line; `BACKLOG.md:149` still says "CL9 is the open item below" (left as it was, two sessions now); this file is about 1,000 B under its 25,000-token ceiling (about 56,750 B): condense before adding.
-**Next (my order; the owner gave none):** `BACKLOG.md:168` archive pointers (DECISION NEEDED, S); `:170` condense the 45 "Fixed:" bullets (DECISION NEEDED, M); `:366` compression (READY, L); `:182` contributor tutorial
-(DECISION NEEDED, M).
+### What Session 1023 Did
+**Deliverable:** `BACKLOG.md:168` the archive pointers name `docs/archive/` but the shards sit in `methodology/archive/`: settle leave / rewrite the 52 pointers / change `methodology_trim.py`, then build it
+under strict TDD if the answer is not "leave" (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4)
+**Started:** 2026-10-20 18:41 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. First step: re-resolve every pointer against its own file's directory (S1001 found 52: 23 + 17 + 12), read what `methodology_trim.py` writes
+and which tests or tools read a pointer, then put the leave / rewrite / fix-the-tool choice to the owner in plain words with those measured results.
+`master` is 27 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1021 (condensed S950 to S1022; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1022 (condensed S950 to S1023; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1022: a pedigree file with column headings and no animals keeps its columns in the Cross-Center merge (owner: "Keep every file's columns"): `bindPedigreeRows()` (`R/resolveCrossCenterIds.R:36`)
+collects column names from every piece (`:42-43`), the pieces with rows first; strict TDD; claim `7970c5a46`, RED `8b886a903`, GREEN `6b8acbf0a`, REFACTOR `cc5cdf908`
+(`tests/testthat/helper-emptyCrossCenterInputs.R:6,16`); no NEWS line by the owner's ruling; not pushed; evaluation of S1021 9/10, self 8/10 (Learning 988). **Gotchas kept:** a download link in a
+hidden Shiny tab has `href=""` until the tab is shown (show it, then `fetch()` the link's `href` through `app$get_js()`); `rbind()` drops zero-row pieces; wait on a pid with `kill -0`, never a
+`pgrep -f` that matches its own command line; `BACKLOG.md:149` still says "CL9 is the open item below" (left as it was, three sessions now).
 S1021: a pedigree column named `NA` is read as a blank one (owner: "Treat NA as a blank"): `fixColumnNames()` sets every `NA` name to `""` first (`R/fixColumnNames.R:37`, help `:17`), the one place
 `qcStudbook()` reads the names; strict TDD; claim `987df6da1`, RED `4478cda7b`, GREEN `787832c2b`, REFACTOR `b7c9872a2` (`stopAsValue()`, `tests/testthat/helper-stopAsValue.R:7`), NEWS `061fb1e50`
 (`NEWS.Rmd:496-502`); not pushed; evaluation of S1020 8/10, self 8/10 (Learning 987). **Gotchas kept:** `quality_ratchet.py --run` overwrites the gitignored `.quality-gates-results.json`, so compare the
