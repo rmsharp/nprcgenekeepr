@@ -98,22 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1017 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate; docs only, no `R/` change):** the colony manager guide names the "groups not in the pedigree" sentence in the two places the owner
-chose ("both, as drafted"): a new paragraph after the Statistics paragraph quotes the app's whole Breeding Groups sentence (`vignettes/articles/colony-manager-guide.qmd:709-714`), and the Genetic Diversity paragraph ends
-with the sentence that takes the heat map's place (`:879-882`). Pinned by `tests/testthat/test_guideGroupsOutsidePedigreeWording.R` (8 blocks, 24 expectations; it reads the app's own `.breedingGroupsOutsidePedigreeNote` and
-`.groupsOutsidePedigreeNote`, so a wording change in the app fails it until the guide follows). Claim `7f6648751`, RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR `050466d2e`. Not pushed (62 ahead of origin).
-**Carried forward:** the old item's "Export Current Group" finding is its own DECISION NEEDED item (`BACKLOG.md:168`); the new guide sentences do not mention exports.
-**Evidence:** RED 14 of 24 expectations failed (the 10 passes are the controls); 16 mutants killed before and after REFACTOR; full suite 438 files, 4,007 blocks, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; 15 other
-guide-reading files and the spelling guard 0 failed. The guide was not rendered (prose only); no browser tier (nothing at runtime changed).
-**Handoff evaluation of S1016: 9/10.** Helped: every cite held (`:168`, `:178`, `:193`, `:206`, `:215`, `:401`) and the 56,700 B notes limit was real. Missing: `:168` was tagged "docs only" but held a code finding. Wrong: nothing.
-**Self: 7/10.** + one scope question with drafts; option-text counts were greps; RED's own regex bug (the app's string reads `view). Form`) found by running it; mutants run twice. - a stray `cat >` in my first background
-command (a typo) hung the mutation job about 10 minutes, output piped through `grep`, found only when the owner asked "Are you still running?"; the REFACTOR gate text said each section is read once, but the guide must be
-read inside each block (it may be absent), so the tidy named the sections. Learning 983. Ratchet 1/1 (results `0ff920f6d6a1`).
-**Gotchas:** a background command's output goes to a file, never through `grep`, and `ps` must show the work process within a minute; the test file reads the app's constants with `nprcgenekeepr:::`.
-**Next (my order; the owner gave none):** `BACKLOG.md:168` Export Current Group (DECISION NEEDED, S-M), `:178`, `:193`, `:206`, `:215` (all DECISION NEEDED); the compression item is `:401` (READY, L).
+### What Session 1018 Did
+**Deliverable:** fix the red `windows-latest` leg of `R-CMD-check.yaml` (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4; strict TDD)
+**Started:** 2026-10-19 22:52 CDT
+**Status:** Session claimed. Work beginning. The red run is `39360845908` (the owner's push after S1017; `master` equals `origin/master`): 1 failure of 11,840, `test_docsAuditSlice6eMinorFixes.R:150`
+(S1016's CL2 `create_wkbk` missing-folder test; the Windows temp path has backslashes, the message from `R/create_wkbk.R:57` has forward slashes). The other 4 legs and the 3 other workflows pass.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1016 (condensed S950 to S1017; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1017 (condensed S950 to S1018; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1017: the colony manager guide names the "groups not in the pedigree" sentence in the two places the owner chose (`vignettes/articles/colony-manager-guide.qmd:709-714` quotes the app's whole Breeding Groups
+sentence, `:879-882` ends the Genetic Diversity paragraph); pinned by `tests/testthat/test_guideGroupsOutsidePedigreeWording.R` (8 blocks, 24 expectations; it reads the app's `.breedingGroupsOutsidePedigreeNote`
+and `.groupsOutsidePedigreeNote`); strict TDD; claim `7f6648751`, RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR `050466d2e`; evaluation of S1016 9/10, self 7/10 (Learning 983). Its Export Current Group finding is `BACKLOG.md:168`.
+**Gotchas kept:** a background command's output goes to a file, never through `grep`, and `ps` must show the work process within a minute.
 S1016: the 13 small wrong statements of the slice 6e re-check are fixed and pinned in `tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; new `assertFileType()`,
 `R/assertFileType.R:18`; four NEWS entries `NEWS.Rmd:660-688`); the owner took "fix all 13 as listed" over retiring CK1, CL1, CL6; strict TDD, REFACTOR taken; claim `5411ddf79`, RED `a4878f0e3`,
 GREEN `99d0ab451` `2c5670629` `d0d1a6d8b` `caf9cf9f1` `8139774ea` `3baa1f594` `1aee03ad8`, REFACTOR `e116f4336` `ffe2f3a3b` `596a3e92d`, NEWS `1c15f6272`; evaluation of S1015 8/10, self 7/10 (Learning 982).
