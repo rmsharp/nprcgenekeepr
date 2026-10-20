@@ -98,20 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1018 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate; test file only, no `R/` change):** the red `windows-latest` leg of `R-CMD-check.yaml` is green. S1016's CL2 test
-(`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152`) compared the `create_wkbk()` message with the `tempfile()` path; on Windows `dirname()` (`R/create_wkbk.R:57`) writes `/` where `tempfile()` wrote `\`,
-so it failed. It compares with `dirname(workbook)` now. Claim `f1a90cad3`, GREEN `c5545b016`; no RED commit (the RED was the red CI run `39360845908`, quoted at the gate) and REFACTOR changed nothing.
-**Evidence:** pushed `fc305a706..c5545b016` by SHA with the owner's OK; all 4 workflows green on `c5545b016`; run `39371265700` has all 5 legs green, Windows `Status: OK`, `[ FAIL 0 | WARN 8 | SKIP 516 | PASS 11840 ]`.
-Here: 30 blocks, 100 expectations, 0 failed; 3 mutants of the message (drop the folder, print the parent, remove the check) each fail it; full suite 438 files, 4,007 blocks, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0.
-**Handoff evaluation of S1017: 8/10.** Helped: every BACKLOG cite held (`:168`, `:178`, `:193`, `:206`, `:215`, `:401`) and the 56,750 B notes limit was right.
-Missing: no warning that the 62 unpushed commits, S1016's new tests among them, had never run on Windows. Wrong: nothing.
-**Self: 8/10.** + the red read per leg and the green read from the Windows leg's own log; one push, after the owner's OK; mutants restored in `finally`. - long silent stretches in Phase 0 (the harness nudged twice); my first launcher check took the
-zsh wrapper for the work process (`ps` showed the real one within a minute). Learning 984. Ratchet 1/1 (results `ffabdc03bb87`).
-**Gotchas:** compare a message with the string the code derives, not the path the test built; a workflow-level "success" does not name its legs (`gh run view <id> --json jobs`); the close-out commit is notes only and rides with the next push.
-**Next (my order; the owner gave none):** `BACKLOG.md:168` Export Current Group (DECISION NEEDED, S-M), `:178`, `:193`, `:206`, `:215` (all DECISION NEEDED); the compression item is `:401` (READY, L).
+### What Session 1019 Did
+**Deliverable:** `BACKLOG.md:168` Export Current Group: settle leave-or-fix for the two Breeding Groups exports when a formed group
+holds an animal the loaded pedigree lacks (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4; strict TDD if the answer is "fix")
+**Started:** 2026-10-20 00:26 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. First step: run both exports in the real app (S996 used a module-level probe only; no browser
+download was tried), then put the leave-or-fix choice to the owner in plain words. `master` is 1 commit ahead of `origin/master` (S1018's notes-only close-out).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1017 (condensed S950 to S1018; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1018 (condensed S950 to S1019; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1018: the red `windows-latest` leg of `R-CMD-check.yaml` is green; S1016's CL2 `create_wkbk` test (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152`) compares the message with
+`dirname(workbook)`, the string `R/create_wkbk.R:57` prints (on Windows `dirname()` writes `/` where `tempfile()` wrote `\`); test file only; claim `f1a90cad3`, GREEN `c5545b016`, no RED commit (the red CI
+run `39360845908` was the RED); pushed with the owner's OK, run `39371265700` all 5 legs green; evaluation of S1017 8/10, self 8/10 (Learning 984). **Gotchas kept:** compare a message with the string
+the code derives, not the path the test built; a workflow-level "success" does not name its legs (`gh run view <id> --json jobs`); the close-out commit is notes only and rides with the next push.
 S1017: the colony manager guide names the "groups not in the pedigree" sentence in the two places the owner chose (`vignettes/articles/colony-manager-guide.qmd:709-714` quotes the app's whole Breeding Groups
 sentence, `:879-882` ends the Genetic Diversity paragraph); pinned by `tests/testthat/test_guideGroupsOutsidePedigreeWording.R` (8 blocks, 24 expectations; it reads the app's `.breedingGroupsOutsidePedigreeNote`
 and `.groupsOutsidePedigreeNote`); strict TDD; claim `7f6648751`, RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR `050466d2e`; evaluation of S1016 9/10, self 7/10 (Learning 983). Its Export Current Group finding is `BACKLOG.md:168`.

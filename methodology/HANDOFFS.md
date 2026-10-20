@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1019
+date: 2026-10-20
+status: pending
+active_task: IN PROGRESS -- BACKLOG.md:168 Export Current Group: settle leave-or-fix for the two Breeding Groups exports when a formed group holds an animal the loaded pedigree lacks; owner pick at the Phase 0 picker, item 1 of 4
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1018
 date: 2026-10-19
 status: complete
