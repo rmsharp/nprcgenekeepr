@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1017
 date: 2026-10-19
-status: pending
-active_task: IN PROGRESS -- the guide sentence for "groups not in the pedigree" (`BACKLOG.md:168`, DECISION NEEDED, docs only); owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- the colony manager guide names the "groups not in the pedigree" sentence in the two places the owner chose, "both, as drafted" (owner pick, item 1 of 4; strict TDD, every phase behind its own gate; docs only, no R/ change)
+what_was_done: Claim 7f6648751 (S1016 folded into the condensed notes first). One scope question (the places) and the drafts were shown; the owner chose both. RED ff1f8cb68: tests/testthat/test_guideGroupsOutsidePedigreeWording.R, 8 blocks, 24 expectations, 14 failed because the guide lacked the paragraphs, 10 passed (2 controls); a regex bug in my own test (the app's string reads "view). Form") was found by running it and fixed before the commit. GREEN d7d16f477: vignettes/articles/colony-manager-guide.qmd, a new paragraph after the Statistics paragraph quoting the app's whole Breeding Groups sentence, and one added sentence at the end of the Genetic Diversity paragraph. REFACTOR 050466d2e: the app's two sentences read once each and each guide section named by one function, test file only. 16 mutants (each place deleted, moved, split or one word changed, plus the app's two sentences) killed before and after REFACTOR. BACKLOG.md: the :168 block removed and its Export Current Group finding re-filed as its own DECISION NEEDED item at :168. Full suite 438 files, 4,007 blocks, 0 failed, 0 errors, 187 skipped; lint_package() 0; devtools::check() 0/0/0; 15 other guide-reading files and the spelling guard 0 failed. Not pushed (62 ahead).
+next_steps: No owner order was given; my order: BACKLOG.md:168 (Export Current Group writes no file and says nothing while the sentence shows, Kinship Matrix export writes the old group's matrix; DECISION NEEDED, S-M, try a browser download first), :178 (Changed Columns tab), :193 (nameless NA header), :206 (Cross-Center header-only file), :215 (archive pointers), all DECISION NEEDED; the compression item is :401 (READY, L, last pass S896).
+key_files: tests/testthat/test_guideGroupsOutsidePedigreeWording.R:1 (8 blocks, header states the two places); vignettes/articles/colony-manager-guide.qmd:709-714 (place A) and :879-882 (place B); R/modBreedingGroups.R:222 (.breedingGroupsOutsidePedigreeNote); R/modGeneticDiversity.R:51 (.groupsOutsidePedigreeNote); BACKLOG.md:168 (the Export Current Group item); PROJECT_LEARNINGS.md Learning 983
+gotchas: SESSION_NOTES.md is 56,090 B against the hook's limit of about 56,750 B (25,000 tokens at 2.27 B/token), so condense an older paragraph before adding one (python3 methodology/context_budget.py shows the token count); a background command's output goes to a file, never through grep, and ps must show the work process within a minute (my first mutation job sat on a stray cat for about 10 minutes); the test reads the app's constants with nprcgenekeepr::: and reads the guide inside each block so an absent guide skips the block, not the file; the guide section reader blanks fenced code before it looks for the next heading; the guide was not rendered
+runtime_smoke: n/a -- docs only; no runtime change, so no browser tier; the guide was not rendered with quarto (prose only, the tests read the source), which is a limit of this check
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 0ff920f6d6a1 · manifest aa983075d6a2
+changelog_ref: 7f6648751
+commit: 050466d2e
 ```
 
 ```handoff
