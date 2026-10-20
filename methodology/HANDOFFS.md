@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1022
 date: 2026-10-20
-status: pending
-active_task: IN PROGRESS -- BACKLOG.md:168 the Cross-Center merge drops the extra columns of a pedigree that has a header and no animals: settle leave / keep every input's columns, then build it if the answer is not "leave"; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the former BACKLOG.md:168 item, the Cross-Center merge dropped the extra columns of a pedigree file that has column headings and no animals (owner pick at the Phase 0 picker, item 1 of 4; the owner took "Keep every file's columns"; strict TDD, every phase behind its own gate; no NEWS line by the owner's ruling)
+what_was_done: Claim 7970c5a46. Measured first: 6 function-level cases (an empty pedA or pedB loses a column only it has; two empty files give id, sire, dam; a file with one animal, the same columns, and a mapping row against an empty pedA are already right) and the tab's own server code on three uploads (validation 0 issues, merge confirmed, downloaded header "id","sire","dam"). RED 8b886a903 (9 new blocks, 6 failed with 14 expectations, 3 pins pass). GREEN 6b8acbf0a (bindPedigreeRows() collects names from every piece, pieces with rows first; the first draft's extra "bind only the pieces with rows" line was dead logic, removed after mutant M4 survived because rbind() drops zero-row pieces). REFACTOR cc5cdf908 (emptyPedigree() and noMapping moved to tests/testthat/helper-emptyCrossCenterInputs.R; the owner took REFACTOR over my skip). Mutants 6 of 6 killed before and after. Full suite 439 files 4044 blocks 13593 expectations 0 failed 0 errors 191 skipped; lint 0; check 0/0/0. NEWS: none (owner: overly detailed; the tab is new this release). Added the BACKLOG item to condense the 45 Fixed bullets (owner request). Learning 988; memory notes updated.
+next_steps: No owner order was given; my order: BACKLOG.md:168 (52 archive pointers, DECISION NEEDED, S); :170 condense the 45 "Fixed:" bullets of NEWS.Rmd General Fixes (DECISION NEEDED: one bullet, one per area, or Major kept and Minor grouped; M); :366 BACKLOG.md compression (READY, L, recurring, last pass S896); :182 contributor tutorial (DECISION NEEDED, M, three owner decisions first). The branch is 27 commits ahead of origin (S1019's 7, S1020's 9, S1021's 6, S1022's 5); none has run on CI, Windows included; no push was asked for.
+key_files: R/resolveCrossCenterIds.R:36 (bindPedigreeRows) and :42-43 (the column-name collection); tests/testthat/test_resolveCrossCenterIds.R:398-495 (new blocks); tests/testthat/test_modCrossCenterIdentity.R:281-310 (the tab block); tests/testthat/helper-emptyCrossCenterInputs.R:6,16; BACKLOG.md:170 (the new NEWS-condense item) and :149 (the stale CL9 sentence, left as it was); PROJECT_LEARNINGS.md Learning 988
+gotchas: A download link in a hidden Shiny tab has href="" and class disabled until the tab is shown; show it, then fetch() the link's href through app$get_js() (app$get_download() failed). rbind() drops zero-row data frames and, if none is left, returns the first (documented in ?rbind). Wait on a background job by pid with kill -0; a pgrep -f whose pattern appears in its own command line never ends. quality_ratchet.py --run overwrites the gitignored results file, so compare the last receipt's hash first (I did: 4c1228a6bd31, then eef2aafbd4a5). BSD sed -i needs an empty extension. BACKLOG.md:149 still says CL9 is the open item below (two sessions now). SESSION_NOTES.md sits about 1,000 bytes under its 25,000-token ceiling (about 56,750 B): condense before adding.
+runtime_smoke: Real browser run through a scratch AppDriver (a scratch app.R with load_all() and the Cross-Center module) with a header-only Center A file, three animals at Center B and an empty mapping: "Mapping is clean", the confirm dialog says "0 mapped pair(s); 3 row(s) in the merged pedigree.", and the Merged Pedigree link downloads "id","sire","dam","sex" with sex blank for all 3 animals. The "before" was read from the module's server code (testServer) at PRE-RED, not from a browser.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results eef2aafbd4a5 · manifest aa983075d6a2
+changelog_ref: 7970c5a46
+commit: cc5cdf908
 ```
 
 ```handoff

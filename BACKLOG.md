@@ -165,16 +165,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **The Cross-Center merge drops the extra columns of a pedigree that has a header and no animals (DECISION NEEDED --
-      leave it, or keep every input's columns, Effort S; strict TDD)** (found S1011, left alone at the owner's RED gate) --
-      `bindPedigreeRows()` (`R/resolveCrossCenterIds.R`) removes zero-row frames before it collects column names. Measured
-      S1011 at function level (not in the tab): a Center A file with a header (`id`, `sire`, `dam`, `sex`) and no animals,
-      an empty mapping and a Center B file with animals gives a merged table with `id`, `sire`, `dam` only, and
-      `checkCrossCenterMapping()` reports 0 issues; with one mapping row the merge stops "mapping references idA value(s)
-      not present in pedA$id", so only an empty mapping reaches it. **Decision:** (a) leave it (a file with no animals has
-      nothing to carry); (b) keep the columns of every input, empty or not.
-
 - [ ] **The archive pointers name `docs/archive/`, but the shards sit in `methodology/archive/` (DECISION NEEDED -- leave them, rewrite them, or fix the trim tool, Effort S)** (found S1001, 2026-10-15, while trimming `CHANGELOG.md`) -- measured S1001 by resolving each pointer against its own file's directory: 52 do not resolve -- `methodology/SESSION_NOTES.md` 23 of 23, `methodology/HANDOFFS.md` 17 of 18, and the 12 in `methodology/archive/CHANGELOG-through-2026-10-14.md` (the live `CHANGELOG.md` has one pointer, and it resolves). Every target exists by name in `methodology/archive/`: the sync after S960 moved the shard directory from `docs/archive/` and the older pointers were not rewritten (the S991 and S1001 trims already write `methodology/archive/`). The 12 CHANGELOG pointers were already dead before the S1001 trim (the unmodified `HEAD` copy had the same links), so no proof broke: `verify.sh` and `--reverify` hold. **Decision:** (a) leave it (a reader finds a shard by name in `methodology/archive/`); (b) rewrite the 52 pointers (the 12 sit inside a frozen shard, so that one changes the shard's bytes and its `verify.sh` proof would have to be re-derived, not tried); (c) change `methodology_trim.py` so a pointer is written relative to where the shard really is (a synced file: see the local-customization checklist in `docs/conventions/CLOSEOUT_CHECKLISTS.md`).
+
+- [ ] **Condense the 45 "Fixed:" bullets of `NEWS.Rmd` General Fixes into a few grouped lines (DECISION NEEDED -- how far to
+      group, Effort M; docs only)** (owner-requested S1022, 2026-10-20) -- while closing the Cross-Center header-only item the
+      owner judged a one-sentence NEWS line for a small fix "overly detailed" and asked that bug fixes be grouped as one category
+      instead of listed one by one (that fix got no line: the new tab's bullet already promises it). Measured S1022: `## General
+      Fixes` (`NEWS.Rmd:397-710`) is 314 lines and 20,665 B with 53 bullets, 45 of them "Fixed:" (20 under Major, 25 under
+      Minor); the whole development block has 46. Each says what broke and what it does now; one (`NEWS.Rmd:686`, "several helper
+      functions for scripts gave a wrong or confusing answer") already groups several. **Decision first:** (a) one bullet for
+      all of them; (b) a few bullets, one per area (pedigree checks, breeding groups, exports, scripts); (c) keep the Major ones
+      and group the Minor ones. Then re-knit `NEWS.md` (read `git diff NEWS.md`) and run the 17 test files that name
+      `NEWS.Rmd` or `NEWS.md` (wording gates such as `test_newsReleaseState.R` and `test_breedingGroupsSourceChoices.R`): read
+      each before cutting a bullet it may quote, and move its pin rather than loosen it. NEWS keeps release-state wording.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
