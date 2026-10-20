@@ -336,8 +336,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   over empty tables, counts of zero males and zero females, and a red
   error. When a group holds an animal the pedigree now loaded does not
   have, each page says so in one sentence and asks you to form the
-  groups again or bring back the earlier pedigree. The groups are kept,
-  so bringing that pedigree back shows them again.
+  groups again or bring back the earlier pedigree. On **Group Detail**
+  the sentence takes the place of both tables and the two **Export**
+  buttons, so an old group cannot be exported by mistake. The groups are
+  kept, so bringing that pedigree back shows them again.
 
 ## Mate Pair Analysis
 
