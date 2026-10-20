@@ -169,15 +169,7 @@ modBreedingGroupsUI <- function(id) {
                  selectInput(ns("viewGrp"), "Group to view:", choices = NULL),
                  h4("Group members"),
                  uiOutput(ns("groupDetailNote")),
-                 DT::DTOutput(ns("groupMemberTable")),
-                 br(),
-                 h4("Within-group kinship"),
-                 DT::DTOutput(ns("groupKinTable")),
-                 br(),
-                 downloadButton(ns("downloadGroup"),
-                                "Export Current Group"),
-                 downloadButton(ns("downloadGroupKin"),
-                                "Export Current Group Kinship Matrix")
+                 uiOutput(ns("groupDetailBody"))
                ),
                # Issue #168 Slice 4b (D8): the guardrail's results surface.
                # Violations and coverage describe the currently-selected
@@ -1159,6 +1151,23 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       if (groupsOutsidePedigree()) outsidePedigreeBox()
     })
 
+    # The member and kinship tables and both Export buttons. The sentence
+    # above stands in place of all of them while a formed group holds an
+    # animal the loaded pedigree lacks.
+    output$groupDetailBody <- renderUI({
+      if (groupsOutsidePedigree()) return(NULL)
+      tagList(
+        DT::DTOutput(session$ns("groupMemberTable")),
+        br(),
+        h4("Within-group kinship"),
+        DT::DTOutput(session$ns("groupKinTable")),
+        br(),
+        downloadButton(session$ns("downloadGroup"), "Export Current Group"),
+        downloadButton(session$ns("downloadGroupKin"),
+                       "Export Current Group Kinship Matrix")
+      )
+    })
+
     bgGroupView <- reactive({
       req(breedingGroups())
       req(!groupsOutsidePedigree())
@@ -1177,6 +1186,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     # because the group's members are a subset of the candidate set).
     bgGroupKinView <- reactive({
       req(breedingGroups())
+      req(!groupsOutsidePedigree())
       res <- groupResults()
       req(!is.null(res$kmat))
       ids <- breedingGroups()[[selectedGroup()]]
