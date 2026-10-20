@@ -165,21 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **The Changed Columns tab and `summary()` skip some rename fields (DECISION NEEDED -- should the
-      tab list every rename, Effort S-M; strict TDD)** (found S988, while `checkChangedColsLst()` was made to
-      count every rename) -- `getEmptyErrorLst()$changedCols` has 13 fields. `shouldShowChangedColsTab()` checks 12
-      (`R/shouldShowChangedColsTab.R:36-42`, none for `geographicoriginToGeographicOrigin`); `summary()` writes a sentence
-      for 10 (`R/summary.nprcgenekeeprErr.R:111-165`, none for `recordstatusToRecordStatus`, `fromcenterToFromCenter` or
-      `geographicoriginToGeographicOrigin`); `processQcStudbookResult()` makes a warning row only for `caseChange` and
-      `spaceRemoved` (`R/processQcStudbookResult.R:198-215`). Measured S988: a list with only the `geographicorigin`
-      field filled gives a blank `summary()$txt` and an empty `<ul>` from `insertChangedColsTab()`, so the owner ruled at
-      the PRE-RED scope question to leave the tab alone: with an all-lowercase `geographicorigin` header
-      `hasChangedCols` is now TRUE but the tab stays hidden (`NEWS.Rmd` says so). The same gap for `recordstatus` and
-      `fromcenter` headers was read from the code, not run. **Decision:** open the tab and list every rename (three
-      new `summary()` sentences, 13 fields in `shouldShowChangedColsTab()`), or leave it. If it changes,
-      `test_appServer_dynamicTabs.R:189-209` ("both functions should agree", a 12-field list) needs a 13-field list
-      and the `NEWS.Rmd` sentence changes.
-
 - [ ] **A nameless (`NA`) column header stops `qcStudbook()` before any column check (DECISION NEEDED -- leave it,
       fix each site, or check once at the front, Effort S-M; strict TDD)** (found S989, while `checkRequiredCols()` was
       made to ignore an `NA` name, docs-audit part 2 flag PB4) -- script-only: a CSV blank header is read as `X`, so only

@@ -99,36 +99,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1020 Did
-**Deliverable:** `BACKLOG.md:168` Changed Columns tab and `summary()` skip some rename fields: settle leave-or-list-every-rename, then build it if the
-answer is "list every rename" (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4; strict TDD if built)
-**Started:** 2026-10-20 02:15 CDT
-**Status:** Session claimed. Work beginning, phase PRE-RED. First step: run the `recordstatus` and `fromcenter` header cases through the real code path (the item read
-them from code; S988 ran only `geographicorigin`), then put the leave-or-list choice to the owner in plain words. `master` is 7 commits ahead of `origin/master` (S1019's).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, the Changed Columns tab, is finished and its block removed. The owner took
+"Fix at the cause" (of four options). `fixColumnNames()` leaves a header already spelled `recordStatus`, `fromCenter` or `geographicOrigin` out of the case-change record and the three restore records
+(`R/fixColumnNames.R:36`, `:78-87`); `summary()` writes a sentence for all 13 kinds of rename (one loop, `R/summary.nprcgenekeeprErr.R:134-139`); `shouldShowChangedColsTab()` takes its field names from
+`names(getEmptyErrorLst()$changedCols)` (`R/shouldShowChangedColsTab.R:43`). Claim `ae48a3dc2`, RED `8f69dcdad` and `3826ed863` (browser), GREEN `1489ad34b` (CI group) and `4423616eb`, REFACTOR `5e8e98797`,
+NEWS `2942378fc` (`NEWS.Rmd:470-486`), test `a58ac200e`. Not pushed (16 ahead of origin after this close-out).
+**Evidence:** real app before: an all-lowercase `recordstatus` or `fromcenter` file opened the tab with a heading and no list, and the shipped example file opened it with a false "case was changed" line (0 of 13 cleaned
+headers differ from the uploaded ones); RED 12 new blocks, 10 failed (31 expectations), browser 4 blocks, 6 of 7 expectations failed; after: all pass, browser tier 7 expectations 0 failed, picture opened; mutants 9 of 9 killed
+before the tidy-up and 8 of 8 after; full suite 439 files, 4,027 blocks, 0 failed, 0 errors, 191 skipped; lint 0; `check` 0/0/0; ratchet 1/1.
+**Handoff evaluation of S1019: 8/10.** Helped: every BACKLOG cite held (`:168`, `:183`, `:196`, `:205`, `:391`); the item's own words "read from the code, not run" sent me to run the two cases first; the 7-ahead state was right.
+Missing: the item said the tab "stays hidden" (S988), but for `recordstatus` and `fromcenter` it opens empty, and nothing flagged the false line on the shipped example file. Wrong: nothing in S1019's own claims.
+**Self: 8/10.** + ran the unrun claim in the function and then the real app before asking, found two defects the item missed and their one cause; the owner took the recommended option; a throwaway copy showed 0 existing
+blocks flip before RED; mutants before and after, no survivor; the picture was opened. - my RED commit lacked its CI group line (the first full run after GREEN found it); long silent stretches (the
+harness nudged several times); two small slips (zsh `echo =====`, a `test_dir(filter=)` pattern). Learning 986.
+**Gotchas:** a new `tests/testthat/test-e2e-*.R` file also needs a line in `.github/workflows/shinytest2.yaml` `groups` (guard `test_shinytest2_workflow_coverage.R`); `test_dir(filter=)` matches the name without `test-` or
+`test_`; the browser tier leaves `tests/testthat/_problems/` (gitignored); `git worktree remove --force` clears a scratch worktree (the `.claude/worktrees/wf_*` ones are not mine). Left as it was:
+`processQcStudbookResult()` still makes warning rows only for case and space changes (`R/processQcStudbookResult.R:198-215`).
+**Next (my order; the owner gave none):** `BACKLOG.md:168` NA column header (DECISION NEEDED, S-M), `:181` Cross-Center header-only pedigree, `:190` archive pointers (both DECISION NEEDED, S); the compression item is `:376` (READY, L).
 
 ### Sessions 947-1019 (condensed S950 to S1020; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1019: Export Current Group is finished: while the "groups not in the pedigree" sentence shows, Group Detail holds no table and no Export button (owner: "Sentence only";
-`output$groupDetailBody` `R/modBreedingGroups.R:1162`, `bgGroupKinView` `:1191`, `reqGroupsInPedigree()` `:913`); strict TDD; claim `30d16de5f`, RED `9e74ae435`, GREEN `011cc0a08`,
-REFACTOR `11ce761e6`, NEWS `3b849db64` (`NEWS.Rmd:324-326`); not pushed; evaluation of S1018 8/10, self 8/10 (Learning 985). **Gotchas kept:** only a picture and `innerText` say what a page
-shows; wait for a job's `EXIT=` line; a mutant run edits `R/modBreedingGroups.R` in place, so confirm with `git diff` after.
-S1018: the red `windows-latest` leg of `R-CMD-check.yaml` is green; S1016's CL2 `create_wkbk` test (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152`) compares the message with `dirname(workbook)`, not the
-path the test built (Windows `dirname()` writes `/`, `tempfile()` wrote `\`); test file only; claim `f1a90cad3`, GREEN `c5545b016`; pushed, run `39371265700` all 5 legs green; 8/10, self 8/10 (Learning 984).
-**Gotchas kept:** a workflow "success" does not name its legs (`gh run view <id> --json jobs`).
-S1017: the colony manager guide names the "groups not in the pedigree" sentence in two places (`vignettes/articles/colony-manager-guide.qmd:709-714`, `:879-882`), pinned by
-`tests/testthat/test_guideGroupsOutsidePedigreeWording.R` (8 blocks, 24 expectations; it reads the app's own constants); claim `7f6648751`, RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR `050466d2e`; 9/10, self 7/10 (Learning 983).
-**Gotchas kept:** a background command's output goes to a file, never through `grep`, and `pgrep` must show the work process within a minute.
-S1016: the 13 small wrong statements of the slice 6e re-check are fixed and pinned in `tests/testthat/test_docsAuditSlice6eMinorFixes.R` (30 blocks, 100 expectations; new `assertFileType()`, `R/assertFileType.R:18`; four NEWS
-entries `NEWS.Rmd:660-688`); the owner took "fix all 13 as listed"; claim `5411ddf79`, RED `a4878f0e3`, NEWS `1c15f6272` (the other hashes are in `CHANGELOG.md`); 8/10, self 7/10 (Learning 982).
-**Gotchas kept:** this file sits near the commit hook's limit (about 56,750 B), so condense before adding; a roxygen edit is the R file plus its man page, re-wrapped to 80 characters; never quote a misspelling in
-NEWS or help (`test_wordlist_coverage.R`); the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`.
-S1015: the Input-tab upload block in tests lives once, in `tests/testthat/helper-inputTabUpload.R` (`uploadPedigreeFileQc()`, `uploadPedigreeFile()`; the owner chose to widen the helper; strict TDD,
-test files only; hashes in `CHANGELOG.md`; 8/10, self 8/10). **Gotchas kept:** a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
-S1012-S1014, the config-file reader (strict TDD, REFACTOR taken; evaluations 8-9/10, self 8/10): S1012, the shipped example configuration gives `getConfigApiKey()` no key and one shared reader,
-`readConfigLines()` (`R/readConfigLines.R:16`), drops comment lines, and a setting in another case is read (`getParamDef()`, `R/getParamDef.R:21-24`); S1013, a decision session: the owner took option A
-(`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`); S1014 built it (`scanConfigTerms()`, `R/getTokenList.R:64`; `addConfigTerm()` `:108`). Claims `7aaa8e1d7`, `3bf3b438f`, `41428f309`.
+S1019: Export Current Group is finished: while the "groups not in the pedigree" sentence shows, Group Detail holds no table and no Export button (`R/modBreedingGroups.R:1162` `groupDetailBody`,
+`:913` `reqGroupsInPedigree()`); strict TDD; claim `30d16de5f`, REFACTOR `11ce761e6`; 8/10, self 8/10 (Learning 985). **Gotchas kept:** only a picture and `innerText` say what a page shows; wait for a
+job's `EXIT=` line; a mutant run edits `R/` in place, so confirm with `git diff` after.
+S1015-S1018 (evaluations 8-9/10, self 7-8/10): S1018, the red `windows-latest` leg is green (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152` compares with `dirname(workbook)`); S1017, the guide
+names the "groups not in the pedigree" sentence in two places, pinned by `tests/testthat/test_guideGroupsOutsidePedigreeWording.R`; S1016, 13 small wrong statements fixed and pinned by
+`tests/testthat/test_docsAuditSlice6eMinorFixes.R` (new `assertFileType()`, `R/assertFileType.R:18`); S1015, the Input-tab upload block lives once in `tests/testthat/helper-inputTabUpload.R`.
+Claims `f1a90cad3`, `7f6648751`, `5411ddf79`; hashes in `CHANGELOG.md`. **Gotchas kept:** this file's ceiling is 25,000 tokens (about 56,750 B), so condense before adding; a workflow "success" does not
+name its legs (`gh run view <id> --json jobs`); a background command's output goes to a file and `pgrep` must show the work process within a minute; a roxygen edit is the R file plus its man page; never
+quote a misspelling in NEWS or help (`test_wordlist_coverage.R`); the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`,
+`RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`; a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
+S1012-S1014, the config-file reader (strict TDD, REFACTOR taken; evaluations 8-9/10, self 8/10): `readConfigLines()` (`R/readConfigLines.R:16`) is the one reader, `getParamDef()` reads a setting in
+another case, and the owner took option A (`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`), built as `scanConfigTerms()` (`R/getTokenList.R:64`). Claims `7aaa8e1d7`, `3bf3b438f`, `41428f309`.
 **Gotchas kept:** run `devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run restores the file text in `finally`, never `git checkout`; config tests put
-a file under `HOME` (`tests/testthat/test_getSiteInfo.R:98`); install candidate packages into a scratch library, never renv (Learning 979); wait on a job's `EXIT=` line, not a launcher's "completed" notice (Learning 978).
+a file under `HOME` (`tests/testthat/test_getSiteInfo.R:98`); install candidate packages into a scratch library, never renv (Learning 979).
 S1008-S1011 (claims and close-outs in `CHANGELOG.md` and `HANDOFFS.md`; evaluations 8-9/10, self 8/10): S1008, with a sex ratio set a male is placed only as a known adult male (`R/fillGroupMembersWithSexRatio.R:84-89`;
 `NEWS.Rmd:277`); S1009 diagnosed the red `shinytest2` run (`R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE when every row has an `NA` allele); S1010 fixed it (the guard at `:855` is
 `length(gmat) == 0L || is.null(rohTable) || is.null(ped)`); S1011, the Cross-Center check flags a reused id (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`) and the merge keeps every column

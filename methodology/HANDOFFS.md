@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1020
 date: 2026-10-20
-status: pending
-active_task: IN PROGRESS -- BACKLOG.md:168 Changed Columns tab and summary() skip some rename fields: settle leave-or-list-every-rename, then build it if "list every rename"; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- the Changed Columns tab (the former BACKLOG.md:168): the tab opens only for a header QC really changed and lists every rename (owner pick, item 1 of 4; the owner took "Fix at the cause"; strict TDD, every phase behind its own gate)
+what_was_done: Claim ae48a3dc2. Measured first in runQcStudbook() and then in the real app (scratch install, shinytest2, the shipped example pedigree uploaded four ways): an all-lowercase recordstatus or fromcenter header opened the tab with a heading and no list, geographicorigin opened none, and the shipped example file (headers recordStatus, fromCenter spelled right) opened it with a false "case was changed" line (0 of 13 cleaned headers differ from the uploaded ones). One cause: fixColumnNames() lower-cases every header, restores three camel case names and records both steps. RED 8f69dcdad + 3826ed863 (12 new function-level blocks, 10 failed, 31 expectations; 4 browser blocks, 6 of 7 expectations failed). GREEN 1489ad34b (CI group line the guard demanded) + 4423616eb (R/fixColumnNames.R mask isCamel; 3 new summary() sentences; shouldShowChangedColsTab() checks all 13). REFACTOR 5e8e98797 (summary loop, 61 lines to 15; field names from getEmptyErrorLst(); mutants 9/9 then 8/8 killed). NEWS 2942378fc (two entries); a58ac200e (the dynamic-tabs agreement test covers all 13 fields). Full suite 439 files 4,027 blocks 0 failed 0 errors 191 skipped; lint 0; check 0/0/0.
+next_steps: No owner order was given; my order: BACKLOG.md:168 (NA column header stops qcStudbook(); DECISION NEEDED, S-M), :181 (Cross-Center header-only pedigree) and :190 (52 archive pointers), both DECISION NEEDED, S; the compression item is :376 (READY, L). The branch is 16 commits ahead of origin (S1019's 7 and S1020's 9); no push was asked for.
+key_files: R/fixColumnNames.R:36 (isCamel mask) and :78-87 (the three masked restore records); R/summary.nprcgenekeeprErr.R:134-139 (the changed-from loop); R/shouldShowChangedColsTab.R:43; tests/testthat/test_fixColumnNames.R:88-142 (new blocks); tests/testthat/test-e2e-changed-columns-tab.R; tests/testthat/helper-renamedHeaderPedigree.R (pedLowercaseRecordStatus, pedLowercaseFromCenter); .github/workflows/shinytest2.yaml:141 (the new group line); NEWS.Rmd:470-486; PROJECT_LEARNINGS.md Learning 986
+gotchas: A new tests/testthat/test-e2e-*.R file also needs a line in shinytest2.yaml's groups (guard test_shinytest2_workflow_coverage.R); run the guard with the RED files, not after GREEN. testthat's test_dir(filter=) matches the name without the test- or test_ prefix. The browser tier leaves tests/testthat/_problems/ (gitignored) after a failing run. Remove a scratch git worktree with git worktree remove --force; the .claude/worktrees/wf_* ones are not mine. zsh expands a bare ===== in echo. processQcStudbookResult() still makes warning rows only for case and space changes (R/processQcStudbookResult.R:198-215), left as it was.
+runtime_smoke: Real app (headless Chrome, scratch install of the changed package): the shipped example pedigree with every header spelled right opens no Changed Columns tab; an all-lowercase recordstatus file, a fromcenter file and an added geographicorigin file each open it with one sentence naming the rename (opt-in file test-e2e-changed-columns-tab.R, 4 blocks, 7 expectations, 0 failed); the picture of the tab was opened for the owner.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 766db6e299eb · manifest aa983075d6a2
+changelog_ref: ae48a3dc2
+commit: a58ac200e
 ```
 
 ```handoff
