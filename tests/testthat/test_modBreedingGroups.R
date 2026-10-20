@@ -1154,15 +1154,16 @@ makeBgViewPed <- function(n = 14L) {
   )
 }
 
-test_that("modBreedingGroupsUI has Group Detail tab with selector, views, downloads", {
+# The member and kinship tables and both Export buttons are one server-built
+# piece (groupDetailBody), so the "groups not in the pedigree" sentence can
+# stand in place of all of them (S1019); what the piece holds is pinned in
+# test_modBreedingGroups_groupsOutsidePedigree.R.
+test_that("modBreedingGroupsUI has Group Detail tab with the selector and the one body output", {
   ui_html <- as.character(modBreedingGroupsUI("bg"))
 
   expect_true(grepl("Group Detail", ui_html))
   expect_true(grepl("bg-viewGrp", ui_html))
-  expect_true(grepl("bg-groupMemberTable", ui_html))
-  expect_true(grepl("bg-groupKinTable", ui_html))
-  expect_true(grepl("Export Current Group", ui_html))
-  expect_true(grepl("Export Current Group Kinship", ui_html))
+  expect_true(grepl("bg-groupDetailBody", ui_html))
 })
 
 test_that("downloadGroup writes the selected group's annotated members", {
