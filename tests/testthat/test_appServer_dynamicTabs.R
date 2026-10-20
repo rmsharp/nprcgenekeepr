@@ -187,24 +187,16 @@ test_that("shouldShowChangedColsTab handles partial changedCols list", {
 # =============================================================================
 
 test_that("shouldShowChangedColsTab is consistent with checkChangedColsLst", {
-  changedCols <- list(
-    caseChange = c("ID" = "id"),
-    spaceRemoved = character(0),
-    periodRemoved = character(0),
-    underScoreRemoved = character(0),
-    egoToId = character(0),
-    egoidToId = character(0),
-    sireIdToSire = character(0),
-    damIdToDam = character(0),
-    birthdateToBirth = character(0),
-    deathdateToDeath = character(0),
-    recordstatusToRecordStatus = character(0),
-    fromcenterToFromCenter = character(0)
-  )
+  # Both functions should agree with no change recorded and with one entry in
+  # each of the 13 fields of the error list in turn.
+  noChange <- getEmptyErrorLst()$changedCols
+  expect_length(noChange, 13L)
+  expect_equal(checkChangedColsLst(noChange), shouldShowChangedColsTab(noChange))
 
-  # Both functions should agree
-  checkResult <- checkChangedColsLst(changedCols)
-  shouldShowResult <- shouldShowChangedColsTab(changedCols)
-
-  expect_equal(checkResult, shouldShowResult)
+  for (field in names(noChange)) {
+    changedCols <- noChange
+    changedCols[[field]] <- c("ID" = "id")
+    expect_equal(checkChangedColsLst(changedCols),
+                 shouldShowChangedColsTab(changedCols), info = field)
+  }
 })
