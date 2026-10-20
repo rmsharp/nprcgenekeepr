@@ -98,22 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1019 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, Export Current Group, is finished: while the "groups not in the pedigree" sentence shows,
-Group Detail holds no table and no Export button (the owner ruled "Sentence only"). The real app (scratch install, `shinytest2`; a 375-animal file, 3 groups, then a 3,694-animal file sharing no id) had shown the sentence
-over an empty member table, the old 121-animal kinship table still on screen, "Export Current Group" answering HTTP 500 and the kinship export writing the old group's matrix. `output$groupDetailBody`
-(`R/modBreedingGroups.R:1162`) is empty while the sentence shows, `bgGroupKinView` (`:1191`) stops like the member view, `reqGroupsInPedigree()` (`:913`) is the one check. Claim `30d16de5f`, RED `9e74ae435`,
-GREEN `011cc0a08`, REFACTOR `11ce761e6`, NEWS `3b849db64` (one sentence, `NEWS.Rmd:324-326`). Not pushed (7 ahead of origin after this close-out).
-**Evidence:** RED failed 7 blocks, each for the intended reason (S996's "the kinship table stays" assertion flipped on purpose); `test_modBreedingGroups_groupsOutsidePedigree.R` 12 blocks, 52 expectations; mutants 5 of 5 killed
-before the tidy-up and 8 of 9 after (survivor: the per-group table `observe()` near `:1092`, no test reads it); full suite 438 files, 4,011 blocks, 0 failed, 0 errors, 187 skipped; lint 0; `check` 0/0/0; real app after: 0 buttons, no table.
-**Handoff evaluation of S1018: 8/10.** Helped: every BACKLOG cite held (`:168`, `:178`, `:193`, `:206`, `:215`, `:401`); "try a browser download first" was the step that found the kinship table; the notes limit and the 1-ahead state were right.
-Missing: the item never said S996's test pins "the kinship table stays". Wrong: nothing in S1018's claims (the item text it inherited called Group Detail "one sentence" while the page still drew the old kinship table).
-**Self: 8/10.** + measured the real app before asking, then read the page by DOM and picture when my text read looked unchanged; named the reversed S996 assertion at the RED gate; mutants before and after, survivor reported; waited on
-`EXIT=` lines. - a zsh quoting slip in a one-liner; the BACKLOG block stayed visible until close-out without my saying so (the owner had to ask). Learning 985. Ratchet 1/1 (results `09180e687e57`).
-**Gotchas:** only a picture and `innerText` say what a page shows; wait for a job's `EXIT=` line (a launcher's "completed" arrives at once); a mutant run edits `R/modBreedingGroups.R` in place, so confirm with `git diff` after.
-**Next (my order; the owner gave none):** `BACKLOG.md:168` Changed Columns tab (DECISION NEEDED, S-M), `:183`, `:196`, `:205` (all DECISION NEEDED); the compression item is `:391` (READY, L).
+### What Session 1020 Did
+**Deliverable:** `BACKLOG.md:168` Changed Columns tab and `summary()` skip some rename fields: settle leave-or-list-every-rename, then build it if the
+answer is "list every rename" (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4; strict TDD if built)
+**Started:** 2026-10-20 02:15 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. First step: run the `recordstatus` and `fromcenter` header cases through the real code path (the item read
+them from code; S988 ran only `geographicorigin`), then put the leave-or-list choice to the owner in plain words. `master` is 7 commits ahead of `origin/master` (S1019's).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1018 (condensed S950 to S1019; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1019 (condensed S950 to S1020; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1019: Export Current Group is finished: while the "groups not in the pedigree" sentence shows, Group Detail holds no table and no Export button (owner: "Sentence only";
+`output$groupDetailBody` `R/modBreedingGroups.R:1162`, `bgGroupKinView` `:1191`, `reqGroupsInPedigree()` `:913`); strict TDD; claim `30d16de5f`, RED `9e74ae435`, GREEN `011cc0a08`,
+REFACTOR `11ce761e6`, NEWS `3b849db64` (`NEWS.Rmd:324-326`); not pushed; evaluation of S1018 8/10, self 8/10 (Learning 985). **Gotchas kept:** only a picture and `innerText` say what a page
+shows; wait for a job's `EXIT=` line; a mutant run edits `R/modBreedingGroups.R` in place, so confirm with `git diff` after.
 S1018: the red `windows-latest` leg of `R-CMD-check.yaml` is green; S1016's CL2 `create_wkbk` test (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152`) compares the message with `dirname(workbook)`, not the
 path the test built (Windows `dirname()` writes `/`, `tempfile()` wrote `\`); test file only; claim `f1a90cad3`, GREEN `c5545b016`; pushed, run `39371265700` all 5 legs green; 8/10, self 8/10 (Learning 984).
 **Gotchas kept:** a workflow "success" does not name its legs (`gh run view <id> --json jobs`).
