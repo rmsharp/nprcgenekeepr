@@ -8,7 +8,9 @@
 #' become \code{id}, \code{sireid} becomes \code{sire}, \code{damid} becomes
 #' \code{dam}, \code{birthdate} becomes \code{birth} and \code{deathdate}
 #' becomes \code{death}. \code{recordstatus}, \code{fromcenter} and
-#' \code{geographicorigin} are restored to their camel case forms. The
+#' \code{geographicorigin} are restored to their camel case forms; a header
+#' already spelled \code{recordStatus}, \code{fromCenter} or
+#' \code{geographicOrigin} is not recorded as a change. The
 #' headers \code{first_name} and \code{second_name} keep their underscore.
 #' The matching is unanchored, so any name that contains one of these strings
 #' is changed (for example, \code{category} becomes \code{catidry}).
@@ -28,7 +30,12 @@
 #' )
 fixColumnNames <- function(orgCols, errorLst) {
   cols <- tolower(orgCols)
-  errorLst$changedCols$caseChange <- colChange(orgCols, cols)
+  ## A header already spelled recordStatus, fromCenter or geographicOrigin is
+  ## right as it stands: it is lower-cased here and its camel case restored
+  ## below, so it is left out of the records of those two steps.
+  isCamel <- orgCols %in% c("recordStatus", "fromCenter", "geographicOrigin")
+  errorLst$changedCols$caseChange <-
+    colChange(orgCols[!isCamel], cols[!isCamel])
   newCols <- gsub(" ", "", cols, fixed = FALSE) # nolint fixed_regex_linter
   errorLst$changedCols$spaceRemoved <- colChange(cols, newCols)
   cols <- newCols
@@ -68,13 +75,15 @@ fixColumnNames <- function(orgCols, errorLst) {
   errorLst$changedCols$deathdateToDeath <- colChange(cols, newCols)
   cols <- newCols
   newCols <- gsub("recordstatus", "recordStatus", newCols, fixed = TRUE)
-  errorLst$changedCols$recordstatusToRecordStatus <- colChange(cols, newCols)
+  errorLst$changedCols$recordstatusToRecordStatus <-
+    colChange(cols[!isCamel], newCols[!isCamel])
   cols <- newCols
   newCols <- gsub("fromcenter", "fromCenter", newCols, fixed = TRUE)
-  errorLst$changedCols$fromcenterToFromCenter <- colChange(cols, newCols)
+  errorLst$changedCols$fromcenterToFromCenter <-
+    colChange(cols[!isCamel], newCols[!isCamel])
   cols <- newCols
   newCols <- gsub("geographicorigin", "geographicOrigin", newCols, fixed = TRUE)
   errorLst$changedCols$geographicoriginToGeographicOrigin <-
-    colChange(cols, newCols)
+    colChange(cols[!isCamel], newCols[!isCamel])
   list(newColNames = newCols, errorLst = errorLst)
 }

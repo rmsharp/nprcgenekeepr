@@ -12,7 +12,8 @@ Expected fields include: \code{caseChange}, \code{spaceRemoved},
 \code{periodRemoved}, \code{underScoreRemoved}, \code{egoToId},
 \code{egoidToId}, \code{sireIdToSire}, \code{damIdToDam},
 \code{birthdateToBirth}, \code{deathdateToDeath},
-\code{recordstatusToRecordStatus}, \code{fromcenterToFromCenter}.}
+\code{recordstatusToRecordStatus}, \code{fromcenterToFromCenter},
+\code{geographicoriginToGeographicOrigin}.}
 }
 \value{
 Logical. TRUE if columns were changed and tab should be shown,

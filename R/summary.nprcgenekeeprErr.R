@@ -166,6 +166,24 @@ summary.nprcgenekeeprErr <- function(object, ...) {
     "Change: The column changed from",
     "Change: The columns changed from"
   )
+  txt <- addErrTxt(
+    txt,
+    errorLst$changedCols$recordstatusToRecordStatus,
+    "Change: The column changed from",
+    "Change: The columns changed from"
+  )
+  txt <- addErrTxt(
+    txt,
+    errorLst$changedCols$fromcenterToFromCenter,
+    "Change: The column changed from",
+    "Change: The columns changed from"
+  )
+  txt <- addErrTxt(
+    txt,
+    errorLst$changedCols$geographicoriginToGeographicOrigin,
+    "Change: The column changed from",
+    "Change: The columns changed from"
+  )
   if (stri_length(txt) > 0L) {
     txt <-
       stri_c(txt, "\nPlease check and correct the pedigree file.\n")

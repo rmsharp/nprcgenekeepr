@@ -12,7 +12,8 @@
 #'   \code{periodRemoved}, \code{underScoreRemoved}, \code{egoToId},
 #'   \code{egoidToId}, \code{sireIdToSire}, \code{damIdToDam},
 #'   \code{birthdateToBirth}, \code{deathdateToDeath},
-#'   \code{recordstatusToRecordStatus}, \code{fromcenterToFromCenter}.
+#'   \code{recordstatusToRecordStatus}, \code{fromcenterToFromCenter},
+#'   \code{geographicoriginToGeographicOrigin}.
 #'
 #' @return Logical. TRUE if columns were changed and tab should be shown,
 #'   FALSE otherwise.
@@ -43,7 +44,8 @@ shouldShowChangedColsTab <- function(changedCols) {
     "caseChange", "spaceRemoved", "periodRemoved", "underScoreRemoved",
     "egoToId", "egoidToId", "sireIdToSire", "damIdToDam",
     "birthdateToBirth", "deathdateToDeath",
-    "recordstatusToRecordStatus", "fromcenterToFromCenter"
+    "recordstatusToRecordStatus", "fromcenterToFromCenter",
+    "geographicoriginToGeographicOrigin"
   )
 
   for (field in fields) {

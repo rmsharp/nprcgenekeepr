@@ -23,7 +23,9 @@ underscores, and then renames by substring: \code{egoid} and \code{ego}
 become \code{id}, \code{sireid} becomes \code{sire}, \code{damid} becomes
 \code{dam}, \code{birthdate} becomes \code{birth} and \code{deathdate}
 becomes \code{death}. \code{recordstatus}, \code{fromcenter} and
-\code{geographicorigin} are restored to their camel case forms. The
+\code{geographicorigin} are restored to their camel case forms; a header
+already spelled \code{recordStatus}, \code{fromCenter} or
+\code{geographicOrigin} is not recorded as a change. The
 headers \code{first_name} and \code{second_name} keep their underscore.
 The matching is unanchored, so any name that contains one of these strings
 is changed (for example, \code{category} becomes \code{catidry}).
