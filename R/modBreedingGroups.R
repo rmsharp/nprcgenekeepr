@@ -908,6 +908,13 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       div(class = "alert alert-info", .breedingGroupsOutsidePedigreeNote)
     }
 
+    # Stops a view quietly until groups are formed and the loaded pedigree has
+    # every animal in them (the sentence above says why).
+    reqGroupsInPedigree <- function() {
+      req(breedingGroups())
+      req(!groupsOutsidePedigree())
+    }
+
     output$candidateComparison <- renderTable({
       res <- groupResults()
       req(!is.null(res))
@@ -1082,8 +1089,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     })
 
     observe({
-      req(breedingGroups())
-      req(!groupsOutsidePedigree())
+      reqGroupsInPedigree()
       ped <- pedigree()
 
       lapply(seq_along(breedingGroups()), function(i) {
@@ -1102,8 +1108,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     })
 
     output$groupStats <- renderTable({
-      req(breedingGroups())
-      req(!groupsOutsidePedigree())
+      reqGroupsInPedigree()
       ped <- pedigree()
 
       nBoxes <- length(breedingGroups())
@@ -1169,8 +1174,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     })
 
     bgGroupView <- reactive({
-      req(breedingGroups())
-      req(!groupsOutsidePedigree())
+      reqGroupsInPedigree()
       ids <- breedingGroups()[[selectedGroup()]]
       gp <- addSexAndAgeToGroup(ids, pedigree())
       gp$age <- round(gp$age, 1L)
@@ -1185,8 +1189,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     # retained full kinship matrix (identical to groupAddAssign's groupKin
     # because the group's members are a subset of the candidate set).
     bgGroupKinView <- reactive({
-      req(breedingGroups())
-      req(!groupsOutsidePedigree())
+      reqGroupsInPedigree()
       res <- groupResults()
       req(!is.null(res$kmat))
       ids <- breedingGroups()[[selectedGroup()]]

@@ -74,6 +74,43 @@ gopBodyHolds <- function(output) {
 gopLacks <- function(held) paste(names(held)[!held], collapse = ", ")
 gopStill <- function(held) paste(names(held)[held], collapse = ", ")
 
+## Read another pedigree into the module, as a new file or a trimmed view does.
+gopReadPedigree <- function(session, pedRv, ped) {
+  pedRv(ped)
+  session$flushReact()
+}
+
+## Read a new file that has none of the group animals.
+gopReadNewFile <- function(session, pedRv) {
+  gopReadPedigree(session, pedRv, gopPed(paste0("B", 1:20)))
+}
+
+## Group Detail holds both tables and both Export buttons while the groups
+## match the pedigree. Once `otherPed(<a group animal>)` is read it holds none
+## of them, and the sentence is said once.
+gopExpectBodyGone <- function(otherPed) {
+  skip_if_not_installed("shiny")
+  set.seed(42)
+  pedRv <- shiny::reactiveVal(gopPed())
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = pedRv, geneticValues = NULL),
+    {
+      gopForm(session)
+      lost <- session$getReturned()$groups()[[1L]][1L]
+      before <- gopBodyHolds(output)
+      expect_true(all(before), info = paste("missing before:", gopLacks(before)))
+
+      gopReadPedigree(session, pedRv, otherPed(lost))
+
+      after <- gopBodyHolds(output)
+      expect_false(any(after), info = paste("still shown:", gopStill(after)))
+      expect_equal(gopCount(gopNote, gopPages(output)$detail), 1L)
+    }
+  )
+}
+
 test_that("a new file with none of the group animals: the Groups page says the sentence once, no group box", {
   skip_if_not_installed("shiny")
   set.seed(42)
@@ -88,8 +125,7 @@ test_that("a new file with none of the group animals: the Groups page says the s
       expect_match(before, "Group 1", fixed = TRUE)
       expect_equal(gopCount(gopNote, before), 0L)
 
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
+      gopReadNewFile(session, pedRv)
 
       after <- gopText(output$groupsDisplay)
       expect_equal(gopCount(gopNote, after), 1L)
@@ -110,8 +146,7 @@ test_that("a new file with none of the group animals: the Statistics page says t
       gopForm(session)
       expect_match(gopText(output$groupStats), "Total", fixed = TRUE)
 
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
+      gopReadNewFile(session, pedRv)
 
       expect_equal(gopCount(gopNote, gopPages(output)$stats), 1L)
       expect_false(grepl("Total", gopText(output$groupStats), fixed = TRUE))
@@ -133,8 +168,7 @@ test_that("a new file with none of the group animals: Group Detail says the sent
       expect_match(gopText(output$groupMemberTable), "Ego ID", fixed = TRUE)
       expect_match(gopText(output$groupKinTable), firstId, fixed = TRUE)
 
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
+      gopReadNewFile(session, pedRv)
 
       expect_equal(gopCount(gopNote, gopPages(output)$detail), 1L)
       members <- gopText(output$groupMemberTable)
@@ -161,8 +195,7 @@ test_that("a pedigree that lacks only one group animal still gets the sentence o
       lost <- session$getReturned()$groups()[[1L]][1L]
       expect_equal(gopCount(gopNote, gopText(output$groupsDisplay)), 0L)
 
-      pedRv(gopPed()[gopPed()$id != lost, ])
-      session$flushReact()
+      gopReadPedigree(session, pedRv, gopPed()[gopPed()$id != lost, ])
 
       pages <- gopPages(output)
       expect_equal(gopCount(gopNote, pages$groups), 1L)
@@ -174,50 +207,11 @@ test_that("a pedigree that lacks only one group animal still gets the sentence o
 })
 
 test_that("a new file with none of the group animals: Group Detail shows no tables and no Export buttons", {
-  skip_if_not_installed("shiny")
-  set.seed(42)
-  pedRv <- shiny::reactiveVal(gopPed())
-
-  shiny::testServer(
-    modBreedingGroupsServer,
-    args = list(pedigree = pedRv, geneticValues = NULL),
-    {
-      gopForm(session)
-      before <- gopBodyHolds(output)
-      expect_true(all(before), info = paste("missing before:", gopLacks(before)))
-
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
-
-      after <- gopBodyHolds(output)
-      expect_false(any(after), info = paste("still shown:", gopStill(after)))
-      expect_equal(gopCount(gopNote, gopPages(output)$detail), 1L)
-    }
-  )
+  gopExpectBodyGone(function(lost) gopPed(paste0("B", 1:20)))
 })
 
 test_that("a pedigree that lacks only one group animal: Group Detail shows no tables and no Export buttons", {
-  skip_if_not_installed("shiny")
-  set.seed(42)
-  pedRv <- shiny::reactiveVal(gopPed())
-
-  shiny::testServer(
-    modBreedingGroupsServer,
-    args = list(pedigree = pedRv, geneticValues = NULL),
-    {
-      gopForm(session)
-      lost <- session$getReturned()$groups()[[1L]][1L]
-      before <- gopBodyHolds(output)
-      expect_true(all(before), info = paste("missing before:", gopLacks(before)))
-
-      pedRv(gopPed()[gopPed()$id != lost, ])
-      session$flushReact()
-
-      after <- gopBodyHolds(output)
-      expect_false(any(after), info = paste("still shown:", gopStill(after)))
-      expect_equal(gopCount(gopNote, gopPages(output)$detail), 1L)
-    }
-  )
+  gopExpectBodyGone(function(lost) gopPed()[gopPed()$id != lost, ])
 })
 
 test_that("with the sentence showing, neither export writes a file", {
@@ -233,8 +227,7 @@ test_that("with the sentence showing, neither export writes a file", {
       expect_true(file.exists(output$downloadGroup))
       expect_true(file.exists(output$downloadGroupKin))
 
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
+      gopReadNewFile(session, pedRv)
 
       ## A silent stop, as the members export already does: the kinship
       ## export wrote the old group's matrix (S996 measured it; S1019 re-ran
@@ -286,8 +279,7 @@ test_that("an animal missing only from the Unused animals box counts too", {
       expect_match(gopText(output$groupsDisplay), "Unused animals",
                    fixed = TRUE)
 
-      pedRv(gopPed()[gopPed()$id != unusedId, ])
-      session$flushReact()
+      gopReadPedigree(session, pedRv, gopPed()[gopPed()$id != unusedId, ])
 
       expect_equal(gopCount(gopNote, gopText(output$groupsDisplay)), 1L)
     }
@@ -305,12 +297,10 @@ test_that("bringing the earlier pedigree back shows the groups again on all thre
     {
       gopForm(session)
       firstId <- session$getReturned()$groups()[[1L]][1L]
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
+      gopReadNewFile(session, pedRv)
       expect_equal(gopCount(gopNote, gopPages(output)$groups), 1L)
 
-      pedRv(gopPed())
-      session$flushReact()
+      gopReadPedigree(session, pedRv, gopPed())
 
       pages <- gopPages(output)
       expect_equal(gopCount(gopNote, pages$groups), 0L)
@@ -343,8 +333,7 @@ test_that("the groups the module returns are the same after a new file (Genetic 
       groupsBefore <- returned$groups()
       expect_gte(length(groupsBefore), 1L)
 
-      pedRv(gopPed(paste0("B", 1:20)))
-      session$flushReact()
+      gopReadNewFile(session, pedRv)
 
       expect_identical(returned$groups(), groupsBefore)
       expect_identical(returned$nGroups(), length(groupsBefore))
