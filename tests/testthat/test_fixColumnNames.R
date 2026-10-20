@@ -149,41 +149,36 @@ test_that("a camel case header whose spelling really changes still records each 
 ## package has gives NA (getPedigree() gives "", the app "X", an Excel blank
 ## cell "...3"); only a script that sets names(ped)[k] <- NA does.
 
-## One failing case must not end its block before the next, so a stop becomes
-## the value (`STOP: <message>`) that the expectation then compares.
-fixNamesOrStop <- function(cols) {
-  tryCatch(fixNames(cols),
-           error = function(e) paste("STOP:", conditionMessage(e)))
-}
-fixAllOrStop <- function(cols) {
-  tryCatch(fixColumnNames(cols, errorLst = getEmptyErrorLst()),
-           error = function(e) paste("STOP:", conditionMessage(e)))
-}
+## stopAsValue() is in helper-stopAsValue.R: one failing case must not end its
+## block before the next, so a stop becomes the value the expectation compares.
 
 test_that("an NA header is read as a blank one, wherever it stands", {
-  expect_identical(fixNamesOrStop(c(NA, "id")), c("", "id"))
-  expect_identical(fixNamesOrStop(c("id", NA, "Sire")), c("id", "", "sire"))
-  expect_identical(fixNamesOrStop(c("id", "sire", NA)), c("id", "sire", ""))
-  expect_identical(fixNamesOrStop(NA_character_), "")
+  expect_identical(stopAsValue(fixNames(c(NA, "id"))), c("", "id"))
+  expect_identical(stopAsValue(fixNames(c("id", NA, "Sire"))),
+                   c("id", "", "sire"))
+  expect_identical(stopAsValue(fixNames(c("id", "sire", NA))),
+                   c("id", "sire", ""))
+  expect_identical(stopAsValue(fixNames(NA_character_)), "")
   ## the whole answer is the blank header's, not only the names
-  expect_identical(fixAllOrStop(c("id", NA, "Sire")),
-                   fixAllOrStop(c("id", "", "Sire")))
+  expect_identical(
+    stopAsValue(
+      fixColumnNames(c("id", NA, "Sire"), errorLst = getEmptyErrorLst())
+    ),
+    fixColumnNames(c("id", "", "Sire"), errorLst = getEmptyErrorLst())
+  )
 })
 
 test_that("a vector of only NA headers gives only blank names", {
-  expect_identical(fixNamesOrStop(c(NA, NA, NA)), c("", "", ""))
+  expect_identical(stopAsValue(fixNames(c(NA, NA, NA))), c("", "", ""))
 })
 
 test_that("an NA header leaves no record in changedCols", {
-  recorded <- function(cols) {
-    tryCatch(any(lengths(changedColsFor(cols)) > 0L), error = function(e) NA)
-  }
-  expect_false(recorded(c("id", NA, "sire")))
-  ## beside a header that does change, only that change is recorded
-  expect_identical(
-    tryCatch(changedColsFor(c("ID", NA)), error = function(e) "STOP"),
-    changedColsFor(c("ID", ""))
+  expect_false(
+    stopAsValue(any(lengths(changedColsFor(c("id", NA, "sire"))) > 0L))
   )
+  ## beside a header that does change, only that change is recorded
+  expect_identical(stopAsValue(changedColsFor(c("ID", NA))),
+                   changedColsFor(c("ID", "")))
 })
 
 test_that("the text NA is an ordinary header, not a missing one", {

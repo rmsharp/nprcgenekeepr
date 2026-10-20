@@ -613,11 +613,11 @@ withHeader <- function(ped, cols, header) {
   names(ped)[match(cols, names(ped))] <- header
   ped
 }
-## The value qcStudbook() returns, or `STOP: <message>`, so one case that stops
-## does not end its block before the next.
+## The value qcStudbook() returns, or `STOP: <message>` (see stopAsValue(),
+## helper-stopAsValue.R), so one case that stops does not end its block before
+## the next.
 qcAnswer <- function(ped, reportErrors) {
-  tryCatch(qcStudbook(ped, reportErrors = reportErrors),
-           error = function(e) paste("STOP:", conditionMessage(e)))
+  stopAsValue(qcStudbook(ped, reportErrors = reportErrors))
 }
 missingOf <- function(answer) {
   if (is.list(answer)) answer$missingColumns else answer
