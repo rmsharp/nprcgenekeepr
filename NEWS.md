@@ -521,6 +521,15 @@ export workflows, and longitudinal monitoring of colony genetic health.
   pedigree file is read as `X`, and the tab still reports the missing
   column.
 
+- Fixed: `qcStudbook()` stopped with the message "missing value where
+  TRUE/FALSE needed" when a pedigree data frame had a column whose name
+  was `NA`, whichever column it was. It now reads that name as a blank
+  one, so a nameless `id`, `sire`, `dam`, `sex` or `birth` column is
+  reported as the missing column and a nameless optional column passes,
+  as they already did for a blank name. `fixColumnNames()` does the
+  same. The Input tab is not affected: a blank header in an uploaded
+  file is read as `X`.
+
 - Fixed: on the Age-Sex Pyramid tab, Download Plot with no pedigree
   loaded saved a picture of the packaged example pedigree, with nothing
   on it to say so, so it could pass for the colony's own data. It now
