@@ -30,6 +30,10 @@ schemaName "study", folderPath "/ONPRC/EHR" and queryName
 "demographics". A warning is signaled for the missing file only when
 `expectConfigFile` is `TRUE`.
 
+The format of the configuration file is described in the notes at the
+top of the example file, `example_nprcgenekeepr_config`, in the
+package's `extdata/examples` folder.
+
 The returned list contains the following elements.
 
 1.  `center` – center name, such as "ONPRC" or "SNPRC"
@@ -96,13 +100,13 @@ suppressWarnings(getSiteInfo())
 #> [1] "Linux"
 #> 
 #> $release
-#> [1] "6.17.0-1022-azure"
+#> [1] "7.0.0-1017-azure"
 #> 
 #> $version
-#> [1] "#22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026"
+#> [1] "#17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm8k3b6"
+#> [1] "runnervmxehtw"
 #> 
 #> $machine
 #> [1] "x86_64"
@@ -164,13 +168,13 @@ getSiteInfo(expectConfigFile = FALSE)
 #> [1] "Linux"
 #> 
 #> $release
-#> [1] "6.17.0-1022-azure"
+#> [1] "7.0.0-1017-azure"
 #> 
 #> $version
-#> [1] "#22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026"
+#> [1] "#17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm8k3b6"
+#> [1] "runnervmxehtw"
 #> 
 #> $machine
 #> [1] "x86_64"

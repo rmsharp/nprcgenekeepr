@@ -3,7 +3,9 @@
 A dataframe with one column (*id*) containing the animal Ids from the
 **examplePedigree** pedigree. They can be used to illustrate the
 identification of a population of interest as is shown in the example
-below.
+below. The `id` column is a factor, not a character vector like the `id`
+column of `examplePedigree`; use `as.character(focalAnimals$id)` when
+the two need the same type.
 
 ## Usage
 

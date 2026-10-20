@@ -78,7 +78,9 @@ honoring the ID rule enforced at data input by <code>qcStudbook</code>.</p>
 
 
 <dl><dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
-<dd><p>character vector of IDs to be obfuscated (alias creation).</p></dd>
+<dd><p>character vector of IDs to be obfuscated (alias creation). It
+must not contain <code>NA</code>; an <code>NA</code> id stops with a message that gives
+its position.</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>

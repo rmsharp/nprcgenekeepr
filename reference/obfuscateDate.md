@@ -21,7 +21,9 @@ obfuscateDate(baseDate, minDate, maxDelta = 30L)
   optional vector of Date values, the same length as `baseDate`, that
   has the lower bound of resulting obfuscated dates. When missing, the
   lower bound is each `baseDate` minus its `maxDelta`, so the bound
-  never binds.
+  never binds. An `NA` in `minDate` leaves that element without a lower
+  bound. A `minDate` on or after `baseDate` plus `maxDelta` (a date no
+  draw can reach) stops with an error that names the element.
 
 - maxDelta:
 

@@ -17753,3 +17753,274 @@ copy the current test file in, and run it with
 them the scratch directory’s own renv bootstraps and has no `pkgload`);
 a `cmd &` wrapper inside a background Bash call reports done before the
 job does, so wait on the job’s own `EXIT=` line.
+
+#### Learning 977
+
+**A ruled fix’s second case can be harmless, so measure each named case
+before RED; and a pin test needs its own mutation run before it is
+committed (S1011, 2026-10-18).** **(1) The S1004 ruling “and the mirror
+case” rested on an unmeasured sentence.** The audit (CE4) recommended
+flagging a Center B id equal to a mapped Center A id “and the mirror
+case”; at PRE-RED both cases went through the Cross-Center module’s
+`testServer` and the real tab. The audit’s case (Center B holds its own
+`T1`, the mapping links A’s `T1` to B’s `X9`) shows 0 issues and a merge
+holding `T1` three times. The mirror (A holds its own `X9`, B’s mapped
+`X9` is `T1`) shows 0 issues and a correct merge: one row per id, B’s
+child’s sire becomes `T1`. Why: the merged output’s ids are the unmapped
+A ids, the mapped `idA` values and the unmapped B ids, so only
+unmapped-B meeting `idA` can repeat an id
+(`R/resolveCrossCenterIds.R:245`,
+`intersect(setdiff(pedB$id, mapping$idB), mapping$idA)`). The owner
+chose to flag only that case; a swap mapping and an id mapped to the
+same string are pinned clean. **(2) A one-sided Date column was a
+second, older defect.** `bindPedigreeRows()` filled a column a source
+lacked with a logical `NA`, so a Date column only Center B had came out
+as day numbers (`11356`, `15686`) for every row, found by the B-only
+half of a class test and fixed at the owner’s gate with an `NA` of the
+column’s class (`x[[col]][NA_integer_]`, `.naLikeColumn()`,
+`R/resolveCrossCenterIds.R:15`); the tab reads uploaded dates as text,
+so only scripts with real Dates were hit. **(3) The pin test for the
+mutation survivor also survived at first.** Padding a one-sided column
+with a plain `NA` (`.padCrossCenterColumn()`, `:340`) passed every test;
+the first pin block still passed on that mutant because an unmapped
+Center A animal’s Date, bound first in the final `rbind`, hands the
+column its class and hides the loss. The block that kills it has two
+mapped animals, an `NA` date on the first, and no unmapped animal
+(`tests/testthat/test_resolveCrossCenterIds.R:359`); run the mutant
+against a new pin block before committing it. **(4) Method:** the
+Cross-Center tab has no browser test; a scratch driver on a scratch
+install (`R_LIBS=<scratch>:<renv lib>`,
+`RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`) uploads by the
+namespaced ids (`crossCenterIdentity-pedAFile`, `-pedBFile`,
+`-mappingFile`), clicks `crossCenterIdentity-validate`, reads the table
+with
+`app$get_js("document.querySelector('#crossCenterIdentity-validationTable').innerText")`,
+and `app$get_download()` fails until the Export tab is showing
+(`app$set_inputs(`crossCenterIdentity-mainTabs`= "Export")`); the click
+on the modal button is `crossCenterIdentity-confirmMergeOk`. **(5) Left
+alone, in `BACKLOG.md:235`:** a header-only (zero-animal) pedigree’s
+extra columns are still dropped, because `bindPedigreeRows()` removes
+zero-row frames before it collects the column names.
+
+#### Learning 978
+
+**When a ruled fix says “do it as the sibling does”, grep the sibling’s
+idiom across every reader and not only the one named; and a
+case-insensitivity fix needs a pin in both directions (S1012,
+2026-10-18).** **(1) The ruling named one reader, the cause sat in
+three.** `BACKLOG.md` said to drop comment lines in `getConfigApiKey()`
+as `getOptionalConfigToken()` does. `grep 'readLines(.*skipNul' R/`
+found three readers of the configuration file’s lines and only
+`getOptionalConfigToken()` dropped `#` lines, so the exported
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+also let `# center = OLD` above `center = NEW` win (measured: `OLD`) and
+glued a comment after the last setting onto its value (`mapPedColumns`
+read 13 tokens, not 7; hand-written lines, the shipped example file is
+unaffected). I measured both before RED and put them to the owner as a
+scope question with a side-by-side row; the owner took the shared cause:
+one internal `readConfigLines()` (`R/readConfigLines.R:16`) now serves
+all three, extracted in REFACTOR from three copies. **(2) CI3 had two
+readings** (read `Center` as `center`, or refuse with the “Could not
+find” text); the staleness audit’s own words pointed the second way
+(“instead of the intended message”) and the code’s other lookups the
+first, so it went to the owner as a question and not as a guess; the
+owner took the first, exact case first (`R/getParamDef.R:21-24`). **(3)
+The mutation run found a pin that tested one direction.** A
+`getParamDef()` fallback that lowercased the file’s names but not the
+requested name survived every test, because the RED blocks asked in
+lowercase for a file spelled with capitals, while real use is the other
+way round
+([`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+asks `baseUrl`, a file may say `baseurl`). The pin is
+`tests/testthat/test_getParamDef.R`, block “reads a lowercase setting
+asked for in camel case”; for any case fold, test both directions and
+run the one-sided mutant. **(4) Counting.** The RED commit message and
+the gate text said “17 existing” and “31 blocks”; the RED run printed 20
+existing and 34; take a count from the run output, not from memory of
+the files, and say so in the next commit message when one was wrong.
+**(5) Left alone, `BACKLOG.md:234`:** a `#` comment at the end of a
+setting’s own line is kept by design and still lands in the value
+(`center = SNPRC # the center` reads `SNPRC`, `#`, `the`, `center`);
+`getConfigApiKey()` takes the first token and is unaffected. **(6)
+Method:** `withr::local_envvar(c(HOME = tmp))` plus a copy of the config
+under `basename(getConfigFileName(Sys.info())[["configFile"]])` is how a
+test puts a configuration file where
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+looks (`tests/testthat/test_getSiteInfo.R:98`); `exampleConfigPath()`
+(`tests/testthat/helper-exampleConfig.R:8`) is the shipped example file.
+
+#### Learning 979
+
+**To settle a documentation-against-code question, date the sentence
+against the code of that day, test every candidate on the real shipped
+file unchanged, and look for the one form that works only because the
+current code is loose (S1013, 2026-10-18).** **(1) Date the sentence.**
+The example config file’s notes said semicolons separate terms and
+quotes protect a value;
+`git log -S'semicolons, or newline' -- inst/extdata` gave `26c97c4b3`
+(2017-09-22) and `git show 26c97c4b3:R/getTokenList.R` already read
+`[[\\p{WHITE_SPACE},]]+` (set `5ca3e45fc`, 2017-09-13, never changed):
+the sentences were false the day they were written, so no working file
+can depend on them, which is evidence about “what users already rely on”
+that no count of centers’ files could give. **(2) Test candidates on the
+real file, as it is.** The owner asked whether `config`, `yaml` or
+`configr` would read the existing file without preprocessing. Measured
+on the shipped file:
+[`yaml::read_yaml`](https://yaml.r-lib.org/reference/read_yaml.html)
+returns the whole file as ONE string with no error,
+`configr::read.config` returns `FALSE`, `config::get` errors “subscript
+out of bounds”, `RcppTOML::parseToml` and `ini::read.ini` error; the
+silent ones matter most, because a loader that switched formats would
+not notice an old file. Install candidates into a scratch library
+(`install.packages(pkgs, lib = <scratch>)`, then
+`.libPaths(c(<scratch>, .libPaths()))`) so `renv` is untouched;
+`config::get` also ran R code from a `!expr` tag while `yaml` alone
+refused. **(3) A swapped-in prototype needs a control.** Putting a
+throwaway reader into the namespace (`unlockBinding` + `assign` on
+`asNamespace("nprcgenekeepr")`) and running 12 test files gave 0
+failures with both readers; that proves nothing until a control shows
+the swap reaches the callers (`getConfigApiKey()` on
+`apiKey = "two words"` read `two`, then `two words`) and the
+side-by-side shows the tests pin none of the 8 forms that changed. **(4)
+Hunt for the compatibility counter-example on purpose.** “Quotes do
+nothing” means any form that only works because of that works today: a
+whole list in one pair of quotes (`lkPedColumns = "Id, gender, birth"`,
+three values now, one under the fix) was the one found, and it went into
+the option text as a risk instead of “every working file reads the
+same”. **(5) Compare a copy’s content, not its length.**
+`DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md:268` verified
+`exampleNprcgenekeeprConfig` by “length 34”; the shipped file is 87
+lines and the copy is an older text with the same wrong sentences. **(6)
+A blank value was the real find:** `apiKey =` followed by
+`center = "SNPRC"` makes `getConfigApiKey()` return `center`. Evidence,
+table and prototype:
+`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`.
+
+#### Learning 980
+
+**A prototype from an audit has read the good forms; run it on a bad
+line before building on it, list every reader of a value whose shape
+changes, and treat a surviving mutant as a missing pin (S1014,
+2026-10-18).** **(1) The bad line.** The S1013 prototype read 19
+well-formed files and the 86 old blocks, but on `center = "SNPRC` (one
+stray quote) above two good lines it gave 1 setting, because the quote
+ran to the end of the file; today’s reader gives 3. The build closed a
+quote at the end of its line (`scanConfigTerms()`,
+`R/getTokenList.R:64`) and the plan named that rule at the RED gate as
+the one rule beyond the ruling. **(2) Readers of a changed shape.** A
+blank value used to be `NA` or the next name; it is now `character(0)`,
+and `getConfigApiKey()` and `getOptionalConfigToken()` took
+`tokenVec[idx][[1L]][[1L]]`, which stops on an empty vector.
+`git grep 'tokenVec\['` lists the readers before RED; each needs a
+block. **(3) Mutants name the unpinned readings.** 15 mutants, one per
+rule: 13 died at once; the 2 survivors were a `#` right after empty
+quotes (`"demo"#tail` already has content before the `#`, so only
+`""#tail` shows the `!hasQuote` clause) and a lone quoted `"="`. A pin
+that passes on its first run says nothing until a mutant shows what it
+guards. **(4) `devtools::document()` after a data rebuild.** The
+generated `man/exampleNprcgenekeeprConfig.Rd` says “length 34”;
+rebuilding the object made it 89, and only the REFACTOR run of
+`document()` showed it. **(5)** `<<-` inside a closure failed `lintr`’s
+`assignment_linter`; a small pure helper that returns the updated list
+(`addConfigTerm()`) needed neither. Evidence: `ce789a1c7`, `2691e58d7`,
+`6da22086e`.
+
+#### Learning 981
+
+**A backlog item’s “same shape” claim is a guess until each copy’s
+return value and every caller’s fields are read, and a number in option
+text is a grep result or it is not written (S1015, 2026-10-19).** **(1)
+The claim.** `BACKLOG.md` said three test copies of the Input-tab upload
+block had one shape; two did, but `uploadForQc()` also read
+`qcSummary()` and `isReady()` and returned all three. Its 8 blocks read
+`$summary` in 6, `$ready` in 4 and only `$results` in 2, so a plain move
+was impossible; the owner chose to widen the shared helper. Read what
+each copy returns and which fields each caller reads before promising a
+move. **(2) The count.** My option text said “7 existing callers”;
+`grep -n 'uploadPedigreeFile('` gives 5 call sites in 3 files (three
+inside thin wrappers). The count did not change the choice, but it was
+the Learning 881/935 mistake again: run the grep, then write the number.
+**(3) Widen in GREEN, delegate in REFACTOR.** The new function
+(`uploadPedigreeFileQc()`) went in at GREEN with the old one untouched,
+so no existing caller could change; making the old one call the new one
+was REFACTOR 1. **(4) Re-run mutants after delegation.** 2 of 11 mutants
+(the two minimum-age arguments) survived the new test file because only
+the old callers set ages; they died (3 blocks each) in
+`test_modInput_blankCells.R` once `uploadPedigreeFile()` delegated, so
+no extra pin block was needed. Evidence: RED `310a5f221`, GREEN
+`7d6237678`, REFACTOR `2217419c2` `e448c7f68` `89aa5bdde` `2a699fdd1`.
+
+#### Learning 982
+
+**A “no caller” claim covers only what was searched, a roxygen edit is
+two files under the 5-file cap and its paragraph must be re-wrapped
+whole, and a quoted typo trips the spelling guard (S1016, 2026-10-19).**
+**(1) “No caller in `R/`”.** The backlog item said the eight candidates
+in functions nothing in `R/` calls “could instead be retired under issue
+\#37”; the audit report says `tests/`, `vignettes/` and `inst/` were not
+searched. `git grep` there found
+[`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md)
+in two browser-test files (`test-e2e-mate-pair-analysis-module.R:61`,
+`test-e2e-snapshot-trends-module.R:29`) and its own test file,
+[`get_elapsed_time_str()`](https://github.com/rmsharp/nprcgenekeepr/reference/get_elapsed_time_str.md)
+in `vignettes/a2interactive.Rmd:1895`, and
+[`dataframe2string()`](https://github.com/rmsharp/nprcgenekeepr/reference/dataframe2string.md)
+only in its own test. Only 3 of the 13 statements (CK1, CL1, CL6) sat in
+those functions; the other five of the eight belong to the report’s
+other groups. Search `R/`, `tests/`, `vignettes/`, `inst/`,
+`_pkgdown.yml` and `NAMESPACE` before a removal goes into option text
+(Learning 981’s grep rule, applied to a retire option). **(2) The 5-file
+cap counts the man page.** A changed roxygen sentence is the `R/` file
+plus its `man/*.Rd`, so 13 fixes took 7 GREEN commits of 2 to 5 files;
+plan the commits as (R file, man page) pairs. **(3) Re-wrap the whole
+roxygen paragraph.** Adding one sentence to a wrapped paragraph left a
+93-character line (`R/withinIntegerRange.R:9`); `lint_package()` flagged
+it only after GREEN 1 was committed, which cost a 3b commit. Lint each
+touched file as its commit is made. **(4) Do not quote a misspelling.**
+My first NEWS draft quoted the old typo and `test_wordlist_coverage.R`
+failed in the next full run (8.3 minutes); the entry now says
+“misspelled the word”. **(5) Pin a fix’s deliberate non-change.**
+[`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
+skips the “unreachable minDate” stop for a point range (`maxDelta` 0) on
+purpose; no block said so, so one was added before the mutation run, and
+the mutant that drops the skip died by it alone. **(6) A shared error
+keeps its caller.** `assertFileType()` passes `sys.call(-1L)` to
+[`simpleError()`](https://rdrr.io/r/base/conditions.html), so the
+console still reads “Error in saveDataframesAsFiles(…)”; checked with
+[`conditionCall()`](https://rdrr.io/r/base/conditions.html) before the
+REFACTOR commit. Evidence: RED `a4878f0e3`, GREEN `99d0ab451`
+`2c5670629` `d0d1a6d8b` `caf9cf9f1` `8139774ea` `3baa1f594` `1aee03ad8`,
+REFACTOR `e116f4336` `ffe2f3a3b` `596a3e92d`.
+
+#### Learning 983
+
+**Pin a guide sentence to the app’s own constant, never start a
+background command with a bare `cat`, and read why a control failed
+before committing RED (S1017, 2026-10-19).** **(1) Pin docs to the
+constant.** `test_guideGroupsOutsidePedigreeWording.R` reads
+`.breedingGroupsOutsidePedigreeNote` and `.groupsOutsidePedigreeNote`
+through `nprcgenekeepr:::`, so a wording change in `R/` fails the test
+until the guide quotes the new words. The guide is read inside each
+block, not at the top of the file: an absent guide (a built package)
+then skips the block, while a bare top-level skip would also drop the
+controls. The section reader blanks fenced code before it looks for the
+next `##` or `###` heading, so a comment line in a chunk cannot end a
+section. **(2) A stray `cat` hangs a background job silently.** My first
+mutation job began `cat > <file> 2>/dev/null; cat > <script> <<EOF ...`;
+the first `cat` had no input and waited on stdin, so the script was
+never written, no R process started, and the output went through
+`grep | cut`, so nothing showed for about 10 minutes; I found it only
+when the owner asked “Are you still running?”. Write a script with the
+Write tool, send a background job’s output to a file and never through a
+pipe, and within a minute of launching confirm with `pgrep -fl Rscript`
+that the work process exists (a launcher shell whose only child is `cat`
+is the sign). **(3) A control that fails in RED is a test bug.** The
+app’s string reads `(a new file or a trimmed view). Form`, so my pattern
+for “closing paren, space” never matched; the block meant to pass before
+GREEN failed twice, and only the per-block tally showed it. Read why
+each control failed before the RED commit. **(4) The notes limit is
+tokens, not bytes.** `python3 methodology/context_budget.py` counts
+`SESSION_NOTES.md` at 2.27 B/token against 25,000 tokens, about 56,750
+B; folding S911-S914, S996-S1000, S1001-S1007 and S1012-S1014 kept it at
+56,090 B. Evidence: RED `ff1f8cb68`, GREEN `d7d16f477`, REFACTOR
+`050466d2e`.

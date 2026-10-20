@@ -76,7 +76,10 @@ Insure the resulting date is as least as large as the <code>minDate</code>.</p>
 <dd><p>optional vector of Date values, the same length as
 <code>baseDate</code>, that has the lower bound of resulting obfuscated dates.
 When missing, the lower bound is each <code>baseDate</code> minus its
-<code>maxDelta</code>, so the bound never binds.</p></dd>
+<code>maxDelta</code>, so the bound never binds. An <code>NA</code> in <code>minDate</code>
+leaves that element without a lower bound. A <code>minDate</code> on or after
+<code>baseDate</code> plus <code>maxDelta</code> (a date no draw can reach) stops with
+an error that names the element.</p></dd>
 
 
 <dt id="arg-maxdelta">maxDelta<a class="anchor" aria-label="anchor" href="#arg-maxdelta"></a></dt>

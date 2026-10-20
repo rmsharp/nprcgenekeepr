@@ -83,8 +83,10 @@ on date information that was available.</p>
     <p>An <code>exit</code> column is added only when the pedigree has a <code>birth</code>
 column and no <code>exit</code> column. When both <code>death</code> and
 <code>departure</code> are present the exit is the earlier of the two; it is
-<code>NA</code> if neither column exists. A pedigree without a <code>birth</code>
-column, or with no rows, is returned unchanged.</p>
+<code>NA</code> if neither column exists. The column names are matched without
+regard to case (<code>Death</code> is read as <code>death</code>), and the new column
+is named <code>exit</code>. A pedigree without a <code>birth</code> column, or with no
+rows, is returned unchanged.</p>
     </div>
 
     <div class="section level2">

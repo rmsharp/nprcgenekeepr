@@ -2,8 +2,9 @@
 
 The "show every problem at once" companion to
 [`resolveCrossCenterIds`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
-(issue \#149 Slice 1), sharing its four validation checks – id
-existence, mapping uniqueness, undeclared id collisions, and conflicting
+(issue \#149 Slice 1), sharing its five validation checks – id
+existence, mapping uniqueness, undeclared id collisions, a `pedB` animal
+that reuses an id the mapping gives a `pedA` animal, and conflicting
 recorded parents – via the same internal helpers (D2,
 `docs/planning/issue149-cross-center-identity-mapping-workflow-plan.md`
 section 3).
@@ -45,10 +46,13 @@ checkCrossCenterMapping(pedA, pedB, mapping)
 ## Value
 
 A data.frame of every domain problem found, with columns `type`
-(`"existence"`, `"uniqueness"`, `"collision"`, or `"conflict"`), `ids`
-(the offending id(s), as a single comma-separated string), and `message`
-(a human-readable description). Zero rows means none of these four kinds
-of problem was found.
+(`"existence"`, `"uniqueness"`, `"collision"`, `"mappedIdClash"`, or
+`"conflict"`), `ids` (the offending id(s), as a single comma-separated
+string), and `message` (a human-readable description). Zero rows means
+none of these five kinds of problem was found. A `"mappedIdClash"` row
+names an id of a `pedB` animal with no mapping row that the mapping
+already uses for a `pedA` animal; a merge would hold two rows with that
+id.
 [`resolveCrossCenterIds`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
 can still stop on conflicting values in other columns shared by both
 pedigrees (e.g. `sex`), which this function does not check.
@@ -56,10 +60,11 @@ pedigrees (e.g. `sex`), which this function does not check.
 ## Details
 
 Existence and uniqueness problems (tier A) are checked first; if either
-is present, only those are returned and collision/conflict checks (tier
-B) are skipped entirely, since a mapped id that does not resolve to a
-real pedigree row makes those checks meaningless. Tier B – and both of
-its checks, across every mapped pair – runs only once tier A is clean.
+is present, only those are returned and the collision, reused-id and
+conflict checks (tier B) are skipped entirely, since a mapped id that
+does not resolve to a real pedigree row makes those checks meaningless.
+Tier B – and all three of its checks, across every mapped pair – runs
+only once tier A is clean.
 
 ## See also
 

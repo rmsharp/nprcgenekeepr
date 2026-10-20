@@ -1656,7 +1656,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpPdGQKD/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpRFZziY/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1748,7 +1748,7 @@ summary(errorList)
     ## 
     ## Please check and correct the pedigree file.
     ##  
-    ## Animal records where parent records are suspicous because of dates.
+    ## Animal records where parent records are suspicious because of dates.
     ## One or more parents appear too young at time of birth.
     ##   dam sire id sex      birth recordStatus placeholder exit  sireBirth   damBirth sireAge
     ## 2  d2   s1 o2   F 2009-03-17     original       FALSE <NA> 2000-07-18 2015-09-16    8.66
@@ -2137,9 +2137,11 @@ One subtlety: a genuine undeclared id collision between the two centers
 is only ever reported once the existence and uniqueness problems above
 are already clean – a collision check on a mapping that doesn’t resolve
 to real pedigree rows would be meaningless. The same second check also
-reports a mapped pair whose recorded parents conflict. A clean result
-from this function is what licenses trusting the absence of a collision,
-not merely the absence of a `"collision"` row in a dirty one.
+reports a *pedB* animal whose id *mapping* already gives to a different
+*pedA* animal (a `"mappedIdClash"` row), and a mapped pair whose
+recorded parents conflict. A clean result from this function is what
+licenses trusting the absence of a collision, not merely the absence of
+a `"collision"` row in a dirty one.
 
 ### Cross-Center Identity Linking
 
@@ -2490,8 +2492,8 @@ as *id*, or the call stops.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-18 03:23:03.558024. The processing
-time for this document was 20 seconds..
+The current date and time is 2026-10-20 02:53:05.456295. The processing
+time for this document was 26 seconds..
 
 ``` r
 
@@ -2532,7 +2534,7 @@ sessionInfo()
     ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       quadprog_1.5-8      
     ##  [9] vctrs_0.7.3          tools_4.6.1          generics_0.1.4       tibble_3.3.1        
     ## [13] pkgconfig_2.0.3      Matrix_1.7-5         data.table_1.18.6.1  checkmate_2.3.4     
-    ## [17] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3           readxl_1.5.0.1      
+    ## [17] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3           readxl_1.6.0        
     ## [21] lifecycle_1.0.5      compiler_4.6.1       farver_2.1.2         stringr_1.6.0       
     ## [25] textshaping_1.0.5    Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9     
     ## [29] sass_0.4.10          yaml_2.3.12          htmlTable_2.5.0      later_1.4.8         

@@ -19,8 +19,9 @@ makeGeneticDiversityHeatmap(stats)
 - stats:
 
   A data frame with one row per breeding group. The first column holds
-  the group label; every remaining column is a metric whose values are
-  color indices in `c(1, 2, 3)` or `NA`.
+  the group label, which must be unique (a repeated label stops with an
+  error that names it); every remaining column is a metric whose values
+  are color indices in `c(1, 2, 3)` or `NA`.
 
 ## Value
 

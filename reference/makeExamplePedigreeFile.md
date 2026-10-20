@@ -9,7 +9,8 @@ file already exists, an error is signaled.
 
 ``` r
 makeExamplePedigreeFile(
-  file = file.path(tempdir(), "examplePedigree.csv"),
+  file = file.path(tempdir(), paste0("examplePedigree.", c(csv = "csv", txt = "txt",
+    excel = "xlsx")[[fileType]])),
   fileType = "csv"
 )
 ```
@@ -18,7 +19,10 @@ makeExamplePedigreeFile(
 
 - file:
 
-  character vector of length one providing the file name
+  character vector of length one providing the file name. The default
+  file, in the session's temporary directory, is `examplePedigree.csv`,
+  `examplePedigree.txt` or `examplePedigree.xlsx`, according to
+  `fileType`.
 
 - fileType:
 

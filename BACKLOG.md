@@ -231,12 +231,17 @@ sex, lists them as sire or dam and pairs an animal with itself**
 (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
 table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3
 with CJ4, males under the age or with no birth date in sex-ratio groups,
-fixed S1008; the other three (CE4, CE5 and CI1) are the two fix items
-below**, and 13 small wrong statements for one housekeeping session (an
-item below); CL9 is the open item below), and `R/makeGroupNum.R` still
-says `numGp` “Default is 1” while the examples in
-`R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass
-deprecated `minParentAge` (all three present S890); 7b/8 CV1 and CV2
+fixed S1008; CE4 and CE5, the Cross-Center check and merge, fixed S1011
+(`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`,
+`NEWS.Rmd`); CI1 with CI3, the example-config API-key placeholder and a
+setting read in another case, fixed S1012 (`R/readConfigLines.R`,
+`R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**,
+and the 13 small wrong statements fixed S1016
+(`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9 is
+the open item below), and `R/makeGroupNum.R` still says `numGp` “Default
+is 1” while the examples in `R/fillGroupMembersWithSexRatio.R` and
+`R/groupAddAssign.R` still pass deprecated `minParentAge` (all three
+present S890); 7b/8 CV1 and CV2
 ([`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
 exports with no `@examples`; the `savePlotToFile` example uses
 `\dontrun`); the four likely code defects of *slice 4* (this item’s
@@ -259,86 +264,22 @@ Learning 347, not re-counted; slice 8 left open whether to replace stale
 `file:line` cites in the plans and gap analysis with function names, and
 D’s six parent-to-union edges that still differ in row.
 
-**Make the Cross-Center check flag an id clash and keep one-sided
-columns (READY, Effort S-M; strict TDD; one session for both)** (ruled
-S1004: fix, option (a) for CE4 and CE5; Findings 5 and 6,
-`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:129-155`;
-fifth of six) – `R/resolveCrossCenterIds.R:190-205`
-(`.checkCrossCenterCollision`) compares only ids not in the mapping, so
-an unmapped Center B `T1` against a mapped Center A `T1` shows “Mapping
-is clean” (0 issues) and the merge holds three rows with id `T1`;
-`:484-509` resolves only columns present on both sides, so a column one
-center recorded is `NA` for a mapped animal, and the whole column
-vanishes when every animal is mapped. The help promises both the check
-(`:359-363`) and the union of columns (`:382`). **Ruled fix:** also flag
-a Center B id equal to a mapped Center A id that is not the mapped one,
-and the mirror case (one more row type, shown with the others); take the
-non-`NA` side for every column and keep any column an input has. The
-module calls the function unchanged (`R/modCrossCenterIdentity.R:311`).
-Fixture to copy: `.ccUploadInputs()` in
-`tests/testthat/test_modCrossCenterIdentity.R:54`.
-
-**Make `getConfigApiKey()` ignore commented lines (READY, Effort S;
-strict TDD)** (ruled S1004: fix, option (a) for CI1, with CI3 in the
-same session; Finding 7,
-`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:157-170`;
-sixth of six) – `R/getConfigApiKey.R:17-24` does not drop `#` lines, so
-the shipped example config
-(`inst/extdata/examples/example_nprcgenekeepr_config:53`, a commented
-`apiKey`) returns “paste-your-labkey-api-key-here”, which
-`R/setLabKeyDefaults.R:47-51` uses before it looks for a netrc file.
-**Ruled fix:** drop comment lines as `getOptionalConfigToken()` does
-(`R/getSpeciesOverridesPath.R:23-27`), tested on the shipped file. CI3:
-`getParamDef(<Center key>, "center")` stops “subscript out of bounds”
-(`R/getParamDef.R:19`). Not run against a LabKey server.
-
-**Move the other Input-tab test upload helpers to the shared one (READY,
-Effort S-M; test-only)** (found S1007, REFACTOR) –
-`tests/testthat/helper-inputTabUpload.R` holds
-`uploadPedigreeFile(path, fileType, separator, minDamAge, minSireAge)`,
-which uploads a file through the real Input module and returns its
-`qcResults()`; `test_modInput_blankCells.R`,
-`test_modInput_placeholder.R` and `test_convertFromCenterThroughQc.R`
-call it. Seven more local copies of the
-`shiny::testServer(modInputServer, ...)` block remain. **Three have the
-same shape** (pedFile, getData, `qcResults()`) and should move:
-`.uploadExemplar()` (`test_examplePedigreeFixtures.R`),
-`uploadExample()` (`test_examplePedigreeTxt.R`), `uploadForQc()`
-(`test_modInput_qcStudbook.R`); check each one’s age inputs first.
-**Four differ:** `inputTabStudbook()`
-(`test_genotypeTutorialsWording.R`), `runOneFile()` and `runSeparate()`
-(`test_modInputOneFileGenotypes.R`,
-`test_modInputSeparateGenotypeNote.R`) use the genotype file-content
-modes and read the cleaned studbook or genotype data, and `run_upload()`
-(`test_modInput_incomplete_final_line.R`) reads `qcSummary()` and a
-warning. One file per commit, run it before and after; a new Input-tab
-test calls `uploadPedigreeFile()` and writes no new copy.
-
-**The 13 small wrong statements of the slice 6e re-check (READY, Effort
-S)** (found S1003; the report’s first minor group,
-`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md:176`) – one
-housekeeping session in the S994 shape (help or code fixed, one test
-file; `tests/testthat/test_docsAuditHousekeepingWording.R` is the
-model). The eight candidates in functions nothing in `R/` calls (the
-report’s “No caller in `R/`”) could instead be retired under issue \#37;
-that is the owner’s call at pickup.
-
-**The guide does not name the “groups not in the pedigree” sentence
-(DECISION NEEDED – add a sentence where the owner wants it, or leave;
-docs only, Effort S, the owner writes the sentence)** (found S995,
-widened S996) – the Genetic Diversity page
-(`R/modGeneticDiversity.R:48-54`) and the Breeding Groups Groups,
-Statistics and Group Detail pages (`R/modBreedingGroups.R:222`) say one
-sentence when a formed group holds an animal the loaded pedigree lacks
-(after a new file or a trimmed view); `NEWS.Rmd` says it. The guide’s
-Breeding Groups section
-(`vignettes/articles/colony-manager-guide.qmd:623-700`) and its Genetic
-Diversity paragraph (`:840-866`, which ends “Until groups are formed and
-an analysis has run, the tab shows guidance instead of an empty plot”)
-name neither. Also: with that sentence showing, “Export Current Group”
-stops silently and writes no file (a module-level probe, S996; a browser
-download was not tried), while “Export Current Group Kinship Matrix”
-still writes the old group’s matrix.
+**With the “groups not in the pedigree” sentence showing, “Export
+Current Group” writes no file and says nothing, and “Export Current
+Group Kinship Matrix” writes the old group’s matrix (DECISION NEEDED –
+leave it, or make both exports stop with the page’s sentence, Effort
+S-M; strict TDD)** (found S996, split out of the guide-sentence item
+when S1017 finished it) – a formed group holds an animal the loaded
+pedigree lacks (after a new file or a trimmed view), and the Breeding
+Groups Groups, Statistics and Group Detail pages show one sentence
+(`R/modBreedingGroups.R:222`; the guide says it since S1017,
+`vignettes/articles/colony-manager-guide.qmd:709-714`). Measured S996
+with a module-level probe (a browser download was not tried): “Export
+Current Group” stops silently; “Export Current Group Kinship Matrix”
+writes the old group’s matrix. **Decision:** (a) leave it (the sentence
+on the page already says to form the groups again); (b) make both
+exports stop and say that sentence, which users would see, so it needs a
+`NEWS.Rmd` line and a browser download tried first.
 
 **The Changed Columns tab and
 [`summary()`](https://rdrr.io/r/base/summary.html) skip some rename
@@ -399,6 +340,22 @@ each site, each with a test; (c) check once at the front of
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
 and stop with one message naming the column’s position (the wording is
 the owner’s).
+
+**The Cross-Center merge drops the extra columns of a pedigree that has
+a header and no animals (DECISION NEEDED – leave it, or keep every
+input’s columns, Effort S; strict TDD)** (found S1011, left alone at the
+owner’s RED gate) – `bindPedigreeRows()` (`R/resolveCrossCenterIds.R`)
+removes zero-row frames before it collects column names. Measured S1011
+at function level (not in the tab): a Center A file with a header (`id`,
+`sire`, `dam`, `sex`) and no animals, an empty mapping and a Center B
+file with animals gives a merged table with `id`, `sire`, `dam` only,
+and
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+reports 0 issues; with one mapping row the merge stops “mapping
+references idA value(s) not present in pedA\$id”, so only an empty
+mapping reaches it. **Decision:** (a) leave it (a file with no animals
+has nothing to carry); (b) keep the columns of every input, empty or
+not.
 
 **The archive pointers name `docs/archive/`, but the shards sit in
 `methodology/archive/` (DECISION NEEDED – leave them, rewrite them, or

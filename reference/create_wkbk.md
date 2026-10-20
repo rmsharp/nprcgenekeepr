@@ -33,7 +33,8 @@ create_wkbk(file, df_list, sheetnames, replace = FALSE)
 warning, if the file already exists and `replace` is `FALSE`. Other
 problems are signaled as errors rather than returned as `FALSE`;
 examples are a number of `sheetnames` that differs from the length of
-`df_list` and an invalid worksheet name.
+`df_list`, a folder for `file` that does not exist and an invalid
+worksheet name.
 
 ## Examples
 

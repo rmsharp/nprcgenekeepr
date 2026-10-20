@@ -787,6 +787,14 @@ A **Statistics** sub-tab summarizes all formed groups at once. Groups
 and their kinship matrices can each be exported individually to a file
 and location you choose.
 
+If you read a different pedigree, or trim the pedigree on the Pedigree
+Browser, after groups are formed, a formed group may hold an animal the
+loaded pedigree no longer has. The **Groups**, **Statistics** and
+**Group Detail** sub-tabs then show one sentence in place of their
+tables: “Some animals in these breeding groups are not in the pedigree
+now loaded (a new file or a trimmed view). Form the groups again, or
+bring back the earlier pedigree, to see them.”
+
 **Ancestry guardrails** (issue
 [\#168](https://github.com/rmsharp/nprcgenekeepr/issues/168)). Centers
 that manage geographic ancestry – for example keeping Indian-origin and
@@ -966,7 +974,10 @@ females has no Production value, and its cell is gray. When any animal
 in the groups has no birth date, a note under the heat map says how
 many, and how many of those females were counted or left out. Until
 groups are formed and an analysis has run, the tab shows guidance
-instead of an empty plot.
+instead of an empty plot. The tab shows a sentence in place of the heat
+map in one more case: a formed group holds an animal the loaded pedigree
+no longer has (after reading a different pedigree or trimming the view).
+Form the groups again to see the heat map.
 
 ![Genetic Diversity heat map with 6 rows (one per breeding group) and 4
 columns (Value, Origin, Production, Inbreeding), each cell colored red,
@@ -1328,10 +1339,11 @@ The workflow has three steps, each its own tab:
     Mapping**. Every problem is surfaced at once – not just the first
     one found – so a mapping file with several unrelated mistakes (a
     duplicate mapping row, an id that doesn’t exist in either pedigree,
-    an id present at both centers but never declared in the mapping, or
-    two centers recording different parents for the same mapped animal)
-    can be fixed in one pass instead of being rejected and resubmitted
-    repeatedly.
+    an id present at both centers but never declared in the mapping, a
+    Center B animal whose id the mapping already gives to a different
+    Center A animal, or two centers recording different parents for the
+    same mapped animal) can be fixed in one pass instead of being
+    rejected and resubmitted repeatedly.
 2.  **Preview.** Once the mapping validates clean, this tab computes the
     actual proposed merge and shows a lineage-change table: for each
     mapped pair, both centers’ originally-recorded sire/dam alongside

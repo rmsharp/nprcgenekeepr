@@ -30,9 +30,10 @@ date information that was available.
 
 An `exit` column is added only when the pedigree has a `birth` column
 and no `exit` column. When both `death` and `departure` are present the
-exit is the earlier of the two; it is `NA` if neither column exists. A
-pedigree without a `birth` column, or with no rows, is returned
-unchanged.
+exit is the earlier of the two; it is `NA` if neither column exists. The
+column names are matched without regard to case (`Death` is read as
+`death`), and the new column is named `exit`. A pedigree without a
+`birth` column, or with no rows, is returned unchanged.
 
 ## Examples
 

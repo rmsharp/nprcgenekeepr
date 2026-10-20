@@ -54,7 +54,7 @@ summary(errorList)
 #> 
 #> Please check and correct the pedigree file.
 #>  
-#> Animal records where parent records are suspicous because of dates.
+#> Animal records where parent records are suspicious because of dates.
 #> One or more parents appear too young at time of birth.
 #>   dam sire id sex      birth recordStatus placeholder exit  sireBirth
 #> 2  d2   s1 o2   F 2009-03-17     original       FALSE <NA> 2000-07-18

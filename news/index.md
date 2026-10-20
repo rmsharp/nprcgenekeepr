@@ -239,12 +239,16 @@ export workflows, and longitudinal monitoring of colony genetic health.
   [\#149](https://github.com/rmsharp/nprcgenekeepr/issues/149)).
 - [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
   merges records for the same animals using a curator-confirmed
-  id-matching table, preserving each animal’s own data columns.
+  id-matching table, preserving each animal’s own data columns,
+  including a column only one of the two centers recorded.
 
 **Minor**
 
 - [`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
-  reports every problem in an id-matching table at once.
+  reports every problem in an id-matching table at once, including a
+  second-center animal that uses an id the table already gives to a
+  different first-center animal (the merged file would hold that id
+  twice).
 
 ### Genetic Value Analysis
 
@@ -811,6 +815,82 @@ export workflows, and longitudinal monitoring of colony genetic health.
   relationships, and the six plots) showed a gray title bar reading
   `character(0)` above its one sentence. The pop-ups now show only the
   sentence.
+- Fixed: a site that copied the example configuration file without
+  editing it was treated as having the LabKey API key
+  `paste-your-labkey-api-key-here`, which took the place of its `.netrc`
+  file, so the sign-in failed. A line that starts with `#` is now a
+  comment wherever the configuration file is read, so that site uses its
+  `.netrc` file, or is told that no credential was found. A
+  commented-out `center` above the real one no longer wins, and a
+  comment after the last setting is no longer read as part of its value.
+- Fixed: a setting in the configuration file written with different
+  capitals, such as `Center` for `center`, stopped the program with
+  “subscript out of bounds”. It is now read.
+- Fixed: a value in double quotes in the configuration file was split
+  into several values when it held a blank, a comma, an equals sign or
+  round brackets, so a folder path such as `"/My Folder/EHR"` was read
+  as two values. A value in double quotes is now one value. A `#` that
+  starts a word begins a comment that runs to the end of the line, also
+  after a setting, so a note written after a setting is no longer read
+  as part of its value. A list of column names inside one pair of quotes
+  is one name: write each name on its own, in quotes if you like.
+- Fixed: a setting with nothing after its `=` took the name of the next
+  setting as its value, so `apiKey =` above `center = "SNPRC"` gave the
+  API key `center`. Such a setting is now empty, and an empty API key is
+  no key.
+- Fixed: the notes at the top of the example configuration file said
+  that semicolons separate terms and that an address such as
+  `http://deepthought:8080/labkey` falls apart unless it is in quotes;
+  neither was true. The notes now describe how the file is read.
+  `data("exampleNprcgenekeeprConfig")` is now the shipped example file,
+  not an older copy of it.
+- Fixed: the quality-control summary printed in the console misspelled
+  the word “suspicious”.
+  [`get_elapsed_time_str()`](https://github.com/rmsharp/nprcgenekeepr/reference/get_elapsed_time_str.md)
+  reported 59.6 seconds as “60 seconds.” and 119.6 seconds as “1 minutes
+  and 60 seconds.”; it now rounds first and says “1 minutes and 0
+  seconds.” and “2 minutes and 0 seconds.”.
+- Fixed: several helper functions for scripts gave a wrong or confusing
+  answer.
+  [`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
+  returned `TRUE` for a workbook in a folder that does not exist and
+  wrote nothing; it now stops and names the folder.
+  [`saveDataframesAsFiles()`](https://github.com/rmsharp/nprcgenekeepr/reference/saveDataframesAsFiles.md)
+  and
+  [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md)
+  stopped with “the condition has length \> 1” for a file type that was
+  not one of “txt”, “csv” or “excel”; they now say which three are
+  allowed.
+  [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md)
+  named its default file `examplePedigree.csv` for every type; it is now
+  `examplePedigree.csv`, `examplePedigree.txt` or
+  `examplePedigree.xlsx`.
+  [`withinIntegerRange()`](https://github.com/rmsharp/nprcgenekeepr/reference/withinIntegerRange.md)
+  gave the minimum for a number too large for an integer, such as
+  3,000,000,000, and now gives the maximum.
+- Fixed: the functions that scramble ids and dates before data are
+  shared had three problems.
+  [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
+  ran for ever when its earliest allowed date could not be reached and
+  stopped with an unclear message when that date was missing; it now
+  stops with a message that gives the position of the date, and a
+  missing earliest date means no limit.
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+  and
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  stopped with “missing value where TRUE/FALSE needed” for a missing id;
+  they now say that the id must not contain `NA` and give its position.
+- Fixed:
+  [`setExit()`](https://github.com/rmsharp/nprcgenekeepr/reference/setExit.md)
+  ignored a death or departure column written with capitals, such as
+  `Death`, and either added no exit column or stopped with “replacement
+  has 0 rows”; it now finds the column in any letter case.
+  [`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+  drew two groups with the same label on one row; it now stops and names
+  the label.
+  [`dataframe2string()`](https://github.com/rmsharp/nprcgenekeepr/reference/dataframe2string.md)
+  ended the text for an empty data frame with a backslash and an n. The
+  help of `focalAnimals` now says that its `id` column is a factor.
 
 ## nprcgenekeepr 2.0.0 (20260721)
 

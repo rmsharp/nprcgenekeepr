@@ -58,11 +58,17 @@ named in `mapping` pass through unchanged; an id string present in both
 `pedA` and `pedB` that is *not* declared in `mapping` is also an error –
 per D5, identity is established only by the explicit mapping table,
 never assumed from a coincidentally matching id string across the two
-centers' independent namespaces. As of issue \#149 Slice 1 (D10), a
-merged pair's other shared columns (beyond `id`/ `sire`/`dam`) follow
-the identical non-`NA`-preferred/ error-on-conflict rule – previously
-they were silently dropped. The one exception is the `placeholder` mark
-(see
+centers' independent namespaces. So is an animal of `pedB` with no
+`mapping` row whose id is one `mapping` gives a `pedA` animal: the
+merged animal is keyed by that `idA` value, so the merge would hold two
+rows with the same id. (The mirror case, a `pedA` animal with no
+`mapping` row whose id is a mapped `idB` value, is not an error: the
+mapped `pedB` animal is renamed to its `idA` value and every id stays
+unique.) As of issue \#149 Slice 1 (D10), a merged pair's other columns
+(beyond `id`/ `sire`/`dam`) follow the identical non-`NA`-preferred/
+error-on-conflict rule, and a column only one center recorded is kept as
+that center recorded it – previously these were silently dropped. The
+one exception is the `placeholder` mark (see
 [`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)):
 a stand-in for an unknown parent that a curator links to a known animal
 is that animal, so the merged animal is real (`FALSE`) when either

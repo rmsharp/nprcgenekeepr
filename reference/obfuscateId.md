@@ -16,7 +16,8 @@ obfuscateId(id, size = 10L, existingIds = character(0L), placeholder = NULL)
 
 - id:
 
-  character vector of IDs to be obfuscated (alias creation).
+  character vector of IDs to be obfuscated (alias creation). It must not
+  contain `NA`; an `NA` id stops with a message that gives its position.
 
 - size:
 

@@ -1,6 +1,13 @@
 # Get tokens from a character vector of lines
 
-Get tokens from a character vector of lines
+Reads the lines of an nprcgenekeepr configuration file. The term before
+each equals sign names a setting and the terms after it, up to the next
+name, are its value; terms are separated by blanks, commas or line
+breaks, a term in double quotes is kept whole (a quote not closed on its
+line ends at the end of that line), and a `#` that begins a word starts
+a comment that runs to the end of the line. Round brackets outside
+quotes are ignored. A setting with nothing after its equals sign has an
+empty value.
 
 ## Usage
 
@@ -18,7 +25,7 @@ getTokenList(lines)
 
 A list with two elements: `param`, a character vector of parameter
 names, and `tokenVec`, a list of the token vectors parsed for each
-parameter.
+parameter (an empty character vector for a setting with no value).
 
 ## Examples
 

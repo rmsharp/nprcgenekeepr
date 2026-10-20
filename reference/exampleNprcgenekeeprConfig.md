@@ -14,7 +14,7 @@ data(exampleNprcgenekeeprConfig)
 
 ## Format
 
-An object of class `character` of length 34.
+An object of class `character` of length 89.
 
 ## Examples
 
@@ -22,10 +22,10 @@ An object of class `character` of length 34.
 library(nprcgenekeepr)
 data("exampleNprcgenekeeprConfig")
 head(exampleNprcgenekeeprConfig)
-#> [1] "# The formatting in this example file is intentionally sloppy to illustrate" 
-#> [2] "# the esssential features and to point out what has no effect."              
-#> [3] "# Lines beginning with \"#\" are ignored."                                   
-#> [4] "# Empty lines are ignored"                                                   
-#> [5] "#"                                                                           
-#> [6] "# It is critical to have the term being defined immediately before an equals"
+#> [1] "# The formatting in this example file is intentionally sloppy to illustrate"   
+#> [2] "# the essential features and to point out what has no effect."                 
+#> [3] "# A # that begins a word starts a comment that runs to the end of the line, on"
+#> [4] "# a line of its own or after a setting."                                       
+#> [5] "# Empty lines are ignored"                                                     
+#> [6] "#"                                                                             
 ```
