@@ -39,14 +39,8 @@ shouldShowChangedColsTab <- function(changedCols) {
     return(FALSE)
   }
 
-  # Check each possible changed column field
-  fields <- c(
-    "caseChange", "spaceRemoved", "periodRemoved", "underScoreRemoved",
-    "egoToId", "egoidToId", "sireIdToSire", "damIdToDam",
-    "birthdateToBirth", "deathdateToDeath",
-    "recordstatusToRecordStatus", "fromcenterToFromCenter",
-    "geographicoriginToGeographicOrigin"
-  )
+  # Check each possible changed column field: the ones the error list defines
+  fields <- names(getEmptyErrorLst()$changedCols)
 
   for (field in fields) {
     if (field %in% names(changedCols) && length(changedCols[[field]]) > 0L) {

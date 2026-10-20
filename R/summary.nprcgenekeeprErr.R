@@ -130,60 +130,20 @@ summary.nprcgenekeeprErr <- function(object, ...) {
     "Change: The column where underscore was removed is",
     "Change: The columns where underscore was removed are"
   )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$egoToId,
-    "Change: The column changed from",
-    "Change: The columns changed from"
+  ## The renames below all read "changed from <old> to <new>".
+  changedFromFields <- c(
+    "egoToId", "egoidToId", "sireIdToSire", "damIdToDam",
+    "birthdateToBirth", "deathdateToDeath", "recordstatusToRecordStatus",
+    "fromcenterToFromCenter", "geographicoriginToGeographicOrigin"
   )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$egoidToId,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$sireIdToSire,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$damIdToDam,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$birthdateToBirth,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$deathdateToDeath,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$recordstatusToRecordStatus,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$fromcenterToFromCenter,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
-  txt <- addErrTxt(
-    txt,
-    errorLst$changedCols$geographicoriginToGeographicOrigin,
-    "Change: The column changed from",
-    "Change: The columns changed from"
-  )
+  for (field in changedFromFields) {
+    txt <- addErrTxt(
+      txt,
+      errorLst$changedCols[[field]],
+      "Change: The column changed from",
+      "Change: The columns changed from"
+    )
+  }
   if (stri_length(txt) > 0L) {
     txt <-
       stri_c(txt, "\nPlease check and correct the pedigree file.\n")
