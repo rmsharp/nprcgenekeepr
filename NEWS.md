@@ -496,9 +496,21 @@ export workflows, and longitudinal monitoring of colony genetic health.
   all lowercase (`geographicorigin`), the column was renamed to
   `geographicOrigin` with no notice at all, so `runQcStudbook()`
   reported no changed columns. It is now counted as a column change like
-  every other rename, so `runQcStudbook()` reports it and
-  `qcStudbook(reportErrors = TRUE)` keeps the record. The Changed
-  Columns tab does not list this rename.
+  every other rename, so `runQcStudbook()` reports it,
+  `qcStudbook(reportErrors = TRUE)` keeps the record and the Changed
+  Columns tab lists it.
+
+- Fixed: a pedigree file whose column headers were already right was
+  reported as having changed headers. A file headed `recordStatus`,
+  `fromCenter` or `geographicOrigin` (the shipped example pedigree is
+  one) opened the Changed Columns tab, which said the case of those
+  columns had been changed, and `runQcStudbook(reportChanges = TRUE)`
+  reported the same change, although the cleaned headers were the ones
+  in the file. A header already spelled that way is no longer reported.
+  Also, a file whose `recordstatus` or `fromcenter` header was all
+  lowercase opened the Changed Columns tab with a heading and no list;
+  the tab now lists each of these renames, in the same words it uses for
+  the other renames.
 
 - Fixed: `checkRequiredCols()` stopped with the message "missing value
   where TRUE/FALSE needed" when it was given five or more column names,
