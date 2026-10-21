@@ -298,6 +298,173 @@ test_that(
                info = "No visNetwork/diagram-related console error")
 })
 
+## S1028 -- deceased marker. An animal whose `status` reads DECEASED is drawn
+## with a diagonal slash through its symbol, and no other animal is (owner
+## ruling S1028: the exit date cannot say, it is filled for a shipment too).
+## The slash is stroked on the widget's canvas by an afterDrawing handler, so
+## the unit tests can only read the handler's text; the first test below reads
+## the node field the handler keys on AND the canvas pixels at each node's
+## centre, which the slash crosses and which is otherwise the node's white
+## fill. The second test is the legend: a "Deceased" row joins it, and the
+## owner (S1028) does not accept a legend whose labels run over the next
+## symbol, which the 10-row legend already did before this row existed (each
+## row's box touched the next: gap 0).
+
+## Opens the Diagram tab on a 4-animal pedigree: A is DECEASED, B is ALIVE, C
+## is SHIPPED, D is UNKNOWN; as in the example pedigree, only the DECEASED and
+## SHIPPED animals have an exit date. `birth` is required (see the
+## isolated-individual test below). Returns "" once the widget is drawn, else
+## the reason to skip. The caller owns `app` and stops it.
+open_deceased_diagram <- function(app) {
+  ped_csv <- tempfile(fileext = ".csv")
+  utils::write.csv(
+    data.frame(
+      id = c("A", "B", "C", "D"),
+      sire = c(NA, NA, "A", "A"),
+      dam = c(NA, NA, "B", "B"),
+      sex = c("M", "F", "F", "M"),
+      birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1996-01-01"),
+      exit = c("2005-06-01", NA, "2001-03-01", NA),
+      status = c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN"),
+      stringsAsFactors = FALSE
+    ),
+    ped_csv, row.names = FALSE
+  )
+  on.exit(unlink(ped_csv), add = TRUE)
+
+  if (!upload_and_wait(app, ped_csv)) return("Upload/QC did not complete")
+  if (!navigate_to_tab(app, "Pedigree Browser", "Pedigree")) {
+    return("Could not navigate to Pedigree tab")
+  }
+  if (!click_element_safe(app, 'a[data-value="Diagram"]')) {
+    return("Could not switch to the Diagram tab")
+  }
+  widgetReady <- paste0(
+    "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+    "return !!w && !!w.network && !!w.legend && ",
+    "w.network.body.data.nodes.length > 0; })()"
+  )
+  ready <- tryCatch({
+    app$wait_for_js(widgetReady, timeout = E2E_TIMEOUT)
+    TRUE
+  }, error = function(e) FALSE)
+  if (!ready) return("visNetwork widget instance not found")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  ""
+}
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab draws a slash through the symbol of a
+   DECEASED animal and through no other", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_deceased")
+  on.exit(app$stop(), add = TRUE)
+
+  skipReason <- open_deceased_diagram(app)
+  if (nzchar(skipReason)) skip(skipReason)
+
+  ## The node's deceased field as the string "true", "false" or "undefined"
+  ## (a plain string, not JSON: this package does not depend on jsonlite).
+  get_deceased <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+      "const n = w.network.body.data.nodes.get('%s'); ",
+      "return n ? String(n.deceased) : 'null'; })()"
+    ), id))
+  }
+
+  ## The darkest grey level (0 black, 255 white) in the 5 x 5 canvas pixels
+  ## around the node's centre. An unmarked node's centre is its white fill; a
+  ## marked node's centre lies on the black slash.
+  get_centre_darkest <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
+      ".network; const p = net.canvasToDOM(net.getPosition('%s')); ",
+      "const cv = net.canvas.frame.canvas; const k = cv.width / cv.clientWidth; ",
+      "const d = cv.getContext('2d').getImageData(Math.round(p.x * k) - 2, ",
+      "Math.round(p.y * k) - 2, 5, 5).data; let lo = 255; ",
+      "for (let i = 0; i < d.length; i += 4) { ",
+      "lo = Math.min(lo, (d[i] + d[i + 1] + d[i + 2]) / 3); } return lo; })()"
+    ), id))
+  }
+
+  expect_equal(get_deceased("A"), "true",
+               info = "A's status is DECEASED, so its node is flagged")
+  for (id in c("B", "C", "D")) {
+    expect_equal(get_deceased(id), "false",
+                 info = sprintf("%s is not DECEASED, so its node is not flagged",
+                                id))
+  }
+
+  expect_lt(get_centre_darkest("A"), 100,
+            label = "darkest pixel at the DECEASED animal's centre")
+  for (id in c("B", "C", "D")) {
+    expect_gt(get_centre_darkest(id), 200,
+              label = sprintf("darkest pixel at %s's centre", id))
+  }
+
+  logs <- app$get_logs()
+  diagramErrors <- logs[logs$level == "throw" &
+                          grepl("vis|network|pedigreeDiagram", logs$message,
+                                ignore.case = TRUE), ]
+  expect_equal(nrow(diagramErrors), 0L,
+               info = "No visNetwork/diagram-related console error")
+})
+
+test_that(
+  "E2E: Pedigree Browser Diagram legend has a 'Deceased' row after the
+   six older ones, leaves a gap between every two labelled rows, and keeps
+   its text readable", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_legend_rows")
+  on.exit(app$stop(), add = TRUE)
+
+  skipReason <- open_deceased_diagram(app)
+  if (nzchar(skipReason)) skip(skipReason)
+
+  ## The legend is its own vis.Network (the widget's `legend`). Each labelled
+  ## legend node's bounding box covers its symbol AND its label, so one row's
+  ## label runs over the next row's symbol exactly when the next box starts
+  ## above this one's bottom. Returns "scale|label;top;bottom|label;top;bottom"
+  ## with the rows ordered top to bottom (world units, a plain string, not
+  ## JSON: this package does not depend on jsonlite).
+  legendRows <- app$get_js(paste0(
+    "(() => { const L = HTMLWidgets.find('#pedigree-pedigreeDiagram').legend; ",
+    "const rows = L.body.nodeIndices.map(id => ({ label: ",
+    "L.body.nodes[id].options.label, box: L.getBoundingBox(id) })).filter(",
+    "r => r.label && r.label.length > 0).sort((a, b) => a.box.top - b.box.top); ",
+    "return [L.getScale()].concat(rows.map(r => [r.label, r.box.top, ",
+    "r.box.bottom].join(';'))).join('|'); })()"
+  ))
+  parts <- strsplit(legendRows, "|", fixed = TRUE)[[1L]]
+  scale <- as.numeric(parts[[1L]])
+  cells <- strsplit(parts[-1L], ";", fixed = TRUE)
+  labels <- vapply(cells, `[[`, character(1L), 1L)
+  tops <- as.numeric(vapply(cells, `[[`, character(1L), 2L))
+  bottoms <- as.numeric(vapply(cells, `[[`, character(1L), 3L))
+
+  expect_equal(labels, c("Female", "Male", "Hermaphrodite", "Unknown",
+                         "Other / Unrecorded", "Affected", "Deceased"))
+  ## At least 6 world units clear between one row's box and the next's top.
+  expect_true(length(tops) > 1L &&
+                all(tops[-1L] - bottoms[-length(bottoms)] >= 6),
+              info = paste("legend row gaps:",
+                           toString(tops[-1L] - bottoms[-length(bottoms)])))
+  ## The legend shrinks to fit its canvas; 10 rows fit at 0.68. Spacing the
+  ## rows out must not buy the gap by making the labels unreadably small.
+  expect_gte(scale, 0.55)
+})
+
 ## S549 Finding #2 (BACKLOG.md Housekeeping, fixed S555): consanguineous-
 ## mating visual marker -- kinship2's own doubled/thickened mate-line
 ## convention for a blood-related couple, ported to makePedigreeMatingLayout()

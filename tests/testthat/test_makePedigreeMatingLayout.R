@@ -1950,3 +1950,105 @@ test_that(
   expect_length(result$duplicateToReal, 0L)
   expect_setequal(result$isolatedIds, c("A", "B"))
 })
+
+## ---- S1028 -- deceased marker (BACKLOG.md "Two kinship2 drawing features",
+## feature 1 of 2) ------------------------------------------------------------
+## kinship2 draws a diagonal slash through a deceased animal's symbol. The
+## owner's rulings (S1028): the marker is for an animal whose `status` reads
+## DECEASED and for nothing else. The exit date cannot say: it is filled for a
+## shipment as well as a death (the 3,694-animal ExamplePedigree.csv has 1,990
+## exit dates = 1,625 DECEASED + 365 SHIPPED), and a pedigree with no `status`
+## column marks nobody. The layout's nodes carry a logical `deceased` column,
+## never NA; R/modPedigree.R draws the slash from it. A repeat-appearance
+## node reads as its real animal (as it does for fill and label); a mating
+## union dot and a waypoint node are not animals and are never marked.
+
+.deceasedFixture <- function(status = NULL) {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1", "C2", "C3"),
+    sire = c(NA, NA, "P1", "P1", "P1"),
+    dam = c(NA, NA, "P2", "P2", "P2"),
+    sex = c("M", "F", "F", "M", "F"),
+    gen = c(0L, 0L, 1L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  if (!is.null(status)) ped$status <- status
+  ped
+}
+
+test_that(
+  "makePedigreeMatingLayout marks only an animal whose status reads DECEASED:
+   the nodes get a logical deceased column, TRUE for P1 alone, never NA", {
+  ped <- .deceasedFixture(c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN", NA))
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  expect_true("deceased" %in% names(nodes))
+  expect_type(nodes$deceased, "logical")
+  expect_false(anyNA(nodes$deceased))
+  expect_equal(nodes$deceased[match(ped$id, nodes$id)],
+               c(TRUE, FALSE, FALSE, FALSE, FALSE))
+})
+
+test_that(
+  "makePedigreeMatingLayout reads a factor status, the type qcStudbook()
+   returns, the same way as a character one", {
+  ped <- .deceasedFixture(factor(
+    c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN", NA),
+    levels = c("ALIVE", "DECEASED", "SHIPPED", "UNKNOWN")
+  ))
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  expect_type(nodes$deceased, "logical")
+  expect_equal(nodes$deceased[match(ped$id, nodes$id)],
+               c(TRUE, FALSE, FALSE, FALSE, FALSE))
+})
+
+test_that(
+  "makePedigreeMatingLayout marks nobody, and still returns the deceased
+   column, when the pedigree has no status column", {
+  nodes <- makePedigreeMatingLayout(.deceasedFixture())$nodes
+  expect_true("deceased" %in% names(nodes))
+  expect_identical(nodes$deceased, rep(FALSE, nrow(nodes)))
+})
+
+test_that(
+  "makePedigreeMatingLayout gives every repeat-appearance node of a DECEASED
+   animal the mark, and no mating-union dot or waypoint node ever has it,
+   in both edge styles", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    status = c("ALIVE", "ALIVE", "ALIVE", "ALIVE",
+               "DECEASED", "ALIVE", "ALIVE", "ALIVE"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
+  expect_true(length(dupIds) > 0L)
+
+  for (style in c("rectilinear", "direct")) {
+    nodes <- makePedigreeMatingLayout(loopPed, edgeStyle = style)$nodes
+    expect_true("deceased" %in% names(nodes), info = style)
+    marked <- nodes$id[nodes$deceased %in% TRUE]
+    expect_setequal(marked, c("8LKBV9", dupIds))
+    notAnimal <- grepl("^__(union|drop|bar)_", nodes$id)
+    expect_true(any(notAnimal), info = style)
+    expect_false(any(nodes$deceased[notAnimal] %in% TRUE), info = style)
+  }
+})
+
+test_that(
+  "makePedigreeMatingLayout's empty result, when every animal is isolated,
+   still carries the deceased column, as a zero-length logical", {
+  ped <- data.frame(
+    id = c("X", "Y"), sire = c(NA, NA), dam = c(NA, NA),
+    sex = c("M", "F"), gen = c(0L, 0L),
+    status = c("DECEASED", "ALIVE"), stringsAsFactors = FALSE
+  )
+  result <- suppressMessages(makePedigreeMatingLayout(ped))
+  expect_equal(nrow(result$nodes), 0L)
+  expect_true("deceased" %in% names(result$nodes))
+  expect_identical(result$nodes$deceased, logical(0L))
+})

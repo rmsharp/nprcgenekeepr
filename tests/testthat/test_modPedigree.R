@@ -1485,7 +1485,7 @@ test_that(
 test_that(
   "modPedigreeServer's diagram legend puts the 'Same animal, again' row
    directly above the three twin rows and leaves those rows, and the six
-   shape rows, unchanged", {
+   older shape rows, unchanged (S1028 adds a seventh, 'Deceased', after them)", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
@@ -1518,7 +1518,7 @@ test_that(
                         fixed = TRUE))
       expect_true(grepl(
         paste0('"label":["Female","Male","Hermaphrodite","Unknown",',
-               '"Other / Unrecorded","Affected"]'),
+               '"Other / Unrecorded","Affected","Deceased"]'),
         widgetJson, fixed = TRUE
       ))
     }
@@ -2604,4 +2604,162 @@ test_that(
                   info = "Diagram widget should render normally")
     }
   )
+})
+
+## ---- S1028 -- deceased marker (BACKLOG.md "Two kinship2 drawing features",
+## feature 1 of 2) ------------------------------------------------------------
+## An animal whose `status` reads DECEASED is drawn with a diagonal slash
+## through its symbol, as kinship2 does; nothing else marks one (owner ruling
+## S1028). visNetwork has no slash shape, so the widget carries a logical
+## `deceased` field on each node and an `afterDrawing` handler that strokes a
+## line through every node whose field is TRUE. The legend, a separate
+## vis.Network that cannot share that handler, gets a "Deceased" row whose
+## symbol is a small inline SVG: a circle with the same slash. Owner, S1028:
+## the slash must overhang a circle by the same amount in the diagram as in
+## the legend (the legend's amount), so both read ONE number, `reach`, the
+## distance from the centre to each end of the line along each axis as a
+## fraction of the circle's radius (the legend SVG's 19 of radius 22 = 0.864).
+##
+## Like the S921 tests above these match the serialized widget text and do
+## not parse it with jsonlite (not a dependency of this package).
+
+.deceasedStudbook <- function(status = c("DECEASED", "ALIVE", "SHIPPED")) {
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  if (!is.null(status)) ped$status <- status
+  ped
+}
+
+## The Diagram widget's serialized JSON for a studbook, as the app builds it.
+.deceasedWidgetJson <- function(studbook) {
+  captured <- new.env()
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      captured$json <- output$pedigreeDiagram
+    }
+  )
+  captured$json
+}
+
+## The `deceased` array the widget should carry: one element per node, in the
+## layout's node order, TRUE only for the animals named in `markedIds`.
+.expectedDeceasedField <- function(studbook, markedIds) {
+  studbook$gen <- c(0L, 0L, 1L)
+  ids <- makePedigreeMatingLayout(studbook)$nodes$id
+  paste0('"deceased":[',
+         paste(ifelse(ids %in% markedIds, "true", "false"), collapse = ","),
+         "]")
+}
+
+## The text of the afterDrawing handler, "" when the widget has none.
+.afterDrawingHandler <- function(widgetJson) {
+  hit <- regmatches(widgetJson,
+                    regexpr('"afterDrawing":"[^"]*"', widgetJson))
+  if (length(hit) == 0L) "" else hit
+}
+
+test_that(
+  "modPedigreeServer's diagram widget flags each node of a DECEASED animal
+   and no other with a deceased field", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  studbook <- .deceasedStudbook()
+  widgetJson <- .deceasedWidgetJson(studbook)
+  expect_true(grepl(.expectedDeceasedField(studbook, "A"), widgetJson,
+                    fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's diagram widget carries an afterDrawing handler that
+   strokes a line, sized from the node size, through the deceased nodes", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  handler <- .afterDrawingHandler(.deceasedWidgetJson(.deceasedStudbook()))
+  expect_true(nzchar(handler))
+  expect_true(grepl("deceased", handler, fixed = TRUE))
+  expect_true(grepl("lineTo", handler, fixed = TRUE))
+  expect_true(grepl("size", handler, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's diagram legend has a 'Deceased' row, drawn as an inline
+   SVG image with a diagonal line, after the older shape rows and before the
+   edge rows, so the last legend row stays the short '?' one", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  widgetJson <- .deceasedWidgetJson(.deceasedStudbook())
+  expect_true(grepl(
+    paste0('"label":["Female","Male","Hermaphrodite","Unknown",',
+           '"Other / Unrecorded","Affected","Deceased"]'),
+    widgetJson, fixed = TRUE
+  ))
+  expect_true(grepl("data:image/svg+xml", widgetJson, fixed = TRUE))
+  expect_lt(regexpr('"Deceased"', widgetJson, fixed = TRUE)[[1L]],
+            regexpr('"Same animal, again"', widgetJson, fixed = TRUE)[[1L]])
+  expect_true(grepl('"label":["Same animal, again","MZ","DZ","?"]',
+                    widgetJson, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's diagram marks nobody, yet still has the handler and
+   the 'Deceased' legend row, when the pedigree has no status column", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  studbook <- .deceasedStudbook(status = NULL)
+  widgetJson <- .deceasedWidgetJson(studbook)
+  expect_true(grepl(.expectedDeceasedField(studbook, character()),
+                    widgetJson, fixed = TRUE))
+  expect_true(nzchar(.afterDrawingHandler(widgetJson)))
+  expect_true(grepl('"Deceased"', widgetJson, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's slash overhangs a circle by the same amount in the
+   diagram as in the legend, the legend's 19 of radius 22 (0.864)", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  widgetJson <- .deceasedWidgetJson(.deceasedStudbook())
+
+  ## The legend's amount, read off its SVG: half the line's width over the
+  ## circle's radius. The line must also run at 45 degrees, bottom-left to
+  ## top-right, as kinship2's does.
+  uri <- regmatches(widgetJson,
+                    regexpr('data:image/svg\\+xml[^"]*', widgetJson))
+  expect_length(uri, 1L)
+  svg <- if (length(uri) == 1L) utils::URLdecode(uri) else ""
+  num <- function(attr) {
+    hit <- regmatches(svg, regexpr(sprintf("%s='[0-9.]+'", attr), svg))
+    if (length(hit) == 0L) NA_real_ else as.numeric(gsub("[^0-9.]", "", hit))
+  }
+  radius <- num("r")
+  x1 <- num("x1")
+  x2 <- num("x2")
+  y1 <- num("y1")
+  y2 <- num("y2")
+  expect_true(all(is.finite(c(radius, x1, x2, y1, y2))))
+  expect_equal(x2 - x1, y1 - y2)
+  legendReach <- (x2 - x1) / 2 / radius
+  expect_gt(legendReach, 0.84)
+  expect_lt(legendReach, 0.88)
+
+  ## The diagram's amount, read off its handler's `reach`.
+  handler <- .afterDrawingHandler(widgetJson)
+  hit <- regmatches(handler, regexpr("reach = [0-9.]+", handler))
+  expect_length(hit, 1L)
+  diagramReach <- as.numeric(sub("reach = ", "", hit))
+  expect_equal(diagramReach, legendReach, tolerance = 0.005)
 })
