@@ -13,149 +13,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
       released 3.0.0.
 
-- [ ] **Audit the internal and user-facing documentation for stale information and stale
-      diagrams** (owner-requested 2026-09-26; DECISION NEEDED (part 2 only; part 1, slice 2, finished S944), Effort S each) -- the owner noticed that two article PDFs showed stale figures.
-      **Method** (each slice is its own report, `docs/audits/DOCS_STALENESS_AUDIT_SLICE*`, per
-      `AUDIT_WORKSTREAM.md`): check every claim, number, screenshot and diagram against today's
-      code or output (regenerate the figure from the current source and compare; count, don't
-      recall); list each stale item with its source path; fix it or file it. Related, not
-      duplicated: the deferred `a2interactive` pass and the `inst/doc/` slimming item.
-      **Slices audited, and their wording findings FIXED** (each has a `CHANGELOG.md` entry that
-      carries the counts, and a report): 1 (S820) PDFs and article images -- the untracked PDF is
-      gone (`3a8c026bb`, S831), the tracked one was deleted and the one stale kinship2 image
-      regenerated (S884), two stale code comments fixed (S882, S883); 2 (S821) screenshots, NOT
-      fixed, see below; 3 (S822) article prose, fixed S823; 4 (S824) user manual, in-app guidance
-      pages and README, fixed S825-S828 and S830; 5 (S832) `a2interactive.Rmd`, fixed S833;
-      6a-6e (S834-S842) all 267 `man/` pages, fixed S835, S837, S839, S841, S844; 7a (S845)
-      `NEWS.Rmd`, fixed S846-S847; 7b (S852) living internal docs, 33 of 35 fixed S853; 7c (S860)
-      live `docs/planning/` plans, fixed S861, and a header sweep of all 84 plans (31 bannered),
-      S862; 8 (S868) `docs/research/` and older `docs/audits/`, a status banner on 26 files, S870.
-      **Still open.** (1) *Slice 2* (S821, `DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped
-      S927 into 7-8 sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its owner decisions
-      D2 to D5 are all ruled; D1, the order, was followed as the plan recommended; Phase 1, the session-ending crash, was fixed S928 and Phase 2, the capture scripts'
-      honest reporting, S930: one shared helper, `tests/testthat/helper-captureHarness.R`, and the
-      `NPRC_SHOT_DIR` folder setting; Phase 2's item (e), the full-height `potential_parents_results.png`
-      capture, needed no script change (S940: the fixed script's capture is 1300 x 7121, the committed
-      height; S927's 900 px was the crashed run); Phases 3a (S941; D2 ruled: delete the orphan), 3b (S942; D3 ruled:
-      accept the install date), 3c (S940) 4a (S943; D4 ruled: build the tables) and 4b (S944; D5 ruled: script all nine) are DONE, so slice 2 is finished). Measured S927:
-      37 of the 38 script-written `shiny_app_use/` images differ from the app (S821 said 31); the colony
-      script's tail failure was that crash (an animal with no birth date in a group), not a script bug,
-      and it is fixed; S928 checked it in the headless test driver, S929 by hand in a real Chrome window
-      (the owner: `ExamplePedigree.csv` on the Input tab, Form Groups with the defaults, Top ranked; the
-      page stayed live and the Genetic Diversity tab drew the heat map; "All available" was checked only
-      in S928's headless run, not by hand). Also: 12
-      images have no script (2 of the 3 CSV
-      pictures are stale from the code alone). S933 retook `read_and_check_pedigree.png` alone
-      (the Input tab's new no-birth-date warning made the old picture show Warnings 1; the app now shows 2 and the
-      guide text says 2), with the guide's own script into a scratch folder (81/81 steps), copied alone.
-      S934 retook `genetic_diversity_heatmap.png` alone (the heat map's names were cut off and tiny; the new
-      picture shows them whole at 22 pt, and S931's note), with the guide's own script into a scratch folder,
-      copied alone; that run was stopped after the heat map step, so it is not an 81/81 run.
-      S935 retook it again (the note under the grid now names the Production and Inbreeding columns), from a
-      full 81/81 run, copied alone.
-      S936 retook `read_and_check_pedigree.png` (the QC Summary boxes are colored now, and the capture script
-      waits for the yellow pop-up to close, which the container crop had cut off mid-sentence), from a full
-      82/82 run, copied alone.
-      S940 did Phase 3c: 10 pictures retaken (the six Breeding Groups ones, the heat map, Potential Parents
-      and both Mate Pair ones) from one full 82/82 run, copied by name. The Group Detail picture's "Group to
-      view" box had been blank since 2026-07-10 (the script typed "Group 6"; the box's values are numbers),
-      fixed with a test first (`test_captureHarness.R`); the heat map was retaken again (the groups are
-      living animals with birth dates now, so S935's note is gone); the Mate Pair caption said all alive
-      animals but the picture shows a custom list of six, fixed. Its two findings for the owner (the Group
-      Detail kinship caption and the unused animals' "Group 7" heading) were ruled S950: the guide's words
-      changed and the app did not; S961 then renamed the box "Unused animals" on the Groups, Statistics and Group Detail tabs.
-      S941 did Phase 3a: 14 pictures retaken (9 Pedigree Browser, 5 Diagram) from the colony script's full
-      81/81 run and the diagram script's 18/18 run, copied by name; each was 147 px taller than the
-      committed one (the longer Display Unknown IDs text) and now shows the `placeholder` column and no
-      stale QC pop-up. The owner ruled D2 (delete): `pb_unknown_displayed.png` and its capture step are
-      gone (test first, `test_captureHarness.R`). The legend picture shows the dashed "Same animal,
-      again" row and the dashed-line paragraph (`pedigree-diagram.qmd:50-56`) names it. Captions fixed:
-      "6-animal" is 21 animals, "the top union" is 8LKBV9 x his daughter FJIB3R, the affected picture
-      is 12 animals with 4 filled (not three), the names picture is its own 12-animal lineage, and the
-      first Pedigree Browser alt text. The two leftovers were the Direct-style item (fixed S949: the article's edge-style
-      section now shows a Direct picture, `diagram_direct_edge_style.png`, and says the first picture is the Rectilinear
-      default) and the pop-up item (the first item under Up Next).
-      S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex Pyramid, Summary Statistics x3, Genetic
-      Value x3) from the colony script's full 81/81 run, copied by name; sizes matched S927's measurements. D3
-      was ruled: accept. The Home picture shows the 2026-10-07 install date and a three-row navigation bar (De-
-      Identified Export and Genetic-Health Trends are new tabs). In S942 the Genetic Value results showed imports with
-      a recorded origin first, as the prose said (S956 retook both for the living-animals default) (the committed ones, taken 2026-08-10, had no-parent, no-origin animals first; why was not looked into); the
-      500-row picture's caption and alt text said rows 1 to 10 of 500, 50 pages (S956: 332 entries, 34 pages), not a High-to-Low transition
-      it never showed. Two findings for the owner were the Summary Statistics duplicates item (fixed S945: three
-      different pictures) and the Genetic Value row-names item (fixed S946: the table is built with no row names). Phases 4a and 4b then remained.
-      S943 did Phase 4a (D4 ruled: build the tables in the guide): the three spreadsheet pictures
-      (`ss_kinship_matrix`, `ss_first_order_relationships`, `ss_female_founders`) are deleted and the guide builds
-      the three tables itself, in the chunk labelled `summary-export-tables`
-      (`vignettes/articles/colony-manager-guide.qmd:468`), from the example file with the export buttons' own
-      `write.csv` lines; a kinship corner (the first animal with 3 or more offspring and its first three), and the
-      first 8 rows of the first-order and female-founders files. Measured first in the real app (the three export
-      buttons, headless): exported functions alone rebuild all three files byte for byte (about 5 s); the old
-      first-order picture matched 0 of its 22 rows (cause not looked into), the founders picture lacked
-      `fromCenter` and `placeholder`, the kinship picture listed the animals in another order. The gate is
-      `tests/testthat/test_guideExportTables.R` (9 blocks): what the guide shows must equal the same cells of
-      what the buttons write. S944 did Phase 4b (D5 ruled: script all nine): the nine Marker Genetics pictures are retaken by a new script,
-      `vignettes/articles/marker-genetics-screenshots.R` (one fresh app per picture; its five made-up data sets come from
-      `tests/testthat/helper-markerPictureFixtures.R`, copies of the hand-checked fixtures in `test_modMarkerGenetics.R`, and the
-      other four use files the package ships). Measured first in the real app (headless): every number in all nine old
-      pictures still matched; what had changed was the page (8 sub-tabs and 4 upload boxes now; the five oldest pictures
-      showed 0 to 5 sub-tabs and 1 or 2 boxes). The gate is `tests/testthat/test_markerPictureScreenshots.R` (16 blocks, 72
-      expectations): the script's pictures equal the guide's nine, every picture goes through a pop-up wait, and the data
-      run through the real module give the numbers the captions quote. **Slice 2 is finished:** all 46 pictures in
-      `shiny_app_use/` (measured S944: each is taken by one of the three capture scripts and cited by the guide or the Diagram
-      article) now come from a script, and the guide's abstract says "current as of 2026-10-08". Wording fixed in the
-      same pass: the Heterozygosity caption (its animals are X, Y, Z), the Candidate tab's "Current limitation" note
-      (issue #155 had fixed it), and the caption's "10 shared loci" (3 of 10 disagree). Its one finding for the owner, the
-      Candidate tab's blank table without `fromCenter`, was ruled and built S948 (the tab now says why).
-      (2) *Owner decisions about code, found by slices 4 and 6-8* (DECISION NEEDED, Effort S each;
-      reword the docs if the code changes; carried as recorded S870 and not re-checked against
-      today's code, except where a present-day check is named; the ids are in each slice's
-      report): 6a-6b, the ten oldest flags, re-checked S986
-      (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9 findings, 1 moderate, an invalid date in a
-      file with two date columns, fixed S987, PB7, `checkChangedColsLst()` counting every rename, fixed S988, and PB4, `checkRequiredCols()` ignoring an `NA` name, fixed S989; MC1 was fixed S923; the owner took the recommended option on all four rulings S986,
-      and the last two, the help sentences for MB3 and PD12, were fixed S990; MA3/MB14 are closed by a run and PB13, PA4 and PD1 stay as documented);
-      6c 8 candidates, re-checked S976
-      (`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`: all 11 claims still real, the
-      owner ruled on all of them S976; the first ruling, a blank allele as missing, shipped S977, the second, the F_ROH warning and notice, shipped S978, the third, the two small marker fixes, shipped S979);
-      6d 21 candidates, re-checked S991
-      (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`: 5 closed by later sessions (CA1, CA4, CB2, CC4, CD6), 16 still
-      true, 2 moderate: the Genetic Diversity tab stopped when a group held a living animal outside the Genetic Value population
-      (CA2: the owner took the recommended ruling S993 and it is fixed, `R/appServer.R:448` passes `sharedKinshipMatrix`, `NEWS.Rmd:451`),
-      and Download Plot on the Age-Sex Pyramid tab saved the packaged example's pyramid when nothing was loaded (CD5: the owner
-      took the recommended ruling S992 and it is fixed, `R/modPyramid.R:141,146`, `NEWS.Rmd:445`); 14 minor; one new stale help clause
-      (N1, `R/modGeneticDiversity.R:81-84`); **the housekeeping list was done S994** (N1's clause, CD1's `darkblue`, the CD2 and CC1 comments, CD4's ten
-      popovers, CA5's two alert sentences; gate `test_docsAuditHousekeepingWording.R`; the pyramid line still shows gray, the theme forces it);
-      **CC1 was built S997** (the owner chose "keep the pairs that fit, no message": a twin file is checked against the whole studbook and each place
-      gets only the pairs whose two animals it holds, `R/modPedigree.R:530`, `R/twinPairsWithin.R:20`, `NEWS.Rmd:89`; gate
-      `test_modPedigree_twinRelationsTrimmed.R`); **CB1 was built S998** (the owner chose "both cases, one sentence": with "separate files" the QC Summary says
-      "The genotype file was not used, so no genotypes are used. Reason: ..." for a genotype file the check refuses or the app cannot read, and a file with a short row
-      no longer greys out the page and ends the session; `R/readSeparateGenotypeFile.R`, `R/modInput.R:488-504`, `NEWS.Rmd:525`; gate `test_modInputSeparateGenotypeNote.R`);
-      **CB5 was built S999** (the owner took option (a): the Marker Genetics module's returned `isReady` answers FALSE, not an error, for a genotype file the module cannot use;
-      nothing in `R/` reads `isReady`, so the running app looks the same; `R/modMarkerGenetics.R:595,1347`, help `:479-481`, `NEWS.Rmd` Minor; gates `test_modMarkerGenetics.R`,
-      `test_modMarkerGeneticsIsReadyHelp.R`);
-      **CA3 was built S1000** (the owner chose to keep the leftover row and call it "Unused animals", with `groups()` left as it is and one new returned item, `groupLabels`:
-      the Genetic Diversity heat map's last row, when some animals fit no group, now reads "Unused animals" as the three Breeding Groups pages do; `R/modBreedingGroups.R` `boxLabels`,
-      `R/nameBreedingGroups.R`, `R/appServer.R:434-439`, `NEWS.Rmd:279-283`, the guide and the manual say it; gates `test_modBreedingGroups_groupLabels.R`, `test_nameBreedingGroups.R`,
-      `test_appServer_server.R`, `test_unusedAnimalsHeatMapWording.R`);
-      **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: CC5 is the owner's call,
-      and CB3, CB4, CC2, CC3 and CD3 stay as they are); 6e 46 candidates CE-CL, re-checked S1003
-      (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`: 1 closed by a later session, CF2 in S923; 45 still
-      true, 6 moderate (CE2 `fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for kinship overrides and
-      snapshot history, CI1 example-config API-key placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
-      **one new moderate, N1: the Mate Pair table pairs animals of unknown sex, lists them as sire or dam and pairs an
-      animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
-      table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
-      CE4 and CE5, the Cross-Center check and merge, fixed S1011 (`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`, `NEWS.Rmd`);
-      CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and the 13 small wrong statements fixed S1016 (`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9, the Changed Columns tab, was fixed S1020),
-      and the four
-      likely code defects of *slice 4* (this item's earlier "8" label was wrong), re-checked against today's code S966
-      (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`): all four are still real and the docs
-      already say so, except one wording line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
-      "largest average size" and now say "largest minimum group size (the score is the size of the smallest group)",
-      gate `tests/testthat/test_groupAddAssignHelp.R`; "or younger" was fixed S844). **Three rulings, all taken S968** (the owner took the
-      recommended option each time): the two do-nothing Genetic Value checkboxes were removed S969; the "Upload list" choice
-      was removed S970 and the candidate list it promised was built S973 ("My own list"); the unused-genotypes notice was redirected S970
-      to making the genotype columns work (its item below).
-
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
       `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
@@ -374,8 +231,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
       re-read the compressed result end to end.
       **Candidates for the next pass (measured S896, line counts after this pass; re-grep, sizes
-      not anchors):** the docs-audit item (47 lines; S890 already compressed it, so check for
-      regrowth first), this item's own history (41 lines), the paper item (24), the `inst/doc/`
+      not anchors):** this item's own history (41 lines), the paper item (24), the `inst/doc/`
       slimming item (21) and the trim verify-script item (20, now longer after S898). The
       verify-script item was one of the 7 parked Effort-S items; the owner kept all 7 open (S898),
       so it may be compressed (Candidate C, another of the 7, was closed S910). The standalone-package
@@ -450,6 +306,6 @@ the last one (the legend row for the dashed repeat-appearance link; see `CHANGEL
       pickup must get the original list from the owner. Open decisions: which papers, authorship,
       and what is new in 3.0 relative to the published reference (Vinson & Raboin 2015, *JAALAS*
       54(6):700-707, the package's key reference in `CLAUDE.md`, whose Project Overview also holds
-      the NIH grant acknowledgment). Natural dependencies, the owner's call: a released 3.0.0 to
-      cite (`DESCRIPTION` reads 2.0.0.9000 today) and the documentation audit above, so the
-      papers' figures match the software.
+      the NIH grant acknowledgment). Natural dependency, the owner's call: a released 3.0.0 to
+      cite (`DESCRIPTION` reads 2.0.0.9000 today); the documentation audit is finished (S1027,
+      `CHANGELOG.md`), so the papers' figures match the software.
