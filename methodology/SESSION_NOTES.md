@@ -98,24 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1023 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, the archive pointers that name `docs/archive/` while the shards sit in
-`methodology/archive/`, is finished and its block removed. The owner took "Fix the 40 live ones" (of three): the 23 pointers of `methodology/SESSION_NOTES.md` and 17 of `methodology/HANDOFFS.md` (80 link
-lines) now read `methodology/archive/X` with target `archive/X`, the shape the trim tool writes; the 17 inside six frozen `CHANGELOG` shards stay as history. Claim `3aa1445f8`, RED `325f0275c`, GREEN
-`5f4393906`, REFACTOR `e3de99906` (`archivePointerRowsOf()`, `tests/testthat/helper-archivePointers.R:42`). **No NEWS line** (internal). Not pushed (32 ahead of origin after this close-out).
-**Evidence:** the stored 52 was 57 pointers (114 links): five sit in older frozen shards; all 114 name a file that exists in `methodology/archive/`. The tool was already fixed (a dry-run `--cut 2026-10-10`
-of this file names `methodology/archive/SESSION_NOTES-through-2026-10-10.md`). A shard's `verify.sh` reads the trim commit, not the file (a damaged copy still passed). RED 12 blocks, 23 expectations, 2 failed
-(46 and 34 dead links); mutants 5 of 5 killed before and after the tidy-up; scratch before/after dry-run trims differ only in bytes; full suite 440 files, 4,056 blocks, 13,616 expectations, 0 failed, 0 errors,
-191 skipped; lint 0; `check` 0/0/0; ratchet 1/1 (results `80f4e23e5bc3`, the S1022 citation `eef2aafbd4a5` compared first).
-**Handoff evaluation of S1022: 9/10.** Helped: every cite held (`BACKLOG.md:168,170,182,366`, "27 ahead", the notes ceiling); its order matched the picker. Wrong: "52 archive pointers" (carried from S1001; 57).
-**Self: 8/10.** + counted every tracked file, not the three named; a negative control showed the proof reads the commit; ran the tool's dry run before offering "change the tool"; mutants before and after. -
-two uninformative baseline dry runs first; the zsh unsplit-variable slip again; a `sleep 240` the harness blocked. Learning 989.
-**Gotchas:** a dry-run trim is refused (`P1_UNDOCUMENTED`) while a commit is newer than the `CHANGELOG.md` frontier (use a scratch worktree after one throwaway commit); `--cut` needs a date inside the file's
-records; the `SESSION_NOTES.md` dry run says `SRF_UNDEFINED` "no prior archive" although 23 shards exist (not investigated); this file is about 900 B under its 25,000-token ceiling (about 56,750 B): condense before adding.
-**Next (my order; the owner gave none):** `BACKLOG.md:168` condense the 45 "Fixed:" bullets (DECISION NEEDED, M); `:364` compression (READY, L); `:180` contributor tutorial (DECISION NEEDED, M).
-Left as it was: `BACKLOG.md:149` still says "CL9 is the open item below" (three sessions now).
+### What Session 1024 Did
+**Deliverable:** `BACKLOG.md:168` condense the 45 "Fixed:" bullets of `NEWS.Rmd` General Fixes into a few grouped lines (IN PROGRESS; owner pick at the
+Phase 0 picker, item 1 of 4; docs only)
+**Started:** 2026-10-20 19:58 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. First step: re-measure the section (S1022 found 314 lines, 20,665 B, 53 bullets, 45 "Fixed:"),
+find which of the 17 test files that name `NEWS.Rmd` or `NEWS.md` quote a bullet, then put the how-far-to-group choice (one bullet / one per area / Major kept and
+Minor grouped) to the owner in plain words with the bullets each option keeps. `master` is 32 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1022 (condensed S950 to S1023; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1023 (condensed S950 to S1024; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1023: the archive pointers of the two live ledgers open their shard and proof files (owner: "Fix the 40 live ones"): 80 link lines in `methodology/SESSION_NOTES.md` (23 pointers) and
+`methodology/HANDOFFS.md` (17) now read `methodology/archive/X` with target `archive/X`; the 17 inside six frozen `CHANGELOG` shards stay as history; strict TDD; claim `3aa1445f8`, RED
+`325f0275c`, GREEN `5f4393906`, REFACTOR `e3de99906` (`archivePointerRowsOf()`, `tests/testthat/helper-archivePointers.R:42`); no NEWS line; not pushed; evaluation of S1022 9/10, self
+8/10 (Learning 989). **Gotchas kept:** a dry-run trim is refused (`P1_UNDOCUMENTED`) while a commit is newer than the `CHANGELOG.md` frontier (use a scratch worktree after one throwaway
+commit); `--cut` needs a date inside the file's records; a shard's `verify.sh` reads the trim commit, not the file; the `SESSION_NOTES.md` dry run says `SRF_UNDEFINED` "no prior
+archive" although 23 shards exist (not investigated); `BACKLOG.md:149` still says "CL9 is the open item below" (left as it was, four sessions now).
 S1022: a pedigree file with column headings and no animals keeps its columns in the Cross-Center merge (`R/resolveCrossCenterIds.R:36,42-43`; owner: "Keep every file's columns"); strict TDD;
 claim `7970c5a46`, RED `8b886a903`, GREEN `6b8acbf0a`, REFACTOR `cc5cdf908` (`tests/testthat/helper-emptyCrossCenterInputs.R:6,16`); no NEWS line; evaluation of S1021 9/10, self 8/10 (Learning 988).
 **Gotchas kept:** a download link in a hidden Shiny tab has `href=""` until the tab is shown; `rbind()` drops zero-row pieces; wait on a pid with `kill -0`, never a self-matching `pgrep -f`.

@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1024
+date: 2026-10-20
+status: pending
+active_task: IN PROGRESS -- BACKLOG.md:168 condense the 45 "Fixed:" bullets of NEWS.Rmd General Fixes into a few grouped lines (docs only): choose how far to group (one bullet, one per area, or Major kept and Minor grouped), then build it under strict TDD; owner pick at the Phase 0 picker, item 1 of 4
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1023
 date: 2026-10-20
 status: complete
