@@ -4,7 +4,7 @@
 \alias{makeGrpNum}
 \title{Deprecated alias for makeGroupNum}
 \usage{
-makeGrpNum(numGp)
+makeGrpNum(numGp = 1L)
 }
 \arguments{
 \item{numGp}{integer value indicating the number of groups that should be

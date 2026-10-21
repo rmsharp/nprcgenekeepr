@@ -13,7 +13,7 @@
 #' ## Create the initial grpNum list for three groups
 #' grpNum <- makeGroupNum(numGp = 3L)
 #' grpNum
-makeGroupNum <- function(numGp) {
+makeGroupNum <- function(numGp = 1L) {
   grpNum <- list()
   grpNum[1L:numGp] <- 1L:numGp
   grpNum
@@ -31,7 +31,7 @@ makeGroupNum <- function(numGp) {
 #'
 #' @seealso \code{\link{makeGroupNum}}
 #' @export
-makeGrpNum <- function(numGp) {
+makeGrpNum <- function(numGp = 1L) {
   .Deprecated("makeGroupNum")
   makeGroupNum(numGp)
 }

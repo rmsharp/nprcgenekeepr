@@ -4,7 +4,7 @@
 \alias{makeGroupNum}
 \title{Make the initial grpNum list}
 \usage{
-makeGroupNum(numGp)
+makeGroupNum(numGp = 1L)
 }
 \arguments{
 \item{numGp}{integer value indicating the number of groups that should be
