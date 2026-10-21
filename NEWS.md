@@ -573,7 +573,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
   position. `setExit()` finds a death or departure column in any letter
   case, `makeGeneticDiversityHeatmap()` stops and names a label shared
   by two groups, and the help of `focalAnimals` says that its `id`
-  column is a factor.
+  column is a factor. `makeGroupNum()` and `makeGrpNum()` make one group
+  when called with no number, as their help said they would.
 
 - Fixed (configuration file): A line starting with `#` is a comment
   wherever the file is read, so a site that copies the example file
