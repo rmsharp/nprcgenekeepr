@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1024
 date: 2026-10-20
-status: pending
-active_task: IN PROGRESS -- BACKLOG.md:168 condense the 45 "Fixed:" bullets of NEWS.Rmd General Fixes into a few grouped lines (docs only): choose how far to group (one bullet, one per area, or Major kept and Minor grouped), then build it under strict TDD; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the former BACKLOG.md:168 item, the 45 "Fixed:" bullets of NEWS.Rmd General Fixes (owner pick at the Phase 0 picker, item 1 of 4; the owner took "One bullet per area" of three and approved the seven bullets as drafted; strict TDD, every phase behind its own gate); the BACKLOG.md block is removed
+what_was_done: Claim 4b03bee43. Measured first: 53 bullets, 45 "Fixed:" (20 Major 8,788 B, 25 Minor 8,964 B) and 8 others (2,812 B); emptying the section failed 5 of the 17 NEWS-reading test files but only 3 quote a Fixed bullet (lines 407, 579, 588). RED d12583b3d: test_newsGeneralFixesGrouped.R, 8 blocks 218 expectations, 96 failed (46-fact table, one fact per former item, each checked against its own bullet). GREEN 28c6bfd79: NEWS.Rmd:397-561 holds the 7 New/Changed bullets as written, then seven "Fixed (area):" bullets (13, 7, 11, 5, 3, 3, 3 former items); section 20,665 B to 11,203 B; NEWS.md re-knitted, rest of file byte-identical. REFACTOR 2e6d96e9c: helper-newsBlocks.R replaces three copies of the NEWS-block reader (identical() on both files). Mutants 8 of 8 killed before and after; full suite 441 files, 4,064 blocks, 13,795 expectations, 0 failed, 0 errors, 191 skipped; lint 0; check 0/0/0. Not pushed (37 ahead of origin/master).
+next_steps: No owner order was given; my order: BACKLOG.md:352 compression (READY, L; recurring, last pass S896); :168 contributor tutorial (DECISION NEEDED, M); :394 two kinship2 drawing features (DECISION NEEDED, M each; strict TDD). Offered at the RED gate and not taken: check which of the 45 fixes repair a bug that never shipped in 2.0.0 (the v2.0.0 tag exists; by the S1022 rule those get no line). Left as it was: BACKLOG.md:149 still says "CL9 is the open item below" (four sessions now).
+key_files: NEWS.Rmd:397-561 (General Fixes) and the re-knitted NEWS.md; tests/testthat/test_newsGeneralFixesGrouped.R (fact table :50-102, area list :24, kept-bullet list :36, readers :106-139, gate blocks :196-239); tests/testthat/helper-newsBlocks.R:11,23 (newsTopBlock, newsEntries); test_newsReleaseState.R:80 and test_oneFileGenotypesWording.R:155 now call them; BACKLOG.md:168 (next item).
+gotchas: Emptying a section and running the files that name it over-reports (5 failed, 3 quote a Fixed bullet; the other 2 quote bullets that stay). A bullet starting "The old behavior meant ..." is the tail of the fix above it, not a New bullet. A new fix goes into its area's "Fixed (area):" bullet; the gate fails on a Fixed bullet with no area, an area twice or an area outside the seven. Re-knit with Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)' and compare head and tail with HEAD. The suite total rose by 179, not 218: test_newsReleaseState.R loops once per bullet and the block lost 39. A nohup job started with & inside a shell that then exits sends the launcher's notice, not the job's: wait on the pid with kill -0. SESSION_NOTES.md: the oldest blocks (S873-S910, 7,088 B) were merged into one of 3,415 B so the file ends 1.2 KB smaller; the Read tool stops at 25,000 tokens, so condense before adding.
+runtime_smoke: n/a -- docs and test only (no R/ change, no app behavior). NEWS.md was re-knitted and compared with HEAD outside General Fixes (identical), and the old and new test readers were compared with identical() on NEWS.Rmd, NEWS.md and empty input.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results d26b5f550080 · manifest aa983075d6a2
+changelog_ref: 4b03bee43
+commit: 2e6d96e9c
 ```
 
 ```handoff

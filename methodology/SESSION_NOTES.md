@@ -99,14 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1024 Did
-**Deliverable:** `BACKLOG.md:168` condense the 45 "Fixed:" bullets of `NEWS.Rmd` General Fixes into a few grouped lines (IN PROGRESS; owner pick at the
-Phase 0 picker, item 1 of 4; docs only)
-**Started:** 2026-10-20 19:58 CDT
-**Status:** Session claimed. Work beginning, phase PRE-RED. First step: re-measure the section (S1022 found 314 lines, 20,665 B, 53 bullets, 45 "Fixed:"),
-find which of the 17 test files that name `NEWS.Rmd` or `NEWS.md` quote a bullet, then put the how-far-to-group choice (one bullet / one per area / Major kept and
-Minor grouped) to the owner in plain words with the bullets each option keeps. `master` is 32 commits ahead of `origin/master`.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, the 45 "Fixed:" bullets of `NEWS.Rmd` General Fixes, is
+finished and its block removed. The owner took "One bullet per area" (of three) and approved the seven bullets as drafted: `NEWS.Rmd:397-561` holds the 7 New/Changed bullets as written,
+then one "Fixed (area):" bullet each for pedigree checks and Potential Parents (13 former items), Breeding Groups and Genetic Diversity (7), scripts (11), the configuration file (5),
+Genetic Value (3), genotype files (3), other tabs and the example file (3). Claim `4b03bee43`, RED `d12583b3d`, GREEN `28c6bfd79`, REFACTOR `2e6d96e9c`
+(`tests/testthat/helper-newsBlocks.R:11,23`). **No NEWS line** (this is the NEWS). Not pushed (37 ahead of origin after this close-out).
+**Evidence:** section 20,665 B to 11,203 B (`NEWS.md` 20,748 B to 11,240 B, re-knitted; rest of both files byte-identical); `tests/testthat/test_newsGeneralFixesGrouped.R` 8 blocks, 218
+expectations, RED 96 failed, GREEN 0; 46 facts, one per former item, each checked against its own bullet before the test was written; of the 17 NEWS-reading files only 3 quote a
+"Fixed:" bullet (lines 407, 579, 588), all passed unchanged; mutants 8 of 8 killed before and after REFACTOR; old and new readers `identical()` on both files; full suite 441 files,
+4,064 blocks, 13,795 expectations, 0 failed, 0 errors, 191 skipped (up 179, not 218: a per-bullet loop in `test_newsReleaseState.R` lost 39); lint 0; `check` 0/0/0; ratchet 1/1 (results
+`d26b5f550080`, the S1023 citation `80f4e23e5bc3` compared first).
+**Handoff evaluation of S1023: 9/10.** Helped: every cite held (`BACKLOG.md:168`, 45 Fixed = 20 Major + 25 Minor, 314 lines, 20,665 B, "17 test files", 46 in the development block); its
+order matched the picker; "condense before adding" was right (the Read tool cut this file at 25,274 tokens). Missing: nothing that cost time. Wrong: nothing.
+**Self: 8/10.** + measured before asking (which tests read the section, a fact table, the draft checked against the 3 pins before the owner saw it); every gate asked; an `identical()`
+proof for REFACTOR; REFACTOR taken (3 copies to 1). - three figures I gave at gates were wrong and corrected ("8 stay" was 7, "blocks 2 to 4 pass" was 6 of 8, "about 8 KB" was 11 KB
+with the kept bullets); a launcher's exit notice read as the job's; the zsh `=====` slip again. Learning 990.
+**Gotchas:** emptying a section over-reports (5 of 17 failed, 3 quote a Fixed bullet); "The old behavior meant ..." is the tail of the fix above it; a new fix goes into its area's
+`Fixed (area):` bullet (`test_newsGeneralFixesGrouped.R` fails otherwise); re-knit with `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` and compare head and tail with HEAD;
+wait on a `nohup` job's pid with `kill -0`; the oldest blocks (S873-S910, 7,088 B) were merged into one of 3,415 B, so this file ends 1.2 KB smaller: condense before adding.
+**Next (my order; the owner gave none):** `BACKLOG.md:352` compression (READY, L); `:168` contributor tutorial (DECISION NEEDED, M); `:394` two kinship2 drawing features (DECISION
+NEEDED, M each). Offered and not taken: which of the 45 fixes repair a bug that never shipped in 2.0.0 (the `v2.0.0` tag exists). Left as it was: `BACKLOG.md:149` still says "CL9 is the
+open item below" (four sessions now).
 
 ### Sessions 947-1023 (condensed S950 to S1024; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1023: the archive pointers of the two live ledgers open their shard and proof files (owner: "Fix the 40 live ones"): 80 link lines in `methodology/SESSION_NOTES.md` (23 pointers) and
@@ -353,46 +366,24 @@ shipped NEW-62 (strict TDD, no change for users): one internal `notifyProgress(u
 across `R/` first; compare the last receipt's ratchet citation with `.quality-gates-results.json` at Phase 0, before any `--run`; `devtools::document()` rewrites `man/nprcgenekeepr-package.Rd` (revert it); tally a RED
 with `as.data.frame(test_file(..., reporter = "silent"))`; `mockery::stub()` replaces a function only in the scope of the test that calls it; the `test-e2e-*` files are opt-in (`NPRC_RUN_E2E=true`).
 
-### Sessions 905-910 (condensed S911 to S987; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S905: tests only: `qcdRhesusPed()` (`tests/testthat/helper-qcdRhesusPed.R`) and two tests (`test_makePedigreeMatingLayout.R:780-828`) pin the QC'd layout of the bundled rhesus fixture (Learning 870); the owner stopped push-only sessions.
-S906: a decision, no code: the owner ruled "leave it" on the row-order item (rectilinear 1460 nodes / 190 jog in raw order vs 1412 / 142 in QC order; direct 782 either way). S907: the `data-raw/rhesusPedigree.R` docstring says only what is true
-(the object, `rhesusPedigree_fromCenter.csv` and `obfuscated_rhesus_mhc_ped.csv` agree on all 8 shared columns over 375 rows). S908: one internal `isAddedRecord()` (`R/isAddedRecord.R`) replaces four inline copies
-(`convertDate()`, `removeDuplicates()`, `removeUnknownAnimals()`, `correctParentSex()`); `getRecordStatusIndex()` left alone by ruling. S909: `highlightNearest` degree 6 lights everything degree 1 does for 373 of 375 animals; the owner kept it
-(`docs/audits/HIGHLIGHT_NEAREST_REACH_2026-10-05.md`). S910: 0 of 474 mate-lines span a generation row, so the owner closed Candidate C (`docs/audits/MATE_LINE_ROW_SPAN_2026-10-05.md`; its dashed-link legend row shipped S921).
-Evaluations 9/10, self 8/10 each; hashes are in `CHANGELOG.md`. **Gotchas kept:** to run a test file against another fixture, define `read.csv()` in the `env` given to `testthat::test_file()`; the QC'd rhesus copy has `sex` as a factor,
-`birth` as `Date`, plus `recordStatus` and `placeholder`; run a behaviour baseline twice at one commit; a delegation test needs a stub whose answer differs from the real rule; classify diagram edges by endpoint kind (`real`, `dup`, `union`),
-rows are 150 apart in `y`; macOS `sed -i` needs an extension argument, so edit scratch files with Python; an `Edit` whose `old_string` ends mid-line leaves a ragged line; a BACKLOG cite can understate a claim, so grep the whole file for the key word;
-removing a BACKLOG block shifts every later cite, so re-grep; re-run a stale-looking `gh run list` before trusting an old date; `quality_ratchet.py --run` takes minutes (background it); `gh issue view --comments` fails here, use
-`gh api repos/<repo>/issues/<n>/comments`; take `wc -c` after the last edit (Learning 871).
-
-### Sessions 902-904 (condensed S905, S944 and S1004; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-Three push-only sessions (fast-forwards `529bb031b..42b4fb0b8`, by SHA); every changed file was on the 21-entry `paths-ignore` list and **no CI run started**. The owner ruled in S905 to stop offering push-only sessions.
-**Gotchas kept:** a "no run" result needs a wait and a control query; use the full SHA for `gh run list --commit`; date ledger entries by local time (`date`), not UTC; push by SHA so the claim commit stays local.
-
-### Sessions 896-901 (condensed S897 to S902 and S939; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S896-S901: `BACKLOG.md` compression (S896), a `HANDOFFS.md` trim (S897), the CI `paths-ignore` list and its gate `test_workflowPathsIgnore.R` (S899), the verify-script failures reported
-upstream (`KJ5HST/methodology#93`, `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`); hashes and counts are in `CHANGELOG.md`.
-**Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; a "no run" result needs a wait and a control query on a commit that has runs; `quality_ratchet.py --run` can pass the 120 s
-foreground limit; zsh reads a leading `=` word as an expansion; a `*.md` wildcard would match shipped `README.md` and `NEWS.md`; do not `eval()` a whole test file to borrow its helpers; count verify scripts with a loop that
-prints only failures and a tally; a stored `BACKLOG.md` number can predate later code, so re-run it before a ruling; `AskUserQuestion` takes at most 4 questions per call; `BACKLOG.md` items are long wrapped lines, so edit by
-script with asserted anchors; `--cut <YYYY-MM-DD>` gives a clean day seam and the trimmer re-bases links in archived entries (a byte compare shows false differences, Learning 866); the trimmer writes its own ledger entry and
-never commits, so stage the ledger, shard and `.verify.sh` together; search ledger headings for both `S<N>` and `(Session N)` / `[issue #N]`; `.claude/worktrees/*/BACKLOG.md` are stale copies, so ignore them in greps; run `gh
-repo view <repo> --json hasIssuesEnabled` before promising to post; to see what a `.verify.sh` matched, run a patched scratch copy; diff a `HANDOFFS.md` record by `session: S<N>`.
-
-### Sessions 892-895 (condensed S896 and S962; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S892: `HANDOFFS.md` trimmed (24 receipts, 259,859 B to 149,289 B, `--force --write`; claim `d5e140140`, trim `4def45b83`). S893: two red-CI causes fixed in tests only
-(`sexCodeSourceAvailable()` in `test_sexCodes.R`; QP tolerances at `test_solveJointQP.R:437-439`; seam `helper-reorderedSolveQP.R`; claim `9c445bfa7`, close-out `0a71074e0`). S894 and S895 pushed
-(`2e2046efd..1fd37a244`, then `1d8902e32`) by SHA and read CI: all four push workflows green on `1fd37a244`. Evaluations 8 to 9/10, self 8/10 each.
-**Gotchas kept:** the `HANDOFFS.md` trim needs `--force` (`SRF_RED`; `--force` without `--write` is a dry run), the tool writes its ledger entry and never commits, and 262,144 B is the Read tool's
-refusal; use `withr::with_seed`; the shuffle wrapper takes exactly `(Dmat, dvec, Amat, bvec, meq)`; a constant an existing test reads is defined above it; push a close-out alone with
-`git push origin <sha>:master`; a workflow-level "success" does not name the matrix legs (`gh run view <id> --json jobs`); `pgrep -f` wait loops fire early (Learning 864); zsh reads a leading `=`
-word as an expansion.
-
-### Sessions 873-891 (condensed S932 and S965; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S873-S891: the `sexCodes` adoption (plan `docs/planning/sexcodes-adoption-plan.md`; `test_sexCodes.R` scans every `R/*.R`), `getPotentialParents()` split into helpers (S881), PED_GV
-decisions and builds, `BACKLOG.md` compression, and the red CI diagnosed in `docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`; the record is in `CHANGELOG.md`.
-**Gotchas kept:** never regenerate `gpp_pinned_*.rds` from post-split code, and name helper parameters unlike any column; single-bracket `sexCodes["male"]` is named and breaks `identical()`; a new bare sex letter in
-`R/` fails `test_sexCodes.R`; `data-raw/kinship2FidelityValidation.R` hard-codes `outDir` (line 67); `reportErrors` is the app's QC contract, so never change one function's return alone; `smallPed` is not a
-good-input fixture for `reportGV()`; default test runs skip the `test-app-*`/`test-e2e-*` files unless `NPRC_RUN_E2E=true`; recompute an open count from the report's table, never carry it; in zsh an unquoted
-`$var` of several flags is NOT split; `gh run view --log-failed` omits test-coverage's testthat output (use `--log`); `gh run list --commit` needs the full SHA; `core.hooksPath` is unset (the context-budget hook
-is in `.git/hooks`).
+### Sessions 873-910 (condensed S911 to S1024; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S873-S891: the `sexCodes` adoption, `getPotentialParents()` split into helpers (S881), PED_GV decisions and builds, and the red CI diagnosed in
+`docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. S892-S904: `HANDOFFS.md` trims (S892, S897), two red-CI causes fixed in tests only (S893), pushes by SHA (S894-S895, S902-S904:
+every changed file was on the `paths-ignore` list and no CI run started; the owner stopped push-only sessions, S905), `BACKLOG.md` compression (S896), the `paths-ignore` list and
+`test_workflowPathsIgnore.R` (S899), the verify-script failures reported upstream (`KJ5HST/methodology#93`). S905-S910: `qcdRhesusPed()` and two layout tests (S905), "leave it" on the
+row-order item (S906), `isAddedRecord()` replacing four inline copies (S908), `highlightNearest` kept (S909), Candidate C closed (S910; its dashed-link legend row shipped S921).
+Evaluations 8-9/10, self 8/10.
+**Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; `gh run list --commit` needs the full SHA and a "no run" result needs a wait and a
+control query; date ledger entries by local time (`date`), not UTC; `quality_ratchet.py --run` takes minutes (background it); `gh issue view --comments` fails here, use `gh api
+repos/<repo>/issues/<n>/comments`; a workflow "success" does not name its legs (`gh run view <id> --json jobs`); `gh run view --log-failed` omits test-coverage's testthat output (use
+`--log`); `pgrep -f` wait loops fire early (Learning 864); in zsh a leading `=` word is an expansion and an unquoted `$var` of several flags is NOT split; macOS `sed -i` needs an
+extension argument, so edit scratch files with Python; an `Edit` whose `old_string` ends mid-line leaves a ragged line; `BACKLOG.md` items are long wrapped lines, so edit by script with
+asserted anchors, and removing a block shifts every later cite, so re-grep; a stored count can predate later code, so re-run it before a ruling; `.claude/worktrees/*/BACKLOG.md` are
+stale copies; the `HANDOFFS.md` trim needs `--force` (`SRF_RED`; `--force` without `--write` is a dry run), the trimmer writes its own ledger entry and never commits (stage the ledger,
+shard and `.verify.sh` together), `--cut <YYYY-MM-DD>` gives a clean day seam and re-bases links in archived entries (a byte compare shows false differences, Learning 866), and 262,144
+B is the Read tool's refusal; to run a test file against another fixture define `read.csv()` in the `env` given to `testthat::test_file()`, and do not `eval()` a whole test file to
+borrow its helpers; the QC'd rhesus copy has `sex` as a factor, `birth` as `Date`, plus `recordStatus` and `placeholder`; a delegation test needs a stub whose answer differs from the
+real rule; classify diagram edges by endpoint kind (`real`, `dup`, `union`), rows are 150 apart in `y`; never regenerate `gpp_pinned_*.rds` from post-split code; single-bracket
+`sexCodes["male"]` is named and breaks `identical()`; a new bare sex letter in `R/` fails `test_sexCodes.R`; `reportErrors` is the app's QC contract, so never change one function's
+return alone; `smallPed` is not a good-input fixture for `reportGV()`; `AskUserQuestion` takes at most 4 questions per call; `core.hooksPath` is unset (the context-budget hook is in
+.git/hooks); take `wc -c` after the last edit (Learning 871).

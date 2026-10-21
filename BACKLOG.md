@@ -165,18 +165,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       in the plans and gap analysis with function names, and D's six parent-to-union edges that
       still differ in row.
 
-- [ ] **Condense the 45 "Fixed:" bullets of `NEWS.Rmd` General Fixes into a few grouped lines (DECISION NEEDED -- how far to
-      group, Effort M; docs only)** (owner-requested S1022, 2026-10-20) -- while closing the Cross-Center header-only item the
-      owner judged a one-sentence NEWS line for a small fix "overly detailed" and asked that bug fixes be grouped as one category
-      instead of listed one by one (that fix got no line: the new tab's bullet already promises it). Measured S1022: `## General
-      Fixes` (`NEWS.Rmd:397-710`) is 314 lines and 20,665 B with 53 bullets, 45 of them "Fixed:" (20 under Major, 25 under
-      Minor); the whole development block has 46. Each says what broke and what it does now; one (`NEWS.Rmd:686`, "several helper
-      functions for scripts gave a wrong or confusing answer") already groups several. **Decision first:** (a) one bullet for
-      all of them; (b) a few bullets, one per area (pedigree checks, breeding groups, exports, scripts); (c) keep the Major ones
-      and group the Minor ones. Then re-knit `NEWS.md` (read `git diff NEWS.md`) and run the 17 test files that name
-      `NEWS.Rmd` or `NEWS.md` (wording gates such as `test_newsReleaseState.R` and `test_breedingGroupsSourceChoices.R`): read
-      each before cutting a bullet it may quote, and move its pin rather than loosen it. NEWS keeps release-state wording.
-
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
       `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
