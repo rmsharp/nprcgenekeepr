@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1028
+date: 2026-10-21
+status: pending
+active_task: IN PROGRESS -- one of the two kinship2 drawing features the Diagram tab lacks (owner pick at the Phase 0 picker, item 2 of 4): a deceased marker (which pedigree column marks deceased is the owner's call) or more than one affected condition; which of the two is settled with the owner before RED
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1027
 date: 2026-10-21
 status: complete

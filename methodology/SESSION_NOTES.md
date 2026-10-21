@@ -98,30 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1027 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, the leftover of S1026's pick; strict TDD, every phase behind its own gate):** the last six docs-audit rulings are taken and the
-docs-audit item (`BACKLOG.md` lines 16-158, 143 lines) is off `BACKLOG.md` (`wc -l` 455 to 311). Each finding was re-measured first; the code at every site is as the 6d report describes it (lines moved).
-The owner took the recommended option twice. CC5 Export Demographics: leave the code and say in the manual what it saves (`vignettes/manual_components/_orip_reporting.Rmd:31-32`, the owner's sentence as
-shown). CB3, CB4, CC2, CC3, CD3: leave all five. The 6d report records both (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:225`, "Update S1027"); `CHANGELOG.md` carries the removed item's record.
-Claim `0d24cb8e1`, RED `6ee63a460`, GREEN `640da10be` `f65f10a2d` `a064ed66c`, REFACTOR `01d259f5b` (SR1 uses the shared `expectWording()`). Not pushed (63 ahead of origin after this close-out).
-**Evidence:** `tests/testthat/test_docsAuditSixRulings.R` 5 blocks, 22 expectations; RED 12 failed (SR3 6 of 7: its "no Export Demographics" check passed at HEAD), GREEN 0; mutants 18 of 18 killed, before and
-after REFACTOR, tree identical after; LE1 in `test_docsAuditLooseEnds.R` edited in RED (10 blocks, 53 expectations); the 108 files that name `BACKLOG.md` or `ROADMAP.md`: 1,469 blocks, 0 failed, 20 skipped
-(two shinytest2 files, as S1026); full suite 444 files, 4,093 blocks, 13,934 expectations, 0 failed, 0 errors, 191 skipped (as S1026); lint 0; plain `devtools::check()` 0/0/0; ratchet 1/1 (results
-`a4950b4645b5`, the S1026 citation `16e724fa41df` compared first). No `R/` change, no NEWS line (a manual sentence, no feature).
-**Handoff evaluation of S1026: 8/10.** Helped: the block-off condition (CC5 plus five "leave") was exactly right and the one-session estimate held; `BACKLOG.md:16-157`, `:159`, `:385`, `:343` and the report's `:116`
-all held; the ratchet hash was there to compare. Missing: nothing on CC5's reach (an ONPRC-only tab; the report had it). Wrong: "rows `:110-115`" for the five (CD3 is row `:119`; `:110-115` also holds CB5 and CC1, built).
-**Self: 8/10.** + measured all six before asking and found two claims that no longer hold (CC2 "read by `appServer`": nothing in `R/` reads it; five cites had moved); the measured LabKey `demographics`
-fact made the recommended option; found the two BACKLOG items that pointed at the removed one and the two LE1 blocks that read its text before removing it; every gate asked; mutants twice. - three silent
-stretches nudged (inside runs of quick reads and greps); the option text said "ONPRC's own EHR" where I had measured only the package's LabKey query name; two duplicate monitors; the GREEN 3 message says
-312 lines (a split count; `wc -l` says 311). Learning 993.
-**Gotchas:** grep the tests for phrases of a BACKLOG block before removing it (LE1 required two); live comments still cite removed lines (`R/reportGV.R:298` "BACKLOG.md:139", `R/modBreedingGroups.R:552` ":149",
-`data-raw/buildJmacExample.R:6` ":179", `data-raw/obfuscated_rhesus_mhc_ped_with_genotypes.R:11` ":139"): dated records by the S1026 ruling, left; the 6d report's Rulings section still opens "None taken yet." above its
-Update paragraphs (dated record, left); `quality_ratchet.py --run` overwrote the results file (compare `a4950b4645b5` next time); wait on a background job's pid with `kill -0` (Monitor), no foreground `sleep`.
-**Next (my order; the owner gave none):** (1) `BACKLOG.md:16` contributor tutorial (DECISION NEEDED, M): the owner first decides (a) `CONTRIBUTING.md` plus article or article alone, (b) how much strict TDD outsiders
-are asked to follow, (c) audience. (2) `BACKLOG.md:241` two kinship2 drawing features (DECISION NEEDED: which column marks "deceased"; M each). (3) `BACKLOG.md:200` compression (311 lines now, the smallest in
-the file's history I have seen; low value). The docs-audit work has no open item left. `methodology/SESSION_NOTES.md` is near its 25,000-token commit-hook line: the next claim condenses before adding.
+### What Session 1028 Did
+**Deliverable:** ONE of the two kinship2 drawing features the Diagram tab lacks (IN PROGRESS; Phase 0 picker, "Two kinship2 drawing features", item 2 of 4, S1027's own suggested order and not an
+owner order; the owner named the item, not which of the two): (1) a deceased marker (a diagonal slash over the symbol; DECISION NEEDED: which pedigree column marks an animal deceased) or (2) more than
+one affected condition (the input shape and the legend text), `BACKLOG.md:241-252`. The item says each is its own session, so which one and the ruling are settled with the owner before RED.
+**Started:** 2026-10-21 18:10 CDT
+**Status:** Session claimed. Work beginning. Pre-RED: measuring `death`, `exit` and `status` in the example pedigrees and the Diagram path before any question.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
 
-### Sessions 947-1026 (condensed S950 to S1027; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1027 (condensed S950 to S1028; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1027: the last six docs-audit rulings are taken and the docs-audit item (`BACKLOG.md:16-158`, 143 lines) is off `BACKLOG.md` (455 to 311 lines; owner pick at the picker). CC5 Export Demographics: leave
+the code and say in the manual what it saves (`vignettes/manual_components/_orip_reporting.Rmd:31-32`); CB3, CB4, CC2, CC3, CD3: leave all five (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:225`).
+Strict TDD; claim `0d24cb8e1`, RED `6ee63a460`, GREEN `640da10be` `f65f10a2d` `a064ed66c`, REFACTOR `01d259f5b` (`expectWording()`); evaluation of S1026 8/10, self 8/10 (Learning 993).
+**Gotchas kept:** grep the tests for phrases of a BACKLOG block before removing it (LE1 needed two); live comments still cite removed lines (`R/reportGV.R:298`, `R/modBreedingGroups.R:552`,
+`data-raw/buildJmacExample.R:6`), dated records by the S1026 ruling; `quality_ratchet.py --run` overwrites the results file (compare the last receipt's hash first); wait on a job's pid with `kill -0`.
 S1026: the docs-audit loose ends of `BACKLOG.md` measured and settled (owner pick at the picker): the stale CL9 line is corrected and the "(3) Left unsettled" paragraph is removed (460 to 455
 lines); `methodology/ROADMAP.md:33-34` says slice 3 (slide decks) was never started and slice 4 (the manual) is not done; the five RO3 ids are done; Learning 347's 53 reproduces, 55 now
 (`docs/architecture/module-contract.md:36-40`); D's "6 of 474" edges are jog legs, not parents; the owner ruled to leave the `file:line` cites as dated records. Strict TDD; claim `332474a2f`,
