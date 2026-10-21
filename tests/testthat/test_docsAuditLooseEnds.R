@@ -33,19 +33,19 @@ root <- function() testthat::test_path("..", "..")
 
 ## -- LE1 ---------------------------------------------------------------------
 
-test_that("LE1: BACKLOG.md says CL9 was fixed and drops the settled paragraph", {
+## S1027: the whole docs-audit item came off BACKLOG.md (its last six rulings
+## were taken), so the file no longer holds the CL9 line or the CC5 sentence
+## these two blocks once required. They keep the check that the old paragraphs
+## stay gone; the CC5 ruling is in the 6d re-check report and pinned by
+## test_docsAuditSixRulings.R (SR2).
+test_that("LE1: BACKLOG.md drops the stale CL9 line and the settled paragraph", {
   text <- plainSource("BACKLOG.md")
   expectWording(
     text,
-    now = c("CL9, the Changed Columns tab, was fixed S1020"),
+    now = character(0L),
     gone = c("CL9 is the open item below",
              "Left unsettled by the doc slices",
              "RO8", "RO3", "AR3", "parent-to-union"))
-})
-
-test_that("LE1 (green at HEAD): the CC5 ruling stays in BACKLOG.md", {
-  text <- plainSource("BACKLOG.md")
-  expect_equal(occurrences(text, "CC5 is the owner's call"), 1L)
 })
 
 ## -- LE2 ---------------------------------------------------------------------
