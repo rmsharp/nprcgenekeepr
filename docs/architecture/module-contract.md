@@ -35,8 +35,10 @@ Rules, in the order they bind:
    dead weight -- delete it or wire it. "Consumer" includes the test suite, not
    only `appServer` (see `PROJECT_LEARNINGS.md` Learning 347(a): `modSummaryStats`'
    12 reactives were nearly deleted as "unread" because only `appServer`'s wiring
-   was checked -- Learning 347 counted about 53 real test assertions across 4 files
-   reading them; that figure was not re-counted).
+   was checked -- Learning 347 counted 53 test lines across 4 files reading them
+   (S376, when the module returned 12 reactives); S1026 counted the same way and
+   got 53 at S376's commit and 55 in those four files now, with the 14 reactives
+   it returns today).
 5. **Upstream absence is `req()`; upstream *malformedness* is an error that
    surfaces.** A blanket `tryCatch(..., error = function(e) NULL)` at the seam
    between modules is forbidden -- it makes a shape mismatch look like "no data
