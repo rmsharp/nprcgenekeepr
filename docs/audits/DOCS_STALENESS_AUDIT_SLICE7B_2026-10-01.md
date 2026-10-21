@@ -94,3 +94,5 @@ Slice 7b audited. Fixes are not applied in this session (the item is one audit r
 (`docs/planning/`, `docs/research/`, older `docs/audits/`).
 
 **Fixes applied S853:** 33 of 35 (all but CV1 and CV2, which are code decisions). RO8 and the other ids in RO3 were reworded as not recorded / not re-checked, not settled. AR3's figure is attributed to Learning 347, not re-counted.
+
+**Update S1026 (2026-10-21):** RO8, the five ids of RO3 and AR3 are settled, measured, not reworded. Quarto slice 3 (slide decks) was never started and slice 4 (the manual leaves the CRAN vignette set) is not done, and NEW-45, PED-1, NEW-17, NEW-13 and NEW-23 are done and in the code (both in `methodology/ROADMAP.md`); AR3's 53 reproduces at S376's commit and is 55 in the same four files now (`docs/architecture/module-contract.md`). Gate: `tests/testthat/test_docsAuditLooseEnds.R`.

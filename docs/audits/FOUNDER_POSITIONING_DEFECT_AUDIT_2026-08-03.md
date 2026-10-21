@@ -1,6 +1,6 @@
 # Pedigree Diagram Founder-Positioning Defect — Real-Fixture Characterization Audit
 
-> **Status as of 2026-10-02 (S870):** Fixed in S472 (`904d74b75`; issues #143 and #144, closed). Re-run 2026-10-02 on the same 375-row fixture: 6 of 474 parent-to-union edges still have the parent at a different row than the union (this report measured 147 of 237 units); the 6 are not investigated. Finding #4 (the `rhesusPedigree.R` docstring) is still open; see BACKLOG. The body below is the dated record as written; it was not edited.
+> **Status as of 2026-10-02 (S870):** Fixed in S472 (`904d74b75`; issues #143 and #144, closed). Re-run 2026-10-02 on the same 375-row fixture: 6 of 474 parent-to-union edges still have the parent at a different row than the union (this report measured 147 of 237 units); the 6 were traced 2026-10-21 (S1026) and none starts at a parent: each is the last leg out of a rectilinear routing jog (the connector dips below the shared row and comes back), and with `edgeStyle = "direct"` all 474 parent-to-union pairs sit on one row (`tests/testthat/test_docsAuditLooseEnds.R`). Finding #4 (the `rhesusPedigree.R` docstring) is still open; see BACKLOG. The body below is the dated record as written; it was not edited.
 
 **Date:** 2026-08-03 · **Session:** S470 · **Type:** code-defect characterization audit
 (investigation only — no code changes, no fix designed)

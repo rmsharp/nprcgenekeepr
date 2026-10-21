@@ -31,6 +31,8 @@ Read-only audit. Nothing in the repo was changed except this report and the sess
 
 > **Update S870 (2026-10-02):** recommendations 1 and 2 were applied: a status banner on the 26 files with a moderate finding (4 in `docs/research/`, 22 in `docs/audits/`) and the two numbers corrected inline. Recommendations 3-4 are still open.
 
+> **Update S1026 (2026-10-21):** recommendation 3's `file:line` question: the owner ruled to leave the `file:line` cites as dated records (measured S1026: 1,845 cites in 81 of the 92 pages under `docs/planning` and `docs/research`, 11 of them past the end of the file they name; the gap analysis banner already says to find the function by name), so no plan or research page was edited. Recommendation 4 was traced: the 6 are not parents, each is the last leg out of a rectilinear routing jog, and with `edgeStyle = "direct"` all 474 parent-to-union pairs sit on one row (`tests/testthat/test_docsAuditLooseEnds.R`).
+
 1. Add a one-line "Status as of 2026-10-02" banner, naming what superseded the report, to the files with a moderate
    finding. Leave the bodies as dated records. Candidates by group:
    - **A:** `kinship2-alignped4-joint-positioning-mechanism` (A4, A5), `labkey-integration-options` (A13),
