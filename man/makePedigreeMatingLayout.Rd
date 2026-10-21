@@ -14,7 +14,9 @@ makePedigreeMatingLayout(
 \arguments{
 \item{ped}{data frame with \code{id}, \code{sire}, \code{dam},
 \code{sex}, and \code{gen} columns, same contract as
-\code{\link{makePedigreeDiagramData}}.}
+\code{\link{makePedigreeDiagramData}}. An optional \code{status}
+column marks deceased animals: see the \code{deceased} column of the
+returned \code{nodes}.}
 
 \item{edgeStyle}{one of \code{"rectilinear"} (default), which routes
 mate-line and sibship-bar edges through invisible waypoint nodes so
@@ -45,7 +47,11 @@ twinRelations = twinRelations)}.}
 }
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
-\code{title}, \code{size}, \code{color.background}, \code{x},
+\code{title}, \code{size}, \code{color.background},
+\code{deceased} (logical, never \code{NA}: \code{TRUE} for the node of
+an animal whose \code{status} reads \code{DECEASED}, and for each of its
+repeat-appearance nodes, \code{FALSE} for every other node and for all of
+them when \code{ped} has no \code{status} column), \code{x},
 \code{y}; \code{color.border} is added under
 \code{edgeStyle = "rectilinear"}), \code{edges} (\code{from},
 \code{to}, \code{dashes}, \code{smooth.enabled}, \code{smooth.type},

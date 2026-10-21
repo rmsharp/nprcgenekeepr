@@ -1616,7 +1616,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'
 #' @param ped data frame with \code{id}, \code{sire}, \code{dam},
 #'   \code{sex}, and \code{gen} columns, same contract as
-#'   \code{\link{makePedigreeDiagramData}}.
+#'   \code{\link{makePedigreeDiagramData}}. An optional \code{status}
+#'   column marks deceased animals: see the \code{deceased} column of the
+#'   returned \code{nodes}.
 #' @param edgeStyle one of \code{"rectilinear"} (default), which routes
 #'   mate-line and sibship-bar edges through invisible waypoint nodes so
 #'   they render as a strict right angle, kinship2-style, or
@@ -1642,7 +1644,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   \code{kinship(ped$id, ped$sire, ped$dam, ped$gen,
 #'   twinRelations = twinRelations)}.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
-#'   \code{title}, \code{size}, \code{color.background}, \code{x},
+#'   \code{title}, \code{size}, \code{color.background},
+#'   \code{deceased} (logical, never \code{NA}: \code{TRUE} for the node of
+#'   an animal whose \code{status} reads \code{DECEASED}, and for each of its
+#'   repeat-appearance nodes, \code{FALSE} for every other node and for all of
+#'   them when \code{ped} has no \code{status} column), \code{x},
 #'   \code{y}; \code{color.border} is added under
 #'   \code{edgeStyle = "rectilinear"}), \code{edges} (\code{from},
 #'   \code{to}, \code{dashes}, \code{smooth.enabled}, \code{smooth.type},
@@ -1727,6 +1733,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
                               shape = character(), title = character(),
                               size = numeric(), stringsAsFactors = FALSE)
     emptyNodes$color.background <- character()
+    emptyNodes$deceased <- logical()
     emptyNodes$x <- numeric()
     emptyNodes$y <- numeric()
     emptyEdges <- data.frame(from = character(), to = character(),
@@ -1823,6 +1830,18 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     .affectedColor(affectedOf[ids])
   }
 
+  # S1028 deceased marker: an animal is deceased when its status reads
+  # DECEASED, and only then (the exit date cannot say: it is filled for a
+  # shipment too). No status column, or a blank status, marks nobody.
+  deceasedOf <- stats::setNames(
+    if ("status" %in% names(ped)) {
+      as.character(ped$status) %in% "DECEASED"
+    } else {
+      rep(FALSE, length(realIds))
+    },
+    realIds
+  )
+
   # Issue #136 (D1-D5, D7, D10), independent implementation of the same
   # optional name contract makePedigreeDiagramData() gets. Applied to BOTH
   # real individuals and their duplicate-occurrence nodes (looked up by
@@ -1878,6 +1897,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   # explicit white fill for every id when affectedOf is all-NA (no affected
   # column at all).
   realNodes$color.background <- .affectedColorForVec(realIds)
+  realNodes$deceased <- unname(deceasedOf[realIds])
 
   dupNodes <- if (nrow(duplicates) > 0L) {
     df <- data.frame(
@@ -1893,12 +1913,14 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
       size = 25L, stringsAsFactors = FALSE
     )
     df$color.background <- .affectedColorForVec(duplicates$realId)
+    df$deceased <- unname(deceasedOf[duplicates$realId])
     df
   } else {
     df <- data.frame(id = character(), label = character(),
                       shape = character(), title = character(),
                       size = numeric(), stringsAsFactors = FALSE)
     df$color.background <- character()
+    df$deceased <- logical()
     df
   }
 
@@ -1917,12 +1939,14 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     # visually distinct from real/duplicate nodes on purpose). The column
     # must still exist here for rbind() to align with realNodes/dupNodes.
     df$color.background <- NA_character_
+    df$deceased <- FALSE
     df
   } else {
     df <- data.frame(id = character(), label = character(),
                       shape = character(), title = character(),
                       size = numeric(), stringsAsFactors = FALSE)
     df$color.background <- character()
+    df$deceased <- logical()
     df
   }
 
@@ -2399,13 +2423,14 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     nn$size <- rep(0L, nrow(nn))
     nn$color.background <- rep("rgba(0,0,0,0)", nrow(nn))
     nn$color.border <- rep("rgba(0,0,0,0)", nrow(nn))
+    nn$deceased <- rep(FALSE, nrow(nn))
     nn
   } else {
     data.frame(id = character(), x = numeric(), y = numeric(),
                label = character(), shape = character(),
                title = character(), size = integer(),
                color.background = character(), color.border = character(),
-               stringsAsFactors = FALSE)
+               deceased = logical(), stringsAsFactors = FALSE)
   }
   finalNodes <- rbind(keptNodes, newNodes[, names(keptNodes)])
 
@@ -2726,7 +2751,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
       added[[col]] <- if (is.character(template[[col]])) {
         NA_character_
       } else if (is.logical(template[[col]])) {
-        NA
+        FALSE
       } else {
         NA_real_
       }

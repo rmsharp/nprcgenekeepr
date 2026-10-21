@@ -3,6 +3,92 @@
 
 # Pedigree Browser Shiny Module
 
+#' How far the deceased slash reaches past a symbol's centre
+#'
+#' S1028. The distance from the centre of a circle to each end of the slash,
+#' along each axis, as a fraction of the circle's radius. One number for the
+#' slash the diagram draws and the slash in the legend's picture, so the two
+#' overhang a circle by the same amount (the legend's amount: the line runs
+#' 19 out from the centre of a circle of radius 22, 1.22 times the circle's
+#' outline along the diagonal). The diagram scales it by each shape's outline
+#' (\code{.deceasedOutlineFactors}) so every shape is overhung by that same
+#' amount.
+#' @noRd
+.deceasedSlashReach <- 19 / 22
+
+#' Each node shape's outline distance along the slash diagonal
+#'
+#' S1028. How far a shape's outline is from its centre along the diagonal of
+#' the slash, in units of the node \code{size}: a circle 1, a square its
+#' corner (the square root of 2), a diamond its edge (1 over the square root
+#' of 2), a triangle its base corner, a star about 0.66 (measured on the
+#' canvas, as are the others' analytic values). The names are vis.js shape
+#' names, the shapes \code{makePedigreeMatingLayout()} gives its nodes.
+#' @noRd
+.deceasedOutlineFactors <- c(dot = 1, square = sqrt(2), diamond = 1 / sqrt(2),
+                             triangle = 1.386, star = 0.66)
+
+#' The afterDrawing handler that strokes the deceased slash
+#'
+#' S1028. visNetwork has no slash shape, so after each draw this strokes a
+#' line from bottom-left to top-right through every node whose \code{deceased}
+#' field is \code{TRUE}, sized from the node's own \code{size} and shape. The
+#' text uses single quotes only: it travels inside a JSON string.
+#' @param reach see \code{.deceasedSlashReach}.
+#' @param outline see \code{.deceasedOutlineFactors}.
+#' @return A JavaScript function, as a character string.
+#' @noRd
+.deceasedSlashHandler <- function(reach = .deceasedSlashReach,
+                                  outline = .deceasedOutlineFactors) {
+  sprintf(paste0(
+    "function(ctx) {\n",
+    "  var net = this;\n",
+    "  var reach = %s;\n",
+    "  var outline = {%s};\n",
+    "  var marked = net.body.data.nodes.get(",
+    "{filter: function(n) { return n.deceased === true; }});\n",
+    "  if (marked.length === 0) { return; }\n",
+    "  ctx.save();\n",
+    "  ctx.lineWidth = 3;\n",
+    "  ctx.lineCap = 'round';\n",
+    "  ctx.strokeStyle = '#000000';\n",
+    "  marked.forEach(function(n) {\n",
+    "    var p = net.getPosition(n.id);\n",
+    "    var r = (n.size || 25) * reach * (outline[n.shape] || 1);\n",
+    "    ctx.beginPath();\n",
+    "    ctx.moveTo(p.x - r, p.y + r);\n",
+    "    ctx.lineTo(p.x + r, p.y - r);\n",
+    "    ctx.stroke();\n",
+    "  });\n",
+    "  ctx.restore();\n",
+    "}"
+  ), format(reach, digits = 4L),
+  paste0(names(outline), ": ", format(round(outline, 4L), trim = TRUE),
+         collapse = ", "))
+}
+
+#' The legend's picture of a deceased animal: a circle with the slash
+#'
+#' S1028. The legend is its own vis.Network and cannot share the diagram's
+#' handler, so its \dQuote{Deceased} row is an inline SVG image: a circle of
+#' radius 22 with the slash drawn \code{reach} of that radius out from the
+#' centre along each axis.
+#' @param reach see \code{.deceasedSlashReach}.
+#' @return A \code{data:} URI, as a character string.
+#' @noRd
+.deceasedLegendImage <- function(reach = .deceasedSlashReach) {
+  offset <- reach * 22
+  svg <- sprintf(paste0(
+    "<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'>",
+    "<circle cx='25' cy='25' r='22' fill='white' stroke='#2B7CE9' ",
+    "stroke-width='2'/>",
+    "<line x1='%.1f' y1='%.1f' x2='%.1f' y2='%.1f' stroke='black' ",
+    "stroke-width='4' stroke-linecap='round'/></svg>"
+  ), 25 - offset, 25 + offset, 25 + offset, 25 - offset)
+  paste0("data:image/svg+xml;charset=utf-8,",
+         utils::URLencode(svg, reserved = TRUE))
+}
+
 #' Pedigree Browser Module - UI Function
 #'
 #' Creates user interface for browsing and filtering pedigree data,
@@ -659,7 +745,11 @@ modPedigreeServer <- function(id, studbook) {
               label = "Show Twin Connectors",
               value = .currentShowTwinConnectors()
             ),
-            visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
+            # S1028: 500 px, not the default 400, so the legend's 11 rows
+            # fit at a readable size with no label touching the next symbol
+            # (the legend shares the canvas's height).
+            visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"),
+                                         height = "500px")
           )
         }
       }
@@ -729,10 +819,14 @@ modPedigreeServer <- function(id, studbook) {
         visNetwork::visEdges(smooth = FALSE) |>
         # visNetwork does not auto-bind node clicks to a Shiny input -- wire
         # it explicitly (confirmed hands-on, issue #129 Slice 2 Pre-RED).
-        visNetwork::visEvents(click = sprintf(
-          "function(nodes) { Shiny.setInputValue('%s', nodes.nodes); }",
-          session$ns("pedigreeDiagram_click")
-        )) |>
+        visNetwork::visEvents(
+          click = sprintf(
+            "function(nodes) { Shiny.setInputValue('%s', nodes.nodes); }",
+            session$ns("pedigreeDiagram_click")
+          ),
+          # S1028: the slash through each deceased animal's symbol.
+          afterDrawing = .deceasedSlashHandler()
+        ) |>
         # Image export (issue #131): visExport() bundles its own JS deps
         # (FileSaver/Blob/canvas-toBlob/html2canvas/jsPDF) as htmlwidget
         # dependencies -- no CDN calls, confirmed hands-on Pre-RED.
@@ -748,9 +842,9 @@ modPedigreeServer <- function(id, studbook) {
           addNodes = data.frame(
             label = c("Female", "Male", "Hermaphrodite", "Unknown",
                        "Other / Unrecorded", # nolint: nonportable_path_linter
-                       "Affected"),
+                       "Affected", "Deceased"),
             shape = c("dot", "square", "star", "triangle", "diamond",
-                       "hexagon"),
+                       "hexagon", "image"),
             # Issue #133 Slice 2 (D6): the "Affected" row shares this SAME
             # addNodes data frame -- a second visLegend() call would
             # overwrite, not stack (confirmed S485). The 5 sex-shape rows
@@ -761,7 +855,17 @@ modPedigreeServer <- function(id, studbook) {
             # pill/badge), breaking the fixed-size-icon-plus-separate-label
             # style all 5 existing rows share; "hexagon" is a fixed-size icon
             # like the other 5, none of which claim it.
-            color = c(NA, NA, NA, NA, NA, "#CC79A7"),
+            color = c(NA, NA, NA, NA, NA, "#CC79A7", NA),
+            # S1028: the "Deceased" row is a picture (a circle with the
+            # slash), after "Affected" and before the edge rows, so the last
+            # legend row stays the short "?" one (S921). Measured in the real
+            # app: a label starts 11 world units under its symbol and is 14
+            # tall, so a row takes its symbol (2 * size) plus 25 of the row
+            # spacing (stepY). At the old size 20 and stepY 54 every label
+            # overran the next symbol by 11; size 14 and stepY 60 leave 7
+            # clear.
+            image = c(rep(NA_character_, 6L), .deceasedLegendImage()),
+            size = 14L,
             stringsAsFactors = FALSE
           ),
           # nolint start: commented_code_linter.
@@ -798,8 +902,9 @@ modPedigreeServer <- function(id, studbook) {
           # against this same 400px boundary at stepY=65L (the icon itself
           # rendered, but "Affected" text below it did not) -- retuned to
           # 54L so 6 rows fit within the same envelope 5 rows previously
-          # occupied.
-          stepY = 54L
+          # occupied. S1028: 11 rows now (the "Deceased" picture), in a 500px
+          # canvas, at 60L (see the symbol size above).
+          stepY = 60L
         ) |>
         # Search + highlight (issue #135): nodesIdSelection adds a
         # "Select by id" dropdown; highlightNearest dims non-connected
