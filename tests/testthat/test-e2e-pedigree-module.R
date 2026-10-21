@@ -420,7 +420,11 @@ test_that(
   ## slash is walked outwards from the centre up-right until the black stops
   ## (3 px of non-black); the outline is the first non-white pixel walking
   ## out up-left from 5 px (clear of the slash's own width), where nothing
-  ## else is drawn; a pixel off the canvas or see-through counts as white. The legend's picture runs 19
+  ## else is drawn; a pixel off the canvas or see-through counts as white,
+  ## and "non-white" is the darkest pixel of the 3 x 3 around the sample
+  ## being below 250: a circle's outline is 1 px wide at 45 degrees, and a
+  ## ray along the other diagonal can pass between its pixels (the first
+  ## version missed it and found the sibship bar 85 px out instead). The legend's picture runs 19
   ## of a radius of 22 out along each axis: 1.22 times the circle's outline
   ## along the diagonal. Owner, S1028: the diagram's slash must overhang its
   ## symbol by that same amount whatever the shape, a square (A) as well as
@@ -439,8 +443,11 @@ test_that(
       "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
       "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
       "else if (t - lastBlack > 3) { break; } } ",
+      "const near = (x, y) => { let lo = 255; for (let i = -1; i <= 1; i++) { ",
+      "for (let j = -1; j <= 1; j++) { lo = Math.min(lo, lum(x + i, y + j)); } } ",
+      "return lo; }; ",
       "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
-      "if (lum(c.x - t * q, c.y - t * q) < 235) { outline = t; break; } } ",
+      "if (near(c.x - t * q, c.y - t * q) < 250) { outline = t; break; } } ",
       "return outline > 0 ? lastBlack / outline : -1; })()"
     ), id))
   }
