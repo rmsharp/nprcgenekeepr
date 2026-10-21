@@ -66,6 +66,22 @@
 #'
 #' @importFrom lubridate duration interval
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- qcStudbook(nprcgenekeepr::examplePedigree,
+#'   minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
+#' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+#' geneticValues <- reportGV(ped, guIter = 10L)$report
+#' ## Three groups of living animals that have a genetic value
+#' living <- geneticValues$id[geneticValues$id %in% ped$id[is.na(ped$exit)]]
+#' groups <- list(
+#'   "Group 1" = living[1L:15L],
+#'   "Group 2" = living[16L:30L],
+#'   "Group 3" = living[31L:45L]
+#' )
+#' getGeneticDiversityStats(groups, ped, geneticValues, kmat)
 getGeneticDiversityStats <- function(groups, ped, geneticValues, kmat,
                                      housing = "shelter_pens",
                                      currentDate = Sys.Date()) {
