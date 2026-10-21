@@ -38,14 +38,18 @@ archivePointerRows <- function(lines) {
   rows
 }
 
+## The same rows for the ledger file `ledger`.
+archivePointerRowsOf <- function(ledger) {
+  archivePointerRows(readLines(ledger, warn = FALSE, encoding = "UTF-8"))
+}
+
 ## What is wrong with the pointers of the ledger file `ledger`, one string per
 ## problem and character(0) when nothing is: a target that opens no file, link
 ## text that is not the file's path from `root` (the repository root), a shard
 ## link not followed by its own `.verify.sh` link, a proof link with no shard
 ## link before it.
 archivePointerProblems <- function(ledger, root) {
-  rows <- archivePointerRows(readLines(ledger, warn = FALSE,
-                                       encoding = "UTF-8"))
+  rows <- archivePointerRowsOf(ledger)
   root <- normalizePath(root)
   problems <- character(0)
   for (i in seq_len(nrow(rows))) {

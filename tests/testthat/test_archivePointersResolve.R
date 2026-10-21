@@ -131,9 +131,7 @@ pkg_root <- testthat::test_path("..", "..")
 expectPointersOpen <- function(name) {
   ledger <- file.path(pkg_root, "methodology", name)
   skip_if_not(file.exists(ledger), "no methodology/ here (a built package)")
-  rows <- archivePointerRows(readLines(ledger, warn = FALSE,
-                                       encoding = "UTF-8"))
-  expect_gt(nrow(rows), 0L)
+  expect_gt(nrow(archivePointerRowsOf(ledger)), 0L)
   problems <- archivePointerProblems(ledger, pkg_root)
   expect_equal(length(problems), 0L,
                info = paste(c(paste(length(problems), "problems, the first:"),
