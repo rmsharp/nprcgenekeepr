@@ -30,12 +30,17 @@ canonical, and the legacy monolith has been retired: `inst/application/` is dele
   **Articles:** the first four (S107–S110) were scripted, non-Shiny walkthroughs on shipped data;
   the set has since grown (see `vignettes/articles/` for the current list). Adding more is a
   drop-in `.qmd` (no new config), each verified the same way.
-  **Slices 3 and 4** (the manual leaving the CRAN vignette set): status not recorded here; the
-  manual is still a CRAN vignette (`a3manual.Rmd`) at 2.0.0.9000.
+  **Slice 3** (Quarto slide decks) is not started: no `revealjs` file is in the repository.
+  **Slice 4** (the manual leaves the CRAN vignette set) is not done: `a3manual.Rmd` and
+  `manual_components/` are still built by knitr (`VignetteBuilder: knitr`), and the analysis ties it
+  to a CRAN resubmission.
 - **Audit follow-ups** (full findings in `PED_GV_AUDIT_2026-05-30.md`; the judged status of each
   id is in `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`, and what is still open is in the
   PED_GV item of `BACKLOG.md`). The earlier list here (NEW-53, NEW-20 and the
-  `create_test_app` debt) is done; the other ids were not re-checked.
+  `create_test_app` debt) is done, and so are the other ids it named, checked S1026: NEW-45 (the
+  "no period in IDs" check, `R/qcStudbook.R`) landed 2026-05-31, PED-1 and NEW-17
+  (`getFounders()`, `isFounder()`) in S16, and NEW-13 and NEW-23
+  (`calcFounderContributions()`) in S17.
 
 ## What's Built
 *(Feature inventory — what the package does today.)*

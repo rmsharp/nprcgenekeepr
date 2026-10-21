@@ -145,7 +145,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       animal with itself** (`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option (a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
       table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
       CE4 and CE5, the Cross-Center check and merge, fixed S1011 (`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`, `NEWS.Rmd`);
-      CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and the 13 small wrong statements fixed S1016 (`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9 is the open item below),
+      CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and the 13 small wrong statements fixed S1016 (`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9, the Changed Columns tab, was fixed S1020),
       and the four
       likely code defects of *slice 4* (this item's earlier "8" label was wrong), re-checked against today's code S966
       (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`): all four are still real and the docs
@@ -155,11 +155,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       recommended option each time): the two do-nothing Genetic Value checkboxes were removed S969; the "Upload list" choice
       was removed S970 and the candidate list it promised was built S973 ("My own list"); the unused-genotypes notice was redirected S970
       to making the genotype columns work (its item below).
-      (3) *Left unsettled by the doc slices:* RO8 (Quarto slices 3-4 status) and the other ids in
-      RO3 were reworded "not recorded" / "not re-checked"; AR3's "about 53" is attributed to
-      Learning 347, not re-counted; slice 8 left open whether to replace stale `file:line` cites
-      in the plans and gap analysis with function names, and D's six parent-to-union edges that
-      still differ in row.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
