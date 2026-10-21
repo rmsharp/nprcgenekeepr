@@ -23,7 +23,7 @@ have a non-NA age. Because ages are computed for deceased animals
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2, minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )
