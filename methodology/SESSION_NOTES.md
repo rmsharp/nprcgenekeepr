@@ -98,30 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1024 Did
-**Deliverable, DONE (owner pick, item 1 of 4; strict TDD, every phase behind its own gate):** the former `BACKLOG.md:168` item, the 45 "Fixed:" bullets of `NEWS.Rmd` General Fixes, is
-finished and its block removed. The owner took "One bullet per area" (of three) and approved the seven bullets as drafted: `NEWS.Rmd:397-561` holds the 7 New/Changed bullets as written,
-then one "Fixed (area):" bullet each for pedigree checks and Potential Parents (13 former items), Breeding Groups and Genetic Diversity (7), scripts (11), the configuration file (5),
-Genetic Value (3), genotype files (3), other tabs and the example file (3). Claim `4b03bee43`, RED `d12583b3d`, GREEN `28c6bfd79`, REFACTOR `2e6d96e9c`
-(`tests/testthat/helper-newsBlocks.R:11,23`). **No NEWS line** (this is the NEWS). Not pushed (37 ahead of origin after this close-out).
-**Evidence:** section 20,665 B to 11,203 B (`NEWS.md` 20,748 B to 11,240 B, re-knitted; rest of both files byte-identical); `tests/testthat/test_newsGeneralFixesGrouped.R` 8 blocks, 218
-expectations, RED 96 failed, GREEN 0; 46 facts, one per former item, each checked against its own bullet before the test was written; of the 17 NEWS-reading files only 3 quote a
-"Fixed:" bullet (lines 407, 579, 588), all passed unchanged; mutants 8 of 8 killed before and after REFACTOR; old and new readers `identical()` on both files; full suite 441 files,
-4,064 blocks, 13,795 expectations, 0 failed, 0 errors, 191 skipped (up 179, not 218: a per-bullet loop in `test_newsReleaseState.R` lost 39); lint 0; `check` 0/0/0; ratchet 1/1 (results
-`d26b5f550080`, the S1023 citation `80f4e23e5bc3` compared first).
-**Handoff evaluation of S1023: 9/10.** Helped: every cite held (`BACKLOG.md:168`, 45 Fixed = 20 Major + 25 Minor, 314 lines, 20,665 B, "17 test files", 46 in the development block); its
-order matched the picker; "condense before adding" was right (the Read tool cut this file at 25,274 tokens). Missing: nothing that cost time. Wrong: nothing.
-**Self: 8/10.** + measured before asking (which tests read the section, a fact table, the draft checked against the 3 pins before the owner saw it); every gate asked; an `identical()`
-proof for REFACTOR; REFACTOR taken (3 copies to 1). - three figures I gave at gates were wrong and corrected ("8 stay" was 7, "blocks 2 to 4 pass" was 6 of 8, "about 8 KB" was 11 KB
-with the kept bullets); a launcher's exit notice read as the job's; the zsh `=====` slip again. Learning 990.
-**Gotchas:** emptying a section over-reports (5 of 17 failed, 3 quote a Fixed bullet); "The old behavior meant ..." is the tail of the fix above it; a new fix goes into its area's
-`Fixed (area):` bullet (`test_newsGeneralFixesGrouped.R` fails otherwise); re-knit with `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` and compare head and tail with HEAD;
-wait on a `nohup` job's pid with `kill -0`; the oldest blocks (S873-S910, 7,088 B) were merged into one of 3,415 B, so this file ends 1.2 KB smaller: condense before adding.
-**Next (my order; the owner gave none):** `BACKLOG.md:352` compression (READY, L); `:168` contributor tutorial (DECISION NEEDED, M); `:394` two kinship2 drawing features (DECISION
-NEEDED, M each). Offered and not taken: which of the 45 fixes repair a bug that never shipped in 2.0.0 (the `v2.0.0` tag exists). Left as it was: `BACKLOG.md:149` still says "CL9 is the
-open item below" (four sessions now).
+### What Session 1025 Did
+**Deliverable:** the five wrong or missing help and example lines left in the `BACKLOG.md:16` docs-audit item (IN PROGRESS; owner: "finish the items left in the section beginning on
+line 16", then piece 1 of 3 at the scope question; docs wording only, no app behavior change; strict TDD)
+**Started:** 2026-10-20 21:00 CDT
+**Status:** Session claimed. Work beginning, phase PRE-RED. The five, each checked against today's code this session: `makeGroupNum()` says "Default is 1" with no default
+(`R/makeGroupNum.R:7,16`); the deprecated `minParentAge` passed to `qcStudbook()` in the examples of `fillGroupMembersWithSexRatio()` (`R/fillGroupMembersWithSexRatio.R:39`) and
+`groupAddAssign()` (`R/groupAddAssign.R:139`); `getGeneticDiversityStats()` exported with no `@examples` (`R/getGeneticDiversityStats.R:68`); the `savePlotToFile()` example in `\dontrun`
+(`R/savePlotToFile.R:31`); the Genetic Value help line "Summary Statistics relationship table" (`R/modGeneticValue.R:84`), a table the tab does not show (plots and export buttons only).
+Left for later sessions, one each: the Export Demographics ruling (CC5, owner's call), the four loose ends plus the stale CL9 line (`BACKLOG.md:149`), then the section's block comes off.
+`master` is 37 commits ahead of `origin/master`.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1023 (condensed S950 to S1024; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1024 (condensed S950 to S1025; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1024: `NEWS.Rmd` and `NEWS.md` General Fixes hold seven "Fixed (area):" bullets instead of 45 separate "Fixed:" items (owner: "One bullet per area"; section 20,665 B to 11,203 B); strict TDD;
+claim `4b03bee43`, RED `d12583b3d`, GREEN `28c6bfd79`, REFACTOR `2e6d96e9c` (`tests/testthat/helper-newsBlocks.R:11,23`); no NEWS line (this is the NEWS); evaluation of S1023 9/10, self 8/10
+(Learning 990). **Gotchas kept:** emptying a section over-reports (5 of 17 NEWS-reading files failed, 3 quote a Fixed bullet); a new fix goes into its area's `Fixed (area):` bullet
+(`test_newsGeneralFixesGrouped.R` fails otherwise); re-knit with `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` and compare head and tail with HEAD; wait on a `nohup` job's pid with `kill -0`.
 S1023: the archive pointers of the two live ledgers open their shard and proof files (owner: "Fix the 40 live ones"): 80 link lines in `methodology/SESSION_NOTES.md` (23 pointers) and
 `methodology/HANDOFFS.md` (17) now read `methodology/archive/X` with target `archive/X`; the 17 inside six frozen `CHANGELOG` shards stay as history; strict TDD; claim `3aa1445f8`, RED
 `325f0275c`, GREEN `5f4393906`, REFACTOR `e3de99906` (`archivePointerRowsOf()`, `tests/testthat/helper-archivePointers.R:42`); no NEWS line; not pushed; evaluation of S1022 9/10, self

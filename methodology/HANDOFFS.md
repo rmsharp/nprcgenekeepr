@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1025
+date: 2026-10-20
+status: pending
+active_task: IN PROGRESS -- the five wrong or missing help and example lines left in the BACKLOG.md:16 docs-audit item (docs wording only): makeGroupNum "Default is 1", the deprecated minParentAge in two examples, getGeneticDiversityStats() with no @examples, the savePlotToFile() \dontrun example, the Genetic Value "relationship table" help line; owner: "finish the items left in the section beginning on line 16", piece 1 of 3
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1024
 date: 2026-10-20
 status: complete
