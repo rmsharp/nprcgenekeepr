@@ -167,10 +167,21 @@ test_that("DA4: the savePlotToFile() example is not in \\dontrun", {
 test_that("DA4: the savePlotToFile() example writes only to temp files", {
   code <- exampleLines("savePlotToFile")
   expect_true(any(grepl("tempfile(", code, fixed = TRUE)))
+  ## The example ends by deleting what it wrote, so the folder it ran in tells
+  ## nothing: record the file of every call instead.
+  written <- character(0L)
+  env <- new.env(parent = globalenv())
+  env$savePlotToFile <- function(plot, file, ...) {
+    written <<- c(written, file)
+    nprcgenekeepr::savePlotToFile(plot, file, ...)
+  }
   workDir <- withr::local_tempdir()
   withr::with_dir(workDir, {
-    expect_warning(runExample(code), NA)
+    expect_warning(eval(parse(text = code), envir = env), NA)
   })
+  expect_gte(length(written), 3L)
+  expect_true(all(normalizePath(dirname(written), mustWork = FALSE) ==
+                    normalizePath(tempdir())))
   expect_identical(list.files(workDir, all.files = TRUE, no.. = TRUE),
                    character(0L))
 })
