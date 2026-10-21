@@ -98,29 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1025 Did
-**Deliverable, DONE (owner: "finish the items left in the section beginning on line 16" of `BACKLOG.md`, piece 1 of 3 at the scope question; strict TDD, every phase behind its own gate):** the six
-wrong or missing help and example lines of the docs-audit item are fixed and their text is off `BACKLOG.md:139-153`. The owner took "give them the default of 1": `makeGroupNum()` and `makeGrpNum()`
-have `numGp = 1L` (`R/makeGroupNum.R:16,34`). The examples of `fillGroupMembersWithSexRatio()`, `groupAddAssign()`, `getPedMaxAge()` and `setPopulation()` pass `minSireAge`/`minDamAge`, not the
-deprecated `minParentAge` (the backlog named two; a scan of all 267 man pages found four). `getGeneticDiversityStats()` has an example (`R/getGeneticDiversityStats.R:69`); the `savePlotToFile()` example
-is out of `\dontrun` (`R/savePlotToFile.R:30`); the Genetic Value help names the table the Summary Statistics tab exports (`R/modGeneticValue.R:84-87`); `NEWS.Rmd:540-541` says the default.
-Claim `4622e16d7`, RED `d37d6240f`, GREEN `62b3ba044` `d68297d28` `2d3066dae` `26adac5b9` `6eafb598f` `9332ecc63` `a3011771f`, test hardening `f89fec3f5`, REFACTOR `8df92cb76` (`exampleLinesOf()`,
-`tests/testthat/helper-pageText.R:105`). Not pushed (49 ahead of origin after this close-out).
-**Evidence:** `tests/testthat/test_docsAuditLeftoverWording.R` 14 blocks, 64 expectations; RED 38 failed and 1 error, GREEN 0; mutants 9 of 9 killed (M7, a file written to the working directory,
-survived until DA4 recorded each call's path); old and new `Rd2ex` readers `identical()` on 268 cases; full suite 442 files, 4,078 blocks, 13,859 expectations, 0 failed, 0 errors, 191 skipped (as S1024);
-lint 0; plain `devtools::check()` 0/0/0; ratchet 1/1 (results `ffc0e33db509`, the S1024 citation `d26b5f550080` compared first); the 101 files that name `BACKLOG.md` all pass.
-**Handoff evaluation of S1024: 8/10.** Helped: every cite held (`BACKLOG.md:168,352,394`, "37 ahead", the `Fixed (area)` gate, the re-knit recipe); the claim-time condensing pattern. Missing: the docs-audit
-leftovers were not in its "Next" list (the owner chose them over its order). Wrong: nothing in the handoff; the backlog's own "two example pages" and "47 lines" were carried text and wrong.
-**Self: 7/10.** + scanned all 267 pages before the scope question; every gate asked; mutants before the gate and a weak test fixed; REFACTOR with an `identical()` proof; plain `devtools::check()`; the
-owner's "remove or compress" done. - told the owner the backlog needed compression from an uncounted "regrown" claim (the file was at its smallest in 30 commits); the zsh unsplit-variable slip and a
-wrong tool name; began a check with `--no-manual` before correcting it. Two owner corrections. Learning 991.
-**Gotchas:** scan the whole class before scoping (the backlog's counts were short); "folder empty afterwards" is blind to an example that ends with `unlink()`; in zsh write `$=files`; check `git status`
-after `devtools::document()` for stray `man/` changes; the Shiny help sentence is one `paste()` string and `test_kinshipOverrideDocs.R` pins "relationship label" in it.
-**Next (my order; the owner gave none):** (1) the Export Demographics ruling (CC5, owner's call: rename button and file, build the summary, or leave; `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:116`);
-(2) the loose ends `BACKLOG.md:158-162` and the stale line `:148` ("CL9 is the open item below"; CL9, the Changed Columns tab, was fixed S1020), then the item's block comes off; (3) `:164` contributor tutorial,
-`:390` two kinship2 drawing features, `:348` compression (low value now: 460 lines, the smallest in 30 commits).
+### What Session 1026 Did
+**Deliverable:** the docs-audit loose ends of `BACKLOG.md` (IN PROGRESS; Phase 0 picker, item 2 of 4; S1025's suggested order, not an owner order): the stale line `:148` ("CL9 is the open
+item below"; CL9 was fixed S1020) and the three unsettled leftovers at `:158-162` (RO8 and the RO3 ids, AR3's "about 53", slice 8's `file:line` cites, D's six parent-to-union edges),
+each measured first, then fixed or dropped.
+**Started:** 2026-10-21 15:25 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
 
-### Sessions 947-1024 (condensed S950 to S1025; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1025 (condensed S950 to S1026; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1025: the six wrong or missing help and example lines of the docs-audit item are fixed (owner: "finish the items left in the section beginning on line 16", piece 1 of 3; "give them the
+default of 1"): `makeGroupNum()` and `makeGrpNum()` have `numGp = 1L` (`R/makeGroupNum.R:16,34`); four examples pass `minSireAge`/`minDamAge`; `getGeneticDiversityStats()` has an example; the
+`savePlotToFile()` example is out of `\dontrun`; the Genetic Value help names the table the Summary Statistics tab exports; strict TDD; claim `4622e16d7`, RED `d37d6240f`, GREEN `62b3ba044`
+to `a3011771f`, REFACTOR `8df92cb76` (`exampleLinesOf()`, `tests/testthat/helper-pageText.R:105`), NEWS `NEWS.Rmd:540-541`; evaluation of S1024 8/10, self 7/10 (Learning 991). **Gotchas
+kept:** scan the whole class before scoping (the backlog's counts were short); "folder empty afterwards" is blind to an example that ends with `unlink()`; in zsh write `$=files`; check
+`git status` after `devtools::document()` for stray `man/` changes.
 S1024: `NEWS.Rmd` and `NEWS.md` General Fixes hold seven "Fixed (area):" bullets instead of 45 separate "Fixed:" items (owner: "One bullet per area"; section 20,665 B to 11,203 B); strict TDD;
 claim `4b03bee43`, RED `d12583b3d`, GREEN `28c6bfd79`, REFACTOR `2e6d96e9c` (`tests/testthat/helper-newsBlocks.R:11,23`); no NEWS line (this is the NEWS); evaluation of S1023 9/10, self 8/10
 (Learning 990). **Gotchas kept:** emptying a section over-reports (5 of 17 NEWS-reading files failed, 3 quote a Fixed bullet); a new fix goes into its area's `Fixed (area):` bullet

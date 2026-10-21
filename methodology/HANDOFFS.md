@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1026
+date: 2026-10-21
+status: pending
+active_task: IN PROGRESS -- the docs-audit loose ends of BACKLOG.md (owner pick at the Phase 0 picker, item 2 of 4): the stale line :148 ("CL9 is the open item below"; CL9 was fixed S1020) and the three unsettled leftovers at :158-162, each measured first, then fixed or dropped
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1025
 date: 2026-10-20
 status: complete
