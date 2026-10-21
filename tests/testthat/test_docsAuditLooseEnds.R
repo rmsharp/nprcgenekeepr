@@ -127,6 +127,11 @@ unionLegs <- function(layout) {
     c("from", "to")]
 }
 
+## The row (y) of every node of a layout, named by node id.
+rowsOf <- function(layout) {
+  stats::setNames(layout$nodes$y, layout$nodes$id)
+}
+
 test_that("LE5 (green at HEAD): parents sit on their union's row; 6 jog legs", {
   skip_on_cran()
   f <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
@@ -136,7 +141,7 @@ test_that("LE5 (green at HEAD): parents sit on their union's row; 6 jog legs", {
 
   direct <- suppressWarnings(makePedigreeMatingLayout(ped,
                                                       edgeStyle = "direct"))
-  yDirect <- stats::setNames(direct$nodes$y, direct$nodes$id)
+  yDirect <- rowsOf(direct)
   legsDirect <- unionLegs(direct)
   expect_equal(nrow(legsDirect), 474L)
   expect_false(any(grepl("^__jog_", direct$nodes$id)))
@@ -144,7 +149,7 @@ test_that("LE5 (green at HEAD): parents sit on their union's row; 6 jog legs", {
 
   rect <- suppressWarnings(makePedigreeMatingLayout(ped))
   e <- rect$edges
-  yRect <- stats::setNames(rect$nodes$y, rect$nodes$id)
+  yRect <- rowsOf(rect)
   legs <- unionLegs(rect)
   expect_equal(nrow(legs), 474L)
   differs <- legs[yRect[legs$from] != yRect[legs$to], ]
