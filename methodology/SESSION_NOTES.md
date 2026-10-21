@@ -2,96 +2,96 @@
 
 **Purpose:** Continuity between sessions. Each session reads this first and writes to it before closing out.
 
-**Archived 612 record(s), 1998-12-06 → 2026-08-12** into [`docs/archive/SESSION_NOTES-through-2026-08-12.md`](docs/archive/SESSION_NOTES-through-2026-08-12.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 612 record(s), 1998-12-06 → 2026-08-12** into [`methodology/archive/SESSION_NOTES-through-2026-08-12.md`](archive/SESSION_NOTES-through-2026-08-12.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh`](archive/SESSION_NOTES-through-2026-08-12.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 40 record(s), 2026-08-11 → 2026-08-13** into [`docs/archive/SESSION_NOTES-through-2026-08-13.md`](docs/archive/SESSION_NOTES-through-2026-08-13.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-08-13.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 40 record(s), 2026-08-11 → 2026-08-13** into [`methodology/archive/SESSION_NOTES-through-2026-08-13.md`](archive/SESSION_NOTES-through-2026-08-13.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-08-13.md.verify.sh`](archive/SESSION_NOTES-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 76 record(s), 2026-01-26 → 2026-08-15** into [`docs/archive/SESSION_NOTES-through-2026-08-15.md`](docs/archive/SESSION_NOTES-through-2026-08-15.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 76 record(s), 2026-01-26 → 2026-08-15** into [`methodology/archive/SESSION_NOTES-through-2026-08-15.md`](archive/SESSION_NOTES-through-2026-08-15.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh`](archive/SESSION_NOTES-through-2026-08-15.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 170 record(s), 2026-08-19 → 2026-09-17** into [`docs/archive/SESSION_NOTES-through-2026-09-17.md`](docs/archive/SESSION_NOTES-through-2026-09-17.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 170 record(s), 2026-08-19 → 2026-09-17** into [`methodology/archive/SESSION_NOTES-through-2026-09-17.md`](archive/SESSION_NOTES-through-2026-09-17.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 19 record(s), 2026-08-14 → 2026-09-18** into [`docs/archive/SESSION_NOTES-through-2026-09-18.md`](docs/archive/SESSION_NOTES-through-2026-09-18.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 19 record(s), 2026-08-14 → 2026-09-18** into [`methodology/archive/SESSION_NOTES-through-2026-09-18.md`](archive/SESSION_NOTES-through-2026-09-18.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 21 record(s), 2026-09-17 → 2026-09-19** into [`docs/archive/SESSION_NOTES-through-2026-09-19.md`](docs/archive/SESSION_NOTES-through-2026-09-19.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 21 record(s), 2026-09-17 → 2026-09-19** into [`methodology/archive/SESSION_NOTES-through-2026-09-19.md`](archive/SESSION_NOTES-through-2026-09-19.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 10 record(s), 2026-09-19 → 2026-09-19** into [`docs/archive/SESSION_NOTES-through-2026-09-19-2.md`](docs/archive/SESSION_NOTES-through-2026-09-19-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 10 record(s), 2026-09-19 → 2026-09-19** into [`methodology/archive/SESSION_NOTES-through-2026-09-19-2.md`](archive/SESSION_NOTES-through-2026-09-19-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 14 record(s), 2026-09-19 → 2026-09-19** into [`docs/archive/SESSION_NOTES-through-2026-09-19-3.md`](docs/archive/SESSION_NOTES-through-2026-09-19-3.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 14 record(s), 2026-09-19 → 2026-09-19** into [`methodology/archive/SESSION_NOTES-through-2026-09-19-3.md`](archive/SESSION_NOTES-through-2026-09-19-3.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 12 record(s), 2026-09-20 → 2026-09-20** into [`docs/archive/SESSION_NOTES-through-2026-09-20.md`](docs/archive/SESSION_NOTES-through-2026-09-20.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 12 record(s), 2026-09-20 → 2026-09-20** into [`methodology/archive/SESSION_NOTES-through-2026-09-20.md`](archive/SESSION_NOTES-through-2026-09-20.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-20.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 13 record(s), 2026-09-02 → 2026-09-20** into [`docs/archive/SESSION_NOTES-through-2026-09-20-2.md`](docs/archive/SESSION_NOTES-through-2026-09-20-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 13 record(s), 2026-09-02 → 2026-09-20** into [`methodology/archive/SESSION_NOTES-through-2026-09-20-2.md`](archive/SESSION_NOTES-through-2026-09-20-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 14 record(s), 2026-08-12 → 2026-09-21** into [`docs/archive/SESSION_NOTES-through-2026-09-21.md`](docs/archive/SESSION_NOTES-through-2026-09-21.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 14 record(s), 2026-08-12 → 2026-09-21** into [`methodology/archive/SESSION_NOTES-through-2026-09-21.md`](archive/SESSION_NOTES-through-2026-09-21.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 11 record(s), 2026-09-21 → 2026-09-21** into [`docs/archive/SESSION_NOTES-through-2026-09-21-2.md`](docs/archive/SESSION_NOTES-through-2026-09-21-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 11 record(s), 2026-09-21 → 2026-09-21** into [`methodology/archive/SESSION_NOTES-through-2026-09-21-2.md`](archive/SESSION_NOTES-through-2026-09-21-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 9 record(s), 2026-09-21 → 2026-09-22** into [`docs/archive/SESSION_NOTES-through-2026-09-22.md`](docs/archive/SESSION_NOTES-through-2026-09-22.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 9 record(s), 2026-09-21 → 2026-09-22** into [`methodology/archive/SESSION_NOTES-through-2026-09-22.md`](archive/SESSION_NOTES-through-2026-09-22.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-22.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 9 record(s), 2026-09-22 → 2026-09-23** into [`docs/archive/SESSION_NOTES-through-2026-09-23.md`](docs/archive/SESSION_NOTES-through-2026-09-23.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 9 record(s), 2026-09-22 → 2026-09-23** into [`methodology/archive/SESSION_NOTES-through-2026-09-23.md`](archive/SESSION_NOTES-through-2026-09-23.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 8 record(s), 2026-09-19 → 2026-09-23** into [`docs/archive/SESSION_NOTES-through-2026-09-23-2.md`](docs/archive/SESSION_NOTES-through-2026-09-23-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 8 record(s), 2026-09-19 → 2026-09-23** into [`methodology/archive/SESSION_NOTES-through-2026-09-23-2.md`](archive/SESSION_NOTES-through-2026-09-23-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 8 record(s), 2026-09-24 → 2026-09-25** into [`docs/archive/SESSION_NOTES-through-2026-09-25.md`](docs/archive/SESSION_NOTES-through-2026-09-25.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 8 record(s), 2026-09-24 → 2026-09-25** into [`methodology/archive/SESSION_NOTES-through-2026-09-25.md`](archive/SESSION_NOTES-through-2026-09-25.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-25.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 7 record(s), 2026-09-24 → 2026-09-26** into [`docs/archive/SESSION_NOTES-through-2026-09-26.md`](docs/archive/SESSION_NOTES-through-2026-09-26.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 7 record(s), 2026-09-24 → 2026-09-26** into [`methodology/archive/SESSION_NOTES-through-2026-09-26.md`](archive/SESSION_NOTES-through-2026-09-26.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 5 record(s), 2026-09-26 → 2026-09-26** into [`docs/archive/SESSION_NOTES-through-2026-09-26-2.md`](docs/archive/SESSION_NOTES-through-2026-09-26-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 5 record(s), 2026-09-26 → 2026-09-26** into [`methodology/archive/SESSION_NOTES-through-2026-09-26-2.md`](archive/SESSION_NOTES-through-2026-09-26-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 4 record(s), 2026-09-26 → 2026-09-26** into [`docs/archive/SESSION_NOTES-through-2026-09-26-3.md`](docs/archive/SESSION_NOTES-through-2026-09-26-3.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 4 record(s), 2026-09-26 → 2026-09-26** into [`methodology/archive/SESSION_NOTES-through-2026-09-26-3.md`](archive/SESSION_NOTES-through-2026-09-26-3.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 5 record(s), 2026-08-15 → 2026-09-26** into [`docs/archive/SESSION_NOTES-through-2026-09-26-4.md`](docs/archive/SESSION_NOTES-through-2026-09-26-4.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 5 record(s), 2026-08-15 → 2026-09-26** into [`methodology/archive/SESSION_NOTES-through-2026-09-26-4.md`](archive/SESSION_NOTES-through-2026-09-26-4.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 6 record(s), 2026-08-15 → 2026-09-27** into [`docs/archive/SESSION_NOTES-through-2026-09-27.md`](docs/archive/SESSION_NOTES-through-2026-09-27.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 6 record(s), 2026-08-15 → 2026-09-27** into [`methodology/archive/SESSION_NOTES-through-2026-09-27.md`](archive/SESSION_NOTES-through-2026-09-27.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 13 record(s), 2026-09-26 → 2026-09-28** into [`docs/archive/SESSION_NOTES-through-2026-09-28.md`](docs/archive/SESSION_NOTES-through-2026-09-28.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 13 record(s), 2026-09-26 → 2026-09-28** into [`methodology/archive/SESSION_NOTES-through-2026-09-28.md`](archive/SESSION_NOTES-through-2026-09-28.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-28.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 10 record(s), 1900-01-07 → 2026-09-28** into [`docs/archive/SESSION_NOTES-through-2026-09-28-2.md`](docs/archive/SESSION_NOTES-through-2026-09-28-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 10 record(s), 1900-01-07 → 2026-09-28** into [`methodology/archive/SESSION_NOTES-through-2026-09-28-2.md`](archive/SESSION_NOTES-through-2026-09-28-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh`](archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ---

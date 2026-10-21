@@ -124,75 +124,75 @@ What is specific to *this* file, and gets receipts wrong if assumed:
   reconciled inside an archived receipt, because that field was always going to be filled by a later
   session. Nothing else in a shard is rewritten.
 
-**Archived 181 record(s), 2026-07-08 → 2026-08-10** into [`docs/archive/HANDOFFS-through-2026-08-10.md`](docs/archive/HANDOFFS-through-2026-08-10.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-10.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-10.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 181 record(s), 2026-07-08 → 2026-08-10** into [`methodology/archive/HANDOFFS-through-2026-08-10.md`](archive/HANDOFFS-through-2026-08-10.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-08-10.md.verify.sh`](archive/HANDOFFS-through-2026-08-10.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 39 record(s), 2026-08-10 → 2026-08-12** into [`docs/archive/HANDOFFS-through-2026-08-12.md`](docs/archive/HANDOFFS-through-2026-08-12.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 39 record(s), 2026-08-10 → 2026-08-12** into [`methodology/archive/HANDOFFS-through-2026-08-12.md`](archive/HANDOFFS-through-2026-08-12.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-08-12.md.verify.sh`](archive/HANDOFFS-through-2026-08-12.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 17 record(s), 2026-08-12 → 2026-08-13** into [`docs/archive/HANDOFFS-through-2026-08-13.md`](docs/archive/HANDOFFS-through-2026-08-13.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 17 record(s), 2026-08-12 → 2026-08-13** into [`methodology/archive/HANDOFFS-through-2026-08-13.md`](archive/HANDOFFS-through-2026-08-13.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-08-13.md.verify.sh`](archive/HANDOFFS-through-2026-08-13.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 21 record(s), 2026-08-13 → 2026-08-14** into [`docs/archive/HANDOFFS-through-2026-08-14.md`](docs/archive/HANDOFFS-through-2026-08-14.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 21 record(s), 2026-08-13 → 2026-08-14** into [`methodology/archive/HANDOFFS-through-2026-08-14.md`](archive/HANDOFFS-through-2026-08-14.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 This file currently holds **4** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
 
-**Archived 116 record(s), 2026-08-14 → 2026-09-17** into [`docs/archive/HANDOFFS-through-2026-09-17.md`](docs/archive/HANDOFFS-through-2026-09-17.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 116 record(s), 2026-08-14 → 2026-09-17** into [`methodology/archive/HANDOFFS-through-2026-09-17.md`](archive/HANDOFFS-through-2026-09-17.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-17.md.verify.sh`](archive/HANDOFFS-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 13 record(s), 2026-09-17 → 2026-09-18** into [`docs/archive/HANDOFFS-through-2026-09-18.md`](docs/archive/HANDOFFS-through-2026-09-18.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 13 record(s), 2026-09-17 → 2026-09-18** into [`methodology/archive/HANDOFFS-through-2026-09-18.md`](archive/HANDOFFS-through-2026-09-18.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](archive/HANDOFFS-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-**Archived 11 record(s), 2026-09-18 → 2026-09-19** into [`docs/archive/HANDOFFS-through-2026-09-19.md`](docs/archive/HANDOFFS-through-2026-09-19.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 11 record(s), 2026-09-18 → 2026-09-19** into [`methodology/archive/HANDOFFS-through-2026-09-19.md`](archive/HANDOFFS-through-2026-09-19.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-19.md.verify.sh`](archive/HANDOFFS-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 9 record(s), 2026-09-19 → 2026-09-19** into [`docs/archive/HANDOFFS-through-2026-09-19-2.md`](docs/archive/HANDOFFS-through-2026-09-19-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 9 record(s), 2026-09-19 → 2026-09-19** into [`methodology/archive/HANDOFFS-through-2026-09-19-2.md`](archive/HANDOFFS-through-2026-09-19-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh`](archive/HANDOFFS-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 31 record(s), 2026-09-19 → 2026-09-21** into [`docs/archive/HANDOFFS-through-2026-09-21.md`](docs/archive/HANDOFFS-through-2026-09-21.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-21.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 31 record(s), 2026-09-19 → 2026-09-21** into [`methodology/archive/HANDOFFS-through-2026-09-21.md`](archive/HANDOFFS-through-2026-09-21.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-21.md.verify.sh`](archive/HANDOFFS-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 7 record(s), 2026-09-22 → 2026-09-23** into [`docs/archive/HANDOFFS-through-2026-09-23.md`](docs/archive/HANDOFFS-through-2026-09-23.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-23.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 7 record(s), 2026-09-22 → 2026-09-23** into [`methodology/archive/HANDOFFS-through-2026-09-23.md`](archive/HANDOFFS-through-2026-09-23.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-23.md.verify.sh`](archive/HANDOFFS-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 11 record(s), 2026-09-23 → 2026-09-24** into [`docs/archive/HANDOFFS-through-2026-09-24.md`](docs/archive/HANDOFFS-through-2026-09-24.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-24.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 11 record(s), 2026-09-23 → 2026-09-24** into [`methodology/archive/HANDOFFS-through-2026-09-24.md`](archive/HANDOFFS-through-2026-09-24.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-24.md.verify.sh`](archive/HANDOFFS-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 4 record(s), 2026-09-24 → 2026-09-26** into [`docs/archive/HANDOFFS-through-2026-09-26.md`](docs/archive/HANDOFFS-through-2026-09-26.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 4 record(s), 2026-09-24 → 2026-09-26** into [`methodology/archive/HANDOFFS-through-2026-09-26.md`](archive/HANDOFFS-through-2026-09-26.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-26.md.verify.sh`](archive/HANDOFFS-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 3 record(s), 2026-09-26 → 2026-09-26** into [`docs/archive/HANDOFFS-through-2026-09-26-2.md`](docs/archive/HANDOFFS-through-2026-09-26-2.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 3 record(s), 2026-09-26 → 2026-09-26** into [`methodology/archive/HANDOFFS-through-2026-09-26-2.md`](archive/HANDOFFS-through-2026-09-26-2.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](archive/HANDOFFS-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 4 record(s), 2026-09-26 → 2026-09-26** into [`docs/archive/HANDOFFS-through-2026-09-26-3.md`](docs/archive/HANDOFFS-through-2026-09-26-3.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 4 record(s), 2026-09-26 → 2026-09-26** into [`methodology/archive/HANDOFFS-through-2026-09-26-3.md`](archive/HANDOFFS-through-2026-09-26-3.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh`](archive/HANDOFFS-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 24 record(s), 2026-09-27 → 2026-09-30** into [`docs/archive/HANDOFFS-through-2026-09-30.md`](docs/archive/HANDOFFS-through-2026-09-30.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-30.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-30.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 24 record(s), 2026-09-27 → 2026-09-30** into [`methodology/archive/HANDOFFS-through-2026-09-30.md`](archive/HANDOFFS-through-2026-09-30.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-09-30.md.verify.sh`](archive/HANDOFFS-through-2026-09-30.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 92 record(s), 2026-09-30 → 2026-10-04** into [`docs/archive/HANDOFFS-through-2026-10-04.md`](docs/archive/HANDOFFS-through-2026-10-04.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 92 record(s), 2026-09-30 → 2026-10-04** into [`methodology/archive/HANDOFFS-through-2026-10-04.md`](archive/HANDOFFS-through-2026-10-04.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-04.md.verify.sh`](archive/HANDOFFS-through-2026-10-04.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-**Archived 43 record(s), 2026-10-05 → 2026-10-08** into [`docs/archive/HANDOFFS-through-2026-10-08.md`](docs/archive/HANDOFFS-through-2026-10-08.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+**Archived 43 record(s), 2026-10-05 → 2026-10-08** into [`methodology/archive/HANDOFFS-through-2026-10-08.md`](archive/HANDOFFS-through-2026-10-08.md) — same format, same order, frozen.
+Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-08.md.verify.sh`](archive/HANDOFFS-through-2026-10-08.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 **Archived 40 record(s), 2026-10-08 → 2026-10-14** into [`methodology/archive/HANDOFFS-through-2026-10-14.md`](archive/HANDOFFS-through-2026-10-14.md) — same format, same order, frozen.
