@@ -28,13 +28,15 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 #' @examples
-#' \dontrun{
 #' library(ggplot2)
 #' p <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
-#' savePlotToFile(p, "my_plot.png")
-#' savePlotToFile(p, "my_plot.pdf", format = "pdf")
-#' savePlotToFile(p, "high_res.png", dpi = 300)
-#' }
+#' pngFile <- tempfile(fileext = ".png")
+#' pdfFile <- tempfile(fileext = ".pdf")
+#' hiResFile <- tempfile(fileext = ".png")
+#' savePlotToFile(p, pngFile)
+#' savePlotToFile(p, pdfFile, format = "pdf")
+#' savePlotToFile(p, hiResFile, dpi = 300)
+#' unlink(c(pngFile, pdfFile, hiResFile))
 #'
 savePlotToFile <- function(plot, file, format = NULL,
                             width = 8L, height = 6L, dpi = 150L,
