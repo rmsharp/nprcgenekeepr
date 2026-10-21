@@ -98,26 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1026 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 2 of 4; strict TDD, every phase behind its own gate):** the docs-audit loose ends of `BACKLOG.md`, each measured first. The stale
-CL9 line is corrected and the "(3) Left unsettled by the doc slices" paragraph is removed (460 to 455 lines). RO8: Quarto slice 3 (slide decks) was never started and slice 4 (the manual) is not done
-(`methodology/ROADMAP.md:33-34`); RO3: all five ids are done and in the code (`:40`); AR3: Learning 347's 53 reproduces, 55 now (`docs/architecture/module-contract.md:36-40`); D's "6 of 474" edges are
-jog legs, not parents; the owner ruled to leave the `file:line` cites as dated records. Claim `332474a2f`, RED `e7da1a0a0`, GREEN `dac07adeb` `8f4b430d6` `7b5c3608f`, REFACTOR `14e941480` (`rowsOf()`).
-**The docs-audit item STAYS in `BACKLOG.md`:** CC5 and five 6d findings (CB3, CB4, CC2, CC3, CD3) are still unruled. Not pushed (56 ahead of origin after this close-out).
-**Evidence:** `tests/testthat/test_docsAuditLooseEnds.R` 11 blocks, 55 expectations; RED 27 failed, GREEN 0; mutants 12 of 12 killed, before and after REFACTOR; full suite 443 files, 4,089 blocks, 13,914
-expectations, 0 failed, 0 errors, 191 skipped (as S1025); lint 0; plain `devtools::check()` 0/0/0; ratchet 1/1 (results `16e724fa41df`, the S1025 citation `ffc0e33db509` compared first); the 106 files
-that name `BACKLOG.md` or `ROADMAP.md` and the 17 that read the audit reports (the new file among them) all pass. **Handoff evaluation of S1025: 8/10.** Helped: every cite held (`BACKLOG.md:148`, `:158-162`, `:164`, `:390`,
-"49 ahead", the `$=files` and ratchet-hash gotchas). Missing: the five 6d findings that are unruled (it named only CC5); the loose ends were unmeasured work. Wrong: "then the item's block comes off".
-**Self: 7/10.** + measured all five leftovers before asking (traced the six edges, reproduced the 53 with its own rule, found the QC'd-order 8); every gate asked; honest answers to two owner questions; mutants
-twice; REFACTOR counted the other candidates first. - told the owner at the picker that items 1 and 2 would bring the block off (wrong: five 6d findings are open, found only when the owner asked); the zsh
-slips (three no-match globs, `$C:t`, `=====`), a stray scratch directory, one commit without its trailer; the QC'd-order check came after GREEN. Learning 992.
-**Gotchas:** a layout count depends on row order (raw 6, QC'd 8; both jog legs); reproduce a stored count with its own rule; `BACKLOG.md:139-140` says the other 6d rulings are "not yet taken"; in zsh write
-`${C}:path` and quote globs; wait on a `nohup` job's pid with `kill -0`.
-**Next (my order; the owner gave none):** (1) the six open 6d rulings: CC5 Export Demographics (owner's call: rename, build the summary, or leave; `docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:116`)
-and "leave" for CB3, CB4, CC2, CC3, CD3 (rows `:110-115`); then the item's block (`BACKLOG.md:16-157`) comes off. Optional first: a pointer to that report at `BACKLOG.md:139-140` (the owner asked where the ids
-are defined; not done). (2) `BACKLOG.md:159` contributor tutorial, `:385` two kinship2 drawing features, `:343` compression.
+### What Session 1027 Did
+**Deliverable:** the six open docs-audit rulings (IN PROGRESS; Phase 0 picker, item 1 of 4, the leftover of S1026's pick, S1026's own suggested order and not an owner order): CC5 Export
+Demographics (owner's call: rename, build the summary, or leave) and "leave" for CB3, CB4, CC2, CC3 and CD3 (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:110-116`), each re-measured
+against today's code first; when all six are ruled and any chosen fix is built, the item's block (`BACKLOG.md:16-157`) comes off.
+**Started:** 2026-10-21 16:50 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
 
-### Sessions 947-1025 (condensed S950 to S1026; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1026 (condensed S950 to S1027; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1026: the docs-audit loose ends of `BACKLOG.md` measured and settled (owner pick at the picker): the stale CL9 line is corrected and the "(3) Left unsettled" paragraph is removed (460 to 455
+lines); `methodology/ROADMAP.md:33-34` says slice 3 (slide decks) was never started and slice 4 (the manual) is not done; the five RO3 ids are done; Learning 347's 53 reproduces, 55 now
+(`docs/architecture/module-contract.md:36-40`); D's "6 of 474" edges are jog legs, not parents; the owner ruled to leave the `file:line` cites as dated records. Strict TDD; claim `332474a2f`,
+RED `e7da1a0a0`, GREEN `dac07adeb` `8f4b430d6` `7b5c3608f`, REFACTOR `14e941480` (`rowsOf()`, `tests/testthat/test_docsAuditLooseEnds.R:131`); evaluation of S1025 8/10, self 7/10 (Learning 992).
+**Gotchas kept:** a layout count depends on row order (raw 6, QC'd 8; both jog legs); reproduce a stored count with its own rule; `BACKLOG.md:139-140` says the other 6d rulings are "not yet
+taken"; in zsh write `${C}:path` and quote globs; wait on a `nohup` job's pid with `kill -0`.
 S1025: the six wrong or missing help and example lines of the docs-audit item are fixed (owner: "finish the items left in the section beginning on line 16", piece 1 of 3; "give them the
 default of 1"): `makeGroupNum()` and `makeGrpNum()` have `numGp = 1L` (`R/makeGroupNum.R:16,34`); four examples pass `minSireAge`/`minDamAge`; `getGeneticDiversityStats()` has an example; the
 `savePlotToFile()` example is out of `\dontrun`; the Genetic Value help names the table the Summary Statistics tab exports; strict TDD; claim `4622e16d7`, RED `d37d6240f`, GREEN `62b3ba044`
