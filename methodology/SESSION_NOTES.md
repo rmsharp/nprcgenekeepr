@@ -99,13 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1027 Did
-**Deliverable:** the six open docs-audit rulings (IN PROGRESS; Phase 0 picker, item 1 of 4, the leftover of S1026's pick, S1026's own suggested order and not an owner order): CC5 Export
-Demographics (owner's call: rename, build the summary, or leave) and "leave" for CB3, CB4, CC2, CC3 and CD3 (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:110-116`), each re-measured
-against today's code first; when all six are ruled and any chosen fix is built, the item's block (`BACKLOG.md:16-157`) comes off.
-**Started:** 2026-10-21 16:50 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, the leftover of S1026's pick; strict TDD, every phase behind its own gate):** the last six docs-audit rulings are taken and the
+docs-audit item (`BACKLOG.md` lines 16-158, 143 lines) is off `BACKLOG.md` (`wc -l` 455 to 311). Each finding was re-measured first; the code at every site is as the 6d report describes it (lines moved).
+The owner took the recommended option twice. CC5 Export Demographics: leave the code and say in the manual what it saves (`vignettes/manual_components/_orip_reporting.Rmd:31-32`, the owner's sentence as
+shown). CB3, CB4, CC2, CC3, CD3: leave all five. The 6d report records both (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:225`, "Update S1027"); `CHANGELOG.md` carries the removed item's record.
+Claim `0d24cb8e1`, RED `6ee63a460`, GREEN `640da10be` `f65f10a2d` `a064ed66c`, REFACTOR `01d259f5b` (SR1 uses the shared `expectWording()`). Not pushed (63 ahead of origin after this close-out).
+**Evidence:** `tests/testthat/test_docsAuditSixRulings.R` 5 blocks, 22 expectations; RED 12 failed (SR3 6 of 7: its "no Export Demographics" check passed at HEAD), GREEN 0; mutants 18 of 18 killed, before and
+after REFACTOR, tree identical after; LE1 in `test_docsAuditLooseEnds.R` edited in RED (10 blocks, 53 expectations); the 108 files that name `BACKLOG.md` or `ROADMAP.md`: 1,469 blocks, 0 failed, 20 skipped
+(two shinytest2 files, as S1026); full suite 444 files, 4,093 blocks, 13,934 expectations, 0 failed, 0 errors, 191 skipped (as S1026); lint 0; plain `devtools::check()` 0/0/0; ratchet 1/1 (results
+`a4950b4645b5`, the S1026 citation `16e724fa41df` compared first). No `R/` change, no NEWS line (a manual sentence, no feature).
+**Handoff evaluation of S1026: 8/10.** Helped: the block-off condition (CC5 plus five "leave") was exactly right and the one-session estimate held; `BACKLOG.md:16-157`, `:159`, `:385`, `:343` and the report's `:116`
+all held; the ratchet hash was there to compare. Missing: nothing on CC5's reach (an ONPRC-only tab; the report had it). Wrong: "rows `:110-115`" for the five (CD3 is row `:119`; `:110-115` also holds CB5 and CC1, built).
+**Self: 8/10.** + measured all six before asking and found two claims that no longer hold (CC2 "read by `appServer`": nothing in `R/` reads it; five cites had moved); the measured LabKey `demographics`
+fact made the recommended option; found the two BACKLOG items that pointed at the removed one and the two LE1 blocks that read its text before removing it; every gate asked; mutants twice. - three silent
+stretches nudged (inside runs of quick reads and greps); the option text said "ONPRC's own EHR" where I had measured only the package's LabKey query name; two duplicate monitors; the GREEN 3 message says
+312 lines (a split count; `wc -l` says 311). Learning 993.
+**Gotchas:** grep the tests for phrases of a BACKLOG block before removing it (LE1 required two); live comments still cite removed lines (`R/reportGV.R:298` "BACKLOG.md:139", `R/modBreedingGroups.R:552` ":149",
+`data-raw/buildJmacExample.R:6` ":179", `data-raw/obfuscated_rhesus_mhc_ped_with_genotypes.R:11` ":139"): dated records by the S1026 ruling, left; the 6d report's Rulings section still opens "None taken yet." above its
+Update paragraphs (dated record, left); `quality_ratchet.py --run` overwrote the results file (compare `a4950b4645b5` next time); wait on a background job's pid with `kill -0` (Monitor), no foreground `sleep`.
+**Next (my order; the owner gave none):** (1) `BACKLOG.md:16` contributor tutorial (DECISION NEEDED, M): the owner first decides (a) `CONTRIBUTING.md` plus article or article alone, (b) how much strict TDD outsiders
+are asked to follow, (c) audience. (2) `BACKLOG.md:241` two kinship2 drawing features (DECISION NEEDED: which column marks "deceased"; M each). (3) `BACKLOG.md:200` compression (311 lines now, the smallest in
+the file's history I have seen; low value). The docs-audit work has no open item left. `methodology/SESSION_NOTES.md` is near its 25,000-token commit-hook line: the next claim condenses before adding.
 
 ### Sessions 947-1026 (condensed S950 to S1027; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1026: the docs-audit loose ends of `BACKLOG.md` measured and settled (owner pick at the picker): the stale CL9 line is corrected and the "(3) Left unsettled" paragraph is removed (460 to 455
@@ -114,32 +128,18 @@ lines); `methodology/ROADMAP.md:33-34` says slice 3 (slide decks) was never star
 RED `e7da1a0a0`, GREEN `dac07adeb` `8f4b430d6` `7b5c3608f`, REFACTOR `14e941480` (`rowsOf()`, `tests/testthat/test_docsAuditLooseEnds.R:131`); evaluation of S1025 8/10, self 7/10 (Learning 992).
 **Gotchas kept:** a layout count depends on row order (raw 6, QC'd 8; both jog legs); reproduce a stored count with its own rule; `BACKLOG.md:139-140` says the other 6d rulings are "not yet
 taken"; in zsh write `${C}:path` and quote globs; wait on a `nohup` job's pid with `kill -0`.
-S1025: the six wrong or missing help and example lines of the docs-audit item are fixed (owner: "finish the items left in the section beginning on line 16", piece 1 of 3; "give them the
-default of 1"): `makeGroupNum()` and `makeGrpNum()` have `numGp = 1L` (`R/makeGroupNum.R:16,34`); four examples pass `minSireAge`/`minDamAge`; `getGeneticDiversityStats()` has an example; the
-`savePlotToFile()` example is out of `\dontrun`; the Genetic Value help names the table the Summary Statistics tab exports; strict TDD; claim `4622e16d7`, RED `d37d6240f`, GREEN `62b3ba044`
-to `a3011771f`, REFACTOR `8df92cb76` (`exampleLinesOf()`, `tests/testthat/helper-pageText.R:105`), NEWS `NEWS.Rmd:540-541`; evaluation of S1024 8/10, self 7/10 (Learning 991). **Gotchas
-kept:** scan the whole class before scoping (the backlog's counts were short); "folder empty afterwards" is blind to an example that ends with `unlink()`; in zsh write `$=files`; check
-`git status` after `devtools::document()` for stray `man/` changes.
-S1024: `NEWS.Rmd` and `NEWS.md` General Fixes hold seven "Fixed (area):" bullets instead of 45 separate "Fixed:" items (owner: "One bullet per area"; section 20,665 B to 11,203 B); strict TDD;
-claim `4b03bee43`, RED `d12583b3d`, GREEN `28c6bfd79`, REFACTOR `2e6d96e9c` (`tests/testthat/helper-newsBlocks.R:11,23`); no NEWS line (this is the NEWS); evaluation of S1023 9/10, self 8/10
-(Learning 990). **Gotchas kept:** emptying a section over-reports (5 of 17 NEWS-reading files failed, 3 quote a Fixed bullet); a new fix goes into its area's `Fixed (area):` bullet
-(`test_newsGeneralFixesGrouped.R` fails otherwise); re-knit with `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` and compare head and tail with HEAD; wait on a `nohup` job's pid with `kill -0`.
-S1023: the archive pointers of the two live ledgers open their shard and proof files (owner: "Fix the 40 live ones"): 80 link lines in `methodology/SESSION_NOTES.md` (23 pointers) and
-`methodology/HANDOFFS.md` (17) now read `methodology/archive/X` with target `archive/X`; the 17 inside six frozen `CHANGELOG` shards stay as history; strict TDD; claim `3aa1445f8`, RED
-`325f0275c`, GREEN `5f4393906`, REFACTOR `e3de99906` (`archivePointerRowsOf()`, `tests/testthat/helper-archivePointers.R:42`); no NEWS line; not pushed; evaluation of S1022 9/10, self
-8/10 (Learning 989). **Gotchas kept:** a dry-run trim is refused (`P1_UNDOCUMENTED`) while a commit is newer than the `CHANGELOG.md` frontier (use a scratch worktree after one throwaway
-commit); `--cut` needs a date inside the file's records; a shard's `verify.sh` reads the trim commit, not the file; the `SESSION_NOTES.md` dry run says `SRF_UNDEFINED` "no prior
-archive" although 23 shards exist (not investigated); `BACKLOG.md:149` still says "CL9 is the open item below" (left as it was, four sessions now).
-S1022: a pedigree file with column headings and no animals keeps its columns in the Cross-Center merge (`R/resolveCrossCenterIds.R:36,42-43`; owner: "Keep every file's columns"); strict TDD;
-claim `7970c5a46`, RED `8b886a903`, GREEN `6b8acbf0a`, REFACTOR `cc5cdf908` (`tests/testthat/helper-emptyCrossCenterInputs.R:6,16`); no NEWS line; evaluation of S1021 9/10, self 8/10 (Learning 988).
-**Gotchas kept:** a download link in a hidden Shiny tab has `href=""` until the tab is shown; `rbind()` drops zero-row pieces; wait on a pid with `kill -0`, never a self-matching `pgrep -f`.
-S1021: a pedigree column named `NA` is read as a blank one (`R/fixColumnNames.R:37`; owner: "Treat NA as a blank"); strict TDD; claim `987df6da1`, RED `4478cda7b`, GREEN `787832c2b`, REFACTOR
-`b7c9872a2` (`tests/testthat/helper-stopAsValue.R:7`), NEWS `061fb1e50` (`NEWS.Rmd:496-502`); 8/10, self 8/10 (Learning 987). **Gotchas kept:** `quality_ratchet.py --run` overwrites the gitignored
-results file, so compare the last receipt's hash first; `withCallingHandlers()` goes inside `tryCatch()`; no reader makes an `NA` name, so only function level reaches it.
-S1020: the Changed Columns tab opens only for a header QC really changed and lists all 13 renames (owner: "Fix at the cause"; `R/fixColumnNames.R:36,78-87`, `R/summary.nprcgenekeeprErr.R:134-139`,
-`R/shouldShowChangedColsTab.R:43`); strict TDD; claim `ae48a3dc2`, REFACTOR `5e8e98797`, NEWS `2942378fc`; 8/10, self 8/10 (Learning 986). **Gotchas kept:** a new `test-e2e-*.R` file also needs a line in
-`.github/workflows/shinytest2.yaml` `groups`; `test_dir(filter=)` matches the name without `test-` or `test_`; the browser tier leaves `tests/testthat/_problems/`; `git worktree remove --force` clears a scratch worktree;
-`processQcStudbookResult()` makes warning rows only for case and space changes (`R/processQcStudbookResult.R:198-215`).
+S1020-S1025 (strict TDD each; evaluations 8-9/10, self 7-8/10; Learnings 986-991; hashes in `CHANGELOG.md`): S1025, the six wrong or missing help and example lines are fixed
+(`makeGroupNum()` and `makeGrpNum()` default `numGp = 1L`, four examples on `minSireAge`/`minDamAge`, a `getGeneticDiversityStats()` example, `savePlotToFile()` out of `\dontrun`, the
+Genetic Value help; `NEWS.Rmd:540-541`; `exampleLinesOf()`, `tests/testthat/helper-pageText.R:105`); S1024, `NEWS.Rmd` and `NEWS.md` General Fixes are seven "Fixed (area):" bullets, not
+45 (gate `test_newsGeneralFixesGrouped.R`); S1023, the 80 archive-pointer link lines of the two live ledgers read `methodology/archive/X` (`archivePointerRowsOf()`,
+`tests/testthat/helper-archivePointers.R:42`); S1022, a pedigree file with headings and no animals keeps its columns in the Cross-Center merge (`R/resolveCrossCenterIds.R:36,42-43`);
+S1021, a pedigree column named `NA` is read as a blank one (`R/fixColumnNames.R:37`); S1020, the Changed Columns tab opens only for a header QC really changed and lists all 13 renames
+(`R/fixColumnNames.R:36,78-87`). Claims `4622e16d7`, `4b03bee43`, `3aa1445f8`, `7970c5a46`, `987df6da1`, `ae48a3dc2`. **Gotchas kept:** scan the whole class before scoping (the backlog's
+counts were short); a dry-run trim is refused (`P1_UNDOCUMENTED`) while a commit is newer than the `CHANGELOG.md` frontier (use a scratch worktree after one throwaway commit), `--cut`
+needs a date inside the file's records, and the `SESSION_NOTES.md` dry run says `SRF_UNDEFINED` although 23 shards exist (not investigated); a new `test-e2e-*.R` file needs a line in
+`.github/workflows/shinytest2.yaml` `groups`; `test_dir(filter=)` matches the name without `test-` or `test_`; a hidden Shiny tab's download link has `href=""`; `rbind()` drops zero-row
+pieces; `withCallingHandlers()` goes inside `tryCatch()`; re-knit NEWS with `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` and compare head and tail with HEAD; check `git
+status` after `devtools::document()`; `quality_ratchet.py --run` overwrites the results file, so compare the last receipt's hash first.
 S1019: Export Current Group is finished: while the "groups not in the pedigree" sentence shows, Group Detail holds no table and no Export button (`R/modBreedingGroups.R:913,1162,1191`); claim `30d16de5f`, REFACTOR
 `11ce761e6`; 8/10, self 8/10 (Learning 985). **Gotchas kept:** only a picture and `innerText` say what a page shows; wait for a job's `EXIT=` line; a mutant run edits `R/` in place, so confirm with `git diff` after.
 S1015-S1018 (evaluations 8-9/10, self 7-8/10): S1018, the red `windows-latest` leg is green (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152` compares with `dirname(workbook)`); S1017, the guide

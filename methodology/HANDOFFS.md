@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1027
 date: 2026-10-21
-status: pending
-active_task: IN PROGRESS -- the six open docs-audit rulings (owner pick at the Phase 0 picker, item 1 of 4): CC5 Export Demographics (rename, build, or leave) and "leave" for CB3, CB4, CC2, CC3, CD3, each re-measured against today's code first
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- the six open docs-audit rulings (owner pick at the Phase 0 picker, item 1 of 4; strict TDD, every phase behind its own gate): the owner took the recommended option twice (CC5 Export Demographics: leave the code and say in the manual what the button saves; CB3, CB4, CC2, CC3, CD3: leave all five), the 6d report records both, and the docs-audit item (BACKLOG.md lines 16-158, 143 lines; wc -l 455 to 311) is off BACKLOG.md. No open docs-audit item is left.
+what_was_done: Claim 0d24cb8e1. Re-measured first, all today: the code at every site is as the 6d report describes it (lines moved); CC2's "read by appServer" is not reproduced (nothing in R/ reads the Pedigree Browser's isReady or nAnimals); CB3 and CB4 leave only the hidden data-ready marker unset, read by browser tests and the capture helper, and no capture script uses the categorical scheme; the Export ORIP Report button already writes the summary, the tab is ONPRC-only (R/shouldShowOripTab.R:34), and the LabKey query the pedigree is read from is called demographics. RED 6ee63a460: test_docsAuditSixRulings.R 5 blocks 22 expectations 12 failed; LE1 in test_docsAuditLooseEnds.R stops requiring the CL9 line and the CC5 sentence. GREEN 640da10be (vignettes/manual_components/_orip_reporting.Rmd:31-32, the owner's sentence), f65f10a2d (the 6d report's "Update S1027" paragraph), a064ed66c (BACKLOG.md block off; the paper item says the audit is finished; the compression item drops the stale candidate). REFACTOR 01d259f5b (SR1 uses expectWording()). Mutants 18 of 18 killed twice; the 108 files naming BACKLOG.md or ROADMAP.md 1,469 blocks 0 failed; full suite 444 files 4,093 blocks 13,934 expectations 0 failed 0 errors 191 skipped; lint 0; plain devtools::check() 0/0/0.
+next_steps: No owner order was given; my order: (1) BACKLOG.md:16 contributor tutorial (DECISION NEEDED, Effort M; three owner decisions first: CONTRIBUTING.md plus article or article alone, how much strict TDD outsiders are asked to follow, audience). (2) BACKLOG.md:241 two kinship2 drawing features (DECISION NEEDED: which pedigree column marks deceased; M each). (3) BACKLOG.md:200 compression (311 lines; low value). Estimates, not computed. SESSION_NOTES.md is near its 25,000-token commit-hook line: the next claim condenses before adding.
+key_files: tests/testthat/test_docsAuditSixRulings.R (SR1 to SR3); tests/testthat/test_docsAuditLooseEnds.R:36-49 (LE1); vignettes/manual_components/_orip_reporting.Rmd:31-32; docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:225; BACKLOG.md:16 (next item), :200, :241, :288 (paper item, reworded); R/modORIPReporting.R:263,339-351; R/shouldShowOripTab.R:34.
+gotchas: Grep the tests for phrases of a BACKLOG block before removing it (LE1 required two). Live comments still cite lines that no longer exist (R/reportGV.R:298 BACKLOG.md:139, R/modBreedingGroups.R:552 :149, data-raw/buildJmacExample.R:6 :179, data-raw/obfuscated_rhesus_mhc_ped_with_genotypes.R:11 :139): dated records by the S1026 ruling, left. The 6d report's Rulings section still opens "None taken yet." above its Update paragraphs (dated record, left). quality_ratchet.py --run overwrites the results file: compare a4950b4645b5 first next time. The GREEN 3 commit message says 312 lines; wc -l says 311. Wait on a background job's pid with kill -0 (Monitor), never a foreground sleep. 63 commits ahead of origin; none pushed.
+runtime_smoke: n/a -- docs, one manual sentence and test files, no R/ change; the manual component was read by the 15 test files that name it, and devtools::check() rebuilt the vignettes (OK); the running app was not launched.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results a4950b4645b5 · manifest aa983075d6a2
+changelog_ref: 0d24cb8e1
+commit: 01d259f5b
 ```
 
 ```handoff
