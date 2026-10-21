@@ -31,12 +31,13 @@ test_that("SR1: the manual says what Export Demographics saves", {
 })
 
 test_that("SR1 (green at HEAD): the module names the file the manual names", {
-  lines <- sourceLines("R", "modORIPReporting.R")
-  fileName <- "paste0(\"demographics_\", Sys.Date(), \".csv\")"
-  button <- paste0("downloadButton(ns(\"downloadDemographics\"), ",
-                   "\"Export Demographics\")")
-  expect_equal(sum(grepl(fileName, lines, fixed = TRUE)), 1L)
-  expect_equal(sum(grepl(button, lines, fixed = TRUE)), 1L)
+  text <- plainSource("R", "modORIPReporting.R")
+  expectWording(
+    text,
+    now = c("paste0(\"demographics_\", Sys.Date(), \".csv\")",
+            paste0("downloadButton(ns(\"downloadDemographics\"), ",
+                   "\"Export Demographics\")")),
+    gone = character(0L))
 })
 
 ## -- SR2 ---------------------------------------------------------------------
