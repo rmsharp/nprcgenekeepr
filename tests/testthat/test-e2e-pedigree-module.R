@@ -310,22 +310,24 @@ test_that(
 ## symbol, which the 10-row legend already did before this row existed (each
 ## row's box touched the next: gap 0).
 
-## Opens the Diagram tab on a 4-animal pedigree: A is DECEASED, B is ALIVE, C
-## is SHIPPED, D is UNKNOWN; as in the example pedigree, only the DECEASED and
-## SHIPPED animals have an exit date. `birth` is required (see the
+## Opens the Diagram tab on a 5-animal pedigree: A (a male, drawn as a square)
+## and E (a female, drawn as a circle) are DECEASED, B is ALIVE, C is SHIPPED,
+## D is UNKNOWN; as in the example pedigree, only the DECEASED and SHIPPED
+## animals have an exit date. `birth` is required (see the
 ## isolated-individual test below). Returns "" once the widget is drawn, else
 ## the reason to skip. The caller owns `app` and stops it.
 open_deceased_diagram <- function(app) {
   ped_csv <- tempfile(fileext = ".csv")
   utils::write.csv(
     data.frame(
-      id = c("A", "B", "C", "D"),
-      sire = c(NA, NA, "A", "A"),
-      dam = c(NA, NA, "B", "B"),
-      sex = c("M", "F", "F", "M"),
-      birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1996-01-01"),
-      exit = c("2005-06-01", NA, "2001-03-01", NA),
-      status = c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN"),
+      id = c("A", "B", "C", "D", "E"),
+      sire = c(NA, NA, "A", "A", "A"),
+      dam = c(NA, NA, "B", "B", "B"),
+      sex = c("M", "F", "F", "M", "F"),
+      birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1996-01-01",
+                "1997-01-01"),
+      exit = c("2005-06-01", NA, "2001-03-01", NA, "2010-02-01"),
+      status = c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN", "DECEASED"),
       stringsAsFactors = FALSE
     ),
     ped_csv, row.names = FALSE
@@ -393,20 +395,63 @@ test_that(
     ), id))
   }
 
-  expect_equal(get_deceased("A"), "true",
-               info = "A's status is DECEASED, so its node is flagged")
+  for (id in c("A", "E")) {
+    expect_equal(get_deceased(id), "true",
+                 info = sprintf("%s's status is DECEASED, so its node is flagged",
+                                id))
+  }
   for (id in c("B", "C", "D")) {
     expect_equal(get_deceased(id), "false",
                  info = sprintf("%s is not DECEASED, so its node is not flagged",
                                 id))
   }
 
-  expect_lt(get_centre_darkest("A"), 100,
-            label = "darkest pixel at the DECEASED animal's centre")
+  for (id in c("A", "E")) {
+    expect_lt(get_centre_darkest(id), 100,
+              label = sprintf("darkest pixel at %s's centre", id))
+  }
   for (id in c("B", "C", "D")) {
     expect_gt(get_centre_darkest(id), 200,
               label = sprintf("darkest pixel at %s's centre", id))
   }
+
+  ## How far the slash runs past the symbol's outline, as a multiple of the
+  ## outline's own distance from the centre, both along the diagonal. The
+  ## slash is walked outwards from the centre up-right until the black stops
+  ## (3 px of non-black); the outline is the first non-white pixel walking
+  ## out up-left from 5 px (clear of the slash's own width), where nothing
+  ## else is drawn; a pixel off the canvas or see-through counts as white. The legend's picture runs 19
+  ## of a radius of 22 out along each axis: 1.22 times the circle's outline
+  ## along the diagonal. Owner, S1028: the diagram's slash must overhang its
+  ## symbol by that same amount whatever the shape, a square (A) as well as
+  ## a circle (E) -- a circle-sized slash stays inside a square's corners.
+  get_overhang <- function(id) {
+    app$get_js(sprintf(paste0(
+      "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
+      ".network; const c = net.canvasToDOM(net.getPosition('%s')); ",
+      "const cv = net.canvas.frame.canvas; const k = cv.width / cv.clientWidth; ",
+      "const ctx = cv.getContext('2d'); const lum = (x, y) => { ",
+      "const px = Math.round(x * k), py = Math.round(y * k); ",
+      "if (px < 0 || py < 0 || px >= cv.width || py >= cv.height) { ",
+      "return 255; } const d = ctx.getImageData(px, py, 1, 1).data; ",
+      "return d[3] < 255 ? 255 : (d[0] + d[1] + d[2]) / 3; }; ",
+      "const q = Math.SQRT1_2; ",
+      "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
+      "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
+      "else if (t - lastBlack > 3) { break; } } ",
+      "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
+      "if (lum(c.x - t * q, c.y - t * q) < 235) { outline = t; break; } } ",
+      "return outline > 0 ? lastBlack / outline : -1; })()"
+    ), id))
+  }
+  squareOverhang <- get_overhang("A")
+  circleOverhang <- get_overhang("E")
+  expect_gt(squareOverhang, 1.10, label = "slash past a square's outline")
+  expect_lt(squareOverhang, 1.40, label = "slash past a square's outline")
+  expect_gt(circleOverhang, 1.10, label = "slash past a circle's outline")
+  expect_lt(circleOverhang, 1.40, label = "slash past a circle's outline")
+  expect_lt(abs(squareOverhang - circleOverhang), 0.12,
+            label = "square and circle overhang difference")
 
   logs <- app$get_logs()
   diagramErrors <- logs[logs$level == "throw" &
@@ -432,19 +477,25 @@ test_that(
   skipReason <- open_deceased_diagram(app)
   if (nzchar(skipReason)) skip(skipReason)
 
-  ## The legend is its own vis.Network (the widget's `legend`). Each labelled
-  ## legend node's bounding box covers its symbol AND its label, so one row's
-  ## label runs over the next row's symbol exactly when the next box starts
-  ## above this one's bottom. Returns "scale|label;top;bottom|label;top;bottom"
-  ## with the rows ordered top to bottom (world units, a plain string, not
-  ## JSON: this package does not depend on jsonlite).
+  ## The legend is its own vis.Network (the widget's `legend`). A row runs
+  ## from its symbol's top to its label's bottom, and one row's label runs
+  ## over the next row's symbol exactly when the next row's top is above this
+  ## one's bottom. The row's bottom is the label's own (`labelModule.size`
+  ## top + height), NOT getBoundingBox(): that box ends 11 world units short
+  ## of the label, so the first version of this check passed while every
+  ## label still touched the next symbol (found S1028 in a real-app picture).
+  ## Returns "scale|label;top;bottom|label;top;bottom" with the rows ordered
+  ## top to bottom (world units, a plain string, not JSON: this package does
+  ## not depend on jsonlite).
   legendRows <- app$get_js(paste0(
     "(() => { const L = HTMLWidgets.find('#pedigree-pedigreeDiagram').legend; ",
-    "const rows = L.body.nodeIndices.map(id => ({ label: ",
-    "L.body.nodes[id].options.label, box: L.getBoundingBox(id) })).filter(",
-    "r => r.label && r.label.length > 0).sort((a, b) => a.box.top - b.box.top); ",
-    "return [L.getScale()].concat(rows.map(r => [r.label, r.box.top, ",
-    "r.box.bottom].join(';'))).join('|'); })()"
+    "const rows = L.body.nodeIndices.filter(id => ",
+    "L.body.nodes[id].options.label).map(id => { const n = L.body.nodes[id]; ",
+    "return { label: n.options.label, top: L.getBoundingBox(id).top, ",
+    "bottom: n.labelModule.size.top + n.labelModule.size.height }; }).sort(",
+    "(a, b) => a.top - b.top); ",
+    "return [L.getScale()].concat(rows.map(r => [r.label, r.top, ",
+    "r.bottom].join(';'))).join('|'); })()"
   ))
   parts <- strsplit(legendRows, "|", fixed = TRUE)[[1L]]
   scale <- as.numeric(parts[[1L]])
@@ -455,14 +506,16 @@ test_that(
 
   expect_equal(labels, c("Female", "Male", "Hermaphrodite", "Unknown",
                          "Other / Unrecorded", "Affected", "Deceased"))
-  ## At least 6 world units clear between one row's box and the next's top.
+  ## At least 6 world units clear between one row's label and the next
+  ## row's symbol.
   expect_true(length(tops) > 1L &&
                 all(tops[-1L] - bottoms[-length(bottoms)] >= 6),
               info = paste("legend row gaps:",
                            toString(tops[-1L] - bottoms[-length(bottoms)])))
-  ## The legend shrinks to fit its canvas; 10 rows fit at 0.68. Spacing the
-  ## rows out must not buy the gap by making the labels unreadably small.
-  expect_gte(scale, 0.55)
+  ## The legend shrinks to fit its canvas; 10 rows fit at 0.68 in a 400 px
+  ## diagram. Spacing the rows out must not buy the gap by making the labels
+  ## smaller than that (the owner took a 500 px diagram for 11 rows, S1028).
+  expect_gte(scale, 0.65)
 })
 
 ## S549 Finding #2 (BACKLOG.md Housekeeping, fixed S555): consanguineous-

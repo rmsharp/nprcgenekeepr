@@ -555,7 +555,8 @@ test_that(
   expect_true(any(grepl("^__drop_|^__bar_|^__proj_", default$nodes$id)))
   expect_setequal(names(default$nodes),
                    c("id", "label", "shape", "title", "size",
-                     "color.background", "x", "y", "color.border"))
+                     "color.background", "deceased", "x", "y",
+                     "color.border"))
   expect_setequal(names(default$edges),
                    c("from", "to", "dashes", "smooth.enabled", "smooth.type",
                      "smooth.roundness", "color", "width"))

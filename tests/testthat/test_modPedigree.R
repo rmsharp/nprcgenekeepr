@@ -1319,7 +1319,10 @@ test_that("modPedigreeServer's diagram widget offers a shape-to-sex legend", {
       # label within the same boundary -- see the dedicated Slice 2 test
       # below.
       expect_true(grepl('"width":0.28', widgetJson))
-      expect_true(grepl('"stepY":54', widgetJson))
+      # S1028: retuned 54 -> 60 (with the 500 px diagram and size-14 legend
+      # symbols, pinned in the S1028 tests at the end of this file) so no
+      # label touches the next row's symbol.
+      expect_true(grepl('"stepY":60', widgetJson))
     }
   )
 })
@@ -1433,9 +1436,10 @@ test_that(
 ## the last row's right-hand end, so the last row has to stay the short "?"
 ## one (confirmed hands-on, S921). Owner choices S921: the label "Same animal,
 ## again", a legend row only (no hover text), and nothing else about the panel
-## changes -- the "width":0.28 / "stepY":54 pins above stay as they are.
+## changes -- the "width":0.28 pin above stays as it is (the "stepY" pin was
+## retuned 54 -> 60 by S1028 below).
 ##
-## These tests match the serialized legend text, as the "stepY":54 test above
+## These tests match the serialized legend text, as the "stepY" test above
 ## does, instead of parsing it: this package does not depend on jsonlite
 ## (helper-shinytest2.R's own note) and devtools::check() warns "unstated
 ## dependencies in tests" if a test calls it. The legend serializes as
@@ -2694,8 +2698,8 @@ test_that(
 
 test_that(
   "modPedigreeServer's diagram legend has a 'Deceased' row, drawn as an inline
-   SVG image with a diagonal line, after the older shape rows and before the
-   edge rows, so the last legend row stays the short '?' one", {
+   SVG image, after the six older shape rows, and its last edge row stays the
+   short '?' one", {
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
@@ -2706,8 +2710,9 @@ test_that(
     widgetJson, fixed = TRUE
   ))
   expect_true(grepl("data:image/svg+xml", widgetJson, fixed = TRUE))
-  expect_lt(regexpr('"Deceased"', widgetJson, fixed = TRUE)[[1L]],
-            regexpr('"Same animal, again"', widgetJson, fixed = TRUE)[[1L]])
+  ## (Where the rows sit on the page is not in this text -- the widget lists
+  ## its legend edges before its legend nodes; the browser test reads the
+  ## rows' real positions.)
   expect_true(grepl('"label":["Same animal, again","MZ","DZ","?"]',
                     widgetJson, fixed = TRUE))
 })
@@ -2743,7 +2748,11 @@ test_that(
   svg <- if (length(uri) == 1L) utils::URLdecode(uri) else ""
   num <- function(attr) {
     hit <- regmatches(svg, regexpr(sprintf("%s='[0-9.]+'", attr), svg))
-    if (length(hit) == 0L) NA_real_ else as.numeric(gsub("[^0-9.]", "", hit))
+    if (length(hit) == 0L) {
+      NA_real_
+    } else {
+      as.numeric(sub("^.*='([0-9.]+)'$", "\\1", hit))
+    }
   }
   radius <- num("r")
   x1 <- num("x1")
@@ -2762,4 +2771,73 @@ test_that(
   expect_length(hit, 1L)
   diagramReach <- as.numeric(sub("reach = ", "", hit))
   expect_equal(diagramReach, legendReach, tolerance = 0.005)
+})
+
+## S1028 -- legend and diagram size for the deceased marker. An 11th legend row
+## has to fit without any label touching the next row's symbol. Measured in the
+## real app: a legend label starts 11 world units below its symbol and is 14
+## tall, so a row occupies its symbol (2 * size) plus 25, and the rows are
+## `stepY` apart; at the old size 20 and stepY 54 every label overran the next
+## symbol by 11. The owner took a taller diagram: the canvas goes from 400 to
+## 500 px (the legend shares it), the legend's symbols to size 14 and the rows
+## to stepY 60, which leaves 7 clear and the legend text at about 0.72 of full
+## size (0.68 before). The browser tests read the real positions.
+
+test_that(
+  "modPedigreeServer draws the diagram on a 500 px canvas, so 11 legend rows
+   fit without shrinking the legend text", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ .deceasedStudbook() })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("visNetwork", html, fixed = TRUE))
+      expect_true(grepl("height:500px", html, fixed = TRUE))
+      expect_false(grepl("height:400px", html, fixed = TRUE))
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer's diagram legend draws all seven symbol rows at size 14",
+  {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  widgetJson <- .deceasedWidgetJson(.deceasedStudbook())
+  expect_true(grepl('"size":[14,14,14,14,14,14,14]', widgetJson, fixed = TRUE))
+})
+
+## S1028 -- the slash must overhang a symbol's OUTLINE by the same amount
+## whatever the shape (owner, after seeing a circle-sized slash stay inside a
+## square's corners). The handler scales `reach` by each shape's outline
+## distance from the centre along the slash diagonal, in units of the node
+## size: 1 for the circle the legend draws, the square root of 2 for a square's
+## corner, and so on for the other four shapes the diagram uses. The browser
+## test measures the pixels.
+
+test_that(
+  "modPedigreeServer's slash handler scales the overhang by each shape's
+   outline: 1 for a dot, the square root of 2 for a square", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  handler <- .afterDrawingHandler(.deceasedWidgetJson(.deceasedStudbook()))
+  factor <- function(shape) {
+    hit <- regmatches(handler,
+                      regexpr(sprintf("%s: [0-9.]+", shape), handler))
+    if (length(hit) == 0L) NA_real_ else as.numeric(sub("^.*: ", "", hit))
+  }
+  expect_equal(factor("dot"), 1)
+  expect_equal(factor("square"), sqrt(2), tolerance = 0.001)
+  for (shape in c("diamond", "triangle", "star")) {
+    expect_false(is.na(factor(shape)), label = shape)
+  }
+  expect_true(grepl("n.shape", handler, fixed = TRUE))
 })
