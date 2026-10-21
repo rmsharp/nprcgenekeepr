@@ -136,7 +136,7 @@
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2,
+#'   minSireAge = 2, minDamAge = 2,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )
