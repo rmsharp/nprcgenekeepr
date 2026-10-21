@@ -202,10 +202,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1023
 date: 2026-10-20
-status: pending
-active_task: IN PROGRESS -- BACKLOG.md:168 the archive pointers name docs/archive/ but the shards sit in methodology/archive/: settle leave / rewrite the 52 pointers / change methodology_trim.py, then build it if the answer is not "leave"; owner pick at the Phase 0 picker, item 1 of 4
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the former BACKLOG.md:168 item, the archive pointers naming docs/archive/ while the shards sit in methodology/archive/ (owner pick at the Phase 0 picker, item 1 of 4; the owner took "Fix the 40 live ones"; strict TDD, every phase behind its own gate; no NEWS line)
+what_was_done: Claim 3aa1445f8. Measured first: 57 pointers (114 links), not the stored 52 (23 in SESSION_NOTES.md, 17 in HANDOFFS.md, 17 inside six frozen CHANGELOG shards), every one naming a file that exists in methodology/archive/; methodology_trim.py 1.8.0 already writes working links; a shard verify.sh reads the trim commit, so a rewritten and a damaged copy both pass. RED 325f0275c (helper-archivePointers.R, test_archivePointersResolve.R, 12 blocks 23 expectations, 2 failed on 46 and 34 dead links). GREEN 5f4393906 (80 link lines, nothing else changed; scratch before/after dry-run trims differ only in bytes). REFACTOR e3de99906 (archivePointerRowsOf()). Mutants 5 of 5 killed before and after. Full suite 440 files, 4,056 blocks, 13,616 expectations, 0 failed, 0 errors, 191 skipped; lint 0; check 0/0/0. BACKLOG.md:168 block removed; Learning 989.
+next_steps: No owner order was given; my order: BACKLOG.md:168 condense the 45 "Fixed:" bullets of NEWS.Rmd General Fixes (DECISION NEEDED: one bullet, one per area, or Major kept and Minor grouped; M); :364 BACKLOG.md compression (READY, L, recurring, last pass S896); :180 contributor tutorial (DECISION NEEDED, M, three owner decisions first). The branch is 32 commits ahead of origin (S1019 to S1023); none has run on CI; push only with real work, once per session.
+key_files: tests/testthat/helper-archivePointers.R:26,42,51 (archivePointerRows, archivePointerRowsOf, archivePointerProblems); tests/testthat/test_archivePointersResolve.R:131-151 (expectPointersOpen and the three real-file blocks); methodology/SESSION_NOTES.md:5 and methodology/HANDOFFS.md:127 (the first pointers); methodology/methodology_trim.py:328 (layout_for); methodology/archive/CHANGELOG-through-2026-09-17.md.verify.sh:18,163 (the proof reads the trim commit); BACKLOG.md:168,180,364 (the next items) and :149 (the stale CL9 sentence, left as it was); PROJECT_LEARNINGS.md:2860 (Learning 989)
+gotchas: A dry-run trim is refused (P1_UNDOCUMENTED) while a commit is newer than the CHANGELOG.md frontier: use a scratch worktree after one throwaway commit; --cut needs a date inside the file's records. A shard verify.sh passes for a damaged working-tree copy, so it cannot guard an edit of a frozen shard. The SESSION_NOTES.md dry run says SRF_UNDEFINED (no prior archive) although 23 shards exist: not investigated. An unquoted $var of two words is not split by zsh. SESSION_NOTES.md is about 900 B under its 25,000-token ceiling: condense before adding.
+runtime_smoke: n/a -- docs and test only (no R/ change, no app behavior). The tool surface was exercised with scratch dry-run trims of HANDOFFS.md (31 of 36 records) and SESSION_NOTES.md (1 of 16, --cut 2026-10-10) before and after the rewrite: same verdicts, L1/L2/L3 hold; and with five hand mutants of the live ledgers.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 80f4e23e5bc3 · manifest aa983075d6a2
+changelog_ref: 3aa1445f8
+commit: e3de99906
 ```
 
 ```handoff
