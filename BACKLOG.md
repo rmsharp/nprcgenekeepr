@@ -137,8 +137,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `R/nameBreedingGroups.R`, `R/appServer.R:434-439`, `NEWS.Rmd:279-283`, the guide and the manual say it; gates `test_modBreedingGroups_groupLabels.R`, `test_nameBreedingGroups.R`,
       `test_appServer_server.R`, `test_unusedAnimalsHeatMapWording.R`);
       **the owner's other rulings are not yet taken**, the report proposes one per finding with a recommendation: CC5 is the owner's call,
-      and CB3, CB4, CC2, CC3 and CD3 stay as they are), and the R `helpText` at `R/modGeneticValue.R:88` still says
-      "Summary Statistics relationship table" (present S890; not re-checked); 6e 46 candidates CE-CL, re-checked S1003
+      and CB3, CB4, CC2, CC3 and CD3 stay as they are); 6e 46 candidates CE-CL, re-checked S1003
       (`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`: 1 closed by a later session, CF2 in S923; 45 still
       true, 6 moderate (CE2 `fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for kinship overrides and
       snapshot history, CI1 example-config API-key placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
@@ -147,10 +146,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3 with CJ4, males under the age or with no birth date in sex-ratio groups, fixed S1008;
       CE4 and CE5, the Cross-Center check and merge, fixed S1011 (`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`, `NEWS.Rmd`);
       CI1 with CI3, the example-config API-key placeholder and a setting read in another case, fixed S1012 (`R/readConfigLines.R`, `R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**, and the 13 small wrong statements fixed S1016 (`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9 is the open item below),
-      and `R/makeGroupNum.R` still says `numGp` "Default is 1" while the examples in
-      `R/fillGroupMembersWithSexRatio.R` and `R/groupAddAssign.R` still pass deprecated
-      `minParentAge` (all three present S890); 7b/8 CV1 and CV2 (`getGeneticDiversityStats()`
-      exports with no `@examples`; the `savePlotToFile` example uses `\dontrun`); the four
+      and the four
       likely code defects of *slice 4* (this item's earlier "8" label was wrong), re-checked against today's code S966
       (`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`): all four are still real and the docs
       already say so, except one wording line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
