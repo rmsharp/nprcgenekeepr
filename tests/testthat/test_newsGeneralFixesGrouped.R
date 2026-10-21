@@ -13,7 +13,8 @@
 ##
 ## NEWS.Rmd and NEWS.md are build-ignored, so every block that reads them skips
 ## inside an R CMD check tarball. sourceLines() and plainText() are in
-## helper-pageText.R.
+## helper-pageText.R; newsTopBlock() and newsEntries() are in
+## helper-newsBlocks.R.
 
 library(testthat)
 
@@ -100,15 +101,10 @@ factText <- c(
   "setExit()"
 )
 
-## The lines of the "## General Fixes" part of the newest version block: from
-## the first "# nprcgenekeepr" heading to the second, then to the next "## ".
+## The lines of the "## General Fixes" part of the newest version block (see
+## newsTopBlock() in helper-newsBlocks.R), up to the next "## ".
 newsGeneralFixesLines <- function(lines) {
-  heads <- grep("^# nprcgenekeepr", lines)
-  if (length(heads) == 0L) {
-    return(character(0L))
-  }
-  end <- if (length(heads) > 1L) heads[2L] - 1L else length(lines)
-  block <- lines[heads[1L]:end]
+  block <- newsTopBlock(lines)$lines
   start <- grep("^## General Fixes\\s*$", block)
   if (length(start) == 0L) {
     return(character(0L))
@@ -121,17 +117,11 @@ newsGeneralFixesLines <- function(lines) {
   rest
 }
 
-## The bullets of some lines, each as plain text without its "- ": a line
-## starting "- " begins one and the indented lines after it continue it.
+## The bullets of some lines, each as plain text without its "- " (see
+## newsEntries() in helper-newsBlocks.R).
 newsBullets <- function(lines) {
-  starts <- grep("^- ", lines)
-  vapply(starts, function(i) {
-    j <- i
-    while (j < length(lines) && grepl("^  \\S", lines[j + 1L])) {
-      j <- j + 1L
-    }
-    sub("^- ", "", plainText(lines[i:j]))
-  }, character(1L))
+  entries <- newsEntries(list(start = 1L, lines = lines))
+  vapply(entries$text, plainText, character(1L), USE.NAMES = FALSE)
 }
 
 ## The area in "Fixed (<area>): ..."; NA for a bullet written another way.

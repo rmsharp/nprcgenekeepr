@@ -155,9 +155,7 @@ test_that("the shipped one-file example is the rhesus MHC pedigree with its geno
 newsDevSection <- function(file) {
   path <- file.path(pkgRoot, file)
   skip_if_not(file.exists(path), paste(file, "not present"))
-  lines <- readLines(path, warn = FALSE)
-  starts <- grep("^# nprcgenekeepr ", lines)
-  paste(lines[starts[[1L]]:(starts[[2L]] - 1L)], collapse = " ")
+  paste(newsTopBlock(readLines(path, warn = FALSE))$lines, collapse = " ")
 }
 
 test_that("the development-version NEWS entry says the one-file mode reads these columns, in NEWS.Rmd and in the knitted NEWS.md", {
