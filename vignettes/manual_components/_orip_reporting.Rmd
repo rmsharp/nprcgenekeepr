@@ -28,6 +28,9 @@ The tab has:
 - a **Genetic Diversity Metrics** section (mean kinship, mean genome
   uniqueness, and the number of animals analyzed).
 
+**Export Demographics** saves the pedigree the analysis is using, as it stands,
+to `demographics_<date>.csv`; it is not a summary.
+
 The tab is still under development. A "Coming Soon" list names founder
 contribution analysis, inbreeding trends over time, breeding success rates, age
 structure analysis, and formatted PDF report generation. The exact information
