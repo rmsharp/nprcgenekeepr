@@ -10,13 +10,7 @@ exampleCode <- function(fn) {
   if (!file.exists(rd)) {
     return(NA_character_)
   }
-  out <- tempfile(fileext = ".R")
-  on.exit(unlink(out), add = TRUE)
-  suppressMessages(tools::Rd2ex(rd, out = out))
-  if (!file.exists(out)) {
-    return("")
-  }
-  paste(readLines(out, warn = FALSE), collapse = "\n")
+  paste(exampleLinesOf(rd), collapse = "\n")
 }
 
 for (fn in c(

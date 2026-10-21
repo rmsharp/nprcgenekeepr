@@ -8,7 +8,9 @@
 ## as one line of text, count a phrase in it, say which phrases a page now holds
 ## and which it no longer holds, pull a code chunk out of a .qmd or .Rmd, and
 ## read a function's help in the two places it lives (manText(), roxygenText(),
-## helpPlaces(), skipUnlessHelpInSourceTree()).
+## helpPlaces(), skipUnlessHelpInSourceTree()), and read the example of a man
+## page (exampleLinesOf(); test_examples_invoke_documented_fn.R and
+## test_docsAuditLeftoverWording.R).
 
 ## The lines of one tracked file of the source tree. The file sits outside a
 ## built package (.Rbuildignore'd or not installed), so the block skips where
@@ -95,6 +97,16 @@ manText <- function(topic) {
     return(NA_character_)
   }
   collapseSpace(paste(unlist(tools::parse_Rd(path)), collapse = ""))
+}
+
+## The example code of one man page (the file `rd`), one string per line, as
+## tools::Rd2ex() writes it: a \dontrun part stays in as "## Not run:" and
+## "##D" comment lines. A page with no example gives character(0).
+exampleLinesOf <- function(rd) {
+  out <- tempfile(fileext = ".R")
+  on.exit(unlink(out), add = TRUE)
+  suppressMessages(tools::Rd2ex(rd, out))
+  if (file.exists(out)) readLines(out, warn = FALSE) else character(0L)
 }
 
 ## Every roxygen line of R/<file>.R with the `#'` prefix and the \code{}

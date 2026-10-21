@@ -24,21 +24,12 @@
 ## Blocks marked "(green at HEAD)" pass before the fix; they pin what stays.
 
 ## sourceLines(), plainText(), expectNames(), occurrences(), manText(),
-## roxygenText(), helpPlaces() and skipUnlessHelpInSourceTree() are in
-## helper-pageText.R; newsTopBlock() and newsEntries() are in
-## helper-newsBlocks.R.
+## roxygenText(), exampleLinesOf(), helpPlaces() and
+## skipUnlessHelpInSourceTree() are in helper-pageText.R; newsTopBlock() and
+## newsEntries() are in helper-newsBlocks.R.
 
-## The code of the example section of a man page (tools::Rd2ex() output), one
-## string per line; character(0) for a page with no example. `rd` is the path.
-exampleLinesOf <- function(rd) {
-  out <- tempfile(fileext = ".R")
-  on.exit(unlink(out), add = TRUE)
-  suppressMessages(tools::Rd2ex(rd, out))
-  if (file.exists(out)) readLines(out, warn = FALSE) else character(0L)
-}
-
-## The example code of the man page of `topic`; skips where man/ is absent (an
-## installed package).
+## The example code of the man page of `topic` (exampleLinesOf() in
+## helper-pageText.R); skips where man/ is absent (an installed package).
 exampleLines <- function(topic) {
   rd <- testthat::test_path("..", "..", "man", paste0(topic, ".Rd"))
   skip_if_not(file.exists(rd), "man/*.Rd not available (installed package)")
