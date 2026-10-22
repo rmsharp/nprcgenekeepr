@@ -30,25 +30,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **(Optional, owner decision) Retrospective colony-snapshot backfill for
-      longitudinal genetic-health monitoring** (deferred S760, 2026-09-22, from the
-      closed issue #167's plan §5 Slice 5, DECISION NEEDED, Effort L, its own scoping
-      session first) -- issue #167's v1 (schema + history IO, snapshot generation,
-      trend/delta computation, the Genetic-Health Trends tab; Slices 1-4, all shipped
-      and closed) is prospective-only: snapshots are recorded from the analysis state
-      a user is looking at when they generate one. A future, clearly-caveated feature
-      could reconstruct APPROXIMATE historical snapshots from birth/exit dates alone,
-      giving an immediate trend from a single studbook rather than waiting for
-      prospective series to accumulate. **Never ratified as v1 scope** (plan §3 D5,
-      §5 Slice 5) -- the caveat model is the design problem, not an implementation
-      detail: as-of-date reconstruction cannot recover historical breeder flags or
-      focal-population designations, so `neSexRatio`/`neVariance` and focal-rule
-      snapshots would be silently wrong, not merely approximate, unless the design
-      session solves that. Requires its own fresh Pre-RED design gate (a new GitHub
-      issue, since #167 itself is closed) before any implementation. See
-      `docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 and D5 (§7
-      Dragon 1 is the no-seed-in-`reportGV()` point, not this caveat list)
-      for the full caveat inventory.
+- [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health monitoring
+      -- design written S1036 (DECISION NEEDED, Effort L, four slices, each its own
+      session)** (2026-10-22; scope ruled by the owner: an exported
+      `backfillColonySnapshots()` plus a "Build earlier snapshots" button on the
+      Genetic-Health Trends tab that calls it) -- design, measurements and slices:
+      `docs/planning/retrospective-snapshot-backfill-plan.md`. Measured on the jmac
+      studbook: setting only the population for a past date gives wrong effective sizes
+      (`getLivingBreeders()` reads today's exit dates); blanking later exit dates gives the
+      right ones and matches the app exactly at the export date (2018-07-11). Rebuilt rows
+      get their own rule, `reconstructedLiving`, so they never mix with recorded ones.
+      **Waiting on the owner:** read the design and say go; say when to file the GitHub
+      issue (draft in its Appendix C, **not filed**; #167 is closed). Three calls go to
+      `AskUserQuestion` at the slice that needs them: animals with no birth date (B4), the
+      default start year (B6), the shared analysis-pedigree helper (B11). **Not yet
+      checked:** cost on a colony larger than the 2,590-animal example (about 4 s per date
+      there), and whether the effective-size definition reads sensibly for early years (1
+      of the 201 animals alive on 1990-01-01 has a recorded sire). First pickup once the
+      issue exists: Slice 1, the new rule plus the function for explicit dates (design
+      section 5).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
