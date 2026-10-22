@@ -1218,6 +1218,55 @@ test_that(
   }
 })
 
+## S1029 mutation gaps (found with the mutants of the section painter): a
+## painter that forgot to clip would still pass the half-colour check above,
+## which reads inside the symbols, and one that forgot the section lines would
+## pass it too. The sections must stay inside the outline, and the lines
+## between sections are drawn for every animal, an unaffected one included.
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab keeps the sections inside each symbol's
+   outline and draws the section line on an unaffected animal", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_conditions_edges")
+  on.exit(app$stop(), add = TRUE)
+
+  skipReason <- open_diagram_with(app, conditions_pedigree())
+  if (nzchar(skipReason)) skip(skipReason)
+
+  ## The darkest grey level (0 black, 255 white) of the 3 pixels across at
+  ## (`dx`, `dy`) from a node's centre, in units of the node's radius on
+  ## screen.
+  darkest_at <- function(id, dx, dy) {
+    app$get_js(sprintf(diagram_pixel_js(paste0(
+      "const p = net.canvasToDOM(net.getPosition('%s')); ",
+      "const n = net.body.data.nodes.get('%s'); ",
+      "const r = (n.size || 25) * net.getScale(); let lo = 255; ",
+      "for (let i = -1; i <= 1; i++) { lo = Math.min(lo, ",
+      "lum(p.x + %f * r + i, p.y + %f * r)); } return lo; "
+    )), id, id, dx, dy))
+  }
+
+  ## E is a circle affected by the first condition (the left half is pink);
+  ## A is a square affected by both. Just outside the left edge, where an
+  ## unclipped wedge would still paint, the canvas is white.
+  for (id in c("E", "A")) {
+    expect_gt(darkest_at(id, -1.3, 0), 240,
+              label = sprintf("darkest pixel just left of %s's outline", id))
+  }
+  ## D (a square) and B (a circle) are affected by nothing; the line between
+  ## their two sections runs down the middle, in the outline's color.
+  for (id in c("D", "B")) {
+    expect_lt(darkest_at(id, 0, 0.4), 235,
+              label = sprintf("darkest pixel on %s's section line", id))
+  }
+})
+
 test_that(
   "E2E: Pedigree Browser Diagram tab with four conditions lists four legend
    rows in place of 'Affected', grows the canvas to 635 px, and keeps the

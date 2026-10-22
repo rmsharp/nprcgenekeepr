@@ -3079,3 +3079,29 @@ test_that(
   expect_false(grepl("Only the first four", noteOf(.conditionsStudbook()),
                      fixed = TRUE))
 })
+
+## S1029 mutation gap: the note appears for ONE column left out, not only for
+## two or more (the test above used six columns).
+
+test_that(
+  "modPedigreeServer names the one column left out when a file has exactly
+   five condition columns", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  captured <- new.env()
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ .nConditionsStudbook(5L) })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      captured$html <- output$pedigreeDiagramUI$html
+    }
+  )
+  expect_true(grepl(
+    paste("Only the first four affected columns are drawn.",
+          "Not drawn: affected5."),
+    captured$html, fixed = TRUE
+  ))
+})

@@ -2369,3 +2369,27 @@ test_that(
   expect_true(all(animals %in% c("00", "01", "10", "11")))
   expect_true("11" %in% animals)
 })
+
+## S1029 mutation gaps: a loosened prefix test (any column CONTAINING
+## "affected") and an unescaped name both passed every test above.
+
+test_that(
+  ".conditionColumns takes only a column that STARTS with 'affected': a column
+   such as 'unaffected' or 'notaffected' is not a condition", {
+  ped <- .conditionsFixture(unaffected = TRUE, notaffected = TRUE,
+                            affected = TRUE)
+  expect_equal(.conditionColumns(ped), "affected")
+  expect_equal(.conditionColumns(.conditionsFixture(unaffected = TRUE)),
+               character(0L))
+})
+
+test_that(
+  "makePedigreeMatingLayout escapes markup in a condition's name in the
+   tooltip, as it does for an id", {
+  ped <- .conditionsFixture(
+    `affected<i>x` = c(TRUE, FALSE, NA, TRUE, FALSE)
+  )
+  title <- makePedigreeMatingLayout(ped)$nodes$title[1L]
+  expect_true(grepl("Affected (&lt;i&gt;x):</b>", title, fixed = TRUE))
+  expect_false(grepl("<i>x", title, fixed = TRUE))
+})
