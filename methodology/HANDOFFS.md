@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1031
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- trim methodology/HANDOFFS.md (207,314 B, past its 196,608 B warn line) with methodology_trim.py --budget-bytes 65536 (owner pick at the second Phase 0 picker, item 1 of 4, "Trim HANDOFFS.md"; housekeeping, no code or test change; check first, then write, apart from the close-out)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1030
 date: 2026-10-22
 status: complete
