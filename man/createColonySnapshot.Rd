@@ -17,13 +17,14 @@ createColonySnapshot(
 \item{ped}{The pedigree data.frame the \code{reportGV} analysis was run
 on, carrying at least an \code{id} column (plus the logical
 \code{population} column when \code{membershipRule} is
-\code{"focalPopulation"}).}
+\code{"focalPopulation"} or \code{"reconstructedLiving"}).}
 
 \item{geneticValue}{An object of class \code{nprcgenekeeprGV} as returned
 by \code{\link{reportGV}}.}
 
 \item{membershipRule}{Single string naming how the analysis population
-was assembled; one of \code{"wholePedigree"} or \code{"focalPopulation"}.}
+was assembled; one of \code{"wholePedigree"}, \code{"focalPopulation"} or
+\code{"reconstructedLiving"}.}
 
 \item{guIter}{Single positive whole number: the \code{guIter} value the
 \code{reportGV} call used. Required — there is no default.}
@@ -64,6 +65,11 @@ report, and a contradiction stops:
 \code{population} column (see \code{\link{setPopulation}}) and the report
 covers exactly \code{ped$id[ped$population]}. Pass the same
 population-designated pedigree the \code{reportGV} call analyzed.}
+\item{\code{"reconstructedLiving"}}{the snapshot was rebuilt for a past
+date from the pedigree's birth and exit dates (see
+\code{\link{backfillColonySnapshots}}). It is verified exactly like
+\code{"focalPopulation"}, but is a separate rule so a rebuilt row never
+mixes with a recorded one: rules are never compared with each other.}
 }
 }
 \examples{

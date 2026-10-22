@@ -27,16 +27,22 @@
 #' \code{population} column (see \code{\link{setPopulation}}) and the report
 #' covers exactly \code{ped$id[ped$population]}. Pass the same
 #' population-designated pedigree the \code{reportGV} call analyzed.}
+#' \item{\code{"reconstructedLiving"}}{the snapshot was rebuilt for a past
+#' date from the pedigree's birth and exit dates (see
+#' \code{\link{backfillColonySnapshots}}). It is verified exactly like
+#' \code{"focalPopulation"}, but is a separate rule so a rebuilt row never
+#' mixes with a recorded one: rules are never compared with each other.}
 #' }
 #'
 #' @param ped The pedigree data.frame the \code{reportGV} analysis was run
 #' on, carrying at least an \code{id} column (plus the logical
 #' \code{population} column when \code{membershipRule} is
-#' \code{"focalPopulation"}).
+#' \code{"focalPopulation"} or \code{"reconstructedLiving"}).
 #' @param geneticValue An object of class \code{nprcgenekeeprGV} as returned
 #' by \code{\link{reportGV}}.
 #' @param membershipRule Single string naming how the analysis population
-#' was assembled; one of \code{"wholePedigree"} or \code{"focalPopulation"}.
+#' was assembled; one of \code{"wholePedigree"}, \code{"focalPopulation"} or
+#' \code{"reconstructedLiving"}.
 #' @param guIter Single positive whole number: the \code{guIter} value the
 #' \code{reportGV} call used. Required — there is no default.
 #' @param guThresh Single positive whole number: the \code{guThresh} value
@@ -80,7 +86,7 @@ createColonySnapshot <- function(ped, geneticValue, membershipRule,
       toString(missingReportCols), ".")
   }
 
-  knownRules <- c("wholePedigree", "focalPopulation")
+  knownRules <- c("wholePedigree", "focalPopulation", "reconstructedLiving")
   if (!is.character(membershipRule) || length(membershipRule) != 1L ||
       is.na(membershipRule)) {
     stop("'membershipRule' must be a single string; known rules: ",
@@ -130,16 +136,16 @@ createColonySnapshot <- function(ped, geneticValue, membershipRule,
     }
   } else {
     if (is.null(ped$population)) {
-      stop("membershipRule 'focalPopulation' requires 'ped' to carry the ",
-        "logical population column that designated the focal population ",
+      stop("membershipRule '", membershipRule, "' requires 'ped' to carry ",
+        "the logical population column that designated the focal population ",
         "(see setPopulation()).")
     }
     focalIds <- as.character(ped$id[ped$population])
     if (!setequal(reportIds, focalIds)) {
-      stop("membershipRule 'focalPopulation' claims the analysis covered ",
-        "the pedigree's designated focal population, but the geneticValue ",
-        "report covers ", length(reportIds), " animal(s) while 'ped' ",
-        "designates ", length(focalIds), ".")
+      stop("membershipRule '", membershipRule, "' claims the analysis ",
+        "covered the pedigree's designated focal population, but the ",
+        "geneticValue report covers ", length(reportIds), " animal(s) while ",
+        "'ped' designates ", length(focalIds), ".")
     }
   }
 
