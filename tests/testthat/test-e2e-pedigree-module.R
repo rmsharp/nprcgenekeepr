@@ -310,6 +310,24 @@ test_that(
 ## symbol, which the 10-row legend already did before this row existed (each
 ## row's box touched the next: gap 0).
 
+## Runs `body` in the browser with a pixel reader on the Diagram canvas: `net`
+## (the vis.Network), `cv` (its canvas) and `lum(x, y)`, the grey level (0
+## black, 255 white) at a position in CSS pixels; a pixel off the canvas or see-
+## through counts as white. `body` must `return` its answer.
+diagram_pixel_js <- function(body) {
+  paste0(
+    "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
+    ".network; const cv = net.canvas.frame.canvas; ",
+    "const k = cv.width / cv.clientWidth; const ctx = cv.getContext('2d'); ",
+    "const lum = (x, y) => { const px = Math.round(x * k), ",
+    "py = Math.round(y * k); if (px < 0 || py < 0 || px >= cv.width || ",
+    "py >= cv.height) { return 255; } ",
+    "const d = ctx.getImageData(px, py, 1, 1).data; ",
+    "return d[3] < 255 ? 255 : (d[0] + d[1] + d[2]) / 3; }; ",
+    body, " })()"
+  )
+}
+
 ## Opens the Diagram tab on a 5-animal pedigree: A (a male, drawn as a square)
 ## and E (a female, drawn as a circle) are DECEASED, B is ALIVE, C is SHIPPED,
 ## D is UNKNOWN; as in the example pedigree, only the DECEASED and SHIPPED
@@ -384,15 +402,11 @@ test_that(
   ## around the node's centre. An unmarked node's centre is its white fill; a
   ## marked node's centre lies on the black slash.
   get_centre_darkest <- function(id) {
-    app$get_js(sprintf(paste0(
-      "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
-      ".network; const p = net.canvasToDOM(net.getPosition('%s')); ",
-      "const cv = net.canvas.frame.canvas; const k = cv.width / cv.clientWidth; ",
-      "const d = cv.getContext('2d').getImageData(Math.round(p.x * k) - 2, ",
-      "Math.round(p.y * k) - 2, 5, 5).data; let lo = 255; ",
-      "for (let i = 0; i < d.length; i += 4) { ",
-      "lo = Math.min(lo, (d[i] + d[i + 1] + d[i + 2]) / 3); } return lo; })()"
-    ), id))
+    app$get_js(sprintf(diagram_pixel_js(paste0(
+      "const p = net.canvasToDOM(net.getPosition('%s')); let lo = 255; ",
+      "for (let i = -2; i <= 2; i++) { for (let j = -2; j <= 2; j++) { ",
+      "lo = Math.min(lo, lum(p.x + i, p.y + j)); } } return lo;"
+    )), id))
   }
 
   for (id in c("A", "E")) {
@@ -430,15 +444,8 @@ test_that(
   ## symbol by that same amount whatever the shape, a square (A) as well as
   ## a circle (E) -- a circle-sized slash stays inside a square's corners.
   get_overhang <- function(id) {
-    app$get_js(sprintf(paste0(
-      "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
-      ".network; const c = net.canvasToDOM(net.getPosition('%s')); ",
-      "const cv = net.canvas.frame.canvas; const k = cv.width / cv.clientWidth; ",
-      "const ctx = cv.getContext('2d'); const lum = (x, y) => { ",
-      "const px = Math.round(x * k), py = Math.round(y * k); ",
-      "if (px < 0 || py < 0 || px >= cv.width || py >= cv.height) { ",
-      "return 255; } const d = ctx.getImageData(px, py, 1, 1).data; ",
-      "return d[3] < 255 ? 255 : (d[0] + d[1] + d[2]) / 3; }; ",
+    app$get_js(sprintf(diagram_pixel_js(paste0(
+      "const c = net.canvasToDOM(net.getPosition('%s')); ",
       "const q = Math.SQRT1_2; ",
       "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
       "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
@@ -448,8 +455,8 @@ test_that(
       "return lo; }; ",
       "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
       "if (near(c.x - t * q, c.y - t * q) < 250) { outline = t; break; } } ",
-      "return outline > 0 ? lastBlack / outline : -1; })()"
-    ), id))
+      "return outline > 0 ? lastBlack / outline : -1;"
+    )), id))
   }
   squareOverhang <- get_overhang("A")
   circleOverhang <- get_overhang("E")
