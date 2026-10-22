@@ -133,23 +133,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
       `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
       release tarballs from a clean export, never the working tree.
-- [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
-      `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
-      the chromote CDP-timeout fallback fix (see `CHANGELOG.md`), READY (optional), Effort M -- research only, not
-      required) -- the practical problem is FULLY resolved: `macos-latest` reverts to ambient/
-      unpinned Chrome (`R-CMD-check.yaml`, `if: matrix.config.os != 'macos-latest'` on the 3
-      Chrome-provisioning steps), verified green on real CI.
-      **Unexplained:** why the bootstrap probe `Runtime.evaluate("window.devicePixelRatio", ...)`
-      (`private$get_pixel_ratio()`, chromote 0.5.1) never gets a response on the pinned macOS ARM64
-      binary, though the same binary works on ubuntu-latest/windows-latest and ambient Chrome works
-      on macos-latest (raising `default_timeout` to 60s changed nothing: the session is wedged, not
-      slow). The only plausible analog found is Mozilla Bugzilla #1893921 (Firefox's content-process
-      spawn hitting a 5s sandbox-denial stall on GitHub's *virtualized* macOS ARM64 hosts); no
-      matching Chromium tracker entry exists. Only worth pursuing if pinned-Chrome reproducibility
-      on macOS becomes valuable: `xattr -l` on the extracted `.app` on a live failing runner (the
-      research found Gatekeeper quarantine NOT evidenced for `browser-actions/setup-chrome`), or a
-      new `rstudio/chromote` upstream issue (none matches this macOS+GHA+live-CDP-timeout
-      signature).
 - [ ] **Shard verify scripts that FAIL on lossless trims: reported upstream as `KJ5HST/methodology#93`;
       waiting on a fix and a way to regenerate old scripts (BLOCKED -- on upstream #93, Effort S once
       it ships)** -- S901 characterized all 10 red scripts (of 54: HANDOFFS 2 of 15, CHANGELOG 1 of 16,
