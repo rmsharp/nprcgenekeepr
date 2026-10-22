@@ -75,13 +75,6 @@ backfillColonySnapshots <- function(ped, dates, guIter, guThresh, ...) {
       "(there is no default, so the recorded provenance cannot silently be ",
       "wrong).")
   }
-  validateWholeCount <- function(value, name) {
-    if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
-        value < 1L || value != as.integer(value)) {
-      stop("'", name, "' must be a single positive whole number.")
-    }
-    as.integer(value)
-  }
   guIter <- validateWholeCount(guIter, "guIter")
   guThresh <- validateWholeCount(guThresh, "guThresh")
   if (missing(dates)) {
@@ -106,9 +99,7 @@ backfillColonySnapshots <- function(ped, dates, guIter, guThresh, ...) {
       asOf$exit[!is.na(asOf$exit) & asOf$exit > date] <- NA
       asOf$population <- !standIn & !is.na(asOf$birth) &
         asOf$birth <= date & is.na(asOf$exit)
-      asOf <- trimPedigree(asOf$id[asOf$population], asOf,
-        removeUninformative = FALSE, addBackParents = FALSE
-      )
+      asOf <- trimToAnalysisPopulation(asOf)
       geneticValue <- reportGV(asOf,
         guIter = guIter, guThresh = guThresh, byID = TRUE, ...
       )

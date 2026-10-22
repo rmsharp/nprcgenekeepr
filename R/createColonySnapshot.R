@@ -107,16 +107,9 @@ createColonySnapshot <- function(ped, geneticValue, membershipRule,
       "call used (there is no default, so the recorded provenance cannot ",
       "silently be wrong).")
   }
-  validateWholeCount <- function(value, name) {
-    if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
-        value < 1L || value != as.integer(value)) {
-      stop("'", name, "' must be a single positive whole number (the ",
-        "value the reportGV() call used).")
-    }
-    as.integer(value)
-  }
-  guIter <- validateWholeCount(guIter, "guIter")
-  guThresh <- validateWholeCount(guThresh, "guThresh")
+  usedByReportGV <- " (the value the reportGV() call used)"
+  guIter <- validateWholeCount(guIter, "guIter", usedByReportGV)
+  guThresh <- validateWholeCount(guThresh, "guThresh", usedByReportGV)
 
   ## a Date round-trips through as.character() as YYYY-MM-DD, so one
   ## coercion path serves both accepted input types

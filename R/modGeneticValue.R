@@ -299,22 +299,14 @@ modGeneticValueServer <- function(id, pedigree,
           }
         }
 
-        # Get probands and trim pedigree for analysis
-        probands <- ped$id[ped$population]
-        if (length(probands) == 0L) {
-          probands <- ped$id
+        # No animal designated means analyze everyone
+        if (length(ped$id[ped$population]) == 0L) {
           ped$population <- TRUE
         }
 
+        # Trim pedigree for analysis (adds generation if not present)
         incProgress(0.2, detail = "Trimming pedigree")
-        ped <- trimPedigree(probands, ped,
-                            removeUninformative = FALSE,
-                            addBackParents = FALSE)
-
-        # Add generation if not present
-        if (!"gen" %in% names(ped)) {
-          ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-        }
+        ped <- trimToAnalysisPopulation(ped)
 
         incProgress(0.2, detail = "Running genetic value analysis")
 
