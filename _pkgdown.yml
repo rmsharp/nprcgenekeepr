@@ -192,6 +192,7 @@ reference:
   - '`appServer`'
   - '`appUI`'
   - '`assignAlleles`'
+  - '`backfillColonySnapshots`'
   - '`buildMarkerGenotypeMatrix`'
   - '`calcA`'
   - '`calcAge`'
