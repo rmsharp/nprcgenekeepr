@@ -244,6 +244,7 @@ reference:
   - '`createSimKinships`'
   - '`cumulateSimKinships`'
   - '`dataframe2string`'
+  - '`drawPedigreeDiagram`'
   - '`fillGroupMembersWithSexRatio`'
   - '`filterKinMatrix`'
   - '`filterPairs`'
