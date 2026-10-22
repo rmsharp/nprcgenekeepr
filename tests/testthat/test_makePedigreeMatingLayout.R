@@ -46,9 +46,11 @@ test_that(
   expect_true(is.list(result))
   ## isolatedIds added issue #164 / P5-suppression plan (Phase 1, S644):
   ## always present, character(0) when nothing was suppressed (this trio
-  ## has no isolated individual).
+  ## has no isolated individual). conditions and conditionsNotDrawn added
+  ## S1029 (more than one affected condition), also always present.
   expect_setequal(names(result),
-                   c("nodes", "edges", "duplicateToReal", "isolatedIds"))
+                   c("nodes", "edges", "duplicateToReal", "isolatedIds",
+                     "conditions", "conditionsNotDrawn"))
   expect_equal(result$isolatedIds, character(0))
 })
 
@@ -2072,4 +2074,298 @@ test_that(
   expect_false(anyNA(nodes$deceased))
   expect_false(any(nodes$deceased[jog]))
   expect_gt(sum(nodes$deceased), 0L)
+})
+
+## ---- S1029 -- more than one affected condition (BACKLOG.md "A kinship2
+## drawing feature the Diagram tab still lacks") ------------------------------
+## kinship2 shades up to four conditions per animal as separate sections of the
+## symbol. Owner ruling S1029: every pedigree column whose name starts with
+## "affected" is a condition, in file order, the first four drawn (QC lower-
+## cases a header and drops its spaces, periods and underscores, so
+## `Affected_2` arrives as `affected2` and `Affected Diabetes` as
+## `affecteddiabetes`). `affected` alone behaves exactly as before. With two
+## or more conditions the layout's nodes carry `affectedSections`, one
+## character per condition ("1" affected, "0" unaffected or unknown), and the
+## real and repeat-appearance nodes are filled white: R/modPedigree.R paints
+## the sections. `conditions` (column, label, color) feeds the legend and
+## `conditionsNotDrawn` names any column past the fourth.
+
+.conditionsFixture <- function(...) {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1", "C2", "C3"),
+    sire = c(NA, NA, "P1", "P1", "P1"),
+    dam = c(NA, NA, "P2", "P2", "P2"),
+    sex = c("M", "F", "F", "M", "F"),
+    gen = c(0L, 0L, 1L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+  extra <- list(...)
+  for (name in names(extra)) ped[[name]] <- extra[[name]]
+  ped
+}
+
+## Three conditions, the named one first in the file so that file order, not
+## alphabetical order and not "bare affected first", is what is pinned.
+.threeConditionFixture <- function() {
+  .conditionsFixture(
+    affecteddiabetes = c(TRUE, FALSE, NA, TRUE, FALSE),
+    affected = c(FALSE, FALSE, TRUE, TRUE, NA),
+    affected2 = c(TRUE, TRUE, FALSE, NA, FALSE)
+  )
+}
+
+test_that(
+  ".conditionColumns finds every column starting 'affected', in file order,
+   and no other column", {
+  ped <- .conditionsFixture(
+    affected3 = TRUE, name = "x", affected = TRUE,
+    affecteddiabetes = TRUE, status = "ALIVE", affected2 = TRUE,
+    affected5 = TRUE, affected6 = TRUE
+  )
+  expect_equal(.conditionColumns(ped),
+               c("affected3", "affected", "affecteddiabetes", "affected2",
+                 "affected5", "affected6"))
+  expect_equal(.conditionColumns(.conditionsFixture()), character(0L))
+})
+
+test_that(
+  ".conditionColumns reads a header's case as written: Affected2 is not a
+   condition (QC lower-cases a header; a raw data frame is taken as given,
+   as `affected` always was)", {
+  ped <- .conditionsFixture(affected = TRUE, Affected2 = TRUE)
+  expect_equal(.conditionColumns(ped), "affected")
+})
+
+test_that(
+  ".conditionLabels names a condition from the rest of its column name:
+   Affected, Affected 2, Affected (diabetes)", {
+  expect_equal(
+    .conditionLabels(c("affected", "affected2", "affected10",
+                       "affecteddiabetes", "affected_diabetes",
+                       "affected.type2")),
+    c("Affected", "Affected 2", "Affected 10", "Affected (diabetes)",
+      "Affected (diabetes)", "Affected (type2)")
+  )
+})
+
+test_that(
+  ".conditionColors starts with the affected pink and gives four colors,
+   all different", {
+  expect_equal(.conditionColors,
+               c("#CC79A7", "#E69F00", "#56B4E9", "#009E73"))
+})
+
+test_that(
+  "makePedigreeMatingLayout lists no condition, and gives the nodes no
+   affectedSections column, for a pedigree with no 'affected' column", {
+  result <- makePedigreeMatingLayout(.conditionsFixture())
+  expect_s3_class(result$conditions, "data.frame")
+  expect_identical(names(result$conditions), c("column", "label", "color"))
+  expect_equal(nrow(result$conditions), 0L)
+  expect_identical(result$conditionsNotDrawn, character(0L))
+  expect_false("affectedSections" %in% names(result$nodes))
+})
+
+test_that(
+  "makePedigreeMatingLayout lists the one condition of a bare 'affected'
+   column, pink, and adds no affectedSections column (unchanged output)", {
+  ped <- .conditionsFixture(affected = c(TRUE, FALSE, NA, TRUE, FALSE))
+  result <- makePedigreeMatingLayout(ped)
+  expect_equal(result$conditions$column, "affected")
+  expect_equal(result$conditions$label, "Affected")
+  expect_equal(result$conditions$color, "#CC79A7")
+  expect_false("affectedSections" %in% names(result$nodes))
+  expect_equal(result$nodes$color.background[match(ped$id, result$nodes$id)],
+               c("#CC79A7", "#FFFFFF", "#FFFFFF", "#CC79A7", "#FFFFFF"))
+})
+
+test_that(
+  "makePedigreeMatingLayout draws a lone named condition the way it draws
+   'affected': a pink fill, a label naming the condition, no sections", {
+  ped <- .conditionsFixture(
+    affecteddiabetes = c(TRUE, FALSE, NA, TRUE, FALSE)
+  )
+  result <- makePedigreeMatingLayout(ped)
+  expect_equal(result$conditions$column, "affecteddiabetes")
+  expect_equal(result$conditions$label, "Affected (diabetes)")
+  expect_equal(result$conditions$color, "#CC79A7")
+  expect_false("affectedSections" %in% names(result$nodes))
+  expect_equal(result$nodes$color.background[match(ped$id, result$nodes$id)],
+               c("#CC79A7", "#FFFFFF", "#FFFFFF", "#CC79A7", "#FFFFFF"))
+})
+
+test_that(
+  "makePedigreeMatingLayout lists three conditions in file order, each with
+   its label and its own color, pink first", {
+  result <- makePedigreeMatingLayout(.threeConditionFixture())
+  expect_equal(result$conditions$column,
+               c("affecteddiabetes", "affected", "affected2"))
+  expect_equal(result$conditions$label,
+               c("Affected (diabetes)", "Affected", "Affected 2"))
+  expect_equal(result$conditions$color, c("#CC79A7", "#E69F00", "#56B4E9"))
+  expect_identical(result$conditionsNotDrawn, character(0L))
+})
+
+test_that(
+  "makePedigreeMatingLayout gives each animal an affectedSections string,
+   one character per condition in file order: 1 affected, 0 unaffected or
+   unknown", {
+  ped <- .threeConditionFixture()
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  expect_true("affectedSections" %in% names(nodes))
+  expect_type(nodes$affectedSections, "character")
+  expect_false(anyNA(nodes$affectedSections))
+  expect_equal(nodes$affectedSections[match(ped$id, nodes$id)],
+               c("101", "001", "010", "110", "000"))
+})
+
+test_that(
+  "makePedigreeMatingLayout fills the real nodes white once there are two
+   or more conditions, even for an affected animal: the sections carry the
+   color", {
+  ped <- .threeConditionFixture()
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  expect_true(all(nodes$color.background[match(ped$id, nodes$id)] ==
+                    "#FFFFFF"))
+})
+
+test_that(
+  "makePedigreeMatingLayout gives the tooltip one Yes/No/Unknown line per
+   condition, in file order, each named as in the legend", {
+  ped <- .threeConditionFixture()
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  title <- nodes$title[nodes$id == "C1"]
+  expect_true(grepl("Affected (diabetes):</b> Unknown", title, fixed = TRUE))
+  expect_true(grepl("Affected:</b> Yes", title, fixed = TRUE))
+  expect_true(grepl("Affected 2:</b> No", title, fixed = TRUE))
+  pos <- vapply(c("Affected (diabetes):", "Affected:", "Affected 2:"),
+                function(s) regexpr(s, title, fixed = TRUE)[[1L]], numeric(1L))
+  expect_true(all(pos > 0) && !is.unsorted(pos))
+  title2 <- nodes$title[nodes$id == "P1"]
+  expect_true(grepl("Affected (diabetes):</b> Yes", title2, fixed = TRUE))
+  expect_true(grepl("Affected:</b> No", title2, fixed = TRUE))
+  expect_true(grepl("Affected 2:</b> Yes", title2, fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeMatingLayout labels the tooltip of a lone named condition
+   with its name", {
+  ped <- .conditionsFixture(
+    affecteddiabetes = c(TRUE, FALSE, NA, TRUE, FALSE)
+  )
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  expect_true(grepl("Affected (diabetes):</b> Yes",
+                    nodes$title[nodes$id == "P1"], fixed = TRUE))
+  expect_true(grepl("Affected (diabetes):</b> Unknown",
+                    nodes$title[nodes$id == "C1"], fixed = TRUE))
+})
+
+test_that(
+  "makePedigreeMatingLayout draws the first four conditions and names the
+   rest in conditionsNotDrawn, with no tooltip line for them", {
+  ped <- .conditionsFixture(
+    affected = c(TRUE, FALSE, FALSE, FALSE, FALSE),
+    affected2 = c(FALSE, TRUE, FALSE, FALSE, FALSE),
+    affected3 = c(FALSE, FALSE, TRUE, FALSE, FALSE),
+    affected4 = c(FALSE, FALSE, FALSE, TRUE, FALSE),
+    affected5 = c(TRUE, TRUE, TRUE, TRUE, TRUE),
+    affected6 = c(TRUE, TRUE, TRUE, TRUE, TRUE)
+  )
+  result <- makePedigreeMatingLayout(ped)
+  expect_equal(result$conditions$column,
+               c("affected", "affected2", "affected3", "affected4"))
+  expect_equal(result$conditions$color,
+               c("#CC79A7", "#E69F00", "#56B4E9", "#009E73"))
+  expect_equal(result$conditionsNotDrawn, c("affected5", "affected6"))
+  expect_equal(result$nodes$affectedSections[match(ped$id, result$nodes$id)],
+               c("1000", "0100", "0010", "0001", "0000"))
+  expect_false(any(grepl("Affected 5", result$nodes$title, fixed = TRUE)))
+})
+
+test_that(
+  "makePedigreeMatingLayout reads a condition column that is not logical
+   with as.logical(), as it does 'affected': what does not parse is
+   unknown, drawn open, and nothing stops", {
+  ped <- .conditionsFixture(
+    affected = c(TRUE, FALSE, NA, TRUE, FALSE),
+    affected2 = c("TRUE", "no", "maybe", "FALSE", "TRUE")
+  )
+  nodes <- makePedigreeMatingLayout(ped)$nodes
+  expect_equal(nodes$affectedSections[match(ped$id, nodes$id)],
+               c("11", "00", "00", "10", "01"))
+})
+
+test_that(
+  "makePedigreeMatingLayout gives every repeat-appearance node of an animal
+   its sections, and every mating-union, drop, bar or waypoint node an empty
+   string, never NA, in both edge styles", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    affected = c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE),
+    affected2 = c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(loopPed)
+  dupIds <- forest$duplicates$id[forest$duplicates$realId == "8LKBV9"]
+  expect_true(length(dupIds) > 0L)
+
+  for (style in c("rectilinear", "direct")) {
+    nodes <- makePedigreeMatingLayout(loopPed, edgeStyle = style)$nodes
+    expect_true("affectedSections" %in% names(nodes), info = style)
+    expect_false(anyNA(nodes$affectedSections), info = style)
+    got <- setNames(nodes$affectedSections, nodes$id)
+    expect_equal(got[["8LKBV9"]], "10", info = style)
+    expect_equal(got[["5A6DFT"]], "01", info = style)
+    expect_true(all(got[dupIds] == "10"), info = style)
+    animals <- c(loopPed$id, forest$duplicates$id)
+    notAnimal <- !(nodes$id %in% animals)
+    expect_true(any(notAnimal), info = style)
+    expect_true(all(got[notAnimal] == ""), info = style)
+  }
+})
+
+test_that(
+  "makePedigreeMatingLayout's empty result, when every animal is isolated,
+   still carries affectedSections as a zero-length character vector, and
+   still lists the conditions", {
+  ped <- data.frame(
+    id = c("X", "Y"), sire = c(NA, NA), dam = c(NA, NA),
+    sex = c("M", "F"), gen = c(0L, 0L),
+    affected = c(TRUE, FALSE), affected2 = c(FALSE, TRUE),
+    stringsAsFactors = FALSE
+  )
+  result <- suppressMessages(makePedigreeMatingLayout(ped))
+  expect_equal(nrow(result$nodes), 0L)
+  expect_true("affectedSections" %in% names(result$nodes))
+  expect_identical(result$nodes$affectedSections, character(0L))
+  expect_equal(nrow(result$conditions), 2L)
+})
+
+## The collision repair adds __jog_ waypoint nodes through .matchColumns(),
+## which backfills a column the new node lacks (S1028 found it gave a logical
+## column NA). Only the QC'd bundled fixture makes jog nodes under the default
+## style (142 of them), so a section string that went missing there would be
+## NA, not "".
+
+test_that(
+  "makePedigreeMatingLayout gives the __jog_ waypoint nodes of the QC'd
+   bundled fixture an empty section string, never NA, while real animals keep
+   theirs", {
+  qcd <- qcdRhesusPed()
+  qcd$affected <- seq_len(nrow(qcd)) %% 3L == 0L
+  qcd$affected2 <- seq_len(nrow(qcd)) %% 5L == 0L
+  nodes <- makePedigreeMatingLayout(qcd)$nodes
+  jog <- grepl("^__jog_", nodes$id)
+  expect_gt(sum(jog), 0L)
+  expect_true("affectedSections" %in% names(nodes))
+  expect_false(anyNA(nodes$affectedSections))
+  expect_true(all(nodes$affectedSections[jog] == ""))
+  animals <- nodes$affectedSections[nodes$id %in% qcd$id]
+  expect_true(all(animals %in% c("00", "01", "10", "11")))
+  expect_true("11" %in% animals)
 })

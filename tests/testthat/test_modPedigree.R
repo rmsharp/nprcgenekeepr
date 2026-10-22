@@ -2862,3 +2862,220 @@ test_that(
   width <- as.numeric(sub(".*stroke-width='([0-9.]+)'.*", "\\1", line))
   expect_gte(width, 2)
 })
+
+## ---- S1029 -- more than one affected condition (BACKLOG.md "A kinship2
+## drawing feature the Diagram tab still lacks") ------------------------------
+## makePedigreeMatingLayout() lists the conditions (every column starting
+## "affected", the first four drawn). The widget paints each animal's symbol
+## in equal sections from the `affectedSections` node field, with the same
+## afterDrawing handler that strokes the S1028 slash (sections first, the
+## slash on top); the legend, a separate vis.Network, gets one row per
+## condition in place of the single "Affected" row; and the canvas grows with
+## the legend so its text keeps its size: measured in a standalone widget, 11
+## rows at 500 px give the legend scale 0.703 and each extra row adds 66 world
+## units to the legend's height, so 45 px per extra row keeps the scale near
+## 0.70 (545, 590 and 635 px for two, three and four conditions). More than
+## four such columns draw the first four and say so under the Diagram.
+## The browser tests read the real pixels and positions.
+
+.conditionsStudbook <- function(...) {
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  extra <- list(...)
+  for (name in names(extra)) ped[[name]] <- extra[[name]]
+  ped
+}
+
+## The studbook with `n` condition columns: affected, affected2, ...
+.nConditionsStudbook <- function(n) {
+  cols <- lapply(seq_len(n), function(i) c(TRUE, FALSE, i %% 2L == 0L))
+  names(cols) <- c("affected", paste0("affected", seq_len(n))[-1L])
+  do.call(.conditionsStudbook, cols)
+}
+
+## The legend's node labels, as the serialized widget spells them.
+.legendLabels <- function(labels) {
+  paste0('"label":[',
+         paste0('"', labels, '"', collapse = ","), "]")
+}
+
+test_that(
+  "modPedigreeServer's legend lists one row per condition, in file order,
+   in place of the single 'Affected' row, before 'Deceased'", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  studbook <- .conditionsStudbook(
+    affecteddiabetes = c(TRUE, FALSE, NA), affected2 = c(FALSE, TRUE, TRUE)
+  )
+  widgetJson <- .deceasedWidgetJson(studbook)
+  expect_true(grepl(
+    .legendLabels(c("Female", "Male", "Hermaphrodite", "Unknown",
+                    "Other / Unrecorded", "Affected (diabetes)",
+                    "Affected 2", "Deceased")),
+    widgetJson, fixed = TRUE
+  ))
+  expect_true(grepl(
+    paste0('"shape":["dot","square","star","triangle","diamond",',
+           '"hexagon","hexagon","image"]'),
+    widgetJson, fixed = TRUE
+  ))
+  expect_true(grepl('"size":[14,14,14,14,14,14,14,14]', widgetJson,
+                    fixed = TRUE))
+  expect_true(grepl('"#CC79A7","#E69F00"', widgetJson, fixed = TRUE))
+  expect_true(grepl('"label":["Same animal, again","MZ","DZ","?"]',
+                    widgetJson, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's legend has four condition rows in four colors for
+   four conditions", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  widgetJson <- .deceasedWidgetJson(.nConditionsStudbook(4L))
+  expect_true(grepl(
+    .legendLabels(c("Female", "Male", "Hermaphrodite", "Unknown",
+                    "Other / Unrecorded", "Affected", "Affected 2",
+                    "Affected 3", "Affected 4", "Deceased")),
+    widgetJson, fixed = TRUE
+  ))
+  expect_true(grepl('"#CC79A7","#E69F00","#56B4E9","#009E73"', widgetJson,
+                    fixed = TRUE))
+  expect_true(grepl(paste0('"size":[', paste(rep(14L, 10L), collapse = ","),
+                           "]"), widgetJson, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's legend keeps its single 'Affected' row for no
+   condition and for a bare 'affected' column, and names a lone named
+   condition in that row", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  rows <- function(labels) {
+    .legendLabels(c("Female", "Male", "Hermaphrodite", "Unknown",
+                    "Other / Unrecorded", labels, "Deceased"))
+  }
+  none <- .deceasedWidgetJson(.conditionsStudbook())
+  bare <- .deceasedWidgetJson(
+    .conditionsStudbook(affected = c(TRUE, FALSE, NA))
+  )
+  named <- .deceasedWidgetJson(
+    .conditionsStudbook(affecteddiabetes = c(TRUE, FALSE, NA))
+  )
+  expect_true(grepl(rows("Affected"), none, fixed = TRUE))
+  expect_true(grepl(rows("Affected"), bare, fixed = TRUE))
+  expect_true(grepl(rows("Affected (diabetes)"), named, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's diagram canvas is 500 px for no or one condition
+   and 45 px taller for each further condition: 545, 590, 635", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  heightOf <- function(studbook) {
+    captured <- new.env()
+    shiny::testServer(
+      modPedigreeServer,
+      args = list(studbook = shiny::reactive({ studbook })),
+      {
+        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+        session$flushReact()
+        captured$html <- output$pedigreeDiagramUI$html
+      }
+    )
+    captured$html
+  }
+  expect_true(grepl("height:500px", heightOf(.conditionsStudbook()),
+                    fixed = TRUE))
+  expect_true(grepl("height:500px", heightOf(.nConditionsStudbook(1L)),
+                    fixed = TRUE))
+  expect_true(grepl("height:545px", heightOf(.nConditionsStudbook(2L)),
+                    fixed = TRUE))
+  expect_true(grepl("height:590px", heightOf(.nConditionsStudbook(3L)),
+                    fixed = TRUE))
+  expect_true(grepl("height:635px", heightOf(.nConditionsStudbook(4L)),
+                    fixed = TRUE))
+  expect_true(grepl("height:635px", heightOf(.nConditionsStudbook(6L)),
+                    fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's diagram widget carries each node's affectedSections
+   when there are two conditions, and no such field for one", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  studbook <- .conditionsStudbook(
+    affected = c(TRUE, FALSE, NA), affected2 = c(FALSE, TRUE, TRUE)
+  )
+  widgetJson <- .deceasedWidgetJson(studbook)
+  studbook$gen <- c(0L, 0L, 1L)
+  sections <- makePedigreeMatingLayout(studbook)$nodes$affectedSections
+  expect_true(grepl(
+    paste0('"affectedSections":[',
+           paste0('"', sections, '"', collapse = ","), "]"),
+    widgetJson, fixed = TRUE
+  ))
+  oneJson <- .deceasedWidgetJson(.nConditionsStudbook(1L))
+  expect_false(grepl("affectedSections", oneJson, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer's one afterDrawing handler paints the sections in the
+   four condition colors, clipped to the symbol, before it strokes the
+   deceased slash on top", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  handler <- .afterDrawingHandler(.deceasedWidgetJson(.nConditionsStudbook(2L)))
+  expect_true(nzchar(handler))
+  expect_true(grepl("affectedSections", handler, fixed = TRUE))
+  expect_true(grepl("clip(", handler, fixed = TRUE))
+  for (color in c("#CC79A7", "#E69F00", "#56B4E9", "#009E73")) {
+    expect_true(grepl(color, handler, fixed = TRUE), label = color)
+  }
+  sectionsAt <- regexpr("affectedSections", handler, fixed = TRUE)[[1L]]
+  slashAt <- regexpr("deceased", handler, fixed = TRUE)[[1L]]
+  expect_true(sectionsAt > 0L && slashAt > 0L && sectionsAt < slashAt)
+  expect_true(grepl("lineTo", handler, fixed = TRUE))
+})
+
+test_that(
+  "modPedigreeServer says under the Diagram, only when a file has more than
+   four condition columns, that only the first four are drawn and names the
+   rest", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  noteOf <- function(studbook) {
+    captured <- new.env()
+    shiny::testServer(
+      modPedigreeServer,
+      args = list(studbook = shiny::reactive({ studbook })),
+      {
+        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+        session$flushReact()
+        captured$html <- output$pedigreeDiagramUI$html
+      }
+    )
+    captured$html
+  }
+  six <- noteOf(.nConditionsStudbook(6L))
+  expect_true(grepl(
+    paste("Only the first four affected columns are drawn.",
+          "Not drawn: affected5, affected6."),
+    six, fixed = TRUE
+  ))
+  four <- noteOf(.nConditionsStudbook(4L))
+  expect_false(grepl("Only the first four", four, fixed = TRUE))
+  expect_false(grepl("Only the first four", noteOf(.conditionsStudbook()),
+                     fixed = TRUE))
+})

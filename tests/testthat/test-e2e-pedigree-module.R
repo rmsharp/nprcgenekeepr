@@ -312,8 +312,9 @@ test_that(
 
 ## Runs `body` in the browser with a pixel reader on the Diagram canvas: `net`
 ## (the vis.Network), `cv` (its canvas) and `lum(x, y)`, the grey level (0
-## black, 255 white) at a position in CSS pixels; a pixel off the canvas or see-
-## through counts as white. `body` must `return` its answer.
+## black, 255 white) at a position in CSS pixels, and `rgb(x, y)`, its
+## [r, g, b]; a pixel off the canvas or see-through counts as white. `body`
+## must `return` its answer.
 diagram_pixel_js <- function(body) {
   paste0(
     "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
@@ -324,6 +325,11 @@ diagram_pixel_js <- function(body) {
     "py >= cv.height) { return 255; } ",
     "const d = ctx.getImageData(px, py, 1, 1).data; ",
     "return d[3] < 255 ? 255 : (d[0] + d[1] + d[2]) / 3; }; ",
+    "const rgb = (x, y) => { const px = Math.round(x * k), ",
+    "py = Math.round(y * k); if (px < 0 || py < 0 || px >= cv.width || ",
+    "py >= cv.height) { return [255, 255, 255]; } ",
+    "const d = ctx.getImageData(px, py, 1, 1).data; ",
+    "return d[3] < 255 ? [255, 255, 255] : [d[0], d[1], d[2]]; }; ",
     body, " })()"
   )
 }
@@ -335,21 +341,25 @@ diagram_pixel_js <- function(body) {
 ## isolated-individual test below). Returns "" once the widget is drawn, else
 ## the reason to skip. The caller owns `app` and stops it.
 open_deceased_diagram <- function(app) {
-  ped_csv <- tempfile(fileext = ".csv")
-  utils::write.csv(
-    data.frame(
-      id = c("A", "B", "C", "D", "E"),
-      sire = c(NA, NA, "A", "A", "A"),
-      dam = c(NA, NA, "B", "B", "B"),
-      sex = c("M", "F", "F", "M", "F"),
-      birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1996-01-01",
-                "1997-01-01"),
-      exit = c("2005-06-01", NA, "2001-03-01", NA, "2010-02-01"),
-      status = c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN", "DECEASED"),
-      stringsAsFactors = FALSE
-    ),
-    ped_csv, row.names = FALSE
+  ped <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    sire = c(NA, NA, "A", "A", "A"),
+    dam = c(NA, NA, "B", "B", "B"),
+    sex = c("M", "F", "F", "M", "F"),
+    birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1996-01-01",
+              "1997-01-01"),
+    exit = c("2005-06-01", NA, "2001-03-01", NA, "2010-02-01"),
+    status = c("DECEASED", "ALIVE", "SHIPPED", "UNKNOWN", "DECEASED"),
+    stringsAsFactors = FALSE
   )
+  open_diagram_with(app, ped)
+}
+
+## Opens the Diagram tab on `ped` (written to a CSV and uploaded through the
+## Input tab). Returns "" once the widget is drawn, else the reason to skip.
+open_diagram_with <- function(app, ped) {
+  ped_csv <- tempfile(fileext = ".csv")
+  utils::write.csv(ped, ped_csv, row.names = FALSE)
   on.exit(unlink(ped_csv), add = TRUE)
 
   if (!upload_and_wait(app, ped_csv)) return("Upload/QC did not complete")
@@ -475,32 +485,19 @@ test_that(
                info = "No visNetwork/diagram-related console error")
 })
 
-test_that(
-  "E2E: Pedigree Browser Diagram legend has a 'Deceased' row after the
-   six older ones, leaves a gap between every two labelled rows, and keeps
-   its text readable", {
-  skip_if_not_installed("shinytest2")
-  skip_if_not_installed("chromote")
-  skip_if_not_installed("visNetwork")
-  skip_on_cran()
-
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_legend_rows")
-  on.exit(app$stop(), add = TRUE)
-
-  skipReason <- open_deceased_diagram(app)
-  if (nzchar(skipReason)) skip(skipReason)
-
-  ## The legend is its own vis.Network (the widget's `legend`). A row runs
-  ## from its symbol's top to its label's bottom, and one row's label runs
-  ## over the next row's symbol exactly when the next row's top is above this
-  ## one's bottom. The row's bottom is the label's own (`labelModule.size`
-  ## top + height), NOT getBoundingBox(): that box ends 11 world units short
-  ## of the label, so the first version of this check passed while every
-  ## label still touched the next symbol (found S1028 in a real-app picture).
-  ## Returns "scale|label;top;bottom|label;top;bottom" with the rows ordered
-  ## top to bottom (world units, a plain string, not JSON: this package does
-  ## not depend on jsonlite).
+## Reads the Diagram's legend rows off the running widget.
+## The legend is its own vis.Network (the widget's `legend`). A row runs
+## from its symbol's top to its label's bottom, and one row's label runs
+## over the next row's symbol exactly when the next row's top is above this
+## one's bottom. The row's bottom is the label's own (`labelModule.size`
+## top + height), NOT getBoundingBox(): that box ends 11 world units short
+## of the label, so the first version of this check passed while every
+## label still touched the next symbol (found S1028 in a real-app picture).
+## The widget's script returns
+## "scale|label;top;bottom|label;top;bottom" with the rows ordered top to
+## bottom (world units, a plain string, not JSON: this package does not
+## depend on jsonlite). Returns list(scale, labels, tops, bottoms).
+read_legend_rows <- function(app) {
   legendRows <- app$get_js(paste0(
     "(() => { const L = HTMLWidgets.find('#pedigree-pedigreeDiagram').legend; ",
     "const rows = L.body.nodeIndices.filter(id => ",
@@ -517,6 +514,30 @@ test_that(
   labels <- vapply(cells, `[[`, character(1L), 1L)
   tops <- as.numeric(vapply(cells, `[[`, character(1L), 2L))
   bottoms <- as.numeric(vapply(cells, `[[`, character(1L), 3L))
+  list(scale = scale, labels = labels, tops = tops, bottoms = bottoms)
+}
+
+test_that(
+  "E2E: Pedigree Browser Diagram legend has a 'Deceased' row after the
+   six older ones, leaves a gap between every two labelled rows, and keeps
+   its text readable", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_legend_rows")
+  on.exit(app$stop(), add = TRUE)
+
+  skipReason <- open_deceased_diagram(app)
+  if (nzchar(skipReason)) skip(skipReason)
+
+  rows <- read_legend_rows(app)
+  scale <- rows$scale
+  labels <- rows$labels
+  tops <- rows$tops
+  bottoms <- rows$bottoms
 
   expect_equal(labels, c("Female", "Male", "Hermaphrodite", "Unknown",
                          "Other / Unrecorded", "Affected", "Deceased"))
@@ -1110,4 +1131,127 @@ test_that(
     html, "no pedigree relationship to diagram",
     info = "Should show the singular empty-state copy, not a blank widget"
   )
+})
+
+## S1029 -- more than one affected condition. With two or more columns whose
+## names start "affected", an animal's symbol is split into equal sections,
+## one per condition in file order, counter-clockwise from the top (so the
+## first of two is the left half), and a section is filled with its
+## condition's color where the animal is affected and left open where it is
+## not or is unknown. The sections are stroked on the widget's canvas by the
+## afterDrawing handler, so only the canvas pixels can say what is drawn.
+## Colors: the affected pink #CC79A7, then #E69F00, #56B4E9 and #009E73.
+
+## A (a male, a square) is affected by both conditions, B (a circle) by
+## neither (both unknown), C (a circle) by the second only, D (a square) by
+## neither, E (a circle) by the first only. `birth` is required (see the
+## isolated-individual test below).
+conditions_pedigree <- function(extra = list()) {
+  ped <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    sire = c(NA, NA, "A", "A", "A"),
+    dam = c(NA, NA, "B", "B", "B"),
+    sex = c("M", "F", "F", "M", "F"),
+    birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1996-01-01",
+              "1997-01-01"),
+    affected = c(TRUE, NA, FALSE, FALSE, TRUE),
+    affected2 = c(TRUE, NA, TRUE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  for (name in names(extra)) ped[[name]] <- extra[[name]]
+  ped
+}
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab fills each section of a two-condition
+   animal's circle and square with its condition's color, and leaves an
+   unaffected or unknown section open", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_conditions")
+  on.exit(app$stop(), add = TRUE)
+
+  skipReason <- open_diagram_with(app, conditions_pedigree())
+  if (nzchar(skipReason)) skip(skipReason)
+
+  ## The colors of the pixels half a radius left and right of a node's
+  ## centre, as "r,g,b|r,g,b" (a plain string, not JSON).
+  get_halves <- function(id) {
+    app$get_js(sprintf(diagram_pixel_js(paste0(
+      "const p = net.canvasToDOM(net.getPosition('%s')); ",
+      "const n = net.body.data.nodes.get('%s'); ",
+      "const r = (n.size || 25) * net.getScale(); ",
+      "return rgb(p.x - 0.5 * r, p.y).join(',') + '|' + ",
+      "rgb(p.x + 0.5 * r, p.y).join(','); "
+    )), id, id))
+  }
+  ## Whether a pixel's "r,g,b" is within 16 of a color on every channel.
+  is_color <- function(rgbText, hex) {
+    got <- as.numeric(strsplit(rgbText, ",", fixed = TRUE)[[1L]])
+    want <- as.numeric(grDevices::col2rgb(hex))
+    length(got) == 3L && all(abs(got - want) <= 16)
+  }
+  halves <- function(id) strsplit(get_halves(id), "|", fixed = TRUE)[[1L]]
+
+  pink <- "#CC79A7"
+  orange <- "#E69F00"
+  white <- "#FFFFFF"
+  expected <- list(
+    A = c(pink, orange), B = c(white, white), C = c(white, orange),
+    D = c(white, white), E = c(pink, white)
+  )
+  for (id in names(expected)) {
+    got <- halves(id)
+    expect_length(got, 2L)
+    if (length(got) == 2L) {
+      expect_true(is_color(got[[1L]], expected[[id]][[1L]]),
+                  info = sprintf("%s's left half is %s, read %s", id,
+                                 expected[[id]][[1L]], got[[1L]]))
+      expect_true(is_color(got[[2L]], expected[[id]][[2L]]),
+                  info = sprintf("%s's right half is %s, read %s", id,
+                                 expected[[id]][[2L]], got[[2L]]))
+    }
+  }
+})
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab with four conditions lists four legend
+   rows in place of 'Affected', grows the canvas to 635 px, and keeps the
+   legend text readable with a gap under every label", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_four_conditions")
+  on.exit(app$stop(), add = TRUE)
+
+  ped <- conditions_pedigree(list(
+    affected3 = c(FALSE, FALSE, TRUE, TRUE, FALSE),
+    affected4 = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  ))
+  skipReason <- open_diagram_with(app, ped)
+  if (nzchar(skipReason)) skip(skipReason)
+
+  height <- app$get_js(
+    "document.querySelector('#pedigree-pedigreeDiagram').clientHeight"
+  )
+  expect_equal(height, 635, tolerance = 0.01)
+
+  rows <- read_legend_rows(app)
+  expect_equal(rows$labels,
+               c("Female", "Male", "Hermaphrodite", "Unknown",
+                 "Other / Unrecorded", "Affected", "Affected 2", "Affected 3",
+                 "Affected 4", "Deceased"))
+  expect_true(length(rows$tops) > 1L &&
+                all(rows$tops[-1L] - rows$bottoms[-length(rows$bottoms)] >= 6),
+              info = paste("legend row gaps:",
+                           toString(rows$tops[-1L] -
+                                      rows$bottoms[-length(rows$bottoms)])))
+  expect_gte(rows$scale, 0.65)
 })
