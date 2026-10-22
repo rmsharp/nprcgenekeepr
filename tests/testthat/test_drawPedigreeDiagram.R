@@ -162,7 +162,8 @@ test_that(
   expect_true(any(startsWith(layout$nodes$id, "__")))
   widget <- drawPedigreeDiagram(layout)
   expect_identical(widget$x$export$type, "png")
-  expect_identical(widget$x$export$name, "pedigree_diagram")
+  ## visExport() stores the file name with its extension.
+  expect_identical(widget$x$export$name, "pedigree_diagram.png")
   expect_identical(widget$x$export$label, "Export Diagram (PNG)")
   expect_true(widget$x$idselection$enabled)
   expect_false(widget$x$idselection$useLabels)
