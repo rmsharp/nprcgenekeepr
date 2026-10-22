@@ -238,18 +238,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       item is still 34 lines but is nearly all ratified-scope open text; leave it. Regrowth, for
       scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
 
-- [ ] **Two kinship2 drawing features the Diagram tab still lacks (found S847, 2026-10-01; DECISION
-      NEEDED -- which pedigree column marks "deceased", Effort M for each; strict TDD for both)**
-      -- checked in the source S847 (`R/makePedigreeDiagramData.R`, `R/modPedigree.R`): (1) **Deceased
-      marker:** no diagonal slash is drawn over a deceased animal's symbol, as kinship2 does for a
-      deceased `status`. The pedigree already carries `death`, `exit` and `status` columns, so the
-      decision is which of them (or a new one) marks an animal deceased, and whether `exit` for a
-      transfer must be told apart from death. (2) **More than one affected condition:** `affected`
-      is one logical column (`R/makePedigreeDiagramData.R:73-85`, one fill color); kinship2 shades
-      up to four conditions per animal as separate sections of the symbol, with a matching legend.
-      The decision is the input shape (several logical columns, or a matrix) and the legend text.
-      Each is its own session; the Diagram section of `NEWS.Rmd` (lines 33-35) says "A deceased marker and more than one affected
-      condition are not drawn" until both ship.
+- [ ] **A kinship2 drawing feature the Diagram tab still lacks: more than one affected condition
+      (found S847, 2026-10-01; DECISION NEEDED -- the input shape and the legend text, Effort M;
+      strict TDD)** -- `affected` is one logical column (`R/makePedigreeDiagramData.R:73-85`, one
+      fill color); kinship2 shades up to four conditions per animal as separate sections of the
+      symbol, with a matching legend. The decision is the input shape (several logical columns, or
+      a matrix) and the legend text. `NEWS.Rmd`'s Diagram section says "More than one affected
+      condition is not drawn" until it ships. (The item's other feature, the deceased marker,
+      shipped S1028: a slash through an animal whose `status` reads DECEASED, `CHANGELOG.md`.)
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing

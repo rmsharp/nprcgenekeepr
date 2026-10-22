@@ -81,7 +81,7 @@ test_that("SR3 (green at HEAD): the other open items stay", {
             "Create a tutorial for prospective contributors",
             "Retrospective colony-snapshot backfill",
             "Work with LabKey (Josh Eckels)",
-            "Two kinship2 drawing features the Diagram tab still lacks",
+            "A kinship2 drawing feature the Diagram tab still lacks",
             "NPRC outreach & announcement plan",
             "Develop paper(s) for peer-reviewed journals"),
     gone = character(0L))

@@ -30,8 +30,8 @@ longitudinal monitoring of colony genetic health.
   connectors, and a thicker colored mate line for consanguineous matings. The
   comparison article checks by code that the same individuals and the same
   parent-child and mate relationships appear as in kinship2; the layouts
-  themselves are not identical. A deceased marker and more than one affected
-  condition are not drawn.
+  themselves are not identical. More than one affected condition is not
+  drawn.
 - Click an animal to re-center the diagram. You can also pan and zoom, hover
   for details, and search for an id to highlight it. A legend explains the sex
   symbols, and **Export Diagram (PNG)** saves an image.
@@ -42,6 +42,10 @@ longitudinal monitoring of colony genetic health.
 - An optional `affected` column shades affected individuals. Unaffected and
   unknown-status individuals, and everyone when the column is absent, are drawn
   open.
+- An animal whose `status` is DECEASED is drawn with a diagonal slash through
+  its symbol, as in kinship2, and the legend shows it. Shipped animals, animals
+  of unknown status, and everyone when the pedigree has no `status` column are
+  drawn plain.
 - An optional `name` column shows names beside ids, with a **Show Names on
   Diagram** toggle. De-identified exports remove names. Twin connectors
   (identical, fraternal or unknown zygosity) follow kinship2's twin codes.
