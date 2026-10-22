@@ -16,7 +16,12 @@ makePedigreeMatingLayout(
 \code{sex}, and \code{gen} columns, same contract as
 \code{\link{makePedigreeDiagramData}}. An optional \code{status}
 column marks deceased animals: see the \code{deceased} column of the
-returned \code{nodes}.}
+returned \code{nodes}. Every column whose name starts
+\code{affected} is an affected condition, in the order the data
+frame holds them, the first four drawn (see \code{conditions} in the
+return value). A lone one fills the symbol; two or more split it
+into sections. (\code{\link{makePedigreeDiagramData}} reads the
+column \code{affected} alone.)}
 
 \item{edgeStyle}{one of \code{"rectilinear"} (default), which routes
 mate-line and sibship-bar edges through invisible waypoint nodes so
@@ -53,7 +58,14 @@ an animal whose \code{status} reads \code{DECEASED}, and for each of its
 repeat-appearance nodes, \code{FALSE} for every other node and for all of
 them when \code{ped} has no \code{status} column), \code{x},
 \code{y}; \code{color.border} is added under
-\code{edgeStyle = "rectilinear"}), \code{edges} (\code{from},
+\code{edgeStyle = "rectilinear"}; \code{affectedSections} is added
+when there are two or more conditions: a character string with one
+character per condition, \code{"1"} where the animal is affected
+and \code{"0"} where it is unaffected or unknown, the same for a
+repeat-appearance node as for its animal, \code{""} for a node that
+is not an animal, never \code{NA}; with two or more conditions the
+animals' \code{color.background} is white, the sections carrying the
+color), \code{edges} (\code{from},
 \code{to}, \code{dashes}, \code{smooth.enabled}, \code{smooth.type},
 \code{smooth.roundness}, \code{color}, \code{width}; the \code{color}
 and \code{width} columns are always present once any mating unit
@@ -73,7 +85,12 @@ because they have no known parent, are never a parent, and are not
 connected by \code{twinRelations}; it is \code{character(0)} when
 nothing was suppressed. When every individual in \code{ped} is
 isolated, \code{nodes}/\code{edges} are both 0-row and
-\code{duplicateToReal} is empty.
+\code{duplicateToReal} is empty. Also \code{conditions}, a data
+frame with one row per drawn condition (\code{column}, \code{label}
+such as \dQuote{Affected} or \dQuote{Affected (diabetes)}, and its
+\code{color}), 0-row when \code{ped} has no such column, and
+\code{conditionsNotDrawn}, the names of any such columns past the
+fourth.
 }
 \description{
 Builds a kinship2-style pedigree layout in which each mating (a sire and

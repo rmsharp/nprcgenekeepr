@@ -661,9 +661,24 @@ modPedigreeServer <- function(id, studbook) {
             ),
             # S1028: 500 px, not the default 400, so the legend's 11 rows
             # fit at a readable size with no label touching the next symbol
-            # (the legend shares the canvas's height).
-            visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"),
-                                         height = "500px")
+            # (the legend shares the canvas's height). S1029: 45 px more for
+            # each legend row past the 11th (.diagramHeight()).
+            visNetwork::visNetworkOutput(
+              session$ns("pedigreeDiagram"),
+              height = sprintf("%dpx", .diagramHeight(nrow(layout$conditions)))
+            ),
+            if (length(layout$conditionsNotDrawn) > 0L) {
+              # S1029: kinship2 draws at most four conditions; say which
+              # columns were left out rather than dropping them silently.
+              div(
+                class = "alert alert-info",
+                sprintf(
+                  paste("Only the first four affected columns are drawn.",
+                        "Not drawn: %s."),
+                  toString(layout$conditionsNotDrawn)
+                )
+              )
+            }
           )
         }
       }
@@ -706,6 +721,15 @@ modPedigreeServer <- function(id, studbook) {
       # whether any twin data is actually loaded (like the sex-shape/
       # Affected addNodes rows above it).
       # nolint end
+      # S1029: one legend row per condition, in place of the single
+      # "Affected" row; the one row stays when the pedigree has no
+      # condition column, as before.
+      legendConditions <- if (nrow(layout$conditions) > 0L) {
+        layout$conditions
+      } else {
+        data.frame(label = "Affected", color = .conditionColors[[1L]],
+                   stringsAsFactors = FALSE)
+      }
       twinLegendEdges <- data.frame(
         label = c("MZ", "DZ", "?"),
         color = rep("#009E73", 3L),
@@ -738,8 +762,9 @@ modPedigreeServer <- function(id, studbook) {
             "function(nodes) { Shiny.setInputValue('%s', nodes.nodes); }",
             session$ns("pedigreeDiagram_click")
           ),
-          # S1028: the slash through each deceased animal's symbol.
-          afterDrawing = .deceasedSlashHandler()
+          # S1029: the sections of each multi-condition symbol, then
+          # S1028's slash through each deceased animal's symbol on top.
+          afterDrawing = .diagramAfterDrawing(nrow(layout$conditions) >= 2L)
         ) |>
         # Image export (issue #131): visExport() bundles its own JS deps
         # (FileSaver/Blob/canvas-toBlob/html2canvas/jsPDF) as htmlwidget
@@ -756,9 +781,9 @@ modPedigreeServer <- function(id, studbook) {
           addNodes = data.frame(
             label = c("Female", "Male", "Hermaphrodite", "Unknown",
                        "Other / Unrecorded", # nolint: nonportable_path_linter
-                       "Affected", "Deceased"),
+                       legendConditions$label, "Deceased"),
             shape = c("dot", "square", "star", "triangle", "diamond",
-                       "hexagon", "image"),
+                       rep("hexagon", nrow(legendConditions)), "image"),
             # Issue #133 Slice 2 (D6): the "Affected" row shares this SAME
             # addNodes data frame -- a second visLegend() call would
             # overwrite, not stack (confirmed S485). The 5 sex-shape rows
@@ -769,7 +794,7 @@ modPedigreeServer <- function(id, studbook) {
             # pill/badge), breaking the fixed-size-icon-plus-separate-label
             # style all 5 existing rows share; "hexagon" is a fixed-size icon
             # like the other 5, none of which claim it.
-            color = c(NA, NA, NA, NA, NA, "#CC79A7", NA),
+            color = c(NA, NA, NA, NA, NA, legendConditions$color, NA),
             # S1028: the "Deceased" row is a picture (a circle with the
             # slash), after "Affected" and before the edge rows, so the last
             # legend row stays the short "?" one (S921). Measured in the real
@@ -778,7 +803,8 @@ modPedigreeServer <- function(id, studbook) {
             # spacing (stepY). At the old size 20 and stepY 54 every label
             # overran the next symbol by 11; size 14 and stepY 60 leave 7
             # clear.
-            image = c(rep(NA_character_, 6L), .deceasedLegendImage()),
+            image = c(rep(NA_character_, 5L + nrow(legendConditions)),
+                      .deceasedLegendImage()),
             size = 14L,
             stringsAsFactors = FALSE
           ),

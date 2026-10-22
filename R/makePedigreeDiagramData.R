@@ -1618,7 +1618,12 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   \code{sex}, and \code{gen} columns, same contract as
 #'   \code{\link{makePedigreeDiagramData}}. An optional \code{status}
 #'   column marks deceased animals: see the \code{deceased} column of the
-#'   returned \code{nodes}.
+#'   returned \code{nodes}. Every column whose name starts
+#'   \code{affected} is an affected condition, in the order the data
+#'   frame holds them, the first four drawn (see \code{conditions} in the
+#'   return value). A lone one fills the symbol; two or more split it
+#'   into sections. (\code{\link{makePedigreeDiagramData}} reads the
+#'   column \code{affected} alone.)
 #' @param edgeStyle one of \code{"rectilinear"} (default), which routes
 #'   mate-line and sibship-bar edges through invisible waypoint nodes so
 #'   they render as a strict right angle, kinship2-style, or
@@ -1650,7 +1655,14 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   repeat-appearance nodes, \code{FALSE} for every other node and for all of
 #'   them when \code{ped} has no \code{status} column), \code{x},
 #'   \code{y}; \code{color.border} is added under
-#'   \code{edgeStyle = "rectilinear"}), \code{edges} (\code{from},
+#'   \code{edgeStyle = "rectilinear"}; \code{affectedSections} is added
+#'   when there are two or more conditions: a character string with one
+#'   character per condition, \code{"1"} where the animal is affected
+#'   and \code{"0"} where it is unaffected or unknown, the same for a
+#'   repeat-appearance node as for its animal, \code{""} for a node that
+#'   is not an animal, never \code{NA}; with two or more conditions the
+#'   animals' \code{color.background} is white, the sections carrying the
+#'   color), \code{edges} (\code{from},
 #'   \code{to}, \code{dashes}, \code{smooth.enabled}, \code{smooth.type},
 #'   \code{smooth.roundness}, \code{color}, \code{width}; the \code{color}
 #'   and \code{width} columns are always present once any mating unit
@@ -1670,7 +1682,12 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   connected by \code{twinRelations}; it is \code{character(0)} when
 #'   nothing was suppressed. When every individual in \code{ped} is
 #'   isolated, \code{nodes}/\code{edges} are both 0-row and
-#'   \code{duplicateToReal} is empty.
+#'   \code{duplicateToReal} is empty. Also \code{conditions}, a data
+#'   frame with one row per drawn condition (\code{column}, \code{label}
+#'   such as \dQuote{Affected} or \dQuote{Affected (diabetes)}, and its
+#'   \code{color}), 0-row when \code{ped} has no such column, and
+#'   \code{conditionsNotDrawn}, the names of any such columns past the
+#'   fourth.
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -1700,6 +1717,18 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
          "matrix (or Matrix) with row and column names set to individual ",
          "ids, or NULL.")
   }
+
+  # S1029: every column whose name starts "affected" is a condition (owner
+  # ruling), in file order, the first four drawn (kinship2's own limit).
+  conditionCols <- .conditionColumns(ped)
+  drawnCols <- utils::head(conditionCols, length(.conditionColors))
+  conditionsNotDrawn <- setdiff(conditionCols, drawnCols)
+  conditions <- data.frame(
+    column = drawnCols, label = .conditionLabels(drawnCols),
+    color = .conditionColors[seq_along(drawnCols)],
+    stringsAsFactors = FALSE
+  )
+  sectioned <- length(drawnCols) >= 2L
 
   # A fully-isolated individual (no known parent, never a parent, not
   # twinRelations-connected) is suppressed from the diagram, matching
@@ -1736,6 +1765,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     emptyNodes$deceased <- logical()
     emptyNodes$x <- numeric()
     emptyNodes$y <- numeric()
+    if (sectioned) emptyNodes$affectedSections <- character()
     emptyEdges <- data.frame(from = character(), to = character(),
                               dashes = logical(), smooth.enabled = logical(),
                               smooth.type = character(),
@@ -1744,7 +1774,8 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
                               stringsAsFactors = FALSE)
     return(list(nodes = emptyNodes, edges = emptyEdges,
                 duplicateToReal = stats::setNames(character(), character()),
-                isolatedIds = isolatedIds))
+                isolatedIds = isolatedIds, conditions = conditions,
+                conditionsNotDrawn = conditionsNotDrawn))
   }
 
   forest <- .buildMatingUnitForest(ped)
@@ -1815,14 +1846,19 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   # that one, is what the live Diagram tab actually renders
   # (R/modPedigree.R). Coerce defensively via as.logical() (see that
   # function's own comment for why).
-  hasAffected <- "affected" %in% names(ped)
+  # S1029: each drawn condition column, read as logical by real id. A lone
+  # condition fills the symbol pink as `affected` always has; two or more
+  # are painted in sections by R/modPedigree.R, so the fill stays white.
+  conditionOf <- lapply(drawnCols, function(column) {
+    stats::setNames(as.logical(ped[[column]]), realIds)
+  })
   # Track 1 (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-
   # plan.md, found S569): an absent affected column no longer means
   # `.affectedColorForVec()` goes uncalled -- affectedOf is an all-NA named
   # vector instead of NULL so .affectedColor() below still returns an
   # explicit white fill for every real/duplicate node.
-  affectedOf <- if (hasAffected) {
-    stats::setNames(as.logical(ped$affected), realIds)
+  affectedOf <- if (length(drawnCols) == 1L) {
+    conditionOf[[1L]]
   } else {
     stats::setNames(rep(NA, length(realIds)), realIds)
   }
@@ -1874,10 +1910,11 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
              "<br><b>Sire:</b> %s<br><b>Dam:</b> %s"),
       .escapeHtml(ids), sexLabel, genOf[ids], sireLabel, damLabel
     )
-    if (hasAffected) {
+    for (i in seq_along(drawnCols)) {
       title <- paste0(title,
-                       sprintf("<br><b>Affected:</b> %s",
-                               .affectedLabel(affectedOf[ids])))
+                       sprintf("<br><b>%s:</b> %s",
+                               .escapeHtml(conditions$label[[i]]),
+                               .affectedLabel(conditionOf[[i]][ids])))
     }
     if (hasName) {
       title <- paste0(title, .nameTooltipLine(nameOf[ids]))
@@ -2113,8 +2150,25 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     }
   }
 
+  if (sectioned) {
+    # S1029: one "1"/"0" per condition for each animal (unaffected and
+    # unknown both "0"); a repeat-appearance node reads as its real animal;
+    # a mating-union, drop, bar or waypoint node is not an animal and gets
+    # "" (never NA).
+    flags <- do.call(cbind, lapply(conditionOf, function(v) {
+      ifelse(!is.na(v) & v, "1", "0")
+    }))
+    sectionsOf <- stats::setNames(apply(flags, 1L, paste, collapse = ""),
+                                  realIds)
+    animalOf <- ifelse(nodes$id %in% dupIds,
+                       duplicates$realId[match(nodes$id, dupIds)], nodes$id)
+    nodes$affectedSections <- ifelse(animalOf %in% realIds,
+                                     unname(sectionsOf[animalOf]), "")
+  }
+
   list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal,
-       isolatedIds = isolatedIds)
+       isolatedIds = isolatedIds, conditions = conditions,
+       conditionsNotDrawn = conditionsNotDrawn)
 }
 
 #' Insert rectilinear mate-line/sibship-bar waypoint nodes and edges
