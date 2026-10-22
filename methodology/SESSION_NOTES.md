@@ -99,13 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1030 Did
-**Deliverable:** the scripted Diagram rendering gets the deceased slash and the condition sections, or the docs stop promising it does (IN PROGRESS; Phase 0 picker, item 2 of 4,
-"Scripts miss slash and sections", S1029's own suggested order, not an owner order; `BACKLOG.md:224`; DECISION NEEDED: one exported function that returns the app's handler, or reword
-the "exactly" claim at `vignettes/a2interactive.Rmd:472`; the scope is settled with the owner before RED; strict TDD, every phase behind its own gate).
-**Started:** 2026-10-22 01:15 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, "Scripts miss slash and sections", item 2 of 4; strict TDD, every phase behind its own gate):** a script draws the Diagram
+tab's picture. Owner ruling at the scope question, the recommended option ("One function draws it all"): `drawPedigreeDiagram(layout, edgeStyle, onClick)` is exported
+(`R/drawPedigreeDiagram.R:46`) and returns the whole widget: the 11-row legend (a row per condition drawn), the sections-then-slash `afterDrawing` handler, the `.diagramHeight()`
+canvas, the Export button, a "Select by id" box of real animals, hover reach 6 rectilinear and 1 direct, click wiring only with `onClick`. The app's render (`R/modPedigree.R:715-727`)
+is one call to it with the app's click wiring. Measured first: the walkthrough chain drew 5 legend rows, no handler and the default canvas (the app: 11 rows, the handler, 500 px);
+five "exactly" or "identically" sentences in two pages, and the article contradicted itself. Docs: both walkthrough chunks are one call (`vignettes/a2interactive.Rmd:485,549`), the
+claims and the article's sections paragraph name the function (`vignettes/articles/pedigree-diagram.qmd:29,232,319,328`), `NEWS.Rmd:61`, `_pkgdown.yml`, `inst/WORDLIST`. Claim
+`e1c01d48f`, RED `591948908`, GREEN `73f1db9fd` `86ca8236e`, spelling `15fddfc7c`, docs `b27a7fb8a`, mutation pin `ceecff912`, REFACTOR `91e115310`, E2E qualification `db78025b3`.
+The finished BACKLOG block is off. Not pushed.
+**Evidence:** `test_drawPedigreeDiagram.R` 16 blocks 79 expectations, `test_drawPedigreeDiagramDocs.R` 5 blocks 23, browser tier 22 blocks 108 expectations (scratch install) 0 failed;
+mutants 17 of 17 (16 at once, the data-frame check pinned); full suite 446 files, 4,162 blocks, 14,207 expectations, 0 failed, 0 errors, 197 skipped (S1029: 444 / 4,140 / 14,103 / 196);
+`lintr::lint_package()` 0; `devtools::check()` 0/0/0; ratchet 1/1 (results `1182f9a08bba`; S1029's `fa5fa2978bbb` matched first). Pictures of the old chain and of the function's
+page were opened for the owner before the long runs.
+**Handoff evaluation of S1029: 8/10.** Helped: the BACKLOG item and its two options were the right start; "`visNetwork()` alone draws neither" was the core fact; the browser-tier
+recipe worked the first time; the ratchet hash matched. Missing: that the walkthrough's legend (5 rows) and canvas had drifted too, so exporting the handler alone would have left
+"exactly" untrue. Wrong: the item's "exactly ... true for its own fixtures": those fixtures drew 5 legend rows against the app's 11.
+**Self: 7/10.** + measured the gap before the one scope question (it changed the options); the scope question and all three gates answered with the recommended option the first
+time; the parity blocks compare the app's widget text with the function's byte for byte; a RED edge test caught a real `$` partial-match bug. - one RED expectation was wrong
+(`visExport()` keeps ".png"); my browser block called two exports bare, caught only by the full suite's qualification guard; an `Rscript ... | head -1` stalled at 0% CPU, a known
+gotcha; one long silent stretch drew a nudge. Learning 996.
+**Gotchas:** an E2E-tier file must call exports as `nprcgenekeepr::f()` (`test_e2e_package_qualification.R`: the nightly job does not attach the package, every local run does);
+read a list element whose name starts a longer sibling's with `[[ ]]`; `visExport()` keeps the extension in `x$export$name`; a page saved with `htmlwidgets::saveWidget()` is 960 px
+wide, so its legend is cut in a window under 1,000 px (the old chain did the same; take pictures at 1,400); inside `testServer()` the module's reactives are reachable and a second
+`output$x <- renderVisNetwork(...)` serializes like the app's; never pipe a long `Rscript` into `head`, send it to a file.
+**Next (my order; the owner gave none):** (1) `BACKLOG.md:16` contributor tutorial (DECISION NEEDED, M; three owner decisions first). (2) Housekeeping, own sessions: trim
+`methodology/HANDOFFS.md` (past its 196,608 B warn line: `methodology_trim.py --file methodology/HANDOFFS.md --budget-bytes 65536`, check first, then write, apart from a close-out);
+the methodology sync (SESSION_RUNNER.md 2 commits behind, SAFEGUARDS.md 1, dashboard v2.22.0 against 2.23.0; re-apply the `SESSION_NOTES.md` patch). (3) The "Shard verify scripts"
+BACKLOG item is out of date (upstream #93 and its fix PR #94 are open): offer a text update.
 
 ### Sessions 947-1029 (condensed S950 to S1030; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1029: the Diagram tab draws more than one affected condition per animal (owner rulings, the recommended option: every pedigree column starting "affected" is a condition, in file

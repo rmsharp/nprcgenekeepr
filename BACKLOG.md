@@ -221,20 +221,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       item is still 34 lines but is nearly all ratified-scope open text; leave it. Regrowth, for
       scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
 
-- [ ] **Scripted Diagram rendering lacks the deceased slash and the condition sections (found S1029,
-      2026-10-22; DECISION NEEDED -- an exported helper, or say so where the docs claim "exactly";
-      Effort M; strict TDD)** -- the slash (S1028) and the sections of two to four affected conditions
-      (S1029) are painted by the app's own `afterDrawing` handler (`R/deceasedSlash.R`,
-      `R/affectedConditions.R`, joined by `.diagramAfterDrawing()`), none of it exported:
-      `makePedigreeMatingLayout()` returns the data (`nodes$deceased`, `nodes$affectedSections`,
-      `conditions`) but `visNetwork::visNetwork()` alone draws neither. `vignettes/a2interactive.Rmd:472`
-      says the scripted walkthrough reproduces the tab's rendering "exactly" (true for its own
-      fixtures, which have no `status` and at most one condition); the Diagram article's new section
-      ("More than one affected condition") already says the sections need the app's script. The
-      decision: export one function that returns the handler (a new exported name: `_pkgdown.yml`, the
-      `a2interactive.Rmd` checklist, NEWS) or leave the scripted rendering as it is and say so at the
-      "exactly" claim.
-
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
 feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8
