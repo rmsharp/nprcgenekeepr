@@ -99,11 +99,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1035 Did
-**Deliverable:** Slim `inst/doc/` (owner pick at the Phase 0 picker, item 2 of 4, "Slim inst/doc/"; `BACKLOG.md:115`, DECISION NEEDED, Effort M, its own session) (IN PROGRESS)
-**Started:** 2026-10-22
-**Status:** Session claimed. Work beginning. The pick is the item, not the ruling: first measure the saving, then put the scope question to the owner in plain words (its own question,
-before any RED); implementation, if the owner says go, is strict TDD with the phase gates.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 2 of 4, "Slim inst/doc/"; strict TDD, REFACTOR skipped at the owner's word):** `a2interactive`, `gvaConvergence` and
+`simulatedKValues` moved from `html_document` (`df_print: paged`) to `rmarkdown::html_vignette` with `df_print: kable`; `a2interactive` also `fig_width: 7`, `fig_height: 5`, and it keeps
+`pdf_document`. Three output headers, no other line (`vignettes/a2interactive.Rmd:4-9`, `gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Clean-export tarball 3,971,754 to 3,222,746 B
+(-749,008 B, -18.9%; the ratchet reads 3,222,764 B on `HEAD`); the four built pages 4,438,595 to 2,374,723 B. Owner scope ruling: "Light template only" (declined static diagrams and
+"leave as is"); the live diagrams stay; the 5 MB size gate is unchanged. Claim `c64774804`, RED `069294279`, GREEN `a737202c4`, close-out in the commit after.
+**Measured first (scratch builds of `git archive HEAD`):** light + default tables 3,179,572 B; light + the two live diagram chunks off 2,805,679 B (-1.17 MB, no pictures added back);
+`df_print: paged` under the light template 3,181,240 B, accepted but the page holds 46 table markups and no script to draw them; `kable` 3,180,806 B, 27 HTML tables in `a2interactive`.
+The light template's default 3 x 3 in figures shrank the two plots from 1344x960 to 288x288 px; 7 x 5 in gives 672x480 (`html_document` doubles the pixels, `html_vignette` has no
+argument for it). The owner saw old and new plots as image files and said they look fine. **Checks:** `test_vignetteLightTemplate.R` 24 of 24 (RED: 12 failed, 0 errors); full suite
+447 files, 4,167 blocks, 14,231 expectations, 0 failed, 0 errors, 197 skipped (no earlier full-run skip count to compare); `lint_package()` 0 findings; `R CMD check` of the rebuilt
+tarball (`--no-tests --no-manual`, vignettes rebuilt) 0 errors, 0 warnings, 0 notes; ratchet 1/1 pass (results `0ef16360cae1`, head `a737202c4`).
+**Handoff evaluation of S1034: 9/10.** Helped: Next (2) named the item at `BACKLOG.md:115` and it was there; the Phase 0 numbers (clean tree, both frontiers at HEAD, ratchet hash, CI 10 of
+10) all matched; "a pick on a decision item is the item, not the ruling" was right, so I asked the scope question second; the delayed-items memory kept six items out of the picker.
+Missing: the item's own text was partly wrong (`df_print: paged` "does not exist" under the light template; no mention of the 3 x 3 in figure default), inherited, not S1034's claim.
+Wrong: nothing in the handoff; its zsh `echo "==="` warning was right and I hit it anyway.
+**Self: 7/10.** + claimed before work; measured five variants before the scope question and found the two traps the item missed; three gates asked, each answered; no edit corrected;
+every check green. - two question boxes bounced ("wants to clarify"): the plot-check option assumed the owner knew where two plots sit in a 2 MB page (81% and 89% down; "I am not
+seeing plots"), and the REFACTOR option gave no plain reason for it; the system asked "say what you're doing" 3 times inside runs of builds and waits; the zsh `=` gotcha again;
+`stat -f%z` is GNU stat here (use `wc -c`). Learning 1001.
+**Gotchas:** pkgdown ignores a vignette's YAML output format (it builds each article with its own `html_document` settings), so the website is unchanged; the ratchet reads
+3,222,764 B and a scratch build 3,222,746 B (18 B of build stamp); `BACKLOG.md` lines after the removed block moved up by 22 (`:156` is now `:134`, `:137` is now `:115`, `:195` is now
+`:173`), older cites are dated records; `rcmdcheck::rcmdcheck(<tarball>, args = c("--no-tests", "--no-manual"))` from the repo root checks a scratch tarball; `quality_ratchet.py --run`
+overwrites `methodology/.quality-gates-results.json` (this session's `0ef16360cae1` replaces `f12acc759237`); 111 commits were ahead of `origin` before the close-out commit, not pushed.
+**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Issue #36 check (read-only; READY, Effort S; still the leftover: the issue cites `R/agePyramidPlot.R`,
+which does not exist, no R file mentions chimpanzees, `R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`); the owner closes issues. (2) The `BACKLOG.md` compression pass (READY,
+Effort L, recurring, `BACKLOG.md:134`; the file is 244 lines). (3) DECISION NEEDED: the retrospective snapshot backfill (`BACKLOG.md:33`, Effort L, its own design session and a new GitHub
+issue first). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only, `BACKLOG.md:173`). Estimate, not measured: the compression pass will want the S896 method (six steps).
 
 ### Sessions 947-1034 (condensed S950 to S1035; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1034: the owner ruled A on the ten red archive-proof scripts (owner pick, "Ten red proof scripts"; a decision session, text only, no code): leave the ten files and remove

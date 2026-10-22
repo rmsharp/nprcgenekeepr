@@ -206,10 +206,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1035
 date: 2026-10-22
-status: pending
-active_task: IN PROGRESS -- slim `inst/doc/` (BACKLOG.md:115, DECISION NEEDED, Effort M, its own session; owner pick at the Phase 0 picker, item 2 of 4, "Slim inst/doc/"). The pick is the item, not the ruling: measure the saving and put the scope question to the owner before any RED.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- slim inst/doc/ (owner pick at the Phase 0 picker, item 2 of 4, "Slim inst/doc/"; strict TDD, REFACTOR skipped at the owner's word): a2interactive, gvaConvergence and simulatedKValues moved from html_document (df_print paged) to rmarkdown::html_vignette with df_print kable, a2interactive also fig_width 7 and fig_height 5; the BACKLOG.md block (22 lines, was BACKLOG.md:115-136) is removed.
+what_was_done: Claim c64774804 (stub, pending receipt, CHANGELOG claim entry, S1034 condensed). Phase 0 found a clean tree, both ledger frontiers at HEAD, no pending receipt, no merges, the ratchet citation matching (f12acc759237), CI 10 of 10 success, dashboard 96/100, nothing over a context-budget ceiling. The owner picked the item, then the scope "Light template only" (static diagrams and leave-as-is declined) after five measured scratch builds of git archive HEAD. RED 069294279: tests/testthat/test_vignetteLightTemplate.R, 24 expectations, 12 failed, 0 errors. GREEN a737202c4: three output headers; 24 of 24; clean-export tarball 3,971,754 to 3,222,746 B (-749,008 B, -18.9%); the owner saw the old and new plots as image files and said they look fine. Full suite 447 files 14,231 expectations 0 failed 0 errors 197 skipped; lint 0 findings; R CMD check of the rebuilt tarball 0/0/0. REFACTOR skipped (the header reader exists once). Close-out: BACKLOG block removed, DONE entry, audit status line, Learning 1001.
+next_steps: No owner order was given; my order (the six delayed items are not offered): (1) Issue #36 check, read-only (READY, Effort S): the issue cites R/agePyramidPlot.R, which does not exist, and no R file mentions chimpanzees; the owner closes issues. (2) The BACKLOG.md compression pass (READY, Effort L, recurring, BACKLOG.md:134; 244 lines). (3) DECISION NEEDED: the retrospective snapshot backfill (BACKLOG.md:33, Effort L, own design session and a new GitHub issue first). (4) Owner-side: where to post the close_out_report.py write-up (draft only, BACKLOG.md:173).
+key_files: vignettes/a2interactive.Rmd:4 (the light header, fig_width and fig_height), vignettes/gvaConvergence.Rmd:6, vignettes/simulatedKValues.Rmd:6, tests/testthat/test_vignetteLightTemplate.R:1 (header comment holds the measurements), BACKLOG.md:134 (the compression item), BACKLOG.md:173 (the held-back files item), BACKLOG.md:33 (snapshot backfill), docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md:3 (status line, Finding 3 resolved), R/getPyramidPlot.R:94 (axis ticks).
+gotchas: df_print paged is accepted under html_vignette but draws nothing; the light template's default figures are 3 x 3 in (288x288 px), set fig_width and fig_height on any vignette moved to it; html_vignette has no retina doubling, so 7 x 5 in is 672x480 px. pkgdown ignores a vignette's YAML output format, so the website is unchanged. When the owner is asked to compare something inside a long page, extract it as an image file, open that, and say where it sits (81% and 89% down this page; the owner could not find the plots). BACKLOG.md lines after the removed block moved up by 22. zsh: printf -- '---', never echo "===", and stat -f%z is GNU stat here (use wc -c). quality_ratchet.py --run overwrites methodology/.quality-gates-results.json: this session's hash 0ef16360cae1 replaces f12acc759237. 111 commits ahead of origin before the close-out commit, not pushed.
+runtime_smoke: The change is to build output, so the build is the smoke test: a clean git archive HEAD tarball was built (3,222,746 B), R CMD check of it (vignettes rebuilt, tests off) gave 0 errors, 0 warnings, 0 notes, and the owner opened the rebuilt a2interactive and gvaConvergence pages and the old and new plots. The Shiny app was not launched: no R/ file changed.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 0ef16360cae1 · manifest aa983075d6a2
+changelog_ref: c64774804
+commit: a737202c4
 ```
 
 ```handoff
