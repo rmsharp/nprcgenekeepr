@@ -2841,3 +2841,24 @@ test_that(
   }
   expect_true(grepl("n.shape", handler, fixed = TRUE))
 })
+
+## S1028 mutation gap: the legend picture's slash has to be visible. A line of
+## stroke width 0 left every other test green.
+
+test_that(
+  "modPedigreeServer's legend picture draws its slash in black, at least 2
+   wide", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  widgetJson <- .deceasedWidgetJson(.deceasedStudbook())
+  uri <- regmatches(widgetJson,
+                    regexpr('data:image/svg\\+xml[^"]*', widgetJson))
+  expect_length(uri, 1L)
+  svg <- if (length(uri) == 1L) utils::URLdecode(uri) else ""
+  line <- regmatches(svg, regexpr("<line[^>]*>", svg))
+  expect_length(line, 1L)
+  expect_true(grepl("stroke='black'", line, fixed = TRUE))
+  width <- as.numeric(sub(".*stroke-width='([0-9.]+)'.*", "\\1", line))
+  expect_gte(width, 2)
+})

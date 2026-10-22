@@ -2053,3 +2053,23 @@ test_that(
   expect_true("deceased" %in% names(result$nodes))
   expect_identical(result$nodes$deceased, logical(0L))
 })
+
+## S1028 mutation gap: the collision repair adds __jog_ waypoint nodes through
+## .matchColumns(), which backfills a column the new node lacks; a logical
+## column used to be backfilled with NA, so the jog nodes (142 on the QC'd
+## bundled fixture under the default style) read deceased NA, not FALSE. No
+## other fixture here produces a jog node.
+
+test_that(
+  "makePedigreeMatingLayout gives the __jog_ waypoint nodes of the QC'd bundled
+   fixture a deceased value of FALSE, never NA, while real DECEASED animals
+   keep theirs", {
+  qcd <- qcdRhesusPed()
+  qcd$status <- ifelse(seq_len(nrow(qcd)) %% 7L == 0L, "DECEASED", "ALIVE")
+  nodes <- makePedigreeMatingLayout(qcd)$nodes
+  jog <- grepl("^__jog_", nodes$id)
+  expect_gt(sum(jog), 0L)
+  expect_false(anyNA(nodes$deceased))
+  expect_false(any(nodes$deceased[jog]))
+  expect_gt(sum(nodes$deceased), 0L)
+})
