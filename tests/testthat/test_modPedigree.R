@@ -2898,6 +2898,22 @@ test_that(
   do.call(.conditionsStudbook, cols)
 }
 
+## The Diagram UI's html (the canvas and anything under it) for a studbook, as
+## the app builds it.
+.diagramUiHtml <- function(studbook) {
+  captured <- new.env()
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+      captured$html <- output$pedigreeDiagramUI$html
+    }
+  )
+  captured$html
+}
+
 ## The legend's node labels, as the serialized widget spells them.
 .legendLabels <- function(labels) {
   paste0('"label":[',
@@ -2980,19 +2996,7 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
-  heightOf <- function(studbook) {
-    captured <- new.env()
-    shiny::testServer(
-      modPedigreeServer,
-      args = list(studbook = shiny::reactive({ studbook })),
-      {
-        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-        session$flushReact()
-        captured$html <- output$pedigreeDiagramUI$html
-      }
-    )
-    captured$html
-  }
+  heightOf <- .diagramUiHtml
   expect_true(grepl("height:500px", heightOf(.conditionsStudbook()),
                     fixed = TRUE))
   expect_true(grepl("height:500px", heightOf(.nConditionsStudbook(1L)),
@@ -3055,19 +3059,7 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
-  noteOf <- function(studbook) {
-    captured <- new.env()
-    shiny::testServer(
-      modPedigreeServer,
-      args = list(studbook = shiny::reactive({ studbook })),
-      {
-        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-        session$flushReact()
-        captured$html <- output$pedigreeDiagramUI$html
-      }
-    )
-    captured$html
-  }
+  noteOf <- .diagramUiHtml
   six <- noteOf(.nConditionsStudbook(6L))
   expect_true(grepl(
     paste("Only the first four affected columns are drawn.",
@@ -3089,19 +3081,9 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
-  captured <- new.env()
-  shiny::testServer(
-    modPedigreeServer,
-    args = list(studbook = shiny::reactive({ .nConditionsStudbook(5L) })),
-    {
-      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-      session$flushReact()
-      captured$html <- output$pedigreeDiagramUI$html
-    }
-  )
   expect_true(grepl(
     paste("Only the first four affected columns are drawn.",
           "Not drawn: affected5."),
-    captured$html, fixed = TRUE
+    .diagramUiHtml(.nConditionsStudbook(5L)), fixed = TRUE
   ))
 })

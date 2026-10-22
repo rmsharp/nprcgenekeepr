@@ -2151,19 +2151,9 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   }
 
   if (sectioned) {
-    # S1029: one "1"/"0" per condition for each animal (unaffected and
-    # unknown both "0"); a repeat-appearance node reads as its real animal;
-    # a mating-union, drop, bar or waypoint node is not an animal and gets
-    # "" (never NA).
-    flags <- do.call(cbind, lapply(conditionOf, function(v) {
-      ifelse(!is.na(v) & v, "1", "0")
-    }))
-    sectionsOf <- stats::setNames(apply(flags, 1L, paste, collapse = ""),
-                                  realIds)
-    animalOf <- ifelse(nodes$id %in% dupIds,
-                       duplicates$realId[match(nodes$id, dupIds)], nodes$id)
-    nodes$affectedSections <- ifelse(animalOf %in% realIds,
-                                     unname(sectionsOf[animalOf]), "")
+    nodes$affectedSections <- .affectedSectionsOf(
+      nodes$id, conditionOf, realIds, dupIds, duplicates$realId
+    )
   }
 
   list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal,

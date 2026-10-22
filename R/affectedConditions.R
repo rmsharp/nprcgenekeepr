@@ -48,6 +48,32 @@
   }, character(1L), USE.NAMES = FALSE)
 }
 
+#' The affectedSections string of each node
+#'
+#' S1029. One character per condition for an animal: \code{"1"} where it is
+#' affected, \code{"0"} where it is unaffected or unknown. A repeat-appearance
+#' node reads as its real animal; a mating-union, drop, bar or waypoint node is
+#' not an animal and gets \code{""}, never \code{NA}.
+#' @param nodeIds ids of the layout's nodes.
+#' @param conditionOf list with one logical vector per drawn condition, named
+#'   by real id.
+#' @param realIds ids of the animals, in the order of the vectors.
+#' @param dupIds ids of the repeat-appearance nodes.
+#' @param dupRealIds the real id of each repeat-appearance node.
+#' @return character vector, as long as \code{nodeIds}.
+#' @noRd
+.affectedSectionsOf <- function(nodeIds, conditionOf, realIds, dupIds,
+                                dupRealIds) {
+  flags <- do.call(cbind, lapply(conditionOf, function(v) {
+    ifelse(!is.na(v) & v, "1", "0")
+  }))
+  sectionsOf <- stats::setNames(apply(flags, 1L, paste, collapse = ""),
+                                realIds)
+  animalOf <- ifelse(nodeIds %in% dupIds,
+                     dupRealIds[match(nodeIds, dupIds)], nodeIds)
+  ifelse(animalOf %in% realIds, unname(sectionsOf[animalOf]), "")
+}
+
 #' The afterDrawing handler that paints the sections of a symbol
 #'
 #' S1029. With two or more conditions the layout gives each animal's node an
