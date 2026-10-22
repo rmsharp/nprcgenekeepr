@@ -1337,10 +1337,10 @@ test_that(
     status = c("ALIVE", "ALIVE", "ALIVE", "ALIVE", "DECEASED")
   ))
   ped$gen <- c(0L, 0L, 1L, 1L, 1L)
-  layout <- suppressMessages(makePedigreeMatingLayout(ped))
+  layout <- suppressMessages(nprcgenekeepr::makePedigreeMatingLayout(ped))
   page <- tempfile(fileext = ".html")
   on.exit(unlink(page), add = TRUE)
-  htmlwidgets::saveWidget(drawPedigreeDiagram(layout), page,
+  htmlwidgets::saveWidget(nprcgenekeepr::drawPedigreeDiagram(layout), page,
                           selfcontained = TRUE)
 
   ## The first Chrome launch can be slow (see getLiveRenderedPositions(),
