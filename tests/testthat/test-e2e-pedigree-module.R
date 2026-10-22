@@ -1304,3 +1304,115 @@ test_that(
                                       rows$bottoms[-length(rows$bottoms)])))
   expect_gte(rows$scale, 0.65)
 })
+
+## S1030 -- a script draws what the Diagram tab draws. drawPedigreeDiagram()
+## returns the widget the app shows (owner ruling S1030, "One function draws
+## it all"), so a page a script saves paints the same slash and sections. The
+## unit tests (test_drawPedigreeDiagram.R) compare the widget text; only the
+## canvas pixels can say the saved page paints them. The page is saved with
+## htmlwidgets::saveWidget() and opened in headless Chrome, with no Shiny app.
+
+test_that(
+  "E2E: a page a script saves from drawPedigreeDiagram() draws the deceased
+   slash and fills each condition's section, as the Diagram tab does", {
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("htmlwidgets")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+  skip_if_not(identical(Sys.getenv("NPRC_RUN_E2E"), "true"),
+              "End-to-end tests are opt-in; set NPRC_RUN_E2E=true to run them.")
+
+  ## conditions_pedigree() with E DECEASED. A (a square) is affected by both
+  ## conditions, D (a square) by neither, E (a circle) by the first only, so
+  ## E's right half is open and its slash runs across white.
+  ped <- conditions_pedigree(list(
+    status = c("ALIVE", "ALIVE", "ALIVE", "ALIVE", "DECEASED")
+  ))
+  ped$gen <- c(0L, 0L, 1L, 1L, 1L)
+  layout <- suppressMessages(makePedigreeMatingLayout(ped))
+  page <- tempfile(fileext = ".html")
+  on.exit(unlink(page), add = TRUE)
+  htmlwidgets::saveWidget(drawPedigreeDiagram(layout), page,
+                          selfcontained = TRUE)
+
+  ## The first Chrome launch can be slow (see getLiveRenderedPositions(),
+  ## helper-live-render-positions.R).
+  chromeParent <- chromote::default_chromote_object()
+  if (chromeParent$default_timeout < 60) chromeParent$default_timeout <- 60
+  b <- chromote::ChromoteSession$new(width = 1000L, height = 700L)
+  on.exit(b$close(), add = TRUE)
+  b$go_to(paste0("file://", page), timeout_ = 30, delay = 1.5)
+
+  evaluate <- function(js) {
+    b$Runtime$evaluate(js, returnByValue = TRUE)$result$value
+  }
+  ## diagram_pixel_js() reads the app's widget; the saved page has one widget.
+  page_pixel_js <- function(body) {
+    sub("#pedigree-pedigreeDiagram", ".visNetwork", diagram_pixel_js(body),
+        fixed = TRUE)
+  }
+  drawn <- FALSE
+  for (attempt in seq_len(40L)) {
+    drawn <- isTRUE(evaluate(paste0(
+      "(() => { const w = HTMLWidgets.find('.visNetwork'); ",
+      "return !!w && !!w.network && ",
+      "w.network.body.data.nodes.length > 0; })()"
+    )))
+    if (drawn) break
+    Sys.sleep(0.25)
+  }
+  if (!drawn) skip("The saved page's diagram was not drawn")
+
+  ## The darkest grey level (0 black, 255 white) of the 3 pixels across at
+  ## (`dx`, `dy`) from a node's centre, in units of its radius on screen.
+  darkest_at <- function(id, dx, dy) {
+    evaluate(sprintf(page_pixel_js(paste0(
+      "const p = net.canvasToDOM(net.getPosition('%s')); ",
+      "const n = net.body.data.nodes.get('%s'); ",
+      "const r = (n.size || 25) * net.getScale(); let lo = 255; ",
+      "for (let i = -1; i <= 1; i++) { lo = Math.min(lo, ",
+      "lum(p.x + %f * r + i, p.y + %f * r)); } return lo; "
+    )), id, id, dx, dy))
+  }
+  ## The slash runs from bottom left to top right through the centre, so it
+  ## crosses the point a third of a radius up and right of it.
+  expect_lt(darkest_at("E", 0.35, -0.35), 100,
+            label = "darkest pixel on E's slash (DECEASED)")
+  expect_gt(darkest_at("D", 0.35, -0.35), 200,
+            label = "darkest pixel at the same point of D (ALIVE)")
+
+  ## The colors half a radius left and right of a node's centre.
+  halves <- function(id) {
+    got <- evaluate(sprintf(page_pixel_js(paste0(
+      "const p = net.canvasToDOM(net.getPosition('%s')); ",
+      "const n = net.body.data.nodes.get('%s'); ",
+      "const r = (n.size || 25) * net.getScale(); ",
+      "return rgb(p.x - 0.5 * r, p.y).join(',') + '|' + ",
+      "rgb(p.x + 0.5 * r, p.y).join(','); "
+    )), id, id))
+    strsplit(got, "|", fixed = TRUE)[[1L]]
+  }
+  ## Whether a pixel's "r,g,b" is within 16 of a color on every channel.
+  is_color <- function(rgbText, hex) {
+    got <- as.numeric(strsplit(rgbText, ",", fixed = TRUE)[[1L]])
+    want <- as.numeric(grDevices::col2rgb(hex))
+    length(got) == 3L && all(abs(got - want) <= 16)
+  }
+  pink <- "#CC79A7"
+  orange <- "#E69F00"
+  white <- "#FFFFFF"
+  expected <- list(A = c(pink, orange), D = c(white, white),
+                   E = c(pink, white))
+  for (id in names(expected)) {
+    got <- halves(id)
+    expect_length(got, 2L)
+    if (length(got) == 2L) {
+      expect_true(is_color(got[[1L]], expected[[id]][[1L]]),
+                  info = sprintf("%s's left half is %s, read %s", id,
+                                 expected[[id]][[1L]], got[[1L]]))
+      expect_true(is_color(got[[2L]], expected[[id]][[2L]]),
+                  info = sprintf("%s's right half is %s, read %s", id,
+                                 expected[[id]][[2L]], got[[2L]]))
+    }
+  }
+})
