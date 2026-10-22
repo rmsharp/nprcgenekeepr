@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1029
+date: 2026-10-21
+status: pending
+active_task: IN PROGRESS -- the Diagram tab shades more than one affected condition per animal, as kinship2 does (owner pick at the Phase 0 picker, item 2 of 4, "More than one condition"; BACKLOG.md:241-248; DECISION NEEDED: the input shape and the legend text, settled with the owner before RED; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1028
 date: 2026-10-21
 status: complete

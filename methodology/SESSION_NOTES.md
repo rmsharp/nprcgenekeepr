@@ -98,37 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1028 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, "Two kinship2 drawing features", item 2 of 4; strict TDD, every phase behind its own gate):** the Diagram tab draws a diagonal slash through an
-animal whose `status` reads DECEASED, and through no other. Owner rulings, both the recommended option: the deceased marker first (the other feature stays), and the rule is `status` alone (measured on
-`ExamplePedigree.csv`, 3,694 animals: 1,625 DECEASED, 365 SHIPPED, 332 ALIVE, 1,372 UNKNOWN; 1,990 exit dates = 1,625 + 365, so `exit` cannot say; the two 375-animal rhesus examples have no `status`
-and mark nobody). Three owner messages mid-turn shaped it: the slash overhangs a circle by the legend's amount (0.864 of the radius, one number shared by diagram and legend); then it must overhang
-every SHAPE's outline by that amount (a circle-sized slash reached only 0.90 of a square's outline: per-shape factors, `R/deceasedSlash.R:28`); and the legend's labels must not touch the next symbol (a
-real-app measure: a label starts 11 units under its symbol and is 14 tall; the owner took a 500 px diagram, legend symbols size 14, rows 60 apart). The five Diagram pictures are retaken (owner: all 5).
-Claim `15298a7d9`, RED `ec2f53511`, RED amendment `84ccc9b52` `3cee37d28`, GREEN `3a57aa4cf`, lint `1e85c1291`, docs `705c42057` `3afe44eb4`, pictures `0dd9ac2b6`, mutation tests `99ade901e`, REFACTOR
-`da4cf93c4` (the four helpers move to `R/deceasedSlash.R`; the browser test's two pixel checks share `diagram_pixel_js()`). Not pushed (75 ahead of origin after this close-out).
-**Evidence:** layout file 65 blocks and module file 82 blocks 0 failed; browser tier (scratch install, `tests/testthat/test-e2e-pedigree-module.R:301-540`) 2 blocks 19 expectations 0 failed, and 4 failed on
-the earlier install (square 0.94, legend gaps -3, scale 0.62); mutants 16 of 16 killed (14 first; two real gaps pinned: jog-node `NA` backfill, an invisible legend slash); full suite 444 files, 4,110
-blocks, 13,994 expectations, 0 failed, 0 errors, 193 skipped (S1027: 4,093 / 13,934 / 191; the 2 extra skips are the browser blocks); lint 0; plain `devtools::check()` 0/0/0; ratchet 1/1 (results
-`827cd3043bd4`, S1027's `a4950b4645b5` compared first and matched). No new exported name; `NEWS.Rmd:45`, the Diagram article section (`vignettes/articles/pedigree-diagram.qmd:208`), the manual page and the guide say it.
-**Handoff evaluation of S1027: 8/10.** Helped: item (2) `BACKLOG.md:241` and its DECISION NEEDED were exact; the "condense `SESSION_NOTES.md` before adding" warning was right (54,761 B against a hook line near
-56,700); the `a4950b4645b5` hash matched; "63 ahead" held. Missing: that the decision "which column marks deceased" already had a measured answer in the data (`status`; `isLivingAnimal()` was the precedent).
-Wrong: nothing found.
-**Self: 7/10.** + measured before every question (status/exit counts, outline distances per shape from canvas pixels, the legend's real label geometry); two scratch probes before RED; opened real-app pictures
-and answered all three owner messages with a measurement, not an argument; browser block checked against BOTH installs (it fails on the earlier one); mutants twice. - my first RED was unfaithful: the legend
-check read `getBoundingBox()` and passed while labels touched, the slash was circle-only, two older pins were missed (the node-column `expect_setequal`, SR3's BACKLOG title), two of my parsers were wrong;
-I called a toy legend "not the app" and the app showed the same overlap; one silent stretch nudged. Learning 994.
-**Gotchas:** a legend row takes 2 x size + 25 world units (label 11 under its symbol, 14 tall), so size 14 and `stepY` 60 leave 7; the legend is `HTMLWidgets.find(...).legend`, a label's bottom is
-`labelModule.size.top + height`, not `getBoundingBox()`; the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`,
-`NOT_CRAN=true`, `NPRC_RUN_E2E=true` (to run one block: a scratch folder with `helper-*.R` symlinked and the block extracted); `getImageData` off the canvas is black; the legend serializes its edges before
-its nodes; a leading `sleep` is blocked (put it inside a loop); a "completed" notice for a `nohup` launcher is the launcher, not the job; the hover highlight dimming a node while its slash stays black is
-untested; the five retaken pictures use fixtures with no `status`, so none shows a slash.
-**Next (my order; the owner gave none):** (1) `BACKLOG.md:16` contributor tutorial (DECISION NEEDED, M): the owner first decides (a) `CONTRIBUTING.md` plus article or article alone, (b) how much strict TDD
-outsiders are asked to follow, (c) audience. (2) `BACKLOG.md:241` the one kinship2 feature left, more than one affected condition (DECISION NEEDED: input shape and legend text; M): a new legend row must be
-measured first (an 11th row already uses the whole 500 px canvas at scale 0.62). (3) `BACKLOG.md:200` compression (low value). Optional: a picture of a slash for the article (needs a focal trim of a
-`status` file: the examples with `status` have 3,694 and 2,590 animals, above the display cap).
+### What Session 1029 Did
+**Deliverable:** the Diagram tab shades more than one affected condition per animal, as kinship2 does (IN PROGRESS; Phase 0 picker, item 2 of 4, "More than one condition", S1028's own
+suggested order and not an owner order; `BACKLOG.md:241-248`). DECISION NEEDED: the input shape and the legend text, settled with the owner before RED; a new legend row is measured
+first, because an 11th row already uses the whole 500 px canvas. Strict TDD, every phase behind its own gate.
+**Started:** 2026-10-21 23:13 CDT
+**Status:** Session claimed. Work beginning. Pre-RED: measuring how the one logical `affected` column flows through the Diagram path (`R/makePedigreeDiagramData.R:73-85`), the legend
+and the tests before any question to the owner.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
 
-### Sessions 947-1027 (condensed S950 to S1028; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1028 (condensed S950 to S1029; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1028: the Diagram tab draws a diagonal slash through an animal whose `status` reads DECEASED and through no other (owner rulings: the deceased marker first; `status` alone decides,
+because the exit date is filled for a shipment too: 1,625 DECEASED + 365 SHIPPED = 1,990 exit dates in the 3,694-animal example), with a "Deceased" legend row, a 500 px canvas, legend
+symbols size 14 and rows 60 apart; the slash overhangs every shape's outline by the legend's amount (`R/deceasedSlash.R:28`). Strict TDD; claim `15298a7d9`, RED `ec2f53511` `84ccc9b52`
+`3cee37d28`, GREEN `3a57aa4cf`, mutation pins `99ade901e`, REFACTOR `da4cf93c4`; mutants 16 of 16; browser tier 19 of 19; evaluation of S1027 8/10, self 7/10 (Learning 994).
+**Gotchas kept:** a legend row takes 2 x size + 25 world units; the legend is `HTMLWidgets.find(...).legend` and a label's bottom is `labelModule.size.top + height`, not
+`getBoundingBox()`; the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`,
+`NPRC_RUN_E2E=true`; `getImageData` off the canvas is black; a leading `sleep` is blocked; the five retaken Diagram pictures use fixtures with no `status`, so none shows a slash.
 S1026-S1027 (strict TDD each; evaluations 8/10, self 7-8/10; Learnings 992-993): S1027, the last six docs-audit rulings taken and the docs-audit item (143 lines) off `BACKLOG.md` (455 to 311 lines): CC5
 Export Demographics = leave the code and say in the manual what it saves (`vignettes/manual_components/_orip_reporting.Rmd:31-32`), CB3, CB4, CC2, CC3, CD3 = leave all five
 (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:225`); claim `0d24cb8e1`, REFACTOR `01d259f5b` (`expectWording()`). S1026, the docs-audit loose ends settled (the stale CL9 line, the "(3) Left
