@@ -206,10 +206,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1031
 date: 2026-10-22
-status: pending
-active_task: IN PROGRESS -- trim methodology/HANDOFFS.md (207,314 B, past its 196,608 B warn line) with methodology_trim.py --budget-bytes 65536 (owner pick at the second Phase 0 picker, item 1 of 4, "Trim HANDOFFS.md"; housekeeping, no code or test change; check first, then write, apart from the close-out)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- methodology/HANDOFFS.md trimmed from 207,726 B to 28,615 B, 41 of 44 receipts archived to methodology/archive/HANDOFFS-through-2026-10-21.md (owner pick at the second Phase 0 picker, item 1 of 4, "Trim HANDOFFS.md"; the owner took --force at the SRF_RED question; housekeeping, no code or test change).
+what_was_done: Claim 42f534d85. At the first picker the owner delayed six BACKLOG items (tutorial, 3.0.0 move, both LabKey items, kinship2-like package, outreach, papers); saved as memory picker-delayed-items-2026-10-22, no BACKLOG block edited. The plain trim run was refused with SRF_RED (1.0638; both readings name the S991 archive ceea6dd3a, 197,004 B to 28,966 B; 178,760 B regrown in 8 days); a --force dry run showed the exact result; the owner chose "Yes, trim with --force". Trim 52085b223 (methodology_trim.py v1.8.0 --budget-bytes 65536 --force --write; HANDOFFS.md, CHANGELOG.md entry, the shard and its verify script), committed apart from the close-out; the verify script passes from that commit (L1, L2, L3; 44 before = 3 retained + 41 archived). 137 test files that read a ledger or methodology/: 2,004 blocks, 7,894 expectations, 0 failed, 0 errors. Close-out: S1030 evaluation 8/10, self 7/10, Learning 997, SESSION_NOTES.md S1030 condensed. Not pushed.
+next_steps: No owner order was given; my order (the six delayed items are not offered): (1) the methodology sync (READY, Effort S-M): SESSION_RUNNER.md 2 commits behind, SAFEGUARDS.md 1, methodology_dashboard.py v2.22.0 against 2.23.0, trimmer v1.8.0 against the fork's v1.8.1; re-apply the SESSION_NOTES.md patch per the CLOSEOUT_CHECKLISTS.md trimmer item. (2) Text-only update of the BACKLOG item "Shard verify scripts that FAIL on lossless trims" (BACKLOG.md:136): re-read KJ5HST/methodology #93 and PR #94 first. (3) Issue #36 check, read-only: R/agePyramidPlot.R is gone, R/getPyramidPlot.R:97 sets the axis from the data, neither pyramid file mentions chimpanzees; the owner closes issues. (4) DECISION NEEDED: retrospective snapshot backfill (L), inst/doc slimming (M). Watch: at about 22 KB a day (an estimate from 8 days) HANDOFFS.md passes its 196,608 B warn line again in about a week; the lever is shorter receipts (BACKLOG.md:164; the owner has not chosen).
+key_files: methodology/HANDOFFS.md (28,615 B, 3 receipts live); methodology/archive/HANDOFFS-through-2026-10-21.md and its .verify.sh; methodology/CHANGELOG.md top (the trimmer's entry, then the S1031 entries); PROJECT_LEARNINGS.md Learning 997; BACKLOG.md:136 (shard verify item) and :164 (receipt-size lever); docs/conventions/CLOSEOUT_CHECKLISTS.md:29 (the trimmer item, for the sync).
+gotchas: The plain run of methodology_trim.py on HANDOFFS.md is refused (SRF_RED) until the regrowth is smaller than the last trim's drop; --force without --write is a free preview with the exact numbers. Trim only with the claim committed and commit the trim alone (FRONTIER_PENDING_STUB: record 0 is the live stub). The trimmer puts a ## 2026-10 heading and its own entry at the top of CHANGELOG.md, so a DONE entry goes above it. The quality gate builds from git archive HEAD and its results file is gitignored. Edit no tracked ledger while the ledger tests run. Never git add -A (the studbook stays untracked).
+runtime_smoke: Not applicable and not skipped silently: no runtime behavior changed (ledger and archive files only; no R, app or docs-site file). The mechanical checks are the shard verify script from the trim commit and the 137 ledger-reading test files.
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 972b767212d7 · manifest aa983075d6a2
+changelog_ref: 42f534d85
 ```
 
 ```handoff

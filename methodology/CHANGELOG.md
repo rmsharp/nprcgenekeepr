@@ -24,6 +24,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-22 · [ad hoc] S1031 DONE (owner pick at the second Phase 0 picker, item 1 of 4, "Trim HANDOFFS.md"; housekeeping, no code or test change; the claim entry below says in progress): `methodology/HANDOFFS.md` trimmed from 207,726 B to 28,615 B, 41 of 44 receipts (2026-10-14 to 2026-10-21) archived to `methodology/archive/HANDOFFS-through-2026-10-21.md` with `methodology_trim.py` v1.8.0 `--budget-bytes 65536 --force --write` (the trimmer's own entry sits directly below). The plain run was refused with `SRF_RED` (1.0638; both readings name the S991 archive `ceea6dd3a`, 197,004 B to 28,966 B; 178,760 B regrown in 8 days, about 22 KB a day); the owner took "Yes, trim with --force", the recommended option, after both readings and a `--force` preview were put to them. Claim `42f534d85`, trim `52085b223`, committed apart from this close-out; the shard's verify script passes from the trim commit (L1, L2, L3). 137 test files that read a ledger or `methodology/`: 2,004 blocks, 7,894 expectations, 0 failed, 0 errors; ratchet 1/1 (results `972b767212d7`). Also: at the first picker the owner delayed six `BACKLOG.md` items (contributor tutorial, 3.0.0 version move, both LabKey items, the kinship2-like package, outreach, papers); no block was edited. `SESSION_NOTES.md` carries S1031; Learning 997; the `HANDOFFS.md` receipt is complete (self 7, predecessor 8). Not pushed.
+
 ### 2026-10-22 · [ad hoc] Ledger trim: `methodology/HANDOFFS.md` → `methodology/archive/HANDOFFS-through-2026-10-21.md` (41 record(s), 207,726 B → 28,615 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
