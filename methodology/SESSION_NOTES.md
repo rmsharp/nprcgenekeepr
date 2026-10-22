@@ -98,42 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1029 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, "More than one condition", item 2 of 4; strict TDD, every phase behind its own gate):** the Diagram tab draws more than one
-affected condition per animal. Owner ruling, the recommended option: every pedigree column whose name starts "affected" is a condition, in file order, the first four drawn; `affected`
-alone behaves as before. A symbol is split into equal sections, one per condition, counter-clockwise from the top (the first of two is the left half), in `#CC79A7 #E69F00 #56B4E9
-#009E73`; the legend has a row per condition ("Affected", "Affected 2", "Affected (diabetes)"); the canvas is 500 px plus 45 per legend row past 11; a note names columns past four; one
-`afterDrawing` handler paints the sections, then the S1028 slash. Measured first: QC lower-cases a header and drops spaces, periods and underscores (`affected_2` is `affected2`); a
-standalone 11-row legend at 500 px reads 0.703 and each row adds 66 world units. Claim `f8e3651f2`, RED `6a6e9646a`, GREEN `079907fc4`, docs `9953771d9`, mutation pins `9f7bbaf59`,
-REFACTOR `ca963f006` (`.affectedSectionsOf()`, `.diagramUiHtml()`). Also, at the owner's word, the optional Chrome-for-Testing BACKLOG item is removed (`7934dcc24`, checked first); the
-owner's question whether KJ5HST/methodology #93 merged was answered (it had not; below). Not pushed.
-**Evidence:** layout file 84 blocks 354 expectations, module file 90 blocks 267, browser tier (scratch install, `tests/testthat/test-e2e-pedigree-module.R:1136-1306`) 5 blocks 0 failed
-(the 2 new ones failed on the pre-GREEN install); mutants 24 of 24 killed (17 of the first 20; three survivors pinned; the painter's four killed with two pixel probes); full suite 444
-files, 4,140 blocks, 14,103 expectations, 0 failed, 0 errors, 196 skipped (S1028: 4,110 / 13,994 / 193); `lintr::lint_package()` 0; plain `devtools::check()` 0/0/0; ratchet 1/1 (results
-`fa5fa2978bbb`, S1028's `827cd3043bd4` compared first and matched). No new exported name; `NEWS.Rmd:41-48`, the Diagram article section, the guide and the manual say it. The kinship2
-BACKLOG block is off (both features shipped) and one found item is on (the scripted rendering lacks the slash and sections).
-**Handoff evaluation of S1028: 8/10.** Helped: `BACKLOG.md:241` and its DECISION NEEDED were exact; the "measure a new legend row first" warning was right and led to the
-66-units-per-row rule; the browser-tier install recipe worked the first time; `.deceasedSlashHandler()` and the `deceased` plumbing were the pattern to copy; the ratchet hash matched.
-Missing: that an extra column's name goes through QC's header rewriting (I measured it). Wrong: "an 11th row already uses the whole 500 px canvas at scale 0.62": 0.62 was the old 400 px
-install; at 500 px the legend reads 0.70 and the browser test's floor is 0.65.
-**Self: 7/10.** + measured before every question (QC names, kinship2's source, the bundled vis.js shape paths, the legend scale, QC's sex codes); the one scope question was answered
-with the recommended option; pictures of the real app and of all five shapes were read and opened before the long runs; 24 mutants, with two pixel probes added for what no
-inside-the-symbol test could see; every owner question mid-turn was checked against the repo and the upstream before I answered. - a RED test (no `affectedSections` anywhere for one
-condition) caught that the handler always named the field, found only in GREEN; the two painter gaps (clip, section lines) were pinned only after thinking through the mutants; my first
-shell spec for two mutants missed its anchor and ran as the baseline (caught by reading the output); four silent stretches nudged. Learning 995.
-**Gotchas:** QC turns sex `H`, `X` and `O` into `U` (the real app never draws a star or a diamond; a script does); a pixel test of a painted shape needs a probe outside the outline and
-one on each boundary; a harness must print `ANCHOR PROBLEM` and stop; one NEWS check allows a single Diagram entry to use "shaded" or "filled"; a BACKLOG removal shifts later cites; the
-browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true` (extract
-a block into a scratch folder with the `helper-*.R` files symlinked); the sections are painted by the app's own script, so `visNetwork()` alone draws neither them nor the slash.
-**Next (my order; the owner gave none):** (1) `BACKLOG.md:16` contributor tutorial (DECISION NEEDED, M): the owner first decides (a) `CONTRIBUTING.md` plus article or article alone, (b)
-how much strict TDD outsiders are asked to follow, (c) audience. (2) the new BACKLOG item, scripted rendering lacks the slash and sections (DECISION NEEDED, M). (3) Housekeeping, own
-sessions: `methodology/HANDOFFS.md` is over its WARN line (`methodology_trim.py --file methodology/HANDOFFS.md --budget-bytes 65536 --check`, then `--write`, apart from a close-out); a
-methodology sync is owed (SESSION_RUNNER.md 2 commits behind, SAFEGUARDS.md 1, dashboard v2.22.0 against 2.23.0, trimmer v1.8.0 against the fork's v1.8.1; re-apply the
-`SESSION_NOTES.md` patch). (4) The BACKLOG item "Shard verify scripts that FAIL on lossless trims" is out of date (the owner has not asked for a change): #93 is open and its fix PR #94
-is open and unmerged (changes requested 2026-10-19, the owner's reply the same evening), our trimmer already has a read-only `--reverify`, and it refuses 57 of 59 shards
-(`REVERIFY_SHARD_MISMATCH`: the frozen scripts name `docs/archive/`). Offer a text update.
+### What Session 1030 Did
+**Deliverable:** the scripted Diagram rendering gets the deceased slash and the condition sections, or the docs stop promising it does (IN PROGRESS; Phase 0 picker, item 2 of 4,
+"Scripts miss slash and sections", S1029's own suggested order, not an owner order; `BACKLOG.md:224`; DECISION NEEDED: one exported function that returns the app's handler, or reword
+the "exactly" claim at `vignettes/a2interactive.Rmd:472`; the scope is settled with the owner before RED; strict TDD, every phase behind its own gate).
+**Started:** 2026-10-22 01:15 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
 
 ### Sessions 947-1029 (condensed S950 to S1030; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1029: the Diagram tab draws more than one affected condition per animal (owner rulings, the recommended option: every pedigree column starting "affected" is a condition, in file
+order, the first four drawn; sections counter-clockwise from the top in `#CC79A7 #E69F00 #56B4E9 #009E73`, a legend row each, a 500 px canvas plus 45 per row past 11, a note for columns
+past four; one `afterDrawing` handler paints the sections, then the S1028 slash: `R/affectedConditions.R:25,65,91,199`). Strict TDD; claim `f8e3651f2`, RED `6a6e9646a`, GREEN `079907fc4`,
+docs `9953771d9`, mutation pins `9f7bbaf59` (24 of 24 killed), REFACTOR `ca963f006`; evaluation of S1028 8/10, self 7/10 (Learning 995); the optional Chrome-for-Testing BACKLOG item
+removed at the owner's word (`7934dcc24`). **Gotchas kept:** QC rewrites a header first (`affected_2` is `affected2`) and turns sex `H`, `X` and `O` into `U` (a script draws a star or a
+diamond, the app never does); a pixel test of a painted shape needs a probe outside the outline and one on each boundary; a harness must print `ANCHOR PROBLEM` and stop; one NEWS check
+allows a single Diagram entry to use "shaded" or "filled"; the sections and the slash are painted by the app's own script, so `visNetwork()` alone draws neither (`BACKLOG.md:224`).
 S1028: the Diagram tab draws a diagonal slash through an animal whose `status` reads DECEASED and through no other (owner rulings: the deceased marker first; `status` alone decides,
 because the exit date is filled for a shipment too: 1,625 DECEASED + 365 SHIPPED = 1,990 exit dates in the 3,694-animal example), with a "Deceased" legend row, a 500 px canvas, legend
 symbols size 14 and rows 60 apart; the slash overhangs every shape's outline by the legend's amount (`R/deceasedSlash.R:28`). Strict TDD; claim `15298a7d9`, RED `ec2f53511` `84ccc9b52`

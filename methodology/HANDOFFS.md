@@ -200,6 +200,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-14.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1030
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- the scripted Diagram rendering and the deceased slash and condition sections (owner pick at the Phase 0 picker, item 2 of 4, "Scripts miss slash and sections"; BACKLOG.md:224; DECISION NEEDED: one exported function that returns the app's handler, or reword the "exactly" claim at vignettes/a2interactive.Rmd:472; settled with the owner before RED; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1029
 date: 2026-10-22
 status: complete
