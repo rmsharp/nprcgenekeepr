@@ -221,6 +221,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       item is still 34 lines but is nearly all ratified-scope open text; leave it. Regrowth, for
       scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
 
+- [ ] **Take the methodology files the S1032 sync held back (BLOCKED -- on a fix to `close_out_report.py` in the
+      methodology repo, Effort S once it ships)** (found S1032, 2026-10-22) -- the sync copied 7 of 10 files and, at the
+      owner's word, held back `SESSION_RUNNER.md` (2 versions behind), `SAFEGUARDS.md` (1 behind) and the new
+      `close_out_report.py` (not installed). The newest runner (commit `8f63492b`) makes section 3G run
+      `python3 close_out_report.py` and print its output as the last message; v1.2.0 reads the example box in
+      `HANDOFFS.md`'s front matter as the newest receipt and refuses (`refused: newest receipt (S<N>) is <pending |
+      complete>`), here and on the blank seed. The runner's Oct 12 commit `95005e87` (its subject: a gate run that reads
+      unmeasured gates is repaired and repeated, or each gate is named) is held with it. Evidence, a tested 4-line fix and
+      the draft upstream report, **not posted anywhere** (where to post it is the owner's call):
+      `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`. **What is left:** when the script reads this ledger, sync
+      again (`bin/sync --force`, then the trimmer patch per `docs/conventions/CLOSEOUT_CHECKLISTS.md`) and, before keeping
+      the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
+      until then.
+
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
 feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8
