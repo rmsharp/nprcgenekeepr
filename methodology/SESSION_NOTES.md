@@ -99,15 +99,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1032 Did
-**Deliverable:** methodology sync -- bring the synced process files (`SESSION_RUNNER.md` 2 commits behind, `SAFEGUARDS.md` 1, `methodology_dashboard.py` v2.22.0 against v2.23.0,
-`methodology_trim.py` v1.8.0 against v1.8.1, and whatever `bin/status` lists) up to the canonical `rmsharp/methodology` checkout (IN PROGRESS; owner pick at the Phase 0 picker,
-item 1 of 4, "Update process files"; S1031's suggested order, not an owner order; infrastructure sync, no R code and no test change, so no RED/GREEN gates). The newest upstream
-rules make section 3G run a new script, `close_out_report.py`, which this project does not have: it is shown to the owner before it is kept. The `SESSION_NOTES.md` patch to
-`methodology_trim.py` is re-applied after (`docs/conventions/CLOSEOUT_CHECKLISTS.md`, the trimmer item).
-**Started:** 2026-10-22 11:25 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Update process files"; infrastructure sync, no R code and no test change, so no RED/GREEN gates):** seven synced
+files updated from the methodology checkout `515b3a7e` (v4.2-2285): `methodology_dashboard.py` 2.22.0 to 2.23.0, `methodology_trim.py` 1.8.0 to 1.8.1 (this project's `SESSION_NOTES.md`
+patch re-applied), `quality_ratchet.py` 1.3.0 to 1.5.1, `BOOTSTRAP.md`, `CLAUDE_TEMPLATE.md`, `FRAMEWORK_APPARATUS.md`, `HOW_TO_USE.md`. **Held back at the owner's word** (the question's
+"Hold it back (Recommended)"): `SESSION_RUNNER.md` (2 versions behind), `SAFEGUARDS.md` (1) and the new `close_out_report.py` 1.2.0. Run on this project's ledger it refuses ("newest receipt
+(S<N>) is <pending | complete>") because it reads the example box in the `HANDOFFS.md` front matter as the newest receipt; the blank seed has the same box, the methodology repo's own ledger
+has none. Write-up with a tested 4-line fix, not posted anywhere: `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`; the open item is `BACKLOG.md:224`. Claim `65cd20de8`, sync
+`3bc8a1e8c`, trimmer patch `e90a9b997`. Not pushed.
+**Evidence:** `bin/status` after: only the four intended leftovers (runner, SAFEGUARDS, the trimmer's patch, the missing script). The 7 files are byte-identical to the checkout (blob hashes).
+The trimmer minus the patch was canonical `26bc97a2` before and is `8db5e8215` plus the same patch after; `--check` prints the same lines for all three ledgers, no `NO_CONFIG`; `L1_OK` `L2_OK`
+`L3_OK` on a borrowed 20-record copy, old and new trimmer alike. Dashboard 2.23.0: 96/100, 0 high risks (its diff is only a row for the held script). Ratchet 1.5.1: 35 s of its 600 s
+budget, 1/1 pass, 0 unmeasured, manifest `aa983075d6a2`, results `084a5d10d455`, tarball 3,971,800 B. 137 ledger-reading test files: 2,004 blocks, 7,894 expectations, 0 failed, 0 errors,
+28 skipped (S1031's tally). No R code changed: no lint, check or full suite.
+**Handoff evaluation of S1031: 7/10.** Helped: the sync numbers matched Phase 0; the pointer to the checklist's trimmer item; "do not re-offer the six delayed items"; the ratchet hash matched.
+Missing: that `bin/status` lists 9 files behind plus 1 missing, not 4 (`quality_ratchet.py` 1.3.0 to 1.5.1, four docs, the new script), and that the checklist's `--cut 1` check cannot pass on
+the live file. Wrong: the checklist's patch pointer `63b3286f` was stale (the last re-apply was `5a41dbbdd`); nothing in the handoff itself.
+**Self: 7/10.** + ran the new script before keeping it, as the option text promised, found the defect and put one decision with measured evidence (answered first time); proved the trimmer's
+base by blob; claim, sync and patch in three commits; compared old and new trimmer on a borrowed ledger; ran the 137 files and the gate under 1.5.1. - three small slips (a zsh `path`
+variable hid every command for one call; a `$c:name` modifier; a nested `( ... ) &` made a completion notice fire at once); the first demo run used a ledger whose newest receipt was pending.
+Learning 998.
+**Gotchas:** `bin/status` is the sync's scope, not the last handoff; a file the owner holds back is restored with `git checkout -- <file>` (a new one deleted) before the sync commit; the
+checklist's `--cut 1` dry run needs two or more trimmable records (use a borrowed copy in a scratch worktree after a throwaway `CHANGELOG.md` commit); zsh `path` is `PATH`, and `$c:name`
+is a modifier; run background work directly, not in a nested `( ... ) &`; `bin/sync` reads the methodology checkout's HEAD, which was 10 commits ahead of `origin/main` (none touched a
+distributed file); `.quality-gates-results.json` is gitignored and `--run` overwrites it.
+**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Text-only update of the BACKLOG item "Shard verify scripts that FAIL on lossless trims"
+(`BACKLOG.md:136`; READY, Effort S): this project's trimmer (v1.8.1) already carries the fork's #93 fixes (`5270be8f` 1.5.1, `45d32d6b` 1.6.0, `3616b5fa` `--reverify`) and PR #94 on
+`KJ5HST/methodology` is open (last updated Oct 19); re-read #93, #94 and try `--reverify` on the 10 red scripts first. (2) Issue #36 check (read-only): the file it cites is gone,
+`R/getPyramidPlot.R:97` sets the axis from the data, neither pyramid file mentions chimpanzees; the owner closes issues. (3) DECISION NEEDED: `inst/doc/` slimming (M), the retrospective
+snapshot backfill (L). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only). Watch: `HANDOFFS.md` (about 33 KB) passes 196,608 B again in about a week at S1031's rate
+(the lever is shorter receipts, `BACKLOG.md:164`, not chosen).
 
 ### Sessions 947-1031 (condensed S950 to S1032; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1031: `methodology/HANDOFFS.md` trimmed from 207,726 B to 28,615 B, 41 of 44 receipts archived to `methodology/archive/HANDOFFS-through-2026-10-21.md` (owner pick, "Trim
