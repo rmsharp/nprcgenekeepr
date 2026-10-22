@@ -99,12 +99,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1036 Did
-**Deliverable:** The design document for the retrospective colony-snapshot backfill (owner pick at the Phase 0 picker, item 3 of 4, "Snapshot backfill design"; `BACKLOG.md:33`,
-DECISION NEEDED, Effort L, its own design session) (IN PROGRESS)
-**Started:** 2026-10-22
-**Status:** Session claimed. Work beginning. The pick is the item, not the ruling: first read the issue #167 plan (§3 D5, §5 Slice 5) and measure what the snapshot code needs from a
-studbook, then put the scope question to the owner in plain words before drafting; one design document under `docs/planning/`, no R code and no test, no GitHub issue filed without the owner's say.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 3 of 4, "Snapshot backfill design"; a design session, text only, no R code, so no RED/GREEN gates):**
+`docs/planning/retrospective-snapshot-backfill-plan.md`. Owner scope ruling: an exported `backfillColonySnapshots()` plus a "Build earlier snapshots" button on the Genetic-Health Trends
+tab that calls it (declined: a date helper only; do not build). Twelve decisions B1-B12, rebuilt rows get their own rule `reconstructedLiving` (never mixed with recorded ones), four
+slices: core function, grid and support report, app panel, documentation. `BACKLOG.md:33` rewritten in place (19 lines, file still 244). No GitHub issue filed (draft in Appendix C; the
+owner says when). Claim `3a3a69df4`, deliverable `668d94f5e`, close-out in the commit after.
+**Measured first (jmac studbook, 2,592 real animals; scratch scripts):** blanking exit dates after the chosen date reproduces the app's snapshot exactly at 2018-07-11; setting only the
+population gives `neSexRatio` 0.0 against 3.9 (1990), 0.0 against 62.0 (2000), 30.9 against 136.6 (2010) because `getLivingBreeders()` reads today's exit column; the S756 "breeder
+flags" caveat is stale (no stored flag is read); parentage is thin early (1 of 201 animals alive 1990-01-01 has a recorded sire); about 4 s per date at 1,000 iterations; 62 of 2,592
+animals have no birth date (29 are parents of a dated animal; the offspring rule adds 21 to a base of 44 in 1970 and 1 from 2000).
+**Handoff evaluation of S1035: 9/10.** Helped: Next (3) named `BACKLOG.md:33` with its Effort and the design-first and new-issue conditions, and the block's cites (plan section 5 Slice
+5, D5) led straight to the caveat list; the Phase 0 numbers (clean tree, both frontiers, ratchet hash `0ef16360cae1`, CI 10 of 10) all matched; "a pick on a decision item is the item,
+not the ruling" was right, so the scope question came second; the delayed-items memory kept six items out of the picker. Missing: that `qcStudbook()` stops on the jmac file unless
+blanks are read as `NA` and `minSireAge`/`minDamAge` are 0 (two calls), and that `test_docsAuditSixRulings.R:76-89` pins the backfill item's title phrase. Wrong: "111 commits ahead
+before the close-out commit" (113 measured at Phase 0 against 112 implied; one off, immaterial).
+**Self: 7/10.** + claimed before work; measured before asking; caught three of my own errors before they reached the document: the stand-in "defect" (a probe that skipped the Pedigree
+tab's `setPopulation()`; the guide's own "332 living animals" contradicted it), a data-quality tally that counted generated stand-ins (38.8% with no birth date was 60 real animals), and
+"design workstream" (that one is for UI layout; the architecture workstream governs); found the S756 caveat partly stale; checked who pins the BACKLOG block before editing it. - the
+owner pasted the effective-size table back with "explain:" (the columns "simple" and "exits blanked" had no plain sentence); I named the wrong workstream in Phase 1; several stretches
+of 5+ calls without a status line; the GitHub issue is unfiled. Learning 1002.
+**Gotchas:** Appendix B of the design says how to repeat the measurements (the scratch scripts are not committed); read the jmac file with `na.strings = c("", "NA")` and
+`qcStudbook(minSireAge = 0, minDamAge = 0)`; filter generated stand-ins with `isGeneratedUnknownId(id, ped = ped)` before any data-quality share; the Pedigree tab
+(`R/modPedigree.R:372-374`) sets the population, and the Genetic Value tab's `is.na(exit)` fallback (`R/modGeneticValue.R:293-298`) is not the app's path; the backfill needs
+`processedPedigree`, never `analysisPedigree` (the focal trim); a background launcher's "completed" notice means the launcher exited, not the job (use `pgrep`); `BACKLOG.md` lines did
+not move (244 lines).
+**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) The owner reads the design and says go; then file the GitHub issue (Appendix C) and start Slice 1,
+the new rule plus the function for explicit dates (READY once approved, Effort L; the B4, B6 and B11 calls go to `AskUserQuestion` at the slice). (2) Issue #36 check (READY, Effort S;
+still the leftover: the issue cites `R/agePyramidPlot.R`, which does not exist, no R file mentions chimpanzees, `R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`). (3) The
+`BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:134`). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only, `BACKLOG.md:173`). Estimate,
+not measured: Slice 1 is about one session.
 
 ### Sessions 947-1035 (condensed S950 to S1036; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1035: the three long guides (`a2interactive`, `gvaConvergence`, `simulatedKValues`) moved from `html_document` (`df_print: paged`) to `rmarkdown::html_vignette` with `df_print: kable`
