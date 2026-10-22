@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1035
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- slim `inst/doc/` (BACKLOG.md:115, DECISION NEEDED, Effort M, its own session; owner pick at the Phase 0 picker, item 2 of 4, "Slim inst/doc/"). The pick is the item, not the ruling: measure the saving and put the scope question to the owner before any RED.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1034
 date: 2026-10-22
 status: complete

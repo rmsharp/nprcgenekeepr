@@ -98,34 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1034 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 2 of 4, "Ten red proof scripts"; a decision session, text only, no R code and no test change, so no RED/GREEN gates):** the owner
-ruled **A**, the recommended option: leave the ten red archive-proof scripts and remove the item. The `BACKLOG.md` block (18 lines, was `BACKLOG.md:136-153`) is gone and the one sentence of
-the compression item's candidate list that named it is cut (file 286 to 266 lines, 13 to 12 open items). The record, with the S901 and S1033 findings, is the DONE entry in `CHANGELOG.md`.
-The ten files stay red and unedited; options B (the marker) and C (tell upstream) were not taken; nothing changed in `methodology/`, nothing posted upstream (`KJ5HST/methodology#93` and PR #94
-both still open, read 2026-10-22). Claim `a03bca0f7`, deliverable `666790db5`.
-**Evidence:** no test, R file or doc quotes the block; the two tests that read `BACKLOG.md` (`test_docsAuditLooseEnds.R`, `test_docsAuditSixRulings.R`) and the ledger, budget and receipt tests,
-6 files: 49 blocks, 374 expectations, 0 failed, 0 errors. Ratchet 1.5.1: 1/1 pass, 0 unmeasured, tarball 3,971,734 B, manifest `aa983075d6a2`, results `f12acc759237` (head `666790db5`).
-Ledger-reading tests, the 114 test files that name a ledger, `BACKLOG.md`, `PROJECT_LEARNINGS.md` or `methodology/` (S1033 counted 137 by a wider rule I cannot reproduce): 114 files, 1,780 blocks, 7,012 expectations, 0 failed, 0 errors, 0 skipped (4.5 minutes).
-No R code changed: no lint, check or full suite.
-**Handoff evaluation of S1033: 9/10.** Helped: Next (1) named the #36 item and its facts, all true when measured (no `R/agePyramidPlot.R`, no R file mentions chimpanzees); the Phase 0
-numbers (clean tree, ratchet hash `1dd9ea741a26`, PR #94 open) all matched; "do not re-offer the six delayed items" and the A/B/C meaning saved a picker rewrite; the warning that
-`BACKLOG.md` lines move was right (18 more moved here). Missing: that a pick on this item would still need a separate A/B/C question. Wrong: the axis cite `R/getPyramidPlot.R:92-97`
-is two lines off (it is 94-98); "A means removing the block in its own commit" reads against the S686 checklist (same commit as the ledger entry), which one commit satisfies.
-**Self: 8/10.** + claimed before any work; measured the #36 facts and looked for `inst/doc/` before the option text repeated them (it is build output, absent from the tree, so the
-picker said "not re-measured"); checked who reads the block before removing it and found the one dangling sibling mention under its older name; ran the placement test before the claim
-commit; one picker answer and one ruling, no corrections. - an `echo "======="` hit zsh's `=` expansion, a gotcha already in these notes, and cost a call; my option text did not say a
-second question would follow (one extra round trip). Learning 1000.
-**Gotchas:** every `BACKLOG.md` line after the removed block moved up by 18, and by 20 past the reflowed list (`:155` is now `:137`, `:215` is now `:195`; older cites are dated records);
-a sibling item names a removed item by its older nickname, so grep the old words too; a pick on a decision item is the item, not the ruling; zsh: `printf -- '---\n'`, never `echo "==="`;
-`quality_ratchet.py --run` overwrites `methodology/.quality-gates-results.json` (this session's `f12acc759237` replaces `1dd9ea741a26`).
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Issue #36 check (read-only; READY, Effort S): the issue cites `R/agePyramidPlot.R`, which does not
-exist, no R file mentions chimpanzees and `R/getPyramidPlot.R:94-98` sets the axis from the data; try a long-lived example, write the finding down, the owner closes issues. (2) DECISION
-NEEDED: `inst/doc/` slimming (M, `BACKLOG.md:115`) and the retrospective snapshot backfill (L, `BACKLOG.md:33`, its own design session first). (3) Owner-side: where to post the
-`close_out_report.py` write-up (draft only, `BACKLOG.md:195`). (4) The `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:156`; the file is 266 lines). Estimate, not
-measured: `HANDOFFS.md` was 41,509 B at this claim and warns at 196,608 B.
+### What Session 1035 Did
+**Deliverable:** Slim `inst/doc/` (owner pick at the Phase 0 picker, item 2 of 4, "Slim inst/doc/"; `BACKLOG.md:115`, DECISION NEEDED, Effort M, its own session) (IN PROGRESS)
+**Started:** 2026-10-22
+**Status:** Session claimed. Work beginning. The pick is the item, not the ruling: first measure the saving, then put the scope question to the owner in plain words (its own question,
+before any RED); implementation, if the owner says go, is strict TDD with the phase gates.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1033 (condensed S950 to S1034; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1034 (condensed S950 to S1035; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1034: the owner ruled A on the ten red archive-proof scripts (owner pick, "Ten red proof scripts"; a decision session, text only, no code): leave the ten files and remove
+the item. The `BACKLOG.md` block (18 lines) is gone and the compression item's candidate list no longer names it (file 286 to 266 lines, 12 open items); the record, with the
+S901 and S1033 findings, is the DONE entry in `CHANGELOG.md`. The ten files stay red and unedited, nothing in `methodology/` changed, nothing posted upstream. Claim `a03bca0f7`,
+deliverable `666790db5`, close-out `f7d03436c`; evaluation of S1033 9/10, self 8/10 (Learning 1000). **Gotchas kept:** `BACKLOG.md` lines after a removed block move up (grep
+a removed item's older nickname in its siblings too); a pick on a decision item is the item, not the ruling; zsh: `printf -- '---\n'`, never `echo "==="`; `quality_ratchet.py
+--run` overwrites `methodology/.quality-gates-results.json`.
 S1033: the ten red archive-proof scripts re-derived with the v1.8.1 trimmer's read-only `--reverify` (owner pick, "Re-check 10 red proofs"; housekeeping, no code): the same
 10 of 60 are red and none is a loss (2 hold, 1 is a named stub finalize, 7 `SESSION_NOTES.md` shards fail because the local ledger spec declares no stub marker); `--reverify`
 refuses 57 of 60 in place (their proofs name `docs/archive/`, the shards moved in `0e2663642`); the `BACKLOG.md` item (`BACKLOG.md:136`) is now DECISION NEEDED, A leave and
