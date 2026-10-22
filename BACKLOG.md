@@ -133,33 +133,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
       `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
       release tarballs from a clean export, never the working tree.
-- [ ] **Shard verify scripts that FAIL on lossless trims: reported upstream as `KJ5HST/methodology#93`;
-      waiting on a fix and a way to regenerate old scripts (BLOCKED -- on upstream #93, Effort S once
-      it ships)** -- S901 characterized all 10 red scripts (of 54: HANDOFFS 2 of 15, CHANGELOG 1 of 16,
-      SESSION_NOTES 7 of 23) and diffed the records: **none is a real loss.** Three causes: (1) 7 scripts
-      (v1.5.0): the trim shares a commit with the session's own close-out, so record 0 (a claim stub or a
-      `status: pending` receipt) differs, and BL-27 keeps that a loud FAIL; (2) 1 script (v1.1.2): a
-      baked-in `INJECTED=0`, fixed upstream since v1.2.0 but frozen scripts never benefit; (3) 2 scripts:
-      the L2 "leak" test is a substring test, so a mid-line backtick quote of a front-matter line counts.
-      Causes 1 and 3 are still in the current `main` of both `rmsharp/methodology` and `KJ5HST/methodology`
-      (byte-identical, v1.5.0). The fork has issues disabled, so the owner chose `KJ5HST/methodology`;
-      posted 2026-10-04 (https://github.com/KJ5HST/methodology/issues/93). Evidence and the posted text:
-      `docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (the issue starts at its line 150).
-      **New at S917's Phase 0:** a comment on #93 (2026-10-05 16:32 UTC, from the `rmsharp` account, not
-      recorded before) re-ran the 54 proofs from a clone at `2563a6ee0` and got the same counts. It says:
-      cause 2 is fixed safely by testing whole lines instead of substrings (both shards go green, none
-      turns red across 54 here and 103 in its own archive); cause 3 is not independent of cause 1 (the
-      v1.1.2 `SESSION_NOTES-through-2026-08-15` shard still fails for cause 1's reason once regenerated);
-      all 8 cause-1 shards have a claim stub or a `status: pending` receipt as record 0 and nothing
-      else missing; and a `--reverify` would have to lift the record grammar from the frozen script,
-      because the canonical `LEDGERS` table has no `SESSION_NOTES.md` entry. It proposes no patch yet.
-      S917's own `HANDOFFS.md` trim was committed apart from its close-out and its verify script passes.
-      **What is left:** read upstream's answer (`gh api repos/KJ5HST/methodology/issues/93/comments`;
-      `gh issue view --comments` fails here); when
-      a fix and a regenerate path ship, sync the trimmer (re-apply this project's `SESSION_NOTES.md`
-      patch, per the `CLAUDE.md` checklist) and regenerate the 10 scripts; if upstream declines, decide
-      whether to patch them here (a second local modification to `methodology_trim.py`, which the owner
-      rejected S898). Until then do not quote front-matter command lines verbatim in receipts (Learning 797e).
+- [ ] **Ten archive-proof scripts end red although nothing was lost (DECISION NEEDED -- leave them as
+      documented false alarms or name their cause, recommended: leave them, Effort S)** -- S901
+      characterized the 10 red of 54 (`docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; reported
+      upstream as `KJ5HST/methodology#93`, still open, with PR #94). **Re-checked S1033 (2026-10-22)** with
+      the v1.8.1 trimmer's read-only `--reverify` (`docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md`, the
+      table of all ten): the same 10 of 60 are red and **none is a loss.** Under today's logic 2 hold (the
+      substring-leak cause, gone from the current template), 1 is named a stub finalize (exit 4) and 7
+      `SESSION_NOTES.md` shards still fail because this project's local ledger spec declares no stub
+      marker; with a one-line marker (tried in a scratch clone only) all 7 are named too, still exit 4,
+      which upstream keeps red on purpose. `--reverify` writes nothing, so the ten files stay red, and no
+      regenerate path exists upstream. It also refuses 57 of 60 shards in place
+      (`REVERIFY_SHARD_MISMATCH`): their proofs name `docs/archive/`, and the 2026-10-11 move (`0e2663642`)
+      put the shards in `methodology/archive/`; it runs on a scratch clone with copies at the old path.
+      Nothing runs these scripts (the tests only check that each shard has a proof file).
+      **The choice:** (A, recommended) leave them and remove this item; (B) add the one-line marker to the
+      local `SESSION_NOTES.md` spec so a re-check names all ten (a second local change to a synced file,
+      lost at the next sync unless re-applied); (C) tell upstream that `--reverify` refuses a moved shard
+      (nothing drafted; the owner picks the place).
 
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
