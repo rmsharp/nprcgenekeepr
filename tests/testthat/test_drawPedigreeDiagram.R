@@ -242,6 +242,13 @@ test_that(
                "makePedigreeMatingLayout")
   expect_error(drawPedigreeDiagram(list(nodes = "A", edges = layout$edges)),
                "makePedigreeMatingLayout")
+  ## A data frame is not a layout, even one that carries data frames named
+  ## nodes and edges as columns (S1030 mutation gap: with no data frame check
+  ## it was drawn).
+  frame <- data.frame(id = c("A", "B"))
+  frame$nodes <- data.frame(id = c("A", "B"))
+  frame$edges <- data.frame(from = c("A", "B"), to = c("B", "A"))
+  expect_error(drawPedigreeDiagram(frame), "makePedigreeMatingLayout")
 })
 
 test_that(
