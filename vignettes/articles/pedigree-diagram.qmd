@@ -26,7 +26,7 @@ Two related resources cover the same feature from other angles:
 - The **Interactive Use of nprcgenekeepr** vignette's "Pedigree Diagram"
   section shows the same rendering built entirely from R, script by script,
   via the two exported functions this tab is built on
-  (`makePedigreeMatingLayout()` and `visNetwork::visNetwork()`) -- useful
+  (`makePedigreeMatingLayout()` and `drawPedigreeDiagram()`) -- useful
   outside the Shiny app, e.g. for a reproducible report or a custom app.
 
 ## Node shapes and the legend {#sec-shapes}
@@ -226,10 +226,11 @@ first four, and a note under the diagram names the others. The deceased slash
 is drawn over the sections. A single condition column, named `affected` or
 anything else starting with it, fills the whole symbol, as described above.
 
-These sections, like the deceased slash, are painted by the app's own drawing
-script after each draw. `makePedigreeMatingLayout()` returns the data for
-them (the `affectedSections` column of its nodes, and `conditions`), but
-`visNetwork::visNetwork()` alone does not draw them.
+These sections, like the deceased slash, are painted by the diagram's own
+drawing script after each draw. `makePedigreeMatingLayout()` returns the data
+for them (the `affectedSections` column of its nodes, and `conditions`), and
+`drawPedigreeDiagram()` draws them, in the app and in a script alike;
+`visNetwork::visNetwork()` given that data by hand does not.
 
 ## Deceased marker {#sec-deceased}
 
@@ -315,16 +316,19 @@ functions that work identically outside the Shiny application:
 `makePedigreeMatingLayout()` prepares a pedigree's node/edge data in the
 mating-unit convention this whole article describes (including the
 `edgeStyle`, `twinRelations`, and consanguineous-marker behavior above), and
-`visNetwork::visNetwork()` renders it. A simpler function,
+`drawPedigreeDiagram()` draws it, with the same legend, deceased slash,
+condition sections, Export button and id search as this tab, which calls it
+too. A simpler function,
 `makePedigreeDiagramData()`, remains available for a plain one-node-per-
 animal diagram without the mating-unit convention -- it is no longer what
 the Shiny app itself uses.
 
 See the "Pedigree Diagram" section of the **Interactive Use of
 nprcgenekeepr** vignette for a full, runnable walkthrough -- both edge
-styles, the node/edge data structure, and the twin-relations argument, all
-reproducing this tab's rendering exactly (including a genuinely working
-Export Diagram (PNG) button).
+styles drawn with `drawPedigreeDiagram()`, the node/edge data structure, and
+the twin-relations argument, all reproducing this tab's rendering exactly
+(including a genuinely working Export Diagram (PNG) button). Only
+click-to-navigate needs the app, because it needs a live Shiny session.
 
 ## See also {#sec-seealso}
 

@@ -54,6 +54,11 @@ export workflows, and longitudinal monitoring of colony genetic health.
   diagram: 400 animals with the default "Rectilinear" style, 750 with
   "Direct". Trim to fewer focal animals to bring it back under the
   limit.
+- `drawPedigreeDiagram()` draws the Diagram from a script, from a
+  `makePedigreeMatingLayout()` layout, as the app does: the same legend,
+  deceased slash, condition sections, **Export Diagram (PNG)** button
+  and id search. Save it as a web page or put it in an R Markdown
+  report.
 
 **Minor**
 
