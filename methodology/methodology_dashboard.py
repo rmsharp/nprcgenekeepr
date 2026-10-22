@@ -121,6 +121,9 @@ def resolve_layout(root, anchor="SESSION_RUNNER.md"):
 # A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
 # continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.18.0, the
 # resync's merge of upstream's 2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)
+# 2.23.0: BL-79. The Phase 3G report tool (starter-kit/close_out_report.py) is installed content: it has
+# its own row and signature set in _FRAMEWORK_INSTALLED_CONTENT, so a synced copy is not counted as the
+# adopter's own source (the v3.2 regression, by a fifth route). Changed output on a distributed tool: MINOR.
 # 2.22.0: BL-101 P5 (docs/planning/methodology-subdirectory-plan.md, section 7.2). The dashboard reads a
 # project that keeps its methodology files under methodology/ exactly as it reads one that keeps them at
 # the root: the checklist items keep their names and are LOCATED through the layout resolver, a project
@@ -137,7 +140,7 @@ def resolve_layout(root, anchor="SESSION_RUNNER.md"):
 # and signature set in _FRAMEWORK_INSTALLED_CONTENT. Changed output on a distributed tool: MINOR.
 # Fork-only -- upstream's line continues from 2.11.3, so the two stay apart until a dashboard PR
 # reconciles them.
-DASHBOARD_VERSION = "2.22.0"
+DASHBOARD_VERSION = "2.23.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -819,6 +822,17 @@ _QUALITY_GATES_JSON_SIGNATURES = (
     "quality_ratchet.py",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 )
 
+# The Phase 3G report tool (BL-79): a fifth installed executable. It names its constant `__version__`,
+# not `VERSION`, so its pattern is its own and neither the context-budget gate's nor the quality
+# ratchet's constant satisfies it (and its constant satisfies neither of theirs).
+_CLOSE_OUT_REPORT_VERSION_RE = re.compile(r'''^__version__\s*=\s*["']([^"']+)["']''', re.MULTILINE)
+_CLOSE_OUT_REPORT_SIGNATURES = (
+    "close_out_report.py -- render and lint the Phase 3G close-out report",  # layout: ok -- a name printed in a message, never opened
+    "def decide(payload)",
+    "def lint(text, m)",
+    "CLOSING = \"Session over.\"",
+)
+
 # The ledger merge-driver seed (starter-kit/gitattributes, installed once as `.gitattributes`): no
 # version constant, and like the two JSON seeds above it can never reach source-LOC (a dotfile is
 # categorized as config by name), so its signatures exist for the completeness test. They are lines
@@ -837,6 +851,7 @@ _FRAMEWORK_INSTALLED_CONTENT = {
     TRIM_TOOL_NAME:            (_TRIM_VERSION_RE, ()),
     "context_budget.py":       (_CONTEXT_BUDGET_VERSION_RE, _CONTEXT_BUDGET_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     "quality_ratchet.py":      (_QUALITY_RATCHET_VERSION_RE, _QUALITY_RATCHET_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "close_out_report.py":     (_CLOSE_OUT_REPORT_VERSION_RE, _CLOSE_OUT_REPORT_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ".context-budget.json":    (None, _CONTEXT_BUDGET_JSON_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ".quality-gates.json":     (None, _QUALITY_GATES_JSON_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ".gitattributes":          (None, _GITATTRIBUTES_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
@@ -1081,11 +1096,12 @@ def is_framework_installed(rel_path, fpath):
     Content-verified, PER NAME: each installed executable proves itself with its own constant —
     the scanner with `DASHBOARD_VERSION` (or, for copies predating it, at least two structural
     signatures of the scanner), the trimmer with `TRIM_VERSION`, the context-budget gate and the
-    quality ratchet each with its own `VERSION`. The pairing lives in `_FRAMEWORK_INSTALLED_CONTENT`,
+    quality ratchet each with its own `VERSION`, the Phase 3G report tool with `__version__`. The pairing
+    lives in `_FRAMEWORK_INSTALLED_CONTENT`,
     which this reads rather than re-stating, and which FRAMEWORK_INSTALLED_SOURCE is derived from — so
     no name can be excluded without declaring how it identifies itself. No tool's constant satisfies
-    another entry's check, except that the last two name theirs alike: each one's `VERSION` satisfies
-    the other's. The **whole file** is
+    another entry's check, except that the context-budget gate and the quality ratchet name theirs
+    alike: each one's `VERSION` satisfies the other's. The **whole file** is
     read,
     not a fixed prefix — an earlier version searched only the first 4096 bytes, and the real
     constant sits close enough to that boundary that ordinary growth of this module header would

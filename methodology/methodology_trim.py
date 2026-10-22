@@ -54,7 +54,21 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.8.0"   # 1.8.0: BL-101 P3 (the methodology/ directory plan, section 7.2, coupling C7) -- a ledger
+TRIM_VERSION = "1.8.1"   # 1.8.1: issue #93, the abort code -- a proof that could not read an
+                         # artifact from git ended in `sys.exit("verify: cannot read ...")`, which
+                         # prints the text and exits 1, the FAIL code, so a proof that had compared
+                         # nothing read as a trim that lost something (seen once in a 54-shard
+                         # `--reverify` sweep over a partial clone: one blob fetch failed and the
+                         # shard read FAIL; exit 0 on the re-run). Every abort before the checks --
+                         # a `git show` that fails, a live or shard file that cannot be read -- now
+                         # prints its reason to stderr and exits 3: the code the shell head already
+                         # uses when it cannot reach the repository root, and the code the legend
+                         # of `--reverify` gives "the proof did not finish". Patch, not minor: no
+                         # verdict on any readable tree changes, frozen proofs keep their bytes, and
+                         # `--reverify` renders today's template, so it reads 3 where a frozen
+                         # script read 1.
+                         #
+                         # 1.8.0: BL-101 P3 (the methodology/ directory plan, section 7.2, coupling C7) -- a ledger
                          # may sit under methodology/. Where a shard goes and how a link is rebased now come
                          # from the DIRECTORY of the ledger being trimmed (`layout_for`): a root ledger keeps
                          # docs/archive/ and the two-level prefix, exactly as before and byte for byte; a
@@ -436,21 +450,6 @@ def _handoff_date(text):
     return m.group(1) if m else None
 
 
-def _session_notes_date(text):
-    # Best-effort, not authoritative: unlike CHANGELOG.md/HANDOFFS.md, a session's own write-up
-    # carries no single canonical date field. Tried first: this project's own labelled convention
-    # (**Started/Completed:**, **Started:**, **Completed:**, or the older **Date:**) — covers 243 of
-    # ~512 records by direct count. Falls back to the first bare YYYY-MM-DD substring anywhere in the
-    # record for the rest. Used only to LABEL a shard's span in its own header/pointer text — never
-    # compared against anything, so an imprecise date on an unlabelled record costs nothing L1/L2/L3
-    # would notice.
-    m = re.search(r"\*\*(?:Started(?:/Completed)?|Completed|Date)\s*:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
-    if m:
-        return m.group(1)
-    m = re.search(r"\d{4}-\d{2}-\d{2}", text)
-    return m.group(0) if m else None
-
-
 LEDGERS = {
     "CHANGELOG.md": LedgerSpec(   # layout: ok -- a ledger's own file name, matched at any depth by basename
         basename="CHANGELOG.md",   # layout: ok -- the same name, the spec's key
@@ -511,40 +510,6 @@ LEDGERS = {
         # Ledger), so such an entry is a FINAL record: every claim in this repo's own ledger still
         # reads (in progress).
         stub_marker=re.compile(r"^status: pending\s*$", re.M),
-    ),
-    # --- LOCAL ADDITION (nprcgenekeepr, S518, 2026-08-11) --------------------------------------
-    # methodology_trim.py is a canonical-OVERLAY file per BOOTSTRAP.md's sync table ("Tracked
-    # (canonical owns them) ... overlay — replace with the latest"), and the design doc that ships
-    # this LEDGERS table documents no mechanism for a project-local entry to survive that overlay.
-    # This entry is a real, working config — verified directly against this project's own
-    # SESSION_NOTES.md (577 record-start headings; every one checked for shape variance against the
-    # two patterns below, zero found) — but it WILL be silently dropped by the next
-    # `chore(methodology): sync framework update from canonical` overlay unless that session re-adds
-    # it first. See CLAUDE.md's "Additional close-out checks" for the standing reminder to do so.
-    "SESSION_NOTES.md": LedgerSpec(
-        basename="SESSION_NOTES.md",
-        record_kind="heading",
-        # One session's own write-up is TWO adjacent records under this grammar: the evaluation of
-        # its predecessor's handoff (absent for the ~447 oldest sessions, before Phase 3A existed)
-        # and its own "what I did". Splitting them (rather than pairing them into one record) needs
-        # no special-casing for the old, evaluation-less region — "What Session N Did" alone is
-        # present for all 512 sessions on its own, so no format-transition boundary need be declared.
-        # `\b` guards only the "Did" branch (S528 fix) -- the "Handoff Evaluation ...)" branch
-        # already ends unambiguously in a literal `)`, and a trailing `\b` placed after the whole
-        # alternation binds per-branch: `)` is a non-word char immediately followed by end-of-line,
-        # so no word/non-word transition ever exists there and `\b` can never fire on that branch
-        # (found S527, PROJECT_LEARNINGS.md Learning 533). Moving `\b` inside the "Did" branch keeps
-        # its original purpose (reject a hypothetical "Didn't"-style false match) without breaking
-        # the branch that never needed it.
-        record_start=re.compile(
-            r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did\b)"),
-        # Confirmed by direct inspection: the file ends mid-record (Session 1's own self-assessment
-        # bullets) — no standalone '---' with trailing content after the last record start anywhere.
-        footer_mode="none",
-        date_of_record=_session_notes_date,
-        regenerated=(),
-        content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
-        seed_negation=None,
     ),
 }
 
@@ -1595,16 +1560,29 @@ def zones(text):
     return "".join(lines[:starts[0]]), recs, "".join(lines[foot:])
 
 
+def unfinished(why):
+    # An abort BEFORE the checks is not a verdict. `sys.exit("<text>")` prints the text and exits
+    # 1, which is this script's FAIL code, so a proof that had compared nothing read as a trim that
+    # lost something. Exit 3 is "the proof did not finish": the code the shell head above uses when
+    # it cannot reach the repository root, and the code `--reverify`'s legend gives this case.
+    sys.stderr.write("verify: %s -- the proof did not finish; this is not a verdict (exit 3)\n"
+                     % why)
+    sys.exit(3)
+
+
 def show(ref, path):
     p = subprocess.run(["git", "show", "%s:%s" % (ref, path)], stdout=subprocess.PIPE)
     if p.returncode:
-        sys.exit("verify: cannot read %s:%s" % (ref, path))
+        unfinished("cannot read %s:%s" % (ref, path))
     return p.stdout.decode("utf-8")
 
 
 def readf(path):
-    with open(path, "r", encoding="utf-8", newline="") as fh:
-        return fh.read()
+    try:
+        with open(path, "r", encoding="utf-8", newline="") as fh:
+            return fh.read()
+    except OSError as e:
+        unfinished("cannot read %s (%s)" % (path, e.strerror or e))
 
 
 LIVE, SHARD = os.environ["LIVE"], os.environ["SHARD"]
