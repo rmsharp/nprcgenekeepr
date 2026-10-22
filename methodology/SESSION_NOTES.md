@@ -98,34 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1031 Did
-**Deliverable, DONE (owner pick at the second Phase 0 picker, item 1 of 4, "Trim HANDOFFS.md"; housekeeping, no code or test change, so no RED/GREEN gates):**
-`methodology/HANDOFFS.md` is 28,615 B, down from 207,726 B: 41 of 44 receipts (2026-10-14 to 2026-10-21) moved to `methodology/archive/HANDOFFS-through-2026-10-21.md`
-(`methodology_trim.py` v1.8.0 `--budget-bytes 65536 --force --write`). The plain run refused with `SRF_RED` (1.0638; both readings name the S991 archive `ceea6dd3a`, 197,004 B
-to 28,966 B; 178,760 B regrown in 8 days, about 22 KB a day, 44 receipts of about 4 KB); the owner took "Yes, trim with --force" (the recommended option) after both readings
-and a `--force` preview were put to them. At the first picker the owner also delayed six BACKLOG items (the contributor tutorial, the 3.0.0 move, both LabKey items, the
-kinship2-like package, outreach, the papers; memory `picker-delayed-items-2026-10-22`; no BACKLOG block was edited). Claim `42f534d85`, trim `52085b223` (apart from
-the close-out). Not pushed.
-**Evidence:** `HANDOFFS-through-2026-10-21.md.verify.sh` OK from the trim commit (L1, L2, L3; 44 before = 3 retained + 41 archived; added by the trim commit: 0); context budget:
-`HANDOFFS.md` ok (28,615 B), `SESSION_NOTES.md` ok; the 137 test files that read a ledger or `methodology/` (grep of `tests/testthat`): 2,004 blocks, 7,894 expectations,
-0 failed, 0 errors, 28 skipped; ratchet 1/1 (results `972b767212d7`, tarball 3.97 MB; S1030's `1182f9a08bba` matched first). No R code changed: no lint, check or full suite.
-**Handoff evaluation of S1030: 8/10.** Helped: the exact trim command and "its own commit apart from a close-out" (the trimmer's `FRONTIER_PENDING_STUB` warning says why);
-the sync numbers (2 commits, 1, v2.22.0 to 2.23.0) matched Phase 0; the ratchet hash matched; the pick list was right. Missing: that the plain run would be refused with
-`SRF_RED` and need the owner's word for `--force` (Learnings 549, 587), and that the file would be back over the warn line in about a week. Wrong: nothing I checked.
-**Self: 7/10.** + stopped at the refusal and put both readings, the sizes and a free `--force` preview to the owner before forcing; the claim was committed first, the trim
-alone, its proof re-run from the trim commit; ran all 137 ledger-reading test files, not one; read the close-out checklists. - one nudge for a silent stretch of Phase 0
-reads; the first picker was bounced (the owner wanted six items delayed, which I could not have known, but it cost a round). Learning 997.
-**Gotchas:** the plain trim run is refused (`SRF_RED`) while the regrowth exceeds the last trim's drop; `--force` without `--write` is a free preview; trim only with the claim in git and
-commit the trim alone; the trimmer adds a `## 2026-10` heading and its own entry at the top of `CHANGELOG.md`, so the DONE entry goes above it; the ratchet gate builds
-from `git archive HEAD` and its results file is gitignored; wait on a background job's notification, and edit no tracked ledger while the ledger tests run.
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) the methodology sync (READY, S-M): SESSION_RUNNER.md 2 commits behind, SAFEGUARDS.md 1,
-dashboard v2.22.0 against 2.23.0, trimmer v1.8.0 against the fork's v1.8.1; re-apply the `SESSION_NOTES.md` patch (`CLOSEOUT_CHECKLISTS.md`, the trimmer item). (2) Text-only
-update of the BACKLOG item "Shard verify scripts that FAIL on lossless trims" (`BACKLOG.md:136`): re-read upstream #93 and PR #94 first. (3) Issue #36 check (read-only): the
-file it cites is gone, `R/getPyramidPlot.R:97` sets the axis from the data, neither pyramid file mentions chimpanzees; the owner closes issues. (4) DECISION NEEDED: the
-retrospective snapshot backfill (L), `inst/doc/` slimming (M). Watch: `HANDOFFS.md` passes 196,608 B again in about a week at this rate; the lever is shorter
-receipts (`BACKLOG.md:164`, the owner has not chosen).
+### What Session 1032 Did
+**Deliverable:** methodology sync -- bring the synced process files (`SESSION_RUNNER.md` 2 commits behind, `SAFEGUARDS.md` 1, `methodology_dashboard.py` v2.22.0 against v2.23.0,
+`methodology_trim.py` v1.8.0 against v1.8.1, and whatever `bin/status` lists) up to the canonical `rmsharp/methodology` checkout (IN PROGRESS; owner pick at the Phase 0 picker,
+item 1 of 4, "Update process files"; S1031's suggested order, not an owner order; infrastructure sync, no R code and no test change, so no RED/GREEN gates). The newest upstream
+rules make section 3G run a new script, `close_out_report.py`, which this project does not have: it is shown to the owner before it is kept. The `SESSION_NOTES.md` patch to
+`methodology_trim.py` is re-applied after (`docs/conventions/CLOSEOUT_CHECKLISTS.md`, the trimmer item).
+**Started:** 2026-10-22 11:25 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
 
-### Sessions 947-1030 (condensed S950 to S1031; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1031 (condensed S950 to S1032; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1031: `methodology/HANDOFFS.md` trimmed from 207,726 B to 28,615 B, 41 of 44 receipts archived to `methodology/archive/HANDOFFS-through-2026-10-21.md` (owner pick, "Trim
+HANDOFFS.md"; the plain run was refused with `SRF_RED`, 1.0638, 178,760 B regrown in 8 days, and the owner took `--force`; housekeeping, no code). Claim `42f534d85`, trim `52085b223`;
+evaluation of S1030 8/10, self 7/10 (Learning 997). **Gotchas kept:** the plain trim run is refused while the regrowth exceeds the last trim's drop; `--force` without `--write` is a
+free preview; trim only with the claim in git and commit the trim alone; the trimmer adds a `## 2026-10` heading and its own entry at the top of `CHANGELOG.md`, so the DONE entry goes
+above it; the ratchet gate builds from `git archive HEAD` and its results file is gitignored. **Watch:** `HANDOFFS.md` is back over 196,608 B in about a week at this rate (the
+lever is shorter receipts, `BACKLOG.md:164`, not chosen by the owner).
 S1030: a script draws the Diagram tab's picture: `drawPedigreeDiagram(layout, edgeStyle, onClick)` is exported (`R/drawPedigreeDiagram.R:46`) and the app's render is one
 call to it (`R/modPedigree.R:715-727`); owner ruling at the scope question, the recommended option ("One function draws it all"); both walkthrough chunks are one call
 (`vignettes/a2interactive.Rmd:485,549`) and the "exactly" claims name the function (`vignettes/articles/pedigree-diagram.qmd:29,232,319,328`). Strict TDD; claim

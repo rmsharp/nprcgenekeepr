@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1032
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- methodology sync: bring this project's synced process files up to the canonical rmsharp/methodology checkout (SESSION_RUNNER.md 2 commits behind, SAFEGUARDS.md 1, methodology_dashboard.py v2.22.0 against v2.23.0, methodology_trim.py v1.8.0 against v1.8.1, and whatever bin/status lists) (owner pick at the Phase 0 picker, item 1 of 4, "Update process files"; S1031's suggested order, not an owner order; infrastructure sync, no R code and no test change, so no RED/GREEN gates; the new close_out_report.py is shown to the owner before it is kept; the SESSION_NOTES.md patch to methodology_trim.py is re-applied after).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1031
 date: 2026-10-22
 status: complete
