@@ -206,10 +206,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1034
 date: 2026-10-22
-status: pending
-active_task: IN PROGRESS -- the owner's ruling on the BACKLOG.md item "Ten archive-proof scripts end red although nothing was lost" (BACKLOG.md:136; A leave and remove, B one-line marker, C tell upstream) and the one action that ruling licenses (owner pick at the Phase 0 picker, item 2 of 4, "Ten red proof scripts"; S1033's leftover; a decision session, text only, no R code or test change; nothing posted upstream).
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the owner's ruling on the ten red archive-proof scripts: A, leave them and remove the item (the BACKLOG.md block, 18 lines, was BACKLOG.md:136-153) (owner pick at the Phase 0 picker, item 2 of 4, "Ten red proof scripts"; S1033's leftover; a decision session, text only, no R code or test change; nothing changed in methodology/, nothing posted upstream).
+what_was_done: Claim a03bca0f7 (SESSION_NOTES.md stub, pending receipt, CHANGELOG claim entry, S1033 condensed; test_handoffsReceiptPlacement.R passes). Phase 0 found a clean tree, both ledger frontiers at HEAD, no pending receipt, no merges, the ratchet citation matching (results 1dd9ea741a26), CI all success (10 runs), dashboard 96/100, nothing over a context-budget ceiling. At the Phase 0 picker (4 options) the owner picked the item; a second question (A, B or C) got A, the recommended option. Deliverable 666790db5: the BACKLOG.md block removed (286 to 266 lines, 13 to 12 open items), the compression item's candidate list no longer names it, the DONE entry in CHANGELOG.md carries the S901 and S1033 record. Checked before removal: no test, R file or doc quotes the block; the two tests that read BACKLOG.md plus the ledger tests, 6 files, 49 blocks, 374 expectations, 0 failed, 0 errors. Upstream KJ5HST/methodology#93 and PR #94 both still open (read 2026-10-22).
+next_steps: No owner order was given; my order (the six delayed items are not offered): (1) Issue #36 check, read-only (READY, Effort S): the issue cites R/agePyramidPlot.R, which does not exist, no R file mentions chimpanzees and R/getPyramidPlot.R:94-98 sets the axis from the data; try a long-lived example, write the finding down, the owner closes issues. (2) DECISION NEEDED: inst/doc/ slimming (BACKLOG.md:115, Effort M) and the retrospective snapshot backfill (BACKLOG.md:33, Effort L, its own design session first). (3) Owner-side: where to post the close_out_report.py write-up (draft only, BACKLOG.md:195). (4) The BACKLOG.md compression pass (BACKLOG.md:156, READY, Effort L, recurring; the file is 266 lines). Estimate, not measured: HANDOFFS.md was 41,509 B at this claim and warns at 196,608 B.
+key_files: BACKLOG.md:137 (the CHANGELOG ledger-convention item, was :155), :156 (the compression item; its candidate list reflowed at :189-193), :195 (the held-back files item, was :215), :115 (inst/doc/), :33 (snapshot backfill); docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md:1 (the table of all ten, kept); methodology/CHANGELOG.md (the S1034 DONE entry); R/getPyramidPlot.R:94-98 (the axis from the data); docs/conventions/CLOSEOUT_CHECKLISTS.md:25 (the removal checklist).
+gotchas: Every BACKLOG.md line after the removed block moved up by 18, and by 20 past the reflowed list, so older cites (BACKLOG.md:155, :215, :224) are dated records. A sibling item names a removed item by an older nickname: grep its distinctive old words as well as its title (Learning 1000). A pick on a decision item is the item, not the ruling, so expect the A/B/C question. In zsh use printf -- '---
+', never echo "===" (a leading = word is an expansion). quality_ratchet.py --run overwrites methodology/.quality-gates-results.json: this session's hash f12acc759237 replaces 1dd9ea741a26. Upstream methodology#93 and PR #94 are untouched.
+runtime_smoke: Not applicable and not skipped silently: no app or package behavior changed (BACKLOG.md and ledger text only; methodology/ code untouched). The read-only and ledger tools were run on this project's own files: dashboard 2.23.0 (96/100), context_budget.py, ratchet 1.5.1 --run, and the ledger-reading tests (114 test files that name a ledger, BACKLOG.md, PROJECT_LEARNINGS.md or methodology/: 1,780 blocks, 7,012 expectations, 0 failed, 0 errors, 0 skipped).
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results f12acc759237 · manifest aa983075d6a2
+changelog_ref: a03bca0f7
+commit: 666790db5
 ```
 
 ```handoff
