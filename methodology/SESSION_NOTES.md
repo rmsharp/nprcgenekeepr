@@ -98,42 +98,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1037 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Backfill Slice 1"; strict TDD, every gate put to the owner with `AskUserQuestion`):** Slice 1 of the retrospective
-colony-snapshot backfill, GitHub issue #170 (filed this session with the owner's word, "File it now"; design `docs/planning/retrospective-snapshot-backfill-plan.md` section 5). The exported
-`backfillColonySnapshots(ped, dates, guIter, guThresh, ...)` (`R/backfillColonySnapshots.R:59`) returns `list(history = ...)`, one row per explicit date; `createColonySnapshot()` knows the new rule
-`reconstructedLiving` (`R/createColonySnapshot.R:89`). Dated animals only; a date that cannot be analyzed stops the run and names the date (Slice 2 reports it instead). Two internal helpers
-replace two copies each: `trimToAnalysisPopulation()` (the Genetic Value tab, `R/modGeneticValue.R:309`, and the function) and `validateWholeCount()`. Issue #170 stays open.
-**Commits:** claim `d4791c562`, issue record `b71882631`, RED `e4b832abd`, GREEN `559e260d7` (the rule) and `9f863265d` (the function; two commits because 6 files exceed the 5-file cap), REFACTOR
-`a20fc3c32`, close-out next. Not pushed.
-**Verified:** new file 12 tests 45 expectations (RED was 17 failed 5 errors, all "could not find function"); `test_createColonySnapshot.R` 14 tests 88; full unfiltered suite 448 files 14,286
-expectations 0 failed 0 errors 197 skipped (S1035: 447 files 14,231; the 8 warnings are in two files this session did not edit); `lintr::lint_package()` 0; `R CMD check` 0/0/0 after GREEN and after
-REFACTOR (`--no-tests --no-manual`, vignettes rebuilt); browser tier on a scratch install: genetic-value module 7/7, detailed 7/7, snapshot trends 9/9, 0 skipped; ratchet 1/1 (results `6b6b59567910`,
-tarball 3,228,750 B); ledger-reading tests 125 files 7,031 expectations 0 failed 0 errors 29 skipped (opt-in browser files that only name a path).
-**Measured before RED (scratch scripts, not committed):** the hand-built 10-animal colony gives `neSexRatio` 8/3 (2007-01-01) and 4.8 (2011-01-01), the shortcut 0; the example at 2018-07-11 equals the
-app's snapshot on 25 of 25 fields under one seed (at `guIter` 10 `fg`, `fgSE`, `neGD` are NA on this file, so the test uses 20); 1990/2000/2010 give 3.909/54.052, 61.95/67.954, 136.591/92.456; the
-shortcut gives 0/0/30.909.
-**Design findings (design section 5.1):** (1) B4 would count two real UNKNOWN-status animals (`2NTIGG`, `4R3TIJ`: no exit, no birth date, one dated offspring each) at the export date, 341 against the
-app's 339, so the exact-match claim holds for dated animals only; (2) the `_pkgdown.yml` entry belongs in Slice 1 (a guard test fails at export), not Slice 4; (3) NEWS.Rmd waits for Slice 4 at the
-owner's word (no guard test), which is a deviation from the same-session NEWS checklist.
-**Handoff evaluation of S1036: 9/10.** Helped: the design's RED list, the Appendix A prototype and the section 2 numbers (every pin reproduced to the printed decimals), the gotchas (blank cells as `NA`,
-`minSireAge = 0`, `isGeneratedUnknownId`, `processedPedigree`), and a Phase 0 picture that matched (clean tree, frontiers, ratchet hash `0ef16360cae1`, CI 10 of 10). Missing: the B4 and export-date
-conflict above, that `guIter` 10 leaves three fields NA, and that a new export owes the `_pkgdown.yml` line in the same slice. Wrong: "the method reproduces the app exactly" was measured without B4
-(section 2.2) while the Appendix A prototype includes it.
-**Self: 8/10.** + claimed first; asked before filing the issue (it publishes); validated every pinned number in scratch before RED, which found the B4 conflict; all four gates put to the owner; kept
-to the 5-file cap; ran the browser tier because the refactor touched the app's path; watched the worker pid and not the launcher. - one status-line lapse inside a run of quick probes (the harness
-nudged once); the first claim script was off by one (an assertion caught it before any write); `pgrep -f` matched the launching shell and cost two calls; British spelling in the help text, caught by
-the wordlist guard. Learning 1003.
-**Gotchas:** find the worker with `ps -axo pid,command | grep 'exec/R .*<script>' | grep -v grep` (not `pgrep -f`); the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .` and
-`R_LIBS=<scratch>:<renv lib>` with `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true` (worked first time, 0 skipped); roxygen text uses American spelling
-(`test_wordlist_coverage.R`); `BACKLOG.md` lines did not move (244).
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Slice 2 of #170 (READY, Effort L, about one session, estimate): `from`/`to`/`by`, `minAnimals`, the `support`
-table (B5), the B6 defaults, `existingHistory` skips (B7), per-date failures into `skipped` (B8), `updateProgress`; the B4 default and the B6 start go to `AskUserQuestion`; settle B4 against the
-341-against-339 finding first. (2) Issue #36 check (READY, Effort S; the issue cites `R/agePyramidPlot.R`, which does not exist, no R file mentions chimpanzees, `R/getPyramidPlot.R:94-98` sets the
-axis ticks from `maxAx`). (3) The `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:134`). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only,
-`BACKLOG.md:173`). Owed at Slice 4: NEWS.Rmd, the guide section, the `a2interactive.Rmd` pass, closing #170.
+### What Session 1038 Did
+**Deliverable:** Slice 2 of the retrospective colony-snapshot backfill, GitHub issue #170 (design `docs/planning/retrospective-snapshot-backfill-plan.md` section 5; `BACKLOG.md:33`):
+`backfillColonySnapshots()` gains the date grid (`from`/`to`/`by`, `minAnimals`), the `support` table (B5), `existingHistory` skips (B7), per-date failures reported in `skipped` (B8) and
+`updateProgress`; script only. (IN PROGRESS)
+**Started:** 2026-10-22
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, item 1 of 4, "Backfill Slice 2". The pick is the item, not the ruling: B4 (animals with no birth date,
+decided together with the closure test, 341 against 339) and B6 (the default start year) go to the owner with `AskUserQuestion`; every TDD gate (PRE-RED to RED, RED to GREEN, GREEN to
+REFACTOR) is put to the owner the same way; no RED test is written until the owner says so.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1036 (condensed S950 to S1037; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1037 (condensed S950 to S1038; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1037: Slice 1 of the retrospective colony-snapshot backfill, GitHub issue #170 (owner pick, "Backfill Slice 1"; strict TDD, every gate put to the owner; the issue was filed with the
+owner's word, "File it now"): the exported `backfillColonySnapshots(ped, dates, guIter, guThresh, ...)` (`R/backfillColonySnapshots.R:59`, returns `list(history = ...)`), the rule
+`reconstructedLiving` in `createColonySnapshot()` (`R/createColonySnapshot.R:89`), dated animals only, and two shared helpers, `trimToAnalysisPopulation()` and
+`validateWholeCount()`. Measured: at the export date 2018-07-11 it equals the app's snapshot on 25 of 25 fields (`guIter` 20); rule B4 would add two UNKNOWN-status animals there
+(341 against 339). Claim `d4791c562`, issue record `b71882631`, RED `e4b832abd`, GREEN `559e260d7` + `9f863265d`, REFACTOR `a20fc3c32`, close-out `7c0beadaf`; evaluation of S1036
+9/10, self 8/10 (Learning 1003). **Gotchas kept:** find the worker with `ps -axo pid,command | grep 'exec/R .*<script>' | grep -v grep` (not `pgrep -f`); the browser tier needs
+`R CMD INSTALL --no-docs --library=<scratch> .` and `R_LIBS=<scratch>:<renv lib>` with `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`; roxygen text uses
+American spelling (`test_wordlist_coverage.R`); a new export owes its `_pkgdown.yml` line in the same slice; `guIter` 10 leaves `fg`, `fgSE`, `neGD` NA on the example file.
 S1036: the design for the retrospective colony-snapshot backfill (`docs/planning/retrospective-snapshot-backfill-plan.md`; owner pick, "Snapshot backfill design"; a design session, text
 only, no R code): an exported `backfillColonySnapshots()` plus a "Build earlier snapshots" button (owner scope ruling), twelve decisions B1-B12, rebuilt rows under their own rule
 `reconstructedLiving`, four slices; the owner approved it after the close-out ("approve design"). Measured: blanking exit dates after the chosen date reproduces the app's snapshot
