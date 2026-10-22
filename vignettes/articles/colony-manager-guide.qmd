@@ -383,7 +383,9 @@ legend to the right of the diagram shows what each shape means. If the
 pedigree data includes an optional `affected` column, individuals
 marked affected are additionally shaded a distinct color, with a matching
 "Affected" entry in the same legend -- pedigrees without an `affected`
-column render unshaded, as before. If the
+column render unshaded, as before. An animal whose `status` is DECEASED is also
+drawn with a diagonal slash through its symbol, with a matching "Deceased" entry
+in the legend. If the
 pedigree data includes an optional `name` column, a **Show Names on Diagram** toggle above the
 diagram (off by default) switches each node's label from id-only to id
 plus name on a second line -- a name longer than 15 characters is

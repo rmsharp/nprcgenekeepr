@@ -71,8 +71,10 @@ the diagram showing the same mapping. If the pedigree data includes an
 optional `affected` column, individuals marked affected are additionally
 shaded a distinct color on the diagram, with a matching "Affected" entry in
 the same legend; pedigrees without an `affected` column render unshaded, as
-before. If the pedigree data includes an optional `name` column, a **Show
-Names on Diagram** toggle (off by default) switches each node's label from
+before. An animal whose `status` is DECEASED is also drawn with a diagonal slash
+through its symbol, with a matching "Deceased" entry in the legend. If the
+pedigree data includes an optional `name` column, a **Show Names on Diagram**
+toggle (off by default) switches each node's label from
 id-only to id plus name on a second line; a name longer than 15 characters
 is truncated with an ellipsis on the diagram, with the full name always
 available in the hover tooltip. Not every animal needs a name -- one with

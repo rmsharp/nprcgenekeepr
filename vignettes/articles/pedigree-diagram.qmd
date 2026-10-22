@@ -205,6 +205,17 @@ unshaded, as before.
 
 ![A small lineage (12 animals) from a pedigree that includes an `affected` column: the 4 affected animals render filled; the 8 others, 7 unaffected and 1 of unknown affected status (NA), render identically, open.](shiny_app_use/diagram_affected_shading.png){fig-alt="Pedigree Browser Diagram tab showing twelve individuals: four filled magenta nodes (affected) and eight open/unfilled white nodes (seven unaffected, one of unknown affected status)."}
 
+## Deceased marker {#sec-deceased}
+
+An animal whose `status` is `DECEASED` is drawn with a diagonal slash through
+its symbol, from bottom left to top right, the way kinship2 marks a deceased
+animal, and the legend has a matching "Deceased" entry. Only the `status`
+column decides. A `SHIPPED` animal, an animal of `UNKNOWN` status, and every
+animal in a pedigree with no `status` column are drawn plain: an exit date
+cannot decide it, because it is recorded for a shipment as well as for a death.
+The slash reaches the same distance past the outline of every shape, the
+distance it reaches past the circle in the legend.
+
 ## Showing names {#sec-names}
 
 If the pedigree data includes an optional `name` column, a **Show Names on
