@@ -71,7 +71,11 @@ the diagram showing the same mapping. If the pedigree data includes an
 optional `affected` column, individuals marked affected are additionally
 shaded a distinct color on the diagram, with a matching "Affected" entry in
 the same legend; pedigrees without an `affected` column render unshaded, as
-before. An animal whose `status` is DECEASED is also drawn with a diagonal slash
+before. Further columns whose names start with `affected` (`affected2`,
+`affecteddiabetes`) are more conditions, up to four: each symbol is split into
+one section per condition, filled with that condition's own color where the
+animal is affected, and the legend has a row for each. An animal whose `status`
+is DECEASED is also drawn with a diagonal slash
 through its symbol, with a matching "Deceased" entry in the legend. If the
 pedigree data includes an optional `name` column, a **Show Names on Diagram**
 toggle (off by default) switches each node's label from

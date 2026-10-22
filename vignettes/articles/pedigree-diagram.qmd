@@ -205,6 +205,32 @@ unshaded, as before.
 
 ![A small lineage (12 animals) from a pedigree that includes an `affected` column: the 4 affected animals render filled; the 8 others, 7 unaffected and 1 of unknown affected status (NA), render identically, open.](shiny_app_use/diagram_affected_shading.png){fig-alt="Pedigree Browser Diagram tab showing twelve individuals: four filled magenta nodes (affected) and eight open/unfilled white nodes (seven unaffected, one of unknown affected status)."}
 
+## More than one affected condition {#sec-conditions}
+
+Every further column whose name starts with `affected` is another condition,
+in the order the columns appear in the file, up to four (kinship2's own
+limit). The quality-control step lower-cases a column name and drops its
+spaces, periods and underscores, so `Affected_2` arrives as `affected2` and
+`Affected Diabetes` as `affecteddiabetes`. With two or more conditions the
+symbol is divided into equal sections, one per condition, counter-clockwise
+from the top (with two conditions the first is the left half). A section is
+filled with its condition's color where the animal is affected and left open
+where it is unaffected or of unknown status. The first condition keeps the
+pink (`#CC79A7`); the others are orange (`#E69F00`), sky blue (`#56B4E9`) and
+bluish green (`#009E73`). The legend has one row per condition in place of
+the single "Affected" row, named from the rest of the column name
+("Affected 2", "Affected (diabetes)"), the hover tooltip lists each
+condition as Yes, No or Unknown, and the diagram grows taller to keep the
+legend text the same size. A file with more than four such columns draws the
+first four, and a note under the diagram names the others. The deceased slash
+is drawn over the sections. A single condition column, named `affected` or
+anything else starting with it, fills the whole symbol, as described above.
+
+These sections, like the deceased slash, are painted by the app's own drawing
+script after each draw. `makePedigreeMatingLayout()` returns the data for
+them (the `affectedSections` column of its nodes, and `conditions`), but
+`visNetwork::visNetwork()` alone does not draw them.
+
 ## Deceased marker {#sec-deceased}
 
 An animal whose `status` is `DECEASED` is drawn with a diagonal slash through
