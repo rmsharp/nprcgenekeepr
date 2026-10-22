@@ -14,7 +14,7 @@
 #' (\code{.deceasedOutlineFactors}) so every shape is overhung by that same
 #' amount.
 #' @noRd
-.deceasedSlashReach <- 19 / 22
+.deceasedSlashReach <- 19.0 / 22.0
 
 #' Each node shape's outline distance along the slash diagonal
 #'
@@ -25,7 +25,8 @@
 #' canvas, as are the others' analytic values). The names are vis.js shape
 #' names, the shapes \code{makePedigreeMatingLayout()} gives its nodes.
 #' @noRd
-.deceasedOutlineFactors <- c(dot = 1, square = sqrt(2), diamond = 1 / sqrt(2),
+.deceasedOutlineFactors <- c(dot = 1.0, square = sqrt(2.0),
+                             diamond = 1.0 / sqrt(2.0),
                              triangle = 1.386, star = 0.66)
 
 #' The afterDrawing handler that strokes the deceased slash
@@ -77,14 +78,14 @@
 #' @return A \code{data:} URI, as a character string.
 #' @noRd
 .deceasedLegendImage <- function(reach = .deceasedSlashReach) {
-  offset <- reach * 22
+  offset <- reach * 22.0
   svg <- sprintf(paste0(
     "<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'>",
     "<circle cx='25' cy='25' r='22' fill='white' stroke='#2B7CE9' ",
     "stroke-width='2'/>",
     "<line x1='%.1f' y1='%.1f' x2='%.1f' y2='%.1f' stroke='black' ",
     "stroke-width='4' stroke-linecap='round'/></svg>"
-  ), 25 - offset, 25 + offset, 25 + offset, 25 - offset)
+  ), 25.0 - offset, 25.0 + offset, 25.0 + offset, 25.0 - offset)
   paste0("data:image/svg+xml;charset=utf-8,",
          utils::URLencode(svg, reserved = TRUE))
 }

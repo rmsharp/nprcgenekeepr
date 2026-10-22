@@ -1833,14 +1833,13 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   # S1028 deceased marker: an animal is deceased when its status reads
   # DECEASED, and only then (the exit date cannot say: it is filled for a
   # shipment too). No status column, or a blank status, marks nobody.
-  deceasedOf <- stats::setNames(
-    if ("status" %in% names(ped)) {
-      as.character(ped$status) %in% "DECEASED"
-    } else {
-      rep(FALSE, length(realIds))
-    },
-    realIds
-  )
+  statusOf <- if ("status" %in% names(ped)) {
+    as.character(ped$status)
+  } else {
+    rep(NA_character_, length(realIds))
+  }
+  deceasedOf <- stats::setNames(!is.na(statusOf) & statusOf == "DECEASED",
+                                realIds)
 
   # Issue #136 (D1-D5, D7, D10), independent implementation of the same
   # optional name contract makePedigreeDiagramData() gets. Applied to BOTH
