@@ -222,6 +222,61 @@ test_that("an unknown membershipRule stops, naming the known rules (D3)", {
     ),
     "membershipRule"
   )
+  ## issue #170 Slice 1 (S1037): the known rules now include the rebuilt-past one
+  expect_error(
+    createColonySnapshot(qcPed, gvWhole, "livingAnimals",
+      guIter = 20L, guThresh = 1L
+    ),
+    "reconstructedLiving"
+  )
+})
+
+## Issue #170 Slice 1 (S1037; design B3): rows rebuilt from studbook dates get
+## their own rule, verified exactly like focalPopulation (a logical population
+## column whose rows equal the report). They must not reuse focalPopulation:
+## that rule's recorded rows use whatever population the user chose and
+## today's records, so mixing the two would pass the validator and be wrong.
+test_that("reconstructedLiving is verified like focalPopulation (issue #170)", {
+  snapshot <- createColonySnapshot(focalPed, gvFocal, "reconstructedLiving",
+    guIter = 20L, guThresh = 1L,
+    snapshotDate = as.Date("2026-06-30")
+  )
+  expect_identical(snapshot$membershipRule, "reconstructedLiving")
+  expect_identical(snapshot$nAnimals, length(focalIds))
+  expect_identical(snapshot$nAnimals, nrow(gvFocal$report))
+  expect_error(checkSnapshotHistory(snapshot), NA)
+  ## qcPed carries no population column, so the claim is unverifiable
+  expect_error(
+    createColonySnapshot(qcPed, gvWhole, "reconstructedLiving",
+      guIter = 20L, guThresh = 1L
+    ),
+    "population"
+  )
+  ## focalPed designates 89 animals but gvWhole's report covers all 280
+  expect_error(
+    createColonySnapshot(focalPed, gvWhole, "reconstructedLiving",
+      guIter = 20L, guThresh = 1L
+    ),
+    "reconstructedLiving"
+  )
+})
+
+test_that("a reconstructed row and a recorded row can share a date (issue #170)", {
+  ## rules are never compared with each other, so a rebuilt series is its own
+  ## line: the same date under two rules is two snapshots, not a duplicate
+  recorded <- createColonySnapshot(focalPed, gvFocal, "focalPopulation",
+    guIter = 20L, guThresh = 1L, snapshotDate = as.Date("2026-06-30")
+  )
+  rebuilt <- createColonySnapshot(focalPed, gvFocal, "reconstructedLiving",
+    guIter = 20L, guThresh = 1L, snapshotDate = as.Date("2026-06-30")
+  )
+  history <- appendColonySnapshot(appendColonySnapshot(NULL, recorded), rebuilt)
+  expect_identical(nrow(history), 2L)
+  expect_error(checkSnapshotHistory(history), NA)
+  expect_setequal(
+    as.character(history$membershipRule),
+    c("focalPopulation", "reconstructedLiving")
+  )
 })
 
 test_that("a malformed or incomplete geneticValue object stops", {
