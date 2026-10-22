@@ -81,8 +81,9 @@ test_that("SR3 (green at HEAD): the other open items stay", {
             "Create a tutorial for prospective contributors",
             "Retrospective colony-snapshot backfill",
             "Work with LabKey (Josh Eckels)",
-            "A kinship2 drawing feature the Diagram tab still lacks",
             "NPRC outreach & announcement plan",
             "Develop paper(s) for peer-reviewed journals"),
-    gone = character(0L))
+    ## S1029: both kinship2 drawing features (the deceased marker, S1028, and
+    ## more than one affected condition, S1029) have shipped, so the item is off.
+    gone = "A kinship2 drawing feature the Diagram tab still lacks")
 })
