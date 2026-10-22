@@ -4,8 +4,8 @@ subtitle: "nprcgenekeepr: an R Package for the Genetic Management of Colonies"
 author: "R. Mark Sharp, Ph.D."
 date: "8/29/2021"
 output:
-  html_document:
-    df_print: paged
+  rmarkdown::html_vignette:
+    df_print: kable
 vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle} 
   %\VignetteIndexEntry{Simulated Kinships with Partial Parentage} 

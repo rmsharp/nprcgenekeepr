@@ -2,8 +2,10 @@
 title: "Interactive Use of nprcgenekeepr"
 subtitle: An R Package for the Genetic Management of Colonies
 output:
-  html_document:
-    df_print: paged
+  rmarkdown::html_vignette:
+    df_print: kable
+    fig_width: 7
+    fig_height: 5
   pdf_document: default
 vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
