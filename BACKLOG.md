@@ -133,24 +133,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
       `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
       release tarballs from a clean export, never the working tree.
-- [ ] **Ten archive-proof scripts end red although nothing was lost (DECISION NEEDED -- leave them as
-      documented false alarms or name their cause, recommended: leave them, Effort S)** -- S901
-      characterized the 10 red of 54 (`docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md`; reported
-      upstream as `KJ5HST/methodology#93`, still open, with PR #94). **Re-checked S1033 (2026-10-22)** with
-      the v1.8.1 trimmer's read-only `--reverify` (`docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md`, the
-      table of all ten): the same 10 of 60 are red and **none is a loss.** Under today's logic 2 hold (the
-      substring-leak cause, gone from the current template), 1 is named a stub finalize (exit 4) and 7
-      `SESSION_NOTES.md` shards still fail because this project's local ledger spec declares no stub
-      marker; with a one-line marker (tried in a scratch clone only) all 7 are named too, still exit 4,
-      which upstream keeps red on purpose. `--reverify` writes nothing, so the ten files stay red, and no
-      regenerate path exists upstream. It also refuses 57 of 60 shards in place
-      (`REVERIFY_SHARD_MISMATCH`): their proofs name `docs/archive/`, and the 2026-10-11 move (`0e2663642`)
-      put the shards in `methodology/archive/`; it runs on a scratch clone with copies at the old path.
-      Nothing runs these scripts (the tests only check that each shard has a proof file).
-      **The choice:** (A, recommended) leave them and remove this item; (B) add the one-line marker to the
-      local `SESSION_NOTES.md` spec so a re-check names all ten (a second local change to a synced file,
-      lost at the next sync unless re-applied); (C) tell upstream that `--reverify` refuses a moved shard
-      (nothing drafted; the owner picks the place).
 
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
@@ -205,12 +187,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
       re-read the compressed result end to end.
       **Candidates for the next pass (measured S896, line counts after this pass; re-grep, sizes
-      not anchors):** this item's own history (41 lines), the paper item (24), the `inst/doc/`
-      slimming item (21) and the trim verify-script item (20, now longer after S898). The
-      verify-script item was one of the 7 parked Effort-S items; the owner kept all 7 open (S898),
-      so it may be compressed (Candidate C, another of the 7, was closed S910). The standalone-package
-      item is still 34 lines but is nearly all ratified-scope open text; leave it. Regrowth, for
-      scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after S896.
+      not anchors):** this item's own history (41 lines), the paper item (24) and the `inst/doc/`
+      slimming item (21). The standalone-package item is still 34 lines but is nearly all
+      ratified-scope open text; leave it. Regrowth, for scale: 378 lines on 2026-09-24, 599 at
+      S853, 552 before S890, 514 after S896.
 
 - [ ] **Take the methodology files the S1032 sync held back (BLOCKED -- on a fix to `close_out_report.py` in the
       methodology repo, Effort S once it ships)** (found S1032, 2026-10-22) -- the sync copied 7 of 10 files and, at the
