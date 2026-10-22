@@ -1162,6 +1162,43 @@ conditions_pedigree <- function(extra = list()) {
   ped
 }
 
+## The body, for diagram_pixel_js(), that reads the colors of the pixels half a
+## radius left and right of node `id`'s centre, as "r,g,b|r,g,b" (a plain
+## string, not JSON).
+halves_js <- function(id) {
+  sprintf(paste0(
+    "const p = net.canvasToDOM(net.getPosition('%s')); ",
+    "const n = net.body.data.nodes.get('%s'); ",
+    "const r = (n.size || 25) * net.getScale(); ",
+    "return rgb(p.x - 0.5 * r, p.y).join(',') + '|' + ",
+    "rgb(p.x + 0.5 * r, p.y).join(','); "
+  ), id, id)
+}
+
+## Whether a pixel's "r,g,b" is within 16 of a color on every channel.
+is_color <- function(rgbText, hex) {
+  got <- as.numeric(strsplit(rgbText, ",", fixed = TRUE)[[1L]])
+  want <- as.numeric(grDevices::col2rgb(hex))
+  length(got) == 3L && all(abs(got - want) <= 16)
+}
+
+## Each animal in `expected` (id = its left and right half's colors) has those
+## colors, as `read_halves(id)` reads them with halves_js().
+expect_halves <- function(read_halves, expected) {
+  for (id in names(expected)) {
+    got <- strsplit(read_halves(id), "|", fixed = TRUE)[[1L]]
+    expect_length(got, 2L)
+    if (length(got) == 2L) {
+      expect_true(is_color(got[[1L]], expected[[id]][[1L]]),
+                  info = sprintf("%s's left half is %s, read %s", id,
+                                 expected[[id]][[1L]], got[[1L]]))
+      expect_true(is_color(got[[2L]], expected[[id]][[2L]]),
+                  info = sprintf("%s's right half is %s, read %s", id,
+                                 expected[[id]][[2L]], got[[2L]]))
+    }
+  }
+}
+
 test_that(
   "E2E: Pedigree Browser Diagram tab fills each section of a two-condition
    animal's circle and square with its condition's color, and leaves an
@@ -1178,25 +1215,6 @@ test_that(
   skipReason <- open_diagram_with(app, conditions_pedigree())
   if (nzchar(skipReason)) skip(skipReason)
 
-  ## The colors of the pixels half a radius left and right of a node's
-  ## centre, as "r,g,b|r,g,b" (a plain string, not JSON).
-  get_halves <- function(id) {
-    app$get_js(sprintf(diagram_pixel_js(paste0(
-      "const p = net.canvasToDOM(net.getPosition('%s')); ",
-      "const n = net.body.data.nodes.get('%s'); ",
-      "const r = (n.size || 25) * net.getScale(); ",
-      "return rgb(p.x - 0.5 * r, p.y).join(',') + '|' + ",
-      "rgb(p.x + 0.5 * r, p.y).join(','); "
-    )), id, id))
-  }
-  ## Whether a pixel's "r,g,b" is within 16 of a color on every channel.
-  is_color <- function(rgbText, hex) {
-    got <- as.numeric(strsplit(rgbText, ",", fixed = TRUE)[[1L]])
-    want <- as.numeric(grDevices::col2rgb(hex))
-    length(got) == 3L && all(abs(got - want) <= 16)
-  }
-  halves <- function(id) strsplit(get_halves(id), "|", fixed = TRUE)[[1L]]
-
   pink <- "#CC79A7"
   orange <- "#E69F00"
   white <- "#FFFFFF"
@@ -1204,18 +1222,8 @@ test_that(
     A = c(pink, orange), B = c(white, white), C = c(white, orange),
     D = c(white, white), E = c(pink, white)
   )
-  for (id in names(expected)) {
-    got <- halves(id)
-    expect_length(got, 2L)
-    if (length(got) == 2L) {
-      expect_true(is_color(got[[1L]], expected[[id]][[1L]]),
-                  info = sprintf("%s's left half is %s, read %s", id,
-                                 expected[[id]][[1L]], got[[1L]]))
-      expect_true(is_color(got[[2L]], expected[[id]][[2L]]),
-                  info = sprintf("%s's right half is %s, read %s", id,
-                                 expected[[id]][[2L]], got[[2L]]))
-    }
-  }
+  expect_halves(function(id) app$get_js(diagram_pixel_js(halves_js(id))),
+                expected)
 })
 
 ## S1029 mutation gaps (found with the mutants of the section painter): a
@@ -1381,38 +1389,10 @@ test_that(
   expect_gt(darkest_at("D", 0.35, -0.35), 200,
             label = "darkest pixel at the same point of D (ALIVE)")
 
-  ## The colors half a radius left and right of a node's centre.
-  halves <- function(id) {
-    got <- evaluate(sprintf(page_pixel_js(paste0(
-      "const p = net.canvasToDOM(net.getPosition('%s')); ",
-      "const n = net.body.data.nodes.get('%s'); ",
-      "const r = (n.size || 25) * net.getScale(); ",
-      "return rgb(p.x - 0.5 * r, p.y).join(',') + '|' + ",
-      "rgb(p.x + 0.5 * r, p.y).join(','); "
-    )), id, id))
-    strsplit(got, "|", fixed = TRUE)[[1L]]
-  }
-  ## Whether a pixel's "r,g,b" is within 16 of a color on every channel.
-  is_color <- function(rgbText, hex) {
-    got <- as.numeric(strsplit(rgbText, ",", fixed = TRUE)[[1L]])
-    want <- as.numeric(grDevices::col2rgb(hex))
-    length(got) == 3L && all(abs(got - want) <= 16)
-  }
   pink <- "#CC79A7"
   orange <- "#E69F00"
   white <- "#FFFFFF"
-  expected <- list(A = c(pink, orange), D = c(white, white),
-                   E = c(pink, white))
-  for (id in names(expected)) {
-    got <- halves(id)
-    expect_length(got, 2L)
-    if (length(got) == 2L) {
-      expect_true(is_color(got[[1L]], expected[[id]][[1L]]),
-                  info = sprintf("%s's left half is %s, read %s", id,
-                                 expected[[id]][[1L]], got[[1L]]))
-      expect_true(is_color(got[[2L]], expected[[id]][[2L]]),
-                  info = sprintf("%s's right half is %s, read %s", id,
-                                 expected[[id]][[2L]], got[[2L]]))
-    }
-  }
+  expect_halves(function(id) evaluate(page_pixel_js(halves_js(id))),
+                list(A = c(pink, orange), D = c(white, white),
+                     E = c(pink, white)))
 })

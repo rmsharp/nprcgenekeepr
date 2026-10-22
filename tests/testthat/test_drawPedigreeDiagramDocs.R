@@ -1,8 +1,9 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 ##
-## BACKLOG.md:224 (owner ruling S1030, "One function draws it all"; see
-## test_drawPedigreeDiagram.R). Five sentences in two pages say a script draws
+## The S1029 BACKLOG item "Scripted Diagram rendering lacks the deceased slash
+## and the condition sections" (owner ruling S1030, "One function draws it
+## all"; see test_drawPedigreeDiagram.R). Five sentences in two pages say a script draws
 ## what the Diagram tab draws:
 ##
 ##  - vignettes/a2interactive.Rmd: the functions "work identically outside the

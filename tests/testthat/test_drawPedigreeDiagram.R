@@ -1,7 +1,8 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 ##
-## BACKLOG.md:224 (found S1029; owner ruling S1030, "One function draws it
+## The S1029 BACKLOG item "Scripted Diagram rendering lacks the deceased slash
+## and the condition sections" (owner ruling S1030, "One function draws it
 ## all"). The Diagram tab's picture was built inside modPedigreeServer, so a
 ## script that piped makePedigreeMatingLayout() into visNetwork::visNetwork(),
 ## as the a2interactive walkthrough does, drew a 5-row legend and neither the
