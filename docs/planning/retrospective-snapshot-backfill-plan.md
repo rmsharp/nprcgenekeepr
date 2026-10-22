@@ -9,8 +9,8 @@
 
 This is the "fresh Pre-RED design gate" that the issue #167 plan left open as its optional Slice 5
 (`docs/planning/issue167-longitudinal-monitoring-plan.md` §3 D5, §5 Slice 5; `BACKLOG.md:33`).
-Issue #167 is closed, so implementation needs a **new GitHub issue** (a draft is in Appendix C;
-**not filed**, the owner says when). Each slice in §5 is a separate strict-TDD session.
+Issue #167 is closed, so implementation needed a **new GitHub issue**: filed as **#170** in S1037
+(2026-10-22, with the owner's word; Appendix C is the text posted). Each slice in §5 is a separate strict-TDD session.
 
 **What the owner ruled this session (S1036, at the scope question, 2026-10-22):** build **an
 exported R function plus an app button** that calls it. Everything else below is a
@@ -20,8 +20,8 @@ pattern).
 
 **Approved by the owner, 2026-10-22, after the S1036 close-out** (the owner's words: "approve
 design"). The approval covers this document as written. The three marked judgment calls (B4, B6,
-B11) are still put to the owner at the slice that first needs them, and the GitHub issue stays
-unfiled until the owner says.
+B11) are still put to the owner at the slice that first needs them. The GitHub issue was filed as
+#170 in S1037, after the owner said to.
 
 ---
 
@@ -384,7 +384,7 @@ Wording is written as one proposed sentence per place for the owner to edit.
 This session changes no `R/`, `tests/` or `man/` file, so lint, `R CMD check`, `NEWS.Rmd`,
 `_pkgdown.yml`, the citation checklist and the `a2interactive.Rmd` checklist are **not owed
 this session**; they are owed at the slices as listed in §5. The `BACKLOG.md` block is rewritten
-(not removed; implementation remains) and the GitHub issue stays unfiled until the owner says.
+(not removed; implementation remains) and the GitHub issue was filed later, as #170 in S1037.
 
 ---
 
@@ -444,7 +444,7 @@ snapshotAsOf <- function(ped, asOf, guIter, guThresh) {
    `population <- real & birth <= T & (is.na(exit) | exit > T)` and leave `exit` alone ("simple").
 4. Timing: repeat with `guIter = 1000L`.
 
-## Appendix C. Draft GitHub issue (not filed)
+## Appendix C. GitHub issue text (filed as #170, S1037)
 
 **Title:** Build earlier Genetic-Health Trends snapshots from studbook birth and exit dates
 

@@ -31,8 +31,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       them rather than copying them from here.
 
 - [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health monitoring --
-      design written and approved (S1036; DECISION NEEDED only on filing the GitHub issue, then
-      READY, Effort L, four slices, each its own session)** (2026-10-22; scope ruled by the
+      design written and approved (S1036; GitHub issue #170 filed S1037, so READY, Effort L,
+      four slices, each its own session)** (2026-10-22; scope ruled by the
       owner: an exported `backfillColonySnapshots()` plus a "Build earlier snapshots" button on
       the Genetic-Health Trends tab that calls it; the owner said "approve design" after the
       close-out) -- design, measurements and slices:
@@ -40,14 +40,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       setting only the population for a past date gives wrong effective sizes
       (`getLivingBreeders()` reads today's exit dates); blanking later exit dates gives the
       right ones and matches the app exactly at the export date (2018-07-11). Rebuilt rows get
-      their own rule, `reconstructedLiving`, so they never mix with recorded ones. **Waiting on
-      the owner:** say when to file the GitHub issue (draft in its Appendix C, **not filed**;
-      #167 is closed). Three calls still go to `AskUserQuestion` at the slice that needs them:
+      their own rule, `reconstructedLiving`, so they never mix with recorded ones. **Tracked as
+      issue #170** (filed S1037 from the Appendix C text; #167 is closed). Three calls still
+      go to `AskUserQuestion` at the slice that needs them:
       animals with no birth date (B4), the default start year (B6), the shared analysis-pedigree
       helper (B11). **Not yet checked:** cost on a colony larger than the 2,590-animal example
       (about 4 s per date there), and whether the effective-size definition reads sensibly for
       early years (1 of the 201 animals alive on 1990-01-01 has a recorded sire). First pickup
-      once the issue exists: Slice 1, the new rule plus the function for explicit dates (design
+      (taken in S1037): Slice 1, the new rule plus the function for explicit dates (design
       section 5).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
