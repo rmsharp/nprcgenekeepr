@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1034
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- the owner's ruling on the BACKLOG.md item "Ten archive-proof scripts end red although nothing was lost" (BACKLOG.md:136; A leave and remove, B one-line marker, C tell upstream) and the one action that ruling licenses (owner pick at the Phase 0 picker, item 2 of 4, "Ten red proof scripts"; S1033's leftover; a decision session, text only, no R code or test change; nothing posted upstream).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1033
 date: 2026-10-22
 status: complete

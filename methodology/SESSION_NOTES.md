@@ -98,35 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1033 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Re-check 10 red proofs"; housekeeping, text only, no R code and no test change, so no RED/GREEN gates):** the ten red
-archive-proof scripts were re-derived with the v1.8.1 trimmer's read-only `--reverify`, and the `BACKLOG.md` item (`BACKLOG.md:136`, 28 to 19 lines) now says what is still broken.
-**Result:** the same 10 of 60 scripts are red and none is a loss. Under today's logic 2 hold (the substring-leak cause), 1 is a named stub finalize (exit 4) and 7 `SESSION_NOTES.md` shards
-still exit 1 because the local ledger spec declares no stub marker (a one-line marker, tried in a scratch clone only, makes all 7 exit 4, still red by upstream's design). `--reverify`
-refuses 57 of 60 shards in place: their proofs name `docs/archive/` and the shards moved in `0e2663642`; a scratch clone with copies at the old path runs it. Nothing runs the scripts.
-The item is now DECISION NEEDED with a recommendation (A: leave them and remove the item). Table of all ten and the commands: `docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md`. Claim
-`d6214eb51`, deliverable `5d713689f`. Not pushed; nothing posted upstream; nothing in `methodology/` changed.
-**Evidence:** 60 frozen scripts run (50 exit 0, 10 exit 1); `--reverify` in place: 3 exit 0, 57 exit 3; in the scratch clone at the old path: 49 exit 0 (the 47 earlier passes plus 2),
-1 exit 4, 7 exit 1; all 47 earlier passes stay passes; for all 8 stub-finalize shards the "other records byte-identical, in order, L2 holds" clause prints (5 to 77 records). The main
-repo's `git status` was empty after the scratch work. Ratchet 1.5.1: 1/1 pass, 0 unmeasured, manifest `aa983075d6a2`, results `1dd9ea741a26`. Ledger-reading tests: 137 test files that read a ledger or
-methodology/: 2,004 blocks, 7,894 expectations, 0 failed, 0 errors, 28 skipped. No R code changed: no lint, check or full suite.
-**Handoff evaluation of S1032: 8/10.** Helped: Next (1) named this item, its line and the three upstream commits; the Phase 0 numbers (clean tree, ratchet hash, PR #94 state) all matched;
-"do not re-offer the six delayed items" saved a picker option. Missing: that `--reverify` refuses a moved shard (57 of 60), so "try it on the 10 red scripts" could not be answered in
-place; that the local `SESSION_NOTES.md` spec declares no stub marker; and `bin/status` is not in this repo (running it here failed). Wrong: nothing found; "text-only, Effort S"
-understated the work (a measurement came first).
-**Self: 8/10.** + ran all 60 before narrowing; tested the hypotheses (the in-place refusal, the marker) instead of guessing; re-read or recomputed every number in the doc (47 stay green,
-the byte-identical clause for all 8, nothing runs the scripts); caught my own overstatement about S901's by-hand diff before the commit; read both leak tests before dropping an old
-warning; the scratch work left the repo untouched; one picker answer, no corrections. - assumed `bin/status` was here; a `\b` in a `git grep -E` pattern silently matched nothing; a
-malformed `git cat-file` call. Learning 999.
-**Gotchas:** `--reverify` needs a file at the path the proof names (a scratch `git clone`, copies in `docs/archive/`); exit 4 is still red; macOS `git grep -E` has no `\b`; every
-`BACKLOG.md` line after 136 moved up by 9 (the S1029 cite `BACKLOG.md:224` below is a dated record of an earlier layout); no test or CI run executes the trim verify scripts.
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Issue #36 check (read-only; READY, Effort S): the issue cites `R/agePyramidPlot.R`, no R file
-mentions chimpanzees and `R/getPyramidPlot.R:92-97` sets the axis from the data; try a long-lived example, write the finding down, the owner closes issues. (2) The owner's pick on the
-item this session rewrote (`BACKLOG.md:136`): A leave and remove (recommended), B the one-line marker, C tell upstream; A means removing the block in its own commit. (3) DECISION NEEDED:
-`inst/doc/` slimming (M, `BACKLOG.md:115`) and the retrospective snapshot backfill (L, `BACKLOG.md:33`). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only,
-`BACKLOG.md:215`). Watch: `HANDOFFS.md` passes 196,608 B in about a week at this rate (the lever is shorter receipts, `BACKLOG.md:155`, not chosen).
+### What Session 1034 Did
+**Deliverable:** the owner's ruling on the item "Ten archive-proof scripts end red although nothing was lost" (`BACKLOG.md:136`: A leave them and remove the item, B add the
+one-line marker, C tell upstream), and the one action that ruling licenses (IN PROGRESS; owner pick at the Phase 0 picker, item 2 of 4, "Ten red proof scripts"; S1033's
+leftover, not an owner order; a decision session, text only, no R code and no test change, so no RED/GREEN gates). Nothing is posted upstream.
+**Started:** 2026-10-22 12:13 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
 
-### Sessions 947-1032 (condensed S950 to S1033; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1033 (condensed S950 to S1034; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1033: the ten red archive-proof scripts re-derived with the v1.8.1 trimmer's read-only `--reverify` (owner pick, "Re-check 10 red proofs"; housekeeping, no code): the same
+10 of 60 are red and none is a loss (2 hold, 1 is a named stub finalize, 7 `SESSION_NOTES.md` shards fail because the local ledger spec declares no stub marker); `--reverify`
+refuses 57 of 60 in place (their proofs name `docs/archive/`, the shards moved in `0e2663642`); the `BACKLOG.md` item (`BACKLOG.md:136`) is now DECISION NEEDED, A leave and
+remove recommended (`docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md`). Claim `d6214eb51`, deliverable `5d713689f`, close-out `77e4b6761`; evaluation of S1032 8/10, self 8/10
+(Learning 999). **Gotchas kept:** `--reverify` needs a file at the path the proof names (a scratch `git clone` with copies in `docs/archive/`); exit 4 is still red; macOS
+`git grep -E` has no `\b`; `bin/status` is not in this repo; nothing runs the trim verify scripts.
 S1032: methodology sync, 7 of 10 synced files updated from the methodology checkout `515b3a7e` (dashboard 2.23.0, trimmer 1.8.1 with this project's `SESSION_NOTES.md` patch re-applied,
 `quality_ratchet.py` 1.5.1, four docs); `SESSION_RUNNER.md`, `SAFEGUARDS.md` and `close_out_report.py` held back at the owner's word, because the script reads the `HANDOFFS.md`
 front-matter example box as the newest receipt and refuses (write-up and a tested 4-line fix, posted nowhere: `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`;
