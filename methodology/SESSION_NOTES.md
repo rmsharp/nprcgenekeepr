@@ -123,8 +123,8 @@ of 5+ calls without a status line; the GitHub issue is unfiled. Learning 1002.
 (`R/modPedigree.R:372-374`) sets the population, and the Genetic Value tab's `is.na(exit)` fallback (`R/modGeneticValue.R:293-298`) is not the app's path; the backfill needs
 `processedPedigree`, never `analysisPedigree` (the focal trim); a background launcher's "completed" notice means the launcher exited, not the job (use `pgrep`); `BACKLOG.md` lines did
 not move (244 lines).
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) The owner reads the design and says go; then file the GitHub issue (Appendix C) and start Slice 1,
-the new rule plus the function for explicit dates (READY once approved, Effort L; the B4, B6 and B11 calls go to `AskUserQuestion` at the slice). (2) Issue #36 check (READY, Effort S;
+**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) The owner approved the design (2026-10-22, after the close-out); next the owner says when to file the GitHub issue (Appendix C),
+then Slice 1, the new rule plus the function for explicit dates (READY once the issue exists, Effort L; the B4, B6 and B11 calls go to `AskUserQuestion` at the slice). (2) Issue #36 check (READY, Effort S;
 still the leftover: the issue cites `R/agePyramidPlot.R`, which does not exist, no R file mentions chimpanzees, `R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`). (3) The
 `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:134`). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only, `BACKLOG.md:173`). Estimate,
 not measured: Slice 1 is about one session.

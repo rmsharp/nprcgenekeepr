@@ -30,24 +30,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health monitoring
-      -- design written S1036 (DECISION NEEDED, Effort L, four slices, each its own
-      session)** (2026-10-22; scope ruled by the owner: an exported
-      `backfillColonySnapshots()` plus a "Build earlier snapshots" button on the
-      Genetic-Health Trends tab that calls it) -- design, measurements and slices:
-      `docs/planning/retrospective-snapshot-backfill-plan.md`. Measured on the jmac
-      studbook: setting only the population for a past date gives wrong effective sizes
+- [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health monitoring --
+      design written and approved (S1036; DECISION NEEDED only on filing the GitHub issue, then
+      READY, Effort L, four slices, each its own session)** (2026-10-22; scope ruled by the
+      owner: an exported `backfillColonySnapshots()` plus a "Build earlier snapshots" button on
+      the Genetic-Health Trends tab that calls it; the owner said "approve design" after the
+      close-out) -- design, measurements and slices:
+      `docs/planning/retrospective-snapshot-backfill-plan.md`. Measured on the jmac studbook:
+      setting only the population for a past date gives wrong effective sizes
       (`getLivingBreeders()` reads today's exit dates); blanking later exit dates gives the
-      right ones and matches the app exactly at the export date (2018-07-11). Rebuilt rows
-      get their own rule, `reconstructedLiving`, so they never mix with recorded ones.
-      **Waiting on the owner:** read the design and say go; say when to file the GitHub
-      issue (draft in its Appendix C, **not filed**; #167 is closed). Three calls go to
-      `AskUserQuestion` at the slice that needs them: animals with no birth date (B4), the
-      default start year (B6), the shared analysis-pedigree helper (B11). **Not yet
-      checked:** cost on a colony larger than the 2,590-animal example (about 4 s per date
-      there), and whether the effective-size definition reads sensibly for early years (1
-      of the 201 animals alive on 1990-01-01 has a recorded sire). First pickup once the
-      issue exists: Slice 1, the new rule plus the function for explicit dates (design
+      right ones and matches the app exactly at the export date (2018-07-11). Rebuilt rows get
+      their own rule, `reconstructedLiving`, so they never mix with recorded ones. **Waiting on
+      the owner:** say when to file the GitHub issue (draft in its Appendix C, **not filed**;
+      #167 is closed). Three calls still go to `AskUserQuestion` at the slice that needs them:
+      animals with no birth date (B4), the default start year (B6), the shared analysis-pedigree
+      helper (B11). **Not yet checked:** cost on a colony larger than the 2,590-animal example
+      (about 4 s per date there), and whether the effective-size definition reads sensibly for
+      early years (1 of the 201 animals alive on 1990-01-01 has a recorded sire). First pickup
+      once the issue exists: Slice 1, the new rule plus the function for explicit dates (design
       section 5).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder

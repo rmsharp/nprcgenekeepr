@@ -18,6 +18,11 @@ recommendation, written so the slice sessions do not re-derive it; each judgment
 and is put to the owner with `AskUserQuestion` at the slice that first needs it (the S758-S760
 pattern).
 
+**Approved by the owner, 2026-10-22, after the S1036 close-out** (the owner's words: "approve
+design"). The approval covers this document as written. The three marked judgment calls (B4, B6,
+B11) are still put to the owner at the slice that first needs them, and the GitHub issue stays
+unfiled until the owner says.
+
 ---
 
 ## 1. Context
