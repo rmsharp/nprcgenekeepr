@@ -30,25 +30,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health monitoring --
-      design written and approved (S1036; GitHub issue #170 filed S1037, so READY, Effort L,
-      four slices, each its own session)** (2026-10-22; scope ruled by the
-      owner: an exported `backfillColonySnapshots()` plus a "Build earlier snapshots" button on
-      the Genetic-Health Trends tab that calls it; the owner said "approve design" after the
-      close-out) -- design, measurements and slices:
-      `docs/planning/retrospective-snapshot-backfill-plan.md`. Measured on the jmac studbook:
-      setting only the population for a past date gives wrong effective sizes
-      (`getLivingBreeders()` reads today's exit dates); blanking later exit dates gives the
-      right ones and matches the app exactly at the export date (2018-07-11). Rebuilt rows get
-      their own rule, `reconstructedLiving`, so they never mix with recorded ones. **Tracked as
-      issue #170** (filed S1037 from the Appendix C text; #167 is closed). Three calls still
-      go to `AskUserQuestion` at the slice that needs them:
-      animals with no birth date (B4), the default start year (B6), the shared analysis-pedigree
-      helper (B11). **Not yet checked:** cost on a colony larger than the 2,590-animal example
-      (about 4 s per date there), and whether the effective-size definition reads sensibly for
-      early years (1 of the 201 animals alive on 1990-01-01 has a recorded sire). First pickup
-      (taken in S1037): Slice 1, the new rule plus the function for explicit dates (design
-      section 5).
+- [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health
+      monitoring -- issue #170, design approved (S1036), Slice 1 of 4 DONE (S1037);
+      next Slice 2, READY, Effort L, each slice its own session** (2026-10-22; scope
+      ruled by the owner: an exported `backfillColonySnapshots()` plus a "Build earlier
+      snapshots" button on the Genetic-Health Trends tab that calls it) -- design,
+      measurements and slices: `docs/planning/retrospective-snapshot-backfill-plan.md`
+      (section 5.1 holds what Slice 1 corrected). **Done in Slice 1:** the rule
+      `reconstructedLiving` and the exported function for explicit dates, dated animals
+      only (`R/backfillColonySnapshots.R`); at the export date (2018-07-11) it equals
+      the app's snapshot field for field. **Slice 2 (script only):** the date grid, the
+      support report, existing-history skips, per-date failures reported not fatal; two
+      calls go to `AskUserQuestion`: animals with no birth date (B4) and the default
+      start year (B6). **Settle first:** B4 would count two UNKNOWN-status animals at
+      the export date (341 against the app's 339), so B4 and the exact-match test are
+      decided together. **Owed at Slice 4:** the `NEWS.Rmd` entry (deferred from Slice
+      1 at the owner's word), the guide section, the `a2interactive.Rmd` pass, closing
+      #170. **Not yet checked:** cost on a colony larger than the 2,590-animal example
+      (about 4 s per date there), and early years (1 of the 201 animals alive on
+      1990-01-01 has a recorded sire).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE

@@ -329,6 +329,26 @@ near `:1264`), the B12 limits in plain words, `NEWS.Rmd` (release-state wording)
 recorded not assumed), `a2interactive.Rmd` left for its dedicated pass, and the issue closed.
 Wording is written as one proposed sentence per place for the owner to edit.
 
+### 5.1 Corrections found building Slice 1 (S1037)
+
+1. **B4 and the exact-match claim (§2.2, Appendix A).** The measured equality with the app at
+   2018-07-11 (339 animals, 25 of 25 fields) holds for a population of dated animals only.
+   Appendix A's prototype also applies B4, and at the export date that adds two real animals,
+   `2NTIGG` and `4R3TIJ` (status UNKNOWN, no exit date, no birth date, one dated offspring each):
+   341 against the app's 339. Slice 1 uses dated animals only, so its closure test passes;
+   Slice 2 decides B4 and the closure test together.
+2. **The `_pkgdown.yml` reference entry belongs in Slice 1, not Slice 4.** The coverage guard
+   (`test_pkgdown_reference_config.R`) fails as soon as the function is exported; the spelling
+   guard (`test_wordlist_coverage.R`) also reads the new help page. `NEWS.Rmd`, the guide and the
+   `a2interactive.Rmd` pass stay in Slice 4 (the owner approved deferring the NEWS entry at the
+   RED to GREEN gate; no test guards it).
+3. **`guIter` for the closure test is 20.** At 10 the example gives NA for `fg`, `fgSE` and
+   `neGD`, which would make "equal on every field" vacuous. With the same seed all 25 fields
+   are identical at 20.
+4. **Slice 1 returns `list(history = ...)`** so Slice 2 can add `support` and `skipped`
+   without changing the shape. Built in S1037 (issue #170): RED `e4b832abd`, GREEN `559e260d7`
+   and `9f863265d`, REFACTOR `a20fc3c32` (B11 done, owner approved).
+
 ---
 
 ## 6. Impact analysis
