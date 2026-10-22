@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1033
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- re-check the 10 red archive-proof (verify) scripts with the trimmer's read-only --reverify (v1.8.1) and rewrite the BACKLOG.md item "Shard verify scripts that FAIL on lossless trims" (BACKLOG.md:136) to say what is still really broken (owner pick at the Phase 0 picker, item 1 of 4, "Re-check 10 red proofs"; housekeeping, text only, no R code or test change; nothing posted upstream).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1032
 date: 2026-10-22
 status: complete
