@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1037
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- Slice 1 of the retrospective colony-snapshot backfill (design section 5; BACKLOG.md:33): the reconstructedLiving rule in createColonySnapshot() and the exported backfillColonySnapshots() for explicit dates, script only. Owner pick at the Phase 0 picker, item 1 of 4, "Backfill Slice 1". The pick is the item, not the ruling: the GitHub issue is not filed and no RED test is written until the owner says so (AskUserQuestion at each gate). Strict TDD.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1036
 date: 2026-10-22
 status: complete
