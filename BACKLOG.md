@@ -112,28 +112,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       core test files), so the planning session must re-run the grep and decide where that test
       lives. (The owner accepted S667's recommendation NOT to split the layout core, recorded S738;
       the prep steps stand whether or not a split ever happens.)
-- [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
-      vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
-      tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own
-      session) -- `inst/doc/` is 4.38 MB uncompressed = 86% of CRAN's 5 MB documentation
-      guideline and 38% of the tarball; `a2interactive`/`gvaConvergence`/`simulatedKValues`
-      declare `output: html_document` (`vignettes/a2interactive.Rmd:4-6`,
-      `gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Est. 0.4-0.9 MB compressed saved
-      — an ESTIMATE needing its own before/after clean-export build measurement
-      (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` Finding 3 + §7 recipe); `df_print: paged`
-      does not exist under `html_vignette` and must become `knitr::kable()`; optionally replace
-      `a2interactive`'s two live `visNetwork` widgets with static images — now quantified
-      (S737, `docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` Obs. 2): the
-      widgets' vis-network + html2canvas payload is ~1.23 MB uncompressed ≈ 0.29 MB compressed
-      inside `inst/doc/a2interactive.html`, so that one step alone removes most of the drawing
-      feature's tarball footprint. Buys
-      documentation-guideline headroom, not tarball-limit compliance (already met: clean build
-      3.49 MB vs 10 MB); the S728 `tarball_size_clean_export` gate (`.quality-gates.json`,
-      <=5 MB) will show any saving mechanically. **Not worth doing on size grounds (measured
-      S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
-      `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
-      release tarballs from a clean export, never the working tree.
-
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
@@ -187,10 +165,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
       re-read the compressed result end to end.
       **Candidates for the next pass (measured S896, line counts after this pass; re-grep, sizes
-      not anchors):** this item's own history (41 lines), the paper item (24) and the `inst/doc/`
-      slimming item (21). The standalone-package item is still 34 lines but is nearly all
-      ratified-scope open text; leave it. Regrowth, for scale: 378 lines on 2026-09-24, 599 at
-      S853, 552 before S890, 514 after S896.
+      not anchors):** this item's own history (41 lines) and the paper item (24). The
+      standalone-package item is still 34 lines but is nearly all ratified-scope open text;
+      leave it. Regrowth, for scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890,
+      514 after S896.
 
 - [ ] **Take the methodology files the S1032 sync held back (BLOCKED -- on a fix to `close_out_report.py` in the
       methodology repo, Effort S once it ships)** (found S1032, 2026-10-22) -- the sync copied 7 of 10 files and, at the

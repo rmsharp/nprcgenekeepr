@@ -1,6 +1,6 @@
 # Source-Tarball Size Audit
 
-> **Status as of 2026-10-02 (S870):** Findings 1, 2 and 5 are resolved from S728: `.Rbuildignore` has `^scratchpad$` and the testthat debris entries, and `.quality-gates.json` now declares the gate `tarball_size_clean_export` (max 5,000,000 bytes). Finding 3 (the `html_document` vignettes) is still open; see BACKLOG. The body below is the dated record as written; it was not edited.
+> **Status as of 2026-10-02 (S870):** Findings 1, 2 and 5 are resolved from S728: `.Rbuildignore` has `^scratchpad$` and the testthat debris entries, and `.quality-gates.json` now declares the gate `tarball_size_clean_export` (max 5,000,000 bytes). Finding 3 (the `html_document` vignettes) was resolved S1035 (2026-10-22): the three moved to `rmarkdown::html_vignette` with `df_print: kable` (`a737202c4`), clean-export tarball 3,971,754 B to 3,222,746 B; see `methodology/CHANGELOG.md` (S1035 DONE) for the measurements. The body below is the dated record as written; it was not edited.
 
 **Date:** 2026-09-19 (Session 727)
 **Trigger:** `BACKLOG.md` Up Next item "Reduce the built package (source tarball) size toward
