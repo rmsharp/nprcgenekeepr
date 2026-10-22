@@ -23,7 +23,7 @@ character string, that runs when the diagram is clicked. The Shiny
 application passes one that sends the clicked animal to the server.}
 }
 \value{
-A \code{visNetwork} htmlwidget, 500 pixels tall, 45 more for each
+A \code{visNetwork} widget, 500 pixels tall, 45 more for each
 affected condition past the first (at most four are drawn).
 }
 \description{
@@ -38,8 +38,8 @@ and twin lines), each multi-condition symbol split into its colored
 sections, the slash through each deceased animal's symbol, a canvas that
 grows with the number of conditions, the \strong{Export Diagram (PNG)}
 button, a \dQuote{Select by id} box that lists the animals, and the
-highlight on hover. The sections and the slash are painted by the widget's
-own drawing script, so they appear wherever the widget is shown: in the
+highlight on hover. The sections and the slash are painted by a drawing
+script inside the widget, so they appear wherever the widget is shown: in the
 RStudio viewer, in an R Markdown or Quarto document, or in a web page saved
 with \code{htmlwidgets::saveWidget()}.
 }
