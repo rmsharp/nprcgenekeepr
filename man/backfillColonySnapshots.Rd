@@ -145,9 +145,11 @@ that day, so a twin born later, or one who left and has no descendants, no
 longer makes the date fail. An identifier that is in no pedigree at all is a
 mistake and stops the function before any date is built.
 
-Limits: today's parentage is used for every date, so a parent identified
-later is treated as known earlier; and the effective sizes follow the
-definition of a living breeder in \code{\link{calcNeSexRatio}}.
+Limits: today's parentage and today's genotypes are used for every date, so
+a parent identified later is treated as known earlier; the effective sizes
+follow the definition of a living breeder in
+\code{\link{calcNeSexRatio}}; and two close dates can differ only by
+gene-drop sampling.
 }
 \examples{
 ped <- nprcgenekeepr::qcPed
