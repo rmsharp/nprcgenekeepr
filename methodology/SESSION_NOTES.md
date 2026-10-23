@@ -98,41 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1040 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Finish #170: Slice 4"; strict TDD, the scope question, the notice question and every phase gate put to the owner
-with `AskUserQuestion`):** Slice 4 of the retrospective colony-snapshot backfill, GitHub issue #170, the words (design `docs/planning/retrospective-snapshot-backfill-plan.md` section
-5.4). Nine places, one sentence each, approved as drafted: the colony manager guide's Genetic-Health Trends section (`vignettes/articles/colony-manager-guide.qmd:1264-1310`: "four
-parts", item 4, the limits paragraph, the unknown-fate sentence), `NEWS.Rmd:397-403` and `NEWS.md`, the help's Limits paragraph (`R/backfillColonySnapshots.R:68-72`), and three panel
-wordings (`R/modSnapshotTrends.R:122,365,418,456`): "1 snapshot (2014-01-01)", the notice shows each note once with no count, and a note under Dates not built until a build has run.
-**Owner call after a finding:** my draft "this note came up on 2 dates" was false, because "(2 in all)" counted notes and one date can raise a note twice; the owner took "each note
-once, no count". Issue #170 is closed (comment citing the ledger).
-**Commits:** claim `02e1d1797`, RED `98ba3f7b5`, GREEN `fc980f93f` (guide), `d363b54e1` (NEWS), `ee6bd5afc` (help), `ed83d424e` (panel), REFACTOR `38d2a34cf` (test code only: the
-guide-section reader and the build mock each merged from two copies), docs `31c577781`, close-out next. Not pushed.
-**Verified:** 29 new tests (19 in `test_earlierSnapshotsDocs.R`, 10 in `test_modSnapshotTrends.R`; RED: 20 failing, 9 controls); full unfiltered suite 450 files 4,279 tests 14,792
-expectations (S1039: 14,699) 0 failed 0 errors 197 skipped 8 warnings, identical after REFACTOR; `lintr::lint_package()` 0; `R CMD check` 0/0/0 (default build; `--no-build-vignettes`
-adds two vignette warnings); browser tier on a scratch install 24 of 24; mutation check of the new code 7 of 8 breaks killed (the survivor is the 200-character cut of a note, never
-pinned); ratchet 1/1 (results `62d0de7f808a`, tarball 3,265,296 B). Citation checklist N/A (the counts are not a new statistic).
-**Pictures:** element pictures of the Build box (one date), the Earlier Snapshots tab before and after a build, and the page with the notice were opened for the owner before the long
-tests; the first four viewport pictures showed none of the three changes (below the fold).
-**Handoff evaluation of S1039: 9/10.** Helped: Next item 1 named the whole scope (NEWS, the guide near :1264, the B12 limits and the UNKNOWN sentence, one proposed sentence per place
-and at most one question, the three wording points, close #170 with a comment citing the ledger); accurate line cites (`R/modSnapshotTrends.R` cost line :337, Build :367,
-`describeBackfillCost` :440); the `recordNotifications()` gotcha; a Phase 0 picture that matched (ledgers at HEAD, CI 10 of 10). Missing: that the 2 in "(2 in all)" counts warnings, not
-dates (the handoff's wording led to a false draft sentence); that the #170 block held the only mention of the `a2interactive.Rmd` pass, so it needed extracting before the block came
-off. Wrong: nothing found. ROI: high.
-**Self: 8/10.** + claimed first; measured before asking (the three states printed, the UNKNOWN claim run on the example, the genotype claim read in the code); found my own false
-sentence before RED and re-asked once; mutation check, pictures before the long tests, browser tier, `R CMD check` rerun to the default build; REFACTOR proved identical on 14 of 14
-headings; kept the 5-file cap. - the false sentence reached the owner first (measure what a number counts before drafting: Learning 1006); three picture runs (a viewport shot of a tall
-page; the wrong dropdown value); one background launch with `&` died silently; one harness nudge for silence during the picture runs. Learning 1006.
-**Gotchas:** take an element picture of anything below the fold (`app$run_js()` an id, `get_screenshot(selector = ...)`, remove `.shiny-notification` first); a selectize input lists
-only its selected choice in the DOM; put the command itself in `run_in_background`, never a trailing `&`; `testServer()` says "referenced an output that hasn't been defined" for a
-missing output (a good RED); NEWS.md writes `\#170` (strip backslashes in a test); the guide-reading tests skip in a built package; `helper-guideSections.R` is the one guide-section
-reader; the failed-dates note says 'skipped' in the panel (`BACKLOG.md:33`). 143 commits ahead of origin at Phase 0, 152 after the close-out, not pushed.
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Issue #36 check (READY, Effort S; the issue cites `R/agePyramidPlot.R`, which does not exist, no R
-file mentions chimpanzees, `R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`). (2) The earlier-snapshots follow-ups (`BACKLOG.md:33-50`, five threads; the `a2interactive.Rmd`
-pass and the chart's missing-value notice are READY, Effort S each; the 'skipped' word is a DECISION). (3) The `BACKLOG.md` compression pass (READY, Effort L, recurring,
-`BACKLOG.md:133`; 243 lines). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only, `BACKLOG.md:172`).
+### What Session 1041 Did
+**Deliverable:** Issue #36 check (GitHub issue #36, "Add chimpanzee-specific age pyramid plot settings"): decide whether the issue is still valid against the current
+source (the issue cites `R/agePyramidPlot.R:68-71`, which does not exist; the pyramid code is `R/getPyramidPlot.R`, axis ticks at `:94-98`) (owner pick at the
+Phase 0 picker, item 1 of 4, "Issue #36 check") (IN PROGRESS)
+**Started:** 2026-10-22 23:12 CDT
+**Status:** Session claimed. Work beginning (Phase 1 scoping; no TDD phase declared yet; read-only unless the verdict owes code, which would go through the RED gate).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1039 (condensed S950 to S1040; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1040 (condensed S950 to S1041; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1040: Slice 4 of the retrospective colony-snapshot backfill, #170, the words (owner pick, "Finish #170: Slice 4"; strict TDD, the scope question, the notice question and every gate put to
+the owner): nine places, one sentence each, approved as drafted: the colony manager guide's Genetic-Health Trends section (`vignettes/articles/colony-manager-guide.qmd:1264-1310`),
+`NEWS.Rmd:397-403` and `NEWS.md`, the `backfillColonySnapshots()` Limits paragraph (`R/backfillColonySnapshots.R:68-72`) and three panel wordings (`R/modSnapshotTrends.R:122,365,418,456`).
+**Owner call after a finding:** my draft "came up on 2 dates" was false ("(2 in all)" counted notes, and one date can raise a note twice); the owner took "each note once, no count". #170
+closed. Claim `02e1d1797`, RED `98ba3f7b5`, GREEN `fc980f93f` `d363b54e1` `ee6bd5afc` `ed83d424e`, REFACTOR `38d2a34cf` (test code only), docs `31c577781`, close-out `89267ecaa`; full suite
+450 files 4,279 tests 0 failed 0 errors, browser tier 24 of 24; evaluation of S1039 9/10, self 8/10 (Learning 1006). **Gotchas kept:** take an element picture of anything below the fold
+(`app$run_js()` an id, `get_screenshot(selector = ...)`, remove `.shiny-notification` first); put the command itself in `run_in_background`, never a trailing `&`; NEWS.md writes `\#170`;
+`helper-guideSections.R` is the one guide-section reader; the panel says 'skipped' for failed dates (`BACKLOG.md:33`). Follow-ups left: `BACKLOG.md:33-50`.
 S1039: Slice 3 of the retrospective colony-snapshot backfill, #170 (owner pick, "Slice 3: app button"; strict TDD, every gate and both design calls put to the owner): the Genetic-Health
 Trends tab has a "Build Earlier Snapshots" box (Start year, a cost line, the button) and an "Earlier Snapshots" tab; the button calls `backfillColonySnapshots()` with
 `pedigreeResults$processedPedigree`, the run's `guIter`, `guThresh` and `snapshotSource$reportArgs` (`R/modSnapshotTrends.R:319-430`, `R/modGeneticValue.R:355`, `R/appServer.R:531`).
