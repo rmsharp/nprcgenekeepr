@@ -110,6 +110,59 @@ test_that("E2E: Genetic-Health Trends generates a snapshot from a live GVA run, 
   deltaOut <- utils::read.csv(deltaPath, stringsAsFactors = FALSE)
   expect_true("comparabilityFlag" %in% names(deltaOut))
 
+  # ---- Build earlier snapshots (issue #170 Slice 3) ---------------------------
+  ## The panel rebuilds past 1 Januaries from the studbook's birth and exit
+  ## dates with the full pedigree and the settings of the analysis run above
+  ## (100 iterations). These steps are asserted, not skipped: the panel is the
+  ## deliverable, and a missing button must fail. The example colony's default
+  ## series runs 1966-01-01 to 2014-01-01; starting in 2012 builds three dates.
+  expect_true(click_element_safe(app, "a[data-value='Earlier Snapshots']"),
+              info = "the Earlier Snapshots tab exists")
+  expect_true(
+    wait_for_dt_rendered(app, "#snapshotTrends-backfillSupportTable",
+                         timeout = 30000),
+    info = "the counts table renders before any build"
+  )
+  supportHtml <- paste(
+    get_html_safe(app, "#snapshotTrends-backfillSupportTable"),
+    collapse = " "
+  )
+  expect_match(supportHtml, "nLiving", fixed = TRUE)
+  expect_match(supportHtml, "nPossiblyAlive", fixed = TRUE)
+
+  app$set_inputs(`snapshotTrends-backfillStart` = "2012-01-01", wait_ = FALSE)
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  expect_true(click_element_safe(app, "#snapshotTrends-buildBackfill"),
+              info = "the Build earlier snapshots button exists and is clickable")
+
+  builtHistory <- download_csv_expect(app, "snapshotTrends-downloadHistory",
+                                      "history after Build earlier snapshots")
+  if (!is.null(builtHistory)) {
+    rebuilt <- builtHistory[builtHistory$membershipRule == "reconstructedLiving", ]
+    expect_identical(sort(as.character(rebuilt$snapshotDate)),
+                     c("2012-01-01", "2013-01-01", "2014-01-01"))
+    ## the provenance is the analysis's: the 100 iterations set above
+    expect_identical(unique(rebuilt$guIter), 100L)
+    ## the history already there (the fixture and the generated snapshot) stays
+    expect_true("wholePedigree" %in% builtHistory$membershipRule)
+    expect_gt(nrow(builtHistory), nrow(rebuilt))
+  }
+
+  ## a second click adds nothing: the three dates are already there
+  expect_true(click_element_safe(app, "#snapshotTrends-buildBackfill"),
+              info = "the button can be clicked again")
+  againHistory <- download_csv_expect(app, "snapshotTrends-downloadHistory",
+                                      "history after a second Build")
+  if (!is.null(againHistory) && !is.null(builtHistory)) {
+    expect_identical(nrow(againHistory), nrow(builtHistory))
+  }
+
+  ## the rebuilt line is a series of its own on the trend chart
+  expect_true(click_element_safe(app, "a[data-value='Trends']"))
+  expect_match(get_html_safe(app, "#snapshotTrends-trendPlot"),
+               "shiny-bound-output",
+               info = "the trend plot renders with the rebuilt series")
+
   ## Neither the new module nor the snapshotSource wiring may throw a JS
   ## console error. Pre-existing, unrelated console noise (e.g. shinyBS) is
   ## deliberately not asserted away here, matching prior E2E precedent.

@@ -112,8 +112,9 @@ moduleContractServers <- list(
   ),
   modSnapshotTrends = list(
     server = modSnapshotTrendsServer,
-    args = list(snapshotSource = shiny::reactive(NULL)),
-    names = c("history", "deltas", "isReady")
+    args = list(snapshotSource = shiny::reactive(NULL),
+                fullPedigree = shiny::reactive(NULL)),
+    names = c("history", "deltas", "isReady", "backfillSupport")
   )
 )
 
