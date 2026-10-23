@@ -49,11 +49,15 @@ snapshotFunctions <- c("createColonySnapshot", "appendColonySnapshot",
                        "checkSnapshotHistory", "readSnapshotHistory",
                        "calcSnapshotDeltas", "plotSnapshotTrends")
 
+## Which lines sit inside a code chunk, its opening fence included.
+insideChunk <- function(lines) {
+  cumsum(grepl("^```", lines)) %% 2L == 1L
+}
+
 ## The line numbers of the "## " headings that are headings: a line inside a
 ## code chunk that starts with "## " is an R comment.
 sectionHeadingLines <- function(lines) {
-  insideChunk <- cumsum(grepl("^```", lines)) %% 2L == 1L
-  which(grepl("^## ", lines) & !insideChunk)
+  which(grepl("^## ", lines) & !insideChunk(lines))
 }
 
 ## The lines of the section, from its heading to the line before the next
@@ -70,8 +74,7 @@ snapshotSection <- function() {
 
 ## The section's text outside its code chunks and without its inline R code.
 sectionProse <- function(section) {
-  insideChunk <- cumsum(grepl("^```", section)) %% 2L == 1L
-  prose <- section[!insideChunk & !grepl("^```", section)]
+  prose <- section[!insideChunk(section) & !grepl("^```", section)]
   gsub("`r [^`]*`", "", prose)
 }
 
