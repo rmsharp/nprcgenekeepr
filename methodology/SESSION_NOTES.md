@@ -98,34 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1041 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Issue #36 check"; read-only, no code, no TDD phase beyond PRE-RED):** the verdict on GitHub issue #36
-("Add chimpanzee-specific age pyramid plot settings"): **already solved.** The owner picked "Close #36 as already solved" (over "close it and add one guarding test" and
-"keep it open, reword it"), and #36 is closed (completed, comment with the evidence). Open issues: 10 to 9.
-**Evidence:** `R/agePyramidPlot.R` was an unexported, zero-caller helper whose `gap`, `laxlab`, `raxlab` arrived as arguments; `f78162106` (2026-07-06, S285) deleted it as a
-duplicate of `getPyramidPlot()`. The TODO's numbers were the count axis ("Number of Animals"), not age. The live plot sizes age bands from the oldest animal
-(`R/getPyramidPlot.R:62-73`) and the count ticks and gap from the largest bar (`:76`, `:94-98`): an oldest animal of 55 gave 28 age bands, counts 0-10 by 2 for 60 animals and
-0-40 by 8 for 600, no label collisions, also at the app's default 600 px. The species table names `"CHIMPANZEE"`; no `"PT"` code exists in `R/`.
-**Commits:** claim `ee41c077c`, close-out next. Not pushed (154 ahead of origin after the close-out; 152 at Phase 0). No code changed, so the suite was not re-run (S1040: 450 files,
-4,279 tests, 0 failed 0 errors); ratchet 1/1 (results `6cc4bc336aaa`).
-**Handoff evaluation of S1040: 9/10.** Helped: Next item 1 named three checkable facts (the file missing, no R file mentioning chimpanzees, ticks at `R/getPyramidPlot.R:94-98`),
-all true when re-measured at Phase 0; "the owner closes issues" was right (I asked); the `BACKLOG.md` cites (`:33-50`, `:133`, `:172`, 243 lines) and "152 ahead" all matched.
-Missing: why the file does not exist (deleted in S285) and that the TODO sets the count axis, found with `git log -S`, the deleted file and one render. Wrong: nothing found. ROI: high.
-**Self: 8/10.** + claimed first; re-measured the handoff's #36 claim before it reached the picker text; found the cause (the deletion commit) before building anything; rendered
-four colonies plus the app's default size and looked at each before saying "clean"; opened the picture for the owner before the question; one question with the comparison table and the
-recommendation first; closed the issue only on the explicit pick; 4-file close-out. - Phase 0 ran 12 calls before its first progress sentence (rule: 4-6); the first claim script
-had leftover scaffolding (a dead line, an `or True` assert), cleaned before it ran; one claim-stub line was 386 B against the 280 B ceiling, caught by the budget check. Learning 1007.
-**Gotchas:** `git log --all --oneline -S'<a comment line from the issue>'` finds the commit that deleted a file an issue cites; `git show <commit>^:<path>` reads it. `R/modPyramid.R`'s
-`renderPlot()` passes no `res` or width (72 dpi, container width; height from the slider, default 600, range 400-1500), so `png(800, 600, res = 72)` stands in for the app's default
-view, a function-level render and not an app capture. `tests/testthat/test_getPyramidPlot.R` has 2 tests and both only check for a "recordedplot": nothing pins that the axes follow the
-colony; the owner declined the guarding test, so do not re-offer it. One cosmetic oddity was shown inside the third #36 option and not taken (a largest bar of 134 gives ticks every 27:
-0, 27, ... 135); it is not in `BACKLOG.md`, do not file it unprompted. 154 commits ahead at close-out; the last push CI run is Oct 20, so CI has not seen S1019-S1041 (no push-only pick).
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) The earlier-snapshots follow-ups (`BACKLOG.md:33-50`; READY, Effort S per thread): the
-`a2interactive.Rmd` pass (dedicated), the trend chart's missing-value notice (strict TDD) or pinning the 200-character cut; the 'skipped' word is a DECISION; the large-colony cost is
-BLOCKED on a bigger studbook from the owner. (2) The `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:133`; 243 lines). (3) Owner-side: where to post the
-`close_out_report.py` write-up (draft only; the held-back sync is BLOCKED on it, `BACKLOG.md:172`). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
+### What Session 1042 Did
+**Deliverable:** The `a2interactive.Rmd` pass (`BACKLOG.md:33`, thread 1): demonstrate `backfillColonySnapshots()` and `previewBackfillSupport()` in
+`vignettes/a2interactive.Rmd` with `guIter = 10L`, and inventory any other exported function or new parameter since the last pass, per `docs/conventions/CLOSEOUT_CHECKLISTS.md`
+(owner pick at the Phase 0 picker, item 1 of 4, "Show backfill functions in tutorial") (IN PROGRESS)
+**Started:** 2026-10-22 23:30 CDT
+**Status:** Session claimed. Work beginning (Phase 1 scoping; PRE-RED; the inventory is read-only and the scope question goes to the owner before any RED).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1040 (condensed S950 to S1041; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1041 (condensed S950 to S1042; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1041: the issue #36 check ("Add chimpanzee-specific age pyramid plot settings"; owner pick, "Issue #36 check"; read-only, no code, no TDD phase past PRE-RED): verdict already solved;
+the owner picked "Close #36 as already solved" (over a guarding test and a reword) and #36 is closed, open issues 10 to 9. `R/agePyramidPlot.R` was an unexported zero-caller helper that
+`f78162106` (S285) deleted as a duplicate of `getPyramidPlot()`; the TODO's numbers were the count axis, not age. The live plot sizes age bands from the oldest animal
+(`R/getPyramidPlot.R:62-73`) and count ticks and gap from the largest bar (`:76`, `:94-98`); no collisions at the app's default 600 px. Claim `ee41c077c`, close-out `dc2aea404`; no code
+changed, suite not re-run (S1040: 450 files 4,279 tests 0 failed 0 errors); evaluation of S1040 9/10, self 8/10 (Learning 1007). **Gotchas kept:** `git log --all --oneline -S'<comment line
+from the issue>'` finds the commit that deleted a file an issue cites; `tests/testthat/test_getPyramidPlot.R` has 2 tests that only check for a "recordedplot" and the owner declined a
+guarding test, so do not re-offer it; a largest bar of 134 gives ticks every 27 (not filed; do not file unprompted).
 S1040: Slice 4 of the retrospective colony-snapshot backfill, #170, the words (owner pick, "Finish #170: Slice 4"; strict TDD, the scope question, the notice question and every gate put to
 the owner): nine places, one sentence each, approved as drafted: the colony manager guide's Genetic-Health Trends section (`vignettes/articles/colony-manager-guide.qmd:1264-1310`),
 `NEWS.Rmd:397-403` and `NEWS.md`, the `backfillColonySnapshots()` Limits paragraph (`R/backfillColonySnapshots.R:68-72`) and three panel wordings (`R/modSnapshotTrends.R:122,365,418,456`).
