@@ -30,33 +30,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health
-      monitoring -- issue #170, design approved (S1036), Slices 1-3 of 4 DONE
-      (S1037, S1038, S1039); next Slice 4, READY, Effort M, its own session**
-      (2026-10-22; scope ruled by the owner: an exported `backfillColonySnapshots()`
-      plus a "Build earlier snapshots" button on the Genetic-Health Trends tab that
-      calls it) -- design, measurements and slices:
-      `docs/planning/retrospective-snapshot-backfill-plan.md` (sections 5.1-5.3
-      hold what Slices 1-3 corrected). **Done:** the rule `reconstructedLiving`
-      and the exported function (`R/backfillColonySnapshots.R`; twin pairs cut to
-      each date), the exported `previewBackfillSupport()` (the same counts table
-      without the gene drop), `snapshotSource$reportArgs`, the dashed line and
-      caption, and the "Build Earlier Snapshots" box and "Earlier Snapshots" tab on
-      the Trends tab (`R/modSnapshotTrends.R`), 24 browser expectations. **Slice 4
-      (documentation and close-out), owed:** the `NEWS.Rmd` entry (deferred at the
-      owner's word), the colony-manager guide section
-      (`vignettes/articles/colony-manager-guide.qmd` near :1264, the B12 limits in
-      plain words and the sentence on UNKNOWN-fate ancestors), the
-      `a2interactive.Rmd` pass (dedicated, later), closing #170; the citation
-      checklist is N/A (the counts are not a new statistic), to be recorded.
-      **Wording the owner writes (S1039 pictures):** a build of one date reads
-      "1 snapshots"; the warning notice says "(2 in all)" and shows one distinct
-      text; "Dates not built" is an empty heading before any build. **Not yet
-      checked:** a colony larger than the 3,694-row example at 1,000 iterations
-      (10 dates at 100 iterations took 5.3 s there). Not part of #170: the trend
-      chart prints ggplot's missing-value notice to the console when a metric is NA
-      (older than this slice; `na.rm = TRUE` in `plotSnapshotTrends()` would
-      silence it).
+- [ ] **Earlier-snapshots follow-ups after #170 (five small threads, extracted S1040 when the
+      #170 block came off; #170 is closed)** -- design and what was built:
+      `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4. (1) **The
+      `a2interactive.Rmd` pass** (READY, Effort S, a dedicated pass per
+      `docs/conventions/CLOSEOUT_CHECKLISTS.md`): demonstrate `backfillColonySnapshots()` and
+      `previewBackfillSupport()` with `guIter = 10L`, and inventory any other exported function
+      or new parameter since the last pass. (2) **Build cost on a larger colony** (BLOCKED --
+      needs a studbook above 3,694 rows from the owner, Effort S): the cost line's 4 seconds per
+      1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`) is measured up to
+      100 iterations on a 3,694-row colony, so a bigger colony at 1,000 iterations is unmeasured.
+      (3) **The trend chart's console notice** (READY, Effort S, strict TDD, older than #170):
+      `plotSnapshotTrends()` lets ggplot print "Removed rows containing missing values" when a
+      metric is NA (a 10-iteration build); `na.rm = TRUE` would silence it. (4) **A script word in
+      the panel's notice** (DECISION NEEDED, Effort S): the function's failed-dates warning says
+      "listed in 'skipped'" and the panel shows it as is, while its table is headed "Dates not
+      built"; reword the message for both readers, or leave it. (5) **An unpinned limit** (READY,
+      Effort S): the panel's notice cuts each note at 200 characters
+      (`substr(notes, 1L, 200L)`) and no test pins it (a mutation check in S1040 survived it).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE

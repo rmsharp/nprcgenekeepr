@@ -177,9 +177,9 @@ inherit it. The closure test in §5 Slice 1 is what catches it.
 | B7 | Dates already in the history are skipped and reported, never overwritten. | Built S1038 (§5.2) |
 | B8 | A failing date is reported, never silent and never fatal to the others. | Built S1038 (§5.2) |
 | B9 | `guIter` and `guThresh` are required, no defaults. | Follows S758 |
-| B10 | The app panel: full pedigree, the last analysis's settings, a preview before the run. | Built S1039 (§5.3); the wording is still the owner's (Slice 4) |
+| B10 | The app panel: full pedigree, the last analysis's settings, a preview before the run. | Built S1039 (§5.3); the three wordings built S1040 (§5.4) |
 | B11 | One shared helper for "prepare the analysis pedigree". | Recommended; ratify at Slice 1 REFACTOR |
-| B12 | Known limits stated, not engineered around. | Recommended |
+| B12 | Known limits stated, not engineered around. | Stated in the guide and the help, S1040 (§5.4) |
 
 **B1.** See the status line. It also fixes the order of work: the function first, the button
 second, so the app can never do anything the script cannot (parity promise).
@@ -331,6 +331,7 @@ near `:1264`), the B12 limits in plain words, `NEWS.Rmd` (release-state wording)
 `_pkgdown.yml` reference entry, the citation checklist (expected N/A: no new displayed statistic,
 recorded not assumed), `a2interactive.Rmd` left for its dedicated pass, and the issue closed.
 Wording is written as one proposed sentence per place for the owner to edit.
+**Built in S1040:** see §5.4.
 
 ### 5.1 Corrections found building Slice 1 (S1037)
 
@@ -474,6 +475,42 @@ calls below with `AskUserQuestion`.
    install (24 browser expectations pass); it cannot show how the panel feels on a build of several
    minutes.
 
+### 5.4 Decided and found building Slice 4 (S1040)
+
+Built in S1040 (issue #170): claim `02e1d1797`, RED `98ba3f7b5`, GREEN `fc980f93f` (guide),
+`d363b54e1` (NEWS), `ee6bd5afc` (help) and `ed83d424e` (the three app wordings), REFACTOR
+`38d2a34cf` (test code only); the owner approved every gate and the sentences below with
+`AskUserQuestion`. With this slice the issue is closed.
+
+1. **Nine places, one sentence each.** The guide's Genetic-Health Trends section (a fourth workflow
+   item; a paragraph on the B12 limits; a sentence on an animal the studbook lists as neither alive
+   nor departed), `NEWS.Rmd` and `NEWS.md` (the button; the two functions for script users), the
+   help's Limits paragraph (today's genotypes and gene-drop sampling are added to the two limits it
+   had), and three app wordings: the cost line for one date reads "1 snapshot (2014-01-01)", the
+   warning notice shows each different note once, and "Skipped dates are listed here after a build."
+   stands under Dates not built until a build has run. The guide stays text-only, as its callout says.
+2. **One drafted sentence was false and was found before RED.** The notice's "(2 in all)" counts
+   notes, not dates: one date can raise the same note twice (one date at 10 iterations gave 2 notes;
+   three dates gave 2 notes from 1 date). "This note came up on 2 dates" would have been wrong. The
+   owner chose to show each different note once with no count (three at most). The failed-dates note
+   says 'skipped', a script word the panel never shows; it is the function's own message and stays.
+3. **The B12 claims were checked, not repeated.** On the jmac example `2NTIGG` and `4R3TIJ` (status
+   UNKNOWN, no exit date, named only as dams) are living breeders to `getLivingBreeders()` (it reads
+   `is.na(exit)`) but are not in `nLiving` (339 at the export date); the guide says so. `reportGV()`
+   passes the pedigree's genotype columns to `geneDrop()` (`getGVGenotype()`), so "today's genotypes
+   are used for every date" holds whenever the pedigree has them.
+4. **Verified.** Full suite 450 files, 4,279 tests, 14,792 expectations, 0 failed, 0 errors, before
+   and after REFACTOR; lint 0; `R CMD check` 0/0/0; the browser tier 24 of 24 on a scratch install;
+   element pictures of the Build box (one date), the Earlier Snapshots tab before and after a build
+   and the notice, opened for the owner (a viewport picture of the tall page showed none of the three
+   changes, so each was taken as an element). Mutation check of the new code: 7 of 8 single-line
+   breaks killed; the survivor is the 200-character cut of each note, existing behavior that no test
+   pins.
+5. **Left, as one `BACKLOG.md` item.** The `a2interactive.Rmd` pass for the two new functions, the
+   build cost on a colony larger than the 3,694-row example at 1,000 iterations, the trend chart's
+   missing-value notice (`na.rm = TRUE` in `plotSnapshotTrends()`), the 'skipped' word, and the
+   unpinned 200-character cut.
+
 ---
 
 ## 6. Impact analysis
@@ -488,7 +525,7 @@ calls below with `AskUserQuestion`.
 | `plotSnapshotTrends()`, `calcSnapshotDeltas()` | Style only (B3); no logic change. | Slice 3. |
 | `DESCRIPTION` | Unchanged. | Re-confirm at each close-out. |
 | CRAN write policy | No new write path. | Reviewers check. |
-| `NEWS.Rmd`, guide, `_pkgdown.yml` | New entries. | Slice 4. |
+| `NEWS.Rmd`, guide, `_pkgdown.yml` | New entries. | Done: `_pkgdown.yml` in Slice 1, `NEWS.Rmd` and the guide in Slice 4 (S1040). |
 
 ---
 
