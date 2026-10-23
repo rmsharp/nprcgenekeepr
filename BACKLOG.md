@@ -31,24 +31,32 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       them rather than copying them from here.
 
 - [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health
-      monitoring -- issue #170, design approved (S1036), Slices 1 and 2 of 4 DONE
-      (S1037, S1038); next Slice 3, READY, Effort L, each slice its own session**
+      monitoring -- issue #170, design approved (S1036), Slices 1-3 of 4 DONE
+      (S1037, S1038, S1039); next Slice 4, READY, Effort M, its own session**
       (2026-10-22; scope ruled by the owner: an exported `backfillColonySnapshots()`
       plus a "Build earlier snapshots" button on the Genetic-Health Trends tab that
       calls it) -- design, measurements and slices:
-      `docs/planning/retrospective-snapshot-backfill-plan.md` (sections 5.1 and 5.2
-      hold what Slices 1 and 2 corrected). **Done:** the rule `reconstructedLiving`
-      and the exported function (`R/backfillColonySnapshots.R`): dates or a yearly
-      series, undated parents counted from their first dated offspring, animals not
-      listed as living never counted, a support table, skips for dates already in
-      `existingHistory`, failing dates reported in `skipped`. **Slice 3 (the app
-      button), put to the owner first:** the panel shows the support table before the
-      run, but no script-callable function gives it without the gene drop, so either
-      one is exported (design B1's parity promise) or the owner accepts an app-only
-      preview. **Owed at Slice 4:** the `NEWS.Rmd` entry (deferred at the owner's
-      word), the guide section, the `a2interactive.Rmd` pass, closing #170. **Not yet
-      checked:** cost on a colony larger than the 2,590-animal example (8 s for 53
-      dates at 10 iterations there).
+      `docs/planning/retrospective-snapshot-backfill-plan.md` (sections 5.1-5.3
+      hold what Slices 1-3 corrected). **Done:** the rule `reconstructedLiving`
+      and the exported function (`R/backfillColonySnapshots.R`; twin pairs cut to
+      each date), the exported `previewBackfillSupport()` (the same counts table
+      without the gene drop), `snapshotSource$reportArgs`, the dashed line and
+      caption, and the "Build Earlier Snapshots" box and "Earlier Snapshots" tab on
+      the Trends tab (`R/modSnapshotTrends.R`), 24 browser expectations. **Slice 4
+      (documentation and close-out), owed:** the `NEWS.Rmd` entry (deferred at the
+      owner's word), the colony-manager guide section
+      (`vignettes/articles/colony-manager-guide.qmd` near :1264, the B12 limits in
+      plain words and the sentence on UNKNOWN-fate ancestors), the
+      `a2interactive.Rmd` pass (dedicated, later), closing #170; the citation
+      checklist is N/A (the counts are not a new statistic), to be recorded.
+      **Wording the owner writes (S1039 pictures):** a build of one date reads
+      "1 snapshots"; the warning notice says "(2 in all)" and shows one distinct
+      text; "Dates not built" is an empty heading before any build. **Not yet
+      checked:** a colony larger than the 3,694-row example at 1,000 iterations
+      (10 dates at 100 iterations took 5.3 s there). Not part of #170: the trend
+      chart prints ggplot's missing-value notice to the console when a metric is NA
+      (older than this slice; `na.rm = TRUE` in `plotSnapshotTrends()` would
+      silence it).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE

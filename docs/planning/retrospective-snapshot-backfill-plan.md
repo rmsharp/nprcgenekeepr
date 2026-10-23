@@ -168,16 +168,16 @@ inherit it. The closure test in §5 Slice 1 is what catches it.
 
 | # | Decision | Status |
 |---|---|---|
-| B1 | Scope: an exported function **and** an app button that calls it. | **Ruled by the owner, S1036** |
+| B1 | Scope: an exported function **and** an app button that calls it. | **Ruled by the owner, S1036**; the preview is exported too (S1039, §5.3) |
 | B2 | Method: blank later exits, set the population, same preparation as the app. | Evidence-determined (§2.2) |
-| B3 | Own rule name `reconstructedLiving`; never mixed with recorded rows. | Recommended |
+| B3 | Own rule name `reconstructedLiving`; never mixed with recorded rows. | Recommended; the dashed line and caption built S1039 (§5.3) |
 | B4 | Animals with no birth date: placed by their first dated offspring, else left out. | **Decided by the owner, S1038: "From first offspring"; an animal the studbook does not list as living (status UNKNOWN) never counts** (§5.2) |
 | B5 | Every date comes with a support report; no hidden floor. | Built S1038 (§5.2) |
 | B6 | Date grid and start date. | **Decided by the owner, S1038: the first 1 January with at least `minAnimals` (2) living animals** (§5.2) |
 | B7 | Dates already in the history are skipped and reported, never overwritten. | Built S1038 (§5.2) |
 | B8 | A failing date is reported, never silent and never fatal to the others. | Built S1038 (§5.2) |
 | B9 | `guIter` and `guThresh` are required, no defaults. | Follows S758 |
-| B10 | The app panel: full pedigree, the last analysis's settings, a preview before the run. | Recommended; wording is the owner's |
+| B10 | The app panel: full pedigree, the last analysis's settings, a preview before the run. | Built S1039 (§5.3); the wording is still the owner's (Slice 4) |
 | B11 | One shared helper for "prepare the analysis pedigree". | Recommended; ratify at Slice 1 REFACTOR |
 | B12 | Known limits stated, not engineered around. | Recommended |
 
@@ -324,6 +324,8 @@ a picture of the finished panel opened for the owner before the long tests. A ne
 file needs its line in `.github/workflows/shinytest2.yaml`. **Surface limit:** headless Chrome;
 it cannot show how the panel feels on a slow multi-minute build.
 
+**Built in S1039:** see §5.3.
+
 **Slice 4: documentation and close-out.** Colony Manager Guide section (`colony-manager-guide.qmd`
 near `:1264`), the B12 limits in plain words, `NEWS.Rmd` (release-state wording), the
 `_pkgdown.yml` reference entry, the citation checklist (expected N/A: no new displayed statistic,
@@ -413,6 +415,64 @@ Built in S1038 (issue #170): claim `387771996`, RED `b8d9bfa80`, GREEN `308cf7b0
    Slice 4's B12 sentence: an UNKNOWN-fate ancestor with no exit date still counts as a living
    breeder inside the estimators, which read the exit column as the app does, although it is not
    counted in `nAnimals`.
+
+### 5.3 Decided and found building Slice 3 (S1039)
+
+Built in S1039 (issue #170): claim `c367d2d9a`, RED `c40855ff7` and `ac656a2e6`, GREEN `f60a2a79b`,
+`2253ed0c9`, `fe4b4f696` and `0909df2e5` (a RED-test correction `84f11ed2a` and a caption fix
+`8757ecc10` between and after), REFACTOR `47e8d7a63`; the owner approved every gate and made the two
+calls below with `AskUserQuestion`.
+
+1. **The preview is exported (B1, section 5.2 item 8).** `previewBackfillSupport(ped, dates, from,
+   to, by, minAnimals)` returns the `support` table of the build for the same dates, counts only:
+   the 53 dates of the example take 0.04 s, so the panel calls it live. The owner chose it over an
+   app-only preview and over a table shown only after the build, so a script user sees what the app
+   shows. The build and the preview share one set of internal helpers (`assertBackfillPed()`,
+   `validateMinAnimals()`, `resolveBackfillDates()`, `supportForDates()`), so a preview always shows
+   the dates a build would use; 79 probe inputs (results and exact error messages) are identical
+   before and after that merge.
+2. **Declared twin pairs made every past date fail, and the function now cuts them to each date.**
+   `kinship()` stops with "All twinRelations id1/id2 values must be present in id" when a declared MZ
+   animal is not in the pedigree it is given. On a past date the trimmed pedigree holds only the
+   animals alive then and their ancestors, so a twin born later is missing: one declared pair (an
+   animal born 1995 with one born 2016) gave "No snapshot could be built" for both dates tried on
+   the example. The twin sidecar is one of the app's captured settings, so the panel would have hit
+   it. On each date the MZ groups (A-B and B-C make A, B, C, as in `kinship()`) are cut to the
+   animals in that date's pedigree and applied when two or more remain, so a group cut to its
+   present members still joins them; an id that is in no pedigree at all still stops once, before
+   any date, naming `twinRelations`. Dropping a pair with a missing animal loses nothing: it cannot
+   change anyone's kinship that day.
+3. **B10 as built.** The Genetic Value tab's `snapshotSource` gains `reportArgs`, the nine other
+   settings of the run (the species tables and defaults, kinship overrides, twin pairs, the three
+   ranking cutoffs), frozen with it like `guIter`. `modSnapshotTrendsServer(id, snapshotSource,
+   fullPedigree = reactive(NULL))` (the default follows `modGeneticValueServer`'s optional inputs;
+   `appServer` passes `pedigreeResults$processedPedigree`, never the focal-trimmed
+   `analysisPedigree`, and a test pins that) has a sidebar box (help text, a Start year list of the
+   1 Januaries of the default series with the first selected, a cost line, the button), an Earlier
+   Snapshots tab (the counts table, the dates not built) and one more returned reactive,
+   `backfillSupport`. Build does nothing before an analysis or a pedigree; otherwise it calls
+   `backfillColonySnapshots()` with the full pedigree, the run's `guIter`, `guThresh` and
+   `reportArgs`, the chosen start and the history held, under a progress bar. The build's warnings
+   are summarized in one warning notice, a failure is an error notice with the history untouched,
+   and a second click adds nothing (the dates are already there). The cost line says "n snapshots,
+   first to last, at G iterations each", about 4 seconds per 1,000 iterations on a colony of 2,590
+   animals, as an estimate scaled by the iterations only.
+4. **B3 as built.** `plotSnapshotTrends()` draws the `reconstructedLiving` line dashed and the
+   recorded rules solid, and the caption says "Dashed lines are rebuilt from studbook birth and exit
+   dates and today's parentage, not recorded at the time." The first picture of the real panel showed
+   that with the provenance note on the same line the caption ran off the plot's left edge, so each
+   note has a line of its own (found and fixed test-first, `8757ecc10`).
+5. **Measured.** On the browser tier's example colony (3,694 rows, a default series of 49 dates,
+   1966 to 2014), 10 dates at 100 iterations took 5.3 s, in line with the 4 s per 1,000 iterations
+   of section 2.5; a colony larger than that at 1,000 iterations is still unmeasured. The shipped
+   `qcPed` (280 animals) has a default series of 57 dates, 1961 to 2017.
+6. **Left for Slice 4 or the owner.** The wording points the pictures showed: a build of one date
+   reads "1 snapshots", the warning notice says "(2 in all)" and shows one distinct text, and "Dates
+   not built" is an empty heading before any build. Not part of #170: the trend chart prints
+   ggplot's "Removed rows containing missing values" to the console when a metric is NA (at low
+   iteration counts), a notice that predates this slice. **Surface:** headless Chrome on a scratch
+   install (24 browser expectations pass); it cannot show how the panel feels on a build of several
+   minutes.
 
 ---
 
