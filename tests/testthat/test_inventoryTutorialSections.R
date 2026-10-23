@@ -48,8 +48,8 @@
 ## in it is inline R, computed from the objects above, so the text cannot drift
 ## from the output.
 
-## sourceLines(), plainText(), chunkCode() and expectNames() are in
-## helper-pageText.R.
+## sourceLines(), plainText(), chunkCode(), expectNames(), insideChunk(),
+## sectionProse() and chunkOptionText() are in helper-pageText.R.
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
 
 places <- list(
@@ -97,11 +97,6 @@ places <- list(
   )
 )
 
-## Which lines sit inside a code chunk, its opening fence included.
-insideChunk <- function(lines) {
-  cumsum(grepl("^```", lines)) %% 2L == 1L
-}
-
 ## The line numbers of the "## " and "### " headings that are headings: a line
 ## inside a code chunk that starts with "## " is an R comment.
 headingLines <- function(lines) {
@@ -125,21 +120,6 @@ placeLines <- function(title, lines = tutorialLines()) {
   closing <- grep("^```\\{r elapsed-time[,}]", lines)
   if (length(closing) == 1L && closing > start) end <- min(end, closing - 1L)
   lines[start:end]
-}
-
-## A place's text outside its code chunks and without its inline R code.
-placeProse <- function(section) {
-  prose <- section[!insideChunk(section) & !grepl("^```", section)]
-  gsub("`r [^`]*`", "", prose)
-}
-
-## A chunk's header line and its "#|" option lines.
-chunkOptionText <- function(section, label) {
-  start <- grep(paste0("^```\\{r ", label, "[,}]"), section)
-  if (length(start) != 1L) return(character(0L))
-  body <- section[-seq_len(start)]
-  options <- body[cumsum(!startsWith(body, "#|")) == 0L]
-  c(section[start], options)
 }
 
 ## One place's chunks run once, in order, in a fresh environment, after the
@@ -213,7 +193,7 @@ test_that("each place names the functions and arguments it is about, in prose", 
     section <- placeLines(places[[key]]$title)
     expect_gt(length(section), 0L)
     ## The prose only: a name in a chunk's code does not count.
-    text <- plainText(placeProse(section))
+    text <- plainText(sectionProse(section))
     expectNames(text, places[[key]]$names, where = key)
   }
 })
@@ -261,7 +241,7 @@ test_that("the prose of the five places gives no number as a literal", {
   for (key in names(places)) {
     section <- placeLines(places[[key]]$title)
     expect_gt(length(section), 0L)
-    prose <- placeProse(section)
+    prose <- sectionProse(section)
     withDigits <- prose[grepl("[0-9]", prose)]
     expect_length(withDigits, 0L)
   }

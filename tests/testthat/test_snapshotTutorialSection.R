@@ -38,8 +38,8 @@
 ## inline R, computed from the objects above, so the text cannot drift from the
 ## output.
 
-## sourceLines(), plainText(), chunkCode() and expectNames() are in
-## helper-pageText.R.
+## sourceLines(), plainText(), chunkCode(), expectNames(), insideChunk(),
+## sectionProse() and chunkOptionText() are in helper-pageText.R.
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
 sectionTitle <- "## Colony Snapshots Over Time"
 chunkLabels <- c("snapshot-record", "snapshot-backfill", "snapshot-save-read",
@@ -48,11 +48,6 @@ snapshotFunctions <- c("createColonySnapshot", "appendColonySnapshot",
                        "backfillColonySnapshots", "previewBackfillSupport",
                        "checkSnapshotHistory", "readSnapshotHistory",
                        "calcSnapshotDeltas", "plotSnapshotTrends")
-
-## Which lines sit inside a code chunk, its opening fence included.
-insideChunk <- function(lines) {
-  cumsum(grepl("^```", lines)) %% 2L == 1L
-}
 
 ## The line numbers of the "## " headings that are headings: a line inside a
 ## code chunk that starts with "## " is an R comment.
@@ -70,21 +65,6 @@ snapshotSection <- function() {
   after <- headings[headings > start]
   end <- if (length(after) > 0L) after[1L] - 1L else length(lines)
   lines[start:end]
-}
-
-## The section's text outside its code chunks and without its inline R code.
-sectionProse <- function(section) {
-  prose <- section[!insideChunk(section) & !grepl("^```", section)]
-  gsub("`r [^`]*`", "", prose)
-}
-
-## A chunk's header line and its "#|" option lines.
-chunkOptionText <- function(section, label) {
-  start <- grep(paste0("^```\\{r ", label, "[,}]"), section)
-  if (length(start) != 1L) return(character(0L))
-  body <- section[-seq_len(start)]
-  options <- body[cumsum(!startsWith(body, "#|")) == 0L]
-  c(section[start], options)
 }
 
 ## The five chunks run once, in order, in a fresh environment, with every

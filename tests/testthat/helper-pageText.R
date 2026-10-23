@@ -10,7 +10,10 @@
 ## read a function's help in the two places it lives (manText(), roxygenText(),
 ## helpPlaces(), skipUnlessHelpInSourceTree()), and read the example of a man
 ## page (exampleLinesOf(); test_examples_invoke_documented_fn.R and
-## test_docsAuditLeftoverWording.R).
+## test_docsAuditLeftoverWording.R), and tell a section of a tutorial's code
+## chunks from its prose and read a chunk's option lines (insideChunk(),
+## sectionProse(), chunkOptionText(); test_snapshotTutorialSection.R and
+## test_inventoryTutorialSections.R).
 
 ## The lines of one tracked file of the source tree. The file sits outside a
 ## built package (.Rbuildignore'd or not installed), so the block skips where
@@ -141,3 +144,24 @@ skipUnlessHelpInSourceTree <- function(places) {
 }
 
 collapseSpace <- function(x) trimws(gsub("\\s+", " ", x))
+
+## Which lines of a .qmd or .Rmd sit inside a code chunk, its opening fence
+## included (test_snapshotTutorialSection.R, test_inventoryTutorialSections.R).
+insideChunk <- function(lines) {
+  cumsum(grepl("^```", lines)) %% 2L == 1L
+}
+
+## A section's text outside its code chunks and without its inline R code.
+sectionProse <- function(section) {
+  prose <- section[!insideChunk(section) & !grepl("^```", section)]
+  gsub("`r [^`]*`", "", prose)
+}
+
+## A chunk's header line and its "#|" option lines.
+chunkOptionText <- function(section, label) {
+  start <- grep(paste0("^```\\{r ", label, "[,}]"), section)
+  if (length(start) != 1L) return(character(0L))
+  body <- section[-seq_len(start)]
+  options <- body[cumsum(!startsWith(body, "#|")) == 0L]
+  c(section[start], options)
+}
