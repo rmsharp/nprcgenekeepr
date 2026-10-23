@@ -343,6 +343,25 @@ notificationsOfType <- function(seen, type) {
   Filter(function(note) identical(note$type, type), seen$all)
 }
 
+## A backfillColonySnapshots() that raises each of `notes` as a warning and
+## returns a complete history, for the rest of the calling test. A complete
+## history keeps the trend plot from raising a warning of its own.
+mockBuildWithNotes <- function(notes, .env = parent.frame()) {
+  complete <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
+  testthat::local_mocked_bindings(
+    backfillColonySnapshots = function(...) {
+      for (note in notes) {
+        warning(note, call. = FALSE)
+      }
+      list(history = complete, support = data.frame(),
+           skipped = data.frame(snapshotDate = as.Date(character(0L)),
+                                reason = character(0L)))
+    },
+    .package = "nprcgenekeepr",
+    .env = .env
+  )
+}
+
 ## -- UI: the panel's pieces ---------------------------------------------------
 
 test_that("modSnapshotTrendsUI has the Build Earlier Snapshots panel", {
@@ -676,17 +695,8 @@ test_that("a warning raised inside the build does not escape", {
   ## A complete history, so that redrawing the trend plot for it raises no
   ## warning of its own (ggplot2 reports the NA metrics of a 10-iteration
   ## build); only the build's two warnings are in play.
-  complete <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
-  testthat::local_mocked_bindings(
-    backfillColonySnapshots = function(...) {
-      warning("first note from the build")
-      warning("second note from the build")
-      list(history = complete, support = data.frame(),
-           skipped = data.frame(snapshotDate = as.Date(character(0L)),
-                                reason = character(0L)))
-    },
-    .package = "nprcgenekeepr"
-  )
+  mockBuildWithNotes(c("first note from the build",
+                       "second note from the build"))
 
   shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
     expect_no_warning(
@@ -785,25 +795,6 @@ test_that("the panel's cost line says 1 snapshot when the start year leaves one 
 })
 
 ## -- the warning notice -----------------------------------------------------------
-
-## A backfillColonySnapshots() that raises each of `notes` as a warning and
-## returns a complete history, for the rest of the calling test. A complete
-## history keeps the trend plot from raising a warning of its own.
-mockBuildWithNotes <- function(notes, .env = parent.frame()) {
-  complete <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
-  testthat::local_mocked_bindings(
-    backfillColonySnapshots = function(...) {
-      for (note in notes) {
-        warning(note, call. = FALSE)
-      }
-      list(history = complete, support = data.frame(),
-           skipped = data.frame(snapshotDate = as.Date(character(0L)),
-                                reason = character(0L)))
-    },
-    .package = "nprcgenekeepr",
-    .env = .env
-  )
-}
 
 ## The text of each warning notice one build gives when it raises `notes`.
 noticesOfBuildWith <- function(notes, .env = parent.frame()) {

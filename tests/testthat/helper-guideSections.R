@@ -2,10 +2,10 @@
 ## This file is part of nprcgenekeepr
 ##
 ## Shared by the tests that pin the wording of one "###" section of the colony
-## manager guide (test_earlierSnapshotsDocs.R; the same two readers sit inside
-## test_guideGroupsOutsidePedigreeWording.R until a later phase merges them).
-## The guide is build-ignored, so sourceLines() (helper-pageText.R) skips the
-## calling block in a built package and runs it from the source tree.
+## manager guide (test_guideGroupsOutsidePedigreeWording.R and
+## test_earlierSnapshotsDocs.R). The guide is build-ignored, so sourceLines()
+## (helper-pageText.R) skips the calling block in a built package and runs it
+## from the source tree.
 
 ## The paragraphs of one "###" section of the guide, each as one line of text
 ## with its white space collapsed. Fenced code is blanked first, so a comment

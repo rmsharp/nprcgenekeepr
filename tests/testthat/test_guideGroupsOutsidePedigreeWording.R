@@ -29,41 +29,10 @@
 ## runs. The "Export Current Group" stop in that state is a code finding, not
 ## guide wording (BACKLOG.md), so no block here touches it.
 
-pkg_root <- testthat::test_path("..", "..")
-guidePath <- file.path(pkg_root, "vignettes", "articles",
-                       "colony-manager-guide.qmd")
-
-# The paragraphs of one "###" section of the guide, each as one line of text
-# with its white space collapsed. Fenced code is blanked first, so a comment
-# line inside a chunk cannot end the section. A heading the guide lacks gives
-# character(0), so a block fails on its words, not on an error.
-guideSectionParagraphs <- function(heading) {
-  skip_if_not(file.exists(guidePath), "colony manager guide not present")
-  lines <- readLines(guidePath, warn = FALSE)
-  fence <- grepl("^```", lines)
-  lines[cumsum(fence) %% 2L == 1L | fence] <- ""
-  start <- which(lines == paste("###", heading))
-  if (length(start) != 1L) {
-    return(character(0))
-  }
-  later <- which(grepl("^#{2,3} ", lines) & seq_along(lines) > start)
-  end <- if (length(later) > 0L) min(later) - 1L else length(lines)
-  body <- lines[seq.int(start + 1L, end)]
-  blank <- !nzchar(trimws(body))
-  if (all(blank)) {
-    return(character(0))
-  }
-  paragraphs <- tapply(body[!blank], cumsum(blank)[!blank], paste,
-                       collapse = " ")
-  gsub("\\s+", " ", trimws(unname(paragraphs)))
-}
-
-# The one paragraph holding a piece of text, or "" when no paragraph or more
-# than one holds it, so a missing or doubled sentence fails on its words.
-onlyParagraphWith <- function(paragraphs, text) {
-  hit <- grep(text, paragraphs, fixed = TRUE)
-  if (length(hit) == 1L) paragraphs[hit] else ""
-}
+## guideSectionParagraphs() and onlyParagraphWith() are in
+## helper-guideSections.R (S1040: this file held them until the second test
+## file needing them arrived; the helper reads the guide with sourceLines(),
+## which skips a block when the guide is absent, as the old copy did).
 
 # The app's two sentences and the closing words place B ends with, each
 # written once. The two sections are read inside each block, never at the top
