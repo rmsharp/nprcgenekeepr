@@ -478,7 +478,9 @@ test_that("Build adds one reconstructedLiving row per date from the start year",
   skip_if_not_installed("shiny")
 
   shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
-    session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
+    suppressWarnings(
+      session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
+    )
     result <- session$getReturned()
     hist <- result$history()
     expect_true(result$isReady())
@@ -649,15 +651,15 @@ test_that("a second Build adds nothing: the dates are already there", {
   })
 })
 
-test_that("the warnings of a build are caught and summarized in one notification", {
+test_that("the warnings of a build are summarized in one notification", {
   skip_if_not_installed("shiny")
   seen <- recordNotifications()
 
   ## reportGV() warns on this fixture at 10 iterations (8 warnings across the
   ## six dates, measured S1039), and the function adds its own when a date
-  ## cannot be rebuilt: none may escape, and the reader gets one warning notice.
+  ## cannot be rebuilt: the reader gets one warning notice, not eight.
   shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
-    expect_no_warning(
+    suppressWarnings(
       session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
     )
     expect_identical(nrow(session$getReturned()$history()), 6L)
@@ -666,6 +668,36 @@ test_that("the warnings of a build are caught and summarized in one notification
   expect_length(noted, 1L)
   expect_match(noted[[1L]]$text, "Founder genome equivalents", fixed = TRUE)
   expect_length(notificationsOfType(seen, "error"), 0L)
+})
+
+test_that("a warning raised inside the build does not escape", {
+  skip_if_not_installed("shiny")
+  seen <- recordNotifications()
+  ## A complete history, so that redrawing the trend plot for it raises no
+  ## warning of its own (ggplot2 reports the NA metrics of a 10-iteration
+  ## build); only the build's two warnings are in play.
+  complete <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
+  testthat::local_mocked_bindings(
+    backfillColonySnapshots = function(...) {
+      warning("first note from the build")
+      warning("second note from the build")
+      list(history = complete, support = data.frame(),
+           skipped = data.frame(snapshotDate = as.Date(character(0L)),
+                                reason = character(0L)))
+    },
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    expect_no_warning(
+      session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
+    )
+    expect_identical(nrow(session$getReturned()$history()), 4L)
+  })
+  noted <- notificationsOfType(seen, "warning")
+  expect_length(noted, 1L)
+  expect_match(noted[[1L]]$text, "first note from the build", fixed = TRUE)
+  expect_match(noted[[1L]]$text, "second note from the build", fixed = TRUE)
 })
 
 test_that("a build that fails leaves the history as it was and is reported as an error", {
