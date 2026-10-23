@@ -13,7 +13,11 @@
 #' the analysis already loaded on the Genetic Value Analysis tab, review
 #' trend plots and a per-metric delta comparison (with the D4 comparability
 #' flag visible), and download both the updated history and the delta
-#' table.
+#' table. A "Build Earlier Snapshots" box rebuilds past 1 Januaries from the
+#' studbook's birth and exit dates (issue #170,
+#' \code{\link{backfillColonySnapshots}}), and an "Earlier Snapshots" tab shows
+#' what each of those dates rests on
+#' (\code{\link{previewBackfillSupport}}).
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #'
@@ -57,6 +61,20 @@ modSnapshotTrendsUI <- function(id) {
           selectInput(ns("deltaRule"), "Membership rule:", choices = NULL),
           selectInput(ns("deltaFrom"), "From:", choices = NULL),
           selectInput(ns("deltaTo"), "To:", choices = NULL)
+        ),
+        hr(),
+        wellPanel(
+          h5(icon("history"), "Build Earlier Snapshots"),
+          helpText(
+            "Rebuild snapshots for past 1 Januaries from the birth and exit",
+            "dates in the studbook, so a trend can be drawn now. They are",
+            "filed under their own rule, reconstructedLiving, and never mix",
+            "with recorded snapshots."
+          ),
+          selectInput(ns("backfillStart"), "Start year:", choices = NULL),
+          uiOutput(ns("backfillCostUI")),
+          actionButton(ns("buildBackfill"), "Build earlier snapshots",
+                       icon = icon("history"), class = "btn-primary btn-block")
         )
       ),
 
@@ -87,6 +105,21 @@ modSnapshotTrendsUI <- function(id) {
             DT::DTOutput(ns("deltaTable")),
             br(),
             downloadButton(ns("downloadDeltas"), "Download Delta Table")
+          ),
+
+          tabPanel(
+            "Earlier Snapshots",
+            icon = icon("history"),
+            br(),
+            h5("What each date rests on"),
+            helpText(
+              "Early dates rest on few animals and few recorded sires; read",
+              "these counts beside the trend."
+            ),
+            DT::DTOutput(ns("backfillSupportTable")),
+            br(),
+            h5("Dates not built"),
+            DT::DTOutput(ns("backfillSkippedTable"))
           )
         )
       )
@@ -103,6 +136,12 @@ modSnapshotTrendsUI <- function(id) {
 #' \code{\link{modGeneticValueServer}}'s \code{snapshotSource} return
 #' element), or erroring (shiny \code{req()} semantics) before any run has
 #' happened.
+#' @param fullPedigree reactive returning the full quality-controlled pedigree
+#' (the Pedigree tab's \code{processedPedigree}, never the focal-trimmed
+#' \code{analysisPedigree}, which would shrink every past population), or
+#' erroring (shiny \code{req()} semantics) before a studbook is loaded. Feeds
+#' the "Build Earlier Snapshots" box. Defaults to \code{reactive(NULL)}: no
+#' pedigree, so the box waits.
 #'
 #' @return A list with reactive components:
 #' \itemize{
@@ -113,7 +152,20 @@ modSnapshotTrendsUI <- function(id) {
 #'     to selectors.
 #'   \item \code{isReady} - logical: \code{TRUE} once \code{history} is
 #'     non-\code{NULL} (a history has been uploaded or generated).
+#'   \item \code{backfillSupport} - the table of what each date of the default
+#'     earlier-snapshot series rests on
+#'     (\code{\link{previewBackfillSupport}} of \code{fullPedigree()}),
+#'     independent of the chosen start year; erroring (\code{req()}) until a
+#'     pedigree is loaded.
 #' }
+#'
+#' The "Build Earlier Snapshots" button calls
+#' \code{\link{backfillColonySnapshots}} with the full pedigree, the
+#' \code{guIter}, \code{guThresh} and \code{reportArgs} of
+#' \code{snapshotSource()}, the chosen start year and the history already
+#' held, and adds nothing of its own to the numbers. It does nothing before an
+#' analysis has run. Warnings from the build are summarized in one
+#' notification; a failure is reported and leaves the history as it was.
 #'
 #' The generated snapshot's \code{membershipRule} is auto-derived from
 #' \code{snapshotSource()$ped$population} (issue #167 Slice 4, S760 owner
@@ -134,16 +186,18 @@ modSnapshotTrendsUI <- function(id) {
 #' @seealso \code{\link{modSnapshotTrendsUI}} for the user interface.
 #' @importFrom shiny moduleServer reactive reactiveVal observeEvent req
 #' @importFrom shiny renderUI helpText strong downloadHandler showNotification
-#' @importFrom shiny updateSelectInput renderPlot
+#' @importFrom shiny updateSelectInput renderPlot setProgress
 #' @importFrom DT renderDT
 #' @importFrom utils write.csv
 #' @family Shiny modules
 #' @export
-modSnapshotTrendsServer <- function(id, snapshotSource) {
+modSnapshotTrendsServer <- function(id, snapshotSource,
+                                    fullPedigree = reactive(NULL)) {
 
   moduleServer(id, function(input, output, session) {
 
     history <- reactiveVal(NULL)
+    skippedDates <- reactiveVal(NULL)
 
     signalReady <- function() {
       session$sendCustomMessage("setDataReady", list(
@@ -260,10 +314,141 @@ modSnapshotTrendsServer <- function(id, snapshotSource) {
       }
     )
 
+    # Issue #170 Slice 3: the counts every date of the default series rests
+    # on, the same table a script gets from previewBackfillSupport().
+    backfillSupport <- reactive({
+      req(fullPedigree())
+      previewBackfillSupport(fullPedigree())
+    })
+
+    observeEvent(backfillSupport(), {
+      dates <- backfillSupport()$snapshotDate
+      starts <- stats::setNames(as.character(dates), format(dates, "%Y"))
+      updateSelectInput(session, "backfillStart", choices = starts,
+                        selected = starts[[1L]])
+    })
+
+    # NULL until a start year is chosen: the function then starts its default
+    startDate <- reactive({
+      chosen <- input$backfillStart
+      if (is.null(chosen) || !nzchar(chosen)) NULL else as.Date(chosen)
+    })
+
+    output$backfillCostUI <- renderUI({
+      src <- tryCatch(snapshotSource(), error = function(e) NULL)
+      support <- tryCatch(backfillSupport(), error = function(e) NULL)
+      if (is.null(src)) {
+        return(helpText(
+          "Run Genetic Value Analysis to enable earlier snapshots."
+        ))
+      }
+      if (is.null(support)) {
+        return(helpText("Load a pedigree to enable earlier snapshots."))
+      }
+      start <- tryCatch(startDate(), error = function(e) NULL)
+      dates <- support$snapshotDate
+      if (!is.null(start)) {
+        dates <- dates[dates >= start]
+      }
+      helpText(describeBackfillCost(dates, src$guIter))
+    })
+
+    output$backfillSupportTable <- DT::renderDT({
+      support <- backfillSupport()
+      support$pctSireKnown <- round(support$pctSireKnown, 1L)
+      support$pctDamKnown <- round(support$pctDamKnown, 1L)
+      support
+    }, options = list(pageLength = 10L), rownames = FALSE)
+
+    output$backfillSkippedTable <- DT::renderDT({
+      req(skippedDates())
+    }, options = list(pageLength = 10L), rownames = FALSE)
+
+    observeEvent(input$buildBackfill, {
+      req(snapshotSource(), fullPedigree())
+      src <- snapshotSource()
+      warningsSeen <- character(0L)
+      tryCatch(
+        {
+          result <- withProgress(
+            message = "Building earlier snapshots", value = 0L,
+            {
+              updateProgress <- function(n, value, detail = NULL) {
+                setProgress(value = value / n, detail = detail)
+              }
+              withCallingHandlers(
+                do.call(backfillColonySnapshots, c(
+                  list(fullPedigree(),
+                       guIter = src$guIter, guThresh = src$guThresh,
+                       from = startDate(), existingHistory = history(),
+                       updateProgress = updateProgress),
+                  src$reportArgs
+                )),
+                warning = function(w) {
+                  warningsSeen <<- c(warningsSeen, conditionMessage(w))
+                  invokeRestart("muffleWarning")
+                }
+              )
+            }
+          )
+          history(result$history)
+          skippedDates(result$skipped)
+          signalReady()
+        },
+        error = function(e) {
+          showNotification(
+            paste("Could not build earlier snapshots:", conditionMessage(e)),
+            type = "error", duration = 10L
+          )
+        }
+      )
+      if (length(warningsSeen) > 0L) {
+        showNotification(
+          paste0(
+            "Earlier snapshots were built with notes (", length(warningsSeen),
+            " in all): ",
+            paste(substr(utils::head(unique(warningsSeen), 3L), 1L, 200L),
+                  collapse = " | ")
+          ),
+          type = "warning", duration = 15L
+        )
+      }
+    })
+
     list(
       history = reactive(history()),
       deltas = deltas,
-      isReady = reactive(!is.null(history()))
+      isReady = reactive(!is.null(history())),
+      backfillSupport = backfillSupport
     )
   })
+}
+
+#' The cost line of the Build Earlier Snapshots box
+#'
+#' Says how many snapshots a build will make, between which dates and at how
+#' many gene-drop iterations, and roughly how long it takes. The time is an
+#' estimate from one measurement (about 4 seconds a date for 1,000 iterations
+#' on the 2,590-animal example colony, design section 2.5), scaled by the
+#' iterations only.
+#'
+#' @param dates The \code{Date}s of the build, in order.
+#' @param guIter The gene-drop iterations of the last analysis.
+#' @return A single string.
+#'
+#' @noRd
+describeBackfillCost <- function(dates, guIter) {
+  seconds <- length(dates) * 4L * guIter / 1000L
+  estimate <- if (seconds < 60L) {
+    "under a minute"
+  } else {
+    paste0("about ", round(seconds / 60L), " min")
+  }
+  paste0(
+    length(dates), " snapshots, ", format(min(dates)), " to ",
+    format(max(dates)), ", at ", guIter, " iterations each. Each date runs ",
+    "the gene drop again, about 4 seconds per 1,000 iterations on a colony of ",
+    "2,590 animals, so expect ", estimate, " here (an estimate; larger ",
+    "colonies take longer)."
+  )
 }

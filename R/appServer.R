@@ -521,9 +521,12 @@ appServer <- function(input, output, session) {
   # Genetic-Health Trends Module (issue #167 Slice 4) -- fed by the Genetic
   # Value module's snapshotSource reactive (S760 catalog amendment): the
   # exact analyzed pedigree/nprcgenekeeprGV object/guIter/guThresh from the
-  # most recent GVA run, captured atomically. Self-contained otherwise (no
-  # shared$... wiring), matching modCrossCenterIdentityServer's own
-  # single-upstream-reactive precedent.
+  # most recent GVA run, captured atomically. Issue #170 Slice 3 adds the
+  # full pedigree for the Build Earlier Snapshots box: processedPedigree,
+  # never analysisPedigree, which is trimmed to the focal animals when a
+  # focal list is entered and would shrink every past population. Self-
+  # contained otherwise (no shared$... wiring).
   modSnapshotTrendsServer("snapshotTrends",
-                          snapshotSource = gvResults$snapshotSource)
+                          snapshotSource = gvResults$snapshotSource,
+                          fullPedigree = pedigreeResults$processedPedigree)
 }

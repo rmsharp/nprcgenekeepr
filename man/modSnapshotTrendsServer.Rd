@@ -4,7 +4,7 @@
 \alias{modSnapshotTrendsServer}
 \title{Genetic-Health Trends Module - Server Function}
 \usage{
-modSnapshotTrendsServer(id, snapshotSource)
+modSnapshotTrendsServer(id, snapshotSource, fullPedigree = reactive(NULL))
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
@@ -15,6 +15,13 @@ Genetic Value Analysis run (see
 \code{\link{modGeneticValueServer}}'s \code{snapshotSource} return
 element), or erroring (shiny \code{req()} semantics) before any run has
 happened.}
+
+\item{fullPedigree}{reactive returning the full quality-controlled pedigree
+(the Pedigree tab's \code{processedPedigree}, never the focal-trimmed
+\code{analysisPedigree}, which would shrink every past population), or
+erroring (shiny \code{req()} semantics) before a studbook is loaded. Feeds
+the "Build Earlier Snapshots" box. Defaults to \code{reactive(NULL)}: no
+pedigree, so the box waits.}
 }
 \value{
 A list with reactive components:
@@ -26,7 +33,20 @@ A list with reactive components:
 to selectors.
 \item \code{isReady} - logical: \code{TRUE} once \code{history} is
 non-\code{NULL} (a history has been uploaded or generated).
+\item \code{backfillSupport} - the table of what each date of the default
+earlier-snapshot series rests on
+(\code{\link{previewBackfillSupport}} of \code{fullPedigree()}),
+independent of the chosen start year; erroring (\code{req()}) until a
+pedigree is loaded.
 }
+
+The "Build Earlier Snapshots" button calls
+\code{\link{backfillColonySnapshots}} with the full pedigree, the
+\code{guIter}, \code{guThresh} and \code{reportArgs} of
+\code{snapshotSource()}, the chosen start year and the history already
+held, and adds nothing of its own to the numbers. It does nothing before an
+analysis has run. Warnings from the build are summarized in one
+notification; a failure is reported and leaves the history as it was.
 
 The generated snapshot's \code{membershipRule} is auto-derived from
 \code{snapshotSource()$ped$population} (issue #167 Slice 4, S760 owner

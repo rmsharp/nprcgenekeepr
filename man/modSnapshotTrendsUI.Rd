@@ -23,7 +23,11 @@ Upload or grow a snapshot-history CSV, generate a new dated snapshot from
 the analysis already loaded on the Genetic Value Analysis tab, review
 trend plots and a per-metric delta comparison (with the D4 comparability
 flag visible), and download both the updated history and the delta
-table.
+table. A "Build Earlier Snapshots" box rebuilds past 1 Januaries from the
+studbook's birth and exit dates (issue #170,
+\code{\link{backfillColonySnapshots}}), and an "Earlier Snapshots" tab shows
+what each of those dates rests on
+(\code{\link{previewBackfillSupport}}).
 }
 \seealso{
 \code{\link{modSnapshotTrendsServer}} for server logic.
