@@ -66,7 +66,8 @@ update a \code{shiny::Progress} object. It is not passed on to
 \code{reportGV}.}
 
 \item{...}{Further arguments passed to \code{\link{reportGV}} (for example
-\code{kinshipOverrides} or \code{twinRelations}).}
+\code{kinshipOverrides} or \code{twinRelations}, the latter cut to each
+date as described above).}
 }
 \value{
 A list of three data.frames. \code{history}: the rebuilt snapshots
@@ -131,6 +132,18 @@ how many dates failed. When no date can be built, the function stops and
 names the dates. A date whose \code{"reconstructedLiving"} row is already in
 \code{existingHistory} is not rebuilt; it is listed in \code{skipped}
 without a warning.
+
+\strong{Twin pairs.} A \code{twinRelations} table (see
+\code{\link{checkTwinRelations}}) is used on each date as far as that
+date's animals allow. Declared identical (\code{"MZ twin"}) animals form
+groups, as in \code{\link{kinship}}, so the pairs A-B and B-C make the group
+A, B and C. On a date the groups are cut to the animals in that date's
+pedigree, which holds the animals alive then and their ancestors; a group
+left with two or more animals is applied and the others are left out. An
+animal missing from the pedigree on a date cannot change anyone's kinship
+that day, so a twin born later, or one who left and has no descendants, no
+longer makes the date fail. An identifier that is in no pedigree at all is a
+mistake and stops the function before any date is built.
 
 Limits: today's parentage is used for every date, so a parent identified
 later is treated as known earlier; and the effective sizes follow the

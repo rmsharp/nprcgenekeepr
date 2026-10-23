@@ -53,6 +53,18 @@
 #' \code{existingHistory} is not rebuilt; it is listed in \code{skipped}
 #' without a warning.
 #'
+#' \strong{Twin pairs.} A \code{twinRelations} table (see
+#' \code{\link{checkTwinRelations}}) is used on each date as far as that
+#' date's animals allow. Declared identical (\code{"MZ twin"}) animals form
+#' groups, as in \code{\link{kinship}}, so the pairs A-B and B-C make the group
+#' A, B and C. On a date the groups are cut to the animals in that date's
+#' pedigree, which holds the animals alive then and their ancestors; a group
+#' left with two or more animals is applied and the others are left out. An
+#' animal missing from the pedigree on a date cannot change anyone's kinship
+#' that day, so a twin born later, or one who left and has no descendants, no
+#' longer makes the date fail. An identifier that is in no pedigree at all is a
+#' mistake and stops the function before any date is built.
+#'
 #' Limits: today's parentage is used for every date, so a parent identified
 #' later is treated as known earlier; and the effective sizes follow the
 #' definition of a living breeder in \code{\link{calcNeSexRatio}}.
@@ -94,7 +106,8 @@
 #' update a \code{shiny::Progress} object. It is not passed on to
 #' \code{reportGV}.
 #' @param ... Further arguments passed to \code{\link{reportGV}} (for example
-#' \code{kinshipOverrides} or \code{twinRelations}).
+#' \code{kinshipOverrides} or \code{twinRelations}, the latter cut to each
+#' date as described above).
 #' @return A list of three data.frames. \code{history}: the rebuilt snapshots
 #' (and the rows of \code{existingHistory}, if given), in date order, in the
 #' 27-column snapshot-history schema. \code{support}: one row for each date in
@@ -171,6 +184,12 @@ backfillColonySnapshots <- function(ped, dates = NULL,
     )
   }
 
+  reportArgs <- list(...)
+  twinRelations <- reportArgs[["twinRelations"]]
+  if (!is.null(twinRelations)) {
+    assertTwinIdsInPedigree(twinRelations, ped)
+  }
+
   facts <- describeBackfillColony(ped)
   if (is.null(dates)) {
     dates <- buildBackfillDates(facts, from, to, by, minAnimals)
@@ -218,8 +237,12 @@ backfillColonySnapshots <- function(ped, dates = NULL,
         asOf$exit[!is.na(asOf$exit) & asOf$exit > date] <- NA
         asOf$population <- livingOnDate(facts, date)$living
         asOf <- trimToAnalysisPopulation(asOf)
-        geneticValue <- reportGV(asOf,
-          guIter = guIter, guThresh = guThresh, byID = TRUE, ...
+        reportArgs[["twinRelations"]] <-
+          restrictTwinRelations(twinRelations, asOf$id)
+        geneticValue <- do.call(
+          reportGV,
+          c(list(asOf, guIter = guIter, guThresh = guThresh, byID = TRUE),
+            reportArgs)
         )
         list(row = createColonySnapshot(asOf, geneticValue,
           "reconstructedLiving",
@@ -348,4 +371,93 @@ buildBackfillDates <- function(facts, from, to, by, minAnimals) {
         conditionMessage(e), call. = FALSE)
     }
   )
+}
+
+#' Stop when a twin table names an animal that is in no pedigree
+#'
+#' The one thing \code{kinship()} stopped for on every date that is a real
+#' mistake and not a matter of the date: an identifier that is not in the
+#' pedigree at all (a typing error). Checked once, before any date.
+#'
+#' @param twinRelations A data.frame with \code{id1} and \code{id2}.
+#' @param ped The pedigree handed to \code{backfillColonySnapshots()}.
+#' @return \code{NULL}, invisibly; stops, naming \code{twinRelations} and the
+#' identifiers, when any is not in \code{ped$id}.
+#'
+#' @noRd
+assertTwinIdsInPedigree <- function(twinRelations, ped) {
+  named <- unique(c(
+    as.character(twinRelations$id1), as.character(twinRelations$id2)
+  ))
+  unknown <- setdiff(named, as.character(ped$id))
+  if (length(unknown) > 0L) {
+    stop("'twinRelations' names animals that are not in 'ped': ",
+      toString(unknown), ".", call. = FALSE)
+  }
+  invisible(NULL)
+}
+
+#' Cut a twin table to the animals of one date's pedigree
+#'
+#' Declared \code{"MZ twin"} pairs are grouped as \code{kinship()} groups them
+#' (A-B and B-C make A, B and C). Each group keeps the members that are in
+#' \code{present}; a group left with two or more is returned as pairs joining
+#' its first present member to each of the others. Rows of the other twin
+#' codes, which \code{kinship()} does not use, are kept when both animals are
+#' present.
+#'
+#' @param twinRelations \code{NULL} or a data.frame with \code{id1},
+#' \code{id2} and \code{code}.
+#' @param present The identifiers in the pedigree for the date.
+#' @return \code{NULL} when no pair is left, otherwise a data.frame with
+#' \code{id1}, \code{id2} and \code{code}.
+#'
+#' @noRd
+restrictTwinRelations <- function(twinRelations, present) {
+  if (is.null(twinRelations) || nrow(twinRelations) == 0L) {
+    return(NULL)
+  }
+  pairs <- data.frame(
+    id1 = as.character(twinRelations$id1),
+    id2 = as.character(twinRelations$id2),
+    code = as.character(twinRelations$code),
+    stringsAsFactors = FALSE
+  )
+  isMz <- pairs$code == "MZ twin"
+  kept <- pairs[!isMz & pairs$id1 %in% present & pairs$id2 %in% present, ,
+    drop = FALSE
+  ]
+
+  mz <- pairs[isMz, , drop = FALSE]
+  ids <- unique(c(mz$id1, mz$id2))
+  group <- seq_along(ids)
+  repeat {
+    merged <- FALSE
+    for (i in seq_len(nrow(mz))) {
+      a <- match(mz$id1[[i]], ids)
+      b <- match(mz$id2[[i]], ids)
+      if (group[[a]] != group[[b]]) {
+        group[group == max(group[[a]], group[[b]])] <-
+          min(group[[a]], group[[b]])
+        merged <- TRUE
+      }
+    }
+    if (!merged) {
+      break
+    }
+  }
+  for (g in unique(group)) {
+    members <- ids[group == g & ids %in% present]
+    if (length(members) >= 2L) {
+      kept <- rbind(kept, data.frame(
+        id1 = members[[1L]], id2 = members[-1L], code = "MZ twin",
+        stringsAsFactors = FALSE
+      ))
+    }
+  }
+  if (nrow(kept) == 0L) {
+    return(NULL)
+  }
+  rownames(kept) <- NULL
+  kept
 }
