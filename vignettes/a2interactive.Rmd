@@ -605,6 +605,34 @@ connecting _S1_ directly to _S2_ (dashed, labeled `"?"` for the
 undetermined zygosity code) -- that row exists only because a validated
 _twinRelations_ table was supplied.
 
+### Passing a Kinship Matrix You Already Have
+
+__makePedigreeMatingLayout__ marks a mating unit as consanguineous when its
+sire and dam are related, and it works that out by computing a kinship matrix
+of the pedigree itself. If you already hold a kinship matrix for the same
+pedigree, pass it as _kinshipMatrix_ and the layout uses it instead of making
+its own. The matrix needs the animal ids as its row and column names. It is
+then the only source of the consanguinity marks: _twinRelations_ goes on
+drawing the twin connectors and nothing else, so a matrix that should reflect
+declared monozygotic twins has to be built with __kinship__'s own
+_twinRelations_ argument before it is passed in.
+
+```{r layout-kinship-matrix}
+demoKmat <- kinship(demoPed$id, demoPed$sire, demoPed$dam, demoPed$gen)
+layoutFromPed <- makePedigreeMatingLayout(demoPed)
+layoutFromMatrix <- makePedigreeMatingLayout(demoPed, kinshipMatrix = demoKmat)
+identical(layoutFromMatrix$edges, layoutFromPed$edges)
+unnamedMatrixMessage <- tryCatch(
+  makePedigreeMatingLayout(demoPed, kinshipMatrix = unname(demoKmat)),
+  error = conditionMessage
+)
+unnamedMatrixMessage
+```
+
+The layout built from the matrix has the same edges as the one that computed
+its own, and a matrix without ids is refused with a message that names
+_kinshipMatrix_.
+
 ## Genetic Value Analysis
 
 Your genetic value analysis must be carefully performed. 
@@ -808,6 +836,41 @@ zs <- rpt[, "zScores"]
 
 Creation of boxplots for the _mean kinship_ and _z-scores_ is left
 as an exercise.
+
+### X-Chromosome Kinship
+
+By default __kinship__ gives the autosomal kinship coefficient. With
+`chrtype = "x"` it gives X-chromosome kinship instead. A male carries a single
+X, which comes from his mother alone; a female's X-linked kinship follows the
+same average-of-the-parents rule as the autosomes. Because the calculation
+depends on sex, _sex_ is then required: one value per animal in the order of _id_,
+using the package's `"M"` and `"F"` codes (any other value, `NA` included,
+counts as unknown). An animal of unknown sex that has recorded parents gets
+`NA` kinship with everyone.
+
+```{r kinship-x-chromosome}
+xPed <- nprcgenekeepr::smallPed
+xPed$gen <- findGeneration(xPed$id, xPed$sire, xPed$dam)
+autosomeKmat <- kinship(xPed$id, xPed$sire, xPed$dam, xPed$gen)
+xKmat <- kinship(xPed$id, xPed$sire, xPed$dam, xPed$gen,
+                 chrtype = "x", sex = xPed$sex)
+unique(data.frame(sex = xPed$sex, autosome = unname(diag(autosomeKmat)),
+                  x = unname(diag(xKmat))))
+xPairs <- data.frame(
+  first = c("A", "B", "D", "E"), second = c("C", "C", "F", "F"),
+  relation = c("father and son", "mother and son", "father and daughter",
+               "mother and daughter"))
+pairIndex <- as.matrix(xPairs[, c("first", "second")])
+xPairs$autosome <- autosomeKmat[pairIndex]
+xPairs$x <- xKmat[pairIndex]
+xPairs
+```
+
+The first table is each animal's kinship with itself: on the X a male's is
+higher than his autosomal value, because he carries a single X, and a female's
+is unchanged. In the second, a father and his son share no X, since a son's X
+comes from his mother alone, while a mother and her son, and a father and his
+daughter, share more of it than they do on the autosomes.
 
 ## Colony Snapshots Over Time
 
@@ -1313,6 +1376,44 @@ rule twice is an error, as is giving _overriddenRules_ without
 _ancestryRules_. A valid rules table with zero rules is accepted: the
 result has the ancestry columns, with nothing moved.
 
+### Ancestry Rules for Formed Groups
+
+__reportMatePairs__ applies the rules to pairs. __reportAncestryViolations__
+applies the same rules to groups that already exist, for example the _group_
+element returned by __groupAddAssign__ without its final element, which holds
+the animals left unused. Give it a list of animal-id vectors, one per group,
+the pedigree with its _ancestry_ column, and the rules table. It reports every
+pair inside a group that matches a rule, _block_ and _flag_ rules alike, and a
+_coverage_ table: for each standardized ancestry level, how many of the grouped
+animals sit at that level (_n_) and whether any rule names it (_covered_). An
+id that is not in the pedigree stops the function.
+
+```{r ancestry-violations}
+formedGroups <- list(c("C1", "I1", "J1"), c("I2", "U1", "H1"))
+ancViolations <- reportAncestryViolations(formedGroups, ancPed, ancestryRules)
+ancViolations$violations
+ancViolations$coverage
+```
+
+Each row of _violations_ gives the group (its position in the list), the two
+animals and their levels, the matched rule, its severity and its status. The
+first group also holds a Japanese animal. No rule names that level (_covered_
+is `FALSE`), so that animal appears in no violation; the coverage table is
+there so that this silence is visible.
+
+A rule named in _overriddenRules_ (a data frame that gives the two ancestry
+levels of the rule, in either order and in any case) still reports its pairs,
+with the status `"overridden"` in place of `"violation"`, so nothing is dropped
+silently. A row that matches no rule in the rules table is an error, so a typo
+cannot override nothing.
+
+```{r ancestry-violations-overridden}
+ancViolationsOverridden <- reportAncestryViolations(
+  formedGroups, ancPed, ancestryRules,
+  overriddenRules = data.frame(ancestry1 = "CHINESE", ancestry2 = "INDIAN"))
+ancViolationsOverridden$violations
+```
+
 ## Pedigree Errors
 
 As stated earlier you can see which types of errors are detected by 
@@ -1480,6 +1581,58 @@ following line of code:
 loopIds <- names(exampleLoops)[unlist(exampleLoops)]
 breederPed[match(loopIds, breederPed$id), c("id", "sire", "dam")][1L:10L, ]
 ```
+
+## Shrinking a Pedigree to a Genotyping Budget
+
+__trimPedigree__ cuts a pedigree down around the focal animals you name.
+__shrinkPedigree__ answers a different question: given which animals are
+genotyped, which animals can be dropped and still leave a pedigree that is
+informative within a genotyping-cost budget? It works on this package's
+pedigree data frame (the _id_, _sire_ and _dam_ columns). The budget,
+_maxBits_, limits the pedigree's bit size, which is twice the number of
+non-founders less the number of founders. Three trims are applied in order:
+
+- The _unavailable_ trim repeatedly removes animals that are not genotyped and
+  have no offspring in the pedigree, then founder pairs that are not genotyped
+  and have a single child and no other mate (that child becomes a founder), then
+  any founder left without offspring, genotyped or not.
+- The _non-informative_ trim removes a genotyped animal that is nobody's
+  parent, has both parents known and genotyped, and is not affected, because it
+  adds no genotype information beyond what its parents supply.
+- The _affected-priority_ trim, while the bit size is still above _maxBits_,
+  removes one genotyped animal that is nobody's parent at a time, choosing the
+  removal that leaves the smallest bit size. It tries animals of unknown
+  affected status first, then unaffected ones, then affected ones.
+
+The optional _affected_ vector marks the animals that show the trait you care
+about; without it every animal counts as unaffected. _genotyped_ is a logical
+vector with one value per row of the pedigree, `NA` not allowed. Suppose only
+the animals still living, those with no exit date, are genotyped:
+
+```{r shrink-pedigree}
+genotyped <- is.na(qcPed$exit)
+shrinkResult <- shrinkPedigree(qcPed[, c("id", "sire", "dam")], genotyped)
+unlist(shrinkResult[c("pedSizeOriginal", "pedSizeIntermed", "pedSizeFinal")])
+lengths(shrinkResult$idList)
+```
+
+The `r shrinkResult$pedSizeOriginal` animals of __qcPed__ shrink to
+`r shrinkResult$pedSizeIntermed` after the first two trims and
+`r shrinkResult$pedSizeFinal` at the end. _idList_ groups the removed ids by the
+trim that took them: _unavail_, _noninform_ and _affected_. _idTrimmed_ lists
+every removed id in the order of removal, and _bitSize_ records the bit size
+before any trimming, after the first two trims, and after each round of the
+third. The default _maxBits_ is `r formals(shrinkPedigree)$maxBits`; a smaller
+budget asks the third trim to go further.
+
+```{r shrink-pedigree-budget}
+shrinkResultSmall <- shrinkPedigree(qcPed[, c("id", "sire", "dam")], genotyped,
+                                    maxBits = 8L)
+c(default = nrow(shrinkResult$ped), smaller = nrow(shrinkResultSmall$ped))
+```
+
+The smaller budget leaves `r nrow(shrinkResultSmall$ped)` animals in place of
+`r nrow(shrinkResult$ped)`.
 
 ## Marker Genetics
 
@@ -1985,6 +2138,80 @@ de-identification. The second call marks it real, so it gets a plain alias
 (random, so it could begin with `U` by chance; with this seed it does not),
 while _U0007_, marked `TRUE`, keeps a placeholder-shaped one. The argument
 must be logical and the same length as _id_, or the call stops.
+
+## MHC Haplotype Reporting
+
+The MHC Haplotype Reporting tab of the Shiny application has four counterparts
+for scripts. The input is a wide table with one row for each animal: the
+animal's id, then its two haplotype designations. __checkMhcHaplotypeFile__
+checks that structure (exactly three columns, the first an id, and one row for
+each animal) and gives the columns fixed names whatever the file called them;
+the example data set __rhesusGenotypes__ calls the designation columns
+_first_name_ and _second_name_. A designation is an opaque label: it is never
+split or compared with MHC region names. A trailing `?` marks an uncertain
+call, and an empty cell is a missing one.
+
+```{r mhc-check}
+mhcChecked <- checkMhcHaplotypeFile(rhesusGenotypes)
+names(rhesusGenotypes)
+names(mhcChecked)
+head(mhcChecked, 3L)
+```
+
+__mhcHaplotypeFrequency__ summarizes the table. The frequency of a haplotype is
+its number of copies among the certain calls: twice the animals, less the
+missing and the uncertain calls. Uncertain calls are left out of the copy counts, the
+carrier counts and the frequencies, but they are never hidden: _nUncertain_
+gives them for each haplotype and the _counts_ table for the file as a whole. A
+haplotype is flagged rare (_isRare_) when its frequency is at or below
+_rareFrequencyThreshold_, default
+`r formals(mhcHaplotypeFrequency)$rareFrequencyThreshold`, or its carrier count
+is at or below _rareCarrierThreshold_, default
+`r formals(mhcHaplotypeFrequency)$rareCarrierThreshold`. Both defaults are
+working filters, not scientific claims.
+
+```{r mhc-frequency}
+mhcFrequency <- mhcHaplotypeFrequency(mhcChecked)
+mhcFrequency$counts
+head(mhcFrequency$summary)
+```
+
+In this colony of `r mhcFrequency$counts$nAnimals` animals,
+`r sum(mhcFrequency$summary$isRare)` of the `r nrow(mhcFrequency$summary)`
+haplotypes are flagged rare. The smallest frequency,
+`r round(min(mhcFrequency$summary$frequency), 3L)`, is above the frequency
+threshold, so here only the carrier count can flag a haplotype.
+
+__mhcHaplotypeCarriers__ goes from which haplotypes are rare to which animals
+carry them: one row for each haplotype and carrying animal. By default it lists
+only the haplotypes flagged rare; `rareOnly = FALSE` lists them all. The
+_uncertain_ column is `TRUE` when the animal's only calls of that haplotype are
+uncertain, a provisional carrier that is listed here but is not counted as a
+carrier above.
+
+```{r mhc-carriers}
+rareCarriers <- mhcHaplotypeCarriers(mhcChecked)
+allCarriers <- mhcHaplotypeCarriers(mhcChecked, rareOnly = FALSE)
+head(rareCarriers)
+c(rare = nrow(rareCarriers), all = nrow(allCarriers))
+```
+
+A carrier table names real animals, and a paired MHC type can identify an
+animal on its own. __obfuscateMhcHaplotypes__ replaces the ids in a carrier
+table with the aliases that __obfuscatePed__ gives the same animals (its _map_
+output) and leaves the haplotype labels and the _uncertain_ column unchanged,
+because a haplotype name is shared nomenclature and not an animal identifier.
+An id missing from the map stops the call, so a real id cannot slip through.
+
+```{r mhc-obfuscate}
+set.seed(1L)
+obfuscated <- obfuscatePed(rhesusPedigree[, c("id", "sire", "dam", "sex")],
+                           map = TRUE)
+hiddenCarriers <- obfuscateMhcHaplotypes(rareCarriers, obfuscated$map)
+head(hiddenCarriers)
+```
+
+The aliases are drawn at random, so the seed fixes them for this document.
 
 ```{r elapsed-time}
 elapsed_time <- get_elapsed_time_str(start_time)
