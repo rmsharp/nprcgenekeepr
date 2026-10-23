@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1040
+date: 2026-10-22
+status: pending
+active_task: IN PROGRESS -- Slice 4 of the retrospective colony-snapshot backfill, the documentation and close-out slice (GitHub issue #170; design docs/planning/retrospective-snapshot-backfill-plan.md section 5; BACKLOG.md:33): NEWS.Rmd entry, colony-manager guide section, the three wording points, close #170. Owner pick at the Phase 0 picker, item 1 of 4, "Finish #170: Slice 4".
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1039
 date: 2026-10-22
 status: complete

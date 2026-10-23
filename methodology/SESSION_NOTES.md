@@ -98,38 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1039 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Slice 3: app button"; strict TDD, every gate and both design calls put to the owner with `AskUserQuestion`):** Slice 3 of the
-retrospective colony-snapshot backfill, GitHub issue #170 (design `docs/planning/retrospective-snapshot-backfill-plan.md` section 5; what it decided and found is the new section 5.3). The
-Genetic-Health Trends tab has a "Build Earlier Snapshots" box (Start year, a cost line, the button) and an "Earlier Snapshots" tab (counts table, dates not built). The button calls
-`backfillColonySnapshots()` with `pedigreeResults$processedPedigree`, the run's `guIter`, `guThresh` and the new `snapshotSource$reportArgs` (`R/modSnapshotTrends.R:319-430`, `R/modGeneticValue.R:355`,
-`R/appServer.R:531`). **Owner calls:** export the counts-only preview, `previewBackfillSupport()` (`R/previewBackfillSupport.R:66`), so the app never does more than a script; fix twin pairs in the
-function (a declared MZ pair with an animal missing on a past date made every date fail; `R/backfillColonySnapshots.R:358,386`). Issue #170 stays open (Slice 4 remains).
-**Commits:** claim `c367d2d9a`, RED `c40855ff7` + `ac656a2e6`, GREEN `f60a2a79b`, `2253ed0c9`, `fe4b4f696`, `0909df2e5`, a RED-test correction `84f11ed2a`, a caption fix `8757ecc10`, REFACTOR `47e8d7a63`
-(four internal helpers replace the duplicated argument checks), docs `674e19ad7`, close-out next. Not pushed.
-**Verified:** 52 new tests in 8 files (RED: 49 failing, 3 guards passing by design); full unfiltered suite 449 files 4,250 tests 14,699 expectations (S1038: 14,426) 0 failed 0 errors 197 skipped
-8 warnings, identical after GREEN (18 warnings from my tests, silenced in REFACTOR) and REFACTOR; `lintr::lint_package()` 0; `R CMD check` 0/0/0 (`--no-tests --no-manual`); browser tier on a scratch
-install 24 of 24 (8 earlier expectations pass at RED, the new section fails at the missing tab); ratchet 1/1 (results `2d1608b55ff2`, tarball 3.26046e+06 B); REFACTOR proved on 79 probe inputs identical.
-**Pictures:** the box, the counts table and the trend chart were opened for the owner before the long tests; the first one showed the combined caption running off the plot, fixed test-first.
-**Handoff evaluation of S1038: 9/10.** Helped: Next item 1 named the PRE-RED question and the whole scope (processedPedigree, captured settings, dashed line and caption, contract tests, browser tier, a
-picture before the long tests); the gotchas (the panel must catch reportGV's warnings, `updateProgress` gets n, value and detail, `dates` cannot combine with the series); a Phase 0 picture that matched
-(131 ahead, frontiers at HEAD, CI 10 of 10). Missing: that a declared twin pair makes every date fail (the twin sidecar is a captured setting and the function had never met one); that `testServer()`
-does not raise an error that escapes an observer; that the browser tier's example colony (3,694 rows, series 1966-2014) is a third fixture beside jmac and `qcPed`. Wrong: nothing found. ROI: high.
-**Self: 8/10.** + claimed first; measured before asking (preview 0.04 s, the twin failure on the example), so both gate questions were answered first try; checked pinned counts against an independent count;
-probed the test mechanics (RNG through `setInputs`, observer errors, notice mocking) before GREEN; opened the real pictures before the long tests and found the caption defect; proved REFACTOR old against
-new; kept the 5-file cap. - the gate said "roughly 35-40" tests and 52 landed (Learning 929 again); one RED test was too broad and I edited it during GREEN (acknowledged at the gate); a shared helper file
-and a `fullPedigree` default were beyond what I announced (both disclosed); two harness nudges for silence in runs of quick reads and one `sed -i` slip. Learning 1005.
-**Gotchas:** record notices with `local_mocked_bindings(showNotification = ..., .package = "nprcgenekeepr", .env = parent.frame())`, not `expect_no_error()`; scope a "no warning escapes" test to the
-call that warns (the chart prints ggplot's missing-value notice when a metric is NA); declared MZ pairs are cut to each date (kinship stops on a missing id); `fullPedigree` defaults to `reactive(NULL)`;
-`AppDriver$get_screenshot()` refuses an existing file; the cost line's 4 s per 1,000 iterations is scaled by iterations only (a colony above 3,694 rows at 1,000 iterations is unmeasured). 131 commits ahead
-of origin at Phase 0, 143 after the close-out, not pushed. The rest is in the `HANDOFFS.md` receipt.
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Slice 4 of #170, documentation and close-out (READY, Effort M, about one session, estimate): `NEWS.Rmd`, the guide
-section (`colony-manager-guide.qmd` near :1264, the B12 limits and the UNKNOWN-fate sentence), one proposed sentence per place for the owner and at most one question, the three wording points
-(`BACKLOG.md:33-58`), record the citation checklist as N/A, close #170. (2) Issue #36 check (READY, Effort S; the issue cites `R/agePyramidPlot.R`, which does not exist, no R file mentions chimpanzees,
-`R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`). (3) The `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:142`). (4) Owner-side: where to post the
-`close_out_report.py` write-up (draft only, `BACKLOG.md:181`). The `a2interactive.Rmd` pass stays a later dedicated one.
+### What Session 1040 Did
+**Deliverable:** Slice 4 of the retrospective colony-snapshot backfill, GitHub issue #170: the documentation and close-out slice (`BACKLOG.md:33`; design `docs/planning/retrospective-snapshot-backfill-plan.md` section 5; owner pick at the Phase 0 picker, item 1 of 4, "Finish #170: Slice 4") (IN PROGRESS)
+**Started:** 2026-10-22 21:50 CDT
+**Status:** Session claimed. Work beginning (Phase 1 scoping; no TDD phase declared yet).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1038 (condensed S950 to S1039; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1039 (condensed S950 to S1040; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1039: Slice 3 of the retrospective colony-snapshot backfill, #170 (owner pick, "Slice 3: app button"; strict TDD, every gate and both design calls put to the owner): the Genetic-Health
+Trends tab has a "Build Earlier Snapshots" box (Start year, a cost line, the button) and an "Earlier Snapshots" tab; the button calls `backfillColonySnapshots()` with
+`pedigreeResults$processedPedigree`, the run's `guIter`, `guThresh` and `snapshotSource$reportArgs` (`R/modSnapshotTrends.R:319-430`, `R/modGeneticValue.R:355`, `R/appServer.R:531`).
+**Owner calls:** export the counts-only preview `previewBackfillSupport()` (`R/previewBackfillSupport.R:66`); fix twin pairs in the function (`R/backfillColonySnapshots.R:358,386`). Claim
+`c367d2d9a`, RED `c40855ff7` + `ac656a2e6`, GREEN `f60a2a79b` `2253ed0c9` `fe4b4f696` `0909df2e5`, correction `84f11ed2a`, caption fix `8757ecc10`, REFACTOR `47e8d7a63` (four internal helpers),
+docs `674e19ad7`, close-out `85aa799ed`; full suite 449 files 4,250 tests 0 failed 0 errors, browser tier 24 of 24; evaluation of S1038 9/10, self 8/10 (Learning 1005). **Gotchas kept:** record
+notices with `local_mocked_bindings(showNotification = ..., .package = "nprcgenekeepr", .env = parent.frame())`, not `expect_no_error()` (`testServer()` does not raise an error that escapes an
+observer); scope a "no warning escapes" test to the call that warns; declared MZ pairs are cut to each date; `fullPedigree` defaults to `reactive(NULL)`; `AppDriver$get_screenshot()` refuses an
+existing file; the cost line's 4 s per 1,000 iterations is scaled by iterations only (a colony above 3,694 rows at 1,000 iterations is unmeasured). Left for Slice 4 (S1040): `NEWS.Rmd`, the guide
+section, three wording points the owner writes (`BACKLOG.md:52-55`), close #170.
 S1038: Slice 2 of the retrospective colony-snapshot backfill, #170 (owner pick, "Backfill Slice 2"; strict TDD, every gate and both design calls put to the owner):
 `backfillColonySnapshots()` (`R/backfillColonySnapshots.R:128`) takes `dates` or a yearly series (`from`, `to`, `by`, `minAnimals`) and returns `list(history, support, skipped)`; the counting
 rules are in the new `R/backfillColonyFacts.R`. **Owner calls:** an animal with no birth date counts from its first dated offspring; an animal with no exit date counts only when
