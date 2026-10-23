@@ -298,24 +298,16 @@ buildBackfillDates <- function(facts, from, to, by, minAnimals) {
     stop("'by' must be a single step for seq.Date(), such as \"year\" or ",
       "\"6 months\".", call. = FALSE)
   }
-  parseOneDate <- function(value, name) {
-    parsed <- as.Date(as.character(value), format = "%Y-%m-%d")
-    if (length(parsed) != 1L || is.na(parsed)) {
-      stop("'", name, "' must be a single ISO-8601 (YYYY-MM-DD) date.",
-        call. = FALSE)
-    }
-    parsed
-  }
   januaryFirst <- function(year) as.Date(sprintf("%04d-01-01", year))
   yearOf <- function(day) {
     as.integer(format(as.Date(day, origin = "1970-01-01"), "%Y"))
   }
 
   if (!is.null(to)) {
-    to <- parseOneDate(to, "to")
+    to <- parseIsoDate(to, "to")
   }
   if (!is.null(from)) {
-    from <- parseOneDate(from, "from")
+    from <- parseIsoDate(from, "from")
   }
   recorded <- c(facts$birth, facts$exit)
   recorded <- recorded[!is.na(recorded)]

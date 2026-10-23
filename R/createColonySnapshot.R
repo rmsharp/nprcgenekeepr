@@ -111,12 +111,7 @@ createColonySnapshot <- function(ped, geneticValue, membershipRule,
   guIter <- validateWholeCount(guIter, "guIter", usedByReportGV)
   guThresh <- validateWholeCount(guThresh, "guThresh", usedByReportGV)
 
-  ## a Date round-trips through as.character() as YYYY-MM-DD, so one
-  ## coercion path serves both accepted input types
-  snapshotDate <- as.Date(as.character(snapshotDate), format = "%Y-%m-%d")
-  if (length(snapshotDate) != 1L || anyNA(snapshotDate)) {
-    stop("'snapshotDate' must be a single ISO-8601 (YYYY-MM-DD) date.")
-  }
+  snapshotDate <- parseIsoDate(snapshotDate, "snapshotDate")
 
   reportIds <- as.character(report$id)
   pedIds <- as.character(ped$id)
