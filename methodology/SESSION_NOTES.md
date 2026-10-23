@@ -99,14 +99,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1039 Did
-**Deliverable:** Slice 3 of the retrospective colony-snapshot backfill, GitHub issue #170 (design `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5 and 5.2; `BACKLOG.md:33`):
-the "Build earlier snapshots" button on the Genetic-Health Trends tab, calling `backfillColonySnapshots()`. (IN PROGRESS)
-**Started:** 2026-10-22 19:26 CDT
-**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, item 1 of 4, "Slice 3: app button". The pick is the item, not the ruling: the preview question (export a
-script-callable twin of the support table, design B1's parity promise, or accept an app-only preview) goes to the owner with `AskUserQuestion` at PRE-RED, and every TDD gate (PRE-RED to
-RED, RED to GREEN, GREEN to REFACTOR) is put to the owner too.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
-
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Slice 3: app button"; strict TDD, every gate and both design calls put to the owner with `AskUserQuestion`):** Slice 3 of the
+retrospective colony-snapshot backfill, GitHub issue #170 (design `docs/planning/retrospective-snapshot-backfill-plan.md` section 5; what it decided and found is the new section 5.3). The
+Genetic-Health Trends tab has a "Build Earlier Snapshots" box (Start year, a cost line, the button) and an "Earlier Snapshots" tab (counts table, dates not built). The button calls
+`backfillColonySnapshots()` with `pedigreeResults$processedPedigree`, the run's `guIter`, `guThresh` and the new `snapshotSource$reportArgs` (`R/modSnapshotTrends.R:319-430`, `R/modGeneticValue.R:355`,
+`R/appServer.R:531`). **Owner calls:** export the counts-only preview, `previewBackfillSupport()` (`R/previewBackfillSupport.R:66`), so the app never does more than a script; fix twin pairs in the
+function (a declared MZ pair with an animal missing on a past date made every date fail; `R/backfillColonySnapshots.R:358,386`). Issue #170 stays open (Slice 4 remains).
+**Commits:** claim `c367d2d9a`, RED `c40855ff7` + `ac656a2e6`, GREEN `f60a2a79b`, `2253ed0c9`, `fe4b4f696`, `0909df2e5`, a RED-test correction `84f11ed2a`, a caption fix `8757ecc10`, REFACTOR `47e8d7a63`
+(four internal helpers replace the duplicated argument checks), docs `674e19ad7`, close-out next. Not pushed.
+**Verified:** 52 new tests in 8 files (RED: 49 failing, 3 guards passing by design); full unfiltered suite 449 files 4,250 tests 14,699 expectations (S1038: 14,426) 0 failed 0 errors 197 skipped
+8 warnings, identical after GREEN (18 warnings from my tests, silenced in REFACTOR) and REFACTOR; `lintr::lint_package()` 0; `R CMD check` 0/0/0 (`--no-tests --no-manual`); browser tier on a scratch
+install 24 of 24 (8 earlier expectations pass at RED, the new section fails at the missing tab); ratchet 1/1 (results `2d1608b55ff2`, tarball 3.26046e+06 B); REFACTOR proved on 79 probe inputs identical.
+**Pictures:** the box, the counts table and the trend chart were opened for the owner before the long tests; the first one showed the combined caption running off the plot, fixed test-first.
+**Handoff evaluation of S1038: 9/10.** Helped: Next item 1 named the PRE-RED question and the whole scope (processedPedigree, captured settings, dashed line and caption, contract tests, browser tier, a
+picture before the long tests); the gotchas (the panel must catch reportGV's warnings, `updateProgress` gets n, value and detail, `dates` cannot combine with the series); a Phase 0 picture that matched
+(131 ahead, frontiers at HEAD, CI 10 of 10). Missing: that a declared twin pair makes every date fail (the twin sidecar is a captured setting and the function had never met one); that `testServer()`
+does not raise an error that escapes an observer; that the browser tier's example colony (3,694 rows, series 1966-2014) is a third fixture beside jmac and `qcPed`. Wrong: nothing found. ROI: high.
+**Self: 8/10.** + claimed first; measured before asking (preview 0.04 s, the twin failure on the example), so both gate questions were answered first try; checked pinned counts against an independent count;
+probed the test mechanics (RNG through `setInputs`, observer errors, notice mocking) before GREEN; opened the real pictures before the long tests and found the caption defect; proved REFACTOR old against
+new; kept the 5-file cap. - the gate said "roughly 35-40" tests and 52 landed (Learning 929 again); one RED test was too broad and I edited it during GREEN (acknowledged at the gate); a shared helper file
+and a `fullPedigree` default were beyond what I announced (both disclosed); two harness nudges for silence in runs of quick reads and one `sed -i` slip. Learning 1005.
+**Gotchas:** record notices with `local_mocked_bindings(showNotification = ..., .package = "nprcgenekeepr", .env = parent.frame())`, not `expect_no_error()`; scope a "no warning escapes" test to the
+call that warns (the chart prints ggplot's missing-value notice when a metric is NA); declared MZ pairs are cut to each date (kinship stops on a missing id); `fullPedigree` defaults to `reactive(NULL)`;
+`AppDriver$get_screenshot()` refuses an existing file; the cost line's 4 s per 1,000 iterations is scaled by iterations only (a colony above 3,694 rows at 1,000 iterations is unmeasured). 131 commits ahead
+of origin at Phase 0, 143 after the close-out, not pushed. The rest is in the `HANDOFFS.md` receipt.
+**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Slice 4 of #170, documentation and close-out (READY, Effort M, about one session, estimate): `NEWS.Rmd`, the guide
+section (`colony-manager-guide.qmd` near :1264, the B12 limits and the UNKNOWN-fate sentence), one proposed sentence per place for the owner and at most one question, the three wording points
+(`BACKLOG.md:33-58`), record the citation checklist as N/A, close #170. (2) Issue #36 check (READY, Effort S; the issue cites `R/agePyramidPlot.R`, which does not exist, no R file mentions chimpanzees,
+`R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`). (3) The `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:142`). (4) Owner-side: where to post the
+`close_out_report.py` write-up (draft only, `BACKLOG.md:181`). The `a2interactive.Rmd` pass stays a later dedicated one.
 
 ### Sessions 947-1038 (condensed S950 to S1039; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1038: Slice 2 of the retrospective colony-snapshot backfill, #170 (owner pick, "Backfill Slice 2"; strict TDD, every gate and both design calls put to the owner):
@@ -203,43 +224,28 @@ needs a date inside the file's records, and the `SESSION_NOTES.md` dry run says 
 `.github/workflows/shinytest2.yaml` `groups`; `test_dir(filter=)` matches the name without `test-` or `test_`; a hidden Shiny tab's download link has `href=""`; `rbind()` drops zero-row
 pieces; `withCallingHandlers()` goes inside `tryCatch()`; re-knit NEWS with `Rscript -e 'rmarkdown::render("NEWS.Rmd", quiet = TRUE)'` and compare head and tail with HEAD; check `git
 status` after `devtools::document()`; `quality_ratchet.py --run` overwrites the results file, so compare the last receipt's hash first.
-S1019: Export Current Group is finished: while the "groups not in the pedigree" sentence shows, Group Detail holds no table and no Export button (`R/modBreedingGroups.R:913,1162,1191`); claim `30d16de5f`, REFACTOR
-`11ce761e6`; 8/10, self 8/10 (Learning 985). **Gotchas kept:** only a picture and `innerText` say what a page shows; wait for a job's `EXIT=` line; a mutant run edits `R/` in place, so confirm with `git diff` after.
-S1015-S1018 (evaluations 8-9/10, self 7-8/10): S1018, the red `windows-latest` leg is green (`tests/testthat/test_docsAuditSlice6eMinorFixes.R:150-152` compares with `dirname(workbook)`); S1017, the guide
-names the "groups not in the pedigree" sentence in two places, pinned by `tests/testthat/test_guideGroupsOutsidePedigreeWording.R`; S1016, 13 small wrong statements fixed and pinned by
-`tests/testthat/test_docsAuditSlice6eMinorFixes.R` (new `assertFileType()`, `R/assertFileType.R:18`); S1015, the Input-tab upload block lives once in `tests/testthat/helper-inputTabUpload.R`.
-Claims `f1a90cad3`, `7f6648751`, `5411ddf79`; hashes in `CHANGELOG.md`. **Gotchas kept:** this file's ceiling is 25,000 tokens (about 56,750 B), so condense before adding; a workflow "success" does not
-name its legs (`gh run view <id> --json jobs`); a background command's output goes to a file and `pgrep` must show the work process within a minute; a roxygen edit is the R file plus its man page; never
-quote a misspelling in NEWS or help (`test_wordlist_coverage.R`); the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`,
-`RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`; a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
-S1012-S1014, the config-file reader (strict TDD, REFACTOR taken; evaluations 8-9/10, self 8/10): `readConfigLines()` (`R/readConfigLines.R:16`) is the one reader, `getParamDef()` reads a setting in
-another case, and the owner took option A (`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`), built as `scanConfigTerms()` (`R/getTokenList.R:64`). Claims `7aaa8e1d7`, `3bf3b438f`, `41428f309`.
-**Gotchas kept:** run `devtools::document()` after any data rebuild (`man/exampleNprcgenekeeprConfig.Rd` carries a generated length); a mutation run restores the file text in `finally`, never `git checkout`; config tests put
-a file under `HOME` (`tests/testthat/test_getSiteInfo.R:98`); install candidate packages into a scratch library, never renv (Learning 979).
-S1008-S1011 (claims and close-outs in `CHANGELOG.md` and `HANDOFFS.md`; evaluations 8-9/10, self 8/10): S1008, with a sex ratio set a male is placed only as a known adult male (`R/fillGroupMembersWithSexRatio.R:84-89`;
-`NEWS.Rmd:277`); S1009 diagnosed the red `shinytest2` run (`R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE when every row has an `NA` allele); S1010 fixed it (the guard at `:855` is
-`length(gmat) == 0L || is.null(rohTable) || is.null(ped)`); S1011, the Cross-Center check flags a reused id (row type `"mappedIdClash"`, `R/resolveCrossCenterIds.R:245`) and the merge keeps every column
-(`.padCrossCenterColumn()` `:340`). **Gotchas kept:** measure each named case of a ruled fix before RED; run a mutant against a new pin block before committing it; `req(x)` also stops for a length-0 value; to bisect an E2E file use a
-scratch `git worktree` and `R_LIBS=<lib>:<renv lib>`; the Cross-Center tab has no browser test (scratch `AppDriver`; Learnings 974-977).
-S1001-S1007 (evaluations 8-9/10, self 8/10): S1001, `methodology/CHANGELOG.md` trimmed from 207,203 B to 34,299 B (shard `methodology/archive/CHANGELOG-through-2026-10-14.md`; housekeeping); S1002, the twelve Summary
-Statistics Export pop-ups no longer draw a "character(0)" title bar (`R/modSummaryStats.R:16` `.exportButtonPopover()`; `NEWS.Rmd:599`); S1003, the 46 slice 6e candidates re-checked
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`; 1 closed, 45 still true, plus the new N1 Mate Pair finding); S1004, the owner's rulings on the seven slice 6e findings: fix all seven, option (a) each time
-(a decision session, no code); S1005, an Excel upload of kinship overrides or snapshot history works (`R/convertExcelNumericColumns.R`; `R/snapshotSchemaColumns.R`); S1006, the Mate Pair table pairs only animals recorded male
-or female and says how many it left out (`R/reportMatePairs.R:200`; `R/matePairLeftOutIds.R:21`); S1007, `convertFromCenter()` reads only whole values, and a `fromCenter` cell that is not a yes or a no stops the load and names
-its rows (`R/convertFromCenter.R:28-49`). **Found, not fixed (S1001):** 52 archive pointers name `docs/archive/` while the shards sit in `methodology/archive/` (`BACKLOG.md` DECISION NEEDED). **Gotchas kept:** pass
-`--cut <day before today>` to the trimmer when today's records stay live; zsh needs `${=VAR}` to split a file list; check every anchor before a script writes its first file; Learning 971 (a smoke run from the repo root tests
-the working tree); `writeTestXlsx()` (`tests/testthat/helper-excelFixtures.R`) builds a temporary workbook; no bundled data has an unsexed living animal, so a defect needs a hand-set U; `R/*.R` may not hold a bare "M" or
-"F" (`test_sexCodes.R`); `AppDriver` needs `NOT_CRAN=true`; Input-tab tests call `uploadPedigreeFile()` (`tests/testthat/helper-inputTabUpload.R`).
-S996-S1000 (strict TDD; evaluations 8-9/10, self 7-8/10): S996, the Breeding Groups Groups, Statistics and Group Detail pages say one plain sentence when a formed group holds an animal the loaded pedigree
-lacks (`R/modBreedingGroups.R:222`, `R/groupMembersMissingFromPedigree.R`); S997, the Pedigree Browser's twin-pairs file keeps the pairs that fit after a focal trim (`R/modPedigree.R:530`, `R/twinPairsWithin.R:20`;
-`NEWS.Rmd:89`); S998, with "separate pedigree and genotype files" the QC Summary says why a genotype file was not used and a short row no longer ends the session (`R/readSeparateGenotypeFile.R:22`,
-`R/modInput.R:501`; `NEWS.Rmd:525`); S999, the Marker Genetics module's `isReady` answers FALSE, not an error, for a genotype file it cannot use (`R/modMarkerGenetics.R:595,1347`; `NEWS.Rmd:545`); S1000, the
-Genetic Diversity heat map's leftover row reads "Unused animals" (`R/modBreedingGroups.R:901,1215` `groupLabels`; `R/appServer.R:434-439`; `R/nameBreedingGroups.R`; `NEWS.Rmd:279-283`). **Gotchas kept:** a scratch
-`AppDriver` needs `NOT_CRAN=true`; a scratch worktree of the RED sha gives the "before" run (Learning 963); `kinship()` and the layout builder both stop on a twin pair with an animal they do not hold; show the Input
-tab and QC Summary sub-tab with `.tab('show')` before reading `#dataInput-qcSummaryUI`, `app$click(wait_ = FALSE)`; `testServer` shows an observer error as a warning; a mutant of an observer's read destroys the
-`testServer` session; run `test_wordlist_coverage.R` with any NEWS edit (Learning 964); read the picture, not `textContent`; read `git diff NEWS.md` after a re-knit; "Top ranked" in a scratch driver needs a Genetic
-Value run before Form Groups (Learning 962); `test_moduleContract.R:56-58` pins each module's returned names; names label heat-map rows only when every element is named; name an item `\code{}` in help or the
-spelling test flags it.
+S1015-S1019 (evaluations 8-9/10, self 7-8/10; claims `30d16de5f`, `f1a90cad3`, `7f6648751`, `5411ddf79`; hashes in `CHANGELOG.md`): S1019, Export Current Group is finished (`R/modBreedingGroups.R:913,1162,1191`);
+S1018, the red `windows-latest` leg is green; S1017, the guide names the "groups not in the pedigree" sentence twice (`test_guideGroupsOutsidePedigreeWording.R`); S1016, 13 small wrong statements fixed
+(`assertFileType()`, `R/assertFileType.R:18`); S1015, `tests/testthat/helper-inputTabUpload.R`. **Gotchas kept:** this file's ceiling is 25,000 tokens (about 56,750 B), so condense before adding; a workflow
+"success" does not name its legs (`gh run view <id> --json jobs`); only a picture and `innerText` say what a page shows; a mutant run edits `R/` in place, so confirm with `git diff`; never quote a
+misspelling in NEWS or help (`test_wordlist_coverage.R`); a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
+S1012-S1014, the config-file reader (strict TDD; self 8/10): `readConfigLines()` (`R/readConfigLines.R:16`) is the one reader, `getParamDef()` reads a setting in another case, and the owner took option A
+(`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`), built as `scanConfigTerms()` (`R/getTokenList.R:64`). **Gotchas kept:** run `devtools::document()` after any data rebuild; a mutation run restores
+the file text in `finally`, never `git checkout`; config tests put a file under `HOME` (`tests/testthat/test_getSiteInfo.R:98`); install candidate packages into a scratch library, never renv.
+S1008-S1011 (evaluations 8-9/10, self 8/10): S1008, with a sex ratio set a male is placed only as a known adult male (`R/fillGroupMembersWithSexRatio.R:84-89`); S1009-S1010, the red `shinytest2` run
+(`R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE when every row has an `NA` allele; the guard at `:855`); S1011, the Cross-Center check flags a reused id (`"mappedIdClash"`,
+`R/resolveCrossCenterIds.R:245`) and the merge keeps every column. **Gotchas kept:** measure each named case of a ruled fix before RED; `req(x)` also stops for a length-0 value; the Cross-Center tab has
+no browser test.
+S1001-S1007 (evaluations 8-9/10, self 8/10): S1001, `methodology/CHANGELOG.md` trimmed from 207,203 B to 34,299 B; S1002, the Summary Statistics Export pop-ups draw no "character(0)" title bar
+(`R/modSummaryStats.R:16`); S1003-S1004, the 46 slice 6e candidates re-checked and the owner's rulings on the seven findings (fix all seven); S1005, an Excel upload of kinship overrides or snapshot history
+works (`R/convertExcelNumericColumns.R`); S1006, the Mate Pair table pairs only animals recorded male or female (`R/reportMatePairs.R:200`); S1007, `convertFromCenter()` reads only whole values
+(`R/convertFromCenter.R:28-49`). **Gotchas kept:** pass `--cut <day before today>` to the trimmer when today's records stay live; `writeTestXlsx()` (`tests/testthat/helper-excelFixtures.R`) builds a temporary
+workbook; `R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`); `AppDriver` needs `NOT_CRAN=true`.
+S996-S1000 (strict TDD; evaluations 8-9/10, self 7-8/10): S996, the Breeding Groups pages say one plain sentence when a formed group holds an animal the loaded pedigree lacks
+(`R/groupMembersMissingFromPedigree.R`); S997, the Pedigree Browser's twin-pairs file keeps the pairs that fit after a focal trim (`R/twinPairsWithin.R:20`); S998, "separate pedigree and genotype files"
+says why a genotype file was not used (`R/readSeparateGenotypeFile.R:22`); S999, Marker Genetics `isReady` answers FALSE for a genotype file it cannot use; S1000, the heat map's leftover row reads "Unused
+animals" (`R/modBreedingGroups.R:901,1215`). **Gotchas kept:** `kinship()` and the layout builder both stop on a twin pair with an animal they do not hold (S1039 met it again in the backfill); a mutant of an
+observer's read destroys the `testServer` session; read the picture, not `textContent`; `test_moduleContract.R` pins each module's returned names; name an item `\code{}` in help or the spelling test flags it.
 S995: the Genetic Diversity page says one plain sentence, once, for the same case (`R/modGeneticDiversity.R:48-54,136-169`; `NEWS.Rmd:461-467`; strict TDD; 9/10, self 7/10). **Gotchas
 kept:** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); real-app runs need a scratch `app.R` with `load_all()`; the
 studbook stays untracked (never `git add -A`); never `git stash` here.
