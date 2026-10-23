@@ -81,6 +81,57 @@ layersWithGeom <- function(p, geomClass) {
   }, logical(1L)))
 }
 
+## The lines of a plot's caption (one element per drawn line).
+captionLines <- function(p) {
+  strsplit(p$labels$caption, "\n", fixed = TRUE)[[1L]]
+}
+
+## Each caption line's width in inches, measured with the pdf device's built-in
+## Helvetica metrics, which give the same answer on every platform (a png
+## device would use whatever font the machine has).
+captionLineWidthsInches <- function(p) {
+  element <- ggplot2::calc_element("plot.caption", p$theme)
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  vapply(captionLines(p), function(line) {
+    grid::convertWidth(
+      grid::grobWidth(grid::textGrob(
+        line, gp = grid::gpar(fontsize = element$size,
+                              fontfamily = element$family)
+      )),
+      "in", valueOnly = TRUE
+    )
+  }, numeric(1L), USE.NAMES = FALSE)
+}
+
+## The plot's gtable, built on a null device so that no Rplots.pdf is left in
+## the test folder.
+plotGrob <- function(p) {
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  ggplot2::ggplotGrob(p)
+}
+
+## Three rebuilt snapshots made with one set of settings: the caption is the
+## rebuilt note alone.
+rebuiltOnlyHistory <- function() {
+  checkSnapshotHistory(rbind(
+    makeSnapshotRow("2020-01-01", "reconstructedLiving"),
+    makeSnapshotRow("2021-01-01", "reconstructedLiving"),
+    makeSnapshotRow("2022-01-01", "reconstructedLiving")
+  ))
+}
+
+## Two recorded snapshots that differ in all three provenance fields: the
+## caption is the provenance note naming all three, its longest form.
+allFieldsChangedHistory <- function() {
+  checkSnapshotHistory(rbind(
+    makeSnapshotRow("2020-01-01"),
+    makeSnapshotRow("2021-01-01", packageVersion = "2.1.0", guIter = 2000L,
+                    guThresh = 4L)
+  ))
+}
+
 test_that("plotSnapshotTrends returns a ggplot object with line and point layers", {
   p <- plotSnapshotTrends(validatedSnapshotHistory())
   expect_s3_class(p, "ggplot")
@@ -324,19 +375,70 @@ test_that("a rebuilt series of one point and a recorded series still plot", {
   expect_true(all(isSolid(lines$linetype)))
 })
 
-test_that("the rebuilt note and the provenance note sit on separate lines", {
+test_that("the provenance note and the rebuilt note each start a line of their own and are cut to short lines", {
   ## Seen S1039 in the real app (browser picture of the finished panel): with
   ## both notes on one line the caption was longer than the plot and its start
-  ## ran off the left edge, so each note gets a line of its own.
+  ## ran off the left edge, so each note gets a line of its own. S1044: one
+  ## line per note was still longer than a narrow plot (the app's plot is 437
+  ## pixels wide in a 700-pixel window), so each note is also cut into two
+  ## lines of at most 70 characters. The sentences are pinned as they stand,
+  ## so a cut that drops or changes a word fails; an owner's wording change
+  ## edits them here.
   history <- checkSnapshotHistory(rbind(
     makeSnapshotRow("2020-01-01", "reconstructedLiving", guIter = 1000L),
     makeSnapshotRow("2021-01-01", "reconstructedLiving", guIter = 1000L),
     makeSnapshotRow("2022-01-01", "reconstructedLiving", guIter = 2000L)
   ))
-  caption <- plotSnapshotTrends(history, metrics = "fe")$labels$caption
-  noteLines <- strsplit(caption, "\n", fixed = TRUE)[[1L]]
-  expect_length(noteLines, 2L)
-  expect_match(noteLines[[1L]], "Triangle points", fixed = TRUE)
-  expect_match(noteLines[[2L]], "Dashed", fixed = TRUE)
-  expect_lte(max(nchar(noteLines)), 120L)
+  noteLines <- captionLines(plotSnapshotTrends(history, metrics = "fe"))
+  expect_length(noteLines, 4L)
+  if (length(noteLines) == 4L) {
+    expect_match(noteLines[[1L]], "^Triangle points")
+    expect_match(noteLines[[3L]], "^Dashed")
+    expect_identical(
+      paste(noteLines[1:2], collapse = " "),
+      paste("Triangle points changed provenance (guIter) relative to the",
+            "previous same-rule snapshot.")
+    )
+    expect_identical(
+      paste(noteLines[3:4], collapse = " "),
+      paste("Dashed lines are rebuilt from studbook birth and exit dates and",
+            "today's parentage, not recorded at the time.")
+    )
+  }
+  expect_lte(max(nchar(noteLines)), 70L)
+})
+
+test_that("a note on its own is cut into two lines of at most 70 characters", {
+  ## The rebuilt note alone (108 characters) and the longest provenance note,
+  ## the one naming all three settings (113 characters).
+  for (history in list(rebuiltOnlyHistory(), allFieldsChangedHistory())) {
+    noteLines <- captionLines(plotSnapshotTrends(history, metrics = "fe"))
+    expect_length(noteLines, 2L)
+    expect_lte(max(nchar(noteLines)), 70L)
+  }
+})
+
+test_that("the caption is left-aligned to the whole picture, not right-aligned to the panel", {
+  ## ggplot2 right-aligns a caption to the panel by default, so a caption
+  ## longer than the panel and the legend leaves ran off the picture's left
+  ## edge. Left-aligned to the plot, its start is always on the picture.
+  p <- plotSnapshotTrends(rebuiltOnlyHistory(), metrics = "fe")
+  grob <- plotGrob(p)
+  cell <- grob$layout[grob$layout$name == "caption", ]
+  expect_equal(nrow(cell), 1L)
+  expect_equal(cell$l, 1L)
+  expect_equal(cell$r, ncol(grob))
+  expect_equal(ggplot2::calc_element("plot.caption", p$theme)$hjust, 0)
+})
+
+test_that("the widest caption line fits a figure five inches wide", {
+  ## Five inches is 360 pixels at the app's 72 dpi, narrower than the plot in a
+  ## 700-pixel window. Before S1044 the longest line was 6.47 inches wide.
+  marginInches <- 2 * 5.5 / 72
+  for (history in list(rebuiltOnlyHistory(), allFieldsChangedHistory())) {
+    widths <- captionLineWidthsInches(
+      plotSnapshotTrends(history, metrics = "fe")
+    )
+    expect_lte(max(widths) + marginInches, 5)
+  }
 })
