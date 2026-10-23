@@ -31,24 +31,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       them rather than copying them from here.
 
 - [ ] **Retrospective colony-snapshot backfill for longitudinal genetic-health
-      monitoring -- issue #170, design approved (S1036), Slice 1 of 4 DONE (S1037);
-      next Slice 2, READY, Effort L, each slice its own session** (2026-10-22; scope
-      ruled by the owner: an exported `backfillColonySnapshots()` plus a "Build earlier
-      snapshots" button on the Genetic-Health Trends tab that calls it) -- design,
-      measurements and slices: `docs/planning/retrospective-snapshot-backfill-plan.md`
-      (section 5.1 holds what Slice 1 corrected). **Done in Slice 1:** the rule
-      `reconstructedLiving` and the exported function for explicit dates, dated animals
-      only (`R/backfillColonySnapshots.R`); at the export date (2018-07-11) it equals
-      the app's snapshot field for field. **Slice 2 (script only):** the date grid, the
-      support report, existing-history skips, per-date failures reported not fatal; two
-      calls go to `AskUserQuestion`: animals with no birth date (B4) and the default
-      start year (B6). **Settle first:** B4 would count two UNKNOWN-status animals at
-      the export date (341 against the app's 339), so B4 and the exact-match test are
-      decided together. **Owed at Slice 4:** the `NEWS.Rmd` entry (deferred from Slice
-      1 at the owner's word), the guide section, the `a2interactive.Rmd` pass, closing
-      #170. **Not yet checked:** cost on a colony larger than the 2,590-animal example
-      (about 4 s per date there), and early years (1 of the 201 animals alive on
-      1990-01-01 has a recorded sire).
+      monitoring -- issue #170, design approved (S1036), Slices 1 and 2 of 4 DONE
+      (S1037, S1038); next Slice 3, READY, Effort L, each slice its own session**
+      (2026-10-22; scope ruled by the owner: an exported `backfillColonySnapshots()`
+      plus a "Build earlier snapshots" button on the Genetic-Health Trends tab that
+      calls it) -- design, measurements and slices:
+      `docs/planning/retrospective-snapshot-backfill-plan.md` (sections 5.1 and 5.2
+      hold what Slices 1 and 2 corrected). **Done:** the rule `reconstructedLiving`
+      and the exported function (`R/backfillColonySnapshots.R`): dates or a yearly
+      series, undated parents counted from their first dated offspring, animals not
+      listed as living never counted, a support table, skips for dates already in
+      `existingHistory`, failing dates reported in `skipped`. **Slice 3 (the app
+      button), put to the owner first:** the panel shows the support table before the
+      run, but no script-callable function gives it without the gene drop, so either
+      one is exported (design B1's parity promise) or the owner accepts an app-only
+      preview. **Owed at Slice 4:** the `NEWS.Rmd` entry (deferred at the owner's
+      word), the guide section, the `a2interactive.Rmd` pass, closing #170. **Not yet
+      checked:** cost on a colony larger than the 2,590-animal example (8 s for 53
+      dates at 10 iterations there).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE

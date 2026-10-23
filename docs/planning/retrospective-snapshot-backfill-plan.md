@@ -171,11 +171,11 @@ inherit it. The closure test in §5 Slice 1 is what catches it.
 | B1 | Scope: an exported function **and** an app button that calls it. | **Ruled by the owner, S1036** |
 | B2 | Method: blank later exits, set the population, same preparation as the app. | Evidence-determined (§2.2) |
 | B3 | Own rule name `reconstructedLiving`; never mixed with recorded rows. | Recommended |
-| B4 | Animals with no birth date: placed by their first dated offspring, else left out. | Recommended; judgment call |
-| B5 | Every date comes with a support report; no hidden floor. | Recommended; judgment call |
-| B6 | Date grid and start date. | Recommended; judgment call |
-| B7 | Dates already in the history are skipped and reported, never overwritten. | Recommended |
-| B8 | A failing date is reported, never silent and never fatal to the others. | Recommended |
+| B4 | Animals with no birth date: placed by their first dated offspring, else left out. | **Decided by the owner, S1038: "From first offspring"; an animal the studbook does not list as living (status UNKNOWN) never counts** (§5.2) |
+| B5 | Every date comes with a support report; no hidden floor. | Built S1038 (§5.2) |
+| B6 | Date grid and start date. | **Decided by the owner, S1038: the first 1 January with at least `minAnimals` (2) living animals** (§5.2) |
+| B7 | Dates already in the history are skipped and reported, never overwritten. | Built S1038 (§5.2) |
+| B8 | A failing date is reported, never silent and never fatal to the others. | Built S1038 (§5.2) |
 | B9 | `guIter` and `guThresh` are required, no defaults. | Follows S758 |
 | B10 | The app panel: full pedigree, the last analysis's settings, a preview before the run. | Recommended; wording is the owner's |
 | B11 | One shared helper for "prepare the analysis pedigree". | Recommended; ratify at Slice 1 REFACTOR |
@@ -311,6 +311,7 @@ about the app.
 Owner calls via `AskUserQuestion`: the B4 default and the B6 start. RED pins §2.3 and §2.4 (the
 44 / 21 / 20 line, the 1 / 194 line). **Done =** the function is complete for a script user;
 help page and examples with `guIter = 10L` to keep them fast. **Surface and limit:** as Slice 1.
+**Built in S1038:** see §5.2.
 
 **Slice 3: the app button.** The panel, the `fullPedigree` parameter, the captured settings, the
 dashed line and caption (B3), the module-contract and `snapshotSource` tests. RED includes a
@@ -348,6 +349,70 @@ Wording is written as one proposed sentence per place for the owner to edit.
 4. **Slice 1 returns `list(history = ...)`** so Slice 2 can add `support` and `skipped`
    without changing the shape. Built in S1037 (issue #170): RED `e4b832abd`, GREEN `559e260d7`
    and `9f863265d`, REFACTOR `a20fc3c32` (B11 done, owner approved).
+
+### 5.2 Decided and found building Slice 2 (S1038)
+
+Built in S1038 (issue #170): claim `387771996`, RED `b8d9bfa80`, GREEN `308cf7b0c`, REFACTOR
+`1c9e5f28a`; the owner approved every gate and made the two calls below with `AskUserQuestion`.
+
+1. **B4 and the exact-match claim are settled together.** An animal with no birth date counts from
+   the day its first dated offspring was born until its exit date ("From first offspring"). An
+   animal with no exit date counts only when `isLivingAnimal()` says so (status `ALIVE`, or no exit
+   date when the pedigree has no `status` column), so a status-UNKNOWN animal never counts. The two
+   UNKNOWN dams of the example (`2NTIGG`, `4R3TIJ`: named once each as a dam, never listed in the
+   file, added by the quality check) are out, the rebuilt export date is 339 animals, equal to the
+   app's, and the closure test passes unchanged. The rule is the app's own predicate, not a copy
+   of it, and it holds for animals with a birth date too (no shipped example has one with status
+   UNKNOWN and no exit date). Animals counted under the three rules the owner saw (leave them out /
+   from first offspring / also count UNKNOWN), example studbook: 1970 44 / 65 / 65, 1990
+   201 / 204 / 204, 2000 230 / 230 / 231, export date 339 / 339 / 341. `neSexRatio`, `neVariance`
+   and `fe` were identical under all three on all 102 dates tested (both example studbooks); mean
+   kinship differs between the first two on 80 of the 102, by at most 0.0002 from 1990 on and by
+   0.015 in 1967.
+2. **B6 is the first 1 January with at least `minAnimals` living animals** (default 2): 1966-01-01
+   on the example (two animals, one with a birth date and one parent placed by its offspring), 53
+   yearly points to 2018-01-01 (the last 1 January on or before the latest date in the data). It
+   would be 1967 (7 animals) if undated parents were left out, which is why B4 came first.
+   `minAnimals` moves only the default start; a date named in `dates` or `from` is never refused.
+3. **The "could also be alive" count of §2.3 was 20 on 1970-01-01 and should have been 24.** It
+   left out undated parents whose first dated offspring came after the date (4 that year, two of
+   them the UNKNOWN dams). `nPossiblyAlive` counts every animal that is not counted, is not known
+   to have been born after the date and had not left by it, which also holds the UNKNOWN-status
+   animals: 24 in 1970, 2 in 1990, 2 in 2000, and 57 on 1966-01-01 against 2 living, so the first
+   points rest on very little.
+4. **Names and shapes, fixed in RED.** The support columns are `snapshotDate`, `nLiving`,
+   `nPlacedByOffspring` (the design's `nBoundByOffspring`), `nPossiblyAlive`, `pctSireKnown` and
+   `pctDamKnown` (percent of the living animals with a recorded sire or dam, neither blank nor a
+   generated stand-in; `NA` when nobody was alive); `skipped` has `snapshotDate` and `reason`; the
+   result is `list(history, support, skipped)`; `support` covers every date in the run, skipped and
+   failed ones included.
+5. **B7 and B8 as built.** Rows of `existingHistory` are kept exactly as given, extra columns
+   included (a zero-row history is the same as none); only a (date, `reconstructedLiving`) pair is
+   skipped, and the same date under another rule is not. A failing date goes to `skipped` with the
+   error message verbatim and one warning says how many; the run stops, naming the dates, only when
+   no date at all could be built; dates already there plus failures return the existing history
+   with the warning. `updateProgress(n = dates in the run, value = how many are done, detail = the
+   date as text)` is called once per date and is not passed on to `reportGV()`.
+6. **Argument order.** `backfillColonySnapshots(ped, dates = NULL, guIter, guThresh, from = NULL,
+   to = NULL, by = "year", existingHistory = NULL, minAnimals = 2L, updateProgress = NULL, ...)`:
+   Slice 1's first four, then the new ones; `dates` cannot be combined with `from`, `to` or `by`.
+   `function_argument_linter` objects to required arguments after `dates = NULL`; the design's
+   interface table has the same shape and a test pins it, so two argument lines carry a `nolint`.
+   The owner kept it at the GREEN to REFACTOR gate (reordering was offered).
+7. **Cost.** The default series on the example (53 dates) takes 8.2 s at `guIter = 10` and all 53
+   are built; a second call with that result as `existingHistory` skips all 53 in 0.1 s. At
+   `guIter = 10` `reportGV()` warns on 52 of the 53 dates that founder genome equivalents are
+   undefined, so a panel has to catch those warnings. The 4 s a date at 1,000 iterations of §2.5
+   (about 3.5 minutes for 53 dates) is still an estimate, and a larger colony is still unmeasured.
+8. **Open for Slice 3: the support preview has no script-callable twin.** B10 shows the support
+   table for the whole grid before the run (counts only, no gene drop). Today those counts exist
+   only inside `backfillColonySnapshots()` (internal `describeBackfillColony()`,
+   `supportOnDate()` and `buildBackfillDates()`), so a panel preview would do something no script
+   can, against B1's promise that the app never does more than the function. Slice 3's PRE-RED
+   puts it to the owner: export a small preview function, or accept an app-only preview. Also for
+   Slice 4's B12 sentence: an UNKNOWN-fate ancestor with no exit date still counts as a living
+   breeder inside the estimators, which read the exit column as the app does, although it is not
+   counted in `nAnimals`.
 
 ---
 
