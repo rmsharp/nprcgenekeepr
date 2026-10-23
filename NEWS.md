@@ -416,6 +416,13 @@ export workflows, and longitudinal monitoring of colony genetic health.
   downloaded.
 - Snapshots recorded under different settings or software versions are
   flagged, so a jump is not mistaken for a real change in the colony.
+- **Build Earlier Snapshots** on the Genetic-Health Trends tab rebuilds
+  a yearly history from the birth and exit dates in the studbook, so a
+  trend shows without waiting for new snapshots; rebuilt points are
+  drawn dashed and kept apart from recorded ones (issue \#170).
+- Script users: `backfillColonySnapshots()` does the same from a script,
+  and `previewBackfillSupport()` shows how many animals each date rests
+  on without the long calculation.
 
 **Minor**
 
