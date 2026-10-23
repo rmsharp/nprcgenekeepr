@@ -379,6 +379,7 @@ reference:
   - '`obfuscateTwinRelations`'
   - '`offspringCounts`'
   - '`plotSnapshotTrends`'
+  - '`previewBackfillSupport`'
   - '`processQcStudbookResult`'
   - '`qcStudbook`'
   - '`rankSubjects`'
