@@ -18,6 +18,12 @@
 #' caption naming the changed fields: mixed-provenance series are flagged,
 #' not refused.
 #'
+#' Snapshots rebuilt from studbook dates by
+#' \code{\link{backfillColonySnapshots}} are filed under the rule
+#' \code{"reconstructedLiving"} (issue #170). That series is drawn as a dashed
+#' line, the recorded rules stay solid, and the caption says the dashed lines
+#' are rebuilt and were not recorded at the time.
+#'
 #' @param history data.frame holding the snapshot history in the 27-column
 #' version-1 schema; validated internally with
 #' \code{\link{checkSnapshotHistory}}. A trend needs at least two
@@ -38,6 +44,7 @@
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_point geom_ribbon
 #' @importFrom ggplot2 facet_wrap labs scale_shape_manual theme_minimal
+#' @importFrom ggplot2 scale_linetype_manual
 #' @importFrom ggplot2 .data
 plotSnapshotTrends <- function(history, metrics = NULL) {
   history <- checkSnapshotHistory(history)
@@ -73,6 +80,9 @@ plotSnapshotTrends <- function(history, metrics = NULL) {
       metric = metricName,
       value = as.numeric(history[[metricName]]),
       provenanceChange = ifelse(provenance$changed, "changed", "stable"),
+      seriesKind = ifelse(
+        history$membershipRule == "reconstructedLiving", "rebuilt", "recorded"
+      ),
       stringsAsFactors = FALSE
     )
   }))
@@ -111,22 +121,37 @@ plotSnapshotTrends <- function(history, metrics = NULL) {
     )
   }
   p <- p +
-    ggplot2::geom_line(data = lineData) +
+    ggplot2::geom_line(
+      data = lineData, ggplot2::aes(linetype = .data$seriesKind)
+    ) +
     ggplot2::geom_point(ggplot2::aes(shape = .data$provenanceChange)) +
     ggplot2::scale_shape_manual(
       values = c(stable = 16L, changed = 17L), guide = "none"
+    ) +
+    ggplot2::scale_linetype_manual(
+      values = c(recorded = "solid", rebuilt = "dashed"), guide = "none"
     ) +
     ggplot2::facet_wrap(~metric, scales = "free_y") +
     ggplot2::labs(
       x = "Snapshot date", y = NULL, colour = "Membership rule"
     ) +
     ggplot2::theme_minimal()
+  captions <- character(0L)
   if (length(provenance$fields) > 0L) {
-    p <- p + ggplot2::labs(caption = paste0(
+    captions <- c(captions, paste0(
       "Triangle points changed provenance (",
       toString(provenance$fields),
       ") relative to the previous same-rule snapshot."
     ))
+  }
+  if (any(history$membershipRule == "reconstructedLiving")) {
+    captions <- c(captions, paste0(
+      "Dashed lines are rebuilt from studbook birth and exit dates and ",
+      "today's parentage, not recorded at the time."
+    ))
+  }
+  if (length(captions) > 0L) {
+    p <- p + ggplot2::labs(caption = paste(captions, collapse = " "))
   }
   p
 }

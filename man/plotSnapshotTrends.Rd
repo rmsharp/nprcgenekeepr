@@ -37,6 +37,12 @@ Snapshots whose provenance (\code{guIter}, \code{guThresh}, or
 snapshot are drawn with a distinct point shape, and the plot carries a
 caption naming the changed fields: mixed-provenance series are flagged,
 not refused.
+
+Snapshots rebuilt from studbook dates by
+\code{\link{backfillColonySnapshots}} are filed under the rule
+\code{"reconstructedLiving"} (issue #170). That series is drawn as a dashed
+line, the recorded rules stay solid, and the caption says the dashed lines
+are rebuilt and were not recorded at the time.
 }
 \examples{
 history <- checkSnapshotHistory(readSnapshotHistory(system.file("extdata",

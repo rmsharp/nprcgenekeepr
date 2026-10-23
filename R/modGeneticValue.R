@@ -177,7 +177,11 @@ modGeneticValueUI <- function(id) {
 #' \code{maleFounders}, \code{femaleFounders}, and \code{snapshotSource}
 #' (issue #167 Slice 4: the most recent run's analyzed pedigree, its
 #' \code{nprcgenekeeprGV} object, and its \code{guIter}/\code{guThresh},
-#' captured atomically for \code{\link{modSnapshotTrendsServer}}).
+#' captured atomically for \code{\link{modSnapshotTrendsServer}}, plus
+#' \code{reportArgs} (issue #170 Slice 3): the other nine settings the run
+#' passed to \code{\link{reportGV}} -- the species tables and their defaults,
+#' the kinship overrides, the twin pairs and the three ranking cutoffs -- so
+#' the rows built for earlier dates match the analysis beside them).
 #'
 #' @seealso \code{\link{modGeneticValueUI}}
 #' @seealso \code{\link{modBreedingGroupsServer}} for using results.
@@ -344,7 +348,21 @@ modGeneticValueServer <- function(id, pedigree,
           ped = ped,
           geneticValue = gvReport,
           guIter = as.integer(input$nIterations),
-          guThresh = guThreshold()
+          guThresh = guThreshold(),
+          # Issue #170 Slice 3: the other settings of this run's analysis,
+          # frozen with it, so the panel that builds earlier snapshots
+          # analyzes past dates exactly as this run was analyzed.
+          reportArgs = list(
+            breedingTable = ov$breedingTable,
+            gestationTable = ov$gestationTable,
+            breedingAgeDefault = ov$breedingAgeDefault,
+            gestationDefault = ov$gestationDefault,
+            kinshipOverrides = kinshipOverrideData(),
+            twinRelations = twinRelations(),
+            guCutoff = guCutoffChoice(),
+            zScoreCutoff = zScoreCutoffChoice(),
+            axisPriority = axisPriorityChoice()
+          )
         ))
 
         # Return the report data frame with added rank column

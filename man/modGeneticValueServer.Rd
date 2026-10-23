@@ -42,7 +42,11 @@ be read), \code{founderStats},
 \code{maleFounders}, \code{femaleFounders}, and \code{snapshotSource}
 (issue #167 Slice 4: the most recent run's analyzed pedigree, its
 \code{nprcgenekeeprGV} object, and its \code{guIter}/\code{guThresh},
-captured atomically for \code{\link{modSnapshotTrendsServer}}).
+captured atomically for \code{\link{modSnapshotTrendsServer}}, plus
+\code{reportArgs} (issue #170 Slice 3): the other nine settings the run
+passed to \code{\link{reportGV}} -- the species tables and their defaults,
+the kinship overrides, the twin pairs and the three ranking cutoffs -- so
+the rows built for earlier dates match the analysis beside them).
 }
 \description{
 Genetic Value Analysis Module - Server Function
