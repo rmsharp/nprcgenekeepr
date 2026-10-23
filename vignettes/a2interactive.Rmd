@@ -1017,7 +1017,6 @@ least two snapshots, and _metrics_ chooses the panels (the default draws
 every metric column).
 
 ```{r snapshot-plot}
-#| fig.width: 9
 #| fig.height: 4
 #| fig.alt: >
 #|   Trend lines of three colony genetic-health measures over the snapshot

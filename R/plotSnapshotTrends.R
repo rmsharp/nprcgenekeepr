@@ -44,7 +44,7 @@
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_point geom_ribbon
 #' @importFrom ggplot2 facet_wrap labs scale_shape_manual theme_minimal
-#' @importFrom ggplot2 scale_linetype_manual
+#' @importFrom ggplot2 scale_linetype_manual theme element_text
 #' @importFrom ggplot2 .data
 plotSnapshotTrends <- function(history, metrics = NULL) {
   history <- checkSnapshotHistory(history)
@@ -151,7 +151,17 @@ plotSnapshotTrends <- function(history, metrics = NULL) {
     ))
   }
   if (length(captions) > 0L) {
-    p <- p + ggplot2::labs(caption = paste(captions, collapse = "\n"))
+    ## Each note is cut into lines of at most 70 characters and the caption is
+    ## left-aligned to the whole picture, so its start stays on a narrow plot.
+    wrapped <- vapply(captions, function(note) {
+      paste(strwrap(note, width = 70L), collapse = "\n")
+    }, character(1L), USE.NAMES = FALSE)
+    p <- p +
+      ggplot2::labs(caption = paste(wrapped, collapse = "\n")) +
+      ggplot2::theme(
+        plot.caption.position = "plot",
+        plot.caption = ggplot2::element_text(hjust = 0.0)
+      )
   }
   p
 }
