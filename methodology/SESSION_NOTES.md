@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1045 Did
+**Deliverable:** the trend chart's year labels overlap, and its panel titles are cut off, in narrow panels (`BACKLOG.md:81`; owner pick at the Phase 0 picker, item 1 of 4, "Trend chart labels"; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-23, after the Phase 0 report and the picker.
+**Status:** Session claimed. Work beginning: the real app's pictures at 2x first, then the approach question and PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1044 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trend chart caption"; strict TDD; the scope question, the PRE-RED, RED, wrong-check, GREEN-to-REFACTOR and
 dates-scope questions were put to the owner):** the footnote of `plotSnapshotTrends()` is never cut off: each note is cut into two lines of at most 70 characters (`strwrap(width =
