@@ -220,3 +220,106 @@ test_that("a clean history draws no provenance annotation", {
 test_that("plotSnapshotTrends stops on a malformed history", {
   expect_error(plotSnapshotTrends(data.frame(x = 1)), "must have columns")
 })
+
+## ---------------------------------------------------------------------------
+## Rebuilt series (S1039; issue #170, Slice 3, design B3)
+## ---------------------------------------------------------------------------
+##
+## Snapshots that backfillColonySnapshots() rebuilds from studbook dates are
+## filed under their own rule, "reconstructedLiving", and must not be mistaken
+## for ones recorded at the time. The chart draws that rule's line dashed (the
+## recorded rules stay solid) and the plot carries a one-line caption saying
+## so. The caption's wording is the owner's; these tests pin its key words.
+
+## The x positions (days since 1970-01-01) and line types of every line the
+## plot draws for one metric, however many layers draw them.
+drawnLines <- function(p) {
+  lineLayers <- layersWithGeom(p, "GeomLine")
+  do.call(rbind, lapply(lineLayers, function(i) {
+    layerData <- ggplot2::layer_data(p, i)
+    data.frame(
+      x = as.numeric(layerData$x),
+      linetype = as.character(layerData$linetype),
+      stringsAsFactors = FALSE
+    )
+  }))
+}
+isDashed <- function(linetype) linetype %in% c("dashed", "2")
+isSolid <- function(linetype) linetype %in% c("solid", "1")
+
+mixedRulesHistory <- function() {
+  checkSnapshotHistory(rbind(
+    makeSnapshotRow("2024-01-01", "wholePedigree"),
+    makeSnapshotRow("2025-01-01", "wholePedigree"),
+    makeSnapshotRow("2020-01-01", "reconstructedLiving"),
+    makeSnapshotRow("2021-01-01", "reconstructedLiving"),
+    makeSnapshotRow("2022-01-01", "reconstructedLiving"),
+    makeSnapshotRow("2024-01-01", "focalPopulation"),
+    makeSnapshotRow("2025-01-01", "focalPopulation")
+  ))
+}
+
+test_that("the reconstructedLiving line is dashed and recorded lines stay solid", {
+  p <- plotSnapshotTrends(mixedRulesHistory(), metrics = "fe")
+  lines <- drawnLines(p)
+  rebuilt <- as.numeric(as.Date(c("2020-01-01", "2021-01-01", "2022-01-01")))
+  expect_identical(nrow(lines), 7L)
+  expect_identical(sort(lines$x[isDashed(lines$linetype)]), rebuilt)
+  recorded <- as.numeric(as.Date(c("2024-01-01", "2025-01-01")))
+  expect_identical(sort(lines$x[isSolid(lines$linetype)]), sort(c(recorded, recorded)))
+})
+
+test_that("a history with no reconstructed rows draws every line solid", {
+  p <- plotSnapshotTrends(validatedSnapshotHistory(), metrics = "fe")
+  lines <- drawnLines(p)
+  expect_gt(nrow(lines), 0L)
+  expect_true(all(isSolid(lines$linetype)))
+})
+
+test_that("the caption says the dashed lines are rebuilt, not recorded at the time", {
+  p <- plotSnapshotTrends(mixedRulesHistory(), metrics = "fe")
+  expect_false(is.null(p$labels$caption))
+  expect_match(p$labels$caption, "Dashed", fixed = TRUE)
+  expect_match(p$labels$caption, "rebuilt", fixed = TRUE)
+  expect_match(p$labels$caption, "not recorded", fixed = TRUE)
+  expect_match(p$labels$caption, "birth and exit dates", fixed = TRUE)
+})
+
+test_that("a history with no reconstructed rows has no rebuilt caption", {
+  clean <- checkSnapshotHistory(rbind(
+    makeSnapshotRow("2026-01-15"),
+    makeSnapshotRow("2026-07-15")
+  ))
+  expect_null(plotSnapshotTrends(clean, metrics = "fe")$labels$caption)
+  p <- plotSnapshotTrends(validatedSnapshotHistory(), metrics = "fe")
+  expect_false(grepl("rebuilt", p$labels$caption, fixed = TRUE))
+})
+
+test_that("the rebuilt note and the provenance note share one caption", {
+  history <- checkSnapshotHistory(rbind(
+    makeSnapshotRow("2020-01-01", "reconstructedLiving", guIter = 1000L),
+    makeSnapshotRow("2021-01-01", "reconstructedLiving", guIter = 1000L),
+    makeSnapshotRow("2022-01-01", "reconstructedLiving", guIter = 2000L)
+  ))
+  caption <- plotSnapshotTrends(history, metrics = "fe")$labels$caption
+  expect_match(caption, "guIter", fixed = TRUE)
+  expect_match(caption, "Dashed", fixed = TRUE)
+  expect_match(caption, "rebuilt", fixed = TRUE)
+})
+
+test_that("a rebuilt series of one point and a recorded series still plot", {
+  history <- checkSnapshotHistory(rbind(
+    makeSnapshotRow("2020-01-01", "reconstructedLiving"),
+    makeSnapshotRow("2024-01-01", "wholePedigree"),
+    makeSnapshotRow("2025-01-01", "wholePedigree")
+  ))
+  p <- plotSnapshotTrends(history, metrics = "fe")
+  expect_s3_class(p, "ggplot")
+  expect_error(ggplot2::ggplot_build(p), NA)
+  pointLayers <- layersWithGeom(p, "GeomPoint")
+  expect_identical(nrow(ggplot2::layer_data(p, pointLayers[1L])), 3L)
+  ## one point has no line to dash; the two recorded points keep their solid one
+  lines <- drawnLines(p)
+  expect_identical(nrow(lines), 2L)
+  expect_true(all(isSolid(lines$linetype)))
+})

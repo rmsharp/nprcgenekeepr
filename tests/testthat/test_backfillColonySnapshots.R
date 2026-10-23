@@ -33,38 +33,6 @@ library(testthat)
 ## population for a past date finds no living breeders, because an animal alive
 ## in 1990 has almost always left since.
 
-## The hand-built colony of design section 5 Slice 1 (a), ten animals. S1 and
-## D1 die inside the window (2010-06-01, 2012-01-01) and K1 dies 2008-01-01.
-##
-## On 2007-01-01 the living animals are S1, S2, D1, D2, D3, K1, K2 (7: three
-## males, four females). K3, K4 and K5 are not born, so the trimmed pedigree
-## names as parents only S1 (K1, K2), D1 (K1) and D2 (K2): breeders S1, D1, D2,
-## one male and two females, neSexRatio = 4 * 1 * 2 / (1 + 2) = 8/3.
-##
-## On 2011-01-01 S1 has left; the living animals are S2, D1, D2, D3, K2, K3,
-## K4, K5 (8: two males, six females). Breeders are S2 and K3 (males), D2, D3
-## and K2 (females): neSexRatio = 4 * 2 * 3 / (2 + 3) = 4.8.
-handBuiltColony <- function() {
-  ped <- data.frame(
-    id = c("S1", "S2", "D1", "D2", "D3", "K1", "K2", "K3", "K4", "K5"),
-    sire = c(NA, NA, NA, NA, NA, "S1", "S1", "S2", "S2", "K3"),
-    dam = c(NA, NA, NA, NA, NA, "D1", "D2", "D3", "D2", "K2"),
-    sex = c("M", "M", "F", "F", "F", "M", "F", "M", "F", "F"),
-    birth = as.Date(c(
-      "2000-01-01", "2001-01-01", "2000-01-01", "2000-06-01", "2001-06-01",
-      "2005-01-01", "2006-01-01", "2008-01-01", "2009-01-01", "2010-06-01"
-    )),
-    exit = as.Date(c(
-      "2010-06-01", NA, "2012-01-01", NA, NA,
-      "2008-01-01", NA, NA, NA, NA
-    )),
-    stringsAsFactors = FALSE
-  )
-  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-  ped
-}
-handDates <- as.Date(c("2007-01-01", "2011-01-01"))
-
 ## The shortcut a script user has today: set only the population by dates and
 ## leave the exit column alone.
 shortcutNeSexRatio <- function(ped, date) {
@@ -74,26 +42,6 @@ shortcutNeSexRatio <- function(ped, date) {
     removeUninformative = FALSE, addBackParents = FALSE
   )
   calcNeSexRatio(trimmed)
-}
-
-## The shipped Japanese macaque example, read the way the app reads it: blanks
-## are NA, and the default parent-age check stops this file so it is switched
-## off (design Appendix B). Read once per run.
-jmacQcCache <- new.env(parent = emptyenv())
-jmacQc <- function() {
-  path <- jmacExamplePath()
-  skip_if(path == "", "shipped jmac example not found")
-  if (is.null(jmacQcCache$ped)) {
-    raw <- read.csv(path,
-      na.strings = c("", "NA"), check.names = FALSE,
-      stringsAsFactors = FALSE
-    )
-    jmacQcCache$ped <- suppressMessages(qcStudbook(raw,
-      minSireAge = 0, minDamAge = 0, reportChanges = FALSE,
-      reportErrors = FALSE
-    ))
-  }
-  jmacQcCache$ped
 }
 
 ## What the app records for a pedigree: the Pedigree tab sets the population to
@@ -327,51 +275,6 @@ test_that("the example colony in 1990, 2000 and 2010 gives the measured sizes", 
 ## Slice 2 (S1038)
 ## ---------------------------------------------------------------------------
 
-## Eleven rows, counted by hand. Real animals:
-##   S1  M  2000-01-01 to 2010-06-01     D1  F  2000-01-01 to 2012-01-01
-##   D2  F  no birth date, left 2009-01-01, dam of K1
-##   D3  F  no birth date, left 2011-01-01, no offspring
-##   X1  F  no birth date, no exit date, status UNKNOWN, dam of K3
-##   K1  M  2002-03-01 (S1 x D2)         K2  F  2004-05-01 (S1 x D1)
-##   K3  M  2006-01-01 (K1 x X1)          K4  F  2008-01-01 (U0001 x D1)
-##   Z1  M  2001-01-01, no exit date, status UNKNOWN
-## and U0001, a generated stand-in sire, which is never an animal.
-##
-## Counted as alive (an undated parent from its first dated offspring until it
-## leaves; an animal with no exit date only when the studbook says ALIVE):
-##   2003-01-01  S1, D1, D2 (placed by K1), K1               4 (2 M, 2 F)
-##   2007-01-01  S1, D1, D2, K1, K2, K3                      6 (3 M, 3 F)
-##   2011-06-01  D1, K1, K2, K3, K4 (S1, D2, D3 have left)   5 (2 M, 3 F)
-## X1 and Z1 never count. With D3 (no offspring, so it cannot be placed) they
-## are the animals the studbook does not rule out: 3, 3 and 2 on the three
-## dates (D3 left 2011-01-01). Recorded sires among the living: 1 of 4, 3 of
-## 6, 3 of 5 (K4's sire is the stand-in); recorded dams: 1 of 4, 3 of 6, 4 of 5.
-undatedColony <- function() {
-  ped <- data.frame(
-    id = c("S1", "D1", "D2", "D3", "X1", "K1", "K2", "K3", "K4", "U0001", "Z1"),
-    sire = c(NA, NA, NA, NA, NA, "S1", "S1", "K1", "U0001", NA, NA),
-    dam = c(NA, NA, NA, NA, NA, "D2", "D1", "X1", "D1", NA, NA),
-    sex = c("M", "F", "F", "F", "F", "M", "F", "M", "F", "M", "M"),
-    birth = as.Date(c(
-      "2000-01-01", "2000-01-01", NA, NA, NA, "2002-03-01", "2004-05-01",
-      "2006-01-01", "2008-01-01", NA, "2001-01-01"
-    )),
-    exit = as.Date(c(
-      "2010-06-01", "2012-01-01", "2009-01-01", "2011-01-01", NA, NA, NA, NA,
-      NA, NA, NA
-    )),
-    status = c(
-      "DECEASED", "DECEASED", "DECEASED", "DECEASED", "UNKNOWN", "ALIVE",
-      "ALIVE", "ALIVE", "ALIVE", "UNKNOWN", "UNKNOWN"
-    ),
-    placeholder = c(rep(FALSE, 9L), TRUE, FALSE),
-    stringsAsFactors = FALSE
-  )
-  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-  ped
-}
-undatedDates <- as.Date(c("2003-01-01", "2007-01-01", "2011-06-01"))
-
 ## Runs the function with a seed and lets through only the warning this slice
 ## adds, so reportGV()'s own warnings can neither hide it nor stand in for it.
 runBackfill <- function(ped, ..., seed = 1L) {
@@ -384,30 +287,6 @@ runBackfill <- function(ped, ..., seed = 1L) {
       }
     }
   )
-}
-
-## An error that names what is wrong. R's own "unused argument (from = ...)"
-## also contains the argument's name, so it is refused outright: before an
-## argument exists these checks must fail, not pass by accident.
-expectStopNaming <- function(expr, ...) {
-  msg <- tryCatch(
-    {
-      force(expr)
-      NA_character_
-    },
-    error = function(e) conditionMessage(e)
-  )
-  expect_false(is.na(msg), info = "expected an error, got none")
-  expect_false(grepl("unused argument", msg, fixed = TRUE), info = msg)
-  for (term in c(...)) {
-    expect_match(msg, term, fixed = TRUE)
-  }
-}
-
-expectSameRows <- function(actual, expected) {
-  rownames(actual) <- NULL
-  rownames(expected) <- NULL
-  expect_equal(actual, expected)
 }
 
 test_that("an undated parent counts from its first dated offspring until it leaves", {
@@ -703,4 +582,107 @@ test_that("the arguments keep their documented order and defaults", {
     "by = \"year\", existingHistory = NULL, minAnimals = 2L, ",
     "updateProgress = NULL, ...)"
   ))
+})
+
+## ---------------------------------------------------------------------------
+## Twin pairs (S1039, issue #170 Slice 3; the owner chose "Fix it in the
+## function" at the PRE-RED gate)
+## ---------------------------------------------------------------------------
+##
+## kinship() stops when a declared MZ pair names an animal that is not in the
+## pedigree it is given ("All twinRelations id1/id2 values must be present in
+## id."). On a past date that pedigree holds only the animals alive then and
+## their ancestors, so a twin born later, or one who left and has no
+## descendants, is not in it, and every date failed. Measured S1039 on the
+## shipped example: one declared pair, a 1995 animal with a 2016 animal, gave
+## "No snapshot could be built" for both 2000-01-01 and 2015-01-01. The app
+## declares twins on the Pedigree tab, so the panel would hit it too.
+##
+## Declared MZ animals form groups (A-B and B-C make {A, B, C}, kinship's own
+## rule). A group with an animal missing on a date cannot change anyone's
+## kinship there through that animal, but the animals of it that are present
+## are still identical twins of each other, so each date keeps the groups
+## restricted to the animals present. An id that is in no pedigree at all is
+## still a mistake and still stops, once, before any date.
+
+twinPair <- function(id1, id2, code = "MZ twin") {
+  data.frame(id1 = id1, id2 = id2, code = code, stringsAsFactors = FALSE)
+}
+
+test_that("a twin pair with an animal missing on a date is left out for that date", {
+  ped <- handBuiltColony()
+  ## K1 lives 2005-01-01 to 2008-01-01 and K5 is born 2010-06-01, so on
+  ## 2007-01-01 K5 is not born and on 2011-01-01 K1 has left and has no
+  ## descendants; each date lacks one of the two.
+  without <- runBackfill(ped, dates = handDates)
+  with <- runBackfill(ped, dates = handDates, twinRelations = twinPair("K1", "K5"))
+  expect_identical(with$history$snapshotDate, handDates)
+  expect_identical(nrow(with$skipped), 0L)
+  expectSameRows(with$history, without$history)
+  expectSameRows(with$support, without$support)
+})
+
+test_that("a twin pair is applied on the dates both animals are present", {
+  ped <- handBuiltColony()
+  ## K2 (born 2006) and K3 (born 2008) are both alive on 2011-01-01; on
+  ## 2007-01-01 K3 is not born. Declaring them identical raises their kinship
+  ## with each other from 0 to 0.5, and the mean kinship over the eight
+  ## animals from 9/64 to 45/256 (measured S1039); nothing else in the row
+  ## depends on it.
+  pair <- twinPair("K2", "K3")
+  without <- runBackfill(ped, dates = handDates)$history
+  with <- runBackfill(ped, dates = handDates, twinRelations = pair)
+  expect_identical(nrow(with$skipped), 0L)
+  expectSameRows(with$history[1L, ], without[1L, ])
+  expect_equal(without$meanIndivMeanKin[[2L]], 9 / 64)
+  expect_equal(with$history$meanIndivMeanKin[[2L]], 45 / 256)
+  kinshipColumns <- c(
+    "meanIndivMeanKin", "medianIndivMeanKin", "skewnessIndivMeanKin",
+    "kurtosisIndivMeanKin"
+  )
+  other <- setdiff(names(without), kinshipColumns)
+  expectSameRows(with$history[2L, other], without[2L, other])
+})
+
+test_that("a chain of pairs through an animal who is missing still joins the animals present", {
+  ## K2-K1 and K1-K3 make {K1, K2, K3}. K1 left in 2008, so on 2011-01-01 it
+  ## is not in the pedigree, but K2 and K3 are still identical twins: the row
+  ## equals the one for the pair (K2, K3).
+  ped <- handBuiltColony()
+  chain <- rbind(twinPair("K2", "K1"), twinPair("K1", "K3"))
+  viaChain <- runBackfill(ped, dates = handDates[[2L]], twinRelations = chain)
+  expect_identical(nrow(viaChain$skipped), 0L)
+  expect_equal(viaChain$history$meanIndivMeanKin, 45 / 256)
+  direct <- runBackfill(ped,
+    dates = handDates[[2L]], twinRelations = twinPair("K2", "K3")
+  )
+  expectSameRows(viaChain$history, direct$history)
+})
+
+test_that("an id that is in no pedigree at all still stops, naming it", {
+  ped <- handBuiltColony()
+  expectStopNaming(
+    runBackfill(ped, dates = handDates, twinRelations = twinPair("K1", "NOPE")),
+    "twinRelations", "NOPE"
+  )
+  expectStopNaming(
+    runBackfill(ped, dates = handDates, twinRelations = twinPair("NOPE", "K1")),
+    "twinRelations", "NOPE"
+  )
+})
+
+test_that("the example colony rebuilds both dates with a pair declared across them", {
+  ## the case measured S1039: an animal born 1995-06-23 and one born
+  ## 2016-05-05, on dates either side of the second birth
+  ped <- jmacQc()
+  early <- "03JG2L"
+  late <- "0ZV8DV"
+  expect_identical(ped$birth[ped$id == early], as.Date("1995-06-23"))
+  expect_identical(ped$birth[ped$id == late], as.Date("2016-05-05"))
+  dates <- as.Date(c("2000-01-01", "2015-01-01"))
+  result <- runBackfill(ped,
+    dates = dates, twinRelations = twinPair(early, late), seed = 7L
+  )
+  expect_identical(result$history$snapshotDate, dates)
+  expect_identical(nrow(result$skipped), 0L)
 })
