@@ -809,6 +809,161 @@ zs <- rpt[, "zScores"]
 Creation of boxplots for the _mean kinship_ and _z-scores_ is left
 as an exercise.
 
+## Colony Snapshots Over Time
+
+A _snapshot_ is one dated row of colony-level numbers: the settings and
+counts that say what the numbers rest on, the values __reportGV__ reports
+for the colony as a whole, and summaries of the per-animal kinship and genome
+uniqueness values. Rows for successive dates make a _history_, which is what
+the Genetic-Health Trends tab of the Shiny application keeps and plots. The
+functions in this section do the same work in a script.
+
+The chunks below use the example pedigree that ships with the package,
+__qcPed__, and few gene-drop iterations so that each runs in a moment. Use
+more for an analysis you will report (the default of __reportGV__ is
+`r formals(reportGV)$guIter`).
+
+### Recording a Snapshot
+
+__createColonySnapshot__ turns one __reportGV__ result into a one-row
+snapshot. Give it the pedigree the analysis was run on, the result, the
+_membershipRule_ that says who was analyzed (here `"wholePedigree"`, every
+animal in the pedigree), and the same _guIter_ and _guThresh_ the analysis
+used, because the snapshot records them and the result does not carry them.
+__appendColonySnapshot__ adds the row to a history (`NULL` starts a new one)
+and returns the history in date order; it writes nothing. The date is fixed
+here only so that the printed values are the same each time the document is
+built; leave it out to date the snapshot today.
+
+```{r snapshot-record}
+set.seed(1L)
+snapshotPed <- qcPed
+snapshotGV <- reportGV(snapshotPed, guIter = 50L, guThresh = 1L)
+firstSnapshot <- createColonySnapshot(snapshotPed, snapshotGV,
+  "wholePedigree",
+  guIter = 50L, guThresh = 1L, snapshotDate = as.Date("2018-01-01")
+)
+snapshotHistory <- appendColonySnapshot(NULL, firstSnapshot)
+snapshotHistory[, c("snapshotDate", "membershipRule", "nAnimals", "fe", "fg")]
+```
+
+The snapshot has `r ncol(firstSnapshot)` columns; the table shows five of
+them.
+
+### Rebuilding Earlier Dates
+
+A history of one row shows no trend. __backfillColonySnapshots__ rebuilds a
+snapshot for each date you name from the birth and exit dates already in the
+pedigree, so you need not wait for seasons of recording. It works out which
+animals were alive on each date, analyzes them and their ancestors with
+__reportGV__, and summarizes the result as __createColonySnapshot__ does. Give
+it the full pedigree, not one already trimmed to a focal list of animals. The
+rows are filed under their own membership rule, `"reconstructedLiving"`, so
+they form a line of their own and never mix with recorded rows. Passing the
+history as _existingHistory_ keeps its rows and adds the rebuilt ones.
+
+Before the gene drop is spent, __previewBackfillSupport__ gives the counts
+each date rests on, without the analysis.
+
+```{r snapshot-backfill}
+set.seed(1L)
+earlierDates <- as.Date(c("2005-01-01", "2008-01-01", "2010-01-01"))
+backfillPreview <- previewBackfillSupport(snapshotPed, dates = earlierDates)
+backfillPreview
+earlierSnapshots <- backfillColonySnapshots(snapshotPed,
+  dates = earlierDates,
+  guIter = 50L, guThresh = 1L, existingHistory = snapshotHistory
+)
+snapshotHistory <- earlierSnapshots$history
+snapshotHistory[, c("snapshotDate", "membershipRule", "nAnimals", "fe", "fg")]
+```
+
+_nLiving_ is the number of animals each date rests on, and _pctSireKnown_
+and _pctDamKnown_ are the percentage of them whose sire or dam is recorded.
+_nPlacedByOffspring_ and _nPossiblyAlive_ count animals with no birth date
+(`?backfillColonySnapshots` says how each is placed). Read these counts
+beside the trend: where few sires are recorded the sex-ratio effective size
+reads low because of the missing records, not because of the colony.
+
+A rebuilt snapshot looks back with today's records: a parent identified later
+counts as known earlier, today's genotypes are used for every date, and only
+animals with a birth date, or with an offspring that has one, are placed. Two
+close dates can differ only by the random sampling every gene drop has.
+
+A date that cannot be analyzed does not stop the others. It is listed in the
+`skipped` element with the reason, and one warning says how many dates
+failed. Here `r nrow(earlierSnapshots$skipped)` dates were skipped.
+
+### Saving, Reading and Checking a History
+
+Neither __appendColonySnapshot__ nor __backfillColonySnapshots__ writes a
+file. You keep the history yourself, as the application does when you
+download it, with __write.csv__ and `row.names = FALSE`.
+__readSnapshotHistory__ reads the file back (delimited text or Excel) but
+does not check it, and it leaves the dates as text. __checkSnapshotHistory__
+checks the structure and the values, stops with a message that names the
+problem, and otherwise returns the history with the dates as dates.
+
+```{r snapshot-save-read}
+historyFile <- tempfile(fileext = ".csv")
+write.csv(snapshotHistory, historyFile, row.names = FALSE)
+readBack <- readSnapshotHistory(historyFile)
+class(readBack$snapshotDate)
+checkedHistory <- checkSnapshotHistory(readBack)
+class(checkedHistory$snapshotDate)
+```
+
+### Comparing Two Dates
+
+__calcSnapshotDeltas__ lists, metric by metric, the value on each of two
+dates and the difference between them. The two dates must belong to one
+membership-rule series, because rules are never compared with each other. A
+history that holds both recorded and rebuilt rows therefore needs to be told
+which series; without _membershipRule_ the function stops and names the
+rules it finds.
+
+```{r snapshot-compare}
+mixedRuleMessage <- tryCatch(
+  calcSnapshotDeltas(checkedHistory, from = "2005-01-01", to = "2010-01-01"),
+  error = conditionMessage
+)
+mixedRuleMessage
+deltas <- calcSnapshotDeltas(checkedHistory,
+  from = "2005-01-01", to = "2010-01-01",
+  membershipRule = "reconstructedLiving"
+)
+deltas[deltas$metric %in% c("nAnimals", "fe", "fg", "neSexRatio"), ]
+```
+
+The _comparabilityFlag_ column is `NA` when the two snapshots were made with
+the same settings. When they were not, it names each setting that differs, so
+a change caused by a different number of gene-drop iterations is not mistaken
+for a change in the colony.
+
+### Plotting the Trend
+
+__plotSnapshotTrends__ draws the history as one ggplot object with a panel
+for each metric, the date along the bottom and one colored series for each
+membership rule. The rebuilt series is dashed, and the caption says that the dashed
+lines were rebuilt and not recorded at the time. Where the history carries a
+standard error, as for founder genome equivalents and mean genome uniqueness,
+the panel shows a ribbon for the sampling uncertainty of the gene drop. A
+snapshot made with different settings from the previous one of its series is
+drawn with a different point shape and named in the caption. A trend needs at
+least two snapshots, and _metrics_ chooses the panels (the default draws
+every metric column).
+
+```{r snapshot-plot}
+#| fig.width: 9
+#| fig.height: 4
+#| fig.alt: >
+#|   Trend lines of three colony genetic-health measures over the snapshot
+#|   dates. The rebuilt snapshots form a dashed line and the one recorded
+#|   snapshot is a single point.
+trendPlot <- plotSnapshotTrends(checkedHistory, metrics = c("fe", "fg", "meanGu"))
+trendPlot
+```
+
 ## Breeding Group Formation
 
 The primary purpose of __nprcgenekeepr__ is to form breeding groups 

@@ -188,6 +188,26 @@ test_that("the plot chunk gives the figure alt text", {
                         fixed = TRUE)))
 })
 
+## S1042, found at GREEN in the picture of the rendered section, which no test
+## had caught: at the tutorial's default 7-inch figure the plot's caption
+## ("Dashed lines are rebuilt from studbook birth and exit dates and today's
+## parentage, not recorded at the time.", 5.9 inches wide) is cut off on its
+## left, because ggplot right-aligns it to the panel and the legend takes about
+## two inches of the figure. Measured on macOS: cut at 7 inches, whole at 8 and
+## at 9. The chunk is 9 inches wide so that a wider font on another platform
+## (the website is built on Linux) still fits. The function's own alignment of
+## the caption is a separate BACKLOG item, not changed here.
+test_that("the plot chunk's figure is wide enough for the plot's caption", {
+  section <- snapshotSection()
+  expect_gt(length(section), 0L)
+  setting <- grep("^#\\| fig\\.width:", chunkOptionText(section, "snapshot-plot"),
+                  value = TRUE)
+  expect_length(setting, 1L)
+  if (length(setting) == 1L) {
+    expect_gte(as.numeric(sub("^#\\| fig\\.width:\\s*", "", setting)), 9)
+  }
+})
+
 test_that("the five chunks run in order on their own and give no warning, the plot drawn too", {
   skip_on_cran()
   run <- chunkRun()
