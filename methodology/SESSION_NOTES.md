@@ -99,51 +99,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1045 Did
-**Deliverable:** the trend chart's year labels overlap, and its panel titles are cut off, in narrow panels (`BACKLOG.md:81`; owner pick at the Phase 0 picker, item 1 of 4, "Trend chart labels"; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-23, after the Phase 0 report and the picker.
-**Status:** Session claimed. Work beginning: the real app's pictures at 2x first, then the approach question and PRE-RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trend chart labels"; strict TDD; the approach question, the PRE-RED, RED-to-GREEN and GREEN-to-REFACTOR gates
+were put to the owner):** the Genetic-Health Trends chart keeps its panel titles whole and never overprints its year labels in a narrow window. `trendPlotLayout(width, nPanels)`
+(`R/trendPlotLayout.R:26`, internal) gives `floor((width - 115) / 150)` panel columns kept between 2 and 5 and 130 px a row plus 80; `plotSnapshotTrends()` takes `ncol = NULL`
+(`R/plotSnapshotTrends.R:57,76`) and draws the year labels with `guide_axis(check.overlap = TRUE)` (`:139`, at every width); the module's plot box is `height = "auto"` and its
+`renderPlot` takes the columns and the height from the box's width (`R/modSnapshotTrends.R:98,289-299`); the 18 default metric names are one constant (`R/trendDefaultMetrics.R:13`).
+The owner chose "columns follow the window width" over "always 3 columns" and "labels and font only" at the approach question.
+**Measured first:** the real app's plot is 437, 570, 770 and 903 px wide in 700-, 900-, 1200- and 1400-px windows; the 18 panels were 22, 48, 88 and 115 px wide against the longest
+title's 94 px, so 15, 7, 1 and 0 of 18 titles lost letters; a one-year history's 36-px date labels collided at all four widths. **Now (the real app, pictures at 2x, a history of 3
+recorded and 4 rebuilt snapshots):** 2, 3, 4 and 5 columns and 1250, 860, 730 and 600 px tall at those windows, every title whole, the year labels clear, the 1400-px window as before.
+**Resumed mid-session:** this stretch began from a summarized context. RED was committed; the GREEN edits sat uncommitted (written a minute before the owner's "go", by `ls -la`
+against `date`) and no RED-to-GREEN approval was on record, so I asked and the owner approved. Found and fixed there: four lint findings (three implicit integers, one 82-character
+line) and `devtools::document()` never run (`NAMESPACE` gained `guide_axis` and `guides`; `man/plotSnapshotTrends.Rd` gained `ncol`).
+**Commits:** claim `acfd85698`, RED `2fb4bd16b`, GREEN `3ba3fd51b`, REFACTOR `073c93e6e` (`trendDefaultMetrics`, proved `identical()` to the vector it replaced; one stale header comment in
+`test_trendPlotLayout.R` changed that the gate question did not mention), close-out next. Not pushed (178 ahead of origin after the close-out; the last push CI run is Oct 20).
+**Verification, final tree:** `test_plotSnapshotTrends.R` 30 tests 98 expectations, `test_trendPlotLayout.R` 6 tests 45, `test_modSnapshotTrends.R` 49 tests 145, all 0 failed (RED: 11 failed
+3 errors, 6 errors, 4 failed); the browser-tier file 29 expectations 0 failed against a scratch install; full suite 453 files 4,319 tests 15,118 expectations 0 failed 0 errors 198 skipped
+8 warnings; `lintr::lint_package()` 0; `devtools::check()` 0/0/0; ratchet 1/1 (results `2a3f1da501a4`). Runtime: the real app at four window widths, three before-and-after pairs opened.
+**Handoff evaluation of S1044: 9/10.** Helped: the item named the defect with measured panel widths (23/49/89/116 px; I measured 22/48/88/115), "take pictures at 2x" and "the owner picks
+the approach at PRE-RED"; the ggplot2 4.0.3 and `kill -0` gotchas held; HEAD was green; the receipt was complete. Missing: the plot box is a fixed 600-px `plotOutput`, so fewer columns also
+needs a taller box (a module change, not only a plot-function change); a one-year history's date labels collide at every width. Wrong: nothing found. ROI: high.
+**Self: 8/10.** + checked the three files' mtimes against `date`, then asked the gate for code of unknown provenance; ran the browser tier against a scratch install, not the stale renv
+copy; read all four 2x pictures; caught the missing `document()` and the lint findings; counted the copies before offering the REFACTOR and proved the constant identical. - the GREEN commit
+message said every title was whole at all four widths after I had read two pictures (the other two agreed); the REFACTOR edited a test comment the gate question did not mention; a
+malformed `Monitor` call wasted a turn. Learning 1011.
+**Gotchas:** the layout constants (115, 150, 130, 80) were measured on the 18-panel chart with its legend, so a longer title or another legend needs them re-measured; `testServer()`'s
+client data is fixed (a 600-px-wide box), so `test_modSnapshotTrends.R` pins only 3 columns and 860 px and the real windows are in `test-e2e-snapshot-trends-module.R:177` (a range, 415 to 564 px,
+gives 2 columns, so a few pixels of drift do not move it); run `devtools::document()` after any roxygen edit and read `git status` after it; the browser tier needs `R CMD INSTALL --no-docs
+--library=<scratch> .` and `R_LIBS=<scratch>:<renv lib>` with `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`.
+**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Diagnose the scheduled `shinytest2` timeout (`BACKLOG.md:73`; READY, Effort S to diagnose; the
+2026-10-24 07:18 UTC run had not happened at close-out, so run `gh run list` first). (2) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or pinning the 200-character
+cut (READY); the 'skipped' word is a DECISION; the large-colony cost is BLOCKED on a bigger studbook. (3) The tutorial leftovers (`BACKLOG.md:49`; DECISION NEEDED, Effort S), now three
+things: `twinRelations`, a guard for omitted exports, and whether the tutorial shows `ncol`. (4) Owner-side: where to post the `close_out_report.py` write-up (`BACKLOG.md:204`; the
+held-back sync is BLOCKED on it). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
 
-### What Session 1044 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trend chart caption"; strict TDD; the scope question, the PRE-RED, RED, wrong-check, GREEN-to-REFACTOR and
-dates-scope questions were put to the owner):** the footnote of `plotSnapshotTrends()` is never cut off: each note is cut into two lines of at most 70 characters (`strwrap(width =
-70L)`) and the caption is left-aligned to the whole plot (`plot.caption.position = "plot"`, alignment 0.0; `R/plotSnapshotTrends.R:153-165`), so it is whole from a plot width of about
-320 px (it needed 550 px, 590 with all three provenance settings named). `vignettes/a2interactive.Rmd:1019` lost its `#| fig.width: 9` and the S1042 pin became "the plot chunk sets no
-figure width of its own" (`test_snapshotTutorialSection.R:181`). The owner chose this over aligning to the whole plot only (430 px, 470 with three settings).
-**Measured first:** the real app's Trends tab (a scratch `app.R` with `load_all()`, shinytest2, a history of 3 recorded and 4 rebuilt snapshots): the plot is 437, 570, 770 and 903 px
-wide in 700-, 900-, 1200- and 1400-px windows; a png sweep at 72 dpi (plot widths 260 to 760 px, a pixel scan of the caption band) gave the smallest clean width for each variant.
-**Error caught:** my RED check that the caption cell spans every column was wrong for ggplot2 4.0.3 (columns 3 to 11 of 13: the outer margin and the empty y-title columns lie outside);
-found at GREEN, put to the owner, fixed in its own commit `d4d6b54ab` with a relative check (the old function loaded in a side environment: 14 failed, the new one: 0). **Owner
-remarks:** my first before/after picture was "low and pixilated" (a 1x screenshot; retaken at 2x from the page's own image); the pictures also show the x-axis years overlapping and the
-panel titles cut off in narrow panels, now `BACKLOG.md:81`, and the owner chose to finish the footnote first.
-**Commits:** claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab`, GREEN `31c3dcc79`, REFACTOR `8cc8fdde1` (`rebuiltWithGuIterChangeHistory()`, two identical copies proved
-identical), close-out next. Not pushed (173 ahead of origin after the close-out; the last push CI run is Oct 20).
-**Verification, final tree:** `test_plotSnapshotTrends.R` 25 tests 71 expectations 0 failed (RED: 11 failed), `test_snapshotTutorialSection.R` 11 tests 64 expectations 0 failed; full
-suite 452 files 4,304 tests 15,039 expectations 0 failed 0 errors 197 skipped 8 warnings (7.8 minutes); `lintr::lint_package()` 0; `devtools::check()` 0/0/0; ratchet 1/1 (results `32cc81429b3e`).
-Runtime: the real app run at 700, 900 and 1200 px windows with the old and the new function, pictures at 2x opened for the owner; the tutorial's chart at the default 7 inches (rendered
-to a scratch folder, 19 s) shows the whole caption.
-**Handoff evaluation of S1043: 9/10.** Helped: Next item 1 named this defect with its file, tags and "look at the app picture first", and that advice found the real answer (the
-candidate fix alone still clips at a 700-px window); the note that the tutorial pins `fig.width >= 9` and that the pin goes with the fix was exact; the heavy-checks-one-at-a-time and
-"after the last BACKLOG edit" advice held; HEAD was green; the receipt was complete. Missing: that the same chart also has overlapping year labels and cut panel titles in narrow panels
-(the owner found them in the pictures); that ggplot2 here is 4.0.3 (no `plot_theme()`). Wrong: nothing. ROI: high.
-**Self: 8/10.** + looked at the real app first and measured the clipping threshold with a sweep before offering options; showed the owner a strip of the three variants and put every
-gate to them; proved the new function against the old one (14 failed against 0) when a RED check turned out wrong; retook the pictures at 2x; suite, lint and check ran one at a time;
-the REFACTOR was proved identical. - My RED layout check was written against the old layout only and was wrong, which cost a question and an extra commit; the first picture was 1x and
-the owner had to say so; a trailing `&` inside `run_in_background` again and a wasted placeholder `Monitor`; a stretch of about 8 calls early on without a status sentence. Learning
-1010.
-**Gotchas:** the footnote is wrapped in the label itself (`p$labels$caption` holds the newlines; `captionLines()`, `captionLineWidthsInches()` and `plotGrob()` are at
-`test_plotSnapshotTrends.R:85-113`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`; ggplot2 4.0.3 has no `plot_theme()`, use `calc_element(name, p$theme)`; grid has no
-`"px"` unit (use `"bigpts"` at 72 dpi); the app's plot is 437/570/770/903 px in 700/900/1200/1400-px windows and a panel is 23/49/89/116 px; take pictures at 2x (the
-`show-visual-result-before-long-tests` memory); wait on a background job's pid with a `kill -0` loop and never write a trailing `&` inside `run_in_background`; the old function for a
-before picture is `git show d3c2c7b18:R/plotSnapshotTrends.R` patched into the namespace.
-**Next (the owner chose item 1; my order for the rest; do not re-offer the six delayed items):** (1) The x-axis years and panel titles of the trend chart (`BACKLOG.md:81`; READY, Effort
-S to M, strict TDD; the owner picks the approach at PRE-RED; take pictures at 2x). (2) Diagnose the scheduled `shinytest2` timeout (`BACKLOG.md:70`; READY, Effort S to diagnose; the
-2026-10-24 07:18 UTC run will have happened, so run `gh run list` first). (3) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or pinning the 200-character cut
-(READY); the 'skipped' word is a DECISION; the large-colony cost is BLOCKED on a bigger studbook. (4) The tutorial leftovers (`BACKLOG.md:49`; DECISION NEEDED, Effort S). (5)
-Owner-side: where to post the `close_out_report.py` write-up (`BACKLOG.md:218`; the held-back sync is BLOCKED on it). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11,
-#10, #5).
-
-### Sessions 947-1043 (condensed S950 to S1044; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1044 (condensed S950 to S1045; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1044: the trend chart's footnote is never cut off (owner pick, "Trend chart caption"; strict TDD; every gate put to the owner): `plotSnapshotTrends()` cuts each note into two lines of at
+most 70 characters and left-aligns the caption to the whole plot (`plot.caption.position = "plot"`), whole from a plot width of about 320 px (550 before); the tutorial's snapshot-plot chunk
+lost its 9-inch width. Claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab` (my layout check was wrong for ggplot2 4.0.3), GREEN `31c3dcc79`, REFACTOR `8cc8fdde1`, close-out `b8c3bf9e1`;
+full suite 452 files 4,304 tests 0 failed 0 errors; evaluation of S1043 9/10, self 8/10 (Learning 1010). **Gotchas kept:** the footnote is wrapped in the label itself
+(`p$labels$caption`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`; ggplot2 4.0.3 has no `plot_theme()` (use `calc_element(name, p$theme)`); grid has no `"px"` unit
+(`"bigpts"` at 72 dpi); take pictures at 2x.
 S1043: the `a2interactive.Rmd` inventory finished (owner pick, "Finish tutorial inventory"; strict TDD; the scope, PRE-RED, RED, GREEN and GREEN-to-REFACTOR gates put to the owner):
 `vignettes/a2interactive.Rmd` names the six script-callable functions and the two parameters it never did, in five places (`kinshipMatrix` `:608`, X-chromosome kinship `:840`,
 `reportAncestryViolations()` `:1379`, `shrinkPedigree()` `:1585`, the four MHC functions `:2142`); the owner chose all eight and to leave the package name `kinship2` out of the text.

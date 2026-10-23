@@ -50,7 +50,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       omitted exports** (DECISION NEEDED, Effort S; found S1043) -- the pass named the six functions
       and the two parameters it had left (the next pass compares against this pass's commit
       `649389386`, not S541): 170 of the 236 exports are still never named, which is not a gap
-      (the tutorial is a walkthrough, not a reference). Two things are open. (1) **`twinRelations`**
+      (the tutorial is a walkthrough, not a reference). Three things are open. (1) **`twinRelations`**
       is used in a call only on `makePedigreeMatingLayout()`; the `reportGV()` argument list names it
       and points to `?reportGV`, and the "Passing a Kinship Matrix You Already Have" section says
       `kinship()` takes it, but no output shows a twin-corrected kinship matrix (`kinship()`,
@@ -66,6 +66,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       claim with `grep -F` on the committed text. Pattern for a section:
       `tests/testthat/test_inventoryTutorialSections.R` (the shared readers `insideChunk()`,
       `sectionProse()` and `chunkOptionText()` are in `helper-pageText.R`).
+      (3) **A new parameter since the pass** (S1045, `3ba3fd51b`): `plotSnapshotTrends()` takes
+      `ncol`, the number of panel columns. The tutorial's chart has 3 panels, where the default
+      grid is right, so whether the tutorial shows `ncol` is a decision.
 
 - [ ] **Diagnose the scheduled `shinytest2` run that hit its time limit** (READY, Effort S to
       diagnose; found at S1043 Phase 0, 2026-10-23, not diagnosed) -- the scheduled run of
@@ -77,23 +80,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       First see whether the run of 2026-10-24 (07:18 UTC) repeats it, then read the job log
       (`gh run view --job=120292192510 --log`) for the step that stalled. No issue is filed (the
       CI-break convention).
-
-- [ ] **The trend chart's year labels overlap, and its panel titles are cut off, in narrow panels**
-      (READY, Effort S to M, strict TDD; found S1044 by the owner in the real-app pictures of the
-      caption fix, which neither caused nor changes it) -- `plotSnapshotTrends()` draws up to 18
-      panels in 5 columns and the app's plot is as wide as the browser gives it (437 px in a 700-px
-      window, 570 at 900, 770 at 1200, 903 at 1400). Measured on the 18-panel plot: each panel is
-      about 23, 49, 89 and 116 px wide at those four widths and one year label ("2020", 8.8 pt) is
-      20 px, so the four labels of a 2020 to 2026 history collide at 437 and 570 px, fit barely at
-      770 and read cleanly at 903. The pictures at 700 and 900 px also show panel titles such as
-      `neVariance`, `MaleFounders` and `medianIndivMeanKin` losing letters at both ends. **Not
-      measured:** a longer history (a backfilled series has several decade labels per panel), the
-      other rows of the grid, and the 1400-px window's titles. Candidate approaches, none tried:
-      drop colliding labels (`guide_axis(check.overlap = TRUE)`), dodge them (`n.dodge = 2`), fewer
-      breaks (`scales::breaks_pretty(n = 3)`), angled labels; for the titles a smaller
-      `strip.text`, wrapped titles (`label_wrap_gen()`) or fewer columns. The owner picks the
-      approach at the PRE-RED question. Take the pictures at 2x density (Learning 1010): a 1x
-      screenshot is soft and the owner rejected one. The tutorial's 3-panel chart is not affected.
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
