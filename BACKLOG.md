@@ -46,26 +46,37 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Effort S): the panel's notice cuts each note at 200 characters
       (`substr(notes, 1L, 200L)`) and no test pins it (a mutation check in S1040 survived it).
 
-- [ ] **Finish the `a2interactive.Rmd` inventory: six functions and two parameters it still never
-      names** (READY, Effort M, a dedicated docs pass per
-      `docs/conventions/CLOSEOUT_CHECKLISTS.md`; found S1042 while writing the snapshot section)
-      -- S1042 compared the exports at the last full pass (S541, `95609eeb2`: 217) with today's
-      (236) and searched each name in the tutorial: 19 are new; 3 were already named
-      (`checkAncestryRules()`, `readAncestryRules()`, `drawPedigreeDiagram()`), 2 are Shiny module
-      functions (`modSnapshotTrendsServer()`, `modSnapshotTrendsUI()`) and 8 are the snapshot
-      family, now in the "Colony Snapshots Over Time" section. **Left:** the four MHC haplotype
-      functions (`checkMhcHaplotypeFile()`, `mhcHaplotypeFrequency()`, `mhcHaplotypeCarriers()`,
-      `obfuscateMhcHaplotypes()`), `reportAncestryViolations()` and `shrinkPedigree()`; and two
-      parameters whose names appear nowhere in the tutorial, `kinship(chrtype)` and
-      `makePedigreeMatingLayout(kinshipMatrix)` (the second is the injectable boundary for the
-      standalone-package item above; whether it needs a demo is a decision). The name search is
-      loose (a name found anywhere counts), so a parameter such as `kinship(twinRelations)` was not
-      checked beyond that. 190 of the 236 exports are never named, which is not a gap: the tutorial
-      is a walkthrough, not a reference. Re-run the comparison, do not trust this list: formals at
-      the old commit from a scratch `git worktree` through `pkgload::load_all()` run in the main
-      checkout (renv), against today's. Pattern for a section: `tests/testthat/test_snapshotTutorialSection.R`
-      (self-contained chunks on shipped data, no literal number in the prose, no warning, the plot
-      drawn). No guard notices a new exported function the tutorial omits; whether to add one is open.
+- [ ] **Tutorial leftovers after the S1043 inventory pass: twin-corrected kinship, and a guard for
+      omitted exports** (DECISION NEEDED, Effort S; found S1043) -- the pass named the six functions
+      and the two parameters it had left (the next pass compares against this pass's commit
+      `649389386`, not S541): 170 of the 236 exports are still never named, which is not a gap
+      (the tutorial is a walkthrough, not a reference). Two things are open. (1) **`twinRelations`**
+      is used in a call only on `makePedigreeMatingLayout()`; the `reportGV()` argument list names it
+      and points to `?reportGV`, and the "Passing a Kinship Matrix You Already Have" section says
+      `kinship()` takes it, but no output shows a twin-corrected kinship matrix (`kinship()`,
+      `reportGV()`, `gvaConvergence()`, `createSimKinships()` and `cumulateSimKinships()` accept it).
+      `checkTwinRelations()` wants a same-sex pair for an MZ call and the tutorial's pair is a
+      mixed-sex UZ pair, so a demo needs its own pair; whether one belongs is a decision. (2) **No
+      guard notices a new exported function the tutorial omits**; one would need an allow-list of the
+      never-named set (170 today), so whether it is worth the upkeep is a decision. **Method for the
+      next inventory:** formals at the old commit from a scratch `git worktree` through
+      `pkgload::load_all()` run in the main checkout (renv), against today's; search each name with a
+      boundary that ignores `_` (the tutorial writes `__fn__`, and `\b` treats `_` as a word
+      character, so it misses them: S1043's first total of 182 was 176) and confirm every "unnamed"
+      claim with `grep -F` on the committed text. Pattern for a section:
+      `tests/testthat/test_inventoryTutorialSections.R` (the shared readers `insideChunk()`,
+      `sectionProse()` and `chunkOptionText()` are in `helper-pageText.R`).
+
+- [ ] **Diagnose the scheduled `shinytest2` run that hit its time limit** (READY, Effort S to
+      diagnose; found at S1043 Phase 0, 2026-10-23, not diagnosed) -- the scheduled run of
+      2026-10-23 (run `39916862256`, job `120292192510`) was cancelled at the job's 45-minute limit
+      ("exceeded the maximum execution time of 45m0s"). Scheduled runs test `origin/master`, which has
+      not moved since the push of 2026-10-20, so the same code took 22 minutes (10-20), 30 (10-21)
+      and 30 (10-22) and passed; the runs of 10-16 and 10-17 failed on earlier code and were not
+      examined. That points at the runner or a hang rather than a change, but it is an inference.
+      First see whether the run of 2026-10-24 (07:18 UTC) repeats it, then read the job log
+      (`gh run view --job=120292192510 --log`) for the step that stalled. No issue is filed (the
+      CI-break convention).
 
 - [ ] **`plotSnapshotTrends()` cuts its caption off on the left at narrow figure widths** (READY,
       Effort S, strict TDD; found S1042 in the picture of the rendered tutorial section) -- at a
