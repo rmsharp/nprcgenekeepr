@@ -30,24 +30,54 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Earlier-snapshots follow-ups after #170 (five small threads, extracted S1040 when the
-      #170 block came off; #170 is closed)** -- design and what was built:
-      `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4. (1) **The
-      `a2interactive.Rmd` pass** (READY, Effort S, a dedicated pass per
-      `docs/conventions/CLOSEOUT_CHECKLISTS.md`): demonstrate `backfillColonySnapshots()` and
-      `previewBackfillSupport()` with `guIter = 10L`, and inventory any other exported function
-      or new parameter since the last pass. (2) **Build cost on a larger colony** (BLOCKED --
+- [ ] **Earlier-snapshots follow-ups after #170 (four small threads, extracted S1040 when the
+      #170 block came off; #170 is closed; the tutorial thread was done S1042)** -- design and
+      what was built: `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4.
+      (1) **Build cost on a larger colony** (BLOCKED --
       needs a studbook above 3,694 rows from the owner, Effort S): the cost line's 4 seconds per
       1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`) is measured up to
       100 iterations on a 3,694-row colony, so a bigger colony at 1,000 iterations is unmeasured.
-      (3) **The trend chart's console notice** (READY, Effort S, strict TDD, older than #170):
+      (2) **The trend chart's console notice** (READY, Effort S, strict TDD, older than #170):
       `plotSnapshotTrends()` lets ggplot print "Removed rows containing missing values" when a
-      metric is NA (a 10-iteration build); `na.rm = TRUE` would silence it. (4) **A script word in
+      metric is NA (a 10-iteration build); `na.rm = TRUE` would silence it. (3) **A script word in
       the panel's notice** (DECISION NEEDED, Effort S): the function's failed-dates warning says
       "listed in 'skipped'" and the panel shows it as is, while its table is headed "Dates not
-      built"; reword the message for both readers, or leave it. (5) **An unpinned limit** (READY,
+      built"; reword the message for both readers, or leave it. (4) **An unpinned limit** (READY,
       Effort S): the panel's notice cuts each note at 200 characters
       (`substr(notes, 1L, 200L)`) and no test pins it (a mutation check in S1040 survived it).
+
+- [ ] **Finish the `a2interactive.Rmd` inventory: six functions and two parameters it still never
+      names** (READY, Effort M, a dedicated docs pass per
+      `docs/conventions/CLOSEOUT_CHECKLISTS.md`; found S1042 while writing the snapshot section)
+      -- S1042 compared the exports at the last full pass (S541, `95609eeb2`: 217) with today's
+      (236) and searched each name in the tutorial: 19 are new; 3 were already named
+      (`checkAncestryRules()`, `readAncestryRules()`, `drawPedigreeDiagram()`), 2 are Shiny module
+      functions (`modSnapshotTrendsServer()`, `modSnapshotTrendsUI()`) and 8 are the snapshot
+      family, now in the "Colony Snapshots Over Time" section. **Left:** the four MHC haplotype
+      functions (`checkMhcHaplotypeFile()`, `mhcHaplotypeFrequency()`, `mhcHaplotypeCarriers()`,
+      `obfuscateMhcHaplotypes()`), `reportAncestryViolations()` and `shrinkPedigree()`; and two
+      parameters whose names appear nowhere in the tutorial, `kinship(chrtype)` and
+      `makePedigreeMatingLayout(kinshipMatrix)` (the second is the injectable boundary for the
+      standalone-package item above; whether it needs a demo is a decision). The name search is
+      loose (a name found anywhere counts), so a parameter such as `kinship(twinRelations)` was not
+      checked beyond that. 190 of the 236 exports are never named, which is not a gap: the tutorial
+      is a walkthrough, not a reference. Re-run the comparison, do not trust this list: formals at
+      the old commit from a scratch `git worktree` through `pkgload::load_all()` run in the main
+      checkout (renv), against today's. Pattern for a section: `tests/testthat/test_snapshotTutorialSection.R`
+      (self-contained chunks on shipped data, no literal number in the prose, no warning, the plot
+      drawn). No guard notices a new exported function the tutorial omits; whether to add one is open.
+
+- [ ] **`plotSnapshotTrends()` cuts its caption off on the left at narrow figure widths** (READY,
+      Effort S, strict TDD; found S1042 in the picture of the rendered tutorial section) -- at a
+      7-inch figure (the tutorial's default) the caption "Dashed lines are rebuilt from studbook
+      birth and exit dates and today's parentage, not recorded at the time." (108 characters,
+      5.9 inches at 8.8 pt) loses its first words: ggplot right-aligns a caption to the panel and
+      the legend takes about 2 inches of the figure. Measured on macOS: cut at 7 inches, whole at 8
+      and 9. A candidate fix, not tried: `plot.caption.position = "plot"` in the function's theme,
+      which moves the caption in the app too, so look at the app picture first (S1039 fixed the same
+      family by putting the two notes on separate lines, `8757ecc10`). Until then the tutorial chunk
+      is 9 inches wide and `test_snapshotTutorialSection.R` pins that width; drop both when the
+      function is fixed.
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
