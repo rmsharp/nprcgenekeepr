@@ -4,7 +4,7 @@
 \alias{plotSnapshotTrends}
 \title{Plot colony genetic-health trends from a snapshot history}
 \usage{
-plotSnapshotTrends(history, metrics = NULL)
+plotSnapshotTrends(history, metrics = NULL, ncol = NULL)
 }
 \arguments{
 \item{history}{data.frame holding the snapshot history in the 27-column
@@ -17,6 +17,13 @@ default \code{NULL} plots the 18 metric columns (the \code{reportGV()}
 colony scalars and the Summary Statistics aggregates); the composition
 counts (\code{nAnimals}, \code{nMales}, \code{nFemales}) may be
 requested to make membership churn visible.}
+
+\item{ncol}{single positive whole number: how many columns of panels to
+draw. The default \code{NULL} leaves the grid to \code{ggplot2} (5 columns
+for the 18 default metrics). A narrow figure needs fewer columns, so each
+panel stays wide enough for its title; the Genetic-Health Trends tab picks
+the number from the width of its plot. A number above the count of panels
+draws one column for each panel.}
 }
 \value{
 A \code{ggplot} object.
@@ -29,7 +36,8 @@ Draws the longitudinal trend view of a colony snapshot history (issue
 like. Sampling-uncertainty ribbons are drawn exactly where the schema
 carries a standard error: \code{fg} (\code{fgSE}) and \code{meanGu}
 (\code{meanGuSE}) — the Monte Carlo gene-drop uncertainty is surfaced,
-never hidden.
+never hidden. Date labels that would overlap on a narrow panel are dropped
+instead of drawn over one another.
 }
 \details{
 Snapshots whose provenance (\code{guIter}, \code{guThresh}, or

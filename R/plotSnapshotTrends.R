@@ -10,7 +10,8 @@
 #' like. Sampling-uncertainty ribbons are drawn exactly where the schema
 #' carries a standard error: \code{fg} (\code{fgSE}) and \code{meanGu}
 #' (\code{meanGuSE}) — the Monte Carlo gene-drop uncertainty is surfaced,
-#' never hidden.
+#' never hidden. Date labels that would overlap on a narrow panel are dropped
+#' instead of drawn over one another.
 #'
 #' Snapshots whose provenance (\code{guIter}, \code{guThresh}, or
 #' \code{packageVersion}) changed relative to the same rule's previous
@@ -33,6 +34,12 @@
 #' colony scalars and the Summary Statistics aggregates); the composition
 #' counts (\code{nAnimals}, \code{nMales}, \code{nFemales}) may be
 #' requested to make membership churn visible.
+#' @param ncol single positive whole number: how many columns of panels to
+#' draw. The default \code{NULL} leaves the grid to \code{ggplot2} (5 columns
+#' for the 18 default metrics). A narrow figure needs fewer columns, so each
+#' panel stays wide enough for its title; the Genetic-Health Trends tab picks
+#' the number from the width of its plot. A number above the count of panels
+#' draws one column for each panel.
 #' @return A \code{ggplot} object.
 #' @export
 #' @examples
@@ -45,8 +52,9 @@
 #' @importFrom ggplot2 ggplot aes geom_line geom_point geom_ribbon
 #' @importFrom ggplot2 facet_wrap labs scale_shape_manual theme_minimal
 #' @importFrom ggplot2 scale_linetype_manual theme element_text
+#' @importFrom ggplot2 guides guide_axis
 #' @importFrom ggplot2 .data
-plotSnapshotTrends <- function(history, metrics = NULL) {
+plotSnapshotTrends <- function(history, metrics = NULL, ncol = NULL) {
   history <- checkSnapshotHistory(history)
   if (nrow(history) < 2L) {
     stop("A trend needs at least 2 snapshots; the history has ",
@@ -70,6 +78,9 @@ plotSnapshotTrends <- function(history, metrics = NULL) {
   if (length(unknownMetrics) > 0L) {
     stop("Unknown metric(s): ", toString(unknownMetrics), "; allowed: ",
       toString(allowedMetrics), ".")
+  }
+  if (!is.null(ncol)) {
+    ncol <- validateWholeCount(ncol, "ncol")
   }
 
   provenance <- snapshotProvenanceChanges(history)
@@ -131,7 +142,8 @@ plotSnapshotTrends <- function(history, metrics = NULL) {
     ggplot2::scale_linetype_manual(
       values = c(recorded = "solid", rebuilt = "dashed"), guide = "none"
     ) +
-    ggplot2::facet_wrap(~metric, scales = "free_y") +
+    ggplot2::facet_wrap(~metric, scales = "free_y", ncol = ncol) +
+    ggplot2::guides(x = ggplot2::guide_axis(check.overlap = TRUE)) +
     ggplot2::labs(
       x = "Snapshot date", y = NULL, colour = "Membership rule"
     ) +

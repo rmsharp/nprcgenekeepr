@@ -95,7 +95,7 @@ modSnapshotTrendsUI <- function(id) {
             "Trends",
             icon = icon("chart-area"),
             br(),
-            plotOutput(ns("trendPlot"), height = "600px")
+            plotOutput(ns("trendPlot"), height = "auto")
           ),
 
           tabPanel(
@@ -286,10 +286,17 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
       req(history())
     }, options = list(pageLength = 10L))
 
+    ## The chart's columns and height follow the width of its box, so the panel
+    ## titles stay whole in a narrow window (trendPlotLayout()).
+    trendWidthId <- paste0("output_", session$ns("trendPlot"), "_width")
+    trendLayout <- reactive({
+      trendPlotLayout(session$clientData[[trendWidthId]])
+    })
+
     output$trendPlot <- renderPlot({
       req(history())
-      plotSnapshotTrends(history())
-    })
+      plotSnapshotTrends(history(), ncol = trendLayout()$ncol)
+    }, height = function() trendLayout()$height)
 
     deltas <- reactive({
       req(history(), input$deltaFrom, input$deltaTo, input$deltaRule)
