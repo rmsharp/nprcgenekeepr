@@ -145,8 +145,8 @@ test_that("snapshotSource carries reportArgs with one element for each setting",
 
   shiny::testServer(modGeneticValueServer,
                      args = list(pedigree = shiny::reactive(ped)), {
-    session$setInputs(nIterations = 10, threshold = 4, runAnalysis = 1)
-    gvResults()
+    suppressWarnings(session$setInputs(nIterations = 10, threshold = 4, runAnalysis = 1))
+    suppressWarnings(gvResults())
 
     src <- session$getReturned()$snapshotSource()
     expect_true(is.list(src$reportArgs))
@@ -177,14 +177,14 @@ test_that("reportArgs holds the settings the run was given", {
                        speciesOverrides = shiny::reactive(settings$overrides),
                        twinRelations = shiny::reactive(settings$twins)
                      ), {
-    session$setInputs(
+    suppressWarnings(session$setInputs(
       nIterations = 10, threshold = 4,
       rankScheme = "categorical", axisPriority = "mk",
       guCutoff = 12, zScoreCutoff = -1.5,
       kinshipOverrideFile = sourceFileInfo(overrideCsv),
       runAnalysis = 1
-    )
-    gvResults()
+    ))
+    suppressWarnings(gvResults())
 
     args <- session$getReturned()$snapshotSource()$reportArgs
     expect_identical(args$breedingTable, settings$overrides$breedingTable)
@@ -213,11 +213,11 @@ test_that("reportArgs does not drift when settings change after the run", {
                        pedigree = shiny::reactive(ped),
                        twinRelations = twinPairs
                      ), {
-    session$setInputs(
+    suppressWarnings(session$setInputs(
       nIterations = 10, threshold = 4, axisPriority = "gu", guCutoff = 10,
       runAnalysis = 1
-    )
-    gvResults()
+    ))
+    suppressWarnings(gvResults())
 
     ## change every setting WITHOUT re-running the analysis
     twinPairs(NULL)
@@ -241,13 +241,13 @@ test_that("a second run replaces reportArgs together with the rest of the source
                        pedigree = shiny::reactive(ped),
                        twinRelations = twinPairs
                      ), {
-    session$setInputs(nIterations = 10, threshold = 4, runAnalysis = 1)
-    gvResults()
+    suppressWarnings(session$setInputs(nIterations = 10, threshold = 4, runAnalysis = 1))
+    suppressWarnings(gvResults())
     expect_null(session$getReturned()$snapshotSource()$reportArgs$twinRelations)
 
     twinPairs(settings$twins)
-    session$setInputs(runAnalysis = 2)
-    gvResults()
+    suppressWarnings(session$setInputs(runAnalysis = 2))
+    suppressWarnings(gvResults())
     src <- session$getReturned()$snapshotSource()
     expect_identical(src$reportArgs$twinRelations, settings$twins)
     expect_identical(src$guIter, 10L)

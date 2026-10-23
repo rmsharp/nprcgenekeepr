@@ -65,41 +65,11 @@
 #' head(previewBackfillSupport(ped, minAnimals = 30L), 3L)
 previewBackfillSupport <- function(ped, dates = NULL, from = NULL, to = NULL,
                                    by = "year", minAnimals = 2L) {
-  if (!is.data.frame(ped)) {
-    stop("'ped' must be a pedigree data.frame.")
-  }
-  assertRequiredColsPresent(
-    names(ped),
-    c("id", "sire", "dam", "sex", "gen", "birth", "exit"),
-    "previewBackfillSupport(ped)"
-  )
-  minAnimals <- validateWholeCount(minAnimals, "minAnimals")
-  if (minAnimals < 2L) {
-    stop("'minAnimals' must be at least 2: a snapshot needs two animals.")
-  }
+  assertBackfillPed(ped, "previewBackfillSupport(ped)")
+  minAnimals <- validateMinAnimals(minAnimals)
 
   facts <- describeBackfillColony(ped)
-  if (is.null(dates)) {
-    dates <- buildBackfillDates(facts, from, to, by, minAnimals)
-  } else {
-    if (!is.null(from) || !is.null(to) || !missing(by)) {
-      stop("'dates' cannot be combined with 'from', 'to' or 'by': give ",
-        "either the dates or a series.")
-    }
-    dates <- as.Date(as.character(dates), format = "%Y-%m-%d")
-    if (length(dates) == 0L || anyNA(dates)) {
-      stop("'dates' must be one or more ISO-8601 (YYYY-MM-DD) dates, none ",
-        "missing.")
-    }
-    if (anyDuplicated(dates) > 0L) {
-      stop("'dates' must not contain duplicate dates.")
-    }
-    dates <- sort(dates)
-  }
-
-  support <- do.call(rbind, lapply(seq_along(dates), function(i) {
-    supportOnDate(facts, dates[[i]])
-  }))
-  rownames(support) <- NULL
-  support
+  dates <- resolveBackfillDates(facts, dates, from, to, by, !missing(by),
+                                minAnimals)
+  supportForDates(facts, dates)
 }

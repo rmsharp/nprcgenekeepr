@@ -147,14 +147,7 @@ backfillColonySnapshots <- function(ped, dates = NULL,
   ## The order follows the design's interface table and a test pins it: dates,
   ## then the two required settings (design B9: no default, so the recorded
   ## provenance cannot silently be wrong), then the series.
-  if (!is.data.frame(ped)) {
-    stop("'ped' must be a pedigree data.frame.")
-  }
-  assertRequiredColsPresent(
-    names(ped),
-    c("id", "sire", "dam", "sex", "gen", "birth", "exit"),
-    "backfillColonySnapshots(ped)"
-  )
+  assertBackfillPed(ped, "backfillColonySnapshots(ped)")
   if (missing(guIter)) {
     stop("'guIter' must be supplied: the number of gene-drop iterations ",
       "(there is no default, so the recorded provenance cannot silently be ",
@@ -167,10 +160,7 @@ backfillColonySnapshots <- function(ped, dates = NULL,
   }
   guIter <- validateWholeCount(guIter, "guIter")
   guThresh <- validateWholeCount(guThresh, "guThresh")
-  minAnimals <- validateWholeCount(minAnimals, "minAnimals")
-  if (minAnimals < 2L) {
-    stop("'minAnimals' must be at least 2: a snapshot needs two animals.")
-  }
+  minAnimals <- validateMinAnimals(minAnimals)
   if (!is.null(updateProgress) && !is.function(updateProgress)) {
     stop("'updateProgress' must be a function or NULL.")
   }
@@ -191,29 +181,9 @@ backfillColonySnapshots <- function(ped, dates = NULL,
   }
 
   facts <- describeBackfillColony(ped)
-  if (is.null(dates)) {
-    dates <- buildBackfillDates(facts, from, to, by, minAnimals)
-  } else {
-    if (!is.null(from) || !is.null(to) || !missing(by)) {
-      stop("'dates' cannot be combined with 'from', 'to' or 'by': give ",
-        "either the dates or a series.")
-    }
-    ## a Date round-trips through as.character() as YYYY-MM-DD, so one
-    ## coercion path serves both accepted input types
-    dates <- as.Date(as.character(dates), format = "%Y-%m-%d")
-    if (length(dates) == 0L || anyNA(dates)) {
-      stop("'dates' must be one or more ISO-8601 (YYYY-MM-DD) dates, none ",
-        "missing.")
-    }
-    if (anyDuplicated(dates) > 0L) {
-      stop("'dates' must not contain duplicate dates.")
-    }
-    dates <- sort(dates)
-  }
-
-  support <- do.call(rbind, lapply(seq_along(dates), function(i) {
-    supportOnDate(facts, dates[[i]])
-  }))
+  dates <- resolveBackfillDates(facts, dates, from, to, by, !missing(by),
+                                minAnimals)
+  support <- supportForDates(facts, dates)
 
   alreadyThere <- if (is.null(existingHistory)) {
     as.Date(character(0L))
@@ -460,4 +430,93 @@ restrictTwinRelations <- function(twinRelations, present) {
   }
   rownames(kept) <- NULL
   kept
+}
+
+#' Check the pedigree handed to a backfill function
+#'
+#' Shared by \code{backfillColonySnapshots()} and
+#' \code{previewBackfillSupport()}, which take the same pedigree.
+#'
+#' @param ped The pedigree argument.
+#' @param where The call, for the message about missing columns.
+#' @return \code{NULL}, invisibly; stops when \code{ped} is not a data.frame or
+#' lacks a required column.
+#'
+#' @noRd
+assertBackfillPed <- function(ped, where) {
+  if (!is.data.frame(ped)) {
+    stop("'ped' must be a pedigree data.frame.")
+  }
+  assertRequiredColsPresent(
+    names(ped),
+    c("id", "sire", "dam", "sex", "gen", "birth", "exit"),
+    where
+  )
+}
+
+#' Check the \code{minAnimals} argument of a backfill function
+#'
+#' @param minAnimals The argument.
+#' @return A single whole number of at least 2; stops, naming
+#' \code{minAnimals}, otherwise.
+#'
+#' @noRd
+validateMinAnimals <- function(minAnimals) {
+  minAnimals <- validateWholeCount(minAnimals, "minAnimals")
+  if (minAnimals < 2L) {
+    stop("'minAnimals' must be at least 2: a snapshot needs two animals.")
+  }
+  minAnimals
+}
+
+#' The dates of a backfill call
+#'
+#' Either the explicit \code{dates} (read, checked and put in order) or the
+#' series \code{buildBackfillDates()} lays out from \code{from}, \code{to} and
+#' \code{by}. Shared by \code{backfillColonySnapshots()} and
+#' \code{previewBackfillSupport()}, so a preview always shows the dates a build
+#' would use.
+#'
+#' @param facts The list from \code{describeBackfillColony()}.
+#' @param dates,from,to,by,minAnimals The arguments of the calling function.
+#' @param byGiven \code{TRUE} when the caller was given \code{by} (it has a
+#' default, so \code{missing(by)} is only known there).
+#' @return A \code{Date} vector in order; stops, naming the argument, when an
+#' argument cannot be used.
+#'
+#' @noRd
+resolveBackfillDates <- function(facts, dates, from, to, by, byGiven,
+                                 minAnimals) {
+  if (is.null(dates)) {
+    return(buildBackfillDates(facts, from, to, by, minAnimals))
+  }
+  if (!is.null(from) || !is.null(to) || byGiven) {
+    stop("'dates' cannot be combined with 'from', 'to' or 'by': give ",
+      "either the dates or a series.")
+  }
+  ## a Date round-trips through as.character() as YYYY-MM-DD, so one
+  ## coercion path serves both accepted input types
+  dates <- as.Date(as.character(dates), format = "%Y-%m-%d")
+  if (length(dates) == 0L || anyNA(dates)) {
+    stop("'dates' must be one or more ISO-8601 (YYYY-MM-DD) dates, none ",
+      "missing.")
+  }
+  if (anyDuplicated(dates) > 0L) {
+    stop("'dates' must not contain duplicate dates.")
+  }
+  sort(dates)
+}
+
+#' The support table for a set of dates
+#'
+#' @param facts The list from \code{describeBackfillColony()}.
+#' @param dates The \code{Date}s, in order.
+#' @return A data.frame with one row per date (see
+#' \code{supportOnDate()}).
+#'
+#' @noRd
+supportForDates <- function(facts, dates) {
+  do.call(rbind, lapply(seq_along(dates), function(i) {
+    supportOnDate(facts, dates[[i]])
+  }))
 }
