@@ -122,6 +122,16 @@ rebuiltOnlyHistory <- function() {
   ))
 }
 
+## Three rebuilt snapshots, the last made with a different guIter: the caption
+## holds the provenance note and the rebuilt note.
+rebuiltWithGuIterChangeHistory <- function() {
+  checkSnapshotHistory(rbind(
+    makeSnapshotRow("2020-01-01", "reconstructedLiving", guIter = 1000L),
+    makeSnapshotRow("2021-01-01", "reconstructedLiving", guIter = 1000L),
+    makeSnapshotRow("2022-01-01", "reconstructedLiving", guIter = 2000L)
+  ))
+}
+
 ## Two recorded snapshots that differ in all three provenance fields: the
 ## caption is the provenance note naming all three, its longest form.
 allFieldsChangedHistory <- function() {
@@ -347,11 +357,7 @@ test_that("a history with no reconstructed rows has no rebuilt caption", {
 })
 
 test_that("the rebuilt note and the provenance note share one caption", {
-  history <- checkSnapshotHistory(rbind(
-    makeSnapshotRow("2020-01-01", "reconstructedLiving", guIter = 1000L),
-    makeSnapshotRow("2021-01-01", "reconstructedLiving", guIter = 1000L),
-    makeSnapshotRow("2022-01-01", "reconstructedLiving", guIter = 2000L)
-  ))
+  history <- rebuiltWithGuIterChangeHistory()
   caption <- plotSnapshotTrends(history, metrics = "fe")$labels$caption
   expect_match(caption, "guIter", fixed = TRUE)
   expect_match(caption, "Dashed", fixed = TRUE)
@@ -384,11 +390,7 @@ test_that("the provenance note and the rebuilt note each start a line of their o
   ## lines of at most 70 characters. The sentences are pinned as they stand,
   ## so a cut that drops or changes a word fails; an owner's wording change
   ## edits them here.
-  history <- checkSnapshotHistory(rbind(
-    makeSnapshotRow("2020-01-01", "reconstructedLiving", guIter = 1000L),
-    makeSnapshotRow("2021-01-01", "reconstructedLiving", guIter = 1000L),
-    makeSnapshotRow("2022-01-01", "reconstructedLiving", guIter = 2000L)
-  ))
+  history <- rebuiltWithGuIterChangeHistory()
   noteLines <- captionLines(plotSnapshotTrends(history, metrics = "fe"))
   expect_length(noteLines, 4L)
   if (length(noteLines) == 4L) {
