@@ -112,6 +112,33 @@ plotGrob <- function(p) {
   ggplot2::ggplotGrob(p)
 }
 
+## The grid ggplot2 lays the panels out in: the number of columns and rows.
+panelGrid <- function(p) {
+  layout <- ggplot2::ggplot_build(p)$layout$layout
+  c(cols = max(layout$COL), rows = max(layout$ROW))
+}
+
+## Whether each text grob under the bottom axes asks the drawing device to
+## drop labels that would overlap one another (one logical per text grob).
+axisLabelOverlapFlags <- function(p) {
+  gt <- plotGrob(p)
+  flags <- logical(0L)
+  collect <- function(x) {
+    if (inherits(x, "text")) {
+      flags <<- c(flags, isTRUE(x$check.overlap))
+    }
+    if (inherits(x, "gTree")) {
+      lapply(x$children, collect)
+    }
+    if (inherits(x, "gtable")) {
+      lapply(x$grobs, collect)
+    }
+    invisible(NULL)
+  }
+  lapply(gt$grobs[grepl("^axis-b", gt$layout$name)], collect)
+  flags
+}
+
 ## Three rebuilt snapshots made with one set of settings: the caption is the
 ## rebuilt note alone.
 rebuiltOnlyHistory <- function() {
@@ -450,5 +477,70 @@ test_that("the widest caption line fits a figure five inches wide", {
       plotSnapshotTrends(history, metrics = "fe")
     )
     expect_lte(max(widths) + marginInches, 5)
+  }
+})
+
+## -- S1045: the number of panel columns and the year labels -----------------
+## Seen in the real app (the BACKLOG item found in S1044's pictures): the plot is
+## as wide as the browser gives it (437 pixels in a 700-pixel window), 18
+## panels in 5 columns are then 22 pixels wide, the longest panel title is 94
+## pixels, and 15 of the 18 titles lose letters (7 of 18 at 570 pixels). The
+## cure is fewer columns when the plot is narrow, so the chart takes the
+## number of columns as an argument, and the Genetic-Health Trends tab
+## chooses it from its plot's width (test_trendPlotLayout.R). The year labels
+## collide for a separate reason: a one-year history labels its x axis
+## "Oct 2024", "Jan 2025" and so on (36 pixels each) and collided at every
+## width measured, so the labels that would overlap are dropped everywhere.
+
+test_that("ncol sets the number of panel columns", {
+  history <- validatedSnapshotHistory()
+  for (n in c(1L, 2, 3L, 5)) {
+    grid <- panelGrid(plotSnapshotTrends(history, ncol = n))
+    expect_equal(grid[["cols"]], n)
+    expect_equal(grid[["rows"]], ceiling(18 / n))
+  }
+})
+
+test_that("without ncol the grid is the one ggplot2 chooses: 5 columns for 18 panels, 3 for 3", {
+  history <- validatedSnapshotHistory()
+  expect_identical(panelGrid(plotSnapshotTrends(history))[["cols"]], 5L)
+  expect_identical(
+    panelGrid(plotSnapshotTrends(history, ncol = NULL))[["cols"]], 5L
+  )
+  expect_identical(
+    panelGrid(plotSnapshotTrends(history, metrics = c("fe", "fg", "meanGu"),
+                                 ncol = NULL))[["cols"]],
+    3L
+  )
+})
+
+test_that("an ncol above the number of panels draws one column for each panel", {
+  grid <- panelGrid(plotSnapshotTrends(
+    validatedSnapshotHistory(), metrics = c("fe", "fg", "meanGu"), ncol = 5L
+  ))
+  expect_identical(grid[["cols"]], 3L)
+  expect_identical(grid[["rows"]], 1L)
+})
+
+test_that("ncol must be a single positive whole number", {
+  history <- validatedSnapshotHistory()
+  for (bad in list(0, -1, 2.5, NA, NA_integer_, "2", c(2L, 3L), TRUE)) {
+    expect_error(
+      plotSnapshotTrends(history, ncol = bad),
+      "'ncol' must be a single positive whole number",
+      fixed = TRUE
+    )
+  }
+})
+
+test_that("the year labels under the panels drop labels that would overlap", {
+  ## Today none of the label text asks the device to drop a colliding label
+  ## (0 of 5 for the 18-panel chart); with the setting every one does.
+  history <- validatedSnapshotHistory()
+  for (metrics in list(NULL, "fe", c("fe", "fg", "meanGu"))) {
+    flags <- axisLabelOverlapFlags(plotSnapshotTrends(history,
+                                                      metrics = metrics))
+    expect_gt(length(flags), 0L)
+    expect_true(all(flags))
   }
 })

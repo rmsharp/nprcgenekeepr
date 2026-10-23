@@ -866,3 +866,55 @@ test_that("after a build the note under Dates not built is gone", {
     expect_false(grepl("Skipped dates are listed here", html, fixed = TRUE))
   })
 })
+
+## -- The chart follows the plot's width (S1045) --------------------------------
+## The plot box was a fixed 600 pixels high and the chart always laid its 18
+## panels out in 5 columns, so a 700-pixel window (a plot 437 pixels wide) drew
+## panels 22 pixels wide with most titles cut off. The columns now come from
+## trendPlotLayout() (test_trendPlotLayout.R) and the picture is as tall as
+## its rows need. The test harness's own client data is fixed (a plot box 600
+## pixels wide and 400 high; it cannot be set), where the rule gives 3 columns
+## and 860 pixels; the real windows are checked by the browser test.
+
+test_that("the trend chart's box has no fixed height of its own", {
+  ui_html <- as.character(modSnapshotTrendsUI("test"))
+  box <- regmatches(ui_html,
+                    regexpr('<div[^>]*id="test-trendPlot"[^>]*>', ui_html))
+  expect_length(box, 1L)
+  if (length(box) == 1L) {
+    expect_false(grepl("600px", box, fixed = TRUE))
+    expect_true(grepl("height:auto", box, fixed = TRUE))
+  }
+})
+
+test_that("the trend chart is as tall as the rule says for the plot's width", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(modSnapshotTrendsServer,
+                    args = list(snapshotSource = shiny::reactive(NULL)), {
+    session$setInputs(historyFile = fileInfo(exampleHistoryPath))
+    plotInfo <- suppressWarnings(output$trendPlot)
+    expect_identical(as.integer(plotInfo$width), 600L)
+    expect_identical(as.integer(plotInfo$height), 860L)
+  })
+})
+
+test_that("the module hands the rule's column count to the chart", {
+  skip_if_not_installed("shiny")
+  seen <- NULL
+  realPlot <- plotSnapshotTrends
+  testthat::local_mocked_bindings(
+    plotSnapshotTrends = function(history, metrics = NULL, ncol = NULL) {
+      seen <<- ncol
+      realPlot(history, metrics = metrics)
+    },
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(modSnapshotTrendsServer,
+                    args = list(snapshotSource = shiny::reactive(NULL)), {
+    session$setInputs(historyFile = fileInfo(exampleHistoryPath))
+    invisible(suppressWarnings(output$trendPlot))
+    expect_identical(seen, 3L)
+  })
+})

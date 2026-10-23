@@ -173,3 +173,61 @@ test_that("E2E: Genetic-Health Trends generates a snapshot from a live GVA run, 
   expect_equal(nrow(trendErrors), 0L,
                info = "No Genetic-Health Trends console error")
 })
+
+test_that("E2E: the Genetic-Health Trends chart follows the plot's width: tall in a 700-px window, 600 px high in a 1400-px window", {
+  ## S1045. The plot box is 437 px wide in a 700-px window (18 panels in 5
+  ## columns were 22 px wide and 15 of the 18 titles lost letters) and 903 px
+  ## wide in a 1400-px window. trendPlotLayout() gives 2 columns and a 1250-px
+  ## picture for any plot from 415 to 564 px, and 5 columns and 600 px from
+  ## 865 px, so a few pixels of layout drift do not move these figures.
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_on_cran()
+
+  fixturePath <- system.file("extdata", "examples",
+                             "example_snapshot_history.csv",
+                             package = "nprcgenekeepr")
+  boxJs <- paste0(
+    "(function() {",
+    " var img = document.querySelector('#snapshotTrends-trendPlot img');",
+    " if (!img) return '';",
+    " var r = img.getBoundingClientRect();",
+    " return Math.round(r.width) + ',' + Math.round(r.height);",
+    "})()"
+  )
+  ## The drawn chart's width and height in css pixels, in a window of this width.
+  chartSize <- function(windowWidth) {
+    app <- create_app_driver(create_test_app(),
+                             paste0("e2e_trend_chart_", windowWidth),
+                             height = 900, width = windowWidth)
+    on.exit(app$stop(), add = TRUE)
+    if (!navigate_to_tab(app, "Genetic-Health Trends")) {
+      skip("Could not navigate to Genetic-Health Trends")
+    }
+    do.call(app$upload_file,
+            stats::setNames(list(fixturePath), "snapshotTrends-historyFile"))
+    if (!wait_for_module_ready(app, "snapshotTrends", timeout = 30000)) {
+      skip("Snapshot history upload did not signal data-ready")
+    }
+    if (!click_element_safe(app, "a[data-value='Trends']")) {
+      skip("Could not open the Trends tab")
+    }
+    app$wait_for_idle(timeout = E2E_TIMEOUT)
+    size <- poll_js(app, boxJs,
+                    done = function(v) grepl("^[1-9][0-9]*,[1-9][0-9]*$", v),
+                    timeout = 30000)
+    if (!nzchar(size)) skip("The trend chart did not draw")
+    as.integer(strsplit(size, ",", fixed = TRUE)[[1L]])
+  }
+
+  narrow <- chartSize(700L)
+  expect_gte(narrow[[1L]], 415L)
+  expect_lte(narrow[[1L]], 564L)
+  expect_equal(narrow[[2L]], 1250L, tolerance = 0.002,
+               info = "a 700-px window draws 2 columns of 9 rows")
+
+  wide <- chartSize(1400L)
+  expect_gte(wide[[1L]], 865L)
+  expect_equal(wide[[2L]], 600L, tolerance = 0.002,
+               info = "a 1400-px window draws 5 columns of 4 rows, as before")
+})
