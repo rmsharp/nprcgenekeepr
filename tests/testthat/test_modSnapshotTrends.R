@@ -734,3 +734,144 @@ test_that("a start date that is not a date is reported, not built", {
   expect_length(failed, 1L)
   expect_match(failed[[1L]]$text, "earlier snapshots", ignore.case = TRUE)
 })
+
+## ===========================================================================
+## Slice 4 wording (S1040; issue #170): three sentences of the panel, approved
+## by the owner at the S1040 scope questions (AskUserQuestion) after the S1039
+## pictures showed them:
+##  * the cost line for one date reads "1 snapshot (2005-01-01), at 100
+##    iterations each." (it read "1 snapshots, 2005-01-01 to 2005-01-01, ...");
+##  * the warning notice of a build shows each different note once and counts
+##    nothing: "Earlier snapshots were built; the calculation gave this note:
+##    <text>", or "these notes:" for several, three at most. The "(2 in all)"
+##    it gave counted notes, not dates: one date can raise a note twice
+##    (measured S1040: one date at 10 iterations gave 2 notes, and three dates
+##    gave 2 notes from 1 date);
+##  * under the Dates not built heading, "Skipped dates are listed here after a
+##    build." stands until a build has run (the heading was empty).
+## ===========================================================================
+
+## -- the cost line --------------------------------------------------------------
+
+test_that("the cost line says 1 snapshot, and the date once, for a single date", {
+  line <- nprcgenekeepr:::describeBackfillCost(as.Date("2005-01-01"), 100L)
+  expect_match(line, "^1 snapshot \\(2005-01-01\\), at 100 iterations each\\.")
+  expect_false(grepl("1 snapshots", line, fixed = TRUE))
+  expect_false(grepl("2005-01-01 to 2005-01-01", line, fixed = TRUE))
+  expect_match(line, "estimate", fixed = TRUE)
+})
+
+test_that("the cost line for several dates is as it was", {
+  line <- nprcgenekeepr:::describeBackfillCost(
+    as.Date(c("2005-01-01", "2006-01-01")), 100L
+  )
+  expect_match(
+    line,
+    "^2 snapshots, 2005-01-01 to 2006-01-01, at 100 iterations each\\."
+  )
+  expect_match(line, "estimate", fixed = TRUE)
+})
+
+test_that("the panel's cost line says 1 snapshot when the start year leaves one date", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    session$setInputs(backfillStart = "2017-01-01")
+    html <- as.character(output$backfillCostUI$html)
+    expect_match(html, "1 snapshot (2017-01-01), at 10 iterations each.",
+                 fixed = TRUE)
+    expect_false(grepl("1 snapshots", html, fixed = TRUE))
+  })
+})
+
+## -- the warning notice -----------------------------------------------------------
+
+## A backfillColonySnapshots() that raises each of `notes` as a warning and
+## returns a complete history, for the rest of the calling test. A complete
+## history keeps the trend plot from raising a warning of its own.
+mockBuildWithNotes <- function(notes, .env = parent.frame()) {
+  complete <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
+  testthat::local_mocked_bindings(
+    backfillColonySnapshots = function(...) {
+      for (note in notes) {
+        warning(note, call. = FALSE)
+      }
+      list(history = complete, support = data.frame(),
+           skipped = data.frame(snapshotDate = as.Date(character(0L)),
+                                reason = character(0L)))
+    },
+    .package = "nprcgenekeepr",
+    .env = .env
+  )
+}
+
+## The text of each warning notice one build gives when it raises `notes`.
+noticesOfBuildWith <- function(notes, .env = parent.frame()) {
+  seen <- recordNotifications(.env)
+  mockBuildWithNotes(notes, .env)
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
+  })
+  vapply(notificationsOfType(seen, "warning"), function(note) note$text,
+         character(1L))
+}
+
+test_that("a build that raises no note gives no warning notice", {
+  skip_if_not_installed("shiny")
+  expect_length(noticesOfBuildWith(character(0L)), 0L)
+})
+
+test_that("a note raised twice is shown once, with no count", {
+  skip_if_not_installed("shiny")
+  expect_identical(
+    noticesOfBuildWith(c("note A", "note A")),
+    "Earlier snapshots were built; the calculation gave this note: note A"
+  )
+})
+
+test_that("several different notes are listed in the order they came, joined by a bar", {
+  skip_if_not_installed("shiny")
+  expect_identical(
+    noticesOfBuildWith(c("note A", "note B", "note A")),
+    paste("Earlier snapshots were built; the calculation gave these notes:",
+          "note A | note B")
+  )
+})
+
+test_that("at most three different notes are shown", {
+  skip_if_not_installed("shiny")
+  expect_identical(
+    noticesOfBuildWith(c("note A", "note B", "note C", "note D")),
+    paste("Earlier snapshots were built; the calculation gave these notes:",
+          "note A | note B | note C")
+  )
+})
+
+## -- Dates not built ---------------------------------------------------------------
+
+test_that("the Dates not built heading has a place for a note under it", {
+  ui_html <- as.character(modSnapshotTrendsUI("test"))
+  expect_true(grepl("Dates not built", ui_html, fixed = TRUE))
+  expect_true(grepl("test-backfillSkippedNote", ui_html, fixed = TRUE))
+})
+
+test_that("before any build the Dates not built part says when skipped dates are listed", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    html <- paste(as.character(output$backfillSkippedNote$html), collapse = "")
+    expect_match(html, "Skipped dates are listed here after a build.",
+                 fixed = TRUE)
+  })
+})
+
+test_that("after a build the note under Dates not built is gone", {
+  skip_if_not_installed("shiny")
+  mockBuildWithNotes(character(0L))
+
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
+    html <- paste(as.character(output$backfillSkippedNote$html), collapse = "")
+    expect_false(grepl("Skipped dates are listed here", html, fixed = TRUE))
+  })
+})
