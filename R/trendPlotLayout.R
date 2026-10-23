@@ -23,7 +23,7 @@
 #' @return A list of \code{ncol} (a whole number, or \code{NULL} for
 #' \pkg{ggplot2}'s own grid) and \code{height} (a whole number of pixels).
 #' @noRd
-trendPlotLayout <- function(width, nPanels = 18L) {
+trendPlotLayout <- function(width, nPanels = length(trendDefaultMetrics)) {
   if (!is.numeric(width) || length(width) != 1L || !is.finite(width) ||
         width <= 0L) {
     return(list(ncol = NULL, height = 600L))

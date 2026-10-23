@@ -2,11 +2,11 @@
 ## This file is part of nprcgenekeepr
 library(testthat)
 
-# S1045: trendPlotLayout(width, nPanels = 18L) is the rule the Genetic-Health
-# Trends tab uses to lay out its chart for the width of the plot box: how many
-# panel columns, and how tall the picture is. The owner chose "columns follow
-# the window width" at the S1045 approach question (over always 3 columns and
-# over thinning the labels only).
+# S1045: trendPlotLayout(width, nPanels = length(trendDefaultMetrics)) is the
+# rule the Genetic-Health Trends tab uses to lay out its chart for the width of
+# the plot box: how many panel columns, and how tall the picture is. The owner
+# chose "columns follow the window width" at the S1045 approach question (over
+# always 3 columns and over thinning the labels only).
 #
 # Measured in S1045 on the app's own history (3 recorded and 4 rebuilt
 # snapshots, 18 panels) with a red panel border read from the real app's

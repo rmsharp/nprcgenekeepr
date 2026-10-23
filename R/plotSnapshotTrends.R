@@ -60,16 +60,9 @@ plotSnapshotTrends <- function(history, metrics = NULL, ncol = NULL) {
     stop("A trend needs at least 2 snapshots; the history has ",
       nrow(history), ".")
   }
-  defaultMetrics <- c(
-    "fe", "fg", "fgSE", "neGD", "neSexRatio", "neVariance",
-    "nMaleFounders", "nFemaleFounders", "nFounders",
-    "meanIndivMeanKin", "medianIndivMeanKin", "skewnessIndivMeanKin",
-    "kurtosisIndivMeanKin", "meanGu", "medianGu", "meanGuSE",
-    "skewnessGu", "kurtosisGu"
-  )
-  allowedMetrics <- c("nAnimals", "nMales", "nFemales", defaultMetrics)
+  allowedMetrics <- c("nAnimals", "nMales", "nFemales", trendDefaultMetrics)
   if (is.null(metrics)) {
-    metrics <- defaultMetrics
+    metrics <- trendDefaultMetrics
   }
   if (length(metrics) == 0L) {
     stop("'metrics' must name at least one metric column.")
