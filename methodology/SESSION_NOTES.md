@@ -98,40 +98,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1038 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Backfill Slice 2"; strict TDD, every gate and both design calls put to the owner with `AskUserQuestion`):** Slice 2 of the
-retrospective colony-snapshot backfill, GitHub issue #170 (design `docs/planning/retrospective-snapshot-backfill-plan.md` section 5; what it corrected is the new section 5.2).
-`backfillColonySnapshots()` (`R/backfillColonySnapshots.R:128`) takes `dates` or a yearly series (`from`, `to`, `by`, `minAnimals`) and returns `list(history, support, skipped)`; the counting rules are
-in the new `R/backfillColonyFacts.R` (`describeBackfillColony()` :24, `livingOnDate()` :67, `supportOnDate()` :88). **Owner calls:** an animal with no birth date counts from its first dated offspring
-until it leaves; an animal with no exit date counts only when `isLivingAnimal()` says so (status UNKNOWN never counts, so the rebuilt export date is 339, equal to the app); the default series starts
-at the first 1 January with 2 living animals (1966 on the example, 53 yearly points to 2018). Issue #170 stays open (Slices 3 and 4 remain).
-**Commits:** claim `387771996`, RED `b8d9bfa80`, GREEN `308cf7b0c`, REFACTOR `1c9e5f28a` (`parseIsoDate()` replaces two identical copies, owner approved), close-out next. Not pushed.
-**Verified:** `test_backfillColonySnapshots.R` 29 tests 185 expectations (RED: 133 expectations, 53 failed; 11 pass, 9 fail, 9 error); full unfiltered suite 448 files 4,198 tests 14,426 expectations
-(S1037: 14,286) 0 failed 0 errors 197 skipped, identical after GREEN and after REFACTOR (8 warnings, the same two files); `lintr::lint_package()` 0; `R CMD check` 0/0/0 after GREEN and REFACTOR
-(`--no-tests`, vignettes rebuilt); ratchet 1/1 (results `0ef18e584c45`, tarball 3.23681e+06 B); ledger-reading tests 125 files 7,171 expectations 0 failed 0 errors 29 skipped; no browser tier (no app path touched).
-**Measured and surface-checked:** see the DONE entry in `CHANGELOG.md` and design section 5.2 (the three birth-date rules compared on 102 dates; the default series on the jmac file: 53 dates, 8.2 s at `guIter` 10).
-**Handoff evaluation of S1037: 9/10.** Helped: the Next list gave Slice 2's scope item by item and said to settle B4 against the 341-against-339 finding first (the owner's call closed it); design section
-5.1; the gotchas (the worker found with `ps`, American spelling in roxygen, the stop test that changes in Slice 2, `guIter` 20 for the closure test); a Phase 0 picture that matched (clean tree, frontiers
-at HEAD, CI 10 of 10). Missing: that `isLivingAnimal()` is the app's one alive test and that status UNKNOWN reaches animals with a birth date too (Slice 1's `is.na(exit)` would count them); that the
-design's 20 "could also be alive" left out a class (24); that the default start depends on the B4 answer (1966 or 1967). Wrong: only the commit count (124 ahead after the close-out; 125 at my Phase 0,
-the close-out commit itself not counted). ROI: high; reading it cost minutes and I did not re-derive the Slice 2 scope.
-**Self: 8/10.** + claimed first; measured before asking, so both owner calls came with real counts and were answered first try; validated RED's numbers with an independent calculation and caught two
-checks that would have passed by accident before committing RED; ran the whole default series on the shipped file; proved the REFACTOR old-against-new on 24 inputs and looked at the 14 false differences
-of my own probe before acting; kept to the 5-file cap and the phase gates. - the gate said "about 13 new tests" and 17 landed (Learning 929 again); I left the shipped-file default-series test out of
-RED on a guessed cost (about a minute) that was 8 s, so no test pins 53 dates / 1966 / 2018; the lint objection to the pinned signature surfaced only at GREEN; one launcher with a nested `&` (S1037's
-gotcha) and one blocked `sleep`. Learning 1004.
-**Gotchas:** `guIter`/`guThresh` follow `dates = NULL` with a `nolint` on each line (a test pins the signature; moving them is a RED edit). `dates` cannot be combined with `from`/`to`/`by`. UNKNOWN-fate
-ancestors with no exit date are still living breeders inside the estimators (as in the app) though not in `nAnimals`. A panel must catch `reportGV`'s warnings and the function's own ("N of M dates
-could not be rebuilt"). The support preview has no script-callable twin (design 5.2 item 8). No test pins the shipped file's default series. 125 commits ahead of origin at Phase 0, 131 after the
-close-out, not pushed. The rest is in the `HANDOFFS.md` receipt.
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) Slice 3 of #170, the app button (READY, Effort L, about one session, estimate): its PRE-RED asks whether to export a
-preview function (the parity promise, design B1) or accept an app-only preview; then the panel, `fullPedigree` (`processedPedigree`, not `analysisPedigree`), the captured settings, the dashed line and
-caption (B3), the module-contract and `snapshotSource` tests, the browser tier, a picture opened for the owner before the long tests; the shipped-file default-series test (8 s) can be added there.
-(2) Issue #36 check (READY, Effort S; the issue cites `R/agePyramidPlot.R`, which does not exist, no R file mentions chimpanzees, `R/getPyramidPlot.R:94-98` sets the axis ticks from `maxAx`).
-(3) The `BACKLOG.md` compression pass (READY, Effort L, recurring, `BACKLOG.md:134`). (4) Owner-side: where to post the `close_out_report.py` write-up (draft only, `BACKLOG.md:173`). Owed at Slice 4:
-NEWS.Rmd, the guide section (with the sentence on UNKNOWN-fate ancestors), the `a2interactive.Rmd` pass, closing #170.
+### What Session 1039 Did
+**Deliverable:** Slice 3 of the retrospective colony-snapshot backfill, GitHub issue #170 (design `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5 and 5.2; `BACKLOG.md:33`):
+the "Build earlier snapshots" button on the Genetic-Health Trends tab, calling `backfillColonySnapshots()`. (IN PROGRESS)
+**Started:** 2026-10-22 19:26 CDT
+**Status:** Session claimed. Work beginning. Owner pick at the Phase 0 picker, item 1 of 4, "Slice 3: app button". The pick is the item, not the ruling: the preview question (export a
+script-callable twin of the support table, design B1's parity promise, or accept an app-only preview) goes to the owner with `AskUserQuestion` at PRE-RED, and every TDD gate (PRE-RED to
+RED, RED to GREEN, GREEN to REFACTOR) is put to the owner too.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1037 (condensed S950 to S1038; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+
+### Sessions 947-1038 (condensed S950 to S1039; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1038: Slice 2 of the retrospective colony-snapshot backfill, #170 (owner pick, "Backfill Slice 2"; strict TDD, every gate and both design calls put to the owner):
+`backfillColonySnapshots()` (`R/backfillColonySnapshots.R:128`) takes `dates` or a yearly series (`from`, `to`, `by`, `minAnimals`) and returns `list(history, support, skipped)`; the counting
+rules are in the new `R/backfillColonyFacts.R`. **Owner calls:** an animal with no birth date counts from its first dated offspring; an animal with no exit date counts only when
+`isLivingAnimal()` says so (export date 339, equal to the app); the default series starts at the first 1 January with 2 living animals (1966 on the example, 53 points to 2018). Claim
+`387771996`, RED `b8d9bfa80`, GREEN `308cf7b0c`, REFACTOR `1c9e5f28a` (`parseIsoDate()` replaces two copies), close-out `205c4d9ef`; evaluation of S1037 9/10, self 8/10 (Learning 1004).
+**Gotchas kept:** `guIter`/`guThresh` follow `dates = NULL` with a `nolint` on each line (a test pins the signature); `dates` cannot be combined with `from`/`to`/`by`; a panel must catch
+`reportGV`'s warnings and the function's own "N of M dates could not be rebuilt"; the support preview has no script-callable twin (design 5.2 item 8); no test pins the shipped file's
+default series (8 s at `guIter` 10).
 S1037: Slice 1 of the retrospective colony-snapshot backfill, GitHub issue #170 (owner pick, "Backfill Slice 1"; strict TDD, every gate put to the owner; the issue was filed with the
 owner's word, "File it now"): the exported `backfillColonySnapshots(ped, dates, guIter, guThresh, ...)` (returns `list(history = ...)`), the rule `reconstructedLiving` in
 `createColonySnapshot()` (`R/createColonySnapshot.R:89`), dated animals only, and two shared helpers, `trimToAnalysisPopulation()` and `validateWholeCount()`. At the export date 2018-07-11 it
