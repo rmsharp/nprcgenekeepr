@@ -119,6 +119,7 @@ modSnapshotTrendsUI <- function(id) {
             DT::DTOutput(ns("backfillSupportTable")),
             br(),
             h5("Dates not built"),
+            uiOutput(ns("backfillSkippedNote")),
             DT::DTOutput(ns("backfillSkippedTable"))
           )
         )
@@ -360,6 +361,13 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
       support
     }, options = list(pageLength = 10L), rownames = FALSE)
 
+    # NULL (no text) once a build has run, whether or not it skipped a date
+    output$backfillSkippedNote <- renderUI({
+      if (is.null(skippedDates())) {
+        helpText("Skipped dates are listed here after a build.")
+      }
+    })
+
     output$backfillSkippedTable <- DT::renderDT({
       req(skippedDates())
     }, options = list(pageLength = 10L), rownames = FALSE)
@@ -403,12 +411,13 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
         }
       )
       if (length(warningsSeen) > 0L) {
+        # Each different note once, no count: a date can raise a note twice
+        notes <- utils::head(unique(warningsSeen), 3L)
         showNotification(
           paste0(
-            "Earlier snapshots were built with notes (", length(warningsSeen),
-            " in all): ",
-            paste(substr(utils::head(unique(warningsSeen), 3L), 1L, 200L),
-                  collapse = " | ")
+            "Earlier snapshots were built; the calculation gave ",
+            if (length(notes) == 1L) "this note: " else "these notes: ",
+            paste(substr(notes, 1L, 200L), collapse = " | ")
           ),
           type = "warning", duration = 15L
         )
@@ -444,11 +453,15 @@ describeBackfillCost <- function(dates, guIter) {
   } else {
     paste0("about ", round(seconds / 60L), " min")
   }
+  span <- if (length(dates) == 1L) {
+    paste0(" (", format(dates), ")")
+  } else {
+    paste0("s, ", format(min(dates)), " to ", format(max(dates)))
+  }
   paste0(
-    length(dates), " snapshots, ", format(min(dates)), " to ",
-    format(max(dates)), ", at ", guIter, " iterations each. Each date runs ",
-    "the gene drop again, about 4 seconds per 1,000 iterations on a colony of ",
-    "2,590 animals, so expect ", estimate, " here (an estimate; larger ",
-    "colonies take longer)."
+    length(dates), " snapshot", span, ", at ", guIter, " iterations each. ",
+    "Each date runs the gene drop again, about 4 seconds per 1,000 iterations ",
+    "on a colony of 2,590 animals, so expect ", estimate, " here (an ",
+    "estimate; larger colonies take longer)."
   )
 }
