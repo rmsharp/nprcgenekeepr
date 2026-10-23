@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1043 Did
+**Deliverable:** finish the `a2interactive.Rmd` inventory (`BACKLOG.md:49`; owner pick at the Phase 0 picker, item 1 of 4, "Finish tutorial inventory") (IN PROGRESS)
+**Started:** 2026-10-23
+**Status:** Session claimed. Work beginning: re-run the export comparison, then the scope question, then PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Phase 0 found:** ledgers at HEAD `7a73a2c80`, dashboard 96/100, nothing over a context ceiling, 161 commits ahead of origin, CI: the scheduled shinytest2 run of Oct 23 hit the 45-minute limit (reported, not fixed).
+
 ### What Session 1042 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Show backfill functions in tutorial"; strict TDD; the scope question, the RED gate, the GREEN gate and the stale-test question
 were put to the owner):** `vignettes/a2interactive.Rmd:812-966` has a new section, "Colony Snapshots Over Time", between "Genetic Value Analysis" and "Breeding Group Formation". The owner chose the
