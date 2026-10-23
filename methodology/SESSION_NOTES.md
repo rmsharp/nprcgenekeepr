@@ -99,12 +99,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1042 Did
-**Deliverable:** The `a2interactive.Rmd` pass (`BACKLOG.md:33`, thread 1): demonstrate `backfillColonySnapshots()` and `previewBackfillSupport()` in
-`vignettes/a2interactive.Rmd` with `guIter = 10L`, and inventory any other exported function or new parameter since the last pass, per `docs/conventions/CLOSEOUT_CHECKLISTS.md`
-(owner pick at the Phase 0 picker, item 1 of 4, "Show backfill functions in tutorial") (IN PROGRESS)
-**Started:** 2026-10-22 23:30 CDT
-**Status:** Session claimed. Work beginning (Phase 1 scoping; PRE-RED; the inventory is read-only and the scope question goes to the owner before any RED).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Show backfill functions in tutorial"; strict TDD; the scope question, the RED gate, the GREEN gate and the stale-test question
+were put to the owner):** `vignettes/a2interactive.Rmd:812-966` has a new section, "Colony Snapshots Over Time", between "Genetic Value Analysis" and "Breeding Group Formation". The owner chose the
+eight snapshot functions in one section (over the two named alone, and over the whole inventory). Five labelled chunks on `qcPed` at 50 gene-drop iterations, each with a short explanation:
+`snapshot-record` (`createColonySnapshot`, `appendColonySnapshot`), `snapshot-backfill` (`previewBackfillSupport`, `backfillColonySnapshots` with `existingHistory`, and the colony manager
+guide's limits sentence), `snapshot-save-read` (`write.csv`, `readSnapshotHistory` gives text dates, `checkSnapshotHistory` gives Dates), `snapshot-compare` (`calcSnapshotDeltas`: the mixed-rule
+message shown, then `membershipRule`), `snapshot-plot` (`plotSnapshotTrends`, alt text, a 9-inch figure). No literal number in the prose: counts are inline R.
+**Measured first:** exports at S541 (`95609eeb2`, 217) against today's (236): 19 new, 14 script-callable and unnamed (8 snapshot, 4 MHC haplotype, `reportAncestryViolations`, `shrinkPedigree`);
+190 of 236 never named, which is a walkthrough and not a gap. The demo takes under 1 s; at `guIter = 10L` (the old item's setting) the rebuild gave two founder-genome warnings, at 50 and 100 none.
+**Found at GREEN:** the picture of the rendered section showed the plot's caption cut off on its left at 7 inches (ggplot aligns it to the panel; the legend takes about 2 in): test first, it failed,
+then `fig.width: 9` (`BACKLOG.md:70` holds the function-side item). Reading each sentence against the output dropped two unbacked claims. The final full suite found `test_docsAuditSixRulings.R`
+SR3 red since S1040's docs commit `31c577781` (it removed the #170 item after S1040's suite run; S1041 ran none): fixed in its own commit at the owner's choice.
+**Commits:** claim `bba4264b5`, RED `fc3d928f9`, GREEN `ea8c6af96` (section, 16 `inst/WORDLIST` words, the caption-width test), stale guard `fad6ccff8`, REFACTOR `b41bb0de6` (one `insideChunk()`
+helper, test only; identical on 1,997 vignette lines), docs `86da7d65c` (BACKLOG, Learning 1008), close-out next. Not pushed (161 ahead of origin after the close-out; the last push CI run is Oct 20).
+**Verification, final tree:** `test_snapshotTutorialSection.R` 11 tests 65 expectations (RED: 10 tests 42 expectations 31 failed); full suite 451 files 4,290 tests 14,857 expectations 0 failed 0 errors
+197 skipped 8 warnings; `lintr::lint_package()` 0; `devtools::check()` 0/0/0 (it builds the tutorial); the full tutorial renders in 16 s with no warning in the section; ratchet 1/1 (results
+`19679977ad90`). Runtime: no app code changed and the Shiny app was not launched; the figure and the section page were opened for the owner.
+**Handoff evaluation of S1041: 8/10.** Helped: Next item 1 named the five threads at `BACKLOG.md:33-50` and every claim re-measured true (the tutorial names neither function, the cut is at
+`R/modSnapshotTrends.R:420` and unpinned, no `na.rm`); "do not re-offer the six delayed items" and the CI note were right; the receipt was complete. Missing: that HEAD was red (`test_docsAuditSixRulings.R`
+SR3, since `31c577781`): "suite not re-run (S1040: ... 0 failed)" read as green; that `guIter = 10L` warns; that "Effort S" held for the two named functions only (the inventory found 14 more).
+Wrong: nothing stated false; one implied (HEAD green). ROI: high.
+**Self: 8/10.** + claimed first; measured before the option text and before the RED assertions (no RED correction was needed); read every sentence against the render; opened the figure and section for
+the owner before the long checks; test-first for the caption finding; ran the suite on the final tree after the last BACKLOG edit; 7 commits, each at most 3 files. - Several stretches of more than 6
+calls without a progress sentence; two avoidable tool errors (a `sleep` that is blocked, a `\s` in an `Rscript -e` string); a stray `Rplots.pdf` appeared in the repo root from one of my runs (removed,
+never found which); two unbacked sentences reached the file before the render read. Learning 1008.
+**Gotchas:** `test_snapshotTutorialSection.R` runs the five chunks once in a fresh environment and draws the plot on `pdf(NULL)`; its `fig.width >= 9` pin goes when `plotSnapshotTrends()` is fixed
+(`BACKLOG.md:70`). `test_docsAuditSixRulings.R` SR3 now lists "Retrospective colony-snapshot backfill" as gone: never write that exact phrase into `BACKLOG.md`. Render the tutorial without byproducts in
+`vignettes/` (the spelling guard scans there): `pkgload::load_all()`, then `rmarkdown::render("vignettes/a2interactive.Rmd", output_dir = <scratch>, intermediates_dir = <scratch>, knit_root_dir =
+<vignettes dir>)`. Extract the figure from the self-contained HTML (base64 `img`) and `open` it. `devtools::check()` and the suite are heavy: run each as `run_in_background`, one at a time.
+**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) The tutorial inventory remainder (`BACKLOG.md:49`; READY, Effort M): four MHC haplotype functions,
+`reportAncestryViolations()`, `shrinkPedigree()`, two parameters. (2) `plotSnapshotTrends()` caption clipped at narrow widths (`BACKLOG.md:70`; READY, Effort S, strict TDD; look at the app
+picture first). (3) The earlier-snapshots follow-ups (`BACKLOG.md:33-47`): the `na.rm` notice (READY) or pinning the 200-character cut (READY); the 'skipped' word is a DECISION; the large-colony
+cost is BLOCKED on a bigger studbook. (4) Owner-side: where to post the `close_out_report.py` write-up (`BACKLOG.md:202`; the held-back sync is BLOCKED on it). The `BACKLOG.md` compression pass is
+not owed (273 lines; 243 before this session). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
 
 ### Sessions 947-1041 (condensed S950 to S1042; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1041: the issue #36 check ("Add chimpanzee-specific age pyramid plot settings"; owner pick, "Issue #36 check"; read-only, no code, no TDD phase past PRE-RED): verdict already solved;
@@ -256,53 +283,26 @@ forced gray, so inline `color:` shows nothing; every popover header reads "chara
 Value population (`R/appServer.R:448`; `NEWS.Rmd:451`; 9/10, self 8/10). **Gotchas kept:** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole
 `testServer()` call; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`.
 S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (`NEWS.Rmd:445`). S991: the 21 slice 6d candidates re-checked
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`). S990: the help for `kinship()` chrtype and `hasBothParents()` id. S989: `checkRequiredCols()` ignores an `NA` column
-name (`NEWS.Rmd:437`). **Gotchas kept (S989-S992):** the CC1 fix needs a layout-builder probe with pairs outside the view; a "revert to `HEAD`" mutant is a no-op after GREEN (use
-`HEAD~1`), and `git checkout` of a file with uncommitted work destroys it (Learning 961).
+(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`). S990: the help for `kinship()` chrtype and `hasBothParents()` id. S989: `checkRequiredCols()` ignores an `NA`
+column name (`NEWS.Rmd:437`). **Gotchas kept (S989-S992):** the CC1 fix needs a layout-builder probe with pairs outside the view; a "revert to `HEAD`" mutant is a no-op after
+GREEN (use `HEAD~1`), and `git checkout` of a file with uncommitted work destroys it (Learning 961).
 
-S947-S960 (hashes and scores in `CHANGELOG.md` and `HANDOFFS.md`): drift gates for the guide's export tables and Breeding Groups statements (`test_guideExportTables.R`, `test_guideBreedingGroupsWording.R`);
-the Candidate Parent Assignment tab says why its table is blank without `fromCenter`; the Diagram article shows a Direct picture; `HANDOFFS.md` (S951) and `CHANGELOG.md` (S960) trimmed with
-`methodology_trim.py --budget-bytes 65536 --write`, no `--force`; the owner's origin and funding sentences everywhere (`test_originFundingWording.R`); with no focal animals the Pedigree Browser flags
-the living animals (S954-S955); 21 guide pictures retaken (S956); the seven old-style `panel panel-*` boxes stay plain by ruling (S957); `getAncestors()` carries on when a parent has no row (S958);
-the hidden ONPRC/SNPRC comment lines deleted (S959). Strict TDD where code changed; evaluations 9/10, self 8/10.
-S961-S962: the Breeding Groups last box is named "Unused animals" (`R/breedingGroupLabels.R:20`); a box of exactly one animal is headed "(1 animal)" and the one-animal
-nobody-is-alive notice reads "The 1 animal in this source is not alive, ..." (`R/modBreedingGroups.R:682-689,993-994`; evaluations 9/10 and 8/10, self 8/10 and 7/10). **Gotchas kept:** a retake draws the
-last box's count, so the pin follows the picture; a mutation must change what the tests read (return `""`).
-S963-S965: the guide shows the Warnings sub-tab as the app opens it (`colony-manager-guide.qmd:245-249`); no guide picture is taken with a pop-up on screen (`wait_for_popups_before()`,
-`tests/testthat/helper-captureHarness.R:98`); `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget size check (`methodology/.context-budget.json:52-65`, gate `test_contextBudgetLedgers.R`).
-Strict TDD; evaluations 9/10, self 7-8/10. **Gotchas kept:** the capture recorder counts each `do_step` and each `shot` once; read `uptime` before a `test_markerKinship.R:177` benchmark failure
-(load above about 7 fails it); `sips -c` does not crop, use Pillow (`python3 -I`); `CHANGELOG.md` has two `## 2026-10` headings, prepend under the first.
-S966-S974 (strict TDD where code changed, REFACTOR taken in S967 and S969-S974; evaluations 8-9/10, self 7-8/10; hashes in `CHANGELOG.md`): S966, the four likely code defects of docs-audit slice 4 re-checked
-(`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`; all still real; an audit); S967, the `groupAddAssign()` help says the largest minimum group size wins (`R/groupAddAssign.R:11-12`; gate
-`test_groupAddAssignHelp.R`); S968, a decision session: the owner took the recommended option on all three docs-audit part 2 rulings; S969, the Genetic Value tab lost its two do-nothing check boxes
-(`R/modGeneticValue.R:63-66`); S970, the Breeding Groups Source box no longer offers "Upload list" (`R/modBreedingGroups.R:40-42`; gate `test_breedingGroupsSourceChoices.R`; `NEWS.Rmd:276-278`); S971-S972, a one-file
-pedigree's genotype columns are read and the QC Summary names allele columns found but unreadable (`R/readOneFileGenotypes.R:30,41-61`); S973, "My own list" is a third Source choice (`R/parseIdList.R`); S974, the
-one-file genotype tutorials (`a2interactive.Rmd:742-785`; gate `test_genotypeTutorialsWording.R`). **Gotchas kept:** `qcStudbook(reportErrors = TRUE)` returns `NULL` when nothing is reported; a mutation of `R/` code needs
-`pkgload::load_all()` after it; a `cd` in one Bash call persists, so use absolute paths; grep a removed control or choice by id, wrapped label, kind, count words AND meaning (Learnings 935, 936, 939); mutate new code
-before the REFACTOR gate (Learning 937); copy a file before a `git checkout` mutation harness; a real-app or E2E run loads the INSTALLED package and the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .`
-with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`; wait on a run's `EXIT=` and for `uptime` before E2E; a retake draws the last box's count, so
-`test_guideBreedingGroupsWording.R` follows the picture.
-S975: founder genome equivalents, their standard error and gene diversity come from the pedigree alone (`R/reportGV.R:294-318`; 9/10, self 8/10). S976-S979, marker genetics: the S976 re-check
-(`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`); a blank allele is missing, not `"NA/NA"` (S977, `R/buildMarkerGenotypeMatrix.R:54`, `R/markerHeterozygosity.R:105-119`); the F_ROH warning and
-notice (S978, `R/computeGenomicROH.R:112-118`, `R/sidecarLociMissingFromMatrix.R:22,39`, `R/modMarkerGenetics.R:1102-1128`); a blank chromosome is missing and `checkGenotypeFile()` names every collision once
-(S979, `R/checkLocusMetadata.R:76-79`, `R/checkGenotypeFile.R:55-73`); strict TDD, 8-9/10, self 8/10. **Gotchas kept (S976-S979):** `computeGenomicROH()` takes the raw sidecar but
-`sidecarLociMissingFromMatrix()` takes `checkLocusMetadata()`'s output; under `testServer()` collect warnings with `withCallingHandlers()`; read help with `roxygenText()`; a script's `read.csv()` keeps `""`.
-S980-S982: the jmac example's two impossible sire cells are blank (`inst/extdata/examples/deidentified_jmac_ped.csv:2485,2612`); the example is the 2018 studbook de-identified (`data-raw/buildJmacExample.R`, seed
-20180711; the studbook stays untracked); the Input tab warns about a death before the birth date (`R/getExitBeforeBirthWarning.R:21-44`); 8/10, self 7-8/10. **Gotchas kept:** `ped$exit` partial-matches `exitDate` (read
-with `[[ ]]`); read `textContent`, not `innerText`; count a field's rows before offering to blank it.
-S983-S985, harem groups: a sire's relatives stay out of his harem (`R/fillGroupMembers.R:60-67`); a harem group with no seeded male gets a sampled sire (`R/initializeHaremGroups.R:37-63`,
-`R/groupsWithoutSire.R:1-35`); harem plus a non-zero `sexRatio` stops (`R/groupAddAssign.R:259-264`); strict TDD, REFACTOR taken, 8-9/10, self 8/10. **Gotchas kept:** `kin[[absent]]` errors (read with `[`);
-`makeGroupMembers()` returns only the first `numGp` groups; `sameGroups()` is a global test helper (`helper-haremPedigree.R`).
-S986-S988: the 6a-6b re-check (`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`); the Input tab lists every invalid date by row, in every date column
-(`R/getDateErrorsAndConvertDatesInPed.R:48-55`; `NEWS.Rmd:423`); `checkChangedColsLst()` counts every rename (`R/checkChangedColsLst.R:37`; `NEWS.Rmd:430`); 8-9/10, self 8/10. **Gotchas kept:**
-`runQcStudbook()` needs `reportChanges = TRUE` to show renames; `qcStudbook(reportErrors = TRUE)` is `NULL` for a clean file; 15 test files read `NEWS.Rmd`/`NEWS.md`; a probe installs into a scratch library,
-never renv; `export VAR` before `Rscript`; start every Bash command with an absolute `cd`; never `git add -A` (the studbook stays untracked), never `git stash` here.
-**Gotchas kept (S956-S960):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results hash, so cite the last run only; the trimmer neither stages
-nor commits (`git add` `HANDOFFS.md`, `CHANGELOG.md`, the shard and its verify script); a new receipt goes directly above the newest one; a `panel panel-` hit in `R/` is not a defect (the owner ruled it, S957); `qcStudbook()` gives an animal
-with one known parent a `U0001`-style placeholder for the other, so a raw-versus-QC fixture lists both parents or neither (S958); print `skipped` beside `failed` in a RED tally; under `testServer()` an unset input is `NULL`, and `appServer`
-with a full pedigree takes 70 s, so chain the modules; restore a mutated file in `tryCatch(finally =)`, never `on.exit()`; a guarded assertion in a RED test is unrun until GREEN; to run an old commit's tests, `git archive` it to scratch and
-`setwd()` into it from the MAIN repo's R session; the Candidate table's other two blank causes stay unexplained by decision, do not re-offer them; the wall-clock benchmark blocks (`test_markerKinship.R:177`,
-`test_markerParentageLikelihood.R:647`) fail under desktop load; put R code with `\s` in a script file; sweep with `git grep`, never `grep -r` (it walks `docs/archive/` and five `.claude/worktrees/` copies).
+S947-S988 (hashes, scores and file lines in `CHANGELOG.md` and `HANDOFFS.md`, condensed S1042; strict TDD where code changed, evaluations 8-9/10, self 7-8/10): drift gates for
+the guide's export tables and Breeding Groups wording; the owner's origin and funding sentences everywhere (`test_originFundingWording.R`); 21 guide pictures retaken (S956);
+the seven old-style `panel panel-*` boxes stay plain by ruling (S957); the Breeding Groups last box is "Unused animals" (S961-S962); no guide picture is taken with a pop-up on
+screen (S963); `HANDOFFS.md` and `CHANGELOG.md` are under the context-budget check (`test_contextBudgetLedgers.R`, S965); docs-audit part 2 re-checks and rulings (S966-S968,
+S976, S986); the Genetic Value tab lost two do-nothing check boxes (S969); the Breeding Groups Source box offers "My own list" (S970, S973); one-file pedigree genotypes
+(S971-S974, the `a2interactive.Rmd` subsection "Using known genotypes"); founder genome equivalents from the pedigree alone (S975, `R/reportGV.R:294-318`); marker genetics
+blanks, the F_ROH notice and locus metadata (S977-S979); the jmac example's two impossible sire cells blanked and an exit-before-birth warning (S980-S982); harem groups
+(S983-S985); every invalid date listed by row and every rename counted (S987-S988).
+**Gotchas kept (S947-S988):** the claim commit needs its own `CHANGELOG.md` entry before a trim `--write` (Learning 545); each `quality_ratchet.py --run` prints a new results
+hash, so cite the last run only; the trimmer neither stages nor commits; a new receipt goes directly above the newest one; a real-app or E2E run loads the INSTALLED package and
+the renv copy is stale: `R CMD INSTALL --no-docs --library=<scratch> .` with `R_LIBS=<scratch>:<renv libs>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`; a mutation
+of `R/` code needs `pkgload::load_all()` after it and must change what the tests read; restore a mutated file in `tryCatch(finally =)`; `qcStudbook(reportErrors = TRUE)`
+returns `NULL` when nothing is reported; under `testServer()` collect warnings with `withCallingHandlers()` and an unset input is `NULL`; `ped$exit` partial-matches `exitDate`
+(read with `[[ ]]`); the wall-clock benchmark blocks (`test_markerKinship.R:177`, `test_markerParentageLikelihood.R:647`) fail under desktop load, so read `uptime` first; `sips
+-c` does not crop, use Pillow (`python3 -I`); put R code with `\s` in a script file; start every Bash command with an absolute `cd`; sweep with `git grep`, never `grep -r` (it
+walks `docs/archive/` and five `.claude/worktrees/` copies); never `git add -A` (the studbook stays untracked) and never `git stash` here.
 
 ### Sessions 911-946 (condensed S911 to S1030; full record in `CHANGELOG.md`, `HANDOFFS.md` and the lossless shards)
 S911-S921 (decisions and small internal builds, strict TDD where code changed; evaluations 8-9/10, self 7-8/10): `notifyProgress()` (`R/notifyProgress.R`, S914), `walkPedigree()`
