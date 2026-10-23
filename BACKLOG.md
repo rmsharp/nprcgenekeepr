@@ -78,17 +78,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`gh run view --job=120292192510 --log`) for the step that stalled. No issue is filed (the
       CI-break convention).
 
-- [ ] **`plotSnapshotTrends()` cuts its caption off on the left at narrow figure widths** (READY,
-      Effort S, strict TDD; found S1042 in the picture of the rendered tutorial section) -- at a
-      7-inch figure (the tutorial's default) the caption "Dashed lines are rebuilt from studbook
-      birth and exit dates and today's parentage, not recorded at the time." (108 characters,
-      5.9 inches at 8.8 pt) loses its first words: ggplot right-aligns a caption to the panel and
-      the legend takes about 2 inches of the figure. Measured on macOS: cut at 7 inches, whole at 8
-      and 9. A candidate fix, not tried: `plot.caption.position = "plot"` in the function's theme,
-      which moves the caption in the app too, so look at the app picture first (S1039 fixed the same
-      family by putting the two notes on separate lines, `8757ecc10`). Until then the tutorial chunk
-      is 9 inches wide and `test_snapshotTutorialSection.R` pins that width; drop both when the
-      function is fixed.
+- [ ] **The trend chart's year labels overlap, and its panel titles are cut off, in narrow panels**
+      (READY, Effort S to M, strict TDD; found S1044 by the owner in the real-app pictures of the
+      caption fix, which neither caused nor changes it) -- `plotSnapshotTrends()` draws up to 18
+      panels in 5 columns and the app's plot is as wide as the browser gives it (437 px in a 700-px
+      window, 570 at 900, 770 at 1200, 903 at 1400). Measured on the 18-panel plot: each panel is
+      about 23, 49, 89 and 116 px wide at those four widths and one year label ("2020", 8.8 pt) is
+      20 px, so the four labels of a 2020 to 2026 history collide at 437 and 570 px, fit barely at
+      770 and read cleanly at 903. The pictures at 700 and 900 px also show panel titles such as
+      `neVariance`, `MaleFounders` and `medianIndivMeanKin` losing letters at both ends. **Not
+      measured:** a longer history (a backfilled series has several decade labels per panel), the
+      other rows of the grid, and the 1400-px window's titles. Candidate approaches, none tried:
+      drop colliding labels (`guide_axis(check.overlap = TRUE)`), dodge them (`n.dodge = 2`), fewer
+      breaks (`scales::breaks_pretty(n = 3)`), angled labels; for the titles a smaller
+      `strip.text`, wrapped titles (`label_wrap_gen()`) or fewer columns. The owner picks the
+      approach at the PRE-RED question. Take the pictures at 2x density (Learning 1010): a 1x
+      screenshot is soft and the owner rejected one. The tutorial's 3-panel chart is not affected.
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE

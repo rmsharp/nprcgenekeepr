@@ -99,52 +99,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1044 Did
-**Deliverable:** `plotSnapshotTrends()` caption cut off on the left at narrow figure widths (`BACKLOG.md:81`; owner pick at the Phase 0 picker, item 1 of 4, "Trend chart caption") (IN PROGRESS)
-**Started:** 2026-10-23
-**Status:** Session claimed. Work beginning: the app picture first, then the scope question, then PRE-RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-**Phase 0 found:** ledgers at HEAD `a36703926` (gap 0), dashboard 96/100, nothing over a context ceiling, 167 commits ahead of origin, CI: the scheduled shinytest2 run of Oct 23 hit the 45-minute limit (reported, not fixed).
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trend chart caption"; strict TDD; the scope question, the PRE-RED, RED, wrong-check, GREEN-to-REFACTOR and
+dates-scope questions were put to the owner):** the footnote of `plotSnapshotTrends()` is never cut off: each note is cut into two lines of at most 70 characters (`strwrap(width =
+70L)`) and the caption is left-aligned to the whole plot (`plot.caption.position = "plot"`, alignment 0.0; `R/plotSnapshotTrends.R:153-165`), so it is whole from a plot width of about
+320 px (it needed 550 px, 590 with all three provenance settings named). `vignettes/a2interactive.Rmd:1019` lost its `#| fig.width: 9` and the S1042 pin became "the plot chunk sets no
+figure width of its own" (`test_snapshotTutorialSection.R:181`). The owner chose this over aligning to the whole plot only (430 px, 470 with three settings).
+**Measured first:** the real app's Trends tab (a scratch `app.R` with `load_all()`, shinytest2, a history of 3 recorded and 4 rebuilt snapshots): the plot is 437, 570, 770 and 903 px
+wide in 700-, 900-, 1200- and 1400-px windows; a png sweep at 72 dpi (plot widths 260 to 760 px, a pixel scan of the caption band) gave the smallest clean width for each variant.
+**Error caught:** my RED check that the caption cell spans every column was wrong for ggplot2 4.0.3 (columns 3 to 11 of 13: the outer margin and the empty y-title columns lie outside);
+found at GREEN, put to the owner, fixed in its own commit `d4d6b54ab` with a relative check (the old function loaded in a side environment: 14 failed, the new one: 0). **Owner
+remarks:** my first before/after picture was "low and pixilated" (a 1x screenshot; retaken at 2x from the page's own image); the pictures also show the x-axis years overlapping and the
+panel titles cut off in narrow panels, now `BACKLOG.md:81`, and the owner chose to finish the footnote first.
+**Commits:** claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab`, GREEN `31c3dcc79`, REFACTOR `8cc8fdde1` (`rebuiltWithGuIterChangeHistory()`, two identical copies proved
+identical), close-out next. Not pushed (173 ahead of origin after the close-out; the last push CI run is Oct 20).
+**Verification, final tree:** `test_plotSnapshotTrends.R` 25 tests 71 expectations 0 failed (RED: 11 failed), `test_snapshotTutorialSection.R` 11 tests 64 expectations 0 failed; full
+suite 452 files 4,304 tests 15,039 expectations 0 failed 0 errors 197 skipped 8 warnings (7.8 minutes); `lintr::lint_package()` 0; `devtools::check()` 0/0/0; ratchet 1/1 (results `32cc81429b3e`).
+Runtime: the real app run at 700, 900 and 1200 px windows with the old and the new function, pictures at 2x opened for the owner; the tutorial's chart at the default 7 inches (rendered
+to a scratch folder, 19 s) shows the whole caption.
+**Handoff evaluation of S1043: 9/10.** Helped: Next item 1 named this defect with its file, tags and "look at the app picture first", and that advice found the real answer (the
+candidate fix alone still clips at a 700-px window); the note that the tutorial pins `fig.width >= 9` and that the pin goes with the fix was exact; the heavy-checks-one-at-a-time and
+"after the last BACKLOG edit" advice held; HEAD was green; the receipt was complete. Missing: that the same chart also has overlapping year labels and cut panel titles in narrow panels
+(the owner found them in the pictures); that ggplot2 here is 4.0.3 (no `plot_theme()`). Wrong: nothing. ROI: high.
+**Self: 8/10.** + looked at the real app first and measured the clipping threshold with a sweep before offering options; showed the owner a strip of the three variants and put every
+gate to them; proved the new function against the old one (14 failed against 0) when a RED check turned out wrong; retook the pictures at 2x; suite, lint and check ran one at a time;
+the REFACTOR was proved identical. - My RED layout check was written against the old layout only and was wrong, which cost a question and an extra commit; the first picture was 1x and
+the owner had to say so; a trailing `&` inside `run_in_background` again and a wasted placeholder `Monitor`; a stretch of about 8 calls early on without a status sentence. Learning
+1010.
+**Gotchas:** the footnote is wrapped in the label itself (`p$labels$caption` holds the newlines; `captionLines()`, `captionLineWidthsInches()` and `plotGrob()` are at
+`test_plotSnapshotTrends.R:85-113`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`; ggplot2 4.0.3 has no `plot_theme()`, use `calc_element(name, p$theme)`; grid has no
+`"px"` unit (use `"bigpts"` at 72 dpi); the app's plot is 437/570/770/903 px in 700/900/1200/1400-px windows and a panel is 23/49/89/116 px; take pictures at 2x (the
+`show-visual-result-before-long-tests` memory); wait on a background job's pid with a `kill -0` loop and never write a trailing `&` inside `run_in_background`; the old function for a
+before picture is `git show d3c2c7b18:R/plotSnapshotTrends.R` patched into the namespace.
+**Next (the owner chose item 1; my order for the rest; do not re-offer the six delayed items):** (1) The x-axis years and panel titles of the trend chart (`BACKLOG.md:81`; READY, Effort
+S to M, strict TDD; the owner picks the approach at PRE-RED; take pictures at 2x). (2) Diagnose the scheduled `shinytest2` timeout (`BACKLOG.md:70`; READY, Effort S to diagnose; the
+2026-10-24 07:18 UTC run will have happened, so run `gh run list` first). (3) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or pinning the 200-character cut
+(READY); the 'skipped' word is a DECISION; the large-colony cost is BLOCKED on a bigger studbook. (4) The tutorial leftovers (`BACKLOG.md:49`; DECISION NEEDED, Effort S). (5)
+Owner-side: where to post the `close_out_report.py` write-up (`BACKLOG.md:218`; the held-back sync is BLOCKED on it). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11,
+#10, #5).
 
-### What Session 1043 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Finish tutorial inventory"; strict TDD; the scope question, the PRE-RED, RED, GREEN and GREEN-to-REFACTOR gates were
-put to the owner):** `vignettes/a2interactive.Rmd` names the six script-callable functions and the two parameters it never did, in five places in file order: `### Passing a Kinship Matrix
-You Already Have` (`:608`, `makePedigreeMatingLayout(kinshipMatrix)`), `### X-Chromosome Kinship` (`:840`, `kinship(chrtype = "x", sex)`), `### Ancestry Rules for Formed Groups` (`:1379`,
-`reportAncestryViolations()`), `## Shrinking a Pedigree to a Genotyping Budget` (`:1585`, `shrinkPedigree()`) and `## MHC Haplotype Reporting` (`:2142`, the four MHC functions). Each has labelled
-chunks on shipped data and no literal number in the prose. The owner chose all eight over three narrower scopes, and chose to leave the package name `kinship2` out of the text.
-**Measured first:** exports 217 at S541 against 236, 19 new, 6 unnamed script functions; the six names, `chrtype` and `kinshipMatrix` had zero `grep -F` hits; 170 of 236 exports are still never named
-(176 before). `shrinkPedigree()` on `qcPed` with the 89 living animals genotyped shows all three trims (280 to 258 to 44; 19 / 3 / 214); the guide's MHC figures (31, 33, 26, 60) reproduce by inline R.
-**Error caught:** a `\b` name search misses `__name__` markup, so the 182 of 236 I first quoted to the owner (and S1042's 190, really 184) was too high, and `twinRelations`, named in the `reportGV()`
-argument list, was missed; corrected in `BACKLOG.md` and Learning 1009. **Found at GREEN:** my RED digit rule also bans `kinship2`, `J1` and `ancestry1`; the prose was reworded.
-**Commits:** claim `9945d6554`, RED `7e0b99009`, GREEN `649389386` (the five places, 17 `inst/WORDLIST` identifiers), REFACTOR `d7a821da2` (`insideChunk()`, `sectionProse()` and `chunkOptionText()`
-once in `helper-pageText.R`), docs `1b06a8556` (BACKLOG, Learning 1009), close-out next. Not pushed (167 ahead of origin after the close-out; the last push CI run is Oct 20).
-**Verification, final tree:** `test_inventoryTutorialSections.R` 11 tests 167 expectations (RED: 11 tests 107 expectations 76 failed); full suite 452 files 4,301 tests 15,024 expectations 0 failed
-0 errors 197 skipped 8 warnings; `lintr::lint_package()` 0; `devtools::check()` 0/0/0 (it builds the tutorial); the full tutorial renders in 19 s; ratchet 1/1 (results `3e01c6d3b770`). Runtime: no app
-code changed and the Shiny app was not launched; the five places were rendered as their own page and opened for the owner.
-**Handoff evaluation of S1042: 9/10.** Helped: Next item 1 named the six functions and two parameters and every claim re-measured true (zero `grep -F` hits; the 217 / 236 / 19 comparison
-reproduced); the render recipe and `test_snapshotTutorialSection.R` as the pattern worked verbatim; "do not re-offer the six delayed items", the CI note and the one-at-a-time heavy-check advice
-were right; HEAD was green; the receipt was complete. Missing: that `sex` is also unnamed (the item named `chrtype`); that "190 of 236 never named" came from a `\b` search (184 by an
-underscore-aware one); nothing could have warned of the 2026-10-23 shinytest2 timeout. Wrong: only that figure. ROI: high.
-**Self: 8/10.** + claimed first; re-ran the comparison and probed every demo's input on shipped data before the option text (which found the `shrinkPedigree()` input); ran the RED tests' helpers
-against an existing section before GREEN; read each sentence against the render and fixed three small things; opened a page of just the five places for the owner before the long checks; suite, lint
-and check ran one at a time; the REFACTOR was proved identical. - Quoted a wrong total (182) to the owner from a flawed search; my RED digit rule was too strict and cost a reword and a question;
-two command errors (`\\` in `Rscript -e` strings, zsh `=====`); a stretch of about 8 quick calls in the probe phase without a progress sentence. Learning 1009.
-**Gotchas:** the five places are pinned by exact title and neighbouring headings (`test_inventoryTutorialSections.R:55`), so a new heading between them breaks test 1; the last place ends at the
-`elapsed-time` chunk (`:2216`), keep the MHC section before it; the digit rule bans any digit in the five places' prose, so naming `kinship2` needs the rule changed first (RED), and the owner
-chose to leave it out, so do not re-offer; search names with a boundary that ignores `_`; `insideChunk()`, `sectionProse()` and `chunkOptionText()` are in `tests/testthat/helper-pageText.R:150-167`;
-this harness reduces `\\` to `\` in `Rscript -e '...'`, so put regexes in a script file. Never write the phrase "Retrospective colony-snapshot backfill" into `BACKLOG.md` (SR3).
-**Next (my order; the owner gave none; do not re-offer the six delayed items):** (1) `plotSnapshotTrends()` caption clipped at narrow widths (`BACKLOG.md:81`; READY, Effort S, strict TDD; look at
-the app picture first). (2) Diagnose the scheduled `shinytest2` timeout (`BACKLOG.md:70`; READY, Effort S to diagnose; first see whether the 2026-10-24 07:18 UTC run repeats it). (3) The
-earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or pinning the 200-character cut (READY); the 'skipped' word is a DECISION; the large-colony cost is BLOCKED on a bigger
-studbook. (4) The tutorial leftovers (`BACKLOG.md:49`; DECISION NEEDED, Effort S): a twin-corrected kinship demo and a guard for omitted exports. (5) Owner-side: where to post the
-`close_out_report.py` write-up (`BACKLOG.md:213`; the held-back sync is BLOCKED on it). The `BACKLOG.md` compression pass is not owed (284 lines). Informational: 9 open issues (#138, #123, #116,
-#37, #28, #12, #11, #10, #5).
-
-### Sessions 947-1042 (condensed S950 to S1043; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1043 (condensed S950 to S1044; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1043: the `a2interactive.Rmd` inventory finished (owner pick, "Finish tutorial inventory"; strict TDD; the scope, PRE-RED, RED, GREEN and GREEN-to-REFACTOR gates put to the owner):
+`vignettes/a2interactive.Rmd` names the six script-callable functions and the two parameters it never did, in five places (`kinshipMatrix` `:608`, X-chromosome kinship `:840`,
+`reportAncestryViolations()` `:1379`, `shrinkPedigree()` `:1585`, the four MHC functions `:2142`); the owner chose all eight and to leave the package name `kinship2` out of the text.
+Claim `9945d6554`, RED `7e0b99009`, GREEN `649389386`, REFACTOR `d7a821da2` (`insideChunk()`, `sectionProse()` and `chunkOptionText()` once in `helper-pageText.R`), docs `1b06a8556`,
+close-out `a36703926`; full suite 452 files 4,301 tests 0 failed 0 errors; evaluation of S1042 9/10, self 8/10 (Learning 1009). **Gotchas kept:** a `\b` name search misses `__name__`
+markup (170 of 236 exports are never named, not 182); the five places are pinned by exact heading and neighbours (`test_inventoryTutorialSections.R:55`); the digit rule bans any digit
+in their prose; put regexes in a script file (this harness reduces `\\` inside `Rscript -e`).
 S1042: the `a2interactive.Rmd` pass for the snapshot family (owner pick, "Show backfill functions in tutorial"; strict TDD; the scope, RED, GREEN and stale-test questions put to the owner):
 `vignettes/a2interactive.Rmd` has a "Colony Snapshots Over Time" section for the eight snapshot functions (five chunks on `qcPed` at 50 gene-drop iterations, no literal number in the prose, a
 9-inch figure because the plot's caption was cut off at 7). Claim `bba4264b5`, RED `fc3d928f9`, GREEN `ea8c6af96`, stale guard `fad6ccff8` (`test_docsAuditSixRulings.R` SR3, red since
 S1040's `31c577781`), REFACTOR `b41bb0de6`, docs `86da7d65c`, close-out `7a73a2c80`; full suite 451 files 4,290 tests 0 failed 0 errors; evaluation of S1041 8/10, self 8/10 (Learning 1008).
-**Gotchas kept:** `test_snapshotTutorialSection.R` pins `fig.width >= 9` (it goes when `plotSnapshotTrends()` is fixed, `BACKLOG.md:81`); the phrase "Retrospective colony-snapshot backfill" must not
+**Gotchas kept:** the `fig.width >= 9` pin in `test_snapshotTutorialSection.R` was replaced in S1044 ("sets no figure width of its own"); the phrase "Retrospective colony-snapshot backfill" must not
 return to `BACKLOG.md` (SR3); render the tutorial without byproducts in `vignettes/` (the spelling guard scans there); run each heavy check with `run_in_background`, one at a time.
 S1041: the issue #36 check ("Add chimpanzee-specific age pyramid plot settings"; owner pick, "Issue #36 check"; read-only, no code, no TDD phase past PRE-RED): verdict already solved;
 the owner picked "Close #36 as already solved" (over a guarding test and a reword) and #36 is closed, open issues 10 to 9. `R/agePyramidPlot.R` was an unexported zero-caller helper that
