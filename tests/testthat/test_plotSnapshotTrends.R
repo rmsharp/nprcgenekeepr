@@ -421,14 +421,22 @@ test_that("a note on its own is cut into two lines of at most 70 characters", {
 test_that("the caption is left-aligned to the whole picture, not right-aligned to the panel", {
   ## ggplot2 right-aligns a caption to the panel by default, so a caption
   ## longer than the panel and the legend leaves ran off the picture's left
-  ## edge. Left-aligned to the plot, its start is always on the picture.
-  p <- plotSnapshotTrends(rebuiltOnlyHistory(), metrics = "fe")
-  grob <- plotGrob(p)
-  cell <- grob$layout[grob$layout$name == "caption", ]
-  expect_equal(nrow(cell), 1L)
-  expect_equal(cell$l, 1L)
-  expect_equal(cell$r, ncol(grob))
-  expect_equal(ggplot2::calc_element("plot.caption", p$theme)$hjust, 0)
+  ## edge. Left-aligned to the plot, its start is always on the picture. The
+  ## built table's outer margin and empty y-title columns lie outside the
+  ## caption (S1044 first wrote "spans every column", which ggplot2 never
+  ## builds), so the check is relative: the caption starts at or before the
+  ## leftmost axis or panel column and ends at or after the legend's column.
+  ## Measured on the old settings (position "panel", alignment 1): false for 1,
+  ## 3 and 18 panels.
+  for (metrics in list("fe", c("fe", "fg", "meanGu"))) {
+    p <- plotSnapshotTrends(rebuiltOnlyHistory(), metrics = metrics)
+    layout <- plotGrob(p)$layout
+    cell <- layout[layout$name == "caption", ]
+    expect_equal(nrow(cell), 1L)
+    expect_lte(cell$l, min(layout$l[grepl("^(panel|axis-l)", layout$name)]))
+    expect_gte(cell$r, layout$l[layout$name == "guide-box-right"])
+    expect_equal(ggplot2::calc_element("plot.caption", p$theme)$hjust, 0)
+  }
 })
 
 test_that("the widest caption line fits a figure five inches wide", {
