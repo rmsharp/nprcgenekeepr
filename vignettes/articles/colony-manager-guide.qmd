@@ -1269,7 +1269,7 @@ one-time snapshots on the Genetic Value Analysis tab into a longitudinal
 record: a running history of dated colony snapshots that lets you see
 whether the colony's genetic health is improving or eroding over time.
 
-The workflow has three parts:
+The workflow has four parts:
 
 1. **Snapshot history.** Upload a snapshot-history file (the package ships a
    worked example file for this tab) or start recording a new one. Each row is one dated
@@ -1291,6 +1291,23 @@ The workflow has three parts:
    jump in the numbers is not mistaken for a real change in the colony.
    The updated history and the delta table are both downloadable for
    record-keeping.
+4. **Build Earlier Snapshots.** Once you have run Genetic Value Analysis,
+   this box rebuilds one snapshot for each past 1 January from the birth
+   and exit dates already in the studbook, so a trend can be drawn now
+   instead of after seasons of recording; the rebuilt points are drawn as a
+   dashed line, apart from snapshots recorded at the time.
+
+A rebuilt snapshot looks back with today's records: a parent identified
+later counts as known earlier, today's genotypes are used for every date,
+and only animals with a birth date, or with an offspring that has one, are
+placed. The sex-ratio effective size reads low in years when few sires were
+recorded, and two close dates can differ only by the random sampling every
+snapshot has, so read each point beside the counts on the **Earlier
+Snapshots** tab.
+
+An animal the studbook lists as neither alive nor departed is left out of
+the count of animals, but the effective sizes still treat it as living when
+it is a recorded parent, as they do for the snapshot recorded today.
 
 ::: {.callout-note}
 This section is text-only, matching the established precedent for a
