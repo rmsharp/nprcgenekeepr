@@ -151,7 +151,7 @@ plotSnapshotTrends <- function(history, metrics = NULL) {
     ))
   }
   if (length(captions) > 0L) {
-    p <- p + ggplot2::labs(caption = paste(captions, collapse = " "))
+    p <- p + ggplot2::labs(caption = paste(captions, collapse = "\n"))
   }
   p
 }

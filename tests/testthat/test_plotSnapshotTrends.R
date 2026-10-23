@@ -323,3 +323,20 @@ test_that("a rebuilt series of one point and a recorded series still plot", {
   expect_identical(nrow(lines), 2L)
   expect_true(all(isSolid(lines$linetype)))
 })
+
+test_that("the rebuilt note and the provenance note sit on separate lines", {
+  ## Seen S1039 in the real app (browser picture of the finished panel): with
+  ## both notes on one line the caption was longer than the plot and its start
+  ## ran off the left edge, so each note gets a line of its own.
+  history <- checkSnapshotHistory(rbind(
+    makeSnapshotRow("2020-01-01", "reconstructedLiving", guIter = 1000L),
+    makeSnapshotRow("2021-01-01", "reconstructedLiving", guIter = 1000L),
+    makeSnapshotRow("2022-01-01", "reconstructedLiving", guIter = 2000L)
+  ))
+  caption <- plotSnapshotTrends(history, metrics = "fe")$labels$caption
+  noteLines <- strsplit(caption, "\n", fixed = TRUE)[[1L]]
+  expect_length(noteLines, 2L)
+  expect_match(noteLines[[1L]], "Triangle points", fixed = TRUE)
+  expect_match(noteLines[[2L]], "Dashed", fixed = TRUE)
+  expect_lte(max(nchar(noteLines)), 120L)
+})
