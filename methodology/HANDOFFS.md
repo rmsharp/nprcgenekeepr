@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1044
+date: 2026-10-23
+status: pending
+active_task: IN PROGRESS -- plotSnapshotTrends() cuts its caption off on the left at narrow figure widths (BACKLOG.md:81; owner pick at the Phase 0 picker, item 1 of 4, "Trend chart caption")
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1043
 date: 2026-10-23
 status: complete

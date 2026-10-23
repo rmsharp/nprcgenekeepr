@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1044 Did
+**Deliverable:** `plotSnapshotTrends()` caption cut off on the left at narrow figure widths (`BACKLOG.md:81`; owner pick at the Phase 0 picker, item 1 of 4, "Trend chart caption") (IN PROGRESS)
+**Started:** 2026-10-23
+**Status:** Session claimed. Work beginning: the app picture first, then the scope question, then PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Phase 0 found:** ledgers at HEAD `a36703926` (gap 0), dashboard 96/100, nothing over a context ceiling, 167 commits ahead of origin, CI: the scheduled shinytest2 run of Oct 23 hit the 45-minute limit (reported, not fixed).
+
 ### What Session 1043 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Finish tutorial inventory"; strict TDD; the scope question, the PRE-RED, RED, GREEN and GREEN-to-REFACTOR gates were
 put to the owner):** `vignettes/a2interactive.Rmd` names the six script-callable functions and the two parameters it never did, in five places in file order: `### Passing a Kinship Matrix
