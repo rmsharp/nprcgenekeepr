@@ -84,7 +84,7 @@ asked in the phase that needs them, never now.
     births over 45 years, harem breeding (1 male in 6 breeds), parents 3.5 to 20 years older than
     their offspring, and deaths at 1 to 25 years. After QC and the app's trim: 6,090 rows, 2,981
     living, 9 generations. **Synthetic, and labeled so every time it is cited:** no real studbook
-    above 3,694 rows is in the repository (`BACKLOG.md:37`, BLOCKED).
+    above 3,694 rows is in the repository (`BACKLOG.md:51`, BLOCKED).
   - "jmac": `inst/extdata/examples/deidentified_jmac_ped.csv`, read with
     `na.strings = c("", "NA")` and `qcStudbook(minSireAge = 0, minDamAge = 0)`. That is 2,590
     animals, 4,055 rows after QC adds stand-in parents.
@@ -700,7 +700,7 @@ Mocks of in-scope code (each phase re-greps `mocked_bindings|stub(`):
 9. **Synthetic colony against real colony.** Structure changes the answers: kinship is 7.3%
    nonzero on the example against 45.5% on the synthetic colony. Any decision that depends on
    structure (D5) is shown with both numbers. A real studbook above 3,694 animals is still
-   BLOCKED (`BACKLOG.md:37`).
+   BLOCKED (`BACKLOG.md:51`).
 10. **Scope creep.** Each phase changes its hotspot only. Something noticed on the way becomes a
     `BACKLOG.md` line, never an edit (`methodology/SAFEGUARDS.md` §Scope Creep Red Flags).
 
