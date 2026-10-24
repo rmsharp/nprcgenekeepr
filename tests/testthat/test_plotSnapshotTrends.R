@@ -544,3 +544,67 @@ test_that("the year labels under the panels drop labels that would overlap", {
     expect_true(all(flags))
   }
 })
+
+## -- S1049: a blank value is left out without a warning ---------------------
+## Measured S1049 on the shipped Japanese macaque example (3 dates, 10 gene-drop
+## iterations): the 2010 snapshot has fg, fgSE and neGD blank (founders kept in
+## 0 of 10 iterations, which the build already says in a warning of its own).
+## Drawing the chart then gave three console warnings, "Removed 1 row ..." from
+## geom_ribbon and "Removed 3 rows ..." from geom_line and geom_point, for a
+## picture that is the same with or without them (the saved PNG is
+## byte-identical). The build, or the analysis that recorded the history, has
+## already said the value is blank, so the chart leaves it out quietly.
+
+## The warnings that drawing the chart for `history` raises. ggplot2 removes
+## blank values when it draws, not when it builds, so the chart is drawn.
+warningsOfDrawing <- function(history, metrics = NULL) {
+  seen <- character(0L)
+  withCallingHandlers(
+    plotGrob(plotSnapshotTrends(history, metrics = metrics)),
+    warning = function(w) {
+      seen <<- c(seen, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+  seen
+}
+
+## Three yearly snapshots of one rule, with the `blank` columns left blank in
+## the snapshots numbered `rows`.
+historyWithBlanks <- function(blank, rows) {
+  snapshots <- rbind(
+    makeSnapshotRow("2020-01-01"), makeSnapshotRow("2021-01-01"),
+    makeSnapshotRow("2022-01-01")
+  )
+  snapshots[rows, blank] <- NA_real_
+  checkSnapshotHistory(snapshots)
+}
+
+test_that("a history with no blank value draws with no warning", {
+  ## the control for the test below: the harness itself raises nothing
+  expect_identical(
+    warningsOfDrawing(historyWithBlanks(character(0L), integer(0L))),
+    character(0L)
+  )
+})
+
+test_that("a blank value is left out of the drawing without a warning", {
+  ## the last snapshot, the middle one (the line breaks there), the first, and
+  ## the two metrics that carry a shaded band (fg with fgSE, meanGu with
+  ## meanGuSE), also with only the band's width blank
+  cases <- list(
+    list(blank = c("fg", "fgSE", "neGD"), rows = 3L),
+    list(blank = c("fg", "fgSE", "neGD"), rows = 2L),
+    list(blank = "fe", rows = 1L),
+    list(blank = c("meanGu", "meanGuSE"), rows = 3L),
+    list(blank = "fgSE", rows = 3L)
+  )
+  for (case in cases) {
+    expect_identical(
+      warningsOfDrawing(historyWithBlanks(case$blank, case$rows),
+                        metrics = c("fe", "fg", "neGD", "meanGu")),
+      character(0L),
+      info = paste(toString(case$blank), "blank in snapshot", case$rows)
+    )
+  }
+})

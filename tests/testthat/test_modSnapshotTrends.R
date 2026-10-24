@@ -838,6 +838,42 @@ test_that("at most three different notes are shown", {
   )
 })
 
+## The notice cuts each note at 200 characters and adds nothing to a cut note.
+## Measured S1049: the one real note a 10-iteration build raised ("Founder
+## genome equivalents undefined: ...") is 159 characters, so the cut never
+## fired on it, and no test pinned it (a mutation check in S1040 survived a
+## change of the number).
+oneNoteNotice <- function(note) {
+  paste0("Earlier snapshots were built; the calculation gave this note: ", note)
+}
+
+test_that("a note of 200 characters is shown whole", {
+  skip_if_not_installed("shiny")
+  note <- strrep("a", 200L)
+  expect_identical(noticesOfBuildWith(note), oneNoteNotice(note))
+})
+
+test_that("a longer note is cut at its 200th character and nothing is added", {
+  skip_if_not_installed("shiny")
+  ## 202 characters: the 200th is the first "b", the "c" and "d" go
+  note <- paste0(strrep("a", 199L), "bcd")
+  expect_identical(
+    noticesOfBuildWith(note),
+    oneNoteNotice(paste0(strrep("a", 199L), "b"))
+  )
+})
+
+test_that("each note is cut on its own, before the notes are joined", {
+  skip_if_not_installed("shiny")
+  expect_identical(
+    noticesOfBuildWith(c(strrep("a", 250L), strrep("b", 250L))),
+    paste(
+      "Earlier snapshots were built; the calculation gave these notes:",
+      paste(strrep("a", 200L), strrep("b", 200L), sep = " | ")
+    )
+  )
+})
+
 ## -- Dates not built ---------------------------------------------------------------
 
 test_that("the Dates not built heading has a place for a note under it", {
