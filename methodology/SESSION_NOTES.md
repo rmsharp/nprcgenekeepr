@@ -99,46 +99,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1049 Did
-**Deliverable:** The two ready threads of the earlier-snapshots follow-ups item (`BACKLOG.md:33`): the trend chart's console notice for NA metrics, and a test pinning the panel notice's 200-character cut (owner pick at the Phase 0 picker, item 1 of 4; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-23
-**Status:** Session claimed. Work beginning (measure both threads on the real example first, then the PRE-RED gate).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Earlier-snapshots follow-ups"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to
+the owner and approved):** the two ready threads of the earlier-snapshots follow-ups item. **(2) The chart's console notice:** `plotSnapshotTrends()` leaves a blank metric value out of
+the drawing without a warning, `na.rm = TRUE` on four layers (`R/plotSnapshotTrends.R:125,131,134`); on the jmac example at 10 iterations (one date with `fg`, `fgSE`, `neGD` blank)
+drawing gave 3 warnings, now 0, saved PNG byte-identical; the app's module 3, now 0. **(4) The 200-character cut** (`R/modSnapshotTrends.R:427`, unchanged) is pinned by three tests
+(`tests/testthat/test_modSnapshotTrends.R:857,863,873`); they pass on the existing code, so their RED is four broken copies of the cut, killed by 3, 2, 1 and 2 of them. REFACTOR: the
+notice sentence is spelled out once per form (`oneNoteNotice()`, `severalNotesNotice()`, `:812,815`). Claim `16ddb997f`, RED `924b26b1b`, GREEN `3e3adfcbc`, REFACTOR `6efd1ce94`,
+close-out next. Not pushed (194 ahead of origin after the close-out).
+**Verification:** full suite 453 files 4,324 tests 15,127 expectations 0 failed 0 errors (S1047: 4,319 and 15,118; the +5 and +9 are the RED ones); lint 0; ratchet 1/1 (results
+`7826176ee2f1`). Runtime: module level (`testServer()`), not a browser; the nightly `shinytest2` job covers that tier, and the picture is byte-identical.
+**Handoff evaluation of S1048: 9/10.** Helped: Next (2) named the item, `BACKLOG.md:33`, "READY, Effort S, strict TDD" and was right; the `BACKLOG.md:135` lever cite and the 56,750 B
+cap note held; the unpushed 45 was still true at close-out (`git show origin/master:.github/workflows/shinytest2.yaml` reads 45, the working file 75). Missing: the backlog line did not
+say the message appears only when the chart is drawn, three times (ribbon, line, points), or that the real note (159 characters) is shorter than the cut, so thread (4) has no RED; I
+measured both before the gate. Wrong: nothing found. ROI: high.
+**Self: 8/10.** + claimed first; both threads measured on the real example before PRE-RED; RED failed on all 5 cases and I printed the real messages; four broken copies of the cut;
+a module probe on the pre-fix function; `identical()` proof for the REFACTOR; every gate named its exact actions; the ratchet cited from the last run. - the first module probe put the
+handler inside the `testServer()` block and counted 0 (the console showed 3), one wasted run; status lines came late in the research stretch; thread (4) is a defensive pin that cannot
+fire on a real note. Learning 1015.
+**Gotchas:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws quietly" test must draw (`plotGrob()`, `tests/testthat/test_plotSnapshotTrends.R:560`),
+`ggplot_build()` raises nothing; the two `suppressWarnings(output$trendPlot)` calls in `test_modSnapshotTrends.R` do not hide this warning (left alone); a blank-value history takes 0.9 s
+(Learning 1015 has the call); `BACKLOG.md` cites moved up 4 lines after the item shrank (two test comments still cite `BACKLOG.md:49` as dated records); condense the previous section
+when writing a new one (this file's cap is about 56,750 B).
+**Left in the item (`BACKLOG.md:33`):** (1) a studbook above 3,694 rows from the owner (BLOCKED); (2) the "listed in 'skipped'" wording (DECISION NEEDED).
+**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Phase 0's `gh run list` shows the 2026-10-24 07:18 UTC run: it used 75 minutes only if the owner
+pushed first (`origin/master` reads 45), so a cancel at 45 is the unpushed fix, not a new cause. (2) The tutorial leftovers (`BACKLOG.md:45`; DECISION NEEDED, Effort S). (3) The
+`CHANGELOG.md` regrowth lever (`BACKLOG.md:131`; DECISION NEEDED, Effort unknown). (4) Scope issue #138 (planning only; Effort L). (5) The held-back methodology files (`BACKLOG.md:189`;
+BLOCKED). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
 
-### What Session 1048 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trim CHANGELOG.md"; housekeeping, no code, so no TDD gates):** `methodology/CHANGELOG.md` is 23,778 B, not 200,357
-B. `python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --cut 2026-10-22 --write` archived 112 of 125 records (2026-10-15 to 2026-10-22) to
-`methodology/archive/CHANGELOG-through-2026-10-22.md`; 13 records (all dated 2026-10-23) stay live, plus the tool's own entry. **Owner call:** the clean day seam over the default cut
-(104 archived, 33,990 B, 8 of the 31 records dated 2026-10-22 left live under a "through-2026-10-22" name). The plain run was not refused (SRF 0.9604). Claim `76353cde1`, trim
-`4c54afa9e` (ledger, shard and verify script, alone), close-out next. Not pushed (189 ahead of origin after the close-out).
-**Verification:** L1, L2, L3 OK and `P1A_OK`; the shard's verify script passes before and after the trim commit; the 143 test files that read a ledger: 2,143 tests 8,674 expectations 0
-failed 0 errors; ratchet 1/1 (results `d4a8a4063fdd`). Runtime: not applicable. **Phase 0 finding:** the S1047 75-minute limit is local only; `origin/master` still reads
-`timeout-minutes: 45`, so the 2026-10-24 07:18 UTC run uses 45 unless the owner pushes.
-**Handoff evaluation of S1047: 8/10.** Helped: Next (2) gave the file and the exact `--check` then `--write` commands, and both worked; the `BACKLOG.md` lines and the stale-pointer note
-held; the ratchet citation matched. Missing: Next (1) said a pass at the 07:18 UTC run "closes this", true only after a push, and nothing said `origin/master` still held 45; no word on
-the cut choice. Wrong: the 197,295 B figure was 2,192 B low by Phase 0. ROI: high.
-**Self: 8/10.** + claimed first; the cuts were priced by dry runs before one question with measured numbers; verify script before and after the commit; 143 ledger-reading tests before
-the trim commit; trim committed alone; the unpushed 45 reported at Phase 0. - one question the S1001 and S1031 precedent could have decided; a status line was owed after about 16 reads;
-the stale pointer at `test_shinytest2_workflow_timeout.R:9-10` left alone. Learning 1014.
-**Gotchas:** a scheduled workflow runs from the remote default branch; dry runs write nothing and print each cut's counts, `--cut <date>` keeps records dated after the date (the newest
-day alone is `CUT_OUT_OF_RANGE`); the tool's own entry sits under the pointer block, so the DONE entry goes above it; `CHANGELOG.md` regrows about 22 KB a day (an estimate: the warn
-line is back in about 8 days; the lever is `BACKLOG.md:135`); condense the previous section when writing a new one (this file's cap is about 56,750 B).
-**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Phase 0's `gh run list` shows the 2026-10-24 07:18 UTC run: it ran with 75 only if the owner pushed
-first, so a cancel at 45 minutes is the unpushed fix, not a new cause. (2) The earlier-snapshots follow-ups (`BACKLOG.md:33`; READY, Effort S, strict TDD). (3) The tutorial leftovers
-(`BACKLOG.md:49`; DECISION NEEDED, Effort S). (4) Scope issue #138 (planning only; Effort L). (5) Owner-side: the methodology files the S1032 sync held back (`BACKLOG.md:193`; BLOCKED).
-Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
-
-### Sessions 947-1047 (condensed S950 to S1048; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1047: the scheduled `shinytest2` job's time limit is 75 minutes, not 45 (owner pick, "Raise shinytest2 limit"; strict TDD, every gate put to the owner): the timeout test expects `75L`
-(`tests/testthat/test_shinytest2_workflow_timeout.R:36`), `.github/workflows/shinytest2.yaml:46` says `timeout-minutes: 75`, and the workflow path is one test helper,
-`shinytest2WorkflowPath()` (`tests/testthat/helper-shinytest2Workflow.R:13`); claim `571d62426`, RED `ef166ab23`, GREEN `08efe189e`, REFACTOR `0134dc55f`, close-out `179f0ec5b`;
-evaluation of S1046 9/10, self 8/10 (Learning 1013). **Gotchas kept:** the test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that night
-needed about 55, an estimate); wait on the R process by pid, not `pgrep -f`.
-S1046: the scheduled `shinytest2` run of 2026-10-23 (run `39916862256`) was cancelled at 45 minutes because `apt` downloads ran 6 to 26 times slower than the night before (52 to 55
-kB/s; setup took 31 min 47 s), not because of a test (owner pick, "Diagnose shinytest2 timeout"; a diagnosis, no production code): the tests ran at their usual pace and were cut off with
-7 of 21 groups not started; the owner ruled to raise the limit to 75 (done S1047). Write-up `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`. Claim `ee8bdbe7c`, diagnosis
-`36261f1bc`, close-out `8ed228abf`; evaluation of S1045 8/10, self 7/10 (Learning 1012). **Gotchas kept:** `gh run view <id> --json jobs` gives every step's start and end; the saved job
-log labels every line "UNKNOWN STEP", so find slow stretches by timestamp gaps and the `Fetched ... (kB/s)` lines; `##[group]E2E module group` lines give the 21 group starts; the
-2026-09-27 cancel was a real 30-minute cap (growth), not this cause.
+### Sessions 947-1048 (condensed S950 to S1049; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1048: `methodology/CHANGELOG.md` trimmed from 200,357 B to 23,778 B, 112 of 125 records archived to `methodology/archive/CHANGELOG-through-2026-10-22.md` (owner pick, "Trim
+CHANGELOG.md"; housekeeping, no code); the owner chose the clean day seam, `--cut 2026-10-22`, over the tool's default cut (21 records kept at 33,990 B, which would have left 8 of the
+31 records dated 2026-10-22 live under a "through-2026-10-22" name); claim `76353cde1`, trim `4c54afa9e`, close-out `7a6729bd6`; evaluation of S1047 8/10, self 8/10 (Learning 1014).
+**Gotchas kept:** a scheduled workflow runs from the remote default branch (`git show origin/master:.github/workflows/shinytest2.yaml` reads 45 until a push); the trimmer's dry runs write
+nothing and print each cut's counts, `--cut <date>` keeps records dated after the date (the newest day alone is `CUT_OUT_OF_RANGE`); the tool's own entry sits under the pointer block, so
+the DONE entry goes above it; `CHANGELOG.md` regrows about 22 KB a day (an estimate; the lever is `BACKLOG.md:131`).
+S1046-S1047: the scheduled `shinytest2` run of 2026-10-23 (`39916862256`) was cancelled at 45 minutes because `apt` downloads ran 6 to 26 times slower than the night before (52 to
+55 kB/s; setup took 31 min 47 s), not because of a test (S1046, a diagnosis: `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`); the limit is 75 minutes (S1047, strict TDD:
+`tests/testthat/test_shinytest2_workflow_timeout.R:36` expects `75L`, `.github/workflows/shinytest2.yaml:46`, one path helper `shinytest2WorkflowPath()` in
+`tests/testthat/helper-shinytest2Workflow.R:13`). Claims `ee8bdbe7c`, `571d62426`, RED `ef166ab23`, GREEN `08efe189e`, REFACTOR `0134dc55f`; evaluations 9/10, self 7-8/10 (Learnings
+1012-1013). **Gotchas kept:** the test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that night needed about 55, an estimate); `gh run view <id>
+--json jobs` gives every step's start and end and the saved job log labels every line "UNKNOWN STEP"; wait on the R process by pid, not `pgrep -f`; the 2026-09-27 cancel was a real
+30-minute cap (growth), not this cause.
 S1044-S1045 (strict TDD each; every gate put to the owner; evaluations 9/10, self 8/10; Learnings 1010-1011): S1045, the trend chart keeps its panel titles whole and never overprints its
 year labels in a narrow window: `trendPlotLayout(width, nPanels)` (`R/trendPlotLayout.R:26`) gives 2 to 5 panel columns and 130 px a row plus 80; `plotSnapshotTrends()` takes `ncol`
 (`R/plotSnapshotTrends.R:57,76`) and draws year labels with `guide_axis(check.overlap = TRUE)` (`:139`); the plot box is `height = "auto"` (`R/modSnapshotTrends.R:98,289-299`); the 18 default
