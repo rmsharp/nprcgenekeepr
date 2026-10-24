@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 2, the gene drop (owner-directed S1050; plan
-      approved and D1-D4 ruled S1051; Phase 0 done S1052, Phase 1 S1053; READY; Effort M per phase,
-      10 phases left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
-      (Phase 2 at `:479`). Phase 1 counts each animal's rare alleles once, fast (`R/rareAlleleCounts.R`):
-      `reportGV()` on the example went from 3.28 s to 0.60 s and its gate `perf_reportGV_example_seconds`
-      is 0.8 s. Phase 2 builds `geneDrop()`'s table from a K x 2n matrix inside (the plan's Appendix B
-      `geneDropFast()`) and returns the same data frame, `identical()` to a frozen `geneDropReference()`
-      (D1; also point the frozen `reportGVReference()`'s two `geneDrop()` calls at it,
-      `tests/testthat/helper-perfReference.R:154` and `:208`); it keeps the id checks, the draw order and
-      the 1 + n progress calls, and tightens `perf_geneDrop_example_peak_mb` (164 MB; 148.6 at S1053).
-      **Ruled S1051 (plan section 6):** D1 exact results for the same seed, D2 plain R first, D3 the 18
-      exported functions unchanged, D4 opt-in budget tests (`NPRC_RUN_PERF=true`) plus ratchet gates.
-      D5-D8 are asked in their own phases.
+- [ ] **Performance and memory campaign: Phase 3, the relationship table (owner-directed S1050; plan
+      approved and D1-D4 ruled S1051; Phase 0 done S1052, Phase 1 S1053, Phase 2 S1054; READY; Effort M per
+      phase, 9 phases left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
+      (Phase 3 at `:504`). Phase 2 fills one matrix inside `geneDrop()` for an ordinary pedigree and runs today's
+      code for any other input (`geneDropPlan()`, `geneDropGeneral()`, `R/geneDrop.R`); its gate
+      `perf_geneDrop_example_peak_mb` is 72 MB (148.5 MB before). Phase 3 makes both relationship downloads finish
+      on the example (6,824,665 pairs) with the same rows and classes: (a) preallocate `convertRelationships()`'s
+      result, (b) classify all pairs with vector comparisons in the rule order; keep its one argument-free progress
+      call per pair in its own body (`tests/testthat/test_notifyProgress.R:163`, stubbed at `:235`); gate
+      `perf_convertRelationships_300_seconds` (8.0 s; 6.84 s at S1054). For Phase 11, the owner asked (S1054)
+      whether the fallbacks' input classes (`rareAlleleCountsGeneral()`, `geneDropGeneral()`) can move onto the
+      fast paths later. **Ruled S1051 (plan section 6):** D1 exact results for the same seed, D2 plain R first,
+      D3 the 18 exported functions unchanged, D4 opt-in budget tests plus ratchet gates; D5-D8 in their phases.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
