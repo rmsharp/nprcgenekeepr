@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1049 Did
+**Deliverable:** The two ready threads of the earlier-snapshots follow-ups item (`BACKLOG.md:33`): the trend chart's console notice for NA metrics, and a test pinning the panel notice's 200-character cut (owner pick at the Phase 0 picker, item 1 of 4; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-23
+**Status:** Session claimed. Work beginning (measure both threads on the real example first, then the PRE-RED gate).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+
 ### What Session 1048 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trim CHANGELOG.md"; housekeeping, no code, so no TDD gates):** `methodology/CHANGELOG.md` is 23,778 B, not 200,357
 B. `python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --cut 2026-10-22 --write` archived 112 of 125 records (2026-10-15 to 2026-10-22) to
