@@ -8,6 +8,14 @@
 # under the cap). This is a capacity-growth trend, not a hang: no single
 # module group is stuck. See BACKLOG.md's "Up Next" shinytest2 item for the
 # measured run-duration history.
+#
+# The cap was raised from 30 to 45 minutes on 2026-09-27 (S794). The
+# scheduled run of 2026-10-23 was then CANCELLED at 45 min although the
+# tests ran at their usual pace: apt downloads in setup ran at about 52
+# kB/s (309 to 1,328 kB/s the night before), so setup alone took
+# 31 min 47 s. That night needed about 55 min in all (an estimate), so
+# the cap is now 75. See
+# docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md.
 
 workflow_path <- testthat::test_path(
   "..", "..", ".github", "workflows", "shinytest2.yaml"
@@ -27,12 +35,13 @@ test_that("shinytest2.yaml's job timeout-minutes has headroom above the observed
   timeout_minutes <- extract_timeout_minutes(workflow_path)
 
   expect_equal(
-    timeout_minutes, 45L,
+    timeout_minutes, 75L,
     info = paste0(
       "shinytest2.yaml's job timeout-minutes is ", timeout_minutes,
-      ", not 45 -- the nightly job has been observed within ~2 minutes of ",
-      "its cap (cancelled 2026-09-27 at 30.02 min, succeeded 2026-09-26 at ",
-      "29.87 min) on a steady growth trend; see BACKLOG.md's shinytest2 item"
+      ", not 75 -- the nightly job was cancelled at 45 min on 2026-10-23 ",
+      "because package downloads in setup ran slow (setup took 31 min 47 s; ",
+      "the tests then ran at their usual pace); see ",
+      "docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md"
     )
   )
 })
