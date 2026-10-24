@@ -99,10 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1050 Did
-**Deliverable:** A plan for a multi-session refactor campaign: smaller memory footprint and faster time-intensive work (owner-directed in prose; planning session, one plan document in `docs/planning/`, no `R/` or test change) (IN PROGRESS)
-**Started:** 2026-10-24
-**Status:** Session claimed. Work beginning (measure the slow and memory-heavy paths on real inputs first, then write the plan).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+**Deliverable, DONE (owner-directed in prose after the Phase 0 report: "examine the code to refactor the code with the primary goals of smaller memory footprint and faster
+processing of time intensive work", then "expected to take multiple sessions with planning being very important"; a planning session, no `R/` or test change, so no TDD gates):** the
+campaign plan, `docs/planning/performance-memory-campaign-plan.md` (`0bc77f06a`): measured baselines, root causes H1-H10 with file:line, 12 phases (0 harness and gates, 1 genome
+uniqueness, 2 gene drop, 3 relationship table, 4 group formation, 5 founder statistics, 6 kinship memory, 7 diagram solver, 8 app-memory design, 9 its build, 10 follow-through,
+11 consolidation), each one strict-TDD session with exactness against frozen reference copies, an opt-in budget test and a named surface; the grep inventory; decisions D1-D4 now, D5-D8
+in their phases. Measured at the app's defaults: `reportGV()` on the example about 3.5 s, 2.9 s of it in `calcGU()` + `calcGUSE()` (one rare-allele count built twice); the two relationship
+downloads do not finish (600 animals 65 s, about 10x per doubling); 1,000 group trials 23.6 s; the Diagram at 708 animals 13.9 s; the app caches a 104.6 MB full-pedigree kinship matrix.
+Two scratch prototypes are `identical()` (rare-allele count 14-23x with `byID = TRUE`, gene drop 2.6-7.7x); `solve.QP.compact()` 11.6 to 3.0 s, identical positions. Claim `4738c7a37`,
+deliverable `0bc77f06a`, BACKLOG item `1a1779668` (`BACKLOG.md:8`, first in Up Next), close-out next. Not pushed (198 ahead after the close-out).
+**Verification:** every number in the plan traced to a scratch run log (not committed; the code is in the plan's Appendices A and B); every line cite re-grepped; the 21 test files that
+read `BACKLOG.md` give 452 tests 0 failed and the other files that mention it 1,616 tests 0 failed; ratchet 1/1 (results `1cd5c0c24e34`). Runtime: n/a, docs only.
+**Handoff evaluation of S1049: 9/10.** Helped: "condense the previous section when writing a new one (this file's cap is about 56,750 B)": the hook refused my stub and that line was
+the fix; the ledger and push state (194 ahead, `origin/master` reads 45) were exact; the tagged Next list made the picker quick. Missing: the hook counts tokens (25,000), and at 56,409 B
+the file had about 150 tokens of room, so even a 6-line stub was refused: say "fold my section at your claim". Wrong: nothing (its "2026-10-24 07:18 UTC run" is tonight's run). ROI: high.
+**Self: 8/10.** + claimed first; measured before writing; prototypes proved `identical()` on 12 cases and the genotype path; found a mock that would go vacuous, a BLAS-dependent `crossprod()`,
+the pinned progress calls; re-read the draft and fixed a peak taken from a broken run, a speedup range true only for `byID = TRUE`, two line numbers, missing per-phase surfaces. - the first
+harness read the wrong `gc()` column; an `awk` with an empty file argument hung; a probe lacked the required `guThresh`; the zsh word-split gotcha cost two runs; a status nudge in Phase 0.
+Learning 1016.
+**Gotchas:** R 4.6's `gc()` has a "limit (Mb)" column, so find "max used" by name; its high-water mark varied 2x between runs (compare same-run pairs); `backfillColonySnapshots()` needs
+`guThresh`; the jmac file is 4,055 rows after QC; `kinship(sparse = TRUE)` is 85x slower than dense on 3,694 animals; `test_file()` changes the working directory (pass absolute paths);
+in zsh pass a file list through `xargs`, never an unquoted `$files`; give `awk` `< /dev/null` when its file variable may be empty; `BACKLOG.md` cites below line 8 moved down 14 lines.
+**Next (the owner's own direction: a multi-session campaign, so these come first):** (1) the owner reads the plan's sections 1 and 6 and rules D1-D4 (recommended: yes to all four);
+recording the rulings in the plan's Status line and section 6 is a decision record, not a go-ahead for code. (2) Phase 0 (plan section 7): `tests/testthat/test_perfHarness.R` first (RED),
+then `tools/perf/harness.R` and `run.R` from Appendix A, the baseline doc, the app memory table through `shinytest2`, gates at today's values. (3) Phase 1 after Phase 0. Still open: the
+snapshot wording (`BACKLOG.md:55`, DECISION NEEDED), tutorial leftovers (`BACKLOG.md:59`), the `CHANGELOG.md` lever (`BACKLOG.md:145`), #138; the 75-minute `shinytest2` fix is local only.
 
 ### Sessions 947-1049 (condensed S950 to S1050; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1049: the trend chart leaves a blank metric value out of the drawing without a console warning (`na.rm = TRUE` on four layers,
@@ -264,31 +285,17 @@ misspelling in NEWS or help (`test_wordlist_coverage.R`); a backlog "same shape"
 S1012-S1014, the config-file reader (strict TDD; self 8/10): `readConfigLines()` (`R/readConfigLines.R:16`) is the one reader, `getParamDef()` reads a setting in another case, and the owner took option A
 (`docs/audits/CONFIG_FILE_FORMAT_DECISION_2026-10-18.md`), built as `scanConfigTerms()` (`R/getTokenList.R:64`). **Gotchas kept:** run `devtools::document()` after any data rebuild; a mutation run restores
 the file text in `finally`, never `git checkout`; config tests put a file under `HOME` (`tests/testthat/test_getSiteInfo.R:98`); install candidate packages into a scratch library, never renv.
-S1008-S1011 (evaluations 8-9/10, self 8/10): S1008, with a sex ratio set a male is placed only as a known adult male (`R/fillGroupMembersWithSexRatio.R:84-89`); S1009-S1010, the red `shinytest2` run
-(`R/modMarkerGenetics.R:849` `req(gmat, rohTable, ped)` is FALSE when every row has an `NA` allele; the guard at `:855`); S1011, the Cross-Center check flags a reused id (`"mappedIdClash"`,
-`R/resolveCrossCenterIds.R:245`) and the merge keeps every column. **Gotchas kept:** measure each named case of a ruled fix before RED; `req(x)` also stops for a length-0 value; the Cross-Center tab has
-no browser test.
-S1001-S1007 (evaluations 8-9/10, self 8/10): S1001, `methodology/CHANGELOG.md` trimmed from 207,203 B to 34,299 B; S1002, the Summary Statistics Export pop-ups draw no "character(0)" title bar
-(`R/modSummaryStats.R:16`); S1003-S1004, the 46 slice 6e candidates re-checked and the owner's rulings on the seven findings (fix all seven); S1005, an Excel upload of kinship overrides or snapshot history
-works (`R/convertExcelNumericColumns.R`); S1006, the Mate Pair table pairs only animals recorded male or female (`R/reportMatePairs.R:200`); S1007, `convertFromCenter()` reads only whole values
-(`R/convertFromCenter.R:28-49`). **Gotchas kept:** pass `--cut <day before today>` to the trimmer when today's records stay live; `writeTestXlsx()` (`tests/testthat/helper-excelFixtures.R`) builds a temporary
-workbook; `R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`); `AppDriver` needs `NOT_CRAN=true`.
-S996-S1000 (strict TDD; evaluations 8-9/10, self 7-8/10): S996, the Breeding Groups pages say one plain sentence when a formed group holds an animal the loaded pedigree lacks
-(`R/groupMembersMissingFromPedigree.R`); S997, the Pedigree Browser's twin-pairs file keeps the pairs that fit after a focal trim (`R/twinPairsWithin.R:20`); S998, "separate pedigree and genotype files"
-says why a genotype file was not used (`R/readSeparateGenotypeFile.R:22`); S999, Marker Genetics `isReady` answers FALSE for a genotype file it cannot use; S1000, the heat map's leftover row reads "Unused
-animals" (`R/modBreedingGroups.R:901,1215`). **Gotchas kept:** `kinship()` and the layout builder both stop on a twin pair with an animal they do not hold (S1039 met it again in the backfill); a mutant of an
-observer's read destroys the `testServer` session; read the picture, not `textContent`; `test_moduleContract.R` pins each module's returned names; name an item `\code{}` in help or the spelling test flags it.
-S995: the Genetic Diversity page says one plain sentence, once, for the same case (`R/modGeneticDiversity.R:48-54,136-169`; `NEWS.Rmd:461-467`; strict TDD; 9/10, self 7/10). **Gotchas
-kept:** commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961); real-app runs need a scratch `app.R` with `load_all()`; the
-studbook stays untracked (never `git add -A`); never `git stash` here.
-S994: the seven small wrong statements of the S991 housekeeping list fixed (`test_docsAuditHousekeepingWording.R`; strict TDD; 9/10, self 7/10). **Gotchas kept:** `.help-block` color is
-forced gray, so inline `color:` shows nothing; every popover header reads "character(0)". S993: the Genetic Diversity tab scores groups that hold a living animal outside the Genetic
-Value population (`R/appServer.R:448`; `NEWS.Rmd:451`; 9/10, self 8/10). **Gotchas kept:** `withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole
-`testServer()` call; start every R call with `cd /Users/rmsharp/Development/nprcgenekeepr &&`.
-S992: Download Plot on the Age-Sex Pyramid tab saves nothing until a pedigree is loaded (`NEWS.Rmd:445`). S991: the 21 slice 6d candidates re-checked
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`). S990: the help for `kinship()` chrtype and `hasBothParents()` id. S989: `checkRequiredCols()` ignores an `NA`
-column name (`NEWS.Rmd:437`). **Gotchas kept (S989-S992):** the CC1 fix needs a layout-builder probe with pairs outside the view; a "revert to `HEAD`" mutant is a no-op after
-GREEN (use `HEAD~1`), and `git checkout` of a file with uncommitted work destroys it (Learning 961).
+S989-S1011 (strict TDD where code changed; evaluations 8-9/10, self 7-8/10; condensed S1050, hashes and file lines in `CHANGELOG.md` and `HANDOFFS.md`): a male is placed only as a
+known adult male under a sex ratio (S1008); the red `shinytest2` run, `req()` FALSE when every allele is `NA` (`R/modMarkerGenetics.R:849,855`, S1009-S1010); the Cross-Center check flags a
+reused id (S1011); the `CHANGELOG.md` trim to 34,299 B (S1001); no "character(0)" pop-up titles (S1002); slice 6e rulings (S1003-S1004); Excel uploads of overrides and history (S1005); Mate
+Pair pairs only males with females (S1006); `convertFromCenter()` reads whole values (S1007); plain sentences for groups holding animals outside the pedigree (S993, S995-S996); twin pairs
+after a focal trim (S997); genotype-file notes (S998-S999); "Unused animals" (S1000); wording fixes (S989-S994). **Gotchas kept:** measure each named case of a ruled fix before RED; `req(x)`
+stops for a length-0 value; pass `--cut <day before today>` to the trimmer when today's records stay live; `writeTestXlsx()` (`tests/testthat/helper-excelFixtures.R`) builds a workbook;
+`R/*.R` may not hold a bare "M" or "F" (`test_sexCodes.R`); `AppDriver` needs `NOT_CRAN=true`; `kinship()` and the layout builder stop on a twin pair with an animal they do not hold; a
+mutant of an observer's read destroys the `testServer` session; read the picture, not `textContent`; `test_moduleContract.R` pins each module's returned names; name an item `\code{}` in
+help or the spelling test flags it; commit a phase's edit before a mutation run and restore from saved text, never `git checkout` (Learning 961), and a "revert to `HEAD`" mutant is a no-op
+after GREEN; real-app runs need a scratch `app.R` with `load_all()`; never `git add -A` (the studbook stays untracked) or `git stash`; `.help-block` color is forced gray;
+`withDiversityApp()` (`tests/testthat/test_appServer_server.R:761`) wraps the whole `testServer()` call.
 
 S947-S988 (hashes, scores and file lines in `CHANGELOG.md` and `HANDOFFS.md`, condensed S1042; strict TDD where code changed, evaluations 8-9/10, self 7-8/10): drift gates for
 the guide's export tables and Breeding Groups wording; the owner's origin and funding sentences everywhere (`test_originFundingWording.R`); 21 guide pictures retaken (S956);
