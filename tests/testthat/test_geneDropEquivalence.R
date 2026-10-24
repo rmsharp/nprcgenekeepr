@@ -186,23 +186,6 @@ unusualInputs <- function() {
   )
 }
 
-## The value, error message and warnings of one call, from a fixed seed.
-outcome <- function(f, args) {
-  warnings <- character()
-  withr::with_seed(1L, tryCatch(
-    withCallingHandlers(
-      list(value = do.call(f, args), warnings = warnings),
-      warning = function(w) {
-        warnings <<- c(warnings, conditionMessage(w))
-        invokeRestart("muffleWarning")
-      }
-    ),
-    error = function(e) {
-      list(error = conditionMessage(e), warnings = warnings)
-    }
-  ))
-}
-
 test_that("geneDrop() gives the frozen copy's table on the plan's grid", {
   expectGridMatchesReference()
 })
