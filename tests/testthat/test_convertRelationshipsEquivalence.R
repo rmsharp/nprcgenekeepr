@@ -77,7 +77,9 @@ expectGridMatchesReference <- function() {
 ## Inputs a script can pass to convertRelationships() that the app never does:
 ## each was run through today's function and a vector prototype before RED
 ## (S1055). The prototype stopped with an error on one of them (a kinship
-## matrix whose cells are all missing, which gives no pairs).
+## matrix whose cells are all missing, which gives no pairs). The last four
+## fast-path inputs were added after GREEN's mutation check: each tells one
+## changed rule apart from today's, which the others did not.
 ## Each element: the arguments, and the path the fast version must take.
 unusualInputs <- function() {
   sp <- nprcgenekeepr::smallPed
@@ -108,6 +110,21 @@ unusualInputs <- function() {
                   rep(NA_character_, 3L))
   naTextLogicalDam <- naText
   naTextLogicalDam$dam <- NA
+  ## an unknown sire beside an id that starts with "NA" and has parents:
+  ## pmatch() would take the missing sire for that id
+  naPrefix <- pedOf(c("P", "Q", "NAx", "D1", "K"), c(NA, NA, "P", NA, NA),
+                    c(NA, NA, "Q", NA, "D1"))
+  ## a sire named "A", a prefix of AB, whose parents are known
+  prefixKnown <- pedOf(c("GS", "GD", "AB", "Q", "R"),
+                       c(NA, NA, "GS", "A", "AB"), c(NA, NA, "GD", NA, NA))
+  ## C1 and C2: their dams are full sisters, their sires unrelated
+  damsSisters <- pedOf(c("GS", "GD", "D1", "D2", "S1", "S2", "C1", "C2"),
+                       c(NA, NA, "GS", "GS", NA, NA, "S1", "S2"),
+                       c(NA, NA, "GD", "GD", NA, NA, "D1", "D2"))
+  ## U's dam GD is a grandparent of A1, which comes first in the matrix
+  secondDam <- pedOf(c("A1", "X", "M", "GS", "GD", "U", "Y"),
+                     c("X", NA, "GS", NA, NA, "Y", NA),
+                     c("M", NA, "GD", NA, NA, "GD", NA))
   factors <- sp
   factors$id <- factor(sp$id)
   factors$sire <- factor(sp$sire)
@@ -170,6 +187,14 @@ unusualInputs <- function() {
       fast(args(spKmat, sp, updateProgress = function() NULL)),
     `a progress value that is not a function` =
       fast(args(spKmat, sp, updateProgress = 5)),
+    `an unknown sire beside an id that starts with "NA"` =
+      fast(args(square(naPrefix$id, 0.1), naPrefix)),
+    `a parent named by a prefix of an animal with parents` =
+      fast(args(square(prefixKnown$id, 0.1), prefixKnown)),
+    `dams who are full sisters` =
+      fast(args(square(damsSisters$id, 0.1), damsSisters)),
+    `the second animal's dam a grandparent of the first` =
+      fast(args(square(secondDam$id, 0.1), secondDam)),
     `factor ids and parents` = general(args(spKmat, factors)),
     `numeric ids and parents` =
       general(args(square(1L:5L, 0.1), numeric)),
@@ -223,7 +248,7 @@ test_that("the grid takes the fast path, never today's code", {
 
 test_that("unusual inputs give the frozen copy's table, or its error", {
   cases <- unusualInputs()
-  expect_length(cases, 32L)
+  expect_length(cases, 36L)
   for (name in names(cases)) {
     expect_identical(outcome(convertRelationships, cases[[name]]$args),
                      outcome(convertRelationshipsReference,
@@ -247,8 +272,17 @@ test_that("an unusual input goes to today's code unless the fast path is safe", 
   }
   paths <- vapply(cases, `[[`, character(1L), "path")
   expect_identical(used, names(cases)[paths == "general"])
-  expect_identical(sum(paths == "fast"), 20L)
+  expect_identical(sum(paths == "fast"), 24L)
   expect_identical(sum(paths == "general"), 12L)
+})
+
+test_that("pairs classified in several blocks give the frozen copy's table", {
+  ## qcPed's 39,340 pairs in blocks of 1,000: every other input fits in one
+  ## block of relationBlockSize, so a block boundary is checked only here.
+  local_mocked_bindings(relationBlockSize = 1000L)
+  qc <- nprcgenekeepr::qcPed
+  expect_identical(convertRelationships(pedKinship(qc), qc),
+                   gridReference()$qcPed)
 })
 
 test_that("the example's first 600 animals give the frozen copy's table", {

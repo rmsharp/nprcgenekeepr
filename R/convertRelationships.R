@@ -63,7 +63,7 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   k1 <- match(kin$id1, plan$id, nomatch = outside)
   k2 <- match(kin$id2, plan$id, nomatch = outside)
   classes <- integer(nPairs)
-  blockSize <- 1048576L
+  blockSize <- relationBlockSize
   for (block in seq_len(ceiling(nPairs / blockSize))) {
     rows <- ((block - 1L) * blockSize + 1L):min(nPairs, block * blockSize)
     classes[rows] <- relationClasses(
@@ -80,6 +80,12 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   kin["relation"] <- unname(relationClassNames[ruleOrder])[classes]
   kin
 }
+
+# The number of pairs convertRelationships()' fast path classifies at a time.
+# In blocks, the example's table of 6,824,665 pairs peaked at 936.6 MB, about
+# its long form's own peak; classified at once, at 1,152 MB (S1055). A test
+# swaps it for a small number to run several blocks.
+relationBlockSize <- 1048576L
 
 #' An ordinary pedigree, laid out for convertRelationships()' fast path, or
 #' NULL
