@@ -121,14 +121,18 @@ plotSnapshotTrends <- function(history, metrics = NULL, ncol = NULL) {
     p <- p + ggplot2::geom_ribbon(
       data = ribbonData,
       ggplot2::aes(ymin = .data$ymin, ymax = .data$ymax),
-      fill = "grey70", alpha = 0.4, colour = NA, show.legend = FALSE
+      fill = "grey70", alpha = 0.4, colour = NA, show.legend = FALSE,
+      na.rm = TRUE
     )
   }
   p <- p +
     ggplot2::geom_line(
-      data = lineData, ggplot2::aes(linetype = .data$seriesKind)
+      data = lineData, ggplot2::aes(linetype = .data$seriesKind),
+      na.rm = TRUE
     ) +
-    ggplot2::geom_point(ggplot2::aes(shape = .data$provenanceChange)) +
+    ggplot2::geom_point(
+      ggplot2::aes(shape = .data$provenanceChange), na.rm = TRUE
+    ) +
     ggplot2::scale_shape_manual(
       values = c(stable = 16L, changed = 17L), guide = "none"
     ) +
