@@ -19,33 +19,6 @@
 ## comparison with its frozen copy is in test_rareAlleleCounts.R; its two gene
 ## drops now run in geneDropReference() there.
 
-## The example studbook as the app trims it for the Genetic Value analysis
-## (R/modPedigree.R, then R/modGeneticValue.R), as test_rareAlleleCounts.R
-## builds it. Built once per file run.
-exampleAnalysisPed <- local({
-  ped <- NULL
-  function() {
-    if (is.null(ped)) {
-      sb <- qcStudbook(nprcgenekeepr::examplePedigree,
-                       minSireAge = 2L, minDamAge = 2L,
-                       reportChanges = FALSE, reportErrors = FALSE)
-      p <- setPopulation(sb, sb$id[isLivingAnimal(sb)])
-      p$pedNum <- findPedigreeNumber(p$id, p$sire, p$dam)
-      if (!"gen" %in% names(p)) {
-        p$gen <- findGeneration(p$id, p$sire, p$dam)
-      }
-      ped <<- trimToAnalysisPopulation(p)
-    }
-    ped
-  }
-})
-
-integerCodes <- function(genotype) {
-  genotype$first <- as.integer(genotype$first)
-  genotype$second <- as.integer(genotype$second)
-  genotype
-}
-
 ## The plan's grid: four shipped pedigrees (the genotyped one with its double
 ## codes as shipped and with integer copies) and the example's analysis set.
 gridInputs <- function() {

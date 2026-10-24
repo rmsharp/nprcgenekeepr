@@ -18,34 +18,6 @@
 ## unchanged (owner ruling S1053), so it gives today's result, or today's
 ## error, by construction.
 
-## The example studbook as the app trims it for the Genetic Value analysis
-## (R/modPedigree.R, then R/modGeneticValue.R; tools/perf/harness.R
-## appAnalysisPed() does the same, but tools/ is not in a built package, and
-## these tests must run on every CI platform). Built once per file run.
-exampleAnalysisPed <- local({
-  ped <- NULL
-  function() {
-    if (is.null(ped)) {
-      sb <- qcStudbook(nprcgenekeepr::examplePedigree,
-                       minSireAge = 2L, minDamAge = 2L,
-                       reportChanges = FALSE, reportErrors = FALSE)
-      p <- setPopulation(sb, sb$id[isLivingAnimal(sb)])
-      p$pedNum <- findPedigreeNumber(p$id, p$sire, p$dam)
-      if (!"gen" %in% names(p)) {
-        p$gen <- findGeneration(p$id, p$sire, p$dam)
-      }
-      ped <<- trimToAnalysisPopulation(p)
-    }
-    ped
-  }
-})
-
-integerCodes <- function(genotype) {
-  genotype$first <- as.integer(genotype$first)
-  genotype$second <- as.integer(genotype$second)
-  genotype
-}
-
 ## The plan's grid: four shipped pedigrees (the genotyped one with its double
 ## codes as shipped and with integer copies) and the example's analysis set,
 ## cut to the probands as reportGV() cuts it.

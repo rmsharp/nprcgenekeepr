@@ -18,13 +18,6 @@
 pkgRoot <- normalizePath(testthat::test_path("..", ".."), mustWork = FALSE)
 harnessFile <- file.path(pkgRoot, "tools", "perf", "harness.R")
 
-loadAverage <- function() {
-  tryCatch(paste(system2("uptime", stdout = TRUE), collapse = " "),
-           error = function(e) "unavailable", warning = function(w) {
-             "unavailable"
-           })
-}
-
 test_that("calcGU() and calcGUSE() on the app's example take under 1 second", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("NPRC_RUN_PERF"), "true"),

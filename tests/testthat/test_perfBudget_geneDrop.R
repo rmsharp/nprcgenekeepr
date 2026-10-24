@@ -20,13 +20,6 @@
 pkgRoot <- normalizePath(testthat::test_path("..", ".."), mustWork = FALSE)
 harnessFile <- file.path(pkgRoot, "tools", "perf", "harness.R")
 
-loadAverage <- function() {
-  tryCatch(paste(system2("uptime", stdout = TRUE), collapse = " "),
-           error = function(e) "unavailable", warning = function(w) {
-             "unavailable"
-           })
-}
-
 test_that("geneDrop() on the synthetic 10,000-animal colony takes under 2.4 s", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("NPRC_RUN_PERF"), "true"),
