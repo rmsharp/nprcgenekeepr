@@ -135,57 +135,68 @@ appAnalysisPed <- function(raw, trim = TRUE, everyone = FALSE) {
 quickLabel <- "synthetic 150 (quick)"
 quickColony <- function() synthColony(150L, seed = 1L)
 
-## Each input is a list(label, ped); with `quick` the stand-in takes its place.
-exampleTrim <- function(quick) {
+## The raw studbook of an input and its label: the 150-animal stand-in when
+## `quick`, else the real one, which `readRaw()` reads only then.
+rawInput <- function(quick, label, readRaw) {
   if (quick) {
-    return(list(label = quickLabel, ped = appAnalysisPed(quickColony())))
+    return(list(label = quickLabel, raw = quickColony()))
   }
-  list(label = "example (app trim)",
-       ped = appAnalysisPed(nprcgenekeepr::examplePedigree))
+  list(label = label, raw = readRaw())
+}
+
+## An input is a list(label, ped): its raw studbook, put through `prepare()`.
+pedInput <- function(quick, label, readRaw, prepare) {
+  input <- rawInput(quick, label, readRaw)
+  list(label = input$label, ped = prepare(input$raw))
+}
+
+readExample <- function() nprcgenekeepr::examplePedigree
+
+## The de-identified Japanese macaque studbook, read as the plan's section 2
+## says: blank cells as NA.
+readJmac <- function() {
+  utils::read.csv(system.file("extdata", "examples",
+                              "deidentified_jmac_ped.csv",
+                              package = "nprcgenekeepr"),
+                  na.strings = c("", "NA"), stringsAsFactors = FALSE)
+}
+
+exampleTrim <- function(quick) {
+  pedInput(quick, "example (app trim)", readExample, appAnalysisPed)
 }
 
 exampleAll <- function(quick) {
-  raw <- if (quick) quickColony() else nprcgenekeepr::examplePedigree
-  list(label = if (quick) quickLabel else "example (all 3694)",
-       ped = appAnalysisPed(raw, trim = FALSE, everyone = TRUE))
+  pedInput(quick, "example (all 3694)", readExample, function(raw) {
+    appAnalysisPed(raw, trim = FALSE, everyone = TRUE)
+  })
 }
 
 ## The living animals as the population, untrimmed: the pedigree whose kinship
 ## the relationship table and the long form were measured on.
 exampleLiving <- function(quick) {
-  raw <- if (quick) quickColony() else nprcgenekeepr::examplePedigree
-  list(label = if (quick) quickLabel else "example (all 3694)",
-       ped = appAnalysisPed(raw, trim = FALSE))
+  pedInput(quick, "example (all 3694)", readExample, function(raw) {
+    appAnalysisPed(raw, trim = FALSE)
+  })
 }
 
 synthetic10000 <- function(quick) {
-  if (quick) {
-    return(exampleTrim(quick = TRUE))
-  }
-  list(label = "synthetic 10000",
-       ped = appAnalysisPed(synthColony(10000L, seed = 1L)))
+  pedInput(quick, "synthetic 10000",
+           function() synthColony(10000L, seed = 1L), appAnalysisPed)
 }
 
 rhesus <- function(quick) {
-  raw <- if (quick) quickColony() else nprcgenekeepr::rhesusPedigree
-  list(label = if (quick) quickLabel else "rhesus 375",
-       ped = qcStudbook(raw, reportChanges = FALSE, reportErrors = FALSE))
+  pedInput(quick, "rhesus 375", function() nprcgenekeepr::rhesusPedigree,
+           function(raw) {
+             qcStudbook(raw, reportChanges = FALSE, reportErrors = FALSE)
+           })
 }
 
-## The de-identified Japanese macaque studbook, read as the plan's section 2
-## says: blank cells as NA and no minimum parent age.
+## The jmac studbook is QC'd with no minimum parent age (the plan's section 2).
 jmac <- function(quick) {
-  raw <- if (quick) {
-    quickColony()
-  } else {
-    utils::read.csv(system.file("extdata", "examples",
-                                "deidentified_jmac_ped.csv",
-                                package = "nprcgenekeepr"),
-                    na.strings = c("", "NA"), stringsAsFactors = FALSE)
-  }
-  list(label = if (quick) quickLabel else "jmac 2590",
-       ped = qcStudbook(raw, minSireAge = 0L, minDamAge = 0L,
-                        reportChanges = FALSE, reportErrors = FALSE))
+  pedInput(quick, "jmac 2590", readJmac, function(raw) {
+    qcStudbook(raw, minSireAge = 0L, minDamAge = 0L, reportChanges = FALSE,
+               reportErrors = FALSE)
+  })
 }
 
 ## ---- Scenarios -------------------------------------------------------------
@@ -196,13 +207,18 @@ measurementRow <- function(input, label, m) {
              stringsAsFactors = FALSE)
 }
 
+## A pedigree's kinship matrix, from its id, sire, dam and gen columns.
+pedKinship <- function(ped, sparse = FALSE) {
+  kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = sparse)
+}
+
 ## reportGV()'s expensive stages, one at a time, in reportGV()'s order, at
 ## threshold 4 with byID = TRUE (the plan's section 3.1).
 runStages <- function(input, iter) {
   ped <- input$ped
   probands <- as.character(ped$id[ped$population])
   row <- function(label, m) measurementRow(input$label, label, m)
-  k <- measure(kinship(ped$id, ped$sire, ped$dam, ped$gen))
+  k <- measure(pedKinship(ped))
   kp <- measure(filterKinMatrix(probands, k$value))
   rows <- list(row("kinship (analysis pedigree)", k),
                row("filterKinMatrix (probands)", kp))
@@ -253,7 +269,7 @@ convertRelationshipsScenario <- function(n) {
   function(quick) {
     input <- exampleLiving(quick)
     ped <- input$ped
-    kFull <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+    kFull <- pedKinship(ped)
     size <- if (quick) 20L else n
     ids <- rownames(kFull)[seq_len(size)]
     m <- measure(convertRelationships(kFull[ids, ids], ped))
@@ -265,8 +281,7 @@ convertRelationshipsScenario <- function(n) {
 kinMatrix2LongFormScenario <- function(removeDups) {
   function(quick) {
     input <- exampleLiving(quick)
-    ped <- input$ped
-    kFull <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+    kFull <- pedKinship(input$ped)
     m <- measure(kinMatrix2LongForm(kFull, removeDups = removeDups))
     measurementRow(input$label,
                    sprintf("kinMatrix2LongForm (removeDups = %s)", removeDups),
@@ -279,22 +294,21 @@ kinMatrix2LongFormScenario <- function(removeDups) {
 ## and alive; 6 groups.
 groupAddAssignScenario <- function(iter, harem) {
   function(quick) {
-    raw <- if (quick) quickColony() else nprcgenekeepr::examplePedigree
-    sb <- qcStudbook(raw, minSireAge = 2L, minDamAge = 2L,
+    input <- rawInput(quick, "example", readExample)
+    sb <- qcStudbook(input$raw, minSireAge = 2L, minDamAge = 2L,
                      reportChanges = FALSE, reportErrors = FALSE)
     focal <- sb$id[!(is.na(sb$sire) & is.na(sb$dam)) & is.na(sb$exit)]
     tped <- trimPedigree(focal, sb)
-    tk <- kinship(tped$id, tped$sire, tped$dam, tped$gen)
+    tk <- pedKinship(tped)
     cand <- tped$id[!is.na(tped$birth) & tped$birth < as.Date("2013-01-01") &
                       is.na(tped$exit)]
     trials <- if (quick) 2L else iter
     m <- withSeed(1L, measure(
       groupAddAssign(cand, tk, tped, iter = trials, numGp = 6L, harem = harem)
     ))
-    input <- sprintf("%s, %d candidates",
-                     if (quick) quickLabel else "example", length(cand))
-    measurementRow(input, sprintf("groupAddAssign (6 %s, %d trials)",
-                                  if (harem) "harems" else "groups", trials),
+    measurementRow(sprintf("%s, %d candidates", input$label, length(cand)),
+                   sprintf("groupAddAssign (6 %s, %d trials)",
+                           if (harem) "harems" else "groups", trials),
                    m)
   }
 }
@@ -341,8 +355,7 @@ gvaConvergenceScenario <- function(quick) {
 kinshipSparseScenario <- function(inputOf) {
   function(quick) {
     input <- inputOf(quick)
-    ped <- input$ped
-    m <- measure(kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = TRUE))
+    m <- measure(pedKinship(input$ped, sparse = TRUE))
     measurementRow(input$label, "kinship (sparse = TRUE)", m)
   }
 }
