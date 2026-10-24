@@ -98,35 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1049 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Earlier-snapshots follow-ups"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to
-the owner and approved):** the two ready threads of the earlier-snapshots follow-ups item. **(2) The chart's console notice:** `plotSnapshotTrends()` leaves a blank metric value out of
-the drawing without a warning, `na.rm = TRUE` on four layers (`R/plotSnapshotTrends.R:125,131,134`); on the jmac example at 10 iterations (one date with `fg`, `fgSE`, `neGD` blank)
-drawing gave 3 warnings, now 0, saved PNG byte-identical; the app's module 3, now 0. **(4) The 200-character cut** (`R/modSnapshotTrends.R:427`, unchanged) is pinned by three tests
-(`tests/testthat/test_modSnapshotTrends.R:857,863,873`); they pass on the existing code, so their RED is four broken copies of the cut, killed by 3, 2, 1 and 2 of them. REFACTOR: the
-notice sentence is spelled out once per form (`oneNoteNotice()`, `severalNotesNotice()`, `:812,815`). Claim `16ddb997f`, RED `924b26b1b`, GREEN `3e3adfcbc`, REFACTOR `6efd1ce94`,
-close-out next. Not pushed (194 ahead of origin after the close-out).
-**Verification:** full suite 453 files 4,324 tests 15,127 expectations 0 failed 0 errors (S1047: 4,319 and 15,118; the +5 and +9 are the RED ones); lint 0; ratchet 1/1 (results
-`7826176ee2f1`). Runtime: module level (`testServer()`), not a browser; the nightly `shinytest2` job covers that tier, and the picture is byte-identical.
-**Handoff evaluation of S1048: 9/10.** Helped: Next (2) named the item, `BACKLOG.md:33`, "READY, Effort S, strict TDD" and was right; the `BACKLOG.md:135` lever cite and the 56,750 B
-cap note held; the unpushed 45 was still true at close-out (`git show origin/master:.github/workflows/shinytest2.yaml` reads 45, the working file 75). Missing: the backlog line did not
-say the message appears only when the chart is drawn, three times (ribbon, line, points), or that the real note (159 characters) is shorter than the cut, so thread (4) has no RED; I
-measured both before the gate. Wrong: nothing found. ROI: high.
-**Self: 8/10.** + claimed first; both threads measured on the real example before PRE-RED; RED failed on all 5 cases and I printed the real messages; four broken copies of the cut;
-a module probe on the pre-fix function; `identical()` proof for the REFACTOR; every gate named its exact actions; the ratchet cited from the last run. - the first module probe put the
-handler inside the `testServer()` block and counted 0 (the console showed 3), one wasted run; status lines came late in the research stretch; thread (4) is a defensive pin that cannot
-fire on a real note. Learning 1015.
-**Gotchas:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws quietly" test must draw (`plotGrob()`, `tests/testthat/test_plotSnapshotTrends.R:560`),
-`ggplot_build()` raises nothing; the two `suppressWarnings(output$trendPlot)` calls in `test_modSnapshotTrends.R` do not hide this warning (left alone); a blank-value history takes 0.9 s
-(Learning 1015 has the call); `BACKLOG.md` cites moved up 4 lines after the item shrank (two test comments still cite `BACKLOG.md:49` as dated records); condense the previous section
-when writing a new one (this file's cap is about 56,750 B).
-**Left in the item (`BACKLOG.md:33`):** (1) a studbook above 3,694 rows from the owner (BLOCKED); (2) the "listed in 'skipped'" wording (DECISION NEEDED).
-**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Phase 0's `gh run list` shows the 2026-10-24 07:18 UTC run: it used 75 minutes only if the owner
-pushed first (`origin/master` reads 45), so a cancel at 45 is the unpushed fix, not a new cause. (2) The tutorial leftovers (`BACKLOG.md:45`; DECISION NEEDED, Effort S). (3) The
-`CHANGELOG.md` regrowth lever (`BACKLOG.md:131`; DECISION NEEDED, Effort unknown). (4) Scope issue #138 (planning only; Effort L). (5) The held-back methodology files (`BACKLOG.md:189`;
-BLOCKED). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
+### What Session 1050 Did
+**Deliverable:** A plan for a multi-session refactor campaign: smaller memory footprint and faster time-intensive work (owner-directed in prose; planning session, one plan document in `docs/planning/`, no `R/` or test change) (IN PROGRESS)
+**Started:** 2026-10-24
+**Status:** Session claimed. Work beginning (measure the slow and memory-heavy paths on real inputs first, then write the plan).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
 
-### Sessions 947-1048 (condensed S950 to S1049; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1049 (condensed S950 to S1050; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1049: the trend chart leaves a blank metric value out of the drawing without a console warning (`na.rm = TRUE` on four layers,
+`R/plotSnapshotTrends.R:125,131,134`; the jmac example at 10 iterations gave 3 warnings, now 0, PNG byte-identical), and three tests pin the panel notice's
+200-character cut (`R/modSnapshotTrends.R:427`; `tests/testthat/test_modSnapshotTrends.R:857,863,873`; their RED is four broken copies of the cut); owner pick
+"Earlier-snapshots follow-ups", strict TDD; claim `16ddb997f`, RED `924b26b1b`, GREEN `3e3adfcbc`, REFACTOR `6efd1ce94` (`oneNoteNotice()`, `severalNotesNotice()`),
+close-out `520bd5dc8`; evaluation of S1048 9/10, self 8/10 (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a
+plot renders; a "draws quietly" test must draw (`plotGrob()`), `ggplot_build()` raises nothing; a blank-value history takes 0.9 s.
 S1048: `methodology/CHANGELOG.md` trimmed from 200,357 B to 23,778 B, 112 of 125 records archived to `methodology/archive/CHANGELOG-through-2026-10-22.md` (owner pick, "Trim
 CHANGELOG.md"; housekeeping, no code); the owner chose the clean day seam, `--cut 2026-10-22`, over the tool's default cut (21 records kept at 33,990 B, which would have left 8 of the
 31 records dated 2026-10-22 live under a "through-2026-10-22" name); claim `76353cde1`, trim `4c54afa9e`, close-out `7a6729bd6`; evaluation of S1047 8/10, self 8/10 (Learning 1014).
