@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 0, the measuring harness (owner-directed S1050;
-      plan approved and D1-D4 ruled S1051; READY; Effort M per phase, 12 phases, each its own
-      strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (S1050,
-      `0bc77f06a`). Measured on the example at the app's defaults: the Genetic Value analysis takes
-      about 3.5 s, 2.9 s of it in `calcGU()` + `calcGUSE()` (the same rare-allele count built twice);
-      the two relationship downloads do not finish (600 animals take 65 s, about 10x per doubling,
-      and the example has 3,694); Breeding Groups at 1,000 trials takes 23.6 s; the Diagram at 708
-      animals 13.9 s; the app caches one full-pedigree kinship matrix (104.6 MB, n x n x 8 B) for six
-      tabs. **Ruled S1051, each as recommended (plan section 6):** D1 exact results (`identical()`
-      for the same seed), D2 plain R first (no Rcpp), D3 the 18 exported functions in scope unchanged,
-      D4 opt-in budget tests plus ratchet gates. Next, Phase 0 (plan section 7): the harness
-      (`tools/perf/`), the baselines doc and the gates, with no package behavior change; Phase 1
-      (genome uniqueness) after it. D5-D8 are asked in their own phases.
+- [ ] **Performance and memory campaign: Phase 1, genome uniqueness (owner-directed S1050; plan
+      approved and D1-D4 ruled S1051; Phase 0 done S1052; READY; Effort M per phase, 11 phases
+      left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
+      (Phase 1 at `:442`). Phase 0 left the harness in `tools/perf/` (`Rscript tools/perf/run.R
+      <scenario>` from the project root; 20 scenarios, one per row of the plan's section 3) and its
+      numbers in `docs/audits/PERF_BASELINE_2026-10-24.md`: the Genetic Value analysis on the example
+      takes 3.28 s, 2.94 s of it in `calcGU()` + `calcGUSE()` (the same rare-allele count built twice).
+      Phase 1 builds one fast count, once (`rareAlleleCounts()`, the plan's section 5 helper table),
+      proves `identical()` results against a frozen copy (D1), and tightens the ratchet gate
+      `perf_reportGV_example_seconds` (4.3 s today) in `methodology/.quality-gates.json`. **Ruled
+      S1051 (plan section 6):** D1 exact results for the same seed, D2 plain R first, D3 the 18
+      exported functions unchanged, D4 opt-in budget tests (`NPRC_RUN_PERF=true`) plus ratchet gates.
+      D5-D8 are asked in their own phases.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the

@@ -99,12 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1052 Did
-**Deliverable:** Phase 0 of the performance and memory campaign (`docs/planning/performance-memory-campaign-plan.md:404`): the measuring harness
-(`tools/perf/harness.R`, `tools/perf/run.R`), `tests/testthat/test_perfHarness.R`, `.Rbuildignore` `^tools$`, the baselines doc `docs/audits/PERF_BASELINE_2026-10-24.md`
-and gates at today's values (owner pick at the Phase 0 picker, item 1 of 4, "Perf Phase 0"; strict TDD, every gate to the owner; no package behavior change) (IN PROGRESS)
-**Started:** 2026-10-24, about 01:35 CDT
-**Status:** Session claimed. Work beginning. Phase 0 found both ledgers current (frontier = HEAD `28b59e9e4`, gap 0, no merges, no pending receipt, ratchet `61e0a93a0db3` matches).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Perf Phase 0"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner):** Phase 0
+of the performance and memory campaign (`docs/planning/performance-memory-campaign-plan.md:404`): the harness `tools/perf/harness.R` + `tools/perf/run.R` (`Rscript tools/perf/run.R <scenario>`
+from the project root prints one line per call, then `SECONDS=` and `PEAK_MB=`; 20 scenarios, one per row of the plan's section 3, with S1050's exact calls), `tests/testthat/test_perfHarness.R`
+(20 tests), `.Rbuildignore` `^tools$`, `docs/audits/PERF_BASELINE_2026-10-24.md` (3 runs a row, the app memory table, the app script as Appendix A) and 7 gates in `methodology/.quality-gates.json`.
+Claim `0e265fb1c`, RED `df4e236c7`, GREEN `67bc27e4d`, REFACTOR `7bd35faec` (`rawInput()`/`pedInput()`, `pedKinship()`), baselines and gates `9a7392c96`, close-out next; not pushed.
+**Owner calls:** 7 gates, one per later phase (Phases 1, 2, 3, 4, 6, 7, 10; about 79 s a close-out); room +25% time over the slowest run, +10% memory over the peak; the app script stays in the appendix.
+**Findings:** every memory peak was identical in all 3 runs (one fresh process per scenario; the plan's 578 against 300 MB came from same-session runs), so memory gates are exact; times within
+7.1%; `reportGV-example` 3.28 s (plan about 3.5 s; 2.94 s of it `calcGU()` + `calcGUSE()`); the app's resident memory 441 MB at start, 699 after upload + QC, 832 after Genetic Value, 837 at the end.
+**Verification:** `test_perfHarness.R` 20 tests 0 failed (16 s); full suite 454 files 4,344 tests 0 failed 0 errors 198 skipped (after GREEN and after REFACTOR); lint 0 (`lint_package()`, and
+`lintr::lint()` of the two tool files, which `lint_package()` never reads); REFACTOR fingerprint `identical()` (12 inputs, 27 label sets); ratchet 8/8 (results `58d5e14ea1fc`); `devtools::check()`
+0 errors, 0 warnings, 0 notes; the 2026-10-24 07:11 UTC `shinytest2` run green in 24 min 11 s (`origin/master` still has the 45-minute limit).
+**Handoff evaluation of S1051: 8/10.** Helped: Next (1) gave the exact files, the plan's `:404` and `:751` and "six files, two checkpoint commits", all right; "fold my section at your claim"
+(the claim fit, 52,307 B); counting the tests that can see a changed file (used for the gates file and the doc). Missing: the plan's section 3 never recorded the Breeding Groups, backfill and
+diagram calls (S1050's scratch scripts, still on disk, held them); say where a planner's scratch lives. Wrong: "At Phase 0 read the 2026-10-24 07:18 UTC run" (at 06:27 UTC it had not run). ROI: high.
+**Self: 7/10.** + claimed first; probed the RED assumptions (QC with no errors, 708 and 332) first; found S1050's scripts and reproduced every input; proved REFACTOR by fingerprint; measured
+spreads and gate costs before the gates question; checked each app step did its work; every question answered first try. - the first full-suite launch had a trailing `&` and an unset output
+variable (S1040's gotcha, repeated; killed and relaunched); a parser bug in the scratch summary; "6 times" said before counting (7); a cause stated as fact in the doc draft (fixed before commit). Learning 1018.
+**Gotchas:** `lint_package()` never reads `tools/` (lint each tool file); `tools/**` is not on the workflows' `paths-ignore` list (`test_workflowPathsIgnore.R` pins it), so a tools-only push starts CI;
+a `--quick` run is never a baseline; the harness test skips outside the source tree; compare memory only fresh process to fresh process; the app script needs a scratch install (Appendix A).
+**Next (the owner's campaign, in the plan's order):** (1) Phase 1, genome uniqueness (plan `:442`, `BACKLOG.md:8`), strict TDD, every gate to the owner: frozen copies of `calcA()`, `calcGU()`
+and `calcGUSE()` in `tests/testthat/helper-perfReference.R` (`git show 520bd5dc8:R/<file>`), equivalence tests on `rareAlleleCounts()` (RED: it does not exist), an opt-in budget test
+(`NPRC_RUN_PERF=true`), then `run.R reportGV-example` before and after and tighten `perf_reportGV_example_seconds`. (2) Phase 2 after it. Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203`, #138.
 
 ### Sessions 947-1051 (condensed S950 to S1052; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1051: the owner's rulings on D1-D4 of the performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed, D2 plain R with
@@ -166,39 +182,15 @@ closed. Claim `02e1d1797`, RED `98ba3f7b5`, GREEN `fc980f93f` `d363b54e1` `ee6bd
 450 files 4,279 tests 0 failed 0 errors, browser tier 24 of 24; evaluation of S1039 9/10, self 8/10 (Learning 1006). **Gotchas kept:** take an element picture of anything below the fold
 (`app$run_js()` an id, `get_screenshot(selector = ...)`, remove `.shiny-notification` first); put the command itself in `run_in_background`, never a trailing `&`; NEWS.md writes `\#170`;
 `helper-guideSections.R` is the one guide-section reader; the panel says 'skipped' for failed dates (`BACKLOG.md:33`). Follow-ups left: `BACKLOG.md:33-50`.
-S1039: Slice 3 of the retrospective colony-snapshot backfill, #170 (owner pick, "Slice 3: app button"; strict TDD, every gate and both design calls put to the owner): the Genetic-Health
-Trends tab has a "Build Earlier Snapshots" box (Start year, a cost line, the button) and an "Earlier Snapshots" tab; the button calls `backfillColonySnapshots()` with
-`pedigreeResults$processedPedigree`, the run's `guIter`, `guThresh` and `snapshotSource$reportArgs` (`R/modSnapshotTrends.R:319-430`, `R/modGeneticValue.R:355`, `R/appServer.R:531`).
-**Owner calls:** export the counts-only preview `previewBackfillSupport()` (`R/previewBackfillSupport.R:66`); fix twin pairs in the function (`R/backfillColonySnapshots.R:358,386`). Claim
-`c367d2d9a`, RED `c40855ff7` + `ac656a2e6`, GREEN `f60a2a79b` `2253ed0c9` `fe4b4f696` `0909df2e5`, correction `84f11ed2a`, caption fix `8757ecc10`, REFACTOR `47e8d7a63` (four internal helpers),
-docs `674e19ad7`, close-out `85aa799ed`; full suite 449 files 4,250 tests 0 failed 0 errors, browser tier 24 of 24; evaluation of S1038 9/10, self 8/10 (Learning 1005). **Gotchas kept:** record
-notices with `local_mocked_bindings(showNotification = ..., .package = "nprcgenekeepr", .env = parent.frame())`, not `expect_no_error()` (`testServer()` does not raise an error that escapes an
-observer); scope a "no warning escapes" test to the call that warns; declared MZ pairs are cut to each date; `fullPedigree` defaults to `reactive(NULL)`; `AppDriver$get_screenshot()` refuses an
-existing file; the cost line's 4 s per 1,000 iterations is scaled by iterations only (a colony above 3,694 rows at 1,000 iterations is unmeasured). Left for Slice 4 (S1040): `NEWS.Rmd`, the guide
-section, three wording points the owner writes (`BACKLOG.md:52-55`), close #170.
-S1038: Slice 2 of the retrospective colony-snapshot backfill, #170 (owner pick, "Backfill Slice 2"; strict TDD, every gate and both design calls put to the owner):
-`backfillColonySnapshots()` (`R/backfillColonySnapshots.R:128`) takes `dates` or a yearly series (`from`, `to`, `by`, `minAnimals`) and returns `list(history, support, skipped)`; the counting
-rules are in the new `R/backfillColonyFacts.R`. **Owner calls:** an animal with no birth date counts from its first dated offspring; an animal with no exit date counts only when
-`isLivingAnimal()` says so (export date 339, equal to the app); the default series starts at the first 1 January with 2 living animals (1966 on the example, 53 points to 2018). Claim
-`387771996`, RED `b8d9bfa80`, GREEN `308cf7b0c`, REFACTOR `1c9e5f28a` (`parseIsoDate()` replaces two copies), close-out `205c4d9ef`; evaluation of S1037 9/10, self 8/10 (Learning 1004).
-**Gotchas kept:** `guIter`/`guThresh` follow `dates = NULL` with a `nolint` on each line (a test pins the signature); `dates` cannot be combined with `from`/`to`/`by`; a panel must catch
-`reportGV`'s warnings and the function's own "N of M dates could not be rebuilt"; the support preview has no script-callable twin (design 5.2 item 8); no test pins the shipped file's
-default series (8 s at `guIter` 10).
-S1037: Slice 1 of the retrospective colony-snapshot backfill, GitHub issue #170 (owner pick, "Backfill Slice 1"; strict TDD, every gate put to the owner; the issue was filed with the
-owner's word, "File it now"): the exported `backfillColonySnapshots(ped, dates, guIter, guThresh, ...)` (returns `list(history = ...)`), the rule `reconstructedLiving` in
-`createColonySnapshot()` (`R/createColonySnapshot.R:89`), dated animals only, and two shared helpers, `trimToAnalysisPopulation()` and `validateWholeCount()`. At the export date 2018-07-11 it
-equals the app's snapshot on 25 of 25 fields (`guIter` 20; the 341-against-339 finding was settled in S1038). Claim `d4791c562`, issue record `b71882631`, RED `e4b832abd`, GREEN `559e260d7` +
-`9f863265d`, REFACTOR `a20fc3c32`, close-out `7c0beadaf`; evaluation of S1036 9/10, self 8/10 (Learning 1003). **Gotchas kept:** the browser tier needs `R CMD INSTALL --no-docs
---library=<scratch> .` and `R_LIBS=<scratch>:<renv lib>` with `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`; roxygen text uses American spelling
-(`test_wordlist_coverage.R`); a new export owes its `_pkgdown.yml` line in the same slice.
-S1036: the design for the retrospective colony-snapshot backfill (`docs/planning/retrospective-snapshot-backfill-plan.md`; owner pick, "Snapshot backfill design"; a design session, text
-only, no R code): an exported `backfillColonySnapshots()` plus a "Build earlier snapshots" button (owner scope ruling), twelve decisions B1-B12, rebuilt rows under their own rule
-`reconstructedLiving`, four slices; the owner approved it after the close-out ("approve design"). Measured: blanking exit dates after the chosen date reproduces the app's snapshot
-exactly at the export date, while setting only the population gives `neSexRatio` 0.0 against 3.9 (1990). Claim `3a3a69df4`, deliverable `668d94f5e`, close-out `f5bef01a1`, approval
-`735b01146`; evaluation of S1035 9/10, self 7/10 (Learning 1002). **Gotchas kept:** read the jmac file with `na.strings = c("", "NA")` and `qcStudbook(minSireAge = 0, minDamAge = 0)`;
-filter generated stand-ins with `isGeneratedUnknownId(id, ped = ped)` before any data-quality share; the backfill needs `processedPedigree`, never `analysisPedigree` (the focal trim);
-`R/modPedigree.R:372-374` sets the population and `R/modGeneticValue.R:293-298`'s `is.na(exit)` fallback is not the app's path; a background launcher's "completed" notice means the
-launcher exited, not the job (use `pgrep`).
+S1036-S1039, the retrospective colony-snapshot backfill, #170, design and Slices 1-3 (strict TDD where code changed; every gate and design call put to the owner; evaluations 9/10, self
+7-8/10; Learnings 1002-1005; hashes in `CHANGELOG.md`): S1036 the design (`docs/planning/retrospective-snapshot-backfill-plan.md`, B1-B12, the rule `reconstructedLiving`; "approve design");
+S1037 the exported `backfillColonySnapshots()` (`R/backfillColonySnapshots.R:128`), equal to the app's snapshot on 25 of 25 fields at 2018-07-11; S1038 dates or a yearly series returning
+`list(history, support, skipped)`, the counting rules in `R/backfillColonyFacts.R` (no birth date counts from the first dated offspring; no exit date counts only when `isLivingAnimal()` says
+so); S1039 the app's "Build Earlier Snapshots" box and tab (`R/modSnapshotTrends.R:319-430`) and the exported `previewBackfillSupport()`. **Gotchas kept:** the backfill needs
+`processedPedigree`, never `analysisPedigree`; read the jmac file with `na.strings = c("", "NA")` and `qcStudbook(minSireAge = 0, minDamAge = 0)`; filter generated stand-ins with
+`isGeneratedUnknownId(id, ped = ped)` before any data-quality share; record notices with `local_mocked_bindings(showNotification = ..., .package = "nprcgenekeepr", .env = parent.frame())`
+(`testServer()` lets no observer error escape); `guIter`/`guThresh` follow `dates = NULL` with a `nolint` each (a test pins the signature); `AppDriver$get_screenshot()` refuses an existing
+file; the cost line's 4 s per 1,000 iterations is unmeasured above 3,694 rows; a background launcher's "completed" means the launcher exited, not the job (use `pgrep`).
 S1035: the three long guides (`a2interactive`, `gvaConvergence`, `simulatedKValues`) moved from `html_document` (`df_print: paged`) to `rmarkdown::html_vignette` with `df_print: kable`
 (owner pick, "Slim inst/doc/", scope "Light template only"; strict TDD, REFACTOR skipped at the owner's word): the clean-export tarball went 3,971,754 to 3,222,746 B (-749,008 B);
 `a2interactive` also `fig_width: 7`, `fig_height: 5` (`vignettes/a2interactive.Rmd:4-9`; gate `tests/testthat/test_vignetteLightTemplate.R`). Claim `c64774804`, RED `069294279`, GREEN
