@@ -104,6 +104,141 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
     stop("geneDrop(): animal IDs must be unique; ",
          "duplicated id(s): ", toString(unique(as.character(ids)[dupIds])))
   }
+  plan <- geneDropPlan(ids, sires, dams, gen, genotype, n)
+  if (is.null(plan)) {
+    return(geneDropGeneral(ids, sires, dams, gen, genotype, n,
+                           updateProgress))
+  }
+  ## Performance plan Phase 2: each animal's two alleles are two columns of one
+  ## matrix (sire, then dam) in generation order, one row per iteration, and
+  ## parents are found by position. The draws are today's, in today's order,
+  ## so the table is today's for the same seed.
+  nAnimals <- length(plan$id)
+  alleles <- matrix(if (plan$isDouble) 0.0 else 0L, nrow = n,
+                    ncol = 2L * nAnimals)
+  nIter <- nrow(alleles)
+  counter <- 1L
+  parents <- list(plan$sire, plan$dam)
+  codes <- list(plan$first, plan$second)
+
+  notifyProgress(
+    updateProgress,
+    detail = "Performing Gene-drop Simulation", value = 0L, reset = TRUE
+  )
+
+  for (i in seq_len(nAnimals)) {
+    for (side in 1L:2L) {
+      col <- 2L * i - 2L + side
+      code <- codes[[side]][i]
+      parent <- parents[[side]][i]
+      if (!is.na(code)) {
+        # A known genotype allele, the same in every iteration.
+        alleles[, col] <- code
+      } else if (is.na(parent)) {
+        # An unknown parent passes on a new allele of its own.
+        alleles[, col] <- counter
+        counter <- counter + 1L
+      } else {
+        # Mendelian sampling of the parent's two alleles, as chooseAlleles().
+        s1 <- sample(c(0L, 1L), nIter, replace = TRUE)
+        alleles[, col] <- (alleles[, 2L * parent - 1L] * s1) +
+          (alleles[, 2L * parent] * (1L - s1))
+      }
+    }
+
+    notifyProgress(updateProgress, n = nAnimals)
+  }
+
+  alleles <- as.data.frame(t(alleles))
+  alleles$id <- rep(plan$id, each = 2L)
+  alleles$parent <- rep(c("sire", "dam"), nAnimals)
+  rownames(alleles) <- seq_len(nrow(alleles))
+  alleles
+}
+
+#' An ordinary pedigree, laid out for geneDrop()'s fast path, or NULL
+#'
+#' \code{geneDrop()}'s fast path gives today's table only where that can be
+#' shown (performance plan Phase 2, decision D1). So \code{ids},
+#' \code{sires}, \code{dams} and \code{gen} must be plain vectors of one
+#' length, with at least one animal; \code{n} one whole number of at least 1;
+#' no id missing or empty; every known parent an animal earlier in the
+#' generation order, so its alleles exist before its offspring draw from them;
+#' and \code{genotype} NULL or a dataframe with \code{id}, \code{first} and
+#' \code{second} columns, numeric codes, no missing id on a row it keeps and
+#' no animal on two rows it keeps. Any other input gives NULL, and
+#' \code{geneDrop()} runs today's code, \code{geneDropGeneral()} (owner ruling
+#' S1054).
+#'
+#' @inheritParams geneDrop
+#' @return NULL, or a list: \code{id}, the ids in generation order;
+#' \code{sire} and \code{dam}, each parent's position in \code{id}, NA for an
+#' unknown parent; \code{first} and \code{second}, each animal's known
+#' genotype codes, NA where its allele is drawn; and \code{isDouble}, TRUE
+#' when a double code is used, which makes today's table double.
+#' @noRd
+geneDropPlan <- function(ids, sires, dams, gen, genotype, n) {
+  nAnimals <- length(ids)
+  isColumn <- function(x) {
+    is.atomic(x) && is.null(dim(x)) && length(x) == nAnimals
+  }
+  if (nAnimals == 0L || !isColumn(ids) || !isColumn(sires) ||
+        !isColumn(dams) || !isColumn(gen) || !is.numeric(n) ||
+        length(n) != 1L || is.na(n) || n < 1L || n != trunc(n)) {
+    return(NULL)
+  }
+  ord <- order(gen)
+  id <- as.character(ids)[ord]
+  if (anyNA(id) || !all(nzchar(id))) {
+    return(NULL)
+  }
+  sireIds <- as.character(sires)[ord]
+  damIds <- as.character(dams)[ord]
+  sire <- match(sireIds, id)
+  dam <- match(damIds, id)
+  # A known parent must come earlier, so its alleles exist when drawn from.
+  position <- seq_len(nAnimals)
+  if (!all(is.na(sireIds) | (!is.na(sire) & sire < position)) ||
+        !all(is.na(damIds) | (!is.na(dam) & dam < position))) {
+    return(NULL)
+  }
+  first <- rep(NA_integer_, nAnimals)
+  second <- rep(NA_integer_, nAnimals)
+  isDouble <- FALSE
+  if (!is.null(genotype)) {
+    if (!is.data.frame(genotype) ||
+          !all(c("id", "first", "second") %in% names(genotype))) {
+      return(NULL)
+    }
+    genotype <- genotype[!(is.na(genotype$first) & is.na(genotype$second)), ]
+    if (!is.numeric(genotype$first) || !is.numeric(genotype$second) ||
+          anyNA(genotype$id) ||
+          anyDuplicated(genotype$id[genotype$id %in% id]) > 0L) {
+      return(NULL)
+    }
+    rows <- match(id, genotype$id)
+    first <- genotype$first[rows]
+    second <- genotype$second[rows]
+    isDouble <- (is.double(first) && !all(is.na(first))) ||
+      (is.double(second) && !all(is.na(second)))
+  }
+  list(id = id, sire = sire, dam = dam, first = first, second = second,
+       isDouble = isDouble)
+}
+
+#' Today's gene drop, for any input
+#'
+#' \code{geneDrop()}'s code before performance plan Phase 2, word for word
+#' after its two id checks: each animal's alleles kept in a list, its parents
+#' looked up by row name, \code{assignAlleles()} for each parent.
+#' \code{geneDrop()} calls it for an input \code{geneDropPlan()} does not
+#' admit, which keeps that input's table, error and warnings.
+#'
+#' @inheritParams geneDrop
+#' @return As \code{geneDrop()}.
+#' @noRd
+geneDropGeneral <- function(ids, sires, dams, gen, genotype, n,
+                            updateProgress) {
   ## Sort the IDs by generation so older generations are first
   ped <- data.frame(
     id = ids, sire = sires, dam = dams, gen,
