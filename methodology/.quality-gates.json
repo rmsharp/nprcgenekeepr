@@ -35,11 +35,11 @@
     {
       "name": "perf_geneDrop_example_peak_mb",
       "direction": "max",
-      "threshold": 164,
+      "threshold": 72,
       "unit": "MB (gc() peak above the start, from tools/perf/harness.R measure(); on this Mac)",
       "command": "Rscript tools/perf/run.R gvStages-example",
       "extract": "geneDrop \\(n = 1000\\) +[0-9.]+ s  peak +([0-9.]+) MB",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: geneDrop() on the example as the app trims it (the geneDrop row of the stage table, 1,000 iterations) peaked at 148.5 MB in all 3 runs; threshold = the peak plus 10%, rounded up to a whole MB; the peak was the same in all 3 runs, because each scenario runs in a fresh process (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 2 (the gene drop) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: geneDrop() on the example as the app trims it (the geneDrop row of the stage table, 1,000 iterations) peaked at 148.5 MB in all 3 runs; threshold = the peak plus 10%, rounded up to a whole MB; the peak was the same in all 3 runs, because each scenario runs in a fresh process (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Tightened S1054 (2026-10-24, Phase 2, the gene drop: one matrix for an ordinary pedigree, today's code for any other input): the same run peaked at 65.1 MB in all 3 fresh-process runs (0.04 s, against 0.13 s; load average 5.3 to 7.4), so 164 MB becomes 72 MB by the same rule (65.1 MB plus 10%, rounded up to a whole MB)."
     },
     {
       "name": "perf_convertRelationships_300_seconds",
