@@ -99,54 +99,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1047 Did
-**Deliverable:** Raise the scheduled `shinytest2` job's time limit from 45 to 75 minutes (`BACKLOG.md:73`; owner pick at the Phase 0 picker, item 1 of 4; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-23
-**Status:** Session claimed. Work beginning (PRE-RED; the gates go to the owner).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Raise shinytest2 limit"; strict TDD; the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner
+and approved):** the scheduled `shinytest2` job's time limit is 75 minutes, not 45. **RED:** `tests/testthat/test_shinytest2_workflow_timeout.R:36` expects `75L`; its header (`:12-18`) and
+failure message give the 2026-09-27 raise (30 to 45, S794, `dad5a3d0c`) and the 2026-10-23 cancel and point at the diagnosis file; it failed once, `[1] 45 - 75 == -30`. **GREEN:**
+`.github/workflows/shinytest2.yaml:46` `timeout-minutes: 75`, one line. **REFACTOR:** the workflow path is stated once, `shinytest2WorkflowPath()` (`tests/testthat/helper-shinytest2Workflow.R:13`),
+called by the timeout test (`:20`) and `test_shinytest2_workflow_coverage.R:10` (same string as before, checked with `identical()`). The `BACKLOG.md` block came off in the close-out commit.
+**Commits:** claim `571d62426`, RED `ef166ab23`, GREEN `08efe189e`, REFACTOR `0134dc55f`, close-out next. Not pushed (186 ahead of origin after the close-out).
+**Verification:** full suite after GREEN and after REFACTOR, each 453 files 4,319 tests 15,118 expectations 0 failed 0 errors; lint 0 on the package; ratchet 1/1 (results `3f89a6546bea`);
+PyYAML reads `jobs.shinytest2.timeout-minutes` as 75. **Runtime: no live GitHub run.** The test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that
+night needed about 55, an estimate); the first real check is the 2026-10-24 07:18 UTC scheduled run.
+**Handoff evaluation of S1046: 9/10.** Helped: Next item (1) gave the file, the line of each of the two edits (`:30`, `:46`) and "no other file names the number", and all three held; the
+receipt was complete and HEAD green. Missing: it did not say `CHANGELOG.md` sat 355 B under its 196,608 B warn line, so the claim entry alone crossed it (197,295 B); the guard test's header
+still pointed at a BACKLOG item that is gone. Wrong: nothing found. ROI: high.
+**Self: 8/10.** + every gate carried the exact actions and a wording preview; RED failed for the stated reason; the 30-to-45 history was checked against git; the duplicate was counted (two
+copies; the third workflow test reads other workflow files) before REFACTOR was offered; behavior preservation shown by `identical()`. - `pgrep -f` matched the launching shell, not R (the
+S1022 trap again); no live run was possible; one stale pointer left (below). Learning 1013.
+**Gotchas:** `CHANGELOG.md` is 197,295 B, past its 196,608 B warn line, so a trim is owed (`python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --check`,
+then `--write`); the next claim entry grows it again. `test_shinytest2_workflow_timeout.R:9-10` still says "See BACKLOG.md's 'Up Next' shinytest2 item"; no such item exists, so point it at the
+diagnosis file next time in that file. A launcher's "completed" notice is not the job: `ps -axo pid,etime,pcpu,args | grep '[f]ull_suite.R'`, then `kill -0 <pid>`. `quality_ratchet.py --run`
+measures a size that differs by tens of bytes on every run (3,345,214 to 3,345,230 B on one tree), so each run overwrites the hash the receipt cites (this one: `3f89a6546bea`).
+**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Phase 0's `gh run list` shows the 2026-10-24 07:18 UTC run: a pass under 75 minutes closes this; a
+cancel or failure is a new diagnosis. (2) Trim `CHANGELOG.md` (rule-owed; READY, Effort S; command above). (3) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or
+pinning the 200-character cut (READY, Effort S, strict TDD). (4) The tutorial leftovers (`BACKLOG.md:49`; DECISION NEEDED, Effort S). (5) Owner-side: the methodology files the S1032 sync
+held back (`BACKLOG.md:193`; BLOCKED). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
 
-### What Session 1046 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Diagnose shinytest2 timeout"; a diagnosis, no production code, no TDD phase past PRE-RED):** why the scheduled
-`shinytest2` run of 2026-10-23 (run `39916862256`) was cancelled at 45 minutes. **Cause:** `apt` downloads from `azure.archive.ubuntu.com` ran at 52 to 55 kB/s in all three steps
-that use it (309, 1,328 and 360 kB/s the night before), so setup took 31 min 47 s; the tests ran at their usual pace (14th of 21 groups at 12 min 43 s, 13 min 27 s the night before)
-and were cut off with 7 groups not started; same commit `c5545b016` as three green nights. Write-up: `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`. **Owner ruling:** raise the
-limit from 45 to 75 minutes (over leaving it). The diagnose block is off `BACKLOG.md`; "Raise the scheduled `shinytest2` job's time limit" (`BACKLOG.md:73`; READY, Effort S, strict TDD)
-takes its place: RED edits the pinned `45L` (`tests/testthat/test_shinytest2_workflow_timeout.R:30`), GREEN edits `.github/workflows/shinytest2.yaml:46`. Not done here.
-**Commits:** claim `ee8bdbe7c` (S1045's full section was condensed there: the context-budget hook refused the stub, 57,286 to 53,084 B), diagnosis `36261f1bc`, close-out next. Not pushed (181 ahead of origin
-after the close-out; the last push CI run is Oct 20).
-**Verification:** docs-only, nothing in `R/`, `tests/`, `vignettes/` or the workflow changed; full suite 453 files 4,319 tests 15,118 expectations 0 failed 0 errors 198 skipped 8 warnings
-(7.6 min, the same figures as S1045); ratchet 1/1 (results `f7e0708b1e2b`); lint n/a. Runtime: n/a, docs-only.
-**Handoff evaluation of S1045: 8/10.** Helped: the Next item gave the run and job ids, said the Oct 24 run had not happened and to run `gh run list` first, and its guess (runner, not
-code) was right; the receipt was complete and HEAD green. Missing: it left this file at 24,972 of 25,000 tokens (my Read of it was cut at line 314), so the claim stub was refused and a
-condense came first; the backlog item did not know `test_shinytest2_workflow_timeout.R` pins the limit; nothing said `gh run view --log` labels every line "UNKNOWN STEP". Wrong: nothing
-found. ROI: high.
-**Self: 7/10.** + built the loop from captured artifacts and settled "setup, not tests" in two calls; five hypotheses each settled by a measurement; recomputed every figure of the draft and
-fixed two wrong ones (a ratio, a setup time) before the commit; the owner question carried measured numbers and a recommendation. - about 20 probe calls with no status line; the
-skill's show-hypotheses-first step skipped; the claim commit refused once. Learning 1012.
-**Gotchas:** `gh run view <id> --json jobs` gives every step's start and end; the saved job log labels every line "UNKNOWN STEP", so find slow stretches by timestamp gaps and the
-`Fetched ... (kB/s)` lines; `##[group]E2E module group` lines give the 21 group starts; the 2026-09-27 cancel was a real 30-minute cap (growth), not this cause; `quality_ratchet.py --run`
-ran once (results `f7e0708b1e2b`, head `ee8bdbe7c`) and a rerun overwrites it; leave 2 KB of headroom here at close-out.
-**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Raise the limit to 75 (`BACKLOG.md:73`; READY, Effort S, owner-ruled; run `gh run list` first for the
-2026-10-24 07:18 UTC run). (2) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or pinning the 200-character cut (READY). (3) The tutorial leftovers (`BACKLOG.md:49`;
-DECISION NEEDED, Effort S). (4) Owner-side: where to post the `close_out_report.py` write-up (`BACKLOG.md:209`; BLOCKED). Informational: 9 open issues (#138, #123, #116, #37, #28, #12,
-#11, #10, #5).
-
-### Sessions 947-1045 (condensed S950 to S1046; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1045: the trend chart keeps its panel titles whole and never overprints its year labels in a narrow window (owner pick, "Trend chart labels"; strict TDD;
-the approach question and every gate put to the owner, who chose "columns follow the window width"): `trendPlotLayout(width, nPanels)` (`R/trendPlotLayout.R:26`,
-internal) gives 2 to 5 panel columns and 130 px a row plus 80; `plotSnapshotTrends()` takes `ncol` (`R/plotSnapshotTrends.R:57,76`) and draws the year labels with
-`guide_axis(check.overlap = TRUE)` (`:139`); the module's plot box is `height = "auto"` (`R/modSnapshotTrends.R:98,289-299`); the 18 default metric names are one
-constant (`R/trendDefaultMetrics.R:13`). Claim `acfd85698`, RED `2fb4bd16b`, GREEN `3ba3fd51b`, REFACTOR `073c93e6e`, close-out `7239ef90b`; full suite 453 files
-4,319 tests 0 failed 0 errors; evaluation of S1044 9/10, self 8/10 (Learning 1011). **Gotchas kept:** the layout constants (115, 150, 130, 80) were measured on the
-18-panel chart with its legend, so re-measure them for a longer title or another legend; `testServer()`'s client data is a fixed 600-px-wide box, so
-`test_modSnapshotTrends.R` pins only 3 columns and 860 px and the real windows are in `test-e2e-snapshot-trends-module.R:177`; run `devtools::document()` after any
-roxygen edit and read `git status` after it; the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .` and `R_LIBS=<scratch>:<renv lib>` with
-`RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`.
-S1044: the trend chart's footnote is never cut off (owner pick, "Trend chart caption"; strict TDD; every gate put to the owner): `plotSnapshotTrends()` cuts each note into two lines of at
-most 70 characters and left-aligns the caption to the whole plot (`plot.caption.position = "plot"`), whole from a plot width of about 320 px (550 before); the tutorial's snapshot-plot chunk
-lost its 9-inch width. Claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab` (my layout check was wrong for ggplot2 4.0.3), GREEN `31c3dcc79`, REFACTOR `8cc8fdde1`, close-out `b8c3bf9e1`;
-full suite 452 files 4,304 tests 0 failed 0 errors; evaluation of S1043 9/10, self 8/10 (Learning 1010). **Gotchas kept:** the footnote is wrapped in the label itself
-(`p$labels$caption`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`; ggplot2 4.0.3 has no `plot_theme()` (use `calc_element(name, p$theme)`); grid has no `"px"` unit
-(`"bigpts"` at 72 dpi); take pictures at 2x.
+### Sessions 947-1046 (condensed S950 to S1047; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1046: the scheduled `shinytest2` run of 2026-10-23 (run `39916862256`) was cancelled at 45 minutes because `apt` downloads ran 6 to 26 times slower than the night before (52 to 55
+kB/s; setup took 31 min 47 s), not because of a test (owner pick, "Diagnose shinytest2 timeout"; a diagnosis, no production code): the tests ran at their usual pace and were cut off with
+7 of 21 groups not started; the owner ruled to raise the limit to 75 (done S1047). Write-up `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`. Claim `ee8bdbe7c`, diagnosis
+`36261f1bc`, close-out `8ed228abf`; evaluation of S1045 8/10, self 7/10 (Learning 1012). **Gotchas kept:** `gh run view <id> --json jobs` gives every step's start and end; the saved job
+log labels every line "UNKNOWN STEP", so find slow stretches by timestamp gaps and the `Fetched ... (kB/s)` lines; `##[group]E2E module group` lines give the 21 group starts; the
+2026-09-27 cancel was a real 30-minute cap (growth), not this cause.
+S1044-S1045 (strict TDD each; every gate put to the owner; evaluations 9/10, self 8/10; Learnings 1010-1011): S1045, the trend chart keeps its panel titles whole and never overprints its
+year labels in a narrow window: `trendPlotLayout(width, nPanels)` (`R/trendPlotLayout.R:26`) gives 2 to 5 panel columns and 130 px a row plus 80; `plotSnapshotTrends()` takes `ncol`
+(`R/plotSnapshotTrends.R:57,76`) and draws year labels with `guide_axis(check.overlap = TRUE)` (`:139`); the plot box is `height = "auto"` (`R/modSnapshotTrends.R:98,289-299`); the 18 default
+metric names are one constant (`R/trendDefaultMetrics.R:13`); claim `acfd85698`, RED `2fb4bd16b`, GREEN `3ba3fd51b`, REFACTOR `073c93e6e`, close-out `7239ef90b`. S1044, the chart's footnote is never
+cut off: `plotSnapshotTrends()` cuts each note into two lines of at most 70 characters and left-aligns the caption to the whole plot (`plot.caption.position = "plot"`), whole from a plot width
+of about 320 px (550 before); the tutorial's snapshot-plot chunk lost its 9-inch width; claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab`, GREEN `31c3dcc79`, REFACTOR `8cc8fdde1`, close-out
+`b8c3bf9e1`. **Gotchas kept:** the layout constants (115, 150, 130, 80) were measured on the 18-panel chart with its legend, so re-measure them for a longer title or another legend;
+`testServer()`'s client data is a fixed 600-px-wide box, so `test_modSnapshotTrends.R` pins only 3 columns and 860 px and the real windows are in `test-e2e-snapshot-trends-module.R:177`; run
+`devtools::document()` after any roxygen edit and read `git status` after it; the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .` and `R_LIBS=<scratch>:<renv lib>` with
+`RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`; the footnote is wrapped in the label itself (`p$labels$caption`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`;
+ggplot2 4.0.3 has no `plot_theme()` (use `calc_element(name, p$theme)`); grid has no `"px"` unit (`"bigpts"` at 72 dpi); take pictures at 2x.
 S1041-S1043 (strict TDD where code changed; evaluations 8-9/10, self 8/10; Learnings 1007-1009; hashes in `CHANGELOG.md`): S1043, the `a2interactive.Rmd` inventory finished: six
 script-callable functions and two parameters named in five places (`vignettes/a2interactive.Rmd:608,840,1379,1585,2142`; pinned by `test_inventoryTutorialSections.R:55`; the shared
 readers `insideChunk()`, `sectionProse()` and `chunkOptionText()` are in `helper-pageText.R`); S1042, a "Colony Snapshots Over Time" section for the eight snapshot functions (five

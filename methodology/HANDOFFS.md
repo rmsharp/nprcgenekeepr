@@ -206,10 +206,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1047
 date: 2026-10-23
-status: pending
-active_task: IN PROGRESS -- raise the scheduled shinytest2 job's time limit from 45 to 75 minutes (BACKLOG.md:73; owner pick at the Phase 0 picker, item 1 of 4, "Raise shinytest2 limit"; strict TDD, owner-ruled at S1046)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the scheduled shinytest2 job's time limit is 75 minutes, not 45 (owner pick at the Phase 0 picker, item 1 of 4, "Raise shinytest2 limit"; strict TDD, all three gates put to the owner): the RED test expects 75L, GREEN is one line in the workflow, REFACTOR is one shared test helper for the workflow path. The BACKLOG.md block is removed. No live run yet: the first real check is the 2026-10-24 07:18 UTC scheduled run.
+what_was_done: Claim 571d62426, RED ef166ab23 (test_shinytest2_workflow_timeout.R expects 75L, failed once, "[1] 45 - 75 == -30"), GREEN 08efe189e (shinytest2.yaml timeout-minutes 75), REFACTOR 0134dc55f (shinytest2WorkflowPath() helper used by two tests, identical string), close-out next. Full suite after GREEN and after REFACTOR: 453 files 4,319 tests 15,118 expectations 0 failed 0 errors; lint 0 on the package; PyYAML parse reads 75, 10 steps. Evaluated S1046's handoff 9/10.
+next_steps: No owner order was given; mine (the six delayed items are not offered): (1) Phase 0's gh run list shows the 2026-10-24 07:18 UTC run: a pass under 75 minutes closes this, a cancel or failure is a new diagnosis. (2) Trim CHANGELOG.md, which the project rule says is owed (197,295 B, warn line 196,608 B; READY, Effort S): python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --check, then --write. (3) The earlier-snapshots follow-ups (BACKLOG.md:33; na.rm notice, pin the 200-character cut; READY, strict TDD). (4) The tutorial leftovers (BACKLOG.md:49; DECISION NEEDED). (5) The methodology files the S1032 sync held back (BACKLOG.md; BLOCKED).
+key_files: .github/workflows/shinytest2.yaml:46 (the 75); tests/testthat/test_shinytest2_workflow_timeout.R:36 (the pinned 75L; header :12-18; :9-10 still points at a BACKLOG item that is gone); tests/testthat/helper-shinytest2Workflow.R:13 (shinytest2WorkflowPath()); tests/testthat/test_shinytest2_workflow_coverage.R:10 (second caller); docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md:1 (the cause)
+gotchas: CHANGELOG.md is past its warn line, so a trim is owed and the next claim entry grows it again. The test reads the YAML text; it cannot show that 75 minutes is enough (that night needed about 55, an estimate). pgrep -f matches the launching shell; find the R process with ps -axo pid,etime,pcpu,args | grep '[f]ull_suite.R' and wait with kill -0 <pid>. quality_ratchet.py --run was run at head 0134dc55f (results 3f89a6546bea); its measured size differs by tens of bytes on every run (3,345,214 to 3,345,230 B on one tree), so a rerun changes the hash and overwrites the cited one.
+runtime_smoke: impossible: a GitHub Actions time limit only shows in a live scheduled run, and the next one (2026-10-24 07:18 UTC) had not happened; stand-ins were the unit test on the YAML text and a PyYAML parse of jobs.shinytest2.timeout-minutes (75, 10 steps)
+quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3f89a6546bea · manifest aa983075d6a2
+changelog_ref: 571d62426
+commit: 571d62426
 ```
 
 ```handoff
