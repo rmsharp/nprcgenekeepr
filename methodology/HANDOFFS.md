@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1056
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- Phase 4 of the performance and memory campaign, group formation (docs/planning/performance-memory-campaign-plan.md:525, BACKLOG.md:8): groupAddAssign() gives the same groups for the same seed, identical() to frozen copies of today's functions, with 1,000 trials on the example's candidates taking seconds (owner pick "Speed Phase 4: groups"; strict TDD, every gate to the owner)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1055
 date: 2026-10-24
 status: complete
