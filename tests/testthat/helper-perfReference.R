@@ -373,3 +373,79 @@ geneDropReference <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
   rownames(alleles) <- seq_len(nrow(alleles))
   alleles
 }
+
+## Phase 3 (the relationship table): R/convertRelationships.R at 520bd5dc8. It
+## calls the live filterKinMatrix(), kinMatrix2LongForm(), makeCEPH(),
+## allTrueNoNA(), isEmpty(), relationClassNames and notifyProgress(), which
+## Phase 3 does not change.
+convertRelationshipsReference <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
+  if (!is.null(ids)) {
+    kmat <- filterKinMatrix(ids, kmat)
+  }
+  # No id of `ids` is in `kmat`: a matrix with no cells has no pairs to name.
+  if (length(kmat) == 0L) {
+    return(data.frame(
+      id1 = character(0L), id2 = character(0L), kinship = numeric(0L),
+      relation = character(0L), stringsAsFactors = FALSE
+    ))
+  }
+  kin <- kinMatrix2LongForm(kmat, removeDups = TRUE)
+  ped <- makeCEPH(ped$id, ped$sire, ped$dam)
+  r <- character(0L)
+
+  for (i in seq_len(nrow(kin))) {
+    id1 <- kin$id1[i]
+    id2 <- kin$id2[i]
+
+    ceph1 <- ped[[id1]]
+    ceph2 <- ped[[id2]]
+
+    if (id1 == id2) {
+      relation <- relationClassNames[["self"]]
+    } else if (allTrueNoNA(ceph1$parents == ceph2$parents)) {
+      relation <- relationClassNames[["fullSiblings"]]
+    } else if (id1 %in% ceph2$parents || id2 %in% ceph1$parents) {
+      # one animal is the parent of the other
+      relation <- relationClassNames[["parentOffspring"]]
+    } else if (!isEmpty(intersect(ceph1$parents, ceph2$parents))) {
+      # at least 1 parent is shared
+      relation <- relationClassNames[["halfSiblings"]]
+    } else if (id1 %in% c(ceph2$pgp, ceph2$mgp) ||
+      id2 %in% c(ceph1$pgp, ceph1$mgp)) {
+      # one animals is the grandparent of the other
+      relation <- relationClassNames[["grandparentGrandchild"]]
+    } else if (allTrueNoNA(ceph1$pgp == ceph2$pgp) ||
+      allTrueNoNA(ceph1$pgp == ceph2$mgp) ||
+      allTrueNoNA(ceph1$mgp == ceph2$pgp) ||
+      allTrueNoNA(ceph1$mgp == ceph2$mgp)) {
+      # When a full set of grandparents are shared
+      relation <- relationClassNames[["fullCousins"]]
+    } else if (!isEmpty(intersect(
+      c(ceph1$pgp, ceph1$mgp),
+      c(ceph2$pgp, ceph2$mgp)
+    ))) {
+      # When at least one grandparent is in common
+      relation <- relationClassNames[["cousinOther"]]
+    } else if (allTrueNoNA(ceph1$parents == ceph2$pgp) ||
+      allTrueNoNA(ceph1$parents == ceph2$mgp) ||
+      allTrueNoNA(ceph2$parents == ceph1$pgp) ||
+      allTrueNoNA(ceph2$parents == ceph1$mgp)) {
+      # When parents of one proband are the grandparents of the other
+      relation <- relationClassNames[["fullAvuncular"]]
+    } else if (!isEmpty(intersect(ceph1$parents, c(ceph2$pgp, ceph2$mgp))) ||
+      !isEmpty(intersect(ceph2$parents, c(ceph1$pgp, ceph1$mgp)))) {
+      # When at least one parent of a proband is the grandparent of the other
+      relation <- relationClassNames[["avuncularOther"]]
+    } else if (kin$kinship[i] > 0L) {
+      relation <- relationClassNames[["other"]]
+    } else {
+      relation <- relationClassNames[["noRelation"]]
+    }
+
+    r <- c(r, relation)
+
+    notifyProgress(updateProgress)
+  }
+  kin["relation"] <- r
+  kin
+}
