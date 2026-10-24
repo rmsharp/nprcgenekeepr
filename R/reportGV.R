@@ -265,7 +265,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # (performance plan Phase 1).
   probandAlleles <- alleles[alleles$id %in% probands, ]
   rare <- rareAlleleCounts(probandAlleles, threshold = guThresh, byID = byID)
-  iterations <- sum(!(colnames(alleles) %in% c("id", "parent")))
+  iterations <- sum(iterationColumns(alleles))
 
   # Calculate genome uniqueness and order the rows of the returned data.frame
   gu <- guFromRare(rare, iterations)

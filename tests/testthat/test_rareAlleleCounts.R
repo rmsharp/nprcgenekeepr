@@ -132,6 +132,39 @@ test_that("rareAlleleCounts() and calcA() give today's count on the grid", {
   }
 })
 
+test_that("animals carrying two copies of one allele give today's count", {
+  ## Few animals in the grid's pedigrees carry two copies of one founder
+  ## allele, so dropping the byID correction for them failed only 2 of the
+  ## grid's 120 checks (S1053's mutation check). Here every animal, then every
+  ## other animal, carries two copies of one allele in every iteration.
+  gd <- withr::with_seed(1L, geneDrop(
+    qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen, n = 20L
+  ))
+  iterations <- setdiff(names(gd), c("id", "parent"))
+  second <- which(duplicated(gd$id))
+  everyAnimal <- gd
+  everyAnimal[second, iterations] <- gd[match(gd$id[second], gd$id),
+                                        iterations]
+  half <- second[gd$id[second] %in% unique(gd$id)[c(TRUE, FALSE)]]
+  everyOther <- gd
+  everyOther[half, iterations] <- gd[match(gd$id[half], gd$id), iterations]
+  tables <- list(`every animal` = everyAnimal,
+                 `every other animal` = everyOther)
+  for (name in names(tables)) {
+    for (threshold in c(1L, 2L, 4L)) {
+      for (byID in c(TRUE, FALSE)) {
+        info <- sprintf("two copies in %s, threshold %d, byID %s", name,
+                        threshold, byID)
+        expected <- calcAReference(tables[[name]], threshold, byID)
+        expect_identical(rareAlleleCounts(tables[[name]], threshold, byID),
+                         expected, info = info)
+        expect_identical(calcA(tables[[name]], threshold, byID), expected,
+                         info = info)
+      }
+    }
+  }
+})
+
 test_that("calcGU(), calcGUSE() and the tables built from one count are today's", {
   ## One seed per input shape: the shipped pedigree, the genotyped one with
   ## double codes, and the example's analysis set.

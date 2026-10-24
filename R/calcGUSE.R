@@ -56,7 +56,7 @@ calcGUSE <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL) {
   # The per-iteration rare-allele counts calcGU() averages. m_ik = rare[i, k]/2
   # is the iteration-k value whose mean over iterations equals gu_i / 100.
   rare <- calcA(alleles, threshold, byID)
-  iterations <- sum(!(colnames(alleles) %in% c("id", "parent")))
+  iterations <- sum(iterationColumns(alleles))
   guSEFromRare(rare, iterations)
 }
 

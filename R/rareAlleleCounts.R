@@ -73,7 +73,7 @@ geneDropShape <- function(alleles, threshold) {
         is.na(threshold)) {
     return(NULL)
   }
-  cols <- !(names(alleles) %in% c("id", "parent"))
+  cols <- iterationColumns(alleles)
   if (sum(cols) < 2L ||
         !all(vapply(alleles[cols], is.numeric, logical(1L)))) {
     return(NULL)
@@ -91,6 +91,19 @@ geneDropShape <- function(alleles, threshold) {
   rows <- order(g)
   list(alleles = m, ids = levels(ids), first = rows[c(TRUE, FALSE)],
        second = rows[c(FALSE, TRUE)])
+}
+
+#' The iteration columns of a gene-drop table
+#'
+#' Every column of a \code{geneDrop()} table except \code{id} and
+#' \code{parent} holds one iteration's alleles.
+#'
+#' @param alleles a gene-drop table.
+#' @return A logical vector over the table's columns, TRUE for each iteration
+#' column.
+#' @noRd
+iterationColumns <- function(alleles) {
+  !(colnames(alleles) %in% c("id", "parent"))
 }
 
 #' Today's rare-allele count, for any table
