@@ -114,6 +114,8 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
   ## parents are found by position. The draws are today's, in today's order,
   ## so the table is today's for the same seed.
   nAnimals <- length(plan$id)
+  # Storing a double code would turn an integer matrix double anyway, as
+  # today's table is then double; starting double saves that copy.
   alleles <- matrix(if (plan$isDouble) 0.0 else 0L, nrow = n,
                     ncol = 2L * nAnimals)
   nIter <- nrow(alleles)
