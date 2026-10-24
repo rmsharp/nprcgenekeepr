@@ -70,16 +70,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `ncol`, the number of panel columns. The tutorial's chart has 3 panels, where the default
       grid is right, so whether the tutorial shows `ncol` is a decision.
 
-- [ ] **Diagnose the scheduled `shinytest2` run that hit its time limit** (READY, Effort S to
-      diagnose; found at S1043 Phase 0, 2026-10-23, not diagnosed) -- the scheduled run of
-      2026-10-23 (run `39916862256`, job `120292192510`) was cancelled at the job's 45-minute limit
-      ("exceeded the maximum execution time of 45m0s"). Scheduled runs test `origin/master`, which has
-      not moved since the push of 2026-10-20, so the same code took 22 minutes (10-20), 30 (10-21)
-      and 30 (10-22) and passed; the runs of 10-16 and 10-17 failed on earlier code and were not
-      examined. That points at the runner or a hang rather than a change, but it is an inference.
-      First see whether the run of 2026-10-24 (07:18 UTC) repeats it, then read the job log
-      (`gh run view --job=120292192510 --log`) for the step that stalled. No issue is filed (the
-      CI-break convention).
+- [ ] **Raise the scheduled `shinytest2` job's time limit from 45 to 75 minutes** (READY, Effort S,
+      strict TDD; owner ruling S1046, 2026-10-23, "Raise it to 75 minutes") -- the diagnosis
+      (`docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`) found that the run cancelled on
+      2026-10-23 (run `39916862256`) spent 31 min 47 s on setup, because `apt` downloads from Ubuntu's
+      server ran at about 52 kB/s (309 to 1,328 kB/s the night before), and that the tests then ran at
+      their normal pace and were cut off with 7 of 21 groups not yet started; that night needed about
+      55 minutes in all (an estimate: 31.8 min of setup plus the 23.6 min the tier took the night
+      before). **The change, two places:** RED edits `tests/testthat/test_shinytest2_workflow_timeout.R`
+      (it pins `45L` at `:30`; its header and `info` text give the 2026-09-27 history and should add
+      this night), GREEN edits `timeout-minutes: 45` at `.github/workflows/shinytest2.yaml:46`. No other
+      file names the number (`git grep` of the workflow, its two tests and this file). The price is a
+      real hang cut off 30 minutes later; the repository is public, so runner minutes cost nothing.
+      Nothing else about the cause is open: why the server was slow is on GitHub's or Ubuntu's side and
+      the logs cannot say. The `gh run list` of each Phase 0 shows whether the 2026-10-24 07:18 UTC run
+      repeated it. No issue is filed (the CI-break convention).
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
