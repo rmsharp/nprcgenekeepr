@@ -57,6 +57,20 @@ calcGUSE <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL) {
   # is the iteration-k value whose mean over iterations equals gu_i / 100.
   rare <- calcA(alleles, threshold, byID)
   iterations <- sum(!(colnames(alleles) %in% c("id", "parent")))
+  guSEFromRare(rare, iterations)
+}
+
+#' The standard error of genome uniqueness from a rare-allele count
+#'
+#' The table \code{calcGUSE()} returns, built from its rare-allele count, so
+#' \code{reportGV()} can build \code{gu} and \code{guSE} from one count.
+#'
+#' @param rare the integer matrix \code{rareAlleleCounts()} returns.
+#' @param iterations the number of gene-drop iterations (columns).
+#' @return Dataframe \code{rows: id, col: guSE}, as \code{calcGUSE()} returns
+#' it.
+#' @noRd
+guSEFromRare <- function(rare, iterations) {
   perColumn <- rare / 2L
 
   # Exact Monte Carlo standard error of the mean, on the gu percentage scale.

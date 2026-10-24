@@ -96,6 +96,19 @@ calcGU <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL) {
   # each simulation and average across all simulated alleles.
   rare <- calcA(alleles, threshold, byID)
   iterations <- sum(!(colnames(alleles) %in% c("id", "parent")))
+  guFromRare(rare, iterations)
+}
+
+#' Genome uniqueness from a rare-allele count
+#'
+#' The table \code{calcGU()} returns, built from its rare-allele count, so
+#' \code{reportGV()} can build \code{gu} and \code{guSE} from one count.
+#'
+#' @param rare the integer matrix \code{rareAlleleCounts()} returns.
+#' @param iterations the number of gene-drop iterations (columns).
+#' @return Dataframe \code{rows: id, col: gu}, as \code{calcGU()} returns it.
+#' @noRd
+guFromRare <- function(rare, iterations) {
   gu <- rowSums(rare) / (2L * iterations)
 
   # convert to a percentage

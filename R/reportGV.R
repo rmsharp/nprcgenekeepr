@@ -261,16 +261,21 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     detail = "Calculating Genome Uniqueness", value = 1L, reset = TRUE
   )
 
+  # Count the probands' rare alleles once, as calcGU() and calcGUSE() each did
+  # (performance plan Phase 1).
+  probandAlleles <- alleles[alleles$id %in% probands, ]
+  rare <- rareAlleleCounts(probandAlleles, threshold = guThresh, byID = byID)
+  iterations <- sum(!(colnames(alleles) %in% c("id", "parent")))
+
   # Calculate genome uniqueness and order the rows of the returned data.frame
-  gu <- calcGU(alleles, threshold = guThresh, byID = byID, pop = probands)
+  gu <- guFromRare(rare, iterations)
   gu <- gu[probands, , drop = FALSE]
 
   # Issue #2 Slice 1: the per-animal Monte Carlo sampling standard error of the
-  # gu estimate, computed from the same rare matrix calcGU() averages (so it is
+  # gu estimate, computed from the same rare matrix gu averages (so it is
   # correct for any guThresh / byID). Carried alongside gu into both the report
-  # and the returned $gu element. (calcGUSE recomputes the rare matrix today;
-  # factoring it out of calcA so gu and guSE share one build is Slice 2's job.)
-  guSE <- calcGUSE(alleles, threshold = guThresh, byID = byID, pop = probands)
+  # and the returned $gu element.
+  guSE <- guSEFromRare(rare, iterations)
   guSE <- guSE[probands, , drop = FALSE]
 
   notifyProgress(

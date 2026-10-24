@@ -32,21 +32,5 @@
 #' library(nprcgenekeepr)
 #' rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
 calcA <- function(alleles, threshold = 1L, byID = FALSE) {
-  ids <- alleles$id
-  alleles <- alleles[, !(names(alleles) %in% c("id", "parent"))]
-
-  countRare <- function(a) {
-    if (byID) {
-      f <- alleleFreq(a, ids)
-    } else {
-      f <- alleleFreq(a)
-    }
-    rareAlleles <- f$allele[f$freq <= threshold]
-    a <- (a %in% rareAlleles)
-    tapply(a, ids, sum)
-  }
-
-  # S925: cbind keeps one row per animal; apply()'s own simplification turned
-  # a single animal's row into a bare vector and dropped its id.
-  do.call(cbind, apply(alleles, 2L, countRare, simplify = FALSE))
+  rareAlleleCounts(alleles, threshold, byID)
 }
