@@ -26,11 +26,11 @@
     {
       "name": "perf_reportGV_example_seconds",
       "direction": "max",
-      "threshold": 4.3,
+      "threshold": 0.8,
       "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
       "command": "Rscript tools/perf/run.R reportGV-example",
       "extract": "SECONDS=([0-9.]+)",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: reportGV() on the example as the app trims it (708 rows, 1,000 iterations, threshold 4) took 3.28 s, median of 3 runs (3.27 to 3.38); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 1 (genome uniqueness) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: reportGV() on the example as the app trims it (708 rows, 1,000 iterations, threshold 4) took 3.28 s, median of 3 runs (3.27 to 3.38); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Tightened S1053 (2026-10-24, Phase 1, genome uniqueness: one fast rare-allele count, built once): the same run took 0.60 s, median of 3 fresh-process runs (0.60, 0.60, 0.61, at load average 9.5 to 10.4; peak 162.9 to 132.9 MB), so 4.3 s becomes 0.8 s by the same rule (0.61 s plus 25%, rounded up to 0.1 s)."
     },
     {
       "name": "perf_geneDrop_example_peak_mb",
