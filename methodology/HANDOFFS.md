@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1053
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- Phase 1 of the performance and memory campaign, genome uniqueness (docs/planning/performance-memory-campaign-plan.md:442, BACKLOG.md:8): one rare-allele count for calcGU() and calcGUSE(), results identical() to frozen copies (D1), an opt-in budget test, a tighter perf_reportGV_example_seconds (owner pick "Speed Phase 1"; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1052
 date: 2026-10-24
 status: complete

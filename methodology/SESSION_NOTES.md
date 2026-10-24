@@ -98,31 +98,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1052 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Perf Phase 0"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner):** Phase 0
-of the performance and memory campaign (`docs/planning/performance-memory-campaign-plan.md:404`): the harness `tools/perf/harness.R` + `tools/perf/run.R` (`Rscript tools/perf/run.R <scenario>`
-from the project root prints one line per call, then `SECONDS=` and `PEAK_MB=`; 20 scenarios, one per row of the plan's section 3, with S1050's exact calls), `tests/testthat/test_perfHarness.R`
-(20 tests), `.Rbuildignore` `^tools$`, `docs/audits/PERF_BASELINE_2026-10-24.md` (3 runs a row, the app memory table, the app script as Appendix A) and 7 gates in `methodology/.quality-gates.json`.
-Claim `0e265fb1c`, RED `df4e236c7`, GREEN `67bc27e4d`, REFACTOR `7bd35faec` (`rawInput()`/`pedInput()`, `pedKinship()`), baselines and gates `9a7392c96`, close-out next; not pushed.
-**Owner calls:** 7 gates, one per later phase (Phases 1, 2, 3, 4, 6, 7, 10; about 79 s a close-out); room +25% time over the slowest run, +10% memory over the peak; the app script stays in the appendix.
-**Findings:** every memory peak was identical in all 3 runs (one fresh process per scenario; the plan's 578 against 300 MB came from same-session runs), so memory gates are exact; times within
-7.1%; `reportGV-example` 3.28 s (plan about 3.5 s; 2.94 s of it `calcGU()` + `calcGUSE()`); the app's resident memory 441 MB at start, 699 after upload + QC, 832 after Genetic Value, 837 at the end.
-**Verification:** `test_perfHarness.R` 20 tests 0 failed (16 s); full suite 454 files 4,344 tests 0 failed 0 errors 198 skipped (after GREEN and after REFACTOR); lint 0 (`lint_package()`, and
-`lintr::lint()` of the two tool files, which `lint_package()` never reads); REFACTOR fingerprint `identical()` (12 inputs, 27 label sets); ratchet 8/8 (results `58d5e14ea1fc`); `devtools::check()`
-0 errors, 0 warnings, 0 notes; the 2026-10-24 07:11 UTC `shinytest2` run green in 24 min 11 s (`origin/master` still has the 45-minute limit).
-**Handoff evaluation of S1051: 8/10.** Helped: Next (1) gave the exact files, the plan's `:404` and `:751` and "six files, two checkpoint commits", all right; "fold my section at your claim"
-(the claim fit, 52,307 B); counting the tests that can see a changed file (used for the gates file and the doc). Missing: the plan's section 3 never recorded the Breeding Groups, backfill and
-diagram calls (S1050's scratch scripts, still on disk, held them); say where a planner's scratch lives. Wrong: "At Phase 0 read the 2026-10-24 07:18 UTC run" (at 06:27 UTC it had not run). ROI: high.
-**Self: 7/10.** + claimed first; probed the RED assumptions (QC with no errors, 708 and 332) first; found S1050's scripts and reproduced every input; proved REFACTOR by fingerprint; measured
-spreads and gate costs before the gates question; checked each app step did its work; every question answered first try. - the first full-suite launch had a trailing `&` and an unset output
-variable (S1040's gotcha, repeated; killed and relaunched); a parser bug in the scratch summary; "6 times" said before counting (7); a cause stated as fact in the doc draft (fixed before commit). Learning 1018.
-**Gotchas:** `lint_package()` never reads `tools/` (lint each tool file); `tools/**` is not on the workflows' `paths-ignore` list (`test_workflowPathsIgnore.R` pins it), so a tools-only push starts CI;
-a `--quick` run is never a baseline; the harness test skips outside the source tree; compare memory only fresh process to fresh process; the app script needs a scratch install (Appendix A).
-**Next (the owner's campaign, in the plan's order):** (1) Phase 1, genome uniqueness (plan `:442`, `BACKLOG.md:8`), strict TDD, every gate to the owner: frozen copies of `calcA()`, `calcGU()`
-and `calcGUSE()` in `tests/testthat/helper-perfReference.R` (`git show 520bd5dc8:R/<file>`), equivalence tests on `rareAlleleCounts()` (RED: it does not exist), an opt-in budget test
-(`NPRC_RUN_PERF=true`), then `run.R reportGV-example` before and after and tighten `perf_reportGV_example_seconds`. (2) Phase 2 after it. Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203`, #138.
+### What Session 1053 Did
+**Deliverable:** Phase 1 of the performance and memory campaign, genome uniqueness (`docs/planning/performance-memory-campaign-plan.md:442`,
+`BACKLOG.md:8`): count the rare alleles once for `calcGU()` and `calcGUSE()`, results `identical()` to frozen copies of today's functions (D1),
+an opt-in budget test, and a tighter `perf_reportGV_example_seconds` (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 1";
+strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates to the owner)
+**Started:** 2026-10-24
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1051 (condensed S950 to S1052; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1052 (condensed S950 to S1053; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1052: Phase 0 of the performance and memory campaign (owner pick "Perf Phase 0", strict TDD): the harness `tools/perf/harness.R` + `tools/perf/run.R`
+(`Rscript tools/perf/run.R <scenario>` from the root prints `SECONDS=` and `PEAK_MB=`; 20 scenarios, one per row of the plan's section 3),
+`tests/testthat/test_perfHarness.R` (20 tests), `docs/audits/PERF_BASELINE_2026-10-24.md` (`reportGV()` on the example 3.28 s, 2.94 s of it
+`calcGU()` + `calcGUSE()`) and 7 ratchet gates, one per later phase (+25% time, +10% memory). Claim `0e265fb1c`, RED `df4e236c7`, GREEN
+`67bc27e4d`, REFACTOR `7bd35faec`, gates `9a7392c96`, close-out `a9ce04253`; evaluation of S1051 8/10, self 7/10 (Learning 1018). **Gotchas
+kept:** `lint_package()` never reads `tools/` (lint each tool file with `lintr::lint()`); a tools-only push starts CI; a `--quick` run is
+never a baseline; memory peaks repeat exactly fresh process to fresh process (never compare same-session peaks); a background run is the
+command itself, never a trailing `&`; planners' scratch scripts may survive under the scratchpad folders.
 S1051: the owner's rulings on D1-D4 of the performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed, D2 plain R with
 C++ revisited at Phase 11, D3 the 18 exported functions in scope unchanged, D4 opt-in budget tests plus ratchet gates), and the plan approved as written
 (`docs/planning/performance-memory-campaign-plan.md:4,58-62,308-345`; owner pick "Rule on D1-D4", a decision session). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out
