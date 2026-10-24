@@ -71,6 +71,7 @@ calcGUSEReference <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 }
 
 ## Phase 1 (genome uniqueness): R/reportGV.R at 520bd5dc8.
+## Phase 2 points its two geneDrop() calls at geneDropReference().
 reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
@@ -151,7 +152,7 @@ reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   zScores <- scale(indivMeanKin)
 
   # Perform the gene drop simulation
-  alleles <- geneDrop(
+  alleles <- geneDropReference(
     ids = ped$id, sires = ped$sire, dams = ped$dam,
     gen = ped$gen, genotype = genotype, n = guIter,
     updateProgress = updateProgress
@@ -205,7 +206,7 @@ reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   hasCodes <- !is.null(genotype) &&
     any(!is.na(genotype$first) | !is.na(genotype$second))
   founderAlleles <- if (hasCodes) {
-    geneDrop(
+    geneDropReference(
       ids = ped$id, sires = ped$sire, dams = ped$dam,
       gen = ped$gen, genotype = NULL, n = guIter,
       updateProgress = NULL
@@ -297,4 +298,78 @@ reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   class(finalData) <- append(class(finalData), "nprcgenekeeprGV")
 
   finalData
+}
+
+## Phase 2 (the gene drop): R/geneDrop.R at 520bd5dc8. It calls the live
+## hasInvalidIdChar(), toCharacter(), notifyProgress(), assignAlleles() and
+## getGenoDefinedParentGenotypes(), which Phase 2 does not change.
+geneDropReference <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
+                     updateProgress = NULL) {
+  badIds <- hasInvalidIdChar(as.character(ids))
+  if (any(badIds)) {
+    stop("geneDrop(): animal IDs must not contain a period ('.'); ",
+         "offending id(s): ", toString(unique(as.character(ids)[badIds])))
+  }
+  dupIds <- duplicated(as.character(ids))
+  if (any(dupIds)) {
+    stop("geneDrop(): animal IDs must be unique; ",
+         "duplicated id(s): ", toString(unique(as.character(ids)[dupIds])))
+  }
+  ## Sort the IDs by generation so older generations are first
+  ped <- data.frame(
+    id = ids, sire = sires, dam = dams, gen,
+    stringsAsFactors = FALSE
+  )
+  ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
+  rownames(ped) <- ids
+  ped <- ped[order(gen), ]
+  if (!is.null(genotype)) {
+    genotype <- genotype[!(is.na(genotype$first) & is.na(genotype$second)), ]
+    genoDefined <- TRUE
+  } else {
+    genoDefined <- FALSE
+  }
+
+  alleles <- list(alleles = list(), counter = 1L)
+
+  notifyProgress(
+    updateProgress,
+    detail = "Performing Gene-drop Simulation", value = 0L, reset = TRUE
+  )
+
+  ## Iterate through each ID and get the maternal and paternal alleles
+  for (id in ped$id) {
+    alleles$alleles[[id]] <- list()
+    sire <- ped[id, "sire"]
+    dam <- ped[id, "dam"]
+    assigned <- FALSE
+    if (genoDefined && any(genotype$id == id)) {
+      alleles <- getGenoDefinedParentGenotypes(alleles, genotype, id, sire,
+                                               dam, n)
+      assigned <- TRUE
+    }
+    if (!assigned) {
+      alleles <- assignAlleles(alleles, "sire", sire, id, n)
+      alleles <- assignAlleles(alleles, "dam", dam, id, n)
+    }
+
+    notifyProgress(updateProgress, n = nrow(ped))
+  }
+
+  # Convert the list of alleles to a data.frame
+  alleles <- as.data.frame(t(data.frame(alleles$alleles, check.names = FALSE)))
+  keys <- strsplit(rownames(alleles), ".", fixed = TRUE)
+
+  id <- character(0L)
+  parent <- character(0L)
+  for (i in seq_along(keys)) {
+    key <- keys[[i]]
+    id <- c(id, key[1L])
+    parent <- c(parent, key[2L])
+  }
+
+  alleles$id <- id
+  alleles$parent <- parent
+  rownames(alleles) <- seq_len(nrow(alleles))
+  alleles
 }
