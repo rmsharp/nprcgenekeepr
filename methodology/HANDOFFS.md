@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1051
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- record the owner's rulings on decisions D1-D4 of the performance and memory campaign plan (docs/planning/performance-memory-campaign-plan.md section 6) and move BACKLOG.md:8 to READY for Phase 0 (owner pick "Rule on D1-D4"; a decision session, no R/ or test change)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1050
 date: 2026-10-24
 status: complete

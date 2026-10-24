@@ -98,34 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1050 Did
-**Deliverable, DONE (owner-directed in prose after the Phase 0 report: "examine the code to refactor the code with the primary goals of smaller memory footprint and faster
-processing of time intensive work", then "expected to take multiple sessions with planning being very important"; a planning session, no `R/` or test change, so no TDD gates):** the
-campaign plan, `docs/planning/performance-memory-campaign-plan.md` (`0bc77f06a`): measured baselines, root causes H1-H10 with file:line, 12 phases (0 harness and gates, 1 genome
-uniqueness, 2 gene drop, 3 relationship table, 4 group formation, 5 founder statistics, 6 kinship memory, 7 diagram solver, 8 app-memory design, 9 its build, 10 follow-through,
-11 consolidation), each one strict-TDD session with exactness against frozen reference copies, an opt-in budget test and a named surface; the grep inventory; decisions D1-D4 now, D5-D8
-in their phases. Measured at the app's defaults: `reportGV()` on the example about 3.5 s, 2.9 s of it in `calcGU()` + `calcGUSE()` (one rare-allele count built twice); the two relationship
-downloads do not finish (600 animals 65 s, about 10x per doubling); 1,000 group trials 23.6 s; the Diagram at 708 animals 13.9 s; the app caches a 104.6 MB full-pedigree kinship matrix.
-Two scratch prototypes are `identical()` (rare-allele count 14-23x with `byID = TRUE`, gene drop 2.6-7.7x); `solve.QP.compact()` 11.6 to 3.0 s, identical positions. Claim `4738c7a37`,
-deliverable `0bc77f06a`, BACKLOG item `1a1779668` (`BACKLOG.md:8`, first in Up Next), close-out next. Not pushed (198 ahead after the close-out).
-**Verification:** every number in the plan traced to a scratch run log (not committed; the code is in the plan's Appendices A and B); every line cite re-grepped; the 21 test files that
-read `BACKLOG.md` give 452 tests 0 failed and the other files that mention it 1,616 tests 0 failed; ratchet 1/1 (results `1cd5c0c24e34`). Runtime: n/a, docs only.
-**Handoff evaluation of S1049: 9/10.** Helped: "condense the previous section when writing a new one (this file's cap is about 56,750 B)": the hook refused my stub and that line was
-the fix; the ledger and push state (194 ahead, `origin/master` reads 45) were exact; the tagged Next list made the picker quick. Missing: the hook counts tokens (25,000), and at 56,409 B
-the file had about 150 tokens of room, so even a 6-line stub was refused: say "fold my section at your claim". Wrong: nothing (its "2026-10-24 07:18 UTC run" is tonight's run). ROI: high.
-**Self: 8/10.** + claimed first; measured before writing; prototypes proved `identical()` on 12 cases and the genotype path; found a mock that would go vacuous, a BLAS-dependent `crossprod()`,
-the pinned progress calls; re-read the draft and fixed a peak taken from a broken run, a speedup range true only for `byID = TRUE`, two line numbers, missing per-phase surfaces. - the first
-harness read the wrong `gc()` column; an `awk` with an empty file argument hung; a probe lacked the required `guThresh`; the zsh word-split gotcha cost two runs; a status nudge in Phase 0.
-Learning 1016.
-**Gotchas:** R 4.6's `gc()` has a "limit (Mb)" column, so find "max used" by name; its high-water mark varied 2x between runs (compare same-run pairs); `backfillColonySnapshots()` needs
-`guThresh`; the jmac file is 4,055 rows after QC; `kinship(sparse = TRUE)` is 85x slower than dense on 3,694 animals; `test_file()` changes the working directory (pass absolute paths);
-in zsh pass a file list through `xargs`, never an unquoted `$files`; give `awk` `< /dev/null` when its file variable may be empty; `BACKLOG.md` cites below line 8 moved down 14 lines.
-**Next (the owner's own direction: a multi-session campaign, so these come first):** (1) the owner reads the plan's sections 1 and 6 and rules D1-D4 (recommended: yes to all four);
-recording the rulings in the plan's Status line and section 6 is a decision record, not a go-ahead for code. (2) Phase 0 (plan section 7): `tests/testthat/test_perfHarness.R` first (RED),
-then `tools/perf/harness.R` and `run.R` from Appendix A, the baseline doc, the app memory table through `shinytest2`, gates at today's values. (3) Phase 1 after Phase 0. Still open: the
-snapshot wording (`BACKLOG.md:55`, DECISION NEEDED), tutorial leftovers (`BACKLOG.md:59`), the `CHANGELOG.md` lever (`BACKLOG.md:145`), #138; the 75-minute `shinytest2` fix is local only.
+### What Session 1051 Did
+**Deliverable:** record the owner's rulings on decisions D1-D4 of the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`
+section 6) in its Status line and section 6, and move `BACKLOG.md:8` from DECISION NEEDED to READY for Phase 0 (owner pick at the Phase 0 picker, item 1 of 4,
+"Rule on D1-D4"; a decision session, no `R/` or test change, so no TDD gates) (IN PROGRESS)
+**Started:** 2026-10-24, about 00:55 CDT
+**Status:** Session claimed. Work beginning. Phase 0 found both ledgers current (frontier = HEAD `0a1727714`, gap 0, no merges, no pending receipt, ratchet `1cd5c0c24e34` matches).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1049 (condensed S950 to S1050; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1050 (condensed S950 to S1051; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; owner-directed in prose, a planning session, no `R/` or test
+change): measured baselines, root causes H1-H10 with file:line, 12 phases (each one strict-TDD session, exactness against frozen reference copies, an opt-in budget
+test, a named surface), the grep inventory, decisions D1-D4 now and D5-D8 in their phases; `reportGV()` on the example about 3.5 s (2.9 s in `calcGU()` + `calcGUSE()`),
+the relationship downloads never finish, a 104.6 MB cached kinship matrix; two prototypes `identical()` to today's functions. Claim `4738c7a37`, deliverable `0bc77f06a`,
+BACKLOG item `1a1779668`, close-out `0a1727714`; evaluation of S1049 9/10, self 8/10 (Learning 1016). **Gotchas kept:** R 4.6's `gc()` has a "limit (Mb)" column (find
+"max used" by name) and its high-water mark varies 2x between runs (compare same-run pairs); `backfillColonySnapshots()` needs `guThresh`; `kinship(sparse = TRUE)` is
+85x slower than dense on 3,694 animals; `test_file()` changes the working directory (absolute paths); in zsh pass a file list through `xargs`.
 S1049: the trend chart leaves a blank metric value out of the drawing without a console warning (`na.rm = TRUE` on four layers,
 `R/plotSnapshotTrends.R:125,131,134`; the jmac example at 10 iterations gave 3 warnings, now 0, PNG byte-identical), and three tests pin the panel notice's
 200-character cut (`R/modSnapshotTrends.R:427`; `tests/testthat/test_modSnapshotTrends.R:857,863,873`; their RED is four broken copies of the cut); owner pick
