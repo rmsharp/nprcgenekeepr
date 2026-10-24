@@ -1,7 +1,8 @@
 # Performance and Memory Campaign: Plan
 
 **Session:** S1050, 2026-10-24. A planning session: nothing under `R/` or `tests/` changed.
-**Status:** DRAFT for owner approval of the plan and of decisions D1 to D4 (section 6).
+**Status:** APPROVED by the owner, S1051 (2026-10-24): the plan as written, and D1 to D4 each
+ruled as recommended (section 6). Phase 0 is next.
 **Owner's direction (S1050):** "As an architect and engineer examine the code to refactor the
 code with the primary goals of smaller memory footprint and faster processing of time intensive
 work", then "This is expected to take multiple sessions with planning being very important."
@@ -54,11 +55,11 @@ prototypes written this session already do: the faster rare-allele count and the
 are `identical()` to today's functions on 3 inputs x 4 settings and on the genotype path, integer
 and double codes (Appendix B, section 3.3).
 
-### What the owner decides now
+### What the owner decided (S1051, 2026-10-24)
 
 D1 exact results, D2 plain R first, D3 exported functions unchanged, D4 where the speed and
-memory budgets live. Each has a recommendation in section 6. Four later decisions (D5 to D8) are
-asked in the phase that needs them, never now.
+memory budgets live: the owner ruled all four as recommended (section 6) and approved the plan as
+written. Four later decisions (D5 to D8) are asked in the phase that needs them, never earlier.
 
 ---
 
@@ -241,9 +242,10 @@ the random stream (D1), so it is not proposed.
 
 1. **Exact equivalence** (D1). Each phase proves `identical()` against a frozen copy of
    today's function, on a grid of inputs and seeds (section 5.1).
-2. **The public interface does not move** (D3). The 20 exported functions in scope keep their
-   arguments, defaults, messages, warnings and results. The speed lives in internal helpers they
-   call ("deep modules": `ARCHITECTURE_WORKSTREAM.md` §Refactor Heuristics).
+2. **The public interface does not move** (D3). The 18 exported functions in scope (listed
+   under D3 in section 6) keep their arguments, defaults, messages, warnings and results. The
+   speed lives in internal helpers they call ("deep modules": `ARCHITECTURE_WORKSTREAM.md`
+   §Refactor Heuristics).
 3. **One hotspot per session**, with checkpoint commits under the 5-file cap
    (`methodology/SAFEGUARDS.md` §Blast Radius Limits).
 4. **Measure before and after on the same harness** (Phase 0), on the same machine, in the
@@ -303,7 +305,8 @@ the random stream (D1), so it is not proposed.
 
 ## 6. Decisions for the owner
 
-**Now, to approve the plan:**
+**Ruled by the owner, S1051 (2026-10-24), each as recommended, with the plan approved as
+written:**
 
 - **D1. Exact results.** *Recommended:* every change must give exactly today's numbers for the
   same inputs and random seed. A change that would alter the random stream (for example one
@@ -311,21 +314,35 @@ the random stream (D1), so it is not proposed.
   phase. *Consequence:* a few larger speedups are off the table; the measured gains in section 3.3
   do not need them. *Alternative:* allow results that are statistically equivalent but not
   identical. That gains more speed, but the existing pinned tests would have to change and every
-  comparison would need a statistical tolerance.
+  comparison would need a statistical tolerance. **Ruling (S1051): exactly the same.**
 - **D2. Plain R first.** *Recommended:* no compiled code (C++ through Rcpp) in this campaign;
   revisit at Phase 11 with the measured hotspots that remain. *Consequence:* no new build toolchain
   for anyone installing from source on Windows or macOS, and no compiled-code CRAN checks; the
   ceiling is lower. *Alternative:* allow Rcpp now, for the gene drop and kinship loops especially.
-- **D3. Exported functions unchanged.** *Recommended:* the 20 exported functions in scope keep
+  **Ruling (S1051): plain R, revisited at Phase 11.** (The package has no compiled code today: no
+  `src/` directory, no `LinkingTo` or `useDynLib`.)
+- **D3. Exported functions unchanged.** *Recommended:* the exported functions in scope keep
   their arguments and results; the fast paths are internal helpers. *Consequence:* some memory is
   left on the table (for example `geneDrop()` still returns a data frame with one column per
   iteration), but no script that calls the package breaks. *Alternative:* change some results
   (for example `geneDrop()` returning a matrix), with deprecation notes and a NEWS entry.
+  **Ruling (S1051): unchanged.** The draft said "20 exported functions in scope" without a list;
+  section 7 gives 18, each checked against `NAMESPACE`. Twelve have their own file edited by a
+  phase: `calcA`, `calcGU`, `calcGUSE`, `reportGV` (Phases 1, 5), `geneDrop` (2),
+  `convertRelationships` (3), `calcRetention`, `calcFEFG`, `calcFGSE` (5), `kinship`,
+  `kinMatrix2LongForm`, `getAnimalsWithHighKinship` (6). Six keep identical results through
+  code a phase edits beneath them: `gvaConvergence` (through `calcA`, Phase 1),
+  `groupAddAssign` (through `fillGroupMembers()` and its helpers, 4), `calcFE` and `calcFG`
+  (through `calcFounderContributions()`, 5), `makePedigreeMatingLayout` (through
+  `.solveJointQP()`, 7), `backfillColonySnapshots` (through `reportGV`, re-measured in 10).
+  `alleleFreq`, `assignAlleles` and `chooseAlleles` are in section 8's inventory but no phase
+  edits them.
 - **D4. Where the budgets live.** *Recommended:* speed and memory budgets as opt-in tests
   (`NPRC_RUN_PERF=true`, like the browser tier's `NPRC_RUN_E2E`), plus ratchet gates for memory
   peaks; the exactness tests run in the normal suite. *Consequence:* the normal suite does not
   become flaky under desktop load; budgets are checked when someone runs them or the ratchet.
-  *Alternative:* budgets in the normal suite, which is simpler but flaky.
+  *Alternative:* budgets in the normal suite, which is simpler but flaky. **Ruling (S1051):
+  opt-in budget tests plus ratchet gates.**
 
 **Later, each in the phase that needs it:**
 

@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: the owner approves the plan and rules D1-D4, then Phase 0
-      (owner-directed S1050; DECISION NEEDED, then READY; Effort M per phase, 12 phases, each its own
+- [ ] **Performance and memory campaign: Phase 0, the measuring harness (owner-directed S1050;
+      plan approved and D1-D4 ruled S1051; READY; Effort M per phase, 12 phases, each its own
       strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (S1050,
       `0bc77f06a`). Measured on the example at the app's defaults: the Genetic Value analysis takes
       about 3.5 s, 2.9 s of it in `calcGU()` + `calcGUSE()` (the same rare-allele count built twice);
       the two relationship downloads do not finish (600 animals take 65 s, about 10x per doubling,
       and the example has 3,694); Breeding Groups at 1,000 trials takes 23.6 s; the Diagram at 708
       animals 13.9 s; the app caches one full-pedigree kinship matrix (104.6 MB, n x n x 8 B) for six
-      tabs. **Decisions first (plan section 6, each with a recommendation):** D1 exact results
-      (`identical()` for the same seed), D2 plain R first (no Rcpp), D3 exported functions unchanged,
-      D4 opt-in budget tests plus ratchet gates. Then Phase 0: the measuring harness (`tools/perf/`),
-      the baselines doc and the gates, with no package behavior change; Phase 1 (genome uniqueness)
-      after it. D5-D8 are asked in their own phases.
+      tabs. **Ruled S1051, each as recommended (plan section 6):** D1 exact results (`identical()`
+      for the same seed), D2 plain R first (no Rcpp), D3 the 18 exported functions in scope unchanged,
+      D4 opt-in budget tests plus ratchet gates. Next, Phase 0 (plan section 7): the harness
+      (`tools/perf/`), the baselines doc and the gates, with no package behavior change; Phase 1
+      (genome uniqueness) after it. D5-D8 are asked in their own phases.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
