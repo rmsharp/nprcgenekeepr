@@ -807,6 +807,18 @@ noticesOfBuildWith <- function(notes, .env = parent.frame()) {
          character(1L))
 }
 
+## The warning notice when a build raises one note, or several joined by a bar.
+## The sentence is the owner's wording (S1040) and is spelled out here only.
+oneNoteNotice <- function(note) {
+  paste0("Earlier snapshots were built; the calculation gave this note: ", note)
+}
+severalNotesNotice <- function(joinedNotes) {
+  paste0(
+    "Earlier snapshots were built; the calculation gave these notes: ",
+    joinedNotes
+  )
+}
+
 test_that("a build that raises no note gives no warning notice", {
   skip_if_not_installed("shiny")
   expect_length(noticesOfBuildWith(character(0L)), 0L)
@@ -816,7 +828,7 @@ test_that("a note raised twice is shown once, with no count", {
   skip_if_not_installed("shiny")
   expect_identical(
     noticesOfBuildWith(c("note A", "note A")),
-    "Earlier snapshots were built; the calculation gave this note: note A"
+    oneNoteNotice("note A")
   )
 })
 
@@ -824,8 +836,7 @@ test_that("several different notes are listed in the order they came, joined by 
   skip_if_not_installed("shiny")
   expect_identical(
     noticesOfBuildWith(c("note A", "note B", "note A")),
-    paste("Earlier snapshots were built; the calculation gave these notes:",
-          "note A | note B")
+    severalNotesNotice("note A | note B")
   )
 })
 
@@ -833,8 +844,7 @@ test_that("at most three different notes are shown", {
   skip_if_not_installed("shiny")
   expect_identical(
     noticesOfBuildWith(c("note A", "note B", "note C", "note D")),
-    paste("Earlier snapshots were built; the calculation gave these notes:",
-          "note A | note B | note C")
+    severalNotesNotice("note A | note B | note C")
   )
 })
 
@@ -843,9 +853,6 @@ test_that("at most three different notes are shown", {
 ## genome equivalents undefined: ...") is 159 characters, so the cut never
 ## fired on it, and no test pinned it (a mutation check in S1040 survived a
 ## change of the number).
-oneNoteNotice <- function(note) {
-  paste0("Earlier snapshots were built; the calculation gave this note: ", note)
-}
 
 test_that("a note of 200 characters is shown whole", {
   skip_if_not_installed("shiny")
@@ -867,8 +874,7 @@ test_that("each note is cut on its own, before the notes are joined", {
   skip_if_not_installed("shiny")
   expect_identical(
     noticesOfBuildWith(c(strrep("a", 250L), strrep("b", 250L))),
-    paste(
-      "Earlier snapshots were built; the calculation gave these notes:",
+    severalNotesNotice(
       paste(strrep("a", 200L), strrep("b", 200L), sep = " | ")
     )
   )
