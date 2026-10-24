@@ -98,39 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1054 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 2: gene drop"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner):**
-Phase 2 of the performance and memory campaign, the gene drop (`docs/planning/performance-memory-campaign-plan.md:479`). `R/geneDrop.R`: `geneDrop()` keeps its id checks;
-`geneDropPlan()` (`:182`, internal) admits an ordinary pedigree; the fast path (`:116-158`) fills one matrix, a sire and a dam column per animal, and finds parents by position;
-`geneDropGeneral()` (`:242`, internal) is today's code word for word for any other input (owner ruling). Tests: `geneDropReference()` (`tests/testthat/helper-perfReference.R:306`),
-`test_geneDropEquivalence.R` (4 tests, 100 expectations), `test_perfBudget_geneDrop.R` (opt-in), `helper-perfCampaign.R` (the campaign's shared test inputs, one copy each).
-Claim `394bcf73a`, RED `2636941cb`, GREEN `e72a5b8ed`, REFACTOR `077ca3321` `cb1dc8280`, gate `3171454d4`, close-out next; not pushed.
-**Owner calls:** the fallback as in Phase 1 (the owner asked if those inputs can get faster code later: yes, class by class, noted for Phase 11 at `BACKLOG.md:8`); the
-synthetic-colony budget (2.4 s); every gate as offered (REFACTOR: a comment and one shared test helper file).
-**Findings:** the plan's prototype differed from today on 9 of 36 unusual inputs, the built code on none (17 fast, 19 fallback). At 1,000 iterations in fresh processes: the app's
-trim 0.145 to 0.076 s (peak 128.2 to 84.1 MB); all 3,694 animals 1.87 to 0.43 s; the synthetic colony 4.52 to 0.78 s (0.35 s warm); the gate's stage 148.5 to 65.1 MB (gate 164
-to 72 MB); `reportGV()` on the example 0.60 to 0.51 s and the backfill 1.87 to 1.63 s (Phases 1 and 10 own those gates). One equivalent mutant: an integer matrix turns double on
-the first double code stored, which is when today's table is double, so starting double only saves a copy (a comment says so).
-**Verification:** full suite 458 files, 4,357 tests, 0 failed, 0 errors, 200 skipped (after GREEN and after REFACTOR); lint 0; `document()` changed nothing; 12 mutants, 11 caught,
-1 equivalent; ratchet 8/8 (results `8523246427be`); the three Genetic Value browser files opted in, from a scratch install: 22 tests, 0 failed, 0 skipped; `devtools::check()` 0 errors,
-0 warnings, 0 notes.
-**Handoff evaluation of S1053: 9/10.** Helped: Next (1) was exact and every cite held (`helper-perfReference.R:154` and `:208`, `R/geneDrop.R:97-106`, `test_notifyProgress.R:195-209`);
-the gotcha that `mockery::stub()` reaches only `geneDrop()`'s own body decided where the fast loop lives; the opt-in browser recipe. Missing: the plan's issue #37 step depends on
-the fallback choice (settled at the approach question). Wrong: "double when the genotype codes are double" holds only when a double code is stored (2 of 36 inputs differ);
-"53,239 B" was 53,444 B. ROI: high.
-**Self: 8/10.** + claimed first; probed 36 odd inputs and timed three inputs for both codes before RED; one approach question with measured counts, the owner's follow-up answered
-in prose; the frozen copy and the moved body proved by diff; the budget input chosen by its ratio; 12 mutants with the survivor explained, not hidden; REFACTOR proved by identical
-counts; the gate measured in fresh processes; browser smoke. - `echo ======` in zsh again (a kept gotcha); two probe cases first hit rows the filter removes (caught before RED);
-GREEN's message amended after its mutation run (commit first, then mutate). Learning 1020.
-**Gotchas:** `convertRelationships()` is stubbed the same way (`test_notifyProgress.R:232-235`), so its per-pair progress call stays in its own body; pick a budget input whose speedup
-is well over 3x (Learning 1020); the browser tests need a scratch install and `NPRC_RUN_E2E=true`, the budget tests `NPRC_RUN_PERF=true` and the source tree; a new campaign test
-takes its shared inputs from `helper-perfCampaign.R`, not a copy.
-**Next (the owner's campaign, in the plan's order):** (1) Phase 3, the relationship table (plan `:504`, `BACKLOG.md:8`), strict TDD, every gate to the owner: a frozen
-`convertRelationshipsReference()` (`git show 520bd5dc8:R/convertRelationships.R`); probe today's function on odd inputs first; (a) preallocate, then (b) vector classification in the
-rule order if it fits; every pair's class on `qcPed` and the example's first 600 animals; an opt-in budget; tighten `perf_convertRelationships_300_seconds` (8.0 s; 6.84 s at S1054);
-both downloads must finish in the app (browser tier). (2) Phase 11: the fallbacks' input classes. Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
+### What Session 1055 Did
+**Deliverable:** Phase 3 of the performance and memory campaign, the relationship table (`docs/planning/performance-memory-campaign-plan.md:504`,
+`BACKLOG.md:8`): both relationship downloads finish on the example with the same rows and classes (owner pick at the Phase 0 picker, item 1 of 4,
+"Speed Phase 3"; strict TDD, every gate to the owner). (IN PROGRESS)
+**Started:** 2026-10-24
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1053 (condensed S950 to S1054; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1054 (condensed S950 to S1055; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1054: Phase 2 of the performance and memory campaign, the gene drop (owner pick "Speed Phase 2: gene drop", strict TDD): `R/geneDrop.R`
+keeps `geneDrop()`'s id checks; `geneDropPlan()` (internal) admits an ordinary pedigree and the fast path fills one matrix (a sire and a dam
+column per animal) and finds parents by position; any other input runs `geneDropGeneral()` (today's code word for word, owner ruling); the
+gate's stage 148.5 to 65.1 MB (`perf_geneDrop_example_peak_mb` 164 to 72). Claim `394bcf73a`, RED `2636941cb`, GREEN `e72a5b8ed`, REFACTOR
+`077ca3321` `cb1dc8280`, gate `3171454d4`, close-out `dc5e4b005`; evaluation of S1053 9/10, self 8/10 (Learning 1020). **Gotchas kept:**
+`mockery::stub()` reaches only a function's own body, so a per-item progress call stays there; pick a budget input whose speedup is well over
+3x; shared campaign test inputs live in `tests/testthat/helper-perfCampaign.R`; in zsh printf a separator, never `echo ======`.
 S1053: Phase 1 of the performance and memory campaign, genome uniqueness (owner pick "Speed Phase 1", strict TDD): `R/rareAlleleCounts.R`
 (internal) counts a table shaped like `geneDrop()`'s with `match()` and `tabulate()`; `geneDropShape()` admits only tables where that equals
 today's count, and any other goes to `rareAlleleCountsGeneral()` (today's `calcA()` word for word, owner ruling); `guFromRare()`,

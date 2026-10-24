@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1055
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- Phase 3 of the performance and memory campaign, the relationship table (docs/planning/performance-memory-campaign-plan.md:504, BACKLOG.md:8): convertRelationships() returns the same rows and classes, identical() to a frozen convertRelationshipsReference(), fast enough that both relationship downloads finish on the example (owner pick "Speed Phase 3"; strict TDD, every gate to the owner)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1054
 date: 2026-10-24
 status: complete
