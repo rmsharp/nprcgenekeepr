@@ -22,6 +22,69 @@
       "command": "X=$(mktemp -d) && mkdir \"$X/src\" \"$X/out\" && git archive HEAD | tar -x -C \"$X/src\" && Rscript -e \"cat(sprintf('TARBALL_BYTES=%.0f', file.size(pkgbuild::build('$X/src', dest_path = '$X/out', quiet = TRUE))))\" ; rc=$?; rm -rf \"$X\"; exit $rc",
       "extract": "TARBALL_BYTES=(\\d+)",
       "why": "Declared S728 (2026-09-19, owner-approved follow-up from docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md Finding 5): clean-export build measured 3,485,185 B at f8ffa40b; the gate at 5 MB catches a scratchpad-class leak or runaway growth long before CRAN's 10 MB line. Measures a `git archive HEAD` export (the artifact a fresh clone / CRAN submission gets), never the working tree -- working-tree leaks are the .Rbuildignore/.gitignore hygiene entries' job. Full build with vignettes; ~1-3 min per run, inside the ratchet's 600 s timeout."
+    },
+    {
+      "name": "perf_reportGV_example_seconds",
+      "direction": "max",
+      "threshold": 4.3,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R reportGV-example",
+      "extract": "SECONDS=([0-9.]+)",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: reportGV() on the example as the app trims it (708 rows, 1,000 iterations, threshold 4) took 3.28 s, median of 3 runs (3.27 to 3.38); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 1 (genome uniqueness) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_geneDrop_example_peak_mb",
+      "direction": "max",
+      "threshold": 164,
+      "unit": "MB (gc() peak above the start, from tools/perf/harness.R measure(); on this Mac)",
+      "command": "Rscript tools/perf/run.R gvStages-example",
+      "extract": "geneDrop \\(n = 1000\\) +[0-9.]+ s  peak +([0-9.]+) MB",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: geneDrop() on the example as the app trims it (the geneDrop row of the stage table, 1,000 iterations) peaked at 148.5 MB in all 3 runs; threshold = the peak plus 10%, rounded up to a whole MB; the peak was the same in all 3 runs, because each scenario runs in a fresh process (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 2 (the gene drop) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_convertRelationships_300_seconds",
+      "direction": "max",
+      "threshold": 8.0,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R convertRelationships-300",
+      "extract": "SECONDS=([0-9.]+)",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: convertRelationships() on the first 300 example animals (45,150 rows: every pair, self-pairs included) took 6.28 s, median of 3 runs (6.27 to 6.34); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 3 (the relationship table) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_groupAddAssign_1000_seconds",
+      "direction": "max",
+      "threshold": 29.2,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R groupAddAssign-1000",
+      "extract": "SECONDS=([0-9.]+)",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: groupAddAssign() with 6 groups and 1,000 trials on the tutorial's 280 candidates took 23.04 s, median of 3 runs (23.02 to 23.30); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 4 (group formation) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_kinMatrix2LongForm_all_peak_mb",
+      "direction": "max",
+      "threshold": 1077,
+      "unit": "MB (gc() peak above the start, from tools/perf/harness.R measure(); on this Mac)",
+      "command": "Rscript tools/perf/run.R kinMatrix2LongForm-all",
+      "extract": "PEAK_MB=([0-9.]+)",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: kinMatrix2LongForm() of the whole example's kinship matrix (3,694 animals, 13,645,636 rows) peaked at 979.0 MB in all 3 runs; threshold = the peak plus 10%, rounded up to a whole MB; the peak was the same in all 3 runs, because each scenario runs in a fresh process (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 6 (kinship memory) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_diagram_example_direct_seconds",
+      "direction": "max",
+      "threshold": 16.1,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R diagram-example-direct",
+      "extract": "SECONDS=([0-9.]+)",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: makePedigreeMatingLayout(edgeStyle = \"direct\") on the example as the app trims it (708 animals) took 12.81 s, median of 3 runs (12.76 to 12.82); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 7 (the diagram's solver) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_backfill_jmac_seconds",
+      "direction": "max",
+      "threshold": 11.9,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R backfill-jmac",
+      "extract": "SECONDS=([0-9.]+)",
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: backfillColonySnapshots() on the jmac studbook at 3 dates with 1,000 iterations took 9.42 s, median of 3 runs (9.36 to 9.46); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 10 (snapshot backfill follow-through) is meant to lower it and tightens this gate."
     }
   ]
 }
