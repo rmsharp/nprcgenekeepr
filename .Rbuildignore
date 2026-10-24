@@ -52,6 +52,9 @@ README\.*\.png$
 ^vignettes/articles$
 ^data-raw$
 ^dev$
+# The performance campaign's measuring harness, tools/perf/, S1052: run from the
+# source tree only, never shipped.
+^tools$
 ^doc$
 ^Meta$
 ^revdep$
