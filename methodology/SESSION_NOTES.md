@@ -99,12 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1051 Did
-**Deliverable:** record the owner's rulings on decisions D1-D4 of the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`
-section 6) in its Status line and section 6, and move `BACKLOG.md:8` from DECISION NEEDED to READY for Phase 0 (owner pick at the Phase 0 picker, item 1 of 4,
-"Rule on D1-D4"; a decision session, no `R/` or test change, so no TDD gates) (IN PROGRESS)
-**Started:** 2026-10-24, about 00:55 CDT
-**Status:** Session claimed. Work beginning. Phase 0 found both ledgers current (frontier = HEAD `0a1727714`, gap 0, no merges, no pending receipt, ratchet `1cd5c0c24e34` matches).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Rule on D1-D4"; a decision session, no `R/` or test change, so no TDD gates):** the owner ruled D1-D4 of the
+performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed; D2 plain R, C++ revisited at Phase 11; D3 the exported functions in scope
+unchanged; D4 opt-in budget tests plus ratchet gates), then approved the plan as written in a second question (the item asked for both; the four-question box held D1-D4).
+Recorded at `docs/planning/performance-memory-campaign-plan.md:4` (Status APPROVED), `:58-62` and `:308-345`; D3's unbacked "20 exported functions in scope" is now the 18 the
+phases give, listed with their call paths (`:329`); `BACKLOG.md:8` READY for Phase 0 (same 13 lines). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out next; 201 ahead, not pushed.
+**Verification:** no test reads the plan; the 2 test files that read `BACKLOG.md` and the 2 that name it in code give 28 tests 0 failed (the owner's call: "run just 4 files"); all
+114 files that mention it 1,665 tests 0 failed 0 errors (that run finished before the call); ratchet 1/1 (results `61e0a93a0db3`). Runtime: n/a, docs only.
+**Handoff evaluation of S1050: 8/10.** Helped: Next (1) set the exact scope ("a decision record, not a go-ahead for code"); section 6 gave each decision a recommendation, a
+consequence and an alternative, so the options read plainly first try; the ledger state, 198 ahead and the `BACKLOG.md:55,59,145` cites were exact. Missing: Next (1) named D1-D4
+only, while the item and the plan's Status also asked for the plan's approval (a second question). Wrong: "the 21 test files that read `BACKLOG.md`" (2 read its text; 110 of 114
+name it only in comments) and the plan's "20 exported functions in scope" (no list; the phases give 18). ROI: high.
+**Self: 7/10.** + claimed first; checked each fact before it went into option text (no `src/`; the count left out); listed the 18 and traced each call path; fixed my own loose
+"through an internal function" before the commit; asked about the approval instead of assuming it; every question answered first try. - I called the run "114 test files" (111 and 3
+helpers) and started it without counting which could see the edit, so the owner had to ask; the approval half was seen only after the D1-D4 box; a `Read` of the 3.3 MB
+`PROJECT_LEARNINGS.md` was refused. Learning 1017.
+**Gotchas:** to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' -- tests/testthat`, filter with `/test[_-]` (not `/test`) and open each hit (a string
+continuation can cite a file without reading it); read `PROJECT_LEARNINGS.md` (3.3 MB, one line a learning) with `sed -n` and `cut`; the plan's Phase 0 is now at `:404`, Appendix A at `:751`.
+**Next (the owner's campaign, in the plan's order):** (1) Phase 0 (plan `:404`), strict TDD, every gate to the owner: `tests/testthat/test_perfHarness.R` first (RED), then
+`tools/perf/harness.R` and `tools/perf/run.R` from Appendix A, `.Rbuildignore` `^tools$`, `docs/audits/PERF_BASELINE_<date>.md` (3 runs a row), the app memory table through
+`shinytest2` from a scratch-library install, gates at today's values; six files, two checkpoint commits. (2) Phase 1 after it. At Phase 0 read the 2026-10-24 07:18 UTC `shinytest2`
+run (45-minute limit; `origin/master` reads 45). Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
 
 ### Sessions 947-1050 (condensed S950 to S1051; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; owner-directed in prose, a planning session, no `R/` or test
@@ -329,24 +344,15 @@ re-knits `NEWS.md`.
 **Carried:** `reportGV(smallPed)` unfiled (3 of 3 calls fail in `geneDrop()`); hover text on the dashed link (not built); the D2 dogleg observation from S910 (untested); the
 seventh-label scan test (unfiled); `rhub` is in neither `renv.lock` nor `DESCRIPTION`.
 
-### Sessions 873-910 (condensed S911 to S1024; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S873-S891: the `sexCodes` adoption, `getPotentialParents()` split into helpers (S881), PED_GV decisions and builds, and the red CI diagnosed in
-`docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`. S892-S904: `HANDOFFS.md` trims (S892, S897), two red-CI causes fixed in tests only (S893), pushes by SHA (S894-S895, S902-S904:
-every changed file was on the `paths-ignore` list and no CI run started; the owner stopped push-only sessions, S905), `BACKLOG.md` compression (S896), the `paths-ignore` list and
-`test_workflowPathsIgnore.R` (S899), the verify-script failures reported upstream (`KJ5HST/methodology#93`). S905-S910: `qcdRhesusPed()` and two layout tests (S905), "leave it" on the
-row-order item (S906), `isAddedRecord()` replacing four inline copies (S908), `highlightNearest` kept (S909), Candidate C closed (S910; its dashed-link legend row shipped S921).
-Evaluations 8-9/10, self 8/10.
-**Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; `gh run list --commit` needs the full SHA and a "no run" result needs a wait and a
-control query; date ledger entries by local time (`date`), not UTC; `quality_ratchet.py --run` takes minutes (background it); `gh issue view --comments` fails here, use `gh api
-repos/<repo>/issues/<n>/comments`; a workflow "success" does not name its legs (`gh run view <id> --json jobs`); `gh run view --log-failed` omits test-coverage's testthat output (use
-`--log`); `pgrep -f` wait loops fire early (Learning 864); in zsh a leading `=` word is an expansion and an unquoted `$var` of several flags is NOT split; macOS `sed -i` needs an
-extension argument, so edit scratch files with Python; an `Edit` whose `old_string` ends mid-line leaves a ragged line; `BACKLOG.md` items are long wrapped lines, so edit by script with
-asserted anchors, and removing a block shifts every later cite, so re-grep; a stored count can predate later code, so re-run it before a ruling; `.claude/worktrees/*/BACKLOG.md` are
-stale copies; the `HANDOFFS.md` trim needs `--force` (`SRF_RED`; `--force` without `--write` is a dry run), the trimmer writes its own ledger entry and never commits (stage the ledger,
-shard and `.verify.sh` together), `--cut <YYYY-MM-DD>` gives a clean day seam and re-bases links in archived entries (a byte compare shows false differences, Learning 866), and 262,144
-B is the Read tool's refusal; to run a test file against another fixture define `read.csv()` in the `env` given to `testthat::test_file()`, and do not `eval()` a whole test file to
-borrow its helpers; the QC'd rhesus copy has `sex` as a factor, `birth` as `Date`, plus `recordStatus` and `placeholder`; a delegation test needs a stub whose answer differs from the
-real rule; classify diagram edges by endpoint kind (`real`, `dup`, `union`), rows are 150 apart in `y`; never regenerate `gpp_pinned_*.rds` from post-split code; single-bracket
-`sexCodes["male"]` is named and breaks `identical()`; a new bare sex letter in `R/` fails `test_sexCodes.R`; `reportErrors` is the app's QC contract, so never change one function's
-return alone; `smallPed` is not a good-input fixture for `reportGV()`; `AskUserQuestion` takes at most 4 questions per call; `core.hooksPath` is unset (the context-budget hook is in
-.git/hooks); take `wc -c` after the last edit (Learning 871).
+### Sessions 873-910 (condensed S911 to S1051; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S873-S910: the `sexCodes` adoption, `getPotentialParents()` helpers (S881), PED_GV builds, the red-CI diagnosis (`docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md`), `HANDOFFS.md`
+trims (S892, S897), pushes by SHA and the end of push-only sessions (S905), the `paths-ignore` list (`test_workflowPathsIgnore.R`, S899), `KJ5HST/methodology#93`, `qcdRhesusPed()`
+(S905), `isAddedRecord()` (S908), Candidate C closed (S910). Evaluations 8-9/10, self 8/10.
+**Gotchas kept:** push by SHA (`git push origin <sha>:master`) when a claim commit sits on top; `gh run list --commit` needs the full SHA, and a "no run" result needs a wait and a
+control query; date ledger entries by local time (`date`); `gh issue view --comments` fails here (use `gh api repos/<repo>/issues/<n>/comments`); `gh run view --log-failed` omits
+test-coverage's testthat output (use `--log`); in zsh a leading `=` word is an expansion; macOS `sed -i` needs an extension argument (edit scratch files with Python); an `Edit`
+whose `old_string` ends mid-line leaves a ragged line; edit `BACKLOG.md` by script with asserted anchors; re-run a stored count before a ruling; the trimmer writes its own ledger
+entry and never commits (stage the ledger, shard and `.verify.sh` together); 262,144 B is the Read tool's refusal; to run a test file on another fixture define `read.csv()` in the
+`env` given to `test_file()`; the QC'd rhesus copy has `sex` a factor, `birth` a `Date`, plus `recordStatus` and `placeholder`; a delegation test needs a stub whose answer differs
+from the real rule; diagram rows are 150 apart in `y`; never regenerate `gpp_pinned_*.rds` from post-split code; `sexCodes["male"]` is named and breaks `identical()`;
+`reportErrors` is the app's QC contract (never change one function's return alone); `AskUserQuestion` takes at most 4 questions per call; the context-budget hook is in `.git/hooks`.
