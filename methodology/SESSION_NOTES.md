@@ -99,37 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1048 Did
-**Deliverable:** Trim `methodology/CHANGELOG.md` (199,487 B, past its 196,608 B warn line) with `methodology_trim.py --budget-bytes 65536` (owner pick at the Phase 0 picker, item 1 of 4; housekeeping, no code) (IN PROGRESS)
-**Started:** 2026-10-23
-**Status:** Session claimed. Work beginning (`--check` first, then the preview, then `--write` after the owner sees the numbers).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Trim CHANGELOG.md"; housekeeping, no code, so no TDD gates):** `methodology/CHANGELOG.md` is 23,778 B, not 200,357
+B. `python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --cut 2026-10-22 --write` archived 112 of 125 records (2026-10-15 to 2026-10-22) to
+`methodology/archive/CHANGELOG-through-2026-10-22.md`; 13 records (all dated 2026-10-23) stay live, plus the tool's own entry. **Owner call:** the clean day seam over the default cut
+(104 archived, 33,990 B, 8 of the 31 records dated 2026-10-22 left live under a "through-2026-10-22" name). The plain run was not refused (SRF 0.9604). Claim `76353cde1`, trim
+`4c54afa9e` (ledger, shard and verify script, alone), close-out next. Not pushed (189 ahead of origin after the close-out).
+**Verification:** L1, L2, L3 OK and `P1A_OK`; the shard's verify script passes before and after the trim commit; the 143 test files that read a ledger: 2,143 tests 8,674 expectations 0
+failed 0 errors; ratchet 1/1 (results `d4a8a4063fdd`). Runtime: not applicable. **Phase 0 finding:** the S1047 75-minute limit is local only; `origin/master` still reads
+`timeout-minutes: 45`, so the 2026-10-24 07:18 UTC run uses 45 unless the owner pushes.
+**Handoff evaluation of S1047: 8/10.** Helped: Next (2) gave the file and the exact `--check` then `--write` commands, and both worked; the `BACKLOG.md` lines and the stale-pointer note
+held; the ratchet citation matched. Missing: Next (1) said a pass at the 07:18 UTC run "closes this", true only after a push, and nothing said `origin/master` still held 45; no word on
+the cut choice. Wrong: the 197,295 B figure was 2,192 B low by Phase 0. ROI: high.
+**Self: 8/10.** + claimed first; the cuts were priced by dry runs before one question with measured numbers; verify script before and after the commit; 143 ledger-reading tests before
+the trim commit; trim committed alone; the unpushed 45 reported at Phase 0. - one question the S1001 and S1031 precedent could have decided; a status line was owed after about 16 reads;
+the stale pointer at `test_shinytest2_workflow_timeout.R:9-10` left alone. Learning 1014.
+**Gotchas:** a scheduled workflow runs from the remote default branch; dry runs write nothing and print each cut's counts, `--cut <date>` keeps records dated after the date (the newest
+day alone is `CUT_OUT_OF_RANGE`); the tool's own entry sits under the pointer block, so the DONE entry goes above it; `CHANGELOG.md` regrows about 22 KB a day (an estimate: the warn
+line is back in about 8 days; the lever is `BACKLOG.md:135`); condense the previous section when writing a new one (this file's cap is about 56,750 B).
+**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Phase 0's `gh run list` shows the 2026-10-24 07:18 UTC run: it ran with 75 only if the owner pushed
+first, so a cancel at 45 minutes is the unpushed fix, not a new cause. (2) The earlier-snapshots follow-ups (`BACKLOG.md:33`; READY, Effort S, strict TDD). (3) The tutorial leftovers
+(`BACKLOG.md:49`; DECISION NEEDED, Effort S). (4) Scope issue #138 (planning only; Effort L). (5) Owner-side: the methodology files the S1032 sync held back (`BACKLOG.md:193`; BLOCKED).
+Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
 
-### What Session 1047 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Raise shinytest2 limit"; strict TDD; the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner
-and approved):** the scheduled `shinytest2` job's time limit is 75 minutes, not 45. **RED:** `tests/testthat/test_shinytest2_workflow_timeout.R:36` expects `75L`; its header (`:12-18`) and
-failure message give the 2026-09-27 raise (30 to 45, S794, `dad5a3d0c`) and the 2026-10-23 cancel and point at the diagnosis file; it failed once, `[1] 45 - 75 == -30`. **GREEN:**
-`.github/workflows/shinytest2.yaml:46` `timeout-minutes: 75`, one line. **REFACTOR:** the workflow path is stated once, `shinytest2WorkflowPath()` (`tests/testthat/helper-shinytest2Workflow.R:13`),
-called by the timeout test (`:20`) and `test_shinytest2_workflow_coverage.R:10` (same string as before, checked with `identical()`). The `BACKLOG.md` block came off in the close-out commit.
-**Commits:** claim `571d62426`, RED `ef166ab23`, GREEN `08efe189e`, REFACTOR `0134dc55f`, close-out next. Not pushed (186 ahead of origin after the close-out).
-**Verification:** full suite after GREEN and after REFACTOR, each 453 files 4,319 tests 15,118 expectations 0 failed 0 errors; lint 0 on the package; ratchet 1/1 (results `3f89a6546bea`);
-PyYAML reads `jobs.shinytest2.timeout-minutes` as 75. **Runtime: no live GitHub run.** The test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that
-night needed about 55, an estimate); the first real check is the 2026-10-24 07:18 UTC scheduled run.
-**Handoff evaluation of S1046: 9/10.** Helped: Next item (1) gave the file, the line of each of the two edits (`:30`, `:46`) and "no other file names the number", and all three held; the
-receipt was complete and HEAD green. Missing: it did not say `CHANGELOG.md` sat 355 B under its 196,608 B warn line, so the claim entry alone crossed it (197,295 B); the guard test's header
-still pointed at a BACKLOG item that is gone. Wrong: nothing found. ROI: high.
-**Self: 8/10.** + every gate carried the exact actions and a wording preview; RED failed for the stated reason; the 30-to-45 history was checked against git; the duplicate was counted (two
-copies; the third workflow test reads other workflow files) before REFACTOR was offered; behavior preservation shown by `identical()`. - `pgrep -f` matched the launching shell, not R (the
-S1022 trap again); no live run was possible; one stale pointer left (below). Learning 1013.
-**Gotchas:** `CHANGELOG.md` is 197,295 B, past its 196,608 B warn line, so a trim is owed (`python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --check`,
-then `--write`); the next claim entry grows it again. `test_shinytest2_workflow_timeout.R:9-10` still says "See BACKLOG.md's 'Up Next' shinytest2 item"; no such item exists, so point it at the
-diagnosis file next time in that file. A launcher's "completed" notice is not the job: `ps -axo pid,etime,pcpu,args | grep '[f]ull_suite.R'`, then `kill -0 <pid>`. `quality_ratchet.py --run`
-measures a size that differs by tens of bytes on every run (3,345,214 to 3,345,230 B on one tree), so each run overwrites the hash the receipt cites (this one: `3f89a6546bea`).
-**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Phase 0's `gh run list` shows the 2026-10-24 07:18 UTC run: a pass under 75 minutes closes this; a
-cancel or failure is a new diagnosis. (2) Trim `CHANGELOG.md` (rule-owed; READY, Effort S; command above). (3) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or
-pinning the 200-character cut (READY, Effort S, strict TDD). (4) The tutorial leftovers (`BACKLOG.md:49`; DECISION NEEDED, Effort S). (5) Owner-side: the methodology files the S1032 sync
-held back (`BACKLOG.md:193`; BLOCKED). Informational: 9 open issues (#138, #123, #116, #37, #28, #12, #11, #10, #5).
-
-### Sessions 947-1046 (condensed S950 to S1047; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1047 (condensed S950 to S1048; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1047: the scheduled `shinytest2` job's time limit is 75 minutes, not 45 (owner pick, "Raise shinytest2 limit"; strict TDD, every gate put to the owner): the timeout test expects `75L`
+(`tests/testthat/test_shinytest2_workflow_timeout.R:36`), `.github/workflows/shinytest2.yaml:46` says `timeout-minutes: 75`, and the workflow path is one test helper,
+`shinytest2WorkflowPath()` (`tests/testthat/helper-shinytest2Workflow.R:13`); claim `571d62426`, RED `ef166ab23`, GREEN `08efe189e`, REFACTOR `0134dc55f`, close-out `179f0ec5b`;
+evaluation of S1046 9/10, self 8/10 (Learning 1013). **Gotchas kept:** the test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that night
+needed about 55, an estimate); wait on the R process by pid, not `pgrep -f`.
 S1046: the scheduled `shinytest2` run of 2026-10-23 (run `39916862256`) was cancelled at 45 minutes because `apt` downloads ran 6 to 26 times slower than the night before (52 to 55
 kB/s; setup took 31 min 47 s), not because of a test (owner pick, "Diagnose shinytest2 timeout"; a diagnosis, no production code): the tests ran at their usual pace and were cut off with
 7 of 21 groups not started; the owner ruled to raise the limit to 75 (done S1047). Write-up `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`. Claim `ee8bdbe7c`, diagnosis
