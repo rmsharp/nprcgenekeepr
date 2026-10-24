@@ -99,12 +99,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1055 Did
-**Deliverable:** Phase 3 of the performance and memory campaign, the relationship table (`docs/planning/performance-memory-campaign-plan.md:504`,
-`BACKLOG.md:8`): both relationship downloads finish on the example with the same rows and classes (owner pick at the Phase 0 picker, item 1 of 4,
-"Speed Phase 3"; strict TDD, every gate to the owner). (IN PROGRESS)
-**Started:** 2026-10-24
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 3"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner):**
+Phase 3 of the performance and memory campaign, the relationship table (`docs/planning/performance-memory-campaign-plan.md:504`). `R/convertRelationships.R`: `convertRelationships()`
+(`:37`) keeps its first steps; `relationsPlan()` (`:112`, internal) admits an ordinary pedigree; `relationClasses()` (`:161`) applies today's 11 rules as vector comparisons in
+today's order, in blocks of `relationBlockSize` (`:88`, 1,048,576 pairs); `convertRelationshipsGeneral()` (`:233`) is today's code word for word for any other input.
+Tests: `convertRelationshipsReference()` (`tests/testthat/helper-perfReference.R:381`), `test_convertRelationshipsEquivalence.R` (6 tests, 56 expectations; 36 unusual inputs),
+`test_perfBudget_convertRelationships.R` (opt-in), the opt-in browser file `test-e2e-summary-statistics-relationship-downloads.R`; `helper-perfCampaign.R` gained
+`exampleLivingPed()` `:16`, `exampleColony()` `:50`, `exampleRelationsInput()` `:67`, `outcome()` `:76`. Claim `12b83629c`, RED `9187ab8a2`, GREEN `933486b5a`, REFACTOR
+`1b1dd0e06` `757f271de`, gate `e8713e257`, close-out next; not pushed.
+**Owner calls:** unusual inputs keep today's code (as Phases 1-2); the example's first 300 animals checked in every run, its first 600 (66 s of today's code) only opted in;
+every gate as offered (REFACTOR: the five mutation gaps closed, one shared `outcome()`, one builder for the example's QC lines).
+**Findings:** today's rules on all 6,824,665 pairs (result preallocated, 544.7 s) gave the vector table exactly; the first 300 animals 6.28 s to 0.08 s, the first 600 64.21 s to
+0.14 s, all pairs never to 3.47 s (peak 936.6 MB in blocks, 1,152 MB at once); both downloads finish in the app (browser file 18.5 s in all); the prototype failed on an all-missing
+kinship matrix (caught pre-RED); 15 mutants, 10 caught, 5 real gaps closed in REFACTOR (Learning 1021); gate `perf_convertRelationships_300_seconds` 8.0 to 0.2 s.
+**Verification:** full suite 461 files, 4,365 tests, 0 failed, 0 errors, 203 skipped (after REFACTOR; 4,364 after GREEN); lint 0; `document()` changed nothing; ratchet 8/8 (results
+`42a3652de25c`); browser file from a scratch install: 11 expectations, 0 failed; `devtools::check()` 0 errors, 0 warnings, 0 notes.
+**Handoff evaluation of S1054: 9/10.** Helped: Next (1) mapped step for step and every cite held (`test_notifyProgress.R:163` and `:232-235`, 8.0 s and 6.84 s); the
+budget-by-ratio rule picked the 300-animal input (today/new about 76x); the browser recipe worked as written; `helper-perfCampaign.R` as the home for shared inputs. Missing:
+no browser test clicked these downloads (I wrote one), shinytest2's `get_download()` waits with no limit, and the plan's 600-animal check costs 66 s a run (an owner decision).
+Wrong: nothing material ("the budget tests need the source tree" holds only for those reading `tools/`). ROI: high.
+**Self: 8/10.** + claimed first; 37 probe inputs, fresh-process timings and a full 6.8-million-pair cross-check before RED; the all-missing bug found pre-RED; two owner questions
+with measured numbers; a RED browser test bounded at 120 s; the fallback proved by diff; 15 mutants, each gap case run against its mutant before committing; REFACTOR proved by
+`identical()` and counts. - my RED odd inputs could not tell two lookup rules apart (their looked-up animals were founders), so five gaps waited for REFACTOR; GREEN's file
+write sliced one line short (caught by the diff before any test); one background job started with `( ... &)` despite the kept gotcha. Learning 1021.
+**Gotchas:** `mockery::stub()` reaches only a function's own body (`test_notifyProgress.R:251` stubs `groupAddAssign()`'s progress call); an odd input pins a lookup only
+if the looked-up animal has known parents, so name the class it should change and run it against its mutant; `get_download()` has no time limit (fetch the link with
+`download.file()` under `options(timeout)`); the browser tests need a scratch install, `R_LIBS`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`.
+**Next (the owner's campaign, in the plan's order):** (1) Phase 4, group formation (plan `:525`, `BACKLOG.md:8`), strict TDD, every gate to the owner: frozen copies of the five
+files' functions from `520bd5dc8`; probe odd inputs first and design each so the rule it tests changes a result; `groupAddAssign()`'s whole result identical for seeds x {plain,
+harem, sex ratio, seeded groups, ancestry rules}; one progress call per trial; tighten `perf_groupAddAssign_1000_seconds` (29.2 s; 23.61 s at S1055); the Breeding Groups tab at
+1,000 trials in the browser tier. (2) Phase 11: the three fallbacks' input classes. Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
 
 ### Sessions 947-1054 (condensed S950 to S1055; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1054: Phase 2 of the performance and memory campaign, the gene drop (owner pick "Speed Phase 2: gene drop", strict TDD): `R/geneDrop.R`

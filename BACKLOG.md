@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 3, the relationship table (owner-directed S1050; plan
-      approved and D1-D4 ruled S1051; Phase 0 done S1052, Phase 1 S1053, Phase 2 S1054; READY; Effort M per
-      phase, 9 phases left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
-      (Phase 3 at `:504`). Phase 2 fills one matrix inside `geneDrop()` for an ordinary pedigree and runs today's
-      code for any other input (`geneDropPlan()`, `geneDropGeneral()`, `R/geneDrop.R`); its gate
-      `perf_geneDrop_example_peak_mb` is 72 MB (148.5 MB before). Phase 3 makes both relationship downloads finish
-      on the example (6,824,665 pairs) with the same rows and classes: (a) preallocate `convertRelationships()`'s
-      result, (b) classify all pairs with vector comparisons in the rule order; keep its one argument-free progress
-      call per pair in its own body (`tests/testthat/test_notifyProgress.R:163`, stubbed at `:235`); gate
-      `perf_convertRelationships_300_seconds` (8.0 s; 6.84 s at S1054). For Phase 11, the owner asked (S1054)
-      whether the fallbacks' input classes (`rareAlleleCountsGeneral()`, `geneDropGeneral()`) can move onto the
-      fast paths later. **Ruled S1051 (plan section 6):** D1 exact results for the same seed, D2 plain R first,
-      D3 the 18 exported functions unchanged, D4 opt-in budget tests plus ratchet gates; D5-D8 in their phases.
+- [ ] **Performance and memory campaign: Phase 4, group formation (owner-directed S1050; plan
+      approved and D1-D4 ruled S1051; Phases 0-3 done S1052-S1055; READY; Effort M per phase,
+      8 phases left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
+      (Phase 4 at `:525`). Phase 3 classifies every pair with vector comparisons inside `convertRelationships()` for
+      an ordinary pedigree and runs today's code for any other input (`relationsPlan()`, `relationClasses()`,
+      `convertRelationshipsGeneral()`, `R/convertRelationships.R`); both relationship downloads now finish on the
+      example (6,824,665 pairs); its gate `perf_convertRelationships_300_seconds` is 0.2 s (8.0 s before). Phase 4
+      makes 1,000 trials on the example's 280 candidates take seconds, with the same groups for the same seed, in five
+      files (`R/fillGroupMembers.R`, `R/fillGroupMembersWithSexRatio.R`, `R/removeSelectedAnimalFromAvailableAnimals.R`,
+      `R/removeGroupIfNoAvailableAnimals.R`, `R/makeAvailable.R`; tests in a second commit); one progress call per trial
+      stays in `groupAddAssign()`'s body (stubbed at `tests/testthat/test_notifyProgress.R:251`); gate
+      `perf_groupAddAssign_1000_seconds` (29.2 s; 23.61 s at S1055). For Phase 11: whether the three fallbacks' inputs
+      move onto the fast paths (owner, S1054). **Ruled S1051:** D1 exact results, D2 plain R, D3 the API, D4 budgets.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
