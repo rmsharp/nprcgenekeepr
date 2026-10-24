@@ -44,11 +44,11 @@
     {
       "name": "perf_convertRelationships_300_seconds",
       "direction": "max",
-      "threshold": 8.0,
+      "threshold": 0.2,
       "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
       "command": "Rscript tools/perf/run.R convertRelationships-300",
       "extract": "SECONDS=([0-9.]+)",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: convertRelationships() on the first 300 example animals (45,150 rows: every pair, self-pairs included) took 6.28 s, median of 3 runs (6.27 to 6.34); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 3 (the relationship table) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: convertRelationships() on the first 300 example animals (45,150 rows: every pair, self-pairs included) took 6.28 s, median of 3 runs (6.27 to 6.34); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 3 (the relationship table) is meant to lower it and tightens this gate. Tightened S1055 (2026-10-24), Phase 3: convertRelationships() now classifies every pair with vector comparisons for an ordinary pedigree; the same scenario took 0.08, 0.08 and 0.09 s in 3 fresh-process runs (load average about 4; peak 52.2 MB, 271.7 MB before), so the threshold is the slowest run plus 25%, rounded up to 0.1 s (0.09 x 1.25 = 0.11, so 0.2). The 150- and 600-animal rows took 0.07 s (1.35 s before) and 0.13 to 0.14 s (64.21 s before)."
     },
     {
       "name": "perf_groupAddAssign_1000_seconds",
