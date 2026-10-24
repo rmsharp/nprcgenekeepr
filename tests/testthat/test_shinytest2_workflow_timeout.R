@@ -17,9 +17,7 @@
 # the cap is now 75. See
 # docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md.
 
-workflow_path <- testthat::test_path(
-  "..", "..", ".github", "workflows", "shinytest2.yaml"
-)
+workflow_path <- shinytest2WorkflowPath()
 
 extract_timeout_minutes <- function(path) {
   lines <- readLines(path, warn = FALSE)

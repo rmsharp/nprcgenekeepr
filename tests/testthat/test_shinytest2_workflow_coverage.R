@@ -7,9 +7,7 @@
 # test-e2e-potential-parents-module.R were added by later sessions and
 # matched none of the groups that existed at the time).
 
-workflow_path <- testthat::test_path(
-  "..", "..", ".github", "workflows", "shinytest2.yaml"
-)
+workflow_path <- shinytest2WorkflowPath()
 
 extract_group_regexes <- function(path) {
   lines <- readLines(path, warn = FALSE)
