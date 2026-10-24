@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1047 Did
+**Deliverable:** Raise the scheduled `shinytest2` job's time limit from 45 to 75 minutes (`BACKLOG.md:73`; owner pick at the Phase 0 picker, item 1 of 4; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-23
+**Status:** Session claimed. Work beginning (PRE-RED; the gates go to the owner).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+
 ### What Session 1046 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Diagnose shinytest2 timeout"; a diagnosis, no production code, no TDD phase past PRE-RED):** why the scheduled
 `shinytest2` run of 2026-10-23 (run `39916862256`) was cancelled at 45 minutes. **Cause:** `apt` downloads from `azure.archive.ubuntu.com` ran at 52 to 55 kB/s in all three steps

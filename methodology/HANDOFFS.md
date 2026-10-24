@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1047
+date: 2026-10-23
+status: pending
+active_task: IN PROGRESS -- raise the scheduled shinytest2 job's time limit from 45 to 75 minutes (BACKLOG.md:73; owner pick at the Phase 0 picker, item 1 of 4, "Raise shinytest2 limit"; strict TDD, owner-ruled at S1046)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1046
 date: 2026-10-23
 status: complete
