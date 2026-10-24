@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1052
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- Phase 0 of the performance and memory campaign (docs/planning/performance-memory-campaign-plan.md:404): the measuring harness in tools/perf/, tests/testthat/test_perfHarness.R, the baselines doc and the gates at today's values (owner pick "Perf Phase 0"; strict TDD, no package behavior change)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1051
 date: 2026-10-24
 status: complete

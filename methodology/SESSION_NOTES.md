@@ -98,30 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1051 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Rule on D1-D4"; a decision session, no `R/` or test change, so no TDD gates):** the owner ruled D1-D4 of the
-performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed; D2 plain R, C++ revisited at Phase 11; D3 the exported functions in scope
-unchanged; D4 opt-in budget tests plus ratchet gates), then approved the plan as written in a second question (the item asked for both; the four-question box held D1-D4).
-Recorded at `docs/planning/performance-memory-campaign-plan.md:4` (Status APPROVED), `:58-62` and `:308-345`; D3's unbacked "20 exported functions in scope" is now the 18 the
-phases give, listed with their call paths (`:329`); `BACKLOG.md:8` READY for Phase 0 (same 13 lines). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out next; 201 ahead, not pushed.
-**Verification:** no test reads the plan; the 2 test files that read `BACKLOG.md` and the 2 that name it in code give 28 tests 0 failed (the owner's call: "run just 4 files"); all
-114 files that mention it 1,665 tests 0 failed 0 errors (that run finished before the call); ratchet 1/1 (results `61e0a93a0db3`). Runtime: n/a, docs only.
-**Handoff evaluation of S1050: 8/10.** Helped: Next (1) set the exact scope ("a decision record, not a go-ahead for code"); section 6 gave each decision a recommendation, a
-consequence and an alternative, so the options read plainly first try; the ledger state, 198 ahead and the `BACKLOG.md:55,59,145` cites were exact. Missing: Next (1) named D1-D4
-only, while the item and the plan's Status also asked for the plan's approval (a second question). Wrong: "the 21 test files that read `BACKLOG.md`" (2 read its text; 110 of 114
-name it only in comments) and the plan's "20 exported functions in scope" (no list; the phases give 18). ROI: high.
-**Self: 7/10.** + claimed first; checked each fact before it went into option text (no `src/`; the count left out); listed the 18 and traced each call path; fixed my own loose
-"through an internal function" before the commit; asked about the approval instead of assuming it; every question answered first try. - I called the run "114 test files" (111 and 3
-helpers) and started it without counting which could see the edit, so the owner had to ask; the approval half was seen only after the D1-D4 box; a `Read` of the 3.3 MB
-`PROJECT_LEARNINGS.md` was refused. Learning 1017.
-**Gotchas:** to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' -- tests/testthat`, filter with `/test[_-]` (not `/test`) and open each hit (a string
-continuation can cite a file without reading it); read `PROJECT_LEARNINGS.md` (3.3 MB, one line a learning) with `sed -n` and `cut`; the plan's Phase 0 is now at `:404`, Appendix A at `:751`.
-**Next (the owner's campaign, in the plan's order):** (1) Phase 0 (plan `:404`), strict TDD, every gate to the owner: `tests/testthat/test_perfHarness.R` first (RED), then
-`tools/perf/harness.R` and `tools/perf/run.R` from Appendix A, `.Rbuildignore` `^tools$`, `docs/audits/PERF_BASELINE_<date>.md` (3 runs a row), the app memory table through
-`shinytest2` from a scratch-library install, gates at today's values; six files, two checkpoint commits. (2) Phase 1 after it. At Phase 0 read the 2026-10-24 07:18 UTC `shinytest2`
-run (45-minute limit; `origin/master` reads 45). Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
+### What Session 1052 Did
+**Deliverable:** Phase 0 of the performance and memory campaign (`docs/planning/performance-memory-campaign-plan.md:404`): the measuring harness
+(`tools/perf/harness.R`, `tools/perf/run.R`), `tests/testthat/test_perfHarness.R`, `.Rbuildignore` `^tools$`, the baselines doc `docs/audits/PERF_BASELINE_2026-10-24.md`
+and gates at today's values (owner pick at the Phase 0 picker, item 1 of 4, "Perf Phase 0"; strict TDD, every gate to the owner; no package behavior change) (IN PROGRESS)
+**Started:** 2026-10-24, about 01:35 CDT
+**Status:** Session claimed. Work beginning. Phase 0 found both ledgers current (frontier = HEAD `28b59e9e4`, gap 0, no merges, no pending receipt, ratchet `61e0a93a0db3` matches).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1050 (condensed S950 to S1051; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1051 (condensed S950 to S1052; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1051: the owner's rulings on D1-D4 of the performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed, D2 plain R with
+C++ revisited at Phase 11, D3 the 18 exported functions in scope unchanged, D4 opt-in budget tests plus ratchet gates), and the plan approved as written
+(`docs/planning/performance-memory-campaign-plan.md:4,58-62,308-345`; owner pick "Rule on D1-D4", a decision session). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out
+`28b59e9e4`; evaluation of S1050 8/10, self 7/10 (Learning 1017). **Gotchas kept:** to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' --
+tests/testthat`, filter with `/test[_-]` and open each hit; read `PROJECT_LEARNINGS.md` (3.3 MB, one line a learning) with `sed -n` and `cut`.
 S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; owner-directed in prose, a planning session, no `R/` or test
 change): measured baselines, root causes H1-H10 with file:line, 12 phases (each one strict-TDD session, exactness against frozen reference copies, an opt-in budget
 test, a named surface), the grep inventory, decisions D1-D4 now and D5-D8 in their phases; `reportGV()` on the example about 3.5 s (2.9 s in `calcGU()` + `calcGUSE()`),
