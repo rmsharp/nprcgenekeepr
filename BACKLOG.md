@@ -5,17 +5,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 1, genome uniqueness (owner-directed S1050; plan
-      approved and D1-D4 ruled S1051; Phase 0 done S1052; READY; Effort M per phase, 11 phases
-      left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
-      (Phase 1 at `:442`). Phase 0 left the harness in `tools/perf/` (`Rscript tools/perf/run.R
-      <scenario>` from the project root; 20 scenarios, one per row of the plan's section 3) and its
-      numbers in `docs/audits/PERF_BASELINE_2026-10-24.md`: the Genetic Value analysis on the example
-      takes 3.28 s, 2.94 s of it in `calcGU()` + `calcGUSE()` (the same rare-allele count built twice).
-      Phase 1 builds one fast count, once (`rareAlleleCounts()`, the plan's section 5 helper table),
-      proves `identical()` results against a frozen copy (D1), and tightens the ratchet gate
-      `perf_reportGV_example_seconds` (4.3 s today) in `methodology/.quality-gates.json`. **Ruled
-      S1051 (plan section 6):** D1 exact results for the same seed, D2 plain R first, D3 the 18
+- [ ] **Performance and memory campaign: Phase 2, the gene drop (owner-directed S1050; plan
+      approved and D1-D4 ruled S1051; Phase 0 done S1052, Phase 1 S1053; READY; Effort M per phase,
+      10 phases left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md`
+      (Phase 2 at `:479`). Phase 1 counts each animal's rare alleles once, fast (`R/rareAlleleCounts.R`):
+      `reportGV()` on the example went from 3.28 s to 0.60 s and its gate `perf_reportGV_example_seconds`
+      is 0.8 s. Phase 2 builds `geneDrop()`'s table from a K x 2n matrix inside (the plan's Appendix B
+      `geneDropFast()`) and returns the same data frame, `identical()` to a frozen `geneDropReference()`
+      (D1; also point the frozen `reportGVReference()`'s two `geneDrop()` calls at it,
+      `tests/testthat/helper-perfReference.R:154` and `:208`); it keeps the id checks, the draw order and
+      the 1 + n progress calls, and tightens `perf_geneDrop_example_peak_mb` (164 MB; 148.6 at S1053).
+      **Ruled S1051 (plan section 6):** D1 exact results for the same seed, D2 plain R first, D3 the 18
       exported functions unchanged, D4 opt-in budget tests (`NPRC_RUN_PERF=true`) plus ratchet gates.
       D5-D8 are asked in their own phases.
 

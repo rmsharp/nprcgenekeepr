@@ -99,13 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1053 Did
-**Deliverable:** Phase 1 of the performance and memory campaign, genome uniqueness (`docs/planning/performance-memory-campaign-plan.md:442`,
-`BACKLOG.md:8`): count the rare alleles once for `calcGU()` and `calcGUSE()`, results `identical()` to frozen copies of today's functions (D1),
-an opt-in budget test, and a tighter `perf_reportGV_example_seconds` (IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 1";
-strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates to the owner)
-**Started:** 2026-10-24
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 1"; strict TDD, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner):**
+Phase 1 of the performance and memory campaign, genome uniqueness (`docs/planning/performance-memory-campaign-plan.md:442`). `R/rareAlleleCounts.R` (new, internal): `rareAlleleCounts()`
+counts a table shaped like `geneDrop()`'s with `match()` and `tabulate()`; `geneDropShape()` decides which tables qualify; any other table goes to `rareAlleleCountsGeneral()`, today's
+`calcA()` body word for word (owner ruling); `iterationColumns()`. `guFromRare()` in `R/calcGU.R`, `guSEFromRare()` in `R/calcGUSE.R`; `reportGV()` builds the count once.
+Tests: `tests/testthat/helper-perfReference.R` (frozen `calcA()`, `calcGU()`, `calcGUSE()`, `reportGV()` from `520bd5dc8`), `test_rareAlleleCounts.R` (7 tests, 415 expectations),
+`test_perfBudget_genomeUniqueness.R` (opt-in). Claim `846bce3eb`, RED `2db44bcc5`, GREEN `6bb2b9e94`, REFACTOR `40db591b6`, gate `ae1cebda5`, close-out next; not pushed.
+**Owner calls:** a fast path plus today's code for odd tables (one question, the recommended option); every TDD gate as offered (REFACTOR: the helper and a homozygous test block).
+**Findings:** `reportGV()` on the example 3.28 to 0.60 s (peak 162.9 to 132.9 MB); `calcGU()` 1.53 to 0.088 s, `calcGUSE()` 1.41 to 0.094 s; the backfill gate (Phase 10's) 9.42 to
+1.87 s, since it calls `reportGV()` per date (`R/backfillColonySnapshots.R:215`); the plan's prototype differed from today on 6 odd shapes (zero animals, one iteration, an unused
+factor level, threshold NA, missing alleles, missing ids); dropping the `byID` homozygous correction failed 2 of the 120 grid checks until REFACTOR's block (12 of its 12 `byID` checks).
+**Verification:** full suite 456 files, 4,352 tests, 0 failed, 0 errors, 199 skipped (4,351 after GREEN); lint 0; `document()` changed nothing; 3 mutations, each caught; ratchet 8/8
+(results `c48517ceefae`); the three Genetic Value browser files opted in (`NPRC_RUN_E2E=true`): 22 tests, 0 failed, 0 skipped (the real app ran `reportGV()`); `devtools::check()` 0 errors, 0 warnings, 0 notes.
+**Handoff evaluation of S1052: 9/10.** Helped: Next (1) was exact and every claim held (`520bd5dc8` holds today's text of all 6 files; no `mocked_bindings` or `stub(` on the 3 functions;
+the grid, the budget pattern, +25% room); "compare memory fresh process to fresh process" (3 fresh runs, peaks identical); `harness.R:118` and `:217` gave the app trim and the stage
+inputs. Missing: `reportGV()` needs a frozen copy too (plan 5.1, "any helper it changes"); the browser tests are opt-in (`NPRC_RUN_E2E=true`), the runtime check a phase needs. Wrong: none found.
+ROI: high.
+**Self: 8/10.** + claimed first; probed today's `calcA()` on 12 odd shapes before RED and turned the 6 differences into one owner question with measured counts; each frozen copy proved
+by diff; a mock pins the fast path; the mutation check found a thin branch and REFACTOR closed it; headroom (5.5x) and the gate runs measured in fresh processes; read the backfill's call
+path before naming the cause. - a `perf:` prefix with no precedent (amended to `feat:` with `--no-verify`, the hooks read after, not before); a placeholder background `sleep` that sent a
+stray notification; "about 10 lines" in option text for the slow path's 12 lines of code (not counted first). Learning 1019.
+**Gotchas:** `reportGVReference()` calls the live `geneDrop()` (`helper-perfReference.R:154`, `:208`): Phase 2 freezes `geneDropReference()` and repoints both; browser tests need
+`NPRC_RUN_E2E=true`; the budget test needs `NPRC_RUN_PERF=true` and the source tree; `test_rareAlleleCounts.R` takes about 9 s (the example's `qcStudbook()`, once per file run); `test_notifyProgress.R:199`
+stubs `notifyProgress` inside `geneDrop()` with `mockery::stub()`, which reaches only its own body, so Phase 2 keeps the 1 + n calls in `geneDrop()` itself.
+**Next (the owner's campaign, in the plan's order):** (1) Phase 2, the gene drop (plan `:479`, `BACKLOG.md:8`), strict TDD, every gate to the owner: a frozen `geneDropReference()` in
+`helper-perfReference.R` (`git show 520bd5dc8:R/geneDrop.R`) with both `reportGVReference()` calls repointed; equivalence on the grid (seeds 1, 7, 2026; genotype codes double and
+integer) keeping the id-check messages (`R/geneDrop.R:97-106`), the draw order, the 1 + n `notifyProgress()` calls (`test_notifyProgress.R:195-209`) and the value type; an opt-in
+`test_perfBudget_geneDrop.R`; re-measure `gvStages-example` 3 times in fresh processes and tighten `perf_geneDrop_example_peak_mb` (164 MB; 148.6 MB at S1053). (2) Phase 10
+re-measures the backfill (1.87 s). Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
 
 ### Sessions 947-1052 (condensed S950 to S1053; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1052: Phase 0 of the performance and memory campaign (owner pick "Perf Phase 0", strict TDD): the harness `tools/perf/harness.R` + `tools/perf/run.R`
