@@ -99,10 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1046 Did
-**Deliverable:** diagnose the scheduled `shinytest2` run of 2026-10-23 that hit its 45-minute limit (`BACKLOG.md:73`; owner pick at the Phase 0 picker, item 1 of 4, "Diagnose shinytest2 timeout"; a diagnosis, no production code) (IN PROGRESS)
-**Started:** 2026-10-23, after the Phase 0 report and the picker.
-**Status:** Session claimed. Work beginning: read the cancelled job's log (`gh run view --job=120292192510 --log`) and the runs around it.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Diagnose shinytest2 timeout"; a diagnosis, no production code, no TDD phase past PRE-RED):** why the scheduled
+`shinytest2` run of 2026-10-23 (run `39916862256`) was cancelled at 45 minutes. **Cause:** `apt` downloads from `azure.archive.ubuntu.com` ran at 52 to 55 kB/s in all three steps
+that use it (309, 1,328 and 360 kB/s the night before), so setup took 31 min 47 s; the tests ran at their usual pace (14th of 21 groups at 12 min 43 s, 13 min 27 s the night before)
+and were cut off with 7 groups not started; same commit `c5545b016` as three green nights. Write-up: `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`. **Owner ruling:** raise the
+limit from 45 to 75 minutes (over leaving it). The diagnose block is off `BACKLOG.md`; "Raise the scheduled `shinytest2` job's time limit" (`BACKLOG.md:73`; READY, Effort S, strict TDD)
+takes its place: RED edits the pinned `45L` (`tests/testthat/test_shinytest2_workflow_timeout.R:30`), GREEN edits `.github/workflows/shinytest2.yaml:46`. Not done here.
+**Commits:** claim `ee8bdbe7c` (S1045's full section was condensed there: the context-budget hook refused the stub, 57,286 to 53,084 B), diagnosis `36261f1bc`, close-out next. Not pushed (181 ahead of origin
+after the close-out; the last push CI run is Oct 20).
+**Verification:** docs-only, nothing in `R/`, `tests/`, `vignettes/` or the workflow changed; full suite 453 files 4,319 tests 15,118 expectations 0 failed 0 errors 198 skipped 8 warnings
+(7.6 min, the same figures as S1045); ratchet 1/1 (results `f7e0708b1e2b`); lint n/a. Runtime: n/a, docs-only.
+**Handoff evaluation of S1045: 8/10.** Helped: the Next item gave the run and job ids, said the Oct 24 run had not happened and to run `gh run list` first, and its guess (runner, not
+code) was right; the receipt was complete and HEAD green. Missing: it left this file at 24,972 of 25,000 tokens (my Read of it was cut at line 314), so the claim stub was refused and a
+condense came first; the backlog item did not know `test_shinytest2_workflow_timeout.R` pins the limit; nothing said `gh run view --log` labels every line "UNKNOWN STEP". Wrong: nothing
+found. ROI: high.
+**Self: 7/10.** + built the loop from captured artifacts and settled "setup, not tests" in two calls; five hypotheses each settled by a measurement; recomputed every figure of the draft and
+fixed two wrong ones (a ratio, a setup time) before the commit; the owner question carried measured numbers and a recommendation. - about 20 probe calls with no status line; the
+skill's show-hypotheses-first step skipped; the claim commit refused once. Learning 1012.
+**Gotchas:** `gh run view <id> --json jobs` gives every step's start and end; the saved job log labels every line "UNKNOWN STEP", so find slow stretches by timestamp gaps and the
+`Fetched ... (kB/s)` lines; `##[group]E2E module group` lines give the 21 group starts; the 2026-09-27 cancel was a real 30-minute cap (growth), not this cause; `quality_ratchet.py --run`
+ran once (results `f7e0708b1e2b`, head `ee8bdbe7c`) and a rerun overwrites it; leave 2 KB of headroom here at close-out.
+**Next (no owner order was given; mine, the six delayed items are not offered):** (1) Raise the limit to 75 (`BACKLOG.md:73`; READY, Effort S, owner-ruled; run `gh run list` first for the
+2026-10-24 07:18 UTC run). (2) The earlier-snapshots follow-ups (`BACKLOG.md:33`): the `na.rm` notice or pinning the 200-character cut (READY). (3) The tutorial leftovers (`BACKLOG.md:49`;
+DECISION NEEDED, Effort S). (4) Owner-side: where to post the `close_out_report.py` write-up (`BACKLOG.md:209`; BLOCKED). Informational: 9 open issues (#138, #123, #116, #37, #28, #12,
+#11, #10, #5).
 
 ### Sessions 947-1045 (condensed S950 to S1046; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1045: the trend chart keeps its panel titles whole and never overprints its year labels in a narrow window (owner pick, "Trend chart labels"; strict TDD;
@@ -121,26 +141,15 @@ lost its 9-inch width. Claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab` 
 full suite 452 files 4,304 tests 0 failed 0 errors; evaluation of S1043 9/10, self 8/10 (Learning 1010). **Gotchas kept:** the footnote is wrapped in the label itself
 (`p$labels$caption`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`; ggplot2 4.0.3 has no `plot_theme()` (use `calc_element(name, p$theme)`); grid has no `"px"` unit
 (`"bigpts"` at 72 dpi); take pictures at 2x.
-S1043: the `a2interactive.Rmd` inventory finished (owner pick, "Finish tutorial inventory"; strict TDD; the scope, PRE-RED, RED, GREEN and GREEN-to-REFACTOR gates put to the owner):
-`vignettes/a2interactive.Rmd` names the six script-callable functions and the two parameters it never did, in five places (`kinshipMatrix` `:608`, X-chromosome kinship `:840`,
-`reportAncestryViolations()` `:1379`, `shrinkPedigree()` `:1585`, the four MHC functions `:2142`); the owner chose all eight and to leave the package name `kinship2` out of the text.
-Claim `9945d6554`, RED `7e0b99009`, GREEN `649389386`, REFACTOR `d7a821da2` (`insideChunk()`, `sectionProse()` and `chunkOptionText()` once in `helper-pageText.R`), docs `1b06a8556`,
-close-out `a36703926`; full suite 452 files 4,301 tests 0 failed 0 errors; evaluation of S1042 9/10, self 8/10 (Learning 1009). **Gotchas kept:** a `\b` name search misses `__name__`
-markup (170 of 236 exports are never named, not 182); the five places are pinned by exact heading and neighbours (`test_inventoryTutorialSections.R:55`); the digit rule bans any digit
-in their prose; put regexes in a script file (this harness reduces `\\` inside `Rscript -e`).
-S1042: the `a2interactive.Rmd` pass for the snapshot family (owner pick, "Show backfill functions in tutorial"; strict TDD; the scope, RED, GREEN and stale-test questions put to the owner):
-`vignettes/a2interactive.Rmd` has a "Colony Snapshots Over Time" section for the eight snapshot functions (five chunks on `qcPed` at 50 gene-drop iterations, no literal number in the prose, a
-9-inch figure because the plot's caption was cut off at 7). Claim `bba4264b5`, RED `fc3d928f9`, GREEN `ea8c6af96`, stale guard `fad6ccff8` (`test_docsAuditSixRulings.R` SR3, red since
-S1040's `31c577781`), REFACTOR `b41bb0de6`, docs `86da7d65c`, close-out `7a73a2c80`; full suite 451 files 4,290 tests 0 failed 0 errors; evaluation of S1041 8/10, self 8/10 (Learning 1008).
-**Gotchas kept:** the `fig.width >= 9` pin in `test_snapshotTutorialSection.R` was replaced in S1044 ("sets no figure width of its own"); the phrase "Retrospective colony-snapshot backfill" must not
-return to `BACKLOG.md` (SR3); render the tutorial without byproducts in `vignettes/` (the spelling guard scans there); run each heavy check with `run_in_background`, one at a time.
-S1041: the issue #36 check ("Add chimpanzee-specific age pyramid plot settings"; owner pick, "Issue #36 check"; read-only, no code, no TDD phase past PRE-RED): verdict already solved;
-the owner picked "Close #36 as already solved" (over a guarding test and a reword) and #36 is closed, open issues 10 to 9. `R/agePyramidPlot.R` was an unexported zero-caller helper that
-`f78162106` (S285) deleted as a duplicate of `getPyramidPlot()`; the TODO's numbers were the count axis, not age. The live plot sizes age bands from the oldest animal
-(`R/getPyramidPlot.R:62-73`) and count ticks and gap from the largest bar (`:76`, `:94-98`); no collisions at the app's default 600 px. Claim `ee41c077c`, close-out `dc2aea404`; no code
-changed, suite not re-run (S1040: 450 files 4,279 tests 0 failed 0 errors); evaluation of S1040 9/10, self 8/10 (Learning 1007). **Gotchas kept:** `git log --all --oneline -S'<comment line
-from the issue>'` finds the commit that deleted a file an issue cites; `tests/testthat/test_getPyramidPlot.R` has 2 tests that only check for a "recordedplot" and the owner declined a
-guarding test, so do not re-offer it; a largest bar of 134 gives ticks every 27 (not filed; do not file unprompted).
+S1041-S1043 (strict TDD where code changed; evaluations 8-9/10, self 8/10; Learnings 1007-1009; hashes in `CHANGELOG.md`): S1043, the `a2interactive.Rmd` inventory finished: six
+script-callable functions and two parameters named in five places (`vignettes/a2interactive.Rmd:608,840,1379,1585,2142`; pinned by `test_inventoryTutorialSections.R:55`; the shared
+readers `insideChunk()`, `sectionProse()` and `chunkOptionText()` are in `helper-pageText.R`); S1042, a "Colony Snapshots Over Time" section for the eight snapshot functions (five
+chunks on `qcPed` at 50 gene-drop iterations, no literal number in the prose); S1041, the issue #36 check: already solved (`R/agePyramidPlot.R` was a zero-caller helper that
+`f78162106`, S285, deleted), #36 closed, open issues 10 to 9. Claims `9945d6554`, `bba4264b5`, `ee41c077c`. **Gotchas kept:** a `\b` name search misses `__name__` markup (170 of 236
+exports are never named, not 182); the digit rule bans any digit in that section's prose; put regexes in a script file (this harness reduces `\\` inside `Rscript -e`); the phrase
+"Retrospective colony-snapshot backfill" must not return to `BACKLOG.md` (`test_docsAuditSixRulings.R` SR3); render the tutorial without byproducts in `vignettes/` (the spelling
+guard scans there); `git log --all --oneline -S'<comment line from the issue>'` finds the commit that deleted a file an issue cites; the owner declined a guarding test for the age
+pyramid (`test_getPyramidPlot.R` has 2 tests that only check for a "recordedplot"), so do not re-offer it; run each heavy check with `run_in_background`, one at a time.
 S1040: Slice 4 of the retrospective colony-snapshot backfill, #170, the words (owner pick, "Finish #170: Slice 4"; strict TDD, the scope question, the notice question and every gate put to
 the owner): nine places, one sentence each, approved as drafted: the colony manager guide's Genetic-Health Trends section (`vignettes/articles/colony-manager-guide.qmd:1264-1310`),
 `NEWS.Rmd:397-403` and `NEWS.md`, the `backfillColonySnapshots()` Limits paragraph (`R/backfillColonySnapshots.R:68-72`) and three panel wordings (`R/modSnapshotTrends.R:122,365,418,456`).
