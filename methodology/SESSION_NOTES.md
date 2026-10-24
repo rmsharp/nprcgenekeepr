@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1048 Did
+**Deliverable:** Trim `methodology/CHANGELOG.md` (199,487 B, past its 196,608 B warn line) with `methodology_trim.py --budget-bytes 65536` (owner pick at the Phase 0 picker, item 1 of 4; housekeeping, no code) (IN PROGRESS)
+**Started:** 2026-10-23
+**Status:** Session claimed. Work beginning (`--check` first, then the preview, then `--write` after the owner sees the numbers).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb.
+
 ### What Session 1047 Did
 **Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Raise shinytest2 limit"; strict TDD; the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates each put to the owner
 and approved):** the scheduled `shinytest2` job's time limit is 75 minutes, not 45. **RED:** `tests/testthat/test_shinytest2_workflow_timeout.R:36` expects `75L`; its header (`:12-18`) and
