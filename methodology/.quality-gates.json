@@ -62,11 +62,11 @@
     {
       "name": "perf_kinMatrix2LongForm_all_peak_mb",
       "direction": "max",
-      "threshold": 1077,
+      "threshold": 344,
       "unit": "MB (gc() peak above the start, from tools/perf/harness.R measure(); on this Mac)",
       "command": "Rscript tools/perf/run.R kinMatrix2LongForm-all",
       "extract": "PEAK_MB=([0-9.]+)",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: kinMatrix2LongForm() of the whole example's kinship matrix (3,694 animals, 13,645,636 rows) peaked at 979.0 MB in all 3 runs; threshold = the peak plus 10%, rounded up to a whole MB; the peak was the same in all 3 runs, because each scenario runs in a fresh process (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 6 (kinship memory) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: kinMatrix2LongForm() of the whole example's kinship matrix (3,694 animals, 13,645,636 rows) peaked at 979.0 MB in all 3 runs; threshold = the peak plus 10%, rounded up to a whole MB; the peak was the same in all 3 runs, because each scenario runs in a fresh process (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 6 (kinship memory) is meant to lower it and tightens this gate. Tightened S1059 (2026-10-25, Phase 6, kinship memory: kinMatrix2LongForm() builds its three columns directly with rep() and as.vector(), today's code for any other matrix): the same run peaked at 312.5 MB in all 3 fresh-process runs (0.53 s, against 1.98 s; load average 5 to 8), so 1,077 MB becomes 344 MB by the same rule (312.5 MB plus 10%, rounded up to a whole MB)."
     },
     {
       "name": "perf_diagram_example_direct_seconds",
@@ -94,6 +94,15 @@
       "command": "Rscript tools/perf/run.R gvStages-synthetic10000",
       "extract": "calcFEFG +([0-9.]+) s",
       "why": "Declared S1058 (2026-10-25) for Phase 5 (founder statistics), which declares its own gate (docs/audits/PERF_BASELINE_2026-10-24.md section 5: its calls take 0.08 s on the app trim, too short to gate); the owner chose the synthetic colony at the S1058 scope question. The calcFEFG row of gvStages-synthetic10000 (a generated 10,000-animal colony, 6,090 rows after the app's trim, 327 founders, 1,000 iterations; not a real studbook) took 1.19 s on the code before Phase 5 (one fresh run, S1058) and 0.09 s in all 3 fresh runs after REFACTOR 232d6e612 (load average 9.4 to 10.4); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052 rule: 0.09 x 1.25 = 0.11, so 0.2). The calcFGSE row read 1.18 s before and 0.12 s after; the scenario 6.26 s before and 3.80 to 3.86 s after, about 10 s wall time a run."
+    },
+    {
+      "name": "perf_kinship_synthetic10000_peak_mb",
+      "direction": "max",
+      "threshold": 502,
+      "unit": "MB (gc() peak above the start, from tools/perf/harness.R measure(); on this Mac)",
+      "command": "Rscript tools/perf/run.R gvStages-synthetic10000",
+      "extract": "kinship \\(analysis pedigree\\) +[0-9.]+ s  peak +([0-9.]+) MB",
+      "why": "Declared S1059 (2026-10-25) for Phase 6 (kinship memory), at the owner's S1059 scope question (\"Tighten it, add kinship()\"): kinship() of the analysis pedigree, the first row of gvStages-synthetic10000 (a generated 10,000-animal colony, 6,090 rows after the app's trim; not a real studbook), peaked at 569.8 MB with today's code (kinshipGeneral() swapped into the harness, 2 fresh runs) and 455.6 MB with Phase 6's n x n fill (2 fresh runs after REFACTOR 1c4b4d421; result 283.7 MB); threshold = the peak plus 10%, rounded up to a whole MB (owner-approved S1052 rule: 455.6 x 1.1 = 501.2, so 502). It shares its command with perf_calcFEFG_synthetic10000_seconds, so the ratchet runs the scenario once for both."
     }
   ]
 }
