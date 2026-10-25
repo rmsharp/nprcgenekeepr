@@ -204,6 +204,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1063
+date: 2026-10-25
+status: pending
+active_task: IN PROGRESS -- Phase 9a of the performance and memory campaign, the app's memory, implementation (owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9a"; strict TDD; BACKLOG.md:8; design docs/planning/app-kinship-memory-design.md sections 6.1, 7 and 8): the scripted app session committed to tools/perf/ with the before table, kinshipForAnimals() with the 7.1 tests, then Breeding Groups, Genetic Diversity and Mate Pair through a kinshipFor provider.
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1062
 date: 2026-10-25
 status: complete

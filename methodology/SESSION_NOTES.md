@@ -98,31 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1062 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 8: app memory"; a design session, text only; three owner questions, each answered with
-the recommended option first try):** `docs/planning/app-kinship-memory-design.md`. **D5 ruled (c):** each tab computes kinship for its own animals plus
-their ancestors, and nothing of the colony's size is kept between clicks. Also ruled: the three larger tab costs are their own items (`BACKLOG.md:240`,
-`:249`, `:258`), and the scripted app session joins `tools/perf/` in Phase 9a. Plan: `performance-memory-campaign-plan.md:358,639,650`. Claim
-`d750f818e`, deliverable `b82ff2464`; not pushed (no package change, every file build-ignored).
-**Measured (scratch scripts, design Appendix A):** the full matrix is built at upload by Genetic Diversity's readiness observer
-(`R/modGeneticDiversity.R:119,188`; traced in the running app); upload holds 163-175 MB less without it; five modules read it seven ways, four needing
-every animal; kinship of a set plus its ancestors is `identical()` on 12 sets (MZ twins kept by group, overrides cut first). Ratchet 10/10 (results `35cdde390001`).
-**Handoff evaluation of S1061: 9/10.** Helped: Next (1) named the plan line, the BACKLOG line, "D5 consumer by consumer", the inputs and "name the
-bit-identity tests, twins included", all accurate; the 55,300 B read-limit gotcha held (the notes read in one pass). Missing: the recipe for a scripted
-app run (found in the S1044 condensed gotchas and the baseline's Appendix A). Wrong: nothing found. ROI: high.
-**Self: 8/10.** + traced the app instead of inferring when the matrix is built; measured the twin chain that keeping pairs gets wrong; every question first
-try. - the first draft said "14 sets" (12) and filed three tests under "change by design"; two commit-message line numbers were off by one (amended
-before any push). Learning 1028.
-**Gotchas:** a scratch `app.R` with `load_all()` and `trace(where = asNamespace("nprcgenekeepr"))` logs every `kinship()` call and its caller; run it
-outside the project with `R_LIBS=<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`; Mate Pair's "All alive" is `is.na(exit)`
-(1,704 example animals), not `isLivingAnimal()` (332); `BACKLOG.md` items below the campaign block moved down 4 lines;
-`HANDOFFS.md` is 185,828 B, 10,780 B under its 196,608 B warn line (nothing was trimmed this session; a trim is owed when it warns).
-**Next:** **the owner's campaign:** (1) Phase 9a (`BACKLOG.md:8`; design sections 6.1, 7 and 8; strict TDD): commit the app session to `tools/perf/` and
-take the "before" table, then `kinshipForAnimals()` with the 7.1 tests, then Breeding Groups, Genetic Diversity and Mate Pair through `kinshipFor`.
-(2) Phase 9b. (3) The tie-order decision (`BACKLOG.md:221`). Outside the campaign: `BACKLOG.md:231` (`@inheritParams`, READY, Effort S) and the new
-`:240`, `:249`, `:258` (DECISION NEEDED). Still open: `:51`, `:63`, `:149`, `:207` (BLOCKED), #138.
+### What Session 1063 Did
+**Deliverable:** Phase 9a of the performance and memory campaign, the app's memory, implementation (IN PROGRESS; owner pick at
+the Phase 0 picker, item 1 of 4, "Campaign Phase 9a"; strict TDD; `BACKLOG.md:8`; design `docs/planning/app-kinship-memory-design.md`
+sections 6.1, 7 and 8).
+**Started:** 2026-10-25 18:50 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1061 (condensed S950 to S1062; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1062 (condensed S950 to S1063; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1062: Phase 8 of the campaign, the app's memory design (`docs/planning/app-kinship-memory-design.md`; text only): D5 ruled (c),
+each tab computes kinship for its own animals plus their ancestors; the full matrix is built at upload by Genetic Diversity's
+readiness observer (`R/modGeneticDiversity.R:119,188`); three larger tab costs filed (`BACKLOG.md:240`, `:249`, `:258`). Claim
+`d750f818e`, deliverable `b82ff2464`, close-out `ea0bd5e2a`; S1061 9/10, self 8/10 (Learning 1028). **Gotchas kept:** a scratch `app.R`
+with `load_all()` and `trace(where = asNamespace("nprcgenekeepr"))` logs every `kinship()` call and its caller; Mate Pair's "All
+alive" is `is.na(exit)` (1,704 example animals), not `isLivingAnimal()` (332).
 S1061: the red `windows-latest` leg of `R-CMD-check.yaml` fixed (strict TDD; RED was the red run `40230619957`, as S1018):
 `archivePointerProblems()` calls `normalizePath(winslash = "/")` on both paths (`tests/testthat/helper-archivePointers.R:54,64`);
 CI run `40236872235` green on all 5 legs. Claim `478e98a65`, GREEN `f33b3474e`, close-out `7434f69a6`; S1060 9/10, self 8/10
