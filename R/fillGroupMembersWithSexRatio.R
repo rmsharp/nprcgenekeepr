@@ -131,15 +131,18 @@ fillGroupMembersWithSexRatio <-
         ratio <- 0.0
       } ## no seed animals
 
-      if (ratio < sexRatio) { ## need female
-        id <- sample(femalePool[availableFemales[, i]], 1L)
-        availableFemales[match(id, femalePool), ] <- FALSE
-      } else if (abs(sexRatio - sexRatioFromCounts(size, nMales[[i]],
-                                                   nOthers[[i]],
-                                                   additionalMales = 1L)) <
+      # A female when the group is short of the ratio, else a male when one
+      # brings the group closer to it than a female would: today's two tests,
+      # in today's order, so a missing sexRatio stops at the first.
+      drawMale <- if (ratio < sexRatio) {
+        FALSE
+      } else {
         abs(sexRatio - sexRatioFromCounts(size, nMales[[i]], nOthers[[i]],
-                                          additionalFemales = 1L))) {
-        # may need male
+                                          additionalMales = 1L)) <
+          abs(sexRatio - sexRatioFromCounts(size, nMales[[i]], nOthers[[i]],
+                                            additionalFemales = 1L))
+      }
+      if (drawMale) {
         id <- sample(potentialSires[availableMales[, i]], 1L)
         availableMales[match(id, potentialSires), ] <- FALSE
       } else {
