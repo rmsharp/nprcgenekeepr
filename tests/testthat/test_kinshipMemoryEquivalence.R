@@ -111,6 +111,19 @@ kinshipGrid <- local({
       fam1$gen <- findGeneration(fam1$id, fam1$sire, fam1$dam)
       twins89 <- data.frame(id1 = "8", id2 = "9", code = "MZ twin",
                             stringsAsFactors = FALSE)
+      ## On the X chromosome a son takes his dam's kinship with the missing
+      ## parent: NA when she has unknown sex and parents of her own, so a
+      ## later animal with no dam has NA kinship with him (S1059's mutation
+      ## check).
+      unknownDam <- data.frame(
+        id = c("F1", "M1", "U", "S", "J", "D"),
+        sire = c(NA, NA, "M1", "M1", "S", "S"),
+        dam = c(NA, NA, "F1", "U", NA, NA),
+        sex = c("F", "M", "U", "M", "M", "F"),
+        stringsAsFactors = FALSE
+      )
+      unknownDam$gen <- findGeneration(unknownDam$id, unknownDam$sire,
+                                       unknownDam$dam)
       cases <<- c(
         list(
           lacy1989Ped = args(lacy),
@@ -123,6 +136,8 @@ kinshipGrid <- local({
           `fam1, MZ twins` = args(fam1, twinRelations = twins89),
           `fam1, MZ twins, x` = args(fam1, twinRelations = twins89,
                                      chrtype = "x", sex = fam1$sex),
+          `a son of an unknown-sex dam, x` = args(unknownDam, chrtype = "x",
+                                                  sex = unknownDam$sex),
           `one founder` = list("A", NA, NA, 0L),
           `one animal, parents not in the pedigree` = list("A", "S", "D", 1L),
           `one male, x` = list("A", NA, NA, 0L, chrtype = "x", sex = "M"),
@@ -396,6 +411,10 @@ test_that("an unusual matrix or threshold gives today's lists and errors", {
   cases <- list(
     `threshold NA` = argsWith(kmat, NA),
     `two thresholds` = argsWith(kmat, c(0.1, 0.2)),
+    ## Today's long form drops the missing cell before the two thresholds are
+    ## recycled over its rows, so the cells after it meet the other threshold.
+    `two thresholds, one missing cell` = argsWith(replace(kmat, 2L, NA),
+                                                  c(0.1, 0.2)),
     `threshold as text` = argsWith(kmat, "0.1"),
     `no threshold` = argsWith(kmat, numeric(0L)),
     `a sparse Matrix` = argsWith(Matrix::Matrix(kmat, sparse = TRUE), 0.1),
