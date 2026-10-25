@@ -355,6 +355,8 @@ written:**
 
   Measured inputs: the example is 7.3% nonzero, the synthetic colony 45.5%. A naive dense-to-
   sparse conversion briefly took 1,415 MB at 6,090 animals.
+  **Ruling (S1062, 2026-10-25): (c), each tab computes its own**, as recommended. The design,
+  its measurements and the bit-identity tests are in `docs/planning/app-kinship-memory-design.md`.
 - **D6 (Phase 10). Parallel dates for Build Earlier Snapshots.** Dates are independent. But
   fork-based parallelism does not exist on Windows, and per-worker random streams change the
   results unless each date is seeded on its own. *Recommended:* no, unless Phase 10's
@@ -634,6 +636,9 @@ done.**
 - **Output:** a design document, and the owner's D5 ruling.
 - **Surface:** none; it is a design session (text only). Its numbers come from Phase 0's app
   memory table and Phase 6's measurements.
+- **Done S1062:** `docs/planning/app-kinship-memory-design.md`. Five modules read the shared
+  matrix in seven ways, not six consumers: Marker Genetics' Realized Relatedness also needs every
+  pair. D5 is ruled (c).
 
 ### Phase 9. The app's memory: implementation (per Phase 8's design; one or two sessions)
 
@@ -642,6 +647,9 @@ done.**
   browser-tier tests.
 - **Surface:** the running app (resident memory through `shinytest2`). Unit-level object sizes
   cannot show what a session holds.
+- **Per the design (S1062):** two sessions, 9a and 9b, with the scope, the tests and the DONE
+  items in sections 6.1, 7 and 8 of `docs/planning/app-kinship-memory-design.md`. The scripted
+  app session joins `tools/perf/` in 9a.
 
 ### Phase 10. Snapshot backfill and convergence: follow-through
 
