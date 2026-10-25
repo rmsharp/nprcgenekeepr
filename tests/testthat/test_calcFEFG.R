@@ -64,7 +64,8 @@ test_that("calcFEFG stops with a clear error on partial parentage", {
 })
 
 test_that("reportGV surfaces the partial-parentage error through its real caller", {
-  ## Real-pipeline regression guard: reportGV() calls calcFEFG() at reportGV.R:133.
+  ## Real-pipeline regression guard: reportGV() builds FE and FG through
+  ## founderStatistics(), which names calcFEFG in this error, as calcFEFG() does.
   ## A descendant with one NA parent must yield the clear diagnostic through the
   ## actual caller, not the cryptic subscript-out-of-bounds crash.
   modLacy <- lacy1989Ped

@@ -85,8 +85,19 @@ founderFunctions <- function() {
                   today = function(ped, alleles) calcFEReference(ped)),
     calcFG = list(new = calcFG, today = calcFGReference),
     calcFEFG = list(new = calcFEFG, today = calcFEFGReference),
-    calcFGSE = list(new = calcFGSE, today = calcFGSEReference)
+    calcFGSE = list(new = calcFGSE, today = calcFGSEReference),
+    founderStatistics = list(new = founderStatistics,
+                             today = todaysFounderStatistics)
   )
+}
+
+## What reportGV() got from today's two calls in a row: calcFEFG()'s list and
+## calcFGSE()'s number, with outcome() collecting both calls' warnings in
+## order, or the first error either gives. founderStatistics() builds both from
+## one contribution build and one scan.
+todaysFounderStatistics <- function(ped, alleles) {
+  list(feFg = calcFEFGReference(ped, alleles),
+       fgSE = calcFGSEReference(ped, alleles))
 }
 
 ## outcome() under a time limit, so a broken fast path that loops fails the
@@ -236,6 +247,17 @@ oddAlleleCases <- function() {
   factorIds <- al
   factorIds$id <- factor(factorIds$id)
   founders <- c("A", "B", "E")
+  ## every descendant carries founder A's first allele in every iteration, so
+  ## B and E contribute but are retained in none: FG and its SE are NA, each
+  ## with a warning
+  lost <- al
+  lost[!(lost$id %in% founders), iter] <- 1L
+  ## V1 stays numbers and one other iteration column does not
+  oneColumn <- function(f) {
+    a <- al
+    a$V2 <- f(a$V2)
+    a
+  }
   list(
     plain = list(alleles = al, path = "new"),
     `double values` = list(alleles = eachIteration(as.double), path = "new"),
@@ -271,7 +293,14 @@ oddAlleleCases <- function() {
     ),
     `NULL` = list(alleles = NULL, path = "none"),
     `a list` = list(alleles = as.list(al), path = "none"),
-    `a matrix` = list(alleles = as.matrix(al), path = "none")
+    `a matrix` = list(alleles = as.matrix(al), path = "none"),
+    `contributing founders lost` = list(alleles = lost, path = "new"),
+    `one text column` = list(alleles = oneColumn(as.character),
+                             path = "today's"),
+    `one factor column` = list(alleles = oneColumn(factor), path = "today's"),
+    `one logical column` = list(alleles = oneColumn(function(v) v > 3L),
+                                path = "today's"),
+    `one Date column` = list(alleles = oneColumn(as.Date), path = "today's")
   )
 }
 
@@ -291,7 +320,7 @@ test_that("unusual gene-drop tables give today's value, error and warnings", {
     list(label = name, ped = ped, alleles = oddAlleleCases()[[name]]$alleles)
   })
   expectFounderOutcomes(cases, founderFunctions()[
-    c("calcRetention", "calcFG", "calcFEFG", "calcFGSE")
+    c("calcRetention", "calcFG", "calcFEFG", "calcFGSE", "founderStatistics")
   ])
 })
 
