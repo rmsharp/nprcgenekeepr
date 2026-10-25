@@ -55,7 +55,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modSnapshotTrendsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">snapshotSource</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modSnapshotTrendsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">snapshotSource</span>, fullPedigree <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,6 +74,15 @@ Genetic Value Analysis run (see
 element), or erroring (shiny <code>req()</code> semantics) before any run has
 happened.</p></dd>
 
+
+<dt id="arg-fullpedigree">fullPedigree<a class="anchor" aria-label="anchor" href="#arg-fullpedigree"></a></dt>
+<dd><p>reactive returning the full quality-controlled pedigree
+(the Pedigree tab's <code>processedPedigree</code>, never the focal-trimmed
+<code>analysisPedigree</code>, which would shrink every past population), or
+erroring (shiny <code>req()</code> semantics) before a studbook is loaded. Feeds
+the "Build Earlier Snapshots" box. Defaults to <code>reactive(NULL)</code>: no
+pedigree, so the box waits.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -84,7 +93,19 @@ happened.</p></dd>
 to selectors.</p></li>
 <li><p><code>isReady</code> - logical: <code>TRUE</code> once <code>history</code> is
 non-<code>NULL</code> (a history has been uploaded or generated).</p></li>
-</ul><p>The generated snapshot's <code>membershipRule</code> is auto-derived from
+<li><p><code>backfillSupport</code> - the table of what each date of the default
+earlier-snapshot series rests on
+(<code><a href="previewBackfillSupport.html">previewBackfillSupport</a></code> of <code>fullPedigree()</code>),
+independent of the chosen start year; erroring (<code>req()</code>) until a
+pedigree is loaded.</p></li>
+</ul><p>The "Build Earlier Snapshots" button calls
+<code><a href="backfillColonySnapshots.html">backfillColonySnapshots</a></code> with the full pedigree, the
+<code>guIter</code>, <code>guThresh</code> and <code>reportArgs</code> of
+<code>snapshotSource()</code>, the chosen start year and the history already
+held, and adds nothing of its own to the numbers. It does nothing before an
+analysis has run. Warnings from the build are summarized in one
+notification; a failure is reported and leaves the history as it was.</p>
+<p>The generated snapshot's <code>membershipRule</code> is auto-derived from
 <code>snapshotSource()$ped$population</code> (issue #167 Slice 4, S760 owner
 decision): <code>"focalPopulation"</code> when the analyzed pedigree's
 population column excludes any animal, <code>"wholePedigree"</code> otherwise

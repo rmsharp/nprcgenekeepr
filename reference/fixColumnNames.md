@@ -5,9 +5,13 @@ and underscores, and then renames by substring: `egoid` and `ego` become
 `id`, `sireid` becomes `sire`, `damid` becomes `dam`, `birthdate`
 becomes `birth` and `deathdate` becomes `death`. `recordstatus`,
 `fromcenter` and `geographicorigin` are restored to their camel case
-forms. The headers `first_name` and `second_name` keep their underscore.
-The matching is unanchored, so any name that contains one of these
-strings is changed (for example, `category` becomes `catidry`).
+forms; a header already spelled `recordStatus`, `fromCenter` or
+`geographicOrigin` is not recorded as a change. The headers `first_name`
+and `second_name` keep their underscore. The matching is unanchored, so
+any name that contains one of these strings is changed (for example,
+`category` becomes `catidry`). A header that is `NA` is read as a blank
+one, so a nameless column is reported the way a column with a blank
+header is.
 
 ## Usage
 
@@ -20,7 +24,7 @@ fixColumnNames(orgCols, errorLst)
 - orgCols:
 
   character vector with ordered list of column names found in a pedigree
-  file.
+  file. A name that is `NA` counts as blank.
 
 - errorLst:
 

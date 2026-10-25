@@ -94,7 +94,7 @@ precision — no estimator is recomputed or duplicated.</p>
 <dd><p>The pedigree data.frame the <code>reportGV</code> analysis was run
 on, carrying at least an <code>id</code> column (plus the logical
 <code>population</code> column when <code>membershipRule</code> is
-<code>"focalPopulation"</code>).</p></dd>
+<code>"focalPopulation"</code> or <code>"reconstructedLiving"</code>).</p></dd>
 
 
 <dt id="arg-geneticvalue">geneticValue<a class="anchor" aria-label="anchor" href="#arg-geneticvalue"></a></dt>
@@ -104,7 +104,8 @@ by <code><a href="reportGV.html">reportGV</a></code>.</p></dd>
 
 <dt id="arg-membershiprule">membershipRule<a class="anchor" aria-label="anchor" href="#arg-membershiprule"></a></dt>
 <dd><p>Single string naming how the analysis population
-was assembled; one of <code>"wholePedigree"</code> or <code>"focalPopulation"</code>.</p></dd>
+was assembled; one of <code>"wholePedigree"</code>, <code>"focalPopulation"</code> or
+<code>"reconstructedLiving"</code>.</p></dd>
 
 
 <dt id="arg-guiter">guIter<a class="anchor" aria-label="anchor" href="#arg-guiter"></a></dt>
@@ -144,6 +145,13 @@ report, and a contradiction stops:</p><dl><dt><code>"wholePedigree"</code></dt>
 <code>population</code> column (see <code><a href="setPopulation.html">setPopulation</a></code>) and the report
 covers exactly <code>ped$id[ped$population]</code>. Pass the same
 population-designated pedigree the <code>reportGV</code> call analyzed.</p></dd>
+
+<dt><code>"reconstructedLiving"</code></dt>
+<dd><p>the snapshot was rebuilt for a past
+date from the pedigree's birth and exit dates (see
+<code><a href="backfillColonySnapshots.html">backfillColonySnapshots</a></code>). It is verified exactly like
+<code>"focalPopulation"</code>, but is a separate rule so a rebuilt row never
+mixes with a recorded one: rules are never compared with each other.</p></dd>
 
 
 </dl></div>

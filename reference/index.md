@@ -220,6 +220,9 @@ Funtions designed for interactive use
   : Main Application UI for nprcgenekeepr
 - [`assignAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/assignAlleles.md)
   : Assign parent alleles randomly
+- [`backfillColonySnapshots()`](https://github.com/rmsharp/nprcgenekeepr/reference/backfillColonySnapshots.md)
+  : Rebuild earlier colony snapshots from a pedigree's birth and exit
+  dates
 - [`buildMarkerGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)
   : Pivot a long-format marker genotype table into a wide genotype
   matrix
@@ -327,6 +330,8 @@ Funtions designed for interactive use
   : Compute kinship summary statistics across simulations
 - [`dataframe2string()`](https://github.com/rmsharp/nprcgenekeepr/reference/dataframe2string.md)
   : Convert a data frame to a character vector
+- [`drawPedigreeDiagram()`](https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.md)
+  : Draw the Pedigree Browser's Diagram from a mating layout
 - [`fillGroupMembersWithSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/fillGroupMembersWithSexRatio.md)
   : Form breeding groups to match a target sex ratio
 - [`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
@@ -600,6 +605,9 @@ Funtions designed for interactive use
   : Tabulate offspring counts, optionally by population
 - [`plotSnapshotTrends()`](https://github.com/rmsharp/nprcgenekeepr/reference/plotSnapshotTrends.md)
   : Plot colony genetic-health trends from a snapshot history
+- [`previewBackfillSupport()`](https://github.com/rmsharp/nprcgenekeepr/reference/previewBackfillSupport.md)
+  : Count what each date of a rebuilt series rests on, before building
+  it
 - [`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)
   : Process qcStudbook Result into UI-Friendly Format
 - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)

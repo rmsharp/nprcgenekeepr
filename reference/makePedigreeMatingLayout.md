@@ -27,6 +27,13 @@ makePedigreeMatingLayout(
   data frame with `id`, `sire`, `dam`, `sex`, and `gen` columns, same
   contract as
   [`makePedigreeDiagramData`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md).
+  An optional `status` column marks deceased animals: see the `deceased`
+  column of the returned `nodes`. Every column whose name starts
+  `affected` is an affected condition, in the order the data frame holds
+  them, the first four drawn (see `conditions` in the return value). A
+  lone one fills the symbol; two or more split it into sections.
+  ([`makePedigreeDiagramData`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  reads the column `affected` alone.)
 
 - edgeStyle:
 
@@ -65,8 +72,17 @@ makePedigreeMatingLayout(
 ## Value
 
 A list with `nodes` (`id`, `label`, `shape`, `title`, `size`,
-`color.background`, `x`, `y`; `color.border` is added under
-`edgeStyle = "rectilinear"`), `edges` (`from`, `to`, `dashes`,
+`color.background`, `deceased` (logical, never `NA`: `TRUE` for the node
+of an animal whose `status` reads `DECEASED`, and for each of its
+repeat-appearance nodes, `FALSE` for every other node and for all of
+them when `ped` has no `status` column), `x`, `y`; `color.border` is
+added under `edgeStyle = "rectilinear"`; `affectedSections` is added
+when there are two or more conditions: a character string with one
+character per condition, `"1"` where the animal is affected and `"0"`
+where it is unaffected or unknown, the same for a repeat-appearance node
+as for its animal, `""` for a node that is not an animal, never `NA`;
+with two or more conditions the animals' `color.background` is white,
+the sections carrying the color), `edges` (`from`, `to`, `dashes`,
 `smooth.enabled`, `smooth.type`, `smooth.roundness`, `color`, `width`;
 the `color` and `width` columns are always present once any mating unit
 exists: a consanguineous mating unit's (`kinship(sire, dam) > 0`) 2
@@ -83,7 +99,10 @@ vector of ids suppressed from `nodes`/`edges` because they have no known
 parent, are never a parent, and are not connected by `twinRelations`; it
 is `character(0)` when nothing was suppressed. When every individual in
 `ped` is isolated, `nodes`/`edges` are both 0-row and `duplicateToReal`
-is empty.
+is empty. Also `conditions`, a data frame with one row per drawn
+condition (`column`, `label` such as “Affected” or “Affected
+(diabetes)”, and its `color`), 0-row when `ped` has no such column, and
+`conditionsNotDrawn`, the names of any such columns past the fourth.
 
 ## Details
 

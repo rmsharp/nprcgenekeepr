@@ -11,7 +11,11 @@ Upload or grow a snapshot-history CSV, generate a new dated snapshot
 from the analysis already loaded on the Genetic Value Analysis tab,
 review trend plots and a per-metric delta comparison (with the D4
 comparability flag visible), and download both the updated history and
-the delta table.
+the delta table. A "Build Earlier Snapshots" box rebuilds past 1
+Januaries from the studbook's birth and exit dates (issue \#170,
+[`backfillColonySnapshots`](https://github.com/rmsharp/nprcgenekeepr/reference/backfillColonySnapshots.md)),
+and an "Earlier Snapshots" tab shows what each of those dates rests on
+([`previewBackfillSupport`](https://github.com/rmsharp/nprcgenekeepr/reference/previewBackfillSupport.md)).
 
 ## Usage
 

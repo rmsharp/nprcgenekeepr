@@ -70,11 +70,16 @@ underlying save function
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 library(ggplot2)
 p <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
-savePlotToFile(p, "my_plot.png")
-savePlotToFile(p, "my_plot.pdf", format = "pdf")
-savePlotToFile(p, "high_res.png", dpi = 300)
-} # }
+pngFile <- tempfile(fileext = ".png")
+pdfFile <- tempfile(fileext = ".pdf")
+hiResFile <- tempfile(fileext = ".png")
+savePlotToFile(p, pngFile)
+#> [1] TRUE
+savePlotToFile(p, pdfFile, format = "pdf")
+#> [1] TRUE
+savePlotToFile(p, hiResFile, dpi = 300)
+#> [1] TRUE
+unlink(c(pngFile, pdfFile, hiResFile))
 ```

@@ -126,7 +126,7 @@ flowchart LR
 
 **Two ways to use it.** Everything in this pipeline is available both
 through the Shiny application walked in [Section 5](#sec-practice) and
-as directly callable R functions – `NAMESPACE` exports 233 functions
+as directly callable R functions – `NAMESPACE` exports 236 functions
 (counted when this article is rendered). An open GitHub issue
 ([\#37](https://github.com/rmsharp/nprcgenekeepr/issues/37)) tracks,
 function by function, which exports the Shiny app itself exercises
@@ -446,25 +446,30 @@ diagram shows what each shape means. If the pedigree data includes an
 optional `affected` column, individuals marked affected are additionally
 shaded a distinct color, with a matching “Affected” entry in the same
 legend – pedigrees without an `affected` column render unshaded, as
-before. If the pedigree data includes an optional `name` column, a
-**Show Names on Diagram** toggle above the diagram (off by default)
-switches each node’s label from id-only to id plus name on a second line
-– a name longer than 15 characters is truncated with an ellipsis on the
-diagram itself, with the full name always available in the hover
-tooltip. Not every animal needs a name; one with no name, or a pedigree
-with no `name` column at all, always renders with just its id, and the
-“Select by id” search dropdown below always lists ids, never names,
-regardless of the toggle. A mating between two blood-related animals
-renders its connector lines thicker and in a distinct color, flagging
-the consanguineous mating at a glance – no optional column or toggle
-needed, since it is detected directly from the pedigree’s own sire/dam
-data. If a colony records twin births, an optional Twin/Zygosity
-Relations file can be uploaded to draw a distinctly-styled connector
-between a declared pair’s own nodes – and, for a declared monozygotic
-pair, corrects their kinship to genetic identity throughout the
-application, not just this diagram. See **The Pedigree Diagram Tab**
-article for the full tour of every feature this tab offers, with a
-screenshot of each.
+before. Further columns whose names start with `affected` (`affected2`,
+`affecteddiabetes`) are more conditions, up to four: each symbol is
+split into one section per condition, filled with that condition’s own
+color where the animal is affected, and the legend has a row for each.
+An animal whose `status` is DECEASED is also drawn with a diagonal slash
+through its symbol, with a matching “Deceased” entry in the legend. If
+the pedigree data includes an optional `name` column, a **Show Names on
+Diagram** toggle above the diagram (off by default) switches each node’s
+label from id-only to id plus name on a second line – a name longer than
+15 characters is truncated with an ellipsis on the diagram itself, with
+the full name always available in the hover tooltip. Not every animal
+needs a name; one with no name, or a pedigree with no `name` column at
+all, always renders with just its id, and the “Select by id” search
+dropdown below always lists ids, never names, regardless of the toggle.
+A mating between two blood-related animals renders its connector lines
+thicker and in a distinct color, flagging the consanguineous mating at a
+glance – no optional column or toggle needed, since it is detected
+directly from the pedigree’s own sire/dam data. If a colony records twin
+births, an optional Twin/Zygosity Relations file can be uploaded to draw
+a distinctly-styled connector between a declared pair’s own nodes – and,
+for a declared monozygotic pair, corrects their kinship to genetic
+identity throughout the application, not just this diagram. See **The
+Pedigree Diagram Tab** article for the full tour of every feature this
+tab offers, with a screenshot of each.
 
 ![Pedigree Browser Diagram tab showing an interactive pedigree diagram
 with sex-shaped nodes and a shape-to-sex legend panel (dot=Female,
@@ -1461,7 +1466,7 @@ one-time snapshots on the Genetic Value Analysis tab into a longitudinal
 record: a running history of dated colony snapshots that lets you see
 whether the colony’s genetic health is improving or eroding over time.
 
-The workflow has three parts:
+The workflow has four parts:
 
 1.  **Snapshot history.** Upload a snapshot-history file (the package
     ships a worked example file for this tab) or start recording a new
@@ -1483,6 +1488,25 @@ The workflow has three parts:
     versions, so a jump in the numbers is not mistaken for a real change
     in the colony. The updated history and the delta table are both
     downloadable for record-keeping.
+4.  **Build Earlier Snapshots.** Once you have run Genetic Value
+    Analysis, this box rebuilds one snapshot for each past 1 January
+    from the birth and exit dates already in the studbook, so a trend
+    can be drawn now instead of after seasons of recording; the rebuilt
+    points are drawn as a dashed line, apart from snapshots recorded at
+    the time.
+
+A rebuilt snapshot looks back with today’s records: a parent identified
+later counts as known earlier, today’s genotypes are used for every
+date, and only animals with a birth date, or with an offspring that has
+one, are placed. The sex-ratio effective size reads low in years when
+few sires were recorded, and two close dates can differ only by the
+random sampling every snapshot has, so read each point beside the counts
+on the **Earlier Snapshots** tab.
+
+An animal the studbook lists as neither alive nor departed is left out
+of the count of animals, but the effective sizes still treat it as
+living when it is a recorded parent, as they do for the snapshot
+recorded today.
 
 > **Note**
 >

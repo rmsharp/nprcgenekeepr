@@ -5,7 +5,7 @@ Genetic-Health Trends Module - Server Function
 ## Usage
 
 ``` r
-modSnapshotTrendsServer(id, snapshotSource)
+modSnapshotTrendsServer(id, snapshotSource, fullPedigree = reactive(NULL))
 ```
 
 ## Arguments
@@ -22,6 +22,15 @@ modSnapshotTrendsServer(id, snapshotSource)
   `snapshotSource` return element), or erroring (shiny `req()`
   semantics) before any run has happened.
 
+- fullPedigree:
+
+  reactive returning the full quality-controlled pedigree (the Pedigree
+  tab's `processedPedigree`, never the focal-trimmed `analysisPedigree`,
+  which would shrink every past population), or erroring (shiny `req()`
+  semantics) before a studbook is loaded. Feeds the "Build Earlier
+  Snapshots" box. Defaults to `reactive(NULL)`: no pedigree, so the box
+  waits.
+
 ## Value
 
 A list with reactive components:
@@ -35,6 +44,20 @@ A list with reactive components:
 
 - `isReady` - logical: `TRUE` once `history` is non-`NULL` (a history
   has been uploaded or generated).
+
+- `backfillSupport` - the table of what each date of the default
+  earlier-snapshot series rests on
+  ([`previewBackfillSupport`](https://github.com/rmsharp/nprcgenekeepr/reference/previewBackfillSupport.md)
+  of `fullPedigree()`), independent of the chosen start year; erroring
+  (`req()`) until a pedigree is loaded.
+
+The "Build Earlier Snapshots" button calls
+[`backfillColonySnapshots`](https://github.com/rmsharp/nprcgenekeepr/reference/backfillColonySnapshots.md)
+with the full pedigree, the `guIter`, `guThresh` and `reportArgs` of
+`snapshotSource()`, the chosen start year and the history already held,
+and adds nothing of its own to the numbers. It does nothing before an
+analysis has run. Warnings from the build are summarized in one
+notification; a failure is reported and leaves the history as it was.
 
 The generated snapshot's `membershipRule` is auto-derived from
 `snapshotSource()$ped$population` (issue \#167 Slice 4, S760 owner

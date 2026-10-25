@@ -5,7 +5,7 @@ Make the initial grpNum list
 ## Usage
 
 ``` r
-makeGroupNum(numGp)
+makeGroupNum(numGp = 1L)
 ```
 
 ## Arguments

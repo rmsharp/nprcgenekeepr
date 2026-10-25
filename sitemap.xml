@@ -47,6 +47,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/appendColonySnapshot.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/assignAlleles.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/backfillColonySnapshots.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calcA.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calcAge.html</loc></url>
@@ -105,6 +106,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerTransmissionProbability.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/dot-markerTwoSourceGenotypeProbability.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/dot-parseMhcHaplotypeCalls.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/exampleNprcgenekeeprConfig.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/examplePedigree.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/fillGroupMembersWithSexRatio.html</loc></url>
@@ -257,6 +259,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/pedWithGenotype.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/pedWithGenotypeReport.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/plotSnapshotTrends.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/previewBackfillSupport.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/print.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/qcBreeders.html</loc></url>

@@ -46,9 +46,9 @@ someDates <- lubridate::mdy(paste0(
   ) + 2000
 ))
 someDates
-#> [1] "2015-04-14" "2009-01-19"
+#> [1] "2003-09-17" "2006-02-02"
 chooseDate(someDates[1], someDates[2], earlier = TRUE)
-#> [1] "2009-01-19"
+#> [1] "2003-09-17"
 chooseDate(someDates[1], someDates[2], earlier = FALSE)
-#> [1] "2015-04-14"
+#> [1] "2006-02-02"
 ```

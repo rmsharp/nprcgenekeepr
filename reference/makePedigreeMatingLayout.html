@@ -88,7 +88,14 @@ separate function.</p>
 <dl><dt id="arg-ped">ped<a class="anchor" aria-label="anchor" href="#arg-ped"></a></dt>
 <dd><p>data frame with <code>id</code>, <code>sire</code>, <code>dam</code>,
 <code>sex</code>, and <code>gen</code> columns, same contract as
-<code><a href="makePedigreeDiagramData.html">makePedigreeDiagramData</a></code>.</p></dd>
+<code><a href="makePedigreeDiagramData.html">makePedigreeDiagramData</a></code>. An optional <code>status</code>
+column marks deceased animals: see the <code>deceased</code> column of the
+returned <code>nodes</code>. Every column whose name starts
+<code>affected</code> is an affected condition, in the order the data
+frame holds them, the first four drawn (see <code>conditions</code> in the
+return value). A lone one fills the symbol; two or more split it
+into sections. (<code><a href="makePedigreeDiagramData.html">makePedigreeDiagramData</a></code> reads the
+column <code>affected</code> alone.)</p></dd>
 
 
 <dt id="arg-edgestyle">edgeStyle<a class="anchor" aria-label="anchor" href="#arg-edgestyle"></a></dt>
@@ -127,9 +134,20 @@ twinRelations = twinRelations)</code>.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with <code>nodes</code> (<code>id</code>, <code>label</code>, <code>shape</code>,
-<code>title</code>, <code>size</code>, <code>color.background</code>, <code>x</code>,
+<code>title</code>, <code>size</code>, <code>color.background</code>,
+<code>deceased</code> (logical, never <code>NA</code>: <code>TRUE</code> for the node of
+an animal whose <code>status</code> reads <code>DECEASED</code>, and for each of its
+repeat-appearance nodes, <code>FALSE</code> for every other node and for all of
+them when <code>ped</code> has no <code>status</code> column), <code>x</code>,
 <code>y</code>; <code>color.border</code> is added under
-<code>edgeStyle = "rectilinear"</code>), <code>edges</code> (<code>from</code>,
+<code>edgeStyle = "rectilinear"</code>; <code>affectedSections</code> is added
+when there are two or more conditions: a character string with one
+character per condition, <code>"1"</code> where the animal is affected
+and <code>"0"</code> where it is unaffected or unknown, the same for a
+repeat-appearance node as for its animal, <code>""</code> for a node that
+is not an animal, never <code>NA</code>; with two or more conditions the
+animals' <code>color.background</code> is white, the sections carrying the
+color), <code>edges</code> (<code>from</code>,
 <code>to</code>, <code>dashes</code>, <code>smooth.enabled</code>, <code>smooth.type</code>,
 <code>smooth.roundness</code>, <code>color</code>, <code>width</code>; the <code>color</code>
 and <code>width</code> columns are always present once any mating unit
@@ -149,7 +167,12 @@ because they have no known parent, are never a parent, and are not
 connected by <code>twinRelations</code>; it is <code>character(0)</code> when
 nothing was suppressed. When every individual in <code>ped</code> is
 isolated, <code>nodes</code>/<code>edges</code> are both 0-row and
-<code>duplicateToReal</code> is empty.</p>
+<code>duplicateToReal</code> is empty. Also <code>conditions</code>, a data
+frame with one row per drawn condition (<code>column</code>, <code>label</code>
+such as “Affected” or “Affected (diabetes)”, and its
+<code>color</code>), 0-row when <code>ped</code> has no such column, and
+<code>conditionsNotDrawn</code>, the names of any such columns past the
+fourth.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

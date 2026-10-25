@@ -6,14 +6,16 @@ membershipRule, so successive snapshots are compared like with
 like. Sampling-uncertainty ribbons are drawn exactly where the schema
 carries a standard error: fg (fgSE) and meanGu
 (meanGuSE) — the Monte Carlo gene-drop uncertainty is surfaced,
-never hidden."><meta property="og:description" content="Draws the longitudinal trend view of a colony snapshot history (issue
+never hidden. Date labels that would overlap on a narrow panel are dropped
+instead of drawn over one another."><meta property="og:description" content="Draws the longitudinal trend view of a colony snapshot history (issue
 #167): one ggplot object faceted per metric (free y scales), with
 snapshotDate on the x axis and one colored series per
 membershipRule, so successive snapshots are compared like with
 like. Sampling-uncertainty ribbons are drawn exactly where the schema
 carries a standard error: fg (fgSE) and meanGu
 (meanGuSE) — the Monte Carlo gene-drop uncertainty is surfaced,
-never hidden."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+never hidden. Date labels that would overlap on a narrow panel are dropped
+instead of drawn over one another."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -71,12 +73,13 @@ never hidden."><meta property="og:image" content="https://github.com/rmsharp/npr
 like. Sampling-uncertainty ribbons are drawn exactly where the schema
 carries a standard error: <code>fg</code> (<code>fgSE</code>) and <code>meanGu</code>
 (<code>meanGuSE</code>) — the Monte Carlo gene-drop uncertainty is surfaced,
-never hidden.</p>
+never hidden. Date labels that would overlap on a narrow panel are dropped
+instead of drawn over one another.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotSnapshotTrends</span><span class="op">(</span><span class="va">history</span>, metrics <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotSnapshotTrends</span><span class="op">(</span><span class="va">history</span>, metrics <span class="op">=</span> <span class="cn">NULL</span>, ncol <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -97,6 +100,15 @@ colony scalars and the Summary Statistics aggregates); the composition
 counts (<code>nAnimals</code>, <code>nMales</code>, <code>nFemales</code>) may be
 requested to make membership churn visible.</p></dd>
 
+
+<dt id="arg-ncol">ncol<a class="anchor" aria-label="anchor" href="#arg-ncol"></a></dt>
+<dd><p>single positive whole number: how many columns of panels to
+draw. The default <code>NULL</code> leaves the grid to <code>ggplot2</code> (5 columns
+for the 18 default metrics). A narrow figure needs fewer columns, so each
+panel stays wide enough for its title; the Genetic-Health Trends tab picks
+the number from the width of its plot. A number above the count of panels
+draws one column for each panel.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -109,6 +121,11 @@ requested to make membership churn visible.</p></dd>
 snapshot are drawn with a distinct point shape, and the plot carries a
 caption naming the changed fields: mixed-provenance series are flagged,
 not refused.</p>
+<p>Snapshots rebuilt from studbook dates by
+<code><a href="backfillColonySnapshots.html">backfillColonySnapshots</a></code> are filed under the rule
+<code>"reconstructedLiving"</code> (issue #170). That series is drawn as a dashed
+line, the recorded rules stay solid, and the caption says the dashed lines
+are rebuilt and were not recorded at the time.</p>
     </div>
 
     <div class="section level2">

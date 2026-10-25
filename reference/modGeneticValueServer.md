@@ -54,7 +54,13 @@ loaded or it cannot be read), `founderStats`, `maleFounders`,
 `femaleFounders`, and `snapshotSource` (issue \#167 Slice 4: the most
 recent run's analyzed pedigree, its `nprcgenekeeprGV` object, and its
 `guIter`/`guThresh`, captured atomically for
-[`modSnapshotTrendsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md)).
+[`modSnapshotTrendsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md),
+plus `reportArgs` (issue \#170 Slice 3): the other nine settings the run
+passed to
+[`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+– the species tables and their defaults, the kinship overrides, the twin
+pairs and the three ranking cutoffs – so the rows built for earlier
+dates match the analysis beside them).
 
 ## References
 

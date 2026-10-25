@@ -355,10 +355,16 @@ with a legend to the right of the diagram showing the same mapping. If
 the pedigree data includes an optional `affected` column, individuals
 marked affected are additionally shaded a distinct color on the diagram,
 with a matching “Affected” entry in the same legend; pedigrees without
-an `affected` column render unshaded, as before. If the pedigree data
-includes an optional `name` column, a **Show Names on Diagram** toggle
-(off by default) switches each node’s label from id-only to id plus name
-on a second line; a name longer than 15 characters is truncated with an
+an `affected` column render unshaded, as before. Further columns whose
+names start with `affected` (`affected2`, `affecteddiabetes`) are more
+conditions, up to four: each symbol is split into one section per
+condition, filled with that condition’s own color where the animal is
+affected, and the legend has a row for each. An animal whose `status` is
+DECEASED is also drawn with a diagonal slash through its symbol, with a
+matching “Deceased” entry in the legend. If the pedigree data includes
+an optional `name` column, a **Show Names on Diagram** toggle (off by
+default) switches each node’s label from id-only to id plus name on a
+second line; a name longer than 15 characters is truncated with an
 ellipsis on the diagram, with the full name always available in the
 hover tooltip. Not every animal needs a name – one with no name (or a
 pedigree with no `name` column at all) always renders with just its id,
@@ -902,6 +908,9 @@ The tab has:
   by sex), and
 - a **Genetic Diversity Metrics** section (mean kinship, mean genome
   uniqueness, and the number of animals analyzed).
+
+**Export Demographics** saves the pedigree the analysis is using, as it
+stands, to `demographics_<date>.csv`; it is not a summary.
 
 The tab is still under development. A “Coming Soon” list names founder
 contribution analysis, inbreeding trends over time, breeding success

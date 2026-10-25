@@ -24,7 +24,7 @@ Two related resources cover the same feature from other angles:
   script, via the two exported functions this tab is built on
   ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
   and
-  [`visNetwork::visNetwork()`](https://rdrr.io/pkg/visNetwork/man/visNetwork.html))
+  [`drawPedigreeDiagram()`](https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.md))
   – useful outside the Shiny app, e.g. for a reproducible report or a
   custom app.
 
@@ -279,6 +279,51 @@ A small lineage (12 animals) from a pedigree that includes an `affected`
 column: the 4 affected animals render filled; the 8 others, 7 unaffected
 and 1 of unknown affected status (NA), render identically, open.
 
+## More than one affected condition
+
+Every further column whose name starts with `affected` is another
+condition, in the order the columns appear in the file, up to four
+(kinship2’s own limit). The quality-control step lower-cases a column
+name and drops its spaces, periods and underscores, so `Affected_2`
+arrives as `affected2` and `Affected Diabetes` as `affecteddiabetes`.
+With two or more conditions the symbol is divided into equal sections,
+one per condition, counter-clockwise from the top (with two conditions
+the first is the left half). A section is filled with its condition’s
+color where the animal is affected and left open where it is unaffected
+or of unknown status. The first condition keeps the pink (`#CC79A7`);
+the others are orange (`#E69F00`), sky blue (`#56B4E9`) and bluish green
+(`#009E73`). The legend has one row per condition in place of the single
+“Affected” row, named from the rest of the column name (“Affected 2”,
+“Affected (diabetes)”), the hover tooltip lists each condition as Yes,
+No or Unknown, and the diagram grows taller to keep the legend text the
+same size. A file with more than four such columns draws the first four,
+and a note under the diagram names the others. The deceased slash is
+drawn over the sections. A single condition column, named `affected` or
+anything else starting with it, fills the whole symbol, as described
+above.
+
+These sections, like the deceased slash, are painted by the diagram’s
+own drawing script after each draw.
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+returns the data for them (the `affectedSections` column of its nodes,
+and `conditions`), and
+[`drawPedigreeDiagram()`](https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.md)
+draws them, in the app and in a script alike;
+[`visNetwork::visNetwork()`](https://rdrr.io/pkg/visNetwork/man/visNetwork.html)
+given that data by hand does not.
+
+## Deceased marker
+
+An animal whose `status` is `DECEASED` is drawn with a diagonal slash
+through its symbol, from bottom left to top right, the way kinship2
+marks a deceased animal, and the legend has a matching “Deceased” entry.
+Only the `status` column decides. A `SHIPPED` animal, an animal of
+`UNKNOWN` status, and every animal in a pedigree with no `status` column
+are drawn plain: an exit date cannot decide it, because it is recorded
+for a shipment as well as for a death. The slash reaches the same
+distance past the outline of every shape, the distance it reaches past
+the circle in the legend.
+
 ## Showing names
 
 If the pedigree data includes an optional `name` column, a **Show Names
@@ -369,17 +414,22 @@ functions that work identically outside the Shiny application:
 prepares a pedigree’s node/edge data in the mating-unit convention this
 whole article describes (including the `edgeStyle`, `twinRelations`, and
 consanguineous-marker behavior above), and
-[`visNetwork::visNetwork()`](https://rdrr.io/pkg/visNetwork/man/visNetwork.html)
-renders it. A simpler function,
+[`drawPedigreeDiagram()`](https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.md)
+draws it, with the same legend, deceased slash, condition sections,
+Export button and id search as this tab, which calls it too. A simpler
+function,
 [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md),
 remains available for a plain one-node-per- animal diagram without the
 mating-unit convention – it is no longer what the Shiny app itself uses.
 
 See the “Pedigree Diagram” section of the **Interactive Use of
 nprcgenekeepr** vignette for a full, runnable walkthrough – both edge
-styles, the node/edge data structure, and the twin-relations argument,
-all reproducing this tab’s rendering exactly (including a genuinely
-working Export Diagram (PNG) button).
+styles drawn with
+[`drawPedigreeDiagram()`](https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.md),
+the node/edge data structure, and the twin-relations argument, all
+reproducing this tab’s rendering exactly (including a genuinely working
+Export Diagram (PNG) button). Only click-to-navigate needs the app,
+because it needs a live Shiny session.
 
 ## See also
 

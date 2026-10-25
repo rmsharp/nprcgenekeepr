@@ -32,7 +32,7 @@ createColonySnapshot(
 
   The pedigree data.frame the `reportGV` analysis was run on, carrying
   at least an `id` column (plus the logical `population` column when
-  `membershipRule` is `"focalPopulation"`).
+  `membershipRule` is `"focalPopulation"` or `"reconstructedLiving"`).
 
 - geneticValue:
 
@@ -42,7 +42,7 @@ createColonySnapshot(
 - membershipRule:
 
   Single string naming how the analysis population was assembled; one of
-  `"wholePedigree"` or `"focalPopulation"`.
+  `"wholePedigree"`, `"focalPopulation"` or `"reconstructedLiving"`.
 
 - guIter:
 
@@ -85,6 +85,15 @@ and a contradiction stops:
   [`setPopulation`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md))
   and the report covers exactly `ped$id[ped$population]`. Pass the same
   population-designated pedigree the `reportGV` call analyzed.
+
+- `"reconstructedLiving"`:
+
+  the snapshot was rebuilt for a past date from the pedigree's birth and
+  exit dates (see
+  [`backfillColonySnapshots`](https://github.com/rmsharp/nprcgenekeepr/reference/backfillColonySnapshots.md)).
+  It is verified exactly like `"focalPopulation"`, but is a separate
+  rule so a rebuilt row never mixes with a recorded one: rules are never
+  compared with each other.
 
 ## Examples
 

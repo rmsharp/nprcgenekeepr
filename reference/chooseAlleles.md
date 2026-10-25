@@ -30,5 +30,5 @@ according to Mendelian inheritance.
 
 ``` r
 chooseAlleles(0L:4L, 5L:9L)
-#> [1] 5 1 2 8 4
+#> [1] 0 1 7 3 9
 ```

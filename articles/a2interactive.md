@@ -327,8 +327,9 @@ occurrence after the first joined back to its main occurrence by a
 dashed line. Both are built on two script-callable functions that work
 identically outside the Shiny application: **makePedigreeMatingLayout**
 prepares a pedigree’s node/edge data in this convention, and
-**visNetwork::visNetwork** (from the **visNetwork** package, a
-dependency of **nprcgenekeepr**) renders it. (A simpler function,
+**drawPedigreeDiagram** draws it with the **visNetwork** package (a
+dependency of **nprcgenekeepr**); the Diagram tab itself calls
+**drawPedigreeDiagram**. (A simpler function,
 **makePedigreeDiagramData**, remains available for a plain
 one-node-per-animal diagram without this convention – it is no longer
 what the Shiny app itself uses.) See the *pedigree-diagram* article for
@@ -429,7 +430,8 @@ diagramData <- makePedigreeMatingLayout(demoPed, edgeStyle = "direct")
 names(diagramData)
 ```
 
-    ## [1] "nodes"           "edges"           "duplicateToReal" "isolatedIds"
+    ## [1] "nodes"              "edges"              "duplicateToReal"   
+    ## [4] "isolatedIds"        "conditions"         "conditionsNotDrawn"
 
 ``` r
 
@@ -462,50 +464,18 @@ function also prints a message naming them).
 
 Each node already carries its own fixed **x**/**y** position (computed
 by **makePedigreeMatingLayout** itself), so rendering it turns vis.js’s
-usual physics/hierarchical layout off rather than turning one on. Piping
-*diagramData* into **visNetwork::visNetwork** and the same layout,
-export, legend, and search options `R/modPedigree.R` uses reproduces the
-Diagram tab’s rendering exactly, including a genuinely working **Export
-Diagram (PNG)** button – try it below.[^5]
+usual physics/hierarchical layout off rather than turning one on.
+**drawPedigreeDiagram** draws *diagramData* the way the Diagram tab does
+– the tab calls the same function – so it reproduces the Diagram tab’s
+rendering exactly: the legend, a slash through the symbol of an animal
+whose `status` is DECEASED, the colored sections of an animal with more
+than one affected condition, and a genuinely working **Export Diagram
+(PNG)** button – try it below. Give it the `edgeStyle` the layout was
+made with.[^5]
 
 ``` r
 
-visNetwork::visNetwork(diagramData$nodes, diagramData$edges) |>
-  visNetwork::visPhysics(enabled = FALSE) |>
-  visNetwork::visNodes(physics = FALSE) |>
-  visNetwork::visEdges(smooth = FALSE) |>
-  visNetwork::visExport(
-    type = "png", name = "pedigree_diagram",
-    label = "Export Diagram (PNG)"
-  ) |>
-  visNetwork::visLegend(
-    addNodes = data.frame(
-      label = c(
-        "Female", "Male", "Hermaphrodite", "Unknown", "Other / Unrecorded"
-      ),
-      shape = c("dot", "square", "star", "triangle", "diamond"),
-      stringsAsFactors = FALSE
-    ),
-    useGroups = FALSE, position = "right", main = "Sex",
-    width = 0.28, stepY = 65L
-  ) |>
-  visNetwork::visOptions(
-    nodesIdSelection = list(
-      enabled = TRUE,
-      # Excludes all 5 of makePedigreeMatingLayout()'s reserved node-id
-      # prefixes -- __union_/__dup_ can appear under either edge style;
-      # __drop_/__bar_/__proj_ only appear under "rectilinear" (see below).
-      # Harmless no-op here since diagramData was built with edgeStyle =
-      # "direct" explicit above, but keeps this pattern identical to the
-      # rectilinear chunk below and to R/modPedigree.R's own.
-      values = diagramData$nodes$id[
-        !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
-               diagramData$nodes$id)
-      ]
-    ),
-    highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 1L,
-                             algorithm = "all")
-  )
+drawPedigreeDiagram(diagramData, edgeStyle = "direct")
 ```
 
 The **Select by id** dropdown above the diagram – filtered to real
@@ -535,7 +505,8 @@ diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
 names(diagramDataRectilinear)
 ```
 
-    ## [1] "nodes"           "edges"           "duplicateToReal" "isolatedIds"
+    ## [1] "nodes"              "edges"              "duplicateToReal"   
+    ## [4] "isolatedIds"        "conditions"         "conditionsNotDrawn"
 
 ``` r
 
@@ -561,58 +532,29 @@ extra `color.border` column under *rectilinear* –
 **visNetwork::visNetwork()** reads it directly, so no extra rendering
 code is needed.
 
-Rendering it uses the identical chain as the *direct* style above, with
-one difference: **highlightNearest**’s hover-highlight *degree* is
-raised from `1` to `6`. Under *rectilinear*, a plain individual’s
-nearest graph neighbor is often one of the invisible waypoint nodes
-above rather than a visible mating dot, so `degree = 1` (correct for
-*direct*) can highlight nothing visible at all on hover; `6` restores
-visible feedback for the common case. It is a deliberate compromise, not
-a complete fix, because the invisible waypoints count as steps: on the
-bundled 375-animal rhesus pedigree, hovering an animal lights everything
-that the *direct* style’s `degree = 1` lights for all but 2 animals,
-whose parents’ mating dot is just out of reach (their family’s
-connectors were rerouted around crowded lines, which adds waypoints).
-One mating pair with nine or more full siblings reaches the same limit;
-the widest pair in the bundled pedigrees has four. A larger `degree`
-would cover these cases, but it highlights more of the diagram on every
-hover, so the simpler, tighter hover was kept. The live Shiny app’s
-Diagram tab applies this same style-aware degree automatically when you
-switch the “Diagram Edge Style” toggle.
+Rendering it is the same call with `edgeStyle = "rectilinear"`, which
+makes one difference: **drawPedigreeDiagram** raises the hover
+highlight’s reach (**highlightNearest**’s *degree*) from `1` to `6`.
+Under *rectilinear*, a plain individual’s nearest graph neighbor is
+often one of the invisible waypoint nodes above rather than a visible
+mating dot, so `degree = 1` (correct for *direct*) can highlight nothing
+visible at all on hover; `6` restores visible feedback for the common
+case. It is a deliberate compromise, not a complete fix, because the
+invisible waypoints count as steps: on the bundled 375-animal rhesus
+pedigree, hovering an animal lights everything that the *direct* style’s
+`degree = 1` lights for all but 2 animals, whose parents’ mating dot is
+just out of reach (their family’s connectors were rerouted around
+crowded lines, which adds waypoints). One mating pair with nine or more
+full siblings reaches the same limit; the widest pair in the bundled
+pedigrees has four. A larger `degree` would cover these cases, but it
+highlights more of the diagram on every hover, so the simpler, tighter
+hover was kept. The live Shiny app’s Diagram tab applies this same
+style-aware degree automatically when you switch the “Diagram Edge
+Style” toggle.
 
 ``` r
 
-visNetwork::visNetwork(diagramDataRectilinear$nodes,
-                        diagramDataRectilinear$edges) |>
-  visNetwork::visPhysics(enabled = FALSE) |>
-  visNetwork::visNodes(physics = FALSE) |>
-  visNetwork::visEdges(smooth = FALSE) |>
-  visNetwork::visExport(
-    type = "png", name = "pedigree_diagram_rectilinear",
-    label = "Export Diagram (PNG)"
-  ) |>
-  visNetwork::visLegend(
-    addNodes = data.frame(
-      label = c(
-        "Female", "Male", "Hermaphrodite", "Unknown", "Other / Unrecorded"
-      ),
-      shape = c("dot", "square", "star", "triangle", "diamond"),
-      stringsAsFactors = FALSE
-    ),
-    useGroups = FALSE, position = "right", main = "Sex",
-    width = 0.28, stepY = 65L
-  ) |>
-  visNetwork::visOptions(
-    nodesIdSelection = list(
-      enabled = TRUE,
-      values = diagramDataRectilinear$nodes$id[
-        !grepl("^__union_|^__dup_|^__drop_|^__bar_|^__proj_",
-               diagramDataRectilinear$nodes$id)
-      ]
-    ),
-    highlightNearest = list(enabled = TRUE, hover = TRUE, degree = 6L,
-                             algorithm = "all")
-  )
+drawPedigreeDiagram(diagramDataRectilinear, edgeStyle = "rectilinear")
 ```
 
 The live Shiny app also caps how large a pedigree it will render as a
@@ -698,6 +640,44 @@ returns for the same pedigree without *twinRelations*: the union/parent
 connecting *S1* directly to *S2* (dashed, labeled `"?"` for the
 undetermined zygosity code) – that row exists only because a validated
 *twinRelations* table was supplied.
+
+### Passing a Kinship Matrix You Already Have
+
+**makePedigreeMatingLayout** marks a mating unit as consanguineous when
+its sire and dam are related, and it works that out by computing a
+kinship matrix of the pedigree itself. If you already hold a kinship
+matrix for the same pedigree, pass it as *kinshipMatrix* and the layout
+uses it instead of making its own. The matrix needs the animal ids as
+its row and column names. It is then the only source of the
+consanguinity marks: *twinRelations* goes on drawing the twin connectors
+and nothing else, so a matrix that should reflect declared monozygotic
+twins has to be built with **kinship**’s own *twinRelations* argument
+before it is passed in.
+
+``` r
+
+demoKmat <- kinship(demoPed$id, demoPed$sire, demoPed$dam, demoPed$gen)
+layoutFromPed <- makePedigreeMatingLayout(demoPed)
+layoutFromMatrix <- makePedigreeMatingLayout(demoPed, kinshipMatrix = demoKmat)
+identical(layoutFromMatrix$edges, layoutFromPed$edges)
+```
+
+    ## [1] TRUE
+
+``` r
+
+unnamedMatrixMessage <- tryCatch(
+  makePedigreeMatingLayout(demoPed, kinshipMatrix = unname(demoKmat)),
+  error = conditionMessage
+)
+unnamedMatrixMessage
+```
+
+    ## [1] "makePedigreeMatingLayout() requires 'kinshipMatrix' to be a matrix (or Matrix) with row and column names set to individual ids, or NULL."
+
+The layout built from the matrix has the same edges as the one that
+computed its own, and a matrix without ids is refused with a message
+that names *kinshipMatrix*.
 
 ## Genetic Value Analysis
 
@@ -981,6 +961,265 @@ zs <- rpt[, "zScores"]
 Creation of boxplots for the *mean kinship* and *z-scores* is left as an
 exercise.
 
+### X-Chromosome Kinship
+
+By default **kinship** gives the autosomal kinship coefficient. With
+`chrtype = "x"` it gives X-chromosome kinship instead. A male carries a
+single X, which comes from his mother alone; a female’s X-linked kinship
+follows the same average-of-the-parents rule as the autosomes. Because
+the calculation depends on sex, *sex* is then required: one value per
+animal in the order of *id*, using the package’s `"M"` and `"F"` codes
+(any other value, `NA` included, counts as unknown). An animal of
+unknown sex that has recorded parents gets `NA` kinship with everyone.
+
+``` r
+
+xPed <- nprcgenekeepr::smallPed
+xPed$gen <- findGeneration(xPed$id, xPed$sire, xPed$dam)
+autosomeKmat <- kinship(xPed$id, xPed$sire, xPed$dam, xPed$gen)
+xKmat <- kinship(xPed$id, xPed$sire, xPed$dam, xPed$gen,
+                 chrtype = "x", sex = xPed$sex)
+unique(data.frame(sex = xPed$sex, autosome = unname(diag(autosomeKmat)),
+                  x = unname(diag(xKmat))))
+```
+
+    ##   sex autosome   x
+    ## 1   M      0.5 1.0
+    ## 2   F      0.5 0.5
+
+``` r
+
+xPairs <- data.frame(
+  first = c("A", "B", "D", "E"), second = c("C", "C", "F", "F"),
+  relation = c("father and son", "mother and son", "father and daughter",
+               "mother and daughter"))
+pairIndex <- as.matrix(xPairs[, c("first", "second")])
+xPairs$autosome <- autosomeKmat[pairIndex]
+xPairs$x <- xKmat[pairIndex]
+xPairs
+```
+
+    ##   first second            relation autosome    x
+    ## 1     A      C      father and son     0.25 0.00
+    ## 2     B      C      mother and son     0.25 0.50
+    ## 3     D      F father and daughter     0.25 0.50
+    ## 4     E      F mother and daughter     0.25 0.25
+
+The first table is each animal’s kinship with itself: on the X a male’s
+is higher than his autosomal value, because he carries a single X, and a
+female’s is unchanged. In the second, a father and his son share no X,
+since a son’s X comes from his mother alone, while a mother and her son,
+and a father and his daughter, share more of it than they do on the
+autosomes.
+
+## Colony Snapshots Over Time
+
+A *snapshot* is one dated row of colony-level numbers: the settings and
+counts that say what the numbers rest on, the values **reportGV**
+reports for the colony as a whole, and summaries of the per-animal
+kinship and genome uniqueness values. Rows for successive dates make a
+*history*, which is what the Genetic-Health Trends tab of the Shiny
+application keeps and plots. The functions in this section do the same
+work in a script.
+
+The chunks below use the example pedigree that ships with the package,
+**qcPed**, and few gene-drop iterations so that each runs in a moment.
+Use more for an analysis you will report (the default of **reportGV** is
+1000).
+
+### Recording a Snapshot
+
+**createColonySnapshot** turns one **reportGV** result into a one-row
+snapshot. Give it the pedigree the analysis was run on, the result, the
+*membershipRule* that says who was analyzed (here `"wholePedigree"`,
+every animal in the pedigree), and the same *guIter* and *guThresh* the
+analysis used, because the snapshot records them and the result does not
+carry them. **appendColonySnapshot** adds the row to a history (`NULL`
+starts a new one) and returns the history in date order; it writes
+nothing. The date is fixed here only so that the printed values are the
+same each time the document is built; leave it out to date the snapshot
+today.
+
+``` r
+
+set.seed(1L)
+snapshotPed <- qcPed
+snapshotGV <- reportGV(snapshotPed, guIter = 50L, guThresh = 1L)
+firstSnapshot <- createColonySnapshot(snapshotPed, snapshotGV,
+  "wholePedigree",
+  guIter = 50L, guThresh = 1L, snapshotDate = as.Date("2018-01-01")
+)
+snapshotHistory <- appendColonySnapshot(NULL, firstSnapshot)
+snapshotHistory[, c("snapshotDate", "membershipRule", "nAnimals", "fe", "fg")]
+```
+
+    ##   snapshotDate membershipRule nAnimals       fe       fg
+    ## 1   2018-01-01  wholePedigree      280 77.04028 52.16436
+
+The snapshot has 27 columns; the table shows five of them.
+
+### Rebuilding Earlier Dates
+
+A history of one row shows no trend. **backfillColonySnapshots**
+rebuilds a snapshot for each date you name from the birth and exit dates
+already in the pedigree, so you need not wait for seasons of recording.
+It works out which animals were alive on each date, analyzes them and
+their ancestors with **reportGV**, and summarizes the result as
+**createColonySnapshot** does. Give it the full pedigree, not one
+already trimmed to a focal list of animals. The rows are filed under
+their own membership rule, `"reconstructedLiving"`, so they form a line
+of their own and never mix with recorded rows. Passing the history as
+*existingHistory* keeps its rows and adds the rebuilt ones.
+
+Before the gene drop is spent, **previewBackfillSupport** gives the
+counts each date rests on, without the analysis.
+
+``` r
+
+set.seed(1L)
+earlierDates <- as.Date(c("2005-01-01", "2008-01-01", "2010-01-01"))
+backfillPreview <- previewBackfillSupport(snapshotPed, dates = earlierDates)
+backfillPreview
+```
+
+    ##   snapshotDate nLiving nPlacedByOffspring nPossiblyAlive pctSireKnown
+    ## 1   2005-01-01      86                  0              0     56.97674
+    ## 2   2008-01-01      79                  0              0     59.49367
+    ## 3   2010-01-01      63                  0              0     68.25397
+    ##   pctDamKnown
+    ## 1    89.53488
+    ## 2    91.13924
+    ## 3    90.47619
+
+``` r
+
+earlierSnapshots <- backfillColonySnapshots(snapshotPed,
+  dates = earlierDates,
+  guIter = 50L, guThresh = 1L, existingHistory = snapshotHistory
+)
+snapshotHistory <- earlierSnapshots$history
+snapshotHistory[, c("snapshotDate", "membershipRule", "nAnimals", "fe", "fg")]
+```
+
+    ##   snapshotDate      membershipRule nAnimals       fe       fg
+    ## 1   2005-01-01 reconstructedLiving       86 66.68822 40.32350
+    ## 2   2008-01-01 reconstructedLiving       79 71.95316 38.93590
+    ## 3   2010-01-01 reconstructedLiving       63 63.03001 32.81522
+    ## 4   2018-01-01       wholePedigree      280 77.04028 52.16436
+
+*nLiving* is the number of animals each date rests on, and
+*pctSireKnown* and *pctDamKnown* are the percentage of them whose sire
+or dam is recorded. *nPlacedByOffspring* and *nPossiblyAlive* count
+animals with no birth date
+([`?backfillColonySnapshots`](https://github.com/rmsharp/nprcgenekeepr/reference/backfillColonySnapshots.md)
+says how each is placed). Read these counts beside the trend: where few
+sires are recorded the sex-ratio effective size reads low because of the
+missing records, not because of the colony.
+
+A rebuilt snapshot looks back with today’s records: a parent identified
+later counts as known earlier, today’s genotypes are used for every
+date, and only animals with a birth date, or with an offspring that has
+one, are placed. Two close dates can differ only by the random sampling
+every gene drop has.
+
+A date that cannot be analyzed does not stop the others. It is listed in
+the `skipped` element with the reason, and one warning says how many
+dates failed. Here 0 dates were skipped.
+
+### Saving, Reading and Checking a History
+
+Neither **appendColonySnapshot** nor **backfillColonySnapshots** writes
+a file. You keep the history yourself, as the application does when you
+download it, with **write.csv** and `row.names = FALSE`.
+**readSnapshotHistory** reads the file back (delimited text or Excel)
+but does not check it, and it leaves the dates as text.
+**checkSnapshotHistory** checks the structure and the values, stops with
+a message that names the problem, and otherwise returns the history with
+the dates as dates.
+
+``` r
+
+historyFile <- tempfile(fileext = ".csv")
+write.csv(snapshotHistory, historyFile, row.names = FALSE)
+readBack <- readSnapshotHistory(historyFile)
+class(readBack$snapshotDate)
+```
+
+    ## [1] "character"
+
+``` r
+
+checkedHistory <- checkSnapshotHistory(readBack)
+class(checkedHistory$snapshotDate)
+```
+
+    ## [1] "Date"
+
+### Comparing Two Dates
+
+**calcSnapshotDeltas** lists, metric by metric, the value on each of two
+dates and the difference between them. The two dates must belong to one
+membership-rule series, because rules are never compared with each
+other. A history that holds both recorded and rebuilt rows therefore
+needs to be told which series; without *membershipRule* the function
+stops and names the rules it finds.
+
+``` r
+
+mixedRuleMessage <- tryCatch(
+  calcSnapshotDeltas(checkedHistory, from = "2005-01-01", to = "2010-01-01"),
+  error = conditionMessage
+)
+mixedRuleMessage
+```
+
+    ## [1] "Snapshot history holds several membershipRule values (reconstructedLiving, wholePedigree); pass 'membershipRule' to pick the series to compare."
+
+``` r
+
+deltas <- calcSnapshotDeltas(checkedHistory,
+  from = "2005-01-01", to = "2010-01-01",
+  membershipRule = "reconstructedLiving"
+)
+deltas[deltas$metric %in% c("nAnimals", "fe", "fg", "neSexRatio"), ]
+```
+
+    ##       metric     from       to      delta comparabilityFlag
+    ## 1   nAnimals 86.00000 63.00000 -23.000000              <NA>
+    ## 4         fe 66.68822 63.03001  -3.658216              <NA>
+    ## 5         fg 40.32350 32.81522  -7.508285              <NA>
+    ## 8 neSexRatio 25.26316 17.14286  -8.120301              <NA>
+
+The *comparabilityFlag* column is `NA` when the two snapshots were made
+with the same settings. When they were not, it names each setting that
+differs, so a change caused by a different number of gene-drop
+iterations is not mistaken for a change in the colony.
+
+### Plotting the Trend
+
+**plotSnapshotTrends** draws the history as one ggplot object with a
+panel for each metric, the date along the bottom and one colored series
+for each membership rule. The rebuilt series is dashed, and the caption
+says that the dashed lines were rebuilt and not recorded at the time.
+Where the history carries a standard error, as for founder genome
+equivalents and mean genome uniqueness, the panel shows a ribbon for the
+sampling uncertainty of the gene drop. A snapshot made with different
+settings from the previous one of its series is drawn with a different
+point shape and named in the caption. A trend needs at least two
+snapshots, and *metrics* chooses the panels (the default draws every
+metric column).
+
+``` r
+
+trendPlot <- plotSnapshotTrends(checkedHistory, metrics = c("fe", "fg", "meanGu"))
+trendPlot
+```
+
+![Trend lines of three colony genetic-health measures over the snapshot
+dates. The rebuilt snapshots form a dashed line and the one recorded
+snapshot is a single
+point.](a2interactive_files/figure-html/snapshot-plot-1.png)
+
 ## Breeding Group Formation
 
 The primary purpose of **nprcgenekeepr** is to form breeding groups
@@ -1123,43 +1362,42 @@ haremGrp$group
 ```
 
     ## [[1]]
-    ##  [1] "XY2CK7" "1SSCJC" "G8MCV7" "6KWVRI" "3GECJJ" "99BMJW" "8JUUJ9" "AR5U44"
-    ##  [9] "83HQBN" "MX4J7G" "ESUIAF" "N5QBWD" "EZ2F8A" "AP1YLW" "R5AYJK" "0SGJ12"
-    ## [17] "LYSLPP" "MKY9TK" "YFCIHJ" "HE0SCR" "PBAFJF" "IH1KPA" "5EDLL7" "F45799"
-    ## [25] "DI4AHD" "7RA57Q" "CRPXY7" "WI38KZ" "PU7RSG" "FB5L3N" "QWKFBH" "XFWVVX"
-    ## [33] "KX0RJ3" "MH88T6" "QQMBT1" "DPXEQE"
+    ##  [1] "SXSVEH" "G8MCV7" "99BMJW" "5EDIEE" "6X6BG9" "2Z4YLY" "IH1KPA" "0X4W26"
+    ##  [9] "XEC0M5" "3GECJJ" "Q7U139" "6F9FB8" "JLFKV8" "B1WVCN" "BKWE4D" "C18V6I"
+    ## [17] "F45799" "S056D5" "QRZK48" "DHNQ1W" "D33J06" "38K2SR" "TEACA3" "5EDLL7"
+    ## [25] "M9PVG5" "Y6DB6L" "LS184H" "AR5U44" "ZPS15A" "1CZM30"
     ## 
     ## [[2]]
-    ##  [1] "K7900I" "TQEMY6" "1CZM30" "Y6DB6L" "GIIEUD" "1QVS67" "B1WVCN" "KZY6PD"
-    ##  [9] "5EDIEE" "BKWE4D" "2F6J3U" "1VP3UC" "YTJ2UL" "EX5K0S" "3DTD2N" "LS184H"
-    ## [17] "SCFSBF" "W6MDVK" "M9PVG5" "E5Q33K" "NK802Y" "N4NV8B" "AFZKBS" "I5CI33"
-    ## [25] "XEC0M5" "ZPS15A" "G58RGY" "GTLA8R" "W5WIRP" "ZH3YG1"
+    ##  [1] "9FRCIE" "50D77I" "AW400C" "Q8U9LB" "7B9CA6" "5KWNMZ" "92UG4N" "1KJ2MG"
+    ##  [9] "PI4VHT" "87AQLF" "YLRNIK" "DCJJYS" "B228Q6" "MPIQ4N" "WLMGS1" "Z904TJ"
+    ## [17] "VWC5ZH" "FG0SFA" "W0GUKI" "MFKT9C" "PVY432" "W5WIRP" "2F6J3U" "1FAZ0K"
+    ## [25] "MKY9TK" "MTCAIG" "WJXIH9"
     ## 
     ## [[3]]
-    ##  [1] "G2GYST" "50D77I" "AIHJ8Z" "PYPM1W" "S056D5" "92UG4N" "GAS52W" "MYUMMX"
-    ##  [9] "Q8U9LB" "EMV4P6" "72LYDE" "WJXIH9" "FL170P" "XYRDKV" "TXZUKC" "9MG040"
-    ## [17] "TYEWF1" "7NE2UT" "VWC5ZH" "LVYYNY" "87AQLF" "DKIM6U" "CHK1ZX" "B134XZ"
-    ## [25] "2Z4YLY" "ZQXZYB" "7ZNY75" "30J3CQ" "I8ABC7"
+    ##  [1] "1E8KD1" "YTJ2UL" "WK89I9" "72LYDE" "465ERA" "FL170P" "CS23RV" "DKIM6U"
+    ##  [9] "DI4AHD" "B134XZ" "SHG3RB" "5W621W" "MX4J7G" "QW2Z3R" "RVHVTZ" "46ZHKN"
+    ## [17] "PU7RSG" "FB5L3N" "CRPXY7" "EX5K0S" "SCFSBF" "6KWVRI" "J3F6PD" "9MG040"
+    ## [25] "7NE2UT" "X694YR" "FJS7RQ" "I5CI33" "I8ABC7" "WNEAS6" "1QVS67" "83HQBN"
     ## 
     ## [[4]]
-    ##  [1] "A6A1M1" "AW400C" "FJS7RQ" "Q7U139" "6X6BG9" "1CIRC9" "1FAZ0K" "5KWNMZ"
-    ##  [9] "FG0SFA" "PVY432" "W0GUKI" "3YJIMV" "0X4W26" "SH3FB7" "CMMUKU" "WKY2SZ"
-    ## [17] "X694YR" "S3EBGZ" "MPIQ4N" "DCJJYS" "1GF3GM" "J3F6PD" "AZ3L0D" "0XTZQ1"
-    ## [25] "6F9FB8" "ZATMEE" "AR17R5" "Z904TJ" "C18V6I" "JLFKV8" "WK89I9" "BCJJKN"
-    ## [33] "5ERY5Z" "S7IWWA"
+    ##  [1] "5KFB90" "AFZKBS" "QCA36T" "967Y3D" "N79QXB" "DPXEQE" "8JUUJ9" "QQMBT1"
+    ##  [9] "QWKFBH" "MYUMMX" "D4B0RM" "DRXMW4" "PBAFJF" "QCENKM" "ZQXZYB" "1SPLS8"
+    ## [17] "EZ2F8A" "KX0RJ3" "R5AYJK" "9P0DES" "F7I2ED" "S5H1GC" "Y0TCYX" "YFCIHJ"
+    ## [25] "WKY2SZ" "XYRDKV" "S7IWWA" "5ERY5Z" "1SSCJC" "MH88T6" "EMV4P6" "01QRQ4"
+    ## [33] "AIHJ8Z" "5BPBUI" "KZY6PD" "ESUIAF" "321LLB" "CLSVU6" "BCJJKN" "0XTZQ1"
+    ## [41] "414N7M" "SH3FB7" "7ZNY75"
     ## 
     ## [[5]]
-    ##  [1] "0V4SAC" "S5H1GC" "D4B0RM" "414N7M" "GCBYDW" "RJ4JPC" "0HYZ23" "3SKITJ"
-    ##  [9] "QCENKM" "CS23RV" "D33J06" "Y0TCYX" "NN3GDQ" "TEACA3" "CLSVU6" "KEA4QG"
-    ## [17] "321LLB" "MFKT9C" "WNEAS6" "D9P18Y" "5BPBUI" "PI4VHT" "9P0DES" "38K2SR"
-    ## [25] "7B9CA6" "01QRQ4" "PJ72W1" "1KJ2MG" "MTCAIG" "WLMGS1" "YLRNIK" "QCA36T"
-    ## [33] "QRZK48"
+    ##  [1] "80F2MI" "ILVQVB" "0SGJ12" "W6MDVK" "TXZUKC" "AP1YLW" "ZH3YG1" "PYPM1W"
+    ##  [9] "CMMUKU" "G25E3F" "D9P18Y" "GTLA8R" "AR17R5" "1CIRC9" "3DTD2N" "XFWVVX"
+    ## [17] "GCBYDW" "30J3CQ" "KEA4QG" "E5Q33K" "S3EBGZ" "AZ3L0D" "PJ72W1" "13B1QL"
+    ## [25] "LVYYNY" "G58RGY" "1VP3UC" "S222R3" "NK802Y" "ZATMEE" "0IIAEN" "GIIEUD"
     ## 
     ## [[6]]
-    ##  [1] "BTTHAJ" "465ERA" "WTE53B" "ILVQVB" "QW2Z3R" "RVHVTZ" "G25E3F" "Q17CG3"
-    ##  [9] "46ZHKN" "13B1QL" "SHG3RB" "DHNQ1W" "S222R3" "1SPLS8" "BS3RLE" "5IAFMK"
-    ## [17] "MB6NYQ" "DH9WJQ" "F7I2ED" "T3QPW5" "K3TNHP" "967Y3D" "0IIAEN" "B228Q6"
-    ## [25] "H2J6UA" "N79QXB" "DRXMW4" "5W621W"
+    ##  [1] "B2CKHA" "HE0SCR" "N5QBWD" "7RA57Q" "3YJIMV" "DH9WJQ" "WI38KZ" "RJ4JPC"
+    ##  [9] "K3TNHP" "CHK1ZX" "TYEWF1" "TQEMY6" "N4NV8B" "Q17CG3" "0HYZ23" "GAS52W"
+    ## [17] "WTE53B" "LYSLPP" "MB6NYQ" "H2J6UA" "5IAFMK" "BS3RLE" "T3QPW5" "3SKITJ"
+    ## [25] "1GF3GM" "NN3GDQ"
     ## 
     ## [[7]]
     ## [1] NA
@@ -1180,22 +1418,22 @@ sapply(haremGrp$group, function(ids) {
 ```
 
     ## [[1]]
-    ## [1] "XY2CK7"
+    ## [1] "SXSVEH"
     ## 
     ## [[2]]
-    ## [1] "K7900I"
+    ## [1] "9FRCIE"
     ## 
     ## [[3]]
-    ## [1] "G2GYST"
+    ## [1] "1E8KD1"
     ## 
     ## [[4]]
-    ## [1] "A6A1M1"
+    ## [1] "5KFB90"
     ## 
     ## [[5]]
-    ## [1] "0V4SAC"
+    ## [1] "80F2MI"
     ## 
     ## [[6]]
-    ## [1] "BTTHAJ"
+    ## [1] "B2CKHA"
     ## 
     ## [[7]]
     ## logical(0)
@@ -1218,12 +1456,12 @@ lines <- sapply(haremGrp$group, function(ids) {
 for (line in lines) print(line)
 ```
 
-    ## [1] "Count: 36 Sex Ratio: 35"
     ## [1] "Count: 30 Sex Ratio: 29"
-    ## [1] "Count: 29 Sex Ratio: 28"
-    ## [1] "Count: 34 Sex Ratio: 33"
-    ## [1] "Count: 33 Sex Ratio: 32"
-    ## [1] "Count: 28 Sex Ratio: 27"
+    ## [1] "Count: 27 Sex Ratio: 26"
+    ## [1] "Count: 32 Sex Ratio: 31"
+    ## [1] "Count: 43 Sex Ratio: 42"
+    ## [1] "Count: 32 Sex Ratio: 31"
+    ## [1] "Count: 26 Sex Ratio: 25"
     ## [1] "Count: 1 Sex Ratio: Inf"
 
 Examination of this table shows that of the 184 females 184 are included
@@ -1250,60 +1488,59 @@ sexRatioGrp$group
 ```
 
     ## [[1]]
-    ##  [1] "QW2Z3R" "5PW7WT" "9MG040" "VWC5ZH" "DH9WJQ" "MPIQ4N" "N5QBWD" "QRZK48"
-    ##  [9] "AW400C" "PI4VHT" "LVYYNY" "SHG3RB" "5IAFMK" "R6HV9A" "5KWNMZ" "PU7RSG"
-    ## [17] "0HYZ23" "D33J06" "AR5U44" "WJXIH9" "72LYDE" "WNEAS6" "WI38KZ" "5BPBUI"
-    ## [25] "ZW2X4N" "GCBYDW" "GIIEUD" "E5Q33K" "QCA36T" "DRXMW4"
+    ##  [1] "PVY432" "E3JP0C" "0HYZ23" "321LLB" "ZATMEE" "KZY6PD" "W5WIRP" "B134XZ"
+    ##  [9] "F45799" "PJ72W1" "1SSCJC" "1GF3GM" "WK89I9" "KZM9RB" "MYUMMX" "QCA36T"
+    ## [17] "MTCAIG" "DI4AHD" "R5AYJK" "DH9WJQ" "X694YR" "BKWE4D" "S056D5" "YLRNIK"
+    ## [25] "KXHGRH" "Y6DB6L" "LS184H" "BS3RLE"
     ## 
     ## [[2]]
-    ##  [1] "FB5L3N" "3P9BX6" "EZ2F8A" "Q8U9LB" "5EDLL7" "Z904TJ" "DPXEQE" "3DTD2N"
-    ##  [9] "NK802Y" "W0GUKI" "ZH3YG1" "465ERA" "F45799" "KXHGRH" "CRPXY7" "M9PVG5"
-    ## [17] "1VP3UC" "H2J6UA" "N79QXB" "D4B0RM" "YFCIHJ" "MFKT9C" "6KWVRI" "N4NV8B"
-    ## [25] "KZM9RB"
+    ##  [1] "ESUIAF" "RY1AZM" "G58RGY" "RJ4JPC" "F7I2ED" "6F9FB8" "NK802Y" "3SKITJ"
+    ##  [9] "EMV4P6" "QWKFBH" "6KWVRI" "ZPS15A" "M9PVG5" "WQUN84" "Q17CG3" "BCJJKN"
+    ## [17] "TQEMY6" "CRPXY7" "VWC5ZH" "AR17R5" "YTJ2UL" "CLSVU6" "7ZNY75" "414N7M"
+    ## [25] "A6A1M1" "I8ABC7" "AZ3L0D" "0IIAEN" "S222R3" "6X6BG9" "J3F6PD" "SCFSBF"
+    ## [33] "7NE2UT"
     ## 
     ## [[3]]
-    ##  [1] "967Y3D" "55VDSQ" "YTJ2UL" "3YJIMV" "WTE53B" "IH1KPA" "BKWE4D" "PYPM1W"
-    ##  [9] "1GF3GM" "PJ72W1" "87AQLF" "13B1QL" "PVY432" "3MMZD4" "CS23RV" "B1WVCN"
-    ## [17] "QWKFBH" "EMV4P6" "I5CI33" "DCJJYS" "NN3GDQ" "1CIRC9" "F7I2ED" "Y6DB6L"
-    ## [25] "G2GYST" "R5AYJK" "B228Q6" "6F9FB8"
+    ##  [1] "1CZM30" "QRWYQZ" "CHK1ZX" "S3EBGZ" "FB5L3N" "AFZKBS" "D4B0RM" "3DTD2N"
+    ##  [9] "C18V6I" "2Z4YLY" "01QRQ4" "1QVS67" "GCBYDW" "K7900I" "92UG4N" "MFKT9C"
+    ## [17] "Y0TCYX" "0XTZQ1" "DCJJYS" "30J3CQ" "AW400C" "IH1KPA" "G25E3F" "GIIEUD"
+    ## [25] "SXSVEH" "XFWVVX" "1KJ2MG" "HE0SCR" "MB6NYQ" "Q7U139"
     ## 
     ## [[4]]
-    ##  [1] "5ERY5Z" "FFGPS4" "ESUIAF" "S3EBGZ" "2F6J3U" "MKY9TK" "1SPLS8" "S222R3"
-    ##  [9] "01QRQ4" "1QVS67" "1FAZ0K" "G25E3F" "SCFSBF" "K7900I" "CHK1ZX" "HE0SCR"
-    ## [17] "LYSLPP" "X694YR" "EX5K0S" "99BMJW" "MTCAIG" "S056D5" "8JUUJ9" "QCENKM"
-    ## [25] "9FRCIE" "2Z4YLY" "ZQXZYB"
+    ##  [1] "3GECJJ" "3QHAFI" "5KWNMZ" "DRXMW4" "1FAZ0K" "FL170P" "13B1QL" "TXZUKC"
+    ##  [9] "WI38KZ" "8JUUJ9" "MH88T6" "0SGJ12" "GTLA8R" "JSAP3H" "QCENKM" "TEACA3"
+    ## [17] "72LYDE" "JLFKV8" "WLMGS1" "50D77I" "PU7RSG" "W6MDVK" "5EDIEE" "YFCIHJ"
+    ## [25] "IZDV8K" "QW2Z3R" "465ERA" "38K2SR" "967Y3D" "WTE53B" "RVHVTZ" "87AQLF"
+    ## [33] "AR5U44" "TYEWF1" "Z7NBA2"
     ## 
     ## [[5]]
-    ##  [1] "AR17R5" "B2CKHA" "ZATMEE" "K3TNHP" "XFWVVX" "AZ3L0D" "BCJJKN" "FL170P"
-    ##  [9] "XEC0M5" "0X4W26" "D9P18Y" "414N7M" "Y0TCYX" "RY1AZM" "G58RGY" "38K2SR"
-    ## [17] "TQEMY6" "7B9CA6" "CLSVU6" "RVHVTZ" "KZY6PD" "TXZUKC" "Q17CG3" "3SKITJ"
-    ## [25] "WQUN84" "TYEWF1" "SH3FB7" "RJ4JPC" "TEACA3" "DI4AHD" "J3F6PD"
+    ##  [1] "D9P18Y" "XL658N" "LVYYNY" "9P0DES" "MX4J7G" "FJS7RQ" "2F6J3U" "ZQXZYB"
+    ##  [9] "46ZHKN" "EZ2F8A" "KX0RJ3" "B1WVCN" "WNEAS6" "T38W6H" "9MG040" "N79QXB"
+    ## [17] "DKIM6U" "Q8U9LB" "AIHJ8Z" "CMMUKU" "W0GUKI" "ILVQVB" "PI4VHT" "5EDLL7"
+    ## [25] "LN1DLY" "DPXEQE" "S5H1GC" "D33J06" "SH3FB7" "99BMJW" "5ERY5Z"
     ## 
     ## [[6]]
-    ##  [1] "YLRNIK" "J1R2EW" "LS184H" "JLFKV8" "321LLB" "50D77I" "KX0RJ3" "XYRDKV"
-    ##  [9] "ZPS15A" "MH88T6" "92UG4N" "G8MCV7" "ILVQVB" "NHWTJ9" "GAS52W" "Q7U139"
-    ## [17] "KEA4QG" "3GECJJ" "83HQBN" "AFZKBS" "CMMUKU" "1KJ2MG" "WK89I9" "WKY2SZ"
-    ## [25] "JSAP3H" "46ZHKN"
+    ##  [1] "7B9CA6" "ER464J" "1SPLS8" "0X4W26" "7RA57Q" "1CIRC9" "XEC0M5" "FG0SFA"
+    ##  [9] "AP1YLW" "GAS52W" "5BPBUI" "NN3GDQ" "83HQBN" "R6HV9A" "CS23RV" "H2J6UA"
+    ## [17] "K3TNHP" "SHG3RB" "MPIQ4N" "PBAFJF" "T3QPW5" "B228Q6" "3YJIMV" "QRZK48"
+    ## [25] "A98D7P" "1VP3UC" "WKY2SZ" "KEA4QG"
     ## 
     ## [[7]]
-    ##   [1] "HLQ9SY" "6X6BG9" "DKIM6U" "GDXWJ1" "MB6NYQ" "TR5L57" "XC304E" "Z7NBA2"
-    ##   [9] "1E8KD1" "5KFB90" "A6A1M1" "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "FTVE03"
-    ##  [17] "IRFJ09" "LMJWTN" "MX4J7G" "MYUMMX" "PBAFJF" "Q9LWGX" "RNQU14" "W5WIRP"
-    ##  [25] "09LFE4" "1CZM30" "3QHAFI" "55BPSE" "5XVTVH" "7RA57Q" "8IG767" "BS3RLE"
-    ##  [33] "ER464J" "FG6L7S" "GTLA8R" "P7RBPI" "S5H1GC" "TBCE78" "YI16QD" "1SSCJC"
-    ##  [41] "2F1IV1" "30J3CQ" "4LHK19" "59NYZE" "5EDIEE" "5IYDXN" "6KLWVC" "7NE2UT"
-    ##  [49] "80F2MI" "8TV4MT" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "DHNQ1W" "EEGLWY"
-    ##  [57] "FG0SFA" "FX9E4X" "G91ZM6" "I8ABC7" "LDND6J" "LN1DLY" "MQT080" "NSIC4I"
-    ##  [65] "PHB6TE" "QRWYQZ" "W6MDVK" "WHQLH5" "WLMGS1" "XL658N" "XX0GYV" "YHHVC7"
-    ##  [73] "YP910X" "0IIAEN" "0SGJ12" "0V4SAC" "0X1RZ9" "0XTZQ1" "3YHBC1" "5W621W"
-    ##  [81] "653J82" "6MEP2C" "76DIT4" "7ZNY75" "80KACX" "9P0DES" "AIHJ8Z" "AP1YLW"
-    ##  [89] "B2YJJP" "C18V6I" "E3JP0C" "FLIZQI" "GM371F" "IZDV8K" "MEUZ85" "PA9F3J"
-    ##  [97] "QQMBT1" "S7IWWA" "SXSVEH" "T38W6H" "T3QPW5" "TJN1AD" "WNKKW3" "XY2CK7"
-    ## [105] "XZH41H" "YDRD81" "Z25D52" "ZDRSG0" "7D09WH" "B134XZ" "DGZLV3" "FJS7RQ"
-    ## [113] "S63QDN"
+    ##  [1] "5IAFMK" "HLQ9SY" "B2CKHA" "GDXWJ1" "TR5L57" "XC304E" "1E8KD1" "5KFB90"
+    ##  [9] "5PW7WT" "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "FTVE03" "G2GYST" "G8MCV7"
+    ## [17] "IRFJ09" "LMJWTN" "N4NV8B" "N5QBWD" "Q9LWGX" "RNQU14" "09LFE4" "3MMZD4"
+    ## [25] "55BPSE" "5XVTVH" "8IG767" "9FRCIE" "FFGPS4" "FG6L7S" "LYSLPP" "NHWTJ9"
+    ## [33] "P7RBPI" "TBCE78" "YI16QD" "2F1IV1" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC"
+    ## [41] "80F2MI" "8TV4MT" "AZ4D19" "BTTHAJ" "CHSCFG" "DHNQ1W" "EEGLWY" "FX9E4X"
+    ## [49] "G91ZM6" "I5CI33" "J1R2EW" "LDND6J" "MKY9TK" "MQT080" "NSIC4I" "PHB6TE"
+    ## [57] "PYPM1W" "WHQLH5" "XX0GYV" "XYRDKV" "YHHVC7" "YP910X" "Z904TJ" "ZH3YG1"
+    ## [65] "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ" "5W621W" "653J82" "6MEP2C" "76DIT4"
+    ## [73] "80KACX" "B2YJJP" "E5Q33K" "EX5K0S" "FLIZQI" "GM371F" "MEUZ85" "PA9F3J"
+    ## [81] "QQMBT1" "S7IWWA" "TJN1AD" "WJXIH9" "WNKKW3" "XY2CK7" "XZH41H" "YDRD81"
+    ## [89] "Z25D52" "ZDRSG0" "3P9BX6" "7D09WH" "DGZLV3" "S63QDN" "ZW2X4N"
 
 As before, the last element of the list is not a breeding group. Here it
-holds the 113 candidates that were not placed in any of the six groups.
+holds the 95 candidates that were not placed in any of the six groups.
 
 Again we can identify and list the males in each group with the
 following code.
@@ -1316,34 +1553,34 @@ sapply(sexRatioGrp$group, function(ids) {
 ```
 
     ## [[1]]
-    ## [1] "5PW7WT" "R6HV9A" "ZW2X4N"
+    ## [1] "E3JP0C" "KZM9RB" "KXHGRH"
     ## 
     ## [[2]]
-    ## [1] "3P9BX6" "KXHGRH" "KZM9RB"
+    ## [1] "RY1AZM" "WQUN84" "A6A1M1"
     ## 
     ## [[3]]
-    ## [1] "55VDSQ" "3MMZD4" "G2GYST"
+    ## [1] "QRWYQZ" "K7900I" "SXSVEH"
     ## 
     ## [[4]]
-    ## [1] "FFGPS4" "K7900I" "9FRCIE"
+    ## [1] "3QHAFI" "JSAP3H" "IZDV8K" "Z7NBA2"
     ## 
     ## [[5]]
-    ## [1] "B2CKHA" "RY1AZM" "WQUN84"
+    ## [1] "XL658N" "T38W6H" "LN1DLY"
     ## 
     ## [[6]]
-    ## [1] "J1R2EW" "NHWTJ9" "JSAP3H"
+    ## [1] "ER464J" "R6HV9A" "A98D7P"
     ## 
     ## [[7]]
-    ##  [1] "HLQ9SY" "GDXWJ1" "TR5L57" "XC304E" "Z7NBA2" "1E8KD1" "5KFB90" "A6A1M1"
-    ##  [9] "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "FTVE03" "IRFJ09" "LMJWTN" "Q9LWGX"
-    ## [17] "RNQU14" "09LFE4" "3QHAFI" "55BPSE" "5XVTVH" "8IG767" "ER464J" "FG6L7S"
-    ## [25] "P7RBPI" "TBCE78" "YI16QD" "2F1IV1" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC"
-    ## [33] "80F2MI" "8TV4MT" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "EEGLWY" "FX9E4X"
-    ## [41] "G91ZM6" "LDND6J" "LN1DLY" "MQT080" "NSIC4I" "PHB6TE" "QRWYQZ" "WHQLH5"
-    ## [49] "XL658N" "XX0GYV" "YHHVC7" "YP910X" "0V4SAC" "0X1RZ9" "3YHBC1" "653J82"
-    ## [57] "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "E3JP0C" "FLIZQI" "GM371F" "IZDV8K"
-    ## [65] "MEUZ85" "PA9F3J" "SXSVEH" "T38W6H" "TJN1AD" "WNKKW3" "XY2CK7" "XZH41H"
-    ## [73] "YDRD81" "Z25D52" "ZDRSG0" "7D09WH" "DGZLV3" "S63QDN"
+    ##  [1] "HLQ9SY" "B2CKHA" "GDXWJ1" "TR5L57" "XC304E" "1E8KD1" "5KFB90" "5PW7WT"
+    ##  [9] "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "FTVE03" "G2GYST" "IRFJ09" "LMJWTN"
+    ## [17] "Q9LWGX" "RNQU14" "09LFE4" "3MMZD4" "55BPSE" "5XVTVH" "8IG767" "9FRCIE"
+    ## [25] "FFGPS4" "FG6L7S" "NHWTJ9" "P7RBPI" "TBCE78" "YI16QD" "2F1IV1" "4LHK19"
+    ## [33] "59NYZE" "5IYDXN" "6KLWVC" "80F2MI" "8TV4MT" "AZ4D19" "BTTHAJ" "CHSCFG"
+    ## [41] "EEGLWY" "FX9E4X" "G91ZM6" "J1R2EW" "LDND6J" "MQT080" "NSIC4I" "PHB6TE"
+    ## [49] "WHQLH5" "XX0GYV" "YHHVC7" "YP910X" "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ"
+    ## [57] "653J82" "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "FLIZQI" "GM371F" "MEUZ85"
+    ## [65] "PA9F3J" "TJN1AD" "WNKKW3" "XY2CK7" "XZH41H" "YDRD81" "Z25D52" "ZDRSG0"
+    ## [73] "3P9BX6" "7D09WH" "DGZLV3" "S63QDN" "ZW2X4N"
 
 We can also see the number of animals and the sex ratios created in each
 group.
@@ -1359,15 +1596,15 @@ lines <- sapply(sexRatioGrp$group, function(ids) {
 for (line in lines) print(line)
 ```
 
-    ## [1] "Count: 30 Sex Ratio: 9"
-    ## [1] "Count: 25 Sex Ratio: 7.33"
     ## [1] "Count: 28 Sex Ratio: 8.33"
-    ## [1] "Count: 27 Sex Ratio: 8"
+    ## [1] "Count: 33 Sex Ratio: 10"
+    ## [1] "Count: 30 Sex Ratio: 9"
+    ## [1] "Count: 35 Sex Ratio: 7.75"
     ## [1] "Count: 31 Sex Ratio: 9.33"
-    ## [1] "Count: 26 Sex Ratio: 7.67"
-    ## [1] "Count: 113 Sex Ratio: 0.45"
+    ## [1] "Count: 28 Sex Ratio: 8.33"
+    ## [1] "Count: 95 Sex Ratio: 0.23"
 
-Examination of this table shows that of the 184 females 149 are included
+Examination of this table shows that of the 184 females 166 are included
 in the six groups.
 
 ## Individual Mate-Pair Analysis
@@ -1585,6 +1822,70 @@ rule twice is an error, as is giving *overriddenRules* without
 *ancestryRules*. A valid rules table with zero rules is accepted: the
 result has the ancestry columns, with nothing moved.
 
+### Ancestry Rules for Formed Groups
+
+**reportMatePairs** applies the rules to pairs.
+**reportAncestryViolations** applies the same rules to groups that
+already exist, for example the *group* element returned by
+**groupAddAssign** without its final element, which holds the animals
+left unused. Give it a list of animal-id vectors, one per group, the
+pedigree with its *ancestry* column, and the rules table. It reports
+every pair inside a group that matches a rule, *block* and *flag* rules
+alike, and a *coverage* table: for each standardized ancestry level, how
+many of the grouped animals sit at that level (*n*) and whether any rule
+names it (*covered*). An id that is not in the pedigree stops the
+function.
+
+``` r
+
+formedGroups <- list(c("C1", "I1", "J1"), c("I2", "U1", "H1"))
+ancViolations <- reportAncestryViolations(formedGroups, ancPed, ancestryRules)
+ancViolations$violations
+```
+
+    ##   group id1 id2 ancestry1 ancestry2           rule severity    status
+    ## 1     1  I1  C1    INDIAN   CHINESE CHINESE-INDIAN    block violation
+    ## 2     2  I2  H1    INDIAN    HYBRID  HYBRID-INDIAN    block violation
+    ## 3     2  I2  U1    INDIAN   UNKNOWN INDIAN-UNKNOWN     flag violation
+
+``` r
+
+ancViolations$coverage
+```
+
+    ##   ancestry n covered
+    ## 1  CHINESE 1    TRUE
+    ## 2   INDIAN 2    TRUE
+    ## 3   HYBRID 1    TRUE
+    ## 4 JAPANESE 1   FALSE
+    ## 5    OTHER 0    TRUE
+    ## 6  UNKNOWN 1    TRUE
+
+Each row of *violations* gives the group (its position in the list), the
+two animals and their levels, the matched rule, its severity and its
+status. The first group also holds a Japanese animal. No rule names that
+level (*covered* is `FALSE`), so that animal appears in no violation;
+the coverage table is there so that this silence is visible.
+
+A rule named in *overriddenRules* (a data frame that gives the two
+ancestry levels of the rule, in either order and in any case) still
+reports its pairs, with the status `"overridden"` in place of
+`"violation"`, so nothing is dropped silently. A row that matches no
+rule in the rules table is an error, so a typo cannot override nothing.
+
+``` r
+
+ancViolationsOverridden <- reportAncestryViolations(
+  formedGroups, ancPed, ancestryRules,
+  overriddenRules = data.frame(ancestry1 = "CHINESE", ancestry2 = "INDIAN"))
+ancViolationsOverridden$violations
+```
+
+    ##   group id1 id2 ancestry1 ancestry2           rule severity     status
+    ## 1     1  I1  C1    INDIAN   CHINESE CHINESE-INDIAN    block overridden
+    ## 2     2  I2  H1    INDIAN    HYBRID  HYBRID-INDIAN    block  violation
+    ## 3     2  I2  U1    INDIAN   UNKNOWN INDIAN-UNKNOWN     flag  violation
+
 ## Pedigree Errors
 
 As stated earlier you can see which types of errors are detected by
@@ -1656,7 +1957,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpneJlQg/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpJf4Mij/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1692,7 +1993,7 @@ ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
 
     ##   id sire  dam sex gen      birth exit  age recordStatus placeholder
     ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.5     original       FALSE
-    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.3     original       FALSE
+    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.4     original       FALSE
     ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original       FALSE
     ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.1     original       FALSE
 
@@ -1825,6 +2126,76 @@ breederPed[match(loopIds, breederPed$id), c("id", "sire", "dam")][1L:10L, ]
     ## 2922 ZQFCR5 7ZEGLB DCJJYS
     ## 2924 027TLR TR5L57 TEACA3
     ## 2941 1EXT8T TR5L57 ZPS15A
+
+## Shrinking a Pedigree to a Genotyping Budget
+
+**trimPedigree** cuts a pedigree down around the focal animals you name.
+**shrinkPedigree** answers a different question: given which animals are
+genotyped, which animals can be dropped and still leave a pedigree that
+is informative within a genotyping-cost budget? It works on this
+package’s pedigree data frame (the *id*, *sire* and *dam* columns). The
+budget, *maxBits*, limits the pedigree’s bit size, which is twice the
+number of non-founders less the number of founders. Three trims are
+applied in order:
+
+- The *unavailable* trim repeatedly removes animals that are not
+  genotyped and have no offspring in the pedigree, then founder pairs
+  that are not genotyped and have a single child and no other mate (that
+  child becomes a founder), then any founder left without offspring,
+  genotyped or not.
+- The *non-informative* trim removes a genotyped animal that is nobody’s
+  parent, has both parents known and genotyped, and is not affected,
+  because it adds no genotype information beyond what its parents
+  supply.
+- The *affected-priority* trim, while the bit size is still above
+  *maxBits*, removes one genotyped animal that is nobody’s parent at a
+  time, choosing the removal that leaves the smallest bit size. It tries
+  animals of unknown affected status first, then unaffected ones, then
+  affected ones.
+
+The optional *affected* vector marks the animals that show the trait you
+care about; without it every animal counts as unaffected. *genotyped* is
+a logical vector with one value per row of the pedigree, `NA` not
+allowed. Suppose only the animals still living, those with no exit date,
+are genotyped:
+
+``` r
+
+genotyped <- is.na(qcPed$exit)
+shrinkResult <- shrinkPedigree(qcPed[, c("id", "sire", "dam")], genotyped)
+unlist(shrinkResult[c("pedSizeOriginal", "pedSizeIntermed", "pedSizeFinal")])
+```
+
+    ## pedSizeOriginal pedSizeIntermed    pedSizeFinal 
+    ##             280             258              44
+
+``` r
+
+lengths(shrinkResult$idList)
+```
+
+    ##   unavail noninform  affected 
+    ##        19         3       214
+
+The 280 animals of **qcPed** shrink to 258 after the first two trims and
+44 at the end. *idList* groups the removed ids by the trim that took
+them: *unavail*, *noninform* and *affected*. *idTrimmed* lists every
+removed id in the order of removal, and *bitSize* records the bit size
+before any trimming, after the first two trims, and after each round of
+the third. The default *maxBits* is 16; a smaller budget asks the third
+trim to go further.
+
+``` r
+
+shrinkResultSmall <- shrinkPedigree(qcPed[, c("id", "sire", "dam")], genotyped,
+                                    maxBits = 8L)
+c(default = nrow(shrinkResult$ped), smaller = nrow(shrinkResultSmall$ped))
+```
+
+    ## default smaller 
+    ##      44      20
+
+The smaller budget leaves 20 animals in place of 44.
 
 ## Marker Genetics
 
@@ -2435,7 +2806,7 @@ obfuscateLdBlocks(ldBlockResult, obfuscatedTwinPed$map)
 ```
 
     ##   locus1 locus2 chrom Dprime  r2 nUsed       idsUsed                      caveat
-    ## 1     L1     L2     1    0.5 0.3     2 WKDPF4,LM2KHR Descriptive statistic only.
+    ## 1     L1     L2     1    0.5 0.3     2 23M4TN,6ZYRB6 Descriptive statistic only.
 
 The real ids *F1*/*F2* (reusing the twin-pedigree ids from the
 **Pedigree Diagram** section above) no longer appear in *idsUsed* –
@@ -2487,13 +2858,146 @@ this seed it does not), while *U0007*, marked `TRUE`, keeps a
 placeholder-shaped one. The argument must be logical and the same length
 as *id*, or the call stops.
 
+## MHC Haplotype Reporting
+
+The MHC Haplotype Reporting tab of the Shiny application has four
+counterparts for scripts. The input is a wide table with one row for
+each animal: the animal’s id, then its two haplotype designations.
+**checkMhcHaplotypeFile** checks that structure (exactly three columns,
+the first an id, and one row for each animal) and gives the columns
+fixed names whatever the file called them; the example data set
+**rhesusGenotypes** calls the designation columns *first_name* and
+*second_name*. A designation is an opaque label: it is never split or
+compared with MHC region names. A trailing `?` marks an uncertain call,
+and an empty cell is a missing one.
+
+``` r
+
+mhcChecked <- checkMhcHaplotypeFile(rhesusGenotypes)
+names(rhesusGenotypes)
+```
+
+    ## [1] "id"          "first_name"  "second_name"
+
+``` r
+
+names(mhcChecked)
+```
+
+    ## [1] "id"         "haplotype1" "haplotype2"
+
+``` r
+
+head(mhcChecked, 3L)
+```
+
+    ##       id haplotype1  haplotype2
+    ## 1 I67LRJ  A004_B002  A004_B048a
+    ## 2 K0M2RD A004_B012b  A008_B017a
+    ## 3 ZPVN1V A008_B015b A002a_B069a
+
+**mhcHaplotypeFrequency** summarizes the table. The frequency of a
+haplotype is its number of copies among the certain calls: twice the
+animals, less the missing and the uncertain calls. Uncertain calls are
+left out of the copy counts, the carrier counts and the frequencies, but
+they are never hidden: *nUncertain* gives them for each haplotype and
+the *counts* table for the file as a whole. A haplotype is flagged rare
+(*isRare*) when its frequency is at or below *rareFrequencyThreshold*,
+default 0.01, or its carrier count is at or below
+*rareCarrierThreshold*, default 2. Both defaults are working filters,
+not scientific claims.
+
+``` r
+
+mhcFrequency <- mhcHaplotypeFrequency(mhcChecked)
+mhcFrequency$counts
+```
+
+    ##   nAnimals nCalls nMissing nUncertain denominator
+    ## 1       31     62        0          2          60
+
+``` r
+
+head(mhcFrequency$summary)
+```
+
+    ##     haplotype nCopies nCarriers nUncertain  frequency isRare
+    ## 1  A001_B001a       3         3          0 0.05000000  FALSE
+    ## 2 A002a_B001a       2         2          0 0.03333333   TRUE
+    ## 3 A002a_B012b       1         1          0 0.01666667   TRUE
+    ## 4 A002a_B015a       1         1          0 0.01666667   TRUE
+    ## 5 A002a_B024a       1         1          0 0.01666667   TRUE
+    ## 6 A002a_B069a       2         2          0 0.03333333   TRUE
+
+In this colony of 31 animals, 26 of the 33 haplotypes are flagged rare.
+The smallest frequency, 0.017, is above the frequency threshold, so here
+only the carrier count can flag a haplotype.
+
+**mhcHaplotypeCarriers** goes from which haplotypes are rare to which
+animals carry them: one row for each haplotype and carrying animal. By
+default it lists only the haplotypes flagged rare; `rareOnly = FALSE`
+lists them all. The *uncertain* column is `TRUE` when the animal’s only
+calls of that haplotype are uncertain, a provisional carrier that is
+listed here but is not counted as a carrier above.
+
+``` r
+
+rareCarriers <- mhcHaplotypeCarriers(mhcChecked)
+allCarriers <- mhcHaplotypeCarriers(mhcChecked, rareOnly = FALSE)
+head(rareCarriers)
+```
+
+    ##     haplotype     id uncertain
+    ## 1 A002a_B001a BNHC69     FALSE
+    ## 2 A002a_B001a K93DCQ     FALSE
+    ## 3 A002a_B012b 6XRGWW     FALSE
+    ## 4 A002a_B015a 4A4EC5     FALSE
+    ## 5 A002a_B024a FHHNGA     FALSE
+    ## 6 A002a_B069a 7UMJ31     FALSE
+
+``` r
+
+c(rare = nrow(rareCarriers), all = nrow(allCarriers))
+```
+
+    ## rare  all 
+    ##   32   61
+
+A carrier table names real animals, and a paired MHC type can identify
+an animal on its own. **obfuscateMhcHaplotypes** replaces the ids in a
+carrier table with the aliases that **obfuscatePed** gives the same
+animals (its *map* output) and leaves the haplotype labels and the
+*uncertain* column unchanged, because a haplotype name is shared
+nomenclature and not an animal identifier. An id missing from the map
+stops the call, so a real id cannot slip through.
+
+``` r
+
+set.seed(1L)
+obfuscated <- obfuscatePed(rhesusPedigree[, c("id", "sire", "dam", "sex")],
+                           map = TRUE)
+hiddenCarriers <- obfuscateMhcHaplotypes(rareCarriers, obfuscated$map)
+head(hiddenCarriers)
+```
+
+    ##     haplotype     id uncertain
+    ## 1 A002a_B001a PA1H96     FALSE
+    ## 2 A002a_B001a DY3FSE     FALSE
+    ## 3 A002a_B012b 7P29L2     FALSE
+    ## 4 A002a_B015a 1PHABI     FALSE
+    ## 5 A002a_B024a T7QPMV     FALSE
+    ## 6 A002a_B069a 4RBLMI     FALSE
+
+The aliases are drawn at random, so the seed fixes them for this
+document.
+
 ``` r
 
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-20 04:49:13.192094. The processing
-time for this document was 15 seconds..
+The current date and time is 2026-10-25 20:29:21.477956. The processing
+time for this document was 26 seconds..
 
 ``` r
 

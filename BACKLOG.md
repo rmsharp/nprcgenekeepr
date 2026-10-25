@@ -6,6 +6,30 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
+**Performance and memory campaign: Phase 7, the diagram’s solver
+(owner-directed S1050; plan approved and D1-D4 ruled S1051; Phases 0-6
+done S1052-S1059; D7 ruled S1057; READY; Effort M per phase, 5 phases
+left, each its own strict-TDD session)** – plan:
+`docs/planning/performance-memory-campaign-plan.md` (Phase 7 at `:602`).
+Phase 6 fills one n x n kinship matrix, builds the long form with
+[`rep()`](https://rdrr.io/r/base/rep.html) and
+[`as.vector()`](https://rdrr.io/r/base/vector.html), and reads the
+high-kinship pairs from `which(kmat >= threshold)` (odd inputs run
+today’s code); gates `perf_kinMatrix2LongForm_all_peak_mb` 344 MB (312.5
+after, 979 before) and `perf_kinship_synthetic10000_peak_mb` 502 MB
+(455.6 after, 569.8 before). Phase 7’s gate is
+`perf_diagram_example_direct_seconds` (16.1 s; 13.1 and 13.8 s at
+S1059’s two ratchet runs); it moves `helper-reorderedSolveQP.R`‘s mock
+to `solve.QP.compact`. For Phase 11: whether the fallbacks’ inputs move
+onto the fast paths (owner, S1054); harems’ per-trial age work
+([`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md),
+[`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md),
+`groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase
+5’s calcFGSE row peak (225.5 to 254.1 MB, not investigated). Phase 8,
+the app’s memory design (plan `:626`), reads Phase 6’s numbers. **D7
+ruled S1057:** keep the Breeding Groups tab’s default of 10 trials (plan
+`:362`). **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
+
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
 Until then `DESCRIPTION`, the `NEWS.Rmd`/`NEWS.md` heading, `README.md`
@@ -14,370 +38,6 @@ and `ROADMAP.md` stay at 2.0.0.9000 on purpose. At release prep: set
 re-knit `NEWS.md`, reinstall the package and re-render `README`
 (Learning 376), and update the 2.0.0.9000 cites in `ROADMAP.md`. The
 paper-dependency item below also waits on a released 3.0.0.
-
-**Audit the internal and user-facing documentation for stale information
-and stale diagrams** (owner-requested 2026-09-26; DECISION NEEDED (part
-2 only; part 1, slice 2, finished S944), Effort S each) – the owner
-noticed that two article PDFs showed stale figures. **Method** (each
-slice is its own report, `docs/audits/DOCS_STALENESS_AUDIT_SLICE*`, per
-`AUDIT_WORKSTREAM.md`): check every claim, number, screenshot and
-diagram against today’s code or output (regenerate the figure from the
-current source and compare; count, don’t recall); list each stale item
-with its source path; fix it or file it. Related, not duplicated: the
-deferred `a2interactive` pass and the `inst/doc/` slimming item.
-**Slices audited, and their wording findings FIXED** (each has a
-`CHANGELOG.md` entry that carries the counts, and a report): 1 (S820)
-PDFs and article images – the untracked PDF is gone (`3a8c026bb`, S831),
-the tracked one was deleted and the one stale kinship2 image regenerated
-(S884), two stale code comments fixed (S882, S883); 2 (S821)
-screenshots, NOT fixed, see below; 3 (S822) article prose, fixed S823; 4
-(S824) user manual, in-app guidance pages and README, fixed S825-S828
-and S830; 5 (S832) `a2interactive.Rmd`, fixed S833; 6a-6e (S834-S842)
-all 267 `man/` pages, fixed S835, S837, S839, S841, S844; 7a (S845)
-`NEWS.Rmd`, fixed S846-S847; 7b (S852) living internal docs, 33 of 35
-fixed S853; 7c (S860) live `docs/planning/` plans, fixed S861, and a
-header sweep of all 84 plans (31 bannered), S862; 8 (S868)
-`docs/research/` and older `docs/audits/`, a status banner on 26 files,
-S870. **Still open.** (1) *Slice 2* (S821,
-`DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`) was scoped S927 into 7-8
-sessions: `docs/planning/docs-audit-slice2-screenshot-plan.md` (its
-owner decisions D2 to D5 are all ruled; D1, the order, was followed as
-the plan recommended; Phase 1, the session-ending crash, was fixed S928
-and Phase 2, the capture scripts’ honest reporting, S930: one shared
-helper, `tests/testthat/helper-captureHarness.R`, and the
-`NPRC_SHOT_DIR` folder setting; Phase 2’s item (e), the full-height
-`potential_parents_results.png` capture, needed no script change (S940:
-the fixed script’s capture is 1300 x 7121, the committed height; S927’s
-900 px was the crashed run); Phases 3a (S941; D2 ruled: delete the
-orphan), 3b (S942; D3 ruled: accept the install date), 3c (S940) 4a
-(S943; D4 ruled: build the tables) and 4b (S944; D5 ruled: script all
-nine) are DONE, so slice 2 is finished). Measured S927: 37 of the 38
-script-written `shiny_app_use/` images differ from the app (S821 said
-31); the colony script’s tail failure was that crash (an animal with no
-birth date in a group), not a script bug, and it is fixed; S928 checked
-it in the headless test driver, S929 by hand in a real Chrome window
-(the owner: `ExamplePedigree.csv` on the Input tab, Form Groups with the
-defaults, Top ranked; the page stayed live and the Genetic Diversity tab
-drew the heat map; “All available” was checked only in S928’s headless
-run, not by hand). Also: 12 images have no script (2 of the 3 CSV
-pictures are stale from the code alone). S933 retook
-`read_and_check_pedigree.png` alone (the Input tab’s new no-birth-date
-warning made the old picture show Warnings 1; the app now shows 2 and
-the guide text says 2), with the guide’s own script into a scratch
-folder (81/81 steps), copied alone. S934 retook
-`genetic_diversity_heatmap.png` alone (the heat map’s names were cut off
-and tiny; the new picture shows them whole at 22 pt, and S931’s note),
-with the guide’s own script into a scratch folder, copied alone; that
-run was stopped after the heat map step, so it is not an 81/81 run. S935
-retook it again (the note under the grid now names the Production and
-Inbreeding columns), from a full 81/81 run, copied alone. S936 retook
-`read_and_check_pedigree.png` (the QC Summary boxes are colored now, and
-the capture script waits for the yellow pop-up to close, which the
-container crop had cut off mid-sentence), from a full 82/82 run, copied
-alone. S940 did Phase 3c: 10 pictures retaken (the six Breeding Groups
-ones, the heat map, Potential Parents and both Mate Pair ones) from one
-full 82/82 run, copied by name. The Group Detail picture’s “Group to
-view” box had been blank since 2026-07-10 (the script typed “Group 6”;
-the box’s values are numbers), fixed with a test first
-(`test_captureHarness.R`); the heat map was retaken again (the groups
-are living animals with birth dates now, so S935’s note is gone); the
-Mate Pair caption said all alive animals but the picture shows a custom
-list of six, fixed. Its two findings for the owner (the Group Detail
-kinship caption and the unused animals’ “Group 7” heading) were ruled
-S950: the guide’s words changed and the app did not; S961 then renamed
-the box “Unused animals” on the Groups, Statistics and Group Detail
-tabs. S941 did Phase 3a: 14 pictures retaken (9 Pedigree Browser, 5
-Diagram) from the colony script’s full 81/81 run and the diagram
-script’s 18/18 run, copied by name; each was 147 px taller than the
-committed one (the longer Display Unknown IDs text) and now shows the
-`placeholder` column and no stale QC pop-up. The owner ruled D2
-(delete): `pb_unknown_displayed.png` and its capture step are gone (test
-first, `test_captureHarness.R`). The legend picture shows the dashed
-“Same animal, again” row and the dashed-line paragraph
-(`pedigree-diagram.qmd:50-56`) names it. Captions fixed: “6-animal” is
-21 animals, “the top union” is 8LKBV9 x his daughter FJIB3R, the
-affected picture is 12 animals with 4 filled (not three), the names
-picture is its own 12-animal lineage, and the first Pedigree Browser alt
-text. The two leftovers were the Direct-style item (fixed S949: the
-article’s edge-style section now shows a Direct picture,
-`diagram_direct_edge_style.png`, and says the first picture is the
-Rectilinear default) and the pop-up item (the first item under Up Next).
-S942 did Phase 3b: 12 pictures retaken (Input x4, Home, Age-Sex Pyramid,
-Summary Statistics x3, Genetic Value x3) from the colony script’s full
-81/81 run, copied by name; sizes matched S927’s measurements. D3 was
-ruled: accept. The Home picture shows the 2026-10-07 install date and a
-three-row navigation bar (De- Identified Export and Genetic-Health
-Trends are new tabs). In S942 the Genetic Value results showed imports
-with a recorded origin first, as the prose said (S956 retook both for
-the living-animals default) (the committed ones, taken 2026-08-10, had
-no-parent, no-origin animals first; why was not looked into); the
-500-row picture’s caption and alt text said rows 1 to 10 of 500, 50
-pages (S956: 332 entries, 34 pages), not a High-to-Low transition it
-never showed. Two findings for the owner were the Summary Statistics
-duplicates item (fixed S945: three different pictures) and the Genetic
-Value row-names item (fixed S946: the table is built with no row names).
-Phases 4a and 4b then remained. S943 did Phase 4a (D4 ruled: build the
-tables in the guide): the three spreadsheet pictures
-(`ss_kinship_matrix`, `ss_first_order_relationships`,
-`ss_female_founders`) are deleted and the guide builds the three tables
-itself, in the chunk labelled `summary-export-tables`
-(`vignettes/articles/colony-manager-guide.qmd:468`), from the example
-file with the export buttons’ own `write.csv` lines; a kinship corner
-(the first animal with 3 or more offspring and its first three), and the
-first 8 rows of the first-order and female-founders files. Measured
-first in the real app (the three export buttons, headless): exported
-functions alone rebuild all three files byte for byte (about 5 s); the
-old first-order picture matched 0 of its 22 rows (cause not looked
-into), the founders picture lacked `fromCenter` and `placeholder`, the
-kinship picture listed the animals in another order. The gate is
-`tests/testthat/test_guideExportTables.R` (9 blocks): what the guide
-shows must equal the same cells of what the buttons write. S944 did
-Phase 4b (D5 ruled: script all nine): the nine Marker Genetics pictures
-are retaken by a new script,
-`vignettes/articles/marker-genetics-screenshots.R` (one fresh app per
-picture; its five made-up data sets come from
-`tests/testthat/helper-markerPictureFixtures.R`, copies of the
-hand-checked fixtures in `test_modMarkerGenetics.R`, and the other four
-use files the package ships). Measured first in the real app (headless):
-every number in all nine old pictures still matched; what had changed
-was the page (8 sub-tabs and 4 upload boxes now; the five oldest
-pictures showed 0 to 5 sub-tabs and 1 or 2 boxes). The gate is
-`tests/testthat/test_markerPictureScreenshots.R` (16 blocks, 72
-expectations): the script’s pictures equal the guide’s nine, every
-picture goes through a pop-up wait, and the data run through the real
-module give the numbers the captions quote. **Slice 2 is finished:** all
-46 pictures in `shiny_app_use/` (measured S944: each is taken by one of
-the three capture scripts and cited by the guide or the Diagram article)
-now come from a script, and the guide’s abstract says “current as of
-2026-10-08”. Wording fixed in the same pass: the Heterozygosity caption
-(its animals are X, Y, Z), the Candidate tab’s “Current limitation” note
-(issue \#155 had fixed it), and the caption’s “10 shared loci” (3 of 10
-disagree). Its one finding for the owner, the Candidate tab’s blank
-table without `fromCenter`, was ruled and built S948 (the tab now says
-why). (2) *Owner decisions about code, found by slices 4 and 6-8*
-(DECISION NEEDED, Effort S each; reword the docs if the code changes;
-carried as recorded S870 and not re-checked against today’s code, except
-where a present-day check is named; the ids are in each slice’s report):
-6a-6b, the ten oldest flags, re-checked S986
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6A_6B_RECHECK_2026-10-14.md`: 9
-findings, 1 moderate, an invalid date in a file with two date columns,
-fixed S987, PB7,
-[`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)
-counting every rename, fixed S988, and PB4,
-[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
-ignoring an `NA` name, fixed S989; MC1 was fixed S923; the owner took
-the recommended option on all four rulings S986, and the last two, the
-help sentences for MB3 and PD12, were fixed S990; MA3/MB14 are closed by
-a run and PB13, PA4 and PD1 stay as documented); 6c 8 candidates,
-re-checked S976
-(`docs/audits/DOCS_AUDIT_PART2_MARKER_GENETICS_RECHECK_2026-10-13.md`:
-all 11 claims still real, the owner ruled on all of them S976; the first
-ruling, a blank allele as missing, shipped S977, the second, the F_ROH
-warning and notice, shipped S978, the third, the two small marker fixes,
-shipped S979); 6d 21 candidates, re-checked S991
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md`: 5 closed
-by later sessions (CA1, CA4, CB2, CC4, CD6), 16 still true, 2 moderate:
-the Genetic Diversity tab stopped when a group held a living animal
-outside the Genetic Value population (CA2: the owner took the
-recommended ruling S993 and it is fixed, `R/appServer.R:448` passes
-`sharedKinshipMatrix`, `NEWS.Rmd:451`), and Download Plot on the Age-Sex
-Pyramid tab saved the packaged example’s pyramid when nothing was loaded
-(CD5: the owner took the recommended ruling S992 and it is fixed,
-`R/modPyramid.R:141,146`, `NEWS.Rmd:445`); 14 minor; one new stale help
-clause (N1, `R/modGeneticDiversity.R:81-84`); **the housekeeping list
-was done S994** (N1’s clause, CD1’s `darkblue`, the CD2 and CC1
-comments, CD4’s ten popovers, CA5’s two alert sentences; gate
-`test_docsAuditHousekeepingWording.R`; the pyramid line still shows
-gray, the theme forces it); **CC1 was built S997** (the owner chose
-“keep the pairs that fit, no message”: a twin file is checked against
-the whole studbook and each place gets only the pairs whose two animals
-it holds, `R/modPedigree.R:530`, `R/twinPairsWithin.R:20`,
-`NEWS.Rmd:89`; gate `test_modPedigree_twinRelationsTrimmed.R`); **CB1
-was built S998** (the owner chose “both cases, one sentence”: with
-“separate files” the QC Summary says “The genotype file was not used, so
-no genotypes are used. Reason: …” for a genotype file the check refuses
-or the app cannot read, and a file with a short row no longer greys out
-the page and ends the session; `R/readSeparateGenotypeFile.R`,
-`R/modInput.R:488-504`, `NEWS.Rmd:525`; gate
-`test_modInputSeparateGenotypeNote.R`); **CB5 was built S999** (the
-owner took option (a): the Marker Genetics module’s returned `isReady`
-answers FALSE, not an error, for a genotype file the module cannot use;
-nothing in `R/` reads `isReady`, so the running app looks the same;
-`R/modMarkerGenetics.R:595,1347`, help `:479-481`, `NEWS.Rmd` Minor;
-gates `test_modMarkerGenetics.R`,
-`test_modMarkerGeneticsIsReadyHelp.R`); **CA3 was built S1000** (the
-owner chose to keep the leftover row and call it “Unused animals”, with
-`groups()` left as it is and one new returned item, `groupLabels`: the
-Genetic Diversity heat map’s last row, when some animals fit no group,
-now reads “Unused animals” as the three Breeding Groups pages do;
-`R/modBreedingGroups.R` `boxLabels`, `R/nameBreedingGroups.R`,
-`R/appServer.R:434-439`, `NEWS.Rmd:279-283`, the guide and the manual
-say it; gates `test_modBreedingGroups_groupLabels.R`,
-`test_nameBreedingGroups.R`, `test_appServer_server.R`,
-`test_unusedAnimalsHeatMapWording.R`); **the owner’s other rulings are
-not yet taken**, the report proposes one per finding with a
-recommendation: CC5 is the owner’s call, and CB3, CB4, CC2, CC3 and CD3
-stay as they are), and the R `helpText` at `R/modGeneticValue.R:88`
-still says “Summary Statistics relationship table” (present S890; not
-re-checked); 6e 46 candidates CE-CL, re-checked S1003
-(`docs/audits/DOCS_AUDIT_PART2_SLICE_6E_RECHECK_2026-10-15.md`: 1 closed
-by a later session, CF2 in S923; 45 still true, 6 moderate (CE2
-`fromCenter` text, CE4 and CE5 Cross-Center, CF3 Excel upload fails for
-kinship overrides and snapshot history, CI1 example-config API-key
-placeholder, CJ3 under-age males in sex-ratio groups) and 39 minor;
-**one new moderate, N1: the Mate Pair table pairs animals of unknown
-sex, lists them as sire or dam and pairs an animal with itself**
-(`R/reportMatePairs.R:198-211`); **all seven ruled S1004 (fix, option
-(a) each time); CF3, the Excel upload, fixed S1005, N1, the Mate Pair
-table, fixed S1006, CE2, the `fromCenter` text, fixed S1007, and CJ3
-with CJ4, males under the age or with no birth date in sex-ratio groups,
-fixed S1008; CE4 and CE5, the Cross-Center check and merge, fixed S1011
-(`R/resolveCrossCenterIds.R`, `R/checkCrossCenterMapping.R`,
-`NEWS.Rmd`); CI1 with CI3, the example-config API-key placeholder and a
-setting read in another case, fixed S1012 (`R/readConfigLines.R`,
-`R/getParamDef.R`, `NEWS.Rmd`); all six fixes of the slice are done**,
-and the 13 small wrong statements fixed S1016
-(`tests/testthat/test_docsAuditSlice6eMinorFixes.R`; `NEWS.Rmd`); CL9 is
-the open item below), and `R/makeGroupNum.R` still says `numGp` “Default
-is 1” while the examples in `R/fillGroupMembersWithSexRatio.R` and
-`R/groupAddAssign.R` still pass deprecated `minParentAge` (all three
-present S890); 7b/8 CV1 and CV2
-([`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
-exports with no `@examples`; the `savePlotToFile` example uses
-`\dontrun`); the four likely code defects of *slice 4* (this item’s
-earlier “8” label was wrong), re-checked against today’s code S966
-(`docs/audits/DOCS_AUDIT_PART2_FOUR_CODE_CANDIDATES_RECHECK_2026-10-12.md`):
-all four are still real and the docs already say so, except one wording
-line, fixed S967 (the `groupAddAssign` roxygen and its `man/` page said
-“largest average size” and now say “largest minimum group size (the
-score is the size of the smallest group)”, gate
-`tests/testthat/test_groupAddAssignHelp.R`; “or younger” was fixed
-S844). **Three rulings, all taken S968** (the owner took the recommended
-option each time): the two do-nothing Genetic Value checkboxes were
-removed S969; the “Upload list” choice was removed S970 and the
-candidate list it promised was built S973 (“My own list”); the
-unused-genotypes notice was redirected S970 to making the genotype
-columns work (its item below). (3) *Left unsettled by the doc slices:*
-RO8 (Quarto slices 3-4 status) and the other ids in RO3 were reworded
-“not recorded” / “not re-checked”; AR3’s “about 53” is attributed to
-Learning 347, not re-counted; slice 8 left open whether to replace stale
-`file:line` cites in the plans and gap analysis with function names, and
-D’s six parent-to-union edges that still differ in row.
-
-**With the “groups not in the pedigree” sentence showing, “Export
-Current Group” writes no file and says nothing, and “Export Current
-Group Kinship Matrix” writes the old group’s matrix (DECISION NEEDED –
-leave it, or make both exports stop with the page’s sentence, Effort
-S-M; strict TDD)** (found S996, split out of the guide-sentence item
-when S1017 finished it) – a formed group holds an animal the loaded
-pedigree lacks (after a new file or a trimmed view), and the Breeding
-Groups Groups, Statistics and Group Detail pages show one sentence
-(`R/modBreedingGroups.R:222`; the guide says it since S1017,
-`vignettes/articles/colony-manager-guide.qmd:709-714`). Measured S996
-with a module-level probe (a browser download was not tried): “Export
-Current Group” stops silently; “Export Current Group Kinship Matrix”
-writes the old group’s matrix. **Decision:** (a) leave it (the sentence
-on the page already says to form the groups again); (b) make both
-exports stop and say that sentence, which users would see, so it needs a
-`NEWS.Rmd` line and a browser download tried first.
-
-**The Changed Columns tab and
-[`summary()`](https://rdrr.io/r/base/summary.html) skip some rename
-fields (DECISION NEEDED – should the tab list every rename, Effort S-M;
-strict TDD)** (found S988, while
-[`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)
-was made to count every rename) – `getEmptyErrorLst()$changedCols` has
-13 fields.
-[`shouldShowChangedColsTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowChangedColsTab.md)
-checks 12 (`R/shouldShowChangedColsTab.R:36-42`, none for
-`geographicoriginToGeographicOrigin`);
-[`summary()`](https://rdrr.io/r/base/summary.html) writes a sentence for
-10 (`R/summary.nprcgenekeeprErr.R:111-165`, none for
-`recordstatusToRecordStatus`, `fromcenterToFromCenter` or
-`geographicoriginToGeographicOrigin`);
-[`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)
-makes a warning row only for `caseChange` and `spaceRemoved`
-(`R/processQcStudbookResult.R:198-215`). Measured S988: a list with only
-the `geographicorigin` field filled gives a blank `summary()$txt` and an
-empty `<ul>` from `insertChangedColsTab()`, so the owner ruled at the
-PRE-RED scope question to leave the tab alone: with an all-lowercase
-`geographicorigin` header `hasChangedCols` is now TRUE but the tab stays
-hidden (`NEWS.Rmd` says so). The same gap for `recordstatus` and
-`fromcenter` headers was read from the code, not run. **Decision:** open
-the tab and list every rename (three new
-[`summary()`](https://rdrr.io/r/base/summary.html) sentences, 13 fields
-in
-[`shouldShowChangedColsTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowChangedColsTab.md)),
-or leave it. If it changes, `test_appServer_dynamicTabs.R:189-209`
-(“both functions should agree”, a 12-field list) needs a 13-field list
-and the `NEWS.Rmd` sentence changes.
-
-**A nameless (`NA`) column header stops
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-before any column check (DECISION NEEDED – leave it, fix each site, or
-check once at the front, Effort S-M; strict TDD)** (found S989, while
-[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
-was made to ignore an `NA` name, docs-audit part 2 flag PB4) –
-script-only: a CSV blank header is read as `X`, so only
-`names(ped)[k] <- NA` reaches it. Measured S989 on `examplePedigree`:
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-with `reportErrors` TRUE and FALSE stops “missing value where TRUE/FALSE
-needed” in
-[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
-(`R/fixColumnNames.R:43` and `:46`,
-`if (any(tolower(newCols) == "firstname"))`), before
-[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
-is reached. With `na.rm = TRUE` at both (previewed in memory, nothing
-committed) a nameless `birth` header gives `missingColumns` “birth” (and
-“Required field(s) missing: birth.” with `reportErrors = FALSE`), but a
-nameless `origin` header still stops “undefined columns selected” at
-`R/addParents.R:47` (`ped[, names(ped) != "recordStatus"]`), and more
-sites may follow (not searched). The owner ruled S989, at the PRE-RED
-scope question, to fix
-[`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
-only (shipped S989). **Decision:** (a) leave it (script-only); (b) fix
-each site, each with a test; (c) check once at the front of
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-and stop with one message naming the column’s position (the wording is
-the owner’s).
-
-**The Cross-Center merge drops the extra columns of a pedigree that has
-a header and no animals (DECISION NEEDED – leave it, or keep every
-input’s columns, Effort S; strict TDD)** (found S1011, left alone at the
-owner’s RED gate) – `bindPedigreeRows()` (`R/resolveCrossCenterIds.R`)
-removes zero-row frames before it collects column names. Measured S1011
-at function level (not in the tab): a Center A file with a header (`id`,
-`sire`, `dam`, `sex`) and no animals, an empty mapping and a Center B
-file with animals gives a merged table with `id`, `sire`, `dam` only,
-and
-[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
-reports 0 issues; with one mapping row the merge stops “mapping
-references idA value(s) not present in pedA\$id”, so only an empty
-mapping reaches it. **Decision:** (a) leave it (a file with no animals
-has nothing to carry); (b) keep the columns of every input, empty or
-not.
-
-**The archive pointers name `docs/archive/`, but the shards sit in
-`methodology/archive/` (DECISION NEEDED – leave them, rewrite them, or
-fix the trim tool, Effort S)** (found S1001, 2026-10-15, while trimming
-`CHANGELOG.md`) – measured S1001 by resolving each pointer against its
-own file’s directory: 52 do not resolve – `methodology/SESSION_NOTES.md`
-23 of 23, `methodology/HANDOFFS.md` 17 of 18, and the 12 in
-`methodology/archive/CHANGELOG-through-2026-10-14.md` (the live
-`CHANGELOG.md` has one pointer, and it resolves). Every target exists by
-name in `methodology/archive/`: the sync after S960 moved the shard
-directory from `docs/archive/` and the older pointers were not rewritten
-(the S991 and S1001 trims already write `methodology/archive/`). The 12
-CHANGELOG pointers were already dead before the S1001 trim (the
-unmodified `HEAD` copy had the same links), so no proof broke:
-`verify.sh` and `--reverify` hold. **Decision:** (a) leave it (a reader
-finds a shard by name in `methodology/archive/`); (b) rewrite the 52
-pointers (the 12 sit inside a frozen shard, so that one changes the
-shard’s bytes and its `verify.sh` proof would have to be re-derived, not
-tried); (c) change `methodology_trim.py` so a pointer is written
-relative to where the shard really is (a synced file: see the
-local-customization checklist in
-`docs/conventions/CLOSEOUT_CHECKLISTS.md`).
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
@@ -403,28 +63,65 @@ checklist in `CLAUDE.md` applies; take the commands from its “Build /
 Test / Verify” section and re-check them rather than copying them from
 here.
 
-**(Optional, owner decision) Retrospective colony-snapshot backfill for
-longitudinal genetic-health monitoring** (deferred S760, 2026-09-22,
-from the closed issue \#167’s plan §5 Slice 5, DECISION NEEDED, Effort
-L, its own scoping session first) – issue \#167’s v1 (schema + history
-IO, snapshot generation, trend/delta computation, the Genetic-Health
-Trends tab; Slices 1-4, all shipped and closed) is prospective-only:
-snapshots are recorded from the analysis state a user is looking at when
-they generate one. A future, clearly-caveated feature could reconstruct
-APPROXIMATE historical snapshots from birth/exit dates alone, giving an
-immediate trend from a single studbook rather than waiting for
-prospective series to accumulate. **Never ratified as v1 scope** (plan
-§3 D5, §5 Slice 5) – the caveat model is the design problem, not an
-implementation detail: as-of-date reconstruction cannot recover
-historical breeder flags or focal-population designations, so
-`neSexRatio`/`neVariance` and focal-rule snapshots would be silently
-wrong, not merely approximate, unless the design session solves that.
-Requires its own fresh Pre-RED design gate (a new GitHub issue, since
-\#167 itself is closed) before any implementation. See
-`docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 and
-D5 (§7 Dragon 1 is the
-no-seed-in-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-point, not this caveat list) for the full caveat inventory.
+**Earlier-snapshots follow-ups after \#170 (two threads left, extracted
+S1040 when the \#170 block came off; \#170 is closed; the tutorial
+thread was done S1042, the trend chart’s console notice and the notice’s
+200-character cut S1049)** – design and what was built:
+`docs/planning/retrospective-snapshot-backfill-plan.md` sections
+5.3-5.4. (1) **Build cost on a larger colony** (BLOCKED – needs a
+studbook above 3,694 rows from the owner, Effort S): the cost line’s 4
+seconds per 1,000 iterations (`describeBackfillCost()`,
+`R/modSnapshotTrends.R`) is measured up to 100 iterations on a 3,694-row
+colony, so a bigger colony at 1,000 iterations is unmeasured. (2) **A
+script word in the panel’s notice** (DECISION NEEDED, Effort S): the
+function’s failed-dates warning says “listed in ‘skipped’” and the panel
+shows it as is, while its table is headed “Dates not built”; reword the
+message for both readers, or leave it.
+
+**Tutorial leftovers after the S1043 inventory pass: twin-corrected
+kinship, and a guard for omitted exports** (DECISION NEEDED, Effort S;
+found S1043) – the pass named the six functions and the two parameters
+it had left (the next pass compares against this pass’s commit
+`649389386`, not S541): 170 of the 236 exports are still never named,
+which is not a gap (the tutorial is a walkthrough, not a reference).
+Three things are open. (1) **`twinRelations`** is used in a call only on
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+the
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+argument list names it and points to
+[`?reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
+and the “Passing a Kinship Matrix You Already Have” section says
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+takes it, but no output shows a twin-corrected kinship matrix
+([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
+[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
+and
+[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+accept it).
+[`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
+wants a same-sex pair for an MZ call and the tutorial’s pair is a
+mixed-sex UZ pair, so a demo needs its own pair; whether one belongs is
+a decision. (2) **No guard notices a new exported function the tutorial
+omits**; one would need an allow-list of the never-named set (170
+today), so whether it is worth the upkeep is a decision. **Method for
+the next inventory:** formals at the old commit from a scratch
+`git worktree` through
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+run in the main checkout (renv), against today’s; search each name with
+a boundary that ignores `_` (the tutorial writes `__fn__`, and `\b`
+treats `_` as a word character, so it misses them: S1043’s first total
+of 182 was 176) and confirm every “unnamed” claim with `grep -F` on the
+committed text. Pattern for a section:
+`tests/testthat/test_inventoryTutorialSections.R` (the shared readers
+`insideChunk()`, `sectionProse()` and `chunkOptionText()` are in
+`helper-pageText.R`). (3) **A new parameter since the pass** (S1045,
+`3ba3fd51b`):
+[`plotSnapshotTrends()`](https://github.com/rmsharp/nprcgenekeepr/reference/plotSnapshotTrends.md)
+takes `ncol`, the number of panel columns. The tutorial’s chart has 3
+panels, where the default grid is right, so whether the tutorial shows
+`ncol` is a decision.
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
@@ -511,99 +208,6 @@ re-run the grep and decide where that test lives. (The owner accepted
 S667’s recommendation NOT to split the layout core, recorded S738; the
 prep steps stand whether or not a split ever happens.)
 
-**(Optional, owner decision) Slim `inst/doc/` by moving the three
-`html_document` vignettes to
-[`rmarkdown::html_vignette`](https://pkgs.rstudio.com/rmarkdown/reference/html_vignette.html)**
-(extracted S728, 2026-09-19, from the completed tarball build-hygiene
-item — its still-open step 4; DECISION NEEDED, Effort M, its own
-session) – `inst/doc/` is 4.38 MB uncompressed = 86% of CRAN’s 5 MB
-documentation guideline and 38% of the tarball;
-`a2interactive`/`gvaConvergence`/`simulatedKValues` declare
-`output: html_document` (`vignettes/a2interactive.Rmd:4-6`,
-`gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Est. 0.4-0.9 MB
-compressed saved — an ESTIMATE needing its own before/after clean-export
-build measurement (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`
-Finding 3 + §7 recipe); `df_print: paged` does not exist under
-`html_vignette` and must become
-[`knitr::kable()`](https://rdrr.io/pkg/knitr/man/kable.html); optionally
-replace `a2interactive`‘s two live `visNetwork` widgets with static
-images — now quantified (S737,
-`docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` Obs.
-2): the widgets’ vis-network + html2canvas payload is ~1.23 MB
-uncompressed ≈ 0.29 MB compressed inside `inst/doc/a2interactive.html`,
-so that one step alone removes most of the drawing feature’s tarball
-footprint. Buys documentation-guideline headroom, not tarball-limit
-compliance (already met: clean build 3.49 MB vs 10 MB); the S728
-`tarball_size_clean_export` gate (`.quality-gates.json`, \<=5 MB) will
-show any saving mechanically. **Not worth doing on size grounds
-(measured S727):** shrinking example/test data (`inst/extdata/examples/`
-0.46 MB compressed, `tests/` 0.66 MB), recompressing `data/` (0.14 MB),
-or the package split. Always build release tarballs from a clean export,
-never the working tree.
-
-**(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
-binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**
-(found S619, 2026-08-20, incidental to the chromote CDP-timeout fallback
-fix (see `CHANGELOG.md`), READY (optional), Effort M – research only,
-not required) – the practical problem is FULLY resolved: `macos-latest`
-reverts to ambient/ unpinned Chrome (`R-CMD-check.yaml`,
-`if: matrix.config.os != 'macos-latest'` on the 3 Chrome-provisioning
-steps), verified green on real CI. **Unexplained:** why the bootstrap
-probe `Runtime.evaluate("window.devicePixelRatio", ...)`
-(`private$get_pixel_ratio()`, chromote 0.5.1) never gets a response on
-the pinned macOS ARM64 binary, though the same binary works on
-ubuntu-latest/windows-latest and ambient Chrome works on macos-latest
-(raising `default_timeout` to 60s changed nothing: the session is
-wedged, not slow). The only plausible analog found is Mozilla Bugzilla
-\#1893921 (Firefox’s content-process spawn hitting a 5s sandbox-denial
-stall on GitHub’s *virtualized* macOS ARM64 hosts); no matching Chromium
-tracker entry exists. Only worth pursuing if pinned-Chrome
-reproducibility on macOS becomes valuable: `xattr -l` on the extracted
-`.app` on a live failing runner (the research found Gatekeeper
-quarantine NOT evidenced for `browser-actions/setup-chrome`), or a new
-`rstudio/chromote` upstream issue (none matches this
-macOS+GHA+live-CDP-timeout signature).
-
-**Shard verify scripts that FAIL on lossless trims: reported upstream as
-`KJ5HST/methodology#93`; waiting on a fix and a way to regenerate old
-scripts (BLOCKED – on upstream \#93, Effort S once it ships)** – S901
-characterized all 10 red scripts (of 54: HANDOFFS 2 of 15, CHANGELOG 1
-of 16, SESSION_NOTES 7 of 23) and diffed the records: **none is a real
-loss.** Three causes: (1) 7 scripts (v1.5.0): the trim shares a commit
-with the session’s own close-out, so record 0 (a claim stub or a
-`status: pending` receipt) differs, and BL-27 keeps that a loud FAIL;
-(2) 1 script (v1.1.2): a baked-in `INJECTED=0`, fixed upstream since
-v1.2.0 but frozen scripts never benefit; (3) 2 scripts: the L2 “leak”
-test is a substring test, so a mid-line backtick quote of a front-matter
-line counts. Causes 1 and 3 are still in the current `main` of both
-`rmsharp/methodology` and `KJ5HST/methodology` (byte-identical, v1.5.0).
-The fork has issues disabled, so the owner chose `KJ5HST/methodology`;
-posted 2026-10-04 (<https://github.com/KJ5HST/methodology/issues/93>).
-Evidence and the posted text:
-`docs/audits/SHARD_VERIFY_SCRIPT_FAILURES_2026-10-04.md` (the issue
-starts at its line 150). **New at S917’s Phase 0:** a comment on \#93
-(2026-10-05 16:32 UTC, from the `rmsharp` account, not recorded before)
-re-ran the 54 proofs from a clone at `2563a6ee0` and got the same
-counts. It says: cause 2 is fixed safely by testing whole lines instead
-of substrings (both shards go green, none turns red across 54 here and
-103 in its own archive); cause 3 is not independent of cause 1 (the
-v1.1.2 `SESSION_NOTES-through-2026-08-15` shard still fails for cause
-1’s reason once regenerated); all 8 cause-1 shards have a claim stub or
-a `status: pending` receipt as record 0 and nothing else missing; and a
-`--reverify` would have to lift the record grammar from the frozen
-script, because the canonical `LEDGERS` table has no `SESSION_NOTES.md`
-entry. It proposes no patch yet. S917’s own `HANDOFFS.md` trim was
-committed apart from its close-out and its verify script passes. **What
-is left:** read upstream’s answer
-(`gh api repos/KJ5HST/methodology/issues/93/comments`;
-`gh issue view --comments` fails here); when a fix and a regenerate path
-ship, sync the trimmer (re-apply this project’s `SESSION_NOTES.md`
-patch, per the `CLAUDE.md` checklist) and regenerate the 10 scripts; if
-upstream declines, decide whether to patch them here (a second local
-modification to `methodology_trim.py`, which the owner rejected S898).
-Until then do not quote front-matter command lines verbatim in receipts
-(Learning 797e).
-
 **`CHANGELOG.md`’s own ~4-entries-per-session ledger convention (claim,
 Phase 0 reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side
 analogue of the already-diagnosed `HANDOFFS.md` “Receipt Inflation” (H4)
@@ -669,33 +273,49 @@ line ranges mechanically (Learning 537: a partial `old_string` leaves
 later paragraphs duplicated beside the new bullet); (5) leave open items
 byte-untouched; (6) re-read the compressed result end to end.
 **Candidates for the next pass (measured S896, line counts after this
-pass; re-grep, sizes not anchors):** the docs-audit item (47 lines; S890
-already compressed it, so check for regrowth first), this item’s own
-history (41 lines), the paper item (24), the `inst/doc/` slimming item
-(21) and the trim verify-script item (20, now longer after S898). The
-verify-script item was one of the 7 parked Effort-S items; the owner
-kept all 7 open (S898), so it may be compressed (Candidate C, another of
-the 7, was closed S910). The standalone-package item is still 34 lines
+pass; re-grep, sizes not anchors):** this item’s own history (41 lines)
+and the paper item (24). The standalone-package item is still 34 lines
 but is nearly all ratified-scope open text; leave it. Regrowth, for
 scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890, 514 after
 S896.
 
-**Two kinship2 drawing features the Diagram tab still lacks (found S847,
-2026-10-01; DECISION NEEDED – which pedigree column marks “deceased”,
-Effort M for each; strict TDD for both)** – checked in the source S847
-(`R/makePedigreeDiagramData.R`, `R/modPedigree.R`): (1) **Deceased
-marker:** no diagonal slash is drawn over a deceased animal’s symbol, as
-kinship2 does for a deceased `status`. The pedigree already carries
-`death`, `exit` and `status` columns, so the decision is which of them
-(or a new one) marks an animal deceased, and whether `exit` for a
-transfer must be told apart from death. (2) **More than one affected
-condition:** `affected` is one logical column
-(`R/makePedigreeDiagramData.R:73-85`, one fill color); kinship2 shades
-up to four conditions per animal as separate sections of the symbol,
-with a matching legend. The decision is the input shape (several logical
-columns, or a matrix) and the legend text. Each is its own session; the
-Diagram section of `NEWS.Rmd` (lines 33-35) says “A deceased marker and
-more than one affected condition are not drawn” until both ship.
+**Take the methodology files the S1032 sync held back (BLOCKED – on a
+fix to `close_out_report.py` in the methodology repo, Effort S once it
+ships)** (found S1032, 2026-10-22) – the sync copied 7 of 10 files and,
+at the owner’s word, held back `SESSION_RUNNER.md` (2 versions behind),
+`SAFEGUARDS.md` (1 behind) and the new `close_out_report.py` (not
+installed). The newest runner (commit `8f63492b`) makes section 3G run
+`python3 close_out_report.py` and print its output as the last message;
+v1.2.0 reads the example box in `HANDOFFS.md`’s front matter as the
+newest receipt and refuses
+(`refused: newest receipt (S<N>) is <pending | complete>`), here and on
+the blank seed. The runner’s Oct 12 commit `95005e87` (its subject: a
+gate run that reads unmeasured gates is repaired and repeated, or each
+gate is named) is held with it. Evidence, a tested 4-line fix and the
+draft upstream report, **not posted anywhere** (where to post it is the
+owner’s call): `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`.
+**What is left:** when the script reads this ledger, sync again
+(`bin/sync --force`, then the trimmer patch per
+`docs/conventions/CLOSEOUT_CHECKLISTS.md`) and, before keeping the
+script, print a report from a ledger whose newest receipt is complete;
+`bin/status` lists these three files until then.
+
+**Breeding Groups: groupings with equal scores are not listed in the
+order they were found (DECISION NEEDED, Effort S; found S1057)** –
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+lists its retained groupings best first and breaks a tie by the slot
+each one holds (`R/groupAddAssign.R:330-334`,
+`order(-retainedScores, seq_along(retained))`), while the comment there
+says “by discovery order”: a later grouping that replaces a worse one
+takes that one’s slot. Measured S1057 (the example’s top 20 ranked
+living animals, 3 groups, kinship limit 0.25, seed 5, 1,000 trials): all
+five kept groupings score 6, the first was found at trial 7, and the one
+listed first (the tab selects candidate 1,
+`R/modBreedingGroups.R:865-867`) was found at trial 18 (the five in
+listed order: trials 18, 7, 8, 23, 26). No score is wrong. To decide:
+correct the comment only, or list ties in the order found (that changes
+which grouping the tab shows first for the same seed, so tests that pin
+a result would be re-checked).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
@@ -768,7 +388,7 @@ the pickup must get the original list from the owner. Open decisions:
 which papers, authorship, and what is new in 3.0 relative to the
 published reference (Vinson & Raboin 2015, *JAALAS* 54(6):700-707, the
 package’s key reference in `CLAUDE.md`, whose Project Overview also
-holds the NIH grant acknowledgment). Natural dependencies, the owner’s
-call: a released 3.0.0 to cite (`DESCRIPTION` reads 2.0.0.9000 today)
-and the documentation audit above, so the papers’ figures match the
-software.
+holds the NIH grant acknowledgment). Natural dependency, the owner’s
+call: a released 3.0.0 to cite (`DESCRIPTION` reads 2.0.0.9000 today);
+the documentation audit is finished (S1027, `CHANGELOG.md`), so the
+papers’ figures match the software.

@@ -137,12 +137,9 @@ ratio is as close as possible to the ratio specified by
 <span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
 <span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="va">examplePedigree</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">300</span>, <span class="op">]</span> <span class="co"># Comment out for full example</span></span></span>
 <span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>,</span></span>
-<span class="r-in"><span>  minParentAge <span class="op">=</span> <span class="fl">2L</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  minSireAge <span class="op">=</span> <span class="fl">2L</span>, minDamAge <span class="op">=</span> <span class="fl">2L</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> 2.0.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use minSireAge and minDamAge instead.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">currentGroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>

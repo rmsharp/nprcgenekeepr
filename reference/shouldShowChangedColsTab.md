@@ -18,7 +18,8 @@ shouldShowChangedColsTab(changedCols)
   fields include: `caseChange`, `spaceRemoved`, `periodRemoved`,
   `underScoreRemoved`, `egoToId`, `egoidToId`, `sireIdToSire`,
   `damIdToDam`, `birthdateToBirth`, `deathdateToDeath`,
-  `recordstatusToRecordStatus`, `fromcenterToFromCenter`.
+  `recordstatusToRecordStatus`, `fromcenterToFromCenter`,
+  `geographicoriginToGeographicOrigin`.
 
 ## Value
 

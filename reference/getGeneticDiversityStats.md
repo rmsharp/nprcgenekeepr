@@ -100,3 +100,27 @@ The Inbreeding column counts breeding-age females by the same rule: a
 female with no birth date counts when the pedigree lists an offspring
 for her, and is left out otherwise. A male with no birth date is never
 counted as a potential mate.
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+ped <- qcStudbook(nprcgenekeepr::examplePedigree,
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
+  reportErrors = FALSE
+)
+kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+geneticValues <- reportGV(ped, guIter = 10L)$report
+## Three groups of living animals that have a genetic value
+living <- geneticValues$id[geneticValues$id %in% ped$id[is.na(ped$exit)]]
+groups <- list(
+  "Group 1" = living[1L:15L],
+  "Group 2" = living[16L:30L],
+  "Group 3" = living[31L:45L]
+)
+getGeneticDiversityStats(groups, ped, geneticValues, kmat)
+#>     group Value Origin Production Inbreeding
+#> 1 Group 1     3      3          1          3
+#> 2 Group 2     1      3          1          3
+#> 3 Group 3     1      3          1          3
+```

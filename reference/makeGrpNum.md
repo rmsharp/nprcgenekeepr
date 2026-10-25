@@ -10,7 +10,7 @@ It remains as a deprecated wrapper that issues a warning and then calls
 ## Usage
 
 ``` r
-makeGrpNum(numGp)
+makeGrpNum(numGp = 1L)
 ```
 
 ## Arguments

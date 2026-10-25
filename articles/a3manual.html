@@ -465,10 +465,17 @@ showing the same mapping. If the pedigree data includes an optional
 <code>affected</code> column, individuals marked affected are
 additionally shaded a distinct color on the diagram, with a matching
 “Affected” entry in the same legend; pedigrees without an
-<code>affected</code> column render unshaded, as before. If the pedigree
-data includes an optional <code>name</code> column, a <strong>Show Names
-on Diagram</strong> toggle (off by default) switches each node’s label
-from id-only to id plus name on a second line; a name longer than 15
+<code>affected</code> column render unshaded, as before. Further columns
+whose names start with <code>affected</code> (<code>affected2</code>,
+<code>affecteddiabetes</code>) are more conditions, up to four: each
+symbol is split into one section per condition, filled with that
+condition’s own color where the animal is affected, and the legend has a
+row for each. An animal whose <code>status</code> is DECEASED is also
+drawn with a diagonal slash through its symbol, with a matching
+“Deceased” entry in the legend. If the pedigree data includes an
+optional <code>name</code> column, a <strong>Show Names on
+Diagram</strong> toggle (off by default) switches each node’s label from
+id-only to id plus name on a second line; a name longer than 15
 characters is truncated with an ellipsis on the diagram, with the full
 name always available in the hover tooltip. Not every animal needs a
 name – one with no name (or a pedigree with no <code>name</code> column
@@ -1129,6 +1136,9 @@ number of founders by sex), and</li>
 <li>a <strong>Genetic Diversity Metrics</strong> section (mean kinship,
 mean genome uniqueness, and the number of animals analyzed).</li>
 </ul>
+<p><strong>Export Demographics</strong> saves the pedigree the analysis
+is using, as it stands, to <code>demographics_&lt;date&gt;.csv</code>;
+it is not a summary.</p>
 <p>The tab is still under development. A “Coming Soon” list names
 founder contribution analysis, inbreeding trends over time, breeding
 success rates, age structure analysis, and formatted PDF report

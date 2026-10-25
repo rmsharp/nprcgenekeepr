@@ -31,7 +31,7 @@ otherwise. If `ids` is empty, all animals are flagged `TRUE`.
 ``` r
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2, minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )
