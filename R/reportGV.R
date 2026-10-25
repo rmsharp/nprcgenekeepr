@@ -318,16 +318,20 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     alleles
   }
 
-  # Calculating founder equivalents and founder genome equivalents
-  feFg <- calcFEFG(ped, founderAlleles)
+  # Calculating founder equivalents and founder genome equivalents, as
+  # calcFEFG() does, from one build of the founder contributions and one
+  # retention scan (performance plan Phase 5).
+  founderStats <- founderStatistics(ped, founderAlleles)
+  feFg <- founderStats$feFg
 
   # Issue #82 Slice 3: the Monte Carlo sampling standard error of the founder
   # genome equivalents (FG), computed from the SAME gene drop that produces fg
-  # (as guSE reuses gu's alleles). FG is a colony-level scalar, so fgSE is one
-  # number that rides next to fg -- it is NOT a per-animal report column. NA
-  # (with a warning) when a contributing founder is retained in zero iterations,
-  # the same degeneracy calcFEFG reports for FG itself.
-  fgSE <- calcFGSE(ped, founderAlleles)
+  # (as guSE reuses gu's alleles), as calcFGSE() does. FG is a colony-level
+  # scalar, so fgSE is one number that rides next to fg -- it is NOT a
+  # per-animal report column. NA (with a warning) when a contributing founder
+  # is retained in zero iterations, the same degeneracy calcFEFG reports for FG
+  # itself.
+  fgSE <- founderStats$fgSE
 
   # Calculating known founders
   founders <- ped[isFounder(ped), ]

@@ -70,11 +70,8 @@ calcFGSE <- function(ped, alleles) {
   ## alleles in each iteration column.
   founderAlleles <- alleles[alleles$id %in% founders, c("id", "V1")]
   colnames(founderAlleles) <- c("id", "allele")
-  descAlleles <- alleles[
-    alleles$id %in% descendants,
-    !(colnames(alleles) %in% c("id", "parent"))
-  ]
-  retained <- apply(descAlleles, 2L, function(a) founderAlleles$allele %in% a)
+  retained <- retainedFounderAlleles(founderAlleles$allele, alleles,
+                                     descendants)
   storage.mode(retained) <- "numeric"
   ## Collapse the two copies per founder: F x K matrix in {0, 0.5, 1}; its row
   ## means equal calcRetention() and its rows are founder-id-sorted.

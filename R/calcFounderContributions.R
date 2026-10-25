@@ -46,6 +46,103 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
   ## Free the founders-by-founders identity block before the generation loop:
   ## it has been copied into d above and is never referenced again.
   founderMatrix <- NULL
+  d <- founderContributionMatrix(ped, d)
+
+  currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
+  ## drop = FALSE keeps a single living descendant a one-row matrix (S925).
+  d <- d[currentDesc, , drop = FALSE]
+  p <- colMeans(d)
+
+  list(p = p, ped = ped)
+}
+
+#' Fill the founder-contribution matrix, fast
+#'
+#' Each descendant's row of founder contributions is the mean of its two
+#' parents' rows, filled generation by generation from generation 1; the rows
+#' of generation 0 stay as \code{calcFounderContributions()} built them. For
+#' an ordinary pedigree every row of a generation is filled at once, by
+#' position (performance plan Phase 5). Any other pedigree goes through
+#' \code{founderContributionMatrixGeneral()}, today's loop by name, unchanged
+#' (owner ruling S1058), so it gives today's result, or today's error, by
+#' construction.
+#'
+#' @param ped the pedigree, its id, sire and dam coerced to character.
+#' @param d the founders-plus-descendants by founders matrix: the founders'
+#' rows the identity, the descendants' rows 0.
+#' @return \code{d} with the rows of generation 1 and later filled.
+#' @noRd
+founderContributionMatrix <- function(ped, d) {
+  plan <- contributionPositions(ped, rownames(d))
+  if (is.null(plan)) {
+    return(founderContributionMatrixGeneral(ped, d))
+  }
+  for (rows in plan) {
+    ## Mendelian 1/2, as in today's loop: the mean of the parents' rows.
+    d[rows$ego, ] <- (d[rows$sire, , drop = FALSE] +
+                        d[rows$dam, , drop = FALSE]) / 2L
+  }
+  d
+}
+
+#' The rows each generation fills, or NULL
+#'
+#' Filling a generation's rows at once gives today's matrix where today's loop
+#' by name reads only rows of earlier generations and finds every name it
+#' looks up. So the pedigree must be a dataframe with at least one row,
+#' character id, sire and dam, every id present, non-empty and unique,
+#' \code{gen} whole numbers of 0 and up with none missing, and every animal of
+#' generation 1 or later must have a sire and a dam in the pedigree, each of
+#' an earlier generation.
+#'
+#' @param ped the pedigree \code{founderContributionMatrix()} was given.
+#' @param ids the matrix's row names, every id of \code{ped}.
+#' @return NULL, or one element per generation from 1 to the last: a list of
+#' the matrix rows of that generation's animals (\code{ego}) and of their
+#' sires and dams.
+#' @noRd
+contributionPositions <- function(ped, ids) {
+  if (!is.data.frame(ped) || nrow(ped) == 0L ||
+        !all(c("id", "sire", "dam", "gen") %in% names(ped)) ||
+        !is.character(ped$id) || !is.character(ped$sire) ||
+        !is.character(ped$dam)) {
+    return(NULL)
+  }
+  gen <- ped$gen
+  if (!is.numeric(gen) || is.object(gen) || anyNA(gen) ||
+        !all(is.finite(gen) & gen >= 0L & gen == trunc(gen))) {
+    return(NULL)
+  }
+  if (anyNA(ped$id) || !all(nzchar(ped$id)) || anyDuplicated(ped$id) > 0L) {
+    return(NULL)
+  }
+  later <- gen >= 1L
+  sire <- match(ped$sire[later], ped$id)
+  dam <- match(ped$dam[later], ped$id)
+  if (anyNA(sire) || anyNA(dam) || any(gen[sire] >= gen[later]) ||
+        any(gen[dam] >= gen[later])) {
+    return(NULL)
+  }
+  ego <- match(ped$id, ids)
+  sireRow <- match(ped$sire, ids)
+  damRow <- match(ped$dam, ids)
+  lapply(seq_len(max(gen)), function(i) {
+    rows <- which(gen == i)
+    list(ego = ego[rows], sire = sireRow[rows], dam = damRow[rows])
+  })
+}
+
+#' Today's founder-contribution fill, for any pedigree
+#'
+#' \code{calcFounderContributions()}'s generation loop before performance plan
+#' Phase 5, word for word: one animal at a time, its row found by name.
+#' \code{founderContributionMatrix()} calls it for a pedigree it does not
+#' fill by position, which keeps that pedigree's result, error and warnings.
+#'
+#' @inheritParams founderContributionMatrix
+#' @return As \code{founderContributionMatrix()}.
+#' @noRd
+founderContributionMatrixGeneral <- function(ped, d) {
   ## Note: skips generation 0.
   ## The references inside matrix d do not work if ped$sire and ped$dam and
   ## thus gen$sire and gen$dam are factors. See test_calcFE.R
@@ -61,11 +158,5 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
       d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
     }
   }
-
-  currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
-  ## drop = FALSE keeps a single living descendant a one-row matrix (S925).
-  d <- d[currentDesc, , drop = FALSE]
-  p <- colMeans(d)
-
-  list(p = p, ped = ped)
+  d
 }
