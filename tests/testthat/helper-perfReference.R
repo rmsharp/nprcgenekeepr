@@ -449,3 +449,143 @@ convertRelationshipsReference <- function(kmat, ped, ids = NULL, updateProgress 
   kin["relation"] <- r
   kin
 }
+
+## Phase 4 (group formation): R/fillGroupMembers.R at 520bd5dc8, its
+## fillGroupMembersWithSexRatio() call pointed at
+## fillGroupMembersWithSexRatioReference(). It calls the live
+## makeGroupMembers(), makeGroupNum(), removePotentialSires(), makeAvailable(),
+## removeGroupIfNoAvailableAnimals(),
+## removeSelectedAnimalFromAvailableAnimals() and isEmpty(), which Phase 4
+## does not change.
+fillGroupMembersReference <- function(candidates,
+                                      currentGroups,
+                                      kin,
+                                      ped,
+                                      harem,
+                                      minAge,
+                                      numGp,
+                                      sexRatio) {
+  groupMembers <- makeGroupMembers(
+    numGp, currentGroups, candidates, ped,
+    harem, minAge
+  )
+  grpNum <- makeGroupNum(numGp)
+
+  if (harem) {
+    # Sires were added to groupMembers
+    candidates <- removePotentialSires(candidates, minAge, ped)
+  }
+  if (sexRatio != 0.0) {
+    groupMembers <- fillGroupMembersWithSexRatioReference(
+      candidates,
+      groupMembers,
+      grpNum,
+      kin,
+      ped,
+      minAge,
+      numGp,
+      sexRatio
+    )
+    return(groupMembers)
+  }
+  available <- makeAvailable(candidates, numGp)
+
+  # Whoever is already in a group (a harem's sampled sire, a supplied seed
+  # animal) keeps his relatives out of that group's pool, as an animal the
+  # loop places does below; a group left with no pool is finished. `[`, not
+  # `[[`: a member with no relatives is absent from `kin` and gives nothing.
+  for (i in seq_len(numGp)) {
+    available[[i]] <- setdiff(available[[i]], unlist(kin[groupMembers[[i]]]))
+  }
+  grpNum <- removeGroupIfNoAvailableAnimals(grpNum, available)
+
+  repeat {
+    if (isEmpty(grpNum)) {
+      break
+    }
+
+    # Select a group at random
+    i <- sample(grpNum, 1L)[[1L]]
+
+    # Select an animal that can be added to this group and add it
+    id <- sample(available[[i]], 1L)
+    groupMembers[[i]] <- c(groupMembers[[i]], id)
+    available <-
+      removeSelectedAnimalFromAvailableAnimals(available, id, numGp)
+
+    # Remove all relatives from consideration for the group it was added to
+    available[[i]] <- setdiff(available[[i]], kin[[id]])
+    grpNum <- removeGroupIfNoAvailableAnimals(grpNum, available)
+  }
+  groupMembers
+}
+
+## Phase 4 (group formation): R/fillGroupMembersWithSexRatio.R at 520bd5dc8. It
+## calls the live getPotentialSires(), makeAvailable(), calculateSexRatio(),
+## removeSelectedAnimalFromAvailableAnimals(),
+## removeGroupIfNoAvailableAnimals(), isEmpty() and sexCodes, which Phase 4
+## does not change.
+fillGroupMembersWithSexRatioReference <-
+  function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
+           sexRatio) {
+    potentialSires <- getPotentialSires(candidates, ped, minAge)
+    # A male who is not a potential sire (under minAge, or with no birth date)
+    # is placed nowhere: calculateSexRatio() counts every male as a male, so he
+    # must not fill the female pool.
+    males <- ped$id[ped$sex %in% sexCodes[["male"]]]
+    availableMales <- makeAvailable(potentialSires, numGp)
+    availableFemales <- makeAvailable(setdiff(candidates, males), numGp)
+
+    repeat {
+      if (isEmpty(grpNum)) {
+        break
+      }
+
+      # Select a group at random
+      i <- sample(grpNum, 1L)[[1L]]
+
+      # Select an animal that can be added to this group and add it
+      ratio <- calculateSexRatio(groupMembers[[i]], ped)
+      if (is.na(ratio)) {
+        ratio <- 0.0
+      } ## no seed animals
+
+      if (ratio < sexRatio) { ## need female
+        id <- sample(availableFemales[[i]], 1L)
+        availableFemales <-
+          removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
+      } else if (abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
+        additionalMales = 1L
+      )) <
+        abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
+          additionalFemales = 1L
+        ))) { # may need male
+        id <- sample(availableMales[[i]], 1L)
+        availableMales <-
+          removeSelectedAnimalFromAvailableAnimals(availableMales, id, numGp)
+      } else {
+        id <- sample(availableFemales[[i]], 1L)
+        availableFemales <-
+          removeSelectedAnimalFromAvailableAnimals(availableFemales, id,
+                                                   numGp)
+      }
+      groupMembers[[i]] <- c(groupMembers[[i]], id)
+      # Remove all relatives from consideration for the group it was added to
+      availableMales[[i]] <- setdiff(availableMales[[i]], kin[[id]])
+      availableFemales[[i]] <- setdiff(availableFemales[[i]], kin[[id]])
+      grpNum <- removeGroupIfNoAvailableAnimals(grpNum, availableMales)
+      grpNum <- removeGroupIfNoAvailableAnimals(grpNum, availableFemales)
+    }
+    groupMembers
+  }
+
+## Phase 4 (group formation): groupAddAssign() itself does not change, so its
+## result from today's code is groupAddAssign() with fillGroupMembers() swapped
+## for the frozen copy above (which calls the frozen sex-ratio copy).
+groupAddAssignReference <- function(...) {
+  testthat::with_mocked_bindings(
+    groupAddAssign(...),
+    fillGroupMembers = fillGroupMembersReference,
+    .package = "nprcgenekeepr"
+  )
+}

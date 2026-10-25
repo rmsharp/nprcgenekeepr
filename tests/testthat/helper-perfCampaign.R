@@ -5,8 +5,8 @@
 ## (docs/planning/performance-memory-campaign-plan.md, section 5): the
 ## equivalence tests (test_rareAlleleCounts.R, test_geneDropEquivalence.R,
 ## test_convertRelationshipsEquivalence.R) and the opt-in budget tests
-## (test_perfBudget_*.R). The frozen copies of today's
-## functions are in helper-perfReference.R.
+## (test_perfBudget_*.R), and test_groupAddAssignEquivalence.R. The frozen
+## copies of today's functions are in helper-perfReference.R.
 
 ## The example studbook QC'd as the app does, with the living animals as the
 ## population, untrimmed (all 3,694 animals): R/modPedigree.R's path, which
@@ -70,12 +70,39 @@ exampleRelationsInput <- function(n) {
   list(kmat = colony$kmat[ids, ids], ped = colony$ped)
 }
 
-## The value, error message and warnings of one call, from a fixed seed: the
-## equivalence tests compare today's function and the new code on unusual
-## inputs with it (test_rareAlleleCounts.R has its own one-argument outcome()).
-outcome <- function(f, args) {
+## Group formation as the tutorial sets it up (tools/perf/harness.R
+## groupAddAssignScenario(), the ratchet gate perf_groupAddAssign_1000_seconds):
+## the living animals with a recorded parent, trimmed to their ancestors (704
+## animals), with that pedigree's kinship matrix; the candidates are the
+## animals born before 2013 and alive (280). Built once, on first use.
+exampleGroupInput <- local({
+  input <- NULL
+  function() {
+    if (is.null(input)) {
+      sb <- qcStudbook(nprcgenekeepr::examplePedigree,
+                       minSireAge = 2L, minDamAge = 2L,
+                       reportChanges = FALSE, reportErrors = FALSE)
+      focal <- sb$id[!(is.na(sb$sire) & is.na(sb$dam)) & is.na(sb$exit)]
+      ped <- trimPedigree(focal, sb)
+      input <<- list(
+        ped = ped,
+        kmat = kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE),
+        candidates = ped$id[!is.na(ped$birth) &
+                              ped$birth < as.Date("2013-01-01") &
+                              is.na(ped$exit)]
+      )
+    }
+    input
+  }
+})
+
+## The value, error message and warnings of one call, from a fixed seed (1 by
+## default): the equivalence tests compare today's function and the new code on
+## unusual inputs with it (test_rareAlleleCounts.R has its own one-argument
+## outcome()).
+outcome <- function(f, args, seed = 1L) {
   warnings <- character()
-  withr::with_seed(1L, tryCatch(
+  withr::with_seed(seed, tryCatch(
     withCallingHandlers(
       list(value = do.call(f, args), warnings = warnings),
       warning = function(w) {
