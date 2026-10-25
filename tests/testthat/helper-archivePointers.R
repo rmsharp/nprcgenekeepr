@@ -50,7 +50,7 @@ archivePointerRowsOf <- function(ledger) {
 ## link before it.
 archivePointerProblems <- function(ledger, root) {
   rows <- archivePointerRowsOf(ledger)
-  root <- normalizePath(root)
+  root <- normalizePath(root, winslash = "/")
   problems <- character(0)
   for (i in seq_len(nrow(rows))) {
     where <- paste0("line ", rows$line[i], ": ")
@@ -60,7 +60,8 @@ archivePointerProblems <- function(ledger, root) {
                     paste0(where, rows$target[i], " does not open a file"))
       next
     }
-    repoPath <- substring(normalizePath(file), nchar(root) + 2L)
+    repoPath <- substring(normalizePath(file, winslash = "/"),
+                          nchar(root) + 2L)
     if (rows$text[i] != repoPath) {
       problems <- c(problems,
                     paste0(where, "the link text ", rows$text[i],
