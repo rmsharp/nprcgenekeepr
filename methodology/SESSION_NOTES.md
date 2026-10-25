@@ -98,31 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1059 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Speed Phase 6: kinship"; strict TDD; 2 scope questions and 3 gates, each answered with the
-recommended option first try):** Phase 6 of the performance and memory campaign, kinship memory (plan `:577`). `kinship()` (`R/kinship.R`) fills one
-n x n matrix, a length-n vector standing for today's missing-parent row; `kinMatrix2LongForm()` builds its columns with `rep()` and `as.vector()` in
-`longFormRows()`; `getAnimalsWithHighKinship()` reads only cells `>=` the threshold (`highKinshipPairs()`); odd inputs run `kinshipGeneral()` or
-`kinMatrix2LongFormGeneral()`, today's code (owner ruling). Claim `0eb2137bf`, RED `1a30d2b9a`, GREEN `36b3f6d18`, REFACTOR `dfc7b694b`
-`1c4b4d421`, gate `139d5a321`; not pushed.
-**Findings:** long form 979.0 to 312.5 MB (gate 1,077 to 344); kinship, synthetic colony, 569.8 to 455.6 MB (new gate 502; the plan said about
-290); pair list 1,258.5 to 279.3 MB and 6.2 to 4.2 s (the rest is `filterPairs()` and `filterAge()` merges).
-**Verification:** full suite 468 files, 4,396 tests, 0 failed, 0 errors, 208 skipped; lint 0; `devtools::check()` 0/0/0; ratchet 10/10 (results
-`4c89f1cc9a88`); mutation check 12 of 12 after REFACTOR (8 of 10 at GREEN); browser tier from a scratch install 6 files, 28 tests, 0 failed (`NPRC_RUN_E2E=true`).
-**Handoff evaluation of S1058: 8/10.** Helped: Next (1) named plan `:577`, the gate, its 979 MB and "peaks repeat exactly", and said to re-grep;
-the high-water-mark and `test_dir(load_package = "installed")` gotchas. Missing: which frozen copies call Phase 6's functions
-(`reportGVReference`, `convertRelationshipsReference`, `groupAddAssignReference`; found by grep). Wrong: nothing (63 test files is 67 now). ROI: high.
-**Self: 7/10.** + prototype identical on 2,536 cases, its grid mutation-checked, and fresh-process peaks before the first question; every question
-answered first try. - 7 shell calls into the safety-check outage before handing over the command; status-line nudges again; a cache shadowed by a
-local (caught reading); the first RED file took 59 s (now 13.5); a quick budget reading without the test's warm-up (519-559, not 388). Learning 1025.
-**Gotchas:** count a `sed` edit's replacements before a mutation run; measure today's code by putting `kinshipGeneral` into the harness env (a
-scratch worktree has no renv library); the X missing-parent row turns NA only through an unknown-sex dam who has parents.
-**Next (the owner's campaign, in the plan's order):** (1) Phase 7, the diagram's solver (plan `:602`, `BACKLOG.md:8`), strict TDD:
-`solve.QP.compact()` and `crossprod()` identical on CI's three platforms, the mock in `helper-reorderedSolveQP.R` moved and asserted; gate
-`perf_diagram_example_direct_seconds` (16.1 s). (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11 items (`BACKLOG.md:8`).
-Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
+### What Session 1060 Did
+**Deliverable:** Phase 7 of the performance and memory campaign, the diagram's solver (`docs/planning/performance-memory-campaign-plan.md:602`,
+`BACKLOG.md:8`): `.solveJointQP()` through `quadprog::solve.QP.compact()` with `crossprod()`, every pinned position unchanged, the mock in
+`helper-reorderedSolveQP.R` moved and asserted; owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 7: diagram"; strict TDD (IN PROGRESS)
+**Started:** 2026-10-25
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1058 (condensed S950 to S1059; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1059 (condensed S950 to S1060; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1059: Phase 6 of the campaign, kinship memory (strict TDD): `kinship()` fills one n x n matrix, `kinMatrix2LongForm()` builds its columns with
+`rep()`/`as.vector()` (`longFormRows()`), the pair list reads only cells `>=` the threshold; long form 979.0 to 312.5 MB (gate 344), kinship 569.8 to
+455.6 MB (gate 502). Claim `0eb2137bf`, GREEN `36b3f6d18`, close-out `54552a819`; S1058 8/10, self 7/10 (Learning 1025). **Gotcha kept:** measure a
+budget with the test's own procedure (one unmeasured run, then the median of 3).
 S1058: Phase 5 of the campaign, founder statistics (strict TDD): contributions filled a generation at a time by position, retention scanned
 with `match()`, both built once per `reportGV()` (`R/founderStatistics.R`); calcFEFG 1.19 to 0.09 s on the synthetic colony (gate 0.2 s). Claim
 `dff80c076`, GREEN `5bc964245`, close-out `cceed66cd`; S1057 8/10, self 8/10 (Learning 1024). **Gotcha kept:** assign each step before passing it on.

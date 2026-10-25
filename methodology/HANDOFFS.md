@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1060
+date: 2026-10-25
+status: pending
+active_task: IN PROGRESS -- Phase 7 of the performance and memory campaign, the diagram's solver (docs/planning/performance-memory-campaign-plan.md:602, BACKLOG.md:8): .solveJointQP() through quadprog::solve.QP.compact() with crossprod(pmat), every pinned position unchanged, the mock in helper-reorderedSolveQP.R moved and asserted (owner pick "Speed Phase 7: diagram"; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1059
 date: 2026-10-25
 status: complete
