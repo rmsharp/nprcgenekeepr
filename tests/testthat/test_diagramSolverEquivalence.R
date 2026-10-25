@@ -109,8 +109,10 @@ diagramSolverToday <- lapply(diagramSolverGrid, function(args) {
 
 ## Unusual inputs, built on the 87-node call of the 40-animal seed-7 pedigree
 ## (22 duplicate nodes), each with today's solver route as S1060 measured it.
-## "dense": a missing or infinite number reaches the solver, so the new code
-## must run today's solve.QP(); "compact": the new code's own solve;
+## "dense": a missing or infinite number reaches the solver, or a node listed
+## twice at one position gives a constraint whose two variables are the same,
+## so the new code must run today's solve.QP(); "compact": the new code's own
+## solve;
 ## "neither": today's code stops before any solve. The duplicated id is given
 ## to the node an anchored mating unit names, so that unit's anchor has no
 ## node and today's code stops while building the objective.
@@ -142,6 +144,9 @@ unusualSolverCases <- function() {
     ),
     `a missing x` = list(withPos(transform(pos, x = replace(x, 3L, NA))),
                          "compact"),
+    `a node listed twice in one row` = list(
+      withPos(rbind(pos, pos[5L, , drop = FALSE])), "dense"
+    ),
     `a spacing as text` = list(c(base, list(minSep = "1")), "neither"),
     `no nodes` = list(c(list(pos[0L, , drop = FALSE]), none), "neither"),
     `a duplicated id` = list(
@@ -206,7 +211,7 @@ test_that("unusual .solveJointQP() inputs give today's value, error and warnings
   }
 })
 
-test_that("only inputs with a missing or infinite number run today's dense solve", {
+test_that("only a missing or infinite number, or a node listed twice, runs today's dense solve", {
   cases <- unusualSolverCases()
   for (name in names(cases)) {
     expected <- switch(cases[[name]][[2L]],
