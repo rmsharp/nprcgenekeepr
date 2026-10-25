@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 7, the diagram's solver (owner-directed S1050; plan approved and
-      D1-D4 ruled S1051; Phases 0-6 done S1052-S1059; D7 ruled S1057; READY; Effort M per phase, 5 phases left, each
-      its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (Phase 7 at `:602`).
-      Phase 6 fills one n x n kinship matrix, builds the long form with `rep()` and `as.vector()`, and reads the
-      high-kinship pairs from `which(kmat >= threshold)` (odd inputs run today's code); gates
-      `perf_kinMatrix2LongForm_all_peak_mb` 344 MB (312.5 after, 979 before) and `perf_kinship_synthetic10000_peak_mb`
-      502 MB (455.6 after, 569.8 before). Phase 7's gate is `perf_diagram_example_direct_seconds` (16.1 s; 13.1 and
-      13.8 s at S1059's two ratchet runs); it moves `helper-reorderedSolveQP.R`'s mock to `solve.QP.compact`.
-      For Phase 11: whether the fallbacks' inputs move onto the fast paths (owner, S1054); harems' per-trial age work
-      (`getPotentialSires()`, `getCurrentAge()`, `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056);
-      Phase 5's calcFGSE row peak (225.5 to 254.1 MB, not investigated). Phase 8, the app's memory design (plan
-      `:626`), reads Phase 6's numbers. **D7 ruled S1057:** keep the Breeding Groups tab's default of 10 trials
-      (plan `:362`). **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
+- [ ] **Performance and memory campaign: Phase 8, the app's memory: a design session (owner-directed S1050; plan
+      approved and D1-D4 ruled S1051; Phases 0-7 done S1052-S1060; D7 ruled S1057; READY; Effort M; 4 phases left, each
+      its own session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (Phase 8 at `:626`). Text only: a
+      design document and the owner's D5 ruling, consumer by consumer (H6 lists the six; only the kinship CSV download
+      and the all-pairs relationship table need every pair), from Phase 0's app memory table and Phase 6's numbers
+      (kinship 455.6 MB peak on the synthetic colony, long form 312.5 MB); it must name the bit-identity tests, twins
+      included. Phase 7 hands `quadprog::solve.QP.compact()` each constraint's two entries in row order: the example's
+      diagram 13.2 to 4.7 s, positions identical; gate `perf_diagram_example_direct_seconds` 5.9 s; `t(pmat) %*% pmat`
+      kept (owner, S1060). For Phase 11: whether the fallbacks' inputs move onto the fast paths (owner, S1054); harems'
+      per-trial age work (`getPotentialSires()`, `getCurrentAge()`, `groupsWithoutSire()`, `initializeHaremGroups()`;
+      owner, S1056); Phase 5's calcFGSE row peak (225.5 to 254.1 MB); the diagram's 1.7 s outside the solve (1.0 s of it
+      `t(pmat) %*% pmat`; the solve's 3.0 s grows with the cube of the nodes). **D7 ruled S1057:** keep the Breeding
+      Groups tab's default of 10 trials (plan `:362`). **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
@@ -223,6 +223,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `R/modBreedingGroups.R:865-867`) was found at trial 18 (the five in listed order: trials 18, 7, 8, 23, 26). No
       score is wrong. To decide: correct the comment only, or list ties in the order found (that changes which grouping
       the tab shows first for the same seed, so tests that pin a result would be re-checked).
+
+- [ ] **Two `@inheritParams` lines with nothing to inherit (READY, Effort S; owner-reported S1060)** -- RStudio's Build ->
+      Document (roxygen2 8.0.0) prints "In topic 'addParents': @inheritParams failed. All parameters are already
+      documented; none remain to be inherited." and the same for 'removeUninformativeFounders': each function takes only
+      `ped`, which its own `@param` documents. Delete `R/addParents.R:13` (`@inheritParams reportGV`) and
+      `R/removeUninformativeFounders.R:11` (`@inheritParams trimPedigree`); `devtools::document()` should leave `man/`
+      unchanged and print neither message (check both). The same run's pandoc line, "Deprecated: --mathjax", is not this
+      item: pandoc 3.12.1 deprecates the flag rmarkdown 2.31's `html_vignette` passes, it only shows because the project's
+      roxygen options include the vignette roclet (`nprcgenekeepr.Rproj:25`), and `devtools::check()` gives 0 warnings.
+
+- [ ] **CI: `windows-latest` R-CMD-check fails 4 expectations in `test_archivePointersResolve.R` (READY, Effort S; found S1060
+      on the push of `63bc354f7`, run 40230619957; macOS and the three Ubuntu jobs pass)** -- `[ FAIL 4 | WARN 10 | SKIP 639 |
+      PASS 15815 ]`, failures at `:81`, `:101`, `:109` and `:110`: "the link text archive/SESSION_NOTES-through-2026-01-02.md is
+      not the file's path methodology\archive\SESSION_NOTES-through-2026-01-02.md". `tests/testthat/helper-archivePointers.R:53`
+      and `:63` build the comparison path with `normalizePath()`, which gives backslashes on Windows, so it never equals the
+      forward-slash link text. Likely fix (not yet tried): `normalizePath(..., winslash = "/")` on both lines. From S1023
+      (`325f0275c`, `e3de99906`, 2026-10-20), first pushed in S1060's push. No GitHub issue (CI-break convention).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing

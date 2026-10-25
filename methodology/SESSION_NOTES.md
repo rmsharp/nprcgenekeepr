@@ -99,12 +99,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1060 Did
-**Deliverable:** Phase 7 of the performance and memory campaign, the diagram's solver (`docs/planning/performance-memory-campaign-plan.md:602`,
-`BACKLOG.md:8`): `.solveJointQP()` through `quadprog::solve.QP.compact()` with `crossprod()`, every pinned position unchanged, the mock in
-`helper-reorderedSolveQP.R` moved and asserted; owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 7: diagram"; strict TDD (IN PROGRESS)
-**Started:** 2026-10-25
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Speed Phase 7: diagram"; strict TDD; 2 scope questions, the gates, a GREEN-to-RED return for a test
+fix and a push question, each answered with the recommended option first try):** Phase 7 of the performance and memory campaign, the diagram's solver
+(plan `:602`). `.solveJointQP()` keeps each constraint's two variable numbers and `.solveSeparationQP()` (`R/makePedigreeDiagramData.R`) hands them to
+`quadprog::solve.QP.compact()` in row order; a missing or infinite number, or a node listed twice, runs today's dense `solve.QP()`; `t(pmat) %*% pmat`
+kept (owner ruling). Claim `75fe2ea7c`, RED `d8ebdea15`, RED fix `395abbd0d`, GREEN `a544147c6`, REFACTOR `b992154e5` `7f7826207`, gate
+`63bc354f7`; pushed at the owner's word (260 commits, `c5545b016..63bc354f7`).
+**Findings:** example diagram 13.17 to 4.70 s, peak 253.0 to 185.9 MB (gate 16.1 to 5.9 s); its solve 11.3 to 3.0 s; rhesus direct 2.32 to 1.32 s,
+rectilinear 3.30 to 2.40 s; the plan's `crossprod()` took 1.89 s against 1.03 s here, so it was dropped.
+**Verification:** full suite 470 files, 4,403 tests, 0 failed, 0 errors, 210 skipped; lint 0; `devtools::check()` 0/0/0 (its own tests line: FAIL 0,
+WARN 10, SKIP 604, PASS 15,951 expectations); ratchet 10/10 (results `1c32d3f6d678`); mutation check 9 of 9 after REFACTOR (7 of 9 at GREEN);
+browser tier from a scratch install 5 files, 30 tests, 0 failed (`NPRC_RUN_E2E=true`); CI on `63bc354f7`: lint and pkgdown pass; R-CMD-check 4 of 5 jobs pass, `windows-latest` fails 4 expectations in
+`test_archivePointersResolve.R` (backslash paths; S1023's code, filed `BACKLOG.md:236`), and every diagram-solver test passes on all five; test-coverage passes.
+**Handoff evaluation of S1059: 8/10.** Helped: Next (1) named plan `:602`, the mock move and its assertion, CI's three platforms and the gate; the
+"budget by the test's own procedure" and "scratch worktree has no renv library" gotchas. Missing: the plan's `crossprod()` speed claim was never measured
+(slower here); a whole-diagram budget cannot keep 3x room and fail today's code; how S1059 put the scratch library first for the browser tier (renv
+precedes `R_LIBS`). Wrong: nothing (the 6,635 pinned lines are 7,764 now; the handoff said to re-count). ROI: high.
+**Self: 7/10.** + every time and identity number measured before the first question (the Fortran read to explain entry order; 300 of 300 seeds);
+every question answered first try; 9 of 9 mutants. - my RED test depended on file order (found only by the full suite; a GREEN-to-RED return);
+deparse-regex and shell-quoting slips cost calls and a second 10-minute check. Learning 1026.
+**Gotchas:** list compact entries in row order (the constraint check starts at -bvec); pin the RNG kinds in seeded test inputs (`set_seed()` leaves
+"Rounding"); for a scratch-install browser run put the library first with `.libPaths()` (callr hands it to the app).
+**Next:** (0) master's R-CMD-check is red on Windows only (`BACKLOG.md:236`, Effort S, likely `winslash = "/"`); it is outside the campaign, so offer
+it beside (1) rather than reorder the owner's campaign. **The owner's campaign, in the plan's order:** (1) Phase 8, the app's memory: a design
+session, text only (plan `:626`, `BACKLOG.md:8`): D5 consumer by consumer, a design document and the owner's ruling, from Phase 0's app memory table
+and Phase 6's numbers; name the bit-identity tests, twins included. (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11 items.
+Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), `:227` (new: the two `@inheritParams` messages the owner saw), #138.
 
 ### Sessions 947-1059 (condensed S950 to S1060; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1059: Phase 6 of the campaign, kinship memory (strict TDD): `kinship()` fills one n x n matrix, `kinMatrix2LongForm()` builds its columns with
@@ -117,15 +137,10 @@ with `match()`, both built once per `reportGV()` (`R/founderStatistics.R`); calc
 S1057: decision D7 (no `R/` change): the Breeding Groups tab keeps 10 trials (plan `:362-376`); filed `BACKLOG.md:217` (equal-score
 groupings listed by slot). Claim `471c25091`, close-out `a9f872ee1`; S1056 9/10, self 7/10 (Learning 1023). **Gotcha kept:** run nothing else
 while `quality_ratchet.py --run` times gates; read `uptime` first.
-S1056: Phase 4 of the performance and memory campaign, group formation (owner pick "Speed Phase 4: groups", strict TDD, plus a second RED/GREEN
-the owner chose for 12 post-GREEN differences): `R/fillGroupMembers.R` fills each group from a candidates x groups true/false table, relatives as row
-positions (`fillGroupMembers()` `:27`, `groupPoolsAdmitted()` `:115`); `R/fillGroupMembersWithSexRatio.R` keeps running male and other counts
-(`sexRatioPoolsAdmitted()` `:180`); odd inputs run `fillGroupMembersGeneral()` or `fillGroupMembersWithSexRatioGeneral()` (today's code word for
-word); 1,000 trials: plain 23.0 to 5.6 s, sex ratio 9 41.4 to 6.2 s, harem 26.0 to 9.9 s, the tab 25.9 to 9.1 s; gate 29.2 to 7.1 s. Claim
-`c93e3239c`, RED `dfa8944a3`, GREEN `5a416bf84`, RED 2 `b972b9d0c`, GREEN 2 `dc6d15d92`, REFACTOR `abaeb9a7f` `d32800027`, gate `fde152c2f`, close-out
-`cc8cc2bc1`; evaluation of S1055 9/10, self 7/10 (Learning 1022). **Gotchas kept:** probe each argument with NULL, a list and a data frame, numbers,
-text, logical, a factor and a Date before RED; `get_js()` blocks while the app works (measure elapsed, then `expect_lt()`); bound every odd-input
-block with `setTimeLimit()`.
+S1056: Phase 4 of the campaign, group formation (strict TDD, plus a second RED/GREEN for 12 post-GREEN differences): groups filled from a
+candidates x groups true/false table (`R/fillGroupMembers.R`) with running sex-ratio counts (`R/fillGroupMembersWithSexRatio.R`); 1,000 trials 23.0 to
+5.6 s, gate 29.2 to 7.1 s. Claim `c93e3239c`, GREEN `5a416bf84`, close-out `cc8cc2bc1`; S1055 9/10, self 7/10 (Learning 1022). **Gotcha kept:** probe
+each argument with NULL, a list, a data frame, numbers, text, logical, a factor and a Date before RED.
 S1055: Phase 3 of the performance and memory campaign, the relationship table (owner pick "Speed Phase 3", strict TDD): `R/convertRelationships.R`
 keeps `convertRelationships()`'s first steps; `relationsPlan()` (internal) admits an ordinary pedigree and `relationClasses()` applies today's
 11 rules as vector comparisons in blocks of `relationBlockSize` (1,048,576 pairs); any other input runs `convertRelationshipsGeneral()` (today's
@@ -162,13 +177,9 @@ C++ revisited at Phase 11, D3 the 18 exported functions in scope unchanged, D4 o
 (`docs/planning/performance-memory-campaign-plan.md:4,58-62,308-345`; owner pick "Rule on D1-D4", a decision session). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out
 `28b59e9e4`; evaluation of S1050 8/10, self 7/10 (Learning 1017). **Gotchas kept:** to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' --
 tests/testthat`, filter with `/test[_-]` and open each hit; read `PROJECT_LEARNINGS.md` (3.3 MB, one line a learning) with `sed -n` and `cut`.
-S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; owner-directed in prose, a planning session, no `R/` or test
-change): measured baselines, root causes H1-H10 with file:line, 12 phases (each one strict-TDD session, exactness against frozen reference copies, an opt-in budget
-test, a named surface), the grep inventory, decisions D1-D4 now and D5-D8 in their phases; `reportGV()` on the example about 3.5 s (2.9 s in `calcGU()` + `calcGUSE()`),
-the relationship downloads never finish, a 104.6 MB cached kinship matrix; two prototypes `identical()` to today's functions. Claim `4738c7a37`, deliverable `0bc77f06a`,
-BACKLOG item `1a1779668`, close-out `0a1727714`; evaluation of S1049 9/10, self 8/10 (Learning 1016). **Gotchas kept:** R 4.6's `gc()` has a "limit (Mb)" column (find
-"max used" by name) and its high-water mark varies 2x between runs (compare same-run pairs); `backfillColonySnapshots()` needs `guThresh`; `kinship(sparse = TRUE)` is
-85x slower than dense on 3,694 animals; `test_file()` changes the working directory (absolute paths); in zsh pass a file list through `xargs`.
+S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; a planning session): baselines, root causes
+H1-H10, 12 phases, decisions D1-D8. Claim `4738c7a37`, deliverable `0bc77f06a`, close-out `0a1727714`; S1049 9/10, self 8/10 (Learning 1016). **Gotchas
+kept:** R 4.6's `gc()` has a "limit (Mb)" column (find "max used" by name); `test_file()` changes the working directory (use absolute paths).
 S1049: the trend chart leaves a blank metric value out of the drawing without a console warning (`na.rm = TRUE` on four layers,
 `R/plotSnapshotTrends.R:125,131,134`; the jmac example at 10 iterations gave 3 warnings, now 0, PNG byte-identical), and three tests pin the panel notice's
 200-character cut (`R/modSnapshotTrends.R:427`; `tests/testthat/test_modSnapshotTrends.R:857,863,873`; their RED is four broken copies of the cut); owner pick
