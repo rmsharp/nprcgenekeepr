@@ -69,17 +69,35 @@ calcFEFG <- function(ped, alleles) {
   ## pre-refactor code did.
   fc <- calcFounderContributions(ped, "calcFEFG") # nolint: object_usage_linter
   r <- calcRetention(fc$ped, alleles)
+  feFgFromRetention(fc$p, r)
+}
+
+#' FE and FG from founder contributions and retention
+#'
+#' The arithmetic of \code{calcFEFG()} and \code{calcFG()}, and of
+#' \code{reportGV()} through \code{founderStatistics()}: \code{FE = 1 /
+#' sum(p^2)} and \code{FG = 1 / sum(p^2 / r)}.
+#'
+#' @param p founder mean contributions, named by founder, as
+#' \code{calcFounderContributions()} returns them.
+#' @param r each founder's mean retention, as \code{calcRetention()} returns
+#' it.
+#' @return A list: \code{FE}, and \code{FG}, which is \code{NA} (with a
+#' warning) when a contributing founder is retained in zero iterations.
+#' @noRd
+feFgFromRetention <- function(p, r) {
   ## Align retention to contributions by NAME before dividing (issue #86,
-  ## Dragon D-3): r is id-sorted while fc$p is in getFounders() pedigree-row
-  ## order, so a positional p^2 / r yields a silently wrong FG on any
-  ## unsorted-founder pedigree. FE (1 / sum(p^2)) has no retention term and is
-  ## unaffected by the ordering.
-  r <- r[names(fc$p)]
-  fe <- 1L / sum(fc$p^2L)
+  ## Dragon D-3): r is id-sorted (tapply) while p is in getFounders()
+  ## pedigree-row order, so a positional p^2 / r pairs the wrong founders -- a
+  ## silently wrong FG (e.g. a collapse to 0) on any pedigree whose founders
+  ## are not already in sorted id order. FE (1 / sum(p^2)) has no retention
+  ## term and is unaffected by the ordering.
+  r <- r[names(p)]
+  fe <- 1L / sum(p^2L)
   ## FE is deterministic and always returned; FG hard-fails (NA + warning)
-  ## on the same zero-retention silent collapse calcFG guards against.
-  if (checkFgDegeneracy(fc$p, r)) {
+  ## on the zero-retention silent collapse.
+  if (checkFgDegeneracy(p, r)) {
     return(list(FE = fe, FG = NA_real_))
   }
-  list(FE = fe, FG = 1L / sum((fc$p^2L) / r, na.rm = TRUE))
+  list(FE = fe, FG = 1L / sum((p^2L) / r, na.rm = TRUE))
 }

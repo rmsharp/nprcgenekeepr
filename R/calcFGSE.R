@@ -61,23 +61,31 @@ calcFGSE <- function(ped, alleles) {
   ## Founder contributions (deterministic) and the toCharacter()-coerced
   ## pedigree, shared with calcFG()/calcFEFG() via calcFounderContributions().
   fc <- calcFounderContributions(ped, "calcFG")
-  pedc <- fc$ped
-  founders <- getFounders(pedc)
-  descendants <- pedc$id[pedc$population & !(pedc$id %in% founders)]
+  scan <- founderRetentionScan(fc$ped, alleles)
+  fgSEFromScan(fc$p, scan)
+}
 
-  ## Rebuild the per-iteration retention matrix calcRetention() averages: for
-  ## each founder allele copy, a 0/1 indicator of presence among the descendant
+#' FG's standard error from founder contributions and the retention scan
+#'
+#' The arithmetic of \code{calcFGSE()}, and of \code{reportGV()} through
+#' \code{founderStatistics()}.
+#'
+#' @param p founder mean contributions, named by founder, as
+#' \code{calcFounderContributions()} returns them.
+#' @param scan \code{founderRetentionScan()}'s list.
+#' @return As \code{calcFGSE()}.
+#' @noRd
+fgSEFromScan <- function(p, scan) {
+  ## The per-iteration retention matrix calcRetention() averages: for each
+  ## founder allele copy, a 0/1 indicator of presence among the descendant
   ## alleles in each iteration column.
-  founderAlleles <- alleles[alleles$id %in% founders, c("id", "V1")]
-  colnames(founderAlleles) <- c("id", "allele")
-  retained <- retainedFounderAlleles(founderAlleles$allele, alleles,
-                                     descendants)
+  retained <- scan$retained
   storage.mode(retained) <- "numeric"
   ## Collapse the two copies per founder: F x K matrix in {0, 0.5, 1}; its row
   ## means equal calcRetention() and its rows are founder-id-sorted.
-  retentionMatrix <- rowsum(retained, founderAlleles$id) / 2L
+  retentionMatrix <- rowsum(retained, scan$founders$id) / 2L
   rhat <- rowMeans(retentionMatrix)
-  p <- fc$p[names(rhat)] # align contributions to retention rows by NAME
+  p <- p[names(rhat)] # align contributions to retention rows by NAME
   k <- ncol(retentionMatrix)
 
   ## Hard-fail: a contributing founder retained in zero drops leaves FG

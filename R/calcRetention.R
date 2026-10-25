@@ -30,6 +30,25 @@
 #' alleles <- lacy1989PedAlleles
 #' retention <- calcRetention(ped, alleles)
 calcRetention <- function(ped, alleles) {
+  ## Each step in its own statement: an argument evaluated lazily inside
+  ## rowSums()'s S4 dispatch would reword today's error messages.
+  scan <- founderRetentionScan(ped, alleles)
+  meanRetention(scan)
+}
+
+#' The founder alleles and the iterations that retain each
+#'
+#' The first steps of \code{calcRetention()}, shared with \code{calcFGSE()}
+#' and \code{founderStatistics()}, so \code{reportGV()} scans the gene drop
+#' once for both founder numbers (performance plan Phase 5).
+#'
+#' @inheritParams calcRetention
+#' @return A list: \code{founders}, a dataframe of the founders' rows of
+#' \code{alleles} with columns \code{id} and \code{allele} (their \code{V1});
+#' \code{retained}, \code{retainedFounderAlleles()}'s matrix for those
+#' alleles.
+#' @noRd
+founderRetentionScan <- function(ped, alleles) {
   # ASSUME: Pedigree has no partial parentage
   founders <- getFounders(ped)
   descendants <- ped$id[ped$population & !(ped$id %in% founders)]
@@ -37,9 +56,23 @@ calcRetention <- function(ped, alleles) {
   founders <- alleles[(alleles$id %in% founders), c("id", "V1")]
   colnames(founders) <- c("id", "allele")
 
-  retained <- retainedFounderAlleles(founders$allele, alleles, descendants)
-  retained <- rowSums(retained, na.rm = TRUE) / ncol(retained)
-  founders <- cbind(founders, retained)
+  list(founders = founders,
+       retained = retainedFounderAlleles(founders$allele, alleles,
+                                         descendants))
+}
+
+#' Each founder's mean retention
+#'
+#' \code{calcRetention()}'s result from \code{founderRetentionScan()}'s: each
+#' allele's share of iterations that retain it, averaged over the founder's
+#' two alleles.
+#'
+#' @param scan \code{founderRetentionScan()}'s list.
+#' @return As \code{calcRetention()}.
+#' @noRd
+meanRetention <- function(scan) {
+  retained <- rowSums(scan$retained, na.rm = TRUE) / ncol(scan$retained)
+  founders <- cbind(scan$founders, retained)
 
   founders <- tapply(founders$retained, founders$id, mean)
   founders
@@ -55,7 +88,8 @@ calcRetention <- function(ped, alleles) {
 #'
 #' A table of numbers is scanned one iteration column at a time, the
 #' descendants' alleles looked up among the founder alleles with
-#' \code{match()}. Any other table goes through
+#' \code{match()}. A table with a missing value among the descendants' alleles,
+#' found as the scan reads each column, and any other table go through
 #' \code{retainedFounderAllelesGeneral()}, today's scan, unchanged (owner
 #' ruling S1058), so it gives today's result, or today's error, by
 #' construction.
@@ -80,9 +114,13 @@ retainedFounderAlleles <- function(founderAlleles, alleles, descendants) {
                 ncol = length(shape$columns),
                 dimnames = list(NULL, names(alleles)[shape$columns]))
   for (k in seq_along(shape$columns)) {
+    a <- alleles[[shape$columns[k]]][shape$rows]
+    if (anyNA(a)) {
+      return(retainedFounderAllelesGeneral(founderAlleles, alleles,
+                                           descendants))
+    }
     seen <- logical(length(u))
-    seen[match(alleles[[shape$columns[k]]][shape$rows], u, nomatch = 0L)] <-
-      TRUE
+    seen[match(a, u, nomatch = 0L)] <- TRUE
     out[, k] <- seen[code]
   }
   out
@@ -95,9 +133,10 @@ retainedFounderAlleles <- function(founderAlleles, alleles, descendants) {
 #' \code{apply()} returns a matrix with the columns' own names where there are
 #' at least two founder alleles and at least two iteration columns. So the
 #' table must be a dataframe whose iteration columns, at least two, have
-#' unique, non-empty names and hold plain integers or doubles with no missing
-#' value in the descendants' rows, and the founder alleles, at least two, must
-#' be plain integers or doubles with none missing.
+#' unique, non-empty names and hold plain integers or doubles, and the founder
+#' alleles, at least two, must be plain integers or doubles with none missing.
+#' \code{retainedFounderAlleles()} checks the descendants' alleles for a
+#' missing value as it reads each column, so each column is read once.
 #'
 #' @inheritParams retainedFounderAlleles
 #' @return NULL, or a list: \code{columns}, the positions of the iteration
@@ -117,13 +156,12 @@ retentionShape <- function(founderAlleles, alleles, descendants) {
         !all(nzchar(columnNames)) || anyDuplicated(columnNames) > 0L) {
     return(NULL)
   }
-  rows <- alleles$id %in% descendants
   for (j in columns) {
-    if (!plainNumbers(alleles[[j]]) || anyNA(alleles[[j]][rows])) {
+    if (!plainNumbers(alleles[[j]])) {
       return(NULL)
     }
   }
-  list(columns = columns, rows = rows)
+  list(columns = columns, rows = alleles$id %in% descendants)
 }
 
 #' Today's retention scan, for any table
