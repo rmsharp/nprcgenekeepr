@@ -1328,8 +1328,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' Joint QP solve for one weakly-connected pedigree component (Option C)
 #'
 #' Migration Path Phase 1 of \code{docs/planning/
-#' pedigree-diagram-joint-qp-solver-plan.md} -- one \code{quadprog::
-#' solve.QP()} call positioning every node of one component simultaneously,
+#' pedigree-diagram-joint-qp-solver-plan.md} -- one \code{quadprog} solve
+#' (\code{solve.QP.compact()} since S1060, via \code{.solveSeparationQP()})
+#' positioning every node of one component simultaneously,
 #' replacing \code{.positionMatingUnitForest()}'s five former collision-
 #' avoidance passes (deleted at Migration Path Phase 2, S674, when this
 #' function was wired in as that function's final assembly step -- one
@@ -1442,7 +1443,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     floorIndividualIndividual
   }
 
-  amatCols <- list()
+  ## Each constraint is x[b] - x[a] >= its floor, kept as the two
+  ## variables' numbers (S1060, Phase 7 of the performance and memory
+  ## campaign: it was an n-long column with two nonzero entries).
+  lowerIdx <- integer(0L)
+  upperIdx <- integer(0L)
   bvec <- numeric(0L)
   for (g in sort(unique(provisionalPos$gen))) {
     rowIds <- ids[provisionalPos$gen == g]
@@ -1452,17 +1457,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     for (i in seq_len(length(rowIds) - 1L)) {
       a <- rowIds[i]
       b <- rowIds[i + 1L]
-      col <- numeric(n)
-      col[[varIndex[[b]]]] <- 1.0
-      col[[varIndex[[a]]]] <- -1.0
-      amatCols[[length(amatCols) + 1L]] <- col
+      lowerIdx <- c(lowerIdx, varIndex[[a]])
+      upperIdx <- c(upperIdx, varIndex[[b]])
       bvec <- c(bvec, minSepFor(kind[[a]], kind[[b]]))
     }
-  }
-  Amat <- if (length(amatCols) > 0L) {
-    do.call(cbind, amatCols)
-  } else {
-    matrix(numeric(0L), nrow = n, ncol = 0L)
   }
 
   ## Decision 4: objective. e(id) is the unit basis vector at id's own
@@ -1577,11 +1575,56 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   pmat <- do.call(rbind, pmatRows)
   Dmat <- t(pmat) %*% pmat + 1e-8 * diag(n)
 
-  fit <- quadprog::solve.QP(Dmat = Dmat, dvec = rep(0.0, n), Amat = Amat,
-                             bvec = bvec, meq = 0L)
+  fit <- .solveSeparationQP(Dmat, bvec, lowerIdx, upperIdx)
 
   data.frame(id = ids, x = fit$solution, gen = provisionalPos$gen,
              stringsAsFactors = FALSE)
+}
+
+#' Solve the layout's quadratic program, one entry pair per constraint
+#'
+#' Phase 7 of the performance and memory campaign (S1060,
+#' \code{docs/planning/performance-memory-campaign-plan.md}): each of
+#' \code{.solveJointQP()}'s separation constraints, \code{x[upperIdx] -
+#' x[lowerIdx] >= bvec}, reaches \code{quadprog::solve.QP.compact()} as its
+#' two entries instead of an n-long column with two nonzero entries, so the
+#' solver's sums over a constraint read two numbers, not n. The entries are
+#' listed in row order, the order \code{quadprog::solve.QP()} adds a dense
+#' column's nonzero entries in, so the solution is identical to the dense
+#' solve's. Inputs it was not built for get today's dense matrix and
+#' \code{quadprog::solve.QP()}: a \code{Dmat} or \code{bvec} holding a
+#' missing or infinite number (\code{solve.QP()}'s error names the argument
+#' by its position, and the compact routine numbers its arguments
+#' differently), or a constraint whose two variables are the same.
+#'
+#' @param Dmat the quadratic term, n x n.
+#' @param bvec the constraints' floors.
+#' @param lowerIdx,upperIdx each constraint's two variable numbers:
+#'   \code{x[upperIdx[i]] - x[lowerIdx[i]] >= bvec[i]}.
+#' @return \code{quadprog}'s fit list.
+#' @noRd
+.solveSeparationQP <- function(Dmat, bvec, lowerIdx, upperIdx) {
+  n <- nrow(Dmat)
+  m <- length(bvec)
+  if (all(is.finite(Dmat)) && all(is.finite(bvec)) &&
+        all(lowerIdx != upperIdx)) {
+    ## The dense column held -1 at lowerIdx and 1 at upperIdx.
+    lowerFirst <- lowerIdx < upperIdx
+    Aind <- matrix(c(rbind(rep(2L, m), pmin(lowerIdx, upperIdx),
+                           pmax(lowerIdx, upperIdx))),
+                   nrow = 3L, ncol = m)
+    Amat <- matrix(c(rbind(ifelse(lowerFirst, -1.0, 1.0),
+                           ifelse(lowerFirst, 1.0, -1.0))),
+                   nrow = 2L, ncol = m)
+    return(quadprog::solve.QP.compact(Dmat = Dmat, dvec = rep(0.0, n),
+                                      Amat = Amat, Aind = Aind, bvec = bvec,
+                                      meq = 0L))
+  }
+  Amat <- matrix(0.0, nrow = n, ncol = m)
+  Amat[cbind(upperIdx, seq_len(m))] <- 1.0
+  Amat[cbind(lowerIdx, seq_len(m))] <- -1.0
+  quadprog::solve.QP(Dmat = Dmat, dvec = rep(0.0, n), Amat = Amat,
+                     bvec = bvec, meq = 0L)
 }
 
 #' Combine the mating-unit forest into visNetwork-ready diagram data
