@@ -71,11 +71,11 @@
     {
       "name": "perf_diagram_example_direct_seconds",
       "direction": "max",
-      "threshold": 16.1,
+      "threshold": 5.9,
       "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
       "command": "Rscript tools/perf/run.R diagram-example-direct",
       "extract": "SECONDS=([0-9.]+)",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: makePedigreeMatingLayout(edgeStyle = \"direct\") on the example as the app trims it (708 animals) took 12.81 s, median of 3 runs (12.76 to 12.82); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 7 (the diagram's solver) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: makePedigreeMatingLayout(edgeStyle = \"direct\") on the example as the app trims it (708 animals) took 12.81 s, median of 3 runs (12.76 to 12.82); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 7 (the diagram's solver) is meant to lower it and tightens this gate. Tightened S1060 (2026-10-25, Phase 7, the diagram's solver: .solveJointQP() hands quadprog::solve.QP.compact() each separation constraint's two entries in row order, identical positions; today's dense solve.QP() for a missing or infinite number or a node listed twice): the same run took 4.72, 4.70 and 4.70 s in 3 fresh runs (13.17 s with the code before it, this session; peak 185.9 MB, was 253.0; load average about 5), so 16.1 s becomes 5.9 s by the same rule (4.72 s plus 25%, rounded up to 0.1 s)."
     },
     {
       "name": "perf_backfill_jmac_seconds",
