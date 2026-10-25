@@ -72,6 +72,8 @@ calcGUSEReference <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 
 ## Phase 1 (genome uniqueness): R/reportGV.R at 520bd5dc8.
 ## Phase 2 points its two geneDrop() calls at geneDropReference().
+## Phase 5 points its calcFEFG() and calcFGSE() calls at calcFEFGReference()
+## and calcFGSEReference().
 reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
@@ -216,7 +218,7 @@ reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   }
 
   # Calculating founder equivalents and founder genome equivalents
-  feFg <- calcFEFG(ped, founderAlleles)
+  feFg <- calcFEFGReference(ped, founderAlleles)
 
   # Issue #82 Slice 3: the Monte Carlo sampling standard error of the founder
   # genome equivalents (FG), computed from the SAME gene drop that produces fg
@@ -224,7 +226,7 @@ reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # number that rides next to fg -- it is NOT a per-animal report column. NA
   # (with a warning) when a contributing founder is retained in zero iterations,
   # the same degeneracy calcFEFG reports for FG itself.
-  fgSE <- calcFGSE(ped, founderAlleles)
+  fgSE <- calcFGSEReference(ped, founderAlleles)
 
   # Calculating known founders
   founders <- ped[isFounder(ped), ]
@@ -588,4 +590,170 @@ groupAddAssignReference <- function(...) {
     fillGroupMembers = fillGroupMembersReference,
     .package = "nprcgenekeepr"
   )
+}
+
+## Phase 5 (founder statistics): R/calcFounderContributions.R,
+## R/calcRetention.R, R/calcFE.R, R/calcFG.R, R/calcFEFG.R and R/calcFGSE.R at
+## 520bd5dc8, their calls to each other pointed at these copies. They call the
+## live toCharacter(), getFounders() and checkFgDegeneracy(), which Phase 5
+## does not change.
+calcFounderContributionsReference <- function(ped, caller = "calcFEFG") {
+  ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
+  partial <- xor(is.na(ped$sire), is.na(ped$dam))
+  if (any(partial)) {
+    stop(caller, " requires complete parentage (no partial parentage): ",
+         "id(s) with exactly one known parent: ", toString(ped$id[partial]),
+         ". Resolve partial parentage upstream ",
+         "(e.g., qcStudbook() or addUIds()) before calling ", caller, "().")
+  }
+  founders <- getFounders(ped)
+  descendants <- ped$id[!(ped$id %in% founders)]
+
+  d <- matrix(0L, nrow = length(descendants), ncol = length(founders))
+  colnames(d) <- founders
+  rownames(d) <- descendants
+
+  founderMatrix <- diag(length(founders))
+  colnames(founderMatrix) <- rownames(founderMatrix) <- founders
+
+  d <- rbind(founderMatrix, d)
+  ## Free the founders-by-founders identity block before the generation loop:
+  ## it has been copied into d above and is never referenced again.
+  founderMatrix <- NULL
+  ## Note: skips generation 0.
+  ## The references inside matrix d do not work if ped$sire and ped$dam and
+  ## thus gen$sire and gen$dam are factors. See test_calcFE.R
+  for (i in seq_len(max(ped$gen))) {
+    gen <- ped[(ped$gen == i), ]
+
+    for (j in seq_len(nrow(gen))) {
+      ego <- gen$id[j]
+      sire <- gen$sire[j]
+      dam <- gen$dam[j]
+      ## Mendelian 1/2: an individual's founder contributions are the mean of
+      ## its two parents' (each parent transmits half of its genome).
+      d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
+    }
+  }
+
+  currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
+  ## drop = FALSE keeps a single living descendant a one-row matrix (S925).
+  d <- d[currentDesc, , drop = FALSE]
+  p <- colMeans(d)
+
+  list(p = p, ped = ped)
+}
+
+calcRetentionReference <- function(ped, alleles) {
+  # ASSUME: Pedigree has no partial parentage
+  founders <- getFounders(ped)
+  descendants <- ped$id[ped$population & !(ped$id %in% founders)]
+
+  founders <- alleles[(alleles$id %in% founders), c("id", "V1")]
+  colnames(founders) <- c("id", "allele")
+
+  alleles <- alleles[
+    (alleles$id %in% descendants),
+    !(colnames(alleles) %in% c("id", "parent"))
+  ]
+
+  retained <- apply(alleles, 2L, function(a) {
+    founders$allele %in% a
+  })
+  retained <- rowSums(retained, na.rm = TRUE) / ncol(retained)
+  founders <- cbind(founders, retained)
+
+  founders <- tapply(founders$retained, founders$id, mean)
+  founders
+}
+
+calcFEFGReference <- function(ped, alleles) {
+  ## Founder-contribution algorithm + partial-parentage guard are shared with
+  ## calcFE()/calcFG() via calcFounderContributions() (NEW-13/NEW-23). fc$ped is
+  ## the toCharacter()-coerced pedigree, fed to calcRetention() exactly as the
+  ## pre-refactor code did.
+  fc <- calcFounderContributionsReference(ped, "calcFEFG") # nolint: object_usage_linter
+  r <- calcRetentionReference(fc$ped, alleles)
+  ## Align retention to contributions by NAME before dividing (issue #86,
+  ## Dragon D-3): r is id-sorted while fc$p is in getFounders() pedigree-row
+  ## order, so a positional p^2 / r yields a silently wrong FG on any
+  ## unsorted-founder pedigree. FE (1 / sum(p^2)) has no retention term and is
+  ## unaffected by the ordering.
+  r <- r[names(fc$p)]
+  fe <- 1L / sum(fc$p^2L)
+  ## FE is deterministic and always returned; FG hard-fails (NA + warning)
+  ## on the same zero-retention silent collapse calcFG guards against.
+  if (checkFgDegeneracy(fc$p, r)) {
+    return(list(FE = fe, FG = NA_real_))
+  }
+  list(FE = fe, FG = 1L / sum((fc$p^2L) / r, na.rm = TRUE))
+}
+
+calcFGSEReference <- function(ped, alleles) {
+  ## Founder contributions (deterministic) and the toCharacter()-coerced
+  ## pedigree, shared with calcFG()/calcFEFG() via calcFounderContributions().
+  fc <- calcFounderContributionsReference(ped, "calcFG")
+  pedc <- fc$ped
+  founders <- getFounders(pedc)
+  descendants <- pedc$id[pedc$population & !(pedc$id %in% founders)]
+
+  ## Rebuild the per-iteration retention matrix calcRetention() averages: for
+  ## each founder allele copy, a 0/1 indicator of presence among the descendant
+  ## alleles in each iteration column.
+  founderAlleles <- alleles[alleles$id %in% founders, c("id", "V1")]
+  colnames(founderAlleles) <- c("id", "allele")
+  descAlleles <- alleles[
+    alleles$id %in% descendants,
+    !(colnames(alleles) %in% c("id", "parent"))
+  ]
+  retained <- apply(descAlleles, 2L, function(a) founderAlleles$allele %in% a)
+  storage.mode(retained) <- "numeric"
+  ## Collapse the two copies per founder: F x K matrix in {0, 0.5, 1}; its row
+  ## means equal calcRetention() and its rows are founder-id-sorted.
+  retentionMatrix <- rowsum(retained, founderAlleles$id) / 2L
+  rhat <- rowMeans(retentionMatrix)
+  p <- fc$p[names(rhat)] # align contributions to retention rows by NAME
+  k <- ncol(retentionMatrix)
+
+  ## Hard-fail: a contributing founder retained in zero drops leaves FG
+  ## (and its gradient) undefined -- return NA rather than a finite SE for
+  ## a collapsed FG.
+  if (checkFgDegeneracy(p, rhat)) {
+    return(NA_real_)
+  }
+
+  ## Drop non-contributing (p == 0 -> 0/0) and any missing-retention founders so
+  ## the SE refers to the same founder set as FG.
+  keep <- !is.na(rhat) & rhat > 0L & !is.na(p)
+  fg <- 1L / sum((p[keep]^2L) / rhat[keep])
+  gradient <- numeric(length(rhat))
+  gradient[keep] <- fg^2L * (p[keep]^2L) / (rhat[keep]^2L)
+  influence <- as.numeric(crossprod(gradient, retentionMatrix)) # length K
+  stats::sd(influence) / sqrt(k)
+}
+
+calcFEReference <- function(ped) {
+  ## Founder-contribution algorithm + partial-parentage guard are shared with
+  ## calcFG()/calcFEFG() via calcFounderContributions() (NEW-13/NEW-23).
+  1L / sum(calcFounderContributionsReference(ped, "calcFE")$p^2L) # nolint: object_usage_linter
+}
+
+calcFGReference <- function(ped, alleles) {
+  ## Founder-contribution algorithm + partial-parentage guard are shared with
+  ## calcFE()/calcFEFG() via calcFounderContributions() (NEW-13/NEW-23). fc$ped
+  ## is the toCharacter()-coerced pedigree, fed to calcRetention() as before.
+  fc <- calcFounderContributionsReference(ped, "calcFG") # nolint: object_usage_linter
+  r <- calcRetentionReference(fc$ped, alleles)
+  ## Align retention to contributions by NAME before dividing (issue #86,
+  ## Dragon D-3): calcRetention() returns r id-sorted (tapply) while fc$p is in
+  ## getFounders() pedigree-row order, so a positional p^2 / r pairs the wrong
+  ## founders -- a silently wrong FG (e.g. a collapse to 0) on any pedigree
+  ## whose founders are not already in sorted id order.
+  r <- r[names(fc$p)]
+  ## Hard-fail (NA + warning) the silent FG collapse when a contributing founder
+  ## is retained in zero drops; the point estimate is unchanged otherwise.
+  if (checkFgDegeneracy(fc$p, r)) {
+    return(NA_real_)
+  }
+  1L / sum((fc$p^2L) / r, na.rm = TRUE)
 }

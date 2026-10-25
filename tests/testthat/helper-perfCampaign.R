@@ -5,8 +5,9 @@
 ## (docs/planning/performance-memory-campaign-plan.md, section 5): the
 ## equivalence tests (test_rareAlleleCounts.R, test_geneDropEquivalence.R,
 ## test_convertRelationshipsEquivalence.R) and the opt-in budget tests
-## (test_perfBudget_*.R), and test_groupAddAssignEquivalence.R. The frozen
-## copies of today's functions are in helper-perfReference.R.
+## (test_perfBudget_*.R), test_groupAddAssignEquivalence.R and
+## test_founderStatsEquivalence.R. The frozen copies of today's functions are
+## in helper-perfReference.R.
 
 ## The example studbook QC'd as the app does, with the living animals as the
 ## population, untrimmed (all 3,694 animals): R/modPedigree.R's path, which
