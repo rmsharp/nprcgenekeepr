@@ -98,35 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1060 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Speed Phase 7: diagram"; strict TDD; 2 scope questions, the gates, a GREEN-to-RED return for a test
-fix and a push question, each answered with the recommended option first try):** Phase 7 of the performance and memory campaign, the diagram's solver
-(plan `:602`). `.solveJointQP()` keeps each constraint's two variable numbers and `.solveSeparationQP()` (`R/makePedigreeDiagramData.R`) hands them to
-`quadprog::solve.QP.compact()` in row order; a missing or infinite number, or a node listed twice, runs today's dense `solve.QP()`; `t(pmat) %*% pmat`
-kept (owner ruling). Claim `75fe2ea7c`, RED `d8ebdea15`, RED fix `395abbd0d`, GREEN `a544147c6`, REFACTOR `b992154e5` `7f7826207`, gate
-`63bc354f7`; pushed at the owner's word (260 commits, `c5545b016..63bc354f7`).
-**Findings:** example diagram 13.17 to 4.70 s, peak 253.0 to 185.9 MB (gate 16.1 to 5.9 s); its solve 11.3 to 3.0 s; rhesus direct 2.32 to 1.32 s,
-rectilinear 3.30 to 2.40 s; the plan's `crossprod()` took 1.89 s against 1.03 s here, so it was dropped.
-**Verification:** full suite 470 files, 4,403 tests, 0 failed, 0 errors, 210 skipped; lint 0; `devtools::check()` 0/0/0 (its own tests line: FAIL 0,
-WARN 10, SKIP 604, PASS 15,951 expectations); ratchet 10/10 (results `1c32d3f6d678`); mutation check 9 of 9 after REFACTOR (7 of 9 at GREEN);
-browser tier from a scratch install 5 files, 30 tests, 0 failed (`NPRC_RUN_E2E=true`); CI on `63bc354f7`: lint and pkgdown pass; R-CMD-check 4 of 5 jobs pass, `windows-latest` fails 4 expectations in
-`test_archivePointersResolve.R` (backslash paths; S1023's code, filed `BACKLOG.md:236`), and every diagram-solver test passes on all five; test-coverage passes.
-**Handoff evaluation of S1059: 8/10.** Helped: Next (1) named plan `:602`, the mock move and its assertion, CI's three platforms and the gate; the
-"budget by the test's own procedure" and "scratch worktree has no renv library" gotchas. Missing: the plan's `crossprod()` speed claim was never measured
-(slower here); a whole-diagram budget cannot keep 3x room and fail today's code; how S1059 put the scratch library first for the browser tier (renv
-precedes `R_LIBS`). Wrong: nothing (the 6,635 pinned lines are 7,764 now; the handoff said to re-count). ROI: high.
-**Self: 7/10.** + every time and identity number measured before the first question (the Fortran read to explain entry order; 300 of 300 seeds);
-every question answered first try; 9 of 9 mutants. - my RED test depended on file order (found only by the full suite; a GREEN-to-RED return);
-deparse-regex and shell-quoting slips cost calls and a second 10-minute check. Learning 1026.
-**Gotchas:** list compact entries in row order (the constraint check starts at -bvec); pin the RNG kinds in seeded test inputs (`set_seed()` leaves
-"Rounding"); for a scratch-install browser run put the library first with `.libPaths()` (callr hands it to the app).
-**Next:** (0) master's R-CMD-check is red on Windows only (`BACKLOG.md:236`, Effort S, likely `winslash = "/"`); it is outside the campaign, so offer
-it beside (1) rather than reorder the owner's campaign. **The owner's campaign, in the plan's order:** (1) Phase 8, the app's memory: a design
-session, text only (plan `:626`, `BACKLOG.md:8`): D5 consumer by consumer, a design document and the owner's ruling, from Phase 0's app memory table
-and Phase 6's numbers; name the bit-identity tests, twins included. (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11 items.
-Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), `:227` (new: the two `@inheritParams` messages the owner saw), #138.
+### What Session 1061 Did
+**Deliverable:** fix the red `windows-latest` leg of `R-CMD-check.yaml` (`BACKLOG.md:236`; run `40230619957`, 4 failures in
+`test_archivePointersResolve.R:81,101,109,110` from `normalizePath()` backslash paths at `tests/testthat/helper-archivePointers.R:53,63`)
+(IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4, "Fix the Windows CI failure"; strict TDD)
+**Started:** 2026-10-25 16:16 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1059 (condensed S950 to S1060; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1060 (condensed S950 to S1061; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1060: Phase 7 of the campaign, the diagram's solver (strict TDD): `.solveJointQP()` keeps each constraint's two variable numbers and
+`.solveSeparationQP()` (`R/makePedigreeDiagramData.R`) hands them to `quadprog::solve.QP.compact()` in row order (a missing or infinite
+number, or a node listed twice, runs the dense `solve.QP()`); the example's diagram 13.17 to 4.70 s, positions identical (gate 16.1 to 5.9 s).
+Claim `75fe2ea7c`, GREEN `a544147c6`, close-out `835c42676`; S1059 8/10, self 7/10 (Learning 1026). **Gotcha kept:** pin the RNG kinds in
+seeded test inputs (`set_seed()` leaves "Rounding").
 S1059: Phase 6 of the campaign, kinship memory (strict TDD): `kinship()` fills one n x n matrix, `kinMatrix2LongForm()` builds its columns with
 `rep()`/`as.vector()` (`longFormRows()`), the pair list reads only cells `>=` the threshold; long form 979.0 to 312.5 MB (gate 344), kinship 569.8 to
 455.6 MB (gate 502). Claim `0eb2137bf`, GREEN `36b3f6d18`, close-out `54552a819`; S1058 8/10, self 7/10 (Learning 1025). **Gotcha kept:** measure a

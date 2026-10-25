@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1061
+date: 2026-10-25
+status: pending
+active_task: IN PROGRESS -- fix the red windows-latest leg of R-CMD-check.yaml (BACKLOG.md:236; run 40230619957, 4 failures in test_archivePointersResolve.R:81,101,109,110): archivePointerProblems() builds the comparison path with normalizePath(), which gives backslashes on Windows (tests/testthat/helper-archivePointers.R:53,63); likely winslash = "/" on both lines (owner pick at the Phase 0 picker, item 1 of 4; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1060
 date: 2026-10-25
 status: complete
