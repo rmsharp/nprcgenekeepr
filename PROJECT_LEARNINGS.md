@@ -19870,3 +19870,63 @@ by putting the word-for-word copy of today’s code into the harness
 environment (`perf$kinship <- nprcgenekeepr:::kinshipGeneral`); a
 `sed -i` edit to a mutation script that matched nothing ran the old
 pattern unnoticed, so count the replacements first.
+
+#### Learning 1026
+
+**S1060 (2026-10-25), Phase 7 of the performance and memory campaign
+(the diagram’s solver): to swap quadprog’s dense solver for its compact
+one bit for bit, list each constraint’s entries in row order; pin the
+random-number kinds in any seeded test input; measure a plan’s speed
+claim before following it; and time the changed step when the whole
+cannot keep a budget’s 3x room.** **(1) Entry order.** `solve.QP()`
+(`qpgen2`) and `solve.QP.compact()` (`qpgen1`) differ only in the loops
+over a constraint’s entries (quadprog 1.5-8’s Fortran, read from the
+CRAN source), and the constraint check starts at `sum = -bvec(i)` before
+adding them, so with two entries their order changes the rounding.
+Listed in row order (the order the dense loop meets them) the new
+`.solveSeparationQP()` is
+[`identical()`](https://rdrr.io/r/base/identical.html) to today’s on all
+17 grid calls and the example’s 1,489-node call; a shuffle mock that
+remapped the indices without re-sorting them matched the dense mock on 0
+of 23 seeds of the rhesus fixture’s 733-node call, and on 300 of 300
+seeds once it re-sorted. The reverse-order mutant fails 3 tests. Today’s
+error on a missing or infinite number names the argument by position
+(“arg 1”, “arg 9”) and the compact routine numbers its arguments
+differently, so those inputs keep the dense call. **(2) RNG kind.** The
+first full suite on GREEN gave 4,402 of 4,403: `seededDiagramPed()` used
+[`withr::with_seed()`](https://withr.r-lib.org/reference/with_seed.html)
+alone, which keeps the session’s kinds, and many test files call
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md),
+which leaves `sample.kind = "Rounding"` for the rest of the run
+(`test_obfuscatePed.R:50-60`); after the 99 earlier files the 40-animal
+pedigree differed (digest 55d03261 alone, 6f8dc4f1 after them) and the
+“duplicated id” case hit a node nothing named, so it reached the solver.
+Pin `.rng_kind`, `.rng_normal_kind` and `.rng_sample_kind`, and build an
+edge case on the property it needs (here the node an anchored unit
+names), not on a row number. Phase 6’s `seededPedigree()` in
+`test_kinshipMemoryEquivalence.R` has the same order dependence; it
+compares new and frozen code on one input, so it passes, but its input
+varies with file order (not changed). **(3) Measure the plan’s claim.**
+The plan’s `crossprod(pmat)` took 1.89 s against `t(pmat) %*% pmat`’s
+1.03 s (3 runs each) on this Mac’s reference BLAS, identical here; on
+CI’s Ubuntu (OpenBLAS 0.3.26) it would run another kernel. The owner
+kept today’s product. **(4) A budget for the changed step.** The whole
+diagram went 13.2 to 4.7 s, so no budget on it can keep 3x room and fail
+today’s code (4.8 x 3 = 14.5 \> 13.2); the solve went 11.3 to 3.0 s, so
+`test_perfBudget_diagramSolver.R` times the seconds inside quadprog’s
+two solvers with `with_mocked_bindings()` timers (9 s; today 11.35).
+**(5) Gotchas.** For the browser tier from a scratch install, renv’s
+project library comes before `R_LIBS` (an older installed copy loaded),
+so put the scratch library first with
+[`.libPaths()`](https://rdrr.io/r/base/libPaths.html);
+[`callr::r_bg()`](https://callr.r-lib.org/reference/r_bg.html) defaults
+to `libpath = .libPaths()`, so shinytest2’s app process inherits it.
+`devtools::check(check_dir = )` keeps the `.Rcheck` folder, whose
+`tests/testthat.Rout` holds the check’s own
+`[ FAIL | WARN | SKIP | PASS ]` line, counted in expectations (here 0,
+10, 604, 15,951; 392 of the skips are source files a built package
+lacks), so it is not comparable to `test_dir()`’s count of `test_that()`
+blocks; an `Rscript -e` string holding `"\\["` broke on shell quoting,
+so use a script file. [`deparse()`](https://rdrr.io/r/base/deparse.html)
+wraps long conditions, so a regex mutation of a deparsed body needs
+`\\s+` where it may wrap.
