@@ -17,7 +17,10 @@
 ## ruling S1056, as in Phases 1-3). The odd inputs below were probed before RED
 ## (S1056) against the new code with no admission checks: the ones marked
 ## "today's code" gave a different result there (one looped for ever), so each
-## check the new code makes has an input that needs it.
+## check the new code makes has an input that needs it. Twelve more (a missing
+## or data-frame kin, numGp as text, and for the sex ratio factor or Date
+## seeds and group numbers as text, a factor, TRUE or two numbers) were found
+## against the first GREEN code, by probing direct calls (S1056).
 
 seeds <- c(1L, 7L, 2026L)
 
@@ -263,10 +266,13 @@ fillCases <- function() {
     ),
     `numGp 2.5` = fillArgs(numGp = 2.5),
     `numGp 0 (today's code)` = fillArgs(numGp = 0),
+    `numGp as text (today's code)` = fillArgs(numGp = "2"),
     `numGp missing` = fillArgs(numGp = NA),
     `1 group` = fillArgs(numGp = 1L),
     `no candidates` = fillArgs(candidates = character(0L)),
-    `one candidate` = fillArgs(candidates = breeders[[1L]])
+    `one candidate` = fillArgs(candidates = breeders[[1L]]),
+    `no kin (today's code)` = fillArgs(kin = NULL),
+    `kin a data frame (today's code)` = fillArgs(kin = data.frame(a = 1L))
   )
 }
 
@@ -416,9 +422,32 @@ sexRatioCases <- function() {
         kin = lapply(kin, function(v) if (is.character(v)) factor(v) else v)
       ),
       `numGp 0 (today's code)` = sexRatioArgs(numGp = 0, grpNum = list()),
+      `numGp as text (today's code)` = sexRatioArgs(numGp = "2"),
       `groupMembers not a list` = sexRatioArgs(groupMembers = c("a", "b")),
       `minAge 0` = sexRatioArgs(minAge = 0),
-      `1 group` = do.call(sexRatioArgs, oneGroup)
+      `1 group` = do.call(sexRatioArgs, oneGroup),
+      `no kin (today's code)` = sexRatioArgs(kin = NULL),
+      `kin a data frame (today's code)` = sexRatioArgs(
+        kin = data.frame(a = 1L)
+      ),
+      `factor seeds (today's code)` = sexRatioArgs(
+        groupMembers = emptyGroups(2L, list(factor(breeders[1L:2L])))
+      ),
+      `Date seeds (today's code)` = sexRatioArgs(
+        groupMembers = emptyGroups(2L, list(as.Date("2020-01-01")))
+      ),
+      `group numbers as text (today's code)` = sexRatioArgs(
+        grpNum = list("1", "2")
+      ),
+      `group numbers as a factor (today's code)` = sexRatioArgs(
+        grpNum = factor(1L:2L)
+      ),
+      `a group number TRUE (today's code)` = sexRatioArgs(
+        grpNum = list(TRUE, 2L)
+      ),
+      `two numbers in one group number (today's code)` = sexRatioArgs(
+        grpNum = list(c(1, 2), 2L)
+      )
     )
   )
 }
