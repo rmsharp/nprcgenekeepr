@@ -403,6 +403,13 @@ sexRatioCases <- function() {
       `fewer groups than numGp` = sexRatioArgs(groupMembers = emptyGroups(1L)),
       `a subset of the group numbers` = sexRatioArgs(grpNum = list(2L)),
       `repeated group numbers` = sexRatioArgs(grpNum = list(1L, 1L, 2L)),
+      ## a group finishes while another is still listed twice: the finished
+      ## group's number leaves with setdiff(), which drops the repeat too
+      ## (a filter that kept it passed every other case; S1056 mutation check)
+      `group 1 listed twice in 3 groups` = sexRatioArgs(
+        grpNum = list(1L, 1L, 2L, 3L), numGp = 3L,
+        groupMembers = emptyGroups(3L)
+      ),
       `a missing group number (today's code)` = sexRatioArgs(
         grpNum = list(1L, NA_integer_)
       ),
@@ -418,6 +425,10 @@ sexRatioCases <- function() {
       ),
       `no candidates` = sexRatioArgs(candidates = character(0L)),
       `a missing sexRatio` = sexRatioArgs(sexRatio = NA),
+      ## an empty group asks what one more female would make it: Inf, the only
+      ## case that reaches it (an NA there passed every other case; S1056
+      ## mutation check)
+      `a negative sexRatio` = sexRatioArgs(sexRatio = -1),
       `relatives as factors (today's code)` = sexRatioArgs(
         kin = lapply(kin, function(v) if (is.character(v)) factor(v) else v)
       ),
@@ -459,7 +470,12 @@ test_that("fillGroupMembersWithSexRatio() gives today's outcome on odd inputs", 
 
 ## Which code a call ran: "today's" when it reached fillGroupMembersGeneral()
 ## or fillGroupMembersWithSexRatioGeneral(), "new" when it reached neither.
+## Under the same time limit as boundedOutcome() (the new code without a check
+## can loop for ever), and quiet: a warning both codes give (makeGroupNum(0)
+## for numGp 0) is not this block's business.
 pathTaken <- function(f, args) {
+  setTimeLimit(elapsed = 30, transient = TRUE)
+  on.exit(setTimeLimit(elapsed = Inf), add = TRUE)
   reached <- FALSE
   local_mocked_bindings(
     fillGroupMembersGeneral = function(...) {
@@ -471,7 +487,7 @@ pathTaken <- function(f, args) {
       stop("today's code")
     }
   )
-  try(withr::with_seed(1L, do.call(f, args)), silent = TRUE)
+  suppressWarnings(try(withr::with_seed(1L, do.call(f, args)), silent = TRUE))
   if (reached) "today's" else "new"
 }
 
