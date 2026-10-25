@@ -98,36 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1061 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Fix the Windows CI failure"; strict TDD; an approach question, three gates and a push question,
-each answered with the recommended option first try):** the red `windows-latest` leg of `R-CMD-check.yaml` (`BACKLOG.md:236`, block removed).
-S1023's `archivePointerProblems()` compared `normalizePath()` output with forward-slash link text, and Windows writes `\`: now `winslash = "/"`
-on both calls (`tests/testthat/helper-archivePointers.R:54,64`) and a comment saying why (`:50-51`). RED was the red run `40230619957` (the
-owner's pick, as in S1018). Claim `478e98a65`, GREEN `f33b3474e`, REFACTOR `37997db3f`; pushed at the owner's word (`63bc354f7..37997db3f`, 4 commits).
-**Verification:** a throwaway stand-in for `normalizePath()` passed through `test_file(env =)` gave CI's 4 messages word for word before the fix
-(plus 3 live-ledger blocks, which skip in a built package) and 0 after; full suite 470 files, 4,403 tests, 0 failed, 0 errors, 210 skipped;
-`lint_package()` 0; `devtools::check()` 0/0/0 (FAIL 0, WARN 10, SKIP 604, PASS 15,951); ratchet 10/10 (results `4e13e79a2ea0`). CI run
-`40236872235`: Windows `[ FAIL 0 | WARN 10 | SKIP 639 | PASS 15819 ]`, `Status: OK` (15,815 + the 4); macOS, Ubuntu release and oldrel-1
-pass; Ubuntu devel passes (all 5 legs green); lint, pkgdown and test-coverage pass.
-**Handoff evaluation of S1060: 9/10.** Helped: Next (0) named the file, both lines and the fix (`winslash = "/"`, right), the run, the four lines
-and the tally, and said to offer it beside the campaign, not reorder it; every `BACKLOG.md` line it cited still pointed at its item. Missing: the
-S1018 precedent (Learning 984: RED = the red run) and its 8.3-name warning on `normalizePath()`, both found by search; that the live-ledger
-blocks skip in CI's built package. Wrong: "56,563 B, under the 25,000-token read limit" (close-out commit); the Read tool cut it at line
-321 of 386 (25,532 tokens), a second read. ROI: high.
-**Self: 8/10.** + the local probe reproduced CI's messages before any edit, and I predicted its 7 failures before running it; checked every other
-`normalizePath()` in `tests/` (no other text comparison); every question first try. - a zsh no-match glob and an empty `gh run view --job --log`
-(it waits for the whole run) cost calls. Learning 1027.
-**Gotchas:** `test_file(env = e)` sources the helpers into `e`, so a stand-in put in `e` first is found before base's (the S873-S910
-`read.csv()` gotcha's mechanism); `gh run view --job <id>
---log` waits for the whole run, `gh api --allow-escape-sequences repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs` does not; a Windows-only
-break shows only on a push; the Read tool cuts this file at about 55,300 B (25,000 tokens), so keep it below that.
-**Next:** **the owner's campaign, in the plan's order:** (1) Phase 8, the app's memory: a design session, text only (plan `:626`, `BACKLOG.md:8`):
-D5 consumer by consumer, a design document and the owner's ruling, from Phase 0's app memory table (`docs/audits/PERF_BASELINE_2026-10-24.md`)
-and Phase 6's numbers; name the bit-identity tests, twins included. (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11 items.
-Outside the campaign: `BACKLOG.md:227` (the two `@inheritParams` lines, READY, Effort S). Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203`
-(BLOCKED), #138.
+### What Session 1062 Did
+**Deliverable:** Phase 8 of the performance and memory campaign, the app's memory: a design session, text only
+(`docs/planning/performance-memory-campaign-plan.md:626`, `BACKLOG.md:8`): a design document and the owner's D5 ruling,
+consumer by consumer, naming the bit-identity tests, twins included (owner pick, item 1 of 4) (IN PROGRESS)
+**Started:** 2026-10-25 17:53 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 
-### Sessions 947-1060 (condensed S950 to S1061; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1061 (condensed S950 to S1062; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1061: the red `windows-latest` leg of `R-CMD-check.yaml` fixed (strict TDD; RED was the red run `40230619957`, as S1018):
+`archivePointerProblems()` calls `normalizePath(winslash = "/")` on both paths (`tests/testthat/helper-archivePointers.R:54,64`);
+CI run `40236872235` green on all 5 legs. Claim `478e98a65`, GREEN `f33b3474e`, close-out `7434f69a6`; S1060 9/10, self 8/10
+(Learning 1027). **Gotchas kept:** `test_file(env = e)` finds a stand-in put in `e` before base's; `gh api
+--allow-escape-sequences repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs` serves a finished job's log before the run ends.
 S1060: Phase 7 of the campaign, the diagram's solver (strict TDD): `.solveJointQP()` keeps each constraint's two variable numbers and
 `.solveSeparationQP()` (`R/makePedigreeDiagramData.R`) hands them to `quadprog::solve.QP.compact()` in row order (a missing or infinite
 number, or a node listed twice, runs the dense `solve.QP()`); the example's diagram 13.17 to 4.70 s, positions identical (gate 16.1 to 5.9 s).
