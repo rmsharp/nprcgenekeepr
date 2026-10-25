@@ -27,9 +27,14 @@
 ## founders, each later animal draws a sire from the males and a dam from the
 ## females before it, so parents mate more than once and the layout makes
 ## duplicate nodes; one parent in ten is left unknown and one animal in twenty
-## has an unknown sex.
+## has an unknown sex. The random-number kinds are pinned: set_seed() leaves
+## sample.kind = "Rounding" behind for the rest of a test run
+## (test_obfuscatePed.R), and with_seed() alone keeps the session's kind, so
+## the pedigrees would depend on which test files ran first (S1060).
 seededDiagramPed <- function(n, seed) {
-  withr::with_seed(seed, {
+  withr::with_seed(seed, .rng_kind = "Mersenne-Twister",
+                   .rng_normal_kind = "Inversion",
+                   .rng_sample_kind = "Rejection", code = {
     founders <- max(2L, n %/% 5L)
     id <- sprintf("A%03d", seq_len(n))
     sex <- rep(c("M", "F"), length.out = n)
@@ -106,7 +111,9 @@ diagramSolverToday <- lapply(diagramSolverGrid, function(args) {
 ## (22 duplicate nodes), each with today's solver route as S1060 measured it.
 ## "dense": a missing or infinite number reaches the solver, so the new code
 ## must run today's solve.QP(); "compact": the new code's own solve;
-## "neither": today's code stops before any solve.
+## "neither": today's code stops before any solve. The duplicated id is given
+## to the node an anchored mating unit names, so that unit's anchor has no
+## node and today's code stops while building the objective.
 unusualSolverCases <- function() {
   grid <- diagramSolverGrid[grepl("^seeded, 40 animals, seed 7, ",
                                   names(diagramSolverGrid))]
@@ -115,6 +122,8 @@ unusualSolverCases <- function() {
   pos <- base[[1L]]
   none <- lapply(base[2L:4L], function(d) d[0L, , drop = FALSE])
   withPos <- function(newPos) c(list(newPos), base[2L:4L])
+  anchor <- base[[2L]]$anchor[!is.na(base[[2L]]$anchor)][[1L]]
+  other <- pos$id[pos$id != anchor][[1L]]
   list(
     `a missing spousal weight` = list(c(base, list(wSpouse = NaN)), "dense"),
     `a negative union weight` = list(c(base, list(wUnion = -1.0)), "dense"),
@@ -136,7 +145,8 @@ unusualSolverCases <- function() {
     `a spacing as text` = list(c(base, list(minSep = "1")), "neither"),
     `no nodes` = list(c(list(pos[0L, , drop = FALSE]), none), "neither"),
     `a duplicated id` = list(
-      withPos(transform(pos, id = replace(id, 2L, id[1L]))), "neither"
+      withPos(transform(pos, id = replace(id, id == anchor, other))),
+      "neither"
     )
   )
 }
