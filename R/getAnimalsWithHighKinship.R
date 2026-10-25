@@ -44,9 +44,16 @@
 #' kin[["0DAV0I"]] # should have 34 IDs
 getAnimalsWithHighKinship <- function(kmat, ped, threshold, currentGroups,
                                       ignore, minAge) {
-  kin <- kinMatrix2LongForm(kmat)
-
-  kin <- filterThreshold(kin, threshold = threshold)
+  ## Performance plan Phase 6 (S1059): the pairs at or above the threshold,
+  ## without building every pair first; an unusual matrix or threshold takes
+  ## today's two steps unchanged (owner ruling).
+  if (longFormFits(kmat, FALSE) && is.numeric(threshold) &&
+        length(threshold) == 1L && !is.na(threshold)) {
+    kin <- highKinshipPairs(kmat, threshold)
+  } else {
+    kin <- kinMatrix2LongForm(kmat)
+    kin <- filterThreshold(kin, threshold = threshold)
+  }
   kin <- filterPairs(kin, ped, ignore = ignore)
   kin <- filterAge(kin, ped, minAge = minAge)
 
@@ -59,5 +66,34 @@ getAnimalsWithHighKinship <- function(kmat, ped, threshold, currentGroups,
 
   # Converting the kinships to a list
   kin <- tapply(kin$id2, kin$id1, c)
+  kin
+}
+
+#' The pairs of a kinship matrix at or above a threshold
+#'
+#' Performance plan Phase 6: the rows
+#' \code{filterThreshold(kinMatrix2LongForm(kmat), threshold)} keeps, in the
+#' same order and with the same row names, read from the cells at or above the
+#' threshold instead of from a long form of every cell.
+#'
+#' @param kmat a matrix \code{longFormFits()} takes.
+#' @param threshold one number, not missing.
+#' @return A dataframe with columns \code{id1}, \code{id2} and
+#' \code{kinship}, as \code{filterThreshold()} returns it.
+#' @noRd
+highKinshipPairs <- function(kmat, threshold) {
+  keep <- which(kmat >= threshold)
+  position <- keep - 1L
+  m <- nrow(kmat)
+  kin <- list(id1 = colnames(kmat)[position %/% m + 1L],
+              id2 = rownames(kmat)[position %% m + 1L],
+              kinship = kmat[keep])
+  ## filterThreshold() numbers the rows it keeps from 1, when it keeps any.
+  attr(kin, "row.names") <- if (length(keep) > 0L) {
+    c(NA_integer_, -length(keep))
+  } else {
+    integer(0L)
+  }
+  class(kin) <- "data.frame"
   kin
 }

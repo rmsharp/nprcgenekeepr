@@ -110,6 +110,188 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
                      twinRelations = NULL, chrtype = "autosome", sex = NULL) {
   # Returns: Matrix (row and col names are 'id')
   n <- length(id)
+  ## Performance plan Phase 6 (S1059): an input the n x n fill below was not
+  ## built for runs today's code unchanged (owner ruling).
+  if (!denseKinshipFits(n, father.id, mother.id, pdepth, sparse)) {
+    return(kinshipGeneral(id, father.id, mother.id, pdepth, sparse = sparse,
+                          twinRelations = twinRelations, chrtype = chrtype,
+                          sex = sex))
+  }
+  if (anyDuplicated(id)) {
+    stop("All id values must be unique")
+  }
+  chrtype <- match.arg(casefold(chrtype), c("autosome", "x"))
+
+  # id number "n + 1" stands for a missing parent
+  mrow <- match(mother.id, id, nomatch = n + 1L) # row number of the mother
+  drow <- match(father.id, id, nomatch = n + 1L) # row number of the dad
+
+  if (chrtype == "x") {
+    if (is.null(sex) || length(sex) != n) {
+      stop("invalid sex vector")
+    }
+    ## X-linked founder self-kinship: males are hemizygous (a single X copy,
+    ## so self-kinship = 1); females follow the usual non-inbred 0.5. Unknown
+    ## sex gets NA.
+    sexNum <- c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))] # nolint: object_name_linter
+    founderDiag <- ifelse(is.na(sexNum), NA_real_, (3L - sexNum) / 2L) # nolint: object_name_linter
+  } else {
+    ## Mendelian 1/2: a non-inbred animal's self-kinship is 1/2, so each
+    ## founder's self-kinship is 0.5.
+    founderDiag <- rep(0.5, n) # nolint: object_name_linter
+  }
+  ## One n x n matrix: the founders' self-kinship on the diagonal, 0 elsewhere.
+  kmat <- matrix(0.0, n, n)
+  kmat[cbind(seq_len(n), seq_len(n))] <- founderDiag
+
+  ## MZ-twin transitive-identity correction (ported from kinship2's own
+  ## mzgrp/mzindex mechanism -- see
+  ## docs/planning/twin-relations-kinship-computation-plan.md §2.1). Built
+  ## once, up front: mzgrp is a union-find grouping of chained MZ
+  ## declarations (A-B, B-C => {A,B,C} one group) and mzindex expands each
+  ## group to every ordered off-diagonal pair within it -- the matrix cells
+  ## the depth loop below must overwrite. Applying this inside the depth
+  ## loop (not as a post-hoc pass on the finished matrix) is required for
+  ## the correction to propagate to relatives computed at a later depth --
+  ## see the plan's §2.2 for the mathematical argument.
+  havemz <- FALSE
+  if (!is.null(twinRelations)) {
+    mzRows <- twinRelations[twinRelations$code == "MZ twin", , drop = FALSE]
+    if (nrow(mzRows) > 0L) {
+      mzId1 <- match(mzRows$id1, id)
+      mzId2 <- match(mzRows$id2, id)
+      if (anyNA(c(mzId1, mzId2))) {
+        # nolint start: nonportable_path_linter.
+        stop("All twinRelations id1/id2 values must be present in id.")
+        # nolint end: nonportable_path_linter.
+      }
+      havemz <- TRUE
+      mzmat <- cbind(mzId1, mzId2)
+      mzgrp <- seq_len(max(mzmat))
+      repeat {
+        if (all(mzgrp[mzmat[, 1L]] == mzgrp[mzmat[, 2L]])) {
+          break
+        }
+        for (i in seq_len(nrow(mzmat))) {
+          mzgrp[mzmat[i, 1L]] <- mzgrp[mzmat[i, 2L]] <- min(mzgrp[mzmat[i, ]])
+        }
+      }
+      mzindex <- cbind(
+        unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
+          z <- unique(x)
+          rep(z, length(z))
+        })),
+        unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
+          z <- unique(x)
+          rep(z, each = length(z))
+        }))
+      )
+      mzindex <- mzindex[mzindex[, 1L] != mzindex[, 2L], , drop = FALSE]
+    }
+  }
+
+  ## The missing parent's kinship with each animal: the row "n + 1" that
+  ## kinshipGeneral() keeps in its matrix. It stays 0 except where an animal
+  ## of unknown sex (chrtype "x") makes it NA.
+  missingParentRow <- numeric(n)
+
+  # Those at depth == 0 don't need to be processed
+  # Subjects with depth = i must be processed before those at depth i + 1.
+  # Any parent is guarranteed to be at a lower depth than their children
+  #  The inner loop on "i" can NOT be replaced with a vectorized expression:
+  # sibs' effect on each other is cumulative.
+  for (depth in 1L:max(pdepth, na.rm = TRUE)) {
+    indx <- (1L:n)[pdepth == depth]
+    for (i in indx) {
+      mom <- mrow[i]
+      dad <- drow[i]
+      momKnown <- mom <= n
+      dadKnown <- dad <= n
+      if (chrtype == "x" && !is.na(sexNum[i]) && sexNum[i] == 1L) {
+        ## Male: X comes from the mother only.
+        if (momKnown) {
+          momRow <- kmat[mom, ]
+          momMissing <- missingParentRow[mom]
+        } else {
+          momRow <- missingParentRow
+          momMissing <- 0.0
+        }
+        kmat[i, ] <- kmat[, i] <- momRow
+        missingParentRow[i] <- momMissing
+        kmat[i, i] <- 1L
+      } else if (chrtype == "x" && is.na(sexNum[i])) {
+        ## Unknown sex: no defensible X-linked value.
+        kmat[i, ] <- kmat[, i] <- NA
+        missingParentRow[i] <- NA
+        kmat[i, i] <- NA
+      } else {
+        ## Autosomal, or X-linked female (same average-of-parents formula).
+        ## Mendelian 1/2: i's kinship with any j is the average of its two
+        ## parents' kinships with j; i's self-kinship is half of one plus its
+        ## own inbreeding coefficient (the kinship between its two parents).
+        momRow <- if (momKnown) kmat[mom, ] else missingParentRow
+        dadRow <- if (dadKnown) kmat[dad, ] else missingParentRow
+        momMissing <- if (momKnown) missingParentRow[mom] else 0.0
+        dadMissing <- if (dadKnown) missingParentRow[dad] else 0.0
+        kmat[i, ] <- kmat[, i] <- (momRow + dadRow) / 2L
+        missingParentRow[i] <- (momMissing + dadMissing) / 2L
+        parents <- if (momKnown && dadKnown) {
+          kmat[mom, dad]
+        } else if (momKnown) {
+          missingParentRow[mom]
+        } else if (dadKnown) {
+          missingParentRow[dad]
+        } else {
+          0.0
+        }
+        kmat[i, i] <- (1L + parents) / 2L
+      }
+    }
+    if (havemz) {
+      kmat[mzindex] <- (diag(kmat))[mzindex[, 1L]]
+    }
+  }
+
+  dimnames(kmat) <- list(id, id)
+  kmat
+}
+
+#' Whether kinship()'s n x n fill takes an input
+#'
+#' Performance plan Phase 6: \code{kinship()} fills one n x n matrix when the
+#' result is dense (\code{sparse} exactly \code{FALSE}), there is at least one
+#' animal, the sire, dam and generation vectors are each as long as \code{id},
+#' and no generation is missing. Any other input runs
+#' \code{kinshipGeneral()}, today's code, so it keeps today's result, error
+#' and warnings.
+#'
+#' @param n the number of animals, \code{length(id)}.
+#' @param sires,dams the sire and dam vectors \code{kinship()} was given.
+#' @param pdepth the generation numbers \code{kinship()} was given.
+#' @param sparse \code{kinship()}'s \code{sparse} argument.
+#' @return \code{TRUE} or \code{FALSE}.
+#' @noRd
+denseKinshipFits <- function(n, sires, dams, pdepth, sparse) {
+  isFALSE(sparse) && n >= 1L && length(sires) == n && length(dams) == n &&
+    is.atomic(pdepth) && length(pdepth) == n && !anyNA(pdepth)
+}
+
+#' Today's kinship matrix, for any input
+#'
+#' \code{kinship()} before performance plan Phase 6, word for word: an
+#' (n + 1) x (n + 1) matrix whose last row and column stand for every missing
+#' parent, cut to n x n at the end. \code{kinship()} calls it for an input its
+#' n x n fill was not built for, which keeps that input's result, error and
+#' warnings.
+#'
+#' @inheritParams kinship
+#' @return As \code{kinship()}.
+#' @noRd
+kinshipGeneral <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: object_name_linter
+                           twinRelations = NULL, chrtype = "autosome",
+                           sex = NULL) {
+  # Returns: Matrix (row and col names are 'id')
+  n <- length(id)
   if (anyDuplicated(id)) {
     stop("All id values must be unique")
   }
