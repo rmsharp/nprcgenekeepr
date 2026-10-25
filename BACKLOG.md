@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 6, kinship memory (owner-directed S1050; plan approved and
-      D1-D4 ruled S1051; Phases 0-5 done S1052-S1058; D7 ruled S1057; READY; Effort M per phase, 6 phases left, each
-      its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (Phase 6 at `:577`).
-      Phase 5 fills founder contributions a generation at a time by position, scans retention with `match()` one
-      iteration column at a time, and builds both once per `reportGV()` (`R/founderStatistics.R`; odd inputs run
-      today's code); gate `perf_calcFEFG_synthetic10000_seconds` 0.2 s (0.09 s after, 1.19 s before).
-      Phase 6's gate is `perf_kinMatrix2LongForm_all_peak_mb` (1,077 MB; 979 today), a memory gate: peaks repeat
-      exactly from one fresh process to the next. Phase 5's recorded peaks did not fall (the calcFGSE row 225.5 to
-      254.1 MB, not investigated; the plan's 446 MB was not seen in fresh processes). For Phase 11: whether the five
-      fallbacks' inputs move onto the fast paths (owner, S1054); harems' per-trial age work, 74% of a harem run's
-      remaining time (`getPotentialSires()`, `getCurrentAge()`, `groupsWithoutSire()`, `initializeHaremGroups()`;
-      owner, S1056). **D7 ruled S1057:** keep the Breeding Groups tab's default of 10 trials (plan `:362`).
-      **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
+- [ ] **Performance and memory campaign: Phase 7, the diagram's solver (owner-directed S1050; plan approved and
+      D1-D4 ruled S1051; Phases 0-6 done S1052-S1059; D7 ruled S1057; READY; Effort M per phase, 5 phases left, each
+      its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (Phase 7 at `:602`).
+      Phase 6 fills one n x n kinship matrix, builds the long form with `rep()` and `as.vector()`, and reads the
+      high-kinship pairs from `which(kmat >= threshold)` (odd inputs run today's code); gates
+      `perf_kinMatrix2LongForm_all_peak_mb` 344 MB (312.5 after, 979 before) and `perf_kinship_synthetic10000_peak_mb`
+      502 MB (455.6 after, 569.8 before). Phase 7's gate is `perf_diagram_example_direct_seconds` (16.1 s; 13.1 and
+      13.8 s at S1059's two ratchet runs); it moves `helper-reorderedSolveQP.R`'s mock to `solve.QP.compact`.
+      For Phase 11: whether the fallbacks' inputs move onto the fast paths (owner, S1054); harems' per-trial age work
+      (`getPotentialSires()`, `getCurrentAge()`, `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056);
+      Phase 5's calcFGSE row peak (225.5 to 254.1 MB, not investigated). Phase 8, the app's memory design (plan
+      `:626`), reads Phase 6's numbers. **D7 ruled S1057:** keep the Breeding Groups tab's default of 10 trials
+      (plan `:362`). **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the

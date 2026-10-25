@@ -99,28 +99,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1059 Did
-**Deliverable:** Phase 6 of the performance and memory campaign, kinship memory (`docs/planning/performance-memory-campaign-plan.md:577`,
-`BACKLOG.md:8`): `kinship()` with one n x n matrix, `kinMatrix2LongForm()` built directly with `rep()` and `as.vector()`,
-`getAnimalsWithHighKinship()` from `which(kmat > threshold, arr.ind = TRUE)`, results identical to today's; owner pick at the Phase 0 picker,
-item 1 of 4, "Speed Phase 6: kinship"; strict TDD (IN PROGRESS)
-**Started:** 2026-10-25 00:55 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Speed Phase 6: kinship"; strict TDD; 2 scope questions and 3 gates, each answered with the
+recommended option first try):** Phase 6 of the performance and memory campaign, kinship memory (plan `:577`). `kinship()` (`R/kinship.R`) fills one
+n x n matrix, a length-n vector standing for today's missing-parent row; `kinMatrix2LongForm()` builds its columns with `rep()` and `as.vector()` in
+`longFormRows()`; `getAnimalsWithHighKinship()` reads only cells `>=` the threshold (`highKinshipPairs()`); odd inputs run `kinshipGeneral()` or
+`kinMatrix2LongFormGeneral()`, today's code (owner ruling). Claim `0eb2137bf`, RED `1a30d2b9a`, GREEN `36b3f6d18`, REFACTOR `dfc7b694b`
+`1c4b4d421`, gate `139d5a321`; not pushed.
+**Findings:** long form 979.0 to 312.5 MB (gate 1,077 to 344); kinship, synthetic colony, 569.8 to 455.6 MB (new gate 502; the plan said about
+290); pair list 1,258.5 to 279.3 MB and 6.2 to 4.2 s (the rest is `filterPairs()` and `filterAge()` merges).
+**Verification:** full suite 468 files, 4,396 tests, 0 failed, 0 errors, 208 skipped; lint 0; `devtools::check()` 0/0/0; ratchet 10/10 (results
+`4c89f1cc9a88`); mutation check 12 of 12 after REFACTOR (8 of 10 at GREEN); browser tier from a scratch install 6 files, 28 tests, 0 failed (`NPRC_RUN_E2E=true`).
+**Handoff evaluation of S1058: 8/10.** Helped: Next (1) named plan `:577`, the gate, its 979 MB and "peaks repeat exactly", and said to re-grep;
+the high-water-mark and `test_dir(load_package = "installed")` gotchas. Missing: which frozen copies call Phase 6's functions
+(`reportGVReference`, `convertRelationshipsReference`, `groupAddAssignReference`; found by grep). Wrong: nothing (63 test files is 67 now). ROI: high.
+**Self: 7/10.** + prototype identical on 2,536 cases, its grid mutation-checked, and fresh-process peaks before the first question; every question
+answered first try. - 7 shell calls into the safety-check outage before handing over the command; status-line nudges again; a cache shadowed by a
+local (caught reading); the first RED file took 59 s (now 13.5); a quick budget reading without the test's warm-up (519-559, not 388). Learning 1025.
+**Gotchas:** count a `sed` edit's replacements before a mutation run; measure today's code by putting `kinshipGeneral` into the harness env (a
+scratch worktree has no renv library); the X missing-parent row turns NA only through an unknown-sex dam who has parents.
+**Next (the owner's campaign, in the plan's order):** (1) Phase 7, the diagram's solver (plan `:602`, `BACKLOG.md:8`), strict TDD:
+`solve.QP.compact()` and `crossprod()` identical on CI's three platforms, the mock in `helper-reorderedSolveQP.R` moved and asserted; gate
+`perf_diagram_example_direct_seconds` (16.1 s). (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11 items (`BACKLOG.md:8`).
+Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
 
 ### Sessions 947-1058 (condensed S950 to S1059; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1058: Phase 5 of the performance and memory campaign, founder statistics (owner pick "Speed Phase 5: founders", strict TDD): founder contributions
-fill a generation's rows at once by position (`R/calcFounderContributions.R`), the retention scan reads one iteration column at a time with
-`match()` (`R/calcRetention.R`), and `founderStatistics()` (`R/founderStatistics.R`) builds both once per `reportGV()`; odd inputs run the
-`...General()` copies; synthetic 10,000: calcFEFG 1.19 to 0.09 s, calcFGSE 1.18 to 0.12 s; gate `perf_calcFEFG_synthetic10000_seconds` 0.2 s.
-Claim `dff80c076`, RED `996a10729`, GREEN `5bc964245`, REFACTOR `232d6e612` `522fab0f3`, gate `a2cc1a9ca`, close-out `cceed66cd`; evaluation of
-S1057 8/10, self 8/10 (Learning 1024). **Gotchas kept:** assign each internal step before passing it on (an S4 `rowSums()` rewords a forced
-argument's error); the harness peak is a high-water mark at collections, so it can rise while time falls.
-S1057: decision D7 of the performance and memory campaign (owner pick "D7: default trials", a decision session, no `R/` change): the Breeding Groups
-tab keeps its default of 10 trials (`R/modBreedingGroups.R:125`), "Keep 10 (Recommended)" on the first question; measurements in the plan's D7 entry
-(`docs/planning/performance-memory-campaign-plan.md:362-376`): the default 20 top-ranked animals reach the best split at 10 trials, and 1,000 would
-take about 3 minutes on `synthColony(10000)`; filed `BACKLOG.md:217` (equal-score groupings listed by slot, not in the order found). Claim
-`471c25091`, deliverable `380375b50`, close-out `a9f872ee1`; evaluation of S1056 9/10, self 7/10 (Learning 1023). **Gotchas kept:** run nothing
-else while `quality_ratchet.py --run` times gates and read `uptime` first; the tab's default source is Top ranked 20, not All available.
+S1058: Phase 5 of the campaign, founder statistics (strict TDD): contributions filled a generation at a time by position, retention scanned
+with `match()`, both built once per `reportGV()` (`R/founderStatistics.R`); calcFEFG 1.19 to 0.09 s on the synthetic colony (gate 0.2 s). Claim
+`dff80c076`, GREEN `5bc964245`, close-out `cceed66cd`; S1057 8/10, self 8/10 (Learning 1024). **Gotcha kept:** assign each step before passing it on.
+S1057: decision D7 (no `R/` change): the Breeding Groups tab keeps 10 trials (plan `:362-376`); filed `BACKLOG.md:217` (equal-score
+groupings listed by slot). Claim `471c25091`, close-out `a9f872ee1`; S1056 9/10, self 7/10 (Learning 1023). **Gotcha kept:** run nothing else
+while `quality_ratchet.py --run` times gates; read `uptime` first.
 S1056: Phase 4 of the performance and memory campaign, group formation (owner pick "Speed Phase 4: groups", strict TDD, plus a second RED/GREEN
 the owner chose for 12 post-GREEN differences): `R/fillGroupMembers.R` fills each group from a candidates x groups true/false table, relatives as row
 positions (`fillGroupMembers()` `:27`, `groupPoolsAdmitted()` `:115`); `R/fillGroupMembersWithSexRatio.R` keeps running male and other counts
