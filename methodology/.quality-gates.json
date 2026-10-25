@@ -85,6 +85,15 @@
       "command": "Rscript tools/perf/run.R backfill-jmac",
       "extract": "SECONDS=([0-9.]+)",
       "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: backfillColonySnapshots() on the jmac studbook at 3 dates with 1,000 iterations took 9.42 s, median of 3 runs (9.36 to 9.46); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 10 (snapshot backfill follow-through) is meant to lower it and tightens this gate."
+    },
+    {
+      "name": "perf_calcFEFG_synthetic10000_seconds",
+      "direction": "max",
+      "threshold": 0.2,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R gvStages-synthetic10000",
+      "extract": "calcFEFG +([0-9.]+) s",
+      "why": "Declared S1058 (2026-10-25) for Phase 5 (founder statistics), which declares its own gate (docs/audits/PERF_BASELINE_2026-10-24.md section 5: its calls take 0.08 s on the app trim, too short to gate); the owner chose the synthetic colony at the S1058 scope question. The calcFEFG row of gvStages-synthetic10000 (a generated 10,000-animal colony, 6,090 rows after the app's trim, 327 founders, 1,000 iterations; not a real studbook) took 1.19 s on the code before Phase 5 (one fresh run, S1058) and 0.09 s in all 3 fresh runs after REFACTOR 232d6e612 (load average 9.4 to 10.4); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052 rule: 0.09 x 1.25 = 0.11, so 0.2). The calcFGSE row read 1.18 s before and 0.12 s after; the scenario 6.26 s before and 3.80 to 3.86 s after, about 10 s wall time a run."
     }
   ]
 }
