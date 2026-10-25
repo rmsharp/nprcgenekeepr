@@ -930,3 +930,202 @@ getAnimalsWithHighKinshipReference <- function(kmat, ped, threshold,
   kin <- tapply(kin$id2, kin$id1, c)
   kin
 }
+
+## Phase 7 (the diagram's solver): .solveJointQP() from
+## R/makePedigreeDiagramData.R at 520bd5dc8. It calls the live
+## .nonAnchorNodeResolver() and quadprog::solve.QP(), which Phase 7 does not
+## change; only the copy's name and its signature's line breaks differ.
+solveJointQPReference <- function(provisionalPos, matingUnits, duplicates,
+                                  childEdges, wSpouse = 2.0, alignChild = 1.5,
+                                  wUnion = 2.0, wDup = 1.0, minSep = 1.0) {
+  ids <- provisionalPos$id
+  n <- length(ids)
+  varIndex <- stats::setNames(seq_len(n), ids)
+  isUnion <- ids %in% matingUnits$id
+  kind <- stats::setNames(ifelse(isUnion, "union", "individual"), ids)
+
+  ## Decision 3 as AMENDED S675 (Migration Path Phase 3, owner-ratified via
+  ## AskUserQuestion after seeing the real 375-fixture render): the floors
+  ## are SPACING values keyed to the engine's own minSep (1 raw unit = 120
+  ## px -- .positionMatingUnitForest()'s Tier-1 spacing and kinship2's own
+  ## uniform alignped4 floor), NOT the render-layer symbol-tangent
+  ## clearances the design originally repurposed ((25+25)/120, (25+6)/120,
+  ## (6+6)/120 -- still what .resolveEdgeNodeCollisions() uses, for what
+  ## they are: collision thresholds). Under the tangent floors the
+  ## objective compressed 684 of the real fixture's 705 adjacent pairs to
+  ## exactly the floor -- symbols touching, labels overlapping into a band
+  ## -- and the census's class (a) read 90 sub-microscopic (<= 1.3e-6 px)
+  ## solver shortfalls at its 1e-9 px epsilon. Individual-individual =
+  ## minSep; individual-union = minSep / 2 (the S666 qualifying-pair
+  ## geometry: mates 1.0 apart, dot centred); union-union = minSep / 4.
+  floorIndividualIndividual <- minSep
+  floorIndividualUnion <- minSep / 2.0
+  floorUnionUnion <- minSep / 4.0
+  minSepFor <- function(k1, k2) {
+    if (k1 == "union" && k2 == "union") return(floorUnionUnion)
+    if (k1 == "union" || k2 == "union") return(floorIndividualUnion)
+    floorIndividualIndividual
+  }
+
+  amatCols <- list()
+  bvec <- numeric(0L)
+  for (g in sort(unique(provisionalPos$gen))) {
+    rowIds <- ids[provisionalPos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowX <- provisionalPos$x[match(rowIds, ids)]
+    rowIds <- rowIds[order(rowX, rowIds, method = "radix")]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      a <- rowIds[i]
+      b <- rowIds[i + 1L]
+      col <- numeric(n)
+      col[[varIndex[[b]]]] <- 1.0
+      col[[varIndex[[a]]]] <- -1.0
+      amatCols[[length(amatCols) + 1L]] <- col
+      bvec <- c(bvec, minSepFor(kind[[a]], kind[[b]]))
+    }
+  }
+  Amat <- if (length(amatCols) > 0L) {
+    do.call(cbind, amatCols)
+  } else {
+    matrix(numeric(0L), nrow = n, ncol = 0L)
+  }
+
+  ## Decision 4: objective. e(id) is the unit basis vector at id's own
+  ## column; pmatRows accumulates one row per penalty term, squared later
+  ## via t(pmat) %*% pmat (kinship2's alignped4 builds its own pmat the
+  ## same way).
+  e <- function(id) {
+    v <- numeric(n)
+    v[[varIndex[[id]]]] <- 1.0
+    v
+  }
+  resolveNnode <- .nonAnchorNodeResolver(duplicates)
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  pmatRows <- list()
+  for (i in seq_len(nrow(anchoredUnits))) {
+    u <- anchoredUnits$id[i]
+    anchor <- anchoredUnits$anchor[i]
+    Nnode <- resolveNnode(anchoredUnits$nonAnchor[i], u)
+    ## Migration Path Phase 2 fix (found live wiring this function into
+    ## production): a dangling non-anchor's FREE (non-duplicated)
+    ## occurrence has no rendered node at all (.buildMatingUnitForest()'s
+    ## own contract) -- resolveNnode() then returns the dangling id
+    ## itself, unresolved, outside this QP's own variable set. Generalizes
+    ## the already-established orphan-unit exclusion (anchoredUnits itself
+    ## already excludes anchor == NA) to "anchor OR Nnode has no rendered
+    ## node": skip terms 1-3 for this unit entirely -- its children get no
+    ## centering pull from this unit, matching the orphan-unit treatment.
+    if (!(Nnode %in% ids)) next
+
+    ## Term 1: spousal pull (kinship2's own align[2] term).
+    pmatRows[[length(pmatRows) + 1L]] <-
+      sqrt(wSpouse) * (e(anchor) - e(Nnode))
+
+    ## Term 3 (NEW): union centering -- targets census Finding #1.
+    pmatRows[[length(pmatRows) + 1L]] <-
+      sqrt(wUnion) * (e(u) - 0.5 * e(anchor) - 0.5 * e(Nnode))
+
+    ## Term 2: child centering (kinship2's own align[1] term) -- one row
+    ## per real child, weighted by sibship size k^-alignChild.
+    kids <- childEdges$to[childEdges$from == u]
+    kids <- kids[kids %in% ids]
+    k <- length(kids)
+    if (k > 0L) {
+      childWeight <- sqrt(k^(-alignChild))
+      for (child in kids) {
+        pmatRows[[length(pmatRows) + 1L]] <-
+          childWeight * (e(child) - 0.5 * e(anchor) - 0.5 * e(Nnode))
+      }
+    }
+  }
+
+  ## Term 4 (NEW): duplicate proximity -- polygamy (B1) duplicates ONLY.
+  ## kinship2 has no analogue (S670 report Sec. 3). S683 (the
+  ## owner-ratified amendment to the S675 no-weight-tuning mandate; the
+  ## wDup-on-spouse-duplicates BACKLOG item, design Open Question 2):
+  ## a spouse (B2) duplicate -- one whose realId has its own place in
+  ## the tree (an own parent edge, or an own single-parent direct
+  ## child) -- contributes NO proximity row. Measured on the real 375
+  ## fixture, the pull dragged each marry-in mate's __dup_* node (and
+  ## its whole anchor--dot--mate triple) toward the mate's distant real
+  ## occurrence, beating term 2's child centering (the owner-flagged
+  ## ~950/1190 px P49ZD1 drop jogs), and CAUSED the census's one class-
+  ## (d) dup-adjacent-to-real case rather than preventing it (d 1 -> 0,
+  ## jogs 165 -> 95, c2 105 -> 29 under the skip). The curved duplicate
+  ## connector, not proximity, links a spouse duplicate to its real
+  ## occurrence -- exactly kinship2's own convention. The pull stays
+  ## for polygamy (B1) duplicates, keeping one individual's occurrences
+  ## near each other (test_solveJointQP.R's S683 boundary guard).
+  ##
+  ## B2-shape is derived from this component's own childEdges -- realId
+  ## has an own parent edge (a childEdges$to entry) or is itself a
+  ## single parent with a direct child edge (a non-union
+  ## childEdges$from) -- the same structural test
+  ## .buildMatingUnitForest()'s Decision-2 spouse duplication applies
+  ## to 'ped' at mint time, re-expressed over the arguments this
+  ## function actually receives (asserted identical over every dup
+  ## realId of the real fixture, S683); deriving it here keeps the
+  ## 'duplicates' argument contract unchanged for direct callers
+  ## handing hand-built legacy shapes (Learning 736).
+  if (nrow(duplicates) > 0L) {
+    singleParents <- setdiff(childEdges$from, matingUnits$id)
+    b2Set <- unique(c(childEdges$to, singleParents))
+    for (i in seq_len(nrow(duplicates))) {
+      dupId <- duplicates$id[i]
+      realId <- duplicates$realId[i]
+      ## Migration Path Phase 2 fix (companion to the dangling-non-anchor
+      ## fix above): a duplicate whose own realId is a dangling parent's
+      ## FREE occurrence has no rendered node to pull toward either --
+      ## skip this duplicate's proximity term.
+      if (!(realId %in% ids)) next
+      ## S683: spouse (B2) duplicate -- no proximity row (see above).
+      if (realId %in% b2Set) next
+      pmatRows[[length(pmatRows) + 1L]] <-
+        sqrt(wDup) * (e(dupId) - e(realId))
+    }
+  }
+
+  ## Term 5: anti-degeneracy, breaking translation invariance (pmat alone
+  ## has a 0 unconstrained minimum at "shift everything by the same
+  ## constant") -- matches kinship2's own identical fix. Reference
+  ## variable: the widest row's first node in provisional order (radix
+  ## tie-break), an arbitrary but deterministic choice.
+  genCounts <- table(provisionalPos$gen)
+  widestGen <- as.numeric(names(genCounts))[which.max(genCounts)]
+  widestRowIds <- ids[provisionalPos$gen == widestGen]
+  widestRowX <- provisionalPos$x[match(widestRowIds, ids)]
+  refId <- widestRowIds[order(widestRowX, widestRowIds, method = "radix")][1L]
+  antiDeg <- numeric(n)
+  antiDeg[[varIndex[[refId]]]] <- 1e-5
+  pmatRows[[length(pmatRows) + 1L]] <- antiDeg
+
+  pmat <- do.call(rbind, pmatRows)
+  Dmat <- t(pmat) %*% pmat + 1e-8 * diag(n)
+
+  fit <- quadprog::solve.QP(Dmat = Dmat, dvec = rep(0.0, n), Amat = Amat,
+                             bvec = bvec, meq = 0L)
+
+  data.frame(id = ids, x = fit$solution, gen = provisionalPos$gen,
+             stringsAsFactors = FALSE)
+}
+
+## The .solveJointQP() calls makePedigreeMatingLayout() makes for `ped`, as
+## lists of their arguments. The frozen copy answers each call, so the calls
+## after the first do not depend on the code under test.
+diagramSolverCalls <- function(ped) {
+  calls <- list()
+  answer <- function(provisionalPos, matingUnits, duplicates, childEdges,
+                     ...) {
+    calls[[length(calls) + 1L]] <<- list(provisionalPos, matingUnits,
+                                         duplicates, childEdges, ...)
+    solveJointQPReference(provisionalPos, matingUnits, duplicates,
+                          childEdges, ...)
+  }
+  testthat::with_mocked_bindings(
+    suppressMessages(suppressWarnings(
+      makePedigreeMatingLayout(ped, edgeStyle = "direct")
+    )),
+    .solveJointQP = answer, .package = "nprcgenekeepr"
+  )
+  calls
+}
