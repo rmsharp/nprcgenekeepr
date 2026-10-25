@@ -83,17 +83,11 @@ getAnimalsWithHighKinship <- function(kmat, ped, threshold, currentGroups,
 #' @noRd
 highKinshipPairs <- function(kmat, threshold) {
   keep <- which(kmat >= threshold)
-  position <- keep - 1L
-  m <- nrow(kmat)
-  kin <- list(id1 = colnames(kmat)[position %/% m + 1L],
-              id2 = rownames(kmat)[position %% m + 1L],
-              kinship = kmat[keep])
   ## filterThreshold() numbers the rows it keeps from 1, when it keeps any.
-  attr(kin, "row.names") <- if (length(keep) > 0L) {
+  rowNames <- if (length(keep) > 0L) {
     c(NA_integer_, -length(keep))
   } else {
     integer(0L)
   }
-  class(kin) <- "data.frame"
-  kin
+  longFormRows(kmat, keep, rowNames)
 }

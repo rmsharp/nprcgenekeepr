@@ -31,33 +31,50 @@ kinMatrix2LongForm <- function(kinMatrix, removeDups = FALSE) {
   if (!longFormFits(kinMatrix, removeDups)) {
     return(kinMatrix2LongFormGeneral(kinMatrix, removeDups))
   }
-  m <- nrow(kinMatrix)
-  p <- ncol(kinMatrix)
-  ## One row per cell in column order, as stack() made them: id1 names the
-  ## column, id2 the row.
   if (!removeDups && !anyNA(kinMatrix)) {
-    kin <- list(id1 = rep(colnames(kinMatrix), each = m),
-                id2 = rep(rownames(kinMatrix), times = p),
-                kinship = as.vector(kinMatrix))
-    attr(kin, "row.names") <- c(NA_integer_, -(m * p))
-    class(kin) <- "data.frame"
-    return(kin)
+    return(longFormRows(kinMatrix, NULL, c(NA_integer_, -length(kinMatrix))))
   }
   ## Some cells are left out: the upper triangle (removeDups) and the missing
   ## kinships. The rows kept are named by their cell's position, as today's
   ## subset of the stacked rows named them.
   if (removeDups) {
-    cols <- seq_len(min(m, p))
+    m <- nrow(kinMatrix)
+    cols <- seq_len(min(m, ncol(kinMatrix)))
     keep <- sequence(m - cols + 1L, from = (cols - 1L) * m + cols)
     keep <- keep[!is.na(kinMatrix[keep])]
   } else {
     keep <- which(!is.na(kinMatrix))
   }
-  position <- keep - 1L
-  kin <- list(id1 = colnames(kinMatrix)[position %/% m + 1L],
-              id2 = rownames(kinMatrix)[position %% m + 1L],
-              kinship = kinMatrix[keep])
-  attr(kin, "row.names") <- keep
+  longFormRows(kinMatrix, keep, keep)
+}
+
+#' Long-form rows for cells of a kinship matrix
+#'
+#' Performance plan Phase 6: the table \code{kinMatrix2LongForm()} and
+#' \code{highKinshipPairs()} return, one row per cell in column order, as
+#' \code{stack()} made them: \code{id1} names the cell's column, \code{id2}
+#' its row.
+#'
+#' @param kinMatrix a matrix \code{longFormFits()} takes.
+#' @param cells \code{NULL} for every cell, or the positions of the cells to
+#' keep, in increasing order.
+#' @param rowNames the table's \code{row.names} attribute.
+#' @return A dataframe with columns \code{id1}, \code{id2} and
+#' \code{kinship}.
+#' @noRd
+longFormRows <- function(kinMatrix, cells, rowNames) {
+  m <- nrow(kinMatrix)
+  if (is.null(cells)) {
+    kin <- list(id1 = rep(colnames(kinMatrix), each = m),
+                id2 = rep(rownames(kinMatrix), times = ncol(kinMatrix)),
+                kinship = as.vector(kinMatrix))
+  } else {
+    position <- cells - 1L
+    kin <- list(id1 = colnames(kinMatrix)[position %/% m + 1L],
+                id2 = rownames(kinMatrix)[position %% m + 1L],
+                kinship = kinMatrix[cells])
+  }
+  attr(kin, "row.names") <- rowNames
   class(kin) <- "data.frame"
   kin
 }
