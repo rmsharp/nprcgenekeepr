@@ -1108,24 +1108,3 @@ solveJointQPReference <- function(provisionalPos, matingUnits, duplicates,
   data.frame(id = ids, x = fit$solution, gen = provisionalPos$gen,
              stringsAsFactors = FALSE)
 }
-
-## The .solveJointQP() calls makePedigreeMatingLayout() makes for `ped`, as
-## lists of their arguments. The frozen copy answers each call, so the calls
-## after the first do not depend on the code under test.
-diagramSolverCalls <- function(ped) {
-  calls <- list()
-  answer <- function(provisionalPos, matingUnits, duplicates, childEdges,
-                     ...) {
-    calls[[length(calls) + 1L]] <<- list(provisionalPos, matingUnits,
-                                         duplicates, childEdges, ...)
-    solveJointQPReference(provisionalPos, matingUnits, duplicates,
-                          childEdges, ...)
-  }
-  testthat::with_mocked_bindings(
-    suppressMessages(suppressWarnings(
-      makePedigreeMatingLayout(ped, edgeStyle = "direct")
-    )),
-    .solveJointQP = answer, .package = "nprcgenekeepr"
-  )
-  calls
-}

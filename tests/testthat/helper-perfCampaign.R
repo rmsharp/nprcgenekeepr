@@ -6,8 +6,8 @@
 ## equivalence tests (test_rareAlleleCounts.R, test_geneDropEquivalence.R,
 ## test_convertRelationshipsEquivalence.R) and the opt-in budget tests
 ## (test_perfBudget_*.R), test_groupAddAssignEquivalence.R and
-## test_founderStatsEquivalence.R. The frozen copies of today's functions are
-## in helper-perfReference.R.
+## test_founderStatsEquivalence.R and test_diagramSolverEquivalence.R. The
+## frozen copies of today's functions are in helper-perfReference.R.
 
 ## The example studbook QC'd as the app does, with the living animals as the
 ## population, untrimmed (all 3,694 animals): R/modPedigree.R's path, which
@@ -132,4 +132,25 @@ loadAverage <- function() {
            error = function(e) "unavailable", warning = function(w) {
              "unavailable"
            })
+}
+
+## The .solveJointQP() calls makePedigreeMatingLayout() makes for `ped`, as
+## lists of their arguments. The frozen copy answers each call, so the calls
+## after the first do not depend on the code under test.
+diagramSolverCalls <- function(ped) {
+  calls <- list()
+  answer <- function(provisionalPos, matingUnits, duplicates, childEdges,
+                     ...) {
+    calls[[length(calls) + 1L]] <<- list(provisionalPos, matingUnits,
+                                         duplicates, childEdges, ...)
+    solveJointQPReference(provisionalPos, matingUnits, duplicates,
+                          childEdges, ...)
+  }
+  testthat::with_mocked_bindings(
+    suppressMessages(suppressWarnings(
+      makePedigreeMatingLayout(ped, edgeStyle = "direct")
+    )),
+    .solveJointQP = answer, .package = "nprcgenekeepr"
+  )
+  calls
 }
