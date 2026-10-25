@@ -73,7 +73,8 @@ calcGUSEReference <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 ## Phase 1 (genome uniqueness): R/reportGV.R at 520bd5dc8.
 ## Phase 2 points its two geneDrop() calls at geneDropReference().
 ## Phase 5 points its calcFEFG() and calcFGSE() calls at calcFEFGReference()
-## and calcFGSEReference().
+## and calcFGSEReference(), and Phase 6 its kinship() call at
+## kinshipReference().
 reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
@@ -110,7 +111,7 @@ reportGVReference <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   genotype <- getGVGenotype(ped)
 
   # Generate the kinship matrix and filter down to the animals of interest
-  kmat <- filterKinMatrix(probands, kinship(
+  kmat <- filterKinMatrix(probands, kinshipReference(
     ped$id, ped$sire, ped$dam,
     ped$gen,
     twinRelations = twinRelations
@@ -377,9 +378,10 @@ geneDropReference <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
 }
 
 ## Phase 3 (the relationship table): R/convertRelationships.R at 520bd5dc8. It
-## calls the live filterKinMatrix(), kinMatrix2LongForm(), makeCEPH(),
-## allTrueNoNA(), isEmpty(), relationClassNames and notifyProgress(), which
-## Phase 3 does not change.
+## calls the live filterKinMatrix(), makeCEPH(), allTrueNoNA(), isEmpty(),
+## relationClassNames and notifyProgress(), which Phase 3 does not change; its
+## kinMatrix2LongForm() call is pointed at kinMatrix2LongFormReference(), since
+## Phase 6 changes that function.
 convertRelationshipsReference <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   if (!is.null(ids)) {
     kmat <- filterKinMatrix(ids, kmat)
@@ -391,7 +393,7 @@ convertRelationshipsReference <- function(kmat, ped, ids = NULL, updateProgress 
       relation = character(0L), stringsAsFactors = FALSE
     ))
   }
-  kin <- kinMatrix2LongForm(kmat, removeDups = TRUE)
+  kin <- kinMatrix2LongFormReference(kmat, removeDups = TRUE)
   ped <- makeCEPH(ped$id, ped$sire, ped$dam)
   r <- character(0L)
 
@@ -583,11 +585,13 @@ fillGroupMembersWithSexRatioReference <-
 
 ## Phase 4 (group formation): groupAddAssign() itself does not change, so its
 ## result from today's code is groupAddAssign() with fillGroupMembers() swapped
-## for the frozen copy above (which calls the frozen sex-ratio copy).
+## for the frozen copy above (which calls the frozen sex-ratio copy). Phase 6
+## swaps its getAnimalsWithHighKinship() for the frozen copy below as well.
 groupAddAssignReference <- function(...) {
   testthat::with_mocked_bindings(
     groupAddAssign(...),
     fillGroupMembers = fillGroupMembersReference,
+    getAnimalsWithHighKinship = getAnimalsWithHighKinshipReference,
     .package = "nprcgenekeepr"
   )
 }
@@ -756,4 +760,173 @@ calcFGReference <- function(ped, alleles) {
     return(NA_real_)
   }
   1L / sum((fc$p^2L) / r, na.rm = TRUE)
+}
+
+## Phase 6 (kinship memory): R/kinship.R, R/kinMatrix2LongForm.R and
+## R/getAnimalsWithHighKinship.R at 520bd5dc8, getAnimalsWithHighKinship()'s
+## kinMatrix2LongForm() call pointed at kinMatrix2LongFormReference(). They
+## call the live sexCodes, filterThreshold(), filterPairs() and filterAge(),
+## which Phase 6 does not change.
+kinshipReference <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: object_name_linter
+                              twinRelations = NULL, chrtype = "autosome", sex = NULL) {
+  # Returns: Matrix (row and col names are 'id')
+  n <- length(id)
+  if (anyDuplicated(id)) {
+    stop("All id values must be unique")
+  }
+  chrtype <- match.arg(casefold(chrtype), c("autosome", "x"))
+
+  # id number "n + 1" is a placeholder for missing parents
+  mrow <- match(mother.id, id, nomatch = n + 1L) # row number of the mother
+  drow <- match(father.id, id, nomatch = n + 1L) # row number of the dad
+
+  if (chrtype == "x") {
+    if (is.null(sex) || length(sex) != n) {
+      stop("invalid sex vector")
+    }
+    ## X-linked founder self-kinship: males are hemizygous (a single X copy,
+    ## so self-kinship = 1); females follow the usual non-inbred 0.5. Unknown
+    ## sex gets NA. The "n + 1" placeholder row/col (missing-parent stand-in)
+    ## is appended as 0, matching the autosomal branch's own placeholder
+    ## treatment below.
+    sexNum <- c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))] # nolint: object_name_linter
+    founderDiag <- ifelse(is.na(sexNum), NA_real_, (3L - sexNum) / 2L) # nolint: object_name_linter
+    if (sparse) {
+      kmat <- Diagonal(x = c(founderDiag, 0.0))
+    } else {
+      kmat <- diag(c(founderDiag, 0.0))
+    }
+  } else {
+    ## Mendelian 1/2: a non-inbred animal's self-kinship is 1/2, so kmat
+    ## starts as one-half of the identity matrix (each founder's self-kinship
+    ## is 0.5).
+    if (sparse) {
+      kmat <- Diagonal(n + 1L) / 2L
+    } else {
+      kmat <- diag(n + 1L) / 2L
+    }
+
+    kmat[n + 1L, n + 1L] <- 0L # if A and B both have "unknown" dad, this
+    # ensures that they won't end up 'related' in the matrix
+  }
+
+  ## MZ-twin transitive-identity correction (ported from kinship2's own
+  ## mzgrp/mzindex mechanism -- see
+  ## docs/planning/twin-relations-kinship-computation-plan.md §2.1). Built
+  ## once, up front: mzgrp is a union-find grouping of chained MZ
+  ## declarations (A-B, B-C => {A,B,C} one group) and mzindex expands each
+  ## group to every ordered off-diagonal pair within it -- the matrix cells
+  ## the depth loop below must overwrite. Applying this inside the depth
+  ## loop (not as a post-hoc pass on the finished matrix) is required for
+  ## the correction to propagate to relatives computed at a later depth --
+  ## see the plan's §2.2 for the mathematical argument.
+  havemz <- FALSE
+  if (!is.null(twinRelations)) {
+    mzRows <- twinRelations[twinRelations$code == "MZ twin", , drop = FALSE]
+    if (nrow(mzRows) > 0L) {
+      mzId1 <- match(mzRows$id1, id)
+      mzId2 <- match(mzRows$id2, id)
+      if (anyNA(c(mzId1, mzId2))) {
+        # nolint start: nonportable_path_linter.
+        stop("All twinRelations id1/id2 values must be present in id.")
+        # nolint end: nonportable_path_linter.
+      }
+      havemz <- TRUE
+      mzmat <- cbind(mzId1, mzId2)
+      mzgrp <- seq_len(max(mzmat))
+      repeat {
+        if (all(mzgrp[mzmat[, 1L]] == mzgrp[mzmat[, 2L]])) {
+          break
+        }
+        for (i in seq_len(nrow(mzmat))) {
+          mzgrp[mzmat[i, 1L]] <- mzgrp[mzmat[i, 2L]] <- min(mzgrp[mzmat[i, ]])
+        }
+      }
+      mzindex <- cbind(
+        unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
+          z <- unique(x)
+          rep(z, length(z))
+        })),
+        unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
+          z <- unique(x)
+          rep(z, each = length(z))
+        }))
+      )
+      mzindex <- mzindex[mzindex[, 1L] != mzindex[, 2L], , drop = FALSE]
+    }
+  }
+
+  # Those at depth == 0 don't need to be processed
+  # Subjects with depth = i must be processed before those at depth i + 1.
+  # Any parent is guarranteed to be at a lower depth than their children
+  #  The inner loop on "i" can NOT be replaced with a vectorized expression:
+  # sibs' effect on each other is cumulative.
+  for (depth in 1L:max(pdepth, na.rm = TRUE)) {
+    indx <- (1L:n)[pdepth == depth]
+    for (i in indx) {
+      mom <- mrow[i]
+      dad <- drow[i]
+      if (chrtype == "x" && !is.na(sexNum[i]) && sexNum[i] == 1L) {
+        ## Male: X comes from the mother only.
+        kmat[i, ] <- kmat[, i] <- kmat[mom, ]
+        kmat[i, i] <- 1L
+      } else if (chrtype == "x" && is.na(sexNum[i])) {
+        ## Unknown sex: no defensible X-linked value.
+        kmat[i, ] <- kmat[, i] <- NA
+        kmat[i, i] <- NA
+      } else {
+        ## Autosomal, or X-linked female (same average-of-parents formula).
+        ## Mendelian 1/2: i's kinship with any j is the average of its two
+        ## parents' kinships with j; i's self-kinship is half of one plus its
+        ## own inbreeding coefficient (the kinship between its two parents).
+        kmat[i, ] <- kmat[, i] <- (kmat[mom, ] + kmat[dad, ]) / 2L
+        kmat[i, i] <- (1L + kmat[mom, dad]) / 2L
+      }
+    }
+    if (havemz) {
+      kmat[mzindex] <- (diag(kmat))[mzindex[, 1L]]
+    }
+  }
+
+  ## drop = FALSE keeps a single animal a 1 x 1 matrix (S925).
+  kmat <- kmat[1L:n, 1L:n, drop = FALSE]
+  dimnames(kmat) <- list(id, id)
+  kmat
+}
+
+kinMatrix2LongFormReference <- function(kinMatrix, removeDups = FALSE) {
+  if (removeDups) {
+    kinMatrix[upper.tri(kinMatrix)] <- NA
+  }
+
+  kmat <- as.data.frame(kinMatrix)
+  k <- stack(kmat)
+  k["id2"] <- row.names(kmat)
+
+  colnames(k) <- c("kinship", "id1", "id2")
+  k$id1 <- as.character(k$id1)
+
+  k <- k[!is.na(k$kinship), ]
+
+  k[, c("id1", "id2", "kinship")]
+}
+
+getAnimalsWithHighKinshipReference <- function(kmat, ped, threshold,
+                                               currentGroups, ignore, minAge) {
+  kin <- kinMatrix2LongFormReference(kmat)
+
+  kin <- filterThreshold(kin, threshold = threshold)
+  kin <- filterPairs(kin, ped, ignore = ignore)
+  kin <- filterAge(kin, ped, minAge = minAge)
+
+  # Filter out self kinships
+  kin <- kin[(kin$id1 != kin$id2), ]
+
+  # Ignore kinship between current group members
+  kin <- kin[!((kin$id1 %in% unlist(currentGroups)) &
+    (kin$id2 %in% unlist(currentGroups))), ]
+
+  # Converting the kinships to a list
+  kin <- tapply(kin$id2, kin$id1, c)
+  kin
 }
