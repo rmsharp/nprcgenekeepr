@@ -86,8 +86,8 @@ fillGroupMembersWithSexRatio <-
     # must not fill the female pool.
     males <- ped$id[ped$sex %in% sexCodes[["male"]]]
     femalePool <- setdiff(candidates, males)
-    if (!sexRatioPoolsAdmitted(candidates, potentialSires, femalePool, grpNum,
-                               kin, ped, numGp)) {
+    if (!sexRatioPoolsAdmitted(candidates, potentialSires, femalePool,
+                               groupMembers, grpNum, kin, ped, numGp)) {
       return(fillGroupMembersWithSexRatioGeneral(
         candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio
       ))
@@ -164,8 +164,10 @@ fillGroupMembersWithSexRatio <-
 #'
 #' \code{groupPoolsAdmitted()} for both pools, and pedigree ids as text with
 #' none repeated, no potential sire of unknown sex (\code{getPotentialSires()}
-#' gives \code{NA} for one), and every group number one of the groups. Any
-#' other input runs today's code.
+#' gives \code{NA} for one), no group of a class (\code{c()} turns a factor's
+#' or a Date's values into others, so the counts would not follow), and every
+#' group number a single number that is one of the groups. Any other input runs
+#' today's code.
 #'
 #' @inheritParams fillGroupMembersWithSexRatio
 #' @param potentialSires the male pool.
@@ -173,10 +175,14 @@ fillGroupMembersWithSexRatio <-
 #' @return \code{TRUE} or \code{FALSE}.
 #' @noRd
 sexRatioPoolsAdmitted <- function(candidates, potentialSires, femalePool,
-                                  grpNum, kin, ped, numGp) {
+                                  groupMembers, grpNum, kin, ped, numGp) {
   groupPoolsAdmitted(candidates, kin, c(potentialSires, femalePool), numGp) &&
     is.character(ped$id) && !anyDuplicated(ped$id) &&
-    !anyNA(potentialSires) && all(unlist(grpNum) %in% seq_len(numGp))
+    !anyNA(potentialSires) &&
+    !any(vapply(groupMembers, is.object, logical(1L))) &&
+    all(vapply(grpNum, function(g) is.numeric(g) && length(g) == 1L,
+               logical(1L))) &&
+    all(unlist(grpNum) %in% seq_len(numGp))
 }
 
 #' calculateSexRatio() from a group's size and counts

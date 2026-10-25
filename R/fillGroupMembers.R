@@ -101,9 +101,10 @@ fillGroupMembers <- function(candidates,
 #'
 #' The fill from a true/false table matches the \code{setdiff()} bookkeeping
 #' of \code{fillGroupMembersGeneral()} when the candidates are text with none
-#' missing, there is at least one group, and the relatives of every animal of
-#' the pools are text, a bare \code{NA} (\code{addAnimalsWithNoRelative()})
-#' or nothing. Any other input runs today's code.
+#' missing, the number of groups is a number of at least one, \code{kin} is a
+#' plain list, and the relatives of every animal of the pools are text, a bare
+#' \code{NA} (\code{addAnimalsWithNoRelative()}) or nothing. Any other input
+#' runs today's code.
 #'
 #' @param candidates the candidates as given.
 #' @param kin list of animals and their relatives.
@@ -112,7 +113,8 @@ fillGroupMembers <- function(candidates,
 #' @return \code{TRUE} or \code{FALSE}.
 #' @noRd
 groupPoolsAdmitted <- function(candidates, kin, poolIds, numGp) {
-  is.character(candidates) && !anyNA(candidates) && isTRUE(numGp >= 1L) &&
+  is.character(candidates) && !anyNA(candidates) && is.numeric(numGp) &&
+    isTRUE(numGp >= 1L) && is.list(kin) && !is.object(kin) &&
     all(vapply(kin[unique(poolIds)], function(relatives) {
       is.null(relatives) || is.character(relatives) ||
         (is.logical(relatives) && all(is.na(relatives)))
