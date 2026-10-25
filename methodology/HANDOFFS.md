@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1057
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- decision D7 of the performance and memory campaign (docs/planning/performance-memory-campaign-plan.md:362, BACKLOG.md:8): the owner's ruling on the Breeding Groups tab's default of 10 trials (R/modBreedingGroups.R:125) against groupAddAssign()'s help's 1,000 (owner pick "D7: default trials"; a decision session, no R/ change)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1056
 date: 2026-10-24
 status: complete
