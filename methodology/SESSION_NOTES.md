@@ -98,37 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1057 Did
-**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "D7: default trials"; a decision session, no `R/` change):** decision D7 of the
-performance and memory campaign: the owner kept the Breeding Groups tab's default of 10 trials (`R/modBreedingGroups.R:125`), "Keep 10 (Recommended)",
-on the first question. Recorded in the plan's D7 entry with its measurements (`docs/planning/performance-memory-campaign-plan.md:362-376`) and in
-`BACKLOG.md:8` (now Phase 5, plan `:559`; 13 lines for 13). Claim `471c25091`, deliverable `380375b50`, close-out next; not pushed.
-**Findings (the example, 3 groups, kinship limit 0.25, sex ratio None, seeds 1-10):** the tab's default source, the top 20 ranked living animals,
-reaches the best possible smallest group (6) at 10 trials in 10 of 10 seeds, and 1,000 gain nothing (0.02 s against 1.3 s); all 332 living animals:
-median smallest group 106 / 107.5 / 108 at 10 / 100 / 1,000 trials (0.1 / 0.8 / 7.8 s); harem and a custom ratio of 2.5 at 1,000: 9.4 and 11.1 s;
-`synthColony(10000)` (2,981 living): 10 and 100 trials 2.7 and 17 s, so about 3 minutes at 1,000 (an estimate). The 10 dates from the 2017 app
-(`gp_iter`); the June 2026 rebuild kept it (`22dcf8f10`; `test_modBreedingGroups.R:1358` pins "10, not 1000").
-**New finding, filed, not fixed:** equal-score groupings are listed by slot, not in the order found (`R/groupAddAssign.R:330-334`); seed 5, top 20,
-1,000 trials: the one listed first was found at trial 18, the first of score 6 at trial 7 (`BACKLOG.md:217`, DECISION NEEDED).
-**Verification:** the tests whose code reads the changed files: `test_docsAuditLooseEnds.R` 10, `test_docsAuditSixRulings.R` 5, `test_workflowPathsIgnore.R`
-11; ratchet run alone 7/8 (results `5b68a74226bb`): `perf_diagram_example_direct_seconds` 16.6 against 16.1 at load average
-9.5, the same `R/` and manifest that gave S1056 8/8 (a first run, beside my own 1,000-trial check, was 6/8); no runtime behavior changed, so no app run.
-**Handoff evaluation of S1056: 9/10.** Helped: Next (1) named D7's plan line, the backlog line, the input's file line and the 9 s figure; S1056's
-`same1000.R` gave the app-path recipe. Missing: that the 9.1 s was "All available", while the tab's default source is the top 20
-(1.3 s at 1,000); the default's history (a test pins 10). Wrong: nothing found. ROI: high.
-**Self: 7/10.** + measured gain and cost on the default source, the stress source, two other modes and a larger colony before the question; the
-default's history in the question; answered on the first try; the tie-order finding checked with a traced run before it was filed; only the tests that
-read the changed files. - I ran the traced check while the ratchet timed its gates (6/8; failure mode #29); five status-line nudges in research
-stretches; nearly dropped four harem function names from the backlog block. Learning 1023.
-**Gotchas:** run nothing else while `quality_ratchet.py --run` times gates, and read `uptime` first (load 9 to 10
-tonight); the tab's default source is Top ranked 20 (`R/modBreedingGroups.R:40-69`), not All available; `trace(f, exit = quote(...),
-where = asNamespace("nprcgenekeepr"))` records each trial.
-**Next (the owner's campaign, in the plan's order):** (1) Phase 5, founder statistics (plan `:559`, `BACKLOG.md:8`), strict TDD; it declares its own
-gate on a larger input (0.08 s on the app trim; `docs/audits/PERF_BASELINE_2026-10-24.md:164`); read `uptime` before its
-ratchet run. (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11: the five fallbacks' inputs; harems' age work.
-Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
+### What Session 1058 Did
+**Deliverable:** Phase 5 of the performance and memory campaign, founder statistics (`docs/planning/performance-memory-campaign-plan.md:559`,
+`BACKLOG.md:8`): `calcFE()`, `calcFG()`, `calcFEFG()`, `calcFGSE()` and `calcRetention()` identical to today's, contributions by integer position and
+built once per `reportGV()` report; owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 5: founders"; strict TDD (IN PROGRESS)
+**Started:** 2026-10-24 22:18 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1056 (condensed S950 to S1057; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1057 (condensed S950 to S1058; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1057: decision D7 of the performance and memory campaign (owner pick "D7: default trials", a decision session, no `R/` change): the Breeding Groups
+tab keeps its default of 10 trials (`R/modBreedingGroups.R:125`), "Keep 10 (Recommended)" on the first question; measurements in the plan's D7 entry
+(`docs/planning/performance-memory-campaign-plan.md:362-376`): the default 20 top-ranked animals reach the best split at 10 trials, and 1,000 would
+take about 3 minutes on `synthColony(10000)`; filed `BACKLOG.md:217` (equal-score groupings listed by slot, not in the order found). Claim
+`471c25091`, deliverable `380375b50`, close-out `a9f872ee1`; evaluation of S1056 9/10, self 7/10 (Learning 1023). **Gotchas kept:** run nothing
+else while `quality_ratchet.py --run` times gates and read `uptime` first; the tab's default source is Top ranked 20, not All available.
 S1056: Phase 4 of the performance and memory campaign, group formation (owner pick "Speed Phase 4: groups", strict TDD, plus a second RED/GREEN
 the owner chose for 12 post-GREEN differences): `R/fillGroupMembers.R` fills each group from a candidates x groups true/false table, relatives as row
 positions (`fillGroupMembers()` `:27`, `groupPoolsAdmitted()` `:115`); `R/fillGroupMembersWithSexRatio.R` keeps running male and other counts

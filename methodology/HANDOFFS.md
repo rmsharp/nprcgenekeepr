@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1058
+date: 2026-10-24
+status: pending
+active_task: IN PROGRESS -- Phase 5 of the performance and memory campaign, founder statistics (docs/planning/performance-memory-campaign-plan.md:559, BACKLOG.md:8): calcFE(), calcFG(), calcFEFG(), calcFGSE() and calcRetention() identical to today's, contributions and retention built once per reportGV() report (owner pick "Speed Phase 5: founders"; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1057
 date: 2026-10-24
 status: complete
