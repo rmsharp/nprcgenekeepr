@@ -85,6 +85,145 @@ fillGroupMembersWithSexRatio <-
     # is placed nowhere: calculateSexRatio() counts every male as a male, so he
     # must not fill the female pool.
     males <- ped$id[ped$sex %in% sexCodes[["male"]]]
+    femalePool <- setdiff(candidates, males)
+    if (!sexRatioPoolsAdmitted(candidates, potentialSires, femalePool, grpNum,
+                               kin, ped, numGp)) {
+      return(fillGroupMembersWithSexRatioGeneral(
+        candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio
+      ))
+    }
+    # Column i of each table marks the animals of that pool group i may still
+    # take, so each draw samples exactly the vector the setdiff() bookkeeping
+    # of fillGroupMembersWithSexRatioGeneral() gives.
+    poolIds <- c(potentialSires, femalePool)
+    availableMales <- matrix(TRUE, length(potentialSires), numGp)
+    availableFemales <- matrix(TRUE, length(femalePool), numGp)
+    malesRelated <- kinPositions(kin, poolIds, potentialSires)
+    femalesRelated <- kinPositions(kin, poolIds, femalePool)
+
+    # calculateSexRatio() counts the pedigree rows whose id is in the group,
+    # males and the rest, and a row of unknown sex as both; these running
+    # counts give it the same numbers without reading the pedigree each time.
+    isMale <- ped$sex == sexCodes[["male"]]
+    poolMale <- isMale[match(poolIds, ped$id)]
+    inPed <- poolIds %in% ped$id
+    addsMale <- as.integer(inPed & (is.na(poolMale) | poolMale))
+    addsOther <- as.integer(inPed & (is.na(poolMale) | !poolMale))
+    nMales <- vapply(groupMembers, function(ids) {
+      length(ped$sex[ped$id %in% ids & isMale])
+    }, integer(1L))
+    nOthers <- vapply(groupMembers, function(ids) {
+      length(ped$sex[ped$id %in% ids & !isMale])
+    }, integer(1L))
+
+    repeat {
+      if (isEmpty(grpNum)) {
+        break
+      }
+
+      # Select a group at random
+      i <- sample(grpNum, 1L)[[1L]]
+
+      # Select an animal that can be added to this group and add it
+      size <- length(groupMembers[[i]])
+      ratio <- sexRatioFromCounts(size, nMales[[i]], nOthers[[i]])
+      if (is.na(ratio)) {
+        ratio <- 0.0
+      } ## no seed animals
+
+      if (ratio < sexRatio) { ## need female
+        id <- sample(femalePool[availableFemales[, i]], 1L)
+        availableFemales[match(id, femalePool), ] <- FALSE
+      } else if (abs(sexRatio - sexRatioFromCounts(size, nMales[[i]],
+                                                   nOthers[[i]],
+                                                   additionalMales = 1L)) <
+        abs(sexRatio - sexRatioFromCounts(size, nMales[[i]], nOthers[[i]],
+                                          additionalFemales = 1L))) {
+        # may need male
+        id <- sample(potentialSires[availableMales[, i]], 1L)
+        availableMales[match(id, potentialSires), ] <- FALSE
+      } else {
+        id <- sample(femalePool[availableFemales[, i]], 1L)
+        availableFemales[match(id, femalePool), ] <- FALSE
+      }
+      k <- match(id, poolIds)
+      if (!(id %in% groupMembers[[i]])) {
+        nMales[[i]] <- nMales[[i]] + addsMale[[k]]
+        nOthers[[i]] <- nOthers[[i]] + addsOther[[k]]
+      }
+      groupMembers[[i]] <- c(groupMembers[[i]], id)
+      # Remove all relatives from consideration for the group it was added to
+      availableMales[malesRelated[[k]], i] <- FALSE
+      availableFemales[femalesRelated[[k]], i] <- FALSE
+      grpNum <- dropFinishedGroups(grpNum, availableMales, availableFemales)
+    }
+    groupMembers
+  }
+
+#' Whether the fast sex-ratio fill gives today's result
+#'
+#' \code{groupPoolsAdmitted()} for both pools, and pedigree ids as text with
+#' none repeated, no potential sire of unknown sex (\code{getPotentialSires()}
+#' gives \code{NA} for one), and every group number one of the groups. Any
+#' other input runs today's code.
+#'
+#' @inheritParams fillGroupMembersWithSexRatio
+#' @param potentialSires the male pool.
+#' @param femalePool the female pool.
+#' @return \code{TRUE} or \code{FALSE}.
+#' @noRd
+sexRatioPoolsAdmitted <- function(candidates, potentialSires, femalePool,
+                                  grpNum, kin, ped, numGp) {
+  groupPoolsAdmitted(candidates, kin, c(potentialSires, femalePool), numGp) &&
+    is.character(ped$id) && !anyDuplicated(ped$id) &&
+    !anyNA(potentialSires) && all(unlist(grpNum) %in% seq_len(numGp))
+}
+
+#' calculateSexRatio() from a group's size and counts
+#'
+#' The branches and arithmetic of \code{calculateSexRatio()} and
+#' \code{getSexRatioWithAdditions()}, from the group's number of ids and its
+#' counts of males and of other animals, so the same numbers.
+#'
+#' @param size the number of ids in the group.
+#' @param males,others the group's counts as \code{calculateSexRatio()}
+#' makes them.
+#' @param additionalMales,additionalFemales as in
+#' \code{calculateSexRatio()}.
+#' @return The sex ratio, \code{Inf}, or \code{NA} for an empty group.
+#' @noRd
+sexRatioFromCounts <- function(size, males, others, additionalMales = 0L,
+                               additionalFemales = 0L) {
+  if (size == 0L) {
+    if (additionalFemales > 0L && additionalMales == 0L) {
+      return(Inf)
+    }
+    if (additionalFemales == 0L) {
+      return(if (additionalMales == 0L) NA else 0.0)
+    }
+  } else if (males == 0L && additionalMales <= 0L) {
+    return(Inf)
+  }
+  (others + additionalFemales) / (males + additionalMales)
+}
+
+#' Fill the groups to a sex ratio with today's code
+#'
+#' The body of \code{fillGroupMembersWithSexRatio()} before the performance
+#' campaign's Phase 4, word for word, for the inputs
+#' \code{sexRatioPoolsAdmitted()} does not admit.
+#'
+#' @inheritParams fillGroupMembersWithSexRatio
+#' @return The \code{groupMembers} list, filled.
+#' @noRd
+fillGroupMembersWithSexRatioGeneral <-
+  function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
+           sexRatio) {
+    potentialSires <- getPotentialSires(candidates, ped, minAge)
+    # A male who is not a potential sire (under minAge, or with no birth date)
+    # is placed nowhere: calculateSexRatio() counts every male as a male, so he
+    # must not fill the female pool.
+    males <- ped$id[ped$sex %in% sexCodes[["male"]]]
     availableMales <- makeAvailable(potentialSires, numGp)
     availableFemales <- makeAvailable(setdiff(candidates, males), numGp)
 
