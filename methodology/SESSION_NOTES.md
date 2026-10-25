@@ -99,12 +99,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1061 Did
-**Deliverable:** fix the red `windows-latest` leg of `R-CMD-check.yaml` (`BACKLOG.md:236`; run `40230619957`, 4 failures in
-`test_archivePointersResolve.R:81,101,109,110` from `normalizePath()` backslash paths at `tests/testthat/helper-archivePointers.R:53,63`)
-(IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4, "Fix the Windows CI failure"; strict TDD)
-**Started:** 2026-10-25 16:16 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Fix the Windows CI failure"; strict TDD; an approach question, three gates and a push question,
+each answered with the recommended option first try):** the red `windows-latest` leg of `R-CMD-check.yaml` (`BACKLOG.md:236`, block removed).
+S1023's `archivePointerProblems()` compared `normalizePath()` output with forward-slash link text, and Windows writes `\`: now `winslash = "/"`
+on both calls (`tests/testthat/helper-archivePointers.R:54,64`) and a comment saying why (`:50-51`). RED was the red run `40230619957` (the
+owner's pick, as in S1018). Claim `478e98a65`, GREEN `f33b3474e`, REFACTOR `37997db3f`; pushed at the owner's word (`63bc354f7..37997db3f`, 4 commits).
+**Verification:** a throwaway stand-in for `normalizePath()` passed through `test_file(env =)` gave CI's 4 messages word for word before the fix
+(plus 3 live-ledger blocks, which skip in a built package) and 0 after; full suite 470 files, 4,403 tests, 0 failed, 0 errors, 210 skipped;
+`lint_package()` 0; `devtools::check()` 0/0/0 (FAIL 0, WARN 10, SKIP 604, PASS 15,951); ratchet 10/10 (results `4e13e79a2ea0`). CI run
+`40236872235`: Windows `[ FAIL 0 | WARN 10 | SKIP 639 | PASS 15819 ]`, `Status: OK` (15,815 + the 4); macOS, Ubuntu release and oldrel-1
+pass; Ubuntu devel passes (all 5 legs green); lint, pkgdown and test-coverage pass.
+**Handoff evaluation of S1060: 9/10.** Helped: Next (0) named the file, both lines and the fix (`winslash = "/"`, right), the run, the four lines
+and the tally, and said to offer it beside the campaign, not reorder it; every `BACKLOG.md` line it cited still pointed at its item. Missing: the
+S1018 precedent (Learning 984: RED = the red run) and its 8.3-name warning on `normalizePath()`, both found by search; that the live-ledger
+blocks skip in CI's built package. Wrong: "56,563 B, under the 25,000-token read limit" (close-out commit); the Read tool cut it at line
+321 of 386 (25,532 tokens), a second read. ROI: high.
+**Self: 8/10.** + the local probe reproduced CI's messages before any edit, and I predicted its 7 failures before running it; checked every other
+`normalizePath()` in `tests/` (no other text comparison); every question first try. - a zsh no-match glob and an empty `gh run view --job --log`
+(it waits for the whole run) cost calls. Learning 1027.
+**Gotchas:** `test_file(env = e)` sources the helpers into `e`, so a stand-in put in `e` first is found before base's (the S873-S910
+`read.csv()` gotcha's mechanism); `gh run view --job <id>
+--log` waits for the whole run, `gh api --allow-escape-sequences repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs` does not; a Windows-only
+break shows only on a push; the Read tool cuts this file at about 55,300 B (25,000 tokens), so keep it below that.
+**Next:** **the owner's campaign, in the plan's order:** (1) Phase 8, the app's memory: a design session, text only (plan `:626`, `BACKLOG.md:8`):
+D5 consumer by consumer, a design document and the owner's ruling, from Phase 0's app memory table (`docs/audits/PERF_BASELINE_2026-10-24.md`)
+and Phase 6's numbers; name the bit-identity tests, twins included. (2) The tie-order decision (`BACKLOG.md:217`, Effort S). (3) Phase 11 items.
+Outside the campaign: `BACKLOG.md:227` (the two `@inheritParams` lines, READY, Effort S). Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203`
+(BLOCKED), #138.
 
 ### Sessions 947-1060 (condensed S950 to S1061; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1060: Phase 7 of the campaign, the diagram's solver (strict TDD): `.solveJointQP()` keeps each constraint's two variable numbers and
@@ -126,37 +147,18 @@ S1056: Phase 4 of the campaign, group formation (strict TDD, plus a second RED/G
 candidates x groups true/false table (`R/fillGroupMembers.R`) with running sex-ratio counts (`R/fillGroupMembersWithSexRatio.R`); 1,000 trials 23.0 to
 5.6 s, gate 29.2 to 7.1 s. Claim `c93e3239c`, GREEN `5a416bf84`, close-out `cc8cc2bc1`; S1055 9/10, self 7/10 (Learning 1022). **Gotcha kept:** probe
 each argument with NULL, a list, a data frame, numbers, text, logical, a factor and a Date before RED.
-S1055: Phase 3 of the performance and memory campaign, the relationship table (owner pick "Speed Phase 3", strict TDD): `R/convertRelationships.R`
-keeps `convertRelationships()`'s first steps; `relationsPlan()` (internal) admits an ordinary pedigree and `relationClasses()` applies today's
-11 rules as vector comparisons in blocks of `relationBlockSize` (1,048,576 pairs); any other input runs `convertRelationshipsGeneral()` (today's
-code word for word, owner ruling); 300 animals 6.28 to 0.08 s, both downloads finish (`perf_convertRelationships_300_seconds` 8.0 to 0.2).
-Claim `12b83629c`, RED `9187ab8a2`, GREEN `933486b5a`, REFACTOR `1b1dd0e06` `757f271de`, gate `e8713e257`, close-out `95f0bc4a4`; evaluation
-of S1054 9/10, self 8/10 (Learning 1021). **Gotchas kept:** an odd input tests a lookup rule only if the looked-up animal has known parents,
-so name the class it should change and run it against its mutant; `get_download()` has no time limit (`download.file()` under a timeout);
-browser tests need a scratch install, `R_LIBS`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`.
-S1054: Phase 2 of the performance and memory campaign, the gene drop (owner pick "Speed Phase 2: gene drop", strict TDD): `R/geneDrop.R`
-keeps `geneDrop()`'s id checks; `geneDropPlan()` (internal) admits an ordinary pedigree and the fast path fills one matrix (a sire and a dam
-column per animal) and finds parents by position; any other input runs `geneDropGeneral()` (today's code word for word, owner ruling); the
-gate's stage 148.5 to 65.1 MB (`perf_geneDrop_example_peak_mb` 164 to 72). Claim `394bcf73a`, RED `2636941cb`, GREEN `e72a5b8ed`, REFACTOR
-`077ca3321` `cb1dc8280`, gate `3171454d4`, close-out `dc5e4b005`; evaluation of S1053 9/10, self 8/10 (Learning 1020). **Gotchas kept:**
-`mockery::stub()` reaches only a function's own body, so a per-item progress call stays there; pick a budget input whose speedup is well over
-3x; shared campaign test inputs live in `tests/testthat/helper-perfCampaign.R`; in zsh printf a separator, never `echo ======`.
-S1053: Phase 1 of the performance and memory campaign, genome uniqueness (owner pick "Speed Phase 1", strict TDD): `R/rareAlleleCounts.R`
-(internal) counts a table shaped like `geneDrop()`'s with `match()` and `tabulate()`; `geneDropShape()` admits only tables where that equals
-today's count, and any other goes to `rareAlleleCountsGeneral()` (today's `calcA()` word for word, owner ruling); `guFromRare()`,
-`guSEFromRare()`, `iterationColumns()`; `reportGV()` on the example 3.28 to 0.60 s (gate 0.8 s). Claim `846bce3eb`, RED `2db44bcc5`, GREEN
-`6bb2b9e94`, REFACTOR `40db591b6`, gate `ae1cebda5`, close-out `ad83d7d0b`; evaluation of S1052 9/10, self 8/10 (Learning 1019). **Gotchas
-kept:** frozen copies live in `tests/testthat/helper-perfReference.R` (from `520bd5dc8`); browser tests need `NPRC_RUN_E2E=true`, budget
-tests `NPRC_RUN_PERF=true` and the source tree; read the commit-prefix precedent before a new prefix (`perf:` has none); mutation-check
-each branch of a fast path (the `byID` homozygous correction was thin until a block of its own).
-S1052: Phase 0 of the performance and memory campaign (owner pick "Perf Phase 0", strict TDD): the harness `tools/perf/harness.R` + `tools/perf/run.R`
-(`Rscript tools/perf/run.R <scenario>` from the root prints `SECONDS=` and `PEAK_MB=`; 20 scenarios, one per row of the plan's section 3),
-`tests/testthat/test_perfHarness.R` (20 tests), `docs/audits/PERF_BASELINE_2026-10-24.md` (`reportGV()` on the example 3.28 s, 2.94 s of it
-`calcGU()` + `calcGUSE()`) and 7 ratchet gates, one per later phase (+25% time, +10% memory). Claim `0e265fb1c`, RED `df4e236c7`, GREEN
-`67bc27e4d`, REFACTOR `7bd35faec`, gates `9a7392c96`, close-out `a9ce04253`; evaluation of S1051 8/10, self 7/10 (Learning 1018). **Gotchas
-kept:** `lint_package()` never reads `tools/` (lint each tool file with `lintr::lint()`); a tools-only push starts CI; a `--quick` run is
-never a baseline; memory peaks repeat exactly fresh process to fresh process (never compare same-session peaks); a background run is the
-command itself, never a trailing `&`; planners' scratch scripts may survive under the scratchpad folders.
+S1055: Phase 3 of the campaign, the relationship table (strict TDD): `relationsPlan()` admits an ordinary pedigree and `relationClasses()`
+applies the 11 rules as vector comparisons in blocks (`R/convertRelationships.R`); other input runs `convertRelationshipsGeneral()` (today's
+code); 300 animals 6.28 to 0.08 s. Claim `12b83629c`, GREEN `933486b5a`, close-out `95f0bc4a4`; S1054 9/10, self 8/10 (Learning 1021).
+S1054: Phase 2 of the campaign, the gene drop (strict TDD): `geneDropPlan()` admits an ordinary pedigree and the fast path fills one matrix
+(`R/geneDrop.R`); other input runs `geneDropGeneral()`; peak 148.5 to 65.1 MB. Claim `394bcf73a`, GREEN `e72a5b8ed`, close-out `dc5e4b005`;
+S1053 9/10, self 8/10 (Learning 1020). **Gotcha kept:** shared campaign test inputs live in `tests/testthat/helper-perfCampaign.R`.
+S1053: Phase 1 of the campaign, genome uniqueness (strict TDD): `R/rareAlleleCounts.R` counts with `match()` and `tabulate()`, other tables go
+to `rareAlleleCountsGeneral()`; `reportGV()` on the example 3.28 to 0.60 s. Claim `846bce3eb`, GREEN `6bb2b9e94`, close-out `ad83d7d0b`; S1052
+9/10, self 8/10 (Learning 1019). **Gotcha kept:** frozen copies live in `tests/testthat/helper-perfReference.R`; budget tests need `NPRC_RUN_PERF=true`.
+S1052: Phase 0 of the campaign (strict TDD): the harness (`Rscript tools/perf/run.R <scenario>` prints `SECONDS=` and `PEAK_MB=`; 20 scenarios),
+`docs/audits/PERF_BASELINE_2026-10-24.md` and the ratchet gates. Claim `0e265fb1c`, GREEN `67bc27e4d`, close-out `a9ce04253`; S1051 8/10, self
+7/10 (Learning 1018). **Gotcha kept:** `lint_package()` never reads `tools/` (lint each tool file with `lintr::lint()`).
 S1051: the owner's rulings on D1-D4 of the performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed, D2 plain R with
 C++ revisited at Phase 11, D3 the 18 exported functions in scope unchanged, D4 opt-in budget tests plus ratchet gates), and the plan approved as written
 (`docs/planning/performance-memory-campaign-plan.md:4,58-62,308-345`; owner pick "Rule on D1-D4", a decision session). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out
@@ -294,7 +296,7 @@ pieces; `withCallingHandlers()` goes inside `tryCatch()`; re-knit NEWS with `Rsc
 status` after `devtools::document()`; `quality_ratchet.py --run` overwrites the results file, so compare the last receipt's hash first.
 S1015-S1019 (evaluations 8-9/10, self 7-8/10; claims `30d16de5f`, `f1a90cad3`, `7f6648751`, `5411ddf79`; hashes in `CHANGELOG.md`): S1019, Export Current Group is finished (`R/modBreedingGroups.R:913,1162,1191`);
 S1018, the red `windows-latest` leg is green; S1017, the guide names the "groups not in the pedigree" sentence twice (`test_guideGroupsOutsidePedigreeWording.R`); S1016, 13 small wrong statements fixed
-(`assertFileType()`, `R/assertFileType.R:18`); S1015, `tests/testthat/helper-inputTabUpload.R`. **Gotchas kept:** this file's ceiling is 25,000 tokens (about 56,750 B), so condense before adding; a workflow
+(`assertFileType()`, `R/assertFileType.R:18`); S1015, `tests/testthat/helper-inputTabUpload.R`. **Gotchas kept:** the Read tool cuts this file at 25,000 tokens (about 55,300 B: S1061 measured 56,560 B as 25,532), so condense before adding; a workflow
 "success" does not name its legs (`gh run view <id> --json jobs`); only a picture and `innerText` say what a page shows; a mutant run edits `R/` in place, so confirm with `git diff`; never quote a
 misspelling in NEWS or help (`test_wordlist_coverage.R`); a backlog "same shape" claim is a guess until each copy's return and callers are read (Learning 981).
 S1012-S1014, the config-file reader (strict TDD; self 8/10): `readConfigLines()` (`R/readConfigLines.R:16`) is the one reader, `getParamDef()` reads a setting in another case, and the owner took option A

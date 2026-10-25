@@ -233,14 +233,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       item: pandoc 3.12.1 deprecates the flag rmarkdown 2.31's `html_vignette` passes, it only shows because the project's
       roxygen options include the vignette roclet (`nprcgenekeepr.Rproj:25`), and `devtools::check()` gives 0 warnings.
 
-- [ ] **CI: `windows-latest` R-CMD-check fails 4 expectations in `test_archivePointersResolve.R` (READY, Effort S; found S1060
-      on the push of `63bc354f7`, run 40230619957; macOS and the three Ubuntu jobs pass)** -- `[ FAIL 4 | WARN 10 | SKIP 639 |
-      PASS 15815 ]`, failures at `:81`, `:101`, `:109` and `:110`: "the link text archive/SESSION_NOTES-through-2026-01-02.md is
-      not the file's path methodology\archive\SESSION_NOTES-through-2026-01-02.md". `tests/testthat/helper-archivePointers.R:53`
-      and `:63` build the comparison path with `normalizePath()`, which gives backslashes on Windows, so it never equals the
-      forward-slash link text. Likely fix (not yet tried): `normalizePath(..., winslash = "/")` on both lines. From S1023
-      (`325f0275c`, `e3de99906`, 2026-10-20), first pushed in S1060's push. No GitHub issue (CI-break convention).
-
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
 feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8

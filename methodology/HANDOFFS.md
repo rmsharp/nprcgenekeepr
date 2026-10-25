@@ -206,11 +206,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1061
 date: 2026-10-25
-status: pending
-active_task: IN PROGRESS -- fix the red windows-latest leg of R-CMD-check.yaml (BACKLOG.md:236; run 40230619957, 4 failures in test_archivePointersResolve.R:81,101,109,110): archivePointerProblems() builds the comparison path with normalizePath(), which gives backslashes on Windows (tests/testthat/helper-archivePointers.R:53,63); likely winslash = "/" on both lines (owner pick at the Phase 0 picker, item 1 of 4; strict TDD)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the red windows-latest leg of R-CMD-check.yaml (BACKLOG.md:236, block removed in the close-out commit): archivePointerProblems() normalizes both paths with winslash = "/" (tests/testthat/helper-archivePointers.R:54,64), so on Windows the file's path from the repository root reads methodology/archive/X like the link text; CI run 40236872235's Windows leg is green (owner pick at the Phase 0 picker, item 1 of 4, "Fix the Windows CI failure"; strict TDD). BACKLOG.md:8 (Phase 8, the app's memory: a design session) is the campaign's next step.
+what_was_done: Claim 478e98a65. Research: only test_archivePointersResolve.R calls the helper; no other normalizePath() in tests/ compares with text; the CI log (run 40230619957, [ FAIL 4 | WARN 10 | SKIP 639 | PASS 15815 ]) showed the right path with backslashes at :81, :101, :109, :110. PRE-RED approach question: the owner took "use the red Windows run" as RED (as S1018, Learning 984). RED (no commit): a throwaway scratchpad probe ran the file through testthat::test_file(env = e) with a stand-in normalizePath() in e that writes Windows separators: CI's 4 messages word for word plus the 3 live-ledger blocks (skipped in a built package), 7 failures as predicted; plain run 12 of 12. GREEN f33b3474e: winslash = "/" on both calls; probe 0 failures, plain 12 of 12; full suite 470 files, 4,403 tests, 0 failed, 0 errors, 210 skipped; lint 0; devtools::check() 0/0/0 ([ FAIL 0 | WARN 10 | SKIP 604 | PASS 15951 ]). REFACTOR 37997db3f: a two-line comment saying why (:50-51). Pushed 63bc354f7..37997db3f at the owner's word: Windows [ FAIL 0 | WARN 10 | SKIP 639 | PASS 15819 ], Status: OK; macOS, Ubuntu release and oldrel-1 pass; Ubuntu devel passes (all 5 legs green); lint, pkgdown, test-coverage pass. lint_package() 0; ratchet 10/10.
+next_steps: The owner's campaign, in the plan's order: (1) Phase 8 of the performance and memory campaign, the app's memory: a design session, text only (docs/planning/performance-memory-campaign-plan.md:626, BACKLOG.md:8): D5 consumer by consumer (H6 lists the six; only the kinship CSV download and the all-pairs relationship table need every pair), a design document and the owner's D5 ruling, from Phase 0's app memory table (docs/audits/PERF_BASELINE_2026-10-24.md) and Phase 6's numbers (kinship 455.6 MB peak on the synthetic colony, long form 312.5 MB); the design must name the bit-identity tests, twins included. (2) The tie-order decision (BACKLOG.md:217, Effort S). (3) Phase 11 items. Outside the campaign: BACKLOG.md:227, the two @inheritParams lines (READY, Effort S). Still open: BACKLOG.md:55, :59, :145, :203 (BLOCKED), #138.
+key_files: tests/testthat/helper-archivePointers.R:50-51 (the comment), :54 and :64 (the two winslash = "/" calls); tests/testthat/test_archivePointersResolve.R:81, :101, :109, :110 (the four expectations that failed on Windows) and :141-151 (the live-ledger blocks, which skip in a built package).
+gotchas: testthat::test_file(path, env = e) sources the helpers into e, so a function put in e first is found before base's: that reproduces a Windows-only path failure on this Mac without committing anything. gh run view --job <id> --log answers "still in progress" until the whole run ends; gh api --allow-escape-sequences repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs returns a finished job's log at once. A Windows-only break shows only on a push, so a long unpushed batch delays it (S1023's code reached Windows 5 days later).
+runtime_smoke: n/a for the app -- a test-harness-only change (no R/ code); its surface is CI's windows-latest leg: run 40236872235, [ FAIL 0 | WARN 10 | SKIP 639 | PASS 15819 ], Status: OK
+quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 4e13e79a2ea0 · manifest 7335ff8d4ddc
+changelog_ref: 478e98a65
+commit: 37997db3f
 ```
+The owner picked the Windows fix at the picker and answered the approach question, the PRE-RED to RED, RED to GREEN and GREEN to REFACTOR gates and the push question with the recommended option on the first try. No package code, interface, message or man page changed.
 
 ```handoff
 session: S1060
