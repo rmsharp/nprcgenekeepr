@@ -214,6 +214,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
       until then.
 
+- [ ] **Breeding Groups: groupings with equal scores are not listed in the order they were found (DECISION NEEDED,
+      Effort S; found S1057)** -- `groupAddAssign()` lists its retained groupings best first and breaks a tie by the slot
+      each one holds (`R/groupAddAssign.R:330-334`, `order(-retainedScores, seq_along(retained))`), while the comment
+      there says "by discovery order": a later grouping that replaces a worse one takes that one's slot. Measured S1057
+      (the example's top 20 ranked living animals, 3 groups, kinship limit 0.25, seed 5, 1,000 trials): all five kept
+      groupings score 6, the first was found at trial 7, and the one listed first (the tab selects candidate 1,
+      `R/modBreedingGroups.R:865-867`) was found at trial 18 (the five in listed order: trials 18, 7, 8, 23, 26). No
+      score is wrong. To decide: correct the comment only, or list ties in the order found (that changes which grouping
+      the tab shows first for the same seed, so tests that pin a result would be re-checked).
+
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
 feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8

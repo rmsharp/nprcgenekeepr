@@ -206,11 +206,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1057
 date: 2026-10-24
-status: pending
-active_task: IN PROGRESS -- decision D7 of the performance and memory campaign (docs/planning/performance-memory-campaign-plan.md:362, BACKLOG.md:8): the owner's ruling on the Breeding Groups tab's default of 10 trials (R/modBreedingGroups.R:125) against groupAddAssign()'s help's 1,000 (owner pick "D7: default trials"; a decision session, no R/ change)
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- decision D7 of the performance and memory campaign: the owner kept the Breeding Groups tab's default of 10 trials (R/modBreedingGroups.R:125), "Keep 10 (Recommended)", on the first question; recorded in docs/planning/performance-memory-campaign-plan.md:362-376 (the D7 entry, with its measurements) and BACKLOG.md:8 (now Phase 5, founder statistics, READY, plan :559). No R/, test, docs or guide-picture change.
+what_was_done: Claim 471c25091 (the S1056 section folded, 56,445 B to 53,623 B). Measured before the question, on the example with the tab's other defaults (3 groups, kinship limit 0.25, sex ratio None, seeds 1 to 10): the default source, the top 20 ranked living animals, reaches the best possible smallest group (6) at 10 trials in 10 of 10 seeds and gains nothing at 1,000 (0.02 s against 1.3 s); all 332 living animals: median smallest group 106, 107.5 and 108 at 10, 100 and 1,000 trials (0.1, 0.8 and 7.8 s); harem and a custom ratio of 2.5 at 1,000: 9.4 and 11.1 s; synthColony(10000), 2,981 living: 10 and 100 trials 2.7 and 17 s, so about 3 minutes at 1,000 (an estimate). History: the original app's gp_iter value = 10 (2017), kept by the June 2026 rebuild (22dcf8f10; test_modBreedingGroups.R:1358 pins it). The question carried a measured table and three options (keep 10, 1,000, 100), the recommended first. Deliverable 380375b50 (plan D7 entry and BACKLOG.md:8, 13 lines for 13). Close-out: BACKLOG.md:217, a new DECISION NEEDED item (found this session, not fixed): equal-score groupings are listed by slot, not in the order found (R/groupAddAssign.R:330-334; seed 5: listed first found at trial 18, the first of score 6 at trial 7, by a traced run); Learning 1023.
+next_steps: (1) Phase 5 of the campaign, founder statistics (docs/planning/performance-memory-campaign-plan.md:559, BACKLOG.md:8), strict TDD: calcFE(), calcFG(), calcFEFG(), calcFGSE() and calcRetention() identical, contributions and retention built once per reportGV() report; it declares its own gate on a larger input (0.08 s on the app trim, docs/audits/PERF_BASELINE_2026-10-24.md:164); read uptime before its ratchet run. (2) The tie-order decision (BACKLOG.md:217, Effort S): correct the comment, or list ties in the order found (changes the grouping shown first for a seed). (3) Phase 11: the five fallbacks' inputs; harems' age work (BACKLOG.md:8).
+key_files: docs/planning/performance-memory-campaign-plan.md:362-376 (D7 and its ruling), :559 (Phase 5); BACKLOG.md:8 (the campaign item), :217 (the tie-order item); R/modBreedingGroups.R:40-69 (source defaults, Top ranked 20), :123-125 (Number of simulations, value 10), :627-630 (the server's 10L fallback), :865-867 (candidate 1 selected); R/groupAddAssign.R:43 (iter default 1000 for scripts), :296 (the trial loop), :330-334 (the tie order); tests/testthat/test_modBreedingGroups.R:1358 (pins 10); the three docs that say 10 by default: inst/extdata/ui_guidance/gvAndBgDesc.html:147, vignettes/articles/colony-manager-guide.qmd:678, vignettes/manual_components/_breeding_group_formation.Rmd:102-104.
+gotchas: Run nothing else while quality_ratchet.py --run times its gates and read uptime first: a traced 1,000-trial check beside it gave 6/8, and alone at load average 9.5 (other programs: a remote-desktop app, a vitest process) the diagram gate still read 16.6 s against 16.1 on the code and manifest that gave S1056 8/8; never loosen a gate for this. The tab's default source is Top ranked 20, not All available, so a time measured on All available is not the default user's wait. trace(f, exit = quote(seen[[length(seen) + 1L]] <<- returnValue()), where = asNamespace("nprcgenekeepr")) records each trial of groupAddAssign(). With equal scores the listed order is the slot order, not the found order (BACKLOG.md:217).
+runtime_smoke: n/a -- a decision recorded in docs (the plan, BACKLOG.md, the ledgers and PROJECT_LEARNINGS.md); no runtime behavior changed, so no app run
+quality_ratchet: 7/8 pass · 1 fail · 0 unmeasured · results 5b68a74226bb · manifest 7786b1e4b7f6
+changelog_ref: 471c25091
+commit: 380375b50
 ```
+The owner picked D7 at the picker and answered the one ruling question with the recommended option, "Keep 10", on the first try; the session asked nothing else and changed no package code.
 
 ```handoff
 session: S1056
