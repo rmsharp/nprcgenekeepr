@@ -5,19 +5,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: decision D7, then Phase 5, founder statistics (owner-directed S1050; plan
-      approved and D1-D4 ruled S1051; Phases 0-4 done S1052-S1056; READY; D7 Effort S, Effort M per phase, 7 phases
-      left, each its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (D7 at `:362`,
-      Phase 5 at `:547`). Phase 4 fills each breeding group from a true/false table of the candidates it may still take,
-      relatives as row positions, and with a sex ratio keeps running male and other counts (`R/fillGroupMembers.R`,
-      `R/fillGroupMembersWithSexRatio.R`); odd inputs run `fillGroupMembersGeneral()` or
-      `fillGroupMembersWithSexRatioGeneral()`, today's code. 1,000 trials: plain 23 s to 5.6 s, sex ratio 9 41 s to
-      about 6 to 9 s, the Breeding Groups tab 25.9 s to 9.1 s (load 6 to 10); gate `perf_groupAddAssign_1000_seconds`
-      7.1 s (29.2 before). **D7** (owner decision): the tab's default of 10 trials (`R/modBreedingGroups.R:125`) against
-      the help's 1,000; raising it changes the groups found. Phase 5 declares its own gate on a larger input (its calls
-      take 0.08 s on the app trim). For Phase 11: whether the five fallbacks' inputs move onto the fast paths (owner,
-      S1054); harems' per-trial age work, 74% of a harem run's remaining time (`getPotentialSires()`, `getCurrentAge()`,
-      `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056). **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
+- [ ] **Performance and memory campaign: Phase 5, founder statistics (owner-directed S1050; plan approved and
+      D1-D4 ruled S1051; Phases 0-4 done S1052-S1056; D7 ruled S1057; READY; Effort M per phase, 7 phases left, each
+      its own strict-TDD session)** -- plan: `docs/planning/performance-memory-campaign-plan.md` (Phase 5 at `:559`).
+      Phase 4 fills each breeding group from a true/false table of the candidates it may still take, relatives as row
+      positions, with running male and other counts for a sex ratio (`R/fillGroupMembers.R`,
+      `R/fillGroupMembersWithSexRatio.R`; odd inputs run today's code); gate `perf_groupAddAssign_1000_seconds` 7.1 s.
+      **D7 ruled S1057: keep the tab's default of 10 trials** (`R/modBreedingGroups.R:125`; measurements in the plan's
+      D7 entry, `:362`: 10 trials already find the best split of the default 20 animals, and 1,000 would take about 3
+      minutes a click on a 2,981-animal colony). Phase 5 declares its own gate on a larger input (its calls take 0.08 s
+      on the app trim). For Phase 11: whether the five fallbacks' inputs move onto the fast paths (owner, S1054);
+      harems' per-trial age work, 74% of a harem run's remaining time (`getPotentialSires()`, `getCurrentAge()`,
+      `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056).
+      **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the

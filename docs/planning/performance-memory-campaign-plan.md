@@ -361,7 +361,19 @@ written:**
   re-measurement still shows minutes.
 - **D7 (after Phase 4). Breeding Groups' default of 10 trials** (`R/modBreedingGroups.R:125`)
   against the help's "should be >= 1000". Raising it changes the groups found (a better search),
-  so it is its own decision and its own session.
+  so it is its own decision and its own session. **Ruling (S1057, 2026-10-24): keep 10**, as
+  recommended; no app, test or docs change. Measured after Phase 4 on the example (3 groups,
+  kinship limit 0.25, sex ratio None, seeds 1 to 10): with the tab's default 20 top-ranked
+  animals, 10 trials found the best possible smallest group (6, for 20 animals in 3 groups) in
+  all 10 seeds, and 1,000 trials gained nothing (1.3 s against 0.02 s); with all 332 living
+  animals, the smallest group's median was 106 at 10 trials, 107.5 at 100 and 108 at 1,000
+  (0.1, 0.8 and 7.8 s; 9.1 s in the tab, S1056), and harem and a custom ratio of 2.5 took 9.4
+  and 11.1 s at 1,000 (seed 1). On the synthetic colony (`synthColony(10000)`, 2,981 living
+  animals) 10 and 100 trials took 2.7 and 17 s, so 1,000 would take about 3 minutes (an
+  estimate, 100 trials times 10), with no cancel button. The docs already say to raise it for a
+  final run (`inst/extdata/ui_guidance/gvAndBgDesc.html:147`,
+  `vignettes/articles/colony-manager-guide.qmd:678`,
+  `vignettes/manual_components/_breeding_group_formation.Rmd:102-104`).
 - **D8 (Phase 3, only if needed). The relationship download's scope:** all pairs (6.8 million
   rows for the example, today's behavior) or related pairs only. Asked only if the vectorized
   table is still too slow or too large.
