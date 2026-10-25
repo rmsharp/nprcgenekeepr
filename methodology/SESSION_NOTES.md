@@ -99,12 +99,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1056 Did
-**Deliverable:** Phase 4 of the performance and memory campaign, group formation (`docs/planning/performance-memory-campaign-plan.md:525`,
-`BACKLOG.md:8`): 1,000 trials on the example take seconds with the same groups for the same seed (owner pick at the Phase 0 picker, item 1
-of 4, "Speed Phase 4: groups"; strict TDD, every gate to the owner). (IN PROGRESS)
-**Started:** 2026-10-24
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick at the Phase 0 picker, item 1 of 4, "Speed Phase 4: groups"; strict TDD, every gate put to the owner, plus a second
+RED/GREEN the owner chose after post-GREEN probes):** Phase 4 of the performance and memory campaign, group formation (`docs/planning/performance-memory-campaign-plan.md:525`).
+`R/fillGroupMembers.R`: `fillGroupMembers()` (`:27`) fills from a candidates x groups true/false table, relatives as row positions (`kinPositions()` `:132`),
+finished groups dropped by `setdiff()` as today (`dropFinishedGroups()` `:150`); `groupPoolsAdmitted()` (`:115`) sends odd inputs to `fillGroupMembersGeneral()`
+(`:171`, today's lines word for word). `R/fillGroupMembersWithSexRatio.R` (exported, man page unchanged): the same plus running male/other counts
+(`sexRatioFromCounts()` `:204`), `sexRatioPoolsAdmitted()` (`:180`), `fillGroupMembersWithSexRatioGeneral()` (`:228`). The other three planned files did not change.
+Tests: `fillGroupMembersReference()` etc. (`tests/testthat/helper-perfReference.R:460-594`), `exampleGroupInput()` (`helper-perfCampaign.R:78`),
+`test_groupAddAssignEquivalence.R` (17 grid cases x 3 seeds, 88 odd inputs, 5 tests, 453 expectations), opt-in `test_perfBudget_groupAddAssign.R` and
+`test-e2e-breeding-groups-1000-trials.R`. Claim `c93e3239c`, RED `dfa8944a3`, GREEN `5a416bf84`, RED 2 `b972b9d0c`, GREEN 2 `dc6d15d92`, REFACTOR
+`abaeb9a7f` `d32800027`, gate `fde152c2f`, close-out next; not pushed.
+**Owner calls:** sex-ratio running counts in scope; harem age work (`getCurrentAge()` via `lubridate::today()`, 74% of a harem run's rest) left for Phase 11;
+odd inputs run today's code (as Phases 1-3); a second RED/GREEN for 12 post-GREEN differences; every gate as offered (REFACTOR with the single female draw).
+**Findings:** 1,000 trials, today to new: plain 23.0 to 5.6 s, harem 26.0 to 9.9 s, sex ratio 9 41.4 to 6.2 s (8.7 s at load 8.7), the tab 25.9 to 9.1 s;
+results identical at 1,000 trials (sex ratio 9, the app's path); gate 29.2 to 7.1 s; mutation check 20 of 22 caught, then 11 of 11 after REFACTOR (Learning 1022).
+**Verification:** full suite 464 files, 4,372 tests, 0 failed, 0 errors, 205 skipped (after GREEN, GREEN 2 and REFACTOR); lint 0; `document()` changed nothing;
+ratchet 8/8 (results `eab5b04ac4b8`); budget passes (median under 14 s); browser file from a scratch install 4 expectations, 0 failed; `devtools::check()` 0 errors, 0 warnings, 0 notes.
+**Handoff evaluation of S1055: 9/10.** Helped: Next (1) step for step (frozen copies from `520bd5dc8`, the stub at `test_notifyProgress.R:251`, the 29.2 and
+23.61 s gate figures); Learning 1021's "design each odd input so its rule changes a result"; the browser recipe (scratch install, `R_LIBS`, autoloader off) worked
+as written. Missing: the sex-ratio and harem costs (a plan gap: the baseline timed plain groups only); that `get_js()` waits while the app is busy. Wrong:
+"five R files ... tests in a second commit" (two R files changed; the other three stay for today's code). ROI: high.
+**Self: 7/10.** + profiled each mode before scoping; two owner questions with measured numbers; 69 odd inputs probed before RED; identical at 1,000 trials;
+caught the RED browser test's false pass before committing it; a proper second RED for the post-GREEN differences; 11 of 11 mutants after REFACTOR.
+- GREEN's checks excluded only the probed failures (12 more found after GREEN, two extra gates); I killed the mutation runner (`pgrep -f` matched it, not its
+R child), leaving a mutated file (restored from the commit, `cmp` identical); miscounted the first mutation tally to the owner and in GREEN 2's message
+(corrected in REFACTOR 1's); a zsh word-splitting slip; the paths block had no time limit. Learning 1022.
+**Gotchas:** probe each argument with NULL, list/data frame, numbers, text, logical, factor and Date before RED; `get_js()` blocks while the app works (measure
+elapsed, then `expect_lt()`); bound every odd-input block with `setTimeLimit()`; `c(factor, "x")` gives codes; `list(a = 1)[["b"]]` is NULL; zsh needs `${=spec}`.
+**Next (the owner's campaign, in the plan's order):** (1) D7 (plan `:362`, `BACKLOG.md:8`), an owner decision: the Breeding Groups default of 10 trials
+(`R/modBreedingGroups.R:125`) against the help's 1,000, now that 1,000 take about 9 s in the tab; raising it changes the groups found. (2) Phase 5, founder
+statistics (plan `:547`), strict TDD; it declares its own gate on a larger input (0.08 s on the app trim; `docs/audits/PERF_BASELINE_2026-10-24.md:164`).
+(3) Phase 11: the five fallbacks' inputs; harems' age work. Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
 
 ### Sessions 947-1055 (condensed S950 to S1056; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1055: Phase 3 of the performance and memory campaign, the relationship table (owner pick "Speed Phase 3", strict TDD): `R/convertRelationships.R`
