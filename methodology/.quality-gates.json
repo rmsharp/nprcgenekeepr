@@ -53,11 +53,11 @@
     {
       "name": "perf_groupAddAssign_1000_seconds",
       "direction": "max",
-      "threshold": 29.2,
+      "threshold": 7.1,
       "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
       "command": "Rscript tools/perf/run.R groupAddAssign-1000",
       "extract": "SECONDS=([0-9.]+)",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: groupAddAssign() with 6 groups and 1,000 trials on the tutorial's 280 candidates took 23.04 s, median of 3 runs (23.02 to 23.30); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 4 (group formation) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: groupAddAssign() with 6 groups and 1,000 trials on the tutorial's 280 candidates took 23.04 s, median of 3 runs (23.02 to 23.30); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 4 (group formation) is meant to lower it and tightens this gate. Tightened S1056 (2026-10-24), Phase 4: fillGroupMembers() now fills each group from a true/false table of the candidates it may still take, with relatives as row positions, for an ordinary input; the same scenario took 5.60, 5.58 and 5.61 s in 3 fresh-process runs (load average about 6 to 7; peak 148.8 MB), so the threshold is the slowest run plus 25%, rounded up to 0.1 s (5.61 x 1.25 = 7.01, so 7.1). The harem scenario (groupAddAssign-harem-1000) took 9.87 to 10.09 s (25.98 s before); most of what is left there is the harem's per-trial age work, recorded for Phase 11 (owner, S1056)."
     },
     {
       "name": "perf_kinMatrix2LongForm_all_peak_mb",
