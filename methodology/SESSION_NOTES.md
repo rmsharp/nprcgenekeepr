@@ -98,32 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1058 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Speed Phase 5: founders"; strict TDD; 2 scope questions and 3 gates, each answered with
-the recommended option first try):** Phase 5 of the performance and memory campaign, founder statistics (plan `:559`).
-`founderContributionMatrix()` (`R/calcFounderContributions.R`) fills a generation's rows at once by position; `retainedFounderAlleles()`
-(`R/calcRetention.R`) scans one iteration column at a time with `match()`; `founderStatistics()` (`R/founderStatistics.R`) gives `reportGV()` FE/FG
-and fgSE from one build and one scan through four shared steps (in `R/calcRetention.R`, `R/calcFEFG.R`, `R/calcFGSE.R`); unusual inputs run
-the `...General()` copies of today's code (owner ruling). Claim `dff80c076`, RED
-`996a10729`, GREEN `5bc964245`, REFACTOR `232d6e612` `522fab0f3`, gate `a2cc1a9ca`; not pushed.
-**Findings:** synthetic 10,000 (6,090 rows) in the scenario: calcFEFG 1.19 to 0.09 s, calcFGSE 1.18 to 0.12 s; the pair 2.33 to 0.175 s (budget
-0.6); recorded peaks did not fall (the calcFGSE row 225.5 to 254.1 MB, not investigated); `perf_reportGV_example_seconds` now 0.23 s (0.62, S1057).
-**Verification:** full suite 466 files, 4,382 tests, 0 failed, 0 errors, 206 skipped; lint 0; `devtools::check()` 0/0/0; ratchet 9/9 (results
-`794cdc8c4d18`); mutation check 16 of 16 after REFACTOR (10 of 12 at GREEN); Genetic Value browser files (scratch install) 22 tests 0 failed.
-**Handoff evaluation of S1057: 8/10.** Helped: Next (1) named plan `:559`, `BACKLOG.md:8`, the baseline doc's "declares its own gate" line and
-`uptime`. Missing: the plan's 446 MB peaks are not what fresh processes show (about 200 MB); `reportGVReference()` calls the live calcFEFG() and
-calcFGSE(), so Phase 5 had to repoint it. Wrong: nothing found. ROI: high.
-**Self: 8/10.** + both gate inputs measured in the scenario with the prototype swapped in, 120 unusual inputs probed, before the first
-question; mutation gaps closed with one-change cases. - my first frozen-copy script left the definitions unrenamed (caught before any run);
-REFACTOR 1's nested calls reworded 19 error messages (the tests caught it); three shell slips. Learning 1024.
-**Gotchas:** assign each internal step before passing it on (an S4 `rowSums()` rewords a forced argument's error); the harness peak is a
-high-water mark at collections, so it can rise while time falls; `test_dir(load_package = "installed")` needs `package =`.
-**Next (the owner's campaign, in the plan's order):** (1) Phase 6, kinship memory (plan `:577`, `BACKLOG.md:8`), strict TDD; gate
-`perf_kinMatrix2LongForm_all_peak_mb` (1,077 MB; 979 today); per the plan 63 test files reach `kinship()` (re-grep). (2) The tie-order
-decision (`BACKLOG.md:217`, Effort S). (3) Phase 11: the fallbacks' inputs; harems' age work; calcFGSE's recorded peak.
-Still open: `BACKLOG.md:55`, `:59`, `:145`, `:203` (BLOCKED), #138.
+### What Session 1059 Did
+**Deliverable:** Phase 6 of the performance and memory campaign, kinship memory (`docs/planning/performance-memory-campaign-plan.md:577`,
+`BACKLOG.md:8`): `kinship()` with one n x n matrix, `kinMatrix2LongForm()` built directly with `rep()` and `as.vector()`,
+`getAnimalsWithHighKinship()` from `which(kmat > threshold, arr.ind = TRUE)`, results identical to today's; owner pick at the Phase 0 picker,
+item 1 of 4, "Speed Phase 6: kinship"; strict TDD (IN PROGRESS)
+**Started:** 2026-10-25 00:55 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1057 (condensed S950 to S1058; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1058 (condensed S950 to S1059; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1058: Phase 5 of the performance and memory campaign, founder statistics (owner pick "Speed Phase 5: founders", strict TDD): founder contributions
+fill a generation's rows at once by position (`R/calcFounderContributions.R`), the retention scan reads one iteration column at a time with
+`match()` (`R/calcRetention.R`), and `founderStatistics()` (`R/founderStatistics.R`) builds both once per `reportGV()`; odd inputs run the
+`...General()` copies; synthetic 10,000: calcFEFG 1.19 to 0.09 s, calcFGSE 1.18 to 0.12 s; gate `perf_calcFEFG_synthetic10000_seconds` 0.2 s.
+Claim `dff80c076`, RED `996a10729`, GREEN `5bc964245`, REFACTOR `232d6e612` `522fab0f3`, gate `a2cc1a9ca`, close-out `cceed66cd`; evaluation of
+S1057 8/10, self 8/10 (Learning 1024). **Gotchas kept:** assign each internal step before passing it on (an S4 `rowSums()` rewords a forced
+argument's error); the harness peak is a high-water mark at collections, so it can rise while time falls.
 S1057: decision D7 of the performance and memory campaign (owner pick "D7: default trials", a decision session, no `R/` change): the Breeding Groups
 tab keeps its default of 10 trials (`R/modBreedingGroups.R:125`), "Keep 10 (Recommended)" on the first question; measurements in the plan's D7 entry
 (`docs/planning/performance-memory-campaign-plan.md:362-376`): the default 20 top-ranked animals reach the best split at 10 trials, and 1,000 would

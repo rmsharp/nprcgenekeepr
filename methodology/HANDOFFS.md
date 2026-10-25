@@ -204,6 +204,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-21.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
+session: S1059
+date: 2026-10-25
+status: pending
+active_task: IN PROGRESS -- Phase 6 of the performance and memory campaign, kinship memory (docs/planning/performance-memory-campaign-plan.md:577, BACKLOG.md:8): kinship() with one n x n matrix, kinMatrix2LongForm() built directly, getAnimalsWithHighKinship() from which(arr.ind = TRUE), results identical to today's (owner pick "Speed Phase 6: kinship"; strict TDD)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1058
 date: 2026-10-25
 status: complete
