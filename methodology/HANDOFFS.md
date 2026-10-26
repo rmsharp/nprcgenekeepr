@@ -205,14 +205,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ```handoff
 session: S1064
-date: 2026-10-25
-status: pending
-active_task: IN PROGRESS -- Phase 9b of the performance and memory campaign, the app's memory, implementation (owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9b"; strict TDD; BACKLOG.md:8; design docs/planning/app-kinship-memory-design.md sections 6.1, 7.1 item 6, 8 and 12): Summary Statistics' downloads and Marker Genetics' two tables through kinshipFor, sharedKinshipMatrix removed, the app memory table re-measured.
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+date: 2026-10-26
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- Phase 9b of the performance and memory campaign, the app's memory (owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9b"; strict TDD). Summary Statistics' kinship CSV and relationship downloads and Marker Genetics' comparison and Realized Relatedness tables ask appServer()'s kinshipFor for every animal when the user asks; appServer() keeps no shared matrix (sharedKinshipMatrix removed). Phase 9 is complete; BACKLOG.md:8 is now Phase 10 (READY).
+what_was_done: Claim b02b35804. RED 6530cae3a (test_kinshipForConsumers.R 11 new tests on qcPed, test_appServer_server.R 3, the CD2 guard in test_docsAuditHousekeepingWording.R pinning the owner's sentence). RED return d8b99c981 (one test passes no pedigree: testServer() draws every output on a flush). GREEN 26f18f238 (Summary Statistics: getKinshipMatrix a plain function, matrix then kinshipFor() then the cached fallback), b16836c03 (Marker Genetics: kinshipMatrix = NULL default, kinshipFor; Realized Relatedness checks pedigree and inputs before asking), c8d8e1695 (appServer). REFACTOR 3a3f6d2bc (kinshipFromSources() for four tabs, 216-case proof), c71dabe9d (Breeding Groups help), 5b74f1742 (kinshipArgs() test builder), 336f957b7 (test_modErrorHandling.R's "tryCatch" word check became a behavior test, owner ruling). Docs: design section 13, plan Phase 9, BACKLOG.md:8, Learning 1030.
+next_steps: The owner's campaign: (1) Phase 10 (BACKLOG.md:8; plan docs/planning/performance-memory-campaign-plan.md:666): re-measure Build Earlier Snapshots and gvaConvergence() (rows 5 and 6 of the plan's section 1) after Phases 1, 2 and 5; the cost line R/modSnapshotTrends.R:457 and :470 gets the measured number in the owner's words (describeBackfillCost(), a testthat sentence); then D6 (parallel dates; recommended no unless still minutes). (2) Phase 11 (consolidation, the owner-worded NEWS line). (3) The tie-order decision (BACKLOG.md:221). Outside the campaign: :231 (READY, S); :240, :249, :258 (DECISION NEEDED; :249 Realized Relatedness and :258 Summary Statistics' relationship table are now the app's largest kept tables).
+key_files: R/kinshipFromSources.R:20 (kinshipFromSources); R/appServer.R:347 (currentKinshipOverrides), :366 (kinshipFor), :382 and :488 (Summary Statistics and Marker Genetics get it); R/modSummaryStats.R:396 (getKinshipMatrix), :408 (fallbackKinshipMatrix), :436 (relationshipData, kept: F4); R/modMarkerGenetics.R:539 (signature), :593 (comparison's read), :735 (realizedRelatedness); R/modBreedingGroups.R:371, R/modGeneticDiversity.R:131 (the helper's other callers); tests/testthat/test_kinshipForConsumers.R:37 (recordingProvider), :56 (kinshipArgs), :67 (todaysMatrix), :406 (summaryRun), :528 (markerRun); tests/testthat/test_modErrorHandling.R:191; docs/planning/app-kinship-memory-design.md section 13.
+gotchas: testServer() draws every output when an input changes (a browser draws only the visible tab), so a call count includes every output reading the counted source: remove the others' precondition (no pedigree) or count inside the reactive. test_modErrorHandling.R greps deparse() of modSummaryStatsServer and modBreedingGroupsServer for words ("tryCatch", "showNotification", "req("): grep for deparse(<fn>) before moving code out of a function. Each click now computes again, so warnings repeat per click: compare value, error and warnings one click a session. testthat::test_file(desc =) cannot match a paste()-built name. HANDOFFS.md is near its 196,608 B warn line: a methodology_trim.py --budget-bytes 65536 trim is owed when the context-budget check warns.
+runtime_smoke: The running app through the committed tool, 3 runs before (b02b35804) and 3 after (c8d8e1695): every step's output on the page, the LD tab's kinship() now from realizedRelatedness > kinshipFor; the table within the runs' spread (LD tab 2,563.8 to 2,512.2 MB). The browser tier of design 7.2 from scratch installs of c8d8e1695 and 336f957b7: 11 files, 38 tests, 0 failed each.
+quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 6aa294989f75 · manifest 7335ff8d4ddc
+changelog_ref: b02b35804
+commit: 336f957b7
 ```
-Session claimed; work beginning.
 
 ```handoff
 session: S1063

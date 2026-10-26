@@ -99,12 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1064 Did
-**Deliverable:** Phase 9b of the performance and memory campaign, the app's memory, implementation (IN PROGRESS;
-owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9b"; strict TDD; `BACKLOG.md:8`; design
-`docs/planning/app-kinship-memory-design.md` sections 6.1, 7.1 item 6, 8 and 12).
-**Started:** 2026-10-25 23:29 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 9b"; strict TDD; a wording question, the three phase gates, a GREEN to RED
+return question and an old-test question, each answered with the recommended option):** Summary Statistics' kinship downloads and Marker
+Genetics' comparison and Realized Relatedness tables ask `kinshipFor` for every animal when the user asks; `appServer()` keeps no shared
+matrix (`sharedKinshipMatrix` removed); `kinshipFromSources()` (`R/kinshipFromSources.R`) picks the source for four tabs (Mate Pair keeps its
+own lines: there an error stops the click). Claim `b02b35804`, RED `6530cae3a`, RED return `d8b99c981`, GREEN `26f18f238` `b16836c03`
+`c8d8e1695`, REFACTOR `3a3f6d2bc` `c71dabe9d` `5b74f1742` `336f957b7`. **Owner rulings:** the CD2 comment sentence in `R/modSummaryStats.R`;
+one RED test passes no pedigree (`testServer()` draws every output); Breeding Groups' `kinshipMatrix` help; `test_modErrorHandling.R`'s
+"tryCatch" word check became a behavior test. **Measured** (medians of 3 runs, design section 13): the table matches its before within the
+runs' spread (LD tab 2,563.8 to 2,512.2 MB, inside it); the 104.6 MB matrix is no longer kept, which resident memory cannot show.
+**Verified:** suite 473 files 4,448 tests 0 failed (after GREEN and after REFACTOR); lint 0; check 0/0/0 twice; browser tier 11 files 38 tests
+twice; mutation 10 of 10 at GREEN, 13 of 13 after REFACTOR; the helper equal to the four copies on 216 cases; ratchet 10/10 (`6aa294989f75`).
+**Handoff evaluation of S1063: 9/10.** Helped: Next (1)'s file lines (all accurate), the before-runs-first gotcha, the recorder fix, and
+Learning 1029's "a guard on owner-approved wording turns red by design", which made me grep the guards before RED (CD2 found and asked first).
+Missing: the `deparse()` text checks in `test_modErrorHandling.R`; Breeding Groups' help still said "shared with modSummaryStatsServer"
+after 9a. Wrong: nothing. ROI: high.
+**Self: 8/10.** + guards and the error path measured before RED; before-runs at HEAD; the 216-case proof before replacing copies; every mutant
+caught. - a RED test assumed `testServer()` draws outputs lazily (a return); the REFACTOR broke a `deparse()` check a grep would have shown
+(a question and a second suite). Learning 1030.
+**Gotchas:** `testServer()` draws every output on a flush, so count asks with the other outputs' preconditions removed; grep the tests for
+`deparse(<fn>)` before moving code out of `<fn>`; compare warnings one click a session; `HANDOFFS.md` is near its 196,608 B warn line.
+**Next:** **the owner's campaign:** (1) Phase 10 (`BACKLOG.md:8`; plan `:666`): re-measure Build Earlier Snapshots and `gvaConvergence()`
+(rows 5 and 6 of the plan's section 1), the cost line `R/modSnapshotTrends.R:457,470` in the owner's words (`describeBackfillCost()`),
+then D6. (2) Phase 11. (3) The tie-order decision (`BACKLOG.md:221`). Outside: `:231` (READY, S); `:240`, `:249`, `:258` (DECISION
+NEEDED; `:249` and `:258` are now the app's largest kept tables).
 
 ### Sessions 947-1063 (condensed S950 to S1064; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1063: Phase 9a of the campaign, the app's memory (strict TDD): Breeding Groups, Genetic Diversity and Mate Pair ask
@@ -143,26 +161,15 @@ S1056: Phase 4 of the campaign, group formation (strict TDD, plus a second RED/G
 candidates x groups true/false table (`R/fillGroupMembers.R`) with running sex-ratio counts (`R/fillGroupMembersWithSexRatio.R`); 1,000 trials 23.0 to
 5.6 s, gate 29.2 to 7.1 s. Claim `c93e3239c`, GREEN `5a416bf84`, close-out `cc8cc2bc1`; S1055 9/10, self 7/10 (Learning 1022). **Gotcha kept:** probe
 each argument with NULL, a list, a data frame, numbers, text, logical, a factor and a Date before RED.
-S1055: Phase 3 of the campaign, the relationship table (strict TDD): `relationsPlan()` admits an ordinary pedigree and `relationClasses()`
-applies the 11 rules as vector comparisons in blocks (`R/convertRelationships.R`); other input runs `convertRelationshipsGeneral()` (today's
-code); 300 animals 6.28 to 0.08 s. Claim `12b83629c`, GREEN `933486b5a`, close-out `95f0bc4a4`; S1054 9/10, self 8/10 (Learning 1021).
-S1054: Phase 2 of the campaign, the gene drop (strict TDD): `geneDropPlan()` admits an ordinary pedigree and the fast path fills one matrix
-(`R/geneDrop.R`); other input runs `geneDropGeneral()`; peak 148.5 to 65.1 MB. Claim `394bcf73a`, GREEN `e72a5b8ed`, close-out `dc5e4b005`;
-S1053 9/10, self 8/10 (Learning 1020). **Gotcha kept:** shared campaign test inputs live in `tests/testthat/helper-perfCampaign.R`.
-S1053: Phase 1 of the campaign, genome uniqueness (strict TDD): `R/rareAlleleCounts.R` counts with `match()` and `tabulate()`, other tables go
-to `rareAlleleCountsGeneral()`; `reportGV()` on the example 3.28 to 0.60 s. Claim `846bce3eb`, GREEN `6bb2b9e94`, close-out `ad83d7d0b`; S1052
-9/10, self 8/10 (Learning 1019). **Gotcha kept:** frozen copies live in `tests/testthat/helper-perfReference.R`; budget tests need `NPRC_RUN_PERF=true`.
-S1052: Phase 0 of the campaign (strict TDD): the harness (`Rscript tools/perf/run.R <scenario>` prints `SECONDS=` and `PEAK_MB=`; 20 scenarios),
-`docs/audits/PERF_BASELINE_2026-10-24.md` and the ratchet gates. Claim `0e265fb1c`, GREEN `67bc27e4d`, close-out `a9ce04253`; S1051 8/10, self
-7/10 (Learning 1018). **Gotcha kept:** `lint_package()` never reads `tools/` (lint each tool file with `lintr::lint()`).
-S1051: the owner's rulings on D1-D4 of the performance and memory campaign plan, each as recommended (D1 exactly today's numbers for the same seed, D2 plain R with
-C++ revisited at Phase 11, D3 the 18 exported functions in scope unchanged, D4 opt-in budget tests plus ratchet gates), and the plan approved as written
-(`docs/planning/performance-memory-campaign-plan.md:4,58-62,308-345`; owner pick "Rule on D1-D4", a decision session). Claim `8a046ac60`, deliverable `26d19c0fa`, close-out
-`28b59e9e4`; evaluation of S1050 8/10, self 7/10 (Learning 1017). **Gotchas kept:** to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' --
-tests/testthat`, filter with `/test[_-]` and open each hit; read `PROJECT_LEARNINGS.md` (3.3 MB, one line a learning) with `sed -n` and `cut`.
-S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; a planning session): baselines, root causes
-H1-H10, 12 phases, decisions D1-D8. Claim `4738c7a37`, deliverable `0bc77f06a`, close-out `0a1727714`; S1049 9/10, self 8/10 (Learning 1016). **Gotchas
-kept:** R 4.6's `gc()` has a "limit (Mb)" column (find "max used" by name); `test_file()` changes the working directory (use absolute paths).
+S1050-S1055 (the campaign's plan, rulings and Phases 0-3; strict TDD where code changed; evaluations 8-9/10, self 7-8/10; Learnings
+1016-1021; hashes in `CHANGELOG.md`): S1050 the plan (`docs/planning/performance-memory-campaign-plan.md`: baselines, H1-H10, 12 phases,
+D1-D8); S1051 D1-D4 ruled as recommended (exact numbers for the same seed, plain R, the 18 exports unchanged, opt-in budget tests plus
+ratchet gates); S1052 the harness (`Rscript tools/perf/run.R <scenario>` prints `SECONDS=` and `PEAK_MB=`) and
+`docs/audits/PERF_BASELINE_2026-10-24.md`; S1053 genome uniqueness (`R/rareAlleleCounts.R`, `reportGV()` 3.28 to 0.60 s); S1054 the gene
+drop (`geneDropPlan()`, peak 148.5 to 65.1 MB); S1055 the relationship table (`relationClasses()`, 300 animals 6.28 to 0.08 s). **Gotchas
+kept:** frozen copies live in `helper-perfReference.R` and shared inputs in `helper-perfCampaign.R`; budget tests need `NPRC_RUN_PERF=true`;
+`lint_package()` never reads `tools/`; R 4.6's `gc()` has a "limit (Mb)" column (find "max used" by name); `test_file()` changes the
+working directory; to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' -- tests/testthat` and open each hit.
 S1049: the trend chart drops a blank metric value without a console warning (`na.rm = TRUE`, `R/plotSnapshotTrends.R:125,131,134`) and three
 tests pin the panel notice's 200-character cut (`R/modSnapshotTrends.R:427`); strict TDD; claim `16ddb997f`, close-out `520bd5dc8`; S1048 9/10,
 self 8/10 (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws
