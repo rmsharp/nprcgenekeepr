@@ -98,34 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1067 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Nightly slash test (Recommended)"; strict TDD, all three gates answered "Yes"; test code
-only, no `R/` change):** the nightly `shinytest2` failure of the deceased-slash test (run `40286217416`, `test-e2e-pedigree-module.R:475,477`).
-**Cause, measured:** the drawing is right. `diagram_pixel_js()` counted any partly see-through pixel as white, and CI's Chrome paints the
-canvas on the CPU, where a circle's 1 px outline is nearly all such pixels, so the outline search missed E and found the sibship bar 83.5
-px out: 0.371, gap 0.908, CI's numbers, reproduced here with `--disable-accelerated-2d-canvas` (this Mac's GPU frame reads 1.265).
-**Fix:** the reader blends a partly see-through pixel onto white; the outline cutoff is "half covered" (250 to 194); the overhangs are
-re-read at 25 sub-pixel view shifts; one shared `overhang_js`. 100 CPU-drawn positions: 28 to 100 in the limits. Claim `bb8c3a8ba`, RED
-`25414fa0b`, GREEN `d57172c28`, REFACTOR `71ef50967`. **Owner ruling:** local runs test with both CPU and GPU (the app needs nothing:
-vis-network's plain `getContext("2d")` lets the browser choose); filed `BACKLOG.md:291`; the fixed item's block is off.
-**Verified:** slash block 19 expectations 0 failed, whole file 22 blocks 111 expectations 0 failed, each with GPU and CPU drawing; suite
-474 files 4,454 tests 0 failed 0 errors; lint 0; check 0/0/0; ratchet 10/10 (`08bd46cbf3d1`).
-**Handoff evaluation of S1066: 8/10.** Helped: Next named this item and its exact first step (scratch install, then the run's Chrome
-version and pixels), and the item's candidates pointed at the renderer; every Next line number was right. Missing: the renv library path
-for `R_LIBS` (found with `.libPaths()`), and how to run one block (`test_file(desc =)`). Wrong: nothing. ROI: high.
-**Self: 8/10.** + cause matched to CI's exact numbers with a control (the same frame, GPU against CPU); the sweep's odd (0, 0) reading
-chased, not explained away; each option backed by a 100-position sweep. - the first RED comment named an unmeasured cause (a 0.1 px
-shift), fixed before the commit; `:247` for `:246` in my report and claim (Learning 1033).
-**Gotchas:** pixel tests here read a GPU frame first and CI never does: run them with `chromote::set_chrome_args(c(
-chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))` too; after many `getImageData()` calls this Mac's frames read like
-CPU ones; `net.redraw()` paints at once (`moveTo()` only asks for a frame); `R_LIBS=<scratch>:` the renv path `.libPaths()` prints.
-**Next:** pushed after close-out; read the first scheduled `shinytest2` run on the fix, 07:00 UTC 2026-10-27 (`gh run list --branch master
---limit 10`). Ready: `BACKLOG.md:213` (S), `:246` (help text, S), `:257` (harem, M), `:267` (diagram, M), `:274` (founder peak, S), `:291`
-(CPU and GPU passes, S). Decisions: `:203`, `:222`, `:231`, `:240`, `:281`.
-**Pushed (owner: "push", after close-out):** `779d24724..ccd6e9028`, 20 commits (S1064's 1, S1065's 9, S1066's 5, this session's 5); the four push
-workflows started on `ccd6e9028`. The push-record commit after it is notes only and rides with the next push.
+### What Session 1068 Did
+**Deliverable:** delete the two `@inheritParams` lines with nothing to inherit (`R/addParents.R:13`, `R/removeUninformativeFounders.R:11`;
+`BACKLOG.md:213`), strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Empty @inheritParams lines") (IN PROGRESS)
+**Started:** 2026-10-26
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1066 (condensed S950 to S1067; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1067 (condensed S950 to S1068; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1067: the nightly `shinytest2` deceased-slash failure (run `40286217416`), test code only: CI's Chrome paints the canvas on the CPU and
+`diagram_pixel_js()` counted a partly see-through outline pixel as white; the reader now blends onto white, outline cutoff 194, 25
+sub-pixel shifts, one `overhang_js`. Owner ruling: local runs test CPU and GPU (`BACKLOG.md:291`). Claim `bb8c3a8ba`, close-out `ccd6e9028`,
+pushed `779d24724..ccd6e9028`; S1066 8/10, self 8/10 (Learning 1033). **Gotchas kept:** run pixel tests also under
+`chromote::set_chrome_args(c(chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))`; `net.redraw()` paints at once;
+`R_LIBS=<scratch>:` the renv path `.libPaths()` prints; `test_file(desc =)` runs one block.
 S1066: Phase 11 of the campaign, consolidation (no code; the campaign is complete): `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`, 20
 scenarios x 3 at `c4fb07453` against Phase 0 (the example's analysis 3.28 to 0.23 s, 1,000 trials 23.04 to 5.54 s, the app's upload + QC
 696.6 to 516.0 MB); NEWS "Speed and Memory"; gates `reportGV` 0.3 s, relationships 0.1 s, backfill 1.3 s; `helper-perfReference.R` kept, D2
