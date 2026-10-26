@@ -444,9 +444,10 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
 #'
 #' Says how many snapshots a build will make, between which dates and at how
 #' many gene-drop iterations, and roughly how long it takes. The time is an
-#' estimate from one measurement (about 4 seconds a date for 1,000 iterations
-#' on the 2,590-animal example colony, design section 2.5), scaled by the
-#' iterations only.
+#' estimate of a quarter of a second a date for 1,000 iterations, scaled by the
+#' iterations only: on the 2,590-animal jmac colony the 53 default dates at
+#' 1,000 iterations took 12.6 s, 0.24 s a date (performance campaign Phase 10,
+#' S1065; it was 4 s a date before Phases 1, 2 and 5).
 #'
 #' @param dates The \code{Date}s of the build, in order.
 #' @param guIter The gene-drop iterations of the last analysis.
@@ -454,7 +455,7 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
 #'
 #' @noRd
 describeBackfillCost <- function(dates, guIter) {
-  seconds <- length(dates) * 4L * guIter / 1000L
+  seconds <- length(dates) * 0.25 * guIter / 1000L
   estimate <- if (seconds < 60L) {
     "under a minute"
   } else {
@@ -467,8 +468,9 @@ describeBackfillCost <- function(dates, guIter) {
   }
   paste0(
     length(dates), " snapshot", span, ", at ", guIter, " iterations each. ",
-    "Each date runs the gene drop again, about 4 seconds per 1,000 iterations ",
-    "on a colony of 2,590 animals, so expect ", estimate, " here (an ",
+    "Each date runs the gene drop again, about a quarter of a second per ",
+    "1,000 iterations on a colony of 2,590 animals, so expect ", estimate,
+    " here (an ",
     "estimate; larger colonies take longer)."
   )
 }
