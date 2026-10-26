@@ -655,7 +655,13 @@ done.**
   `tools/perf/runAppSession.R`. Upload + QC 685.1 to 520.8 MB, and no step before the LD tab
   builds a 3,694-animal `kinship()` (design section 12). The owner replaced the design's override
   rule: the animals the overrides name join the set, every override is applied as today, then
-  the cut. 9b is next.
+  the cut.
+- **9b done S1064; Phase 9 is complete:** Summary Statistics' kinship downloads and Marker
+  Genetics' two tables ask `kinshipFor` for every animal when the user asks, and `appServer()`
+  keeps no shared matrix (`sharedKinshipMatrix` removed); `kinshipFromSources()` picks a tab's
+  source. The app memory table matches its before within the runs' spread (the LD tab's
+  -51.6 MB median is inside it): the 104.6 MB matrix is no longer kept, but resident memory does
+  not show a freed object (design section 13). Phase 10 is next.
 
 ### Phase 10. Snapshot backfill and convergence: follow-through
 

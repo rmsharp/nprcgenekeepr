@@ -6,7 +6,8 @@
 - **findings F2-F4:** filed as their own `BACKLOG.md` items (section 9);
 - **the scripted app session:** committed in Phase 9 (F6).
 
-Phase 9a is done (S1063, section 12; rule 3 of section 4.3 replaced by the owner). 9b is next.
+Phase 9 is done: 9a (S1063, section 12; rule 3 of section 4.3 replaced by the owner) and 9b
+(S1064, section 13). The campaign's Phase 10 is next.
 **Plan:** `docs/planning/performance-memory-campaign-plan.md`: Phase 8 (`:626-636`), D5 (`:349-357`),
 H6 (`:203-217`), Phase 9 (`:638-644`).
 **Code read:** HEAD `d750f818e` (the `R/` and `tests/` trees of `37997db3f`).
@@ -508,6 +509,90 @@ REFACTOR); `lintr::lint_package()` 0; the browser tier of section 7.2 from a scr
 `c6c9a5829`, 11 files, 38 tests, 0 failed; mutation check of the new code, 9 breaks, all caught
 after REFACTOR (8 at GREEN: a request for every animal could not be recorded by the test's
 provider, now fixed). `devtools::check()` and the ratchet: `CHANGELOG.md`'s S1063 entry.
+
+## 13. Phase 9b, done (S1064): what changed, and the app memory table before and after
+
+**Built** (strict TDD; RED `6530cae3a`, one test returned to RED in `d8b99c981`): Summary
+Statistics (`26f18f238`) and Marker Genetics (`b16836c03`) take an optional `kinshipFor` and ask
+it for every animal when the user asks; `appServer()` keeps no shared matrix (`c8d8e1695`), so
+every tab asks the one provider. REFACTOR: `kinshipFromSources()` (`R/kinshipFromSources.R`,
+`3a3f6d2bc`) picks a tab's source for Breeding Groups, Summary Statistics, Genetic Diversity and
+Marker Genetics (Mate Pair keeps its own lines: there an error stops the click); Breeding Groups'
+help no longer calls its matrix shared (`c71dabe9d`); one test builder (`5b74f1742`); an old test
+checks the fallback instead of a word in the code (`336f957b7`).
+
+**What each every-animal read does now:**
+
+- **Summary Statistics' kinship CSV** asks at each click, so a second download computes again
+  (0.42 s on the example, section 2.1). The two relationship downloads ask once, for the
+  relationship table they share, which stays kept (F4, `BACKLOG.md:258`, left as it is).
+- **Marker Genetics' Kinship Comparison** asks once a genotype file is uploaded and keeps only
+  the means. **Realized Relatedness** checks the pedigree and its two inputs first, then asks; its
+  table stays kept while the tab shows it (F3, `BACKLOG.md:249`, left as it is).
+- **A source that raises an error counts as none,** as before. Summary Statistics then computes
+  with its own twins and overrides, so an override above its pair's ceiling gives today's error
+  at each download. Because every click computes again, a second download repeats the warning
+  that the kept matrix raised once.
+
+**Owner rulings, S1064:**
+
+- the fallback comment in `R/modSummaryStats.R` (pinned by `test_docsAuditHousekeepingWording.R`,
+  CD2) reads "(the fallback recompute; the app passes its kinship provider, kinshipFor, so this
+  runs only when neither kinship source gives a matrix)";
+- one RED test returned: `testServer()` draws every output when an input changes, so the upload
+  also drew the Realized Relatedness table, which asks for kinship; the test now passes no
+  pedigree (the app draws that table only while its tab is open);
+- Breeding Groups' `kinshipMatrix` help sentence, as proposed at the REFACTOR gate;
+- `test_modErrorHandling.R`'s check for the word "tryCatch" in `modSummaryStatsServer()`'s code,
+  red after the helper took that word away, became a behavior test: a matrix source that raises
+  an error still gives the kinship download, from the module's own computation.
+
+**Measured** with the committed tool, `Rscript tools/perf/runAppSession.R <label> <out.csv>`,
+three runs each, medians, on this Mac (one-minute load average 7.4 before the first set, 7.2
+before the second). Before: `b02b35804` (the code of
+9a, `ab3122abc`). After: `c8d8e1695` (GREEN; the REFACTOR that followed changed no behavior).
+
+| Step | Before | After | Difference |
+|---|---|---|---|
+| app started | 417.6 MB | 420.3 MB | +2.7 MB |
+| upload + QC | 515.0 MB | 516.5 MB | +1.5 MB |
+| open Genetic Diversity (no groups) | 517.3 MB | 518.8 MB | +1.5 MB |
+| Genetic Value run (1,000 iterations) | 626.3 MB | 626.5 MB | +0.2 MB |
+| open Summary Statistics | 679.3 MB | 679.8 MB | +0.5 MB |
+| Breeding Groups: Form Groups (defaults) | 685.2 MB | 686.0 MB | +0.8 MB |
+| open Genetic Diversity (groups formed) | 686.2 MB | 686.5 MB | +0.3 MB |
+| Mate Pair: Find Eligible Pairs (defaults) | 1,383.0 MB | 1,373.2 MB | -9.8 MB |
+| open Marker Genetics | 1,383.0 MB | 1,373.2 MB | -9.8 MB |
+| open its Linkage and LD Block Metrics tab | 2,563.8 MB | 2,512.2 MB | -51.6 MB |
+
+The runs, where they spread most: Mate Pair before 1,371.7 to 1,388.2 MB, after 1,353.6 to
+1,393.6; the LD tab before 2,560.1 to 2,575.2, after 2,466.1 to 2,531.7. Every run left each
+step's output on the page, as in section 12.
+
+**The trace** is section 12's "after" column at every step but the LD tab, whose 3,694-animal
+`kinship()` now comes from `realizedRelatedness > kinshipFor > kinshipForAnimals` (before, the
+shared matrix's first read, made by `realizedRelatedness`).
+
+**Findings:**
+
+- **The table barely moves, as expected.** The session's only every-animal read is the LD tab.
+  The 104.6 MB matrix is no longer kept after it, but resident memory seldom falls when R frees
+  memory (section 2.2), and the tab's own table (F3) is the larger part. The LD tab's -51.6 MB
+  median lies inside the spread of the runs, so it is not claimed as a saving.
+- **What 9b removes is a kept object, not a peak.** Before, the shared matrix stayed from the
+  first every-animal read to the end of the session; now nothing of the colony's size is kept for
+  kinship. The module tests show it: each kinship download asks again.
+- **Not measured in the running app:** the scripted session has no Summary Statistics download
+  and no genotype upload, so those reads are shown by the module tests on `qcPed` only.
+
+**Verified:** full suite 473 files, 4,448 tests, 0 failed, 0 errors (after GREEN; after REFACTOR
+once the old test was rewritten); `lintr::lint_package()` 0; `devtools::check()` 0 errors, 0
+warnings, 0 notes (after GREEN and after REFACTOR); the browser tier of section 7.2 from scratch
+installs, 11 files, 38 tests, 0 failed at GREEN (`c8d8e1695`) and again after REFACTOR (`336f957b7`);
+`kinshipFromSources()` gave the same result as each of the four copies it replaced on 216 mixes of
+the two sources; mutation check 10 of 10 caught at GREEN and 13 of 13 after REFACTOR (the helper's
+four steps, Summary Statistics' kept matrix and ids, Marker Genetics' two reads and its order of
+checks, the ids Genetic Diversity and Breeding Groups ask for, and `appServer()`'s two calls).
 
 ## Appendix A. The scratch measurements (S1062; not committed)
 
