@@ -6,36 +6,38 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Performance and memory campaign: Phase 9, the app’s memory:
-implementation, session 9a (owner-directed S1050; plan approved and
-D1-D4 ruled S1051; Phases 0-8 done S1052-S1062; D5 ruled (c) S1062; D7
-ruled S1057; READY; Effort M; 9a, 9b, 10 and 11 left, each its own
-session)** – design: `docs/planning/app-kinship-memory-design.md`
-(sections 6.1, 7 and 8); plan Phase 9 at
-`docs/planning/performance-memory-campaign-plan.md:643`. **D5 ruled (c)
-(owner, S1062):** each tab computes kinship for its own animals plus
-their ancestors, and nothing of the whole colony’s size is kept between
-clicks. Today the app builds the full matrix at upload, through Genetic
-Diversity’s readiness check (`R/modGeneticDiversity.R:119,188`), and
-keeps it (104.6 MB example, 764.2 MB synthetic 10,000). **9a:** commit
-the scripted app session to `tools/perf/` (owner, S1062) and take the
-“before” table; the internal helper `kinshipForAnimals()` with the
-design’s 7.1 tests; then Breeding Groups, Genetic Diversity and Mate
-Pair through a `kinshipFor` provider. **9b:** the four every-animal
-reads, `sharedKinshipMatrix` removed, the table re-measured (expect
-upload + QC about 170 MB lower). The helper’s three rules (measured,
-design section 4): trim with
-[`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md);
-keep MZ twins by group (by pair is 0.25 off on a chain); cut overrides
-to the set after the pedigree check. For Phase 11: whether the
-fallbacks’ inputs move onto the fast paths (owner, S1054); harems’
-per-trial age work
+**Performance and memory campaign: Phase 10, snapshot backfill and
+convergence: follow-through (owner-directed S1050; plan approved and
+D1-D4 ruled S1051; Phases 0-9 done S1052-S1064, Phase 9 as 9a S1063 and
+9b S1064; READY; Effort M; 10 and 11 left, each its own session)** –
+plan Phase 10 at
+`docs/planning/performance-memory-campaign-plan.md:666`: re-measure
+Build Earlier Snapshots and
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+(rows 5 and 6 of the plan’s section 1) after Phases 1, 2 and 5; the cost
+line `R/modSnapshotTrends.R:457` (`4L * guIter / 1000L`) and `:470`
+(“about 4 seconds per 1,000 iterations on a colony of 2,590 animals”)
+gets the measured number in the owner’s words (`describeBackfillCost()`,
+testthat); then D6 (parallel dates; recommended no, unless the
+re-measurement still shows minutes). **Phase 9 (S1063-S1064):** every
+tab asks
+[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)‘s
+one provider, `kinshipFor` (`R/appServer.R:366`), through
+`kinshipForAnimals()`; no matrix of every animal is kept
+(`sharedKinshipMatrix` removed); `kinshipFromSources()`
+(`R/kinshipFromSources.R`) picks a tab’s source. Upload + QC 685.1 to
+520.8 MB (9a); 9b’s after table matches its before within the runs’
+spread (design `docs/planning/app-kinship-memory-design.md` sections 12
+and 13). For Phase 11: whether the fallbacks’ inputs move onto the fast
+paths (owner, S1054); harems’ per-trial age work
 ([`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md),
 [`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md),
 `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase
-5’s calcFGSE row peak (225.5 to 254.1 MB); the diagram’s 1.7 s outside
-the solve (1.0 s of it `t(pmat) %*% pmat`, kept by the owner S1060).
-**Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
+5’s calcFGSE row peak; the diagram’s 1.7 s outside the solve (1.0 s of
+it `t(pmat) %*% pmat`, kept S1060); the app session has no Summary
+Statistics download or genotype upload step, so 9b’s every-animal reads
+are measured in the app only through the LD tab. **Ruled S1051:** D1
+exact, D2 plain R, D3 API, D4 budgets.
 
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.

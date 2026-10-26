@@ -11,8 +11,8 @@ the Center B upload is validated the same way), estimates marker-based
 kinship independent of pedigree
 ([`markerKinship`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)),
 and surfaces a per-animal comparison of pedigree-based mean kinship
-(`indivMeanKin`, already computed upstream and passed in via
-`kinshipMatrix`) alongside the new marker-based mean kinship
+(`indivMeanKin`, from the pedigree kinship given by `kinshipMatrix` or
+`kinshipFor`) alongside the new marker-based mean kinship
 (`markerMeanKin`) – an independent check on the pedigree-implied
 relatedness, not a replacement for it. A second tab surfaces the
 heterozygosity diagnostic: per-animal observed heterozygosity
@@ -48,7 +48,7 @@ blank, and the tab says so above the table.
 ## Usage
 
 ``` r
-modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
+modMarkerGeneticsServer(id, kinshipMatrix = NULL, pedigree, kinshipFor = NULL)
 ```
 
 ## Arguments
@@ -59,15 +59,27 @@ modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 
 - kinshipMatrix:
 
-  reactive returning the full pedigree-based kinship matrix (row and
-  column names are animal IDs), or `NULL` while upstream analysis has
-  not yet been run.
+  optional reactive returning the full pedigree-based kinship matrix
+  (row and column names are animal IDs), or `NULL` while upstream
+  analysis has not yet been run. It is used before `kinshipFor`.
 
 - pedigree:
 
   reactive returning the current pedigree data frame (columns `id`,
   `sire`, `dam`), or `NULL` while upstream analysis has not yet been
   run.
+
+- kinshipFor:
+
+  optional function of a character vector of animal IDs that returns
+  those animals' kinship matrix; with no IDs it returns every animal's.
+  The Kinship Comparison asks it for every animal once a genotype file
+  is uploaded and keeps only the means; the realized relatedness table
+  asks it for every animal once the pedigree and the two inputs are
+  usable. `appServer` passes one that applies the twins and overrides.
+  With neither `kinshipMatrix` nor `kinshipFor`, `indivMeanKin` is `NA`
+  and there is no realized relatedness table. `NULL` (the default) is
+  not used.
 
 ## Value
 
@@ -101,8 +113,8 @@ uploaded genotype file cannot be used; `locusMetadataTable`, the
 output (or `NULL` before a locus-metadata file is uploaded);
 `realizedRelatednessTable`, the
 [`markerRealizedRelatednessVariance`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
-output (or `NULL` before `pedigree`/`kinshipMatrix` are both available);
-`ldBlockTable`, the
+output (or `NULL` before the `pedigree` and its kinship are both
+available); `ldBlockTable`, the
 [`markerLdBlock`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
 output (or `NULL` before a genotype file and a locus-metadata file are
 both uploaded, or before a pedigree is available if the founders-only
@@ -146,7 +158,7 @@ coverage report
 ([`checkLocusMetadata`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md),
 D2). The realized-relatedness-variance table
 ([`markerRealizedRelatednessVariance`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md),
-D3a) needs only the existing `kinshipMatrix`/`pedigree` plus a
+D3a) needs only the existing `pedigree` and its kinship plus a
 curator-supplied chromosome count and genetic-map length – no genotype
 file at all. The LD-block table
 ([`markerLdBlock`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md),

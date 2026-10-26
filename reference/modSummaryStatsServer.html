@@ -68,7 +68,8 @@ relationship designation analysis.</p>
 <span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  founderStats <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipFor <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,9 +97,9 @@ accepted) enables z-score plots.</p></dd>
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
 <dd><p>optional reactive returning kinship matrix. When
 supplied it is used unchanged, so it should already carry any twin
-correction and kinship overrides (the app passes the shared matrix, which
-does). If NULL, or if the reactive errors or returns NULL, the module
-calculates kinship from the pedigree.</p></dd>
+correction and kinship overrides. If NULL, or if the reactive errors or
+returns NULL, the module asks <code>kinshipFor</code>, then calculates kinship
+from the pedigree.</p></dd>
 
 
 <dt id="arg-founderstats">founderStats<a class="anchor" aria-label="anchor" href="#arg-founderstats"></a></dt>
@@ -112,8 +113,8 @@ on the Summary Statistics tab (monolith parity). If NULL, it is omitted.</p></dd
 <dd><p>optional reactive returning a validated
 outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
 <code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.
-When the module recomputes kinship from the pedigree (the fallback; the
-app normally supplies a matrix that already carries them), the
+When the module recomputes kinship from the pedigree (the fallback; in
+the app <code>kinshipFor</code> already applies them), the
 overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship <em>value</em> only; the <code>relation</code>
@@ -127,11 +128,23 @@ with a logical <code>overridden</code> column in the relationship table.
 <dd><p>optional reactive returning a validated twin/zygosity
 sidecar data.frame (<code>id1</code>, <code>id2</code>, <code>code</code>); see
 <code><a href="checkTwinRelations.html">checkTwinRelations</a></code>. When the module recomputes kinship from
-the pedigree (the fallback; the app normally supplies a matrix that
-already reflects it), it is passed straight through to
+the pedigree (the fallback; in the app <code>kinshipFor</code> already
+reflects it), it is passed straight through to
 <code><a href="kinship.html">kinship</a></code> so the relationship table and the kinship CSV
 export reflect a declared MZ-twin pair's corrected identity regardless
 of tab order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op.</p></dd>
+
+
+<dt id="arg-kinshipfor">kinshipFor<a class="anchor" aria-label="anchor" href="#arg-kinshipfor"></a></dt>
+<dd><p>optional function of a character vector of animal IDs
+that returns those animals' kinship matrix; with no IDs it returns every
+animal's. The kinship CSV download asks it for every animal at each
+click, and the two relationship downloads ask it once for the
+relationship table they share, so no kinship matrix is kept between
+clicks. <code>appServer</code> passes one that applies the twins and
+overrides. A provided <code>kinshipMatrix</code> is used first; with neither,
+the module calculates kinship from the pedigree. <code>NULL</code> (the
+default) is not used.</p></dd>
 
 </dl></div>
     <div class="section level2">

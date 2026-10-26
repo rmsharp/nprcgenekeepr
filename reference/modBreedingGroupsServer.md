@@ -42,30 +42,30 @@ modBreedingGroupsServer(
 
 - kinshipMatrix:
 
-  optional reactive returning a kinship matrix, typically a
-  full-pedigree matrix shared with
-  [`modSummaryStatsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md)
-  (e.g. from `appServer`) rather than independently recomputed. If NULL,
-  the module calculates kinship from the pedigree.
+  optional reactive returning a kinship matrix, used unchanged, so it
+  should already carry any twin correction and kinship overrides. It is
+  used before `kinshipFor`; with neither, the module calculates kinship
+  from the pedigree.
 
 - kinshipOverrides:
 
   optional reactive returning a validated outside-information
   kinship-override data frame (`id1`, `id2`, `kinship`); see
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
-  When the module recomputes kinship from the pedigree (the shared
-  `kinshipMatrix` is unavailable), the overrides are applied to that
-  matrix so group formation reflects them regardless of tab order.
-  `NULL` (the default) is a no-op. A provided `kinshipMatrix` is
-  expected to already carry overrides applied at its source.
+  When the module recomputes kinship from the pedigree (neither
+  `kinshipMatrix` nor `kinshipFor` gives a matrix), the overrides are
+  applied to that matrix so group formation reflects them regardless of
+  tab order. `NULL` (the default) is a no-op. A provided `kinshipMatrix`
+  is expected to already carry overrides applied at its source.
 
 - twinRelations:
 
   optional reactive returning a validated twin/zygosity sidecar
   data.frame (`id1`, `id2`, `code`); see
   [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md).
-  When the module recomputes kinship from the pedigree (the shared
-  `kinshipMatrix` is unavailable), it is passed straight through to
+  When the module recomputes kinship from the pedigree (neither
+  `kinshipMatrix` nor `kinshipFor` gives a matrix), it is passed
+  straight through to
   [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   so group formation reflects a declared MZ-twin pair's corrected
   identity regardless of tab order (BL-N Slice 3). `NULL` (the default)

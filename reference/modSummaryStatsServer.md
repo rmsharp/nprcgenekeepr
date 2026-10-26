@@ -14,7 +14,8 @@ modSummaryStatsServer(
   kinshipMatrix = NULL,
   founderStats = NULL,
   kinshipOverrides = NULL,
-  twinRelations = NULL
+  twinRelations = NULL,
+  kinshipFor = NULL
 )
 ```
 
@@ -42,9 +43,8 @@ modSummaryStatsServer(
 
   optional reactive returning kinship matrix. When supplied it is used
   unchanged, so it should already carry any twin correction and kinship
-  overrides (the app passes the shared matrix, which does). If NULL, or
-  if the reactive errors or returns NULL, the module calculates kinship
-  from the pedigree.
+  overrides. If NULL, or if the reactive errors or returns NULL, the
+  module asks `kinshipFor`, then calculates kinship from the pedigree.
 
 - founderStats:
 
@@ -58,28 +58,39 @@ modSummaryStatsServer(
   optional reactive returning a validated outside-information
   kinship-override data frame (`id1`, `id2`, `kinship`); see
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
-  When the module recomputes kinship from the pedigree (the fallback;
-  the app normally supplies a matrix that already carries them), the
-  overrides are applied to that matrix, so the relationship table and
-  the kinship CSV export reflect the supplied values regardless of tab
-  order. The override moves the kinship *value* only; the `relation`
-  *label* stays pedigree-derived (it is computed from pedigree
-  structure, not from the kinship value). Overridden pairs are flagged
-  with a logical `overridden` column in the relationship table. `NULL`
-  (the default) is a no-op.
+  When the module recomputes kinship from the pedigree (the fallback; in
+  the app `kinshipFor` already applies them), the overrides are applied
+  to that matrix, so the relationship table and the kinship CSV export
+  reflect the supplied values regardless of tab order. The override
+  moves the kinship *value* only; the `relation` *label* stays
+  pedigree-derived (it is computed from pedigree structure, not from the
+  kinship value). Overridden pairs are flagged with a logical
+  `overridden` column in the relationship table. `NULL` (the default) is
+  a no-op.
 
 - twinRelations:
 
   optional reactive returning a validated twin/zygosity sidecar
   data.frame (`id1`, `id2`, `code`); see
   [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md).
-  When the module recomputes kinship from the pedigree (the fallback;
-  the app normally supplies a matrix that already reflects it), it is
-  passed straight through to
+  When the module recomputes kinship from the pedigree (the fallback; in
+  the app `kinshipFor` already reflects it), it is passed straight
+  through to
   [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   so the relationship table and the kinship CSV export reflect a
   declared MZ-twin pair's corrected identity regardless of tab order
   (BL-N Slice 3). `NULL` (the default) is a no-op.
+
+- kinshipFor:
+
+  optional function of a character vector of animal IDs that returns
+  those animals' kinship matrix; with no IDs it returns every animal's.
+  The kinship CSV download asks it for every animal at each click, and
+  the two relationship downloads ask it once for the relationship table
+  they share, so no kinship matrix is kept between clicks. `appServer`
+  passes one that applies the twins and overrides. A provided
+  `kinshipMatrix` is used first; with neither, the module calculates
+  kinship from the pedigree. `NULL` (the default) is not used.
 
 ## Value
 

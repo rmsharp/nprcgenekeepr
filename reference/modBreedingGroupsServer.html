@@ -99,20 +99,20 @@ kinship.</p></dd>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
-<dd><p>optional reactive returning a kinship matrix,
-typically a full-pedigree matrix shared with
-<code><a href="modSummaryStatsServer.html">modSummaryStatsServer</a></code> (e.g. from <code>appServer</code>) rather
-than independently recomputed. If NULL, the module calculates kinship
-from the pedigree.</p></dd>
+<dd><p>optional reactive returning a kinship matrix, used
+unchanged, so it should already carry any twin correction and kinship
+overrides. It is used before <code>kinshipFor</code>; with neither, the module
+calculates kinship from the pedigree.</p></dd>
 
 
 <dt id="arg-kinshipoverrides">kinshipOverrides<a class="anchor" aria-label="anchor" href="#arg-kinshipoverrides"></a></dt>
 <dd><p>optional reactive returning a validated
 outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
 <code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.
-When the module recomputes kinship from the pedigree (the shared
-<code>kinshipMatrix</code> is unavailable), the overrides are applied to that
-matrix so group formation reflects them regardless of tab order.
+When the module recomputes kinship from the pedigree (neither
+<code>kinshipMatrix</code> nor <code>kinshipFor</code> gives a matrix), the
+overrides are applied to that matrix so group formation reflects them
+regardless of tab order.
 <code>NULL</code> (the default) is a no-op. A provided <code>kinshipMatrix</code> is
 expected to already carry overrides applied at its source.</p></dd>
 
@@ -121,11 +121,12 @@ expected to already carry overrides applied at its source.</p></dd>
 <dd><p>optional reactive returning a validated twin/zygosity
 sidecar data.frame (<code>id1</code>, <code>id2</code>, <code>code</code>); see
 <code><a href="checkTwinRelations.html">checkTwinRelations</a></code>. When the module recomputes kinship from
-the pedigree (the shared <code>kinshipMatrix</code> is unavailable), it is
-passed straight through to <code><a href="kinship.html">kinship</a></code> so group formation
-reflects a declared MZ-twin pair's corrected identity regardless of tab
-order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op. A provided
-<code>kinshipMatrix</code> is expected to already reflect it at its source.</p></dd>
+the pedigree (neither <code>kinshipMatrix</code> nor <code>kinshipFor</code> gives a
+matrix), it is passed straight through to <code><a href="kinship.html">kinship</a></code> so group
+formation reflects a declared MZ-twin pair's corrected identity
+regardless of tab order (BL-N Slice 3). <code>NULL</code> (the default) is a
+no-op. A provided <code>kinshipMatrix</code> is expected to already reflect it
+at its source.</p></dd>
 
 
 <dt id="arg-kinshipfor">kinshipFor<a class="anchor" aria-label="anchor" href="#arg-kinshipfor"></a></dt>

@@ -8,8 +8,8 @@ buildMarkerGenotypeMatrix; the Center B upload is validated
 the same way),
 estimates marker-based kinship independent of pedigree
 (markerKinship), and surfaces a per-animal comparison of
-pedigree-based mean kinship (indivMeanKin, already computed
-upstream and passed in via kinshipMatrix) alongside the new
+pedigree-based mean kinship (indivMeanKin, from the pedigree
+kinship given by kinshipMatrix or kinshipFor) alongside the new
 marker-based mean kinship (markerMeanKin) – an independent check
 on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
@@ -45,8 +45,8 @@ buildMarkerGenotypeMatrix; the Center B upload is validated
 the same way),
 estimates marker-based kinship independent of pedigree
 (markerKinship), and surfaces a per-animal comparison of
-pedigree-based mean kinship (indivMeanKin, already computed
-upstream and passed in via kinshipMatrix) alongside the new
+pedigree-based mean kinship (indivMeanKin, from the pedigree
+kinship given by kinshipMatrix or kinshipFor) alongside the new
 marker-based mean kinship (markerMeanKin) – an independent check
 on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
@@ -133,8 +133,8 @@ and a <code>maxLoci</code> warning, then
 the same way),
 estimates marker-based kinship independent of pedigree
 (<code><a href="markerKinship.html">markerKinship</a></code>), and surfaces a per-animal comparison of
-pedigree-based mean kinship (<code>indivMeanKin</code>, already computed
-upstream and passed in via <code>kinshipMatrix</code>) alongside the new
+pedigree-based mean kinship (<code>indivMeanKin</code>, from the pedigree
+kinship given by <code>kinshipMatrix</code> or <code>kinshipFor</code>) alongside the new
 marker-based mean kinship (<code>markerMeanKin</code>) – an independent check
 on the pedigree-implied relatedness, not a replacement for it. A second
 tab surfaces the heterozygosity diagnostic: per-animal observed
@@ -166,7 +166,7 @@ tab says so above the table.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modMarkerGeneticsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">kinshipMatrix</span>, <span class="va">pedigree</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modMarkerGeneticsServer</span><span class="op">(</span><span class="va">id</span>, kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">pedigree</span>, kinshipFor <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -178,15 +178,28 @@ tab says so above the table.</p>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
-<dd><p>reactive returning the full pedigree-based kinship
-matrix (row and column names are animal IDs), or <code>NULL</code> while
-upstream analysis has not yet been run.</p></dd>
+<dd><p>optional reactive returning the full pedigree-based
+kinship matrix (row and column names are animal IDs), or <code>NULL</code>
+while upstream analysis has not yet been run. It is used before
+<code>kinshipFor</code>.</p></dd>
 
 
 <dt id="arg-pedigree">pedigree<a class="anchor" aria-label="anchor" href="#arg-pedigree"></a></dt>
 <dd><p>reactive returning the current pedigree data frame
 (columns <code>id</code>, <code>sire</code>, <code>dam</code>), or <code>NULL</code> while
 upstream analysis has not yet been run.</p></dd>
+
+
+<dt id="arg-kinshipfor">kinshipFor<a class="anchor" aria-label="anchor" href="#arg-kinshipfor"></a></dt>
+<dd><p>optional function of a character vector of animal IDs
+that returns those animals' kinship matrix; with no IDs it returns every
+animal's. The Kinship Comparison asks it for every animal once a
+genotype file is uploaded and keeps only the means; the realized
+relatedness table asks it for every animal once the pedigree and the two
+inputs are usable. <code>appServer</code> passes one that applies the twins
+and overrides. With neither <code>kinshipMatrix</code> nor <code>kinshipFor</code>,
+<code>indivMeanKin</code> is <code>NA</code> and there is no realized relatedness
+table. <code>NULL</code> (the default) is not used.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -222,7 +235,7 @@ uploaded genotype file cannot be used;
 (or <code>NULL</code> before a locus-metadata file is uploaded);
 <code>realizedRelatednessTable</code>, the
 <code><a href="markerRealizedRelatednessVariance.html">markerRealizedRelatednessVariance</a></code> output (or <code>NULL</code>
-before <code>pedigree</code>/<code>kinshipMatrix</code> are both available);
+before the <code>pedigree</code> and its kinship are both available);
 <code>ldBlockTable</code>, the <code><a href="markerLdBlock.html">markerLdBlock</a></code> output (or
 <code>NULL</code> before a genotype file and a locus-metadata file are both
 uploaded, or before a pedigree is available if the founders-only
@@ -263,7 +276,7 @@ three additional analyses. A locus-metadata file (<code>locus</code>,
 classified into a three-tier coverage report
 (<code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code>, D2). The realized-relatedness-variance
 table (<code><a href="markerRealizedRelatednessVariance.html">markerRealizedRelatednessVariance</a></code>, D3a) needs only
-the existing <code>kinshipMatrix</code>/<code>pedigree</code> plus a curator-supplied
+the existing <code>pedigree</code> and its kinship plus a curator-supplied
 chromosome count and genetic-map length – no genotype file at all. The
 LD-block table (<code><a href="markerLdBlock.html">markerLdBlock</a></code>, D3b) reads its OWN,
 dedicated <code>linkageGenotypeFile</code> upload – deliberately independent
