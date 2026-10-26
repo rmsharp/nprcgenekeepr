@@ -283,8 +283,13 @@ test_that("modSnapshotTrendsServer's history upload reads an Excel history as it
 ## is 57 dates, 1961-01-01 to 2017-01-01; most builds below start in 2012 (six
 ## dates, 0.5 s at 10 iterations).
 
+## 1 January of each of `years`, the dates a build makes.
+januaries <- function(years) {
+  as.Date(sprintf("%d-01-01", years))
+}
+
 backfillStartDate <- "2012-01-01"
-backfillStartDates <- seq(as.Date("2012-01-01"), as.Date("2017-01-01"), by = "year")
+backfillStartDates <- januaries(2012:2017)
 
 ## The analysis a user would have run: reportGV() on the living animals of
 ## qcPed at 10 iterations, computed once.
@@ -806,7 +811,7 @@ test_that("the panel's cost line says 1 snapshot when the start year leaves one 
 
 ## The default series a jmac build starts with: 53 yearly dates.
 jmacDefaultDates <- function() {
-  as.Date(sprintf("%d-01-01", 1966:2018))
+  januaries(1966:2018)
 }
 
 test_that("the cost line gives the owner's quarter-second sentence", {
@@ -830,7 +835,7 @@ test_that("the cost line's estimate counts a quarter second a date per 1,000 ite
 })
 
 test_that("the cost line says minutes from 60 seconds on", {
-  dates <- as.Date(sprintf("%d-01-01", 1951:2010))
+  dates <- januaries(1951:2010)
   ## 59 x 0.25 x 4 = 59 s
   expect_match(
     nprcgenekeepr:::describeBackfillCost(dates[-1L], 4000L),
