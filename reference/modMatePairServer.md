@@ -20,10 +20,11 @@ textarea. Kept structurally and file-wise separate from
 modMatePairServer(
   id,
   pedigree,
-  kinshipMatrix,
+  kinshipMatrix = NULL,
   markerKinshipMatrix,
   geneticValues,
-  ancestryRules = NULL
+  ancestryRules = NULL,
+  kinshipFor = NULL
 )
 ```
 
@@ -40,9 +41,9 @@ modMatePairServer(
 
 - kinshipMatrix:
 
-  reactive returning the full pedigree-based kinship matrix (row/column
-  names are animal IDs), typically the same shared reactive passed to
-  `modBreedingGroupsServer`/ `modMarkerGeneticsServer`.
+  optional reactive returning a pedigree-based kinship matrix
+  (row/column names are animal IDs) covering the population. It is used
+  before `kinshipFor`.
 
 - markerKinshipMatrix:
 
@@ -67,6 +68,14 @@ modMatePairServer(
   `NULL` (the default, or a reactive that returns `NULL`) applies no
   rules, and the results are identical to a run before this argument
   existed.
+
+- kinshipFor:
+
+  optional function of a character vector of animal IDs that returns
+  those animals' kinship matrix. At each "Find Eligible Pairs" click the
+  module asks it for the population. `appServer` passes one that
+  computes kinship from those animals and their ancestors only. With
+  neither `kinshipMatrix` nor `kinshipFor` the click does nothing.
 
 ## Value
 
@@ -96,10 +105,11 @@ value column `NA`.
 
 **Population scoping is a hard dependency, not a fallback-recompute.**
 Unlike `modBreedingGroupsServer`'s optional `kinshipMatrix` (which
-recomputes from `pedigree` when absent), this module always receives the
-already-computed shared kinship reactive from `appServer.R` and simply
-depends on it (module-contract rule 5: upstream absence is `req()`),
-matching
+recomputes from `pedigree` when absent), this module always receives its
+kinship from its caller – a `kinshipMatrix`, or the `kinshipFor`
+function `appServer.R` passes, asked for the population at each run –
+and simply depends on it (module-contract rule 5: upstream absence is
+`req()`), matching
 [`modMarkerGeneticsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsServer.md)'s
 own simpler precedent – there is no standalone use case for this module
 that would need an independent recompute path.

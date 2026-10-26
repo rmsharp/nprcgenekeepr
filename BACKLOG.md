@@ -6,31 +6,36 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Performance and memory campaign: Phase 8, the app’s memory: a design
-session (owner-directed S1050; plan approved and D1-D4 ruled S1051;
-Phases 0-7 done S1052-S1060; D7 ruled S1057; READY; Effort M; 4 phases
-left, each its own session)** – plan:
-`docs/planning/performance-memory-campaign-plan.md` (Phase 8 at `:626`).
-Text only: a design document and the owner’s D5 ruling, consumer by
-consumer (H6 lists the six; only the kinship CSV download and the
-all-pairs relationship table need every pair), from Phase 0’s app memory
-table and Phase 6’s numbers (kinship 455.6 MB peak on the synthetic
-colony, long form 312.5 MB); it must name the bit-identity tests, twins
-included. Phase 7 hands
-[`quadprog::solve.QP.compact()`](https://rdrr.io/pkg/quadprog/man/solve.QP.compact.html)
-each constraint’s two entries in row order: the example’s diagram 13.2
-to 4.7 s, positions identical; gate
-`perf_diagram_example_direct_seconds` 5.9 s; `t(pmat) %*% pmat` kept
-(owner, S1060). For Phase 11: whether the fallbacks’ inputs move onto
-the fast paths (owner, S1054); harems’ per-trial age work
+**Performance and memory campaign: Phase 9, the app’s memory:
+implementation, session 9a (owner-directed S1050; plan approved and
+D1-D4 ruled S1051; Phases 0-8 done S1052-S1062; D5 ruled (c) S1062; D7
+ruled S1057; READY; Effort M; 9a, 9b, 10 and 11 left, each its own
+session)** – design: `docs/planning/app-kinship-memory-design.md`
+(sections 6.1, 7 and 8); plan Phase 9 at
+`docs/planning/performance-memory-campaign-plan.md:643`. **D5 ruled (c)
+(owner, S1062):** each tab computes kinship for its own animals plus
+their ancestors, and nothing of the whole colony’s size is kept between
+clicks. Today the app builds the full matrix at upload, through Genetic
+Diversity’s readiness check (`R/modGeneticDiversity.R:119,188`), and
+keeps it (104.6 MB example, 764.2 MB synthetic 10,000). **9a:** commit
+the scripted app session to `tools/perf/` (owner, S1062) and take the
+“before” table; the internal helper `kinshipForAnimals()` with the
+design’s 7.1 tests; then Breeding Groups, Genetic Diversity and Mate
+Pair through a `kinshipFor` provider. **9b:** the four every-animal
+reads, `sharedKinshipMatrix` removed, the table re-measured (expect
+upload + QC about 170 MB lower). The helper’s three rules (measured,
+design section 4): trim with
+[`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md);
+keep MZ twins by group (by pair is 0.25 off on a chain); cut overrides
+to the set after the pedigree check. For Phase 11: whether the
+fallbacks’ inputs move onto the fast paths (owner, S1054); harems’
+per-trial age work
 ([`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md),
 [`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md),
 `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase
 5’s calcFGSE row peak (225.5 to 254.1 MB); the diagram’s 1.7 s outside
-the solve (1.0 s of it `t(pmat) %*% pmat`; the solve’s 3.0 s grows with
-the cube of the nodes). **D7 ruled S1057:** keep the Breeding Groups
-tab’s default of 10 trials (plan `:362`). **Ruled S1051:** D1 exact, D2
-plain R, D3 API, D4 budgets.
+the solve (1.0 s of it `t(pmat) %*% pmat`, kept by the owner S1060).
+**Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
 
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
@@ -333,20 +338,43 @@ deprecates the flag rmarkdown 2.31’s `html_vignette` passes, it only
 shows because the project’s roxygen options include the vignette roclet
 (`nprcgenekeepr.Rproj:25`), and `devtools::check()` gives 0 warnings.
 
-**CI: `windows-latest` R-CMD-check fails 4 expectations in
-`test_archivePointersResolve.R` (READY, Effort S; found S1060 on the
-push of `63bc354f7`, run 40230619957; macOS and the three Ubuntu jobs
-pass)** – `[ FAIL 4 | WARN 10 | SKIP 639 | PASS 15815 ]`, failures at
-`:81`, `:101`, `:109` and `:110`: “the link text
-archive/SESSION_NOTES-through-2026-01-02.md is not the file’s path
-methodology_NOTES-through-2026-01-02.md”.
-`tests/testthat/helper-archivePointers.R:53` and `:63` build the
-comparison path with
-[`normalizePath()`](https://rdrr.io/r/base/normalizePath.html), which
-gives backslashes on Windows, so it never equals the forward-slash link
-text. Likely fix (not yet tried): `normalizePath(..., winslash = "/")`
-on both lines. From S1023 (`325f0275c`, `e3de99906`, 2026-10-20), first
-pushed in S1060’s push. No GitHub issue (CI-break convention).
+**Mate Pair’s default run uses about 1 GB of app memory (DECISION
+NEEDED, Effort M; found S1062)** – on the example the default
+population, “All alive (no recorded exit)” (`R/modMatePair.R:39-45`), is
+1,704 animals (332 by `isLivingAnimal()`), and Find Eligible Pairs
+raised the app’s resident memory from 867.2 to 1,946.3 MB in 11.3 s:
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+builds the long form of every pair among them
+(`R/reportMatePairs.R:207`) before its sex, age and exclusion screens.
+The kinship block itself is 22.4 MB. Measured in the running app
+(`docs/planning/app-kinship-memory-design.md` sections 2.1 and 9, F2).
+Two levers, not measured apart: build only the pairs that pass the
+screens (the same report; it needs its own exactness tests), or the
+default population’s rule (that changes what the tab shows). To decide:
+either, both, or leave it.
+
+**Marker Genetics’ Realized Relatedness table holds every pair (DECISION
+NEEDED, Effort M; found S1062)** – opening the “Linkage and LD Block
+Metrics” tab (`R/modMarkerGenetics.R:227`) runs
+[`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
+on the whole kinship matrix (`:716-729`;
+`R/markerRealizedRelatednessVariance.R:119`), with no genotype file
+needed: 6,824,665 rows on the example, built in 8.31 s with a 707.6 MB
+peak, a 390.9 MB table kept while the tab shows it; the app’s memory
+rose 716 MB in 13.5 s (design sections 2.1 and 9, F3). D5’s change
+leaves it as it is, because the table itself needs every pair. To
+decide: related pairs only (as the plan’s D8 asks of the relationship
+download), a chosen set of animals, a button that builds it, or leave
+it.
+
+**Summary Statistics keeps the whole relationship table after a download
+(DECISION NEEDED, Effort S; found S1062)** – `relationshipData()` is a
+cached `reactive()` (`R/modSummaryStats.R:423-430`) that serves both
+relationship downloads (`:878-894`): 6,824,665 rows and 234.7 MB on the
+example (built in 3.21 s, peak 693.5 MB), kept until the pedigree
+changes (design section 9, F4). To decide: build it inside each
+download, so nothing is kept and a second download rebuilds it (3.21 s),
+or keep it, so the two downloads share one build.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 

@@ -91,10 +91,11 @@ this module shares no code with it.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modMatePairServer</span><span class="op">(</span></span>
 <span>  <span class="va">id</span>,</span>
 <span>  <span class="va">pedigree</span>,</span>
-<span>  <span class="va">kinshipMatrix</span>,</span>
+<span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">markerKinshipMatrix</span>,</span>
 <span>  <span class="va">geneticValues</span>,</span>
-<span>  ancestryRules <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  ancestryRules <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipFor <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,10 +114,9 @@ optionally <code>exit</code>).</p></dd>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
-<dd><p>reactive returning the full pedigree-based kinship
-matrix (row/column names are animal IDs), typically the same shared
-reactive passed to <code>modBreedingGroupsServer</code>/
-<code>modMarkerGeneticsServer</code>.</p></dd>
+<dd><p>optional reactive returning a pedigree-based kinship
+matrix (row/column names are animal IDs) covering the population. It is
+used before <code>kinshipFor</code>.</p></dd>
 
 
 <dt id="arg-markerkinshipmatrix">markerKinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-markerkinshipmatrix"></a></dt>
@@ -140,6 +140,15 @@ rules table (see <code><a href="checkAncestryRules.html">checkAncestryRules</a><
 element, or <code>NULL</code> when no rules are loaded. <code>NULL</code> (the
 default, or a reactive that returns <code>NULL</code>) applies no rules, and
 the results are identical to a run before this argument existed.</p></dd>
+
+
+<dt id="arg-kinshipfor">kinshipFor<a class="anchor" aria-label="anchor" href="#arg-kinshipfor"></a></dt>
+<dd><p>optional function of a character vector of animal IDs
+that returns those animals' kinship matrix. At each "Find Eligible Pairs"
+click the module asks it for the population. <code>appServer</code> passes one
+that computes kinship from those animals and their ancestors only. With
+neither <code>kinshipMatrix</code> nor <code>kinshipFor</code> the click does
+nothing.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -166,9 +175,10 @@ value column <code>NA</code>.</p>
 <p><strong>Population scoping is a hard dependency, not a fallback-recompute.</strong>
 Unlike <code>modBreedingGroupsServer</code>'s optional <code>kinshipMatrix</code>
 (which recomputes from <code>pedigree</code> when absent), this module always
-receives the already-computed shared kinship reactive from
-<code>appServer.R</code> and simply depends on it (module-contract rule 5:
-upstream absence is <code>req()</code>), matching
+receives its kinship from its caller – a <code>kinshipMatrix</code>, or the
+<code>kinshipFor</code> function <code>appServer.R</code> passes, asked for the
+population at each run – and simply depends on it (module-contract rule
+5: upstream absence is <code>req()</code>), matching
 <code><a href="modMarkerGeneticsServer.html">modMarkerGeneticsServer</a></code>'s own simpler precedent – there is
 no standalone use case for this module that would need an independent
 recompute path.</p>

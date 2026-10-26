@@ -70,7 +70,8 @@ groups while maximizing group sizes.</p>
 <span>  geneticValues <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipFor <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -125,6 +126,17 @@ passed straight through to <code><a href="kinship.html">kinship</a></code> so gr
 reflects a declared MZ-twin pair's corrected identity regardless of tab
 order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op. A provided
 <code>kinshipMatrix</code> is expected to already reflect it at its source.</p></dd>
+
+
+<dt id="arg-kinshipfor">kinshipFor<a class="anchor" aria-label="anchor" href="#arg-kinshipfor"></a></dt>
+<dd><p>optional function of a character vector of animal IDs
+that returns those animals' kinship matrix (row and column names are the
+IDs). At Form Groups the module asks it for the candidates plus any seed
+animals, and keeps only that matrix with the results. <code>appServer</code>
+passes one that computes kinship from those animals and their ancestors
+only, with the twins and overrides applied. A provided
+<code>kinshipMatrix</code> is used first; with neither, the module calculates
+kinship from the pedigree. <code>NULL</code> (the default) is not used.</p></dd>
 
 </dl></div>
     <div class="section level2">

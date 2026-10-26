@@ -24,8 +24,9 @@ modGeneticDiversityServer(
   groups,
   pedigree,
   geneticValues,
-  kinshipMatrix,
-  currentDate = Sys.Date()
+  kinshipMatrix = NULL,
+  currentDate = Sys.Date(),
+  kinshipFor = NULL
 )
 ```
 
@@ -58,18 +59,26 @@ modGeneticDiversityServer(
 
 - kinshipMatrix:
 
-  reactive returning a square kinship matrix (row and column names are
-  animal IDs) covering every member of every group;
+  optional reactive returning a square kinship matrix (row and column
+  names are animal IDs) covering every member of every group;
   [`getGeneticDiversityStats`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
-  stops when a group member is missing from it. In the app this is the
-  full-pedigree kinship matrix that Summary Statistics and Breeding
-  Groups also use, so it covers every animal of the pedigree, not only
-  the Genetic Value population.
+  stops when a group member is missing from it. It is used before
+  `kinshipFor`.
 
 - currentDate:
 
   Date used to derive age and the production birth window. Defaults to
   [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html).
+
+- kinshipFor:
+
+  optional function of a character vector of animal IDs that returns
+  those animals' kinship matrix. Once groups, the pedigree and the
+  genetic value report are all available, the module asks it for the
+  groups' members. In the app it computes the members' kinship from them
+  and their ancestors only, so a group may hold any animal of the
+  pedigree, not only the Genetic Value population. With neither
+  `kinshipMatrix` nor `kinshipFor` the module shows no heat map.
 
 ## Value
 

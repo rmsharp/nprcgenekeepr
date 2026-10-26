@@ -96,8 +96,9 @@ the pedigree lists as a dam) and left out.</p>
 <span>  <span class="va">groups</span>,</span>
 <span>  <span class="va">pedigree</span>,</span>
 <span>  <span class="va">geneticValues</span>,</span>
-<span>  <span class="va">kinshipMatrix</span>,</span>
-<span>  currentDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  currentDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  kinshipFor <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -131,17 +132,25 @@ frame.</p></dd>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
-<dd><p>reactive returning a square kinship matrix (row and
-column names are animal IDs) covering every member of every group;
-<code><a href="getGeneticDiversityStats.html">getGeneticDiversityStats</a></code> stops when a group member is
-missing from it. In the app this is the full-pedigree kinship matrix that
-Summary Statistics and Breeding Groups also use, so it covers every animal
-of the pedigree, not only the Genetic Value population.</p></dd>
+<dd><p>optional reactive returning a square kinship matrix
+(row and column names are animal IDs) covering every member of every
+group; <code><a href="getGeneticDiversityStats.html">getGeneticDiversityStats</a></code> stops when a group member
+is missing from it. It is used before <code>kinshipFor</code>.</p></dd>
 
 
 <dt id="arg-currentdate">currentDate<a class="anchor" aria-label="anchor" href="#arg-currentdate"></a></dt>
 <dd><p>Date used to derive age and the production birth window.
 Defaults to <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date()</a></code>.</p></dd>
+
+
+<dt id="arg-kinshipfor">kinshipFor<a class="anchor" aria-label="anchor" href="#arg-kinshipfor"></a></dt>
+<dd><p>optional function of a character vector of animal IDs
+that returns those animals' kinship matrix. Once groups, the pedigree and
+the genetic value report are all available, the module asks it for the
+groups' members. In the app it computes the members' kinship from them
+and their ancestors only, so a group may hold any animal of the
+pedigree, not only the Genetic Value population. With neither
+<code>kinshipMatrix</code> nor <code>kinshipFor</code> the module shows no heat map.</p></dd>
 
 </dl></div>
     <div class="section level2">
