@@ -210,15 +210,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       score is wrong. To decide: correct the comment only, or list ties in the order found (that changes which grouping
       the tab shows first for the same seed, so tests that pin a result would be re-checked).
 
-- [ ] **Two `@inheritParams` lines with nothing to inherit (READY, Effort S; owner-reported S1060)** -- RStudio's Build ->
-      Document (roxygen2 8.0.0) prints "In topic 'addParents': @inheritParams failed. All parameters are already
-      documented; none remain to be inherited." and the same for 'removeUninformativeFounders': each function takes only
-      `ped`, which its own `@param` documents. Delete `R/addParents.R:13` (`@inheritParams reportGV`) and
-      `R/removeUninformativeFounders.R:11` (`@inheritParams trimPedigree`); `devtools::document()` should leave `man/`
-      unchanged and print neither message (check both). The same run's pandoc line, "Deprecated: --mathjax", is not this
-      item: pandoc 3.12.1 deprecates the flag rmarkdown 2.31's `html_vignette` passes, it only shows because the project's
-      roxygen options include the vignette roclet (`nprcgenekeepr.Rproj:25`), and `devtools::check()` gives 0 warnings.
-
 - [ ] **Mate Pair's default run uses about 1 GB of app memory (DECISION NEEDED, Effort M; found S1062)** -- on the
       example the default population, "All alive (no recorded exit)" (`R/modMatePair.R:39-45`), is 1,704 animals (332
       by `isLivingAnimal()`), and Find Eligible Pairs raised the app's resident memory from 867.2 to 1,946.3 MB in

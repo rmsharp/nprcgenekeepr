@@ -210,13 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1068
 date: 2026-10-26
-status: pending
-active_task: IN PROGRESS -- delete the two @inheritParams lines with nothing to inherit (R/addParents.R:13, R/removeUninformativeFounders.R:11; BACKLOG.md:213), under strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Empty @inheritParams lines").
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the two @inheritParams lines with nothing to inherit (R/addParents.R's reportGV, R/removeUninformativeFounders.R's trimPedigree; BACKLOG item "Two @inheritParams lines with nothing to inherit", owner-reported S1060), deleted under strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Empty @inheritParams lines"; the three gates answered "Yes"), with a package-wide guard test. The BACKLOG block is removed.
+what_was_done: Claim 1ad2b06f0. Research: a roxygen run (roxygen2 8.0.0) on a scratch worktree printed "@inheritParams failed" for exactly addParents and removeUninformativeFounders and changed no file; roxygen2:::inherit_params warns when a page's own @param names (comma lists split, \dots as ...) cover all its formals, per page (@rdname joins blocks, @noRd makes none); roxygen2 is dev-only and no package dependency reaches it, so a roxygen-calling test would skip on CI. Owner chose "check all help pages" over a two-function test or a roxygen run. RED 2afa4dabb: tests/testthat/test_roxygenInheritParams.R, a plain-R reader (parse(keep.source = TRUE), the #' lines above each function), 11 synthetic cases each run through roxygen2::roc_proc_text(rd_roclet()) first (pass), and a scan of R/ (36 pages with @inheritParams; fails naming the two). GREEN 26b11046a: the two lines deleted; devtools::document() prints nothing and man/ is unchanged. REFACTOR e67f30e5b (owner's pick over my "skip"): the reader moved word for word to tests/testthat/helper-roxygenBlocks.R. Verified on the final tree: the new file 13 expectations 0 failed; full suite 475 files 4,456 tests 0 failed 0 errors (212 skipped); lint_package 0; devtools::check() 0/0/0 (also on the GREEN tree). Learning 1034.
+next_steps: Read the first scheduled shinytest2 run on S1067's fix (07:00 UTC 2026-10-27; gh run list --branch master --limit 10); this session's commits are not pushed. Then pick from BACKLOG.md. READY: :237 the Build Earlier Snapshots help sentence (S, the owner's words, test-first); :248 harem trials' per-trial set-up (M); :258 the diagram's 1.7 s outside the solver (M); :265 the founder statistics' peak (S); :282 a CPU-drawing pass for the local browser tests (S). DECISION NEEDED: :203 equal-score order, :213 Mate Pair memory, :222 Realized Relatedness table, :231 the kept relationship table, :272 the nine fallbacks.
+key_files: R/addParents.R:4-32 and R/removeUninformativeFounders.R:4-31 (the two roxygen blocks); tests/testthat/test_roxygenInheritParams.R (the 11 cases, the R/ scan); tests/testthat/helper-roxygenBlocks.R (inheritParamsPages(), emptyInheritParams()); PROJECT_LEARNINGS.md Learning 1034.
+gotchas: roxygen2 is not installed where CI runs the tests (Config/Needs/dev only), so a test that calls it only skips there; check a doc-reader case against roxygen with roxygen2::roc_proc_text(roxygen2::rd_roclet(), text). A helper-*.R loads for every test file, so grep its names first. Tests that read R/ skip under R CMD check. The reader reads only blocks above a function assignment (all 64 @inheritParams blocks today).
+runtime_smoke: No runtime behavior changed: two roxygen comment lines removed and devtools::document() left man/ byte-identical (git status showed only the two R files), so the installed help and the app are unchanged; nothing to launch.
+quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results f31c02d7c3b4 · manifest 38cf32b77360
+changelog_ref: 1ad2b06f0
+commit: e67f30e5b
 ```
-Session claimed; work beginning.
 
 ```handoff
 session: S1067
