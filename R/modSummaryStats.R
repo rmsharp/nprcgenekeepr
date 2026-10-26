@@ -395,19 +395,9 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     # kinshipFor asked for every animal, then the fallback below.
     getKinshipMatrix <- function() {
       req(pedigree())
-
-      # Try to use provided kinship matrix
-      if (!is.null(kinshipMatrix)) {
-        kmat <- tryCatch(kinshipMatrix(), error = function(e) NULL)
-        if (!is.null(kmat)) {
-          return(kmat)
-        }
-      }
-      if (!is.null(kinshipFor)) {
-        kmat <- tryCatch(kinshipFor(), error = function(e) NULL)
-        if (!is.null(kmat)) {
-          return(kmat)
-        }
+      kmat <- kinshipFromSources(kinshipMatrix, kinshipFor)
+      if (!is.null(kmat)) {
+        return(kmat)
       }
       fallbackKinshipMatrix()
     }

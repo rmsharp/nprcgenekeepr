@@ -549,17 +549,6 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix = NULL,
     ## genuine Shiny reactive error, not a silent NULL.
     safeRead <- function(r) tryCatch(r(), error = function(e) NULL)
 
-    ## The pedigree kinship of every animal: a handed-in kinshipMatrix, else
-    ## kinshipFor asked for every animal, else NULL. A plain function, so
-    ## nothing of the whole colony's size is kept between reads.
-    pedigreeKinship <- function() {
-      kmat <- safeRead(kinshipMatrix)
-      if (is.null(kmat) && !is.null(kinshipFor)) {
-        kmat <- safeRead(function() kinshipFor())
-      }
-      kmat
-    }
-
     rawGenotype <- reactive({
       if (is.null(input$genotypeFile)) {
         return(NULL)
@@ -599,8 +588,9 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix = NULL,
       ids <- names(markerMean)
 
       ## Every animal's kinship, from kinshipFor when no matrix is handed in
-      ## (performance campaign Phase 9b); only the means are kept.
-      pedKmat <- pedigreeKinship()
+      ## (performance campaign Phase 9b); only the means are kept, so nothing
+      ## of the whole colony's size is kept between reads.
+      pedKmat <- kinshipFromSources(kinshipMatrix, kinshipFor)
       pedMean <- if (is.null(pedKmat)) {
         rep(NA_real_, length(ids))
       } else {
@@ -752,7 +742,7 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix = NULL,
       if (is.na(nChr) || is.na(mapLength) || nChr <= 0L || mapLength <= 0L) {
         return(NULL)
       }
-      kmat <- pedigreeKinship()
+      kmat <- kinshipFromSources(kinshipMatrix, kinshipFor)
       if (is.null(kmat)) {
         return(NULL)
       }

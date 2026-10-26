@@ -128,10 +128,8 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
       }
       ## Kinship is read only now, so no kinship is computed before groups
       ## exist (performance campaign Phase 9a).
-      kmat <- safeRead(kinshipMatrix)
-      if (is.null(kmat) && !is.null(kinshipFor)) {
-        kmat <- safeRead(function() kinshipFor(unique(unlist(grps))))
-      }
+      kmat <- kinshipFromSources(kinshipMatrix, kinshipFor,
+                                 unique(unlist(grps)))
       if (is.null(kmat)) {
         return(NULL)
       }

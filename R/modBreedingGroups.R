@@ -361,24 +361,15 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     # Store results from groupAddAssign
     groupResults <- reactiveVal(NULL)
 
-    # Helper: use the shared kinship matrix (issue #122 Phase 2) if provided,
-    # else the kinship of `ids` from kinshipFor (performance campaign Phase
-    # 9a), else calculate from pedigree
+    # Helper: use a provided kinship matrix if there is one, else the kinship
+    # of `ids` from kinshipFor (performance campaign Phase 9a), else
+    # calculate from pedigree
     getKinshipMatrix <- function(ped, kinshipMatrix, overrides = NULL,
                                  twinRelations = NULL, kinshipFor = NULL,
                                  ids = NULL) {
-      # Try the shared kinship matrix first
-      if (!is.null(kinshipMatrix)) {
-        kmat <- tryCatch(kinshipMatrix(), error = function(e) NULL)
-        if (!is.null(kmat)) {
-          return(kmat)
-        }
-      }
-      if (!is.null(kinshipFor)) {
-        kmat <- tryCatch(kinshipFor(ids), error = function(e) NULL)
-        if (!is.null(kmat)) {
-          return(kmat)
-        }
+      kmat <- kinshipFromSources(kinshipMatrix, kinshipFor, ids)
+      if (!is.null(kmat)) {
+        return(kmat)
       }
 
       # Calculate kinship from pedigree (the fallback recompute). Issue #13
