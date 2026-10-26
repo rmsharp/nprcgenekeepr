@@ -5,24 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 11, consolidation (owner-directed S1050; plan approved and D1-D4 ruled
-      S1051; Phases 0-10 done S1052-S1065, Phase 9 as 9a S1063 and 9b S1064; READY; Effort M; the last session)** --
-      plan Phase 11 at `docs/planning/performance-memory-campaign-plan.md:701`: re-run every harness scenario; write
-      `docs/audits/PERF_CAMPAIGN_REPORT_<date>.md` with before and after for every row of section 1 and the
-      estimate-to-actual ratio; one `NEWS.Rmd` release-state line, worded by the owner; tighten every gate; decide
-      whether `helper-perfReference.R` stays as the oracle; revisit D2 (plain R) with the hotspots that remain; then
-      this block comes off. **Phase 10 (S1065):** row 5, Build Earlier Snapshots, 9.42 to 1.08 s; row 6,
-      `gvaConvergence()`, 4.73 to 0.84 s; the cost line (`describeBackfillCost()`, `R/modSnapshotTrends.R:458,471`)
-      says "about a quarter of a second per 1,000 iterations" (owner's words); the backfill gate 11.9 to 1.4 s;
-      `test_perfBudget_snapshotBackfill.R` (plan Phase 10's Done bullet, `:680`). **Phase 9:** no matrix of every
-      animal is kept; every tab asks `kinshipFor` (`R/appServer.R:366`). Also for Phase 11: whether the fallbacks'
-      inputs move onto the fast paths (owner, S1054); harems' per-trial age work (`getPotentialSires()`,
-      `getCurrentAge()`, `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase 5's calcFGSE row peak;
-      the diagram's 1.7 s outside the solve (1.0 s of it `t(pmat) %*% pmat`, kept S1060); the app session has no
-      Summary Statistics download or genotype upload step, so 9b's every-animal reads are measured in the app only
-      through the LD tab. **Ruled:** D1 exact, D2 plain R, D3 API, D4 budgets (S1051); D5 (c), each tab its own
-      (S1062); D7 keep 10 trials (S1057); D6 no parallel dates (S1065).
-
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
       `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.

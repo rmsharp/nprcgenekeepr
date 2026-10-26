@@ -99,13 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1066 Did
-**Deliverable:** Phase 11 of the performance and memory campaign, consolidation (IN PROGRESS; owner pick at the Phase 0
-picker, item 1 of 4, "Campaign Phase 11 (Recommended)"; `BACKLOG.md:8`; plan
-`docs/planning/performance-memory-campaign-plan.md:701`): re-run every harness scenario, the campaign report, the owner's
-`NEWS.Rmd` line, every gate tightened, the `helper-perfReference.R` and D2 decisions; strict TDD for any code a ruling brings.
-**Started:** 2026-10-26 11:30 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 11 (Recommended)"; no code changed, so no TDD cycle; three decision
+questions and a NEWS wording question, each answered as recommended, the leftovers question with all four):** Phase 11, consolidation;
+**the performance and memory campaign is complete.** `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`: 20 scenarios x 3 fresh runs at
+`c4fb07453` against Phase 0 (the example's analysis 3.28 to 0.23 s; all 3,694 38.50 to 3.03 s; synthetic 35.03 to 3.57 s; the whole
+example's relationship table 3.40 s, never finishing before; 1,000 trials 23.04 to 5.54 s; diagram 12.81 to 5.10 s; backfill 9.42 to
+0.99 s; `gvaConvergence()` 4.73 to 0.75 s; measured over estimate 0.66 to 1.38); the app session on the pre-campaign code (`520bd5dc8`,
+a scratch worktree) and HEAD, alternating: upload + QC 696.6 to 516.0 MB, Mate Pair 1,989.2 to 1,397.8 MB, the LD tab did not finish in
+15 min before, 14.2 s now. Claim `c4fb07453`, NEWS `7f479fc98`, gates `958a47e4f`, report `e223bf1db`. **Owner rulings:** keep
+`helper-perfReference.R`; D2 stays plain R; the NEWS "Speed and Memory" line as drafted; all four leftovers filed (`BACKLOG.md:269`,
+`:279`, `:286`, `:293`). **Gates:** `reportGV` 0.8 to 0.3 s, relationships 0.2 to 0.1 s, backfill 1.4 to 1.3 s; six unchanged.
+**Found:** no fallback runs on the shipped data (a traced probe with a positive control); `filterKinMatrix()`'s 0.14 s is a garbage
+collection; issue #37 needs nothing. **Verified:** suite 474 files 4,454 tests 0 failed 0 errors; lint 0; check 0/0/0; budget tests 8
+files 11 tests 0 failed; the 7 exactness files 48 tests 0 failed; ratchet 10/10 (`78157e1e2a9d`).
+**Handoff evaluation of S1065: 8/10.** Helped: Next (1) named every Phase 11 item, the plan line and the harness command, and the
+block's "Also for Phase 11" list; the fresh-vs-warm gotcha. Missing: no 10-step app table of the pre-campaign code existed, and the old
+LD tab never finishes (one 15-min wait). Wrong: "about 6 min a pass" was Phase 0's; a pass takes 2.5 min now. ROI: high.
+**Self: 8/10.** + a same-hour before for the app; probes with a control; every drafted number re-checked (three fixed before commit).
+- a 15-min wait row 2 predicted; shell slips (zsh `$files`, `test_file()`'s cwd, a self-matching `pgrep`). Learning 1032.
+**Gotchas:** at load 8 to 22 the harness reads up to 10% slow (the sparse-kinship rows are the control); a threshold only tightens;
+old code runs from `git worktree add --detach <scratch>/pre <sha>` with today's `tools/perf/` copied in.
+**Next:** the campaign is over; no owner-ordered work remains. Ready: `BACKLOG.md:246` (the nightly deceased-slash CI break, S), `:213`
+(S), `:258` (help text, S), `:269` (harem trials, M), `:279` (diagram, M), `:286` (founder peak, S). Decisions: `:203` (tie order),
+`:222`, `:231`, `:240` (app memory), `:293` (fallbacks).
+**Not pushed:** 15 local commits (S1065's, with one `R/` change, and this session's) ride with the next push the owner asks for.
 
 ### Sessions 947-1065 (condensed S950 to S1066; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1065: Phase 10 of the campaign, snapshot backfill and convergence (strict TDD): Build Earlier Snapshots 9.42 to 1.08 s,
