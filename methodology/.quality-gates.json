@@ -80,11 +80,11 @@
     {
       "name": "perf_backfill_jmac_seconds",
       "direction": "max",
-      "threshold": 11.9,
+      "threshold": 1.4,
       "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
       "command": "Rscript tools/perf/run.R backfill-jmac",
       "extract": "SECONDS=([0-9.]+)",
-      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: backfillColonySnapshots() on the jmac studbook at 3 dates with 1,000 iterations took 9.42 s, median of 3 runs (9.36 to 9.46); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 10 (snapshot backfill follow-through) is meant to lower it and tightens this gate."
+      "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: backfillColonySnapshots() on the jmac studbook at 3 dates with 1,000 iterations took 9.42 s, median of 3 runs (9.36 to 9.46); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 10 (snapshot backfill follow-through) is meant to lower it and tightens this gate. Tightened S1065 (2026-10-26, Phase 10; Phases 1, 2 and 5 made the call faster, Phase 10 changed none of its code): the same run took 1.08, 1.09 and 1.08 s in 3 fresh runs (load average 6.7 to 8.7; peak 146.1 MB, was 186.4), so 11.9 s becomes 1.4 s by the same rule (1.09 s plus 25%, rounded up to 0.1 s). Three more fresh runs on the session's final code at load 5.9 took 0.94, 0.94 and 0.91 s."
     },
     {
       "name": "perf_calcFEFG_synthetic10000_seconds",
