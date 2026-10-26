@@ -234,16 +234,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **The Build Earlier Snapshots box's "filed under their own rule" reads like a folder (READY, Effort S;
-      owner-reported S1065)** -- `R/modSnapshotTrends.R:69-72` says "They are filed under their own rule,
-      reconstructedLiving, and never mix with recorded snapshots." The owner asked whether that means a separate
-      folder. It does not: the rebuilt rows join the same history table (History, "Download Updated History") with
-      `membershipRule` `"reconstructedLiving"` (`R/backfillColonySnapshots.R:220`); the Trends chart draws them as their
-      own dashed line (`R/plotSnapshotTrends.R:88`), and Compare Snapshots compares within one rule. Proposed S1065,
-      not yet approved (the owner chose to file it for its own session): "They are added to the same history, marked
-      reconstructedLiving in its Membership rule column, and drawn as their own dashed line, apart from recorded
-      snapshots." No test pins the sentence (`git grep -n "never mix" -- tests/`). Change it test-first in the
-      owner's final words, and check the guide's matching step (`vignettes/articles/colony-manager-guide.qmd:1294`).
+- [ ] **Genetic-Health Trends: no document says what a colony manager can learn from the trend (DECISION NEEDED,
+      Effort M; owner-requested S1069; the owner put it next in line, S1069)** -- the owner asked whether any document
+      says why someone would build earlier snapshots and what can be learned from them. The why is written, one clause
+      each: the guide's tab introduction ("whether the colony's genetic health is improving or eroding over time",
+      `vignettes/articles/colony-manager-guide.qmd:1270`, the guide's only such sentence) and its step 4 ("so a trend
+      can be drawn now instead of after seasons of recording"); the same reason in `NEWS.Rmd:397-400`,
+      `backfillColonySnapshots()`'s help and `vignettes/a2interactive.Rmd:918`; plainest in
+      `docs/planning/retrospective-snapshot-backfill-plan.md` section 1.1. The rest is caveats for reading rebuilt
+      points (the guide's two paragraphs after step 4; the help page's "What each date rests on"). Not written
+      anywhere: which way each measure on the trend should move (mean kinship, founder equivalents and founder genome
+      equivalents, genome uniqueness, the effective sizes) and how large a change matters; what a past trend can
+      answer (how fast founder diversity has been lost, whether a past import or breeding-policy change shows, a
+      baseline for today's snapshot). `inst/extdata/ui_guidance/` has no page for the tab;
+      `population_genetics_terms.html` defines each measure only at a single time. To decide: where it goes (a guide
+      subsection after step 4, an app help page for the tab, or both) and which questions it covers; the owner writes
+      or approves the sentences, and each statement about a measure is checked against its function's documentation.
 
 - [ ] **Breeding Groups: harem trials redo their set-up work every trial (READY, Effort M; owner-raised S1056, filed
       S1066 at the performance campaign's close)** -- 1,000 harem trials on the tutorial's 280 candidates take 10.69 s
