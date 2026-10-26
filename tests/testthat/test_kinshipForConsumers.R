@@ -50,6 +50,16 @@ recordingProvider <- function(ped, twinRelations = NULL, overrides = NULL) {
 ## only today's matrix passes no kinshipFor at all.
 passedArgs <- function(args) args[!vapply(args, is.null, logical(1L))]
 
+## The kinship sources a session-9b run hands a module, as `source` says:
+## "matrix" (today's whole matrix, built by `todays()`), "provider", "both" or
+## "neither"; a source not handed over is left out.
+kinshipArgs <- function(source, todays, provider) {
+  passedArgs(list(
+    kinshipMatrix = if (source %in% c("matrix", "both")) todays(),
+    kinshipFor = if (source %in% c("provider", "both")) provider
+  ))
+}
+
 ## The reactive appServer's shared matrix was before Phase 9b: the whole
 ## pedigree's kinship with the twins, then the overrides applied
 ## (R/appServer.R sharedKinshipMatrix). It is built when it is read, so an
@@ -396,20 +406,21 @@ summaryCases <- function() {
 summaryRun <- function(case, source, downloads = kinshipDownloads) {
   recorder <- recordingProvider(case$ped, case$twinRelations, case$overrides)
   files <- list()
-  args <- passedArgs(list(
-    geneticValues = shiny::reactive(NULL),
-    pedigree = shiny::reactive(case$ped),
-    kinshipMatrix = if (source %in% c("matrix", "both")) {
+  args <- c(
+    list(geneticValues = shiny::reactive(NULL),
+         pedigree = shiny::reactive(case$ped)),
+    kinshipArgs(source, function() {
       todaysMatrix(case$ped, case$twinRelations, case$overrides)
-    },
-    kinshipFor = if (source %in% c("provider", "both")) recorder$provider,
-    kinshipOverrides = if (!is.null(case$overrides)) {
-      shiny::reactive(case$overrides)
-    },
-    twinRelations = if (!is.null(case$twinRelations)) {
-      shiny::reactive(case$twinRelations)
-    }
-  ))
+    }, recorder$provider),
+    passedArgs(list(
+      kinshipOverrides = if (!is.null(case$overrides)) {
+        shiny::reactive(case$overrides)
+      },
+      twinRelations = if (!is.null(case$twinRelations)) {
+        shiny::reactive(case$twinRelations)
+      }
+    ))
+  )
   suppressMessages(shiny::testServer(modSummaryStatsServer, args = args, {
     for (download in downloads) {
       files[[length(files) + 1L]] <<- outcome(function() {
@@ -520,13 +531,11 @@ markerRun <- function(source, ped = markerPed(), inputs = list(),
   read <- list(comparison = function(result) result$comparisonTable(),
                realized = function(result) result$realizedRelatednessTable())
   out <- list()
-  args <- passedArgs(list(
-    kinshipMatrix = if (source %in% c("matrix", "both")) {
-      todaysMatrix(markerPed())
-    },
-    pedigree = shiny::reactive(ped),
-    kinshipFor = if (source %in% c("provider", "both")) recorder$provider
-  ))
+  args <- c(
+    kinshipArgs(source, function() todaysMatrix(markerPed()),
+                recorder$provider),
+    list(pedigree = shiny::reactive(ped))
+  )
   shiny::testServer(modMarkerGeneticsServer, args = args, {
     result <- session$getReturned()
     if (length(inputs) > 0L) {
