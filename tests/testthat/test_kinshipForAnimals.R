@@ -22,14 +22,9 @@
 ## error is today's (measured S1063 on four override cases).
 
 ## The example studbook as the app holds it after upload (all 3,694 animals,
-## the living ones the population) and its whole kinship matrix:
-## helper-perfCampaign.R's exampleLivingPed() and exampleColony().
-examplePed <- function() exampleLivingPed()
-exampleFull <- function() exampleColony()$kmat
-exampleLivingIds <- function() {
-  ped <- examplePed()
-  ped$id[isLivingAnimal(ped)]
-}
+## the living ones the population), its whole kinship matrix and its living
+## animals: helper-perfCampaign.R's examplePed(), exampleFull() and
+## exampleLivingIds().
 
 ## The whole pedigree's kinship, with gen computed when absent as
 ## sharedKinshipMatrix does (R/appServer.R).

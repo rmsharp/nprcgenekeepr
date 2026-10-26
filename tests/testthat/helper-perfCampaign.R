@@ -6,7 +6,9 @@
 ## equivalence tests (test_rareAlleleCounts.R, test_geneDropEquivalence.R,
 ## test_convertRelationshipsEquivalence.R) and the opt-in budget tests
 ## (test_perfBudget_*.R), test_groupAddAssignEquivalence.R and
-## test_founderStatsEquivalence.R and test_diagramSolverEquivalence.R. The
+## test_founderStatsEquivalence.R and test_diagramSolverEquivalence.R, the
+## app-memory tests (test_kinshipForAnimals.R, test_kinshipForConsumers.R) and
+## the measuring tools' tests (test_perfHarness.R, test_perfAppSession.R). The
 ## frozen copies of today's functions are in helper-perfReference.R.
 
 ## The example studbook QC'd as the app does, with the living animals as the
@@ -61,6 +63,22 @@ exampleColony <- local({
     colony
   }
 })
+
+## The same pedigree as the app holds it after upload, its whole kinship
+## matrix and its living animals, for the app-memory tests (Phase 9).
+examplePed <- function() exampleLivingPed()
+exampleFull <- function() exampleColony()$kmat
+exampleLivingIds <- function() {
+  ped <- examplePed()
+  ped$id[isLivingAnimal(ped)]
+}
+
+## tools/ and BACKLOG.md are build-ignored, so the measuring tools' tests skip
+## outside the source tree (tools/perf/ is not in a built package).
+skipUnlessSourceTree <- function() {
+  skip_if_not(file.exists(testthat::test_path("..", "..", "BACKLOG.md")),
+              "not the source tree: tools/perf/ is not in a built package")
+}
 
 ## The relationship table's input for the example's first `n` animals: their
 ## rows and columns of the whole pedigree's kinship matrix, and the whole

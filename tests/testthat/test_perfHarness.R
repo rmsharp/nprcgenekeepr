@@ -23,11 +23,7 @@ pkgRoot <- normalizePath(testthat::test_path("..", ".."), mustWork = FALSE)
 harnessFile <- file.path(pkgRoot, "tools", "perf", "harness.R")
 runFile <- file.path(pkgRoot, "tools", "perf", "run.R")
 
-## BACKLOG.md is tracked and build-ignored: present in the source tree only.
-skipUnlessSourceTree <- function() {
-  skip_if_not(file.exists(file.path(pkgRoot, "BACKLOG.md")),
-              "not the source tree: tools/perf/ is not in a built package")
-}
+## skipUnlessSourceTree() is in helper-perfCampaign.R.
 
 ## The harness's functions, in an environment that sees the package's own
 ## functions (exported or not), as run.R gives them after pkgload::load_all().

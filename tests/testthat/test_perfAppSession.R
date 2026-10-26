@@ -23,11 +23,7 @@ appSessionFiles <- c(
   app = file.path(pkgRoot, "tools", "perf", "appSession", "app.R")
 )
 
-## BACKLOG.md is tracked and build-ignored: present in the source tree only.
-skipUnlessSourceTree <- function() {
-  skip_if_not(file.exists(file.path(pkgRoot, "BACKLOG.md")),
-              "not the source tree: tools/perf/ is not in a built package")
-}
+## skipUnlessSourceTree() is in helper-perfCampaign.R.
 
 ## The design's section 2.1 table, one row per step, in its order.
 appSessionStepNames <- c(

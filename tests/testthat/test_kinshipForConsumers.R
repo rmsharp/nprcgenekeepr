@@ -22,19 +22,16 @@
 ## They run on CI and locally.
 testthat::skip_on_cran()
 
-examplePed <- function() exampleLivingPed()
-exampleFull <- function() exampleColony()$kmat
-exampleLivingIds <- function() {
-  ped <- examplePed()
-  ped$id[isLivingAnimal(ped)]
-}
+## examplePed(), exampleFull() and exampleLivingIds() are in
+## helper-perfCampaign.R.
 
-## A kinshipFor that records each set of ids it is asked for.
+## A kinshipFor that records each set of ids it is asked for, a request for
+## every animal (ids = NULL) included.
 recordingProvider <- function(ped) {
   asked <- list()
   list(
     provider = function(ids = NULL) {
-      asked[[length(asked) + 1L]] <<- ids
+      asked <<- c(asked, list(ids))
       kinshipForAnimals(ped, ids)
     },
     asked = function() asked
