@@ -183,13 +183,31 @@ test_that("modBreedingGroupsServer handles formation errors gracefully", {
   expect_true(grepl("showNotification", server_text))
 })
 
+# S1064 (owner ruling at the performance campaign's Phase 9b REFACTOR): this
+# test grepped the module's code for "tryCatch". The catch now lives in the
+# shared internal helper kinshipFromSources(), so the test checks the behavior
+# it stood in for: a kinship source that raises an error does not stop the
+# kinship download, which comes out from the module's own recompute.
 test_that("modSummaryStatsServer handles kinship calculation errors", {
   skip_if_not_installed("shiny")
 
-  # Check that module includes error handling
-  server_source <- deparse(modSummaryStatsServer)
-  server_text <- paste(server_source, collapse = "\n")
-  expect_true(grepl("tryCatch", server_text))
+  ped <- nprcgenekeepr::qcPed
+  expectedFile <- tempfile(fileext = ".csv")
+  write.csv(kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE),
+            expectedFile)
+  downloaded <- NULL
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(geneticValues = shiny::reactive(NULL),
+                pedigree = shiny::reactive(ped),
+                kinshipMatrix = shiny::reactive(stop("kinship source failed"))),
+    {
+      path <- output$downloadKinship
+      downloaded <<- readBin(path, "raw", file.size(path))
+    }
+  )
+  expect_identical(downloaded,
+                   readBin(expectedFile, "raw", file.size(expectedFile)))
 })
 
 # =============================================================================
