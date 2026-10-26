@@ -342,26 +342,7 @@ appServer <- function(input, output, session) {
     shared$geneticValues <- gvResults$geneticValues()
   })
 
-  # Shared full-pedigree kinship reactive (issue #122 Phase 2) -- computed
-  # once from shared$currentPedigree with the GV-tab overrides applied, and
-  # threaded into Summary Stats and Marker Genetics (performance campaign
-  # Phase 9b moves them to kinshipFor below). This is the FULL pedigree, never
-  # gvResults$kinshipMatrix (which is population-filtered to focal animals --
-  # see the module-contract plan's Dragon 1). Matches each consumer's own
-  # prior recompute formula exactly, so the shared value is identical to what
-  # either module computed on its own.
-  sharedKinshipMatrix <- reactive({
-    req(shared$currentPedigree)
-    ped <- shared$currentPedigree
-    if (!"gen" %in% names(ped)) {
-      ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-    }
-    kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
-                    twinRelations = shared$twinRelations)
-    applyKinshipOverridesToMatrix(kmat, currentKinshipOverrides())
-  })
-
-  # The GV-tab kinship overrides both kinship sources apply: NULL when that
+  # The GV-tab kinship overrides the kinship provider applies: NULL when that
   # module returns none.
   currentKinshipOverrides <- function() {
     if (is.null(gvResults$kinshipOverrides)) {
@@ -371,14 +352,17 @@ appServer <- function(input, output, session) {
     }
   }
 
-  # Kinship provider (performance campaign Phase 9a; design
+  # Kinship provider (performance campaign Phases 9a and 9b; design
   # docs/planning/app-kinship-memory-design.md section 6.1, D5 ruled (c)):
   # the kinship of the animals a tab asks for, computed from them and their
-  # ancestors only, with the same twins and GV-tab overrides as the shared
-  # matrix above, so its values are that matrix's (kinshipForAnimals()). A tab
-  # calls it inside its own reactive or handler, which takes the same reactive
-  # dependencies, and nothing of the whole colony's size is kept for it. With
-  # no ids it gives the shared matrix's value.
+  # ancestors only, with the twins and the GV-tab overrides applied, so its
+  # values are the same cells of the whole pedigree's matrix
+  # (kinshipForAnimals()). With no ids it gives the FULL pedigree's matrix,
+  # never gvResults$kinshipMatrix (which is population-filtered to focal
+  # animals -- see the module-contract plan's Dragon 1). A tab calls it inside
+  # its own reactive or handler, which takes the same reactive dependencies,
+  # and nothing of the whole colony's size is kept for it: no tab is handed a
+  # matrix (issue #122 Phase 2's shared matrix is gone, Phase 9b).
   kinshipFor <- function(ids = NULL) {
     req(shared$currentPedigree)
     kinshipForAnimals(shared$currentPedigree, ids,
@@ -388,14 +372,14 @@ appServer <- function(input, output, session) {
 
   # Summary Statistics Module -- thread the GV-tab kinship overrides (issue #13
   # Slice 3) so the relationship table and kinship export reflect them even when
-  # the GV analysis was not run first. kinshipMatrix now points at the shared
-  # reactive above (issue #122 Phase 2); its own recompute fallback stays
-  # (Dragon 3: summary stats must render before GV is ever run).
+  # the GV analysis was not run first. Its kinship downloads ask kinshipFor
+  # above for every animal (performance campaign Phase 9b); its own recompute
+  # fallback stays (Dragon 3: summary stats must render before GV is ever run).
   modSummaryStatsServer( # nolint: object_usage_linter
     "summaryStats",
     geneticValues = reactive(shared$geneticValues),
     pedigree = reactive(shared$currentPedigree),
-    kinshipMatrix = sharedKinshipMatrix,
+    kinshipFor = kinshipFor,
     founderStats = gvResults$founderStats,
     kinshipOverrides = gvResults$kinshipOverrides,
     twinRelations = reactive(shared$twinRelations)
@@ -476,7 +460,8 @@ appServer <- function(input, output, session) {
 
   # Marker Genetics Module (issue #130 Slice 1) -- an independent,
   # genotype-driven check on relatedness, alongside (not in place of) the
-  # pedigree-based kinship already computed above. Slice 3 adds a
+  # pedigree-based kinship, which it asks kinshipFor above for, every animal
+  # (performance campaign Phase 9b). Slice 3 adds a
   # pedigree-recorded-parent Mendelian-exclusion diagnostic, so the module
   # also needs the current pedigree. Captured (issue #151 Slice 2, D6) so its
   # markerKinshipMatrix reactive -- previously computed but never read by any
@@ -484,8 +469,8 @@ appServer <- function(input, output, session) {
   # additive-only and changes nothing about Marker Genetics' own behavior.
   markerResults <- modMarkerGeneticsServer(
     "markerGenetics",
-    kinshipMatrix = sharedKinshipMatrix,
-    pedigree = reactive(shared$currentPedigree)
+    pedigree = reactive(shared$currentPedigree),
+    kinshipFor = kinshipFor
   )
 
   # Mate Pair Analysis Module (issue #151 Slice 2) -- a curator-facing
