@@ -10,7 +10,6 @@
 #' This must be run after \code{addUIds} since the IDs made there are
 #' used by \code{addParents}
 #'
-#' @inheritParams reportGV
 #' @param ped dataframe that is the \code{Pedigree}. The \code{id},
 #' \code{sire}, \code{dam} and \code{sex} columns are required.
 #' @return An updated pedigree with entries added as necessary.

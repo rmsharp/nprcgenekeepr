@@ -8,7 +8,6 @@
 #' of information. Removal repeats until no such founder remains, because
 #' removing one can leave another founder appearing only once.
 #'
-#' @inheritParams trimPedigree
 #' @param ped dataframe that is the \code{Pedigree}. The \code{id},
 #' \code{sire} and \code{dam} columns are required.
 #' @return A reduced pedigree.
