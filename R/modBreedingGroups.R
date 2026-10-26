@@ -306,6 +306,14 @@ modBreedingGroupsUI <- function(id) {
 #'   reflects a declared MZ-twin pair's corrected identity regardless of tab
 #'   order (BL-N Slice 3). \code{NULL} (the default) is a no-op. A provided
 #'   \code{kinshipMatrix} is expected to already reflect it at its source.
+#' @param kinshipFor optional function of a character vector of animal IDs
+#'   that returns those animals' kinship matrix (row and column names are the
+#'   IDs). At Form Groups the module asks it for the candidates plus any seed
+#'   animals, and keeps only that matrix with the results. \code{appServer}
+#'   passes one that computes kinship from those animals and their ancestors
+#'   only, with the twins and overrides applied. A provided
+#'   \code{kinshipMatrix} is used first; with neither, the module calculates
+#'   kinship from the pedigree. \code{NULL} (the default) is not used.
 #'
 #' @return List with reactive components:
 #' \itemize{
@@ -346,19 +354,28 @@ modBreedingGroupsUI <- function(id) {
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
                                     kinshipMatrix = NULL,
                                     kinshipOverrides = NULL,
-                                    twinRelations = NULL) {
+                                    twinRelations = NULL,
+                                    kinshipFor = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Store results from groupAddAssign
     groupResults <- reactiveVal(NULL)
 
     # Helper: use the shared kinship matrix (issue #122 Phase 2) if provided,
-    # else calculate from pedigree
+    # else the kinship of `ids` from kinshipFor (performance campaign Phase
+    # 9a), else calculate from pedigree
     getKinshipMatrix <- function(ped, kinshipMatrix, overrides = NULL,
-                                 twinRelations = NULL) {
+                                 twinRelations = NULL, kinshipFor = NULL,
+                                 ids = NULL) {
       # Try the shared kinship matrix first
       if (!is.null(kinshipMatrix)) {
         kmat <- tryCatch(kinshipMatrix(), error = function(e) NULL)
+        if (!is.null(kmat)) {
+          return(kmat)
+        }
+      }
+      if (!is.null(kinshipFor)) {
+        kmat <- tryCatch(kinshipFor(ids), error = function(e) NULL)
         if (!is.null(kmat)) {
           return(kmat)
         }
@@ -610,14 +627,6 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           rawPool
         }
 
-        incProgress(0.2, detail = "Calculating kinship")
-        ovr <- if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
-        twins <- if (is.null(twinRelations)) NULL else twinRelations()
-        kmat <- getKinshipMatrix(ped, kinshipMatrix, overrides = ovr,
-                                 twinRelations = twins)
-
-        incProgress(0.3, detail = "Running group formation algorithm")
-
         # Parse groupAddAssign parameters
         threshold <- input$maxKinship
         numGp <- input$nGroups
@@ -667,6 +676,19 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         # Seeded animals are not also candidates (monolith server.r:1098-1100;
         # groupAddAssign also drops them and their relatives internally).
         candidateIds <- setdiff(candidateIds, unlist(currentGroups))
+
+        # Kinship of the candidates and seed animals only, the animals
+        # groupAddAssign() cuts the matrix to (performance campaign Phase 9a).
+        incProgress(0.2, detail = "Calculating kinship")
+        ovr <- if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
+        twins <- if (is.null(twinRelations)) NULL else twinRelations()
+        kmat <- getKinshipMatrix(ped, kinshipMatrix, overrides = ovr,
+                                 twinRelations = twins,
+                                 kinshipFor = kinshipFor,
+                                 ids = union(candidateIds,
+                                             unlist(currentGroups)))
+
+        incProgress(0.3, detail = "Running group formation algorithm")
 
         # Seed IDs absent from the pedigree are rejected (validate-and-block):
         # a phantom seed otherwise survives into the group and crashes the

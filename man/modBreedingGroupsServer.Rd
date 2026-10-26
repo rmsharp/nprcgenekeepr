@@ -10,7 +10,8 @@ modBreedingGroupsServer(
   geneticValues = NULL,
   kinshipMatrix = NULL,
   kinshipOverrides = NULL,
-  twinRelations = NULL
+  twinRelations = NULL,
+  kinshipFor = NULL
 )
 }
 \arguments{
@@ -50,6 +51,15 @@ passed straight through to \code{\link{kinship}} so group formation
 reflects a declared MZ-twin pair's corrected identity regardless of tab
 order (BL-N Slice 3). \code{NULL} (the default) is a no-op. A provided
 \code{kinshipMatrix} is expected to already reflect it at its source.}
+
+\item{kinshipFor}{optional function of a character vector of animal IDs
+that returns those animals' kinship matrix (row and column names are the
+IDs). At Form Groups the module asks it for the candidates plus any seed
+animals, and keeps only that matrix with the results. \code{appServer}
+passes one that computes kinship from those animals and their ancestors
+only, with the twins and overrides applied. A provided
+\code{kinshipMatrix} is used first; with neither, the module calculates
+kinship from the pedigree. \code{NULL} (the default) is not used.}
 }
 \value{
 List with reactive components:
