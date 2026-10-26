@@ -82,14 +82,19 @@ modGeneticDiversityUI <- function(id) {
 #'   frame.
 #' @param geneticValues reactive returning the genetic value report data frame
 #'   (with \code{id} and \code{value} columns).
-#' @param kinshipMatrix reactive returning a square kinship matrix (row and
-#'   column names are animal IDs) covering every member of every group;
-#'   \code{\link{getGeneticDiversityStats}} stops when a group member is
-#'   missing from it. In the app this is the full-pedigree kinship matrix that
-#'   Summary Statistics and Breeding Groups also use, so it covers every animal
-#'   of the pedigree, not only the Genetic Value population.
+#' @param kinshipMatrix optional reactive returning a square kinship matrix
+#'   (row and column names are animal IDs) covering every member of every
+#'   group; \code{\link{getGeneticDiversityStats}} stops when a group member
+#'   is missing from it. It is used before \code{kinshipFor}.
 #' @param currentDate Date used to derive age and the production birth window.
 #'   Defaults to \code{Sys.Date()}.
+#' @param kinshipFor optional function of a character vector of animal IDs
+#'   that returns those animals' kinship matrix. Once groups, the pedigree and
+#'   the genetic value report are all available, the module asks it for the
+#'   groups' members. \code{appServer} passes one that computes kinship from
+#'   those animals and their ancestors only, so a group may hold any animal of
+#'   the pedigree, not only the Genetic Value population. With neither
+#'   \code{kinshipMatrix} nor \code{kinshipFor} the module shows no heat map.
 #'
 #' @return A list with two reactive elements: \code{stats}, the per-group
 #'   metric data frame (or \code{NULL} when data are not ready), and
@@ -103,8 +108,9 @@ modGeneticDiversityUI <- function(id) {
 #' @family Shiny modules
 #' @export
 modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
-                                      kinshipMatrix,
-                                      currentDate = Sys.Date()) {
+                                      kinshipMatrix = NULL,
+                                      currentDate = Sys.Date(),
+                                      kinshipFor = NULL) {
   moduleServer(id, function(input, output, session) {
 
     ## Read an upstream reactive that may not be ready yet (a group not formed
@@ -116,9 +122,17 @@ modGeneticDiversityServer <- function(id, groups, pedigree, geneticValues,
       grps <- safeRead(groups)
       ped <- safeRead(pedigree)
       gvReport <- safeRead(geneticValues)
-      kmat <- safeRead(kinshipMatrix)
       if (is.null(grps) || length(grps) == 0L || is.null(ped) ||
-            is.null(gvReport) || is.null(kmat)) {
+            is.null(gvReport)) {
+        return(NULL)
+      }
+      ## Kinship is read only now, so no kinship is computed before groups
+      ## exist (performance campaign Phase 9a).
+      kmat <- safeRead(kinshipMatrix)
+      if (is.null(kmat) && !is.null(kinshipFor)) {
+        kmat <- safeRead(function() kinshipFor(unique(unlist(grps))))
+      }
+      if (is.null(kmat)) {
         return(NULL)
       }
       housing <- if (is.null(input$housing)) "shelter_pens" else input$housing

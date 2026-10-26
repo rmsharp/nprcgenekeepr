@@ -7,10 +7,11 @@
 modMatePairServer(
   id,
   pedigree,
-  kinshipMatrix,
+  kinshipMatrix = NULL,
   markerKinshipMatrix,
   geneticValues,
-  ancestryRules = NULL
+  ancestryRules = NULL,
+  kinshipFor = NULL
 )
 }
 \arguments{
@@ -20,10 +21,9 @@ modMatePairServer(
 (columns \code{id}, \code{sire}, \code{dam}, \code{sex}, \code{age},
 optionally \code{exit}).}
 
-\item{kinshipMatrix}{reactive returning the full pedigree-based kinship
-matrix (row/column names are animal IDs), typically the same shared
-reactive passed to \code{modBreedingGroupsServer}/
-\code{modMarkerGeneticsServer}.}
+\item{kinshipMatrix}{optional reactive returning a pedigree-based kinship
+matrix (row/column names are animal IDs) covering the population. It is
+used before \code{kinshipFor}.}
 
 \item{markerKinshipMatrix}{reactive returning the genotype-only KING-
 robust kinship matrix from \code{\link{modMarkerGeneticsServer}}'s own
@@ -41,6 +41,13 @@ rules table (see \code{\link{checkAncestryRules}}) from
 element, or \code{NULL} when no rules are loaded. \code{NULL} (the
 default, or a reactive that returns \code{NULL}) applies no rules, and
 the results are identical to a run before this argument existed.}
+
+\item{kinshipFor}{optional function of a character vector of animal IDs
+that returns those animals' kinship matrix. At each "Find Eligible Pairs"
+click the module asks it for the population. \code{appServer} passes one
+that computes kinship from those animals and their ancestors only. With
+neither \code{kinshipMatrix} nor \code{kinshipFor} the click does
+nothing.}
 }
 \value{
 A list with three reactive elements: \code{pairs}, the eligible-
@@ -79,9 +86,10 @@ value column \code{NA}.
 \strong{Population scoping is a hard dependency, not a fallback-recompute.}
 Unlike \code{modBreedingGroupsServer}'s optional \code{kinshipMatrix}
 (which recomputes from \code{pedigree} when absent), this module always
-receives the already-computed shared kinship reactive from
-\code{appServer.R} and simply depends on it (module-contract rule 5:
-upstream absence is \code{req()}), matching
+receives its kinship from its caller -- a \code{kinshipMatrix}, or the
+\code{kinshipFor} function \code{appServer.R} passes, asked for the
+population at each run -- and simply depends on it (module-contract rule
+5: upstream absence is \code{req()}), matching
 \code{\link{modMarkerGeneticsServer}}'s own simpler precedent -- there is
 no standalone use case for this module that would need an independent
 recompute path.

@@ -167,9 +167,10 @@ modMatePairUI <- function(id) {
 #' \strong{Population scoping is a hard dependency, not a fallback-recompute.}
 #' Unlike \code{modBreedingGroupsServer}'s optional \code{kinshipMatrix}
 #' (which recomputes from \code{pedigree} when absent), this module always
-#' receives the already-computed shared kinship reactive from
-#' \code{appServer.R} and simply depends on it (module-contract rule 5:
-#' upstream absence is \code{req()}), matching
+#' receives its kinship from its caller -- a \code{kinshipMatrix}, or the
+#' \code{kinshipFor} function \code{appServer.R} passes, asked for the
+#' population at each run -- and simply depends on it (module-contract rule
+#' 5: upstream absence is \code{req()}), matching
 #' \code{\link{modMarkerGeneticsServer}}'s own simpler precedent -- there is
 #' no standalone use case for this module that would need an independent
 #' recompute path.
@@ -211,10 +212,9 @@ modMatePairUI <- function(id) {
 #' @param pedigree reactive returning the current pedigree data frame
 #'   (columns \code{id}, \code{sire}, \code{dam}, \code{sex}, \code{age},
 #'   optionally \code{exit}).
-#' @param kinshipMatrix reactive returning the full pedigree-based kinship
-#'   matrix (row/column names are animal IDs), typically the same shared
-#'   reactive passed to \code{modBreedingGroupsServer}/
-#'   \code{modMarkerGeneticsServer}.
+#' @param kinshipMatrix optional reactive returning a pedigree-based kinship
+#'   matrix (row/column names are animal IDs) covering the population. It is
+#'   used before \code{kinshipFor}.
 #' @param markerKinshipMatrix reactive returning the genotype-only KING-
 #'   robust kinship matrix from \code{\link{modMarkerGeneticsServer}}'s own
 #'   \code{markerKinshipMatrix} return element, or \code{NULL} before a
@@ -229,6 +229,12 @@ modMatePairUI <- function(id) {
 #'   element, or \code{NULL} when no rules are loaded. \code{NULL} (the
 #'   default, or a reactive that returns \code{NULL}) applies no rules, and
 #'   the results are identical to a run before this argument existed.
+#' @param kinshipFor optional function of a character vector of animal IDs
+#'   that returns those animals' kinship matrix. At each "Find Eligible Pairs"
+#'   click the module asks it for the population. \code{appServer} passes one
+#'   that computes kinship from those animals and their ancestors only. With
+#'   neither \code{kinshipMatrix} nor \code{kinshipFor} the click does
+#'   nothing.
 #'
 #' @return A list with three reactive elements: \code{pairs}, the eligible-
 #'   pairs data.frame from the most recent \code{reportMatePairs()} run (see
@@ -248,9 +254,12 @@ modMatePairUI <- function(id) {
 #' @importFrom utils write.csv
 #' @family Shiny modules
 #' @export
-modMatePairServer <- function(id, pedigree, kinshipMatrix,
-                              markerKinshipMatrix, geneticValues,
-                              ancestryRules = NULL) {
+## kinshipMatrix keeps its place (callers name it) and gains a default, so
+## appServer can pass kinshipFor alone.
+modMatePairServer <- function(id, pedigree, kinshipMatrix = NULL,
+                              markerKinshipMatrix, # nolint: function_argument_linter
+                              geneticValues, # nolint: function_argument_linter
+                              ancestryRules = NULL, kinshipFor = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # The "custom" population-source textarea and the exclude-list textarea
@@ -388,8 +397,8 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
 
     observeEvent(input$analyze, {
       req(pedigree())
+      req(!is.null(kinshipMatrix) || !is.null(kinshipFor))
       ped <- pedigree()
-      kmat <- kinshipMatrix()
       gv <- geneticValues()
 
       popIds <- switch(
@@ -407,6 +416,13 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
         custom = parseIdList(input$customPopulationIds),
         ped$id
       )
+      # The population's kinship only, when it comes from kinshipFor
+      # (performance campaign Phase 9a).
+      kmat <- if (is.null(kinshipMatrix)) {
+        kinshipFor(popIds)
+      } else {
+        kinshipMatrix()
+      }
 
       excludeIds <- if (isTRUE(input$useExcludeList)) {
         parseIdList(input$excludeIds)
