@@ -68,8 +68,9 @@ modSnapshotTrendsUI <- function(id) {
           helpText(
             "Rebuild snapshots for past 1 Januaries from the birth and exit",
             "dates in the studbook, so a trend can be drawn now. They are",
-            "filed under their own rule, reconstructedLiving, and never mix",
-            "with recorded snapshots."
+            "added to the same history, marked reconstructedLiving in its",
+            "membershipRule column, and drawn as their own dashed line, apart",
+            "from recorded snapshots."
           ),
           selectInput(ns("backfillStart"), "Start year:", choices = NULL),
           uiOutput(ns("backfillCostUI")),
