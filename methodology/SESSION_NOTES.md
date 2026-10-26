@@ -98,37 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1064 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 9b"; strict TDD; a wording question, the three phase gates, a GREEN to RED
-return question and an old-test question, each answered with the recommended option):** Summary Statistics' kinship downloads and Marker
-Genetics' comparison and Realized Relatedness tables ask `kinshipFor` for every animal when the user asks; `appServer()` keeps no shared
-matrix (`sharedKinshipMatrix` removed); `kinshipFromSources()` (`R/kinshipFromSources.R`) picks the source for four tabs (Mate Pair keeps its
-own lines: there an error stops the click). Claim `b02b35804`, RED `6530cae3a`, RED return `d8b99c981`, GREEN `26f18f238` `b16836c03`
-`c8d8e1695`, REFACTOR `3a3f6d2bc` `c71dabe9d` `5b74f1742` `336f957b7`. **Owner rulings:** the CD2 comment sentence in `R/modSummaryStats.R`;
-one RED test passes no pedigree (`testServer()` draws every output); Breeding Groups' `kinshipMatrix` help; `test_modErrorHandling.R`'s
-"tryCatch" word check became a behavior test. **Measured** (medians of 3 runs, design section 13): the table matches its before within the
-runs' spread (LD tab 2,563.8 to 2,512.2 MB, inside it); the 104.6 MB matrix is no longer kept, which resident memory cannot show.
-**Verified:** suite 473 files 4,448 tests 0 failed (after GREEN and after REFACTOR); lint 0; check 0/0/0 twice; browser tier 11 files 38 tests
-twice; mutation 10 of 10 at GREEN, 13 of 13 after REFACTOR; the helper equal to the four copies on 216 cases; ratchet 10/10 (`6aa294989f75`).
-**Handoff evaluation of S1063: 9/10.** Helped: Next (1)'s file lines (all accurate), the before-runs-first gotcha, the recorder fix, and
-Learning 1029's "a guard on owner-approved wording turns red by design", which made me grep the guards before RED (CD2 found and asked first).
-Missing: the `deparse()` text checks in `test_modErrorHandling.R`; Breeding Groups' help still said "shared with modSummaryStatsServer"
-after 9a. Wrong: nothing. ROI: high.
-**Self: 8/10.** + guards and the error path measured before RED; before-runs at HEAD; the 216-case proof before replacing copies; every mutant
-caught. - a RED test assumed `testServer()` draws outputs lazily (a return); the REFACTOR broke a `deparse()` check a grep would have shown
-(a question and a second suite). Learning 1030.
-**Gotchas:** `testServer()` draws every output on a flush, so count asks with the other outputs' preconditions removed; grep the tests for
-`deparse(<fn>)` before moving code out of `<fn>`; compare warnings one click a session; `HANDOFFS.md` is near its 196,608 B warn line.
-**Next:** **the owner's campaign:** (1) Phase 10 (`BACKLOG.md:8`; plan `:666`): re-measure Build Earlier Snapshots and `gvaConvergence()`
-(rows 5 and 6 of the plan's section 1), the cost line `R/modSnapshotTrends.R:457,470` in the owner's words (`describeBackfillCost()`),
-then D6. (2) Phase 11. (3) The tie-order decision (`BACKLOG.md:221`). Outside: `:231` (READY, S); `:240`, `:249`, `:258` (DECISION
-NEEDED; `:249` and `:258` are now the app's largest kept tables).
-**Pushed** `ab3122abc..779d24724` (owner: "Push now"): lint, pkgdown and test-coverage green; R-CMD-check `40308506997` green on 4 of
-5 legs (macOS, Windows, Ubuntu release and oldrel); the devel leg was still installing dependencies at close (read it at Phase 0).
-**Found after the push:** the scheduled `shinytest2` run of 2026-10-26 (`40286217416`) failed in the Diagram's deceased-slash
-pixel test, its first CI run ever (`BACKLOG.md:264`, READY, S; filed, not diagnosed).
+### What Session 1065 Did
+**Deliverable:** Phase 10 of the performance and memory campaign, snapshot backfill and convergence: follow-through
+(IN PROGRESS; owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 10 (Recommended)"; strict TDD;
+`BACKLOG.md:8`; plan `docs/planning/performance-memory-campaign-plan.md:666`).
+**Started:** 2026-10-26 07:15 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1063 (condensed S950 to S1064; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1064 (condensed S950 to S1065; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1064: Phase 9b of the campaign, the app's memory (strict TDD): Summary Statistics' kinship downloads and Marker
+Genetics' two tables ask `kinshipFor` for every animal; `sharedKinshipMatrix` removed; `kinshipFromSources()`
+(`R/kinshipFromSources.R`) picks four tabs' source; the app memory table within the runs' spread (design section 13).
+Claim `b02b35804`, GREEN `26f18f238`..`c8d8e1695`, close-out `779d24724`, pushed; S1063 9/10, self 8/10 (Learning 1030).
+**Gotchas kept:** `testServer()` draws every output on a flush; grep for `deparse(<fn>)` checks before moving code.
 S1063: Phase 9a of the campaign, the app's memory (strict TDD): Breeding Groups, Genetic Diversity and Mate Pair ask
 `appServer()`'s `kinshipFor(ids)` (`R/appServer.R:382`) through `kinshipForAnimals()` (`R/kinshipForAnimals.R:40`);
 upload + QC 685.1 to 520.8 MB, Mate Pair 1,947.4 to 1,375.3 MB (`Rscript tools/perf/runAppSession.R <label> <out.csv>`,
