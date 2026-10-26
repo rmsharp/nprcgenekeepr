@@ -2,8 +2,8 @@
 
 **Session:** S1050, 2026-10-24. A planning session: nothing under `R/` or `tests/` changed.
 **Status:** APPROVED by the owner, S1051 (2026-10-24): the plan as written, and D1 to D4 each
-ruled as recommended (section 6). Phases 0 to 10 are done (S1052 to S1065); Phase 11,
-consolidation, is next.
+ruled as recommended (section 6). **The campaign is complete:** Phases 0 to 11 are done (S1052
+to S1066); the consolidation report is `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`.
 **Owner's direction (S1050):** "As an architect and engineer examine the code to refactor the
 code with the primary goals of smaller memory footprint and faster processing of time intensive
 work", then "This is expected to take multiple sessions with planning being very important."
@@ -321,7 +321,8 @@ written:**
   for anyone installing from source on Windows or macOS, and no compiled-code CRAN checks; the
   ceiling is lower. *Alternative:* allow Rcpp now, for the gene drop and kinship loops especially.
   **Ruling (S1051): plain R, revisited at Phase 11.** (The package has no compiled code today: no
-  `src/` directory, no `LinkingTo` or `useDynLib`.)
+  `src/` directory, no `LinkingTo` or `useDynLib`.) **Revisited (S1066, 2026-10-26): stay plain
+  R**, as recommended; nothing still slow needs compiled code (the report's section 9).
 - **D3. Exported functions unchanged.** *Recommended:* the exported functions in scope keep
   their arguments and results; the fast paths are internal helpers. *Consequence:* some memory is
   left on the table (for example `geneDrop()` still returns a data frame with one column per
@@ -709,6 +710,15 @@ done.**
 - Revisit D2 with the hotspots that remain.
 - Close the BACKLOG item.
 - **Surface:** this Mac for the harness; the browser tier for the app memory table and the tabs.
+- **Done S1066; the campaign is complete.** `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`: all 20
+  scenarios three times (the example's analysis 3.28 to 0.23 s; the measured times landed at 0.66 to
+  1.38 of their estimates); the app memory table on the pre-campaign code and today's, one tool, one hour (upload
+  + QC 696.6 to 516.0 MB; the LD tab did not finish before, 14.2 s now). **Owner rulings:** keep
+  `helper-perfReference.R` as the oracle; D2 stays plain R; the `NEWS.Rmd` "Speed and Memory" line
+  (`7f479fc98`); all four leftovers filed in `BACKLOG.md`. **Gates:** three tightened (`958a47e4f`:
+  `reportGV` 0.8 to 0.3 s, relationships 0.2 to 0.1 s, backfill 1.4 to 1.3 s), six re-measured and
+  unchanged. The browser-tier files were not re-run (no code changed since S1065); the scripted app
+  session drove every tab of the table.
 
 ---
 

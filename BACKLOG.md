@@ -284,6 +284,41 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       snapshots." No test pins the sentence (`git grep -n "never mix" -- tests/`). Change it test-first in the
       owner's final words, and check the guide's matching step (`vignettes/articles/colony-manager-guide.qmd:1294`).
 
+- [ ] **Breeding Groups: harem trials redo their set-up work every trial (READY, Effort M; owner-raised S1056, filed
+      S1066 at the performance campaign's close)** -- 1,000 harem trials on the tutorial's 280 candidates take 10.69 s
+      (9.78-11.16) against 5.54 s for 6 plain groups (`Rscript tools/perf/run.R groupAddAssign-harem-1000` and
+      `groupAddAssign-1000`, S1066; 27.19 s before the campaign). The extra is the harem's age and sire work
+      repeated each trial: `getPotentialSires()` (`R/getPotentialSires.R:20`), `getCurrentAge()`
+      (`R/getCurrentAge.R:16`), `groupsWithoutSire()` (`R/groupsWithoutSire.R:33`), `initializeHaremGroups()`
+      (`R/initializeHaremGroups.R:20`). The campaign's rules still bind: the same groups for the same seed
+      (`identical()` against `groupAddAssignReference()`, `tests/testthat/test_groupAddAssignEquivalence.R`) and
+      `groupAddAssign()`'s arguments unchanged; add a gate for the harem scenario (the S1052 rule). Report:
+      `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md` section 11.
+- [ ] **Pedigree Diagram: about 1.7 s of the 708-animal layout is outside its solver (READY, Effort M; found S1060,
+      filed S1066)** -- `diagram-example-direct` takes 5.10 s (4.80-5.22, S1066; 12.81 s before the campaign). About
+      1.7 s is outside `.solveSeparationQP()` (`R/makePedigreeDiagramData.R:1606`), 1.0 s of it `Dmat <- t(pmat) %*%
+      pmat` (`:1576`), kept at S1060 because `crossprod(pmat)` calls another BLAS routine and could give other bits,
+      so other positions, on another platform. First step: profile the other 0.7 s; `crossprod()` only with
+      identical positions on CI's three platforms (the pinned positions of the four layout test files, and
+      `tests/testthat/test_diagramSolverEquivalence.R`). Gate: `perf_diagram_example_direct_seconds` (5.9 s).
+- [ ] **Founder statistics: their memory peak rose a little on larger inputs while their time fell (READY, Effort S;
+      found S1058, filed S1066)** -- from Phase 0 to S1066, `calcFGSE()`'s peak went 225.6 to 253.6 MB on the
+      generated 10,000-animal colony and 236.5 to 257.5 MB on all 3,694 example animals, and `calcFEFG()`'s 233.2 to
+      247.7 MB on all 3,694 (`Rscript tools/perf/run.R gvStages-all` and `gvStages-synthetic10000`), while their time
+      fell about tenfold (`calcFGSE()` 1.07 to 0.12 s on the synthetic colony). S1058 saw the rise (225.5 to
+      254.1 MB) and recorded no cause. First step: find the step that peaks (`R/calcFounderContributions.R`,
+      `R/calcRetention.R`), then decide whether lowering it is worth a change.
+- [ ] **The performance campaign's nine fallbacks: move their input types onto the fast paths? (DECISION NEEDED,
+      Effort M; owner-raised S1054, filed S1066)** -- each phase kept the pre-campaign code for inputs its new code
+      does not take (a factor where text is expected, for example): `rareAlleleCountsGeneral()`, `geneDropGeneral()`,
+      `convertRelationshipsGeneral()`, `fillGroupMembersGeneral()`, `fillGroupMembersWithSexRatioGeneral()`,
+      `founderContributionMatrixGeneral()`, `retainedFounderAllelesGeneral()`, `kinshipGeneral()` and
+      `kinMatrix2LongFormGeneral()`. A probe (S1066) traced all nine through nine harness scenarios and a sex-ratio
+      `groupAddAssign()`: none was called on the shipped data (the tracer does count a call: a sparse `kinship()`
+      registered one). S1054 found 14 of `geneDropGeneral()`'s 19 test inputs end in an error today. To decide:
+      fold some input types in, one test each (the same results, `identical()`), or leave the fallbacks as the old
+      code's home for unusual input.
+
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
 feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8
