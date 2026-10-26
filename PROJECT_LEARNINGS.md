@@ -20138,3 +20138,136 @@ a test name built with [`paste()`](https://rdrr.io/r/base/paste.html)
 runs each old copy and the new helper on every mix of inputs (here 6
 matrix kinds x 6 provider kinds x 2 id sets, 216 cases) settles “no
 behavior change” before the copies are replaced.
+
+#### Learning 1031
+
+**S1065 (2026-10-26), Phase 10 of the performance and memory campaign,
+snapshot backfill and convergence (the Build Earlier Snapshots cost line
+counts a quarter of a second a date per 1,000 iterations, in the owner’s
+words; D6 ruled no; the backfill gate 11.9 to 1.4 s; an opt-in budget
+test): measure the user’s own case before rewording a time claim, say
+whether a time is from a fresh process or a warm one, and read the
+plan’s common DONE items at a phase’s start, not only the phase’s own
+bullet.** **(1) The gate’s case is not the user’s case.** Row 5’s three
+dates in a fresh process (1.08 s) work out to 0.36 s a date; the app’s
+default build is 53 dates and took 12.6 s, 0.24 s a date, because a
+fresh process pays about 0.4 s of first-call cost once. The cost line’s
+number came from the default series, and the running app agreed (49
+dates, 11.4 s, against the line’s own 12.3 s). Before a sentence states
+a per-unit time, time the series the button builds, and time a few
+iteration counts to see whether the fixed part breaks the line’s scaling
+(here under 0.1 s a date: it holds). **(2) Fresh and warm are different
+numbers.** The same call took 1.08 s through `tools/perf/run.R` (fresh
+process, the gate) and 0.61 s timed in-process after one untimed run
+(the budget test’s way). Quote which one a figure is, and set a budget
+from a measurement taken the way the test times it. **(3) The plan’s
+common items bind every phase.** Section 7 says each phase’s DONE
+includes “its opt-in budget test”; Phase 10’s own bullet did not name
+one, and it was found after GREEN, at the cost of one more owner
+question. At a campaign phase’s start, read section 7’s common items as
+well as the phase. **(4) Shell slips that cost reruns.** A `( ... ) &`
+inside a background launcher returns at once while the job runs on
+(confirm with `pgrep`); zsh does not split an unquoted `$spec`, so
+`set -- $spec` passes one word (spell the commands out); an
+`Sys.getenv("OUT_RDS")` in the R code needs the variable set in that
+same command, or the run fails only at its end.
+
+#### Learning 1032
+
+**S1066 (2026-10-26), Phase 11 of the performance and memory campaign,
+consolidation (the report
+`docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`, the owner’s NEWS line,
+three gates tightened, `helper-perfReference.R` kept, D2 plain R, four
+leftovers filed): a consolidation’s “before” for a tool built
+mid-campaign is that tool on the old code, in the same hour; predict the
+old code’s run time from the plan’s own rows before launching it; and
+check every number of a drafted report against its measurement file
+before the commit.** **(1) Same tool, old code, same hour.** The 10-step
+app session was committed in Phase 9a, after Phases 1 to 7, so no
+10-step table of the pre-campaign app existed (Phase 0’s was a 5-step
+scratch script). A scratch
+`git worktree add --detach <scratch>/pre 520bd5dc8` with today’s
+`tools/perf/` copied in, run alternately with HEAD from the main
+checkout (so renv’s `shinytest2` loads), gave a same-hour before and
+after; `git grep -c -F "<id>" <commit> -- R` on both commits first
+confirmed every input id the tool clicks exists in the old code. Remove
+the worktree with `git worktree remove --force` (its copied files are
+untracked). **(2) Predict the old code’s time first.** The old LD tab
+runs
+[`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
+on all 3,694 animals, which is the plan’s own row 2 (“never finishes”),
+so the first old run waited the tool’s full 15 minutes; the two after it
+were capped at 2 minutes in the scratch copy. Read the plan’s slow rows
+against the tool’s steps before running old code, and cap the waits in
+the copy. **(3) A stage time can move by garbage collection.**
+[`filterKinMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
+on all 3,694 read 0.14 s against Phase 0’s 0.02 s with its code
+untouched: the first call after today’s
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+took 0.147 s and the next two 0.019 and 0.015 s, while the old tree’s
+first call took 0.016 s. Call a stage twice before calling a changed
+time a regression. **(4) A “none” from a tracer needs a positive
+control.** The fallback probe
+([`trace()`](https://rdrr.io/r/base/trace.html) on nine `*General()`
+functions) said no call; a sparse
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+registering one call showed the tracer counts. **(5) Drafted numbers
+drift.** Re-reading the drafted report against the pass log found three
+claims no measurement supported (“about 0.8 s together”, “two of four
+memory estimates”, “about 3 s” for 3.0 to 3.6 s) and a ratio stated
+backwards in the plan’s note; all were fixed before the commit. **(6)
+Shell slips again:** zsh does not split an unquoted `$files` (pass a
+list through a file and
+[`readLines()`](https://rdrr.io/r/base/readLines.html) it);
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+changes the working directory (pass absolute paths); a monitor’s
+`pgrep -f '<script>'` matches the monitor’s own shell (wait for the
+script’s `DONE` line instead).
+
+#### Learning 1033
+
+**S1067 (2026-10-26), the nightly `shinytest2` failure of the Diagram
+tab’s deceased-slash test (test code only: `diagram_pixel_js()` reads a
+partly see-through pixel as it shows on the page’s white, the overhang
+test’s outline cutoff is “half covered”, and the overhangs are re-read
+at 25 sub-pixel view shifts): a pixel test written and checked on this
+Mac’s GPU-drawn canvas can fail on CI’s CPU-drawn one; reproduce CI with
+Chrome started with `--disable-accelerated-2d-canvas`, and measure a
+pixel check at sub-pixel shifts before trusting its limits.** **(1) Same
+scene, two drawings.** Headless Chrome paints the Diagram’s canvas on
+the GPU here and in software on the CI runner (Chrome for Testing 156 on
+Linux). The software drawing leaves a 1 px outline almost wholly in
+partly see-through pixels, and the reader counted any pixel with alpha
+below 255 as white, so on CI the 3 x 3 outline search missed circle E
+and stopped at the sibship bar 83.5 px out: circle 31/83.5 = 0.371,
+square 1.279, gap 0.908, CI’s 0.37 and 0.91 exactly.
+`chromote::set_chrome_args(c(chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))`
+before the app starts gave those numbers at the first frame on this Mac;
+without it the same frame read 1.265. **(2) This Mac’s drawing changed
+mid-test.** The same view (position, translation and canvas size checked
+equal) read 1.27 before the sweep and 0.37 at the sweep’s first reading
+after `net.redraw()`; after many `getImageData()` calls the readings
+behave like the software drawing (likely Chrome moving a canvas that is
+read often to the CPU; not confirmed from Chrome’s source). A local pass
+can depend on which frame a pixel test reads. **(3) Measure the check,
+not one reading.** Over 100 positions 0.1 px apart, with software
+drawing: the old reader 28 of 100 in the limits; blending alone 100 of
+100, but the circle reached 1.391 against the 1.40 limit; blending plus
+the cutoff at 194 (half way from white to the outline’s \#2B7CE9, grey
+133, the rule the slash’s black below 120 already followed) kept every
+reading at least 0.06 inside (square 1.261-1.333, circle 1.245-1.340). A
+single-pixel ray with blending still missed 1 to 19 of 100, so the 3 x 3
+search stays. **(4) `network.redraw()` paints synchronously** in
+vis-network (`emit("setSize"), this._redraw()`); `moveTo()` alone only
+requests a frame. So moving the view, redrawing and reading can be one
+`get_js()` call with no wait. **(5) The app has no GPU switch to add:**
+vis-network asks for a plain `getContext("2d")`, so the viewer’s browser
+paints on the GPU when it has one and on the CPU otherwise; the owner’s
+“test locally with the CPU and the GPU” is filed as its own item. **(6)
+Run one block:**
+`testthat::test_file(path, desc = "<the test_that description, newlines and indentation included>")`
+(testthat 3.3.2) ran the slash block in about 1.5 minutes against the
+file’s 3.5. **(7) A reader that numbers lines shifts them:**
+`BACKLOG.md:247` in my Phase 0 report and claim was `:246`, because the
+tool output I read had `wc -l`’s line on top. Take line numbers from
+`grep -n` on the file itself.

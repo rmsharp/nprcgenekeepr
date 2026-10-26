@@ -6,39 +6,6 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Performance and memory campaign: Phase 10, snapshot backfill and
-convergence: follow-through (owner-directed S1050; plan approved and
-D1-D4 ruled S1051; Phases 0-9 done S1052-S1064, Phase 9 as 9a S1063 and
-9b S1064; READY; Effort M; 10 and 11 left, each its own session)** –
-plan Phase 10 at
-`docs/planning/performance-memory-campaign-plan.md:666`: re-measure
-Build Earlier Snapshots and
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-(rows 5 and 6 of the plan’s section 1) after Phases 1, 2 and 5; the cost
-line `R/modSnapshotTrends.R:457` (`4L * guIter / 1000L`) and `:470`
-(“about 4 seconds per 1,000 iterations on a colony of 2,590 animals”)
-gets the measured number in the owner’s words (`describeBackfillCost()`,
-testthat); then D6 (parallel dates; recommended no, unless the
-re-measurement still shows minutes). **Phase 9 (S1063-S1064):** every
-tab asks
-[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)‘s
-one provider, `kinshipFor` (`R/appServer.R:366`), through
-`kinshipForAnimals()`; no matrix of every animal is kept
-(`sharedKinshipMatrix` removed); `kinshipFromSources()`
-(`R/kinshipFromSources.R`) picks a tab’s source. Upload + QC 685.1 to
-520.8 MB (9a); 9b’s after table matches its before within the runs’
-spread (design `docs/planning/app-kinship-memory-design.md` sections 12
-and 13). For Phase 11: whether the fallbacks’ inputs move onto the fast
-paths (owner, S1054); harems’ per-trial age work
-([`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md),
-[`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md),
-`groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase
-5’s calcFGSE row peak; the diagram’s 1.7 s outside the solve (1.0 s of
-it `t(pmat) %*% pmat`, kept S1060); the app session has no Summary
-Statistics download or genotype upload step, so 9b’s every-animal reads
-are measured in the app only through the LD tab. **Ruled S1051:** D1
-exact, D2 plain R, D3 API, D4 budgets.
-
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
 Until then `DESCRIPTION`, the `NEWS.Rmd`/`NEWS.md` heading, `README.md`
@@ -78,10 +45,11 @@ thread was done S1042, the trend chart’s console notice and the notice’s
 200-character cut S1049)** – design and what was built:
 `docs/planning/retrospective-snapshot-backfill-plan.md` sections
 5.3-5.4. (1) **Build cost on a larger colony** (BLOCKED – needs a
-studbook above 3,694 rows from the owner, Effort S): the cost line’s 4
-seconds per 1,000 iterations (`describeBackfillCost()`,
-`R/modSnapshotTrends.R`) is measured up to 100 iterations on a 3,694-row
-colony, so a bigger colony at 1,000 iterations is unmeasured. (2) **A
+studbook above 3,694 rows from the owner, Effort S): the cost line’s
+quarter of a second a date per 1,000 iterations
+(`describeBackfillCost()`, `R/modSnapshotTrends.R`; S1065) is measured
+on the 2,590-animal jmac studbook (53 dates, 12.6 s) and the 3,694-row
+example (49 dates, 9.4 s), so a bigger colony is unmeasured. (2) **A
 script word in the panel’s notice** (DECISION NEEDED, Effort S): the
 function’s failed-dates warning says “listed in ‘skipped’” and the panel
 shows it as is, while its table is headed “Dates not built”; reword the
@@ -359,7 +327,7 @@ either, both, or leave it.
 NEEDED, Effort M; found S1062)** – opening the “Linkage and LD Block
 Metrics” tab (`R/modMarkerGenetics.R:227`) runs
 [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
-on the whole kinship matrix (`:716-729`;
+on the whole kinship matrix (`:735-751`;
 `R/markerRealizedRelatednessVariance.R:119`), with no genotype file
 needed: 6,824,665 rows on the example, built in 8.31 s with a 707.6 MB
 peak, a 390.9 MB table kept while the tab shows it; the app’s memory
@@ -371,12 +339,120 @@ it.
 
 **Summary Statistics keeps the whole relationship table after a download
 (DECISION NEEDED, Effort S; found S1062)** – `relationshipData()` is a
-cached `reactive()` (`R/modSummaryStats.R:423-430`) that serves both
-relationship downloads (`:878-894`): 6,824,665 rows and 234.7 MB on the
+cached `reactive()` (`R/modSummaryStats.R:436-443`) that serves both
+relationship downloads (`:891-907`): 6,824,665 rows and 234.7 MB on the
 example (built in 3.21 s, peak 693.5 MB), kept until the pedigree
 changes (design section 9, F4). To decide: build it inside each
 download, so nothing is kept and a second download rebuilds it (3.21 s),
 or keep it, so the two downloads share one build.
+
+**The Build Earlier Snapshots box’s “filed under their own rule” reads
+like a folder (READY, Effort S; owner-reported S1065)** –
+`R/modSnapshotTrends.R:69-72` says “They are filed under their own rule,
+reconstructedLiving, and never mix with recorded snapshots.” The owner
+asked whether that means a separate folder. It does not: the rebuilt
+rows join the same history table (History, “Download Updated History”)
+with `membershipRule` `"reconstructedLiving"`
+(`R/backfillColonySnapshots.R:220`); the Trends chart draws them as
+their own dashed line (`R/plotSnapshotTrends.R:88`), and Compare
+Snapshots compares within one rule. Proposed S1065, not yet approved
+(the owner chose to file it for its own session): “They are added to the
+same history, marked reconstructedLiving in its Membership rule column,
+and drawn as their own dashed line, apart from recorded snapshots.” No
+test pins the sentence (`git grep -n "never mix" -- tests/`). Change it
+test-first in the owner’s final words, and check the guide’s matching
+step (`vignettes/articles/colony-manager-guide.qmd:1294`).
+
+**Breeding Groups: harem trials redo their set-up work every trial
+(READY, Effort M; owner-raised S1056, filed S1066 at the performance
+campaign’s close)** – 1,000 harem trials on the tutorial’s 280
+candidates take 10.69 s (9.78-11.16) against 5.54 s for 6 plain groups
+(`Rscript tools/perf/run.R groupAddAssign-harem-1000` and
+`groupAddAssign-1000`, S1066; 27.19 s before the campaign). The extra is
+the harem’s age and sire work repeated each trial:
+[`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md)
+(`R/getPotentialSires.R:20`),
+[`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md)
+(`R/getCurrentAge.R:16`), `groupsWithoutSire()`
+(`R/groupsWithoutSire.R:33`), `initializeHaremGroups()`
+(`R/initializeHaremGroups.R:20`). The campaign’s rules still bind: the
+same groups for the same seed
+([`identical()`](https://rdrr.io/r/base/identical.html) against
+`groupAddAssignReference()`,
+`tests/testthat/test_groupAddAssignEquivalence.R`) and
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+arguments unchanged; add a gate for the harem scenario (the S1052 rule).
+Report: `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md` section 11.
+
+**Pedigree Diagram: about 1.7 s of the 708-animal layout is outside its
+solver (READY, Effort M; found S1060, filed S1066)** –
+`diagram-example-direct` takes 5.10 s (4.80-5.22, S1066; 12.81 s before
+the campaign). About 1.7 s is outside `.solveSeparationQP()`
+(`R/makePedigreeDiagramData.R:1606`), 1.0 s of it
+`Dmat <- t(pmat) %*% pmat` (`:1576`), kept at S1060 because
+`crossprod(pmat)` calls another BLAS routine and could give other bits,
+so other positions, on another platform. First step: profile the other
+0.7 s; [`crossprod()`](https://rdrr.io/r/base/crossprod.html) only with
+identical positions on CI’s three platforms (the pinned positions of the
+four layout test files, and
+`tests/testthat/test_diagramSolverEquivalence.R`). Gate:
+`perf_diagram_example_direct_seconds` (5.9 s).
+
+**Founder statistics: their memory peak rose a little on larger inputs
+while their time fell (READY, Effort S; found S1058, filed S1066)** –
+from Phase 0 to S1066,
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)’s
+peak went 225.6 to 253.6 MB on the generated 10,000-animal colony and
+236.5 to 257.5 MB on all 3,694 example animals, and
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)’s
+233.2 to 247.7 MB on all 3,694 (`Rscript tools/perf/run.R gvStages-all`
+and `gvStages-synthetic10000`), while their time fell about tenfold
+([`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+1.07 to 0.12 s on the synthetic colony). S1058 saw the rise (225.5 to
+254.1 MB) and recorded no cause. First step: find the step that peaks
+(`R/calcFounderContributions.R`, `R/calcRetention.R`), then decide
+whether lowering it is worth a change.
+
+**The performance campaign’s nine fallbacks: move their input types onto
+the fast paths? (DECISION NEEDED, Effort M; owner-raised S1054, filed
+S1066)** – each phase kept the pre-campaign code for inputs its new code
+does not take (a factor where text is expected, for example):
+`rareAlleleCountsGeneral()`, `geneDropGeneral()`,
+`convertRelationshipsGeneral()`, `fillGroupMembersGeneral()`,
+`fillGroupMembersWithSexRatioGeneral()`,
+`founderContributionMatrixGeneral()`, `retainedFounderAllelesGeneral()`,
+`kinshipGeneral()` and `kinMatrix2LongFormGeneral()`. A probe (S1066)
+traced all nine through nine harness scenarios and a sex-ratio
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md):
+none was called on the shipped data (the tracer does count a call: a
+sparse
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+registered one). S1054 found 14 of `geneDropGeneral()`’s 19 test inputs
+end in an error today. To decide: fold some input types in, one test
+each (the same results,
+[`identical()`](https://rdrr.io/r/base/identical.html)), or leave the
+fallbacks as the old code’s home for unusual input.
+
+**Local browser tests: run the Diagram’s pixel checks with both GPU and
+CPU drawing (READY, Effort S; owner ruling S1067)** – the local browser
+tier (`NPRC_RUN_E2E=true`) starts Chrome with its default drawing, which
+on this Mac paints the Diagram’s canvas on the GPU, while the CI runner
+paints it on the CPU (software). The deceased-slash test
+(`tests/testthat/test-e2e-pedigree-module.R`) passed here and failed on
+CI for five days because of that difference (S1067: run `40286217416`,
+fixed in the test’s pixel reader). Owner (S1067): local runs test with
+both the CPU and the GPU. The app needs nothing for its side of that
+ruling: vis-network asks for a plain `getContext("2d")`, so the viewer’s
+browser paints on the GPU when it has one and on the CPU otherwise.
+S1067 ran the file both ways by hand:
+`chromote::set_chrome_args(c(chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))`
+before
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+gives CPU drawing to every Chrome started after it (22 blocks, 111
+expectations, 0 failed each way, about 3.5 minutes each). First step:
+choose how the second pass runs (a runner or helper that repeats the
+file, or only the blocks that read pixels through `diagram_pixel_js()`,
+under the flag) and keep it opt-in like the rest of the tier.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
