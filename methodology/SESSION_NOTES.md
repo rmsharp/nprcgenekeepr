@@ -98,39 +98,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1065 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 10 (Recommended)"; strict TDD; a wording question with D6, the three phase
-gates, a budget-test question and a help-text question, each answered with the recommended option):** Phase 10 of the performance and memory
-campaign. Rows 5 and 6 re-measured (3 fresh runs each): Build Earlier Snapshots (jmac, 3 dates x 1,000) 9.42 to 1.08 s, peak 186.4 to
-146.1 MB; `gvaConvergence(nMax = 3000)` 4.73 to 0.84 s, 185.3 to 127.1 MB. The cost line (`describeBackfillCost()`,
-`R/modSnapshotTrends.R:458,471`) counts 0.25 s a date per 1,000 iterations and says "about a quarter of a second per 1,000 iterations on a
-colony of 2,590 animals" (owner's words); it had told jmac's 53-date default build "about 4 min" (12.6 s measured). Claim `3601ebc4a`, RED
-`feb8c0055`, GREEN `e6fb78338`, REFACTOR `bb85e6001` (`januaries()` test helper), budget test `c7e94674b`, gate `5312eb280`, docs
-`3333fbc35`. **Owner rulings:** the quarter-second sentence; D6 no (dates stay one at a time); add an opt-in budget test
-(`test_perfBudget_snapshotBackfill.R`, both under 2 s); the box's "filed under their own rule" sentence filed as `BACKLOG.md:276`.
-**Measured:** in the running app the example's 49 dates at 1,000 iterations read "under a minute" and built in 11.4 s (the line's own
-estimate 12.3 s); one date costs about 0.2 s per 1,000 iterations plus under 0.1 s fixed, so the line's scaling holds.
-**Verified:** suite 474 files 4,454 tests 0 failed 0 errors (after GREEN 4,452); lint 0; check 0/0/0 after GREEN; the budget test passes
-with `NPRC_RUN_PERF=true` and a 0.3 s copy fails both; ratchet 10/10 with the gate at 1.4 s (backfill read 0.95 s).
-**Handoff evaluation of S1064: 8/10.** Helped: Next (1) was exact (plan `:666`, the cost line `:457`/`:470`, `describeBackfillCost()`,
-D6's recommendation); the `HANDOFFS.md` warn-line gotcha. Missing: anything for Phase 10 in key files or gotchas (the harness scenarios
-`backfill-jmac` and `gvaConvergence-example`, the baseline rows, the gate, the plan's section 7 common items), so I found the budget-test
-item after GREEN. Wrong: nothing. ROI: high.
-**Self: 8/10.** + measured the user's default series and the iteration scaling before proposing the number; a real build in the app
-agreed with the estimate; the picture went to the owner before the long checks; the budget test was shown able to fail. - the plan's
-common budget-test item found late (one more question); three shell slips (a double-backgrounded launcher, an unset `OUT_RDS` that
-cost a killed suite run, zsh not splitting `$spec`); one line cite (`:681`) fixed before commit. Learning 1031.
-**Gotchas:** a fresh-process time (`tools/perf/run.R`, the gate) and a warm in-process time (the budget test) differ by about 0.4 s of
-first-call cost on the backfill; quote which. Read section 7's common items at a campaign phase's start. `HANDOFFS.md` crossed or nears
-its 196,608 B warn line with this receipt (see the close-out entry for the trim).
-**Next:** **the owner's campaign:** (1) Phase 11, consolidation (`BACKLOG.md:8`; plan `:701`): re-run every harness scenario
-(`Rscript tools/perf/run.R <scenario>`, 20 scenarios, about 6 min a pass), write `docs/audits/PERF_CAMPAIGN_REPORT_<date>.md` against
-section 1 and `docs/audits/PERF_BASELINE_2026-10-24.md`, the owner-worded `NEWS.Rmd` line, tighten every gate, decide on
-`helper-perfReference.R`, revisit D2; the block's "Also for Phase 11" list. (2) The tie-order decision (`BACKLOG.md:221`). Outside:
-`:231` (READY, S), `:264` (CI break, READY, S), `:276` (help text, READY, S); `:240`, `:249`, `:258` (DECISION NEEDED).
-**Not pushed:** the session's commits (one `R/` change) ride with the next push the owner asks for.
+### What Session 1066 Did
+**Deliverable:** Phase 11 of the performance and memory campaign, consolidation (IN PROGRESS; owner pick at the Phase 0
+picker, item 1 of 4, "Campaign Phase 11 (Recommended)"; `BACKLOG.md:8`; plan
+`docs/planning/performance-memory-campaign-plan.md:701`): re-run every harness scenario, the campaign report, the owner's
+`NEWS.Rmd` line, every gate tightened, the `helper-perfReference.R` and D2 decisions; strict TDD for any code a ruling brings.
+**Started:** 2026-10-26 11:30 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1064 (condensed S950 to S1065; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1065 (condensed S950 to S1066; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1065: Phase 10 of the campaign, snapshot backfill and convergence (strict TDD): Build Earlier Snapshots 9.42 to 1.08 s,
+`gvaConvergence()` 4.73 to 0.84 s; the cost line (`describeBackfillCost()`, `R/modSnapshotTrends.R:458,471`) counts 0.25 s a
+date per 1,000 iterations in the owner's words; D6 ruled no; `test_perfBudget_snapshotBackfill.R`; gate 11.9 to 1.4 s.
+Claim `3601ebc4a`, GREEN `e6fb78338`, close-out `971ed4116`, trim `3bc3704de`; S1064 8/10, self 8/10 (Learning 1031).
+**Gotchas kept:** a fresh-process time (`tools/perf/run.R`, the gate) and a warm in-process time (a budget test) differ by
+about 0.4 s; read the plan's section 7 common DONE items at a campaign phase's start.
 S1064: Phase 9b of the campaign, the app's memory (strict TDD): Summary Statistics' kinship downloads and Marker
 Genetics' two tables ask `kinshipFor` for every animal; `sharedKinshipMatrix` removed; `kinshipFromSources()`
 (`R/kinshipFromSources.R`) picks four tabs' source; the app memory table within the runs' spread (design section 13).
