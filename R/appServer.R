@@ -358,13 +358,18 @@ appServer <- function(input, output, session) {
     }
     kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
                     twinRelations = shared$twinRelations)
-    overrides <- if (is.null(gvResults$kinshipOverrides)) {
+    applyKinshipOverridesToMatrix(kmat, currentKinshipOverrides())
+  })
+
+  # The GV-tab kinship overrides both kinship sources apply: NULL when that
+  # module returns none.
+  currentKinshipOverrides <- function() {
+    if (is.null(gvResults$kinshipOverrides)) {
       NULL
     } else {
       gvResults$kinshipOverrides()
     }
-    applyKinshipOverridesToMatrix(kmat, overrides)
-  })
+  }
 
   # Kinship provider (performance campaign Phase 9a; design
   # docs/planning/app-kinship-memory-design.md section 6.1, D5 ruled (c)):
@@ -376,14 +381,9 @@ appServer <- function(input, output, session) {
   # no ids it gives the shared matrix's value.
   kinshipFor <- function(ids = NULL) {
     req(shared$currentPedigree)
-    overrides <- if (is.null(gvResults$kinshipOverrides)) {
-      NULL
-    } else {
-      gvResults$kinshipOverrides()
-    }
     kinshipForAnimals(shared$currentPedigree, ids,
                       twinRelations = shared$twinRelations,
-                      overrides = overrides)
+                      overrides = currentKinshipOverrides())
   }
 
   # Summary Statistics Module -- thread the GV-tab kinship overrides (issue #13
