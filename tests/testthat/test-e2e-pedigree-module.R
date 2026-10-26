@@ -477,6 +477,60 @@ test_that(
   expect_lt(abs(squareOverhang - circleOverhang), 0.12,
             label = "square and circle overhang difference")
 
+  ## S1067: the nightly run of 2026-10-26 (40286217416) read 0.37 for the
+  ## circle where this Mac read 1.27. CI's Chrome draws the canvas in
+  ## software, and there every pixel the reading above looks at on the
+  ## circle's outline is partly see-through, so it missed the outline and
+  ## found the sibship bar 83.5 px out; this Mac reads 0.37 too with Chrome
+  ## started with --disable-accelerated-2d-canvas. Where a symbol falls
+  ## within a pixel changes which pixels are partly see-through, so the view
+  ## is moved by fifths of a pixel each way and redrawn (vis-network's
+  ## redraw() paints at once), and both overhangs are read again at each of
+  ## the 25 positions, as "square,circle".
+  view0 <- as.numeric(strsplit(app$get_js(paste0(
+    "(() => { const v = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
+    ".network.getViewPosition(); return v.x + ',' + v.y; })()"
+  )), ",", fixed = TRUE)[[1L]])
+  get_overhangs_moved <- function(dx, dy) {
+    app$get_js(diagram_pixel_js(paste0(
+      sprintf(paste0(
+        "net.moveTo({position: {x: %f, y: %f}, scale: net.getScale(), ",
+        "animation: false}); net.redraw(); "
+      ), view0[[1L]] + dx, view0[[2L]] + dy),
+      "const q = Math.SQRT1_2; ",
+      "const near = (x, y) => { let lo = 255; for (let i = -1; i <= 1; i++) { ",
+      "for (let j = -1; j <= 1; j++) { lo = Math.min(lo, lum(x + i, y + j)); } } ",
+      "return lo; }; ",
+      "const overhang = (id) => { ",
+      "const c = net.canvasToDOM(net.getPosition(id)); ",
+      "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
+      "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
+      "else if (t - lastBlack > 3) { break; } } ",
+      "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
+      "if (near(c.x - t * q, c.y - t * q) < 250) { outline = t; break; } } ",
+      "return outline > 0 ? lastBlack / outline : -1; }; ",
+      "return overhang('A') + ',' + overhang('E');"
+    )))
+  }
+  shifts <- expand.grid(dx = seq(0, 0.8, by = 0.2), dy = seq(0, 0.8, by = 0.2))
+  moved <- vapply(seq_len(nrow(shifts)), function(i) {
+    as.numeric(strsplit(get_overhangs_moved(shifts$dx[[i]], shifts$dy[[i]]),
+                        ",", fixed = TRUE)[[1L]])
+  }, numeric(2L))
+  readings <- paste0("square/circle at each view shift (dx, dy) px: ",
+                     paste(sprintf("(%.1f, %.1f) %.2f/%.2f", shifts$dx,
+                                   shifts$dy, moved[1L, ], moved[2L, ]),
+                           collapse = "; "))
+  expect_true(all(moved[1L, ] > 1.10 & moved[1L, ] < 1.40),
+              label = "slash past a square's outline at every view shift",
+              info = readings)
+  expect_true(all(moved[2L, ] > 1.10 & moved[2L, ] < 1.40),
+              label = "slash past a circle's outline at every view shift",
+              info = readings)
+  expect_true(all(abs(moved[1L, ] - moved[2L, ]) < 0.12),
+              label = "square and circle overhang difference at every shift",
+              info = readings)
+
   logs <- app$get_logs()
   diagramErrors <- logs[logs$level == "throw" &
                           grepl("vis|network|pedigreeDiagram", logs$message,
