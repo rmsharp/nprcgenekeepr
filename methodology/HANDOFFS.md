@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1069
+date: 2026-10-26
+status: pending
+active_task: IN PROGRESS -- reword the Build Earlier Snapshots box's "filed under their own rule" sentence (R/modSnapshotTrends.R:69-72; BACKLOG.md:237) in the owner's words, test-first, and check the guide's matching step, under strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Snapshot help sentence").
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1068
 date: 2026-10-26
 status: complete

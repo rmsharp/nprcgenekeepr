@@ -98,30 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1068 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Empty @inheritParams lines"; strict TDD, all three gates "Yes"):** the two
-`@inheritParams` lines with nothing to inherit are gone (`R/addParents.R`'s `reportGV`, `R/removeUninformativeFounders.R`'s
-`trimPedigree`); `devtools::document()` prints no "@inheritParams failed" and `man/` is byte-identical, so nothing changes at run time.
-**Guard (owner chose "check all help pages"):** `tests/testthat/test_roxygenInheritParams.R` fails on any help page in `R/` whose own
-`@param` lines already name every argument while it has `@inheritParams` (roxygen2 8.0.0's rule, `roxygen2:::inherit_params`); 36 pages
-read today. Its 11 synthetic cases were each run through `roxygen2::roc_proc_text(rd_roclet())` first. The plain-R reader lives in
-`tests/testthat/helper-roxygenBlocks.R` (REFACTOR, owner's pick over my "skip"). Claim `1ad2b06f0`, RED `2afa4dabb`, GREEN `26b11046a`,
-REFACTOR `e67f30e5b`. The BACKLOG block is off.
-**Verified (final tree):** new file 13 expectations 0 failed; suite 475 files 4,456 tests 0 failed 0 errors (212 skipped); lint 0;
-check 0/0/0 (also 0/0/0 on the GREEN tree); ratchet 10/10 (`f31c02d7c3b4`).
-**Handoff evaluation of S1067: 9/10.** Helped: Next listed this item at the right line (`:213`) and size; its `R_LIBS` gotcha ran roxygen
-in a scratch worktree with no renv set-up; every Phase 0 fact it left (ratchet hash, push range, nightly time) checked true. Missing:
-nothing this item needed. Wrong: nothing. ROI: high.
-**Self: 8/10.** + roxygen's real output measured before RED (exactly the two, no file changed); every test case checked against roxygen
-itself; roxygen2's absence on CI measured before the option text; the "36 pages" and the moved code proved before each commit.
-- recommended "skip REFACTOR" against the recorded lean (overridden); the first RED failure did not name the pages (fixed pre-commit).
-**Gotchas:** roxygen2 is dev-only, not on CI's test machines: a test that calls it only skips there. A `helper-*.R` loads for every test
-file, so grep its names first. Tests that read `R/` skip under `R CMD check` (no `R/` beside the installed tests).
-**Next:** read the first scheduled `shinytest2` run on S1067's fix, 07:00 UTC 2026-10-27 (`gh run list --branch master --limit 10`);
-this session's commits are not pushed. Ready: `BACKLOG.md:237` (help text, S), `:248` (harem, M), `:258` (diagram, M), `:265` (founder
-peak, S), `:282` (CPU and GPU passes, S). Decisions: `:203`, `:213`, `:222`, `:231`, `:272`.
+### What Session 1069 Did
+**Deliverable:** reword the Build Earlier Snapshots box's "filed under their own rule" sentence (`R/modSnapshotTrends.R:69-72`;
+`BACKLOG.md:237`) in the owner's words, test-first, and check the guide's matching step (owner pick at the Phase 0 picker, item 1
+of 4, "Snapshot help sentence") (IN PROGRESS)
+**Started:** 2026-10-26
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1067 (condensed S950 to S1068; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1068 (condensed S950 to S1069; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1068: the two `@inheritParams` lines with nothing to inherit deleted (`R/addParents.R`, `R/removeUninformativeFounders.R`); `man/`
+byte-identical. Guard `test_roxygenInheritParams.R` (owner: check all help pages; 36 read; 11 cases checked against roxygen), its reader
+in `helper-roxygenBlocks.R`. Claim `1ad2b06f0`, close-out `157ba0da7`, not pushed; S1067 9/10, self 8/10 (Learning 1034). **Gotchas
+kept:** roxygen2 is not on CI's test machines (a test calling it only skips); a `helper-*.R` loads for every test file.
 S1067: the nightly `shinytest2` deceased-slash failure (run `40286217416`), test code only: CI's Chrome paints the canvas on the CPU and
 `diagram_pixel_js()` counted a partly see-through outline pixel as white; the reader now blends onto white, outline cutoff 194, 25
 sub-pixel shifts, one `overhang_js`. Owner ruling: local runs test CPU and GPU (`BACKLOG.md:282`). Claim `bb8c3a8ba`, close-out `ccd6e9028`,
