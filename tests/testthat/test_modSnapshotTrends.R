@@ -377,7 +377,7 @@ test_that("modSnapshotTrendsUI has the Build Earlier Snapshots panel", {
   expect_true(grepl("test-backfillStart", ui_html, fixed = TRUE))
   expect_true(grepl("Start year", ui_html, fixed = TRUE))
   expect_true(grepl("test-backfillCostUI", ui_html, fixed = TRUE))
-  ## the box says what the rows are and where they are filed
+  ## the box names the rule the rebuilt rows are marked with
   expect_true(grepl("reconstructedLiving", ui_html, fixed = TRUE))
 })
 
