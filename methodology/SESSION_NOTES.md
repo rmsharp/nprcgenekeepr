@@ -119,10 +119,11 @@ shift), fixed before the commit; `:247` for `:246` in my report and claim (Learn
 **Gotchas:** pixel tests here read a GPU frame first and CI never does: run them with `chromote::set_chrome_args(c(
 chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))` too; after many `getImageData()` calls this Mac's frames read like
 CPU ones; `net.redraw()` paints at once (`moveTo()` only asks for a frame); `R_LIBS=<scratch>:` the renv path `.libPaths()` prints.
-**Next:** the nightly stays red until a push carries `d57172c28`; after the push, read the next scheduled run (`gh run list --branch master
+**Next:** pushed after close-out; read the first scheduled `shinytest2` run on the fix, 07:00 UTC 2026-10-27 (`gh run list --branch master
 --limit 10`). Ready: `BACKLOG.md:213` (S), `:246` (help text, S), `:257` (harem, M), `:267` (diagram, M), `:274` (founder peak, S), `:291`
 (CPU and GPU passes, S). Decisions: `:203`, `:222`, `:231`, `:240`, `:281`.
-**Not pushed:** 20 local commits (S1065's, S1066's and this session's) ride with the next push the owner asks for.
+**Pushed (owner: "push", after close-out):** `779d24724..ccd6e9028`, 20 commits (S1064's 1, S1065's 9, S1066's 5, this session's 5); the four push
+workflows started on `ccd6e9028`. The push-record commit after it is notes only and rides with the next push.
 
 ### Sessions 947-1066 (condensed S950 to S1067; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1066: Phase 11 of the campaign, consolidation (no code; the campaign is complete): `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`, 20
