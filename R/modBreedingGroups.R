@@ -285,27 +285,28 @@ modBreedingGroupsUI <- function(id) {
 #'   "Low Value" animals and IDs absent from the report. Group formation
 #'   halts until it is available in either of those cases. Unrelated to
 #'   kinship.
-#' @param kinshipMatrix optional reactive returning a kinship matrix,
-#'   typically a full-pedigree matrix shared with
-#'   \code{\link{modSummaryStatsServer}} (e.g. from \code{appServer}) rather
-#'   than independently recomputed. If NULL, the module calculates kinship
-#'   from the pedigree.
+#' @param kinshipMatrix optional reactive returning a kinship matrix, used
+#'   unchanged, so it should already carry any twin correction and kinship
+#'   overrides. It is used before \code{kinshipFor}; with neither, the module
+#'   calculates kinship from the pedigree.
 #' @param kinshipOverrides optional reactive returning a validated
 #'   outside-information kinship-override data frame (\code{id1}, \code{id2},
 #'   \code{kinship}); see \code{\link{applyKinshipOverrides}}.
-#'   When the module recomputes kinship from the pedigree (the shared
-#'   \code{kinshipMatrix} is unavailable), the overrides are applied to that
-#'   matrix so group formation reflects them regardless of tab order.
+#'   When the module recomputes kinship from the pedigree (neither
+#'   \code{kinshipMatrix} nor \code{kinshipFor} gives a matrix), the
+#'   overrides are applied to that matrix so group formation reflects them
+#'   regardless of tab order.
 #'   \code{NULL} (the default) is a no-op. A provided \code{kinshipMatrix} is
 #'   expected to already carry overrides applied at its source.
 #' @param twinRelations optional reactive returning a validated twin/zygosity
 #'   sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
 #'   \code{\link{checkTwinRelations}}. When the module recomputes kinship from
-#'   the pedigree (the shared \code{kinshipMatrix} is unavailable), it is
-#'   passed straight through to \code{\link{kinship}} so group formation
-#'   reflects a declared MZ-twin pair's corrected identity regardless of tab
-#'   order (BL-N Slice 3). \code{NULL} (the default) is a no-op. A provided
-#'   \code{kinshipMatrix} is expected to already reflect it at its source.
+#'   the pedigree (neither \code{kinshipMatrix} nor \code{kinshipFor} gives a
+#'   matrix), it is passed straight through to \code{\link{kinship}} so group
+#'   formation reflects a declared MZ-twin pair's corrected identity
+#'   regardless of tab order (BL-N Slice 3). \code{NULL} (the default) is a
+#'   no-op. A provided \code{kinshipMatrix} is expected to already reflect it
+#'   at its source.
 #' @param kinshipFor optional function of a character vector of animal IDs
 #'   that returns those animals' kinship matrix (row and column names are the
 #'   IDs). At Form Groups the module asks it for the candidates plus any seed
