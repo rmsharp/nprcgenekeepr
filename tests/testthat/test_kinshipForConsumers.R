@@ -561,7 +561,11 @@ test_that(paste("the Kinship Comparison asks kinshipFor for every animal once",
   expect_null(before$tables$comparison$value)
   expect_length(before$asked, 0L)
 
-  after <- markerRun("provider", tables = c("comparison", "comparison"))
+  ## No pedigree, so only the comparison can ask: testServer() draws every
+  ## output after the upload, the Realized Relatedness table included, which
+  ## the app draws only while its tab is open.
+  after <- markerRun("provider", ped = NULL,
+                     tables = c("comparison", "comparison"))
   expect_s3_class(after$tables$comparison$value, "data.frame")
   expect_identical(after$asked, list(NULL))
 })
