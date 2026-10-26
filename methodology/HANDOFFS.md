@@ -206,13 +206,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 ```handoff
 session: S1063
 date: 2026-10-25
-status: pending
-active_task: IN PROGRESS -- Phase 9a of the performance and memory campaign, the app's memory, implementation (owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9a"; strict TDD; BACKLOG.md:8; design docs/planning/app-kinship-memory-design.md sections 6.1, 7 and 8): the scripted app session committed to tools/perf/ with the before table, kinshipForAnimals() with the 7.1 tests, then Breeding Groups, Genetic Diversity and Mate Pair through a kinshipFor provider.
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- Phase 9a of the performance and memory campaign, the app's memory (owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9a"; strict TDD). Breeding Groups, Genetic Diversity and Mate Pair ask appServer()'s kinshipFor(ids) for their own animals through the internal kinshipForAnimals(); upload + QC 685.1 to 520.8 MB (design section 12). BACKLOG.md:8 now reads Phase 9b (READY): Summary Statistics' and Marker Genetics' every-animal reads, then sharedKinshipMatrix removed, then the table re-measured.
+what_was_done: Claim 0716ead7a. RED b61752e08 (test_perfAppSession.R, test_kinshipForAnimals.R 18, test_kinshipForConsumers.R 12, test_appServer_server.R wiring changed by design). GREEN 70bd838b6 (tools/perf/appSession.R, runAppSession.R, appSession/app.R) then three "before" runs, 816717628 (R/kinshipForAnimals.R), 3981961ee (Breeding Groups), b5eb89972 (Genetic Diversity, Mate Pair; amended for two lints before any push), 5ba8941ec (appServer provider). RED return 44fdc736f and GREEN c6c9a5829: the owner replaced S993's Genetic Diversity help sentence, made false by the change. Three "after" runs. REFACTOR 4c68f73b2 (shared test helpers; the recorder now records a request for every animal, closing the one mutation gap), ed1e9caae (currentKinshipOverrides()), ab3122abc (mzTwinGroups() for kinship() and the helper; kinshipGeneral() word for word). Owner rulings: overrides "Include them, then cut" (design rule 3 replaced); the help sentence; push now (37997db3f..ab3122abc, 16 commits). Docs 67a7cfb04 (design section 12, plan :653, BACKLOG.md:8 for 9b).
+next_steps: The owner's campaign: (1) Phase 9b (BACKLOG.md:8; design sections 6.1, 7.1 item 6, 8 and 12; strict TDD): Summary Statistics' kinship CSV and relationship downloads (R/modSummaryStats.R:384-436, :840-894) and Marker Genetics' Kinship Comparison (R/modMarkerGenetics.R:576-580, keep only the means) and Realized Relatedness (:716-729) through kinshipFor, each asking for every animal inside its handler; their item-6 tests (download bytes, the two tables); then sharedKinshipMatrix (R/appServer.R:353) removed, test_appServer_server.R:322 reads twins through the provider; then the table re-measured with Rscript tools/perf/runAppSession.R. (2) Phase 10. (3) The tie-order decision (BACKLOG.md:221). Outside the campaign: BACKLOG.md:231 (@inheritParams, READY, Effort S); :240, :249, :258 (DECISION NEEDED).
+key_files: R/kinshipForAnimals.R:40-60 (kinshipForAnimals) and :77-100 (twinRelationsForSet); R/mzTwinGroups.R:17-28; R/appServer.R:353-387 (sharedKinshipMatrix, currentKinshipOverrides, kinshipFor at :382); R/modBreedingGroups.R:367 (getKinshipMatrix) and :680-690 (the kinship step below the seed boxes); R/modGeneticDiversity.R:121-141 (diversityStats); R/modMatePair.R:398-426 (analyze handler); tools/perf/appSession.R:39-78 (steps); tests/testthat/test_kinshipForConsumers.R:30-39 (recordingProvider); tests/testthat/helper-perfCampaign.R:69-81; docs/planning/app-kinship-memory-design.md section 12.
+gotchas: The app session loads the working tree in each run (load_all), so take before-runs before touching R/ and edit nothing while one runs; it works from the project root (no outside-the-project recipe needed), about a minute a run, output to a file, wait for DONE. A test recorder must use c(asked, list(ids)): asked[[n + 1]] <<- NULL records nothing. A lint step in an && chain does not stop the commit; read the count. test_geneticDiversityKinshipHelp.R pins owner-approved help text; grep tests for a parameter's help before rewording it. Mate Pair's own step grew 392 MB less after 9a, not investigated (F2). HANDOFFS.md is 190,493 B, 6,115 B under its 196,608 B warn line: a trim is owed when it warns.
+runtime_smoke: The running app through the committed tool, 3 runs before (70bd838b6) and 3 after (c6c9a5829): upload + QC 685.1 to 520.8 MB, no kinship() at upload, every step's output on the page; the browser tier of design 7.2 from scratch installs of c6c9a5829 and ab3122abc, 11 files, 38 tests, 0 failed.
+quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 89d758aa16dd · manifest 7335ff8d4ddc
+changelog_ref: 0716ead7a
+commit: ab3122abc
 ```
-Session claimed; work beginning.
+The owner picked Phase 9a and answered the approach question (overrides), the three phase gates, the help-wording question and the push question with the recommended option each time. The only exported change: three Shiny module servers gain an optional last argument, kinshipFor, and two get a NULL default for kinshipMatrix; values, messages and results are unchanged.
 
 ```handoff
 session: S1062

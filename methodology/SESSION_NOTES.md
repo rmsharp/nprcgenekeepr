@@ -99,12 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1063 Did
-**Deliverable:** Phase 9a of the performance and memory campaign, the app's memory, implementation (IN PROGRESS; owner pick at
-the Phase 0 picker, item 1 of 4, "Campaign Phase 9a"; strict TDD; `BACKLOG.md:8`; design `docs/planning/app-kinship-memory-design.md`
-sections 6.1, 7 and 8).
-**Started:** 2026-10-25 18:50 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 9a"; strict TDD; an approach question, three phase gates, a help-wording question
+and a push question, each answered with the recommended option):** Breeding Groups, Genetic Diversity and Mate Pair ask `appServer()`'s
+`kinshipFor(ids)` (`R/appServer.R:382`) for their own animals through the internal `kinshipForAnimals()` (`R/kinshipForAnimals.R:40`); the
+scripted app session is committed (`Rscript tools/perf/runAppSession.R <label> <out.csv>`). Claim `0716ead7a`, RED `b61752e08`, GREEN
+`70bd838b6`..`5ba8941ec`, RED return `44fdc736f`, GREEN `c6c9a5829`, REFACTOR `4c68f73b2` `ed1e9caae` `ab3122abc`; pushed `37997db3f..ab3122abc`.
+**Owner rulings:** overrides "Include them, then cut" (the design's rule 3 replaced: it would have dropped today's ceiling error); the Genetic
+Diversity help sentence replaced (`test_geneticDiversityKinshipHelp.R`). **Measured** (medians of 3 runs, design section 12): upload + QC 685.1
+to 520.8 MB, the session through Genetic Diversity 864.5 to 684.6 MB, Mate Pair 1,947.4 to 1,375.3 MB; no `kinship()` at upload.
+**Verified:** suite 4,437 tests 0 failed (after GREEN and REFACTOR); lint 0; check 0/0/0; browser tier 11 files 38 tests twice; ratchet 10/10
+(`89d758aa16dd`); mutation 9 of 9 after REFACTOR. CI on `ab3122abc`: all four workflows
+success, R-CMD-check `40265175571` green on all 5 legs (the bit-identity tests on macOS, Windows and Ubuntu).
+**Handoff evaluation of S1062: 9/10.** Helped: Next (1)'s order (tool and "before" table first, helper, three tabs) and the scratch `app.R`
+trace recipe (its `p8/` folder became `tools/perf/`). Missing: the price of rule 3 on the error path, and `test_geneticDiversityKinshipHelp.R`
+(it pins owner-approved help, in neither of the design's test lists). Wrong: nothing; the run-from-outside recipe is not needed. ROI: high.
+**Self: 8/10.** + measured the override rules on the error path before asking; before/after from the committed tool; the mutation check
+found a real gap in my own test recorder. - a GREEN commit said "lintr 0" with two lints (amended before the push); I missed the help guard in
+planning (cost a RED return and a question); a RED helper could not build an empty table. Learning 1029.
+**Gotchas:** take app-session runs only while nothing edits `R/` (each run loads the tree); a recorder needs `c(asked, list(ids))` to record
+`NULL`; a lint step in an `&&` chain does not stop a commit; Mate Pair's own step grew 392 MB less after 9a, not investigated (F2).
+**Next:** **the owner's campaign:** (1) Phase 9b (`BACKLOG.md:8`; strict TDD): Summary Statistics' downloads and Marker Genetics' two tables
+through `kinshipFor`, their item-6 tests, `sharedKinshipMatrix` removed (`R/appServer.R:353`, `test_appServer_server.R:322`), re-measure.
+(2) Phase 10. (3) The tie-order decision (`BACKLOG.md:221`). Outside: `:231` (READY, S); `:240`, `:249`, `:258` (DECISION NEEDED).
 
 ### Sessions 947-1062 (condensed S950 to S1063; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1062: Phase 8 of the campaign, the app's memory design (`docs/planning/app-kinship-memory-design.md`; text only): D5 ruled (c),
@@ -157,18 +173,13 @@ tests/testthat`, filter with `/test[_-]` and open each hit; read `PROJECT_LEARNI
 S1050: the performance and memory campaign plan (`docs/planning/performance-memory-campaign-plan.md`; a planning session): baselines, root causes
 H1-H10, 12 phases, decisions D1-D8. Claim `4738c7a37`, deliverable `0bc77f06a`, close-out `0a1727714`; S1049 9/10, self 8/10 (Learning 1016). **Gotchas
 kept:** R 4.6's `gc()` has a "limit (Mb)" column (find "max used" by name); `test_file()` changes the working directory (use absolute paths).
-S1049: the trend chart leaves a blank metric value out of the drawing without a console warning (`na.rm = TRUE` on four layers,
-`R/plotSnapshotTrends.R:125,131,134`; the jmac example at 10 iterations gave 3 warnings, now 0, PNG byte-identical), and three tests pin the panel notice's
-200-character cut (`R/modSnapshotTrends.R:427`; `tests/testthat/test_modSnapshotTrends.R:857,863,873`; their RED is four broken copies of the cut); owner pick
-"Earlier-snapshots follow-ups", strict TDD; claim `16ddb997f`, RED `924b26b1b`, GREEN `3e3adfcbc`, REFACTOR `6efd1ce94` (`oneNoteNotice()`, `severalNotesNotice()`),
-close-out `520bd5dc8`; evaluation of S1048 9/10, self 8/10 (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a
-plot renders; a "draws quietly" test must draw (`plotGrob()`), `ggplot_build()` raises nothing; a blank-value history takes 0.9 s.
-S1048: `methodology/CHANGELOG.md` trimmed from 200,357 B to 23,778 B, 112 of 125 records archived to `methodology/archive/CHANGELOG-through-2026-10-22.md` (owner pick, "Trim
-CHANGELOG.md"; housekeeping, no code); the owner chose the clean day seam, `--cut 2026-10-22`, over the tool's default cut (21 records kept at 33,990 B, which would have left 8 of the
-31 records dated 2026-10-22 live under a "through-2026-10-22" name); claim `76353cde1`, trim `4c54afa9e`, close-out `7a6729bd6`; evaluation of S1047 8/10, self 8/10 (Learning 1014).
-**Gotchas kept:** a scheduled workflow runs from the remote default branch (`git show origin/master:.github/workflows/shinytest2.yaml` reads 45 until a push); the trimmer's dry runs write
-nothing and print each cut's counts, `--cut <date>` keeps records dated after the date (the newest day alone is `CUT_OUT_OF_RANGE`); the tool's own entry sits under the pointer block, so
-the DONE entry goes above it; `CHANGELOG.md` regrows about 22 KB a day (an estimate; the lever is `BACKLOG.md:131`).
+S1049: the trend chart drops a blank metric value without a console warning (`na.rm = TRUE`, `R/plotSnapshotTrends.R:125,131,134`) and three
+tests pin the panel notice's 200-character cut (`R/modSnapshotTrends.R:427`); strict TDD; claim `16ddb997f`, close-out `520bd5dc8`; S1048 9/10,
+self 8/10 (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws
+quietly" test must draw (`plotGrob()`).
+S1048: `methodology/CHANGELOG.md` trimmed 200,357 to 23,778 B (`--cut 2026-10-22`, the owner's clean day seam; housekeeping); claim `76353cde1`,
+close-out `7a6729bd6`; S1047 8/10, self 8/10 (Learning 1014). **Gotchas kept:** a scheduled workflow runs from the remote default branch;
+`--cut <date>` keeps records dated after the date; the trimmer's own entry sits under the pointer block, so the DONE entry goes above it.
 S1046-S1047: the scheduled `shinytest2` run of 2026-10-23 (`39916862256`) was cancelled at 45 minutes because `apt` downloads ran 6 to 26 times slower than the night before (52 to
 55 kB/s; setup took 31 min 47 s), not because of a test (S1046, a diagnosis: `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`); the limit is 75 minutes (S1047, strict TDD:
 `tests/testthat/test_shinytest2_workflow_timeout.R:36` expects `75L`, `.github/workflows/shinytest2.yaml:46`, one path helper `shinytest2WorkflowPath()` in
