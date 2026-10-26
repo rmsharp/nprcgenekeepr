@@ -794,6 +794,69 @@ test_that("the panel's cost line says 1 snapshot when the start year leaves one 
   })
 })
 
+## ===========================================================================
+## The cost line's number (S1065; Phase 10 of the performance and memory
+## campaign, docs/planning/performance-memory-campaign-plan.md): after
+## Phases 1, 2 and 5 a date costs about 0.2 s per 1,000 iterations (the jmac
+## studbook's 53 default dates at 1,000 iterations took 12.6 s, 0.24 s a
+## date; the example colony's 49 took 9.4 s), not the 4 s the line said. The
+## sentence is the owner's (S1065, AskUserQuestion, "Quarter second"), and the
+## estimate counts 0.25 s a date per 1,000 iterations.
+## ===========================================================================
+
+## The default series a jmac build starts with: 53 yearly dates.
+jmacDefaultDates <- function() {
+  as.Date(sprintf("%d-01-01", 1966:2018))
+}
+
+test_that("the cost line gives the owner's quarter-second sentence", {
+  line <- nprcgenekeepr:::describeBackfillCost(jmacDefaultDates(), 1000L)
+  expect_identical(
+    line,
+    paste0(
+      "53 snapshots, 1966-01-01 to 2018-01-01, at 1000 iterations each. ",
+      "Each date runs the gene drop again, about a quarter of a second per ",
+      "1,000 iterations on a colony of 2,590 animals, so expect under a ",
+      "minute here (an estimate; larger colonies take longer)."
+    )
+  )
+  expect_false(grepl("4 seconds", line, fixed = TRUE))
+})
+
+test_that("the cost line's estimate counts a quarter second a date per 1,000 iterations", {
+  ## 53 x 0.25 x 10 = 132.5 s
+  line <- nprcgenekeepr:::describeBackfillCost(jmacDefaultDates(), 10000L)
+  expect_match(line, "so expect about 2 min here", fixed = TRUE)
+})
+
+test_that("the cost line says minutes from 60 seconds on", {
+  dates <- as.Date(sprintf("%d-01-01", 1951:2010))
+  ## 59 x 0.25 x 4 = 59 s
+  expect_match(
+    nprcgenekeepr:::describeBackfillCost(dates[-1L], 4000L),
+    "so expect under a minute here", fixed = TRUE
+  )
+  ## 60 x 0.25 x 4 = 60 s
+  expect_match(
+    nprcgenekeepr:::describeBackfillCost(dates, 4000L),
+    "so expect about 1 min here", fixed = TRUE
+  )
+})
+
+test_that("the panel's cost line shows the quarter-second sentence", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    session$setInputs(backfillStart = backfillStartDate)
+    html <- as.character(output$backfillCostUI$html)
+    expect_match(
+      html,
+      "about a quarter of a second per 1,000 iterations on a colony of 2,590 animals",
+      fixed = TRUE
+    )
+  })
+})
+
 ## -- the warning notice -----------------------------------------------------------
 
 ## The text of each warning notice one build gives when it raises `notes`.
