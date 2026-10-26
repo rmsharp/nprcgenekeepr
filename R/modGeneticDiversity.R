@@ -91,9 +91,9 @@ modGeneticDiversityUI <- function(id) {
 #' @param kinshipFor optional function of a character vector of animal IDs
 #'   that returns those animals' kinship matrix. Once groups, the pedigree and
 #'   the genetic value report are all available, the module asks it for the
-#'   groups' members. \code{appServer} passes one that computes kinship from
-#'   those animals and their ancestors only, so a group may hold any animal of
-#'   the pedigree, not only the Genetic Value population. With neither
+#'   groups' members. In the app it computes the members' kinship from them
+#'   and their ancestors only, so a group may hold any animal of the
+#'   pedigree, not only the Genetic Value population. With neither
 #'   \code{kinshipMatrix} nor \code{kinshipFor} the module shows no heat map.
 #'
 #' @return A list with two reactive elements: \code{stats}, the per-group
