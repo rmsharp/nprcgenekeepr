@@ -313,8 +313,11 @@ test_that(
 ## Runs `body` in the browser with a pixel reader on the Diagram canvas: `net`
 ## (the vis.Network), `cv` (its canvas) and `lum(x, y)`, the grey level (0
 ## black, 255 white) at a position in CSS pixels, and `rgb(x, y)`, its
-## [r, g, b]; a pixel off the canvas or see-through counts as white. `body`
-## must `return` its answer.
+## [r, g, b]; a pixel off the canvas counts as white, and a see-through or
+## partly see-through one is read as it shows on the page's white (S1067:
+## Chrome's software drawing, as on CI, draws a 1 px outline almost wholly in
+## partly see-through pixels, which this reader used to count as white).
+## `body` must `return` its answer.
 diagram_pixel_js <- function(body) {
   paste0(
     "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
@@ -324,12 +327,13 @@ diagram_pixel_js <- function(body) {
     "py = Math.round(y * k); if (px < 0 || py < 0 || px >= cv.width || ",
     "py >= cv.height) { return 255; } ",
     "const d = ctx.getImageData(px, py, 1, 1).data; ",
-    "return d[3] < 255 ? 255 : (d[0] + d[1] + d[2]) / 3; }; ",
+    "return 255 - (d[3] / 255) * (255 - (d[0] + d[1] + d[2]) / 3); }; ",
     "const rgb = (x, y) => { const px = Math.round(x * k), ",
     "py = Math.round(y * k); if (px < 0 || py < 0 || px >= cv.width || ",
     "py >= cv.height) { return [255, 255, 255]; } ",
     "const d = ctx.getImageData(px, py, 1, 1).data; ",
-    "return d[3] < 255 ? [255, 255, 255] : [d[0], d[1], d[2]]; }; ",
+    "return [d[0], d[1], d[2]].map(v => ",
+    "Math.round(255 - (d[3] / 255) * (255 - v))); }; ",
     body, " })()"
   )
 }
@@ -442,12 +446,14 @@ test_that(
   ## How far the slash runs past the symbol's outline, as a multiple of the
   ## outline's own distance from the centre, both along the diagonal. The
   ## slash is walked outwards from the centre up-right until the black stops
-  ## (3 px of non-black); the outline is the first non-white pixel walking
-  ## out up-left from 5 px (clear of the slash's own width), where nothing
-  ## else is drawn; a pixel off the canvas or see-through counts as white,
-  ## and "non-white" is the darkest pixel of the 3 x 3 around the sample
-  ## being below 250: a circle's outline is 1 px wide at 45 degrees, and a
-  ## ray along the other diagonal can pass between its pixels (the first
+  ## (3 px of non-black); the outline is the first outline-coloured pixel
+  ## walking out up-left from 5 px (clear of the slash's own width), where
+  ## nothing else is drawn: the darkest pixel of the 3 x 3 around the sample
+  ## below 194, half way from white (255) to the outline's blue #2B7CE9
+  ## (grey 133), so at least half covered, as "black" (below 120) is half
+  ## way to black (S1067; 250, any trace of colour, let the circle read up
+  ## to 1.39). A circle's outline is 1 px wide at 45 degrees, and a ray
+  ## along the other diagonal can pass between its pixels (the first
   ## version missed it and found the sibship bar 85 px out instead). The legend's picture runs 19
   ## of a radius of 22 out along each axis: 1.22 times the circle's outline
   ## along the diagonal. Owner, S1028: the diagram's slash must overhang its
@@ -464,7 +470,7 @@ test_that(
       "for (let j = -1; j <= 1; j++) { lo = Math.min(lo, lum(x + i, y + j)); } } ",
       "return lo; }; ",
       "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
-      "if (near(c.x - t * q, c.y - t * q) < 250) { outline = t; break; } } ",
+      "if (near(c.x - t * q, c.y - t * q) < 194) { outline = t; break; } } ",
       "return outline > 0 ? lastBlack / outline : -1;"
     )), id))
   }
@@ -480,13 +486,14 @@ test_that(
   ## S1067: the nightly run of 2026-10-26 (40286217416) read 0.37 for the
   ## circle where this Mac read 1.27. CI's Chrome draws the canvas in
   ## software, and there every pixel the reading above looks at on the
-  ## circle's outline is partly see-through, so it missed the outline and
-  ## found the sibship bar 83.5 px out; this Mac reads 0.37 too with Chrome
-  ## started with --disable-accelerated-2d-canvas. Where a symbol falls
-  ## within a pixel changes which pixels are partly see-through, so the view
-  ## is moved by fifths of a pixel each way and redrawn (vis-network's
-  ## redraw() paints at once), and both overhangs are read again at each of
-  ## the 25 positions, as "square,circle".
+  ## circle's outline is partly see-through, which diagram_pixel_js() then
+  ## counted as white, so it missed the outline and found the sibship bar
+  ## 83.5 px out; this Mac read 0.37 too with Chrome started with
+  ## --disable-accelerated-2d-canvas. Where a symbol falls within a pixel
+  ## changes which pixels are partly see-through, so the view is moved by
+  ## fifths of a pixel each way and redrawn (vis-network's redraw() paints at
+  ## once), and both overhangs are read again at each of the 25 positions,
+  ## as "square,circle".
   view0 <- as.numeric(strsplit(app$get_js(paste0(
     "(() => { const v = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
     ".network.getViewPosition(); return v.x + ',' + v.y; })()"
@@ -507,7 +514,7 @@ test_that(
       "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
       "else if (t - lastBlack > 3) { break; } } ",
       "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
-      "if (near(c.x - t * q, c.y - t * q) < 250) { outline = t; break; } } ",
+      "if (near(c.x - t * q, c.y - t * q) < 194) { outline = t; break; } } ",
       "return outline > 0 ? lastBlack / outline : -1; }; ",
       "return overhang('A') + ',' + overhang('E');"
     )))
