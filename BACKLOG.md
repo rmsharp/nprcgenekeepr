@@ -248,7 +248,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Marker Genetics' Realized Relatedness table holds every pair (DECISION NEEDED, Effort M; found S1062)** --
       opening the "Linkage and LD Block Metrics" tab (`R/modMarkerGenetics.R:227`) runs
-      `markerRealizedRelatednessVariance()` on the whole kinship matrix (`:716-729`;
+      `markerRealizedRelatednessVariance()` on the whole kinship matrix (`:735-751`;
       `R/markerRealizedRelatednessVariance.R:119`), with no genotype file needed: 6,824,665 rows on the example, built
       in 8.31 s with a 707.6 MB peak, a 390.9 MB table kept while the tab shows it; the app's memory rose 716 MB in
       13.5 s (design sections 2.1 and 9, F3). D5's change leaves it as it is, because the table itself needs every
@@ -256,10 +256,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       animals, a button that builds it, or leave it.
 
 - [ ] **Summary Statistics keeps the whole relationship table after a download (DECISION NEEDED, Effort S; found
-      S1062)** -- `relationshipData()` is a cached `reactive()` (`R/modSummaryStats.R:423-430`) that serves both
-      relationship downloads (`:878-894`): 6,824,665 rows and 234.7 MB on the example (built in 3.21 s, peak 693.5 MB),
+      S1062)** -- `relationshipData()` is a cached `reactive()` (`R/modSummaryStats.R:436-443`) that serves both
+      relationship downloads (`:891-907`): 6,824,665 rows and 234.7 MB on the example (built in 3.21 s, peak 693.5 MB),
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
+
+- [ ] **The scheduled `shinytest2` run of 2026-10-26 failed in the Diagram tab's deceased-slash test (READY, Effort S;
+      found S1064; no GitHub issue, per the CI-break convention)** -- run `40286217416` (07:30 UTC, head `ab3122abc`):
+      `tests/testthat/test-e2e-pedigree-module.R:475` "slash past a circle's outline" measured 0.37, expected > 1.1,
+      and `:477` "square and circle overhang difference" 0.91, expected < 0.12; the file's other 127 tests passed.
+      Not diagnosed. This was the first CI run of the test itself: S1028 added it (`ec2f53511`, 2026-10-21, green in
+      the local browser tier), and no push went out between 2026-10-20 (`c5545b016`) and 2026-10-25 20:24
+      (`63bc354f7`), so every run before was on older code. Candidates, unmeasured: the runner's Chrome renders the
+      outline or the slash differently (pixel width, device pixel ratio), or a later change to the drawing (S1029's
+      sections, S1030's `drawPedigreeDiagram()`, S1060's solver). First step: run the test from a scratch install on
+      this Mac (`R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`,
+      `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`), then read the run's Chrome version and
+      the measured pixels (`gh run view 40286217416 --log`).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing

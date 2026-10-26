@@ -123,6 +123,10 @@ caught. - a RED test assumed `testServer()` draws outputs lazily (a return); the
 (rows 5 and 6 of the plan's section 1), the cost line `R/modSnapshotTrends.R:457,470` in the owner's words (`describeBackfillCost()`),
 then D6. (2) Phase 11. (3) The tie-order decision (`BACKLOG.md:221`). Outside: `:231` (READY, S); `:240`, `:249`, `:258` (DECISION
 NEEDED; `:249` and `:258` are now the app's largest kept tables).
+**Pushed** `ab3122abc..779d24724` (owner: "Push now"): lint, pkgdown and test-coverage green; R-CMD-check `40308506997` green on 4 of
+5 legs (macOS, Windows, Ubuntu release and oldrel); the devel leg was still installing dependencies at close (read it at Phase 0).
+**Found after the push:** the scheduled `shinytest2` run of 2026-10-26 (`40286217416`) failed in the Diagram's deceased-slash
+pixel test, its first CI run ever (`BACKLOG.md:264`, READY, S; filed, not diagnosed).
 
 ### Sessions 947-1063 (condensed S950 to S1064; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1063: Phase 9a of the campaign, the app's memory (strict TDD): Breeding Groups, Genetic Diversity and Mate Pair ask
