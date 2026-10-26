@@ -459,20 +459,27 @@ test_that(
   ## along the diagonal. Owner, S1028: the diagram's slash must overhang its
   ## symbol by that same amount whatever the shape, a square (A) as well as
   ## a circle (E) -- a circle-sized slash stays inside a square's corners.
+  ## The measurement above as browser code for diagram_pixel_js(): it
+  ## defines overhang(id), the ratio for node `id` (-1 when no outline is
+  ## found), for the single reading and the shifted ones below.
+  overhang_js <- paste0(
+    "const q = Math.SQRT1_2; ",
+    "const near = (x, y) => { let lo = 255; for (let i = -1; i <= 1; i++) { ",
+    "for (let j = -1; j <= 1; j++) { lo = Math.min(lo, lum(x + i, y + j)); } } ",
+    "return lo; }; ",
+    "const overhang = (id) => { ",
+    "const c = net.canvasToDOM(net.getPosition(id)); ",
+    "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
+    "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
+    "else if (t - lastBlack > 3) { break; } } ",
+    "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
+    "if (near(c.x - t * q, c.y - t * q) < 194) { outline = t; break; } } ",
+    "return outline > 0 ? lastBlack / outline : -1; }; "
+  )
   get_overhang <- function(id) {
-    app$get_js(sprintf(diagram_pixel_js(paste0(
-      "const c = net.canvasToDOM(net.getPosition('%s')); ",
-      "const q = Math.SQRT1_2; ",
-      "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
-      "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
-      "else if (t - lastBlack > 3) { break; } } ",
-      "const near = (x, y) => { let lo = 255; for (let i = -1; i <= 1; i++) { ",
-      "for (let j = -1; j <= 1; j++) { lo = Math.min(lo, lum(x + i, y + j)); } } ",
-      "return lo; }; ",
-      "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
-      "if (near(c.x - t * q, c.y - t * q) < 194) { outline = t; break; } } ",
-      "return outline > 0 ? lastBlack / outline : -1;"
-    )), id))
+    app$get_js(diagram_pixel_js(paste0(
+      overhang_js, sprintf("return overhang('%s');", id)
+    )))
   }
   squareOverhang <- get_overhang("A")
   circleOverhang <- get_overhang("E")
@@ -504,19 +511,7 @@ test_that(
         "net.moveTo({position: {x: %f, y: %f}, scale: net.getScale(), ",
         "animation: false}); net.redraw(); "
       ), view0[[1L]] + dx, view0[[2L]] + dy),
-      "const q = Math.SQRT1_2; ",
-      "const near = (x, y) => { let lo = 255; for (let i = -1; i <= 1; i++) { ",
-      "for (let j = -1; j <= 1; j++) { lo = Math.min(lo, lum(x + i, y + j)); } } ",
-      "return lo; }; ",
-      "const overhang = (id) => { ",
-      "const c = net.canvasToDOM(net.getPosition(id)); ",
-      "let lastBlack = 0; for (let t = 0; t < 300; t += 0.5) { ",
-      "if (lum(c.x + t * q, c.y - t * q) < 120) { lastBlack = t; } ",
-      "else if (t - lastBlack > 3) { break; } } ",
-      "let outline = -1; for (let t = 5; t < 300; t += 0.5) { ",
-      "if (near(c.x - t * q, c.y - t * q) < 194) { outline = t; break; } } ",
-      "return outline > 0 ? lastBlack / outline : -1; }; ",
-      "return overhang('A') + ',' + overhang('E');"
+      overhang_js, "return overhang('A') + ',' + overhang('E');"
     )))
   }
   shifts <- expand.grid(dx = seq(0, 0.8, by = 0.2), dy = seq(0, 0.8, by = 0.2))
