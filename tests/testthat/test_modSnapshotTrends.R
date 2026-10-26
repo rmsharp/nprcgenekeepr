@@ -381,6 +381,20 @@ test_that("modSnapshotTrendsUI has the Build Earlier Snapshots panel", {
   expect_true(grepl("reconstructedLiving", ui_html, fixed = TRUE))
 })
 
+test_that("the Build Earlier Snapshots box says the rebuilt rows join the same history", {
+  ## owner-reported S1065: "filed under their own rule" read like a separate
+  ## folder. The rows join the History table, whose header shows the name
+  ## membershipRule, and the Trends chart draws them dashed (wording S1069).
+  ui_html <- gsub("\\s+", " ", as.character(modSnapshotTrendsUI("test")))
+
+  expect_true(grepl(paste(
+    "They are added to the same history, marked reconstructedLiving in its",
+    "membershipRule column, and drawn as their own dashed line, apart from",
+    "recorded snapshots."
+  ), ui_html, fixed = TRUE))
+  expect_false(grepl("filed under", ui_html, fixed = TRUE))
+})
+
 test_that("modSnapshotTrendsUI has the Earlier Snapshots tab with the counts table", {
   ui_html <- as.character(modSnapshotTrendsUI("test"))
 
