@@ -161,21 +161,11 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
       mzId1 <- match(mzRows$id1, id)
       mzId2 <- match(mzRows$id2, id)
       if (anyNA(c(mzId1, mzId2))) {
-        # nolint start: nonportable_path_linter.
-        stop("All twinRelations id1/id2 values must be present in id.")
-        # nolint end: nonportable_path_linter.
+        stop(mzTwinIdsAbsentMessage)
       }
       havemz <- TRUE
       mzmat <- cbind(mzId1, mzId2)
-      mzgrp <- seq_len(max(mzmat))
-      repeat {
-        if (all(mzgrp[mzmat[, 1L]] == mzgrp[mzmat[, 2L]])) {
-          break
-        }
-        for (i in seq_len(nrow(mzmat))) {
-          mzgrp[mzmat[i, 1L]] <- mzgrp[mzmat[i, 2L]] <- min(mzgrp[mzmat[i, ]])
-        }
-      }
+      mzgrp <- mzTwinGroups(mzmat[, 1L], mzmat[, 2L], max(mzmat))
       mzindex <- cbind(
         unlist(tapply(mzmat, mzgrp[mzmat], function(x) {
           z <- unique(x)

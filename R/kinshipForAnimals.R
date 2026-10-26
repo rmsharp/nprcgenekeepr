@@ -81,22 +81,11 @@ twinRelationsForSet <- function(twinRelations, held, pedIds) {
   isMz <- twinRelations$code == "MZ twin"
   mz <- twinRelations[isMz, , drop = FALSE]
   if (!all(c(mz$id1, mz$id2) %in% pedIds)) {
-    # nolint start: nonportable_path_linter.
-    stop("All twinRelations id1/id2 values must be present in id.")
-    # nolint end: nonportable_path_linter.
+    stop(mzTwinIdsAbsentMessage)
   }
   members <- unique(c(mz$id1, mz$id2))
-  group <- seq_along(members)
-  first <- match(mz$id1, members)
-  second <- match(mz$id2, members)
-  repeat {
-    if (all(group[first] == group[second])) {
-      break
-    }
-    for (i in seq_along(first)) {
-      group[c(first[i], second[i])] <- min(group[c(first[i], second[i])])
-    }
-  }
+  group <- mzTwinGroups(match(mz$id1, members), match(mz$id2, members),
+                        length(members))
   chains <- lapply(unique(group), function(g) {
     kept <- members[group == g & members %in% held]
     data.frame(id1 = kept[-length(kept)], id2 = kept[-1L],
