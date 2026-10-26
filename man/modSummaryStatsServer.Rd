@@ -11,7 +11,8 @@ modSummaryStatsServer(
   kinshipMatrix = NULL,
   founderStats = NULL,
   kinshipOverrides = NULL,
-  twinRelations = NULL
+  twinRelations = NULL,
+  kinshipFor = NULL
 )
 }
 \arguments{
@@ -28,9 +29,9 @@ accepted) enables z-score plots.}
 
 \item{kinshipMatrix}{optional reactive returning kinship matrix. When
 supplied it is used unchanged, so it should already carry any twin
-correction and kinship overrides (the app passes the shared matrix, which
-does). If NULL, or if the reactive errors or returns NULL, the module
-calculates kinship from the pedigree.}
+correction and kinship overrides. If NULL, or if the reactive errors or
+returns NULL, the module asks \code{kinshipFor}, then calculates kinship
+from the pedigree.}
 
 \item{founderStats}{optional reactive returning a list of founder statistics
 (\code{fe}, \code{fg}, \code{total}, \code{nMaleFounders},
@@ -40,8 +41,8 @@ on the Summary Statistics tab (monolith parity). If NULL, it is omitted.}
 \item{kinshipOverrides}{optional reactive returning a validated
 outside-information kinship-override data frame (\code{id1}, \code{id2},
 \code{kinship}); see \code{\link{applyKinshipOverrides}}.
-When the module recomputes kinship from the pedigree (the fallback; the
-app normally supplies a matrix that already carries them), the
+When the module recomputes kinship from the pedigree (the fallback; in
+the app \code{kinshipFor} already applies them), the
 overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship \emph{value} only; the \code{relation}
@@ -53,11 +54,21 @@ with a logical \code{overridden} column in the relationship table.
 \item{twinRelations}{optional reactive returning a validated twin/zygosity
 sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
 \code{\link{checkTwinRelations}}. When the module recomputes kinship from
-the pedigree (the fallback; the app normally supplies a matrix that
-already reflects it), it is passed straight through to
+the pedigree (the fallback; in the app \code{kinshipFor} already
+reflects it), it is passed straight through to
 \code{\link{kinship}} so the relationship table and the kinship CSV
 export reflect a declared MZ-twin pair's corrected identity regardless
 of tab order (BL-N Slice 3). \code{NULL} (the default) is a no-op.}
+
+\item{kinshipFor}{optional function of a character vector of animal IDs
+that returns those animals' kinship matrix; with no IDs it returns every
+animal's. The kinship CSV download asks it for every animal at each
+click, and the two relationship downloads ask it once for the
+relationship table they share, so no kinship matrix is kept between
+clicks. \code{appServer} passes one that applies the twins and
+overrides. A provided \code{kinshipMatrix} is used first; with neither,
+the module calculates kinship from the pedigree. \code{NULL} (the
+default) is not used.}
 }
 \value{
 A list with reactive components:

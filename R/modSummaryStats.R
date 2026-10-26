@@ -265,9 +265,9 @@ modSummaryStatsUI <- function(id) {
 #'   \code{id}, \code{sire}, \code{dam}, and \code{sex}. Optionally \code{gen}.
 #' @param kinshipMatrix optional reactive returning kinship matrix. When
 #'   supplied it is used unchanged, so it should already carry any twin
-#'   correction and kinship overrides (the app passes the shared matrix, which
-#'   does). If NULL, or if the reactive errors or returns NULL, the module
-#'   calculates kinship from the pedigree.
+#'   correction and kinship overrides. If NULL, or if the reactive errors or
+#'   returns NULL, the module asks \code{kinshipFor}, then calculates kinship
+#'   from the pedigree.
 #' @param founderStats optional reactive returning a list of founder statistics
 #'   (\code{fe}, \code{fg}, \code{total}, \code{nMaleFounders},
 #'   \code{nFemaleFounders}). When supplied, a founder summary table is rendered
@@ -275,8 +275,8 @@ modSummaryStatsUI <- function(id) {
 #' @param kinshipOverrides optional reactive returning a validated
 #'   outside-information kinship-override data frame (\code{id1}, \code{id2},
 #'   \code{kinship}); see \code{\link{applyKinshipOverrides}}.
-#'   When the module recomputes kinship from the pedigree (the fallback; the
-#'   app normally supplies a matrix that already carries them), the
+#'   When the module recomputes kinship from the pedigree (the fallback; in
+#'   the app \code{kinshipFor} already applies them), the
 #'   overrides are applied to that matrix, so the relationship table and the
 #'   kinship CSV export reflect the supplied values regardless of tab order.
 #'   The override moves the kinship \emph{value} only; the \code{relation}
@@ -287,11 +287,20 @@ modSummaryStatsUI <- function(id) {
 #' @param twinRelations optional reactive returning a validated twin/zygosity
 #'   sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
 #'   \code{\link{checkTwinRelations}}. When the module recomputes kinship from
-#'   the pedigree (the fallback; the app normally supplies a matrix that
-#'   already reflects it), it is passed straight through to
+#'   the pedigree (the fallback; in the app \code{kinshipFor} already
+#'   reflects it), it is passed straight through to
 #'   \code{\link{kinship}} so the relationship table and the kinship CSV
 #'   export reflect a declared MZ-twin pair's corrected identity regardless
 #'   of tab order (BL-N Slice 3). \code{NULL} (the default) is a no-op.
+#' @param kinshipFor optional function of a character vector of animal IDs
+#'   that returns those animals' kinship matrix; with no IDs it returns every
+#'   animal's. The kinship CSV download asks it for every animal at each
+#'   click, and the two relationship downloads ask it once for the
+#'   relationship table they share, so no kinship matrix is kept between
+#'   clicks. \code{appServer} passes one that applies the twins and
+#'   overrides. A provided \code{kinshipMatrix} is used first; with neither,
+#'   the module calculates kinship from the pedigree. \code{NULL} (the
+#'   default) is not used.
 #'
 #' @return A list with reactive components:
 #' \itemize{
@@ -334,7 +343,7 @@ modSummaryStatsUI <- function(id) {
 modSummaryStatsServer <- function(id, geneticValues, pedigree,
                                    kinshipMatrix = NULL, founderStats = NULL,
                                    kinshipOverrides = NULL,
-                                   twinRelations = NULL) {
+                                   twinRelations = NULL, kinshipFor = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # ========================================
@@ -380,10 +389,12 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       }
     }
 
-    # Helper: Get or calculate kinship matrix
-    getKinshipMatrix <- reactive({
+    # Helper: Get or calculate kinship matrix. A plain function, not a
+    # reactive, so the matrix kinshipFor gives is not kept between clicks
+    # (performance campaign Phase 9b): a provided kinshipMatrix first, then
+    # kinshipFor asked for every animal, then the fallback below.
+    getKinshipMatrix <- function() {
       req(pedigree())
-      ped <- asDataFrame(pedigree())
 
       # Try to use provided kinship matrix
       if (!is.null(kinshipMatrix)) {
@@ -392,15 +403,27 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           return(kmat)
         }
       }
+      if (!is.null(kinshipFor)) {
+        kmat <- tryCatch(kinshipFor(), error = function(e) NULL)
+        if (!is.null(kmat)) {
+          return(kmat)
+        }
+      }
+      fallbackKinshipMatrix()
+    }
 
-      # Calculate kinship from pedigree if not provided (the fallback
-      # recompute; the app passes its shared full-pedigree matrix, so this
-      # runs only when that reactive gives no matrix).
+    # Calculate kinship from pedigree if not provided (the fallback
+    # recompute; the app passes its kinship provider, kinshipFor, so this
+    # runs only when neither kinship source gives a matrix).
+    fallbackKinshipMatrix <- reactive({
+      req(pedigree())
+      ped <- asDataFrame(pedigree())
       # Issue #13 Slice 3: apply outside-information kinship overrides to this
       # matrix so the relationship table and the kinship CSV export reflect them
-      # regardless of tab order. The passed-kinshipMatrix branch above already
-      # carries overrides. Ids absent from the matrix are warn-dropped, never
-      # aborting the module (D5). The override moves the kinship VALUE; the
+      # regardless of tab order. The kinshipMatrix and kinshipFor branches
+      # above already carry overrides. Ids absent from the matrix are
+      # warn-dropped, never aborting the module (D5). The override moves the
+      # kinship VALUE; the
       # relation LABEL stays pedigree-derived (convertRelationships is
       # structural).
       if (!"gen" %in% names(ped)) {
