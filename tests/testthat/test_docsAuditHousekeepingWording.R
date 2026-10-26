@@ -101,16 +101,23 @@ test_that("the Age-Sex Pyramid's height help line is styled with a real color", 
 
 ## -- CD2 and CC1 (comments) --------------------------------------------------
 
+## Phase 9b of the performance and memory campaign (S1064): appServer passes
+## its kinship provider, kinshipFor, instead of the shared matrix, so the S994
+## sentence went false; the owner chose the replacement at the S1064 PRE-RED
+## question ("Proposed sentence").
 test_that("the Summary Statistics kinship comment says what appServer passes", {
   expectWording(
     commentText("modSummaryStats.R"),
     now = paste(
-      "(the fallback recompute; the app passes its shared full-pedigree",
-      "matrix, so this runs only when that reactive gives no matrix)"
+      "(the fallback recompute; the app passes its kinship provider,",
+      "kinshipFor, so this runs only when neither kinship source gives a",
+      "matrix)"
     ),
-    gone = paste(
-      "the path the app always takes since appServer passes",
-      "kinshipMatrix=NULL"
+    gone = c(
+      paste("the path the app always takes since appServer passes",
+            "kinshipMatrix=NULL"),
+      paste("(the fallback recompute; the app passes its shared full-pedigree",
+            "matrix, so this runs only when that reactive gives no matrix)")
     )
   )
 })

@@ -270,16 +270,18 @@ test_that("appServer hands the other tabs the analysis pedigree, not the table's
 # 2b. BL-N Slice 3 (twinRelations-into-kinship() plan, docs/planning/
 #     twin-relations-kinship-computation-plan.md sec 4): shared$twinRelations
 #     is populated from the pedigree module's own new return-list entry, feeds
-#     sharedKinshipMatrix()'s own kinship() call, and is threaded through to
-#     the GV Analysis and Breeding Groups module calls -- this is the literal
+#     the kinship provider's kinship() call, and is threaded through to the
+#     GV Analysis and Breeding Groups module calls -- this is the literal
 #     Dragon-1 wiring the plan's own Pre-RED resolved (single upload point,
-#     app-wide propagation regardless of tab visit order).
+#     app-wide propagation regardless of tab visit order). Since performance
+#     campaign Phase 9b the provider (kinshipFor) is the app's only kinship
+#     source; the shared matrix (sharedKinshipMatrix) is gone.
 # =============================================================================
 
 # Reuses test_kinship.R's own fam1 fixture (subjects 8/9 declared MZ twins,
 # 10 a child of twin 8 -- the propagation case), without a gen column --
-# sharedKinshipMatrix() computes gen itself when absent (mirrors its own
-# existing pedSet fixture convention of a minimal pedigree).
+# the provider computes gen itself when absent (mirrors its own existing
+# pedSet fixture convention of a minimal pedigree).
 twinFixturePed <- function() {
   data.frame(
     id   = as.character(1:10),
@@ -294,9 +296,10 @@ twinFixtureTwins <- function() {
 }
 
 test_that(paste("appServer wires shared$twinRelations from the pedigree",
-                "module into sharedKinshipMatrix and the downstream GV/",
-                "Breeding-Groups module calls (Slice 3)"), {
+                "module into the kinship provider and the downstream GV/",
+                "Breeding-Groups module calls (Slice 3; Phase 9b)"), {
   twinsSet <- FALSE
+  sharedMatrixGone <- FALSE
   kmAtTwins <- NULL
   kfAtTwins <- NULL
   gvArgTwins <- "unset"
@@ -319,9 +322,11 @@ test_that(paste("appServer wires shared$twinRelations from the pedigree",
         ctl$twins(twinFixtureTwins())
         session$flushReact()
         twinsSet <<- identical(shared$twinRelations, twinFixtureTwins())
-        kmAtTwins <<- sharedKinshipMatrix()
-        # Phase 9a: the provider Breeding Groups is given sees the twins too.
+        # Phase 9b: no shared matrix is kept; the provider Breeding Groups is
+        # given sees the twins, asked for every animal and for two of them.
+        sharedMatrixGone <<- !exists("sharedKinshipMatrix")
         if (is.function(ctl$bgKinshipFor)) {
+          kmAtTwins <<- ctl$bgKinshipFor()
           kfAtTwins <<- ctl$bgKinshipFor(c("9", "10"))
         }
         # twinRelations is documented (mirroring kinshipOverrides) as an
@@ -343,6 +348,8 @@ test_that(paste("appServer wires shared$twinRelations from the pedigree",
   )
 
   expect_true(twinsSet)
+  expect_true(sharedMatrixGone)
+  expect_identical(rownames(kmAtTwins), twinFixturePed()$id)
   expect_equal(kmAtTwins["8", "9"], 0.5)
   expect_equal(kmAtTwins["9", "10"], 0.28125)
   expect_identical(kfAtTwins["9", "10"], 0.28125)
@@ -630,28 +637,31 @@ test_that(paste("appServer does not mount the ORIP module when the site",
 })
 
 # =============================================================================
-# 7. Shared kinship (issue #122 Phase 2; performance campaign Phase 9a,
-#    S1063). appServer hoists ONE full-pedigree kinship reactive, which
-#    Summary Statistics (and Marker Genetics) read until Phase 9b, and ONE
-#    kinship provider, a function of the ids a tab needs, which Breeding
-#    Groups, Genetic Diversity and Mate Pair ask for those animals only
-#    (docs/planning/app-kinship-memory-design.md section 6.1). With no ids the
-#    provider gives the FULL pedigree's matrix, the shared reactive's value,
-#    never GV's population-filtered gvResults$kinshipMatrix
+# 7. Shared kinship (issue #122 Phase 2; performance campaign Phases 9a and
+#    9b, S1063-S1064). appServer hoists ONE kinship provider, a function of
+#    the ids a tab needs: Breeding Groups, Genetic Diversity and Mate Pair ask
+#    it for their own animals, and Summary Statistics and Marker Genetics ask
+#    it for every animal (docs/planning/app-kinship-memory-design.md section
+#    6.1). No tab is handed a matrix, and no matrix of every animal is kept.
+#    With no ids the provider gives the FULL pedigree's matrix, never GV's
+#    population-filtered gvResults$kinshipMatrix
 #    (docs/planning/issue122-module-contract-plan.md section 4.3, Dragon 1).
 # =============================================================================
 
-test_that(paste("appServer gives Breeding Groups a kinship provider instead",
-                "of the shared matrix, and the provider's whole-pedigree",
-                "value is the matrix Summary Statistics gets (Phase 9a)"), {
-  capturedSummaryKin <- NULL
+test_that(paste("appServer gives Summary Statistics and Breeding Groups the",
+                "same kinship provider instead of a matrix, and its",
+                "whole-pedigree value is the pedigree's kinship (Phases 9a",
+                "and 9b)"), {
+  capturedSummaryKin <- "unset"
+  capturedSummaryFor <- NULL
   capturedBreedingKin <- "unset"
   capturedBreedingFor <- NULL
-  capturedSummaryValue <- NULL
   capturedProviderValue <- NULL
 
-  captureSummaryStats <- function(id, ..., kinshipMatrix) {
+  captureSummaryStats <- function(id, ..., kinshipMatrix = "not passed",
+                                  kinshipFor = "not passed") {
     capturedSummaryKin <<- kinshipMatrix
+    capturedSummaryFor <<- kinshipFor
     invisible(NULL)
   }
   captureBreedingGroups <- function(id, ..., kinshipMatrix = "not passed",
@@ -687,28 +697,63 @@ test_that(paste("appServer gives Breeding Groups a kinship provider instead",
         session$flushReact()
         ctl$ped(test_ped)
         session$flushReact()
-        # Reactives can only be evaluated inside the live testServer session.
-        capturedSummaryValue <<- capturedSummaryKin()
-        if (is.function(capturedBreedingFor)) {
-          capturedProviderValue <<- capturedBreedingFor()
+        # The provider reads reactive values, so it is asked inside the live
+        # testServer session.
+        if (is.function(capturedSummaryFor)) {
+          capturedProviderValue <<- capturedSummaryFor()
         }
       }))
     }
   )
 
-  expect_true(is.function(capturedSummaryKin))
-  # Breeding Groups asks the provider for its own animals; it is no longer
-  # handed the whole matrix.
+  # Each tab asks the provider; neither is handed the whole matrix.
+  expect_identical(capturedSummaryKin, "not passed")
   expect_identical(capturedBreedingKin, "not passed")
-  expect_true(is.function(capturedBreedingFor))
+  expect_true(is.function(capturedSummaryFor))
+  expect_identical(capturedSummaryFor, capturedBreedingFor)
 
   expected_ped <- test_ped
   expected_ped$gen <- findGeneration(expected_ped$id, expected_ped$sire,
                                      expected_ped$dam)
   expected <- kinship(expected_ped$id, expected_ped$sire, expected_ped$dam,
                       expected_ped$gen)
-  expect_equal(capturedSummaryValue, expected)
-  expect_identical(capturedProviderValue, capturedSummaryValue)
+  expect_identical(capturedProviderValue, expected)
+})
+
+test_that(paste("appServer gives Marker Genetics the same kinship provider",
+                "as Breeding Groups, not a matrix (Phase 9b)"), {
+  capturedMarkerKin <- "unset"
+  capturedMarkerFor <- NULL
+  captureMarker <- function(id, ..., kinshipMatrix = "not passed",
+                            kinshipFor = "not passed") {
+    capturedMarkerKin <<- kinshipMatrix
+    capturedMarkerFor <<- kinshipFor
+    # appServer hands markerKinshipMatrix on to Mate Pair.
+    list(markerKinshipMatrix = shiny::reactive(NULL))
+  }
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modMarkerGeneticsServer = captureMarker,
+    modMatePairServer = noopServer,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+      }))
+    }
+  )
+
+  expect_identical(capturedMarkerKin, "not passed")
+  expect_true(is.function(capturedMarkerFor))
+  expect_identical(capturedMarkerFor, ctl$bgKinshipFor)
 })
 
 test_that(paste("appServer gives Mate Pair the same kinship provider as",
