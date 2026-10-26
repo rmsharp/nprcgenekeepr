@@ -98,31 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1063 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Campaign Phase 9a"; strict TDD; an approach question, three phase gates, a help-wording question
-and a push question, each answered with the recommended option):** Breeding Groups, Genetic Diversity and Mate Pair ask `appServer()`'s
-`kinshipFor(ids)` (`R/appServer.R:382`) for their own animals through the internal `kinshipForAnimals()` (`R/kinshipForAnimals.R:40`); the
-scripted app session is committed (`Rscript tools/perf/runAppSession.R <label> <out.csv>`). Claim `0716ead7a`, RED `b61752e08`, GREEN
-`70bd838b6`..`5ba8941ec`, RED return `44fdc736f`, GREEN `c6c9a5829`, REFACTOR `4c68f73b2` `ed1e9caae` `ab3122abc`; pushed `37997db3f..ab3122abc`.
-**Owner rulings:** overrides "Include them, then cut" (the design's rule 3 replaced: it would have dropped today's ceiling error); the Genetic
-Diversity help sentence replaced (`test_geneticDiversityKinshipHelp.R`). **Measured** (medians of 3 runs, design section 12): upload + QC 685.1
-to 520.8 MB, the session through Genetic Diversity 864.5 to 684.6 MB, Mate Pair 1,947.4 to 1,375.3 MB; no `kinship()` at upload.
-**Verified:** suite 4,437 tests 0 failed (after GREEN and REFACTOR); lint 0; check 0/0/0; browser tier 11 files 38 tests twice; ratchet 10/10
-(`89d758aa16dd`); mutation 9 of 9 after REFACTOR. CI on `ab3122abc`: all four workflows
-success, R-CMD-check `40265175571` green on all 5 legs (the bit-identity tests on macOS, Windows and Ubuntu).
-**Handoff evaluation of S1062: 9/10.** Helped: Next (1)'s order (tool and "before" table first, helper, three tabs) and the scratch `app.R`
-trace recipe (its `p8/` folder became `tools/perf/`). Missing: the price of rule 3 on the error path, and `test_geneticDiversityKinshipHelp.R`
-(it pins owner-approved help, in neither of the design's test lists). Wrong: nothing; the run-from-outside recipe is not needed. ROI: high.
-**Self: 8/10.** + measured the override rules on the error path before asking; before/after from the committed tool; the mutation check
-found a real gap in my own test recorder. - a GREEN commit said "lintr 0" with two lints (amended before the push); I missed the help guard in
-planning (cost a RED return and a question); a RED helper could not build an empty table. Learning 1029.
-**Gotchas:** take app-session runs only while nothing edits `R/` (each run loads the tree); a recorder needs `c(asked, list(ids))` to record
-`NULL`; a lint step in an `&&` chain does not stop a commit; Mate Pair's own step grew 392 MB less after 9a, not investigated (F2).
-**Next:** **the owner's campaign:** (1) Phase 9b (`BACKLOG.md:8`; strict TDD): Summary Statistics' downloads and Marker Genetics' two tables
-through `kinshipFor`, their item-6 tests, `sharedKinshipMatrix` removed (`R/appServer.R:353`, `test_appServer_server.R:322`), re-measure.
-(2) Phase 10. (3) The tie-order decision (`BACKLOG.md:221`). Outside: `:231` (READY, S); `:240`, `:249`, `:258` (DECISION NEEDED).
+### What Session 1064 Did
+**Deliverable:** Phase 9b of the performance and memory campaign, the app's memory, implementation (IN PROGRESS;
+owner pick at the Phase 0 picker, item 1 of 4, "Campaign Phase 9b"; strict TDD; `BACKLOG.md:8`; design
+`docs/planning/app-kinship-memory-design.md` sections 6.1, 7.1 item 6, 8 and 12).
+**Started:** 2026-10-25 23:29 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1062 (condensed S950 to S1063; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1063 (condensed S950 to S1064; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1063: Phase 9a of the campaign, the app's memory (strict TDD): Breeding Groups, Genetic Diversity and Mate Pair ask
+`appServer()`'s `kinshipFor(ids)` (`R/appServer.R:382`) through `kinshipForAnimals()` (`R/kinshipForAnimals.R:40`);
+upload + QC 685.1 to 520.8 MB, Mate Pair 1,947.4 to 1,375.3 MB (`Rscript tools/perf/runAppSession.R <label> <out.csv>`,
+design section 12). Claim `0716ead7a`, GREEN `70bd838b6`..`c6c9a5829`, close-out `cb9fc87f7`; S1062 9/10, self 8/10
+(Learning 1029). **Gotchas kept:** take app-session runs only while nothing edits `R/`; a test recorder needs
+`c(asked, list(ids))` to record `NULL`; a lint step in an `&&` chain does not stop a commit.
 S1062: Phase 8 of the campaign, the app's memory design (`docs/planning/app-kinship-memory-design.md`; text only): D5 ruled (c),
 each tab computes kinship for its own animals plus their ancestors; the full matrix is built at upload by Genetic Diversity's
 readiness observer (`R/modGeneticDiversity.R:119,188`); three larger tab costs filed (`BACKLOG.md:240`, `:249`, `:258`). Claim
