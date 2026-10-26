@@ -5,23 +5,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 10, snapshot backfill and convergence: follow-through (owner-directed
-      S1050; plan approved and D1-D4 ruled S1051; Phases 0-9 done S1052-S1064, Phase 9 as 9a S1063 and 9b S1064;
-      READY; Effort M; 10 and 11 left, each its own session)** -- plan Phase 10 at
-      `docs/planning/performance-memory-campaign-plan.md:666`: re-measure Build Earlier Snapshots and `gvaConvergence()`
-      (rows 5 and 6 of the plan's section 1) after Phases 1, 2 and 5; the cost line `R/modSnapshotTrends.R:457`
-      (`4L * guIter / 1000L`) and `:470` ("about 4 seconds per 1,000 iterations on a colony of 2,590 animals") gets the
-      measured number in the owner's words (`describeBackfillCost()`, testthat); then D6 (parallel dates; recommended
-      no, unless the re-measurement still shows minutes). **Phase 9 (S1063-S1064):** every tab asks `appServer()`'s one
-      provider, `kinshipFor` (`R/appServer.R:366`), through `kinshipForAnimals()`; no matrix of every animal is kept
-      (`sharedKinshipMatrix` removed); `kinshipFromSources()` (`R/kinshipFromSources.R`) picks a tab's source.
-      Upload + QC 685.1 to 520.8 MB (9a); 9b's after table matches its before within the runs' spread (design
-      `docs/planning/app-kinship-memory-design.md` sections 12 and 13). For Phase 11: whether the fallbacks' inputs move
-      onto the fast paths (owner, S1054); harems' per-trial age work (`getPotentialSires()`, `getCurrentAge()`,
-      `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase 5's calcFGSE row peak; the diagram's 1.7 s
-      outside the solve (1.0 s of it `t(pmat) %*% pmat`, kept S1060); the app session has no Summary Statistics download
-      or genotype upload step, so 9b's every-animal reads are measured in the app only through the LD tab.
-      **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
+- [ ] **Performance and memory campaign: Phase 11, consolidation (owner-directed S1050; plan approved and D1-D4 ruled
+      S1051; Phases 0-10 done S1052-S1065, Phase 9 as 9a S1063 and 9b S1064; READY; Effort M; the last session)** --
+      plan Phase 11 at `docs/planning/performance-memory-campaign-plan.md:701`: re-run every harness scenario; write
+      `docs/audits/PERF_CAMPAIGN_REPORT_<date>.md` with before and after for every row of section 1 and the
+      estimate-to-actual ratio; one `NEWS.Rmd` release-state line, worded by the owner; tighten every gate; decide
+      whether `helper-perfReference.R` stays as the oracle; revisit D2 (plain R) with the hotspots that remain; then
+      this block comes off. **Phase 10 (S1065):** row 5, Build Earlier Snapshots, 9.42 to 1.08 s; row 6,
+      `gvaConvergence()`, 4.73 to 0.84 s; the cost line (`describeBackfillCost()`, `R/modSnapshotTrends.R:458,471`)
+      says "about a quarter of a second per 1,000 iterations" (owner's words); the backfill gate 11.9 to 1.4 s;
+      `test_perfBudget_snapshotBackfill.R` (plan Phase 10's Done bullet, `:680`). **Phase 9:** no matrix of every
+      animal is kept; every tab asks `kinshipFor` (`R/appServer.R:366`). Also for Phase 11: whether the fallbacks'
+      inputs move onto the fast paths (owner, S1054); harems' per-trial age work (`getPotentialSires()`,
+      `getCurrentAge()`, `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase 5's calcFGSE row peak;
+      the diagram's 1.7 s outside the solve (1.0 s of it `t(pmat) %*% pmat`, kept S1060); the app session has no
+      Summary Statistics download or genotype upload step, so 9b's every-animal reads are measured in the app only
+      through the LD tab. **Ruled:** D1 exact, D2 plain R, D3 API, D4 budgets (S1051); D5 (c), each tab its own
+      (S1062); D7 keep 10 trials (S1057); D6 no parallel dates (S1065).
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
@@ -53,9 +53,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       console notice and the notice's 200-character cut S1049)** -- design and what was built:
       `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4.
       (1) **Build cost on a larger colony** (BLOCKED --
-      needs a studbook above 3,694 rows from the owner, Effort S): the cost line's 4 seconds per
-      1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`) is measured up to
-      100 iterations on a 3,694-row colony, so a bigger colony at 1,000 iterations is unmeasured.
+      needs a studbook above 3,694 rows from the owner, Effort S): the cost line's quarter of a second a date per
+      1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`; S1065) is measured on the 2,590-animal jmac
+      studbook (53 dates, 12.6 s) and the 3,694-row example (49 dates, 9.4 s), so a bigger colony is unmeasured.
       (2) **A script word in the panel's notice** (DECISION NEEDED, Effort S): the function's
       failed-dates warning says "listed in 'skipped'" and the panel shows it as is, while its
       table is headed "Dates not built"; reword the message for both readers, or leave it.
@@ -273,6 +273,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       this Mac (`R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`,
       `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`), then read the run's Chrome version and
       the measured pixels (`gh run view 40286217416 --log`).
+- [ ] **The Build Earlier Snapshots box's "filed under their own rule" reads like a folder (READY, Effort S;
+      owner-reported S1065)** -- `R/modSnapshotTrends.R:69-72` says "They are filed under their own rule,
+      reconstructedLiving, and never mix with recorded snapshots." The owner asked whether that means a separate
+      folder. It does not: the rebuilt rows join the same history table (History, "Download Updated History") with
+      `membershipRule` `"reconstructedLiving"` (`R/backfillColonySnapshots.R:220`); the Trends chart draws them as their
+      own dashed line (`R/plotSnapshotTrends.R:88`), and Compare Snapshots compares within one rule. Proposed S1065,
+      not yet approved (the owner chose to file it for its own session): "They are added to the same history, marked
+      reconstructedLiving in its Membership rule column, and drawn as their own dashed line, apart from recorded
+      snapshots." No test pins the sentence (`git grep -n "never mix" -- tests/`). Change it test-first in the
+      owner's final words, and check the guide's matching step (`vignettes/articles/colony-manager-guide.qmd:1294`).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing

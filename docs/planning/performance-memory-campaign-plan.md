@@ -2,7 +2,8 @@
 
 **Session:** S1050, 2026-10-24. A planning session: nothing under `R/` or `tests/` changed.
 **Status:** APPROVED by the owner, S1051 (2026-10-24): the plan as written, and D1 to D4 each
-ruled as recommended (section 6). Phase 0 is next.
+ruled as recommended (section 6). Phases 0 to 10 are done (S1052 to S1065); Phase 11,
+consolidation, is next.
 **Owner's direction (S1050):** "As an architect and engineer examine the code to refactor the
 code with the primary goals of smaller memory footprint and faster processing of time intensive
 work", then "This is expected to take multiple sessions with planning being very important."
@@ -360,7 +361,10 @@ written:**
 - **D6 (Phase 10). Parallel dates for Build Earlier Snapshots.** Dates are independent. But
   fork-based parallelism does not exist on Windows, and per-worker random streams change the
   results unless each date is seeded on its own. *Recommended:* no, unless Phase 10's
-  re-measurement still shows minutes.
+  re-measurement still shows minutes. **Ruling (S1065, 2026-10-26): no**, as recommended; dates
+  stay one at a time and builds stay identical for the same seed. Measured in Phase 10: the app's
+  default build of the jmac studbook (53 dates) takes 12.6 s at 1,000 iterations, and about 2 min
+  at 10,000 (an estimate from one date's time per iteration).
 - **D7 (after Phase 4). Breeding Groups' default of 10 trials** (`R/modBreedingGroups.R:125`)
   against the help's "should be >= 1000". Raising it changes the groups found (a better search),
   so it is its own decision and its own session. **Ruling (S1057, 2026-10-24): keep 10**, as
@@ -673,6 +677,26 @@ done.**
 - **DONE when:** the two rows of section 1 (5 and 6) are re-measured and the cost line says the
   measured number in the owner's words.
 - **Surface:** this Mac for the number; testthat for the sentence (`describeBackfillCost()`).
+- **Done S1065; Phase 10 is complete.** Rows 5 and 6, each `Rscript tools/perf/run.R
+  <scenario>` in 3 fresh processes (load average 6.7 to 8.7, from other work):
+  - `backfill-jmac` (3 dates x 1,000): 1.08 s (1.08 to 1.09), peak 146.1 MB; Phase 0 9.42 s,
+    186.4 MB. Three more runs on the final code at load 5.9: 0.94, 0.94, 0.91 s.
+  - `gvaConvergence-example` (`nMax = 3000`): 0.84 s (0.81 to 0.96), peak 127.1 MB; Phase 0
+    4.73 s, 185.3 MB. The plan's estimate was about 0.7 s.
+
+  The app's default series at 1,000 iterations (scratch probe, load 11.7): jmac 53 dates
+  (1966 to 2018) 12.6 s, 0.24 s a date; the example colony 49 dates (1966 to 2014) 9.4 s. The
+  old cost line said about 4 and about 3 min. One date costs about 0.2 s per 1,000 iterations
+  plus under 0.1 s fixed (3 dates: 0.31 s at 10 iterations, 0.63 s at 1,000, 5.81 s at 10,000),
+  so the line's scaling by iterations still holds. **The cost line** (`describeBackfillCost()`,
+  now `R/modSnapshotTrends.R:458` and `:471`) counts 0.25 s a date per 1,000 iterations and says
+  "about a quarter of a second per 1,000 iterations on a colony of 2,590 animals" (owner's
+  words, S1065); RED `feb8c0055`, GREEN `e6fb78338`, REFACTOR `bb85e6001` (a `januaries()`
+  test helper). In the running app the example's 49 dates at 1,000 iterations read "expect
+  under a minute", and the build took 11.4 s from click to idle. **D6** ruled no (section 6).
+  **Gate:** `perf_backfill_jmac_seconds` 11.9 to 1.4 s (`5312eb280`). **Budget test:**
+  `tests/testthat/test_perfBudget_snapshotBackfill.R`, both calls under 2 s (0.61 s and 0.49 s
+  timed its way; owner ruling S1065, `c7e94674b`). Phase 11 is next.
 
 ### Phase 11. Consolidation
 
