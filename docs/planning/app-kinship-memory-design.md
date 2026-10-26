@@ -6,7 +6,7 @@
 - **findings F2-F4:** filed as their own `BACKLOG.md` items (section 9);
 - **the scripted app session:** committed in Phase 9 (F6).
 
-Phase 9 is next.
+Phase 9a is done (S1063, section 12; rule 3 of section 4.3 replaced by the owner). 9b is next.
 **Plan:** `docs/planning/performance-memory-campaign-plan.md`: Phase 8 (`:626-636`), D5 (`:349-357`),
 H6 (`:203-217`), Phase 9 (`:638-644`).
 **Code read:** HEAD `d750f818e` (the `R/` and `tests/` trees of `37997db3f`).
@@ -215,6 +215,12 @@ pair can be declared.
    - Keep that warning by checking against the pedigree first, with today's wording.
    - Then pass on only the rows inside the set.
    - Its message "N kinship override(s) applied." will then count only the set's overrides.
+
+   **Replaced by the owner, S1063 (approach question before RED):** the animals the overrides
+   name join the set before the trim, every override is applied as on the whole matrix, then
+   the matrix is cut to the set. Measured on five override cases (section 12): value, message,
+   warning and error are all today's, including an override above its pair's ceiling on
+   animals outside the set (this rule would have dropped it without today's error).
 
 ## 5. The options (D5), with measured costs
 
@@ -431,7 +437,77 @@ the decision it needs. Phase 9 stays about how kinship is held.
   "groups first" (a'). Under (c) the Form Groups step would not build the whole matrix, so the
   session should end near the "groups first" runs' level before that step: about 680 MB against
   today's 862 to 871 MB on the example. That is an estimate; Phase 9 measures it.
+  (Measured in 9a: 684.6 MB, section 12.)
 - **Other machines.** Windows, Linux and the browser's own memory are not measured.
+
+## 12. Phase 9a, done (S1063): what changed, and the app memory table before and after
+
+**Built** (strict TDD; RED `b61752e08`): the scripted app session in `tools/perf/`
+(`appSession.R`, `runAppSession.R`, `appSession/app.R`; `70bd838b6`); the internal helper
+`kinshipForAnimals()` (`R/kinshipForAnimals.R`; `816717628`); Breeding Groups (`3981961ee`),
+Genetic Diversity and Mate Pair (`b5eb89972`) asking an optional `kinshipFor` for their own
+animals; `appServer()`'s one provider for the three tabs (`5ba8941ec`). Summary Statistics and
+Marker Genetics still read the shared matrix (9b).
+
+**Owner rulings, S1063:** overrides as above (rule 3 replaced); the Genetic Diversity help
+carries "In the app it computes the members' kinship from them and their ancestors only, so a
+group may hold any animal of the pedigree, not only the Genetic Value population." in place of
+S993's sentence (`test_geneticDiversityKinshipHelp.R`).
+
+**Measured** with the committed tool, `Rscript tools/perf/runAppSession.R <label> <out.csv>`,
+three runs each, medians (Phase 0's recipe), on this Mac (Apple M2 Max, R 4.6.1; load average
+8.7 to 8.9 before both sets). Before: `70bd838b6` (the code of section 2 plus the tool). After:
+`c6c9a5829` (GREEN done; the REFACTOR that followed changed no behavior).
+
+| Step | Before | After | Difference |
+|---|---|---|---|
+| app started | 420.6 MB | 417.8 MB | -2.8 MB |
+| upload + QC | 685.1 MB | 520.8 MB | -164.3 MB |
+| open Genetic Diversity (no groups) | 687.4 MB | 523.1 MB | -164.3 MB |
+| Genetic Value run (1,000 iterations) | 848.9 MB | 630.1 MB | -218.8 MB |
+| open Summary Statistics | 858.4 MB | 677.1 MB | -181.3 MB |
+| Breeding Groups: Form Groups (defaults) | 864.1 MB | 683.2 MB | -180.9 MB |
+| open Genetic Diversity (groups formed) | 864.5 MB | 684.6 MB | -179.9 MB |
+| Mate Pair: Find Eligible Pairs (defaults) | 1,947.4 MB | 1,375.3 MB | -572.1 MB |
+| open Marker Genetics | 1,947.4 MB | 1,375.3 MB | -572.1 MB |
+| open its Linkage and LD Block Metrics tab | 2,567.7 MB | 2,567.8 MB | +0.1 MB |
+
+The runs: before 683.6 to 685.4 MB at upload + QC, after 514.3 to 522.4 MB. Every run left each
+step's output on the page (10 ranking rows, 3 histograms, 3 group tables, 1 heat map, 315,023
+pairs, 6,824,665 relatedness rows).
+
+**The trace** (every `kinship()` call the app made, with its size; the same in all three runs
+of each set except where a range is given):
+
+| Step | Before | After |
+|---|---|---|
+| upload + QC | `kinship()` on 3,694, from `diversityPlot > diversityStats` | none |
+| Genetic Value run | 708, `reportGV` | 708, `reportGV` |
+| Form Groups | none (the shared matrix, built at upload) | 161 to 166, `getKinshipMatrix > kinshipFor` |
+| open Genetic Diversity (groups formed) | none | 161 to 166, `diversityStats > kinshipFor` |
+| Mate Pair | none (the shared matrix) | 1,898, `kinshipFor` |
+| the LD Block Metrics tab | `convertRelationships()` on 3,694 | `kinship()` on 3,694 (the shared matrix, first read here) and `convertRelationships()` on 3,694 |
+
+161 to 166 is the 20 top-ranked animals plus their ancestors; the ranking depends on the
+analysis's gene drop, so it varies from run to run.
+
+**Findings:**
+
+- Upload + QC holds 164.3 MB less, as section 8 expected ("about 170 MB"), and no step before
+  the LD tab builds a 3,694-animal `kinship()`.
+- The session through Genetic Diversity ends at 684.6 MB against 864.5 MB, near section 11's
+  estimate of about 680 MB.
+- Mate Pair's step grew 690.7 MB against 1,082.9 MB before, so the session after it holds 572.1 MB
+  less. That is more than the 104.6 MB shared matrix; why the step itself grew less was not
+  investigated (its pair work, F2, is unchanged: `BACKLOG.md:240`).
+- The LD tab ends where it did: under 9a it builds the shared matrix itself, and its table (F3)
+  is the larger part. 9b moves it to the provider.
+
+**Verified:** full suite 473 files, 4,437 tests, 0 failed, 0 errors (after GREEN and after
+REFACTOR); `lintr::lint_package()` 0; the browser tier of section 7.2 from a scratch install of
+`c6c9a5829`, 11 files, 38 tests, 0 failed; mutation check of the new code, 9 breaks, all caught
+after REFACTOR (8 at GREEN: a request for every animal could not be recorded by the test's
+provider, now fixed). `devtools::check()` and the ratchet: `CHANGELOG.md`'s S1063 entry.
 
 ## Appendix A. The scratch measurements (S1062; not committed)
 

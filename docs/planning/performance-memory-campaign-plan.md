@@ -650,6 +650,12 @@ done.**
 - **Per the design (S1062):** two sessions, 9a and 9b, with the scope, the tests and the DONE
   items in sections 6.1, 7 and 8 of `docs/planning/app-kinship-memory-design.md`. The scripted
   app session joins `tools/perf/` in 9a.
+- **9a done S1063:** Breeding Groups, Genetic Diversity and Mate Pair ask `appServer()`'s
+  `kinshipFor` for their own animals (`kinshipForAnimals()`); the app session is
+  `tools/perf/runAppSession.R`. Upload + QC 685.1 to 520.8 MB, and no step before the LD tab
+  builds a 3,694-animal `kinship()` (design section 12). The owner replaced the design's override
+  rule: the animals the overrides name join the set, every override is applied as today, then
+  the cut. 9b is next.
 
 ### Phase 10. Snapshot backfill and convergence: follow-through
 

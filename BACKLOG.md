@@ -5,23 +5,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Performance and memory campaign: Phase 9, the app's memory: implementation, session 9a (owner-directed S1050;
-      plan approved and D1-D4 ruled S1051; Phases 0-8 done S1052-S1062; D5 ruled (c) S1062; D7 ruled S1057; READY;
-      Effort M; 9a, 9b, 10 and 11 left, each its own session)** -- design: `docs/planning/app-kinship-memory-design.md`
-      (sections 6.1, 7 and 8); plan Phase 9 at `docs/planning/performance-memory-campaign-plan.md:643`. **D5 ruled (c)
-      (owner, S1062):** each tab computes kinship for its own animals plus their ancestors, and nothing of the whole
-      colony's size is kept between clicks. Today the app builds the full matrix at upload, through Genetic Diversity's
-      readiness check (`R/modGeneticDiversity.R:119,188`), and keeps it (104.6 MB example, 764.2 MB synthetic 10,000).
-      **9a:** commit the scripted app session to `tools/perf/` (owner, S1062) and take the "before" table; the internal
-      helper `kinshipForAnimals()` with the design's 7.1 tests; then Breeding Groups, Genetic Diversity and Mate Pair
-      through a `kinshipFor` provider. **9b:** the four every-animal reads, `sharedKinshipMatrix` removed, the table
-      re-measured (expect upload + QC about 170 MB lower). The helper's three rules (measured, design section 4):
-      trim with `getProbandPedigree()`; keep MZ twins by group (by pair is 0.25 off on a chain); cut overrides to the
-      set after the pedigree check. For Phase 11: whether the fallbacks' inputs move onto the fast paths (owner,
-      S1054); harems' per-trial age work (`getPotentialSires()`, `getCurrentAge()`, `groupsWithoutSire()`,
-      `initializeHaremGroups()`; owner, S1056); Phase 5's calcFGSE row peak (225.5 to 254.1 MB); the diagram's 1.7 s
-      outside the solve (1.0 s of it `t(pmat) %*% pmat`, kept by the owner S1060). **Ruled S1051:** D1 exact, D2 plain
-      R, D3 API, D4 budgets.
+- [ ] **Performance and memory campaign: Phase 9, the app's memory: implementation, session 9b (owner-directed S1050;
+      plan approved and D1-D4 ruled S1051; Phases 0-8 done S1052-S1062, 9a done S1063; D5 ruled (c) S1062; READY;
+      Effort M; 9b, 10 and 11 left, each its own session)** -- design: `docs/planning/app-kinship-memory-design.md`
+      (sections 6.1, 7, 8 and 12); plan Phase 9 at `docs/planning/performance-memory-campaign-plan.md:643`. **9a (S1063):**
+      Breeding Groups, Genetic Diversity and Mate Pair ask `appServer()`'s `kinshipFor(ids)` (`R/appServer.R:382`) for
+      their own animals, through `kinshipForAnimals()` (`R/kinshipForAnimals.R`); upload + QC 685.1 to 520.8 MB (medians
+      of 3 runs of `Rscript tools/perf/runAppSession.R <label> <out.csv>`, design section 12). **9b:** the four every-animal
+      reads through `kinshipFor`, each asking for every animal inside its handler: Summary Statistics' kinship CSV and
+      relationship downloads (`R/modSummaryStats.R:384-436`, `:840-894`) and Marker Genetics' Kinship Comparison (keep
+      only the means, `R/modMarkerGenetics.R:576-580`) and Realized Relatedness (`:716-729`); design 7.1 item 6's tests
+      for those two modules (the three downloads' bytes, the two tables); then `sharedKinshipMatrix` (`R/appServer.R:353`)
+      removed and `test_appServer_server.R:322` reads the twins through the provider; then the table re-measured (the
+      LD tab still ends at 2,567.8 MB, its table F3 the larger part). Owner rule S1063: the animals the overrides name
+      join the trim, every override is applied as today, then the cut. For Phase 11: whether the fallbacks' inputs move
+      onto the fast paths (owner, S1054); harems' per-trial age work (`getPotentialSires()`, `getCurrentAge()`,
+      `groupsWithoutSire()`, `initializeHaremGroups()`; owner, S1056); Phase 5's calcFGSE row peak; the diagram's 1.7 s
+      outside the solve (1.0 s of it `t(pmat) %*% pmat`, kept S1060). **Ruled S1051:** D1 exact, D2 plain R, D3 API, D4 budgets.
 
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
