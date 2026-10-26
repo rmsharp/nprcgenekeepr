@@ -368,8 +368,8 @@ modMarkerGeneticsUI <- function(id) {
 #' the same way),
 #' estimates marker-based kinship independent of pedigree
 #' (\code{\link{markerKinship}}), and surfaces a per-animal comparison of
-#' pedigree-based mean kinship (\code{indivMeanKin}, already computed
-#' upstream and passed in via \code{kinshipMatrix}) alongside the new
+#' pedigree-based mean kinship (\code{indivMeanKin}, from the pedigree
+#' kinship given by \code{kinshipMatrix} or \code{kinshipFor}) alongside the new
 #' marker-based mean kinship (\code{markerMeanKin}) -- an independent check
 #' on the pedigree-implied relatedness, not a replacement for it. A second
 #' tab surfaces the heterozygosity diagnostic: per-animal observed
@@ -404,7 +404,7 @@ modMarkerGeneticsUI <- function(id) {
 #' classified into a three-tier coverage report
 #' (\code{\link{checkLocusMetadata}}, D2). The realized-relatedness-variance
 #' table (\code{\link{markerRealizedRelatednessVariance}}, D3a) needs only
-#' the existing \code{kinshipMatrix}/\code{pedigree} plus a curator-supplied
+#' the existing \code{pedigree} and its kinship plus a curator-supplied
 #' chromosome count and genetic-map length -- no genotype file at all. The
 #' LD-block table (\code{\link{markerLdBlock}}, D3b) reads its OWN,
 #' dedicated \code{linkageGenotypeFile} upload -- deliberately independent
@@ -445,12 +445,22 @@ modMarkerGeneticsUI <- function(id) {
 #' new, sibling concern.
 #'
 #' @param id character vector of length 1. Module namespace identifier.
-#' @param kinshipMatrix reactive returning the full pedigree-based kinship
-#'   matrix (row and column names are animal IDs), or \code{NULL} while
-#'   upstream analysis has not yet been run.
+#' @param kinshipMatrix optional reactive returning the full pedigree-based
+#'   kinship matrix (row and column names are animal IDs), or \code{NULL}
+#'   while upstream analysis has not yet been run. It is used before
+#'   \code{kinshipFor}.
 #' @param pedigree reactive returning the current pedigree data frame
 #'   (columns \code{id}, \code{sire}, \code{dam}), or \code{NULL} while
 #'   upstream analysis has not yet been run.
+#' @param kinshipFor optional function of a character vector of animal IDs
+#'   that returns those animals' kinship matrix; with no IDs it returns every
+#'   animal's. The Kinship Comparison asks it for every animal once a
+#'   genotype file is uploaded and keeps only the means; the realized
+#'   relatedness table asks it for every animal once the pedigree and the two
+#'   inputs are usable. \code{appServer} passes one that applies the twins
+#'   and overrides. With neither \code{kinshipMatrix} nor \code{kinshipFor},
+#'   \code{indivMeanKin} is \code{NA} and there is no realized relatedness
+#'   table. \code{NULL} (the default) is not used.
 #'
 #' @return A named list of reactive elements: \code{markerGenotype}, the
 #'   raw uploaded genotype data frame (or \code{NULL} before upload);
@@ -483,7 +493,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   (or \code{NULL} before a locus-metadata file is uploaded);
 #'   \code{realizedRelatednessTable}, the
 #'   \code{\link{markerRealizedRelatednessVariance}} output (or \code{NULL}
-#'   before \code{pedigree}/\code{kinshipMatrix} are both available);
+#'   before the \code{pedigree} and its kinship are both available);
 #'   \code{ldBlockTable}, the \code{\link{markerLdBlock}} output (or
 #'   \code{NULL} before a genotype file and a locus-metadata file are both
 #'   uploaded, or before a pedigree is available if the founders-only
@@ -524,7 +534,11 @@ modMarkerGeneticsUI <- function(id) {
 #' @importFrom utils write.csv
 #' @family Shiny modules
 #' @export
-modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
+## kinshipMatrix keeps its place (callers name it) and gains a default, so
+## appServer can pass kinshipFor alone.
+modMarkerGeneticsServer <- function(id, kinshipMatrix = NULL,
+                                    pedigree, # nolint: function_argument_linter
+                                    kinshipFor = NULL) {
   moduleServer(id, function(input, output, session) {
 
     ## Upstream absence (pedigree kinship not yet computed) is treated as
@@ -534,6 +548,17 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     ## surrounding tryCatch, so a real validation error surfaces as a
     ## genuine Shiny reactive error, not a silent NULL.
     safeRead <- function(r) tryCatch(r(), error = function(e) NULL)
+
+    ## The pedigree kinship of every animal: a handed-in kinshipMatrix, else
+    ## kinshipFor asked for every animal, else NULL. A plain function, so
+    ## nothing of the whole colony's size is kept between reads.
+    pedigreeKinship <- function() {
+      kmat <- safeRead(kinshipMatrix)
+      if (is.null(kmat) && !is.null(kinshipFor)) {
+        kmat <- safeRead(function() kinshipFor())
+      }
+      kmat
+    }
 
     rawGenotype <- reactive({
       if (is.null(input$genotypeFile)) {
@@ -573,7 +598,9 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       markerMean <- meanKinship(mkmat)
       ids <- names(markerMean)
 
-      pedKmat <- safeRead(kinshipMatrix)
+      ## Every animal's kinship, from kinshipFor when no matrix is handed in
+      ## (performance campaign Phase 9b); only the means are kept.
+      pedKmat <- pedigreeKinship()
       pedMean <- if (is.null(pedKmat)) {
         rep(NA_real_, length(ids))
       } else {
@@ -705,23 +732,28 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     })
 
     ## No genotype file is needed here -- markerRealizedRelatednessVariance()
-    ## (D3a) is pedigree-only (kinshipMatrix/pedigree, already module
+    ## (D3a) is pedigree-only (the pedigree and its kinship, already module
     ## parameters) plus the curator-supplied nChr/mapLength below. Falls
     ## back to the rhesus-macaque default (20 chromosomes, 28 Morgans,
     ## matching markerRealizedRelatednessVariance()'s own roxygen example)
     ## when the UI's own numericInput default hasn't reached input$... yet
     ## (e.g. under shiny::testServer(), which does not auto-apply UI
     ## defaults) -- mirrors modDeidentifiedExportServer's own
-    ## input-fallback-default pattern.
+    ## input-fallback-default pattern. The kinship is read last, so none is
+    ## computed while the pedigree or an input is not usable (performance
+    ## campaign Phase 9b).
     realizedRelatedness <- reactive({
       ped <- safeRead(pedigree)
-      kmat <- safeRead(kinshipMatrix)
-      if (is.null(ped) || is.null(kmat)) {
+      if (is.null(ped)) {
         return(NULL)
       }
       nChr <- if (!is.null(input$nChr)) input$nChr else 20L
       mapLength <- if (!is.null(input$mapLength)) input$mapLength else 28.0
       if (is.na(nChr) || is.na(mapLength) || nChr <= 0L || mapLength <= 0L) {
+        return(NULL)
+      }
+      kmat <- pedigreeKinship()
+      if (is.null(kmat)) {
         return(NULL)
       }
       markerRealizedRelatednessVariance(kmat, ped, nChr = nChr,
