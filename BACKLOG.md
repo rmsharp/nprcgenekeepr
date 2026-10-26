@@ -243,18 +243,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **The scheduled `shinytest2` run of 2026-10-26 failed in the Diagram tab's deceased-slash test (READY, Effort S;
-      found S1064; no GitHub issue, per the CI-break convention)** -- run `40286217416` (07:30 UTC, head `ab3122abc`):
-      `tests/testthat/test-e2e-pedigree-module.R:475` "slash past a circle's outline" measured 0.37, expected > 1.1,
-      and `:477` "square and circle overhang difference" 0.91, expected < 0.12; the file's other 127 tests passed.
-      Not diagnosed. This was the first CI run of the test itself: S1028 added it (`ec2f53511`, 2026-10-21, green in
-      the local browser tier), and no push went out between 2026-10-20 (`c5545b016`) and 2026-10-25 20:24
-      (`63bc354f7`), so every run before was on older code. Candidates, unmeasured: the runner's Chrome renders the
-      outline or the slash differently (pixel width, device pixel ratio), or a later change to the drawing (S1029's
-      sections, S1030's `drawPedigreeDiagram()`, S1060's solver). First step: run the test from a scratch install on
-      this Mac (`R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`,
-      `RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`), then read the run's Chrome version and
-      the measured pixels (`gh run view 40286217416 --log`).
 - [ ] **The Build Earlier Snapshots box's "filed under their own rule" reads like a folder (READY, Effort S;
       owner-reported S1065)** -- `R/modSnapshotTrends.R:69-72` says "They are filed under their own rule,
       reconstructedLiving, and never mix with recorded snapshots." The owner asked whether that means a separate
@@ -300,6 +288,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       registered one). S1054 found 14 of `geneDropGeneral()`'s 19 test inputs end in an error today. To decide:
       fold some input types in, one test each (the same results, `identical()`), or leave the fallbacks as the old
       code's home for unusual input.
+- [ ] **Local browser tests: run the Diagram's pixel checks with both GPU and CPU drawing (READY, Effort S;
+      owner ruling S1067)** -- the local browser tier (`NPRC_RUN_E2E=true`) starts Chrome with its default drawing,
+      which on this Mac paints the Diagram's canvas on the GPU, while the CI runner paints it on the CPU (software).
+      The deceased-slash test (`tests/testthat/test-e2e-pedigree-module.R`) passed here and failed on CI for five
+      days because of that difference (S1067: run `40286217416`, fixed in the test's pixel reader). Owner (S1067):
+      local runs test with both the CPU and the GPU. The app needs nothing for its side of that ruling: vis-network
+      asks for a plain `getContext("2d")`, so the viewer's browser paints on the GPU when it has one and on the CPU
+      otherwise. S1067 ran the file both ways by hand: `chromote::set_chrome_args(c(chromote::default_chrome_args(),
+      "--disable-accelerated-2d-canvas"))` before `testthat::test_file()` gives CPU drawing to every Chrome started
+      after it (22 blocks, 111 expectations, 0 failed each way, about 3.5 minutes each). First step: choose how the
+      second pass runs (a runner or helper that repeats the file, or only the blocks that read pixels through
+      `diagram_pixel_js()`, under the flag) and keep it opt-in like the rest of the tier.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing

@@ -99,11 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1067 Did
-**Deliverable:** the nightly `shinytest2` failure of the Diagram tab's deceased-slash test (`tests/testthat/test-e2e-pedigree-module.R:475,477`;
-run `40286217416`; `BACKLOG.md:247`), diagnosed and fixed under strict TDD (owner pick, item 1 of 4, "Nightly slash test (Recommended)") (IN PROGRESS)
-**Started:** 2026-10-26 13:20 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Nightly slash test (Recommended)"; strict TDD, all three gates answered "Yes"; test code
+only, no `R/` change):** the nightly `shinytest2` failure of the deceased-slash test (run `40286217416`, `test-e2e-pedigree-module.R:475,477`).
+**Cause, measured:** the drawing is right. `diagram_pixel_js()` counted any partly see-through pixel as white, and CI's Chrome paints the
+canvas on the CPU, where a circle's 1 px outline is nearly all such pixels, so the outline search missed E and found the sibship bar 83.5
+px out: 0.371, gap 0.908, CI's numbers, reproduced here with `--disable-accelerated-2d-canvas` (this Mac's GPU frame reads 1.265).
+**Fix:** the reader blends a partly see-through pixel onto white; the outline cutoff is "half covered" (250 to 194); the overhangs are
+re-read at 25 sub-pixel view shifts; one shared `overhang_js`. 100 CPU-drawn positions: 28 to 100 in the limits. Claim `bb8c3a8ba`, RED
+`25414fa0b`, GREEN `d57172c28`, REFACTOR `71ef50967`. **Owner ruling:** local runs test with both CPU and GPU (the app needs nothing:
+vis-network's plain `getContext("2d")` lets the browser choose); filed `BACKLOG.md:291`; the fixed item's block is off.
+**Verified:** slash block 19 expectations 0 failed, whole file 22 blocks 111 expectations 0 failed, each with GPU and CPU drawing; suite
+474 files 4,454 tests 0 failed 0 errors; lint 0; check 0/0/0; ratchet 10/10 (`08bd46cbf3d1`).
+**Handoff evaluation of S1066: 8/10.** Helped: Next named this item and its exact first step (scratch install, then the run's Chrome
+version and pixels), and the item's candidates pointed at the renderer; every Next line number was right. Missing: the renv library path
+for `R_LIBS` (found with `.libPaths()`), and how to run one block (`test_file(desc =)`). Wrong: nothing. ROI: high.
+**Self: 8/10.** + cause matched to CI's exact numbers with a control (the same frame, GPU against CPU); the sweep's odd (0, 0) reading
+chased, not explained away; each option backed by a 100-position sweep. - the first RED comment named an unmeasured cause (a 0.1 px
+shift), fixed before the commit; `:247` for `:246` in my report and claim (Learning 1033).
+**Gotchas:** pixel tests here read a GPU frame first and CI never does: run them with `chromote::set_chrome_args(c(
+chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))` too; after many `getImageData()` calls this Mac's frames read like
+CPU ones; `net.redraw()` paints at once (`moveTo()` only asks for a frame); `R_LIBS=<scratch>:` the renv path `.libPaths()` prints.
+**Next:** the nightly stays red until a push carries `d57172c28`; after the push, read the next scheduled run (`gh run list --branch master
+--limit 10`). Ready: `BACKLOG.md:213` (S), `:246` (help text, S), `:257` (harem, M), `:267` (diagram, M), `:274` (founder peak, S), `:291`
+(CPU and GPU passes, S). Decisions: `:203`, `:222`, `:231`, `:240`, `:281`.
+**Not pushed:** 20 local commits (S1065's, S1066's and this session's) ride with the next push the owner asks for.
 
 ### Sessions 947-1066 (condensed S950 to S1067; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1066: Phase 11 of the campaign, consolidation (no code; the campaign is complete): `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`, 20
@@ -182,34 +201,18 @@ S1046-S1047: the scheduled `shinytest2` run of 2026-10-23 (`39916862256`) was ca
 1012-1013). **Gotchas kept:** the test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that night needed about 55, an estimate); `gh run view <id>
 --json jobs` gives every step's start and end and the saved job log labels every line "UNKNOWN STEP"; wait on the R process by pid, not `pgrep -f`; the 2026-09-27 cancel was a real
 30-minute cap (growth), not this cause.
-S1044-S1045 (strict TDD each; every gate put to the owner; evaluations 9/10, self 8/10; Learnings 1010-1011): S1045, the trend chart keeps its panel titles whole and never overprints its
-year labels in a narrow window: `trendPlotLayout(width, nPanels)` (`R/trendPlotLayout.R:26`) gives 2 to 5 panel columns and 130 px a row plus 80; `plotSnapshotTrends()` takes `ncol`
-(`R/plotSnapshotTrends.R:57,76`) and draws year labels with `guide_axis(check.overlap = TRUE)` (`:139`); the plot box is `height = "auto"` (`R/modSnapshotTrends.R:98,289-299`); the 18 default
-metric names are one constant (`R/trendDefaultMetrics.R:13`); claim `acfd85698`, RED `2fb4bd16b`, GREEN `3ba3fd51b`, REFACTOR `073c93e6e`, close-out `7239ef90b`. S1044, the chart's footnote is never
-cut off: `plotSnapshotTrends()` cuts each note into two lines of at most 70 characters and left-aligns the caption to the whole plot (`plot.caption.position = "plot"`), whole from a plot width
-of about 320 px (550 before); the tutorial's snapshot-plot chunk lost its 9-inch width; claim `ef7932fc6`, RED `d3c2c7b18`, test fix `d4d6b54ab`, GREEN `31c3dcc79`, REFACTOR `8cc8fdde1`, close-out
-`b8c3bf9e1`. **Gotchas kept:** the layout constants (115, 150, 130, 80) were measured on the 18-panel chart with its legend, so re-measure them for a longer title or another legend;
-`testServer()`'s client data is a fixed 600-px-wide box, so `test_modSnapshotTrends.R` pins only 3 columns and 860 px and the real windows are in `test-e2e-snapshot-trends-module.R:177`; run
-`devtools::document()` after any roxygen edit and read `git status` after it; the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .` and `R_LIBS=<scratch>:<renv lib>` with
-`RENV_CONFIG_AUTOLOADER_ENABLED=false NOT_CRAN=true NPRC_RUN_E2E=true`; the footnote is wrapped in the label itself (`p$labels$caption`); `ggplotGrob()` opens a device, so build it on `pdf(NULL)`;
-ggplot2 4.0.3 has no `plot_theme()` (use `calc_element(name, p$theme)`); grid has no `"px"` unit (`"bigpts"` at 72 dpi); take pictures at 2x.
-S1041-S1043 (strict TDD where code changed; evaluations 8-9/10, self 8/10; Learnings 1007-1009; hashes in `CHANGELOG.md`): S1043, the `a2interactive.Rmd` inventory finished: six
-script-callable functions and two parameters named in five places (`vignettes/a2interactive.Rmd:608,840,1379,1585,2142`; pinned by `test_inventoryTutorialSections.R:55`; the shared
-readers `insideChunk()`, `sectionProse()` and `chunkOptionText()` are in `helper-pageText.R`); S1042, a "Colony Snapshots Over Time" section for the eight snapshot functions (five
-chunks on `qcPed` at 50 gene-drop iterations, no literal number in the prose); S1041, the issue #36 check: already solved (`R/agePyramidPlot.R` was a zero-caller helper that
-`f78162106`, S285, deleted), #36 closed, open issues 10 to 9. Claims `9945d6554`, `bba4264b5`, `ee41c077c`. **Gotchas kept:** a `\b` name search misses `__name__` markup (170 of 236
-exports are never named, not 182); the digit rule bans any digit in that section's prose; put regexes in a script file (this harness reduces `\\` inside `Rscript -e`); the phrase
-"Retrospective colony-snapshot backfill" must not return to `BACKLOG.md` (`test_docsAuditSixRulings.R` SR3); render the tutorial without byproducts in `vignettes/` (the spelling
-guard scans there); `git log --all --oneline -S'<comment line from the issue>'` finds the commit that deleted a file an issue cites; the owner declined a guarding test for the age
-pyramid (`test_getPyramidPlot.R` has 2 tests that only check for a "recordedplot"), so do not re-offer it; run each heavy check with `run_in_background`, one at a time.
-S1040: Slice 4 of the retrospective colony-snapshot backfill, #170, the words (owner pick, "Finish #170: Slice 4"; strict TDD, the scope question, the notice question and every gate put to
-the owner): nine places, one sentence each, approved as drafted: the colony manager guide's Genetic-Health Trends section (`vignettes/articles/colony-manager-guide.qmd:1264-1310`),
-`NEWS.Rmd:397-403` and `NEWS.md`, the `backfillColonySnapshots()` Limits paragraph (`R/backfillColonySnapshots.R:68-72`) and three panel wordings (`R/modSnapshotTrends.R:122,365,418,456`).
-**Owner call after a finding:** my draft "came up on 2 dates" was false ("(2 in all)" counted notes, and one date can raise a note twice); the owner took "each note once, no count". #170
-closed. Claim `02e1d1797`, RED `98ba3f7b5`, GREEN `fc980f93f` `d363b54e1` `ee6bd5afc` `ed83d424e`, REFACTOR `38d2a34cf` (test code only), docs `31c577781`, close-out `89267ecaa`; full suite
-450 files 4,279 tests 0 failed 0 errors, browser tier 24 of 24; evaluation of S1039 9/10, self 8/10 (Learning 1006). **Gotchas kept:** take an element picture of anything below the fold
-(`app$run_js()` an id, `get_screenshot(selector = ...)`, remove `.shiny-notification` first); put the command itself in `run_in_background`, never a trailing `&`; NEWS.md writes `\#170`;
-`helper-guideSections.R` is the one guide-section reader; the panel says 'skipped' for failed dates (`BACKLOG.md:33`). Follow-ups left: `BACKLOG.md:33-50`.
+S1040-S1045 (strict TDD each; every gate put to the owner; evaluations 8-9/10, self 7-8/10; Learnings 1006-1011; condensed S1067,
+hashes in `CHANGELOG.md`): S1045, the trend chart keeps panel titles whole and never overprints year labels (`trendPlotLayout(width,
+nPanels)`, `R/trendPlotLayout.R:26`; `plotSnapshotTrends(ncol)`; the 18 default metric names, `R/trendDefaultMetrics.R:13`); S1044, its
+footnote is never cut off (two lines of at most 70 characters, `plot.caption.position = "plot"`); S1043, the `a2interactive.Rmd` inventory
+finished (`test_inventoryTutorialSections.R:55`, readers in `helper-pageText.R`); S1042, the tutorial's "Colony Snapshots Over Time"
+section; S1041, issue #36 closed (already solved); S1040, Slice 4 of #170, the words in nine places (#170 closed; "each note once, no
+count"). **Gotchas kept:** re-measure the layout constants (115, 150, 130, 80) for a longer title or another legend; `testServer()`'s
+client data is a fixed 600-px box (real windows: `test-e2e-snapshot-trends-module.R:177`); run `devtools::document()` after any roxygen
+edit and read `git status`; build `ggplotGrob()` on `pdf(NULL)`; grid has no `"px"` unit; a `\b` name search misses `__name__` markup;
+put regexes in a script file; "Retrospective colony-snapshot backfill" must not return to `BACKLOG.md` (`test_docsAuditSixRulings.R`
+SR3); render the tutorial without byproducts in `vignettes/`; the owner declined an age-pyramid guard test; take an element picture of
+anything below the fold (`get_screenshot(selector = ...)`); NEWS.md writes `\#170`.
 S1036-S1039, the retrospective colony-snapshot backfill, #170, design and Slices 1-3 (strict TDD where code changed; every gate and design call put to the owner; evaluations 9/10, self
 7-8/10; Learnings 1002-1005; hashes in `CHANGELOG.md`): S1036 the design (`docs/planning/retrospective-snapshot-backfill-plan.md`, B1-B12, the rule `reconstructedLiving`; "approve design");
 S1037 the exported `backfillColonySnapshots()` (`R/backfillColonySnapshots.R:128`), equal to the app's snapshot on 25 of 25 fields at 2018-07-11; S1038 dates or a yearly series returning
