@@ -98,29 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1073 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Diagram layout time"; ruling "Only where exact"; strict TDD, three gates "Yes", one
-GREEN->RED stop "Back to RED"):** the diagram's penalty table is squared by blocks wherever a once-a-session check finds that exact:
-`.penaltyCrossprod()`, `.blockCrossprod()`, `.blockProductIsExact()` (`R/penaltyCrossprod.R`), called at `R/makePedigreeDiagramData.R:1577`.
-The example's diagram 4.58 to 3.61 s (gate 5.9 to 4.6 s); the app's 708-animal draw 9.94 to 8.65 s. Claim `6074c5188`, RED `af36a5b88`,
-RED addition `d2c20a8dd`, GREEN `499280c15`, REFACTOR `61290fc2e`, gate `e6f110c41`. Block off BACKLOG; two findings filed (`:237`, `:245`).
-**Measured first:** 1.07 s of the 1.77 s outside the solver was `t(pmat) %*% pmat` (2-3 numbers a row); blocks multiplied by the library
-matched 18 of 18 grid solves, a plain-R sum did not (1 ulp, positions 1.1e-7 off); CI's Ubuntu legs load OpenBLAS (run `40390720074`).
-**Verified:** full suite 478 files 4,478 tests 0 failed 0 errors and check 0/0/0 on GREEN and REFACTOR; lint 0; mutants 10/10; browser
-tier 22 tests 111 expectations 0 failed; ratchet 11/11 (`81395c09beb6`), `reportGV` 0.21 s (S1072's 0.31 s fail did not recur).
-**Handoff evaluation of S1072: 8/10.** Helped: Next and the block named `:1576`, the S1060 reason and the equivalence test; "drive the app
-from outside the repo and log `find.package()`" worked first try. Missing: which library CI's Ubuntu legs load (found in the job log).
-Wrong: nothing; "the other 0.7 s" was mostly allocation (about 0.4 s of R code remains). ROI: high.
-**Self: 7/10.** + profiled and prototyped both variants and read CI's library before the scope question; every gate as recommended;
-10/10 mutants; the app before/after logged its package. - a RED counter also counted the check's own probe product (a GREEN->RED trip);
-three app-driver attempts on the 400-animal limit before reading the render branch.
-**Gotchas:** the block product is exact only where the library adds each entry's terms in row order; on OpenBLAS the check fails and the
-whole product runs ("built by blocks" skips there); a recorder around `.blockCrossprod()` also counts the check's probe call; above 400
-animals the Diagram tab has no style buttons (use `Shiny.setInputValue()`); the gate's 25% room exceeds the 21% gain (Learning 1039).
-**Next:** the owner picks. READY: `BACKLOG.md:245` layout twice (S), `:252` founder peak (S), `:269` CPU and GPU (S); DECISION NEEDED
-`:237` Direct above 400. Read the next CI run's Ubuntu legs (check fails there, tests pass). Not pushed (37 ahead).
+### What Session 1074 Did
+**Deliverable:** make the Pedigree Diagram's first drawing build its layout once, not twice (owner pick, item 1 of 4, "Layout built
+twice"; `BACKLOG.md:245`, READY, Effort S): log which input invalidates `diagramLayout()` (`R/modPedigree.R:690`), then stop the
+second build with the drawn diagram identical; strict TDD (IN PROGRESS)
+**Started:** 2026-10-27 ~09:52 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1072 (condensed S950 to S1073; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1073 (condensed S950 to S1074; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1073: the diagram's penalty table is squared by blocks wherever a once-a-session check finds that exact (`.penaltyCrossprod()`,
+`R/penaltyCrossprod.R`, called at `R/makePedigreeDiagramData.R:1577`); the example's diagram 4.58 to 3.61 s (gate 4.6 s), the app's
+708-animal Direct draw 9.94 to 8.65 s. Claim `6074c5188`, close-out `b086c3296`, not pushed; S1072 8/10, self 7/10 (Learning 1039).
+**Gotchas kept:** on OpenBLAS (CI's Ubuntu legs) the check fails and the whole product runs; a recorder around `.blockCrossprod()`
+also counts the check's probe call; above 400 animals the Diagram tab has no style buttons (use `Shiny.setInputValue()`).
 S1072: harem trials build their set-up once per `groupAddAssign()` call (`makeHaremSetUp()`, `drawHaremGroups()`,
 `R/makeHaremSetUp.R:31,76`); 1,000 harem trials 9.71 to 4.58 s (gate `perf_groupAddAssign_harem_1000_seconds` 5.9 s), the tab
 10.9 to 5.7 s. Claim `06fee3112`, close-out `e31d54208`, not pushed; S1071 8/10, self 8/10 (Learning 1038). **Gotchas kept:**
