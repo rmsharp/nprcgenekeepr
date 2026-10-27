@@ -51,11 +51,7 @@ modPyramidUI <- function(id) {
                downloadButton(ns("downloadPlot"), "Download Plot")
              ),
              div(
-               style = paste(
-                 "padding: 10px; border: 1px solid lightgray;",
-                 "background-color: #EDEDED; border-radius: 25px;",
-                 "box-shadow: 0 0 5px 2px #888; margin-top: 10px;"
-               ),
+               style = helpBoxStyle,
                includeHTML(
                  system.file("extdata", "ui_guidance", "pyramidPlot.html",
                              package = "nprcgenekeepr")
