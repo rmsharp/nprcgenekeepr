@@ -115,6 +115,18 @@ exampleGroupInput <- local({
   }
 })
 
+## The relatives list groupAddAssign() builds with its default settings
+## (kinship above 0.015625, female pairs ignored, minimum age 1) and hands to
+## fillGroupMembers(): each candidate's relatives among `candidates`.
+defaultRelatives <- function(candidates, kmat, ped) {
+  addAnimalsWithNoRelative(
+    getAnimalsWithHighKinship(filterKinMatrix(candidates, kmat), ped,
+                              0.015625, list(character(0L)),
+                              list(c("F", "F")), 1.0),
+    candidates
+  )
+}
+
 ## The value, error message and warnings of one call, from a fixed seed (1 by
 ## default): the equivalence tests compare today's function and the new code on
 ## unusual inputs with it (test_rareAlleleCounts.R has its own one-argument

@@ -136,16 +136,6 @@ test_that("one set-up and a draw of the sires start a harem trial as today's cod
   }
 })
 
-## The relatives list groupAddAssign() builds and hands to fillGroupMembers().
-kinOf <- function(candidates, kmat, ped) {
-  addAnimalsWithNoRelative(
-    getAnimalsWithHighKinship(filterKinMatrix(candidates, kmat), ped,
-                              0.015625, list(character(0L)),
-                              list(c("F", "F")), 1.0),
-    candidates
-  )
-}
-
 ## fillGroupMembers() handed the set-up, as groupAddAssign() now does.
 fillWithSetUp <- function(candidates, currentGroups, kin, ped, harem, minAge,
                           numGp, sexRatio) {
@@ -164,8 +154,8 @@ test_that("fillGroupMembers() fills harems as today's code does, handed the set-
   breedersPed <- nprcgenekeepr::pedWithGenotype
   fillArgs <- function(candidates, kmat, ped, numGp,
                        currentGroups = list(character(0L))) {
-    list(candidates, currentGroups, kinOf(candidates, kmat, ped), ped, TRUE,
-         1.0, numGp, 0.0)
+    list(candidates, currentGroups, defaultRelatives(candidates, kmat, ped),
+         ped, TRUE, 1.0, numGp, 0.0)
   }
   cases <- list(
     `example, 6 harems` = fillArgs(ex$candidates, ex$kmat, ex$ped, 6L),

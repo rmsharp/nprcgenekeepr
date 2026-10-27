@@ -14,52 +14,14 @@
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will
 #'  be ignored. Default is 1 year.
-#' @return Initial groupMembers list
+#' @return Initial groupMembers list: the set-up groupAddAssign() builds once
+#' per call (\code{makeHaremSetUp()}) and the draw of the sires each trial
+#' makes (\code{drawHaremGroups()}).
 #'
 #' @noRd
 initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
                                   minAge) {
-  groupMembers <- list()
-  if (length(currentGroups) > 0L) {
-    for (i in seq_along(currentGroups)) {
-      currentGroup <- currentGroups[[i]]
-      if (length(getPotentialSires(currentGroup, ped, minAge)) > 1L) {
-        stop(
-          "User selected to form harems with more than one male, ",
-          "There are ",
-          length(getPotentialSires(currentGroup, ped, minAge)),
-          " at least ", minAge, " years old in the current group ",
-          i, "."
-        )
-      }
-    }
-  }
-  needsSire <- groupsWithoutSire(numGp, currentGroups, ped, minAge)
-  availableSires <- setdiff(
-    getPotentialSires(candidates, ped, minAge), unlist(currentGroups)
+  drawHaremGroups(
+    makeHaremSetUp(numGp, currentGroups, candidates, ped, minAge), numGp
   )
-  if (length(availableSires) < sum(needsSire)) {
-    stop(
-      "User selected to form harems in ", numGp, " groups with ",
-      "only ", length(availableSires),
-      " males at least ",
-      minAge, " years old in the list of candidates."
-    )
-  }
-
-  sires <- character(0L)
-  if (any(needsSire)) {
-    sires <- sample(availableSires, sum(needsSire), replace = FALSE)
-  }
-  seeds <- groupSeeds(numGp, currentGroups)
-  nextSire <- 0L
-  for (i in seq_len(numGp)) {
-    if (needsSire[i]) {
-      nextSire <- nextSire + 1L
-      groupMembers[[i]] <- c(sires[nextSire], seeds[[i]])
-    } else {
-      groupMembers[[i]] <- seeds[[i]]
-    }
-  }
-  groupMembers
 }

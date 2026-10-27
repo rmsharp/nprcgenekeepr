@@ -207,12 +207,7 @@ test_that("the grid runs the new code: today's code mocked to stop changes nothi
 ## The relatives list groupAddAssign() builds for the breeders and hands to
 ## fillGroupMembers().
 breedersKin <- function(candidates = breeders) {
-  kmat <- filterKinMatrix(candidates, breedersKmat)
-  addAnimalsWithNoRelative(
-    getAnimalsWithHighKinship(kmat, breedersPed, 0.015625,
-                              list(character(0L)), list(c("F", "F")), 1.0),
-    candidates
-  )
+  defaultRelatives(candidates, breedersKmat, breedersPed)
 }
 
 ## fillGroupMembers()'s arguments: ordinary values unless named.
