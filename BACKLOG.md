@@ -234,14 +234,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **Pedigree Diagram: no way to choose "Direct" for a pedigree of 401 to 750 animals (DECISION NEEDED, Effort S;
-      found S1073)** -- with the default "Rectilinear" style the Diagram tab draws at most 400 animals, and "Direct" 750
-      (`R/modPedigree.R:465`; `NEWS.Rmd:58-60` says so), but the edge-style buttons are drawn only beside a diagram
-      (`:624-631`), never beside the over-limit message (`:555-565`). Measured S1073 in the app with the example as the
-      app trims it (708 animals): the tab said "Diagram not shown: 708 animals exceeds the 400-animal display limit.
-      Narrow the focal-animal selection to view a diagram." with 0 style buttons, so a fresh session cannot reach the
-      Direct diagram of 708 animals. Whether a style chosen on a smaller diagram carries over is untested. To decide:
-      show the style buttons with the message too, name "Direct" in the message, or both.
+- [ ] **The `reportGV` speed gate reads slower from the repo folder than from a copy of the same commit (READY,
+      Effort S; found S1072, failed S1077)** -- at S1077 close-out `perf_reportGV_example_seconds` (limit 0.3 s)
+      read 0.31 s (`quality_ratchet.py --run`, results `5c8e1d80e68c`, 10/11). Its own command, `Rscript
+      tools/perf/run.R reportGV-example`, read 0.29 to 0.31 s in six runs from the repo folder and 0.20 to 0.21 s from
+      `git archive` copies of both HEAD `1107d0750` and S1076's `ce976ca4f`, interleaved at load 8 to 10, so the code
+      did not slow (S1075 and S1076 read 0.23 s from the repo). Nothing new in the folder explains it: `Meta/` and
+      `doc/` date from July, the only file a test rewrote today is tracked and unchanged, and the package has no
+      compiled code. To do: find what `pkgload::load_all()` of the repo folder brings that an archive copy lacks, then
+      decide whether the gate runs from an archive copy.
 - [ ] **The performance campaign's nine fallbacks: move their input types onto the fast paths? (DECISION NEEDED,
       Effort M; owner-raised S1054, filed S1066)** -- each phase kept the pre-campaign code for inputs its new code
       does not take (a factor where text is expected, for example): `rareAlleleCountsGeneral()`, `geneDropGeneral()`,

@@ -99,11 +99,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1077 Did
-**Deliverable:** the Diagram tab lets a user reach "Direct" for a pedigree of 401 to 750 animals (`BACKLOG.md:237`, DECISION
-NEEDED, Effort S; found S1073; owner pick, item 1 of 4, "Direct diagram, 401-750"); owner ruling first; strict TDD. (IN PROGRESS)
-**Started:** 2026-10-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Direct diagram, 401-750"; ruling "Buttons and wording"; strict TDD, three gates
+"Yes"):** from 401 to 750 animals in Rectilinear the Diagram tab's message keeps the Diagram Edge Style buttons above it and reads
+"Diagram not shown: N animals exceeds the 400-animal limit of the Rectilinear style. Choose Direct above to draw up to 750 animals, or
+narrow the focal-animal selection." One click on Direct draws it; above 750 the old message, no buttons (`R/modPedigree.R:569-597`,
+`.edgeStyleButtons()` `:500`). NEWS bullet `NEWS.Rmd:58-61`. Claim `0e9c9c68d`, RED `12992e2ca`, GREEN `2d7d8a1f1`, NEWS `9f369f809`,
+REFACTOR `1107d0750`. Block off BACKLOG; no issue; the three guide pages already said "750 if switched to Direct".
+**Measured first:** a module probe (450, 708: message, 0 buttons; Direct set: drawn; chosen on 20 animals then grown: carries over).
+**Verified:** module file 5 tests, 9 RED failures for the right reason; browser test (450 animals in 150 trios, click Direct, drawn)
+3 RED failures; full suite 483 files 4,507 tests 0 failed (GREEN and REFACTOR); check 0/0/0 twice; lint 0; browser file 27 tests 164
+expectations 0 failed (GREEN and REFACTOR); mutants 7/8 + M9 caught, M5 (the style clause) equivalent; real app on the 708-animal
+example trim: buttons above the message, Direct drew 1,489 nodes (pictures opened for the owner).
+**Ratchet: 10/11** (`5c8e1d80e68c`): `perf_reportGV_example_seconds` 0.31 s (limit 0.3); the same code reads 0.20-0.21 s from a
+`git archive` copy and S1076's code the same, so the repo folder is slow, not the code; filed `BACKLOG.md:237`.
+**Handoff evaluation of S1076: 9/10.** Helped: Next named `:237` with its three choices; `load_all(helpers = FALSE)`; S1074's
+"click a radio with `run_js`". Missing: S1072's "the reportGV gate reads slower from the repo folder" had dropped out of the
+notes and failed this close-out. Wrong: nothing. ROI: high.
+**Self: 8/10.** + measured before the scope question; every gate first try; mutants on scratch copies (repo never edited); the
+refactor proved `identical()` and on RED-time code. - a `regexpr()` order check passed with no buttons (fixed before RED); a
+mutant had a stray `)`; a viewport picture missed the diagram again (retaken as an element picture before the owner saw it).
+**Gotchas:** `test_file(desc =)` also runs earlier `pixel_test_that()` blocks; under load 55 the 708 Direct layout took 37 s (read
+`uptime`); time the reportGV gate from a `git archive` copy too (Learning 1043).
+**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` tie order (S), `:231` relationship table (S); READY `:237` reportGV
+gate (S). After a push read CI (S1073 OpenBLAS, S1075 `Rprofmem` skips, S1076 CPU-drawing skips). Not pushed (61 ahead).
 
 ### Sessions 947-1076 (condensed S950 to S1077; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1076: every browser test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]"
@@ -207,16 +225,11 @@ S1049: the trend chart drops a blank metric value without a console warning (`na
 tests pin the panel notice's 200-character cut (`R/modSnapshotTrends.R:427`); strict TDD; claim `16ddb997f`, close-out `520bd5dc8`; S1048 9/10,
 self 8/10 (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws
 quietly" test must draw (`plotGrob()`).
-S1048: `methodology/CHANGELOG.md` trimmed 200,357 to 23,778 B (`--cut 2026-10-22`, the owner's clean day seam; housekeeping); claim `76353cde1`,
-close-out `7a6729bd6`; S1047 8/10, self 8/10 (Learning 1014). **Gotchas kept:** a scheduled workflow runs from the remote default branch;
-`--cut <date>` keeps records dated after the date; the trimmer's own entry sits under the pointer block, so the DONE entry goes above it.
-S1046-S1047: the scheduled `shinytest2` run of 2026-10-23 (`39916862256`) was cancelled at 45 minutes because `apt` downloads ran 6 to 26 times slower than the night before (52 to
-55 kB/s; setup took 31 min 47 s), not because of a test (S1046, a diagnosis: `docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`); the limit is 75 minutes (S1047, strict TDD:
-`tests/testthat/test_shinytest2_workflow_timeout.R:36` expects `75L`, `.github/workflows/shinytest2.yaml:46`, one path helper `shinytest2WorkflowPath()` in
-`tests/testthat/helper-shinytest2Workflow.R:13`). Claims `ee8bdbe7c`, `571d62426`, RED `ef166ab23`, GREEN `08efe189e`, REFACTOR `0134dc55f`; evaluations 9/10, self 7-8/10 (Learnings
-1012-1013). **Gotchas kept:** the test reads the YAML text, so it proves the number in the file, not that 75 minutes is enough (that night needed about 55, an estimate); `gh run view <id>
---json jobs` gives every step's start and end and the saved job log labels every line "UNKNOWN STEP"; wait on the R process by pid, not `pgrep -f`; the 2026-09-27 cancel was a real
-30-minute cap (growth), not this cause.
+S1048: `methodology/CHANGELOG.md` trimmed 200,357 to 23,778 B (`--cut 2026-10-22`; Learning 1014). **Gotchas kept:** `--cut <date>` keeps records
+dated after the date; the trimmer's own entry sits under the pointer block, so the DONE entry goes above it.
+S1046-S1047: the 2026-10-23 `shinytest2` cancel was slow `apt` downloads, not a test (`docs/audits/SHINYTEST2_TIMEOUT_DIAGNOSIS_2026-10-23.md`);
+the limit is 75 minutes (`test_shinytest2_workflow_timeout.R:36`, `.github/workflows/shinytest2.yaml:46`); hashes in `CHANGELOG.md` (Learnings 1012-1013).
+**Gotchas kept:** the test proves the number in the file, not that 75 minutes is enough; `gh run view <id> --json jobs` gives each step's times.
 S1040-S1045 (strict TDD each; every gate put to the owner; evaluations 8-9/10, self 7-8/10; Learnings 1006-1011; condensed S1067,
 hashes in `CHANGELOG.md`): S1045, the trend chart keeps panel titles whole and never overprints year labels (`trendPlotLayout(width,
 nPanels)`, `R/trendPlotLayout.R:26`; `plotSnapshotTrends(ncol)`; the 18 default metric names, `R/trendDefaultMetrics.R:13`); S1044, its
