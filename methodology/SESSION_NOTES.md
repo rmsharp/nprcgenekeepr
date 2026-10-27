@@ -98,32 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1076 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "GPU and CPU pixel checks"; scope "Pixel tests, every run"; strict TDD, three gates
-"Yes"; survivor ruling "Pin it with a test"):** every browser test that reads the Diagram's canvas pixels runs twice: "[default
-drawing]" and "[CPU drawing]", the second in a Chrome started with `--disable-accelerated-2d-canvas`. `pixel_test_that()`,
-`local_cpu_canvas_chrome()`, `chrome_canvas_drawing()`, `run_declared()` (`tests/testthat/helper-shinytest2.R:683,701,732,760`); the
-four blocks `test-e2e-pedigree-module.R:392,1261,1294,1382`. Claim `334c6948d`, RED `91fc62746`, GREEN `e4e1b560a`, pin `688e954c3`,
-REFACTOR `ec11df0be`. Block off BACKLOG; test-only, so no NEWS, docs or issue.
-**Measured first:** Chrome's own `SystemInfo` "2d_canvas" reads "enabled" (GPU) here and "disabled_software" with the flag; an
-`AppDriver` started after `chromote::set_default_chromote_object(cpu)` ran in that Chrome. Pedigree file 171.6 s GPU, 172.2 s CPU.
-**Verified:** browser tier pedigree 26 tests 160 expectations, canvas 4 tests, 0 failed 0 skipped (214.0 s against 171.6 s: +42 s,
-not the "about 21 s" the option said); full suite 482 files 4,501 tests 0 failed 0 errors (222 skipped, the 8 baseline warnings);
-check 0/0/0; lint 0; mutants 9/10 after the pin (M2, no `local()`, measured harmless and left); ratchet 11/11 (`745e98f05f27`).
-**Handoff evaluation of S1075: 9/10.** Helped: Next named `:255` and its first choice exactly; the by-hand flag; Learning 1033 on a
-canvas moving to the CPU. Missing: nothing it owed. Wrong: nothing (its "about 3.5 minutes" a pass read 172 s here). ROI: high.
-**Self: 7/10.** + measured Chrome's report and the swap before the scope question; every gate as recommended; survivors measured and
-pinned; the refactored files proved on the RED-time helpers. - the time in the option was a sum of old parts (21 s; 42 s real); the
-first mutation script was invalid twice and left mutants stacked in the working tree (restored from the GREEN commit); a first
-RED-time rerun was invalid (`load_all()` sources the repo's helpers). Controls caught all three.
-**Gotchas:** `test_file(desc =)` cannot select a test `pixel_test_that()` makes; top-level `on.exit()` never runs in an `Rscript`
-script; `load_all(helpers = FALSE)` for a RED-time rerun (Learning 1042). Not known: what CI's headless Chrome reports for
-"2d_canvas"; if CPU, the four "[CPU drawing]" tests and two canvas tests skip there; if "enabled", they run (+~40 s). Read the
-next nightly `shinytest2` log after a push.
-**Next:** the owner picks. DECISION NEEDED: `BACKLOG.md:237` Direct above 400 (S), `:203` tie order (S), `:231` relationship table (S);
-read the next CI run (S1073's OpenBLAS check, S1075's `Rprofmem` skips, this session's skips). Not pushed (55 ahead).
+### What Session 1077 Did
+**Deliverable:** the Diagram tab lets a user reach "Direct" for a pedigree of 401 to 750 animals (`BACKLOG.md:237`, DECISION
+NEEDED, Effort S; found S1073; owner pick, item 1 of 4, "Direct diagram, 401-750"); owner ruling first; strict TDD. (IN PROGRESS)
+**Started:** 2026-10-27
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1075 (condensed S950 to S1076; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1076 (condensed S950 to S1077; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1076: every browser test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]"
+(`pixel_test_that()`, `tests/testthat/helper-shinytest2.R:732`; a `--disable-accelerated-2d-canvas` Chrome); pedigree file 171.6 to
+214.0 s. Claim `334c6948d`, close-out `ce976ca4f`, not pushed; S1075 9/10, self 7/10 (Learning 1042). **Gotchas kept:**
+`test_file(desc =)` cannot select a generated test; `load_all(helpers = FALSE)` for a RED-time rerun; read CI's "2d_canvas" skips.
 S1075: the founder statistics build their contribution table once: each fill builds it with `initialContributions()`
 (`R/calcFounderContributions.R:74,143,173`); live memory during the fill 94.1 to 47.1 MB on all 3,694, results identical. Claim
 `3e6cce7db`, close-out `3c983760c`, not pushed; S1074 8/10, self 7/10 (Learning 1041). **Gotchas kept:** the harness peak counts
