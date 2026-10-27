@@ -748,3 +748,30 @@ pixel_test_that <- function(desc, code, drawing = chrome_canvas_drawing) {
   })), env)
   invisible(NULL)
 }
+
+#' Run code that declares tests, apart from the calling test file
+#'
+#' Runs `code` under its own reporter, so the tests it declares (for example
+#' through pixel_test_that()) do not count in the calling file's results.
+#'
+#' @param code Code that declares tests.
+#' @return A data frame with one row per declared test: `test` (its name),
+#'   `skipped` (whether it skipped) and `message` (its results' messages).
+run_declared <- function(code) {
+  reporter <- testthat::ListReporter$new()
+  reporter$start_file("declared")
+  testthat::with_reporter(reporter, code, start_end_reporter = FALSE)
+  reporter$end_file()
+  tests <- reporter$get_results()
+  data.frame(
+    test = vapply(tests, function(t) t$test, character(1L)),
+    skipped = vapply(tests, function(t) {
+      any(vapply(t$results, inherits, logical(1L), "expectation_skip"))
+    }, logical(1L)),
+    message = vapply(tests, function(t) {
+      paste(vapply(t$results, conditionMessage, character(1L)),
+            collapse = " | ")
+    }, character(1L)),
+    stringsAsFactors = FALSE
+  )
+}

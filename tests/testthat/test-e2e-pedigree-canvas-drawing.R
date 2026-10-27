@@ -2,8 +2,9 @@
 ## and once in a Chrome that draws its canvas on the CPU (owner ruling S1067;
 ## owner pick S1076, "Pixel tests, every run"; see
 ## test_pixelTestsBothDrawings.R). local_cpu_canvas_chrome()
-## (helper-shinytest2.R) is how the second run gets its Chrome; these tests
-## check that helper on its own. Chrome itself says how it draws a canvas:
+## (helper-shinytest2.R) is how the second run gets its Chrome; the first
+## three tests check that helper on its own, the last that pixel_test_that()
+## runs its second test under it. Chrome itself says how it draws a canvas:
 ## its SystemInfo "2d_canvas" status reads "enabled" for the GPU (this Mac's
 ## default) and "disabled_software" with --disable-accelerated-2d-canvas.
 
@@ -69,28 +70,6 @@ test_that(
 ## every test above. This one reads Chrome's own 2d_canvas status, not
 ## chrome_canvas_drawing(), inside each of the two tests pixel_test_that()
 ## declares.
-
-## Runs `code`, which declares tests, under its own reporter, so the tests it
-## declares do not count in this file's results. Returns one row per declared
-## test: its name, whether it skipped, and its results' messages.
-run_declared <- function(code) {
-  reporter <- testthat::ListReporter$new()
-  reporter$start_file("declared")
-  testthat::with_reporter(reporter, code, start_end_reporter = FALSE)
-  reporter$end_file()
-  tests <- reporter$get_results()
-  data.frame(
-    test = vapply(tests, function(t) t$test, character(1L)),
-    skipped = vapply(tests, function(t) {
-      any(vapply(t$results, inherits, logical(1L), "expectation_skip"))
-    }, logical(1L)),
-    message = vapply(tests, function(t) {
-      paste(vapply(t$results, conditionMessage, character(1L)),
-            collapse = " | ")
-    }, character(1L)),
-    stringsAsFactors = FALSE
-  )
-}
 
 test_that(
   "where the default Chrome draws on the GPU, pixel_test_that() runs its first

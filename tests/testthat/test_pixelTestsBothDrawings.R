@@ -29,28 +29,6 @@ reads_pixels <- function(call) {
     any(grepl("getImageData", deparse(call), fixed = TRUE))
 }
 
-## Runs `code`, which declares tests, under its own reporter, so the tests it
-## declares do not count in this file's results. Returns one row per declared
-## test: its name, whether it skipped, and its results' messages.
-run_declared <- function(code) {
-  reporter <- testthat::ListReporter$new()
-  reporter$start_file("declared")
-  testthat::with_reporter(reporter, code, start_end_reporter = FALSE)
-  reporter$end_file()
-  tests <- reporter$get_results()
-  data.frame(
-    test = vapply(tests, function(t) t$test, character(1L)),
-    skipped = vapply(tests, function(t) {
-      any(vapply(t$results, inherits, logical(1L), "expectation_skip"))
-    }, logical(1L)),
-    message = vapply(tests, function(t) {
-      paste(vapply(t$results, conditionMessage, character(1L)),
-            collapse = " | ")
-    }, character(1L)),
-    stringsAsFactors = FALSE
-  )
-}
-
 test_that(
   "every browser test that reads the Diagram's canvas pixels is declared with
    pixel_test_that(), so it also runs with CPU drawing", {

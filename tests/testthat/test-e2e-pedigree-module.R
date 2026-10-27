@@ -317,7 +317,9 @@ test_that(
 ## partly see-through one is read as it shows on the page's white (S1067:
 ## Chrome's software drawing, as on CI, draws a 1 px outline almost wholly in
 ## partly see-through pixels, which this reader used to count as white).
-## `body` must `return` its answer.
+## `body` must `return` its answer. Every test that reads pixels is declared
+## with pixel_test_that() (helper-shinytest2.R; S1076), so it runs in the
+## default Chrome and again in one that draws its canvas on the CPU.
 diagram_pixel_js <- function(body) {
   paste0(
     "(() => { const net = HTMLWidgets.find('#pedigree-pedigreeDiagram')",
@@ -496,7 +498,8 @@ pixel_test_that(
   ## circle's outline is partly see-through, which diagram_pixel_js() then
   ## counted as white, so it missed the outline and found the sibship bar
   ## 83.5 px out; this Mac read 0.37 too with Chrome started with
-  ## --disable-accelerated-2d-canvas. Where a symbol falls within a pixel
+  ## --disable-accelerated-2d-canvas (since S1076 this test's [CPU drawing]
+  ## run does that on every local run). Where a symbol falls within a pixel
   ## changes which pixels are partly see-through, so the view is moved by
   ## fifths of a pixel each way and redrawn (vis-network's redraw() paints at
   ## once), and both overhangs are read again at each of the 25 positions,
