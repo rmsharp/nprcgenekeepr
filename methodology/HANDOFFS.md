@@ -210,13 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1071
 date: 2026-10-26
-status: pending
-active_task: IN PROGRESS -- correct the shipped example snapshot history (inst/extdata/examples/example_snapshot_history.csv; BACKLOG.md:237, READY, Effort S; owner pick at the Phase 0 picker, item 1 of 4, "Fix example neGD"): check every column of its 4 rows against the package's definitions, fix the wrong values (neGD 42.5/43.1/43.8/30.4 where 1 - 1/(2*fg) gives 0.942/0.943/0.944/0.919), and add a test that the file agrees with them, under strict TDD
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- the shipped example snapshot history (inst/extdata/examples/example_snapshot_history.csv) holds values the package makes (BACKLOG item "The example snapshot history's neGD values are not gene diversity", found S1070), under strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Fix example neGD"; owner rulings "All three" and "Leave them"; the three gates answered "Yes" and one GREEN->RED stop "Back to RED").
+what_was_done: Claim 4f8d12e5e. Measured all 27 columns of the 4 rows against the definitions and against createColonySnapshot() rows of qcPed and the example colony's 332 living animals: neGD 42.5-43.8/30.4 where 1 - 1/(2*fg) gives 0.919-0.944; meanGu/medianGu/meanGuSE written as shares (about 0.21/0.21/0.004) where calcGU() writes percentages (example colony 22.8/14.4/0.28); kurtosis 2.8-3.2 where calcKurtosis() gives excess kurtosis (example colony -0.28/0.88); the rest consistent. RED f4dd96b15 (tests/testthat/test_exampleSnapshotHistoryValues.R; test_calcSnapshotDeltas.R rows 1-2), RED addition b68f4e293 (test_plotSnapshotTrends.R meanGu band, missed at RED by a truncated grep, found by the first GREEN run), GREEN 160d0915d (24 cells: neGD 0.9419/0.9432/0.9444/0.9194, genome uniqueness x100, kurtosis -3), REFACTOR ba2baebce (validatedSnapshotHistory() in tests/testthat/helper-snapshotHistory.R for four identical copies). BACKLOG block off; CHANGELOG DONE entry; Learning 1037.
+next_steps: The owner picks at the next Phase 0. READY items: harem trials redo set-up work (BACKLOG.md:237, M), diagram time outside the solver (:247, M), founder statistics' memory peak (:254, S), GPU and CPU pixel passes (:271, S); the DECISION NEEDED items are unchanged. At Phase 0, read the first scheduled shinytest2 run on S1067's fix (due about 07:15 UTC 2026-10-27; run 40286217416 was the last red one). Not pushed (23 ahead of origin after this commit).
+key_files: inst/extdata/examples/example_snapshot_history.csv (the corrected 24 cells, columns 13 and 22-25, 27); tests/testthat/test_exampleSnapshotHistoryValues.R:24-41 (the neGD-against-fg test and the pinned corrections); tests/testthat/helper-snapshotHistory.R:9 (the shared reader); tests/testthat/test_calcSnapshotDeltas.R:103-127 (rows 1-2 hand-copied); tests/testthat/test_plotSnapshotTrends.R:245-263 (the meanGu band); R/calcGeneDiversity.R, R/calcGU.R:114-115 (percent), R/calcKurtosis.R (excess) for the definitions.
+gotchas: Never cut an inventory grep with a per-file head: the RED inventory's | head -15 hid test_plotSnapshotTrends.R's hand-copied meanGu band, the gate text said "the one test that copies" when there were two, and a GREEN->RED reversal was needed. validatedSnapshotHistory() now lives in helper-snapshotHistory.R and loads for every test file; a test file that defines the same name locally shadows it. The example file's values are hand-made: only neGD is tied to a definition (fg); the genome uniqueness and kurtosis numbers are pinned values. The three test files' own made-up rows (test_appendColonySnapshot.R, test_calcSnapshotDeltas.R, test_plotSnapshotTrends.R builders) still use neGD 44.2, meanGu 0.229 and kurtosis 2.8/3.0 by owner ruling. A real-app run needs the scratch install on R_LIBS (the app and system.file read the installed package).
+runtime_smoke: The tree installed into a scratch library (R CMD INSTALL --no-docs), the full app started with shinytest2, the corrected file uploaded on the Genetic-Health Trends tab, the Trends sub-tab's 18-panel chart (903 x 600 px) draws neGD on 0.92-0.945, meanGu about 20-22 with its band, meanGuSE 0.28-0.41 and kurtosis -0.2 to 0.2, each panel in its intended direction; picture opened for the owner.
+quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 48f546074f8c · manifest 38cf32b77360
+changelog_ref: 4f8d12e5e
+commit: ba2baebce
 ```
-Session claimed; work beginning.
+Self 7/10. + Measured every column against definitions and two real colonies before the scope question, which found the genome-uniqueness and kurtosis scale errors the filed item did not name; the owner took the recommended option each time; the real-app picture and full verification on both trees. - A truncated inventory grep missed a second test that copies the file's values, so two gate texts carried a false "the one test" and a GREEN->RED reversal cost a round trip. Predecessor S1070 9/10: its Next and block named this item, its definition, the pinned test line and the reader count, all accurate.
 
 ```handoff
 session: S1070

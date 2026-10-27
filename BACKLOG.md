@@ -234,18 +234,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **The example snapshot history's neGD values are not gene diversity (READY, Effort S; found S1070, filed at the
-      owner's word)** -- `inst/extdata/examples/example_snapshot_history.csv` (written by hand at S757, `1d10be708`) has
-      `neGD` 42.5, 43.1, 43.8 and 30.4, where the package's definition, `1 - 1 / (2 * fg)` (`reportGV()`'s help,
-      `calcGeneDiversity()`, since S310), gives 0.942, 0.943, 0.944 and 0.919 for the file's `fg` values 8.6, 8.8, 9.0
-      and 6.2. Loaded in the app (the guide's step 1 points to the shipped file), its `neGD` panel reads 30 to 45 while
-      the Trends tab's "Reading the trend" box (S1070, `inst/extdata/ui_guidance/snapshot_trends.html`) says neGD is a
-      share between 0 and 1. First step: check the file's other columns against their definitions the same way, then
-      correct the values (or rebuild the rows from real `reportGV()` runs) with a test that every row's `neGD` equals
-      `1 - 1 / (2 * fg)`. Readers to re-check: `tests/testthat/test_calcSnapshotDeltas.R:116` pins `neGD` 42.5, eight
-      more test files read the file (`grep -l example_snapshot_history tests/testthat`), and five help examples
-      (`appendColonySnapshot`, `calcSnapshotDeltas`, `checkSnapshotHistory`, `plotSnapshotTrends`, `readSnapshotHistory`).
-
 - [ ] **Breeding Groups: harem trials redo their set-up work every trial (READY, Effort M; owner-raised S1056, filed
       S1066 at the performance campaign's close)** -- 1,000 harem trials on the tutorial's 280 candidates take 10.69 s
       (9.78-11.16) against 5.54 s for 6 plain groups (`Rscript tools/perf/run.R groupAddAssign-harem-1000` and
