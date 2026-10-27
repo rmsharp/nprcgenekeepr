@@ -84,3 +84,27 @@ test_that("the example's solver positions are today's", {
                      info = paste("call", i))
   }
 })
+
+## BACKLOG.md "Pedigree Diagram: about 1.7 s of the 708-animal layout is
+## outside its solver" (owner pick S1073): the penalty table's product with
+## itself, worked out by blocks where that is exact (.penaltyCrossprod(),
+## test_diagramSolverEquivalence.R). Measured S1073 on the example's table
+## (1,480 rows, 1,489 columns) with R's own math library: 1.07 s whole, 0.04 s
+## by blocks (a prototype). The budget, 0.3 s for the median of 3 timed runs
+## after one untimed run (which also makes the once-a-session check), fails
+## today's whole multiplication and keeps about 7 times room over the new
+## time. With a library that does the whole product fast (OpenBLAS) the table
+## is multiplied whole and the budget holds as well.
+test_that("the penalty product inside the example's diagram takes under 0.3 s", {
+  skipUnlessDiagramBudget()
+  pmat <- penaltyMatrixOf(diagramSolverCalls(diagramBudgetPed())[[1L]])
+  invisible(.penaltyCrossprod(pmat))
+  timings <- vapply(seq_len(3L), function(i) {
+    system.time(.penaltyCrossprod(pmat))[["elapsed"]]
+  }, numeric(1L))
+  med <- stats::median(timings)
+  expect_lt(med, 0.3, label = sprintf(
+    "median of 3 runs, %.3f s (runs %s; load: %s)", med,
+    toString(sprintf("%.3f", timings)), loadAverage()
+  ))
+})

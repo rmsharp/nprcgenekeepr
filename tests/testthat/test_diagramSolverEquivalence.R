@@ -221,3 +221,168 @@ test_that("only a missing or infinite number, or a node listed twice, runs today
                      info = name)
   }
 })
+
+## BACKLOG.md "Pedigree Diagram: about 1.7 s of the 708-animal layout is
+## outside its solver" (owner pick S1073). Before the solve, .solveJointQP()
+## multiplies its penalty table by itself, t(pmat) %*% pmat: 1,480 rows by
+## 1,489 columns on the example, 1.07 s of its 4.6 s with R's own math
+## library, though each row holds only 2 or 3 numbers. The product is now
+## worked out block by block (.penaltyCrossprod()): each pair of 32-column
+## blocks is multiplied over only the rows with a number in both, in row
+## order. Every term it leaves out is an exact zero and the library adds the
+## rest in the same order, so with R's own library the result is today's to
+## the last bit (0.04 s on the example; a prototype matched 18 of 18 grid
+## solves, S1073). A library that adds a long product in chunks (OpenBLAS, on
+## CI's Ubuntu runs) can round the block sums differently, so the owner ruled
+## "only where exact" (S1073): a check made once a session
+## (.blockProductIsExact()) multiplies a probe table whole and by blocks, and
+## wherever the two differ the table is multiplied whole, as today.
+
+## The penalty table of every grid solve, read from the frozen copy.
+gridPenaltyMatrices <- lapply(diagramSolverGrid, penaltyMatrixOf)
+
+## A stand-in for a math library that adds a long product in chunks of
+## `chunk` rows, as OpenBLAS does: each chunk's sums are worked out on their
+## own and then added together.
+chunkedProduct <- function(chunk) {
+  force(chunk)
+  function(x, y) {
+    out <- matrix(0.0, nrow(x), ncol(y))
+    for (start in seq(1L, ncol(x), by = chunk)) {
+      rows <- start:min(ncol(x), start + chunk - 1L)
+      out <- out + x[, rows, drop = FALSE] %*% y[rows, , drop = FALSE]
+    }
+    out
+  }
+}
+
+## Forget the check's answer now and again when the calling test ends, so a
+## stand-in library's answer never reaches another test.
+localFreshBlockCheck <- function(env = parent.frame()) {
+  rm(list = ls(.blockProductCache), envir = .blockProductCache)
+  withr::defer(rm(list = ls(.blockProductCache), envir = .blockProductCache),
+               envir = env)
+}
+
+## The column counts of the tables .penaltyCrossprod() multiplies by blocks
+## while `code` runs.
+blockProducts <- function(code) {
+  counts <- integer(0L)
+  real <- .blockCrossprod
+  testthat::with_mocked_bindings(
+    code,
+    .blockCrossprod = function(pmat, ...) {
+      counts <<- c(counts, ncol(pmat))
+      real(pmat, ...)
+    }
+  )
+  counts
+}
+
+test_that("the penalty product is today's whole multiplication on the grid", {
+  for (name in names(gridPenaltyMatrices)) {
+    pmat <- gridPenaltyMatrices[[name]]
+    expect_identical(.penaltyCrossprod(pmat), t(pmat) %*% pmat, info = name)
+  }
+})
+
+test_that("where the check passes, a table over 32 columns is built by blocks", {
+  skip_if_not(.blockProductIsExact(),
+              "this R's math library adds a long product in another order")
+  widths <- vapply(gridPenaltyMatrices, ncol, integer(1L))
+  wide <- names(gridPenaltyMatrices)[widths > 32L]
+  expect_length(wide, 7L)
+  for (name in wide) {
+    pmat <- gridPenaltyMatrices[[name]]
+    expect_identical(blockProducts(.penaltyCrossprod(pmat)), ncol(pmat),
+                     info = name)
+  }
+  pmat <- gridPenaltyMatrices[["seeded, 40 animals, seed 7, call 1"]]
+  pmat <- pmat[, 1L:33L]
+  expect_identical(blockProducts(.penaltyCrossprod(pmat)), 33L)
+  expect_identical(.penaltyCrossprod(pmat), t(pmat) %*% pmat)
+})
+
+test_that(".solveJointQP() hands its penalty table over once per solve", {
+  for (name in names(diagramSolverGrid)) {
+    handed <- list()
+    real <- .penaltyCrossprod
+    with_mocked_bindings(
+      do.call(.solveJointQP, diagramSolverGrid[[name]]),
+      .penaltyCrossprod = function(pmat, ...) {
+        handed[[length(handed) + 1L]] <<- pmat
+        real(pmat, ...)
+      }
+    )
+    expect_identical(handed, list(gridPenaltyMatrices[[name]]), info = name)
+  }
+})
+
+test_that("the check refuses a math library that adds in chunks", {
+  localFreshBlockCheck()
+  local_mocked_bindings(.matrixProduct = chunkedProduct(256L))
+  expect_false(.blockProductIsExact())
+})
+
+test_that("chunks longer than the probe table change nothing the check sees", {
+  localFreshBlockCheck()
+  own <- .blockProductIsExact()
+  rm(list = ls(.blockProductCache), envir = .blockProductCache)
+  local_mocked_bindings(.matrixProduct = chunkedProduct(100000L))
+  expect_identical(.blockProductIsExact(), own)
+})
+
+test_that("where the check fails, the penalty table is multiplied whole", {
+  localFreshBlockCheck()
+  chunked <- chunkedProduct(256L)
+  local_mocked_bindings(.matrixProduct = chunked)
+  pmat <- gridPenaltyMatrices[["the rhesus fixture, call 5"]]
+  expect_identical(blockProducts(.penaltyCrossprod(pmat)), integer(0L))
+  expect_identical(.penaltyCrossprod(pmat), chunked(t(pmat), pmat))
+})
+
+test_that("a missing or infinite number, or 32 columns or fewer, is multiplied whole", {
+  wide <- gridPenaltyMatrices[["seeded, 40 animals, seed 7, call 1"]]
+  cases <- list(
+    `a missing number` = replace(wide, 5L, NA),
+    `a NaN` = replace(wide, 5L, NaN),
+    `an infinite number` = replace(wide, 5L, Inf),
+    `a negative infinite number` = replace(wide, 5L, -Inf),
+    `32 columns` = wide[, 1L:32L],
+    `22 columns` = gridPenaltyMatrices[["seeded, 12 animals, seed 1, call 1"]],
+    `one column` = wide[, 1L, drop = FALSE]
+  )
+  for (name in names(cases)) {
+    pmat <- cases[[name]]
+    expect_identical(blockProducts(.penaltyCrossprod(pmat)), integer(0L),
+                     info = name)
+    expect_identical(.penaltyCrossprod(pmat), t(pmat) %*% pmat, info = name)
+  }
+})
+
+test_that("the check is made once a session and draws no random numbers", {
+  localFreshBlockCheck()
+  products <- 0L
+  local_mocked_bindings(.matrixProduct = function(x, y) {
+    products <<- products + 1L
+    x %*% y
+  })
+  withr::local_seed(11L)
+  before <- .Random.seed
+  first <- .blockProductIsExact()
+  made <- products
+  expect_gt(made, 0L)
+  expect_identical(.blockProductIsExact(), first)
+  expect_identical(products, made)
+  expect_identical(.Random.seed, before)
+  withr::local_options(matprod = "internal")
+  .blockProductIsExact()
+  expect_gt(products, made)
+})
+
+test_that("with R's own math library the check passes", {
+  skip_if_not(grepl("Rblas", extSoftVersion()[["BLAS"]], fixed = TRUE),
+              "this R does not use its own math library (Rblas)")
+  localFreshBlockCheck()
+  expect_true(.blockProductIsExact())
+})

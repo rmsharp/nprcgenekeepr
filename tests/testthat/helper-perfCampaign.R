@@ -184,3 +184,17 @@ diagramSolverCalls <- function(ped) {
   )
   calls
 }
+
+## The penalty table one .solveJointQP() call multiplies by itself (pmat, one
+## row per penalty term), read from the frozen copy: its statements up to the
+## one that stacks the rows, so the table does not depend on the code under
+## test (S1073).
+penaltyMatrixOf <- function(args) {
+  f <- solveJointQPReference
+  steps <- as.list(body(f))
+  last <- which(vapply(steps, identical, logical(1L),
+                       quote(pmat <- do.call(rbind, pmatRows))))
+  stopifnot(length(last) == 1L)
+  body(f) <- as.call(c(steps[seq_len(last)], quote(pmat)))
+  do.call(f, args)
+}
