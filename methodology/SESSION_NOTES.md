@@ -98,29 +98,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1075 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Founder memory peak"; approach "Remove copy, build direct"; strict TDD, three gates
-"Yes"; survivor ruling "Pin it with a test"):** the founder statistics build their contribution table once. Since S1058 the fill
-got the table while `calcFounderContributions()` held it and copied it whole at the first write (both fills); each fill now builds
-it with `initialContributions()` (`R/calcFounderContributions.R:74,143,173`). Live during the fill 94.1 to 47.1 MB on all 3,694
-(table 47.0 MB), 30.6 to 15.4 MB synthetic; `calcFEFG()` there allocates 441.7 to 314.0 MB, 0.27 to 0.14 s; results identical.
-Claim `3e6cce7db`, RED `8a141b60f`, GREEN `45e00f56f`, pin `7b85bd3d7`, REFACTOR `9aee3a90e`. Block off BACKLOG; no NEWS line.
-**Measured first:** old and new founder code after the same earlier stages, all 3,694: 180.5/183.3 against 247.7/257.6 MB; the
-synthetic rise (+29 MB in `calcFGSE()`) is collection timing (1 collection in the call against 7), not code; `Rprofmem` found the copy.
-**Verified:** full suite 480 files 4,489 tests 0 failed 0 errors; check 0/0/0 (REFACTOR); `lint_package()` 0; mutants 7/7 and a
-passing control; ratchet 11/11 (`0bc1d81acb75`); the refactored file fails on the RED-time code as before (1 1 2 0 0).
-**Handoff evaluation of S1074: 8/10.** Helped: Next named `:245` and its first step; every Phase 0 claim was true. Missing: nothing
-it owed (the S1066 BACKLOG block compared peaks taken after different earlier stages). Wrong: nothing. ROI: high.
-**Self: 7/10.** + measured under the same history before naming a cause; the copy found by `Rprofmem`; every gate as recommended; the
-survivor pinned. - the first decision question said P1/P2 "remove the copy" from a GC-sampled peak and the owner picked on that false
-sentence (corrected at the PRE-RED gate); a 10-minute `gctorture` run stopped; the first mutation run was invalid (no renv in a worktree).
-**Gotchas:** the harness peak counts uncollected garbage and cannot rank two designs (count copies with `Rprofmem`); a table passed in
-while held, or an argument read before its first write, is copied; a scratch worktree has no renv library (Learning 1041). Not known:
-whether CI's R has memory profiling (`capabilities("profmem")`); 4 of the file's 5 blocks skip without it, so read the next CI log.
-**Next:** the owner picks. READY: `BACKLOG.md:255` CPU and GPU (S); DECISION NEEDED `:237` Direct above 400 (S), `:203` tie order (S),
-`:231` relationship table (S). Read the next CI run's Ubuntu legs (S1073's check; this file's skips). Not pushed (49 ahead).
+### What Session 1076 Did
+**Deliverable:** the local browser tier runs the Diagram's pixel checks with both GPU and CPU drawing (`BACKLOG.md:255`, READY,
+Effort S; owner ruling S1067; owner pick, item 1 of 4, "GPU and CPU pixel checks"); kept opt-in; strict TDD. (IN PROGRESS)
+**Started:** 2026-10-27
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1074 (condensed S950 to S1075; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1075 (condensed S950 to S1076; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1075: the founder statistics build their contribution table once: each fill builds it with `initialContributions()`
+(`R/calcFounderContributions.R:74,143,173`); live memory during the fill 94.1 to 47.1 MB on all 3,694, results identical. Claim
+`3e6cce7db`, close-out `3c983760c`, not pushed; S1074 8/10, self 7/10 (Learning 1041). **Gotchas kept:** the harness peak counts
+uncollected garbage and cannot rank two designs (count copies with `Rprofmem`); a scratch git worktree has no renv library.
 S1074: the Diagram tab's first drawing builds its layout once: edge style, Show Names and Twin Connectors are `.heldSetting()`
 reactiveVals set by `observeEvent()` (`R/modPedigree.R:478,488,502,511`); the 708-animal trim in Direct 2 builds and 8.12 s to 1
 build and 4.17 s, drawing identical. Claim `5f8373f00`, close-out `486cc1086`, not pushed; S1073 8/10, self 8/10 (Learning 1040).
