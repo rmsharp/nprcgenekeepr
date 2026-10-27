@@ -21,13 +21,6 @@ library(testthat)
 # reaches only calcGU() (the 5 gu aggregate rows); a packageVersion
 # difference flags every row.
 
-validatedSnapshotHistory <- function() {
-  checkSnapshotHistory(read.csv(system.file(
-    "extdata", "examples", "example_snapshot_history.csv",
-    package = "nprcgenekeepr"
-  ), stringsAsFactors = FALSE))
-}
-
 ## The 21 numeric (non-provenance-string) schema columns, in schema order.
 deltaMetrics <- c(
   "nAnimals", "nMales", "nFemales",

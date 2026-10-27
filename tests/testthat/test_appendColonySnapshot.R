@@ -9,13 +9,6 @@ library(testthat)
 # pair. Script users persist the result themselves (write.csv); the app's only
 # write path is a user-initiated downloadHandler (Slice 4).
 
-validatedSnapshotHistory <- function() {
-  checkSnapshotHistory(read.csv(system.file(
-    "extdata", "examples", "example_snapshot_history.csv",
-    package = "nprcgenekeepr"
-  ), stringsAsFactors = FALSE))
-}
-
 ## A plausible next snapshot, dated after every fixture row.
 newSnapshotRow <- function() {
   data.frame(

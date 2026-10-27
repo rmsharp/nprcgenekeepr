@@ -19,28 +19,23 @@
 ## every panel keeps the direction the example was written to show. The
 ## provenance columns, the dates and the four rows stay as they were.
 
-exampleSnapshotHistory <- function() {
-  checkSnapshotHistory(read.csv(system.file(
-    "extdata", "examples", "example_snapshot_history.csv",
-    package = "nprcgenekeepr"
-  ), stringsAsFactors = FALSE))
-}
+## validatedSnapshotHistory() is in helper-snapshotHistory.R.
 
 test_that("every row's neGD is the gene diversity its own fg gives", {
-  history <- exampleSnapshotHistory()
+  history <- validatedSnapshotHistory()
   expect_equal(history$neGD, round(1 - 1 / (2 * history$fg), 4L))
   expect_equal(history$neGD, c(0.9419, 0.9432, 0.9444, 0.9194))
 })
 
 test_that("genome uniqueness is a percentage on every row", {
-  history <- exampleSnapshotHistory()
+  history <- validatedSnapshotHistory()
   expect_equal(history$meanGu, c(21.3, 21.9, 22.4, 19.8))
   expect_equal(history$medianGu, c(20.5, 21.1, 21.6, 19.2))
   expect_equal(history$meanGuSE, c(0.41, 0.40, 0.28, 0.33))
 })
 
 test_that("kurtosis is excess kurtosis, 0 for a bell curve, on every row", {
-  history <- exampleSnapshotHistory()
+  history <- validatedSnapshotHistory()
   expect_equal(history$kurtosisIndivMeanKin, c(-0.1, -0.2, -0.2, 0.2))
   expect_equal(history$kurtosisGu, c(0.1, 0.0, 0.0, 0.1))
 })

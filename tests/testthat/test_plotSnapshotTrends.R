@@ -19,13 +19,6 @@ library(testthat)
 # recorded S759 choice; Slice 4's live render is the first human-eyes
 # surface (plan section 5).
 
-validatedSnapshotHistory <- function() {
-  checkSnapshotHistory(read.csv(system.file(
-    "extdata", "examples", "example_snapshot_history.csv",
-    package = "nprcgenekeepr"
-  ), stringsAsFactors = FALSE))
-}
-
 ## The 18 metric columns (schema order): the 9 reportGV() colony scalars and
 ## the 9 Summary Statistics aggregates. Composition counts excluded here.
 trendMetrics <- c(
