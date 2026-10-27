@@ -99,12 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1072 Did
-**Deliverable:** make harem trials in `groupAddAssign()` faster: stop redoing the age and sire set-up work every trial,
-the same groups for the same seed, the arguments unchanged, a gate for the harem scenario; strict TDD (owner pick, item 1
-of 4, "Faster harem trials"; `BACKLOG.md:237`, READY, Effort M) (IN PROGRESS)
-**Started:** 2026-10-26 ~23:17 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Faster harem trials"; strict TDD, three gates "Yes"):** harem trials build their
+set-up once per `groupAddAssign()` call: `makeHaremSetUp()` and `drawHaremGroups()` (`R/makeHaremSetUp.R:31,76`), an optional
+set-up on `fillGroupMembers()` (`:37`), built after `1L:iter` (`R/groupAddAssign.R:300-309`); `initializeHaremGroups()` is one
+call to the helpers. 1,000 harem trials 9.71 to 4.58 s (gate `perf_groupAddAssign_harem_1000_seconds` 5.9 s); the tab 10.9 to 5.7 s.
+Claim `06fee3112`, RED `fa8ac7484`, GREEN `df5644fd8`, gate `aa87799a9`, REFACTOR `27516dec1` (`defaultRelatives()`,
+`helper-perfCampaign.R:121`), NEWS `6568bf3e5`. Block off BACKLOG.
+**Measured first:** `Rprof` put 70% of a harem run in `getPotentialSires()` (about 9 calls a trial, 60% in `today()`'s time-zone
+check); a scratch prototype matched 30 of 30 outcomes. RED froze `groupAddAssign()`, `makeGroupMembers()` and
+`initializeHaremGroups()` (`helper-perfReference.R:592,639,672`); call count 458 against 26 (`test_haremSetUp.R:41`).
+**Verified:** full suite 478 files 4,468 tests 0 failed 0 errors and check 0/0/0 on GREEN and REFACTOR; lint 0; mutants 7/7; NEWS
+readers 0 failed; ratchet 10/11 (`30b7bc1b5d01`): `reportGV` 0.31 against 0.3, a folder effect (0.22 s from a worktree, same code).
+**Handoff evaluation of S1071: 8/10.** Helped: Next and the block named the four functions, the equivalence test and the gate rule;
+"never truncate an inventory grep" (printed whole). Missing: that `groupAddAssignReference()` ran the live `groupAddAssign()`.
+Wrong: "a real-app run reads the installed package": driven from the repo folder the app ran the source tree. ROI: high.
+**Self: 8/10.** + profiled and prototyped before RED; every gate taken as recommended; the app before/after proved by
+`find.package()` inside the app. - the first app timing (5.8 s both) rested on an unchecked package path; a zsh `$F` split and a
+relative path in a `test_file()` loop cost about 5 calls.
+**Gotchas:** for an app before/after, drive from outside the repo and log `find.package()` in a scratch `app.R`; the `reportGV`
+gate reads slower from the repo folder (cause unknown); zsh needs `${=F}` to split a list (Learning 1038).
+**Next:** the owner picks. READY: `BACKLOG.md:237` diagram (M), `:244` founder peak (S), `:261` CPU and GPU (S). Put the `reportGV`
+folder finding to the owner. Read the scheduled `shinytest2` run on S1067's fix. Not pushed (30 ahead).
 
 ### Sessions 947-1071 (condensed S950 to S1072; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1071: the shipped example snapshot history (`inst/extdata/examples/example_snapshot_history.csv`) holds values the package

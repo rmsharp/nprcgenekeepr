@@ -209,14 +209,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
 session: S1072
-date: 2026-10-26
-status: pending
-active_task: IN PROGRESS -- make harem trials in groupAddAssign() faster (BACKLOG.md:237, READY, Effort M; owner pick at the Phase 0 picker, item 1 of 4, "Faster harem trials"): stop redoing the age and sire set-up work every trial, the same groups for the same seed, the arguments unchanged, a gate for the harem scenario; strict TDD
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+date: 2026-10-27
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- harem trials build their set-up once per groupAddAssign() call (BACKLOG item "Breeding Groups: harem trials redo their set-up work every trial", filed S1066), under strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Faster harem trials"; the PRE-RED->RED, RED->GREEN and GREEN->REFACTOR gates each answered "Yes"). Block off BACKLOG.
+what_was_done: Claim 06fee3112. Profiled 200 harem trials: 70% in getPotentialSires(), about 9 calls a trial, 60% in lubridate::today()'s time-zone check; only the sire draw differs between trials. Scratch prototype: 9.03 to 4.17 s, 30 of 30 outcomes identical. RED fa8ac7484: frozen copies of groupAddAssign(), makeGroupMembers() and initializeHaremGroups() from 520bd5dc8; 8 harem grid cases; test_haremSetUp.R (call count 458 against 26, the helpers' start on 25 inputs x 3 seeds, fills handed the set-up or not); opt-in 13 s budget; 85 of 94 expectations failed. GREEN df5644fd8: R/makeHaremSetUp.R (makeHaremSetUp(), drawHaremGroups()), fillGroupMembers(haremSetUp = NULL), groupAddAssign() builds the set-up once after 1L:iter. Gate aa87799a9: perf_groupAddAssign_harem_1000_seconds 5.9 s (new 4.67/4.57/4.58 s, today's code 9.78/9.71/9.67 s). REFACTOR 27516dec1: initializeHaremGroups() is one call to the helpers; defaultRelatives() test helper for two copies, identical on 6 inputs. NEWS 6568bf3e5. Verified: full suite 478 files 4,468 tests 0 failed 0 errors and check 0/0/0 on GREEN and REFACTOR; lint 0; mutants 7 of 7; the app 10.9 to 5.7 s.
+next_steps: The owner picks at the next Phase 0. READY: diagram time outside the solver (BACKLOG.md:237, M), founder statistics' memory peak (:244, S), GPU and CPU pixel passes (:261, S); the DECISION NEEDED items are unchanged. New finding to put to the owner (not filed): the reportGV-example gate measures 0.31 to 0.41 s from the repo folder against 0.22 s from a scratch worktree of the same commit, so it failed this session's ratchet run (0.31 against 0.3) with no code cause; not investigated past ruling out src/ and ignored R/ files. At Phase 0 read the scheduled shinytest2 run on S1067's fix (none yet at S1072's Phase 0, 04:14 UTC 2026-10-27). Not pushed (30 ahead).
+key_files: R/makeHaremSetUp.R:31 (makeHaremSetUp: the two stops, the sires, the pool without them), :76 (drawHaremGroups: the one sample() a trial); R/groupAddAssign.R:300-309 (1L:iter first, the set-up once, handed to each trial); R/fillGroupMembers.R:37,45-46 (the optional set-up); R/initializeHaremGroups.R:24 (one call to the helpers); tests/testthat/test_haremSetUp.R:26-41 (call count), :50-126 (start comparison), :140-149 (fills); tests/testthat/helper-perfReference.R:592,639,672 (frozen copies); tests/testthat/helper-perfCampaign.R:121 (defaultRelatives); methodology/.quality-gates.json:63 (the gate); NEWS.Rmd:424-425.
+gotchas: A shinytest2 app driven from the repo folder ran the repo source although R_LIBS put a scratch install first (find.package() inside the app said so): for a before/after app timing drive from outside the repo with a scratch app.R that calls library(lib.loc =) and logs find.package(). The reportGV-example gate is folder-sensitive (0.31 s in the repo, 0.22 s in a worktree). zsh does not split an unquoted $F list: use ${=F}. A test_file() loop needs absolute paths. groupAddAssignReference() is now the pre-campaign text, so it stays as it is when groupAddAssign() changes again. A 3x-headroom budget passes today's code when the gain is under 3x (say so in the file; RED needs a deterministic test).
+runtime_smoke: The GREEN tree and the pre-session code installed into scratch libraries (R CMD INSTALL --no-docs); a scratch app.R (library(lib.loc =), find.package() logged, groupAddAssign() traced) driven by shinytest2 from the scratch folder: ExamplePedigree.csv, Breeding Groups, All available (332), Harem, 3 groups, 1,000 trials: before 10.9 s from the click (groupAddAssign 10.25 s), after 5.7 s (5.00 s); each harem shows one male (ages 12.3, 13.4 and 13.5), the groups hold 70, 72 and 70 animals, no console errors.
+quality_ratchet: 10/11 pass · 1 fail · 0 unmeasured · results 30b7bc1b5d01 · manifest a22028f2dbff (the fail is perf_reportGV_example_seconds, 0.31 against 0.3, a folder effect, not this session's code)
+changelog_ref: 06fee3112
+commit: 6568bf3e5
 ```
-Session claimed; work beginning.
+Self 8/10. + Profiled and prototyped before RED, so the gate texts carried measured numbers and every gate was taken as recommended; 7 of 7 mutants caught, full verification on both trees; the app before/after proved by find.package() inside the app. - The first app comparison (5.8 s both) rested on an unchecked package path, and a zsh list split and a relative path in a test_file() loop cost about 5 calls. Predecessor S1071 8/10: its Next and the block named the four functions, the equivalence test and the gate rule, all accurate; its "a real-app run reads the installed package" was wrong for a driver started from the repo folder.
 
 ```handoff
 session: S1071

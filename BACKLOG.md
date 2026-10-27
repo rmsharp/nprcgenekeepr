@@ -234,16 +234,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **Breeding Groups: harem trials redo their set-up work every trial (READY, Effort M; owner-raised S1056, filed
-      S1066 at the performance campaign's close)** -- 1,000 harem trials on the tutorial's 280 candidates take 10.69 s
-      (9.78-11.16) against 5.54 s for 6 plain groups (`Rscript tools/perf/run.R groupAddAssign-harem-1000` and
-      `groupAddAssign-1000`, S1066; 27.19 s before the campaign). The extra is the harem's age and sire work
-      repeated each trial: `getPotentialSires()` (`R/getPotentialSires.R:20`), `getCurrentAge()`
-      (`R/getCurrentAge.R:16`), `groupsWithoutSire()` (`R/groupsWithoutSire.R:33`), `initializeHaremGroups()`
-      (`R/initializeHaremGroups.R:20`). The campaign's rules still bind: the same groups for the same seed
-      (`identical()` against `groupAddAssignReference()`, `tests/testthat/test_groupAddAssignEquivalence.R`) and
-      `groupAddAssign()`'s arguments unchanged; add a gate for the harem scenario (the S1052 rule). Report:
-      `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md` section 11.
 - [ ] **Pedigree Diagram: about 1.7 s of the 708-animal layout is outside its solver (READY, Effort M; found S1060,
       filed S1066)** -- `diagram-example-direct` takes 5.10 s (4.80-5.22, S1066; 12.81 s before the campaign). About
       1.7 s is outside `.solveSeparationQP()` (`R/makePedigreeDiagramData.R:1606`), 1.0 s of it `Dmat <- t(pmat) %*%
