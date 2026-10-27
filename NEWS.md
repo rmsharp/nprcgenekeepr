@@ -443,10 +443,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   iterations) takes about 0.2 seconds instead of about 3, the Summary
   Statistics relationship downloads of the whole example finish in under
   10 seconds instead of not finishing, and 1,000 Breeding Groups trials
-  take about 6 seconds instead of about 23. The app no longer keeps a
-  kinship matrix of the whole pedigree, so it holds about 180 MB less
-  once the example is loaded. Results are the same as before for the
-  same random seed.
+  take about 6 seconds instead of about 23 (about 5 instead of about 27
+  when forming harems). The app no longer keeps a kinship matrix of the
+  whole pedigree, so it holds about 180 MB less once the example is
+  loaded. Results are the same as before for the same random seed.
 
 ## General Fixes
 
