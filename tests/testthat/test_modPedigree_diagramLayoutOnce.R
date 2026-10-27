@@ -45,6 +45,24 @@ countLayoutBuilds <- function(env = parent.frame()) {
   function() builds
 }
 
+# Runs `code` in a modPedigreeServer session on the trio, after the first
+# drawing: the pedigree view and the Diagram tab's UI and widget, with `style`
+# chosen first when it is not NULL. `code` sees the session's `input`,
+# `output` and `session`, as in shiny::testServer().
+withDiagramTrio <- function(code, style = NULL) {
+  first <- c(list(displayUnknownIds = TRUE, trimPedigree = FALSE),
+             if (!is.null(style)) list(pedigreeEdgeStyle = style))
+  shiny::testServer(
+    modPedigreeServer,
+    {
+      do.call(session$setInputs, first)
+      invisible(output$pedigreeDiagram)
+      {{ code }}
+    },
+    args = list(studbook = shiny::reactive({ diagramTrio() }))
+  )
+}
+
 test_that(
   "the Diagram tab's first drawing builds its layout once when its three
    controls report the values they show", {
@@ -52,19 +70,14 @@ test_that(
   skip_if_not_installed("visNetwork")
 
   builds <- countLayoutBuilds()
-  shiny::testServer(
-    modPedigreeServer,
-    args = list(studbook = shiny::reactive({ diagramTrio() })),
-    {
-      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-      drawn <- output$pedigreeDiagram
-      expect_identical(builds(), 1L)
+  withDiagramTrio({
+    drawn <- output$pedigreeDiagram
+    expect_identical(builds(), 1L)
 
-      do.call(session$setInputs, shownControlValues())
-      expect_identical(output$pedigreeDiagram, drawn)
-      expect_identical(builds(), 1L)
-    }
-  )
+    do.call(session$setInputs, shownControlValues())
+    expect_identical(output$pedigreeDiagram, drawn)
+    expect_identical(builds(), 1L)
+  })
 })
 
 test_that(
@@ -76,19 +89,13 @@ test_that(
   builds <- countLayoutBuilds()
   reports <- shownControlValues()
   for (control in names(reports)) {
-    shiny::testServer(
-      modPedigreeServer,
-      args = list(studbook = shiny::reactive({ diagramTrio() })),
-      {
-        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-        invisible(output$pedigreeDiagram)
-        before <- builds()
+    withDiagramTrio({
+      before <- builds()
 
-        do.call(session$setInputs, reports[control])
-        invisible(output$pedigreeDiagram)
-        expect_identical(builds() - before, 0L, info = control)
-      }
-    )
+      do.call(session$setInputs, reports[control])
+      invisible(output$pedigreeDiagram)
+      expect_identical(builds() - before, 0L, info = control)
+    })
   }
 })
 
@@ -99,20 +106,14 @@ test_that(
   skip_if_not_installed("visNetwork")
 
   builds <- countLayoutBuilds()
-  shiny::testServer(
-    modPedigreeServer,
-    args = list(studbook = shiny::reactive({ diagramTrio() })),
-    {
-      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE,
-                        pedigreeEdgeStyle = "direct")
-      drawn <- output$pedigreeDiagram
-      expect_identical(builds(), 1L)
+  withDiagramTrio({
+    drawn <- output$pedigreeDiagram
+    expect_identical(builds(), 1L)
 
-      do.call(session$setInputs, shownControlValues("direct"))
-      expect_identical(output$pedigreeDiagram, drawn)
-      expect_identical(builds(), 1L)
-    }
-  )
+    do.call(session$setInputs, shownControlValues("direct"))
+    expect_identical(output$pedigreeDiagram, drawn)
+    expect_identical(builds(), 1L)
+  }, style = "direct")
 })
 
 # Each change on the tab after the first drawing, in this order.
@@ -135,24 +136,18 @@ test_that(
   skip_if_not_installed("visNetwork")
 
   builds <- countLayoutBuilds()
-  shiny::testServer(
-    modPedigreeServer,
-    args = list(studbook = shiny::reactive({ diagramTrio() })),
-    {
-      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-      invisible(output$pedigreeDiagram)
-      do.call(session$setInputs, shownControlValues())
-      invisible(output$pedigreeDiagram)
+  withDiagramTrio({
+    do.call(session$setInputs, shownControlValues())
+    invisible(output$pedigreeDiagram)
 
-      for (change in diagramChanges()) {
-        before <- builds()
-        do.call(session$setInputs, change)
-        invisible(output$pedigreeDiagram)
-        expect_identical(builds() - before, 1L,
-                         info = paste(names(change), "=", change[[1L]]))
-      }
+    for (change in diagramChanges()) {
+      before <- builds()
+      do.call(session$setInputs, change)
+      invisible(output$pedigreeDiagram)
+      expect_identical(builds() - before, 1L,
+                       info = paste(names(change), "=", change[[1L]]))
     }
-  )
+  })
 })
 
 # The session's input store passes on a value identical to the one it holds
@@ -167,30 +162,24 @@ test_that(
   skip_if_not_installed("visNetwork")
 
   builds <- countLayoutBuilds()
-  shiny::testServer(
-    modPedigreeServer,
-    args = list(studbook = shiny::reactive({ diagramTrio() })),
-    {
-      shown <- shownControlValues()
-      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+  withDiagramTrio({
+    shown <- shownControlValues()
+    do.call(session$setInputs, shown)
+    invisible(output$pedigreeDiagram)
+
+    for (change in diagramChanges()) {
+      do.call(session$setInputs, change)
       invisible(output$pedigreeDiagram)
+      shown[names(change)] <- change
+      before <- builds()
+
       do.call(session$setInputs, shown)
       invisible(output$pedigreeDiagram)
-
-      for (change in diagramChanges()) {
-        do.call(session$setInputs, change)
-        invisible(output$pedigreeDiagram)
-        shown[names(change)] <- change
-        before <- builds()
-
-        do.call(session$setInputs, shown)
-        invisible(output$pedigreeDiagram)
-        expect_identical(builds() - before, 0L,
-                         info = paste("after", names(change), "=",
-                                      change[[1L]]))
-      }
+      expect_identical(builds() - before, 0L,
+                       info = paste("after", names(change), "=",
+                                    change[[1L]]))
     }
-  )
+  })
 })
 
 # A mutation pin (S1074): with the held settings' observers at the default
@@ -211,21 +200,15 @@ test_that(
     list(trimPedigree = TRUE, pedigreeEdgeStyle = "direct")
   )
   for (inputs in together) {
-    shiny::testServer(
-      modPedigreeServer,
-      args = list(studbook = shiny::reactive({ diagramTrio() })),
-      {
-        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
-        invisible(output$pedigreeDiagram)
-        do.call(session$setInputs, shownControlValues())
-        invisible(output$pedigreeDiagram)
-        before <- builds()
+    withDiagramTrio({
+      do.call(session$setInputs, shownControlValues())
+      invisible(output$pedigreeDiagram)
+      before <- builds()
 
-        do.call(session$setInputs, inputs)
-        invisible(output$pedigreeDiagram)
-        expect_identical(builds() - before, 1L,
-                         info = paste(names(inputs), collapse = " + "))
-      }
-    )
+      do.call(session$setInputs, inputs)
+      invisible(output$pedigreeDiagram)
+      expect_identical(builds() - before, 1L,
+                       info = paste(names(inputs), collapse = " + "))
+    })
   }
 })

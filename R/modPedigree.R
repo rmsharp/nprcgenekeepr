@@ -473,7 +473,8 @@ modPedigreeServer <- function(id, studbook) {
     # held in a reactiveVal, which ignores a value identical to the one it
     # holds; observeEvent() ignores a NULL input, so the default stands until
     # the control reports, and priority 1 updates it before the outputs that
-    # read it run.
+    # read it run. Each .current*() below is such a reactiveVal; calling it
+    # with no argument reads it.
     .heldSetting <- function(name, default) {
       value <- reactiveVal(default)
       observeEvent(input[[name]], value(input[[name]]), priority = 1L)
@@ -484,10 +485,7 @@ modPedigreeServer <- function(id, studbook) {
     # to "rectilinear" (the default since S574, matching
     # makePedigreeMatingLayout()'s own edgeStyle default) before the style
     # toggle below has ever rendered, and the node cap that applies to it.
-    edgeStyleSetting <- .heldSetting("pedigreeEdgeStyle", "rectilinear")
-    .currentEdgeStyle <- function() {
-      edgeStyleSetting()
-    }
+    .currentEdgeStyle <- .heldSetting("pedigreeEdgeStyle", "rectilinear")
     .currentDiagramCap <- function() {
       if (.currentEdgeStyle() == "rectilinear") {
         pedigreeDiagramMaxNodesRectilinear
@@ -501,10 +499,7 @@ modPedigreeServer <- function(id, studbook) {
     # framing) -- defaulting to FALSE before the toggle below has ever
     # rendered means the very first render is byte-identical to
     # pre-issue-136 behavior, same pattern as .currentEdgeStyle() above.
-    showNamesSetting <- .heldSetting("pedigreeShowNames", FALSE)
-    .currentShowNames <- function() {
-      showNamesSetting()
-    }
+    .currentShowNames <- .heldSetting("pedigreeShowNames", FALSE)
 
     # nolint start: commented_code_linter.
     # Issue #137 Slice 3: whether the diagram shows twin/zygosity
@@ -513,11 +508,8 @@ modPedigreeServer <- function(id, studbook) {
     # a valid twinRelationsFile has also been uploaded (see
     # twinRelationsData() below).
     # nolint end
-    showTwinConnectorsSetting <- .heldSetting("pedigreeShowTwinConnectors",
-                                              FALSE)
-    .currentShowTwinConnectors <- function() {
-      showTwinConnectorsSetting()
-    }
+    .currentShowTwinConnectors <- .heldSetting("pedigreeShowTwinConnectors",
+                                               FALSE)
 
     # nolint start: commented_code_linter.
     # Issue #137 Slice 3 (D5/D11): read + validate an uploaded twin
