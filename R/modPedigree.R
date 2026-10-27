@@ -552,7 +552,31 @@ modPedigreeServer <- function(id, studbook) {
       n <- nrow(pedigreeData())
       style <- .currentEdgeStyle()
       cap <- .currentDiagramCap()
-      if (n > cap) {
+      if (n > cap && style == "rectilinear" && n <= pedigreeDiagramMaxNodes) {
+        # S1077 (owner ruling "Buttons and wording"): Direct can draw this
+        # pedigree, so the message keeps the edge-style buttons above it.
+        tagList(
+          radioButtons(
+            session$ns("pedigreeEdgeStyle"),
+            label = "Diagram Edge Style",
+            choices = c(Direct = "direct",
+                        "Rectilinear (kinship2-style)" = "rectilinear"),
+            selected = style,
+            inline = TRUE
+          ),
+          div(
+            class = "alert alert-warning",
+            sprintf(
+              paste(
+                "Diagram not shown: %d animals exceeds the %d-animal limit of",
+                "the Rectilinear style. Choose Direct above to draw up to %d",
+                "animals, or narrow the focal-animal selection."
+              ),
+              n, cap, pedigreeDiagramMaxNodes
+            )
+          )
+        )
+      } else if (n > cap) {
         div(
           class = "alert alert-warning",
           sprintf(
