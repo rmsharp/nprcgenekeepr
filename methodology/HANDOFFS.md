@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1072
+date: 2026-10-26
+status: pending
+active_task: IN PROGRESS -- make harem trials in groupAddAssign() faster (BACKLOG.md:237, READY, Effort M; owner pick at the Phase 0 picker, item 1 of 4, "Faster harem trials"): stop redoing the age and sire set-up work every trial, the same groups for the same seed, the arguments unchanged, a gate for the harem scenario; strict TDD
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1071
 date: 2026-10-26
 status: complete

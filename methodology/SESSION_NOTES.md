@@ -98,30 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1071 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Fix example neGD"; strict TDD, three gates "Yes", one GREEN->RED stop "Back to RED"):**
-`inst/extdata/examples/example_snapshot_history.csv` now holds values the package makes: 24 cells in 4 rows, `neGD` 0.9419/0.9432/
-0.9444/0.9194 (`1 - 1/(2*fg)` of each row's `fg`), genome uniqueness x100 (`meanGu` 21.3-22.4, a percentage as `calcGU()` writes it),
-kurtosis -3 (excess, as `calcKurtosis()` gives it); provenance, dates, rows unchanged. Owner rulings: "All three"; the three test
-files' own made-up rows "Leave them". Claim `4f8d12e5e`, RED `f4dd96b15`, RED addition `b68f4e293`, GREEN `160d0915d`, REFACTOR
-`ba2baebce` (`validatedSnapshotHistory()` in `tests/testthat/helper-snapshotHistory.R` for four copies). Block off BACKLOG.
-**Measured first (all 27 columns):** against the definitions and `createColonySnapshot()` rows of `qcPed` and the example colony's
-332 living animals (GU 22.8/14.4/0.28, kurtosis -0.28/0.88); the rest consistent; `1/(2*meanIndivMeanKin)` is not `fg` here (69.1
-against 52.8 on `qcPed`), so untested; version labels 1.0.5 and 2.0.0 predate snapshots but stay (they show the provenance marker).
-**Verified:** the 10 files that read the example 156 tests 639 expectations 0 failed (GREEN and REFACTOR); full suite 477 files 4,464
-tests 0 failed 0 errors on both trees; lint 0; check 0/0/0 (GREEN); real app chart picture opened; ratchet 10/10 (`48f546074f8c`).
-**Handoff evaluation of S1070: 9/10.** Helped: Next and the block named this item, the definition, the pinned line
-(`test_calcSnapshotDeltas.R:116`), the reader count (8 more files, accurate) and the five help examples; "check the other columns
-first" led to the GU and kurtosis finds. Missing: nothing knowable (the second hand-copy was mine to find). Wrong: nothing. ROI: high.
-**Self: 7/10.** + measured every column against definitions and two real colonies before the scope question; recommended options
-taken each time; full verification on both trees. - my RED inventory grep ran `| head -15` per file and hid the second hand-copy
-(`test_plotSnapshotTrends.R`), so two gate texts said "the one test" and a GREEN->RED reversal cost a round trip.
-**Gotchas:** never truncate an inventory grep; `validatedSnapshotHistory()` loads for every test file (a local definition shadows
-it); only `neGD` is tied to a definition, the GU and kurtosis numbers are pinned values; a real-app run reads the installed package.
-**Next:** the owner picks. READY: `BACKLOG.md:237` harem (M), `:247` diagram (M), `:254` founder peak (S), `:271` CPU and GPU (S).
-At Phase 0 read the first scheduled `shinytest2` run on S1067's fix (about 07:15 UTC 2026-10-27). Not pushed (23 ahead).
+### What Session 1072 Did
+**Deliverable:** make harem trials in `groupAddAssign()` faster: stop redoing the age and sire set-up work every trial,
+the same groups for the same seed, the arguments unchanged, a gate for the harem scenario; strict TDD (owner pick, item 1
+of 4, "Faster harem trials"; `BACKLOG.md:237`, READY, Effort M) (IN PROGRESS)
+**Started:** 2026-10-26 ~23:17 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1070 (condensed S950 to S1071; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1071 (condensed S950 to S1072; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1071: the shipped example snapshot history (`inst/extdata/examples/example_snapshot_history.csv`) holds values the package
+makes: 24 cells in 4 rows, `neGD` = `1 - 1/(2*fg)` of each row, genome uniqueness x100 (a percentage, as `calcGU()`), kurtosis
+-3 (excess, as `calcKurtosis()`); `validatedSnapshotHistory()` in `tests/testthat/helper-snapshotHistory.R`. Claim `4f8d12e5e`,
+close-out `9bd903c9a`, not pushed; S1070 9/10, self 7/10 (Learning 1037). **Gotchas kept:** never cut an inventory grep with a
+per-file `head`; only `neGD` is tied to a definition (the GU and kurtosis numbers are pinned values).
 S1070: one text on reading the Genetic-Health trend, `inst/extdata/ui_guidance/snapshot_trends.html`, shown in a grey box under the chart
 (`R/modSnapshotTrends.R:95-109`) and in the guide (`colony-manager-guide.qmd:1312-1320`, chunk `trend-guidance`); `helpBoxStyle`
 (`R/helpBoxStyle.R`) for three exact copies; filed `BACKLOG.md:237` (the example history's `neGD`). Claim `5a8cfecae`, close-out `e23083992`,
