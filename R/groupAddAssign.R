@@ -293,10 +293,20 @@ groupAddAssign <- function(candidates,
   # re-qualify at that same score.
   retained <- list()
 
-  for (k in 1L:iter) {
+  # A harem's set-up (which groups need a sire, the potential sires, the pool
+  # without them) is the same in every trial, so it is built once here and
+  # each trial draws its sires from it. 1L:iter comes first, so a bad iter
+  # stops with the same message as before.
+  trials <- 1L:iter
+  haremSetUp <- NULL
+  if (harem) {
+    haremSetUp <- makeHaremSetUp(numGp, currentGroups, candidates, ped, minAge)
+  }
+
+  for (k in trials) {
     groupMembers <- fillGroupMembers(
       candidates, currentGroups, kin, ped, harem,
-      minAge, numGp, sexRatio
+      minAge, numGp, sexRatio, haremSetUp
     )
 
     # Score the resulting groups

@@ -21,6 +21,8 @@
 #' @param sexRatio numeric value indicating the ratio of females to males x
 #' (from 0.5 to 20 by increments of 0.5 within the accompanying Shiny
 #' application. A sex ratio of 0 ignores sex in making up groups.
+#' @param haremSetUp the list \code{makeHaremSetUp()} returns, built once per
+#' \code{groupAddAssign()} call; \code{NULL} (the default) builds it here.
 #' @return A list of animal groups and their member animals
 #'
 #' @noRd
@@ -31,17 +33,24 @@ fillGroupMembers <- function(candidates,
                              harem,
                              minAge,
                              numGp,
-                             sexRatio) {
-  groupMembers <- makeGroupMembers(
-    numGp, currentGroups, candidates, ped,
-    harem, minAge
-  )
-  grpNum <- makeGroupNum(numGp)
-
+                             sexRatio,
+                             haremSetUp = NULL) {
   if (harem) {
-    # Sires were added to groupMembers
-    candidates <- removePotentialSires(candidates, minAge, ped)
+    # Each trial draws its sires from a set-up that is the same in every
+    # trial; the sires go into groupMembers and out of the pool
+    if (is.null(haremSetUp)) {
+      haremSetUp <- makeHaremSetUp(numGp, currentGroups, candidates, ped,
+                                   minAge)
+    }
+    groupMembers <- drawHaremGroups(haremSetUp, numGp)
+    candidates <- haremSetUp$nonSires
+  } else {
+    groupMembers <- makeGroupMembers(
+      numGp, currentGroups, candidates, ped,
+      harem, minAge
+    )
   }
+  grpNum <- makeGroupNum(numGp)
   if (sexRatio != 0.0) {
     groupMembers <- fillGroupMembersWithSexRatio(
       candidates,
