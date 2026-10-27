@@ -456,11 +456,12 @@ convertRelationshipsReference <- function(kmat, ped, ids = NULL, updateProgress 
 
 ## Phase 4 (group formation): R/fillGroupMembers.R at 520bd5dc8, its
 ## fillGroupMembersWithSexRatio() call pointed at
-## fillGroupMembersWithSexRatioReference(). It calls the live
-## makeGroupMembers(), makeGroupNum(), removePotentialSires(), makeAvailable(),
+## fillGroupMembersWithSexRatioReference() and, since S1072, its
+## makeGroupMembers() call at makeGroupMembersReference() (below). It calls the
+## live makeGroupNum(), removePotentialSires(), makeAvailable(),
 ## removeGroupIfNoAvailableAnimals(),
-## removeSelectedAnimalFromAvailableAnimals() and isEmpty(), which Phase 4
-## does not change.
+## removeSelectedAnimalFromAvailableAnimals() and isEmpty(), which Phase 4 and
+## S1072 do not change.
 fillGroupMembersReference <- function(candidates,
                                       currentGroups,
                                       kin,
@@ -469,7 +470,7 @@ fillGroupMembersReference <- function(candidates,
                                       minAge,
                                       numGp,
                                       sexRatio) {
-  groupMembers <- makeGroupMembers(
+  groupMembers <- makeGroupMembersReference(
     numGp, currentGroups, candidates, ped,
     harem, minAge
   )
@@ -583,17 +584,249 @@ fillGroupMembersWithSexRatioReference <-
     groupMembers
   }
 
-## Phase 4 (group formation): groupAddAssign() itself does not change, so its
-## result from today's code is groupAddAssign() with fillGroupMembers() swapped
-## for the frozen copy above (which calls the frozen sex-ratio copy). Phase 6
-## swaps its getAnimalsWithHighKinship() for the frozen copy below as well.
-groupAddAssignReference <- function(...) {
-  testthat::with_mocked_bindings(
-    groupAddAssign(...),
-    fillGroupMembers = fillGroupMembersReference,
-    getAnimalsWithHighKinship = getAnimalsWithHighKinshipReference,
-    .package = "nprcgenekeepr"
+## Harem trials (S1072, BACKLOG.md "Breeding Groups: harem trials redo their
+## set-up work every trial"): R/initializeHaremGroups.R and R/makeGroupMembers.R
+## at 520bd5dc8, the latter's initializeHaremGroups() call pointed at the copy
+## here. They call the live getPotentialSires(), groupsWithoutSire() and
+## groupSeeds(), which S1072 does not change.
+initializeHaremGroupsReference <- function(numGp, currentGroups, candidates,
+                                           ped, minAge) {
+  groupMembers <- list()
+  if (length(currentGroups) > 0L) {
+    for (i in seq_along(currentGroups)) {
+      currentGroup <- currentGroups[[i]]
+      if (length(getPotentialSires(currentGroup, ped, minAge)) > 1L) {
+        stop(
+          "User selected to form harems with more than one male, ",
+          "There are ",
+          length(getPotentialSires(currentGroup, ped, minAge)),
+          " at least ", minAge, " years old in the current group ",
+          i, "."
+        )
+      }
+    }
+  }
+  needsSire <- groupsWithoutSire(numGp, currentGroups, ped, minAge)
+  availableSires <- setdiff(
+    getPotentialSires(candidates, ped, minAge), unlist(currentGroups)
   )
+  if (length(availableSires) < sum(needsSire)) {
+    stop(
+      "User selected to form harems in ", numGp, " groups with ",
+      "only ", length(availableSires),
+      " males at least ",
+      minAge, " years old in the list of candidates."
+    )
+  }
+
+  sires <- character(0L)
+  if (any(needsSire)) {
+    sires <- sample(availableSires, sum(needsSire), replace = FALSE)
+  }
+  seeds <- groupSeeds(numGp, currentGroups)
+  nextSire <- 0L
+  for (i in seq_len(numGp)) {
+    if (needsSire[i]) {
+      nextSire <- nextSire + 1L
+      groupMembers[[i]] <- c(sires[nextSire], seeds[[i]])
+    } else {
+      groupMembers[[i]] <- seeds[[i]]
+    }
+  }
+  groupMembers
+}
+
+makeGroupMembersReference <- function(numGp, currentGroups, candidates, ped,
+                                      harem, minAge) {
+  groupMembers <- list()
+  if (harem) {
+    ## Since harems only have a single male, they are inserted during
+    ## initialization.
+    groupMembers <- initializeHaremGroupsReference(
+      numGp, currentGroups, candidates,
+      ped, minAge
+    )
+  } else {
+    for (i in seq_len(numGp)) {
+      if (length(currentGroups) >= i) {
+        groupMembers[[i]] <- currentGroups[[i]]
+      } else {
+        groupMembers[[i]] <- vector()
+      }
+    }
+  }
+  groupMembers
+}
+
+## groupAddAssign(): R/groupAddAssign.R at 520bd5dc8, its fillGroupMembers()
+## and getAnimalsWithHighKinship() calls pointed at the frozen copies above and
+## below. Until S1072 groupAddAssign() itself did not change, so this was
+## groupAddAssign() run with those two swapped by mocking (Phases 4 and 6);
+## S1072 changes it (the harem set-up is built once per call), so it is a copy.
+## It calls the live filterKinMatrix(), checkAncestryRules(),
+## .ancestryConflictPairs(), .mergeAncestryBlockPairs(),
+## addAnimalsWithNoRelative(), .groupAddAssignExhaustive(), getPotentialSires(),
+## groupsWithoutSire(), canonicalizePartition(), notifyProgress(),
+## addGroupOfUnusedAnimals() and groupMembersReturn(), which S1072 does not
+## change.
+groupAddAssignReference <- function(candidates,
+                                    kmat,
+                                    ped,
+                                    currentGroups = list(character(0L)),
+                                    threshold = 0.015625, ignore = list(c("F", "F")),
+                                    minAge = 1.0, iter = 1000L,
+                                    numGp = 1L, harem = FALSE,
+                                    sexRatio = 0.0, withKin = FALSE,
+                                    maxCandidates = 5L,
+                                    exhaustive = FALSE,
+                                    maxExhaustiveCandidates = 20L,
+                                    exhaustiveTimeLimit = 10.0,
+                                    ancestryRules = NULL,
+                                    updateProgress = NULL) {
+  if (length(currentGroups) > numGp) {
+    stop(
+      "Cannot have more groups with seed animals than number of ",
+      "groups to be formed."
+    )
+  }
+  kmat <- filterKinMatrix(union(candidates, unlist(currentGroups)), kmat)
+  kin <- getAnimalsWithHighKinshipReference(
+    kmat, ped, threshold, currentGroups, ignore,
+    minAge
+  )
+
+  # Ancestry guardrails (issue #168, D3/D7): block-severity rules merge
+  # their conflicting pairs into `kin` HERE -- upstream of the current-group
+  # conflict filter below (seeds never pass through the fill loop, so only
+  # that filter can exclude seed-blocked candidates) and upstream of the
+  # sampling/exhaustive mode fork, never inside the iter loop (RNG-stream
+  # neutrality). Flag rules never touch the search;
+  # reportAncestryViolations() computes them post-formation.
+  if (!is.null(ancestryRules)) {
+    ancestryRules <- checkAncestryRules(ancestryRules)
+    if (!("ancestry" %in% names(ped))) {
+      stop("nprcgenekeepr: ancestryRules were supplied, but the pedigree ",
+        "has no 'ancestry' column.",
+        call. = FALSE
+      )
+    }
+    blocked <- .ancestryConflictPairs(
+      union(candidates, unlist(currentGroups)), ped, ancestryRules,
+      severity = "block"
+    )
+    # pairs already within the current groups mirror the kinship treatment
+    # (getAnimalsWithHighKinship): formation cannot undo an existing
+    # co-housing, so they do not constrain the search
+    bothInGroups <- blocked$id1 %in% unlist(currentGroups) &
+      blocked$id2 %in% unlist(currentGroups)
+    kin <- .mergeAncestryBlockPairs(
+      kin, blocked[!bothInGroups, , drop = FALSE]
+    )
+  }
+
+  # Filtering out candidates related to current group members
+  conflicts <- unique(c(
+    unlist(kin[unlist(currentGroups)]),
+    unlist(currentGroups)
+  ))
+  candidates <- setdiff(candidates, conflicts)
+
+
+  kin <- addAnimalsWithNoRelative(kin, candidates)
+
+  # Exhaustive mode (issue #146 Slice 2) is a parallel search strategy that
+  # bypasses the random-sampling loop below entirely -- scope (D2) and
+  # feasibility (D5) are checked, then enumeration replaces sampling.
+  if (exhaustive) {
+    return(.groupAddAssignExhaustive(
+      candidates, kin, currentGroups, ped, minAge, numGp, harem, sexRatio,
+      withKin, kmat, maxCandidates, maxExhaustiveCandidates,
+      exhaustiveTimeLimit
+    ))
+  }
+
+  if (harem && sexRatio != 0.0) {
+    stop(
+      "A harem (harem = TRUE) cannot be formed with a non-zero sexRatio ",
+      "(got sexRatio = ", sexRatio, "); use one or the other."
+    )
+  }
+
+  if (harem &&
+      length(getPotentialSires(candidates, ped, minAge)) <
+        sum(groupsWithoutSire(numGp, currentGroups, ped, minAge))) {
+    stop(
+      "User selected to form ",
+      numGp,
+      " harems with only ",
+      length(getPotentialSires(candidates, ped, minAge)),
+      " males at least ",
+      minAge,
+      " years old in the list of candidates."
+    )
+  }
+
+  # Starting the group assignment simulation. Up to maxCandidates distinct
+  # candidate solutions are retained (default 5; issue #125, configurable per
+  # issue #146 Slice 1), deduplicated by canonicalized partition content --
+  # not merely by score, since two trials with the same score but different
+  # membership both count (see canonicalizePartition() below, Dragon R4).
+  # Each new trial is compared only against the current up-to-maxCandidates
+  # retained candidates, not the full trial history so far
+  # (O(iter x maxCandidates), not O(iter^2)): safe because a partition's
+  # score is a pure function of its own membership, so a partition once
+  # evicted for scoring no better than the retained set can never later
+  # re-qualify at that same score.
+  retained <- list()
+
+  for (k in 1L:iter) {
+    groupMembers <- fillGroupMembersReference(
+      candidates, currentGroups, kin, ped, harem,
+      minAge, numGp, sexRatio
+    )
+
+    # Score the resulting groups
+    score <- min(lengths(groupMembers))
+    signature <- canonicalizePartition(groupMembers)
+
+    alreadyRetained <- any(vapply(
+      retained, function(r) identical(r$signature, signature), logical(1L)
+    ))
+
+    if (!alreadyRetained) {
+      if (length(retained) < maxCandidates) {
+        retained[[length(retained) + 1L]] <- list(
+          groupMembers = groupMembers, score = score, signature = signature
+        )
+      } else {
+        retainedScores <- vapply(retained, function(r) r$score, numeric(1L))
+        worstIdx <- which.min(retainedScores)
+        if (score > retainedScores[worstIdx]) {
+          retained[[worstIdx]] <- list(
+            groupMembers = groupMembers, score = score, signature = signature
+          )
+        }
+      }
+    }
+
+    # Updating the progress bar, if applicable
+    notifyProgress(updateProgress)
+  }
+
+  # Best candidate first; ties broken by discovery order (order() is not
+  # guaranteed stable for all methods, so break ties explicitly rather than
+  # relying on it).
+  retainedScores <- vapply(retained, function(r) r$score, numeric(1L))
+  retained <- retained[order(-retainedScores, seq_along(retained))]
+
+  retained <- lapply(retained, function(r) {
+    r$groupMembers <- addGroupOfUnusedAnimals(
+      r$groupMembers, candidates, ped, minAge, harem
+    )
+    r
+  })
+
+  groupMembersReturn(retained, withKin, kmat)
 }
 
 ## Phase 5 (founder statistics): R/calcFounderContributions.R,

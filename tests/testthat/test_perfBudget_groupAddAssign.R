@@ -34,3 +34,31 @@ test_that("groupAddAssign() forms 6 groups in 1,000 trials on the example's 280 
     toString(sprintf("%.2f", timings)), loadAverage()
   ))
 })
+
+## Harem trials (BACKLOG.md "Breeding Groups: harem trials redo their set-up
+## work every trial", owner pick S1072): the same 280 candidates in 6 harems.
+## Today's code took 9.03 s on it in one process (S1072, median of 3; 10.69 s
+## in a fresh process, S1066) and a prototype that builds the harem set-up
+## once per call 4.17 s. The budget is 13 s, more than 3 times the
+## prototype's time (plan section 5.2). Today's code passes it too, so the
+## ratchet gate perf_groupAddAssign_harem_1000_seconds is the closer check.
+test_that("groupAddAssign() forms 6 harems in 1,000 trials on the example's 280 candidates in under 13 s", {
+  skip_on_cran()
+  skip_if_not(identical(Sys.getenv("NPRC_RUN_PERF"), "true"),
+              "set NPRC_RUN_PERF=true to run the time budgets")
+  input <- exampleGroupInput()
+  form <- function() {
+    withr::with_seed(1L, groupAddAssign(input$candidates, input$kmat, input$ped,
+                                        iter = 1000L, numGp = 6L,
+                                        harem = TRUE))
+  }
+  form()
+  timings <- vapply(seq_len(3L), function(i) {
+    system.time(form())[["elapsed"]]
+  }, numeric(1L))
+  med <- stats::median(timings)
+  expect_lt(med, 13, label = sprintf(
+    "median of 3 runs, %.2f s (runs %s; load: %s)", med,
+    toString(sprintf("%.2f", timings)), loadAverage()
+  ))
+})

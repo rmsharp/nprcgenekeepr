@@ -5,8 +5,9 @@
 ## (owner pick S1056; plan docs/planning/performance-memory-campaign-plan.md,
 ## Phase 4 and section 5.1). groupAddAssign() must give exactly today's result
 ## for the same inputs and seed (decision D1): its whole result is compared
-## with groupAddAssignReference() (helper-perfReference.R: groupAddAssign()
-## run on the frozen copies of today's fillGroupMembers() and
+## with groupAddAssignReference() (helper-perfReference.R: a frozen copy of
+## today's groupAddAssign() since S1072, which builds the harem set-up once per
+## call, run on the frozen copies of today's fillGroupMembers() and
 ## fillGroupMembersWithSexRatio()) using identical().
 ##
 ## The new code fills the groups from a true/false table of the animals each
@@ -71,7 +72,14 @@ gridCases <- function() {
     list(candidates = anc$ped$id, kmat = anc$kmat, ped = anc$ped,
          iter = 10L, ancestryRules = anc$rules, ...)
   }
-  exSire <- getPotentialSires(ex$candidates, ex$ped, 1.0)[[1L]]
+  exSires <- getPotentialSires(ex$candidates, ex$ped, 1.0)
+  exSire <- exSires[[1L]]
+  exNonSire <- setdiff(ex$candidates, exSires)[[1L]]
+  ## harems on the example, with other values for an argument exampleArgs()
+  ## sets
+  exampleHarems <- function(...) {
+    utils::modifyList(exampleArgs(harem = TRUE), list(...))
+  }
   list(
     `breeders, 2 groups` = breedersArgs(numGp = 2L),
     `breeders, 1 group seeded with 3` = breedersArgs(
@@ -108,7 +116,25 @@ gridCases <- function() {
     `ancestry rules, 2 groups` = ancestryArgs(numGp = 2L),
     `ancestry rules, sex ratio 1, 2 groups` = ancestryArgs(numGp = 2L,
                                                            sexRatio = 1.0),
-    `ancestry rules, 2 harems` = ancestryArgs(numGp = 2L, harem = TRUE)
+    `ancestry rules, 2 harems` = ancestryArgs(numGp = 2L, harem = TRUE),
+    ## S1072: groupAddAssign() builds the harem set-up once per call; these
+    ## reach each of its stops and each argument it reads
+    `example, 3 harems, a seeded group with two sires` = exampleHarems(
+      numGp = 3L, currentGroups = list(exSires[1L:2L])
+    ),
+    `example, 3 harems, a seeded group without a sire` = exampleHarems(
+      numGp = 3L, currentGroups = list(exNonSire)
+    ),
+    `example, 97 harems for 96 sires` = exampleHarems(numGp = 97L),
+    `example, 3 harems, iter NA and a seeded group with two sires` =
+      exampleHarems(numGp = 3L, iter = NA,
+                    currentGroups = list(exSires[1L:2L])),
+    `example, 3 harems, iter 0` = exampleHarems(numGp = 3L, iter = 0L),
+    `example, 3 harems, minAge 0` = exampleHarems(numGp = 3L, minAge = 0),
+    `example, 1 harem` = exampleHarems(numGp = 1L),
+    `example, 2 harems, kinship kept, 1 retained` = exampleHarems(
+      numGp = 2L, withKin = TRUE, maxCandidates = 1L
+    )
   )
 }
 
