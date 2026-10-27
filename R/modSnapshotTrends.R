@@ -26,7 +26,7 @@
 #' @importFrom shiny NS div h3 h5 icon helpText wellPanel fileInput
 #' @importFrom shiny sidebarLayout sidebarPanel mainPanel actionButton
 #' @importFrom shiny tabsetPanel tabPanel uiOutput plotOutput downloadButton
-#' @importFrom shiny selectInput br hr
+#' @importFrom shiny selectInput br hr h4 includeHTML
 #' @importFrom DT DTOutput
 #' @family Shiny modules
 #' @export
@@ -96,7 +96,19 @@ modSnapshotTrendsUI <- function(id) {
             "Trends",
             icon = icon("chart-area"),
             br(),
-            plotOutput(ns("trendPlot"), height = "auto")
+            plotOutput(ns("trendPlot"), height = "auto"),
+            div(
+              style = paste(
+                "padding: 10px; border: 1px solid lightgray;",
+                "background-color: #EDEDED; border-radius: 25px;",
+                "box-shadow: 0 0 5px 2px #888; margin-top: 10px;"
+              ),
+              h4("Reading the trend"),
+              includeHTML(
+                system.file("extdata", "ui_guidance", "snapshot_trends.html",
+                            package = "nprcgenekeepr")
+              )
+            )
           ),
 
           tabPanel(

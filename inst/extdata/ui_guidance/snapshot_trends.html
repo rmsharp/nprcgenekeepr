@@ -1,0 +1,97 @@
+<p>
+	Each panel is one measure, titled with its column name in the snapshot
+	history. Each color is one membership rule; the dashed line is snapshots
+	rebuilt from studbook dates.
+</p>
+
+<p>
+	<b>Which way each panel moves</b>
+</p>
+<ul>
+	<li>
+		<b>fe, fg and neGD</b> (founder equivalents, founder genome equivalents
+		and gene diversity): higher means more of the founders' diversity is
+		still in the colony. fe falls when the founders' contributions grow more
+		unequal; fg and neGD also fall when founder alleles are lost by chance.
+		neGD is a share between 0 and 1, not a number of animals.
+	</li>
+	<li>
+		<b>nFounders, nMaleFounders and nFemaleFounders</b>: the known founders
+		(animals with no recorded parents) among the analyzed animals and their
+		ancestors. They rise when such an animal joins, an import for example;
+		in a series of living animals they also fall when a founder and all its
+		descendants have left.
+	</li>
+	<li>
+		<b>neSexRatio and neVariance</b> (the sex-ratio and variance effective
+		sizes, counted over the living breeders): higher means less diversity is
+		lost each generation. neSexRatio falls when breeding relies on few
+		animals of one sex; neVariance falls when a few breeders produce most of
+		the offspring. Read each as an index, not a head count.
+	</li>
+	<li>
+		<b>meanIndivMeanKin and medianIndivMeanKin</b>: the colony's average and
+		median of each animal's mean kinship. A rise means the animals are, on
+		average, more closely related to the rest of the colony.
+	</li>
+	<li>
+		<b>meanGu and medianGu</b> (genome uniqueness): neither direction is
+		better. They fall when a rare founder allele is lost, and also when
+		breeding spreads it into more animals, so a fall alone is not a loss; fg
+		and neGD show loss.
+	</li>
+	<li>
+		<b>The skewness and kurtosis panels</b>: the shape of the spread across
+		animals, not a measure of health. Positive skewness means a few animals
+		with unusually high values stretch the upper tail.
+	</li>
+	<li>
+		<b>fgSE and meanGuSE</b>: how precise fg and meanGu are, not how healthy
+		the colony is. They shrink when more gene-drop iterations are run.
+	</li>
+</ul>
+
+<p>
+	<b>When a change is real</b>
+</p>
+<ul>
+	<li>
+		The grey band around fg and meanGu spans one standard error on each side
+		of each point. A change smaller than the bands can come from the random
+		sampling alone.
+	</li>
+	<li>
+		fe, the founder counts, the effective sizes and the mean-kinship panels
+		have no band because they are calculated without random sampling: a
+		change in them is a change in the records. The other genome-uniqueness
+		panels have no band but come from the same sampling as meanGu.
+	</li>
+	<li>
+		A point drawn with a different shape was taken with different settings
+		(the number of gene-drop iterations, the rare-allele threshold or the
+		package version) than the point before it, and the caption names the
+		change; a jump there may come from the settings, not the colony.
+	</li>
+</ul>
+
+<p>
+	<b>What a past trend can answer</b>
+</p>
+<ul>
+	<li>
+		How fast founder diversity is being lost: the slope of fg and neGD
+		across the years.
+	</li>
+	<li>
+		Whether an import or a change in breeding shows: an unrelated import
+		with no recorded parents lowers mean kinship and raises the founder
+		counts as soon as it is in the population, and raises fe and fg once it
+		has offspring there. A change in breeding practice shows as a change of
+		slope from that year on, for example a fall in neSexRatio when fewer
+		sires are used.
+	</li>
+	<li>
+		A baseline: rebuilt years let today's snapshot of the living animals be
+		read against the colony's past instead of alone.
+	</li>
+</ul>

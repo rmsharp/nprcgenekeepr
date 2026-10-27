@@ -1309,6 +1309,16 @@ An animal the studbook lists as neither alive nor departed is left out of
 the count of animals, but the effective sizes still treat it as living when
 it is a recorded parent, as they do for the snapshot recorded today.
 
+#### Reading the trend
+
+```{r}
+#| label: trend-guidance
+shiny::includeHTML(system.file(
+  "extdata", "ui_guidance", "snapshot_trends.html",
+  package = "nprcgenekeepr", mustWork = TRUE
+))
+```
+
 ::: {.callout-note}
 This section is text-only, matching the established precedent for a
 straightforward new-tab addition (see the Cross-Center Identity section
