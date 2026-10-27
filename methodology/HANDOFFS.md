@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1071
+date: 2026-10-26
+status: pending
+active_task: IN PROGRESS -- correct the shipped example snapshot history (inst/extdata/examples/example_snapshot_history.csv; BACKLOG.md:237, READY, Effort S; owner pick at the Phase 0 picker, item 1 of 4, "Fix example neGD"): check every column of its 4 rows against the package's definitions, fix the wrong values (neGD 42.5/43.1/43.8/30.4 where 1 - 1/(2*fg) gives 0.942/0.943/0.944/0.919), and add a test that the file agrees with them, under strict TDD
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1070
 date: 2026-10-26
 status: complete
