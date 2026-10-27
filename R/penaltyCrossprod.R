@@ -26,7 +26,7 @@
         .blockProductIsExact()) {
     return(.blockCrossprod(pmat))
   }
-  .matrixProduct(t(pmat), pmat)
+  .wholeCrossprod(pmat)
 }
 
 #' Multiply a table by itself, block by block
@@ -80,8 +80,7 @@
   known <- .blockProductCache[[key]]
   if (is.null(known)) {
     probe <- .blockProductProbe()
-    known <- identical(.blockCrossprod(probe),
-                       .matrixProduct(t(probe), probe))
+    known <- identical(.blockCrossprod(probe), .wholeCrossprod(probe))
     assign(key, known, envir = .blockProductCache)
   }
   known
@@ -105,6 +104,15 @@
   probe[cbind(r, (7L * r) %% nCols + 1L)] <- -0.5 * sqrt(r + 1.0)
   probe[cbind(r, (31L * r + 5L) %% nCols + 1L)] <- 1.0 / sqrt(r + 2.0)
   probe
+}
+
+#' Multiply a table by itself, whole
+#'
+#' @param x a numeric matrix.
+#' @return \code{t(x) \%*\% x}, through \code{.matrixProduct()}.
+#' @noRd
+.wholeCrossprod <- function(x) {
+  .matrixProduct(t(x), x)
 }
 
 #' The matrix product the penalty functions use

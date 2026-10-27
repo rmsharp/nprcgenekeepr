@@ -256,12 +256,16 @@ chunkedProduct <- function(chunk) {
   }
 }
 
+## Forget the check's answer, so the next check is made afresh.
+forgetBlockCheck <- function() {
+  rm(list = ls(.blockProductCache), envir = .blockProductCache)
+}
+
 ## Forget the check's answer now and again when the calling test ends, so a
 ## stand-in library's answer never reaches another test.
 localFreshBlockCheck <- function(env = parent.frame()) {
-  rm(list = ls(.blockProductCache), envir = .blockProductCache)
-  withr::defer(rm(list = ls(.blockProductCache), envir = .blockProductCache),
-               envir = env)
+  forgetBlockCheck()
+  withr::defer(forgetBlockCheck(), envir = env)
 }
 
 ## The column counts of the tables .penaltyCrossprod() multiplies by blocks
@@ -327,7 +331,7 @@ test_that("the check refuses a math library that adds in chunks", {
 test_that("chunks longer than the probe table change nothing the check sees", {
   localFreshBlockCheck()
   own <- .blockProductIsExact()
-  rm(list = ls(.blockProductCache), envir = .blockProductCache)
+  forgetBlockCheck()
   local_mocked_bindings(.matrixProduct = chunkedProduct(100000L))
   expect_identical(.blockProductIsExact(), own)
 })
