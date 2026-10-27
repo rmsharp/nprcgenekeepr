@@ -1466,7 +1466,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## Decision 4: objective. e(id) is the unit basis vector at id's own
   ## column; pmatRows accumulates one row per penalty term, squared later
   ## via t(pmat) %*% pmat (kinship2's alignped4 builds its own pmat the
-  ## same way).
+  ## same way), worked out by .penaltyCrossprod() (S1073: by blocks where
+  ## that gives the same bits).
   e <- function(id) {
     v <- numeric(n)
     v[[varIndex[[id]]]] <- 1.0
@@ -1573,7 +1574,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   pmatRows[[length(pmatRows) + 1L]] <- antiDeg
 
   pmat <- do.call(rbind, pmatRows)
-  Dmat <- t(pmat) %*% pmat + 1e-8 * diag(n)
+  Dmat <- .penaltyCrossprod(pmat) + 1e-8 * diag(n)
 
   fit <- .solveSeparationQP(Dmat, bvec, lowerIdx, upperIdx)
 
