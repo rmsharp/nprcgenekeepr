@@ -387,7 +387,7 @@ open_diagram_with <- function(app, ped) {
   ""
 }
 
-test_that(
+pixel_test_that(
   "E2E: Pedigree Browser Diagram tab draws a slash through the symbol of a
    DECEASED animal and through no other", {
   skip_if_not_installed("shinytest2")
@@ -1255,7 +1255,7 @@ expect_halves <- function(read_halves, expected) {
   }
 }
 
-test_that(
+pixel_test_that(
   "E2E: Pedigree Browser Diagram tab fills each section of a two-condition
    animal's circle and square with its condition's color, and leaves an
    unaffected or unknown section open", {
@@ -1288,7 +1288,7 @@ test_that(
 ## pass it too. The sections must stay inside the outline, and the lines
 ## between sections are drawn for every animal, an unaffected one included.
 
-test_that(
+pixel_test_that(
   "E2E: Pedigree Browser Diagram tab keeps the sections inside each symbol's
    outline and draws the section line on an unaffected animal", {
   skip_if_not_installed("shinytest2")
@@ -1376,7 +1376,7 @@ test_that(
 ## canvas pixels can say the saved page paints them. The page is saved with
 ## htmlwidgets::saveWidget() and opened in headless Chrome, with no Shiny app.
 
-test_that(
+pixel_test_that(
   "E2E: a page a script saves from drawPedigreeDiagram() draws the deceased
    slash and fills each condition's section, as the Diagram tab does", {
   skip_if_not_installed("chromote")

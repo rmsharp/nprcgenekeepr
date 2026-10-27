@@ -662,3 +662,89 @@ download_csv_expect <- function(app, output_id, what) {
   }
   utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE)
 }
+
+# ---------------------------------------------------------------------------
+# GPU and CPU drawing for the pixel tests (S1076; owner ruling S1067)
+#
+# Headless Chrome paints the Diagram's canvas on the GPU on a Mac and on the
+# CPU on CI, and a pixel check that passed on one failed on the other (S1067).
+# pixel_test_that() declares a browser test that reads canvas pixels twice:
+# as written, in the default Chrome, and again in a Chrome started with
+# --disable-accelerated-2d-canvas (test_pixelTestsBothDrawings.R requires it
+# of every such test).
+# ---------------------------------------------------------------------------
+
+#' How a Chrome draws a 2D canvas, by its own account
+#'
+#' @param chromote A chromote::Chromote object (a running Chrome).
+#' @return "GPU" when Chrome's "2d_canvas" feature status is enabled (it
+#'   reads "enabled" on this Mac's default Chrome), otherwise "CPU" (it reads
+#'   "disabled_software" with --disable-accelerated-2d-canvas).
+chrome_canvas_drawing <- function(chromote = chromote::default_chromote_object()) {
+  status <- chromote$SystemInfo$getInfo()$gpu$featureStatus[["2d_canvas"]]
+  if (length(status) == 1L && startsWith(status, "enabled")) "GPU" else "CPU"
+}
+
+#' Make apps and pages start in a Chrome that draws its canvas on the CPU
+#'
+#' Starts a Chrome with `args` and makes it the default chromote object, which
+#' shinytest2::AppDriver and chromote::ChromoteSession use, until the code
+#' that called this ends; then the previous default is put back and this
+#' Chrome is closed. An app started under it must be stopped before then:
+#' run the test's code inside local() (see pixel_test_that()).
+#'
+#' @param args The Chrome command-line arguments.
+#' @param frame The frame whose end restores the previous default.
+#' @return The CPU-drawing chromote::Chromote object, invisibly. Stops with an
+#'   error, closing the Chrome it started, when that Chrome still draws its
+#'   canvas on the GPU.
+local_cpu_canvas_chrome <- function(
+    args = c(chromote::default_chrome_args(),
+             "--disable-accelerated-2d-canvas"),
+    frame = parent.frame()) {
+  before <- chromote::default_chromote_object()
+  cpu <- chromote::Chromote$new(browser = chromote::Chrome$new(args = args))
+  if (chrome_canvas_drawing(cpu) != "CPU") {
+    cpu$close()
+    stop("The Chrome started for CPU drawing still draws its canvas on the GPU",
+         call. = FALSE)
+  }
+  chromote::set_default_chromote_object(cpu)
+  withr::defer({
+    chromote::set_default_chromote_object(before)
+    cpu$close()
+  }, envir = frame)
+  invisible(cpu)
+}
+
+#' Declare a browser test that reads canvas pixels, for GPU and CPU drawing
+#'
+#' Declares "<desc> [default drawing]", the test as written, and
+#' "<desc> [CPU drawing]", the same code in a Chrome that draws its canvas on
+#' the CPU. The CPU-drawing test skips, before it starts any Chrome, when the
+#' browser tests are not opted in, and skips where the default Chrome already
+#' draws on the CPU (as on CI), since the first test covered that.
+#'
+#' @param desc The test's description.
+#' @param code The test's code, as for testthat::test_that().
+#' @param drawing The function that says how the default Chrome draws.
+#' @return NULL, invisibly; called for the two tests it declares.
+pixel_test_that <- function(desc, code, drawing = chrome_canvas_drawing) {
+  code <- substitute(code)
+  env <- parent.frame()
+  eval(bquote(testthat::test_that(.(paste(desc, "[default drawing]")),
+                                  .(code))), env)
+  eval(bquote(testthat::test_that(.(paste(desc, "[CPU drawing]")), {
+    testthat::skip_if_not_installed("chromote")
+    testthat::skip_on_cran()
+    create_test_app()
+    testthat::skip_if(
+      .(drawing)() == "CPU",
+      paste("The default Chrome already draws its canvas on the CPU;",
+            "the [default drawing] test covered it")
+    )
+    local_cpu_canvas_chrome()
+    local(.(code))
+  })), env)
+  invisible(NULL)
+}
