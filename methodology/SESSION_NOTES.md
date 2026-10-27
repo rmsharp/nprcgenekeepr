@@ -99,12 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1070 Did
-**Deliverable:** guidance on what a colony manager can learn from the Genetic-Health trend (`BACKLOG.md:237`; owner pick at the
-Phase 0 picker, item 1 of 4, "Trends guidance"): the owner decides where it goes and which questions it covers, then writes or
-approves the sentences; test-first under strict TDD (IN PROGRESS)
-**Started:** 2026-10-26 19:40 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Trends guidance"; strict TDD, all three gates "Yes"):** one text on reading the
+Genetic-Health trend, `inst/extdata/ui_guidance/snapshot_trends.html`, shown in a grey box under the chart on the Trends sub-tab
+(`R/modSnapshotTrends.R:95-109`) and in the guide (`colony-manager-guide.qmd:1312-1320`, chunk `trend-guidance`,
+`shiny::includeHTML()`). Owner rulings: "App box + guide, one text"; covers which way each panel moves, when a change is real, what
+a past trend answers (no literature target); the 27-sentence draft approved as written. Claim `5a8cfecae`, RED `52b512616`, GREEN
+`1b91df4ad`, REFACTOR `62b4e8e5a` (`helpBoxStyle`, `R/helpBoxStyle.R`, for three exact copies), NEWS `d1982110e`. Block off BACKLOG.
+**Measured first:** panels titled by column name; band +/-1 SE on fg and meanGu only; `neGD` is `1 - 1/(2*fg)`, a share; mean GU
+falls on loss and on spread; founder counts = known founders in the trimmed pedigree; `lacy1989Ped`: an import moves fe only once it
+has offspring (2.909 to 3.390).
+**Filed (owner: "File it for later"):** `BACKLOG.md:237`, the example history's `neGD` is 30.4-43.8 where its `fg` gives 0.919-0.944.
+**Owner question:** the memory and speed report is `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md` (opened); asked three times.
+**Verified:** new tests 142 expectations 0 failed; suite 476 files 4,461 tests 0 failed 0 errors (GREEN tree); lint 0; check 0/0/0;
+REFACTOR 192 tests 0 failed, UI byte-identical; NEWS readers 175 tests 0 failed; app and guide pictures opened; ratchet 10/10
+(`252b26ac1cc5`).
+**Handoff evaluation of S1069: 9/10.** Helped: Next named this item and its first decisions; the block listed every place the why
+was already written, so research went straight to the measures; the shinytest2 gotchas (`NOT_CRAN`, `R_LIBS`, the `.well` id
+trick) worked first try. Missing: nothing knowable; the block grouped `neGD` under "the effective sizes" by implication. Wrong:
+nothing. ROI: high.
+**Self: 7/10.** + the import probe and the trim trace corrected two sentences before the owner saw them; one file feeds both places,
+guarded; the example-data defect found from the picture and measured. - my first answer to the owner's report question was buried in
+status text and the owner had to ask twice more; two pictures needed a retake (padding crop, viewport height); an `Rscript -e`
+regex broke on escapes (known gotcha).
+**Gotchas:** the guide chunk reads the installed package: render a scratch copy (qmd + `shiny_app_use/`) with a scratch install on
+`R_LIBS`; a panel added to `trendDefaultMetrics` fails `test_snapshotTrendsGuidance.R` until the page explains it; read
+`getComputedStyle()` before calling a background missing; chromote element pictures stop at the session height.
+**Next:** the owner's S1069 order is finished. The owner picks; the new READY item is `BACKLOG.md:237` (S; re-check
+`test_calcSnapshotDeltas.R:116`, which pins 42.5). Also READY: `:249` harem (M), `:259` diagram (M), `:266` founder peak (S), `:283`
+CPU and GPU (S). At Phase 0 read the first scheduled `shinytest2` run on S1067's fix. Not pushed (17 ahead).
 
 ### Sessions 947-1069 (condensed S950 to S1070; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1069: the Build Earlier Snapshots box (`R/modSnapshotTrends.R:69-72`) says rebuilt rows are "added to the same history, marked

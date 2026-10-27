@@ -234,22 +234,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **Genetic-Health Trends: no document says what a colony manager can learn from the trend (DECISION NEEDED,
-      Effort M; owner-requested S1069; the owner put it next in line, S1069)** -- the owner asked whether any document
-      says why someone would build earlier snapshots and what can be learned from them. The why is written, one clause
-      each: the guide's tab introduction ("whether the colony's genetic health is improving or eroding over time",
-      `vignettes/articles/colony-manager-guide.qmd:1270`, the guide's only such sentence) and its step 4 ("so a trend
-      can be drawn now instead of after seasons of recording"); the same reason in `NEWS.Rmd:397-400`,
-      `backfillColonySnapshots()`'s help and `vignettes/a2interactive.Rmd:918`; plainest in
-      `docs/planning/retrospective-snapshot-backfill-plan.md` section 1.1. The rest is caveats for reading rebuilt
-      points (the guide's two paragraphs after step 4; the help page's "What each date rests on"). Not written
-      anywhere: which way each measure on the trend should move (mean kinship, founder equivalents and founder genome
-      equivalents, genome uniqueness, the effective sizes) and how large a change matters; what a past trend can
-      answer (how fast founder diversity has been lost, whether a past import or breeding-policy change shows, a
-      baseline for today's snapshot). `inst/extdata/ui_guidance/` has no page for the tab;
-      `population_genetics_terms.html` defines each measure only at a single time. To decide: where it goes (a guide
-      subsection after step 4, an app help page for the tab, or both) and which questions it covers; the owner writes
-      or approves the sentences, and each statement about a measure is checked against its function's documentation.
+- [ ] **The example snapshot history's neGD values are not gene diversity (READY, Effort S; found S1070, filed at the
+      owner's word)** -- `inst/extdata/examples/example_snapshot_history.csv` (written by hand at S757, `1d10be708`) has
+      `neGD` 42.5, 43.1, 43.8 and 30.4, where the package's definition, `1 - 1 / (2 * fg)` (`reportGV()`'s help,
+      `calcGeneDiversity()`, since S310), gives 0.942, 0.943, 0.944 and 0.919 for the file's `fg` values 8.6, 8.8, 9.0
+      and 6.2. Loaded in the app (the guide's step 1 points to the shipped file), its `neGD` panel reads 30 to 45 while
+      the Trends tab's "Reading the trend" box (S1070, `inst/extdata/ui_guidance/snapshot_trends.html`) says neGD is a
+      share between 0 and 1. First step: check the file's other columns against their definitions the same way, then
+      correct the values (or rebuild the rows from real `reportGV()` runs) with a test that every row's `neGD` equals
+      `1 - 1 / (2 * fg)`. Readers to re-check: `tests/testthat/test_calcSnapshotDeltas.R:116` pins `neGD` 42.5, eight
+      more test files read the file (`grep -l example_snapshot_history tests/testthat`), and five help examples
+      (`appendColonySnapshot`, `calcSnapshotDeltas`, `checkSnapshotHistory`, `plotSnapshotTrends`, `readSnapshotHistory`).
 
 - [ ] **Breeding Groups: harem trials redo their set-up work every trial (READY, Effort M; owner-raised S1056, filed
       S1066 at the performance campaign's close)** -- 1,000 harem trials on the tutorial's 280 candidates take 10.69 s

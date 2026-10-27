@@ -210,13 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1070
 date: 2026-10-26
-status: pending
-active_task: IN PROGRESS -- write guidance on what a colony manager can learn from the Genetic-Health trend (BACKLOG.md:237, DECISION NEEDED, Effort M; owner pick at the Phase 0 picker, item 1 of 4, "Trends guidance"): the owner decides where it goes and which questions it covers, then writes or approves the sentences; each statement about a measure checked against its function's documentation; test-first under strict TDD.
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- guidance on what a colony manager can learn from the Genetic-Health trend (BACKLOG item "Genetic-Health Trends: no document says what a colony manager can learn from the trend", owner-requested S1069), one file shown under the trend chart and in the guide, under strict TDD (owner pick at the Phase 0 picker, item 1 of 4, "Trends guidance"; the three gates answered "Yes"; owner rulings "App box + guide, one text", three questions covered, the drafted text approved as written).
+what_was_done: Claim 5a8cfecae. Research: panels titled by column name; band +/-1 SE on fg and meanGu only; provenance change = another point shape plus caption; neGD = 1 - 1/(2*fg), a 0-1 share; mean GU falls on loss and on spread; founder counts = known founders in the pedigree trimmed to the population and its ancestors; lacy1989Ped probe: an import moves fe/fg only once it has offspring (2.909 to 3.390). RED 52b512616 (tests/testthat/test_snapshotTrendsGuidance.R, 4 tests, 87 of 142 failing). GREEN 1b91df4ad (inst/extdata/ui_guidance/snapshot_trends.html; R/modSnapshotTrends.R Trends sub-tab box; colony-manager-guide.qmd "#### Reading the trend" + chunk trend-guidance). REFACTOR 62b4e8e5a (helpBoxStyle for three exact copies, byte-identical UI). NEWS d1982110e. Filed: example_snapshot_history.csv neGD on the wrong scale (BACKLOG, READY S). Owner question answered: the memory and speed report is docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md (opened).
+next_steps: Owner-given order (S1069) is finished: S1069's item and the trends guidance are both done. Next, the owner's pick from the picker; the newest READY item is the example history's neGD (BACKLOG.md:237, Effort S: correct the four rows so neGD = 1 - 1/(2*fg), check the other columns the same way, re-check test_calcSnapshotDeltas.R:116 which pins 42.5 and the eight other test files that read the file). Other READY: harem trials (:249, M), diagram time outside the solver (:259, M), founder statistics' memory peak (:266, S), GPU and CPU pixel passes (:283, S). At Phase 0, read the first scheduled shinytest2 run on S1067's fix (07:00 UTC 2026-10-27). Not pushed (17 ahead of origin after this commit).
+key_files: inst/extdata/ui_guidance/snapshot_trends.html (the one text); R/modSnapshotTrends.R:95-109 (the Trends sub-tab and its box); R/helpBoxStyle.R (the shared style); vignettes/articles/colony-manager-guide.qmd:1312-1320 (the guide's subsection and chunk); tests/testthat/test_snapshotTrendsGuidance.R (the guard, incl. every trendDefaultMetrics panel named); inst/extdata/examples/example_snapshot_history.csv (the wrong neGD values); BACKLOG.md:237 (the new item).
+gotchas: The guide's chunk reads the INSTALLED package (system.file, mustWork = TRUE), so a local quarto render needs a scratch R CMD INSTALL and R_LIBS=<scratch>/lib:<renv path>; render a copy in the scratch folder (the qmd plus shiny_app_use/) to keep vignettes/ clean. A panel added to trendDefaultMetrics fails test_snapshotTrendsGuidance.R until the page explains it (skewness/kurtosis names ride on their shared line). AppDriver element pictures crop inside a box's padding (read getComputedStyle before calling a background missing); a chromote element picture stops at the session height. shinytest2 still needs NOT_CRAN=true and RENV_CONFIG_AUTOLOADER_ENABLED=false. Answer an owner question that arrives mid-turn first and on its own line.
+runtime_smoke: The tree installed into a scratch library (R CMD INSTALL --no-docs), the full app started with shinytest2, the shipped example history uploaded, the Genetic-Health Trends tab's Trends sub-tab shows the "Reading the trend" box under the 18-panel chart with all 13 bullets (computed background rgb(237, 237, 237), padding 10px, radius 25px); the guide copy rendered with quarto 1.7.33 shows the subsection inside the trends section, raw HTML formatted, no code; both pictures opened for the owner.
+quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 252b26ac1cc5 · manifest 38cf32b77360
+changelog_ref: 5a8cfecae
+commit: d1982110e
 ```
-Session claimed; work beginning.
 
 ```handoff
 session: S1069
