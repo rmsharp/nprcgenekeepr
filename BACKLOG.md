@@ -242,13 +242,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Narrow the focal-animal selection to view a diagram." with 0 style buttons, so a fresh session cannot reach the
       Direct diagram of 708 animals. Whether a style chosen on a smaller diagram carries over is untested. To decide:
       show the style buttons with the message too, name "Direct" in the message, or both.
-- [ ] **Founder statistics: their memory peak rose a little on larger inputs while their time fell (READY, Effort S;
-      found S1058, filed S1066)** -- from Phase 0 to S1066, `calcFGSE()`'s peak went 225.6 to 253.6 MB on the
-      generated 10,000-animal colony and 236.5 to 257.5 MB on all 3,694 example animals, and `calcFEFG()`'s 233.2 to
-      247.7 MB on all 3,694 (`Rscript tools/perf/run.R gvStages-all` and `gvStages-synthetic10000`), while their time
-      fell about tenfold (`calcFGSE()` 1.07 to 0.12 s on the synthetic colony). S1058 saw the rise (225.5 to
-      254.1 MB) and recorded no cause. First step: find the step that peaks (`R/calcFounderContributions.R`,
-      `R/calcRetention.R`), then decide whether lowering it is worth a change.
 - [ ] **The performance campaign's nine fallbacks: move their input types onto the fast paths? (DECISION NEEDED,
       Effort M; owner-raised S1054, filed S1066)** -- each phase kept the pre-campaign code for inputs its new code
       does not take (a factor where text is expected, for example): `rareAlleleCountsGeneral()`, `geneDropGeneral()`,
