@@ -234,13 +234,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
       kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
 
-- [ ] **Pedigree Diagram: about 1.7 s of the 708-animal layout is outside its solver (READY, Effort M; found S1060,
-      filed S1066)** -- `diagram-example-direct` takes 5.10 s (4.80-5.22, S1066; 12.81 s before the campaign). About
-      1.7 s is outside `.solveSeparationQP()` (`R/makePedigreeDiagramData.R:1606`), 1.0 s of it `Dmat <- t(pmat) %*%
-      pmat` (`:1576`), kept at S1060 because `crossprod(pmat)` calls another BLAS routine and could give other bits,
-      so other positions, on another platform. First step: profile the other 0.7 s; `crossprod()` only with
-      identical positions on CI's three platforms (the pinned positions of the four layout test files, and
-      `tests/testthat/test_diagramSolverEquivalence.R`). Gate: `perf_diagram_example_direct_seconds` (5.9 s).
+- [ ] **Pedigree Diagram: no way to choose "Direct" for a pedigree of 401 to 750 animals (DECISION NEEDED, Effort S;
+      found S1073)** -- with the default "Rectilinear" style the Diagram tab draws at most 400 animals, and "Direct" 750
+      (`R/modPedigree.R:465`; `NEWS.Rmd:58-60` says so), but the edge-style buttons are drawn only beside a diagram
+      (`:624-631`), never beside the over-limit message (`:555-565`). Measured S1073 in the app with the example as the
+      app trims it (708 animals): the tab said "Diagram not shown: 708 animals exceeds the 400-animal display limit.
+      Narrow the focal-animal selection to view a diagram." with 0 style buttons, so a fresh session cannot reach the
+      Direct diagram of 708 animals. Whether a style chosen on a smaller diagram carries over is untested. To decide:
+      show the style buttons with the message too, name "Direct" in the message, or both.
+- [ ] **Pedigree Diagram: the first drawing computes the layout twice (READY, Effort S; found S1073)** -- in the S1073
+      app runs (the 708-animal example trim, "Direct") one drawing made two `makePedigreeMatingLayout()` calls, with
+      the code before and after S1073 alike (4.96 and 4.63 s before, 4.42 and 3.84 s after), about 4 s of the 8.7 s
+      the user waits. Likely cause, not verified: `diagramLayout()` (`R/modPedigree.R:690`) reads the Show Names and
+      Twin Connectors toggles, which are `NULL` until their check boxes first appear beside the diagram and then
+      `FALSE`, so the layout is rebuilt with the same result. First step: log which input invalidates
+      `diagramLayout()`; any fix keeps the drawn diagram identical.
 - [ ] **Founder statistics: their memory peak rose a little on larger inputs while their time fell (READY, Effort S;
       found S1058, filed S1066)** -- from Phase 0 to S1066, `calcFGSE()`'s peak went 225.6 to 253.6 MB on the
       generated 10,000-animal colony and 236.5 to 257.5 MB on all 3,694 example animals, and `calcFEFG()`'s 233.2 to

@@ -99,13 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1073 Did
-**Deliverable:** make the Pedigree Diagram's 708-animal layout faster outside its solver: profile the 1.7 s outside
-`.solveSeparationQP()`, the same positions (`crossprod()` only with identical positions on CI's three platforms), gate
-`perf_diagram_example_direct_seconds`; strict TDD (owner pick, item 1 of 4, "Diagram layout time"; `BACKLOG.md:237`, READY,
-Effort M) (IN PROGRESS)
-**Started:** 2026-10-27 ~07:05 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Diagram layout time"; ruling "Only where exact"; strict TDD, three gates "Yes", one
+GREEN->RED stop "Back to RED"):** the diagram's penalty table is squared by blocks wherever a once-a-session check finds that exact:
+`.penaltyCrossprod()`, `.blockCrossprod()`, `.blockProductIsExact()` (`R/penaltyCrossprod.R`), called at `R/makePedigreeDiagramData.R:1577`.
+The example's diagram 4.58 to 3.61 s (gate 5.9 to 4.6 s); the app's 708-animal draw 9.94 to 8.65 s. Claim `6074c5188`, RED `af36a5b88`,
+RED addition `d2c20a8dd`, GREEN `499280c15`, REFACTOR `61290fc2e`, gate `e6f110c41`. Block off BACKLOG; two findings filed (`:237`, `:245`).
+**Measured first:** 1.07 s of the 1.77 s outside the solver was `t(pmat) %*% pmat` (2-3 numbers a row); blocks multiplied by the library
+matched 18 of 18 grid solves, a plain-R sum did not (1 ulp, positions 1.1e-7 off); CI's Ubuntu legs load OpenBLAS (run `40390720074`).
+**Verified:** full suite 478 files 4,478 tests 0 failed 0 errors and check 0/0/0 on GREEN and REFACTOR; lint 0; mutants 10/10; browser
+tier 22 tests 111 expectations 0 failed; ratchet 11/11 (`81395c09beb6`), `reportGV` 0.21 s (S1072's 0.31 s fail did not recur).
+**Handoff evaluation of S1072: 8/10.** Helped: Next and the block named `:1576`, the S1060 reason and the equivalence test; "drive the app
+from outside the repo and log `find.package()`" worked first try. Missing: which library CI's Ubuntu legs load (found in the job log).
+Wrong: nothing; "the other 0.7 s" was mostly allocation (about 0.4 s of R code remains). ROI: high.
+**Self: 7/10.** + profiled and prototyped both variants and read CI's library before the scope question; every gate as recommended;
+10/10 mutants; the app before/after logged its package. - a RED counter also counted the check's own probe product (a GREEN->RED trip);
+three app-driver attempts on the 400-animal limit before reading the render branch.
+**Gotchas:** the block product is exact only where the library adds each entry's terms in row order; on OpenBLAS the check fails and the
+whole product runs ("built by blocks" skips there); a recorder around `.blockCrossprod()` also counts the check's probe call; above 400
+animals the Diagram tab has no style buttons (use `Shiny.setInputValue()`); the gate's 25% room exceeds the 21% gain (Learning 1039).
+**Next:** the owner picks. READY: `BACKLOG.md:245` layout twice (S), `:252` founder peak (S), `:269` CPU and GPU (S); DECISION NEEDED
+`:237` Direct above 400. Read the next CI run's Ubuntu legs (check fails there, tests pass). Not pushed (37 ahead).
 
 ### Sessions 947-1072 (condensed S950 to S1073; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1072: harem trials build their set-up once per `groupAddAssign()` call (`makeHaremSetUp()`, `drawHaremGroups()`,
@@ -145,29 +158,15 @@ scenarios x 3 at `c4fb07453` against Phase 0 (the example's analysis 3.28 to 0.2
 plain R; four leftovers filed (`BACKLOG.md:270`, `:280`, `:287`, `:294`). Claim `c4fb07453`, close-out `25fb3aade`; S1065 8/10, self 8/10
 (Learning 1032). **Gotchas kept:** at load 8 to 22 the harness reads up to 10% slow; old code runs from `git worktree add --detach
 <scratch>/pre <sha>` with today's `tools/perf/` copied in.
-S1065: Phase 10 of the campaign, snapshot backfill and convergence (strict TDD): Build Earlier Snapshots 9.42 to 1.08 s,
-`gvaConvergence()` 4.73 to 0.84 s; the cost line (`describeBackfillCost()`, `R/modSnapshotTrends.R:458,471`) counts 0.25 s a
-date per 1,000 iterations in the owner's words; D6 ruled no; `test_perfBudget_snapshotBackfill.R`; gate 11.9 to 1.4 s.
-Claim `3601ebc4a`, GREEN `e6fb78338`, close-out `971ed4116`, trim `3bc3704de`; S1064 8/10, self 8/10 (Learning 1031).
-**Gotchas kept:** a fresh-process time (`tools/perf/run.R`, the gate) and a warm in-process time (a budget test) differ by
-about 0.4 s; read the plan's section 7 common DONE items at a campaign phase's start.
-S1064: Phase 9b of the campaign, the app's memory (strict TDD): Summary Statistics' kinship downloads and Marker
-Genetics' two tables ask `kinshipFor` for every animal; `sharedKinshipMatrix` removed; `kinshipFromSources()`
-(`R/kinshipFromSources.R`) picks four tabs' source; the app memory table within the runs' spread (design section 13).
-Claim `b02b35804`, GREEN `26f18f238`..`c8d8e1695`, close-out `779d24724`, pushed; S1063 9/10, self 8/10 (Learning 1030).
-**Gotchas kept:** `testServer()` draws every output on a flush; grep for `deparse(<fn>)` checks before moving code.
-S1063: Phase 9a of the campaign, the app's memory (strict TDD): Breeding Groups, Genetic Diversity and Mate Pair ask
-`appServer()`'s `kinshipFor(ids)` (`R/appServer.R:382`) through `kinshipForAnimals()` (`R/kinshipForAnimals.R:40`);
-upload + QC 685.1 to 520.8 MB, Mate Pair 1,947.4 to 1,375.3 MB (`Rscript tools/perf/runAppSession.R <label> <out.csv>`,
-design section 12). Claim `0716ead7a`, GREEN `70bd838b6`..`c6c9a5829`, close-out `cb9fc87f7`; S1062 9/10, self 8/10
-(Learning 1029). **Gotchas kept:** take app-session runs only while nothing edits `R/`; a test recorder needs
-`c(asked, list(ids))` to record `NULL`; a lint step in an `&&` chain does not stop a commit.
-S1062: Phase 8 of the campaign, the app's memory design (`docs/planning/app-kinship-memory-design.md`; text only): D5 ruled (c),
-each tab computes kinship for its own animals plus their ancestors; the full matrix is built at upload by Genetic Diversity's
-readiness observer (`R/modGeneticDiversity.R:119,188`); three larger tab costs filed (`BACKLOG.md:240`, `:249`, `:258`). Claim
-`d750f818e`, deliverable `b82ff2464`, close-out `ea0bd5e2a`; S1061 9/10, self 8/10 (Learning 1028). **Gotchas kept:** a scratch `app.R`
-with `load_all()` and `trace(where = asNamespace("nprcgenekeepr"))` logs every `kinship()` call and its caller; Mate Pair's "All
-alive" is `is.na(exit)` (1,704 example animals), not `isLivingAnimal()` (332).
+S1062-S1065 (the campaign's Phases 8-10; strict TDD where code changed; evaluations 8-9/10, self 8/10; Learnings 1028-1031; hashes in
+`CHANGELOG.md`): S1062 the app's memory design (`docs/planning/app-kinship-memory-design.md`, D5 ruled (c)); S1063 Breeding Groups,
+Genetic Diversity and Mate Pair ask `kinshipFor(ids)` (`R/appServer.R:382`, `R/kinshipForAnimals.R:40`; upload + QC 685.1 to 520.8 MB);
+S1064 Summary Statistics and Marker Genetics too (`kinshipFromSources()`, `R/kinshipFromSources.R`); S1065 Build Earlier Snapshots 9.42
+to 1.08 s, `gvaConvergence()` 4.73 to 0.84 s, the cost line `describeBackfillCost()` (`R/modSnapshotTrends.R:458,471`). **Gotchas
+kept:** a fresh-process time and a warm in-process time differ by about 0.4 s; `testServer()` draws every output on a flush; grep for
+`deparse(<fn>)` checks before moving code; take app-session runs only while nothing edits `R/`; a scratch `app.R` with `load_all()` and
+`trace(where = asNamespace("nprcgenekeepr"))` logs every `kinship()` call and its caller; Mate Pair's "All alive" is `is.na(exit)`
+(1,704 example animals), not `isLivingAnimal()` (332).
 S1061: the red `windows-latest` leg of `R-CMD-check.yaml` fixed (strict TDD; RED was the red run `40230619957`, as S1018):
 `archivePointerProblems()` calls `normalizePath(winslash = "/")` on both paths (`tests/testthat/helper-archivePointers.R:54,64`);
 CI run `40236872235` green on all 5 legs. Claim `478e98a65`, GREEN `f33b3474e`, close-out `7434f69a6`; S1060 9/10, self 8/10
