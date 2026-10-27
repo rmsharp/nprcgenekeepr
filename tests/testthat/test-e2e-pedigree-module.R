@@ -361,6 +361,14 @@ open_deceased_diagram <- function(app) {
   open_diagram_with(app, ped)
 }
 
+## JavaScript that is true once the Diagram tab's widget has drawn its nodes
+## and its legend.
+diagram_ready_js <- paste0(
+  "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+  "return !!w && !!w.network && !!w.legend && ",
+  "w.network.body.data.nodes.length > 0; })()"
+)
+
 ## Opens the Diagram tab on `ped` (written to a CSV and uploaded through the
 ## Input tab). Returns "" once the widget is drawn, else the reason to skip.
 open_diagram_with <- function(app, ped) {
@@ -375,13 +383,8 @@ open_diagram_with <- function(app, ped) {
   if (!click_element_safe(app, 'a[data-value="Diagram"]')) {
     return("Could not switch to the Diagram tab")
   }
-  widgetReady <- paste0(
-    "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
-    "return !!w && !!w.network && !!w.legend && ",
-    "w.network.body.data.nodes.length > 0; })()"
-  )
   ready <- tryCatch({
-    app$wait_for_js(widgetReady, timeout = E2E_TIMEOUT)
+    app$wait_for_js(diagram_ready_js, timeout = E2E_TIMEOUT)
     TRUE
   }, error = function(e) FALSE)
   if (!ready) return("visNetwork widget instance not found")
@@ -1252,14 +1255,7 @@ test_that(
   expect_true(hasDirect, info = "a Direct button beside the message")
   drawn <- hasDirect && tryCatch({
     app$run_js(sprintf("document.querySelector(\"%s\").click();", direct))
-    app$wait_for_js(
-      paste0(
-        "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
-        "return !!w && !!w.network && ",
-        "w.network.body.data.nodes.length > 0; })()"
-      ),
-      timeout = E2E_TIMEOUT
-    )
+    app$wait_for_js(diagram_ready_js, timeout = E2E_TIMEOUT)
     TRUE
   }, error = function(e) FALSE)
   expect_true(drawn, info = "choosing Direct draws the diagram")

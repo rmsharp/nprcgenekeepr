@@ -1706,25 +1706,10 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
-  n <- 750L
-  bigId <- sprintf("A%04d", seq_len(n))
-  sire <- rep(NA_character_, n)
-  dam <- rep(NA_character_, n)
-  ## Issue #164 / P5-suppression plan Phase 3: a fixture of ALL isolated
-  ## founders now renders the all-isolated empty-state message instead of
-  ## the widget (Phase 1 already strips them from layout$nodes) -- give one
-  ## trio a real relationship so this fixture exercises the CAP boundary
-  ## this test is actually about, not isolation-suppression's own empty-
-  ## state branch. n itself (the cap-boundary quantity) is unchanged.
-  sire[3] <- bigId[1]
-  dam[3] <- bigId[2]
-  test_studbook <- data.frame(
-    id = bigId,
-    sire = sire,
-    dam = dam,
-    sex = rep(c("M", "F"), length.out = n),
-    stringsAsFactors = FALSE
-  )
+  ## Issue #164 / P5-suppression plan Phase 3: one trio among isolated
+  ## founders (pedigreeOfSize(), helper-pedigreeOfSize.R), so this fixture
+  ## exercises the CAP boundary, not the all-isolated empty-state message.
+  test_studbook <- pedigreeOfSize(750L)
 
   shiny::testServer(
     modPedigreeServer,
@@ -1795,27 +1780,12 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
-  ## Issue #164 / P5-suppression plan Phase 3: a fixture of ALL isolated
-  ## founders now renders the all-isolated empty-state message instead of
-  ## the widget (Phase 1 already strips them from layout$nodes) -- give one
-  ## trio a real relationship so this fixture exercises the CAP boundary
-  ## this test is actually about, not isolation-suppression's own empty-
-  ## state branch. n itself (the cap-boundary quantity) is unchanged.
-  makeStudbook <- function(n) {
-    bigId <- sprintf("A%04d", seq_len(n))
-    sire <- rep(NA_character_, n)
-    dam <- rep(NA_character_, n)
-    sire[3] <- bigId[1]
-    dam[3] <- bigId[2]
-    data.frame(
-      id = bigId, sire = sire, dam = dam,
-      sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
-    )
-  }
-
+  ## Issue #164 / P5-suppression plan Phase 3: each fixture is one trio
+  ## among isolated founders (pedigreeOfSize(), helper-pedigreeOfSize.R), so
+  ## it exercises the CAP boundary, not the all-isolated empty-state message.
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ makeStudbook(400L) })),
+    args = list(studbook = shiny::reactive({ pedigreeOfSize(400L) })),
     {
       session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
       session$flushReact()
@@ -1826,7 +1796,7 @@ test_that(
 
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ makeStudbook(401L) })),
+    args = list(studbook = shiny::reactive({ pedigreeOfSize(401L) })),
     {
       session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
       session$flushReact()
@@ -2119,27 +2089,12 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
-  ## Issue #164 / P5-suppression plan Phase 3: a fixture of ALL isolated
-  ## founders now renders the all-isolated empty-state message instead of
-  ## the widget (Phase 1 already strips them from layout$nodes) -- give one
-  ## trio a real relationship so this fixture exercises the CAP boundary
-  ## this test is actually about, not isolation-suppression's own empty-
-  ## state branch. n itself (the cap-boundary quantity) is unchanged.
-  makeStudbook <- function(n) {
-    bigId <- sprintf("A%04d", seq_len(n))
-    sire <- rep(NA_character_, n)
-    dam <- rep(NA_character_, n)
-    sire[3] <- bigId[1]
-    dam[3] <- bigId[2]
-    data.frame(
-      id = bigId, sire = sire, dam = dam,
-      sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
-    )
-  }
-
+  ## Issue #164 / P5-suppression plan Phase 3: each fixture is one trio
+  ## among isolated founders (pedigreeOfSize(), helper-pedigreeOfSize.R), so
+  ## it exercises the CAP boundary, not the all-isolated empty-state message.
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ makeStudbook(400L) })),
+    args = list(studbook = shiny::reactive({ pedigreeOfSize(400L) })),
     {
       session$setInputs(
         displayUnknownIds = TRUE, trimPedigree = FALSE,
@@ -2153,7 +2108,7 @@ test_that(
 
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ makeStudbook(401L) })),
+    args = list(studbook = shiny::reactive({ pedigreeOfSize(401L) })),
     {
       session$setInputs(
         displayUnknownIds = TRUE, trimPedigree = FALSE,
@@ -2168,7 +2123,7 @@ test_that(
 
   shiny::testServer(
     modPedigreeServer,
-    args = list(studbook = shiny::reactive({ makeStudbook(401L) })),
+    args = list(studbook = shiny::reactive({ pedigreeOfSize(401L) })),
     {
       session$setInputs(
         displayUnknownIds = TRUE, trimPedigree = FALSE,

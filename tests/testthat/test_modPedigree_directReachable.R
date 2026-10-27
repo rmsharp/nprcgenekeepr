@@ -9,24 +9,10 @@
 # above 750 neither style can draw the pedigree, so the message stays as it
 # was, with no buttons.
 
-# `n` animals: one trio (A0001 and A0002 the parents of A0003) and founders
-# with no recorded relatives, so the diagram is not empty when it is drawn.
-pedigreeOfSize <- function(n) {
-  ids <- sprintf("A%04d", seq_len(n))
-  sire <- rep(NA_character_, n)
-  dam <- rep(NA_character_, n)
-  sire[3L] <- ids[1L]
-  dam[3L] <- ids[2L]
-  data.frame(
-    id = ids, sire = sire, dam = dam,
-    sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
-  )
-}
-
-# Runs `code` in a modPedigreeServer session on pedigreeOfSize(n), with the
-# whole pedigree in view and `style` chosen first when it is not NULL.
-# `code` sees the session's `input`, `output` and `session`, as in
-# shiny::testServer().
+# Runs `code` in a modPedigreeServer session on pedigreeOfSize(n)
+# (helper-pedigreeOfSize.R), with the whole pedigree in view and `style`
+# chosen first when it is not NULL. `code` sees the session's `input`,
+# `output` and `session`, as in shiny::testServer().
 withDiagramTabOf <- function(n, code, style = NULL) {
   first <- c(list(displayUnknownIds = TRUE, trimPedigree = FALSE),
              if (!is.null(style)) list(pedigreeEdgeStyle = style))

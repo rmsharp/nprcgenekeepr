@@ -494,6 +494,20 @@ modPedigreeServer <- function(id, studbook) {
       }
     }
 
+    # The Diagram Edge Style buttons with `style` selected, drawn beside the
+    # diagram and (S1077) beside the over-limit message when Direct can draw
+    # the pedigree.
+    .edgeStyleButtons <- function(style) {
+      radioButtons(
+        session$ns("pedigreeEdgeStyle"),
+        label = "Diagram Edge Style",
+        choices = c(Direct = "direct",
+                    "Rectilinear (kinship2-style)" = "rectilinear"),
+        selected = style,
+        inline = TRUE
+      )
+    }
+
     # Issue #136 Slice 2: whether the diagram shows names alongside id.
     # Off by default (owner-ratified "some centers, inconsistently"
     # framing) -- defaulting to FALSE before the toggle below has ever
@@ -556,14 +570,7 @@ modPedigreeServer <- function(id, studbook) {
         # S1077 (owner ruling "Buttons and wording"): Direct can draw this
         # pedigree, so the message keeps the edge-style buttons above it.
         tagList(
-          radioButtons(
-            session$ns("pedigreeEdgeStyle"),
-            label = "Diagram Edge Style",
-            choices = c(Direct = "direct",
-                        "Rectilinear (kinship2-style)" = "rectilinear"),
-            selected = style,
-            inline = TRUE
-          ),
+          .edgeStyleButtons(style),
           div(
             class = "alert alert-warning",
             sprintf(
@@ -645,14 +652,7 @@ modPedigreeServer <- function(id, studbook) {
                 )
               )
             },
-            radioButtons(
-              session$ns("pedigreeEdgeStyle"),
-              label = "Diagram Edge Style",
-              choices = c(Direct = "direct",
-                          "Rectilinear (kinship2-style)" = "rectilinear"),
-              selected = style,
-              inline = TRUE
-            ),
+            .edgeStyleButtons(style),
             # Issue #136 Slice 2, decisions D3, D4, D6 -- no existing home
             # for this control either -- same D4 net-new-UI precedent as
             # the edge style toggle above. Off by default; has no visible
