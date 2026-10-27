@@ -413,7 +413,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - New **Genetic-Health Trends** tab: upload or start a history, record a
   snapshot from the genetic value analysis you just ran, view trend
   plots, and compare two dates. Histories and comparisons can be
-  downloaded.
+  downloaded. A box under the trend chart, also in the guide, says which
+  way each measure should move, when a change is more than chance, and
+  what a past trend can show.
 - Snapshots recorded under different settings or software versions are
   flagged, so a jump is not mistaken for a real change in the colony.
 - **Build Earlier Snapshots** on the Genetic-Health Trends tab rebuilds
