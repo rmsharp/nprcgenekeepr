@@ -464,16 +464,29 @@ modPedigreeServer <- function(id, studbook) {
     # nolint end: commented_code_linter.
     pedigreeDiagramMaxNodesRectilinear <- 400L
 
+    # S1074: the edge-style, Show Names and Show Twin Connectors controls are
+    # drawn by pedigreeDiagramUI below after it has built the first layout,
+    # and the browser reports the value each one shows when it binds it
+    # (NULL -> "rectilinear", NULL -> FALSE). Read straight from input, that
+    # report rebuilt the layout with the same settings: two builds per first
+    # drawing, 3.9 s of the 708-animal example's in Direct. So each setting is
+    # held in a reactiveVal, which ignores a value identical to the one it
+    # holds; observeEvent() ignores a NULL input, so the default stands until
+    # the control reports, and priority 1 updates it before the outputs that
+    # read it run.
+    .heldSetting <- function(name, default) {
+      value <- reactiveVal(default)
+      observeEvent(input[[name]], value(input[[name]]), priority = 1L)
+      value
+    }
+
     # Issue #142 Slice 2: which edge style is currently selected, defaulting
     # to "rectilinear" (the default since S574, matching
     # makePedigreeMatingLayout()'s own edgeStyle default) before the style
     # toggle below has ever rendered, and the node cap that applies to it.
+    edgeStyleSetting <- .heldSetting("pedigreeEdgeStyle", "rectilinear")
     .currentEdgeStyle <- function() {
-      if (is.null(input$pedigreeEdgeStyle)) {
-        "rectilinear"
-      } else {
-        input$pedigreeEdgeStyle
-      }
+      edgeStyleSetting()
     }
     .currentDiagramCap <- function() {
       if (.currentEdgeStyle() == "rectilinear") {
@@ -488,12 +501,9 @@ modPedigreeServer <- function(id, studbook) {
     # framing) -- defaulting to FALSE before the toggle below has ever
     # rendered means the very first render is byte-identical to
     # pre-issue-136 behavior, same pattern as .currentEdgeStyle() above.
+    showNamesSetting <- .heldSetting("pedigreeShowNames", FALSE)
     .currentShowNames <- function() {
-      if (is.null(input$pedigreeShowNames)) {
-        FALSE
-      } else {
-        input$pedigreeShowNames
-      }
+      showNamesSetting()
     }
 
     # nolint start: commented_code_linter.
@@ -503,12 +513,10 @@ modPedigreeServer <- function(id, studbook) {
     # a valid twinRelationsFile has also been uploaded (see
     # twinRelationsData() below).
     # nolint end
+    showTwinConnectorsSetting <- .heldSetting("pedigreeShowTwinConnectors",
+                                              FALSE)
     .currentShowTwinConnectors <- function() {
-      if (is.null(input$pedigreeShowTwinConnectors)) {
-        FALSE
-      } else {
-        input$pedigreeShowTwinConnectors
-      }
+      showTwinConnectorsSetting()
     }
 
     # nolint start: commented_code_linter.
