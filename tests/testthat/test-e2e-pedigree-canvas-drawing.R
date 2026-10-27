@@ -63,3 +63,53 @@ test_that(
   )
   expect_identical(chromote::default_chromote_object(), before)
 })
+
+## S1076 mutation gaps: a CPU-drawing test that never switched Chrome, and a
+## drawing check stuck on "CPU" (which skips every CPU-drawing test), passed
+## every test above. This one reads Chrome's own 2d_canvas status, not
+## chrome_canvas_drawing(), inside each of the two tests pixel_test_that()
+## declares.
+
+## Runs `code`, which declares tests, under its own reporter, so the tests it
+## declares do not count in this file's results. Returns one row per declared
+## test: its name, whether it skipped, and its results' messages.
+run_declared <- function(code) {
+  reporter <- testthat::ListReporter$new()
+  reporter$start_file("declared")
+  testthat::with_reporter(reporter, code, start_end_reporter = FALSE)
+  reporter$end_file()
+  tests <- reporter$get_results()
+  data.frame(
+    test = vapply(tests, function(t) t$test, character(1L)),
+    skipped = vapply(tests, function(t) {
+      any(vapply(t$results, inherits, logical(1L), "expectation_skip"))
+    }, logical(1L)),
+    message = vapply(tests, function(t) {
+      paste(vapply(t$results, conditionMessage, character(1L)),
+            collapse = " | ")
+    }, character(1L)),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that(
+  "where the default Chrome draws on the GPU, pixel_test_that() runs its first
+   test in that Chrome and its second in one that draws on the CPU", {
+  skip_if_not_installed("chromote")
+  skip_on_cran()
+  create_test_app()
+  canvas_status <- function() {
+    chromote::default_chromote_object()$SystemInfo$getInfo()$gpu$featureStatus[[
+      "2d_canvas"]]
+  }
+  skip_if(!identical(canvas_status(), "enabled"),
+          "The default Chrome draws its canvas on the CPU here")
+
+  seen <- character()
+  declared <- run_declared(pixel_test_that("a pixel test", {
+    seen <<- c(seen, canvas_status())
+    testthat::succeed()
+  }))
+  expect_identical(declared$skipped, c(FALSE, FALSE))
+  expect_identical(seen, c("enabled", "disabled_software"))
+})
