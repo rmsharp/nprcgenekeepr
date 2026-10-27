@@ -257,13 +257,15 @@ test_that("the meanGu ribbon spans meanGu plus and minus meanGuSE", {
   expect_identical(length(ribbonLayers), 1L)
   ribbonData <- ggplot2::layer_data(p, ribbonLayers[1L])
   ribbonData <- ribbonData[order(ribbonData$x), ]
+  ## genome uniqueness as a percentage, as corrected S1071 (see
+  ## test_exampleSnapshotHistoryValues.R)
   expect_equal(
     ribbonData$ymin,
-    c(0.213 - 0.0041, 0.219 - 0.004, 0.224 - 0.0028)
+    c(21.3 - 0.41, 21.9 - 0.40, 22.4 - 0.28)
   )
   expect_equal(
     ribbonData$ymax,
-    c(0.213 + 0.0041, 0.219 + 0.004, 0.224 + 0.0028)
+    c(21.3 + 0.41, 21.9 + 0.40, 22.4 + 0.28)
   )
 })
 
