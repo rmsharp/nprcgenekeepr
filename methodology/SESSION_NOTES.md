@@ -99,12 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1078 Did
-**Deliverable:** find why the `reportGV` speed gate (`perf_reportGV_example_seconds`, limit 0.3 s) reads 0.29-0.31 s from the
-repo folder and 0.20-0.21 s from a `git archive` copy of the same commit, then settle whether the gate runs from a copy
-(`BACKLOG.md:237`, READY, Effort S; owner pick, item 1 of 4, "reportGV gate"). (IN PROGRESS)
-**Started:** 2026-10-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "reportGV gate"; ruling "Middle of 5 runs"; strict TDD, three gates "Yes"):** the
+`reportGV` speed gate read 0.30-0.33 s from the repo folder and 0.21-0.23 s from copies because one full garbage collection
+(0.094-0.116 s, live heap about 210 MB) fell inside the 0.21 s timed call or did not, decided by trivial allocation differences
+(the folder path, a `.git` link, one extra script line), not by the folder's files or the library. `Rscript tools/perf/run.R
+<scenario> --runs N` runs it N times and prints medians (`runsArg()`, `runMain()` in `tools/perf/harness.R`); the gate runs
+`reportGV-example --runs 5` (`methodology/.quality-gates.json`), limit still 0.3 s. Claim `c82960b5c`, RED `57287e688`, GREEN
+`6f5004f2e`, REFACTOR `5698f70a3`. Block off BACKLOG; no NEWS (`tools/` is build-ignored); no issue.
+**Measured first:** interleaved loop, all from the repo folder (same renv library): repo 0.30-0.33, archive and full copies
+0.21-0.23, `.git` linked 0.30-0.32; counts read after the run 33+5+9 against 36+5+8; median of 5 read 0.17-0.18 in four folders.
+**Verified:** harness file 24 tests 247 expectations; full suite 483 files 4,511 tests 0 failed (GREEN and REFACTOR); check 0/0/0;
+lint 0 (package, `tools/perf/*.R`, the test file); refactored file on a RED-commit copy: the same 16 failures; ratchet 11/11 at
+GREEN `6f5004f2e` (`42a0a495e2dd`, reportGV 0.17 s), not rerun after the test-only REFACTOR (load 30 from an outside vitest).
+**Handoff evaluation of S1077: 9/10.** Helped: `:237`'s exact numbers and "interleaved"; Learning 1043's "time from a `git archive`
+copy too"; "read `uptime`". Missing: how its archive copy was run (alone, its `.Rprofile` bootstraps an empty renv library; run
+`Rscript <copy>/tools/perf/run.R` from the repo folder). Wrong: nothing measured; its "find what the folder brings" was a guess
+and the folder brings nothing. ROI: high.
+**Self: 8/10.** + a 3 s loop before any hypothesis; one probe per hypothesis; caught that probes moved the result and measured
+after the run; the fix measured in four folders before the question. - three probes read `.git` as the cause until a script at
+another path flipped it; the archive copy's run made a renv cache entry outside scratch (removed); two scratch scripts broke
+(an `awk` field, a `sed` edit); the cited gate run is at GREEN, not HEAD.
+**Gotchas:** a probe before a timed call moves it, append it after (Learning 1044); a median of 3 still reads the cold first run;
+`perf_convertRelationships_300_seconds` (0.08 s against 0.1 s) has the same exposure, fix is `--runs 5` if it ever fails near
+0.18 s with no code change.
+**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` tie order (S), `:231` relationship table (S), `:213` Mate Pair memory (M).
+After a push read CI (S1073 OpenBLAS, S1075 `Rprofmem` skips, S1076 CPU-drawing skips). Not pushed (66 ahead).
 
 ### Sessions 947-1077 (condensed S950 to S1078; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1077: from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-style buttons above its over-limit message, which names
@@ -134,26 +153,15 @@ S1072: harem trials build their set-up once per `groupAddAssign()` call (`makeHa
 10.9 to 5.7 s. Claim `06fee3112`, close-out `e31d54208`, not pushed; S1071 8/10, self 8/10 (Learning 1038). **Gotchas kept:**
 for an app before/after, drive from outside the repo and log `find.package()` in a scratch `app.R`; the `reportGV` gate reads
 slower from the repo folder (cause unknown); zsh needs `${=F}` to split a list.
-S1071: the shipped example snapshot history (`inst/extdata/examples/example_snapshot_history.csv`) holds values the package
-makes: 24 cells in 4 rows, `neGD` = `1 - 1/(2*fg)` of each row, genome uniqueness x100 (a percentage, as `calcGU()`), kurtosis
--3 (excess, as `calcKurtosis()`); `validatedSnapshotHistory()` in `tests/testthat/helper-snapshotHistory.R`. Claim `4f8d12e5e`,
-close-out `9bd903c9a`, not pushed; S1070 9/10, self 7/10 (Learning 1037). **Gotchas kept:** never cut an inventory grep with a
-per-file `head`; only `neGD` is tied to a definition (the GU and kurtosis numbers are pinned values).
-S1070: one text on reading the Genetic-Health trend, `inst/extdata/ui_guidance/snapshot_trends.html`, shown in a grey box under the chart
-(`R/modSnapshotTrends.R:95-109`) and in the guide (`colony-manager-guide.qmd:1312-1320`, chunk `trend-guidance`); `helpBoxStyle`
-(`R/helpBoxStyle.R`) for three exact copies; filed `BACKLOG.md:237` (the example history's `neGD`). Claim `5a8cfecae`, close-out `e23083992`,
-not pushed; S1069 9/10, self 7/10 (Learning 1036). **Gotchas kept:** the guide chunk reads the installed package (render a scratch copy
-with a scratch install on `R_LIBS`); a panel added to `trendDefaultMetrics` fails `test_snapshotTrendsGuidance.R` until the page explains it.
-S1069: the Build Earlier Snapshots box (`R/modSnapshotTrends.R:69-72`) says rebuilt rows are "added to the same history, marked
-reconstructedLiving in its membershipRule column, and drawn as their own dashed line" (owner: "Box only"; the History tab shows the raw
-name `membershipRule`); filed `BACKLOG.md:237` (what a manager learns from the trend). Claim `16e4c48d5`, close-out `0b64ac6f9`, not
-pushed; S1068 9/10, self 8/10 (Learning 1035). **Gotchas kept:** shinytest2 needs `NOT_CRAN=true`, `R_LIBS=<scratch>/lib:<renv path>`
-and `RENV_CONFIG_AUTOLOADER_ENABLED=false`; an element picture of a `.well`: set an id with `app$get_js()`, then
-`app$get_screenshot(file, selector = "#<id>")`.
-S1068: the two `@inheritParams` lines with nothing to inherit deleted (`R/addParents.R`, `R/removeUninformativeFounders.R`); `man/`
-byte-identical. Guard `test_roxygenInheritParams.R` (owner: check all help pages; 36 read; 11 cases checked against roxygen), its reader
-in `helper-roxygenBlocks.R`. Claim `1ad2b06f0`, close-out `157ba0da7`, not pushed; S1067 9/10, self 8/10 (Learning 1034). **Gotchas
-kept:** roxygen2 is not on CI's test machines (a test calling it only skips); a `helper-*.R` loads for every test file.
+S1068-S1071 (evaluations 9/10, self 7-8/10; Learnings 1034-1037; condensed S1078, hashes in `CHANGELOG.md`): S1071, the shipped example
+snapshot history holds values the package makes (`neGD` = `1 - 1/(2*fg)`, GU x100, kurtosis -3; `validatedSnapshotHistory()` in
+`tests/testthat/helper-snapshotHistory.R`); S1070, one text on reading the Genetic-Health trend (`inst/extdata/ui_guidance/snapshot_trends.html`,
+`R/modSnapshotTrends.R:95-109`, `helpBoxStyle`); S1069, the Build Earlier Snapshots box names `reconstructedLiving` and its `membershipRule`
+column (`R/modSnapshotTrends.R:69-72`); S1068, two empty `@inheritParams` deleted, guard `test_roxygenInheritParams.R`. **Gotchas kept:**
+never cut an inventory grep with a per-file `head`; the guide chunk reads the installed package (scratch install on `R_LIBS`); a panel
+added to `trendDefaultMetrics` fails `test_snapshotTrendsGuidance.R` until the page explains it; shinytest2 needs `NOT_CRAN=true`,
+`R_LIBS=<scratch>/lib:<renv path>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`; a `.well` element picture: an id by `app$get_js()`, then
+`app$get_screenshot(file, selector = "#<id>")`; roxygen2 is not on CI's test machines; a `helper-*.R` loads for every test file.
 S1067: the nightly `shinytest2` deceased-slash failure (run `40286217416`), test code only: CI's Chrome paints the canvas on the CPU and
 `diagram_pixel_js()` counted a partly see-through outline pixel as white; the reader now blends onto white, outline cutoff 194, 25
 sub-pixel shifts, one `overhang_js`. Owner ruling: local runs test CPU and GPU (`BACKLOG.md:282`). Claim `bb8c3a8ba`, close-out `ccd6e9028`,
