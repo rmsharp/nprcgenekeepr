@@ -60,6 +60,15 @@
       "why": "Declared S1052 (2026-10-24) from docs/audits/PERF_BASELINE_2026-10-24.md: groupAddAssign() with 6 groups and 1,000 trials on the tutorial's 280 candidates took 23.04 s, median of 3 runs (23.02 to 23.30); threshold = the slowest of the 3 runs plus 25%, rounded up to 0.1 s (owner-approved S1052: one gate per later phase, +25% time, +10% memory). Phase 4 (group formation) is meant to lower it and tightens this gate. Tightened S1056 (2026-10-24), Phase 4: fillGroupMembers() now fills each group from a true/false table of the candidates it may still take, with relatives as row positions, for an ordinary input; the same scenario took 5.60, 5.58 and 5.61 s in 3 fresh-process runs (load average about 6 to 7; peak 148.8 MB), so the threshold is the slowest run plus 25%, rounded up to 0.1 s (5.61 x 1.25 = 7.01, so 7.1). The harem scenario (groupAddAssign-harem-1000) took 9.87 to 10.09 s (25.98 s before); most of what is left there is the harem's per-trial age work, recorded for Phase 11 (owner, S1056). Re-measured S1066 (2026-10-26, Phase 11, consolidation; 3 fresh runs, load average 4.8 in the first pass and 8 to 22 in the other two, from other work): 5.49, 5.54 and 5.93 s (the slowest at load 12.0), so the rule gives 7.5 s, looser than 7.1; unchanged, since a threshold only tightens. Report: docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md."
     },
     {
+      "name": "perf_groupAddAssign_harem_1000_seconds",
+      "direction": "max",
+      "threshold": 5.9,
+      "unit": "seconds (elapsed, on this Mac; another machine needs its own baseline)",
+      "command": "Rscript tools/perf/run.R groupAddAssign-harem-1000",
+      "extract": "SECONDS=([0-9.]+)",
+      "why": "Declared S1072 (2026-10-27; BACKLOG.md \"Breeding Groups: harem trials redo their set-up work every trial\", filed S1066): groupAddAssign() with 6 harems and 1,000 trials on the tutorial's 280 candidates. Each harem trial redid the same set-up (which groups need a sire, the potential sires, the pool without them: about 9 getPotentialSires() calls a trial, each reading every age through lubridate::today()); groupAddAssign() now builds it once per call (makeHaremSetUp(), R/makeHaremSetUp.R) and each trial draws only its sires (drawHaremGroups()). 3 fresh-process runs at load average about 7: today's code (a worktree of fa8ac7484) 9.78, 9.71 and 9.67 s; the new code (df5644fd8) 4.67, 4.57 and 4.58 s (peak 142.7 MB, unchanged); S1066 measured 10.69 s (9.78 to 11.16) before. Threshold = the slowest new run plus 25%, rounded up to 0.1 s (the S1052 rule: 4.67 x 1.25 = 5.84, so 5.9); today's code fails it. The same groups for the same seed: tests/testthat/test_groupAddAssignEquivalence.R and tests/testthat/test_haremSetUp.R."
+    },
+    {
       "name": "perf_kinMatrix2LongForm_all_peak_mb",
       "direction": "max",
       "threshold": 344,
