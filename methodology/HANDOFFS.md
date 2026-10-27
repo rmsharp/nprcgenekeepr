@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1078
+date: 2026-10-27
+status: pending
+active_task: IN PROGRESS -- find why the reportGV speed gate reads 0.29-0.31 s from the repo folder and 0.20-0.21 s from a git archive copy of the same commit, then settle whether the gate runs from a copy (BACKLOG.md:237, READY, Effort S; found S1072, failed S1077; owner pick at the Phase 0 picker, item 1 of 4, "reportGV gate")
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1077
 date: 2026-10-27
 status: complete

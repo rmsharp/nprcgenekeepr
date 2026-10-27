@@ -98,32 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1077 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Direct diagram, 401-750"; ruling "Buttons and wording"; strict TDD, three gates
-"Yes"):** from 401 to 750 animals in Rectilinear the Diagram tab's message keeps the Diagram Edge Style buttons above it and reads
-"Diagram not shown: N animals exceeds the 400-animal limit of the Rectilinear style. Choose Direct above to draw up to 750 animals, or
-narrow the focal-animal selection." One click on Direct draws it; above 750 the old message, no buttons (`R/modPedigree.R:569-597`,
-`.edgeStyleButtons()` `:500`). NEWS bullet `NEWS.Rmd:58-61`. Claim `0e9c9c68d`, RED `12992e2ca`, GREEN `2d7d8a1f1`, NEWS `9f369f809`,
-REFACTOR `1107d0750`. Block off BACKLOG; no issue; the three guide pages already said "750 if switched to Direct".
-**Measured first:** a module probe (450, 708: message, 0 buttons; Direct set: drawn; chosen on 20 animals then grown: carries over).
-**Verified:** module file 5 tests, 9 RED failures for the right reason; browser test (450 animals in 150 trios, click Direct, drawn)
-3 RED failures; full suite 483 files 4,507 tests 0 failed (GREEN and REFACTOR); check 0/0/0 twice; lint 0; browser file 27 tests 164
-expectations 0 failed (GREEN and REFACTOR); mutants 7/8 + M9 caught, M5 (the style clause) equivalent; real app on the 708-animal
-example trim: buttons above the message, Direct drew 1,489 nodes (pictures opened for the owner).
-**Ratchet: 10/11** (`5c8e1d80e68c`): `perf_reportGV_example_seconds` 0.31 s (limit 0.3); the same code reads 0.20-0.21 s from a
-`git archive` copy and S1076's code the same, so the repo folder is slow, not the code; filed `BACKLOG.md:237`.
-**Handoff evaluation of S1076: 9/10.** Helped: Next named `:237` with its three choices; `load_all(helpers = FALSE)`; S1074's
-"click a radio with `run_js`". Missing: S1072's "the reportGV gate reads slower from the repo folder" had dropped out of the
-notes and failed this close-out. Wrong: nothing. ROI: high.
-**Self: 8/10.** + measured before the scope question; every gate first try; mutants on scratch copies (repo never edited); the
-refactor proved `identical()` and on RED-time code. - a `regexpr()` order check passed with no buttons (fixed before RED); a
-mutant had a stray `)`; a viewport picture missed the diagram again (retaken as an element picture before the owner saw it).
-**Gotchas:** `test_file(desc =)` also runs earlier `pixel_test_that()` blocks; under load 55 the 708 Direct layout took 37 s (read
-`uptime`); time the reportGV gate from a `git archive` copy too (Learning 1043).
-**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` tie order (S), `:231` relationship table (S); READY `:237` reportGV
-gate (S). After a push read CI (S1073 OpenBLAS, S1075 `Rprofmem` skips, S1076 CPU-drawing skips). Not pushed (61 ahead).
+### What Session 1078 Did
+**Deliverable:** find why the `reportGV` speed gate (`perf_reportGV_example_seconds`, limit 0.3 s) reads 0.29-0.31 s from the
+repo folder and 0.20-0.21 s from a `git archive` copy of the same commit, then settle whether the gate runs from a copy
+(`BACKLOG.md:237`, READY, Effort S; owner pick, item 1 of 4, "reportGV gate"). (IN PROGRESS)
+**Started:** 2026-10-27
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1076 (condensed S950 to S1077; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1077 (condensed S950 to S1078; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1077: from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-style buttons above its over-limit message, which names
+Direct (`R/modPedigree.R:569-597`, `.edgeStyleButtons()` `:500`); one click on Direct draws it. Claim `0e9c9c68d`, close-out
+`f56261aa0`, not pushed; S1076 9/10, self 8/10 (Learning 1043). **Gotchas kept:** `test_file(desc =)` also runs earlier
+`pixel_test_that()` blocks; read `uptime` before timing; time the reportGV gate from a `git archive` copy too.
 S1076: every browser test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]"
 (`pixel_test_that()`, `tests/testthat/helper-shinytest2.R:732`; a `--disable-accelerated-2d-canvas` Chrome); pedigree file 171.6 to
 214.0 s. Claim `334c6948d`, close-out `ce976ca4f`, not pushed; S1075 9/10, self 7/10 (Learning 1042). **Gotchas kept:**
