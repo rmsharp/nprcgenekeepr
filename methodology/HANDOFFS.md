@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1070
+date: 2026-10-26
+status: pending
+active_task: IN PROGRESS -- write guidance on what a colony manager can learn from the Genetic-Health trend (BACKLOG.md:237, DECISION NEEDED, Effort M; owner pick at the Phase 0 picker, item 1 of 4, "Trends guidance"): the owner decides where it goes and which questions it covers, then writes or approves the sentences; each statement about a measure checked against its function's documentation; test-first under strict TDD.
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1069
 date: 2026-10-26
 status: complete

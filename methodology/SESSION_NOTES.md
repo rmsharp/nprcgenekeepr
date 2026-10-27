@@ -98,34 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1069 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Snapshot help sentence"; strict TDD, all three gates "Yes"):** the Build Earlier
-Snapshots box (`R/modSnapshotTrends.R:69-72`) now says "They are added to the same history, marked reconstructedLiving in its
-membershipRule column, and drawn as their own dashed line, apart from recorded snapshots." Owner chose "Box only": the guide's step 4
-(`colony-manager-guide.qmd:1294`, already "drawn as a dashed line, apart from snapshots recorded at the time"), the two help pages and
-the vignette keep "filed under". S1065's stored draft said "Membership rule column"; the History tab's header is the raw name
-`membershipRule` (measured), so that word changed. Claim `16e4c48d5`, RED `7849e86c1`, GREEN `0e4e84ae5`, REFACTOR `2231ea4b0` (a
-test comment). The BACKLOG block is off.
-**Filed (owner's question, then "yes, file it"):** `BACKLOG.md:237`, no document says what a manager learns from the trend (DECISION
-NEEDED, M); the owner put it next in line.
-**Verified:** suite 475 files 4,457 tests 0 failed 0 errors (212 skipped) on the GREEN tree; lint 0; check 0/0/0; the module file 57
-tests 0 failed on the final tree; ratchet 10/10 (`4f34ad9653e8`); the real app's box shows the new sentence whole (element picture, opened).
-**Handoff evaluation of S1068: 9/10.** Helped: Next named this item at its exact line (`:237`) and size; every Phase 0 fact (ratchet
-hash, 6 unpushed, the 07:00 UTC run) checked true. Missing: its condensed S1067 gotcha dropped `NOT_CRAN=true` (shinytest2 stopped
-"On CRAN", one rerun). Wrong: nothing. ROI: high.
-**Self: 8/10.** + the History header measured before the option text (caught the stored draft's wrong label); each fact in the
-sentence traced to code; the app picture opened before the long checks; edits held while the suite read the files. - forgot
-`NOT_CRAN` on the first app run; the item's guide check was narrow, and the owner's own question found the bigger gap.
-**Gotchas:** shinytest2 needs `NOT_CRAN=true`, `R_LIBS=<scratch>/lib:<the renv path .libPaths() prints>` and
-`RENV_CONFIG_AUTOLOADER_ENABLED=false`; the History table shows raw column names; element picture: set an id on the `.well` with
-`app$get_js()`, then `app$get_screenshot(file, selector = "#<id>")`.
-**Next (owner-given order, S1069):** (1) finish this item if anything is left (nothing known: block off, all checks green); (2) the
-new trends-guidance item, `BACKLOG.md:237` (first decide where it goes and which questions it covers; the owner writes or approves
-the sentences); (3) the rest. At Phase 0, read the first scheduled `shinytest2` run on S1067's fix (07:00 UTC 2026-10-27). Not
-pushed. Ready: `:254` harem (M), `:264` diagram (M), `:271` founder peak (S), `:288` CPU and GPU (S). Decisions: `:203`, `:213`,
-`:222`, `:231`, `:278`.
+### What Session 1070 Did
+**Deliverable:** guidance on what a colony manager can learn from the Genetic-Health trend (`BACKLOG.md:237`; owner pick at the
+Phase 0 picker, item 1 of 4, "Trends guidance"): the owner decides where it goes and which questions it covers, then writes or
+approves the sentences; test-first under strict TDD (IN PROGRESS)
+**Started:** 2026-10-26 19:40 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1068 (condensed S950 to S1069; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1069 (condensed S950 to S1070; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1069: the Build Earlier Snapshots box (`R/modSnapshotTrends.R:69-72`) says rebuilt rows are "added to the same history, marked
+reconstructedLiving in its membershipRule column, and drawn as their own dashed line" (owner: "Box only"; the History tab shows the raw
+name `membershipRule`); filed `BACKLOG.md:237` (what a manager learns from the trend). Claim `16e4c48d5`, close-out `0b64ac6f9`, not
+pushed; S1068 9/10, self 8/10 (Learning 1035). **Gotchas kept:** shinytest2 needs `NOT_CRAN=true`, `R_LIBS=<scratch>/lib:<renv path>`
+and `RENV_CONFIG_AUTOLOADER_ENABLED=false`; an element picture of a `.well`: set an id with `app$get_js()`, then
+`app$get_screenshot(file, selector = "#<id>")`.
 S1068: the two `@inheritParams` lines with nothing to inherit deleted (`R/addParents.R`, `R/removeUninformativeFounders.R`); `man/`
 byte-identical. Guard `test_roxygenInheritParams.R` (owner: check all help pages; 36 read; 11 cases checked against roxygen), its reader
 in `helper-roxygenBlocks.R`. Claim `1ad2b06f0`, close-out `157ba0da7`, not pushed; S1067 9/10, self 8/10 (Learning 1034). **Gotchas
