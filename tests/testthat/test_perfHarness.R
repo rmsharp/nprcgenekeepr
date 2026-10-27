@@ -250,3 +250,95 @@ test_that("run.R runs a scenario from the command line, as a gate does", {
   expect_identical(sum(grepl("^SECONDS=[0-9]+(\\.[0-9]+)?$", out)), 1L)
   expect_identical(sum(grepl("^PEAK_MB=[0-9]+(\\.[0-9]+)?$", out)), 1L)
 })
+
+## ---- --runs N: the middle of N runs (S1078) --------------------------------
+## A single run of reportGV-example read 0.21-0.23 s or 0.30-0.33 s, depending
+## on whether one full garbage collection (0.09-0.12 s) fell inside it, and
+## trivial differences decide that (the folder's path, one extra line in the
+## script). The middle of 5 runs in one process read 0.17-0.18 s in every
+## folder tried, so the perf_reportGV_example_seconds gate reads that (owner
+## ruling S1078, "Middle of 5 runs").
+
+## A stand-in for runScenario() that records its calls and returns one row
+## per call, its seconds and peak taken in turn from `seconds` and `peakMb`.
+recordingScenario <- function(seconds, peakMb) {
+  calls <- 0L
+  run <- function(name, quick = FALSE) {
+    calls <<- calls + 1L
+    data.frame(scenario = name, input = "i", label = "a",
+               seconds = seconds[[calls]], peakMb = peakMb[[calls]],
+               resultMb = 1, stringsAsFactors = FALSE)
+  }
+  list(run = run, calls = function() calls)
+}
+
+test_that("runMain() with --runs N runs the scenario N times, prints the middle", {
+  perf <- loadPerfHarness()
+  stand <- recordingScenario(seconds = c(0.31, 0.46, 0.18, 0.17, 0.18),
+                             peakMb = c(70, 90, 60, 50, 55))
+  perf$runScenario <- stand$run
+  res <- perf$runMain(c("reportGV-example", "--runs", "5"))
+  expect_identical(res$status, 0L)
+  expect_identical(stand$calls(), 5L)
+  expect_identical(grep("^SECONDS=", res$lines, value = TRUE), "SECONDS=0.18")
+  expect_identical(grep("^PEAK_MB=", res$lines, value = TRUE), "PEAK_MB=60.0")
+  ## The flag may come before the name, and --quick still applies.
+  stand <- recordingScenario(seconds = c(0.4, 0.2, 0.3), peakMb = c(1, 3, 2))
+  perf$runScenario <- stand$run
+  res <- perf$runMain(c("--runs", "3", "--quick", "reportGV-example"))
+  expect_identical(res$status, 0L)
+  expect_identical(stand$calls(), 3L)
+  expect_identical(grep("^SECONDS=", res$lines, value = TRUE), "SECONDS=0.30")
+  ## Without --runs the scenario runs once, as before.
+  stand <- recordingScenario(seconds = 0.31, peakMb = 70)
+  perf$runScenario <- stand$run
+  res <- perf$runMain("reportGV-example")
+  expect_identical(stand$calls(), 1L)
+  expect_identical(grep("^SECONDS=", res$lines, value = TRUE), "SECONDS=0.31")
+})
+
+test_that("runMain() refuses a --runs value that is not a whole number above 0", {
+  perf <- loadPerfHarness()
+  stand <- recordingScenario(seconds = 0.1, peakMb = 1)
+  perf$runScenario <- stand$run
+  for (bad in list("0", "-1", "2.5", "abc", character())) {
+    res <- perf$runMain(c("reportGV-example", "--runs", bad))
+    label <- if (length(bad)) bad else "no value"
+    expect_identical(res$status, 2L, info = label)
+    expect_true(any(grepl("Usage", res$lines, fixed = TRUE)), info = label)
+    expect_true(any(grepl("--runs", res$lines, fixed = TRUE)), info = label)
+  }
+  expect_identical(stand$calls(), 0L)
+})
+
+test_that("run.R passes --runs through from the command line", {
+  skipUnlessSourceTree()
+  rscript <- file.path(R.home("bin"), "Rscript")
+  skip_if_not(file.exists(rscript), "Rscript is not installed")
+  out <- withr::with_dir(pkgRoot, suppressWarnings(
+    system2(rscript, c(runFile, "reportGV-example", "--quick", "--runs", "2"),
+            stdout = TRUE, stderr = TRUE)))
+  expect_null(attr(out, "status"))
+  expect_identical(sum(grepl("reportGV (n = 10)", out, fixed = TRUE)), 2L)
+  expect_identical(sum(grepl("^SECONDS=[0-9]+(\\.[0-9]+)?$", out)), 1L)
+})
+
+## The command of one gate in methodology/.quality-gates.json, read as text
+## (jsonlite is not a dependency): the "command" line of the gate's block.
+gateCommand <- function(gate) {
+  manifest <- readLines(file.path(pkgRoot, "methodology",
+                                  ".quality-gates.json"))
+  start <- grep(sprintf('"name": "%s"', gate), manifest, fixed = TRUE)
+  expect_length(start, 1L)
+  block <- manifest[start:length(manifest)]
+  block <- block[seq_len(grep("^\\s*}", block)[[1L]])]
+  line <- grep('^\\s*"command": ', block, value = TRUE)
+  expect_length(line, 1L)
+  sub('^\\s*"command": "(.*)",?\\s*$', "\\1", line)
+}
+
+test_that("the reportGV gate times the middle of 5 runs", {
+  skipUnlessSourceTree()
+  expect_identical(gateCommand("perf_reportGV_example_seconds"),
+                   "Rscript tools/perf/run.R reportGV-example --runs 5")
+})
