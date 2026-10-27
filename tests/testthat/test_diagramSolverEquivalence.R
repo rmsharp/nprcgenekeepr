@@ -337,6 +337,9 @@ test_that("where the check fails, the penalty table is multiplied whole", {
   chunked <- chunkedProduct(256L)
   local_mocked_bindings(.matrixProduct = chunked)
   pmat <- gridPenaltyMatrices[["the rhesus fixture, call 5"]]
+  ## The check first: it multiplies its own probe table by blocks, which
+  ## blockProducts() would count.
+  expect_false(.blockProductIsExact())
   expect_identical(blockProducts(.penaltyCrossprod(pmat)), integer(0L))
   expect_identical(.penaltyCrossprod(pmat), chunked(t(pmat), pmat))
 })
