@@ -52,8 +52,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
   styles.
 - A pedigree above the display limit shows a message instead of a
   diagram: 400 animals with the default "Rectilinear" style, 750 with
-  "Direct". Trim to fewer focal animals to bring it back under the
-  limit.
+  "Direct". Between the two limits the message keeps the style buttons,
+  so one click on Direct draws it; above both, trim to fewer focal
+  animals.
 - `drawPedigreeDiagram()` draws the Diagram from a script, from a
   `makePedigreeMatingLayout()` layout, as the app does: the same legend,
   deceased slash, condition sections, **Export Diagram (PNG)** button
