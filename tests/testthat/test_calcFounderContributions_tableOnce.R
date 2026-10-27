@@ -49,40 +49,37 @@ fallbackAnalysisPed <- function() {
   ped
 }
 
-## Stops a call where the fallback fill would start.
-stopAtFallbackFill <- function() {
-  function(...) stop("the fallback fill ran")
+## How many allocations of `bytes` (by default a whole table)
+## calcFounderContributions() makes on `ped`.
+contributionAllocations <- function(ped, bytes = contributionTableBytes(ped)) {
+  tableAllocations(function() calcFounderContributions(ped, "calcFEFG"), bytes)
+}
+
+## Which fill calcFounderContributions() runs on `ped`: "main", or "fallback"
+## when the call reaches the fallback fill, mocked to stop there. Any other
+## error is returned as its message.
+fillTaken <- function(ped) {
+  local_mocked_bindings(founderContributionMatrixGeneral = function(...) {
+    stop("fallback")
+  })
+  tryCatch({
+    calcFounderContributions(ped, "calcFEFG")
+    "main"
+  }, error = conditionMessage)
 }
 
 test_that("calcFounderContributions() builds its contribution table once", {
   skipWithoutMemoryProfiling()
   ped <- exampleAnalysisPed()
-  local({
-    local_mocked_bindings(founderContributionMatrixGeneral =
-                            stopAtFallbackFill())
-    expect_no_error(calcFounderContributions(ped, "calcFEFG"))
-  })
-  expect_identical(
-    tableAllocations(function() calcFounderContributions(ped, "calcFEFG"),
-                     contributionTableBytes(ped)),
-    1L
-  )
+  expect_identical(fillTaken(ped), "main")
+  expect_identical(contributionAllocations(ped), 1L)
 })
 
 test_that("the fallback fill builds the contribution table once", {
   skipWithoutMemoryProfiling()
   ped <- fallbackAnalysisPed()
-  local({
-    local_mocked_bindings(founderContributionMatrixGeneral =
-                            stopAtFallbackFill())
-    expect_error(calcFounderContributions(ped, "calcFEFG"),
-                 "the fallback fill ran")
-  })
-  expect_identical(
-    tableAllocations(function() calcFounderContributions(ped, "calcFEFG"),
-                     contributionTableBytes(ped)),
-    1L
-  )
+  expect_identical(fillTaken(ped), "fallback")
+  expect_identical(contributionAllocations(ped), 1L)
 })
 
 test_that("calcFEFG() and calcFGSE() each build the table once", {
@@ -107,11 +104,8 @@ test_that("calcFEFG() and calcFGSE() each build the table once", {
 test_that("the contribution table starts as doubles, not whole numbers", {
   skipWithoutMemoryProfiling()
   ped <- exampleAnalysisPed()
-  expect_identical(
-    tableAllocations(function() calcFounderContributions(ped, "calcFEFG"),
-                     contributionTableBytes(ped) / 2),
-    0L
-  )
+  wholeNumberTable <- contributionTableBytes(ped) / 2
+  expect_identical(contributionAllocations(ped, wholeNumberTable), 0L)
 })
 
 test_that("both fills give the frozen pre-campaign contributions", {

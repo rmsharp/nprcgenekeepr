@@ -91,7 +91,8 @@ founderContributionMatrix <- function(ped, founders, descendants) {
 #' an earlier generation.
 #'
 #' @param ped the pedigree \code{founderContributionMatrix()} was given.
-#' @param ids the matrix's row names, every id of \code{ped}.
+#' @param ids every id of \code{ped} in the matrix's row order, the founders
+#' first (the row names \code{initialContributions()} gives it).
 #' @return NULL, or one element per generation from 1 to the last: a list of
 #' the matrix rows of that generation's animals (\code{ego}) and of their
 #' sires and dams.

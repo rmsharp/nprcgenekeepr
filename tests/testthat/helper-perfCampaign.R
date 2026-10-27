@@ -7,7 +7,9 @@
 ## test_convertRelationshipsEquivalence.R) and the opt-in budget tests
 ## (test_perfBudget_*.R), test_groupAddAssignEquivalence.R and
 ## test_founderStatsEquivalence.R and test_diagramSolverEquivalence.R, the
-## app-memory tests (test_kinshipForAnimals.R, test_kinshipForConsumers.R) and
+## founder table's allocation counts
+## (test_calcFounderContributions_tableOnce.R), the app-memory tests
+## (test_kinshipForAnimals.R, test_kinshipForConsumers.R) and
 ## the measuring tools' tests (test_perfHarness.R, test_perfAppSession.R). The
 ## frozen copies of today's functions are in helper-perfReference.R.
 
