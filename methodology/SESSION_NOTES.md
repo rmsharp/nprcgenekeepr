@@ -99,12 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1074 Did
-**Deliverable:** make the Pedigree Diagram's first drawing build its layout once, not twice (owner pick, item 1 of 4, "Layout built
-twice"; `BACKLOG.md:245`, READY, Effort S): log which input invalidates `diagramLayout()` (`R/modPedigree.R:690`), then stop the
-second build with the drawn diagram identical; strict TDD (IN PROGRESS)
-**Started:** 2026-10-27 ~09:52 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Layout built twice"; ruling "Ignore repeat reports"; strict TDD, three gates "Yes";
+survivor ruling "Pin it with a test"):** the Diagram tab's first drawing builds its layout once. Edge style, Show Names and Twin
+Connectors are `.heldSetting()` reactiveVals set by `observeEvent()` (`R/modPedigree.R:478,488,502,511`). The 708-animal trim in
+Direct 2 builds and 8.12 s to 1 build and 4.17 s, every drawn node, edge and position identical. Claim `5f8373f00`, RED `ea104b3bb`,
+GREEN `d7354396f`, pin `d65ed89ed`, REFACTOR `8a5256397`. Block off BACKLOG; no NEWS line (the Diagram is new this release).
+**Measured first:** a scratch `app.R` with the reactive log on named the inputs: NULL -> "rectilinear" (default) or NULL -> FALSE
+(Direct first) when the browser binds the controls `renderUI()` draws; a prototype in a scratch worktree, then the owner's pick.
+**Verified:** full suite 479 files 4,484 tests 0 failed 0 errors; check 0/0/0 (REFACTOR); `lint_package()` 0; mutants 8/8; browser
+tier 22 + 1 tests 0 failed; ratchet 11/11 (`07d5c922eac4`); the refactored tests fail on the old code exactly as before (1 3 1 0 5 0).
+**Handoff evaluation of S1073: 8/10.** Helped: Next named `:245` and "log which input invalidates `diagramLayout()`"; the
+`Shiny.setInputValue()` gotcha. Missing: how the 708-animal app input was made (`ExamplePedigree.csv` shows 3,694; it is the
+`appAnalysisPed()` trim, `tools/perf/harness.R:118`, as a CSV). Wrong: nothing; the labeled guess missed the style input. ROI: high.
+**Self: 8/10.** + cause named by the reactive log and the fix prototyped and measured before the approach question; every gate as
+recommended; a survivor probed and pinned. - a "guard, passes today" comment rested on an unchecked belief that Shiny drops a
+repeated input (it does not, `dedupe = FALSE`); caught before the RED commit and corrected at the next gate; one run on the wrong file.
+**Gotchas:** `testServer()` and a real session both pass on an identical input value (only the browser does not resend); a
+`app$click()` on the Direct radio then on Show Names waits out its timeout (use `app$run_js(".click()")`); `withDiagramTrio()`
+passes code into `testServer()` with `{{ }}` (Learning 1040).
+**Next:** the owner picks. READY: `BACKLOG.md:245` founder peak (S), `:262` CPU and GPU (S); DECISION NEEDED `:237` Direct above
+400. Read the next CI run's Ubuntu legs (S1073's check fails there, tests pass). Not pushed (43 ahead).
 
 ### Sessions 947-1073 (condensed S950 to S1074; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1073: the diagram's penalty table is squared by blocks wherever a once-a-session check finds that exact (`.penaltyCrossprod()`,

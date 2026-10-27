@@ -242,13 +242,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Narrow the focal-animal selection to view a diagram." with 0 style buttons, so a fresh session cannot reach the
       Direct diagram of 708 animals. Whether a style chosen on a smaller diagram carries over is untested. To decide:
       show the style buttons with the message too, name "Direct" in the message, or both.
-- [ ] **Pedigree Diagram: the first drawing computes the layout twice (READY, Effort S; found S1073)** -- in the S1073
-      app runs (the 708-animal example trim, "Direct") one drawing made two `makePedigreeMatingLayout()` calls, with
-      the code before and after S1073 alike (4.96 and 4.63 s before, 4.42 and 3.84 s after), about 4 s of the 8.7 s
-      the user waits. Likely cause, not verified: `diagramLayout()` (`R/modPedigree.R:690`) reads the Show Names and
-      Twin Connectors toggles, which are `NULL` until their check boxes first appear beside the diagram and then
-      `FALSE`, so the layout is rebuilt with the same result. First step: log which input invalidates
-      `diagramLayout()`; any fix keeps the drawn diagram identical.
 - [ ] **Founder statistics: their memory peak rose a little on larger inputs while their time fell (READY, Effort S;
       found S1058, filed S1066)** -- from Phase 0 to S1066, `calcFGSE()`'s peak went 225.6 to 253.6 MB on the
       generated 10,000-animal colony and 236.5 to 257.5 MB on all 3,694 example animals, and `calcFEFG()`'s 233.2 to
