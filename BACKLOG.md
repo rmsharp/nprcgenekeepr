@@ -252,18 +252,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       registered one). S1054 found 14 of `geneDropGeneral()`'s 19 test inputs end in an error today. To decide:
       fold some input types in, one test each (the same results, `identical()`), or leave the fallbacks as the old
       code's home for unusual input.
-- [ ] **Local browser tests: run the Diagram's pixel checks with both GPU and CPU drawing (READY, Effort S;
-      owner ruling S1067)** -- the local browser tier (`NPRC_RUN_E2E=true`) starts Chrome with its default drawing,
-      which on this Mac paints the Diagram's canvas on the GPU, while the CI runner paints it on the CPU (software).
-      The deceased-slash test (`tests/testthat/test-e2e-pedigree-module.R`) passed here and failed on CI for five
-      days because of that difference (S1067: run `40286217416`, fixed in the test's pixel reader). Owner (S1067):
-      local runs test with both the CPU and the GPU. The app needs nothing for its side of that ruling: vis-network
-      asks for a plain `getContext("2d")`, so the viewer's browser paints on the GPU when it has one and on the CPU
-      otherwise. S1067 ran the file both ways by hand: `chromote::set_chrome_args(c(chromote::default_chrome_args(),
-      "--disable-accelerated-2d-canvas"))` before `testthat::test_file()` gives CPU drawing to every Chrome started
-      after it (22 blocks, 111 expectations, 0 failed each way, about 3.5 minutes each). First step: choose how the
-      second pass runs (a runner or helper that repeats the file, or only the blocks that read pixels through
-      `diagram_pixel_js()`, under the flag) and keep it opt-in like the rest of the tier.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
