@@ -110,18 +110,19 @@ test_that("calcSnapshotDeltas returns the 21-row delta table in schema order", {
 test_that("deltas match hand-computed values on the fixture", {
   ## wholePedigree 2025-01-15 -> 2025-07-15, values hand-copied from
   ## inst/extdata/examples/example_snapshot_history.csv rows 1 and 2, in
-  ## deltaMetrics (schema) order.
+  ## deltaMetrics (schema) order (neGD, genome uniqueness and kurtosis as
+  ## corrected S1071; see test_exampleSnapshotHistoryValues.R).
   fromExpected <- c(
     360, 120, 240,
-    14.2, 8.6, 0.21, 42.5, 213.3, 187.4,
+    14.2, 8.6, 0.21, 0.9419, 213.3, 187.4,
     12, 24, 36,
-    0.0812, 0.0794, 0.42, 2.9, 0.213, 0.205, 0.0041, 0.35, 3.1
+    0.0812, 0.0794, 0.42, -0.1, 21.3, 20.5, 0.41, 0.35, 0.1
   )
   toExpected <- c(
     372, 124, 248,
-    14.5, 8.8, 0.2, 43.1, 220.6, 191.2,
+    14.5, 8.8, 0.2, 0.9432, 220.6, 191.2,
     12, 24, 36,
-    0.0805, 0.0788, 0.4, 2.8, 0.219, 0.211, 0.004, 0.33, 3.0
+    0.0805, 0.0788, 0.4, -0.2, 21.9, 21.1, 0.40, 0.33, 0.0
   )
   deltas <- calcSnapshotDeltas(validatedSnapshotHistory(),
     from = "2025-01-15", to = "2025-07-15",
