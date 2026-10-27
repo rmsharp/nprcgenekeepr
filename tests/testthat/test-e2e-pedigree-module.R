@@ -1192,6 +1192,85 @@ test_that(
   )
 })
 
+## S1077 -- a pedigree between the Rectilinear style's 400-animal limit and
+## Direct's 750. The over-limit message keeps the edge-style buttons above it
+## (owner ruling "Buttons and wording"), so one click on Direct draws the
+## diagram in the browser. `k` sires, `k` dams and one offspring of each pair,
+## so every animal is drawn (none is isolated). `birth` is required (see the
+## isolated-individual test above).
+trio_pedigree <- function(k) {
+  sires <- sprintf("S%03d", seq_len(k))
+  dams <- sprintf("D%03d", seq_len(k))
+  data.frame(
+    id = c(sires, dams, sprintf("O%03d", seq_len(k))),
+    sire = c(rep(NA, 2L * k), sires),
+    dam = c(rep(NA, 2L * k), dams),
+    sex = c(rep("M", k), rep("F", k), rep(c("M", "F"), length.out = k)),
+    birth = c(rep("1990-01-01", 2L * k), rep("1996-01-01", k)),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab offers Direct beside the over-limit
+   message for 450 animals, and choosing it draws the diagram", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_direct_reachable")
+  on.exit(app$stop(), add = TRUE)
+
+  ped_csv <- tempfile(fileext = ".csv")
+  utils::write.csv(trio_pedigree(150L), ped_csv, row.names = FALSE)
+  on.exit(unlink(ped_csv), add = TRUE)
+
+  if (!upload_and_wait(app, ped_csv)) skip("Upload/QC did not complete")
+  if (!navigate_to_tab(app, "Pedigree Browser", "Pedigree")) {
+    skip("Could not navigate to Pedigree tab")
+  }
+  if (!click_element_safe(app, 'a[data-value="Diagram"]')) {
+    skip("Could not switch to the Diagram tab")
+  }
+
+  html <- get_html_safe(app, "#pedigree-pedigreeDiagramUI")
+  expect_match(
+    html,
+    paste("Diagram not shown: 450 animals exceeds the 400-animal limit of",
+          "the Rectilinear style. Choose Direct above"),
+    fixed = TRUE
+  )
+
+  ## The Direct button is clicked in the page (app$click() on a radio button
+  ## waits out its timeout here: S1074).
+  direct <- "input[name='pedigree-pedigreeEdgeStyle'][value='direct']"
+  hasDirect <- isTRUE(app$get_js(
+    sprintf("document.querySelector(\"%s\") !== null", direct)
+  ))
+  expect_true(hasDirect, info = "a Direct button beside the message")
+  drawn <- hasDirect && tryCatch({
+    app$run_js(sprintf("document.querySelector(\"%s\").click();", direct))
+    app$wait_for_js(
+      paste0(
+        "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
+        "return !!w && !!w.network && ",
+        "w.network.body.data.nodes.length > 0; })()"
+      ),
+      timeout = E2E_TIMEOUT
+    )
+    TRUE
+  }, error = function(e) FALSE)
+  expect_true(drawn, info = "choosing Direct draws the diagram")
+  if (drawn) {
+    app$wait_for_idle(timeout = E2E_TIMEOUT)
+    expect_false(grepl("Diagram not shown",
+                       get_html_safe(app, "#pedigree-pedigreeDiagramUI"),
+                       fixed = TRUE))
+  }
+})
+
 ## S1029 -- more than one affected condition. With two or more columns whose
 ## names start "affected", an animal's symbol is split into equal sections,
 ## one per condition in file order, counter-clockwise from the top (so the
