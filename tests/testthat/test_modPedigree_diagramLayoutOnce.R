@@ -192,3 +192,40 @@ test_that(
     }
   )
 })
+
+# A mutation pin (S1074): with the held settings' observers at the default
+# priority, a change to the pedigree view arriving in the same update as a
+# setting change, the view change first, built the layout twice: the outputs
+# ran before the held value was updated and again after it. Priority 1 updates
+# the held value first.
+test_that(
+  "a change to the pedigree view and a setting change arriving together build
+   the layout once", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  builds <- countLayoutBuilds()
+  together <- list(
+    list(displayUnknownIds = FALSE, pedigreeShowNames = TRUE),
+    list(pedigreeShowNames = TRUE, displayUnknownIds = FALSE),
+    list(trimPedigree = TRUE, pedigreeEdgeStyle = "direct")
+  )
+  for (inputs in together) {
+    shiny::testServer(
+      modPedigreeServer,
+      args = list(studbook = shiny::reactive({ diagramTrio() })),
+      {
+        session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+        invisible(output$pedigreeDiagram)
+        do.call(session$setInputs, shownControlValues())
+        invisible(output$pedigreeDiagram)
+        before <- builds()
+
+        do.call(session$setInputs, inputs)
+        invisible(output$pedigreeDiagram)
+        expect_identical(builds() - before, 1L,
+                         info = paste(names(inputs), collapse = " + "))
+      }
+    )
+  }
+})
