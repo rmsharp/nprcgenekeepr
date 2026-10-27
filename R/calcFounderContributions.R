@@ -35,18 +35,7 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
   founders <- getFounders(ped)
   descendants <- ped$id[!(ped$id %in% founders)]
 
-  d <- matrix(0L, nrow = length(descendants), ncol = length(founders))
-  colnames(d) <- founders
-  rownames(d) <- descendants
-
-  founderMatrix <- diag(length(founders))
-  colnames(founderMatrix) <- rownames(founderMatrix) <- founders
-
-  d <- rbind(founderMatrix, d)
-  ## Free the founders-by-founders identity block before the generation loop:
-  ## it has been copied into d above and is never referenced again.
-  founderMatrix <- NULL
-  d <- founderContributionMatrix(ped, d)
+  d <- founderContributionMatrix(ped, founders, descendants)
 
   currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
   ## drop = FALSE keeps a single living descendant a one-row matrix (S925).
@@ -60,7 +49,7 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
 #'
 #' Each descendant's row of founder contributions is the mean of its two
 #' parents' rows, filled generation by generation from generation 1; the rows
-#' of generation 0 stay as \code{calcFounderContributions()} built them. For
+#' of generation 0 stay as \code{initialContributions()} built them. For
 #' an ordinary pedigree every row of a generation is filled at once, by
 #' position (performance plan Phase 5). Any other pedigree goes through
 #' \code{founderContributionMatrixGeneral()}, today's loop by name, unchanged
@@ -68,15 +57,21 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
 #' construction.
 #'
 #' @param ped the pedigree, its id, sire and dam coerced to character.
-#' @param d the founders-plus-descendants by founders matrix: the founders'
-#' rows the identity, the descendants' rows 0.
-#' @return \code{d} with the rows of generation 1 and later filled.
+#' @param founders the founders' ids, from \code{getFounders()}.
+#' @param descendants every other id of \code{ped}.
+#' @return The founders-plus-descendants by founders matrix of
+#' \code{initialContributions()} with the rows of generation 1 and later
+#' filled.
 #' @noRd
-founderContributionMatrix <- function(ped, d) {
-  plan <- contributionPositions(ped, rownames(d))
+founderContributionMatrix <- function(ped, founders, descendants) {
+  plan <- contributionPositions(ped, c(founders, descendants))
   if (is.null(plan)) {
-    return(founderContributionMatrixGeneral(ped, d))
+    return(founderContributionMatrixGeneral(ped, founders, descendants))
   }
+  ## Built here, where it is filled, so the fill writes into the only copy: a
+  ## table passed in while its caller still holds it is copied whole at the
+  ## first write (S1075).
+  d <- initialContributions(founders, descendants)
   for (rows in plan) {
     ## Mendelian 1/2, as in today's loop: the mean of the parents' rows.
     d[rows$ego, ] <- (d[rows$sire, , drop = FALSE] +
@@ -142,7 +137,9 @@ contributionPositions <- function(ped, ids) {
 #' @inheritParams founderContributionMatrix
 #' @return As \code{founderContributionMatrix()}.
 #' @noRd
-founderContributionMatrixGeneral <- function(ped, d) {
+founderContributionMatrixGeneral <- function(ped, founders, descendants) {
+  ## Built here for the reason given in founderContributionMatrix().
+  d <- initialContributions(founders, descendants)
   ## Note: skips generation 0.
   ## The references inside matrix d do not work if ped$sire and ped$dam and
   ## thus gen$sire and gen$dam are factors. See test_calcFE.R
@@ -158,5 +155,24 @@ founderContributionMatrixGeneral <- function(ped, d) {
       d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
     }
   }
+  d
+}
+
+#' The founder-contribution matrix before the fill
+#'
+#' One row per animal, the founders first, and one column per founder: each
+#' founder's row is its own column 1 and the rest 0, and every descendant's row
+#' is 0. Built directly as one matrix of doubles, the same matrix as the
+#' founders' identity block bound above the descendants' zero block.
+#'
+#' @inheritParams founderContributionMatrix
+#' @return The matrix, with the ids as row names and the founders as column
+#' names.
+#' @noRd
+initialContributions <- function(founders, descendants) {
+  n <- length(founders)
+  d <- matrix(0.0, nrow = n + length(descendants), ncol = n,
+              dimnames = list(c(founders, descendants), founders))
+  d[cbind(seq_len(n), seq_len(n))] <- 1.0
   d
 }
