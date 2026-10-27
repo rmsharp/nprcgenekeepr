@@ -219,12 +219,31 @@ test_that("a scenario's headline is its total time and its highest peak", {
   expect_identical(perf$headline(rows), c(seconds = 3.5, peakMb = 30))
 })
 
+## Expects exactly one "<key>=<number>" line in `lines`, the line a gate's
+## `extract` reads.
+expectOneNumberLine <- function(lines, key) {
+  pattern <- sprintf("^%s=[0-9]+(\\.[0-9]+)?$", key)
+  expect_identical(sum(grepl(pattern, lines)), 1L,
+                   label = sprintf("the number of %s= lines", key))
+}
+
+## The output of `Rscript tools/perf/run.R <args>`, run from the project root
+## as a gate's command runs (quality_ratchet.py); skips outside the source tree
+## or without Rscript.
+runFromCommandLine <- function(args) {
+  skipUnlessSourceTree()
+  rscript <- file.path(R.home("bin"), "Rscript")
+  skip_if_not(file.exists(rscript), "Rscript is not installed")
+  withr::with_dir(pkgRoot, suppressWarnings(
+    system2(rscript, c(runFile, args), stdout = TRUE, stderr = TRUE)))
+}
+
 test_that("runMain() prints SECONDS= and PEAK_MB= for a scenario", {
   perf <- loadPerfHarness()
   res <- perf$runMain(c("reportGV-example", "--quick"))
   expect_identical(res$status, 0L)
-  expect_identical(sum(grepl("^SECONDS=[0-9]+(\\.[0-9]+)?$", res$lines)), 1L)
-  expect_identical(sum(grepl("^PEAK_MB=[0-9]+(\\.[0-9]+)?$", res$lines)), 1L)
+  expectOneNumberLine(res$lines, "SECONDS")
+  expectOneNumberLine(res$lines, "PEAK_MB")
 })
 
 test_that("runMain() fails and lists the scenarios for a wrong or no name", {
@@ -239,16 +258,10 @@ test_that("runMain() fails and lists the scenarios for a wrong or no name", {
 })
 
 test_that("run.R runs a scenario from the command line, as a gate does", {
-  skipUnlessSourceTree()
-  rscript <- file.path(R.home("bin"), "Rscript")
-  skip_if_not(file.exists(rscript), "Rscript is not installed")
-  ## A gate's command runs from the project root (quality_ratchet.py).
-  out <- withr::with_dir(pkgRoot, suppressWarnings(
-    system2(rscript, c(runFile, "reportGV-example", "--quick"),
-            stdout = TRUE, stderr = TRUE)))
+  out <- runFromCommandLine(c("reportGV-example", "--quick"))
   expect_null(attr(out, "status"))
-  expect_identical(sum(grepl("^SECONDS=[0-9]+(\\.[0-9]+)?$", out)), 1L)
-  expect_identical(sum(grepl("^PEAK_MB=[0-9]+(\\.[0-9]+)?$", out)), 1L)
+  expectOneNumberLine(out, "SECONDS")
+  expectOneNumberLine(out, "PEAK_MB")
 })
 
 ## ---- --runs N: the middle of N runs (S1078) --------------------------------
@@ -312,15 +325,10 @@ test_that("runMain() refuses a --runs value that is not a whole number above 0",
 })
 
 test_that("run.R passes --runs through from the command line", {
-  skipUnlessSourceTree()
-  rscript <- file.path(R.home("bin"), "Rscript")
-  skip_if_not(file.exists(rscript), "Rscript is not installed")
-  out <- withr::with_dir(pkgRoot, suppressWarnings(
-    system2(rscript, c(runFile, "reportGV-example", "--quick", "--runs", "2"),
-            stdout = TRUE, stderr = TRUE)))
+  out <- runFromCommandLine(c("reportGV-example", "--quick", "--runs", "2"))
   expect_null(attr(out, "status"))
   expect_identical(sum(grepl("reportGV (n = 10)", out, fixed = TRUE)), 2L)
-  expect_identical(sum(grepl("^SECONDS=[0-9]+(\\.[0-9]+)?$", out)), 1L)
+  expectOneNumberLine(out, "SECONDS")
 })
 
 ## The command of one gate in methodology/.quality-gates.json, read as text
