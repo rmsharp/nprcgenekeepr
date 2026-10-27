@@ -406,29 +406,53 @@ headline <- function(rows) {
 
 ## ---- The command line ------------------------------------------------------
 
+## The number of runs a command line asks for, and the command line without
+## --runs and its value: 1 run when there is no --runs, else the whole number
+## after it, or NA when that value is missing, not a whole number or below 1.
+runsArg <- function(args) {
+  at <- which(args == "--runs")
+  if (length(at) == 0L) {
+    return(list(runs = 1L, rest = args))
+  }
+  value <- if (length(at) == 1L && at < length(args)) args[[at + 1L]] else ""
+  runs <- if (grepl("^[0-9]+$", value)) as.integer(value) else NA_integer_
+  if (!is.na(runs) && runs < 1L) {
+    runs <- NA_integer_
+  }
+  list(runs = runs, rest = args[-c(at, at + 1L)])
+}
+
 ## What run.R prints and its exit status, for `Rscript tools/perf/run.R
-## <scenario> [--quick]`: one line per measured call, then SECONDS= and
-## PEAK_MB= for the gates. A wrong or missing name prints the usage and the
+## <scenario> [--quick] [--runs N]`: one line per measured call, then SECONDS=
+## and PEAK_MB= for the gates. With --runs N the scenario runs N times in this
+## process, every run's lines are printed, and SECONDS= and PEAK_MB= are the
+## medians of the runs' headlines, so one run that a full garbage collection
+## falls into does not decide a gate (S1078). A wrong or missing name, or a
+## --runs value that is not a whole number above 0, prints the usage and the
 ## scenario names, with status 2.
 runMain <- function(args) {
-  quick <- "--quick" %in% args
-  name <- setdiff(args, "--quick")
-  usage <- c("Usage: Rscript tools/perf/run.R <scenario> [--quick]",
+  usage <- c("Usage: Rscript tools/perf/run.R <scenario> [--quick] [--runs N]",
              "Scenarios:", paste0("  ", scenarioNames()))
-  if (length(name) != 1L) {
+  runs <- runsArg(args)
+  quick <- "--quick" %in% runs$rest
+  name <- setdiff(runs$rest, "--quick")
+  if (is.na(runs$runs) || length(name) != 1L) {
     return(list(lines = usage, status = 2L))
   }
   if (!name %in% scenarioNames()) {
     return(list(lines = c(sprintf("Unknown scenario: %s", name), usage),
                 status = 2L))
   }
-  rows <- runScenario(name, quick = quick)
-  top <- headline(rows)
+  each <- lapply(seq_len(runs$runs), function(i) {
+    runScenario(name, quick = quick)
+  })
+  rows <- do.call(rbind, each)
+  tops <- vapply(each, headline, c(seconds = 0.0, peakMb = 0.0))
   lines <- c(
     sprintf("%-28s %-44s %9.2f s  peak %8.1f MB  result %8.1f MB",
             rows$input, rows$label, rows$seconds, rows$peakMb, rows$resultMb),
-    sprintf("SECONDS=%.2f", top[["seconds"]]),
-    sprintf("PEAK_MB=%.1f", top[["peakMb"]])
+    sprintf("SECONDS=%.2f", stats::median(tops["seconds", ])),
+    sprintf("PEAK_MB=%.1f", stats::median(tops["peakMb", ]))
   )
   list(lines = lines, status = 0L)
 }
