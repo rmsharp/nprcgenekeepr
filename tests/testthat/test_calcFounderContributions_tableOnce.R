@@ -100,6 +100,20 @@ test_that("calcFEFG() and calcFGSE() each build the table once", {
   )
 })
 
+## A starting table of whole numbers (0L, 1L) gives the same contributions:
+## the first fill turns it into doubles, a new table, and the whole-number one,
+## half the size, is thrown away (S1075 mutation probe: 23.5 MB more allocated
+## on all 3,694 example animals, and every other block passed).
+test_that("the contribution table starts as doubles, not whole numbers", {
+  skipWithoutMemoryProfiling()
+  ped <- exampleAnalysisPed()
+  expect_identical(
+    tableAllocations(function() calcFounderContributions(ped, "calcFEFG"),
+                     contributionTableBytes(ped) / 2),
+    0L
+  )
+})
+
 test_that("both fills give the frozen pre-campaign contributions", {
   for (ped in list(exampleAnalysisPed(), fallbackAnalysisPed())) {
     expect_identical(calcFounderContributions(ped, "calcFEFG"),
