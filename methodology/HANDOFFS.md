@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1079
+date: 2026-10-27
+status: pending
+active_task: IN PROGRESS -- settle and build the owner's ruling on how Breeding Groups lists groupings with equal scores: groupAddAssign() breaks a tie by the slot a grouping holds (R/groupAddAssign.R:330-334) while its comment says "by discovery order" (BACKLOG.md:203, DECISION NEEDED, Effort S; found S1057; owner pick at the Phase 0 picker, item 1 of 4, "Tie order"); strict TDD
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1078
 date: 2026-10-27
 status: complete
