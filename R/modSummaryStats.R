@@ -432,17 +432,21 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     # Relationship designation using convertRelationships. Issue #13 item-3
     # (R13): the relation LABEL is pedigree-derived, but the kinship VALUE can
     # be overridden, so flag pairs whose value came from an override (the flag
-    # column appears only when overrides are supplied; D10 otherwise).
-    relationshipData <- reactive({
+    # column appears only when overrides are supplied; D10 otherwise). A plain
+    # function, not a reactive, so the table of every pair (235 MB on the
+    # example) is not kept after a download (owner ruling S1080): each
+    # relationship download builds it again.
+    relationshipData <- function() {
       req(pedigree())
       ped <- asDataFrame(pedigree())
       kmat <- getKinshipMatrix()
       rel <- convertRelationships(kmat, ped)
       overrides <- if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
       flagOverriddenRelationships(rel, overrides)
-    })
+    }
 
-    # Relationship class summary using makeRelationClassesTable
+    # Relationship class summary using makeRelationClassesTable; a reactive,
+    # so only these few class counts are kept between downloads.
     relationClassData <- reactive({
       rels <- relationshipData()
       makeRelationClassesTable(rels)
