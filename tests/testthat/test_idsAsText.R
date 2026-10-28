@@ -180,3 +180,107 @@ test_that("makeCEPH() gives number and factor ids the text's pedigree", {
   factors <- pedIdsAsFactors(ped)
   expect_identical(makeCEPH(factors$id, factors$sire, factors$dam), expected)
 })
+
+## BACKLOG.md "reportGV() given a factor pedigree reports livingOffspring as
+## missing" (owner pick S1084, ruling "Fix the counting"). findOffspring()
+## counted each parent's offspring over the sire and dam factor's levels, and a
+## subset keeps every level: the example's living animals keep 1,485 sire
+## levels, 1,337 of them with no row, so reportGV() reported livingOffspring as
+## NA for 33 of its 332 animals where the text gives 0. A factor whose levels
+## are every animal (one level set for id, sire and dam) made totalOffspring
+## NA too, and calcNeVariance() NA. findOffspring() now reads sire and dam as
+## their text, so each must give exactly the text's counts.
+
+## Nine animals: S1 and S2 sire K1-K5 with D1 and D2. The population (S1, S2,
+## D1 and K1) holds none of S2's offspring, K3 and K4.
+offspringStudbook <- function() {
+  data.frame(
+    id = c("S1", "S2", "D1", "D2", "K1", "K2", "K3", "K4", "K5"),
+    sire = c(NA, NA, NA, NA, "S1", "S1", "S2", "S2", "S1"),
+    dam = c(NA, NA, NA, NA, "D1", "D2", "D1", "D1", "D2"),
+    sex = c("M", "M", "F", "F", "M", "F", "M", "F", "M"),
+    exit = as.Date(rep(NA_character_, 9L)),
+    population = c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+}
+
+## One factor level set, every animal, for id, sire and dam, where
+## pedIdsAsFactors() gives each column the values it holds.
+pedIdsAsSharedFactors <- function(ped) {
+  ids <- sort(unique(c(ped$id, ped$sire, ped$dam)))
+  for (h in c("id", "sire", "dam")) {
+    ped[[h]] <- factor(ped[[h]], levels = ids)
+  }
+  ped
+}
+
+test_that("findOffspring() counts each parent's offspring", {
+  text <- offspringStudbook()
+  expect_identical(
+    findOffspring(c("S1", "S2", "D1", "D2", "K1", "nobody"), text),
+    c(S1 = 3L, S2 = 2L, D1 = 3L, D2 = 2L, K1 = 0L, nobody = 0L)
+  )
+})
+
+test_that("findOffspring() counts factor ids' offspring as their text's", {
+  text <- offspringStudbook()
+  probands <- text$id[text$population]
+  expected <- findOffspring(probands, text[text$population, ])
+  expect_identical(expected, c(S1 = 1L, S2 = 0L, D1 = 1L, K1 = 0L))
+  for (kind in c("own levels", "shared levels")) {
+    ped <- if (kind == "own levels") {
+      pedIdsAsFactors(text)
+    } else {
+      pedIdsAsSharedFactors(text)
+    }
+    expect_identical(findOffspring(probands, ped[ped$population, ]), expected,
+                     info = paste(kind, "in the population"))
+    expect_identical(findOffspring(text$id, ped),
+                     findOffspring(text$id, text),
+                     info = paste(kind, "in the whole studbook"))
+  }
+})
+
+test_that("offspringCounts() counts factor ids' offspring as their text's", {
+  text <- offspringStudbook()
+  probands <- text$id[text$population]
+  expected <- offspringCounts(probands, text, considerPop = TRUE)
+  expect_identical(unname(expected$totalOffspring), c(3L, 2L, 3L, 0L))
+  expect_identical(unname(expected$livingOffspring), c(1L, 0L, 1L, 0L))
+  expect_identical(
+    offspringCounts(probands, pedIdsAsFactors(text), considerPop = TRUE),
+    expected, info = "own levels"
+  )
+  expect_identical(
+    offspringCounts(probands, pedIdsAsSharedFactors(text), considerPop = TRUE),
+    expected, info = "shared levels"
+  )
+})
+
+test_that("calcNeVariance() gives factor ids their text's value", {
+  text <- offspringStudbook()
+  ## Breeders S1, S2, D1 and D2 with 3, 2, 3 and 2 offspring: N = 4,
+  ## kbar = 2.5, Vk = 1/3.
+  expected <- calcNeVariance(text)
+  expect_equal(expected, (4 * 2.5 - 1) / (2.5 - 1 + (1 / 3) / 2.5))
+  expect_identical(calcNeVariance(pedIdsAsFactors(text)), expected,
+                   info = "own levels")
+  expect_identical(calcNeVariance(pedIdsAsSharedFactors(text)), expected,
+                   info = "shared levels")
+})
+
+test_that("reportGV() counts the example's offspring for factor ids as for text", {
+  ex <- exampleIdVariants()
+  counts <- function(ped) {
+    gv <- withr::with_seed(1L, reportGV(ped, guIter = 50L))
+    list(total = gv$report$totalOffspring,
+         living = gv$report$livingOffspring, neVariance = gv$neVariance)
+  }
+  expected <- counts(ex$text)
+  expect_false(anyNA(unlist(expected)))
+  expect_identical(counts(ex$factor), expected, info = "own levels")
+  expect_identical(counts(pedIdsAsSharedFactors(ex$text)), expected,
+                   info = "shared levels")
+  expect_identical(counts(ex$number), expected, info = "number ids")
+})
