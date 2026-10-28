@@ -21,7 +21,9 @@
 #'
 #' @param candidates Character vector of IDs of the animals available for
 #' use in forming the groups. The animals that may be present in
-#' \code{currentGroups} are not included within \code{candidates}.
+#' \code{currentGroups} are not included within \code{candidates}. Ids given
+#' as numbers or as a factor, here, in \code{currentGroups} and in the
+#' pedigree's \code{id}, \code{sire} and \code{dam}, are taken as their text.
 #' @param currentGroups List of character vectors of IDs of animals currently
 #' assigned to groups.
 #' Defaults to \code{list(character(0L))}, a list with a single empty

@@ -9,7 +9,8 @@
 #' is left out of the groups.
 #'
 #' @param candidates character vector of IDs of the animals available for
-#' use in the group.
+#' use in the group. Ids given as numbers or as a factor, here and in the
+#' pedigree's \code{id}, \code{sire} and \code{dam}, are taken as their text.
 #' @param groupMembers list initialized and ready to receive groups with the
 #' desired sex ratios that are created within this function
 #' @param grpNum is a list \code{numGp} long with each member a single integer
