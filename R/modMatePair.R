@@ -39,7 +39,7 @@ modMatePairUI <- function(id) {
                radioButtons(
                  ns("populationSource"), "Candidate population:",
                  choices = c(
-                   "All alive (no recorded exit)" = "allAlive",
+                   "All alive" = "allAlive",
                    "Top ranked by genetic value" = "topRanked",
                    "Custom list (paste IDs)" = "custom"
                  )
@@ -403,11 +403,10 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix = NULL,
 
       popIds <- switch(
         input$populationSource,
-        allAlive = if ("exit" %in% names(ped)) {
-          ped$id[is.na(ped$exit)]
-        } else {
-          ped$id
-        },
+        # Breeding Groups' rule (S1081): a status of ALIVE when the pedigree
+        # has a status column, so a placeholder for an unknown parent (status
+        # UNKNOWN, no exit date) is not offered as a mate.
+        allAlive = ped$id[isLivingAnimal(ped)],
         topRanked = {
           req(gv)
           nTop <- if (!is.null(input$nTopAnimals)) input$nTopAnimals else 20L
