@@ -38,14 +38,27 @@ kinMatrix2LongForm <- function(kinMatrix, removeDups = FALSE) {
   ## kinships. The rows kept are named by their cell's position, as today's
   ## subset of the stacked rows named them.
   if (removeDups) {
-    m <- nrow(kinMatrix)
-    cols <- seq_len(min(m, ncol(kinMatrix)))
-    keep <- sequence(m - cols + 1L, from = (cols - 1L) * m + cols)
+    keep <- lowerTriangleCells(kinMatrix)
     keep <- keep[!is.na(kinMatrix[keep])]
   } else {
     keep <- which(!is.na(kinMatrix))
   }
   longFormRows(kinMatrix, keep, keep)
+}
+
+#' The cells of a kinship matrix's lower triangle
+#'
+#' The cells \code{kinMatrix2LongForm(removeDups = TRUE)} reads before it
+#' drops the missing kinships, and the Mate Pair build reads before it drops
+#' the same-sex pairs (S1081): the diagonal and every cell below it.
+#'
+#' @param kinMatrix a matrix \code{longFormFits()} takes.
+#' @return The cells' positions in the matrix, in column order.
+#' @noRd
+lowerTriangleCells <- function(kinMatrix) {
+  m <- nrow(kinMatrix)
+  cols <- seq_len(min(m, ncol(kinMatrix)))
+  sequence(m - cols + 1L, from = (cols - 1L) * m + cols)
 }
 
 #' Long-form rows for cells of a kinship matrix

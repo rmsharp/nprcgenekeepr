@@ -205,28 +205,7 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
     return(emptyMateResult(ped, ancestry))
   }
 
-  # Only the male-female cells of the lower triangle, in the order
-  # kinMatrix2LongForm(removeDups = TRUE) lists them (S1081): the table of
-  # every pair and filterPairs()' two merges with the pedigree allocated
-  # 1,810 MB and took 8.2 s on the example's default population. A matrix
-  # longFormFits() refuses runs those two steps unchanged.
-  if (longFormFits(kmat, removeDups = TRUE)) {
-    m <- nrow(kmat)
-    cols <- seq_len(min(m, ncol(kmat)))
-    keep <- sequence(m - cols + 1L, from = (cols - 1L) * m + cols)
-    rowMale <- ped$sex[match(rownames(kmat), ped$id)] == sexCodes[["male"]]
-    colMale <- ped$sex[match(colnames(kmat), ped$id)] == sexCodes[["male"]]
-    keep <- keep[rowMale[(keep - 1L) %% m + 1L] !=
-                   colMale[(keep - 1L) %/% m + 1L]]
-    keep <- keep[!is.na(kmat[keep])]
-    kin <- longFormRows(kmat, keep, keep)
-  } else {
-    kin <- kinMatrix2LongForm(kmat, removeDups = TRUE)
-    kin <- filterPairs(kin, ped, ignore = list(
-      c(sexCodes[["male"]], sexCodes[["male"]]),
-      c(sexCodes[["female"]], sexCodes[["female"]])
-    ))
-  }
+  kin <- matePairLongForm(kmat, ped)
 
   if (nrow(kin) == 0L) {
     return(emptyMateResult(ped, ancestry))
@@ -336,6 +315,40 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
     pairs = kin, excluded = excluded,
     ancestryCoverage = .ancestryCoverage(candidateIds, ped, ancestry$rules)
   )
+}
+
+#' The male-female pairs of a kinship matrix, in long form
+#'
+#' The rows \code{filterPairs(kinMatrix2LongForm(kmat, removeDups = TRUE),
+#' ped, ...)} keeps when it drops the male-male and female-female pairs, in
+#' the same order, read from the male-female cells of the lower triangle
+#' (S1081): the table of every pair and \code{filterPairs()}' two merges with
+#' the pedigree allocated 1,810 MB and took 8.2 s on the example's default
+#' population. A matrix \code{longFormFits()} refuses runs those two steps
+#' unchanged.
+#'
+#' @param kmat kinship matrix whose animals are all recorded male or female.
+#' @param ped the pedigree, with \code{id} and \code{sex} columns.
+#' @return A dataframe with columns \code{id1}, \code{id2} and
+#' \code{kinship}.
+#' @noRd
+matePairLongForm <- function(kmat, ped) {
+  if (!longFormFits(kmat, removeDups = TRUE)) {
+    return(filterPairs(kinMatrix2LongForm(kmat, removeDups = TRUE), ped,
+      ignore = list(
+        c(sexCodes[["male"]], sexCodes[["male"]]),
+        c(sexCodes[["female"]], sexCodes[["female"]])
+      )
+    ))
+  }
+  m <- nrow(kmat)
+  keep <- lowerTriangleCells(kmat)
+  rowMale <- ped$sex[match(rownames(kmat), ped$id)] == sexCodes[["male"]]
+  colMale <- ped$sex[match(colnames(kmat), ped$id)] == sexCodes[["male"]]
+  keep <- keep[rowMale[(keep - 1L) %% m + 1L] !=
+                 colMale[(keep - 1L) %/% m + 1L]]
+  keep <- keep[!is.na(kmat[keep])]
+  longFormRows(kmat, keep, keep)
 }
 
 #' @param ancestry when \code{TRUE}, include the three ancestry annotation
