@@ -31,6 +31,10 @@ no ID in \code{kmat} (or an empty \code{ids}) gives a table with no rows.
 \description{
 Part of Relations
 }
+\details{
+Ids given as numbers or as a factor, in the pedigree's \code{id},
+\code{sire} and \code{dam} or in \code{ids}, are taken as their text.
+}
 \examples{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed

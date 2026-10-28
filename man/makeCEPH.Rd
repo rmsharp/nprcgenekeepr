@@ -30,7 +30,7 @@ Part of Relations
 \details{
 Creates a CEPH-style pedigree for each id, consisting of three generations:
 the id, the parents, and the grandparents. Inserts NA for unknown pedigree
-members.
+members. Ids given as numbers or as a factor are taken as their text.
 }
 \examples{
 library(nprcgenekeepr)

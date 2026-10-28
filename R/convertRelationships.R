@@ -5,6 +5,9 @@
 #'
 #' Part of Relations
 #'
+#' Ids given as numbers or as a factor, in the pedigree's \code{id},
+#' \code{sire} and \code{dam} or in \code{ids}, are taken as their text.
+#'
 #' @inheritParams meanKinship
 #' @inheritParams getDescendantPedigree
 #' @param ids character vector of IDs or NULL to which the analysis should be

@@ -7,7 +7,7 @@
 #'
 #' Creates a CEPH-style pedigree for each id, consisting of three generations:
 #' the id, the parents, and the grandparents. Inserts NA for unknown pedigree
-#' members.
+#' members. Ids given as numbers or as a factor are taken as their text.
 #'
 #' @param id character vector of the unique identifiers of all individuals;
 #' a duplicated id stops the function with a \code{duplicate row.names}
