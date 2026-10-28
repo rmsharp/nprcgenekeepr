@@ -294,10 +294,11 @@ modSummaryStatsUI <- function(id) {
 #'   of tab order (BL-N Slice 3). \code{NULL} (the default) is a no-op.
 #' @param kinshipFor optional function of a character vector of animal IDs
 #'   that returns those animals' kinship matrix; with no IDs it returns every
-#'   animal's. The kinship CSV download asks it for every animal at each
-#'   click, and the two relationship downloads ask it once for the
-#'   relationship table they share, so no kinship matrix is kept between
-#'   clicks. \code{appServer} passes one that applies the twins and
+#'   animal's. The kinship CSV download and the relationships download ask
+#'   it for every animal at each click, and the relationship classes
+#'   download asks once and keeps only its class counts, so no kinship
+#'   matrix or relationship table is kept between clicks.
+#'   \code{appServer} passes one that applies the twins and
 #'   overrides. A provided \code{kinshipMatrix} is used first; with neither,
 #'   the module calculates kinship from the pedigree. \code{NULL} (the
 #'   default) is not used.

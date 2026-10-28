@@ -447,7 +447,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
   take about 6 seconds instead of about 23 (about 5 instead of about 27
   when forming harems). The app no longer keeps a kinship matrix of the
   whole pedigree, so it holds about 180 MB less once the example is
-  loaded. Results are the same as before for the same random seed.
+  loaded, and Summary Statistics no longer keeps the table of every pair
+  after a relationship download (about 235 MB for the example). Results
+  are the same as before for the same random seed.
 
 ## General Fixes
 
