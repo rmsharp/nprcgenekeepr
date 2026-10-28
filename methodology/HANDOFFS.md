@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1082
+date: 2026-10-28
+status: pending
+active_task: IN PROGRESS -- settle and build the owner's ruling on Marker Genetics' Realized Relatedness table holding every pair: opening the "Linkage and LD Block Metrics" tab (`R/modMarkerGenetics.R:227`) runs `markerRealizedRelatednessVariance()` (`R/markerRealizedRelatednessVariance.R:119`) on the whole kinship matrix (`R/modMarkerGenetics.R:735-751`), 6,824,665 rows on the example, 8.31 s, 707.6 MB peak, 390.9 MB kept (`BACKLOG.md:203`, DECISION NEEDED, Effort M; found S1062, design F3; owner pick at the Phase 0 picker, item 1 of 4, "Relatedness table memory"); strict TDD
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1081
 date: 2026-10-28
 status: complete
