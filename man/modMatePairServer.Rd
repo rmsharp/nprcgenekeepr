@@ -62,9 +62,11 @@ the corresponding excluded-pairs data.frame; and \code{isReady},
 Reports eligible individual mate-pair candidates via
 \code{\link{reportMatePairs}} (issue #151 Slice 1), wrapped in a
 curator-facing configuration panel for the D4-ratified population scope
-(\code{populationSource}: \code{"allAlive"} -- ids with no recorded
-\code{ped$exit} date, or every id when the pedigree has no \code{exit}
-column; \code{"topRanked"} -- the top \code{nTopAnimals}
+(\code{populationSource}: \code{"allAlive"} -- the animals that are alive:
+a \code{status} of \code{ALIVE} when the pedigree has a \code{status}
+column, otherwise no recorded \code{exit} date, and every id when it has
+neither column (the rule Breeding Groups uses); \code{"topRanked"} -- the
+top \code{nTopAnimals}
 ids in \code{geneticValues}' own report order, mirroring
 \code{\link{modBreedingGroupsServer}}'s own \code{topRanked} reading;
 \code{"custom"} -- a pasted, delimiter-separated id list), the D2 minimum-

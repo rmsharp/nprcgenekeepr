@@ -3,11 +3,12 @@
 
 #' Report eligible individual mate pairs with kinship and genetic-value context
 #'
-#' Issue #151 Slice 1: composes the existing pair-eligibility pipeline
-#' (\code{\link{kinMatrix2LongForm}}, \code{\link{filterPairs}},
-#' \code{filterAge()}, \code{\link{filterKinMatrix}} -- all unmodified)
-#' into a report of opposite-sex, minimum-age-eligible mate-pair candidates,
-#' each row optionally enriched with marker-based kinship
+#' Issue #151 Slice 1: a report of opposite-sex, minimum-age-eligible
+#' mate-pair candidates. Its pairs are those \code{\link{kinMatrix2LongForm}}
+#' followed by \code{\link{filterPairs}} give, in the same order, built
+#' directly, so the table of every pair (same-sex pairs included) is never
+#' made; \code{\link{filterKinMatrix}} scopes the population. Each row is
+#' optionally enriched with marker-based kinship
 #' (\code{\link{markerKinship}}) and per-parent genetic-value context
 #' (\code{\link{reportGV}}'s \code{indivMeanKin}/\code{gu}) when available.
 #' No composite/blended ranking score is computed -- callers sort/filter the
