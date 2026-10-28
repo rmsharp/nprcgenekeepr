@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1081
+date: 2026-10-27
+status: pending
+active_task: IN PROGRESS -- settle and build the owner's ruling on Mate Pair's default run using about 1 GB of app memory: reportMatePairs() builds the long form of every pair (R/reportMatePairs.R:207) before its sex, age and exclusion screens, and the default population "All alive (no recorded exit)" (R/modMatePair.R:39-45) is 1,704 animals on the example (BACKLOG.md:203, DECISION NEEDED, Effort M; found S1062, design F2; owner pick at the Phase 0 picker, item 1 of 4, "Mate Pair memory"); strict TDD
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1080
 date: 2026-10-27
 status: complete
