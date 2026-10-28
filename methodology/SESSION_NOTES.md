@@ -98,31 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1079 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Tie order"; ruling "Correct the comment (Recommended)"; comment only, so no RED or
-GREEN phase, as the ruled option said):** `groupAddAssign()`'s tie-order comment (`R/groupAddAssign.R:340-345`) now says what the
-code does: equal scores keep their place in the kept list, the order found only until the list is full; a better grouping then takes
-the place of the worst one it replaces, so it can be listed ahead of an earlier one with the same score. Claim `0886b1f14`, fix
-`1268f1f9d`. Block off BACKLOG; no NEWS (nothing a user sees changed); no issue.
-**Measured first** (scratch scripts and package copies; Learning 1045): the tab's default pool by the app's own steps, seeds 1-20, every
-trial traced: every seed keeps ties; the grouping shown first would change in 5, 13, 13 of 20 seeds at 10, 100, 1,000 trials; the 48
-group-formation test files on a found-order copy: 36 failed expectations in 2 tests (`test_groupAddAssignEquivalence.R`, the frozen
-`groupAddAssignReference()`), the control 644 tests 0 failed.
-**Verified:** full suite 483 files 4,511 tests 0 failed; check 0/0/0; `lint_package()` 0; ratchet 11/11 (`0c85478456fb`, load 4.3).
-**Handoff evaluation of S1078: 9/10.** Helped: Next named `:203` first with its two choices; both ledgers and its ratchet citation
-matched at Phase 0. Missing: nothing for this task (the block's `R/groupAddAssign.R:330-334` had drifted to `:340-344` with S1072's
-harem set-up, S1057's cite, not S1078's). Wrong: nothing. ROI: high.
-**Self: 8/10.** + measured before the question (60 traced runs; a patched copy beside a control), answered first try; the repo never
-edited for a probe. - S1057's found trials did not reproduce (20, 7, 8, 22, 29 against 18, 7, 8, 23, 26; said so); a pid lookup on
-`ps`'s `comm` column found nothing; the ratchet waited on outside load.
-**Gotchas:** the tie order is pinned only by the frozen-reference comparison, so a change to it updates `groupAddAssignReference()`
-(`tests/testthat/helper-perfReference.R:672`); to count tests a change breaks, patch one of two `git archive` copies and from the repo
-folder `load_all(<copy>)` and `test_file()` the files that `git grep -l` the function; find a suite's pid with `ps -axo pid,etime,args`.
-**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:221` relationship table (S), `:203` Mate Pair memory (M), `:212` realized
-relatedness (M), `:227` fallbacks (M). After a push read CI (S1073 OpenBLAS, S1075 `Rprofmem` skips, S1076 CPU-drawing skips). Not
-pushed (69 ahead).
+### What Session 1080 Did
+**Deliverable:** settle and build the owner's ruling on whether Summary Statistics keeps the whole relationship table after a
+download (`relationshipData()`, `R/modSummaryStats.R:436-443`, serving both downloads `:891-907`; `BACKLOG.md:221`, DECISION
+NEEDED, Effort S; found S1062, design F4; owner pick, item 1 of 4, "Relationship table memory"; strict TDD). (IN PROGRESS)
+**Started:** 2026-10-27
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1078 (condensed S950 to S1079; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1079 (condensed S950 to S1080; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1079: `groupAddAssign()`'s tie-order comment says what the code does (`R/groupAddAssign.R:340-345`; comment only, ruling "Correct
+the comment"): equal scores keep their slot in the kept list. Claim `0886b1f14`, close-out `42a20f437`, not pushed; S1078 9/10, self
+8/10 (Learning 1045). **Gotchas kept:** the tie order is pinned only by `groupAddAssignReference()` (`helper-perfReference.R:672`);
+count a change's broken tests on a patched `git archive` copy beside a control; find a suite's pid with `ps -axo pid,etime,args`.
 S1078: the `reportGV` speed gate times the middle of 5 runs (`Rscript tools/perf/run.R <scenario> --runs N`, `runsArg()` and
 `runMain()` in `tools/perf/harness.R`; gate command in `methodology/.quality-gates.json`): one full garbage collection fell inside the
 0.21 s call or not. Claim `c82960b5c`, close-out `3f93fb475`, not pushed; S1077 9/10, self 8/10 (Learning 1044). **Gotchas kept:** a

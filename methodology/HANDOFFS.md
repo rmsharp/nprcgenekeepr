@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1080
+date: 2026-10-27
+status: pending
+active_task: IN PROGRESS -- settle and build the owner's ruling on whether Summary Statistics keeps the whole relationship table after a download: relationshipData() is a cached reactive() (R/modSummaryStats.R:436-443) that serves both relationship downloads (:891-907), 6,824,665 rows and 234.7 MB on the example, kept until the pedigree changes (BACKLOG.md:221, DECISION NEEDED, Effort S; found S1062, design F4; owner pick at the Phase 0 picker, item 1 of 4, "Relationship table memory"); strict TDD
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1079
 date: 2026-10-27
 status: complete
