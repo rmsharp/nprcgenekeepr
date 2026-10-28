@@ -26,10 +26,9 @@
 #' of animals.
 #' @param pdepth integer vector indicating the generation number for each
 #' animal.
-#' @param sparse logical flag. If \code{TRUE}, \code{Matrix::Diagonal()} is
-#' used to make the starting diagonal matrix (one half of the identity matrix,
-#' the founders' self-kinship) and the result is a sparse
-#' \code{dgCMatrix}. If \code{FALSE}, \code{base::diag()} is used and the
+#' @param sparse logical flag. If \code{TRUE}, the result is a sparse matrix
+#' of the Matrix package with the same values: a \code{ddiMatrix} when no two
+#' animals have a kinship, otherwise a \code{dgCMatrix}. If \code{FALSE}, the
 #' result is a base matrix.
 #' @param twinRelations \code{NULL} (default, no-op) or a data.frame with
 #' columns \code{id1}, \code{id2}, \code{code} declaring twin pairs (see

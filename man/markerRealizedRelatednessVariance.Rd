@@ -10,7 +10,9 @@ markerRealizedRelatednessVariance(kmat, ped, nChr, mapLength, ids = NULL)
 \item{kmat}{square kinship matrix, as produced by \code{\link{kinship}}.}
 
 \item{ped}{dataframe with (at least) \code{id}, \code{sire}, and
-\code{dam} columns, as used by \code{\link{convertRelationships}}.}
+\code{dam} columns, as used by \code{\link{convertRelationships}}. Ids
+given as numbers or as a factor, here or in \code{ids}, are taken as their
+text.}
 
 \item{nChr}{chromosome count (e.g. autosome count for the species), meant
 to be a whole number. Only a single positive numeric value is enforced, so
