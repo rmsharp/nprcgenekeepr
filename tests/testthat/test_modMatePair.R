@@ -74,6 +74,13 @@ test_that("modMatePairUI returns a tagList with the expected namespaced controls
   expect_true(grepl("mp-downloadPairs", ui_html))
 })
 
+test_that("the first candidate population is labeled 'All alive'", {
+  ui_html <- as.character(modMatePairUI("mp"))
+
+  expect_match(ui_html, "<span>All alive</span>", fixed = TRUE)
+  expect_no_match(ui_html, "no recorded exit", fixed = TRUE)
+})
+
 test_that("modMatePairServer is not ready and pairs()/excluded() halt before analyze is clicked", {
   skip_if_not_installed("shiny")
 
@@ -123,6 +130,51 @@ test_that("populationSource = 'allAlive' scopes to ids with no recorded exit dat
       expect_false(any(pairs$sireId == "M2" | pairs$damId == "M2"))
       # M1/F1/F2/F3 are all alive and >= minAge -- M1 x F2 must appear
       expect_true(any(pairs$sireId == "M1" & pairs$damId == "F2"))
+    }
+  )
+})
+
+test_that(paste("populationSource = 'allAlive' takes the animals whose status",
+                "is ALIVE when the pedigree has a status column"), {
+  skip_if_not_installed("shiny")
+
+  # M9 stands in for an unknown sire (status UNKNOWN, no exit date, no age),
+  # as 1,370 of the example's 1,493 males with no exit date do (S1081); F9
+  # died with no exit date recorded. Breeding Groups leaves both out
+  # (isLivingAnimal()), and so does Mate Pair.
+  ped <- rbind(matePairPed(), data.frame(
+    id = c("M9", "F9"), sire = NA_character_, dam = NA_character_,
+    sex = c("M", "F"), age = c(NA, 10), exit = as.Date(c(NA, NA)),
+    stringsAsFactors = FALSE
+  ))
+  ped$status <- c("ALIVE", "ALIVE", "DECEASED", "ALIVE", "ALIVE", "ALIVE",
+                  "UNKNOWN", "DECEASED")
+  full <- matePairKmat(ped)
+  asked <- list()
+  kinshipFor <- function(ids) {
+    asked[[length(asked) + 1L]] <<- ids
+    full[ids, ids, drop = FALSE]
+  }
+
+  shiny::testServer(
+    modMatePairServer,
+    args = list(
+      pedigree = shiny::reactive(ped),
+      markerKinshipMatrix = shiny::reactive(NULL),
+      geneticValues = shiny::reactive(NULL),
+      kinshipFor = kinshipFor
+    ),
+    {
+      session$setInputs(populationSource = "allAlive", minAge = 1)
+      session$setInputs(analyze = 1)
+
+      result <- session$getReturned()
+      named <- c(result$pairs()$sireId, result$pairs()$damId,
+                 result$excluded()$sireId, result$excluded()$damId)
+      expect_identical(asked, list(c("M1", "F1", "F2", "M3", "F3")))
+      expect_false(any(named %in% c("M9", "F9")))
+      expect_true(any(result$pairs()$sireId == "M1" &
+                        result$pairs()$damId == "F2"))
     }
   )
 })

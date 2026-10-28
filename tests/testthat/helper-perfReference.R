@@ -1341,3 +1341,156 @@ solveJointQPReference <- function(provisionalPos, matingUnits, duplicates,
   data.frame(id = ids, x = fit$solution, gen = provisionalPos$gen,
              stringsAsFactors = FALSE)
 }
+
+## Mate Pair (S1081, BACKLOG.md:203): reportMatePairs() from
+## R/reportMatePairs.R at 520bd5dc8. S1081 changes how it builds its pairs;
+## the copy calls the live checkMatePairAncestryArgs(), matchAncestryPairs(),
+## emptyMateResult() and .ancestryCoverage(), which S1081 does not change.
+## Only the copy's name and its signature's line breaks differ.
+reportMatePairsReference <- function(ped, kmat, markerKmat = NULL,
+                                     geneticValues = NULL,
+                                     minAge = 1L, populationIds = NULL,
+                                     exclude = character(0L),
+                                     ancestryRules = NULL,
+                                     overriddenRules = NULL) {
+  assertRequiredColsPresent(
+    names(ped), c("id", "sire", "dam", "sex", "age"),
+    "reportMatePairs(ped)"
+  )
+  if (!is.matrix(kmat)) {
+    stop("nprcgenekeepr: kmat must be a matrix, as returned by kinship().",
+         call. = FALSE)
+  }
+
+  # Validated up front and once, so a bad rules argument fails identically on
+  # every path below -- including the two early returns. NULL when no rules
+  # were given: every ancestry branch below is then skipped.
+  ancestry <- checkMatePairAncestryArgs(ped, ancestryRules, overriddenRules)
+
+  if (!is.null(populationIds)) {
+    kmat <- filterKinMatrix(populationIds, kmat)
+  }
+  # Only animals recorded male or female are paired. The Mate Pair page counts
+  # the rest with the same function, so the two cannot disagree.
+  paired <- !rownames(kmat) %in% matePairLeftOutIds(ped, kmat)
+  kmat <- kmat[paired, paired, drop = FALSE]
+
+  if (nrow(kmat) == 0L || ncol(kmat) == 0L) {
+    return(emptyMateResult(ped, ancestry))
+  }
+
+  kin <- kinMatrix2LongForm(kmat, removeDups = TRUE)
+  kin <- filterPairs(kin, ped, ignore = list(
+    c(sexCodes[["male"]], sexCodes[["male"]]),
+    c(sexCodes[["female"]], sexCodes[["female"]])
+  ))
+
+  if (nrow(kin) == 0L) {
+    return(emptyMateResult(ped, ancestry))
+  }
+
+  # Normalize id1/id2 (whichever happened to land where in the matrix) to
+  # sireId (male) / damId (female) -- only animals recorded male or female
+  # reach filterPairs() above, which drops male-male and female-female pairs,
+  # so every surviving row is opposite-sex.
+  sex1 <- ped$sex[match(kin$id1, ped$id)]
+  isSire1 <- sex1 == sexCodes[["male"]]
+  kin <- data.frame(
+    sireId = ifelse(isSire1, kin$id1, kin$id2),
+    damId = ifelse(isSire1, kin$id2, kin$id1),
+    kinship = kin$kinship,
+    stringsAsFactors = FALSE
+  )
+  # Every candidate pair, before any screen: its animals are the coverage
+  # universe (the same animals as pairs + excluded, by conservation).
+  candidateIds <- unique(c(kin$sireId, kin$damId))
+
+  sireAge <- ped$age[match(kin$sireId, ped$id)]
+  damAge <- ped$age[match(kin$damId, ped$id)]
+  ageOk <- ((sireAge >= minAge) | is.na(sireAge)) &
+    ((damAge >= minAge) | is.na(damAge))
+
+  excludedAge <- kin[!ageOk, c("sireId", "damId"), drop = FALSE]
+  excludedAge$reason <- rep("under minimum age", nrow(excludedAge))
+  kin <- kin[ageOk, , drop = FALSE]
+
+  userOk <- !(kin$sireId %in% exclude | kin$damId %in% exclude)
+  excludedUser <- kin[!userOk, c("sireId", "damId"), drop = FALSE]
+  excludedUser$reason <- rep("user-excluded", nrow(excludedUser))
+  kin <- kin[userOk, , drop = FALSE]
+
+  excluded <- rbind(excludedAge, excludedUser)
+  rownames(excluded) <- NULL
+
+  # The ancestry screen runs LAST (D5): a pair that already failed the age or
+  # user screen keeps that reason and is not counted as an ancestry match, and
+  # marker/genetic-value enrichment below is never computed for a blocked
+  # pair. block => excluded (reason "ancestry rule"); flag, and a block rule
+  # the caller overrode, stay in `pairs` and are annotated further below.
+  if (!is.null(ancestry)) {
+    hit <- matchAncestryPairs(kin$sireId, kin$damId, ped, ancestry$rules)
+    overridden <- !is.na(hit$rule) & hit$rule %in% ancestry$overrideKeys
+    blocked <- !is.na(hit$severity) & hit$severity == "block" & !overridden
+    ancestryStatus <- rep(NA_character_, nrow(kin))
+    ancestryStatus[!is.na(hit$rule)] <- "violation"
+    ancestryStatus[overridden] <- "overridden"
+
+    excluded$ancestryRule <- rep(NA_character_, nrow(excluded))
+    excluded <- rbind(excluded, data.frame(
+      sireId = kin$sireId[blocked], damId = kin$damId[blocked],
+      reason = rep("ancestry rule", sum(blocked)),
+      ancestryRule = hit$rule[blocked], stringsAsFactors = FALSE
+    ))
+    rownames(excluded) <- NULL
+
+    ancestryRule <- hit$rule[!blocked]
+    ancestrySeverity <- hit$severity[!blocked]
+    ancestryStatus <- ancestryStatus[!blocked]
+    kin <- kin[!blocked, , drop = FALSE]
+  }
+
+  # kin may legitimately be 0-row here (every candidate pair excluded). The
+  # merges below are 0-row-safe by construction (match()/%in%/any() on empty
+  # vectors resolve to correct no-ops) -- but the scalar-recycling assumption
+  # for a brand-new column is NOT: `df$col <- NA_real_` errors ("replacement
+  # has 1 row, data has 0") on a 0-row data.frame rather than recycling, so
+  # every new column below is explicitly length-matched via rep(..., nrow()).
+  kin$markerKinship <- rep(NA_real_, nrow(kin))
+  if (!is.null(markerKmat)) {
+    bothGenotyped <- kin$sireId %in% rownames(markerKmat) &
+      kin$damId %in% rownames(markerKmat)
+    if (any(bothGenotyped)) {
+      kin$markerKinship[bothGenotyped] <- markerKmat[
+        cbind(kin$sireId[bothGenotyped], kin$damId[bothGenotyped])
+      ]
+    }
+  }
+
+  kin$sireIndivMeanKin <- rep(NA_real_, nrow(kin))
+  kin$sireGu <- rep(NA_real_, nrow(kin))
+  kin$damIndivMeanKin <- rep(NA_real_, nrow(kin))
+  kin$damGu <- rep(NA_real_, nrow(kin))
+  if (!is.null(geneticValues) && !is.null(geneticValues$report)) {
+    rpt <- geneticValues$report
+    sireIdx <- match(kin$sireId, rpt$id)
+    damIdx <- match(kin$damId, rpt$id)
+    kin$sireIndivMeanKin <- rpt$indivMeanKin[sireIdx]
+    kin$sireGu <- rpt$gu[sireIdx]
+    kin$damIndivMeanKin <- rpt$indivMeanKin[damIdx]
+    kin$damGu <- rpt$gu[damIdx]
+  }
+
+  rownames(kin) <- NULL
+  if (is.null(ancestry)) {
+    return(list(pairs = kin, excluded = excluded))
+  }
+  # Appended AFTER the existing eight columns so consumers indexing them are
+  # undisturbed when rules are active (D6c).
+  kin$ancestryRule <- ancestryRule
+  kin$ancestrySeverity <- ancestrySeverity
+  kin$ancestryStatus <- ancestryStatus
+  list(
+    pairs = kin, excluded = excluded,
+    ancestryCoverage = .ancestryCoverage(candidateIds, ped, ancestry$rules)
+  )
+}
