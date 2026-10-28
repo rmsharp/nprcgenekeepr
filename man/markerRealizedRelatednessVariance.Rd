@@ -23,12 +23,11 @@ Must be a single positive value.}
 should be restricted, as in \code{\link{convertRelationships}}.}
 }
 \value{
-A dataframe with columns \code{id1}, \code{id2}, \code{kinship},
-\code{relation}, \code{R} (pedigree relationship, \code{2 * kinship}),
-\code{varR} (the realized-relatedness variance estimate), and
-\code{sdR} (its square root). \code{varR}/\code{sdR} are \code{NA} for
-every \code{relation} other than \code{"Parent-Offspring"},
-\code{"Full-Siblings"}, or \code{"Half-Siblings"}.
+A dataframe with one row for each \code{"Parent-Offspring"},
+\code{"Full-Siblings"} or \code{"Half-Siblings"} pair and columns
+\code{id1}, \code{id2}, \code{kinship}, \code{relation}, \code{R}
+(pedigree relationship, \code{2 * kinship}), \code{varR} (the
+realized-relatedness variance estimate), and \code{sdR} (its square root).
 }
 \description{
 Pedigree-expected relatedness (this package's existing \code{\link{kinship}}
@@ -40,14 +39,16 @@ nearby loci). This function estimates that variance for
 Parent-Offspring, Full-Siblings, and Half-Siblings pairs (issue #153,
 D3a) -- the closed-form solution of Hill & Weir (2011), extending the
 pedigree kinship this package already computes rather than requiring a
-new population-genetics framework. Every other pedigree-relationship
-category (grandparent, cousin, avuncular, more distant, unrelated, self)
-returns \code{NA} for the variance, not an error -- a pedigree-wide call
-will legitimately include many such pairs as a matter of course.
+new population-genetics framework. It lists only those three kinds of
+pairs; every other pair (grandparent, cousin, avuncular, more distant,
+unrelated, self) is left out, and \code{\link{convertRelationships}} lists
+every pair.
 }
 \details{
-Relationship pairs are classified from the pedigree structure via the
-existing \code{\link{convertRelationships}} (not re-derived). The
+Pairs are named by the rules of \code{\link{convertRelationships}} and
+listed in its order, but only an animal with each of its parents and two
+animals sharing a parent are looked at, so the table of every pair is
+never built. The
 variance combines \code{nChr} chromosomes, each approximated as the
 average length \code{mapLength / nChr} -- Hill & Weir (2011) give an
 exact weighted-sum combination rule (their equation 5) only for lineal
