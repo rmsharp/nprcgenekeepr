@@ -116,12 +116,69 @@ markerRealizedRelatednessVariance <- function(kmat, ped, nChr, mapLength,
          "length in Morgans).")
   }
 
-  rel <- convertRelationships(kmat, ped, ids)
+  if (!is.null(ids)) {
+    kmat <- filterKinMatrix(ids, kmat)
+  }
+  ## Only these three kinds get a variance, so only their pairs are listed
+  ## (owner ruling S1082); on the example that is 13,286 of 6,824,665 pairs.
+  kinds <- c("Parent-Offspring", "Full-Siblings", "Half-Siblings")
+  rel <- varianceKindPairs(kmat, ped, kinds)
   l <- mapLength / nChr
+  variance <- vapply(kinds, .hillWeirVarianceR, numeric(1L), l = l,
+                     nChr = nChr)
 
   rel$R <- 2L * rel$kinship
-  rel$varR <- vapply(rel$relation, .hillWeirVarianceR, numeric(1L),
-                      l = l, nChr = nChr)
+  rel$varR <- unname(variance[match(rel$relation, kinds)])
   rel$sdR <- sqrt(rel$varR)
   rel[c("id1", "id2", "kinship", "relation", "R", "varR", "sdR")]
+}
+
+## The rows of convertRelationships(kmat, ped) whose relation is one of
+## `kinds` (Parent-Offspring, Full-Siblings, Half-Siblings), in the same order,
+## without the table of every pair: only an animal with each of its parents,
+## and two animals sharing a parent (by name, as sire or dam), can be of those
+## kinds, and those pairs are named by convertRelationships()' own rules. A
+## matrix or pedigree this build is not made for (no cells, not a double matrix
+## with the same row and column names, an id not in the pedigree, a pedigree
+## relationsPlan() refuses) runs convertRelationships() itself. Internal only.
+varianceKindPairs <- function(kmat, ped, kinds) {
+  ids <- rownames(kmat)
+  fits <- length(kmat) > 0L && longFormFits(kmat, removeDups = TRUE) &&
+    identical(ids, colnames(kmat)) && all(ids %in% ped$id)
+  plan <- NULL
+  if (fits) {
+    child <- match(rep(ped$id, 2L), ids)
+    parentName <- c(ped$sire, ped$dam)
+    known <- !is.na(child) & !is.na(parentName)
+    families <- lapply(split(child[known], parentName[known]), unique)
+    siblings <- lapply(families[lengths(families) > 1L], utils::combn, 2L)
+    a <- c(child, unlist(lapply(siblings, function(pairs) pairs[1L, ])))
+    b <- c(match(parentName, ids),
+           unlist(lapply(siblings, function(pairs) pairs[2L, ])))
+    keep <- !is.na(a) & !is.na(b) & a != b
+    ## A pair's cell in the lower triangle, as kinMatrix2LongForm(removeDups =
+    ## TRUE) lists it: the earlier animal's column, the later animal's row.
+    cells <- sort(unique((pmin(a[keep], b[keep]) - 1L) * length(ids) +
+                           pmax(a[keep], b[keep])))
+    cells <- cells[!is.na(kmat[cells])]
+    kin <- longFormRows(kmat, cells, cells)
+    plan <- relationsPlan(kin, ped)
+  }
+  if (is.null(plan)) {
+    rel <- convertRelationships(kmat, ped)
+    return(rel[rel$relation %in% kinds, ])
+  }
+  ruleOrder <- c(
+    "self", "fullSiblings", "parentOffspring", "halfSiblings",
+    "grandparentGrandchild", "fullCousins", "cousinOther", "fullAvuncular",
+    "avuncularOther", "other", "noRelation"
+  )
+  outside <- length(plan$id) + 1L
+  classes <- relationClasses(
+    match(kin$id1, plan$id, nomatch = outside),
+    match(kin$id2, plan$id, nomatch = outside),
+    kin$kinship, kin$id1 == kin$id2, plan
+  )
+  kin["relation"] <- unname(relationClassNames[ruleOrder])[classes]
+  kin[kin$relation %in% kinds, ]
 }
