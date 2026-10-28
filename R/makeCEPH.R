@@ -30,6 +30,10 @@
 #' head(ped)
 #' head(pedCEPH$F)
 makeCEPH <- function(id, sire, dam) {
+  # Number or factor ids name the same animals as their text (S1083).
+  id <- idsAsText(id)
+  sire <- idsAsText(sire)
+  dam <- idsAsText(dam)
   ped <- data.frame(
     sire = sire, dam = dam, row.names = id,
     stringsAsFactors = FALSE

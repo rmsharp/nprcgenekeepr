@@ -117,8 +117,10 @@ markerRealizedRelatednessVariance <- function(kmat, ped, nChr, mapLength,
          "length in Morgans).")
   }
 
+  # Number or factor ids name the same animals as their text (S1083).
+  ped <- pedIdsAsText(ped)
   if (!is.null(ids)) {
-    kmat <- filterKinMatrix(ids, kmat)
+    kmat <- filterKinMatrix(idsAsText(ids), kmat)
   }
   ## Only these three kinds get a variance, so only their pairs are listed
   ## (owner ruling S1082); on the example that is 13,286 of 6,824,665 pairs.

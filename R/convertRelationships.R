@@ -35,8 +35,10 @@
 #' relBIds <- convertRelationships(bkmat, ped, c("4LFS70", "DD1U77"))
 #' relBIds
 convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
+  # Number or factor ids name the same animals as their text (S1083).
+  ped <- pedIdsAsText(ped)
   if (!is.null(ids)) {
-    kmat <- filterKinMatrix(ids, kmat)
+    kmat <- filterKinMatrix(idsAsText(ids), kmat)
   }
   # No id of `ids` is in `kmat`: a matrix with no cells has no pairs to name.
   if (length(kmat) == 0L) {

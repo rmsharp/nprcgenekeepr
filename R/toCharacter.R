@@ -29,3 +29,35 @@ toCharacter <- function(df, headers = c("id", "sire", "dam")) {
   }
   df
 }
+
+#' Factor or number ids as text
+#'
+#' A studbook whose ids are numbers (\code{read.csv()} reads number ids as
+#' integers) or factors names the same animals as one whose ids are text, so
+#' the functions that find animals by name take such ids as their text (owner
+#' ruling S1083). Any other value is returned unchanged, so it reaches the
+#' code it reached before.
+#'
+#' @param x a vector of animal ids.
+#' @return \code{x} as text when it is a factor or numbers, otherwise
+#' \code{x}.
+#' @noRd
+idsAsText <- function(x) {
+  if (is.factor(x) || is.numeric(x)) {
+    return(as.character(x))
+  }
+  x
+}
+
+#' A pedigree's factor or number ids as text
+#'
+#' @param ped a pedigree.
+#' @return \code{ped} with each of its \code{id}, \code{sire} and \code{dam}
+#' columns passed through \code{idsAsText()}.
+#' @noRd
+pedIdsAsText <- function(ped) {
+  for (col in intersect(names(ped), c("id", "sire", "dam"))) {
+    ped[[col]] <- idsAsText(ped[[col]])
+  }
+  ped
+}
