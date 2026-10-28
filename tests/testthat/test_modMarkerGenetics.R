@@ -693,6 +693,24 @@ test_that("modMarkerGenetics's realizedRelatednessTable respects explicit nChr/m
   })
 })
 
+## S1082 (owner ruling "Only the 3 kinds"): the tab's table holds only the
+## pairs that get a variance, 30 of smallPed's 153 pairs.
+test_that("modMarkerGenetics's realizedRelatednessTable lists only parent-offspring, full-sibling and half-sibling pairs", {
+  skip_if_not_installed("shiny")
+  ped <- nprcgenekeepr::smallPed
+  kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(kmat),
+                pedigree = shiny::reactive(ped)), {
+    tbl <- session$getReturned()$realizedRelatednessTable()
+    expect_identical(nrow(tbl), 30L)
+    expect_setequal(unique(tbl$relation),
+                    c("Parent-Offspring", "Full-Siblings", "Half-Siblings"))
+    expect_false(anyNA(tbl$varR))
+  })
+})
+
 test_that("modMarkerGenetics's ldBlockTable is not ready before a genotype file is uploaded", {
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,

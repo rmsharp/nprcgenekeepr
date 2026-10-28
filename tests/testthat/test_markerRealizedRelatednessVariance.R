@@ -120,7 +120,7 @@ test_that("human-genome-scale Full-Sib/Half-Sib sdR approximately matches Hill &
   expect_true(abs(hs$sdR - 0.0277) / 0.0277 < 0.03)
 })
 
-test_that("markerRealizedRelatednessVariance classifies smallPed pairs, NA outside PO/FS/HS", {
+test_that("markerRealizedRelatednessVariance lists only smallPed's PO/FS/HS pairs", {
   res <- markerRealizedRelatednessVariance(kmat, ped, nChr = 20L, mapLength = 28)
 
   expect_identical(res$relation[res$id1 == "D" & res$id2 == "G"], "Parent-Offspring")
@@ -130,11 +130,14 @@ test_that("markerRealizedRelatednessVariance classifies smallPed pairs, NA outsi
   expect_false(is.na(res$varR[res$id1 == "F" & res$id2 == "G"]))
   expect_false(is.na(res$varR[res$id1 == "C" & res$id2 == "I"]))
 
-  ## Out-of-scope relationship categories: varR/sdR are NA, not an error.
-  expect_identical(res$relation[res$id1 == "A" & res$id2 == "B"], "No Relation")
-  expect_true(is.na(res$varR[res$id1 == "A" & res$id2 == "B"]))
-  expect_identical(res$relation[res$id1 == "A" & res$id2 == "F"], "Grandparent-Grandchild")
-  expect_true(is.na(res$varR[res$id1 == "A" & res$id2 == "F"]))
+  ## Out-of-scope relationship categories are left out (owner ruling S1082):
+  ## 30 of smallPed's 153 pairs are of the three kinds, and A-B (No Relation)
+  ## and A-F (Grandparent-Grandchild) are not listed.
+  expect_identical(nrow(res), 30L)
+  expect_true(all(res$relation %in% c("Parent-Offspring", "Full-Siblings",
+                                      "Half-Siblings")))
+  expect_false(anyNA(res$varR))
+  expect_false(any(res$id1 == "A" & res$id2 %in% c("B", "F")))
 })
 
 test_that("markerRealizedRelatednessVariance respects the ids restriction parameter", {

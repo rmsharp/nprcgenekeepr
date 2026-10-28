@@ -1494,3 +1494,36 @@ reportMatePairsReference <- function(ped, kmat, markerKmat = NULL,
     ancestryCoverage = .ancestryCoverage(candidateIds, ped, ancestry$rules)
   )
 }
+
+## Realized Relatedness (S1082, BACKLOG.md:203): markerRealizedRelatednessVariance()
+## from R/markerRealizedRelatednessVariance.R at 520bd5dc8 (unchanged until
+## S1082). S1082 changes which pairs it lists; the copy calls the live
+## convertRelationships() and .hillWeirVarianceR(), which S1082 does not change
+## (Phase 3's equivalence tests pin convertRelationships() to
+## convertRelationshipsReference(), which takes minutes on the example). Only
+## the copy's name and its signature's line breaks differ.
+markerRealizedRelatednessVarianceReference <- function(kmat, ped, nChr,
+                                                       mapLength, ids = NULL) {
+  if (is.null(ped) || !is.data.frame(ped) ||
+    !all(c("id", "sire", "dam") %in% names(ped))) {
+    stop("markerRealizedRelatednessVariance() requires a pedigree data ",
+         "frame with 'id', 'sire', and 'dam' columns.")
+  }
+  if (!is.numeric(nChr) || length(nChr) != 1L || is.na(nChr) || nChr <= 0L) {
+    stop("nChr must be a single positive integer (chromosome count).")
+  }
+  if (!is.numeric(mapLength) || length(mapLength) != 1L || is.na(mapLength) ||
+    mapLength <= 0L) {
+    stop("mapLength must be a single positive number (total genetic map ",
+         "length in Morgans).")
+  }
+
+  rel <- convertRelationships(kmat, ped, ids)
+  l <- mapLength / nChr
+
+  rel$R <- 2L * rel$kinship
+  rel$varR <- vapply(rel$relation, .hillWeirVarianceR, numeric(1L),
+                      l = l, nChr = nChr)
+  rel$sdR <- sqrt(rel$varR)
+  rel[c("id1", "id2", "kinship", "relation", "R", "varR", "sdR")]
+}
