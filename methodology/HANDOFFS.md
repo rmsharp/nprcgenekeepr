@@ -210,13 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1079
 date: 2026-10-27
-status: pending
-active_task: IN PROGRESS -- settle and build the owner's ruling on how Breeding Groups lists groupings with equal scores: groupAddAssign() breaks a tie by the slot a grouping holds (R/groupAddAssign.R:330-334) while its comment says "by discovery order" (BACKLOG.md:203, DECISION NEEDED, Effort S; found S1057; owner pick at the Phase 0 picker, item 1 of 4, "Tie order"); strict TDD
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- groupAddAssign()'s tie-order comment says what the code does (BACKLOG item "Breeding Groups: groupings with equal scores are not listed in the order they were found", DECISION NEEDED, Effort S, found S1057; owner pick at the Phase 0 picker, item 1 of 4, "Tie order"; ruling "Correct the comment (Recommended)"); a comment-only change, so no RED or GREEN phase, as the ruled option said.
+what_was_done: Claim 0886b1f14. Measured before the question, scratch scripts and scratch package copies only: the tab's default pool built by the app's own steps (reportGV() at 1,000 gene-drop iterations and threshold 4, the combined rank with Undetermined last, living animals, the first 20) with the tab's other defaults (3 groups, kinship limit 0.25, sex ratio None, 5 kept), every trial traced: all 20 seeds keep tied groupings; the list order differs from the order found in 15, 17 and 17 of 20 seeds at 10, 100 and 1,000 trials, the grouping shown first in 5, 13 and 13; seed 5 at 1,000 trials lists five groupings of score 6 found at trials 20, 7, 8, 22, 29 (S1057 recorded 18, 7, 8, 23, 26). A git archive copy that lists ties in the order found, beside an unpatched control, on the 48 test files that exercise group formation: control 644 tests 0 failed; patched 36 failed expectations in 2 tests, both in test_groupAddAssignEquivalence.R (the frozen groupAddAssignReference()). Fix 1268f1f9d: the comment at R/groupAddAssign.R:340-345 only. BACKLOG block (9 lines at BACKLOG.md:203) removed; Learning 1045.
+next_steps: The owner picks at the next Phase 0. DECISION NEEDED: Summary Statistics' kept relationship table (BACKLOG.md:221, S); Mate Pair's 1 GB default run (:203, M); Marker Genetics' realized relatedness table (:212, M); the nine fallbacks (:227, M). After the next push, read the CI logs: S1073's block-product check on the Ubuntu legs, whether S1075's Rprofmem blocks ran, and whether S1076's "[CPU drawing]" tests skip on CI's Chrome. Not pushed: master is 69 ahead of origin.
+key_files: R/groupAddAssign.R:320-347 (the kept list: append :322, the first worst replaced :327-332, the corrected comment :340-345, order() :347; the exhaustive branch's order() :465 is already the enumeration order); R/modBreedingGroups.R:861-868 (the tab selects candidate 1); tests/testthat/test_groupAddAssignEquivalence.R:153,169,182 (identical() against the frozen copy); tests/testthat/helper-perfReference.R:672 (groupAddAssignReference()); PROJECT_LEARNINGS.md Learning 1045.
+gotchas: The tie order is pinned only by the frozen-reference comparison (test_groupAddAssignEquivalence.R), so a later change to it updates groupAddAssignReference() as well. To count the tests a behavior change breaks, git archive HEAD into two scratch folders, patch one, and from the repo folder load_all(<copy>) and test_file() each file that git grep -l names the function or its module server; the control must read 0 failed. A stored measurement rebuilt from the app's own steps keeps its shape but not its exact numbers (S1057's pool differed). To find a background suite's pid, ps -axo pid,etime,args | grep test_dir | grep -v grep (an awk match on the comm column found nothing).
+runtime_smoke: n/a -- comment only, no behavior can change; the full suite (483 files, 4,511 tests) and the 48-file control run read the same as before the edit.
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 0c85478456fb · manifest 7e3e82ab3ae0 (run at 1268f1f9d, alone, load 4.3, after the owner said go)
+changelog_ref: 0886b1f14
+commit: 1268f1f9d
 ```
-Session claimed; work beginning.
+Self 8/10. + Measured before the question (60 traced runs on the app's own pool; a patched scratch copy beside an unpatched control for the test count), so each option said what it changes and costs, and the owner answered first try; the repo was never edited for a probe; the notes condensed (S1072-S1076 folded) so the file stays under the Read tool's cut. - S1057's found-trial numbers did not reproduce on my pool (said so, not quoted as mine); a first pid lookup by ps comm found nothing; the ratchet waited on outside load.
 
 ```handoff
 session: S1078

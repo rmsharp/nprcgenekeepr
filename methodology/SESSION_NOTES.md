@@ -99,12 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1079 Did
-**Deliverable:** settle and build the owner's ruling on how Breeding Groups lists groupings with equal scores
-(`groupAddAssign()`, `R/groupAddAssign.R:330-334`; `BACKLOG.md:203`, DECISION NEEDED, Effort S; owner pick, item 1 of 4,
-"Tie order"; strict TDD). (IN PROGRESS)
-**Started:** 2026-10-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Tie order"; ruling "Correct the comment (Recommended)"; comment only, so no RED or
+GREEN phase, as the ruled option said):** `groupAddAssign()`'s tie-order comment (`R/groupAddAssign.R:340-345`) now says what the
+code does: equal scores keep their place in the kept list, the order found only until the list is full; a better grouping then takes
+the place of the worst one it replaces, so it can be listed ahead of an earlier one with the same score. Claim `0886b1f14`, fix
+`1268f1f9d`. Block off BACKLOG; no NEWS (nothing a user sees changed); no issue.
+**Measured first** (scratch scripts and package copies; Learning 1045): the tab's default pool by the app's own steps, seeds 1-20, every
+trial traced: every seed keeps ties; the grouping shown first would change in 5, 13, 13 of 20 seeds at 10, 100, 1,000 trials; the 48
+group-formation test files on a found-order copy: 36 failed expectations in 2 tests (`test_groupAddAssignEquivalence.R`, the frozen
+`groupAddAssignReference()`), the control 644 tests 0 failed.
+**Verified:** full suite 483 files 4,511 tests 0 failed; check 0/0/0; `lint_package()` 0; ratchet 11/11 (`0c85478456fb`, load 4.3).
+**Handoff evaluation of S1078: 9/10.** Helped: Next named `:203` first with its two choices; both ledgers and its ratchet citation
+matched at Phase 0. Missing: nothing for this task (the block's `R/groupAddAssign.R:330-334` had drifted to `:340-344` with S1072's
+harem set-up, S1057's cite, not S1078's). Wrong: nothing. ROI: high.
+**Self: 8/10.** + measured before the question (60 traced runs; a patched copy beside a control), answered first try; the repo never
+edited for a probe. - S1057's found trials did not reproduce (20, 7, 8, 22, 29 against 18, 7, 8, 23, 26; said so); a pid lookup on
+`ps`'s `comm` column found nothing; the ratchet waited on outside load.
+**Gotchas:** the tie order is pinned only by the frozen-reference comparison, so a change to it updates `groupAddAssignReference()`
+(`tests/testthat/helper-perfReference.R:672`); to count tests a change breaks, patch one of two `git archive` copies and from the repo
+folder `load_all(<copy>)` and `test_file()` the files that `git grep -l` the function; find a suite's pid with `ps -axo pid,etime,args`.
+**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:221` relationship table (S), `:203` Mate Pair memory (M), `:212` realized
+relatedness (M), `:227` fallbacks (M). After a push read CI (S1073 OpenBLAS, S1075 `Rprofmem` skips, S1076 CPU-drawing skips). Not
+pushed (69 ahead).
 
 ### Sessions 947-1078 (condensed S950 to S1079; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1078: the `reportGV` speed gate times the middle of 5 runs (`Rscript tools/perf/run.R <scenario> --runs N`, `runsArg()` and
@@ -116,29 +132,16 @@ S1077: from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-sty
 Direct (`R/modPedigree.R:569-597`, `.edgeStyleButtons()` `:500`); one click on Direct draws it. Claim `0e9c9c68d`, close-out
 `f56261aa0`, not pushed; S1076 9/10, self 8/10 (Learning 1043). **Gotchas kept:** `test_file(desc =)` also runs earlier
 `pixel_test_that()` blocks; read `uptime` before timing; time the reportGV gate from a `git archive` copy too.
-S1076: every browser test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]"
-(`pixel_test_that()`, `tests/testthat/helper-shinytest2.R:732`; a `--disable-accelerated-2d-canvas` Chrome); pedigree file 171.6 to
-214.0 s. Claim `334c6948d`, close-out `ce976ca4f`, not pushed; S1075 9/10, self 7/10 (Learning 1042). **Gotchas kept:**
-`test_file(desc =)` cannot select a generated test; `load_all(helpers = FALSE)` for a RED-time rerun; read CI's "2d_canvas" skips.
-S1075: the founder statistics build their contribution table once: each fill builds it with `initialContributions()`
-(`R/calcFounderContributions.R:74,143,173`); live memory during the fill 94.1 to 47.1 MB on all 3,694, results identical. Claim
-`3e6cce7db`, close-out `3c983760c`, not pushed; S1074 8/10, self 7/10 (Learning 1041). **Gotchas kept:** the harness peak counts
-uncollected garbage and cannot rank two designs (count copies with `Rprofmem`); a scratch git worktree has no renv library.
-S1074: the Diagram tab's first drawing builds its layout once: edge style, Show Names and Twin Connectors are `.heldSetting()`
-reactiveVals set by `observeEvent()` (`R/modPedigree.R:478,488,502,511`); the 708-animal trim in Direct 2 builds and 8.12 s to 1
-build and 4.17 s, drawing identical. Claim `5f8373f00`, close-out `486cc1086`, not pushed; S1073 8/10, self 8/10 (Learning 1040).
-**Gotchas kept:** `testServer()` and a real session both pass on an identical input value (only the browser does not resend);
-`app$click()` on the Direct radio then Show Names waits out its timeout (use `app$run_js(".click()")`).
-S1073: the diagram's penalty table is squared by blocks wherever a once-a-session check finds that exact (`.penaltyCrossprod()`,
-`R/penaltyCrossprod.R`, called at `R/makePedigreeDiagramData.R:1577`); the example's diagram 4.58 to 3.61 s (gate 4.6 s), the app's
-708-animal Direct draw 9.94 to 8.65 s. Claim `6074c5188`, close-out `b086c3296`, not pushed; S1072 8/10, self 7/10 (Learning 1039).
-**Gotchas kept:** on OpenBLAS (CI's Ubuntu legs) the check fails and the whole product runs; a recorder around `.blockCrossprod()`
-also counts the check's probe call; above 400 animals the Diagram tab has no style buttons (use `Shiny.setInputValue()`).
-S1072: harem trials build their set-up once per `groupAddAssign()` call (`makeHaremSetUp()`, `drawHaremGroups()`,
-`R/makeHaremSetUp.R:31,76`); 1,000 harem trials 9.71 to 4.58 s (gate `perf_groupAddAssign_harem_1000_seconds` 5.9 s), the tab
-10.9 to 5.7 s. Claim `06fee3112`, close-out `e31d54208`, not pushed; S1071 8/10, self 8/10 (Learning 1038). **Gotchas kept:**
-for an app before/after, drive from outside the repo and log `find.package()` in a scratch `app.R`; the `reportGV` gate reads
-slower from the repo folder (cause unknown); zsh needs `${=F}` to split a list.
+S1072-S1076 (evaluations 8-9/10, self 7-8/10; Learnings 1038-1042; condensed S1079, hashes in `CHANGELOG.md`): S1076, every browser
+test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]" (`pixel_test_that()`,
+`tests/testthat/helper-shinytest2.R:732`); S1075, founder statistics build their contribution table once (`initialContributions()`,
+`R/calcFounderContributions.R:74`); S1074, the Diagram tab's first drawing builds its layout once (`.heldSetting()`, `R/modPedigree.R:478`);
+S1073, the diagram's penalty table squared by blocks where a once-a-session check finds it exact (`R/penaltyCrossprod.R`); S1072, harem
+trials build their set-up once per call (`R/makeHaremSetUp.R:31,76`). **Gotchas kept:** `test_file(desc =)` cannot select a generated
+test; `load_all(helpers = FALSE)` for a RED-time rerun; read CI's "2d_canvas" skips; the harness peak counts uncollected garbage and
+cannot rank two designs (count copies with `Rprofmem`); a scratch git worktree has no renv library; click the Direct radio with
+`app$run_js(".click()")`; on OpenBLAS (CI's Ubuntu legs) the block check fails and the whole product runs; for an app before/after, drive
+from outside the repo and log `find.package()`; zsh needs `${=F}` to split a list.
 S1068-S1071 (evaluations 9/10, self 7-8/10; Learnings 1034-1037; condensed S1078, hashes in `CHANGELOG.md`): S1071, the shipped example
 snapshot history holds values the package makes (`neGD` = `1 - 1/(2*fg)`, GU x100, kurtosis -3; `validatedSnapshotHistory()` in
 `tests/testthat/helper-snapshotHistory.R`); S1070, one text on reading the Genetic-Health trend (`inst/extdata/ui_guidance/snapshot_trends.html`,
