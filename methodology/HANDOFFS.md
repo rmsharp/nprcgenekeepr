@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1084
+date: 2026-10-28
+status: pending
+active_task: IN PROGRESS -- fix reportGV() given a factor pedigree reporting livingOffspring as NA for 33 of the example's 332 animals, where the text pedigree gives 0 (BACKLOG.md:203, READY, Effort S; found S1083; owner pick at the Phase 0 picker, item 1 of 4, "reportGV() factor-id NA"); strict TDD.
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1083
 date: 2026-10-28
 status: complete
