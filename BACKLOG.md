@@ -218,12 +218,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       pair. To decide: related pairs only (as the plan's D8 asks of the relationship download), a chosen set of
       animals, a button that builds it, or leave it.
 
-- [ ] **Summary Statistics keeps the whole relationship table after a download (DECISION NEEDED, Effort S; found
-      S1062)** -- `relationshipData()` is a cached `reactive()` (`R/modSummaryStats.R:436-443`) that serves both
-      relationship downloads (`:891-907`): 6,824,665 rows and 234.7 MB on the example (built in 3.21 s, peak 693.5 MB),
-      kept until the pedigree changes (design section 9, F4). To decide: build it inside each download, so nothing is
-      kept and a second download rebuilds it (3.21 s), or keep it, so the two downloads share one build.
-
 - [ ] **The performance campaign's nine fallbacks: move their input types onto the fast paths? (DECISION NEEDED,
       Effort M; owner-raised S1054, filed S1066)** -- each phase kept the pre-campaign code for inputs its new code
       does not take (a factor where text is expected, for example): `rareAlleleCountsGeneral()`, `geneDropGeneral()`,

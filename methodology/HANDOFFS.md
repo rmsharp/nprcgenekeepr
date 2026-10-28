@@ -210,13 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1080
 date: 2026-10-27
-status: pending
-active_task: IN PROGRESS -- settle and build the owner's ruling on whether Summary Statistics keeps the whole relationship table after a download: relationshipData() is a cached reactive() (R/modSummaryStats.R:436-443) that serves both relationship downloads (:891-907), 6,824,665 rows and 234.7 MB on the example, kept until the pedigree changes (BACKLOG.md:221, DECISION NEEDED, Effort S; found S1062, design F4; owner pick at the Phase 0 picker, item 1 of 4, "Relationship table memory"); strict TDD
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- Summary Statistics builds the relationship table inside each download and keeps nothing of it (BACKLOG item "Summary Statistics keeps the whole relationship table after a download", DECISION NEEDED, Effort S, found S1062, design F4; owner pick at the Phase 0 picker, item 1 of 4, "Relationship table memory"; ruling "Build in each download (Recommended)"); strict TDD, the three gates answered "Yes"
+what_was_done: Claim 33251f713. Measured before the question in the running app (scratch app.R wrapping appServer() with a gc(full = TRUE) observer fired by Shiny.setInputValue(), driven with tools/perf/appSession.R's functions; a git archive copy of today's code against a patched copy, two runs each): live heap after a relationships download 472.8 MB today, 238.5 MB patched; the class download right after 0.5 s against 3.4 s, a second relationships download 4.3 s against 6.8 s; peak resident memory 1,562 against 2,002 MB, after both downloads 1,544 against 992 MB. RED 9c48a7fa6 (test_kinshipForConsumers.R:459: four downloads ask kinshipFor 3 times, repeat files identical; 1 of 22 failed on today's code). GREEN 9eb66887f (relationshipData() a plain function, R/modSummaryStats.R:432-447). Docs 099ab92fd (kinshipFor help, NEWS Speed and Memory). REFACTOR 8f449bdf0 (csvDownload(prefix, rows) for five CSV downloads; 12 of 12 files byte-identical before and after). Full suite 4,511 tests 0 failed at GREEN and REFACTOR; check 0/0/0; lint 0; E2E download test 11/11 at both; BACKLOG block removed; Learning 1046.
+next_steps: The owner picks at the next Phase 0. DECISION NEEDED: Mate Pair's 1 GB default run (BACKLOG.md:203, M); Marker Genetics' realized relatedness table (:212, M); the nine fallbacks (:221, M); the earlier-snapshots notice wording (:41, S); the tutorial leftovers (:45, S). For the two memory items, measure in the app as this session did (live heap by an injected gc() observer, not resident memory alone). After the next push, read the CI logs: S1073's block-product check on the Ubuntu legs, whether S1075's Rprofmem blocks ran, and whether S1076's "[CPU drawing]" tests skip on CI's Chrome. Not pushed: master is 75 ahead of origin.
+key_files: R/modSummaryStats.R:432-454 (relationshipData() a plain function, relationClassData() the kept class counts), :295-303 (kinshipFor help), :857-902 (download handlers; csvDownload() :865-873); R/appServer.R:356-361 (kinshipFor recomputes the whole colony's kinship with no ids), :378 (module return discarded); tests/testthat/test_kinshipForConsumers.R:459-474 (the ruling's test), :406-432 (summaryRun()); tests/testthat/test-e2e-summary-statistics-relationship-downloads.R (opt-in, NPRC_RUN_E2E=true); NEWS.Rmd:427-429; tools/perf/appSession.R (appSessionPid(), appSessionRssMb(), appSessionSteps)
+gotchas: Resident memory alone cannot show a kept object: it rose in both runs and fell only later, so read the live heap inside the app with a scratch app.R whose server calls appServer() and adds observeEvent(input$perfGc, gc(full = TRUE) logged to a file), fired by app$run_js("Shiny.setInputValue('perfGc', {...}, {priority: 'event'})"). Under the ruling each relationships download also recomputes kinship (kinshipFor() keeps nothing), so a second download is about 2.5 s slower and the momentary peak about 440 MB higher; that was in the option text. test_file(desc =) cannot match a paste() title; read failure messages from the result list's $results. Never start a long run in a nested ( ... ) & (no notification comes): use run_in_background with an until grep -q DONE wait.
+runtime_smoke: The real app on the repo tree at GREEN (scratch app.R with load_all(), the driver above): live heap 238.5 MB after Export All Relationships (472.8 before the change), every download 8.1 s or less; the opt-in E2E download test 11/11 on a scratch install of GREEN and again of REFACTOR (every pair and the class counts).
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 3f9b3fb750d7 · manifest 7e3e82ab3ae0 (run at 8f449bdf0, alone, load 7.6)
+changelog_ref: 33251f713
+commit: 8f449bdf0
 ```
-Session claimed; work beginning.
 
 ```handoff
 session: S1079

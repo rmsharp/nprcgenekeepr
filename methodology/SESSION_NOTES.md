@@ -99,12 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1080 Did
-**Deliverable:** settle and build the owner's ruling on whether Summary Statistics keeps the whole relationship table after a
-download (`relationshipData()`, `R/modSummaryStats.R:436-443`, serving both downloads `:891-907`; `BACKLOG.md:221`, DECISION
-NEEDED, Effort S; found S1062, design F4; owner pick, item 1 of 4, "Relationship table memory"; strict TDD). (IN PROGRESS)
-**Started:** 2026-10-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Relationship table memory"; ruling "Build in each download (Recommended)"; strict
+TDD, three gates "Yes"):** Summary Statistics builds the relationship table inside each download and keeps nothing of it:
+`relationshipData()` is a plain function (`R/modSummaryStats.R:432-447`), `relationClassData()` stays a reactive (only the class
+counts are kept). Claim `33251f713`, RED `9c48a7fa6`, GREEN `9eb66887f`, docs `099ab92fd`, REFACTOR `8f449bdf0` (`csvDownload()`,
+`:865-873`, for five CSV downloads). Block off BACKLOG; NEWS "Speed and Memory" line; no issue.
+**Measured first** (real app, two runs each, a scratch `app.R` with a `gc(full = TRUE)` observer): live heap after a download 472.8
+MB today, 238.5 MB patched; class download right after 0.5 against 3.4 s; second relationships download 4.3 against 6.8 s; peak
+resident 1,562 against 2,002 MB; after both 1,544 against 992 MB.
+**Verified:** full suite 483 files 4,511 tests 0 failed (GREEN and REFACTOR); check 0/0/0; lint 0; E2E download test 11/11 (both);
+12 of 12 CSV files byte-identical across REFACTOR; ratchet 11/11 (`3f9b3fb750d7`, load 7.6).
+**Handoff evaluation of S1079: 9/10.** Helped: Next named `:221` with its two choices; its line cites (`:436-443`, `:891-907`) held;
+both ledgers matched at Phase 0. Missing: the test pinning the kept table (`test_kinshipForConsumers.R:459`) and that `kinshipFor()`
+recomputes kinship at each ask (both in the S1062 design, not the block). Wrong: nothing. ROI: high.
+**Self: 8/10.** + measured the live heap in the app before the question (answered first try, preview tables); REFACTOR proved
+byte-identical; E2E on GREEN and REFACTOR. - started the REFACTOR suite in a nested `( ... ) &` (a known gotcha); a `test_file(desc
+=)` call on a `paste()` title failed; zsh `echo =====` failed (known).
+**Gotchas:** resident memory alone cannot show a kept object, read the live heap with an injected `gc()` observer (Learning 1046);
+`test_file(desc =)` cannot match a `paste()` title; wait on a background job with `run_in_background` and `until grep -q DONE`.
+**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` Mate Pair memory (M), `:212` realized relatedness (M), `:221` fallbacks
+(M), `:41` snapshot notice (S), `:45` tutorial leftovers (S). After a push read CI (S1073 OpenBLAS, S1075 `Rprofmem` skips, S1076
+CPU-drawing skips). Not pushed (75 ahead).
 
 ### Sessions 947-1079 (condensed S950 to S1080; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1079: `groupAddAssign()`'s tie-order comment says what the code does (`R/groupAddAssign.R:340-345`; comment only, ruling "Correct
