@@ -454,6 +454,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
   after a relationship download (about 235 MB for the example). Results
   are the same as before for the same random seed.
 
+- `kinship(sparse = TRUE)` takes about half a second for the whole
+  shipped example (3,694 animals) instead of about 43 seconds.
+
 ## General Fixes
 
 - New: the Input tab now warns when animals in the uploaded pedigree
@@ -615,6 +618,12 @@ export workflows, and longitudinal monitoring of colony genetic health.
   by two groups, and the help of `focalAnimals` says that its `id`
   column is a factor. `makeGroupNum()` and `makeGrpNum()` make one group
   when called with no number, as their help said they would.
+  `convertRelationships()`, `markerRealizedRelatednessVariance()`,
+  `makeCEPH()`, `groupAddAssign()` and `fillGroupMembersWithSexRatio()`
+  take ids given as numbers (as `read.csv()` reads a studbook with
+  number ids) or as a factor as their text: such a studbook got wrong
+  relationship names, and `groupAddAssign()` stopped with "subscript out
+  of bounds".
 
 - Fixed (configuration file): A line starting with `#` is a comment
   wherever the file is read, so a site that copies the example file
