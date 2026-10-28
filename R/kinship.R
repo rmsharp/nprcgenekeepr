@@ -243,17 +243,20 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
   }
 
   dimnames(kmat) <- list(id, id)
+  if (sparse) {
+    return(sparseKinship(kmat, missingParentRow))
+  }
   kmat
 }
 
 #' Whether kinship()'s n x n fill takes an input
 #'
-#' Performance plan Phase 6: \code{kinship()} fills one n x n matrix when the
-#' result is dense (\code{sparse} exactly \code{FALSE}), there is at least one
-#' animal, the sire, dam and generation vectors are each as long as \code{id},
-#' and no generation is missing. Any other input runs
-#' \code{kinshipGeneral()}, today's code, so it keeps today's result, error
-#' and warnings.
+#' Performance plan Phase 6: \code{kinship()} fills one n x n matrix when
+#' \code{sparse} is exactly \code{FALSE} or (owner ruling S1083) exactly
+#' \code{TRUE}, there is at least one animal, the sire, dam and generation
+#' vectors are each as long as \code{id}, and no generation is missing. Any
+#' other input runs \code{kinshipGeneral()}, today's code, so it keeps
+#' today's result, error and warnings.
 #'
 #' @param n the number of animals, \code{length(id)}.
 #' @param sires,dams the sire and dam vectors \code{kinship()} was given.
@@ -262,8 +265,32 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: 
 #' @return \code{TRUE} or \code{FALSE}.
 #' @noRd
 denseKinshipFits <- function(n, sires, dams, pdepth, sparse) {
-  isFALSE(sparse) && n >= 1L && length(sires) == n && length(dams) == n &&
-    is.atomic(pdepth) && length(pdepth) == n && !anyNA(pdepth)
+  (isFALSE(sparse) || isTRUE(sparse)) && n >= 1L && length(sires) == n &&
+    length(dams) == n && is.atomic(pdepth) && length(pdepth) == n &&
+    !anyNA(pdepth)
+}
+
+#' kinship()'s filled matrix as today's sparse matrix
+#'
+#' Today's code (\code{kinshipGeneral()}) filled a \code{Matrix::Diagonal()}
+#' of n + 1 rows with \code{sparse = TRUE}, the last row the missing parent:
+#' it stays a diagonal matrix while no two of its rows have a kinship, and is
+#' a general sparse matrix otherwise (42.6 s on the example's 3,694 animals,
+#' against 0.34 s for the n x n fill; owner ruling S1083). Its diagonal is
+#' stored value by value, even where every value is 1, which
+#' \code{Matrix::Diagonal()} would store as a unit diagonal.
+#'
+#' @param kmat the filled n x n matrix, with its row and column names.
+#' @param missingParentRow the missing parent's kinship with each animal.
+#' @return A \code{ddiMatrix} or a \code{dgCMatrix}.
+#' @noRd
+sparseKinship <- function(kmat, missingParentRow) {
+  if (isDiagonal(kmat) && !anyNA(missingParentRow) &&
+        all(missingParentRow == 0.0)) {
+    return(new("ddiMatrix", Dim = dim(kmat), Dimnames = dimnames(kmat),
+               diag = "N", x = diag(kmat, names = FALSE)))
+  }
+  as(as(kmat, "generalMatrix"), "CsparseMatrix")
 }
 
 #' Today's kinship matrix, for any input
