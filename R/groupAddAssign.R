@@ -337,9 +337,12 @@ groupAddAssign <- function(candidates,
     notifyProgress(updateProgress)
   }
 
-  # Best candidate first; ties broken by discovery order (order() is not
-  # guaranteed stable for all methods, so break ties explicitly rather than
-  # relying on it).
+  # Best candidate first; equal scores keep their place in the kept list,
+  # broken explicitly because order() is not guaranteed stable for all
+  # methods. That place is the order found only until the list is full: a
+  # better grouping then takes the place of the worst one it replaces
+  # (which.min() above picks the first worst), so it can be listed ahead of
+  # an earlier grouping with the same score.
   retainedScores <- vapply(retained, function(r) r$score, numeric(1L))
   retained <- retained[order(-retainedScores, seq_along(retained))]
 
