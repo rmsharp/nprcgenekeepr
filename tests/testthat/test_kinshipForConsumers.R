@@ -456,16 +456,21 @@ test_that(paste("each kinship CSV download asks kinshipFor for every animal,",
   expect_identical(run$asked, list(NULL, NULL))
 })
 
-test_that(paste("the relationship downloads ask kinshipFor for every animal",
-                "once: the relationship table they share stays kept",
-                "(BACKLOG.md 'Summary Statistics keeps the whole relationship",
-                "table', left as it is)"), {
+test_that(paste("each relationship download asks kinshipFor for every animal",
+                "again: no relationship table is kept between clicks, only",
+                "the class counts (owner ruling S1080)"), {
   run <- summaryRun(summaryCases()$plain, "provider",
                     downloads = c("downloadRelationships",
                                   "downloadRelationClasses",
-                                  "downloadRelationships"))
+                                  "downloadRelationships",
+                                  "downloadRelationClasses"))
   expect_type(run$files[[1L]]$value, "raw")
-  expect_identical(run$asked, list(NULL))
+  expect_type(run$files[[2L]]$value, "raw")
+  expect_identical(run$files[[3L]], run$files[[1L]])
+  expect_identical(run$files[[4L]], run$files[[2L]])
+  ## the two relationships downloads and the first class download; the
+  ## second class download reads the kept class counts
+  expect_identical(run$asked, list(NULL, NULL, NULL))
 })
 
 test_that("Summary Statistics uses a handed-in kinshipMatrix before kinshipFor", {
