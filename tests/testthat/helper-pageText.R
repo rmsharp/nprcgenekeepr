@@ -13,7 +13,9 @@
 ## test_docsAuditLeftoverWording.R), and tell a section of a tutorial's code
 ## chunks from its prose and read a chunk's option lines (insideChunk(),
 ## sectionProse(), chunkOptionText(); test_snapshotTutorialSection.R and
-## test_inventoryTutorialSections.R).
+## test_inventoryTutorialSections.R), and read the column headings of a DT
+## table the app shows (dtHeadings(); test_modGeneticValue.R and
+## test_modMarkerGenetics.R).
 
 ## The lines of one tracked file of the source tree. The file sits outside a
 ## built package (.Rbuildignore'd or not installed), so the block skips where
@@ -164,4 +166,15 @@ chunkOptionText <- function(section, label) {
   body <- section[-seq_len(start)]
   options <- body[cumsum(!startsWith(body, "#|")) == 0L]
   c(section[start], options)
+}
+
+## The heading text of every <th> in a DT table's widget container, in order.
+## Under testServer() a DT output comes back as serialized widget JSON whose
+## container holds the column headings (the rows themselves stay on the
+## server); DT shows a data frame's row names as an unlabeled first column, an
+## empty heading, unless told not to.
+dtHeadings <- function(widgetJson) {
+  json <- as.character(widgetJson)
+  cells <- regmatches(json, gregexpr("<th>[^<]*<\\\\/th>", json))[[1L]]
+  trimws(sub("<\\\\/th>$", "", sub("^<th>", "", cells)))
 }

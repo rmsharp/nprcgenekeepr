@@ -713,9 +713,8 @@ test_that("modMarkerGenetics's realizedRelatednessTable lists only parent-offspr
 
 ## S1082 (owner ruling "Hide it"): the table's rows keep the kinship matrix's
 ## cell numbers as row names (9063, 9158, ... on the example), which DT shows
-## as an unlabeled first column unless told not to. The table comes back from
-## testServer() as serialized widget JSON whose container holds the column
-## headings (the rows themselves stay on the server).
+## as an unlabeled first column unless told not to (dtHeadings(),
+## helper-pageText.R, reads the headings).
 test_that("modMarkerGenetics's realizedRelatednessTable is shown without a row-number column", {
   skip_if_not_installed("shiny")
   ped <- nprcgenekeepr::smallPed
@@ -724,11 +723,9 @@ test_that("modMarkerGenetics's realizedRelatednessTable is shown without a row-n
   shiny::testServer(modMarkerGeneticsServer,
     args = list(kinshipMatrix = shiny::reactive(kmat),
                 pedigree = shiny::reactive(ped)), {
-    json <- as.character(output$realizedRelatednessTable)
-    cells <- regmatches(json, gregexpr("<th>[^<]*<\\\\/th>", json))[[1L]]
-    headings <- trimws(sub("<\\\\/th>$", "", sub("^<th>", "", cells)))
-    expect_identical(headings, c("id1", "id2", "kinship", "relation", "R",
-                                 "varR", "sdR"))
+    expect_identical(dtHeadings(output$realizedRelatednessTable),
+                     c("id1", "id2", "kinship", "relation", "R", "varR",
+                       "sdR"))
   })
 })
 

@@ -138,7 +138,8 @@ markerRealizedRelatednessVariance <- function(kmat, ped, nChr, mapLength,
 ## `kinds` (Parent-Offspring, Full-Siblings, Half-Siblings), in the same order,
 ## without the table of every pair: only an animal with each of its parents,
 ## and two animals sharing a parent (by name, as sire or dam), can be of those
-## kinds, and those pairs are named by convertRelationships()' own rules. A
+## kinds, and those pairs are named by convertRelationships()' own rules
+## (relationNames(), R/convertRelationships.R). A
 ## matrix or pedigree this build is not made for (no cells, not a double matrix
 ## with the same row and column names, an id not in the pedigree, a pedigree
 ## relationsPlan() refuses) runs convertRelationships() itself. Internal only.
@@ -169,17 +170,6 @@ varianceKindPairs <- function(kmat, ped, kinds) {
     rel <- convertRelationships(kmat, ped)
     return(rel[rel$relation %in% kinds, ])
   }
-  ruleOrder <- c(
-    "self", "fullSiblings", "parentOffspring", "halfSiblings",
-    "grandparentGrandchild", "fullCousins", "cousinOther", "fullAvuncular",
-    "avuncularOther", "other", "noRelation"
-  )
-  outside <- length(plan$id) + 1L
-  classes <- relationClasses(
-    match(kin$id1, plan$id, nomatch = outside),
-    match(kin$id2, plan$id, nomatch = outside),
-    kin$kinship, kin$id1 == kin$id2, plan
-  )
-  kin["relation"] <- unname(relationClassNames[ruleOrder])[classes]
+  kin["relation"] <- relationNames(kin, plan)
   kin[kin$relation %in% kinds, ]
 }

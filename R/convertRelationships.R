@@ -50,9 +50,24 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   if (is.null(plan)) {
     return(convertRelationshipsGeneral(kin, ped, updateProgress))
   }
-  ## Performance plan Phase 3: every pair is classified by vector comparisons
-  ## in the order of today's rules, about a million pairs at a time, and the
-  ## first rule a pair meets names it, as today's if/else chain does.
+  kin["relation"] <- relationNames(kin, plan)
+  # One argument-free progress call per pair, as today.
+  if (!is.null(updateProgress)) {
+    for (i in seq_len(nrow(kin))) {
+      notifyProgress(updateProgress)
+    }
+  }
+  kin
+}
+
+## The relation of each pair of `kin` (id1, id2, kinship), given
+## relationsPlan(kin, ped). Performance plan Phase 3: every pair is classified
+## by vector comparisons in the order of today's rules, about a million pairs
+## at a time, and the first rule a pair meets names it, as today's if/else
+## chain does. convertRelationships() names every pair with it, and
+## markerRealizedRelatednessVariance() the pairs that share a parent (S1082).
+## Internal only.
+relationNames <- function(kin, plan) {
   ruleOrder <- c(
     "self", "fullSiblings", "parentOffspring", "halfSiblings",
     "grandparentGrandchild", "fullCousins", "cousinOther", "fullAvuncular",
@@ -71,17 +86,10 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
       plan
     )
   }
-  # One argument-free progress call per pair, as today.
-  if (!is.null(updateProgress)) {
-    for (i in seq_len(nPairs)) {
-      notifyProgress(updateProgress)
-    }
-  }
-  kin["relation"] <- unname(relationClassNames[ruleOrder])[classes]
-  kin
+  unname(relationClassNames[ruleOrder])[classes]
 }
 
-# The number of pairs convertRelationships()' fast path classifies at a time.
+# The number of pairs relationNames() classifies at a time.
 # In blocks, the example's table of 6,824,665 pairs peaked at 936.6 MB, about
 # its long form's own peak; classified at once, at 1,152 MB (S1055). A test
 # swaps it for a small number to run several blocks.

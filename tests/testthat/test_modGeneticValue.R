@@ -389,14 +389,8 @@ test_that("modGeneticValueServer rankingsTable renders after analysis", {
 # app's first ten read 4, 5, 6, 9, 10, ...), not a rank; the real rank column
 # is the last one. The Export buttons already write no row names. The table
 # comes back from testServer() as serialized widget JSON whose container holds
-# the column headings (the rows themselves stay on the server).
-
-# The heading text of every <th> in the widget's container, in order.
-dtHeadings <- function(widgetJson) {
-  json <- as.character(widgetJson)
-  cells <- regmatches(json, gregexpr("<th>[^<]*<\\\\/th>", json))[[1L]]
-  trimws(sub("<\\\\/th>$", "", sub("^<th>", "", cells)))
-}
+# the column headings (the rows themselves stay on the server), which
+# dtHeadings() (helper-pageText.R) reads.
 
 # Runs the module on a 20-animal pedigree with the given inputs set before
 # Run Analysis, and returns the table's headings, the columns of the view the
