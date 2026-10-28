@@ -203,6 +203,12 @@ groupAddAssign <- function(candidates,
       "groups to be formed."
     )
   }
+  # Number or factor ids name the same animals as their text (S1083).
+  candidates <- idsAsText(candidates)
+  if (is.list(currentGroups)) {
+    currentGroups <- lapply(currentGroups, idsAsText)
+  }
+  ped <- pedIdsAsText(ped)
   kmat <- filterKinMatrix(union(candidates, unlist(currentGroups)), kmat)
   kin <- getAnimalsWithHighKinship(
     kmat, ped, threshold, currentGroups, ignore,

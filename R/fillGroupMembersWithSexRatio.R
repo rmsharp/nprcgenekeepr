@@ -80,6 +80,9 @@
 fillGroupMembersWithSexRatio <-
   function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
            sexRatio) {
+    # Number or factor ids name the same animals as their text (S1083).
+    candidates <- idsAsText(candidates)
+    ped <- pedIdsAsText(ped)
     potentialSires <- getPotentialSires(candidates, ped, minAge)
     # A male who is not a potential sire (under minAge, or with no birth date)
     # is placed nowhere: calculateSexRatio() counts every male as a male, so he
