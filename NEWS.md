@@ -170,9 +170,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
   counts as missing. `checkLinkageMarkerGenotypeFile()` accepts panels
   with more than two alleles per locus, such as microsatellites.
 - `markerRealizedRelatednessVariance()` estimates how far DNA-based
-  relatedness can vary around the pedigree prediction. `markerLdBlock()`
-  and `obfuscateLdBlocks()` report and de-identify linked marker blocks
-  (issue \#153).
+  relatedness can vary around the pedigree prediction for
+  parent-offspring, full-sibling and half-sibling pairs, the only pairs
+  it lists. `markerLdBlock()` and `obfuscateLdBlocks()` report and
+  de-identify linked marker blocks (issue \#153).
 - `checkSequenceGenotypeFile()`, `computeGenomicROH()` (inbreeding from
   runs of homozygosity) and `obfuscateGenotypeMatrix()` support
   sequence-scale genotype files, and `markerKinship()` and

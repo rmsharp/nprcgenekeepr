@@ -2008,10 +2008,8 @@ Pedigree-expected relatedness (kinship doubled) is only an average --
 actual IBD sharing between two relatives varies around that expectation
 because of Mendelian sampling and linkage. __markerRealizedRelatednessVariance__
 computes a closed-form estimate of that variance (Hill & Weir 2011) for
-Parent-Offspring, Full-Sibling, and Half-Sibling pairs -- every other
-relationship category (grandparent, cousin, unrelated, self, and so on)
-legitimately returns `NA`, not an error, since a pedigree-wide call
-includes many such pairs as a matter of course. Despite the "marker" name
+Parent-Offspring, Full-Sibling, and Half-Sibling pairs, and lists only those
+pairs. Despite the "marker" name
 shared with the rest of this section, it needs no genotype data at all --
 only a kinship matrix, the pedigree, and the species' chromosome count and
 total autosomal genetic map length (in Morgans).
@@ -2025,7 +2023,7 @@ smallPedKmat <- kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen,
 ## example scale -- supply values appropriate to your own species.
 rrv <- markerRealizedRelatednessVariance(smallPedKmat, smallPed, nChr = 20L,
                                           mapLength = 28)
-rrv[rrv$relation %in% c("Parent-Offspring", "Full-Siblings", "Half-Siblings"), ]
+rrv
 ```
 
 Parent-offspring pairs have `varR` of exactly zero, not merely small --

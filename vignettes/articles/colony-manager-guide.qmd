@@ -1030,8 +1030,9 @@ genuinely pedigree-valid metric (Hill & Weir 2011): pedigree-based
 kinship is only an *average* expected relatedness -- the actual
 proportion of genome shared identical-by-descent between two relatives
 varies around that average because of Mendelian sampling and linkage,
-and this table estimates that variance for Parent-Offspring,
-Full-Sibling, and Half-Sibling pairs given a curator-supplied
+and this table lists the Parent-Offspring, Full-Sibling, and
+Half-Sibling pairs and estimates that variance for each, given a
+curator-supplied
 chromosome count and total genetic-map length (pre-filled with rhesus
 macaque defaults, adjustable for other species or datasets). It needs
 no genotype file at all -- only the pedigree already loaded elsewhere
