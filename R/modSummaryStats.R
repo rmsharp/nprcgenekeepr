@@ -862,54 +862,44 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       }
     )
 
-    output$downloadMaleFounders <- downloadHandler(
-      filename = function() paste0("male_founders_", Sys.Date(), ".csv"),
-      content = function(file) {
+    # A dated CSV download of the table `rows()` gives, without row names.
+    csvDownload <- function(prefix, rows) {
+      downloadHandler(
+        filename = function() paste0(prefix, Sys.Date(), ".csv"),
+        content = function(file) {
+          write.csv(rows(), file, row.names = FALSE)
+        }
+      )
+    }
+
+    output$downloadMaleFounders <- csvDownload(
+      "male_founders_", function() {
         req(pedigree())
         ped <- pedigree()
-        males <- ped[ped$sex == sexCodes[["male"]] & isFounder(ped), ]
-        write.csv(males, file, row.names = FALSE)
+        ped[ped$sex == sexCodes[["male"]] & isFounder(ped), ]
       }
     )
 
-    output$downloadFemaleFounders <- downloadHandler(
-      filename = function() paste0("female_founders_", Sys.Date(), ".csv"),
-      content = function(file) {
+    output$downloadFemaleFounders <- csvDownload(
+      "female_founders_", function() {
         req(pedigree())
         ped <- pedigree()
-        females <- ped[ped$sex == sexCodes[["female"]] & isFounder(ped), ]
-        write.csv(females, file, row.names = FALSE)
+        ped[ped$sex == sexCodes[["female"]] & isFounder(ped), ]
       }
     )
 
-    output$downloadFirstOrder <- downloadHandler(
-      filename = function() {
-        paste0("first_order_relationships_", Sys.Date(), ".csv")
-      },
-      content = function(file) {
+    output$downloadFirstOrder <- csvDownload(
+      "first_order_relationships_", function() {
         req(pedigree())
-        counts <- firstOrderData()
-        write.csv(counts, file, row.names = FALSE)
+        firstOrderData()
       }
     )
 
-    output$downloadRelationships <- downloadHandler(
-      filename = function() paste0("relationships_", Sys.Date(), ".csv"),
-      content = function(file) {
-        rels <- relationshipData()
-        write.csv(rels, file, row.names = FALSE)
-      }
-    )
+    output$downloadRelationships <- csvDownload("relationships_",
+                                                relationshipData)
 
-    output$downloadRelationClasses <- downloadHandler(
-      filename = function() {
-        paste0("relationship_classes_", Sys.Date(), ".csv")
-      },
-      content = function(file) {
-        classes <- relationClassData()
-        write.csv(classes, file, row.names = FALSE)
-      }
-    )
+    output$downloadRelationClasses <- csvDownload("relationship_classes_",
+                                                  relationClassData)
 
     # Plot download handlers (using ggplot2 reactives)
     output$downloadMkHist <- downloadHandler(
