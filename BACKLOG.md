@@ -200,15 +200,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
       until then.
 
-- [ ] **Marker Genetics' Realized Relatedness table holds every pair (DECISION NEEDED, Effort M; found S1062)** --
-      opening the "Linkage and LD Block Metrics" tab (`R/modMarkerGenetics.R:227`) runs
-      `markerRealizedRelatednessVariance()` on the whole kinship matrix (`:735-751`;
-      `R/markerRealizedRelatednessVariance.R:119`), with no genotype file needed: 6,824,665 rows on the example, built
-      in 8.31 s with a 707.6 MB peak, a 390.9 MB table kept while the tab shows it; the app's memory rose 716 MB in
-      13.5 s (design sections 2.1 and 9, F3). D5's change leaves it as it is, because the table itself needs every
-      pair. To decide: related pairs only (as the plan's D8 asks of the relationship download), a chosen set of
-      animals, a button that builds it, or leave it.
-
 - [ ] **The performance campaign's nine fallbacks: move their input types onto the fast paths? (DECISION NEEDED,
       Effort M; owner-raised S1054, filed S1066)** -- each phase kept the pre-campaign code for inputs its new code
       does not take (a factor where text is expected, for example): `rareAlleleCountsGeneral()`, `geneDropGeneral()`,
@@ -219,7 +210,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       registered one). S1054 found 14 of `geneDropGeneral()`'s 19 test inputs end in an error today. S1081 added a
       tenth of the same kind: `matePairLongForm()` (`R/reportMatePairs.R`) runs `kinMatrix2LongForm()` and
       `filterPairs()` for a matrix `longFormFits()` refuses; its male-female build gave today's report on an integer
-      matrix without that branch (`test_reportMatePairsOppositeSexOnly.R`'s guard runs it). To decide:
+      matrix without that branch (`test_reportMatePairsOppositeSexOnly.R`'s guard runs it). S1082 added an eleventh:
+      `varianceKindPairs()` (`R/markerRealizedRelatednessVariance.R`) runs `convertRelationships()` and keeps the
+      three kinds for a matrix or pedigree its parent-link build is not made for (no cells, not a double matrix with the
+      same row and column names, an id not in the pedigree, a pedigree `relationsPlan()` refuses);
+      `test_markerRealizedRelatednessVarianceKinds.R` runs it on an id outside the pedigree, factor columns and an
+      integer matrix. To decide:
       fold some input types in, one test each (the same results, `identical()`), or leave the fallbacks as the old
       code's home for unusual input.
 

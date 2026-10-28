@@ -99,13 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1082 Did
-**Deliverable:** settle and build the owner's ruling on Marker Genetics' Realized Relatedness table holding every pair
-(the "Linkage and LD Block Metrics" tab, `R/modMarkerGenetics.R:227`, runs `markerRealizedRelatednessVariance()` on the whole
-kinship matrix, `:735-751`: 6,824,665 rows on the example, 8.31 s, 390.9 MB kept; `BACKLOG.md:203`, DECISION NEEDED, Effort M;
-found S1062, design F3; owner pick, item 1 of 4, "Relatedness table memory"; strict TDD). (IN PROGRESS)
-**Started:** 2026-10-28
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Relatedness table memory"; rulings "Only the 3 kinds", "Same rows as the app",
+"Hide it"; strict TDD, every gate "Yes"):** `markerRealizedRelatednessVariance()` and the Linkage and LD Block Metrics tab list only
+Parent-Offspring, Full-Siblings and Half-Siblings pairs, found from parent links (`varianceKindPairs()`,
+`R/markerRealizedRelatednessVariance.R:146`; `relationNames()`, `R/convertRelationships.R:70`), shown without row numbers
+(`R/modMarkerGenetics.R:1094-1100`). Claim `9f0009725`, RED `98fdd4387`, GREEN `ba7d53957`, help `a62db53a6`, tutorial/guide/NEWS
+`43a0ece4f`, RED 2 `39ea3dab4`, GREEN 2 `6162eedad`, REFACTOR `66da87eff`. Block off BACKLOG (the fallbacks item names an 11th); no issue.
+**Measured first:** 13,286 of the example's 6,824,665 pairs get a variance (4,052 / 68 / 9,166); the per-row `vapply()` was 5.3 of
+8.3 s. App, opening the tab: today 13-18 s, 422.5 MB kept, peak 1,972 MB; now 0.6 s, 1.9 MB, 606 MB.
+**Verified:** full suite 485 files 4,522 tests 0 failed (GREEN and REFACTOR); check 0/0/0 (both); `lint_package()` 0; app 13,286
+entries, no number column; REFACTOR 18/18 identical; ratchet 11/11 (`e9d19648b2a8`, load 5.5).
+**Handoff evaluation of S1081: 9/10.** Helped: Next named `:203` with "measure in the app with the injected `gc()` observer, attribute
+the allocations first"; its `drive.R` and `gcapp/app.R` were reused as is; "absolute scratch paths" and "check from the repo folder"
+held. Missing: nothing of S1081's (that only three relation kinds get a variance was in the function, not the block). Wrong: nothing.
+ROI: high.
+**Self: 8/10.** + counted rows by kind and prototyped three options, each `identical()` to today, plus an app run, before the question
+(answered first try); a 12-input probe found the parent-in-two-roles gap before RED; the real-app picture found the row numbers
+(owner ruled "Hide it"). - a nested `( ... ) &` launch, zsh `set -- $run` and `echo =====` (all known); two commit messages miscounted
+tests (281 for 260, 65 for 76; both amended at once).
+**Gotchas:** a subset of the long form keeps cell-position row names (DT shows them); today's half-sibling rule matches a parent across
+roles (`s1 == d2`); `exampleLivingPed()` is `qcStudbook(minSireAge = 2)`, not the upload path; another project's vitest drove the load
+to 180 (read `uptime`, wait).
+**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` fallbacks (M, now 11 with `varianceKindPairs()`), `:41` snapshot notice (S),
+`:45` tutorial leftovers (S). After a push read CI (S1073 OpenBLAS; whether the S1075, S1081 and S1082 `Rprofmem` blocks ran; S1076
+CPU-drawing skips). Not pushed (92 ahead).
 
 ### Sessions 947-1081 (condensed S950 to S1082; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1081: Mate Pair builds only male-female pairs and "All alive" takes `isLivingAnimal()` (status ALIVE) (`matePairLongForm()`,
@@ -113,19 +130,13 @@ S1081: Mate Pair builds only male-female pairs and "All alive" takes `isLivingAn
 0.1 s and 503 MB. Claim `438d780f8`, close-out `4bee34b39`, not pushed; S1080 9/10, self 8/10 (Learning 1047). **Gotchas kept:** an
 allocation-window test needs lopsided colonies; give `saveRDS()`/`Rprofmem()` absolute scratch paths; start
 `devtools::check(<copy>)` from the repo folder.
-S1080: Summary Statistics builds the relationship table inside each download and keeps nothing of it (`relationshipData()` a plain
-function, `R/modSummaryStats.R:432-447`; ruling "Build in each download"): live heap after a download 472.8 to 238.5 MB. Claim
-`33251f713`, close-out `c3b4ad8d0`, not pushed; S1079 9/10, self 8/10 (Learning 1046). **Gotchas kept:** read the live heap with an
-injected `gc()` observer, not resident memory alone; `test_file(desc =)` cannot match a `paste()` title.
-S1079: `groupAddAssign()`'s tie-order comment says what the code does (`R/groupAddAssign.R:340-345`; comment only, ruling "Correct
-the comment"): equal scores keep their slot in the kept list. Claim `0886b1f14`, close-out `42a20f437`, not pushed; S1078 9/10, self
-8/10 (Learning 1045). **Gotchas kept:** the tie order is pinned only by `groupAddAssignReference()` (`helper-perfReference.R:672`);
-count a change's broken tests on a patched `git archive` copy beside a control; find a suite's pid with `ps -axo pid,etime,args`.
-S1078: the `reportGV` speed gate times the middle of 5 runs (`Rscript tools/perf/run.R <scenario> --runs N`, `runsArg()` and
-`runMain()` in `tools/perf/harness.R`; gate command in `methodology/.quality-gates.json`): one full garbage collection fell inside the
-0.21 s call or not. Claim `c82960b5c`, close-out `3f93fb475`, not pushed; S1077 9/10, self 8/10 (Learning 1044). **Gotchas kept:** a
-probe before a timed call moves it (append it after); `perf_convertRelationships_300_seconds` has the same exposure (`--runs 5` if it
-fails near 0.18 s); run an archive copy's `run.R` from the repo folder.
+S1078-S1080 (evaluations 9/10, self 8/10; Learnings 1044-1046; hashes in `CHANGELOG.md`): S1080, Summary Statistics builds the
+relationship table inside each download and keeps nothing of it (`relationshipData()`, `R/modSummaryStats.R:432-447`; live heap 472.8 to
+238.5 MB); S1079, `groupAddAssign()`'s tie-order comment says what the code does (`R/groupAddAssign.R:340-345`); S1078, the `reportGV`
+speed gate times the middle of 5 runs (`Rscript tools/perf/run.R <scenario> --runs N`). **Gotchas kept:** read the live heap with an
+injected `gc()` observer; `test_file(desc =)` cannot match a `paste()` title; the tie order is pinned only by
+`groupAddAssignReference()` (`helper-perfReference.R:672`); a probe before a timed call moves it; `perf_convertRelationships_300_seconds`
+takes `--runs 5` if it fails near 0.18 s; run an archive copy's `run.R` from the repo folder.
 S1077: from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-style buttons above its over-limit message, which names
 Direct (`R/modPedigree.R:569-597`, `.edgeStyleButtons()` `:500`); one click on Direct draws it. Claim `0e9c9c68d`, close-out
 `f56261aa0`, not pushed; S1076 9/10, self 8/10 (Learning 1043). **Gotchas kept:** `test_file(desc =)` also runs earlier
