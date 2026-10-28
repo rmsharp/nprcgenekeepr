@@ -99,13 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1081 Did
-**Deliverable:** settle and build the owner's ruling on Mate Pair's default run using about 1 GB of app memory
-(`reportMatePairs()` builds the long form of every pair, `R/reportMatePairs.R:207`, before its sex, age and exclusion screens; the
-default population "All alive (no recorded exit)", `R/modMatePair.R:39-45`; `BACKLOG.md:203`, DECISION NEEDED, Effort M; found
-S1062, design F2; owner pick, item 1 of 4, "Mate Pair memory"; strict TDD). (IN PROGRESS)
-**Started:** 2026-10-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Mate Pair memory"; ruling "Both (Recommended)"; strict TDD, three gates "Yes"):**
+Mate Pair builds only male-female pairs (`matePairLongForm()`, `R/reportMatePairs.R:335`; `lowerTriangleCells()`,
+`R/kinMatrix2LongForm.R:58`) and "All alive" takes `isLivingAnimal()` (status ALIVE), labeled "All alive" (`R/modMatePair.R:42`,
+`:411`). Claim `438d780f8`, RED `3cea4c109`, GREEN `e4e97d981`, help `50ea4d8ad`, guide+NEWS `f200f4252`, pictures `c477385a3`,
+REFACTOR `bc5d1c535`. Block off BACKLOG; NEWS Mate Pair "Minor" line; no issue.
+**Measured first:** `filterPairs()` made 1,526 of `reportMatePairs()`'s 1,810 MB (8.2 s); 1,372 of the 1,704 default animals were
+placeholders (status UNKNOWN), in 289,316 of 315,023 pairs. App, two runs each: today 9.5 s, peak 1,567 MB; both 0.1 s, 503 MB,
+25,707 pairs, 2.8 MB kept.
+**Verified:** full suite 484 files 4,517 tests 0 failed (GREEN and REFACTOR); check 0/0/0 (both); lint 0; Mate Pair E2E 2/2; app on
+the tree 25,707 pairs 0.1 s; REFACTOR 11/11 outputs identical; ratchet 11/11 (`b442e74cb12a`, load 14.8).
+**Handoff evaluation of S1080: 9/10.** Helped: Next named `:203` first; "measure in the app with an injected `gc()` observer" was
+reused as is; its cites held. Missing: nothing of S1080's (the block's "only the pairs that pass the screens" was inexact, since
+excluded pairs are listed, and it did not know the placeholders: S1062's text). Wrong: nothing. ROI: high.
+**Self: 8/10.** + attributed the cost by function and counted the population before the question (first try, preview tables); RED
+checked against the prototype before commit; REFACTOR proved identical. - probe1's relative `saveRDS()`/`Rprofmem()` wrote two files
+to the repo root (moved before any commit); zsh `echo =====` again; check first started inside a copy (empty renv).
+**Gotchas:** the Mac slept ~9 h mid-run (read `uptime` before diagnosing a background failure); another project's vitest pushed the
+load to 97 at close-out; the guide picture script loads the repo source (no install needed); start `devtools::check(<copy>)` from
+the repo folder; an allocation-window test needs lopsided colonies (`unique()`'s hash is result-sized; Learning 1047).
+**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` realized relatedness (M), `:212` fallbacks (M, now names S1081's
+`matePairLongForm()` branch), `:41` snapshot notice (S), `:45` tutorial leftovers (S). After a push read CI (S1073 OpenBLAS, S1075 and
+S1081 `Rprofmem` skips, S1076 CPU-drawing skips). Not pushed (83 ahead).
 
 ### Sessions 947-1080 (condensed S950 to S1081; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1080: Summary Statistics builds the relationship table inside each download and keeps nothing of it (`relationshipData()` a plain

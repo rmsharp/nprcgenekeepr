@@ -200,15 +200,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
       until then.
 
-- [ ] **Mate Pair's default run uses about 1 GB of app memory (DECISION NEEDED, Effort M; found S1062)** -- on the
-      example the default population, "All alive (no recorded exit)" (`R/modMatePair.R:39-45`), is 1,704 animals (332
-      by `isLivingAnimal()`), and Find Eligible Pairs raised the app's resident memory from 867.2 to 1,946.3 MB in
-      11.3 s: `reportMatePairs()` builds the long form of every pair among them (`R/reportMatePairs.R:207`) before its
-      sex, age and exclusion screens. The kinship block itself is 22.4 MB. Measured in the running app
-      (`docs/planning/app-kinship-memory-design.md` sections 2.1 and 9, F2). Two levers, not measured apart: build
-      only the pairs that pass the screens (the same report; it needs its own exactness tests), or the default
-      population's rule (that changes what the tab shows). To decide: either, both, or leave it.
-
 - [ ] **Marker Genetics' Realized Relatedness table holds every pair (DECISION NEEDED, Effort M; found S1062)** --
       opening the "Linkage and LD Block Metrics" tab (`R/modMarkerGenetics.R:227`) runs
       `markerRealizedRelatednessVariance()` on the whole kinship matrix (`:735-751`;
@@ -225,7 +216,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `founderContributionMatrixGeneral()`, `retainedFounderAllelesGeneral()`, `kinshipGeneral()` and
       `kinMatrix2LongFormGeneral()`. A probe (S1066) traced all nine through nine harness scenarios and a sex-ratio
       `groupAddAssign()`: none was called on the shipped data (the tracer does count a call: a sparse `kinship()`
-      registered one). S1054 found 14 of `geneDropGeneral()`'s 19 test inputs end in an error today. To decide:
+      registered one). S1054 found 14 of `geneDropGeneral()`'s 19 test inputs end in an error today. S1081 added a
+      tenth of the same kind: `matePairLongForm()` (`R/reportMatePairs.R`) runs `kinMatrix2LongForm()` and
+      `filterPairs()` for a matrix `longFormFits()` refuses; its male-female build gave today's report on an integer
+      matrix without that branch (`test_reportMatePairsOppositeSexOnly.R`'s guard runs it). To decide:
       fold some input types in, one test each (the same results, `identical()`), or leave the fallbacks as the old
       code's home for unusual input.
 
