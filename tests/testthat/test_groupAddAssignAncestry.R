@@ -34,10 +34,6 @@ ancestryPed <- function() {
   )
 }
 
-ancestryKmat <- function(ped) {
-  kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
-}
-
 exampleAncestryRules <- function() {
   checkAncestryRules(readAncestryRules(system.file(
     "extdata", "examples", "example_ancestry_rules.csv",
@@ -78,7 +74,7 @@ violatingPairKeys <- function(groups, ped, rules, severities = "block") {
 
 test_that("groupAddAssign with ancestryRules = NULL is identical to omitting the argument", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   set_seed(42L)
   base <- groupAddAssign(
     candidates = ped$id, kmat = kmat, ped = ped,
@@ -94,7 +90,7 @@ test_that("groupAddAssign with ancestryRules = NULL is identical to omitting the
 
 test_that("flag-only rules leave formation same-seed identical to no rules", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   ## names both UNKNOWN and OTHER, so no D6 asymmetry warning
   flagOnly <- data.frame(
     ancestry1 = c("INDIAN", "INDIAN"),
@@ -117,7 +113,7 @@ test_that("flag-only rules leave formation same-seed identical to no rules", {
 
 test_that("block rules are never violated in sampling mode across seeds", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   for (s in 1L:5L) {
     set_seed(s)
@@ -132,7 +128,7 @@ test_that("block rules are never violated in sampling mode across seeds", {
 
 test_that("block rules are never violated in exhaustive mode, in any retained candidate", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   res <- groupAddAssign(
     candidates = ped$id, kmat = kmat, ped = ped,
@@ -146,7 +142,7 @@ test_that("block rules are never violated in exhaustive mode, in any retained ca
 
 test_that("block rules are never violated in sexRatio mode across seeds", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   for (s in 1L:3L) {
     set_seed(s)
@@ -161,7 +157,7 @@ test_that("block rules are never violated in sexRatio mode across seeds", {
 
 test_that("block rules bind every member of a harem, the sampled sire too", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   for (s in 1L:3L) {
     set_seed(s)
@@ -183,7 +179,7 @@ test_that("a harem's sampled sire is held to the ancestry block rules", {
   ## left to the unused animals (S764 pinned them co-placed; the owner ruled
   ## that closed S983, BACKLOG.md:156).
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   for (s in 1L:3L) {
     set_seed(s)
@@ -198,7 +194,7 @@ test_that("a harem's sampled sire is held to the ancestry block rules", {
 
 test_that("candidates ancestry-blocked against a current group member are never placed", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   for (s in 1L:3L) {
     set_seed(s)
@@ -222,7 +218,7 @@ test_that("an F-F pair matching a block rule is excluded while F-F kinship stays
   ## HYBRID is a block rule in the example rules file. Ancestry enforcement
   ## is sex-blind (D3), so the same pair that kinship ignores is blocked.
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   set_seed(3L)
   noRules <- groupAddAssign(
@@ -240,7 +236,7 @@ test_that("an F-F pair matching a block rule is excluded while F-F kinship stays
 
 test_that("groupAddAssign stops when rules are supplied but ped has no ancestry column", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   pedNoAncestry <- ped[, setdiff(names(ped), "ancestry")]
   expect_error(
@@ -254,7 +250,7 @@ test_that("groupAddAssign stops when rules are supplied but ped has no ancestry 
 
 test_that("groupAddAssign stops on malformed ancestry rules", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   badSeverity <- data.frame(
     ancestry1 = "INDIAN", ancestry2 = "CHINESE", severity = "warn",
     stringsAsFactors = FALSE
@@ -278,7 +274,7 @@ test_that("groupAddAssign stops on malformed ancestry rules", {
 
 test_that("active block rules leave the return shape unchanged", {
   ped <- ancestryPed()
-  kmat <- ancestryKmat(ped)
+  kmat <- pedigreeKinship(ped)
   rules <- exampleAncestryRules()
   set_seed(2L)
   res <- groupAddAssign(

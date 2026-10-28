@@ -52,10 +52,6 @@ haremPed <- function() {
                               reportErrors = FALSE))
 }
 
-haremKmat <- function(ped) {
-  kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
-}
-
 ## S1 and everyone his relatives could be placed with
 oneHaremPool <- c("S1", "F0", "FS", "HS", "D1", "J1", "U1", "U2")
 
@@ -79,7 +75,7 @@ sameMembers <- function(found, expected) {
 
 test_that("the fill loop keeps a harem sire's mother, full sister and daughter out", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   kin <- getAnimalsWithHighKinship(
     filterKinMatrix(oneHaremPool, kmat), ped, 0.25, list(character(0L)),
     list(c("F", "F")), 1
@@ -101,7 +97,7 @@ test_that("the fill loop keeps a harem sire's mother, full sister and daughter o
 
 test_that("groupAddAssign leaves the sire's relatives to the unused animals", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   for (seed in 1L:5L) {
     res <- formHarems(oneHaremPool, ped, kmat, seed)
     expect_identical(res$group[[1L]][1L], "S1")
@@ -116,7 +112,7 @@ test_that("groupAddAssign leaves the sire's relatives to the unused animals", {
 
 test_that("a lower Max kinship also keeps the sire's half-sister out", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   for (seed in 1L:3L) {
     res <- formHarems(oneHaremPool, ped, kmat, seed, threshold = 0.1)
     expect_true(sameMembers(res$group[[1L]], c("S1", "J1", "U1", "U2")),
@@ -130,7 +126,7 @@ test_that("a lower Max kinship also keeps the sire's half-sister out", {
 
 test_that("a minimum age of 0 also keeps the sire's young daughter out", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   for (seed in 1L:3L) {
     res <- formHarems(oneHaremPool, ped, kmat, seed, minAge = 0)
     expect_true(sameMembers(res$group[[1L]], c("S1", "HS", "U1", "U2")),
@@ -144,7 +140,7 @@ test_that("a minimum age of 0 also keeps the sire's young daughter out", {
 
 test_that("a Max kinship above every relationship excludes no one (guard)", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   for (seed in 1L:3L) {
     res <- formHarems(oneHaremPool, ped, kmat, seed, threshold = 0.5)
     expect_true(sameMembers(res$group[[1L]], oneHaremPool),
@@ -156,7 +152,7 @@ test_that("a Max kinship above every relationship excludes no one (guard)", {
 
 test_that("each of two harems drops only its own sire's relatives", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   pool <- c("S1", "S2", "F0", "FS", "D1", "HS", "J1", "D2", "U1", "U2")
   kin <- getAnimalsWithHighKinship(
     filterKinMatrix(pool, kmat), ped, 0.25, list(character(0L)),
@@ -189,7 +185,7 @@ test_that("each of two harems drops only its own sire's relatives", {
 
 test_that("a harem whose sire is related to every other candidate is the sire alone", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   for (seed in 1L:3L) {
     res <- formHarems(c("S1", "F0", "FS", "D1"), ped, kmat, seed)
     expect_identical(res$group[[1L]], "S1")
@@ -201,7 +197,7 @@ test_that("a harem whose sire is related to every other candidate is the sire al
 
 test_that("a pool of only males gives harems of the sires alone", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   res <- tryCatch(
     formHarems(c("S1", "S2"), ped, kmat, 1L, numGp = 2L),
     error = function(e) e
@@ -217,7 +213,7 @@ test_that("a pool of only males gives harems of the sires alone", {
 
 test_that("a supplied seed animal's relatives stay out of its group (guard)", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   for (seed in 1L:3L) {
     res <- formHarems(c("S1", "S2", "HS", "U1", "U2"), ped, kmat, seed,
       currentGroups = list("D2")
@@ -233,7 +229,7 @@ test_that("every animal already in a group keeps his relatives out, not only the
   ## that order, so S1's mother, full sister and daughter are in the pool
   ## and only the second animal's relatives matter.
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   seeded <- list(c("U1", "S1"))
   pool <- c("F0", "FS", "D1", "HS", "U2")
   kin <- getAnimalsWithHighKinship(
@@ -256,7 +252,7 @@ test_that("a seed animal with no relatives in the kin list does not stop the fil
   ## U1 has no relative at or above 0.25, so the kin list has no entry for
   ## him; asking it for his entry with `[[` would stop with an error.
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   seeded <- list("U1")
   pool <- c("S1", "HS", "U2")
   kin <- getAnimalsWithHighKinship(
@@ -286,7 +282,7 @@ test_that("a seed animal with no relatives in the kin list does not stop the fil
 
 test_that("a sire with no relatives in the pool gives HEAD's same-seed groups (guard)", {
   ped <- haremPed()
-  kmat <- haremKmat(ped)
+  kmat <- pedigreeKinship(ped)
   pool <- c("S1", "S2", "HS", "J1", "U1", "U2")
   ## captured from HEAD (6393282d2) before the fix: nobody in this pool is at
   ## or above 0.25 to either sire, so the fix must not move one draw

@@ -31,7 +31,7 @@
 ## messages, and too few males still stops with the existing message.
 
 stopPedData <- haremFixturePedigree()
-stopKmat <- haremFixtureKinship(stopPedData)
+stopKmat <- pedigreeKinship(stopPedData)
 stopFemales <- paste0("F", 1:8)
 
 formHaremRatio <- function(sexRatio, numGp = 3L, seed = 1L, harem = TRUE,

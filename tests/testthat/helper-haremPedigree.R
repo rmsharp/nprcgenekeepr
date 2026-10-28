@@ -23,8 +23,9 @@ haremFixturePedigree <- function() {
   suppressWarnings(qcStudbook(raw, reportChanges = FALSE, reportErrors = FALSE))
 }
 
-## The dense kinship matrix of `ped` (the output of haremFixturePedigree()).
-haremFixtureKinship <- function(ped) {
+## The dense kinship matrix of a pedigree with a `gen` column (such as the
+## output of haremFixturePedigree()).
+pedigreeKinship <- function(ped) {
   kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 }
 

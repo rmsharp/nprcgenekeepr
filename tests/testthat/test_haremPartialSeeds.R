@@ -29,7 +29,7 @@
 ## group still stops.
 
 partialPedData <- haremFixturePedigree()
-partialKmat <- haremFixtureKinship(partialPedData)
+partialKmat <- pedigreeKinship(partialPedData)
 allMales <- partialPedData$id[partialPedData$sex == "M"]
 allFemales <- paste0("F", 1:8)
 
