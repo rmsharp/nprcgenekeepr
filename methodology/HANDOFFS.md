@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1083
+date: 2026-10-28
+status: pending
+active_task: IN PROGRESS -- settle and build the owner's ruling on the performance campaign's fallbacks: 11 functions keep the pre-campaign code for input their fast path is not made for, e.g. a factor where text is expected (rareAlleleCountsGeneral(), geneDropGeneral(), convertRelationshipsGeneral(), fillGroupMembersGeneral(), fillGroupMembersWithSexRatioGeneral(), founderContributionMatrixGeneral(), retainedFounderAllelesGeneral(), kinshipGeneral(), kinMatrix2LongFormGeneral(), matePairLongForm()'s and varianceKindPairs()' branches; BACKLOG.md:203, DECISION NEEDED, Effort M; owner-raised S1054, filed S1066; owner pick at the Phase 0 picker, item 1 of 4, "Fallback code paths"); strict TDD.
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1082
 date: 2026-10-28
 status: complete

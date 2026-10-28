@@ -98,33 +98,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1082 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Relatedness table memory"; rulings "Only the 3 kinds", "Same rows as the app",
-"Hide it"; strict TDD, every gate "Yes"):** `markerRealizedRelatednessVariance()` and the Linkage and LD Block Metrics tab list only
-Parent-Offspring, Full-Siblings and Half-Siblings pairs, found from parent links (`varianceKindPairs()`,
-`R/markerRealizedRelatednessVariance.R:146`; `relationNames()`, `R/convertRelationships.R:70`), shown without row numbers
-(`R/modMarkerGenetics.R:1094-1100`). Claim `9f0009725`, RED `98fdd4387`, GREEN `ba7d53957`, help `a62db53a6`, tutorial/guide/NEWS
-`43a0ece4f`, RED 2 `39ea3dab4`, GREEN 2 `6162eedad`, REFACTOR `66da87eff`. Block off BACKLOG (the fallbacks item names an 11th); no issue.
-**Measured first:** 13,286 of the example's 6,824,665 pairs get a variance (4,052 / 68 / 9,166); the per-row `vapply()` was 5.3 of
-8.3 s. App, opening the tab: today 13-18 s, 422.5 MB kept, peak 1,972 MB; now 0.6 s, 1.9 MB, 606 MB.
-**Verified:** full suite 485 files 4,522 tests 0 failed (GREEN and REFACTOR); check 0/0/0 (both); `lint_package()` 0; app 13,286
-entries, no number column; REFACTOR 18/18 identical; ratchet 11/11 (`e9d19648b2a8`, load 5.5).
-**Handoff evaluation of S1081: 9/10.** Helped: Next named `:203` with "measure in the app with the injected `gc()` observer, attribute
-the allocations first"; its `drive.R` and `gcapp/app.R` were reused as is; "absolute scratch paths" and "check from the repo folder"
-held. Missing: nothing of S1081's (that only three relation kinds get a variance was in the function, not the block). Wrong: nothing.
-ROI: high.
-**Self: 8/10.** + counted rows by kind and prototyped three options, each `identical()` to today, plus an app run, before the question
-(answered first try); a 12-input probe found the parent-in-two-roles gap before RED; the real-app picture found the row numbers
-(owner ruled "Hide it"). - a nested `( ... ) &` launch, zsh `set -- $run` and `echo =====` (all known); two commit messages miscounted
-tests (281 for 260, 65 for 76; both amended at once).
-**Gotchas:** a subset of the long form keeps cell-position row names (DT shows them); today's half-sibling rule matches a parent across
-roles (`s1 == d2`); `exampleLivingPed()` is `qcStudbook(minSireAge = 2)`, not the upload path; another project's vitest drove the load
-to 180 (read `uptime`, wait).
-**Next:** the owner picks. DECISION NEEDED `BACKLOG.md:203` fallbacks (M, now 11 with `varianceKindPairs()`), `:41` snapshot notice (S),
-`:45` tutorial leftovers (S). After a push read CI (S1073 OpenBLAS; whether the S1075, S1081 and S1082 `Rprofmem` blocks ran; S1076
-CPU-drawing skips). Not pushed (92 ahead).
+### What Session 1083 Did
+**Deliverable:** settle and build the owner's ruling on the performance campaign's fallbacks: 11 functions keep the pre-campaign
+code for input their fast path is not made for, e.g. a factor where text is expected (`BACKLOG.md:203`, DECISION NEEDED, Effort M;
+owner-raised S1054, filed S1066; owner pick, item 1 of 4, "Fallback code paths"; strict TDD). (IN PROGRESS)
+**Started:** 2026-10-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1081 (condensed S950 to S1082; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1082 (condensed S950 to S1083; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1082: `markerRealizedRelatednessVariance()` and Marker Genetics' Realized Relatedness table list only parent-offspring, full- and
+half-sibling pairs, without row numbers (`varianceKindPairs()`, `R/markerRealizedRelatednessVariance.R:146`; `relationNames()`,
+`R/convertRelationships.R:70`): opening the tab 13-18 s and a 1,972 MB peak to 0.6 s and 606 MB. Claim `9f0009725`, close-out
+`f4ba3ceaf`, not pushed; S1081 9/10, self 8/10 (Learning 1048). **Gotchas kept:** a long-form subset keeps cell-position row names
+(DT shows them); the half-sibling rule matches a parent across roles (`s1 == d2`).
 S1081: Mate Pair builds only male-female pairs and "All alive" takes `isLivingAnimal()` (status ALIVE) (`matePairLongForm()`,
 `R/reportMatePairs.R:335`; `lowerTriangleCells()`, `R/kinMatrix2LongForm.R:58`; ruling "Both"): app 9.5 s and a 1,567 MB peak to
 0.1 s and 503 MB. Claim `438d780f8`, close-out `4bee34b39`, not pushed; S1080 9/10, self 8/10 (Learning 1047). **Gotchas kept:** an
