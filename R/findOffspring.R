@@ -32,8 +32,8 @@
 #' probands <- ped$id[ped$population]
 #' totalOffspring <- findOffspring(probands, ped)
 findOffspring <- function(probands, ped) {
-  sires <- tapply(ped$id, as.factor(ped$sire), length)
-  dams <- tapply(ped$id, as.factor(ped$dam), length)
+  sires <- tapply(ped$id, idsAsText(ped$sire), length)
+  dams <- tapply(ped$id, idsAsText(ped$dam), length)
   offspring <- c(sires, dams)
 
   idx <- match(probands, names(offspring))
