@@ -1094,7 +1094,9 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix = NULL,
     output$realizedRelatednessTable <- DT::renderDT({
       tbl <- realizedRelatedness()
       req(tbl)
-      tbl
+      # No row names: they are each pair's cell number in the kinship matrix
+      # (S1082), which would show as an unlabeled column of large numbers.
+      DT::datatable(tbl, rownames = FALSE)
     })
 
     output$ldBlockTable <- DT::renderDT({
