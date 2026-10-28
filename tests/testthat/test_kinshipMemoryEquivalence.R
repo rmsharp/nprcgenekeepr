@@ -156,9 +156,6 @@ kinshipGrid <- local({
 oddKinshipCases <- function() {
   p <- seededPedigree(12L, 1L)
   list(
-    `sparse = TRUE` = list(p$id, p$sire, p$dam, p$gen, sparse = TRUE),
-    `sparse = TRUE, x` = list(p$id, p$sire, p$dam, p$gen, sparse = TRUE,
-                              chrtype = "x", sex = p$sex),
     `sparse = NA` = list(p$id, p$sire, p$dam, p$gen, sparse = NA),
     `sparse = 0` = list(p$id, p$sire, p$dam, p$gen, sparse = 0L),
     `no animals` = list(character(0L), character(0L), character(0L),
@@ -228,6 +225,52 @@ test_that("unusual kinship() inputs run today's code and the others the new", {
                                 warnings = character(0L))),
                  info = name)
   }
+})
+
+## kinship(sparse = TRUE) is the new code's n x n fill turned into today's
+## sparse matrix (owner ruling S1083: today's code took 42.6 s on the example's
+## 3,694 animals, the fill 0.34 s). The grid's pedigrees but the example's
+## (today's sparse code is too slow for them here), each with sparse = TRUE;
+## the two sparse cases that were unusual inputs before S1083; and pedigrees
+## of founders only, where today's sparse matrix is a diagonal one, and an X
+## chromosome son with no known dam, whose row has no kinship but his own.
+sparseKinshipCases <- function() {
+  grid <- kinshipGrid()
+  grid <- grid[!startsWith(names(grid), "example")]
+  cases <- lapply(grid, function(args) c(args, list(sparse = TRUE)))
+  p <- seededPedigree(12L, 1L)
+  founders <- data.frame(id = c("a", "b", "c"), sire = NA_character_,
+                         dam = NA_character_, gen = 0L,
+                         sex = c("M", "F", "F"), stringsAsFactors = FALSE)
+  noDam <- data.frame(id = c("M1", "F1", "S"), sire = c(NA, NA, "M1"),
+                      dam = NA_character_, sex = c("M", "F", "M"),
+                      stringsAsFactors = FALSE)
+  noDam$gen <- findGeneration(noDam$id, noDam$sire, noDam$dam)
+  args <- function(ped, ...) {
+    list(ped$id, ped$sire, ped$dam, ped$gen, sparse = TRUE, ...)
+  }
+  c(cases, list(
+    `sparse = TRUE` = list(p$id, p$sire, p$dam, p$gen, sparse = TRUE),
+    `sparse = TRUE, x` = list(p$id, p$sire, p$dam, p$gen, sparse = TRUE,
+                              chrtype = "x", sex = p$sex),
+    `founders only` = args(founders),
+    `founders only, x` = args(founders, chrtype = "x", sex = founders$sex),
+    `a son with no known dam, x` = args(noDam, chrtype = "x",
+                                        sex = noDam$sex)
+  ))
+}
+
+test_that("kinship(sparse = TRUE) gives today's sparse matrix", {
+  cases <- sparseKinshipCases()
+  expect_length(cases, 70L)
+  expectSameOutcomes(cases, kinship, kinshipReference)
+})
+
+test_that("kinship(sparse = TRUE) never runs today's code", {
+  local_mocked_bindings(kinshipGeneral = function(...) {
+    stop("today's kinship() ran on sparse = TRUE")
+  })
+  expectSameOutcomes(sparseKinshipCases(), kinship, kinshipReference)
 })
 
 ## The kinship matrices the long-form tests read: one per grid case but the

@@ -329,8 +329,6 @@ sexRatioCases <- function() {
   sires <- getPotentialSires(breeders, breedersPed, 1.0)
   oneGroup <- list(numGp = 1L, grpNum = makeGroupNum(1L),
                    groupMembers = emptyGroups(1L))
-  factorIds <- breedersPed
-  factorIds$id <- factor(factorIds$id)
   repeatedMales <- rbind(
     breedersPed,
     breedersPed[breedersPed$id %in% sires, ][1L:2L, ]
@@ -350,8 +348,6 @@ sexRatioCases <- function() {
   unknownFemales <- breedersPed
   unknownFemales$sex[unknownFemales$id %in% females[1L:2L]] <- NA
   unknownFemales$birth[unknownFemales$id %in% females[1L:2L]] <- NA
-  numberKin <- stats::setNames(lapply(seq_along(breeders), function(i) NA),
-                               seq_along(breeders))
   c(
     lapply(stats::setNames(c(0.5, 1.0, 3.0, 9.0),
                            paste("ratio", c(0.5, 1.0, 3.0, 9.0))),
@@ -376,15 +372,6 @@ sexRatioCases <- function() {
         ped = unknownFemales,
         groupMembers = emptyGroups(2L, list(females[[1L]]))
       ),
-      `factor candidates (today's code)` = sexRatioArgs(
-        candidates = factor(breeders)
-      ),
-      `number candidates (today's code)` = sexRatioArgs(
-        candidates = seq_along(breeders)
-      ),
-      `number candidates, one female (today's code)` = sexRatioArgs(
-        candidates = 5, kin = numberKin
-      ),
       `a missing candidate (today's code)` = sexRatioArgs(
         candidates = c(breeders, NA)
       ),
@@ -405,7 +392,6 @@ sexRatioCases <- function() {
       `repeated candidates` = sexRatioArgs(
         candidates = c(breeders, breeders[1L:8L])
       ),
-      `pedigree ids as a factor (today's code)` = sexRatioArgs(ped = factorIds),
       `a repeated male id in the pedigree (today's code)` = sexRatioArgs(
         ped = repeatedMales
       ),
@@ -527,4 +513,53 @@ test_that("ordinary inputs run the new code and the odd ones today's", {
   }
   expectPaths(nprcgenekeepr:::fillGroupMembers, fillCases())
   expectPaths(fillGroupMembersWithSexRatio, sexRatioCases())
+})
+
+## Candidates or pedigree ids given as factors or numbers name the same
+## animals as their text, and fillGroupMembersWithSexRatio() takes them as
+## that text (owner ruling S1083). Each element: the arguments, and the same
+## arguments with the candidates and the pedigree's id, sire and dam as text,
+## whose outcome today's code gives.
+sexRatioTextCases <- function() {
+  factorIds <- breedersPed
+  factorIds$id <- factor(factorIds$id)
+  numberKin <- stats::setNames(lapply(seq_along(breeders), function(i) NA),
+                               seq_along(breeders))
+  asText <- function(args) {
+    text <- args
+    text[[1L]] <- as.character(text[[1L]])
+    for (h in c("id", "sire", "dam")) {
+      text[[5L]][[h]] <- as.character(text[[5L]][[h]])
+    }
+    list(args = args, text = text)
+  }
+  list(
+    `factor candidates` = asText(sexRatioArgs(candidates = factor(breeders))),
+    `number candidates` = asText(sexRatioArgs(
+      candidates = seq_along(breeders)
+    )),
+    `number candidates, one female` = asText(sexRatioArgs(
+      candidates = 5, kin = numberKin
+    )),
+    `pedigree ids as a factor` = asText(sexRatioArgs(ped = factorIds))
+  )
+}
+
+test_that(paste("fillGroupMembersWithSexRatio() fills from factor and number",
+                "ids as from their text, with the new code"), {
+  cases <- sexRatioTextCases()
+  for (name in names(cases)) {
+    for (seed in seeds) {
+      expect_identical(
+        boundedOutcome(fillGroupMembersWithSexRatio, cases[[name]]$args,
+                       seed),
+        boundedOutcome(fillGroupMembersWithSexRatioReference,
+                       cases[[name]]$text, seed),
+        info = sprintf("%s, seed %d", name, seed)
+      )
+    }
+    expect_identical(pathTaken(fillGroupMembersWithSexRatio,
+                               cases[[name]]$args),
+                     "new", info = name)
+  }
 })

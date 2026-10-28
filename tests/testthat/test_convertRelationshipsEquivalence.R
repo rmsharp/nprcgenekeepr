@@ -80,7 +80,11 @@ expectGridMatchesReference <- function() {
 ## matrix whose cells are all missing, which gives no pairs). The last four
 ## fast-path inputs were added after GREEN's mutation check: each tells one
 ## changed rule apart from today's, which the others did not.
-## Each element: the arguments, and the path the fast version must take.
+## Each element: the arguments, and the path the fast version must take. A
+## pedigree whose ids and parents are factors or numbers names the same
+## animals as its text, and convertRelationships() takes it as that text
+## (owner ruling S1083): its element also holds the text arguments, whose
+## frozen table it must give.
 unusualInputs <- function() {
   sp <- nprcgenekeepr::smallPed
   spKmat <- pedKinship(sp)
@@ -157,6 +161,13 @@ unusualInputs <- function() {
   args <- function(kmat, ped, ...) list(kmat = kmat, ped = ped, ...)
   fast <- function(args) list(args = args, path = "fast")
   general <- function(args) list(args = args, path = "general")
+  fastAsText <- function(args) {
+    text <- args
+    for (h in c("id", "sire", "dam")) {
+      text$ped[[h]] <- as.character(text$ped[[h]])
+    }
+    list(args = args, path = "fast", expected = text)
+  }
   list(
     `matrix ids not in the pedigree` = fast(args(spKmat, sp[-(1L:3L), ])),
     `no matrix id in the pedigree` =
@@ -195,9 +206,9 @@ unusualInputs <- function() {
       fast(args(square(damsSisters$id, 0.1), damsSisters)),
     `the second animal's dam a grandparent of the first` =
       fast(args(square(secondDam$id, 0.1), secondDam)),
-    `factor ids and parents` = general(args(spKmat, factors)),
+    `factor ids and parents` = fastAsText(args(spKmat, factors)),
     `numeric ids and parents` =
-      general(args(square(1L:5L, 0.1), numeric)),
+      fastAsText(args(square(1L:5L, 0.1), numeric)),
     `a missing id` = general(args(spKmat, missingId)),
     `a repeated id` = general(args(spKmat, repeatedId)),
     `an empty id` = general(args(spKmat, emptyId)),
@@ -233,9 +244,12 @@ test_that("unusual inputs give the frozen copy's table, or its error", {
   cases <- unusualInputs()
   expect_length(cases, 36L)
   for (name in names(cases)) {
+    expected <- cases[[name]]$expected
+    if (is.null(expected)) {
+      expected <- cases[[name]]$args
+    }
     expect_identical(outcome(convertRelationships, cases[[name]]$args),
-                     outcome(convertRelationshipsReference,
-                             cases[[name]]$args),
+                     outcome(convertRelationshipsReference, expected),
                      info = name)
   }
 })
@@ -255,8 +269,8 @@ test_that("an unusual input goes to today's code unless the fast path is safe", 
   }
   paths <- vapply(cases, `[[`, character(1L), "path")
   expect_identical(used, names(cases)[paths == "general"])
-  expect_identical(sum(paths == "fast"), 24L)
-  expect_identical(sum(paths == "general"), 12L)
+  expect_identical(sum(paths == "fast"), 26L)
+  expect_identical(sum(paths == "general"), 10L)
 })
 
 test_that("pairs classified in several blocks give the frozen copy's table", {
