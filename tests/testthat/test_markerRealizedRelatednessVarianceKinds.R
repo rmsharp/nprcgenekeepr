@@ -67,9 +67,7 @@ test_that(paste("markerRealizedRelatednessVariance() gives today's rows of",
   outsideId <- smallKmat
   dimnames(outsideId) <- list(c(rownames(smallKmat)[-1L], "ZZ"),
                               c(colnames(smallKmat)[-1L], "ZZ"))
-  factorPed <- small
-  factorPed[c("id", "sire", "dam")] <- lapply(small[c("id", "sire", "dam")],
-                                              factor)
+  factorPed <- pedIdsAsFactors(small)
   integerKmat <- smallKmat
   storage.mode(integerKmat) <- "integer"
   inputs <- list(

@@ -528,9 +528,7 @@ sexRatioTextCases <- function() {
   asText <- function(args) {
     text <- args
     text[[1L]] <- as.character(text[[1L]])
-    for (h in c("id", "sire", "dam")) {
-      text[[5L]][[h]] <- as.character(text[[5L]][[h]])
-    }
+    text[[5L]] <- toCharacter(text[[5L]])
     list(args = args, text = text)
   }
   list(

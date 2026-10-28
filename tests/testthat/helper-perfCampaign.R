@@ -149,6 +149,16 @@ outcome <- function(f, args, seed = 1L) {
   ))
 }
 
+## A pedigree with its id, sire and dam as factors: the unusual-input tests
+## check that each function takes such ids as their text (owner ruling S1083;
+## toCharacter() gives the text).
+pedIdsAsFactors <- function(ped) {
+  for (h in c("id", "sire", "dam")) {
+    ped[[h]] <- factor(ped[[h]])
+  }
+  ped
+}
+
 ## Genotype codes as integers: pedWithGenotype ships its codes as doubles, and
 ## the plan's grid runs both.
 integerCodes <- function(genotype) {

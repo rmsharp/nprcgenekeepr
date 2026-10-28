@@ -22,10 +22,6 @@
 ## S1055). pedWithGenotype is left out: it has qcPed's animals and parents in
 ## another row order.
 
-pedKinship <- function(ped) {
-  kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
-}
-
 ## The plan's grid for this function: three shipped pedigrees, two with ids,
 ## and the example's first 300 animals as the app's Summary Statistics sees
 ## them.
@@ -33,8 +29,8 @@ gridInputs <- function() {
   sp <- nprcgenekeepr::smallPed
   qc <- nprcgenekeepr::qcPed
   lacy <- nprcgenekeepr::lacy1989Ped
-  spKmat <- pedKinship(sp)
-  qcKmat <- pedKinship(qc)
+  spKmat <- pedigreeKinship(sp)
+  qcKmat <- pedigreeKinship(qc)
   list(
     smallPed = list(kmat = spKmat, ped = sp),
     `smallPed, 12 ids` = list(
@@ -43,7 +39,7 @@ gridInputs <- function() {
     ),
     `smallPed, 3 ids` = list(kmat = spKmat, ped = sp,
                              ids = c("A", "B", "D")),
-    lacy1989Ped = list(kmat = pedKinship(lacy), ped = lacy),
+    lacy1989Ped = list(kmat = pedigreeKinship(lacy), ped = lacy),
     qcPed = list(kmat = qcKmat, ped = qc),
     `qcPed, 2 ids` = list(kmat = qcKmat, ped = qc,
                           ids = c("4LFS70", "DD1U77")),
@@ -87,7 +83,7 @@ expectGridMatchesReference <- function() {
 ## frozen table it must give.
 unusualInputs <- function() {
   sp <- nprcgenekeepr::smallPed
-  spKmat <- pedKinship(sp)
+  spKmat <- pedigreeKinship(sp)
   square <- function(ids, value) {
     matrix(value, length(ids), length(ids), dimnames = list(ids, ids))
   }
@@ -129,10 +125,7 @@ unusualInputs <- function() {
   secondDam <- pedOf(c("A1", "X", "M", "GS", "GD", "U", "Y"),
                      c("X", NA, "GS", NA, NA, "Y", NA),
                      c("M", NA, "GD", NA, NA, "GD", NA))
-  factors <- sp
-  factors$id <- factor(sp$id)
-  factors$sire <- factor(sp$sire)
-  factors$dam <- factor(sp$dam)
+  factors <- pedIdsAsFactors(sp)
   numeric <- data.frame(id = 1L:5L, sire = c(NA, NA, 1L, 1L, 3L),
                         dam = c(NA, NA, 2L, 2L, 4L))
   missingId <- sp
@@ -163,9 +156,7 @@ unusualInputs <- function() {
   general <- function(args) list(args = args, path = "general")
   fastAsText <- function(args) {
     text <- args
-    for (h in c("id", "sire", "dam")) {
-      text$ped[[h]] <- as.character(text$ped[[h]])
-    }
+    text$ped <- toCharacter(text$ped)
     list(args = args, path = "fast", expected = text)
   }
   list(
@@ -278,7 +269,7 @@ test_that("pairs classified in several blocks give the frozen copy's table", {
   ## block of relationBlockSize, so a block boundary is checked only here.
   local_mocked_bindings(relationBlockSize = 1000L)
   qc <- nprcgenekeepr::qcPed
-  expect_identical(convertRelationships(pedKinship(qc), qc),
+  expect_identical(convertRelationships(pedigreeKinship(qc), qc),
                    gridReference()$qcPed)
 })
 

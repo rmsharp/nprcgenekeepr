@@ -29,24 +29,6 @@ numberStudbook <- function() {
   ped
 }
 
-asText <- function(ped) {
-  for (h in c("id", "sire", "dam")) {
-    ped[[h]] <- as.character(ped[[h]])
-  }
-  ped
-}
-
-asFactors <- function(ped) {
-  for (h in c("id", "sire", "dam")) {
-    ped[[h]] <- factor(ped[[h]])
-  }
-  ped
-}
-
-studbookKinship <- function(ped) {
-  kinship(ped$id, ped$sire, ped$dam, ped$gen)
-}
-
 ## The example studbook as the app holds it, its ids, sires and dams renamed
 ## to numbers that are not row numbers (10000 plus a shuffled position): as
 ## numbers, as text and as factors, with the text's kinship matrix. Built once.
@@ -61,10 +43,10 @@ exampleIdVariants <- local({
       for (h in c("id", "sire", "dam")) {
         numbers[[h]] <- unname(number[ped[[h]]])
       }
-      text <- asText(numbers)
+      text <- toCharacter(numbers)
       variants <<- list(number = numbers, text = text,
-                        factor = asFactors(text),
-                        kmat = studbookKinship(text))
+                        factor = pedIdsAsFactors(text),
+                        kmat = pedigreeKinship(text))
     }
     variants
   }
@@ -82,8 +64,8 @@ stopTodaysRelationships <- function(env = parent.frame()) {
 
 test_that("convertRelationships() names number and factor ids as their text", {
   ped <- numberStudbook()
-  text <- asText(ped)
-  kmat <- studbookKinship(text)
+  text <- toCharacter(ped)
+  kmat <- pedigreeKinship(text)
   expected <- convertRelationships(kmat, text)
   expect_identical(
     c(table(expected$relation)),
@@ -96,9 +78,9 @@ test_that("convertRelationships() names number and factor ids as their text", {
   someIds <- convertRelationships(kmat, text, ids = as.character(ids))
   stopTodaysRelationships()
   expect_identical(convertRelationships(kmat, ped), expected)
-  expect_identical(convertRelationships(kmat, asFactors(ped)), expected)
+  expect_identical(convertRelationships(kmat, pedIdsAsFactors(ped)), expected)
   expect_identical(convertRelationships(kmat, ped, ids = ids), someIds)
-  expect_identical(convertRelationships(kmat, asFactors(ped),
+  expect_identical(convertRelationships(kmat, pedIdsAsFactors(ped),
                                         ids = factor(ids)), someIds)
 })
 
@@ -116,8 +98,8 @@ test_that("convertRelationships() takes the example's number and factor ids as t
 test_that(paste("markerRealizedRelatednessVariance() gives number and factor",
                 "ids the text's rows, without the table of every pair"), {
   ped <- numberStudbook()
-  text <- asText(ped)
-  kmat <- studbookKinship(text)
+  text <- toCharacter(ped)
+  kmat <- pedigreeKinship(text)
   expected <- markerRealizedRelatednessVariance(kmat, text, nChr = 20L,
                                                 mapLength = 28)
   expect_identical(nrow(expected), 24L)
@@ -135,7 +117,7 @@ test_that(paste("markerRealizedRelatednessVariance() gives number and factor",
   expect_identical(markerRealizedRelatednessVariance(kmat, ped, nChr = 20L,
                                                      mapLength = 28),
                    expected)
-  expect_identical(markerRealizedRelatednessVariance(kmat, asFactors(ped),
+  expect_identical(markerRealizedRelatednessVariance(kmat, pedIdsAsFactors(ped),
                                                      nChr = 20L,
                                                      mapLength = 28),
                    expected)
@@ -189,12 +171,12 @@ test_that("groupAddAssign() fills groups from number and factor ids as from text
 
 test_that("makeCEPH() gives number and factor ids the text's pedigree", {
   ped <- numberStudbook()
-  text <- asText(ped)
+  text <- toCharacter(ped)
   expected <- makeCEPH(text$id, text$sire, text$dam)
   expect_identical(expected[["109"]],
                    list(parents = c("105", "108"), pgp = c("101", "102"),
                         mgp = c("103", "104")))
   expect_identical(makeCEPH(ped$id, ped$sire, ped$dam), expected)
-  factors <- asFactors(ped)
+  factors <- pedIdsAsFactors(ped)
   expect_identical(makeCEPH(factors$id, factors$sire, factors$dam), expected)
 })
