@@ -99,12 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1083 Did
-**Deliverable:** settle and build the owner's ruling on the performance campaign's fallbacks: 11 functions keep the pre-campaign
-code for input their fast path is not made for, e.g. a factor where text is expected (`BACKLOG.md:203`, DECISION NEEDED, Effort M;
-owner-raised S1054, filed S1066; owner pick, item 1 of 4, "Fallback code paths"; strict TDD). (IN PROGRESS)
-**Started:** 2026-10-28
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Fallback code paths"; rulings "Text at the start", "Use the fast code", "Keep
+them"; strict TDD, every gate "Yes"):** number and factor ids are taken as their text where `convertRelationships()`,
+`markerRealizedRelatednessVariance()`, `makeCEPH()`, `groupAddAssign()` and `fillGroupMembersWithSexRatio()` start
+(`idsAsText()`/`pedIdsAsText()`, `R/toCharacter.R:33-63`); `kinship(sparse = TRUE)` is the fast fill made sparse
+(`sparseKinship()`, `R/kinship.R`); the other six fallbacks stay. Claim `bf551cb51`, RED `cb38dc0f9`, GREEN `8ff43dd57` `94410fc08`
+`3f0596321` `7f6ae5819`, help `c4e718d47` `d9926aa80` `128809769`, NEWS `2536b007d`, REFACTOR `140dfbad3` `b147a7c63`. Block off BACKLOG.
+**Measured first:** the old relationship code was wrong, not just slow: 64 of 78 pairs misnamed with number ids 101-112, 78 of
+1,830 with factor ids (36.5 s against 0.06 s); `groupAddAssign()` stopped on number ids; sparse 42.6 s against 0.34 s.
+**Verified (at `b147a7c63`):** full suite 486 files 4,530 tests 0 failed; check 0/0/0; `lint_package()` 0; a `read.csv()` number-id
+studbook through the installed tree gives the text's names and groups; app browser tests 3/3 (relationship downloads, 1,000 trials,
+LD block); REFACTOR 64 tests 1,049 expectations before and after.
+**Handoff evaluation of S1082: 9/10.** Helped: Next named `:203` with the eleventh fallback and the test file that runs it, which
+led straight to the pinned cases; "read `uptime`" (load 30-75 here). Missing: nothing of S1082's (that the old code was wrong for
+number ids was in no record). Wrong: the item's title said "nine" with eleven listed (cosmetic). ROI: high.
+**Self: 8/10.** + probed exported functions with real odd input before the question, found wrong names and a crash, prototyped the
+one-cause fix `identical()` (three rulings first try); RED failed for the intended reasons; app and script runtime checks. - check
+NOTE (`methods::new`/`as`) found after GREEN 3 (a fourth GREEN commit); 12 files open before the help commits; RED counted 67 for 70.
+**Gotchas:** the equivalence tests' "numeric ids" case uses ids 1-5 (row numbers), which hid the bug; `Diagonal(x = 1)` stores a unit
+diagonal; no `methods::` (not in Imports); an old-code probe on 300 factor-id animals ran 9+ min; the app's upload makes ids text.
+**Next:** the owner picks. New `BACKLOG.md:203` `reportGV()` factor `livingOffspring` NA (READY, S); `:41` snapshot notice (S); `:45`
+tutorial leftovers (S). After a push read CI (S1073 OpenBLAS; S1075/S1081/S1082 `Rprofmem` blocks; S1076 CPU drawing). Not pushed.
 
 ### Sessions 947-1082 (condensed S950 to S1083; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1082: `markerRealizedRelatednessVariance()` and Marker Genetics' Realized Relatedness table list only parent-offspring, full- and
