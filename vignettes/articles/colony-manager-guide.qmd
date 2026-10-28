@@ -769,7 +769,8 @@ separate from group formation.
 
 **Choosing a candidate population.** Unlike group formation, this tab
 requires an explicit population scope before it will compute anything --
-**All alive** (every animal with no recorded exit date), **Top ranked by
+**All alive** (every animal whose status is ALIVE; in a file with no
+status column, every animal with no recorded exit date), **Top ranked by
 genetic value** (the highest-ranked animals from a completed Genetic Value
 Analysis run), or a **Custom list** of pasted IDs. This is a deliberate,
 evidence-based design choice, not an arbitrary restriction: minimum age

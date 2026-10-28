@@ -386,6 +386,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - Mate pairs are made only from animals recorded as male or female. The
   page says how many animals of any other sex it left out, and
   `reportMatePairs()` leaves them out of both tables.
+- **All alive** takes the same animals as Breeding Groups: status ALIVE,
+  or, in a file with no status column, no recorded exit date.
 
 ## De-Identified Export
 
