@@ -25,7 +25,9 @@ readWithFinalNewline <- function(fileName, reader, ...) {
   if (lacksFinalNewline(fileName)) {
     copy <- tempfile(fileext = ".txt")
     file.copy(fileName, copy)
-    cat("\n", file = copy, append = TRUE)
+    con <- file(copy, open = "ab")
+    writeBin(as.raw(0x0a), con)
+    close(con)
     on.exit(unlink(copy), add = TRUE)
     fileName <- copy
   }
