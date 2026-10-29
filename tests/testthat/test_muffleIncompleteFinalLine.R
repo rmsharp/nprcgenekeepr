@@ -5,14 +5,11 @@
 ## every row (including the last) is read correctly. The helper muffles ONLY that
 ## one warning; every other warning still propagates to the caller.
 
-## Write `text` to a temp file with NO trailing newline (the issue #4 condition).
+## Write `text` to a temp file with NO trailing newline (the issue #4 condition;
+## writeExactly() is in helper-exactFile.R).
 write_no_final_newline <- function(text, ext = ".csv") {
   stopifnot(!grepl("\n$", text))
-  f <- tempfile(fileext = ext)
-  con <- file(f, "wb")
-  on.exit(close(con))
-  writeBin(charToRaw(text), con)
-  f
+  writeExactly(text, ext)
 }
 
 ## Collect every warning message emitted while evaluating `expr` (muffling them so

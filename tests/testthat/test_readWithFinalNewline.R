@@ -14,14 +14,8 @@
 ## read.csv()/read.table() of a file in R/ goes through it (owner ruling S1093:
 ## every file reader, not only the app's upload). On macOS and x86-64 `char` is
 ## signed, so these tests show the contract there; the ARM64 behavior itself
-## is checked in the linux/arm64 container.
-
-## Write `text` to a temporary file exactly as given (no newline added).
-writeExactly <- function(text, ext = ".csv") {
-  f <- tempfile(fileext = ext)
-  writeBin(charToRaw(text), f)
-  f
-}
+## is checked in the linux/arm64 container. writeExactly() is in
+## helper-exactFile.R.
 
 ## A reader that records the path it is given and that file's bytes.
 recordPath <- function(path, ...) {
