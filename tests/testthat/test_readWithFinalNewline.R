@@ -86,6 +86,29 @@ test_that("a missing file or a URL reaches the reader as is, so its own error is
   )
 })
 
+## read.csv() opens a compressed file as text, and a compressed file's last
+## byte is not a newline; a newline added after bzip2 or xz data breaks the read
+## ("appears not to be compressed by bzip2", "lzma decoding result 10"; S1093),
+## so a compressed file must reach the reader as is.
+test_that("a compressed file reaches the reader as is and reads as before", {
+  writers <- c("gzfile", "bzfile", "xzfile")
+  if (exists("zstdfile")) writers <- c(writers, "zstdfile")
+  for (writer in writers) {
+    f <- tempfile(fileext = ".csv")
+    con <- get(writer)(f, "wb")
+    writeLines(c("id,sex", '"A1","M"'), con)
+    close(con)
+    seen <- nprcgenekeepr:::readWithFinalNewline(f, recordPath)
+    expect_identical(seen$path, f, info = writer)
+    expect_identical(
+      nprcgenekeepr:::readWithFinalNewline(f, read.csv,
+                                           stringsAsFactors = FALSE),
+      read.csv(f, stringsAsFactors = FALSE),
+      info = writer
+    )
+  }
+})
+
 test_that("extra arguments reach the reader", {
   f <- writeExactly('a;b\n1;"x"')
   got <- nprcgenekeepr:::readWithFinalNewline(f, read.table, header = TRUE,
