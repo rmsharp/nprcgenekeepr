@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1090
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- fix the red test-coverage.yaml run: test_roxygenInheritParams.R:78,80 scans no .R file under covr (owner pick at the Phase 0 picker, item 1 of 4, "Fix red coverage check"; strict TDD).
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md:8 (the item); tests/testthat/test_roxygenInheritParams.R:59-82; tests/testthat/test_sexCodes.R:92-100 (S893's guard)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the red test-coverage.yaml run fixed in the tests only (owner pick at the Phase 0 picker, item 1 of 4, "Fix red coverage check"; scope "Share one check"; strict TDD, every gate answered with the recommended option; pushed at the owner's word).
+what_was_done: Claim 8e8fc19c7; RED 98a683ca6 (test_rSourceAvailable.R: S893's two blocks on a shared rSourceAvailable(), both failing "could not find function"; the red run 40822189540 reproduced from a covr-layout scratch install, test_roxygenInheritParams.R 2 failed); GREEN 665f4cf9b (tests/testthat/helper-rSource.R; test_roxygenInheritParams.R:60-63 skips unless R/ holds a .R file); REFACTOR 3d5270b4f (test_sexCodes.R calls the helper; its own copy and the two moved blocks deleted). Verified: scratch install 0 failed (1 and 2 skips); full suite 487 files 4,547 blocks 0 errors, 2 failed = the test_markerKinship.R and test_markerParentageLikelihood.R wall-clock benchmarks at load 24, both 0 failed alone; lint_package() 0; devtools::check() 0/0/0. Pushed 6d12f6061..3d5270b4f; test-coverage 40828629186 green, [ FAIL 0 | WARN 10 | SKIP 654 | PASS 16623 ] (was FAIL 2, SKIP 653); lint and pkgdown green; R-CMD-check 40828629069 running at close-out. BACKLOG.md:8 block removed; Learning 1056.
+next_steps: The owner picks at the next Phase 0. READY: #138 scoping (BACKLOG.md:157, Effort M). DECISION NEEDED: shorter ledger entries (BACKLOG.md:103). BLOCKED: larger-colony build cost (BACKLOG.md:33, needs a studbook); the held-back methodology sync (BACKLOG.md:143; upstream main has no close_out_report.py change since S1032, checked S1090). Read R-CMD-check 40828629069 and tonight's nightly shinytest2; the S1073/S1075/S1076/S1081/S1082 log checks are still owed (S1090 read only run conclusions). Not built: a guard test that every whole-R/ scan skips on rSourceAvailable() (the owner's call).
+key_files: tests/testthat/helper-rSource.R (rSourceAvailable); tests/testthat/test_rSourceAvailable.R (its tests); tests/testthat/test_roxygenInheritParams.R:60-63; tests/testthat/test_sexCodes.R:92-99,113-115 (the two scans); .github/workflows/test-coverage.yaml:90-94 (covr::package_coverage, install_path); PROJECT_LEARNINGS.md (Learning 1056)
+gotchas: covr runs the tests from <install_path>/nprcgenekeepr/nprcgenekeepr-tests/testthat, so ../../R is the installed R/ (.rdb/.rdx only). Reproduce: R CMD INSTALL --no-docs --install-tests --library=<scratch> ., then outside the repo with R_LIBS=<scratch>:<renv lib>, RENV_CONFIG_AUTOLOADER_ENABLED=false, NOT_CRAN=true, testthat::test_file("<scratch>/nprcgenekeepr/tests/testthat/<f>", package = "nprcgenekeepr", load_package = "installed"). Only R/ collides: man/, vignettes/, NEWS.Rmd and BACKLOG.md are absent from an installed copy, so their skips work. devtools::check(check_dir = Sys.getenv("X")) with X unset halts at "zero-length 'path' argument".
+runtime_smoke: n/a — test files only (no R/ code or app behavior changed); the faithful surface is CI test-coverage run 40828629186 (green, FAIL 0)
+changelog_ref: 8e8fc19c7 (claim); the close-out commit (DONE and push entries)
+commit: 3d5270b4f
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 2fbfdc211408 · manifest 7e3e82ab3ae0 (run at 3d5270b4f, load about 9)
 ```
 
 ```handoff

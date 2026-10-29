@@ -99,36 +99,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1090 Did
-**Deliverable:** fix the red `test-coverage.yaml` run: `test_roxygenInheritParams.R:78,80` scans no `.R` file
-under covr (`BACKLOG.md:8`) (owner pick, item 1 of 4, "Fix red coverage check"; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Fix red coverage check"; scope "Share one check"; strict TDD, every gate the
+recommended option):** the red `test-coverage.yaml` run is fixed in the tests only. `test_roxygenInheritParams.R` skipped only on a
+missing `R/`; under covr `R/` holds only `.rdb`/`.rdx` files, so the scan read nothing and failed `:78`, `:80`. The shared
+`rSourceAvailable()` (`tests/testthat/helper-rSource.R`, S893's rule) now gates both whole-`R/` scans (`test_roxygenInheritParams.R:60-63`,
+`test_sexCodes.R:97-99,113-115`); its tests are `test_rSourceAvailable.R`, and `test_sexCodes.R` lost its own copy. Claim `8e8fc19c7`,
+RED `98a683ca6`, GREEN `665f4cf9b`, REFACTOR `3d5270b4f`; pushed `6d12f6061..3d5270b4f` at the owner's word; `BACKLOG.md:8` removed.
+**Verified:** a covr-layout scratch install (Gotchas) failed 2 before, 0 after; full suite 487 files, 4,547 blocks, 0 errors, 2 failed
+(the two wall-clock benchmarks at load 24, both pass alone); `lint_package()` 0; `devtools::check()` 0/0/0; ratchet 11/11
+(`2fbfdc211408`, at `3d5270b4f`, load about 9). CI: test-coverage `40828629186` green, `[ FAIL 0 | WARN 10 | SKIP 654 | PASS 16623 ]` (was FAIL 2, SKIP 653);
+lint and pkgdown green, R-CMD-check `40828629069` running at close-out; the earlier R-CMD-check `40822189344` finished with all 5 legs green.
+**Handoff evaluation of S1089: 9/10.** Helped: the cause, the lines (`:61`, `:78`, `:80`), S893's guard and "RED is the red run" were
+exact, and `gh run view --log` found the failures at once. Missing: how to reproduce covr's layout (S893 kept the result, not the recipe).
+**Self: 8/10.** + the class scanned before scoping (only `R/` collides); the failure reproduced before the question; one commit per
+phase. - `devtools::check(check_dir = Sys.getenv("CHKDIR"))` with the variable unset halted at the check step and cost a 10-minute rerun.
+**Gotchas:** covr layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then, outside the repo with
+`R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `testthat::test_file()` on
+`<scratch>/nprcgenekeepr/tests/testthat/<f>` with `package = "nprcgenekeepr", load_package = "installed"`; a new scan of the whole
+`R/` folder skips on `rSourceAvailable()`, not `dir.exists()`; never pass an unset variable as `check_dir`.
+**Next:** the owner picks. READY: #138 scoping (M, `BACKLOG.md:157`). DECISION NEEDED: shorter ledger entries (`:103`). BLOCKED:
+larger-colony cost (studbook, `:33`); held-back sync (`:143`; upstream `main` has no `close_out_report.py` fix, checked S1090). Owed:
+tonight's nightly `shinytest2` and the R-CMD-check logs for the S1073/S1075/S1076/S1081/S1082 checks (S1090 read only conclusions).
 
-### What Session 1089 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "BACKLOG compression"; scope "Leave delayed items alone"; no code, no TDD gates):**
-`BACKLOG.md` 234 to 208 lines (20,009 to 17,560 B) by the six-step method in its own item (`BACKLOG.md:125`). Claim `3340e9064`,
-pass `ad8597cc9`. Changed: the compression item's history and candidates (38 to 26 lines); the CHANGELOG entry-size item (19 to 13,
-DECISION NEEDED, with the 10-28 measurement: DONE entries 86% of 24,094 B; `:113`); the snapshot heading (9 to 7; `:43`); the
-resolved kinship2-audit section deleted; a new #138 item (`:167`), after the owner asked why that section was never a picker option.
-**Verified:** every cited session's entry and its figures, the Learnings, docs and issue states; the 11 other blocks, the six delayed
-items among them, byte-identical to HEAD; `test_docsAuditSixRulings.R` 5 and `test_docsAuditLooseEnds.R` 10 tests 0 failed;
-ratchet 11/11 (`832a2cb3816c`, at `ad8597cc9`, load about 3).
-**CI break found at close-out, filed, not fixed:** `test-coverage.yaml` run `40822189540` on `6d12f6061` is red,
-`test_roxygenInheritParams.R:78,80` (S1068's test scans no `.R` file under covr; S893's `test_sexCodes.R:92-100` guard is the fix).
-Item `BACKLOG.md:8` (READY, S). pkgdown and lint green; R-CMD-check `40822189344` still running at close-out.
-**Handoff evaluation of S1088: 8/10.** Helped: the BACKLOG figures (234 lines, 20,009 B, "little beyond its own 38-line history"),
-all exact. Missing: it left this file at 55,694 B, past the Read cut it names (about 55,300 B), so Phase 0's read stopped at line 338.
-**Self: 7/10.** + drafts measured in scratch before the scope question (answered first try); four stale claims found. - the scope
-option said "#138 stays open on GitHub" without saying it then could never be picked (the owner asked why); the size line took three
-re-edits (Learning 1055).
-**Gotchas:** write a file's own size figure last; the delayed standalone-package item's `test_newsReleaseState.R:234,248` is now
-`:202,216` (recorded at `BACKLOG.md:146`, not fixed); #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
-**Next:** the owner picks. READY: the red test-coverage fix (S, `BACKLOG.md:8`, strict TDD, RED is the red run); #138 scoping (M).
-DECISION NEEDED: shorter ledger entries (`:113`). BLOCKED: larger-colony build cost (studbook); held-back sync (upstream unfixed).
-Read R-CMD-check `40822189344` and tonight's nightly `shinytest2` for the S1073/S1075/S1076/S1081/S1082 checks. Not pushed.
-
-### Sessions 947-1088 (condensed S950 to S1089; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1089 (condensed S950 to S1090; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1089: `BACKLOG.md` compression pass, 234 to 208 lines (claim `3340e9064`, pass `ad8597cc9`): the resolved kinship2-audit section
+deleted and a #138 item added; the red test-coverage run filed (fixed S1090); S1088 8/10, self 7/10 (Learning 1055). **Gotchas kept:**
+write a file's own size figure last; #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
 S1088: `methodology/CHANGELOG.md` trimmed 201,025 to 32,331 B (`--force --cut 2026-10-27` after `SRF_RED` 1.0038; claim `cb71bb6db`,
 trim `87bc10428`); pushed `ccd6e9028..6d12f6061`; S1087 9/10, self 8/10 (Learning 1054). **Gotchas kept:** `SRF_RED` fires once the
 file regrows past 201,025 B, so read `--check` at Phase 0 and put `--force` in the picker; `--cut` and its date are two shell words.
