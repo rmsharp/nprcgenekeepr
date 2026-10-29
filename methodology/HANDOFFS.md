@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1093
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 1: the linux-arm64 failure of test_modInput_incomplete_final_line.R; reproduce, name the cause, fix (owner pick at the Phase 0 picker, item 2 of 4; strict TDD).
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md (sections 2.2, 4.7, 5 Phase 1); tests/testthat/test_modInput_incomplete_final_line.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: CRAN 3.0.0 plan Phase 1 (the linux-arm64 failure of test_modInput_incomplete_final_line.R): DONE -- reproduced in CRAN's own arm64 image, cause named (a bug in R's utils readtablehead(), io.c:910), fixed in every package file reader. Owner pick at the Phase 0 picker, item 2 of 4; owner ruling: every file reader; strict TDD, every gate the recommended option; NEWS sentence approved as written; not pushed.
+what_was_done: Claim 5169a31f1; RED c1e3395fd (test_readWithFinalNewline.R, 8 blocks; the ARM64 RED is CRAN's image at 5169a31f1, FAIL 4 at :68 :70 :79 :81, as on CRAN) and 06b6c277e (a 9th block: compressed files go to the reader as is); GREEN 29e070626 (R/readWithFinalNewline.R: readWithFinalNewline(), lacksFinalNewline(); modInput.R's 2 reads, getPedigree, getGenotypes, readFocalAnimalIds), 3c64589b4 (readTwinRelations, readAncestryRules, readKinshipOverrides, readSnapshotHistory, loadSpeciesOverrides), 39aaf742c (modPedigree, modCrossCenterIdentity); REFACTOR e98c39fcc and e10e8553e (readDelimitedFile() for the six identical reads; muffleIncompleteFinalLine()'s help text corrected), 408170b35 (writeExactly() in tests/testthat/helper-exactFile.R); NEWS 39fcc51c6 (one sentence in "Fixed (pedigree checks and Potential Parents)"). Verified: ARM64 container FAIL 4 to 0 (NOT_CRAN false and true), getPedigree/getGenotypes read "M"/"b"; macOS clean read 489 files 4,563 blocks 0 failed 0 errors; lint_package() 0; devtools::check() Status OK 0/0/0 (PASS 16784, SKIP 629 against S1092's tree's 16757/628 by the same command); real-app browser test keeps 3,694 rows.
+next_steps: Follow the plan's section 7 order (docs/planning/cran-3.0.0-submission-plan.md): Phase 2's DONE when the owner forwards win-builder's R-release log (its queue had processed S1092's tarball at 12:40; R-devel still held it behind 32); else Phase 3 (D1 first) or Phase 4a (D6 first). Phase 8's cover note must say the linux-arm64 issue was R's readtablehead() on unsigned-char platforms, fixed by readWithFinalNewline(), and confirmed by CRAN's arm64 job only after release (BACKLOG.md:16). Reporting the R bug upstream is the owner's call; nothing is posted.
+key_files: R/readWithFinalNewline.R (readWithFinalNewline, readDelimitedFile, lacksFinalNewline); R/modInput.R:341-353 (the upload reads); R/muffleIncompleteFinalLine.R (help text); tests/testthat/test_readWithFinalNewline.R (9 blocks; guard at :132); tests/testthat/helper-exactFile.R; tests/testthat/test_modInput_incomplete_final_line.R (CRAN's failing file, unchanged); PROJECT_LEARNINGS.md Learning 1059; container ngk-arm64-s1093 (image ghcr.io/r-devel/rcheckserver/ubuntu:latest, stopped, kept for Phase 7).
+gotchas: The bug needs a quoted last value, no final newline and a file short enough for read.table's header scan to reach its end (about 6 lines); scan(), readLines() and read.csv(text =) are clean. A newline appended to bzip2 or xz data breaks the read, so lacksFinalNewline() skips compressed signatures. Compare check counts only from one command on both trees (S1092's SKIP 629 was 628 by devtools::check()). devtools::install(upgrade = "never") errors in this devtools; confirm the installed copy before an opt-in E2E run. The guard skips in an installed copy (R/ absent), so it runs in the source tree and CI only.
+runtime_smoke: Real app in Chrome on macOS (test-e2e-input-incomplete-final-line.R, NPRC_RUN_E2E=true, after devtools::install() confirmed the installed copy has readWithFinalNewline): both upload branches keep all 3,694 rows. On Linux ARM64 the real module server ran under shiny::testServer in CRAN's image (no browser there): 0 records/1 error became 3 records/0 errors. CRAN's own arm64 job checks published versions only, so CRAN confirms it after 3.0.0 is out.
+changelog_ref: 5169a31f1 (claim); the close-out commit (DONE entry)
+commit: 39fcc51c6
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results c96e69be647a · manifest 7e3e82ab3ae0 (run at 39fcc51c6, load about 11, first run)
 ```
 
 ```handoff

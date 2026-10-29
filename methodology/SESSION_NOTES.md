@@ -99,43 +99,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1093 Did
-**Deliverable:** CRAN 3.0.0 plan Phase 1, the linux-arm64 failure of `test_modInput_incomplete_final_line.R`: reproduce, name the
-cause, fix (owner pick, item 2 of 4, "Fix the Linux ARM64 failure"; strict TDD) (IN PROGRESS)
-**Started:** 2026-10-29 12:40 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 2 of 4, "Fix the Linux ARM64 failure"; strict TDD, every gate the recommended option): CRAN plan
+Phase 1.** Claim `5169a31f1`, RED `c1e3395fd` and `06b6c277e`, GREEN `29e070626`, `3c64589b4` and `39aaf742c`, REFACTOR `e98c39fcc`,
+`e10e8553e` and `408170b35`, NEWS `39fcc51c6`; not pushed (11 local commits with S1092's close-out).
+**Cause, in R itself:** utils `readtablehead()` (`src/library/utils/src/io.c:910`, `char c2 = (char) scanchar(...)` after a closing
+quote; the same line in R 4.4, 4.5, 4.6 and trunk). Where `char` is unsigned (Linux ARM64) end-of-file becomes 0xFF, so `read.csv()`
+and `read.table()` of a short file (the header scan must reach its end) whose last value is quoted and that has no final newline read
+`"SHIPPED\xff"`; QC then stops ("invalid multibyte string 3"): 0 records, 1 error. Minimal case: Learning 1059.
+**Fix (owner ruling: every file reader):** internal `readWithFinalNewline(fileName, reader, ...)` (`R/readWithFinalNewline.R`) reads a
+file with no final newline through a temporary copy with one added, removed on exit; missing, empty and gzip/bzip2/xz/zstd files go as
+is. All 12 reads in 11 `R/` files use it; the six identical readers share `readDelimitedFile(fileName, sep)` (same file). Tests:
+`tests/testthat/test_readWithFinalNewline.R` (9 blocks, the last a guard over `R/`); `writeExactly()` in `helper-exactFile.R`.
+**Measured:** in CRAN's image (container `ngk-arm64-s1093`, kept; `docker start` it) the failing file went FAIL 4 to 0 with `NOT_CRAN`
+false and true, and `getPedigree()`/`getGenotypes()` read "M"/"b", not "M\xff"/"b\xff". macOS: clean read 489 files 4,563 blocks 0
+failed 0 errors (GREEN and REFACTOR); `lint_package()` 0; `devtools::check()` Status OK 0/0/0 at `39aaf742c` and `408170b35`, `[ FAIL 0
+| WARN 10 | SKIP 629 | PASS 16784 ]` against 628/16757 for S1092's tree by the same command (+27 PASS, +1 guard skip); the real app in
+Chrome (`test-e2e-input-incomplete-final-line.R`, `NPRC_RUN_E2E=true`) keeps 3,694 rows in both branches; ratchet 11/11 (`c96e69be647a`).
+**CI and win-builder:** S1092's four runs green, and each R-CMD-check leg's PASS rose by exactly 19 from S1090's run (S1092's ask). At
+12:40 win-builder's R-release queue had processed S1092's tarball (its email is due); R-devel still held it, behind 32 others.
+**Handoff evaluation of S1092: 8/10.** Helped: the check-layout and `00check.log` `Status:` habits, Phase 1 named as next, the CI run
+ids to read. Missing: nothing this session needed. Wrong: `SKIP 629` "unchanged" in the check layout; the same `devtools::check()` on
+S1092's own tree gives 628 (a 9-minute run to settle).
+**Self: 8/10.** + reproduced on the first try in CRAN's own image from CRAN's own artifact; the cause pinned to one line of R; the
+exported readers measured before the scope question; the compressed-file hazard caught, with RED reopened before any code; counts
+compared like for like. - a probe died on a regex escape; the first browser run passed against old installed code (a bad `upgrade`
+argument), caught and re-run; one 9-minute check spent on the predecessor's skip count.
+**Gotchas:** compare check counts only from one command on both trees; confirm `devtools::install()` worked before an E2E run; the bug
+needs a quoted last value, no final newline and a file short enough for the header scan (about 6 lines).
+**Next:** the plan's section 7 order: Phase 2's win-builder confirmation once the owner forwards the R-release log, or Phase 3 (D1
+first) or Phase 4a (D6 first). Phase 8's cover note must describe Phase 1 (`BACKLOG.md:16`). Reporting the R bug upstream is the
+owner's call; nothing is posted.
 
-### What Session 1092 Did
-**Deliverable (owner pick, item 1 of 4, "Speed up CRAN's tests"; strict TDD, every gate the recommended option): CRAN plan Phase 2's
-cut, landed; its DONE is owed:** win-builder's measured check time for the cut tree (D4 = A, ruled this session). Claim `2d3dc2f26`,
-RED `8c2c80721`, GREEN `53113828f` and `49296d313`, REFACTOR `2e136e0d4`; pushed `3d5270b4f..2e136e0d4`.
-**What changed:** a CRAN check (`NOT_CRAN` not "true") leaves out the 64 files named in `tests/testthat/slowTestFiles.txt` (each
-0.5 s or more in the check's layout): `tests/testthat.R` sources `tests/testthat/helper-slowTestFiles.R` and calls `test_check(filter =
-cranTestFilter("testthat"), invert = TRUE)` (owner ruling: one list, not a line per file). `test_markerKinship.R` and
-`test_markerParentageLikelihood.R` skip their stopwatch block on CRAN, `test_idsAsText.R` its 4 full-example blocks; guard tests in
-`tests/testthat/test_slowTestFiles.R` (7 blocks).
-**Measured, this Mac:** CRAN-mode `checking tests` 296 s to 33 s (re-timed twice at load 15-31; the check itself read 49 s at load
-80); whole check 7 m 44 s to 3 m 13 s, 0/0/1 NOTE (version, DOI); all 236 exports still called on CRAN (trace probe through the real
-filter); `NOT_CRAN=true` in the check layout `PASS 16738` to `16757` (+19, the new file), `SKIP 629` and `WARN 10` unchanged; clean
-read 488 files 4,554 blocks 0 failed 0 errors; `lint_package()` 0; ratchet 11/11 (`4f9d8ce7bf35`; two earlier runs each failed one
-timing gate at load 9-11, no `R/` change).
-**win-builder:** the uncut tarball (`2d3dc2f26`) went to R-devel by FTP at 09:54 CDT (still queued at 11:44: the web form refused a
-same-named copy) and to R-release by web form at 11:45 (accepted). No email by 12:15. The 11:44:17 send's reply was never read.
-**Handoff evaluation of S1091: 8/10.** Helped: Phase 2's installed-layout recipe, dragons 1-2 (repos, `NOT_CRAN = "false"`) and the
-export check. Missing: the 540 s arithmetic (about 495 s non-test estimate leaves the tests about 45 s there, about 13 s here; its 30 s
-was for 600 s) and that win-builder can hold an upload for hours. Wrong: `test_perfHarness.R` in the top 10; it skips in the check.
-**Self: 7/10.** + ranked and checked in the check's own layout; every export proven tested on CRAN; before/after `NOT_CRAN=true` in one
-layout (+19 exactly); every owner question answered first try. - a parsing error after an upload call sent a copy whose reply I never
-read; the first timing run died on an unexported testthat helper; an `rm -rf` on a variable path refused; the 30 s target met only at
-the edge; Phase 2's DONE not reached; two Phase 0 nudges (Learning 1058).
-**Gotchas:** rank in `<check_dir>/nprcgenekeepr.Rcheck/tests` (Learning 1058 has the recipe); a same-named win-builder upload is
-refused until the queued one is processed; perf gates fail at load 9+ (diagram 4.3-4.7 s against 4.6 s).
-**Next:** when the owner forwards a win-builder log, read its step times; if 540 s minus the non-test steps leaves about 110 s or more
-(an estimate: 33 s here times S395's 3.4), upload the cut tree once (`devtools::check_win_devel()`) and confirm at most 540 s; if
-less, the examples or vignettes also need cutting. Then Phase 1 (linux-arm64, READY). Read R-CMD-check `40920931034` (each leg's PASS should rise by 19) and test-coverage
-`40920930833` (`16623` to `16642`).
-
-### Sessions 947-1091 (condensed S950 to S1092; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1092 (condensed S950 to S1093; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1092: CRAN plan Phase 2's cut (claim `2d3dc2f26`, RED `8c2c80721`, GREEN `53113828f`/`49296d313`, REFACTOR `2e136e0d4`, pushed): a
+CRAN check leaves out the 64 files in `tests/testthat/slowTestFiles.txt`; CRAN-mode tests 296 s to 33 s here; owed: win-builder at most
+540 s; S1091 8/10, self 7/10 (Learning 1058). **Gotchas kept:** rank in the check's own layout; a same-named win-builder upload is
+refused until the queued one is processed; perf gates fail at load 9+.
 S1091: the CRAN 3.0.0 plan (`docs/planning/cran-3.0.0-submission-plan.md`, DRAFT; claim `801d1e4fc`, plan `555a995fd`): CRAN-mode
 tests 309 s here against `v2.0.0`'s 66 s (about 1,430 s estimated on win-builder against 600 s); the linux-arm64 failure, the unguarded
 `shinyBS`, a wrong DOI; decisions D1-D6; S1090 9/10, self 8/10 (Learning 1057). **Gotchas kept:** set the CRAN repo before an incoming

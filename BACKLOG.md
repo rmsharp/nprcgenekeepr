@@ -14,9 +14,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       released 3.0.0.
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
-      S1091, DRAFT; Phase 2's cut landed S1092 and its win-builder confirmation is owed; Phase 1
-      READY; DECISION NEEDED on D1-D3, D5 and D6 (D4 ruled A, S1092); Effort L, about 9-11 sessions
-      left) -- **Phase 2 so far:** a CRAN check leaves out the 64 test files named in
+      S1091, DRAFT; Phase 1 DONE S1093; Phase 2's cut landed S1092 and its win-builder
+      confirmation is owed; DECISION NEEDED on D1-D3, D5 and D6 (D4 ruled A, S1092); Effort L,
+      about 8-10 sessions left) -- **Phase 1 (S1093):** the linux-arm64 failure is a bug in R
+      itself (utils `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel):
+      on Linux ARM64 `read.csv()`/`read.table()` of a file whose last value is quoted and that has
+      no final newline read that value with a stray 0xFF byte. Every package read now goes through
+      `readWithFinalNewline()` (`R/readWithFinalNewline.R`), and the failing test passes in CRAN's
+      own arm64 image (container `ngk-arm64-s1093`, kept for Phase 7). Phase 8's cover note must
+      say so, and that CRAN's arm64 job confirms it only after release. Whether to report the R
+      bug upstream (one-line case: `writeChar('a,b\n1,"x"', f, eos = NULL); read.csv(f)$b` gives
+      `x\xff`) is the owner's call; nothing has been posted. **Phase 2 so far:** a CRAN check leaves out the 64 test files named in
       `tests/testthat/slowTestFiles.txt` (`tests/testthat.R`, `tests/testthat/helper-slowTestFiles.R`),
       so in CRAN mode the tests take 33 s here (load 15-31), not 296 s; every exported function
       is still tested on CRAN, and with `NOT_CRAN=true` (CI, local runs) every test still runs.
@@ -26,9 +34,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       12:15. Read the step times from the first log that arrives, then upload the cut tree once
       (the queue refuses a same-named file it has not yet processed). If the non-test steps alone
       leave the tests under about 45 s there, more than the tests must shrink (examples,
-      vignettes). Still open after Phase 2: CRAN's linux-arm64 job fails 2.0.0's
-      `test_modInput_incomplete_final_line.R` (Phase 1), `R/modSummaryStats.R` calls the Suggests
-      package `shinyBS` with no guard (Phase 4a), and one help-page DOI is wrong (Phase 3). The
+      vignettes). At 12:40 CDT win-builder's R-release queue no longer held the tarball (its email
+      is due) and R-devel still did, behind 32 others. Still open after Phase 2:
+      `R/modSummaryStats.R` calls the Suggests package `shinyBS` with no guard (Phase 4a), and one
+      help-page DOI is wrong (Phase 3). The
       plan's section 7 orders the phases; the item above is its Phase 6.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
