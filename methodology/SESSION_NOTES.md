@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1089 Did
+**Deliverable:** one editorial compression pass on `BACKLOG.md` (234 lines) by the method in its own item (`BACKLOG.md:124`)
+(owner pick, item 1 of 4, "BACKLOG compression"; no code, no TDD gates) (IN PROGRESS)
+**Started:** 2026-10-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1088 Did
 **Deliverable, DONE (owner pick, item 1 of 4, "CHANGELOG trim"; housekeeping, no code, no TDD gates):** `methodology/CHANGELOG.md`
 201,025 B to 32,331 B, 87 of 101 records (2026-10-23 to 2026-10-27) archived to `methodology/archive/CHANGELOG-through-2026-10-27.md`
