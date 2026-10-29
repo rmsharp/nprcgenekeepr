@@ -244,6 +244,44 @@ So the time is concentrated. Skipping the 57 files of 1 s or more on CRAN would 
 here, or about 31 s scaled to the check's run (309/389). That is the size section 3.2 allows.
 Phase 2 decides the exact list.
 
+### 3.4 Measured on win-builder (S1094)
+
+| Step | 2.0.0, R-devel | uncut `2d3dc2f26`, R-release 4.6.2 | uncut, R-devel r90783 | cut `9fa5df13c`, R-devel r90783 |
+|---|---:|---:|---:|---:|
+| Check time | 588 s | 1,384 s | 1,722 s | **652 s** |
+| tests | 200 s | 15 min | 20 min | 156 s |
+| examples | 80 s | 108 s | 113 s | 109 s |
+| re-building vignettes | 65 s | 40 s | 67 s | 67 s |
+| R code check | | 69 s | 81 s | 81 s |
+| PDF + HTML manuals | | 89 s | 69 s | 70 s |
+
+- **The steps other than tests took about 496 s** for the cut tree (522 s uncut; 480 s on
+  R-release), so 540 s leaves the tests about 45 s there and 600 s about 105 s. Run-to-run
+  noise is about 30 s. On this Mac the cut tree's CRAN-mode check now matches `v2.0.0`'s (2 m
+  49 s against 2 m 55 s, same command, load 5-6; tests 36 s against 65 s, examples 33 s
+  against 23 s, R code 16 s against 10 s).
+- **Errors:** the uncut tree's two wall-clock benchmarks (`skip_on_cran()` since S1092); the cut
+  tree's `test_readWithFinalNewline.R:46`, where `cat()` appended `"\r\n"` on Windows (fixed
+  S1094 with a binary append).
+- **NOTEs:** the version; "de" (`DESCRIPTION:37`); the thoughtco.com URL, status 402 (2.0.0's
+  note already explained it, `cran-comments.md:47-49`); the DOI (Phase 3); the
+  `getGeneticDiversityStats` example, 15.2 s.
+
+The levers left, measured here; the R-devel savings are estimates scaled from the table:
+
+| Lever | Measured | R-devel saving | Cost |
+|---|---|---:|---|
+| `getGeneticDiversityStats` example (`R/getGeneticDiversityStats.R:69-84`) | 2.6 s here, nearly all `reportGV(ped, guIter = 10L)` on 3,694 rows; the call itself 0.02 s | about 14 s | a smaller input |
+| `findLoops()`/`countLoops()` back to 2.0.0's speed | 0.51 to 1.04 s and 0.61 to 1.20 s since `v2.0.0`; 88% of `findLoops()` is `.getAncestorsOnPath()`, 46% its `%in%` path check (S783's cycle guard) | about 14 s (4 examples 19.9 s there, 2 vignette chunks) | a cheaper cycle check, same results |
+| skip 10 / 20 / 26 / 40 more test files | 8.4 / 12.8 / 14.8 / 18.2 s of the 30.4 s CRAN-run sum here | about 40 / 65 / 75 / 90 s | 10 / 12 / 13 / 26 exports left with no CRAN-run test |
+| `a2interactive` vignette | 11.1 s of the 19 s step here; five chunks 7.4 s | part of 67 s | changes the tutorial's numbers |
+
+The 10-file skip strands `appServer`, seven module servers (`modGvAndBgDescServer`,
+`modMarkerGeneticsServer`, `modMatePairServer`, `modSnapshotTrendsServer`,
+`modORIPReportingServer`, `modGeneticDiversityServer`, `modGeneticValueServer`),
+`backfillColonySnapshots` and `previewBackfillSupport` (S1094 traced every export over the
+CRAN-run files; all 236 are called today).
+
 ---
 
 ## 4. Evidence-based inventory
@@ -766,8 +804,8 @@ must).
 
 | # | Phase | State now | Needs first | Effort |
 |---|---|---|---|---|
-| 2 | cut the CRAN-mode test time (do first) | READY | nothing to start; D4 = A needs the owner's upload | L (1-2 sessions) |
-| 1 | linux-arm64 failure | READY | nothing | M (1-2 sessions) |
+| 2 | cut the CRAN-mode test time (do first) | IN PROGRESS: the S1092 cut measured 652 s on R-devel (S1094) | a further cut of about 112 s from section 3.4's levers; whether 540 s stays the target | L (1-2 sessions) |
+| 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | after D1 | D1 | S |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | after D6 (4a), D2 (4b) | D6; D2 = A for 4b | S-M |
 | 5 | NEWS release pass | after D3 | D3 = B | M |
