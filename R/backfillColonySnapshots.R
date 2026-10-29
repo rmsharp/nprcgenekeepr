@@ -187,13 +187,7 @@ backfillColonySnapshots <- function(ped, dates = NULL,
                                 minAnimals)
   support <- supportForDates(facts, dates)
 
-  alreadyThere <- if (is.null(existingHistory)) {
-    as.Date(character(0L))
-  } else {
-    existingHistory$snapshotDate[
-      existingHistory$membershipRule == "reconstructedLiving"
-    ]
-  }
+  alreadyThere <- rebuiltSnapshotDates(existingHistory)
   rows <- vector("list", length(dates))
   reasons <- character(length(dates))
   already <- logical(length(dates))
@@ -276,6 +270,24 @@ backfillColonySnapshots <- function(ped, dates = NULL,
     ))
   }
   list(history = history, support = support, skipped = skipped)
+}
+
+#' The dates a history already holds rebuilt
+#'
+#' The snapshot dates of the rows of \code{history} under the
+#' \code{"reconstructedLiving"} rule, the dates a build does not rebuild. Used
+#' by \code{backfillColonySnapshots()} and by the Genetic-Health Trends panel,
+#' which says those dates in its own words.
+#'
+#' @param history \code{NULL} or a snapshot history.
+#' @return A \code{Date} vector, empty when \code{history} is \code{NULL}.
+#'
+#' @noRd
+rebuiltSnapshotDates <- function(history) {
+  if (is.null(history)) {
+    return(as.Date(character(0L)))
+  }
+  history$snapshotDate[history$membershipRule == "reconstructedLiving"]
 }
 
 #' The dates of a rebuilt series

@@ -1044,14 +1044,24 @@ test_that("after a build the note under Dates not built is gone", {
 
 appAlreadyBuiltReason <- "Already in the history; not built again."
 
+## Inside testServer(): Build from `start`, then click Build again.
+buildTwice <- function(session, start) {
+  suppressWarnings(
+    session$setInputs(backfillStart = start, buildBackfill = 1)
+  )
+  suppressWarnings(session$setInputs(buildBackfill = 2))
+}
+
+## The server's arguments with the hand-built colony as the full pedigree.
+handBuiltServerArgs <- function() {
+  serverArgs(fullPedigree = shiny::reactive(handBuiltColony()))
+}
+
 test_that("a second Build lists the dates already built in the app's words", {
   skip_if_not_installed("shiny")
 
   shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
-    suppressWarnings(
-      session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
-    )
-    suppressWarnings(session$setInputs(buildBackfill = 2))
+    buildTwice(session, backfillStartDate)
     skipped <- skippedDates()
     expect_identical(skipped$snapshotDate, backfillStartDates)
     expect_identical(skipped$reason, rep(appAlreadyBuiltReason, 6L))
@@ -1060,13 +1070,9 @@ test_that("a second Build lists the dates already built in the app's words", {
 
 test_that("beside the dates already built, a date that failed keeps its own reason", {
   skip_if_not_installed("shiny")
-  args <- serverArgs(fullPedigree = shiny::reactive(handBuiltColony()))
 
-  shiny::testServer(modSnapshotTrendsServer, args = args, {
-    suppressWarnings(
-      session$setInputs(backfillStart = "1999-01-01", buildBackfill = 1)
-    )
-    suppressWarnings(session$setInputs(buildBackfill = 2))
+  shiny::testServer(modSnapshotTrendsServer, args = handBuiltServerArgs(), {
+    buildTwice(session, "1999-01-01")
     skipped <- skippedDates()
     expect_identical(skipped$snapshotDate, januaries(1999:2012))
     expect_match(skipped$reason[[1L]], "needs at least 2 animals", fixed = TRUE)
@@ -1082,9 +1088,8 @@ test_that("a date the history holds only under another rule is not called alread
   recorded$snapshotDate[[1L]] <- as.Date("1999-01-01")
   path <- withr::local_tempfile(fileext = ".csv")
   utils::write.csv(recorded, path, row.names = FALSE)
-  args <- serverArgs(fullPedigree = shiny::reactive(handBuiltColony()))
 
-  shiny::testServer(modSnapshotTrendsServer, args = args, {
+  shiny::testServer(modSnapshotTrendsServer, args = handBuiltServerArgs(), {
     session$setInputs(historyFile = fileInfo(path))
     suppressWarnings(
       session$setInputs(backfillStart = "1999-01-01", buildBackfill = 1)

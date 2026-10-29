@@ -428,9 +428,7 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
           # The function's reason for a date already rebuilt names the
           # script's existingHistory; here it says so in this panel's words
           skipped <- result$skipped
-          rebuilt <- existing$snapshotDate[
-            existing$membershipRule == "reconstructedLiving"
-          ]
+          rebuilt <- rebuiltSnapshotDates(existing)
           skipped$reason[skipped$snapshotDate %in% rebuilt] <-
             "Already in the history; not built again."
           skippedDates(skipped)
