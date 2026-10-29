@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1090 Did
+**Deliverable:** fix the red `test-coverage.yaml` run: `test_roxygenInheritParams.R:78,80` scans no `.R` file
+under covr (`BACKLOG.md:8`) (owner pick, item 1 of 4, "Fix red coverage check"; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1089 Did
 **Deliverable, DONE (owner pick, item 1 of 4, "BACKLOG compression"; scope "Leave delayed items alone"; no code, no TDD gates):**
 `BACKLOG.md` 234 to 208 lines (20,009 to 17,560 B) by the six-step method in its own item (`BACKLOG.md:125`). Claim `3340e9064`,

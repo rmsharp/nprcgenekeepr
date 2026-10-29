@@ -208,6 +208,22 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1090
+date: 2026-10-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- fix the red test-coverage.yaml run: test_roxygenInheritParams.R:78,80 scans no .R file under covr (owner pick at the Phase 0 picker, item 1 of 4, "Fix red coverage check"; strict TDD).
+what_was_done: pending
+next_steps: pending
+key_files: BACKLOG.md:8 (the item); tests/testthat/test_roxygenInheritParams.R:59-82; tests/testthat/test_sexCodes.R:92-100 (S893's guard)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S1089
 date: 2026-10-29
 status: complete
