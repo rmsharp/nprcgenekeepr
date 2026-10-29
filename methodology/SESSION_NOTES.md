@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1092 Did
+**Deliverable:** CRAN 3.0.0 plan Phase 2, cut the CRAN-mode test time (owner pick, item 1 of 4, "Speed up CRAN's tests";
+strict TDD) (IN PROGRESS)
+**Started:** 2026-10-29 09:09 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1091 Did
 **Deliverable, DONE (owner-directed at Phase 0 after closing the picker to clarify: "This session make a plan to complete preparations
 to submit version 3.0.0 to CRAN"; planning session, no code, no TDD gates):** `docs/planning/cran-3.0.0-submission-plan.md` (DRAFT) and
