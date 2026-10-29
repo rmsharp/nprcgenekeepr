@@ -1,0 +1,73 @@
+## Test files a CRAN check leaves out (tests/testthat.R, helper-slowTestFiles.R).
+## CRAN rejects a package whose whole check takes more than 10 minutes on its
+## Windows check machine. Each file below took 0.5 s or more in a CRAN-mode
+## check of this tree (NOT_CRAN unset; S1092, this Mac). CI and local runs set
+## NOT_CRAN to "true" and still run every file. One name a line; `#` starts a
+## comment. A file that is the only CRAN-run test of an exported function stays
+## off this list and skips only its slow blocks on CRAN (S1092:
+## test_markerKinship.R, test_markerParentageLikelihood.R and test_idsAsText.R;
+## test_appServer_logging.R runs whole).
+test_addRectilinearWaypoints.R
+test_appServer_dynamicTabs.R
+test_appServer_server.R
+test_appUI_siteinfo.R
+test_backfillColonySnapshots.R
+test_captureHarness.R
+test_checkSequenceGenotypeFile.R
+test_comparePedigreeStructure.R
+test_convertRelationshipsEquivalence.R
+test_diagramSolverEquivalence.R
+test_displayUnknownIdsDownstream.R
+test_examplePedigreeFixtures.R
+test_fgSEValidation.R
+test_fillGroupMembers.R
+test_fillGroupMembersWithSexRatio.R
+test_filterAge.R
+test_founderStatsEquivalence.R
+test_geneDropEquivalence.R
+test_getPotentialParents.R
+test_groupAddAssign.R
+test_groupAddAssignEquivalence.R
+test_guideBreedingGroupsWording.R
+test_haremPartialSeeds.R
+test_haremSetUp.R
+test_kinshipForAnimals.R
+test_kinshipMemoryEquivalence.R
+test_makeGeneticDiversityHeatmap.R
+test_makePedigreeMatingLayout.R
+test_maleLeftDuplicateMate.R
+test_maleLeftSweepSurvival.R
+test_markerPictureScreenshots.R
+test_modBreedingGroups_groupLabels.R
+test_modBreedingGroups_groupsOutsidePedigree.R
+test_modDeidentifiedExport.R
+test_modGeneticDiversity.R
+test_modGeneticValue_snapshotSource.R
+test_modGvAndBgDesc.R
+test_modInput_qcStudbook.R
+test_modMarkerGenetics.R
+test_modORIPReporting.R
+test_modPedigree_diagramLayoutOnce.R
+test_modPedigree_directReachable.R
+test_modPedigree_twinRelationsTrimmed.R
+test_modPedigree.R
+test_modPotentialParents.R
+test_modSnapshotTrends.R
+test_modSummaryStats_coverage.R
+test_modSummaryStats_ggplots.R
+test_modSummaryStats_parity.R
+test_modSummaryStats_popovers.R
+test_modSummaryStats_relationships.R
+test_modSummaryStats.R
+test_newsReleaseState.R
+test_obfuscateId.R
+test_orderRootSubtrees.R
+test_originFundingWording.R
+test_placeholderMarkDisplay.R
+test_plotSnapshotTrends.R
+test_positionMatingUnitForest.R
+test_qcStudbook.R
+test_rareAlleleCounts.R
+test_reportGV.R
+test_reportMatePairsOppositeSexOnly.R
+test_resolveEdgeNodeCollisions.R
