@@ -200,15 +200,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
       until then.
 
-- [ ] **`reportGV()` given a factor pedigree reports `livingOffspring` as missing (READY, Effort S; found S1083)** --
-      on the shipped example as the tests build it (`qcStudbook(examplePedigree, minSireAge = 2, minDamAge = 2)`, the
-      living animals as the population), `reportGV()` given the same pedigree with its `id`, `sire` and `dam` as
-      factors reports `livingOffspring` as `NA` for 33 of the report's 332 animals, where the text pedigree gives 0;
-      every other part of the result, and the same pedigree with number ids, match the text's (S1083 probe, `guIter`
-      50, seed 1). No old-code fallback runs. S1083 made five other functions take number or factor ids as their text
-      (`idsAsText()`/`pedIdsAsText()`, `R/toCharacter.R`); the pickup first finds the line that makes the `NA`, then
-      whether `reportGV()` (or that count) should do the same.
-
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
 feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8
