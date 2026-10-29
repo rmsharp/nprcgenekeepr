@@ -47,15 +47,38 @@
 ## notes: the prose of the five places states no number as a literal. Any count
 ## in it is inline R, computed from the objects above, so the text cannot drift
 ## from the output.
+##
+## BACKLOG.md:43 thread 1 (S1087; the owner picked it at the Phase 0 picker and
+## chose the scope at the PRE-RED question: the twin example and ncol, no guard
+## for omitted exports). A sixth place, between Twin/Zygosity Connectors and
+## Passing a Kinship Matrix You Already Have, which tells the reader to build
+## the matrix with kinship()'s own twinRelations:
+##   ### Kinship of Identical Twins
+##     twin-kinship   mzPed, mzTwins, plainKmat, twinKmat
+## Measured S1087: the guide's twin pair is a female and a male, so it cannot
+## be an MZ twin pair ("must have matching sex"), and its UZ twin call changes
+## no kinship value. On six animals with two full sisters declared MZ twins
+## and a daughter of the first, kinship(twinRelations) changes four cells: the
+## twins from 0.25 to 0.5 and the daughter with her aunt from 0.125 to 0.25.
+## The ids carry digits, so the prose calls the animals the twins and the
+## daughter and gives each value as inline R.
 
 ## sourceLines(), plainText(), chunkCode(), expectNames(), insideChunk(),
 ## sectionProse() and chunkOptionText() are in helper-pageText.R.
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
 
 places <- list(
+  twinKinship = list(
+    title = "### Kinship of Identical Twins",
+    before = "### Twin/Zygosity Connectors",
+    after = "### Passing a Kinship Matrix You Already Have",
+    names = c("kinship", "twinRelations", "MZ twin", "DZ twin", "UZ twin"),
+    prereq = character(0L),
+    chunks = "twin-kinship"
+  ),
   kinshipMatrix = list(
     title = "### Passing a Kinship Matrix You Already Have",
-    before = "### Twin/Zygosity Connectors",
+    before = "### Kinship of Identical Twins",
     after = "## Genetic Value Analysis",
     names = c("makePedigreeMatingLayout", "kinshipMatrix", "twinRelations"),
     prereq = "pedigree-diagram-demo-data",
@@ -162,7 +185,7 @@ runPlace <- local({
   }
 })
 
-test_that("the five new places stand where the inventory put them, ahead of the closing chunks", {
+test_that("the six places stand where the inventory put them, ahead of the closing chunks", {
   lines <- tutorialLines()
   titles <- trimws(lines[headingLines(lines)])
   for (key in names(places)) {
@@ -237,7 +260,7 @@ test_that("the chunks hide no warning, read no clock and fix the seed where alia
               info = "mhc-obfuscate sets no seed")
 })
 
-test_that("the prose of the five places gives no number as a literal", {
+test_that("the prose of the six places gives no number as a literal", {
   for (key in names(places)) {
     section <- placeLines(places[[key]]$title)
     expect_gt(length(section), 0L)
@@ -255,6 +278,50 @@ test_that("every place's chunks run in order on their own and give no warning an
     if (!is.null(run)) {
       expect_length(run$warnings, 0L)
       expect_length(run$errors, 0L)
+    }
+  }
+})
+
+test_that("an MZ twin declaration gives the twins their self-kinship and the daughter her mother's kinship with the aunt, and changes nothing else", {
+  skip_on_cran()
+  run <- runPlace("twinKinship")
+  expect_false(is.null(run), info = "no 'Kinship of Identical Twins' place")
+  if (!is.null(run)) {
+    env <- run$env
+    expect_true(all(c("mzPed", "mzTwins", "plainKmat", "twinKmat") %in%
+                      ls(env)))
+    if (is.data.frame(env$mzPed) && is.data.frame(env$mzTwins) &&
+          is.matrix(env$plainKmat) && is.matrix(env$twinKmat)) {
+      ped <- env$mzPed
+      expect_identical(env$mzTwins$code, "MZ twin")
+      twins <- c(env$mzTwins$id1, env$mzTwins$id2)
+      ## Two full sisters: an MZ twin pair shares both parents and its sex.
+      expect_identical(ped$sex[match(twins, ped$id)], c("F", "F"))
+      expect_length(unique(ped$sire[match(twins, ped$id)]), 1L)
+      expect_length(unique(ped$dam[match(twins, ped$id)]), 1L)
+      daughter <- ped$id[ped$dam %in% twins[1L]]
+      expect_length(daughter, 1L)
+      plain <- env$plainKmat
+      twin <- env$twinKmat
+      expect_identical(rownames(twin), ped$id)
+      expect_identical(colnames(twin), ped$id)
+      expect_equal(plain, kinship(ped$id, ped$sire, ped$dam, ped$gen))
+      expect_equal(twin, kinship(ped$id, ped$sire, ped$dam, ped$gen,
+                                 twinRelations = env$mzTwins))
+      expect_equal(twin[twins[1L], twins[2L]], twin[twins[1L], twins[1L]])
+      expect_lt(plain[twins[1L], twins[2L]], twin[twins[1L], twins[2L]])
+      if (length(daughter) == 1L) {
+        expect_lt(plain[daughter, twins[2L]], plain[daughter, twins[1L]])
+        expect_equal(twin[daughter, twins[2L]], twin[daughter, twins[1L]])
+        ## Only the twins' pair and the daughter with her aunt change.
+        changed <- which(plain != twin, arr.ind = TRUE)
+        pairs <- unique(apply(changed, 1L, function(cell) {
+          paste(sort(rownames(plain)[cell]), collapse = "-")
+        }))
+        expect_setequal(pairs, c(paste(sort(twins), collapse = "-"),
+                                 paste(sort(c(daughter, twins[2L])),
+                                       collapse = "-")))
+      }
     }
   }
 })

@@ -187,6 +187,28 @@ test_that("the plot chunk sets no figure width of its own", {
   )
 })
 
+## BACKLOG.md:43 thread 3 (S1087; owner scope "Twins + ncol"):
+## plotSnapshotTrends() took ncol at S1045, after the S1043 inventory pass. The
+## plot chunk shows it as a named argument and the prose says what it does.
+## Measured S1087 on the chunk's own history at the default 7 by 4 inches: the
+## default grid is one row of three panels with the year labels clear, and one
+## column at that height flattens each panel, so the chunk asks for the row of
+## three the default gives and the picture does not change.
+test_that("the plot chunk passes ncol to plotSnapshotTrends() and the prose names it", {
+  section <- snapshotSection()
+  expect_gt(length(section), 0L)
+  code <- chunkCode(section, "snapshot-plot")
+  expect_false(is.null(code), info = "no chunk labelled snapshot-plot")
+  if (!is.null(code)) {
+    tokens <- utils::getParseData(parse(text = code, keep.source = TRUE))
+    expect_true("plotSnapshotTrends" %in%
+                  tokens$text[tokens$token == "SYMBOL_FUNCTION_CALL"])
+    expect_true("ncol" %in% tokens$text[tokens$token == "SYMBOL_SUB"])
+  }
+  expectNames(plainText(sectionProse(section)), "ncol",
+              where = "Colony Snapshots Over Time")
+})
+
 test_that("the five chunks run in order on their own and give no warning, the plot drawn too", {
   skip_on_cran()
   run <- chunkRun()
@@ -264,5 +286,17 @@ test_that("the comparison shows the mixed-rule message and a delta table, and th
       expect_gt(nrow(env$deltas), 0L)
     }
     expect_s3_class(env$trendPlot, "ggplot")
+  }
+})
+
+test_that("the trend plot keeps its panels side by side in one row", {
+  skip_on_cran()
+  run <- chunkRun()
+  expect_false(is.null(run), info = "no 'Colony Snapshots Over Time' section")
+  if (!is.null(run) && inherits(run$env$trendPlot, "ggplot")) {
+    layout <- ggplot2::ggplot_build(run$env$trendPlot)$layout$layout
+    expect_gt(nrow(layout), 1L)
+    expect_true(all(as.integer(layout$ROW) == 1L))
+    expect_identical(sort(as.integer(layout$COL)), seq_len(nrow(layout)))
   }
 })
