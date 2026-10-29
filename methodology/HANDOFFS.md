@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1086
+date: 2026-10-28
+status: pending
+active_task: IN PROGRESS -- settle the words of the "Dates not built" table's reason for a date already built: a second Build click lists every built date with "already in existingHistory under the reconstructedLiving rule", a script's argument names (BACKLOG.md:42, DECISION NEEDED, Effort S; found S1085; owner pick at the Phase 0 picker, item 1 of 3, "Dates not built wording"); strict TDD if reworded.
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1085
 date: 2026-10-28
 status: complete

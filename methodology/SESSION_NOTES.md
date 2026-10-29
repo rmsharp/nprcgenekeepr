@@ -98,32 +98,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1085 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Snapshot notice wording"; ruling "App uses its own words"; strict TDD, every
-gate "Yes"):** `backfillColonySnapshots()` raises its failed-dates warning as kind `backfillFailedDates` with `nFailed` and
-`nDates`, the script's sentence unchanged (`R/backfillColonySnapshots.R:269-277`); the Genetic-Health Trends pop-up says
-"N of M dates could not be built and are listed under Dates not built." (`R/modSnapshotTrends.R:411-422`). Claim `cee18a0ba`,
-RED `a5426368c`, GREEN `38f24f393`, REFACTOR `2d01e7f1f`. Thread (2) of the earlier-snapshots block off; no issue; no help/NEWS.
-**Measured first:** the app's start years built every date on the example (49 of 49) and jmac (53 of 53), so the pop-up never
-showed it; a script asking for 1963-1966 got "3 of 4 dates could not be rebuilt and are listed in 'skipped'."
-**Verified:** full suite 486 files 4,540 tests 0 failed (GREEN and REFACTOR); check 0/0/0 at `38f24f393`; `lint_package()` 0;
-runtime: the real function through the real panel server on a studbook that dies out 2003-2005 gave "2 of 8 dates could not
-be built and are listed under Dates not built."; REFACTOR counts unchanged, a pre-GREEN swap fails 6 tests (RED 4); ratchet
-11/11 (`6135593e9f21`, at `2d01e7f1f`).
-**Handoff evaluation of S1084: 9/10.** Helped: Next named `:41` with tag and size; the pre-fix swap gotcha (namespace and
-attached package) worked first time in REFACTOR. Missing: the item did not say whether the app can reach the warning at all
-(it cannot on the shipped studbooks; measured). Wrong: nothing (112 ahead and 189,814 B both right). ROI: high.
-**Self: 8/10.** + measured both studbooks and a script case before the question, found the sibling table-reason words; the
-ruling and all three gates first try; RED failed as intended; runtime check through the real server. - a needless
-`--no-verify` on the RED commit; a probe line that searched DT output for rows (it holds none); one blocked `sleep`.
-**Gotchas:** `failedDatesWarningOf()` and `runBackfill()` now live in `tests/testthat/helper-backfillColony.R` and filter by
-kind; a `DT::renderDT()` output in `testServer()` holds no rows; `mockBuildWithNotes()` takes a list mixing text and conditions.
-**Next:** the owner picks. `BACKLOG.md:42` the Dates not built table's reason words (new, DECISION NEEDED, S); `:50` tutorial
-leftovers (DECISION NEEDED, S); `:155` BACKLOG compression (READY, L). Not filed: S1084's five `tapply()`-over-id sites
-(Learning 1050). After a push read CI (S1073 OpenBLAS; S1075/S1081/S1082 `Rprofmem`; S1076 CPU drawing). Not pushed (117 ahead).
-`CHANGELOG.md` is 193,404 B, warn at 196,608 B: the next session's entries likely cross it, then a trim is owed (estimate).
+### What Session 1086 Did
+**Deliverable:** settle the words of the "Dates not built" table's reason for a date already built: a second Build click lists
+every built date with "already in existingHistory under the reconstructedLiving rule", a script's argument names
+(`BACKLOG.md:42`, DECISION NEEDED, Effort S; found S1085; owner pick at the Phase 0 picker, item 1 of 3, "Dates not built
+wording"; strict TDD if reworded). (IN PROGRESS)
+**Started:** 2026-10-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1084 (condensed S950 to S1085; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1085 (condensed S950 to S1086; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1085: `backfillColonySnapshots()` warns of failed dates as kind `backfillFailedDates` (`nFailed`, `nDates`; script sentence
+unchanged, `R/backfillColonySnapshots.R:269-277`), and the Genetic-Health Trends pop-up says "N of M dates could not be built and
+are listed under Dates not built." (`R/modSnapshotTrends.R:411-422`). Claim `cee18a0ba`, close-out `db5110827`, not pushed; S1084
+9/10, self 8/10 (Learning 1051). **Gotchas kept:** `runBackfill()`/`failedDatesWarningOf()` in `helper-backfillColony.R` filter by
+kind; a `DT::renderDT()` output in `testServer()` holds no rows; `mockBuildWithNotes()` takes text and condition notes.
 S1084: `findOffspring()` reads `sire` and `dam` as their text (`idsAsText()`, `R/findOffspring.R:37-38`), so `offspringCounts()`,
 `calcNeVariance()` and `reportGV()` give a factor-id studbook the text's counts. Claim `1b95eac90`, close-out `886db8ab5`, not pushed;
 S1083 9/10, self 7/10 (Learning 1050). **Gotchas kept:** a pre-fix swap under `load_all()` replaces both `asNamespace()` and
