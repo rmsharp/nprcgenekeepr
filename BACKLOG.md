@@ -32,15 +32,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Earlier-snapshots follow-ups after #170 (two threads left, extracted S1040 when the
       #170 block came off; #170 is closed; the tutorial thread was done S1042, the trend chart's
-      console notice and the notice's 200-character cut S1049)** -- design and what was built:
+      console notice and the notice's 200-character cut S1049, the failed-dates notice's wording
+      S1085)** -- design and what was built:
       `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4.
       (1) **Build cost on a larger colony** (BLOCKED --
       needs a studbook above 3,694 rows from the owner, Effort S): the cost line's quarter of a second a date per
       1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`; S1065) is measured on the 2,590-animal jmac
       studbook (53 dates, 12.6 s) and the 3,694-row example (49 dates, 9.4 s), so a bigger colony is unmeasured.
-      (2) **A script word in the panel's notice** (DECISION NEEDED, Effort S): the function's
-      failed-dates warning says "listed in 'skipped'" and the panel shows it as is, while its
-      table is headed "Dates not built"; reword the message for both readers, or leave it.
+      (2) **Script words in the Dates not built table** (DECISION NEEDED, Effort S; found S1085): a
+      second click on Build lists every date already built under Dates not built with the reason
+      "already in existingHistory under the reconstructedLiving rule" (measured S1085: all 49 dates of
+      the example), the function's own words, `existingHistory` being a script argument
+      (`R/backfillColonySnapshots.R:204-205`). S1085 gave the failed-dates pop-up the app's own words
+      through the warning's kind (`backfillFailedDates`, `R/modSnapshotTrends.R:411-422`); whether the
+      table's reason gets the same, or stays, is a decision.
 
 - [ ] **Tutorial leftovers after the S1043 inventory pass: twin-corrected kinship, and a guard for
       omitted exports** (DECISION NEEDED, Effort S; found S1043) -- the pass named the six functions
