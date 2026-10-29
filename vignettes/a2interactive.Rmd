@@ -605,6 +605,42 @@ connecting _S1_ directly to _S2_ (dashed, labeled `"?"` for the
 undetermined zygosity code) -- that row exists only because a validated
 _twinRelations_ table was supplied.
 
+### Kinship of Identical Twins
+
+Of the three zygosity codes, only _MZ twin_ changes a kinship value: a
+_DZ twin_ or _UZ twin_ row leaves __kinship__'s result as it is. Identical
+twins carry the same genes, so __kinship__, given a _twinRelations_ table,
+sets each declared _MZ twin_ pair's kinship to the kinship an animal has with
+itself, and carries the change on to the twins' relatives. The pair above is a
+female and a male and cannot be an _MZ twin_ pair, so this small pedigree has
+two full sisters declared identical twins and a daughter of the first of them:
+
+```{r twin-kinship}
+mzPed <- data.frame(
+  id = c("F1", "F2", "T1", "T2", "M3", "D1"),
+  sire = c(NA, NA, "F1", "F1", NA, "M3"),
+  dam = c(NA, NA, "F2", "F2", NA, "T1"),
+  sex = c("M", "F", "F", "F", "M", "F"),
+  stringsAsFactors = FALSE
+)
+mzPed$gen <- findGeneration(mzPed$id, mzPed$sire, mzPed$dam)
+mzTwins <- checkTwinRelations(mzPed, data.frame(
+  id1 = "T1", id2 = "T2", code = "MZ twin", stringsAsFactors = FALSE
+))
+plainKmat <- kinship(mzPed$id, mzPed$sire, mzPed$dam, mzPed$gen)
+twinKmat <- kinship(mzPed$id, mzPed$sire, mzPed$dam, mzPed$gen,
+                    twinRelations = mzTwins)
+plainKmat[c("T1", "T2", "D1"), c("T1", "T2", "D1")]
+twinKmat[c("T1", "T2", "D1"), c("T1", "T2", "D1")]
+```
+
+The twins' kinship rises from `r plainKmat["T1", "T2"]`, that of full
+sisters, to `r twinKmat["T1", "T2"]`, and the daughter's kinship with her
+mother's twin rises from `r plainKmat["D1", "T2"]`, that of a niece and her
+aunt, to `r twinKmat["D1", "T2"]`, the same as with her own mother. A matrix
+built this way is the one to pass on as _kinshipMatrix_, as the next section
+explains.
+
 ### Passing a Kinship Matrix You Already Have
 
 __makePedigreeMatingLayout__ marks a mating unit as consanguineous when its
@@ -1014,7 +1050,9 @@ the panel shows a ribbon for the sampling uncertainty of the gene drop. A
 snapshot made with different settings from the previous one of its series is
 drawn with a different point shape and named in the caption. A trend needs at
 least two snapshots, and _metrics_ chooses the panels (the default draws
-every metric column).
+every metric column). _ncol_ sets how many columns of panels to draw: three
+keeps these three panels side by side, and a narrow figure needs fewer, so
+that each panel stays wide enough for its title.
 
 ```{r snapshot-plot}
 #| fig.height: 4
@@ -1022,7 +1060,8 @@ every metric column).
 #|   Trend lines of three colony genetic-health measures over the snapshot
 #|   dates. The rebuilt snapshots form a dashed line and the one recorded
 #|   snapshot is a single point.
-trendPlot <- plotSnapshotTrends(checkedHistory, metrics = c("fe", "fg", "meanGu"))
+trendPlot <- plotSnapshotTrends(checkedHistory,
+                                metrics = c("fe", "fg", "meanGu"), ncol = 3L)
 trendPlot
 ```
 
