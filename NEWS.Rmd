@@ -585,6 +585,9 @@ longitudinal monitoring of colony genetic health.
   ids given as numbers (as `read.csv()` reads a studbook with number ids) or as
   a factor as their text: such a studbook got wrong relationship names, and
   `groupAddAssign()` stopped with "subscript out of bounds".
+  `findOffspring()` takes a factor's sire and dam ids as their text, so
+  `offspringCounts()`, `calcNeVariance()` and `reportGV()` no longer give an
+  offspring count or `neVariance` as `NA` for a studbook whose ids are a factor.
 
 - Fixed (configuration file): A line starting with `#` is a comment wherever the
   file is read, so a site that copies the example file unedited no longer gets
