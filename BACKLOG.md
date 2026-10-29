@@ -5,6 +5,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Fix the red `test-coverage.yaml` run: `test_roxygenInheritParams.R` scans no source under covr
+      (found S1089, 2026-10-29; READY, Effort S)** -- run `40822189540` on `6d12f6061`, the first CI
+      run to include S1068's test, failed 2 tests (16,623 passed): `test_roxygenInheritParams.R:78`
+      (`0 < 30` pages) and `:80` (`NULL`, not `character(0)`). Cause: the test reads `R/*.R` from
+      `test_path("..", "..", "R")` and skips only when that folder is missing (`:61`), but covr runs
+      the tests from the installed package, whose `R/` holds only `.rdb`/`.rdx` files, so the scan
+      reads nothing. S893 fixed the same shape in `test_sexCodes.R:92-100` (`sexCodeSourceAvailable()`:
+      any `.R` file in the folder); use that check here, likely as one shared test helper. RED is the
+      red run, as at S1018 and S1061. R-CMD-check (`40822189344`) was still running at S1089's close-out.
+
 - [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
       the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
       `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.

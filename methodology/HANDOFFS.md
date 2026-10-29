@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1089
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- one editorial compression pass on BACKLOG.md (234 lines, 20,009 B) by the method in its own item (owner pick at the Phase 0 picker, item 1 of 4, "BACKLOG compression"; housekeeping, no code, so no TDD gates).
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md:124 (the compression item and its method)
-gotchas: pending
-runtime_smoke: n/a — docs-only
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- one editorial compression pass on BACKLOG.md (owner pick at the Phase 0 picker, item 1 of 4, "BACKLOG compression"; scope "Leave delayed items alone"; then "Delete section, add #138 item"; housekeeping, no code, so no TDD gates). 234 to 208 lines by the pass; 218 at close-out with the CI-break item.
+what_was_done: Claim 3340e9064; pass ad8597cc9 (BACKLOG.md 234 to 208 lines, 20,009 to 17,560 B): the compression item's pass history and stale candidates (38 to 26 lines; method path to methodology/archive/; the stale dashboard HIGH-risk claim dropped), the CHANGELOG entry-size item (19 to 13, DECISION NEEDED, the 2026-10-28 measurement: DONE entries 86% of 24,094 B), the earlier-snapshots heading (9 to 7), the resolved kinship2-audit section deleted, and a #138 item added after the owner asked why that section was never a picker option. Every cited session entry and its figures, Learning, doc and issue state checked first; the 11 other blocks (the six owner-delayed items among them) byte-identical to HEAD. Close-out: the red test-coverage run 40822189540 diagnosed (test_roxygenInheritParams.R:78,80 scans no .R file under covr) and filed as BACKLOG.md:8, not fixed; Learning 1055; SESSION_NOTES.md condensed to 53,500 B (it was past the Read cut). test_docsAuditSixRulings.R 5 and test_docsAuditLooseEnds.R 10 tests 0 failed.
+next_steps: The owner picks at the next Phase 0. READY: fix the red test-coverage run (BACKLOG.md:8, Effort S; strict TDD with the red run as RED, as S1018/S1061; S893's sexCodeSourceAvailable() in test_sexCodes.R:92-100 is the guard to reuse); #138 scoping (BACKLOG.md:167, Effort M). DECISION NEEDED: shorter ledger entries (BACKLOG.md:113). BLOCKED: larger-colony build cost (BACKLOG.md:43, needs a studbook); the held-back methodology sync (BACKLOG.md:153). Read R-CMD-check 40822189344 (running at close-out) and tonight's nightly shinytest2 for the S1073/S1075/S1076/S1081/S1082 checks. Not pushed: master is 4 ahead after this close-out.
+key_files: BACKLOG.md:8 (CI-break item), :113 (CHANGELOG entry-size item), :125 (compression item; candidates at :146), :167 (#138 item); tests/testthat/test_roxygenInheritParams.R:61,78,80; tests/testthat/test_sexCodes.R:92-100; R/modPedigree.R:453,465 (diagram caps); PROJECT_LEARNINGS.md (Learning 1055, last entry)
+gotchas: A size figure written inside the file it measures moves with every later edit (197, 199, 207, 208): write it last. The delayed standalone-package item's test_newsReleaseState.R:234,248 cite is now :202,216, recorded at BACKLOG.md:146 and not fixed at the owner's word. Issue #138's title says a 1,500-node cap; the code caps 750 animals (400 Rectilinear). gh run view --log, not --log-failed, shows test-coverage's testthat output. Only test_docsAuditSixRulings.R and test_docsAuditLooseEnds.R read BACKLOG.md's text; the perf tests use it only as a repo-root marker.
+runtime_smoke: n/a — docs-only (BACKLOG.md and ledger files; no package code or app behavior changed)
+changelog_ref: 3340e9064 (claim), ad8597cc9 (pass)
+commit: ad8597cc9
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 832a2cb3816c · manifest 7e3e82ab3ae0 (run at ad8597cc9, load about 3)
 ```
 
 ```handoff

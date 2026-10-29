@@ -99,50 +99,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1089 Did
-**Deliverable:** one editorial compression pass on `BACKLOG.md` (234 lines) by the method in its own item (`BACKLOG.md:124`)
-(owner pick, item 1 of 4, "BACKLOG compression"; no code, no TDD gates) (IN PROGRESS)
-**Started:** 2026-10-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "BACKLOG compression"; scope "Leave delayed items alone"; no code, no TDD gates):**
+`BACKLOG.md` 234 to 208 lines (20,009 to 17,560 B) by the six-step method in its own item (`BACKLOG.md:125`). Claim `3340e9064`,
+pass `ad8597cc9`. Changed: the compression item's history and candidates (38 to 26 lines); the CHANGELOG entry-size item (19 to 13,
+DECISION NEEDED, with the 10-28 measurement: DONE entries 86% of 24,094 B; `:113`); the snapshot heading (9 to 7; `:43`); the
+resolved kinship2-audit section deleted; a new #138 item (`:167`), after the owner asked why that section was never a picker option.
+**Verified:** every cited session's entry and its figures, the Learnings, docs and issue states; the 11 other blocks, the six delayed
+items among them, byte-identical to HEAD; `test_docsAuditSixRulings.R` 5 and `test_docsAuditLooseEnds.R` 10 tests 0 failed;
+ratchet 11/11 (`832a2cb3816c`, at `ad8597cc9`, load about 3).
+**CI break found at close-out, filed, not fixed:** `test-coverage.yaml` run `40822189540` on `6d12f6061` is red,
+`test_roxygenInheritParams.R:78,80` (S1068's test scans no `.R` file under covr; S893's `test_sexCodes.R:92-100` guard is the fix).
+Item `BACKLOG.md:8` (READY, S). pkgdown and lint green; R-CMD-check `40822189344` still running at close-out.
+**Handoff evaluation of S1088: 8/10.** Helped: the BACKLOG figures (234 lines, 20,009 B, "little beyond its own 38-line history"),
+all exact. Missing: it left this file at 55,694 B, past the Read cut it names (about 55,300 B), so Phase 0's read stopped at line 338.
+**Self: 7/10.** + drafts measured in scratch before the scope question (answered first try); four stale claims found. - the scope
+option said "#138 stays open on GitHub" without saying it then could never be picked (the owner asked why); the size line took three
+re-edits (Learning 1055).
+**Gotchas:** write a file's own size figure last; the delayed standalone-package item's `test_newsReleaseState.R:234,248` is now
+`:202,216` (recorded at `BACKLOG.md:146`, not fixed); #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
+**Next:** the owner picks. READY: the red test-coverage fix (S, `BACKLOG.md:8`, strict TDD, RED is the red run); #138 scoping (M).
+DECISION NEEDED: shorter ledger entries (`:113`). BLOCKED: larger-colony build cost (studbook); held-back sync (upstream unfixed).
+Read R-CMD-check `40822189344` and tonight's nightly `shinytest2` for the S1073/S1075/S1076/S1081/S1082 checks. Not pushed.
 
-### What Session 1088 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "CHANGELOG trim"; housekeeping, no code, no TDD gates):** `methodology/CHANGELOG.md`
-201,025 B to 32,331 B, 87 of 101 records (2026-10-23 to 2026-10-27) archived to `methodology/archive/CHANGELOG-through-2026-10-27.md`
-with `methodology_trim.py --budget-bytes 65536 --force --cut 2026-10-27`. Claim `cb71bb6db`, trim `87bc10428`.
-**Refused, then ruled:** the plain run gave `SRF_RED` (1.0038 against S1048's archive `4c54afa`; 0.1911 against `8aa6369`). Phase 0's
-`--check` read 0.9998 (29 B of margin); the claim entry crossed it. The owner took "Force, cut at end of 10-27" over the default
-cut (one 10-27 record left live), keeping only today (4,104 B) and no trim. Real regrowth, not the Learning 549 artifact.
-**Verified:** L1, L2, L3 and `P1A_OK` (14 to 15) in the dry run and the write; the shard's verify script passes before and after the
-commit; the 2 tests whose code reads the ledger (`test_archivePointersResolve.R` 12, `test_contextBudgetLedgers.R` 4) 0 failed;
-budget CHANGELOG.md ok; ratchet 11/11 (`248d8225b7ee`, at `87bc10428`).
-**Handoff evaluation of S1087: 9/10.** Helped: "Owed: a CHANGELOG.md trim" with the exact command and "S1048 is the model". Missing:
-the tool's SRF reading (0.9998 at its close-out), the one figure that showed the trim would need `--force`. ROI: high.
-**Self: 8/10.** + four dry runs priced every cut before the one question (answered first try); the RED read checked against
-Learnings 549/550; tests chosen by the S1051 rule. - the picker said "it moves older entries" without the 0.9998; a loop quoted
-`--cut <date>` as one argument (one wasted call).
-**Gotchas:** `SRF_RED` fires once the file regrows past its size just before the last trim: now 201,025 B, only 4,417 B past the
-196,608 B warn line, so the next trim is likely refused too; read `--check` at Phase 0 and put the `--force` choice in the picker.
-Regrowth 168,694 B in 5 days (about 34 KB a day; S1048 saw 22): the warn line returns about 2026-11-03.
-**Next:** the owner picks. READY: BACKLOG compression (L; 234 lines, little to find). BLOCKED: larger-colony build cost (needs a
-studbook); the held-back methodology sync (upstream `close_out_report.py` unfixed since 2026-10-07). Open lever: shorter entries
-(`BACKLOG.md:105`). Not filed: S1084's five `tapply()` sites; Dates not built failed-date reasons. **Pushed after close-out** (owner said "push"): `ccd6e9028..6d12f6061`, 130 commits; CI
-started on `6d12f6061` (R-CMD-check `40822189344`); read its logs for the S1073/S1075/S1076/S1081/S1082 checks. This line is local.
-
-### Sessions 947-1087 (condensed S950 to S1088; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1087: the tutorial gains "### Kinship of Identical Twins" (`vignettes/a2interactive.Rmd:608-643`; MZ twins 0.25 to 0.5, the
-daughter with her aunt 0.125 to 0.25) and `plotSnapshotTrends(ncol = 3L)` (`:1042-1064`); no guard for omitted exports (ruled).
-Claim `85593510b`, close-out `3731cf313`, not pushed; S1086 9/10, self 8/10 (Learning 1053). **Gotchas kept:** render the tutorial
-with `knit_root_dir` in `vignettes/`; no digits in inventoried prose; `headingLines()`/`placeLines()`/`sectionOf()` in `helper-pageText.R`.
-S1086: the Dates not built table lists a date already built as "Already in the history; not built again."
-(`R/modSnapshotTrends.R:397-434`); a failed date keeps its error, a script keeps the function's sentence; one rule,
-`rebuiltSnapshotDates()` (`R/backfillColonySnapshots.R:286`). Claim `677a33f15`, close-out `9ae663a38`, not pushed; S1085 9/10,
-self 8/10 (Learning 1052). **Gotchas kept:** `buildTwice()`/`handBuiltServerArgs()` at `test_modSnapshotTrends.R:1048-1058`; a
-picture of uncommitted code needs a scratch install; read `uptime` before a ratchet run.
-S1085: `backfillColonySnapshots()` warns of failed dates as kind `backfillFailedDates` (`nFailed`, `nDates`; script sentence
-unchanged, `R/backfillColonySnapshots.R:269-277`), and the Genetic-Health Trends pop-up says "N of M dates could not be built and
-are listed under Dates not built." (`R/modSnapshotTrends.R:411-422`). Claim `cee18a0ba`, close-out `db5110827`, not pushed; S1084
-9/10, self 8/10 (Learning 1051). **Gotchas kept:** `runBackfill()`/`failedDatesWarningOf()` in `helper-backfillColony.R` filter by
-kind; a `DT::renderDT()` output in `testServer()` holds no rows; `mockBuildWithNotes()` takes text and condition notes.
+### Sessions 947-1088 (condensed S950 to S1089; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1088: `methodology/CHANGELOG.md` trimmed 201,025 to 32,331 B (`--force --cut 2026-10-27` after `SRF_RED` 1.0038; claim `cb71bb6db`,
+trim `87bc10428`); pushed `ccd6e9028..6d12f6061`; S1087 9/10, self 8/10 (Learning 1054). **Gotchas kept:** `SRF_RED` fires once the
+file regrows past 201,025 B, so read `--check` at Phase 0 and put `--force` in the picker; `--cut` and its date are two shell words.
+S1085-S1087 (evaluations 9/10, self 8/10; Learnings 1051-1053; hashes in `CHANGELOG.md`): S1087, the tutorial's "### Kinship of
+Identical Twins" (`vignettes/a2interactive.Rmd:608-643`) and `plotSnapshotTrends(ncol = 3L)` (`:1042-1064`), no guard for omitted
+exports; S1086, the Dates not built table says "Already in the history; not built again." for a date already built
+(`rebuiltSnapshotDates()`, `R/backfillColonySnapshots.R:286`); S1085, failed dates warn as kind `backfillFailedDates` and the pop-up
+says "N of M dates could not be built and are listed under Dates not built." (`R/modSnapshotTrends.R:411-422`). **Gotchas kept:**
+render the tutorial with `knit_root_dir` in `vignettes/`; no digits in inventoried prose; `buildTwice()`/`handBuiltServerArgs()` at
+`test_modSnapshotTrends.R:1048-1058`; a `DT::renderDT()` output in `testServer()` holds no rows; a picture of uncommitted code needs a
+scratch install; read `uptime` before a ratchet run.
 S1081-S1084 (evaluations 9/10, self 7-8/10; Learnings 1047-1050; hashes in `CHANGELOG.md`): S1084, `findOffspring()` reads
 `sire`/`dam` as text (`idsAsText()`, `R/findOffspring.R:37-38`); S1083, number and factor ids taken as text where five functions
 start (`R/toCharacter.R:33-63`) and `kinship(sparse = TRUE)` is the fast fill made sparse; S1082, the Realized Relatedness table
@@ -197,30 +187,17 @@ kept:** a fresh-process time and a warm in-process time differ by about 0.4 s; `
 `deparse(<fn>)` checks before moving code; take app-session runs only while nothing edits `R/`; a scratch `app.R` with `load_all()` and
 `trace(where = asNamespace("nprcgenekeepr"))` logs every `kinship()` call and its caller; Mate Pair's "All alive" is `is.na(exit)`
 (1,704 example animals), not `isLivingAnimal()` (332).
-S1061: the red `windows-latest` leg of `R-CMD-check.yaml` fixed (strict TDD; RED was the red run `40230619957`, as S1018):
-`archivePointerProblems()` calls `normalizePath(winslash = "/")` on both paths (`tests/testthat/helper-archivePointers.R:54,64`);
-CI run `40236872235` green on all 5 legs. Claim `478e98a65`, GREEN `f33b3474e`, close-out `7434f69a6`; S1060 9/10, self 8/10
-(Learning 1027). **Gotchas kept:** `test_file(env = e)` finds a stand-in put in `e` before base's; `gh api
---allow-escape-sequences repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs` serves a finished job's log before the run ends.
-S1060: Phase 7 of the campaign, the diagram's solver (strict TDD): `.solveJointQP()` keeps each constraint's two variable numbers and
-`.solveSeparationQP()` (`R/makePedigreeDiagramData.R`) hands them to `quadprog::solve.QP.compact()` in row order (a missing or infinite
-number, or a node listed twice, runs the dense `solve.QP()`); the example's diagram 13.17 to 4.70 s, positions identical (gate 16.1 to 5.9 s).
-Claim `75fe2ea7c`, GREEN `a544147c6`, close-out `835c42676`; S1059 8/10, self 7/10 (Learning 1026). **Gotcha kept:** pin the RNG kinds in
-seeded test inputs (`set_seed()` leaves "Rounding").
-S1059: Phase 6 of the campaign, kinship memory (strict TDD): `kinship()` fills one n x n matrix, `kinMatrix2LongForm()` builds its columns with
-`rep()`/`as.vector()` (`longFormRows()`), the pair list reads only cells `>=` the threshold; long form 979.0 to 312.5 MB (gate 344), kinship 569.8 to
-455.6 MB (gate 502). Claim `0eb2137bf`, GREEN `36b3f6d18`, close-out `54552a819`; S1058 8/10, self 7/10 (Learning 1025). **Gotcha kept:** measure a
-budget with the test's own procedure (one unmeasured run, then the median of 3).
-S1058: Phase 5 of the campaign, founder statistics (strict TDD): contributions filled a generation at a time by position, retention scanned
-with `match()`, both built once per `reportGV()` (`R/founderStatistics.R`); calcFEFG 1.19 to 0.09 s on the synthetic colony (gate 0.2 s). Claim
-`dff80c076`, GREEN `5bc964245`, close-out `cceed66cd`; S1057 8/10, self 8/10 (Learning 1024). **Gotcha kept:** assign each step before passing it on.
-S1057: decision D7 (no `R/` change): the Breeding Groups tab keeps 10 trials (plan `:362-376`); filed `BACKLOG.md:217` (equal-score
-groupings listed by slot). Claim `471c25091`, close-out `a9f872ee1`; S1056 9/10, self 7/10 (Learning 1023). **Gotcha kept:** run nothing else
-while `quality_ratchet.py --run` times gates; read `uptime` first.
-S1056: Phase 4 of the campaign, group formation (strict TDD, plus a second RED/GREEN for 12 post-GREEN differences): groups filled from a
-candidates x groups true/false table (`R/fillGroupMembers.R`) with running sex-ratio counts (`R/fillGroupMembersWithSexRatio.R`); 1,000 trials 23.0 to
-5.6 s, gate 29.2 to 7.1 s. Claim `c93e3239c`, GREEN `5a416bf84`, close-out `cc8cc2bc1`; S1055 9/10, self 7/10 (Learning 1022). **Gotcha kept:** probe
-each argument with NULL, a list, a data frame, numbers, text, logical, a factor and a Date before RED.
+S1056-S1061 (strict TDD each; evaluations 8-9/10, self 7-8/10; Learnings 1022-1027; hashes in `CHANGELOG.md`): S1061, the red
+`windows-latest` leg fixed (`normalizePath(winslash = "/")`, `tests/testthat/helper-archivePointers.R:54,64`; RED was the red run);
+S1060, the diagram's solver hands constraints to `quadprog::solve.QP.compact()` (`R/makePedigreeDiagramData.R`; 13.17 to 4.70 s, the
+same positions); S1059, kinship memory (`kinMatrix2LongForm()` 979.0 to 312.5 MB, `kinship()` 569.8 to 455.6 MB); S1058, founder
+statistics built once per `reportGV()` (`R/founderStatistics.R`; calcFEFG 1.19 to 0.09 s); S1057, ruling D7: Breeding Groups keeps 10
+trials; S1056, groups filled from a candidates x groups table (`R/fillGroupMembers.R`; 1,000 trials 23.0 to 5.6 s). **Gotchas kept:**
+`test_file(env = e)` finds a stand-in put in `e` before base's; `gh api --allow-escape-sequences
+repos/rmsharp/nprcgenekeepr/actions/jobs/<id>/logs` serves a finished job's log before the run ends; pin the RNG kinds in seeded test
+inputs; measure a budget with the test's own procedure (one unmeasured run, then the median of 3); run nothing else while
+`quality_ratchet.py --run` times gates; probe each argument with NULL, a list, a data frame, numbers, text, logical, a factor and a
+Date before RED.
 S1050-S1055 (the campaign's plan, rulings and Phases 0-3; strict TDD where code changed; evaluations 8-9/10, self 7-8/10; Learnings
 1016-1021; hashes in `CHANGELOG.md`): S1050 the plan (`docs/planning/performance-memory-campaign-plan.md`: baselines, H1-H10, 12 phases,
 D1-D8); S1051 D1-D4 ruled as recommended (exact numbers for the same seed, plain R, the 18 exports unchanged, opt-in budget tests plus
