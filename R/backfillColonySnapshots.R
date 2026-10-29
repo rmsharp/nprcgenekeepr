@@ -267,8 +267,13 @@ backfillColonySnapshots <- function(ped, dates = NULL,
     stringsAsFactors = FALSE
   )
   if (any(failed)) {
-    warning(sum(failed), " of ", length(dates), " dates could not be ",
-      "rebuilt and are listed in 'skipped'.", call. = FALSE)
+    # Its own kind with its counts, so the app can say it in its own words
+    warning(warningCondition(
+      paste0(sum(failed), " of ", length(dates), " dates could not be ",
+        "rebuilt and are listed in 'skipped'."),
+      class = "backfillFailedDates",
+      nFailed = sum(failed), nDates = length(dates)
+    ))
   }
   list(history = history, support = support, skipped = skipped)
 }

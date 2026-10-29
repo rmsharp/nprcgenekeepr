@@ -409,7 +409,15 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
                   src$reportArgs
                 )),
                 warning = function(w) {
-                  warningsSeen <<- c(warningsSeen, conditionMessage(w))
+                  # The failed-dates warning names the script's 'skipped';
+                  # here it names this panel's table
+                  note <- if (inherits(w, "backfillFailedDates")) {
+                    paste0(w$nFailed, " of ", w$nDates, " dates could not ",
+                           "be built and are listed under Dates not built.")
+                  } else {
+                    conditionMessage(w)
+                  }
+                  warningsSeen <<- c(warningsSeen, note)
                   invokeRestart("muffleWarning")
                 }
               )
