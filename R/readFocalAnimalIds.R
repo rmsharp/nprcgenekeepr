@@ -19,7 +19,8 @@ readFocalAnimalIds <- function(fileName, sep = ",") {
     focalAnimals <- readExcelPOSIXToCharacter(fileName)
   } else {
     focalAnimals <- muffleCannotOpenFile(
-      muffleIncompleteFinalLine(read.csv(fileName,
+      muffleIncompleteFinalLine(readWithFinalNewline(fileName,
+        read.csv,
         header = TRUE,
         sep = sep,
         stringsAsFactors = FALSE,

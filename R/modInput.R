@@ -339,15 +339,17 @@ modInputServer <- function(id) {
             name = "nprcgenekeepr"
           )
           data <- muffleIncompleteFinalLine(
-            read.table(file$datapath, header = TRUE, sep = separator,
-                       stringsAsFactors = FALSE, fill = TRUE,
-                       quote = "\"", na.strings = c("", "NA"))
+            readWithFinalNewline(file$datapath, read.table, header = TRUE,
+                                 sep = separator, stringsAsFactors = FALSE,
+                                 fill = TRUE, quote = "\"",
+                                 na.strings = c("", "NA"))
           )
         } else {
           futile.logger::flog.debug("Reading CSV file", name = "nprcgenekeepr")
           data <- muffleIncompleteFinalLine(
-            read.csv(file$datapath, stringsAsFactors = FALSE,
-                     na.strings = c("", "NA"))
+            readWithFinalNewline(file$datapath, read.csv,
+                                 stringsAsFactors = FALSE,
+                                 na.strings = c("", "NA"))
           )
         }
 

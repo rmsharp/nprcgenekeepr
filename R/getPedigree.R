@@ -30,7 +30,8 @@ getPedigree <- function(fileName, sep = ",") {
       nrow(pedigree), "\n"
     ), name = "nprcgenekeepr")
   } else {
-    pedigree <- muffleIncompleteFinalLine(read.table(fileName,
+    pedigree <- muffleIncompleteFinalLine(readWithFinalNewline(fileName,
+      read.table,
       header = TRUE,
       sep = sep,
       stringsAsFactors = FALSE,

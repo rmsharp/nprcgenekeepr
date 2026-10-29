@@ -32,7 +32,8 @@ getGenotypes <- function(fileName, sep = ",") {
       nrow(genotypes), "\n"
     ), name = "nprcgenekeepr")
   } else {
-    genotypes <- muffleIncompleteFinalLine(read.table(fileName,
+    genotypes <- muffleIncompleteFinalLine(readWithFinalNewline(fileName,
+      read.table,
       header = TRUE,
       sep = sep,
       stringsAsFactors = FALSE,
