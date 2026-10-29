@@ -1031,6 +1031,70 @@ test_that("after a build the note under Dates not built is gone", {
   })
 })
 
+## -- Dates already built, in the app's words (S1086) ---------------------------
+## A second Build, or a build onto a history that already holds rebuilt dates,
+## lists those dates under Dates not built. The function's reason names its
+## script argument ("already in existingHistory under the reconstructedLiving
+## rule"), so the panel says it in its own words (owner ruling S1086, "App uses
+## its own words"); a date that failed keeps the error's own words. The table
+## is read through its data, skippedDates(): a DT output holds no rows in
+## testServer(). On the hand-built colony nobody was alive on 1999-01-01, so a
+## build from 1999 makes 13 snapshots (2000 to 2012) and 1999 fails, on every
+## click.
+
+appAlreadyBuiltReason <- "Already in the history; not built again."
+
+test_that("a second Build lists the dates already built in the app's words", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(modSnapshotTrendsServer, args = serverArgs(), {
+    suppressWarnings(
+      session$setInputs(backfillStart = backfillStartDate, buildBackfill = 1)
+    )
+    suppressWarnings(session$setInputs(buildBackfill = 2))
+    skipped <- skippedDates()
+    expect_identical(skipped$snapshotDate, backfillStartDates)
+    expect_identical(skipped$reason, rep(appAlreadyBuiltReason, 6L))
+  })
+})
+
+test_that("beside the dates already built, a date that failed keeps its own reason", {
+  skip_if_not_installed("shiny")
+  args <- serverArgs(fullPedigree = shiny::reactive(handBuiltColony()))
+
+  shiny::testServer(modSnapshotTrendsServer, args = args, {
+    suppressWarnings(
+      session$setInputs(backfillStart = "1999-01-01", buildBackfill = 1)
+    )
+    suppressWarnings(session$setInputs(buildBackfill = 2))
+    skipped <- skippedDates()
+    expect_identical(skipped$snapshotDate, januaries(1999:2012))
+    expect_match(skipped$reason[[1L]], "needs at least 2 animals", fixed = TRUE)
+    expect_identical(skipped$reason[-1L], rep(appAlreadyBuiltReason, 13L))
+  })
+})
+
+test_that("a date the history holds only under another rule is not called already built", {
+  skip_if_not_installed("shiny")
+  ## the example history with its first recorded (wholePedigree) row moved to
+  ## 1999-01-01, a date that fails on the hand-built colony
+  recorded <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
+  recorded$snapshotDate[[1L]] <- as.Date("1999-01-01")
+  path <- withr::local_tempfile(fileext = ".csv")
+  utils::write.csv(recorded, path, row.names = FALSE)
+  args <- serverArgs(fullPedigree = shiny::reactive(handBuiltColony()))
+
+  shiny::testServer(modSnapshotTrendsServer, args = args, {
+    session$setInputs(historyFile = fileInfo(path))
+    suppressWarnings(
+      session$setInputs(backfillStart = "1999-01-01", buildBackfill = 1)
+    )
+    skipped <- skippedDates()
+    expect_identical(skipped$snapshotDate, januaries(1999L))
+    expect_match(skipped$reason, "needs at least 2 animals", fixed = TRUE)
+  })
+})
+
 ## -- The chart follows the plot's width (S1045) --------------------------------
 ## The plot box was a fixed 600 pixels high and the chart always laid its 18
 ## panels out in 5 columns, so a 700-pixel window (a plot 437 pixels wide) drew

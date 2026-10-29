@@ -437,6 +437,18 @@ test_that("dates already in existingHistory are skipped, listed and left untouch
   expect_identical(result$support$snapshotDate, handDates)
 })
 
+test_that("a script reads the function's own sentence for a date already there", {
+  ## the panel says "Already in the history; not built again." (S1086); a
+  ## script's reason names the argument it passed and stays as it was
+  ped <- handBuiltColony()
+  existing <- runBackfill(ped, dates = handDates[[1L]])$history
+  result <- runBackfill(ped, dates = handDates, existingHistory = existing)
+  expect_identical(
+    result$skipped$reason,
+    "already in existingHistory under the reconstructedLiving rule"
+  )
+})
+
 test_that("a row of another rule on the same date does not count as already there", {
   ped <- handBuiltColony()
   recorded <- runBackfill(ped, dates = handDates[[1L]])$history
