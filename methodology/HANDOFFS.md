@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1092
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 2: cut the time the tests take when CRAN runs them (owner pick at the Phase 0 picker, item 1 of 4; strict TDD).
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md (sections 3, 5 Phase 2, 6 D4); tests/testthat/
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: CRAN 3.0.0 plan Phase 2 (cut the CRAN-mode test time): the cut LANDED, Phase 2's DONE is OWED -- win-builder's measured check time of the cut tree, at most 540 s (D4 = A, ruled this session). Owner pick at the Phase 0 picker, item 1 of 4; strict TDD, every gate the recommended option; pushed at the owner's word.
+what_was_done: Claim 2d3dc2f26; RED 8c2c80721 (test_slowTestFiles.R, 7 blocks, all failing; the budget's RED is the measured run: CRAN-mode checking tests 296 s here); GREEN 53113828f (tests/testthat/slowTestFiles.txt names the 64 files of 0.5 s or more in the check's layout; helper-slowTestFiles.R: slowTestFiles(), cranTestFilter(); tests/testthat.R: test_check(filter = cranTestFilter("testthat"), invert = TRUE)) and 49296d313 (skip_on_cran() in the stopwatch blocks of test_markerKinship.R and test_markerParentageLikelihood.R and the 4 full-example blocks of test_idsAsText.R, the only CRAN-run tests of markerKinship(), markerParentageLikelihood() and makeCEPH()); REFACTOR 2e136e0d4 (one writeSlowList() in the test). Verified: CRAN-mode checking tests 296 s to 33 s (twice, load 15-31), whole check 7 m 44 s to 3 m 13 s, 0/0/1 NOTE; all 236 exports still called on CRAN (trace probe through the real filter); NOT_CRAN=true in the check layout PASS 16738 to 16757 (+19), SKIP 629 and WARN 10 unchanged; clean read 488 files 4,554 blocks 0 failed 0 errors; lint_package() 0. Pushed 3d5270b4f..2e136e0d4. win-builder: the uncut tarball (2d3dc2f26) to R-devel by FTP 09:54 CDT (still queued 11:44) and to R-release by web form 11:45 (accepted); no email by 12:15. Learning 1058.
+next_steps: When the owner forwards a win-builder log (R-devel or R-release), read its step times. If 540 s minus the non-test steps leaves about 110 s or more for the tests (an estimate: 33 s here times win-builder's 3.4 from S395), upload the cut tree once (devtools::check_win_devel(); refused while a same-named file is queued) and confirm the check time is at most 540 s: that is Phase 2's DONE. If less, the examples or vignettes need cutting too (re-plan with the owner). Then Phase 1 (linux-arm64, READY). Read R-CMD-check 40920931034 (each leg's PASS should rise by exactly 19: macOS 16607 to 16626, Ubuntu 16595 to 16614, Windows 16605 to 16624, same SKIP) and test-coverage 40920930833 (16623 to 16642).
+key_files: tests/testthat/slowTestFiles.txt (the 64 names); tests/testthat/helper-slowTestFiles.R (slowTestFiles, cranTestFilter); tests/testthat.R (the wiring); tests/testthat/test_slowTestFiles.R (7 guard blocks); tests/testthat/test_markerKinship.R:136, test_markerParentageLikelihood.R:598, test_idsAsText.R:88,101,135,266 (block-level skips); docs/planning/cran-3.0.0-submission-plan.md (section 5 Phase 2, section 6 D4); BACKLOG.md:16 (the CRAN item, Phase 2 state); PROJECT_LEARNINGS.md (Learning 1058: the check-layout timing and export-probe recipes)
+gotchas: Rank CRAN time in <check_dir>/nprcgenekeepr.Rcheck/tests with R_LIBS=<that .Rcheck>:<renv lib>, NOT_CRAN=false, RENV_CONFIG_AUTOLOADER_ENABLED=false, R --vanilla; a source-tree ranking counts files that skip in the check. A new test file of 0.5 s or more in CRAN mode needs a line in slowTestFiles.txt, and nothing yet checks that (no guard on CRAN time). The 31 files that already call testthat::skip_on_cran() at the top stay as they are (two styles, owner-accepted). win-builder: FTP gives no receipt; the web form says "File name / File Size" on acceptance and "Access ... denied ... not processed yet" while queued. Perf gates fail at load 9+ (diagram 4.3-4.7 s against 4.6 s): re-run before citing.
+runtime_smoke: n/a for the app -- tests only (no R/ or app change); the faithful surfaces are the CRAN-mode R CMD check of 49296d313 (tests 49 s at load 80, 33 s re-timed), the NOT_CRAN=true check-layout runs (+19 exactly) and CI R-CMD-check 40920931034 / test-coverage 40920930833 (running at close-out); win-builder, the one surface that enforces the limit, has not reported.
+changelog_ref: 2d3dc2f26 (claim); the close-out commit (DONE, push and win-builder entries)
+commit: 2e136e0d4
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 4f9d8ce7bf35 · manifest 7e3e82ab3ae0 (run at 2e136e0d4, load 9-13; two earlier runs each failed one timing gate at load, re-run)
 ```
 
 ```handoff

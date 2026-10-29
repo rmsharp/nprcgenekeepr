@@ -99,33 +99,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1092 Did
-**Deliverable:** CRAN 3.0.0 plan Phase 2, cut the CRAN-mode test time (owner pick, item 1 of 4, "Speed up CRAN's tests";
-strict TDD) (IN PROGRESS)
-**Started:** 2026-10-29 09:09 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable (owner pick, item 1 of 4, "Speed up CRAN's tests"; strict TDD, every gate the recommended option): CRAN plan Phase 2's
+cut, landed; its DONE is owed:** win-builder's measured check time for the cut tree (D4 = A, ruled this session). Claim `2d3dc2f26`,
+RED `8c2c80721`, GREEN `53113828f` and `49296d313`, REFACTOR `2e136e0d4`; pushed `3d5270b4f..2e136e0d4`.
+**What changed:** a CRAN check (`NOT_CRAN` not "true") leaves out the 64 files named in `tests/testthat/slowTestFiles.txt` (each
+0.5 s or more in the check's layout): `tests/testthat.R` sources `tests/testthat/helper-slowTestFiles.R` and calls `test_check(filter =
+cranTestFilter("testthat"), invert = TRUE)` (owner ruling: one list, not a line per file). `test_markerKinship.R` and
+`test_markerParentageLikelihood.R` skip their stopwatch block on CRAN, `test_idsAsText.R` its 4 full-example blocks; guard tests in
+`tests/testthat/test_slowTestFiles.R` (7 blocks).
+**Measured, this Mac:** CRAN-mode `checking tests` 296 s to 33 s (re-timed twice at load 15-31; the check itself read 49 s at load
+80); whole check 7 m 44 s to 3 m 13 s, 0/0/1 NOTE (version, DOI); all 236 exports still called on CRAN (trace probe through the real
+filter); `NOT_CRAN=true` in the check layout `PASS 16738` to `16757` (+19, the new file), `SKIP 629` and `WARN 10` unchanged; clean
+read 488 files 4,554 blocks 0 failed 0 errors; `lint_package()` 0; ratchet 11/11 (`4f9d8ce7bf35`; two earlier runs each failed one
+timing gate at load 9-11, no `R/` change).
+**win-builder:** the uncut tarball (`2d3dc2f26`) went to R-devel by FTP at 09:54 CDT (still queued at 11:44: the web form refused a
+same-named copy) and to R-release by web form at 11:45 (accepted). No email by 12:15. The 11:44:17 send's reply was never read.
+**Handoff evaluation of S1091: 8/10.** Helped: Phase 2's installed-layout recipe, dragons 1-2 (repos, `NOT_CRAN = "false"`) and the
+export check. Missing: the 540 s arithmetic (about 495 s non-test estimate leaves the tests about 45 s there, about 13 s here; its 30 s
+was for 600 s) and that win-builder can hold an upload for hours. Wrong: `test_perfHarness.R` in the top 10; it skips in the check.
+**Self: 7/10.** + ranked and checked in the check's own layout; every export proven tested on CRAN; before/after `NOT_CRAN=true` in one
+layout (+19 exactly); every owner question answered first try. - a parsing error after an upload call sent a copy whose reply I never
+read; the first timing run died on an unexported testthat helper; an `rm -rf` on a variable path refused; the 30 s target met only at
+the edge; Phase 2's DONE not reached; two Phase 0 nudges (Learning 1058).
+**Gotchas:** rank in `<check_dir>/nprcgenekeepr.Rcheck/tests` (Learning 1058 has the recipe); a same-named win-builder upload is
+refused until the queued one is processed; perf gates fail at load 9+ (diagram 4.3-4.7 s against 4.6 s).
+**Next:** when the owner forwards a win-builder log, read its step times; if 540 s minus the non-test steps leaves about 110 s or more
+(an estimate: 33 s here times S395's 3.4), upload the cut tree once (`devtools::check_win_devel()`) and confirm at most 540 s; if
+less, the examples or vignettes also need cutting. Then Phase 1 (linux-arm64, READY). Read R-CMD-check `40920931034` (each leg's PASS should rise by 19) and test-coverage
+`40920930833` (`16623` to `16642`).
 
-### What Session 1091 Did
-**Deliverable, DONE (owner-directed at Phase 0 after closing the picker to clarify: "This session make a plan to complete preparations
-to submit version 3.0.0 to CRAN"; planning session, no code, no TDD gates):** `docs/planning/cran-3.0.0-submission-plan.md` (DRAFT) and
-one `BACKLOG.md` item pointing at it ("Prepare the 3.0.0 CRAN submission", `BACKLOG.md:16`). Claim `801d1e4fc`, plan `555a995fd`.
-**Measured (plan section 3):** as the tree stands CRAN's 10-minute incoming check would reject 3.0.0: CRAN-mode tests take 309 s here
-against `v2.0.0`'s 66 s, same machine and command (4.7x), so about 1,430 s on win-builder against 600 s (an estimate); the top 10
-test files hold 52% of it, and skipping the 57 files of 1 s or more leaves about 39 s. Also: CRAN's linux-arm64 job fails 2.0.0's
-`test_modInput_incomplete_final_line.R` (`:68,70,79,81`); `R/modSummaryStats.R:17,356,365,374` call the Suggests package `shinyBS`
-with no guard (so did 2.0.0); `R/markerParentageLikelihood.R:131`'s DOI should be `10.1016/0040-5809(86)90006-7`. The owner's
-mid-session suggestion (old cover notes to `cran/archive/` or deleted) is decision D1.
-**Handoff evaluation of S1090: 9/10.** Helped: the covr-layout recipe (now the plan's Phase 2 step 2) and "never pass an unset
-variable as `check_dir`". Missing: nothing this owner-directed task needed. Wrong: nothing found.
-**Self: 8/10.** + both trees checked on one machine before any timing claim; four real defects found and sourced. - two counts from
-coarse greps (the `shinyBS` guard, a `| head`-cut "10" that is 4) were drafted wrong and caught only at the re-read (Learning 1057).
-**Gotchas:** under renv an incoming check halts on PPM's missing `Meta/current.rds` yet devtools prints 0/0/0: set the CRAN repo first
-and read `00check.log`'s `Status:`; CRAN timing needs `env_vars = c(NOT_CRAN = "false")`; Docker here runs linux/arm64.
-**Next:** the owner rules D1-D6 (plan section 6) or starts Phase 2, the critical path (READY; D4 is asked at its start), then Phase 1
-(arm64). Not pushed: 4 local commits, all notes or `docs/`, ride with the next real push. Ratchet 11/11
-(`9eddede5290b`, at `555a995fd`, load about 12).
-
-### Sessions 947-1090 (condensed S950 to S1091; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1091 (condensed S950 to S1092; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1091: the CRAN 3.0.0 plan (`docs/planning/cran-3.0.0-submission-plan.md`, DRAFT; claim `801d1e4fc`, plan `555a995fd`): CRAN-mode
+tests 309 s here against `v2.0.0`'s 66 s (about 1,430 s estimated on win-builder against 600 s); the linux-arm64 failure, the unguarded
+`shinyBS`, a wrong DOI; decisions D1-D6; S1090 9/10, self 8/10 (Learning 1057). **Gotchas kept:** set the CRAN repo before an incoming
+check and read `00check.log`'s `Status:`; CRAN timing needs `env_vars = c(NOT_CRAN = "false")`; Docker here runs linux/arm64.
 S1090: the red `test-coverage.yaml` run fixed in the tests only: the shared `rSourceAvailable()` (`tests/testthat/helper-rSource.R`)
 gates both whole-`R/` scans (claim `8e8fc19c7`, RED `98a683ca6`, GREEN `665f4cf9b`, REFACTOR `3d5270b4f`, pushed); S1089 9/10, self
 8/10 (Learning 1056). **Gotchas kept:** covr's layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then outside

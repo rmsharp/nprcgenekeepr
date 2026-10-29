@@ -14,13 +14,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       released 3.0.0.
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
-      S1091, DRAFT; READY for its Phase 2, then Phase 1; DECISION NEEDED on D1-D6 for the rest;
-      Effort L, about 10-12 sessions) -- as the tree stands CRAN's 10-minute incoming check would
-      reject 3.0.0: in CRAN mode the tests take 309 s here against `v2.0.0`'s 66 s on the same
-      machine, about 1,430 s on win-builder against a 600 s limit (an estimate). CRAN's linux-arm64
-      check also fails 2.0.0's `test_modInput_incomplete_final_line.R`, `R/modSummaryStats.R` calls
-      the Suggests package `shinyBS` with no guard, and one help-page DOI is wrong. The plan's
-      section 7 orders the phases; the item above is its Phase 6.
+      S1091, DRAFT; Phase 2's cut landed S1092 and its win-builder confirmation is owed; Phase 1
+      READY; DECISION NEEDED on D1-D3, D5 and D6 (D4 ruled A, S1092); Effort L, about 9-11 sessions
+      left) -- **Phase 2 so far:** a CRAN check leaves out the 64 test files named in
+      `tests/testthat/slowTestFiles.txt` (`tests/testthat.R`, `tests/testthat/helper-slowTestFiles.R`),
+      so in CRAN mode the tests take 33 s here (load 15-31), not 296 s; every exported function
+      is still tested on CRAN, and with `NOT_CRAN=true` (CI, local runs) every test still runs.
+      **Owed to finish Phase 2 (D4 = A):** win-builder's measured "Check time in seconds" at or
+      under 540 s for the cut tree. The uncut tree (`2d3dc2f26`) went to win-builder's R-devel
+      queue at 09:54 CDT on 2026-10-29 and its R-release queue at 11:45; neither had reported by
+      12:15. Read the step times from the first log that arrives, then upload the cut tree once
+      (the queue refuses a same-named file it has not yet processed). If the non-test steps alone
+      leave the tests under about 45 s there, more than the tests must shrink (examples,
+      vignettes). Still open after Phase 2: CRAN's linux-arm64 job fails 2.0.0's
+      `test_modInput_incomplete_final_line.R` (Phase 1), `R/modSummaryStats.R` calls the Suggests
+      package `shinyBS` with no guard (Phase 4a), and one help-page DOI is wrong (Phase 3). The
+      plan's section 7 orders the phases; the item above is its Phase 6.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
