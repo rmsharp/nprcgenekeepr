@@ -32,6 +32,32 @@ readWithFinalNewline <- function(fileName, reader, ...) {
   reader(fileName, ...)
 }
 
+#' Read a delimited text file the way the package's file readers do
+#'
+#' Reads \code{fileName} with \code{\link[utils]{read.table}} through
+#' \code{readWithFinalNewline()}: a header row, \code{sep} between values,
+#' blank cells and \code{"NA"} read as missing, column names kept as written,
+#' and the incomplete final line warning muffled. Shared by
+#' \code{getPedigree()}, \code{getGenotypes()}, \code{readTwinRelations()},
+#' \code{readAncestryRules()}, \code{readKinshipOverrides()} and
+#' \code{readSnapshotHistory()}.
+#'
+#' @param fileName path of the file to read.
+#' @param sep the character between values.
+#' @return A data.frame.
+#'
+#' @noRd
+readDelimitedFile <- function(fileName, sep) {
+  muffleIncompleteFinalLine(readWithFinalNewline(fileName,
+    read.table,
+    header = TRUE,
+    sep = sep,
+    stringsAsFactors = FALSE,
+    na.strings = c("", "NA"),
+    check.names = FALSE
+  ))
+}
+
 #' TRUE for an existing, non-empty, uncompressed file whose last byte is not
 #' a newline
 #'

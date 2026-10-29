@@ -39,14 +39,7 @@ readAncestryRules <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     rules <- readExcelPOSIXToCharacter(fileName)
   } else {
-    rules <- muffleIncompleteFinalLine(readWithFinalNewline(fileName,
-      read.table,
-      header = TRUE,
-      sep = sep,
-      stringsAsFactors = FALSE,
-      na.strings = c("", "NA"),
-      check.names = FALSE
-    ))
+    rules <- readDelimitedFile(fileName, sep)
   }
   as.data.frame(rules)
 }

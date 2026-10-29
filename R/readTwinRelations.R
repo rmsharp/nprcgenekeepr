@@ -37,14 +37,7 @@ readTwinRelations <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     twinRelations <- readExcelPOSIXToCharacter(fileName)
   } else {
-    twinRelations <- muffleIncompleteFinalLine(readWithFinalNewline(fileName,
-      read.table,
-      header = TRUE,
-      sep = sep,
-      stringsAsFactors = FALSE,
-      na.strings = c("", "NA"),
-      check.names = FALSE
-    ))
+    twinRelations <- readDelimitedFile(fileName, sep)
   }
   as.data.frame(twinRelations)
 }
