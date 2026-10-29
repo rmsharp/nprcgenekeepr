@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1091 Did
+**Deliverable:** a plan to finish the preparations for submitting version 3.0.0 to CRAN, written to
+`docs/planning/` (owner-directed at Phase 0; planning session, no code) (IN PROGRESS)
+**Started:** 2026-10-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1090 Did
 **Deliverable, DONE (owner pick, item 1 of 4, "Fix red coverage check"; scope "Share one check"; strict TDD, every gate the
 recommended option):** the red `test-coverage.yaml` run is fixed in the tests only. `test_roxygenInheritParams.R` skipped only on a
