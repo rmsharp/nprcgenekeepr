@@ -118,7 +118,8 @@ Learnings 549/550; tests chosen by the S1051 rule. - the picker said "it moves o
 Regrowth 168,694 B in 5 days (about 34 KB a day; S1048 saw 22): the warn line returns about 2026-11-03.
 **Next:** the owner picks. READY: BACKLOG compression (L; 234 lines, little to find). BLOCKED: larger-colony build cost (needs a
 studbook); the held-back methodology sync (upstream `close_out_report.py` unfixed since 2026-10-07). Open lever: shorter entries
-(`BACKLOG.md:105`). Not filed: S1084's five `tapply()` sites; Dates not built failed-date reasons. Not pushed (130 ahead after this close-out).
+(`BACKLOG.md:105`). Not filed: S1084's five `tapply()` sites; Dates not built failed-date reasons. **Pushed after close-out** (owner said "push"): `ccd6e9028..6d12f6061`, 130 commits; CI
+started on `6d12f6061` (R-CMD-check `40822189344`); read its logs for the S1073/S1075/S1076/S1081/S1082 checks. This line is local.
 
 ### Sessions 947-1087 (condensed S950 to S1088; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1087: the tutorial gains "### Kinship of Identical Twins" (`vignettes/a2interactive.Rmd:608-643`; MZ twins 0.25 to 0.5, the
