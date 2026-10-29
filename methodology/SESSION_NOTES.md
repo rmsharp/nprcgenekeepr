@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1088 Did
+**Deliverable:** trim `methodology/CHANGELOG.md` (200,328 B, past its 196,608 B warn line) with `methodology_trim.py
+--budget-bytes 65536` (owner pick, item 1 of 4, "CHANGELOG trim"; no code, no TDD gates) (IN PROGRESS)
+**Started:** 2026-10-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1087 Did
 **Deliverable, DONE (owner pick, item 1 of 4, "Tutorial leftovers"; scope "Twins + ncol"; strict TDD, every gate "Yes"):** the
 tutorial gains "### Kinship of Identical Twins" (`vignettes/a2interactive.Rmd:608-643`: six animals, two full sisters declared MZ

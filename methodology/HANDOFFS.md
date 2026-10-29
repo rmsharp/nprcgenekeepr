@@ -208,6 +208,22 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1088
+date: 2026-10-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- trim methodology/CHANGELOG.md (200,328 B, past its 196,608 B context-budget warn line) with methodology_trim.py --budget-bytes 65536 (owner pick at the Phase 0 picker, item 1 of 4, "CHANGELOG trim"; housekeeping, no code, so no TDD gates).
+what_was_done: pending
+next_steps: pending
+key_files: methodology/CHANGELOG.md:21 (the archive pointer blocks the trim adds to)
+gotchas: pending
+runtime_smoke: n/a — docs-only
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S1087
 date: 2026-10-28
 status: complete
