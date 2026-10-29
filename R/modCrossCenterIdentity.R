@@ -96,7 +96,7 @@
   if (is.null(file)) {
     return(NULL)
   }
-  read.csv(file$datapath, stringsAsFactors = FALSE)
+  readWithFinalNewline(file$datapath, read.csv, stringsAsFactors = FALSE)
 }
 
 #' Cross-Center Identity Mapping Module - UI Function

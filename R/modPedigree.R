@@ -325,8 +325,9 @@ modPedigreeServer <- function(id, studbook) {
       if (!is.null(input$focalAnimalFile) &&
             !identical(input$focalAnimalFile$datapath, clearedFilePath())) {
         tryCatch({
-          fileData <- read.csv(input$focalAnimalFile$datapath,
-                               stringsAsFactors = FALSE)
+          fileData <- readWithFinalNewline(input$focalAnimalFile$datapath,
+                                           read.csv,
+                                           stringsAsFactors = FALSE)
           # Assume first column contains IDs
           if (ncol(fileData) >= 1L) {
             fileIds <- as.character(fileData[[1L]])
