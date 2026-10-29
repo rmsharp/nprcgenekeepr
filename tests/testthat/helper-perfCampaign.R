@@ -159,6 +159,16 @@ pedIdsAsFactors <- function(ped) {
   ped
 }
 
+## The same with one factor level set, every animal, for id, sire and dam,
+## where pedIdsAsFactors() gives each column the values it holds (S1084).
+pedIdsAsSharedFactors <- function(ped) {
+  ids <- sort(unique(c(ped$id, ped$sire, ped$dam)))
+  for (h in c("id", "sire", "dam")) {
+    ped[[h]] <- factor(ped[[h]], levels = ids)
+  }
+  ped
+}
+
 ## Genotype codes as integers: pedWithGenotype ships its codes as doubles, and
 ## the plan's grid runs both.
 integerCodes <- function(genotype) {

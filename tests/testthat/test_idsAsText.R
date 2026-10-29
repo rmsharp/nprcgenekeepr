@@ -205,15 +205,10 @@ offspringStudbook <- function() {
   )
 }
 
-## One factor level set, every animal, for id, sire and dam, where
-## pedIdsAsFactors() gives each column the values it holds.
-pedIdsAsSharedFactors <- function(ped) {
-  ids <- sort(unique(c(ped$id, ped$sire, ped$dam)))
-  for (h in c("id", "sire", "dam")) {
-    ped[[h]] <- factor(ped[[h]], levels = ids)
-  }
-  ped
-}
+## The two kinds of factor ids: each column's own levels, and one level set,
+## every animal, for id, sire and dam.
+factorKinds <- list(`own levels` = pedIdsAsFactors,
+                    `shared levels` = pedIdsAsSharedFactors)
 
 test_that("findOffspring() counts each parent's offspring", {
   text <- offspringStudbook()
@@ -228,12 +223,8 @@ test_that("findOffspring() counts factor ids' offspring as their text's", {
   probands <- text$id[text$population]
   expected <- findOffspring(probands, text[text$population, ])
   expect_identical(expected, c(S1 = 1L, S2 = 0L, D1 = 1L, K1 = 0L))
-  for (kind in c("own levels", "shared levels")) {
-    ped <- if (kind == "own levels") {
-      pedIdsAsFactors(text)
-    } else {
-      pedIdsAsSharedFactors(text)
-    }
+  for (kind in names(factorKinds)) {
+    ped <- factorKinds[[kind]](text)
     expect_identical(findOffspring(probands, ped[ped$population, ]), expected,
                      info = paste(kind, "in the population"))
     expect_identical(findOffspring(text$id, ped),
@@ -248,14 +239,12 @@ test_that("offspringCounts() counts factor ids' offspring as their text's", {
   expected <- offspringCounts(probands, text, considerPop = TRUE)
   expect_identical(unname(expected$totalOffspring), c(3L, 2L, 3L, 0L))
   expect_identical(unname(expected$livingOffspring), c(1L, 0L, 1L, 0L))
-  expect_identical(
-    offspringCounts(probands, pedIdsAsFactors(text), considerPop = TRUE),
-    expected, info = "own levels"
-  )
-  expect_identical(
-    offspringCounts(probands, pedIdsAsSharedFactors(text), considerPop = TRUE),
-    expected, info = "shared levels"
-  )
+  for (kind in names(factorKinds)) {
+    expect_identical(
+      offspringCounts(probands, factorKinds[[kind]](text), considerPop = TRUE),
+      expected, info = kind
+    )
+  }
 })
 
 test_that("calcNeVariance() gives factor ids their text's value", {
@@ -264,10 +253,10 @@ test_that("calcNeVariance() gives factor ids their text's value", {
   ## kbar = 2.5, Vk = 1/3.
   expected <- calcNeVariance(text)
   expect_equal(expected, (4 * 2.5 - 1) / (2.5 - 1 + (1 / 3) / 2.5))
-  expect_identical(calcNeVariance(pedIdsAsFactors(text)), expected,
-                   info = "own levels")
-  expect_identical(calcNeVariance(pedIdsAsSharedFactors(text)), expected,
-                   info = "shared levels")
+  for (kind in names(factorKinds)) {
+    expect_identical(calcNeVariance(factorKinds[[kind]](text)), expected,
+                     info = kind)
+  }
 })
 
 test_that("reportGV() counts the example's offspring for factor ids as for text", {
@@ -279,8 +268,9 @@ test_that("reportGV() counts the example's offspring for factor ids as for text"
   }
   expected <- counts(ex$text)
   expect_false(anyNA(unlist(expected)))
-  expect_identical(counts(ex$factor), expected, info = "own levels")
-  expect_identical(counts(pedIdsAsSharedFactors(ex$text)), expected,
-                   info = "shared levels")
+  for (kind in names(factorKinds)) {
+    expect_identical(counts(factorKinds[[kind]](ex$text)), expected,
+                     info = kind)
+  }
   expect_identical(counts(ex$number), expected, info = "number ids")
 })
