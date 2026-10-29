@@ -21157,3 +21157,35 @@ rule only two test files read the ledger’s text
 (`test_archivePointersResolve.R`, `test_contextBudgetLedgers.R`);
 `test_workflowPathsIgnore.R` and `test_rbuildignore.R` only list path
 names.
+
+#### Learning 1055
+
+**S1089 (2026-10-29), a `BACKLOG.md` compression pass: a scope option
+that deletes a resolved section must say where an open issue that
+section names will show up afterwards, because the owner reads “stays
+open on GitHub” as a question about the picker.** **(1) What happened.**
+The “Pedigree diagram vs kinship2 audit follow-ups” section held no
+`- [ ]` line, only history, so no picker could offer it; its one open
+piece, issue \#138, had sat only on the report’s Informational line. My
+scope option said “#138 stays open on GitHub” and was picked; mid-pass
+the owner asked why the section had never been a picker option, and
+chose “Delete section, add \#138 item” (`BACKLOG.md:167`). Say in the
+option text that an issue left only on GitHub is never a numbered pick.
+**(2) Re-check carried claims against today’s code (Learning 626), four
+were stale:** \#138’s title says a 1,500-node cap, but the code caps 750
+animals, 400 with Rectilinear edges, about 1,500 drawn nodes
+(`R/modPedigree.R:453,465`); the compression item said the dashboard
+flags `BACKLOG.md` as HIGH risk (it no longer lists it); its method
+pointed at `docs/archive/CHANGELOG-*.md` (the shards are in
+`methodology/archive/`); the delayed standalone-package item’s
+`test_newsReleaseState.R:234,248` is now `:202,216` (recorded, not
+fixed, at the owner’s word). **(3) A size figure written inside the file
+it measures moves with every later edit:** 197 became 199, 207 and 208;
+write it last and re-run `wc -l` after the final edit. **(4) Drafting
+every candidate in a scratch copy first** (a script that replaces whole
+line ranges with asserted first and last lines) gave exact line counts
+for the scope question’s preview tables; it was answered first try.
+**(5) For the CHANGELOG lever:** on 2026-10-28 the six sessions’ DONE
+entries held 86% of 24,094 B (claims 439-766 B, DONE 2,393-4,668 B), so
+a shorter DONE entry, not fewer entries, is what would slow the
+regrowth.
