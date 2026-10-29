@@ -43,14 +43,7 @@ readSnapshotHistory <- function(fileName, sep = ",") {
       readExcelPOSIXToCharacter(fileName), snapshotSchemaNumericColumns
     )
   } else {
-    history <- muffleIncompleteFinalLine(readWithFinalNewline(fileName,
-      read.table,
-      header = TRUE,
-      sep = sep,
-      stringsAsFactors = FALSE,
-      na.strings = c("", "NA"),
-      check.names = FALSE
-    ))
+    history <- readDelimitedFile(fileName, sep)
   }
   as.data.frame(history)
 }

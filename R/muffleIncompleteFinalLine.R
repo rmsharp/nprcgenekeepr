@@ -7,8 +7,10 @@
 #' \code{"incomplete final line found by readTableHeader"} warning that
 #' \code{\link[utils]{read.table}} and \code{\link[utils]{read.csv}} emit
 #' when an input file (animal list or pedigree) has no trailing newline.
-#' Every row, including the last, is still read correctly, so the warning is
-#' noise; all other warnings are left to propagate to the caller.
+#' Read through \code{readWithFinalNewline()}, every row, including the last,
+#' is read correctly, so the warning is noise; all other warnings are left to
+#' propagate to the caller. (Read directly on Linux ARM64, a quoted last value
+#' gains a stray 0xFF byte; see \code{readWithFinalNewline()}.)
 #'
 #' @param expr expression to evaluate, typically a \code{read.table} or
 #' \code{read.csv} call.
