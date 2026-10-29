@@ -43,7 +43,8 @@ readKinshipOverrides <- function(fileName, sep = ",") {
       readExcelPOSIXToCharacter(fileName), "kinship"
     )
   } else {
-    overrides <- muffleIncompleteFinalLine(read.table(fileName,
+    overrides <- muffleIncompleteFinalLine(readWithFinalNewline(fileName,
+      read.table,
       header = TRUE,
       sep = sep,
       stringsAsFactors = FALSE,

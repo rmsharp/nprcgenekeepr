@@ -100,7 +100,8 @@ readAndMergeSpeciesOverrides <- function(path) {
   if (!file.exists(path)) {
     stop(sprintf("file does not exist: %s", path))
   }
-  userTbl <- utils::read.csv(path, stringsAsFactors = FALSE)
+  userTbl <- readWithFinalNewline(path, utils::read.csv,
+                                  stringsAsFactors = FALSE)
   required <- c(
     "species", "gestation", "minMaleBreedingAge", "minFemaleBreedingAge"
   )
