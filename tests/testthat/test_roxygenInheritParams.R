@@ -58,7 +58,9 @@ test_that("the reader flags the pages roxygen2 8.0.0 warns about", {
 
 test_that("no help page in R/ has an @inheritParams with nothing to inherit", {
   rDir <- testthat::test_path("..", "..", "R")
-  skip_if_not(dir.exists(rDir), "R/ not available (installed package)")
+  ## Under covr R/ exists but holds no .R file (S1090, run 40822189540).
+  skip_if(!rSourceAvailable(rDir),
+          "R/ source not available (installed package)")
   files <- list.files(rDir, pattern = "[.]R$", full.names = TRUE)
   found <- lapply(files, function(file) {
     lines <- readLines(file, warn = FALSE)
