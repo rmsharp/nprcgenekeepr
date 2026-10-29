@@ -46,6 +46,18 @@ test_that("a file with no final newline reaches the reader as a copy that ends i
   expect_identical(seen$bytes, c(charToRaw(text), as.raw(0x0a)))
 })
 
+## On Windows a text-mode write turns "\n" into "\r\n": with cat() the copy
+## ended in two bytes, and the block above failed on win-builder R-devel
+## (S1094, 17 bytes, not 16). macOS and Linux write one byte either way, so
+## this block checks how the newline is written: in binary, by writeBin().
+test_that("the added newline is written in binary, one byte on every system", {
+  calls <- all.names(body(nprcgenekeepr:::readWithFinalNewline))
+  expect_true("writeBin" %in% calls)
+  expect_identical(
+    intersect(calls, c("cat", "writeLines", "write")), character(0)
+  )
+})
+
 test_that("the user's file is left byte for byte as it was", {
   text <- 'id,sex\n"A1","M"'
   f <- writeExactly(text)
