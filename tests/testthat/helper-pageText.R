@@ -13,9 +13,12 @@
 ## test_docsAuditLeftoverWording.R), and tell a section of a tutorial's code
 ## chunks from its prose and read a chunk's option lines (insideChunk(),
 ## sectionProse(), chunkOptionText(); test_snapshotTutorialSection.R and
-## test_inventoryTutorialSections.R), and read the column headings of a DT
-## table the app shows (dtHeadings(); test_modGeneticValue.R and
-## test_modMarkerGenetics.R).
+## test_inventoryTutorialSections.R), and find a tutorial's headings and the
+## lines of one of its sections (headingLines(), placeLines(); the same two
+## files), and cut one section out of a page's text (sectionOf();
+## test_breedingGroupsSourceChoices.R and test_geneticValueOptionBoxes.R), and
+## read the column headings of a DT table the app shows (dtHeadings();
+## test_modGeneticValue.R and test_modMarkerGenetics.R).
 
 ## The lines of one tracked file of the source tree. The file sits outside a
 ## built package (.Rbuildignore'd or not installed), so the block skips where
@@ -166,6 +169,41 @@ chunkOptionText <- function(section, label) {
   body <- section[-seq_len(start)]
   options <- body[cumsum(!startsWith(body, "#|")) == 0L]
   c(section[start], options)
+}
+
+## The line numbers of the headings, from "## " down to `deepest` "#"s, that
+## are headings: a line inside a code chunk that starts with "## " is an R
+## comment.
+headingLines <- function(lines, deepest = 3L) {
+  which(grepl(paste0("^#{2,", deepest, "} "), lines) & !insideChunk(lines))
+}
+
+## The lines of the section whose heading is `title`: from the heading to the
+## line before the next heading of the same or a higher level, and for the last
+## section to the line before the closing 'elapsed-time' chunk. character(0)
+## when the heading is absent or stands more than once.
+placeLines <- function(title, lines) {
+  headings <- headingLines(lines)
+  start <- headings[trimws(lines[headings]) == title]
+  if (length(start) != 1L) return(character(0L))
+  level <- nchar(sub(" .*$", "", title))
+  levels <- nchar(sub(" .*$", "", lines[headings]))
+  after <- headings[headings > start & levels <= level]
+  end <- if (length(after) > 0L) after[1L] - 1L else length(lines)
+  closing <- grep("^```\\{r elapsed-time[,}]", lines)
+  if (length(closing) == 1L && closing > start) end <- min(end, closing - 1L)
+  lines[start:end]
+}
+
+## The text of one "## " section: from `heading` up to (not including) the next
+## section heading `after`. Both must be present.
+sectionOf <- function(text, heading, after) {
+  from <- regexpr(heading, text, fixed = TRUE)
+  expect_gt(as.integer(from), 0L, label = heading)
+  rest <- substring(text, from)
+  to <- regexpr(after, rest, fixed = TRUE)
+  expect_gt(as.integer(to), 0L, label = after)
+  substring(rest, 1L, to - 1L)
 }
 
 ## The heading text of every <th> in a DT table's widget container, in order.

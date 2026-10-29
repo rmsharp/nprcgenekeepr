@@ -39,7 +39,8 @@
 ## output.
 
 ## sourceLines(), plainText(), chunkCode(), expectNames(), insideChunk(),
-## sectionProse() and chunkOptionText() are in helper-pageText.R.
+## sectionProse(), chunkOptionText(), headingLines() and placeLines() are in
+## helper-pageText.R.
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
 sectionTitle <- "## Colony Snapshots Over Time"
 chunkLabels <- c("snapshot-record", "snapshot-backfill", "snapshot-save-read",
@@ -49,23 +50,9 @@ snapshotFunctions <- c("createColonySnapshot", "appendColonySnapshot",
                        "checkSnapshotHistory", "readSnapshotHistory",
                        "calcSnapshotDeltas", "plotSnapshotTrends")
 
-## The line numbers of the "## " headings that are headings: a line inside a
-## code chunk that starts with "## " is an R comment.
-sectionHeadingLines <- function(lines) {
-  which(grepl("^## ", lines) & !insideChunk(lines))
-}
-
 ## The lines of the section, from its heading to the line before the next
 ## section heading. character(0) when the script has no such section.
-snapshotSection <- function() {
-  lines <- sourceLines(scriptPath)
-  headings <- sectionHeadingLines(lines)
-  start <- headings[trimws(lines[headings]) == sectionTitle]
-  if (length(start) != 1L) return(character(0L))
-  after <- headings[headings > start]
-  end <- if (length(after) > 0L) after[1L] - 1L else length(lines)
-  lines[start:end]
-}
+snapshotSection <- function() placeLines(sectionTitle, sourceLines(scriptPath))
 
 ## The five chunks run once, in order, in a fresh environment, with every
 ## warning kept; then the plot is drawn on a null device. NULL when the section
@@ -104,7 +91,7 @@ chunkRun <- local({
 
 test_that("a2interactive.Rmd has a 'Colony Snapshots Over Time' section between Genetic Value Analysis and Breeding Group Formation", {
   lines <- sourceLines(scriptPath)
-  headings <- sectionHeadingLines(lines)
+  headings <- headingLines(lines, deepest = 2L)
   titles <- trimws(lines[headings])
   at <- which(titles == sectionTitle)
   expect_length(at, 1L)

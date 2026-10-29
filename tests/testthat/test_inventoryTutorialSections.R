@@ -64,7 +64,8 @@
 ## daughter and gives each value as inline R.
 
 ## sourceLines(), plainText(), chunkCode(), expectNames(), insideChunk(),
-## sectionProse() and chunkOptionText() are in helper-pageText.R.
+## sectionProse(), chunkOptionText(), headingLines() and placeLines() are in
+## helper-pageText.R.
 scriptPath <- file.path("vignettes", "a2interactive.Rmd")
 
 places <- list(
@@ -120,30 +121,7 @@ places <- list(
   )
 )
 
-## The line numbers of the "## " and "### " headings that are headings: a line
-## inside a code chunk that starts with "## " is an R comment.
-headingLines <- function(lines) {
-  which(grepl("^#{2,3} ", lines) & !insideChunk(lines))
-}
-
 tutorialLines <- function() sourceLines(scriptPath)
-
-## The lines of the place whose heading is `title`: from the heading to the line
-## before the next heading of the same or a higher level, and for the last
-## place to the line before the closing 'elapsed-time' chunk. character(0) when
-## the heading is absent or stands more than once.
-placeLines <- function(title, lines = tutorialLines()) {
-  headings <- headingLines(lines)
-  start <- headings[trimws(lines[headings]) == title]
-  if (length(start) != 1L) return(character(0L))
-  level <- nchar(sub(" .*$", "", title))
-  levels <- nchar(sub(" .*$", "", lines[headings]))
-  after <- headings[headings > start & levels <= level]
-  end <- if (length(after) > 0L) after[1L] - 1L else length(lines)
-  closing <- grep("^```\\{r elapsed-time[,}]", lines)
-  if (length(closing) == 1L && closing > start) end <- min(end, closing - 1L)
-  lines[start:end]
-}
 
 ## One place's chunks run once, in order, in a fresh environment, after the
 ## earlier chunks of the script that it needs, with every warning and error
@@ -213,7 +191,7 @@ test_that("the six places stand where the inventory put them, ahead of the closi
 
 test_that("each place names the functions and arguments it is about, in prose", {
   for (key in names(places)) {
-    section <- placeLines(places[[key]]$title)
+    section <- placeLines(places[[key]]$title, tutorialLines())
     expect_gt(length(section), 0L)
     ## The prose only: a name in a chunk's code does not count.
     text <- plainText(sectionProse(section))
@@ -244,7 +222,7 @@ test_that("each place holds its labelled chunks, in order, and the earlier chunk
 test_that("the chunks hide no warning, read no clock and fix the seed where aliases are drawn", {
   for (key in names(places)) {
     place <- places[[key]]
-    section <- placeLines(place$title)
+    section <- placeLines(place$title, tutorialLines())
     expect_gt(length(section), 0L)
     for (label in place$chunks) {
       expect_false(any(grepl("warning = FALSE", chunkOptionText(section, label),
@@ -255,14 +233,15 @@ test_that("the chunks hide no warning, read no clock and fix the seed where alia
                    info = label)
     }
   }
-  code <- chunkCode(placeLines(places$mhc$title), "mhc-obfuscate")
+  code <- chunkCode(placeLines(places$mhc$title, tutorialLines()),
+                    "mhc-obfuscate")
   expect_true(any(grepl("set\\.seed\\(", code)),
               info = "mhc-obfuscate sets no seed")
 })
 
 test_that("the prose of the six places gives no number as a literal", {
   for (key in names(places)) {
-    section <- placeLines(places[[key]]$title)
+    section <- placeLines(places[[key]]$title, tutorialLines())
     expect_gt(length(section), 0L)
     prose <- sectionProse(section)
     withDigits <- prose[grepl("[0-9]", prose)]

@@ -22,7 +22,8 @@
 ## Every page read below sits outside a built package, so each block skips
 ## where its file is absent and runs from the source tree.
 ##
-## pageText(), occurrences() and expectWording() live in helper-pageText.R.
+## pageText(), occurrences(), expectWording() and sectionOf() live in
+## helper-pageText.R.
 
 removedSentence <- paste(
   "The Genetic Value Analysis tab no longer shows the",
@@ -30,17 +31,6 @@ removedSentence <- paste(
   "They did nothing: the analysis works out both numbers whether or not they",
   "were ticked."
 )
-
-## The text of one "## " section: from `heading` up to (not including) the next
-## section heading `after`. Both must be present.
-sectionOf <- function(text, heading, after) {
-  from <- regexpr(heading, text, fixed = TRUE)
-  expect_gt(as.integer(from), 0L, label = heading)
-  rest <- substring(text, from)
-  to <- regexpr(after, rest, fixed = TRUE)
-  expect_gt(as.integer(to), 0L, label = after)
-  substring(rest, 1L, to - 1L)
-}
 
 test_that("the Genetic Value screen has no check box that nothing reads", {
   text <- gsub("\\s+", " ",

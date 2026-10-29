@@ -35,7 +35,8 @@
 ## read below sits outside a built package, so each block skips where its file
 ## is absent and runs from the source tree.
 ##
-## pageText(), occurrences() and expectWording() live in helper-pageText.R.
+## pageText(), occurrences(), expectWording() and sectionOf() live in
+## helper-pageText.R.
 
 removedSentence <- paste(
   "The Source choice on the Breeding Group Formation tab no longer offers",
@@ -57,17 +58,6 @@ manualBullet <- paste(
   "not in the pedigree stops the run and is named; an animal that is not",
   "alive is left out and named."
 )
-
-## The text of one "## " section: from `heading` up to (not including) the next
-## section heading `after`. Both must be present.
-sectionOf <- function(text, heading, after) {
-  from <- regexpr(heading, text, fixed = TRUE)
-  expect_gt(as.integer(from), 0L, label = heading)
-  rest <- substring(text, from)
-  to <- regexpr(after, rest, fixed = TRUE)
-  expect_gt(as.integer(to), 0L, label = after)
-  substring(rest, 1L, to - 1L)
-}
 
 test_that("the Source box offers Top ranked, All available and My own list, in that order", {
   text <- gsub("\\s+", " ",
