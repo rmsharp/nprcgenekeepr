@@ -40,30 +40,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`; S1065) is measured on the 2,590-animal jmac
       studbook (53 dates, 12.6 s) and the 3,694-row example (49 dates, 9.4 s), so a bigger colony is unmeasured.
 
-- [ ] **Tutorial leftovers after the S1043 inventory pass: twin-corrected kinship, and a guard for
-      omitted exports** (DECISION NEEDED, Effort S; found S1043) -- the pass named the six functions
-      and the two parameters it had left (the next pass compares against this pass's commit
-      `649389386`, not S541): 170 of the 236 exports are still never named, which is not a gap
-      (the tutorial is a walkthrough, not a reference). Three things are open. (1) **`twinRelations`**
-      is used in a call only on `makePedigreeMatingLayout()`; the `reportGV()` argument list names it
-      and points to `?reportGV`, and the "Passing a Kinship Matrix You Already Have" section says
-      `kinship()` takes it, but no output shows a twin-corrected kinship matrix (`kinship()`,
-      `reportGV()`, `gvaConvergence()`, `createSimKinships()` and `cumulateSimKinships()` accept it).
-      `checkTwinRelations()` wants a same-sex pair for an MZ call and the tutorial's pair is a
-      mixed-sex UZ pair, so a demo needs its own pair; whether one belongs is a decision. (2) **No
-      guard notices a new exported function the tutorial omits**; one would need an allow-list of the
-      never-named set (170 today), so whether it is worth the upkeep is a decision. **Method for the
-      next inventory:** formals at the old commit from a scratch `git worktree` through
-      `pkgload::load_all()` run in the main checkout (renv), against today's; search each name with a
-      boundary that ignores `_` (the tutorial writes `__fn__`, and `\b` treats `_` as a word
-      character, so it misses them: S1043's first total of 182 was 176) and confirm every "unnamed"
-      claim with `grep -F` on the committed text. Pattern for a section:
-      `tests/testthat/test_inventoryTutorialSections.R` (the shared readers `insideChunk()`,
-      `sectionProse()` and `chunkOptionText()` are in `helper-pageText.R`).
-      (3) **A new parameter since the pass** (S1045, `3ba3fd51b`): `plotSnapshotTrends()` takes
-      `ncol`, the number of panel columns. The tutorial's chart has 3 panels, where the default
-      grid is right, so whether the tutorial shows `ncol` is a decision.
-
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143); Recs #1-#5 all DONE,

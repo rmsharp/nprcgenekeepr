@@ -99,14 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1087 Did
-**Deliverable:** settle the three tutorial leftovers after the S1043 inventory pass: a twin-corrected kinship example, a guard
-test for exports the tutorial omits, and `plotSnapshotTrends(ncol)` in the tutorial (`BACKLOG.md:43`, DECISION NEEDED, Effort S;
-owner pick at the Phase 0 picker, item 1 of 4, "Tutorial leftovers"; strict TDD for any test or code). (IN PROGRESS)
-**Started:** 2026-10-28
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "Tutorial leftovers"; scope "Twins + ncol"; strict TDD, every gate "Yes"):** the
+tutorial gains "### Kinship of Identical Twins" (`vignettes/a2interactive.Rmd:608-643`: six animals, two full sisters declared MZ
+twins, `kinship()` without and with `twinRelations`) and Plotting the Trend's call takes `ncol = 3L` with one sentence (`:1042-1064`).
+No guard for omitted exports (ruled). Claim `85593510b`, RED `de7417098`, GREEN `0e65b544e`, REFACTOR `8ebf3f6e7`. BACKLOG item off.
+**Measured first:** 236 exports at `649389386` and now, 170 never named; one new reader-facing parameter (`ncol`); MZ twins 0.25 to
+0.5, the daughter with her aunt 0.125 to 0.25; the tutorial's own chart reads well by default (a stand-in history did not).
+**Verified:** full suite 486 files 4,547 tests 0 failed (GREEN, REFACTOR); check 0/0/0 at GREEN; `lint_package()` 0; the tutorial
+rendered from a scratch install, pictures opened for the owner; REFACTOR counts unchanged; ratchet 11/11 (`590acb8402d0`).
+**Handoff evaluation of S1086: 9/10.** Helped: Next named `:43`; both trims with exact bytes; the scratch-install gotcha. Wrong:
+"the next claim likely crosses" the notes ceiling (the claim's condensing shrank the file). ROI: high.
+**Self: 8/10.** + all three measured before the question; scope, wording and gates first try; pictures before the long runs.
+- a needless `--no-verify` again; a probe left `Rplots.pdf` in the repo root (deleted); the first render failed on a relative path.
+**Gotchas:** render the tutorial with `knit_root_dir` in `vignettes/` (its hidden chunk reads `../inst/extdata/...`) and output in
+scratch; no digits in inventoried prose (ids too: inline R, animals by role); `placeLines(title, lines)`, `headingLines(lines,
+deepest)` and `sectionOf()` are in `helper-pageText.R`; `ggplot_build()` outside `pdf(NULL)` writes `Rplots.pdf`.
+**Next:** the owner picks. Owed: a `CHANGELOG.md` trim (past its warn line since this claim; `methodology_trim.py --budget-bytes
+65536`). READY: BACKLOG compression (L). Not filed: S1084's five `tapply()` sites (`rareAlleleCounts.R:131`, not `:85`); the Dates
+not built failed-date reasons. The next tutorial inventory compares against `0e65b544e` (Learning 1053). Not pushed (127 ahead).
 
-### Sessions 947-1086 (condensed S950 to S1087; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1086 (condensed S950 to S1088; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1086: the Dates not built table lists a date already built as "Already in the history; not built again."
 (`R/modSnapshotTrends.R:397-434`); a failed date keeps its error, a script keeps the function's sentence; one rule,
 `rebuiltSnapshotDates()` (`R/backfillColonySnapshots.R:286`). Claim `677a33f15`, close-out `9ae663a38`, not pushed; S1085 9/10,
@@ -117,36 +129,20 @@ unchanged, `R/backfillColonySnapshots.R:269-277`), and the Genetic-Health Trends
 are listed under Dates not built." (`R/modSnapshotTrends.R:411-422`). Claim `cee18a0ba`, close-out `db5110827`, not pushed; S1084
 9/10, self 8/10 (Learning 1051). **Gotchas kept:** `runBackfill()`/`failedDatesWarningOf()` in `helper-backfillColony.R` filter by
 kind; a `DT::renderDT()` output in `testServer()` holds no rows; `mockBuildWithNotes()` takes text and condition notes.
-S1084: `findOffspring()` reads `sire` and `dam` as their text (`idsAsText()`, `R/findOffspring.R:37-38`), so `offspringCounts()`,
-`calcNeVariance()` and `reportGV()` give a factor-id studbook the text's counts. Claim `1b95eac90`, close-out `886db8ab5`, not pushed;
-S1083 9/10, self 7/10 (Learning 1050). **Gotchas kept:** a pre-fix swap under `load_all()` replaces both `asNamespace()` and
-`package:nprcgenekeepr`; `reportGV()`'s report is ordered by rank; five other `tapply()`-over-id sites not probed (Learning 1050).
-S1083: number and factor ids are taken as their text where `convertRelationships()`, `markerRealizedRelatednessVariance()`,
-`makeCEPH()`, `groupAddAssign()` and `fillGroupMembersWithSexRatio()` start (`idsAsText()`/`pedIdsAsText()`, `R/toCharacter.R:33-63`);
-`kinship(sparse = TRUE)` is the fast fill made sparse (`sparseKinship()`, `R/kinship.R`). Claim `bf551cb51`, close-out `19430142b`, not
-pushed; S1082 9/10, self 8/10 (Learning 1049). **Gotchas kept:** test ids that are not row numbers (1-5 hid the bug); `Diagonal(x = 1)`
-stores a unit diagonal; no `methods::` (not in Imports); the app's upload makes ids text.
-S1082: `markerRealizedRelatednessVariance()` and Marker Genetics' Realized Relatedness table list only parent-offspring, full- and
-half-sibling pairs, without row numbers (`varianceKindPairs()`, `R/markerRealizedRelatednessVariance.R:146`; `relationNames()`,
-`R/convertRelationships.R:70`): opening the tab 13-18 s and a 1,972 MB peak to 0.6 s and 606 MB. Claim `9f0009725`, close-out
-`f4ba3ceaf`, not pushed; S1081 9/10, self 8/10 (Learning 1048). **Gotchas kept:** a long-form subset keeps cell-position row names
-(DT shows them); the half-sibling rule matches a parent across roles (`s1 == d2`).
-S1081: Mate Pair builds only male-female pairs and "All alive" takes `isLivingAnimal()` (status ALIVE) (`matePairLongForm()`,
-`R/reportMatePairs.R:335`; `lowerTriangleCells()`, `R/kinMatrix2LongForm.R:58`; ruling "Both"): app 9.5 s and a 1,567 MB peak to
-0.1 s and 503 MB. Claim `438d780f8`, close-out `4bee34b39`, not pushed; S1080 9/10, self 8/10 (Learning 1047). **Gotchas kept:** an
-allocation-window test needs lopsided colonies; give `saveRDS()`/`Rprofmem()` absolute scratch paths; start
-`devtools::check(<copy>)` from the repo folder.
-S1078-S1080 (evaluations 9/10, self 8/10; Learnings 1044-1046; hashes in `CHANGELOG.md`): S1080, Summary Statistics builds the
-relationship table inside each download and keeps nothing of it (`relationshipData()`, `R/modSummaryStats.R:432-447`; live heap 472.8 to
-238.5 MB); S1079, `groupAddAssign()`'s tie-order comment says what the code does (`R/groupAddAssign.R:340-345`); S1078, the `reportGV`
-speed gate times the middle of 5 runs (`Rscript tools/perf/run.R <scenario> --runs N`). **Gotchas kept:** read the live heap with an
-injected `gc()` observer; `test_file(desc =)` cannot match a `paste()` title; the tie order is pinned only by
-`groupAddAssignReference()` (`helper-perfReference.R:672`); a probe before a timed call moves it; `perf_convertRelationships_300_seconds`
-takes `--runs 5` if it fails near 0.18 s; run an archive copy's `run.R` from the repo folder.
-S1077: from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-style buttons above its over-limit message, which names
-Direct (`R/modPedigree.R:569-597`, `.edgeStyleButtons()` `:500`); one click on Direct draws it. Claim `0e9c9c68d`, close-out
-`f56261aa0`, not pushed; S1076 9/10, self 8/10 (Learning 1043). **Gotchas kept:** `test_file(desc =)` also runs earlier
-`pixel_test_that()` blocks; read `uptime` before timing; time the reportGV gate from a `git archive` copy too.
+S1081-S1084 (evaluations 9/10, self 7-8/10; Learnings 1047-1050; hashes in `CHANGELOG.md`): S1084, `findOffspring()` reads
+`sire`/`dam` as text (`idsAsText()`, `R/findOffspring.R:37-38`); S1083, number and factor ids taken as text where five functions
+start (`R/toCharacter.R:33-63`) and `kinship(sparse = TRUE)` is the fast fill made sparse; S1082, the Realized Relatedness table
+lists only parent-offspring and sibling pairs (`varianceKindPairs()`; 13-18 s to 0.6 s); S1081, Mate Pair builds only male-female
+pairs, "All alive" by `isLivingAnimal()` (9.5 s to 0.1 s). **Gotchas kept:** a pre-fix swap under `load_all()` replaces both
+`asNamespace()` and `package:nprcgenekeepr`; test ids that are not row numbers; no `methods::`; a long-form subset keeps
+cell-position row names; an allocation-window test needs lopsided colonies; give `saveRDS()`/`Rprofmem()` absolute paths.
+S1077-S1080 (evaluations 9/10, self 8/10; Learnings 1043-1046; hashes in `CHANGELOG.md`): S1080, Summary Statistics builds the
+relationship table inside each download and keeps nothing of it (`relationshipData()`, `R/modSummaryStats.R:432-447`); S1079,
+`groupAddAssign()`'s tie-order comment says what the code does; S1078, the `reportGV` speed gate times the middle of 5 runs (`--runs N`);
+S1077, from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-style buttons above its over-limit message (`R/modPedigree.R:569-597`).
+**Gotchas kept:** read the live heap with an injected `gc()` observer; `test_file(desc =)` cannot match a `paste()` title and also runs
+earlier `pixel_test_that()` blocks; the tie order is pinned only by `groupAddAssignReference()` (`helper-perfReference.R:672`); a probe
+before a timed call moves it; run an archive copy's `run.R` from the repo folder; read `uptime` before timing.
 S1072-S1076 (evaluations 8-9/10, self 7-8/10; Learnings 1038-1042; condensed S1079, hashes in `CHANGELOG.md`): S1076, every browser
 test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]" (`pixel_test_that()`,
 `tests/testthat/helper-shinytest2.R:732`); S1075, founder statistics build their contribution table once (`initialContributions()`,

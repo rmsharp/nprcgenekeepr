@@ -210,13 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1087
 date: 2026-10-28
-status: pending
-active_task: IN PROGRESS -- settle the three tutorial leftovers after the S1043 inventory pass: a twin-corrected kinship example, a guard test for exports the tutorial omits, and plotSnapshotTrends(ncol) in the tutorial (BACKLOG.md:43, DECISION NEEDED, Effort S; owner pick at the Phase 0 picker, item 1 of 4, "Tutorial leftovers"); strict TDD for any test or code.
-what_was_done: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- the tutorial leftovers after the S1043 inventory pass (BACKLOG.md:43, DECISION NEEDED, Effort S; owner pick at the Phase 0 picker, item 1 of 4, "Tutorial leftovers"; scope "Twins + ncol"; strict TDD, the PRE-RED->RED, RED->GREEN and GREEN->REFACTOR gates each answered "Yes"). The tutorial shows twin-corrected kinship and plotSnapshotTrends(ncol); no guard for omitted exports (ruled). The BACKLOG item is removed.
+what_was_done: Measured first: 236 exports at 649389386 and now, 170 never named; one new reader-facing parameter (ncol); the tutorial's twin pair cannot be MZ; on six animals kinship(twinRelations) moves the MZ twins 0.25 to 0.5 and the daughter with her aunt 0.125 to 0.25; the tutorial's own chart reads well by default. Claim 85593510b; RED de7417098 (a sixth inventory place with a result test; the plot chunk passes ncol; 8 tests failed as intended); GREEN 0e65b544e (vignettes/a2interactive.Rmd: "### Kinship of Identical Twins", chunk twin-kinship, numbers as inline R; ncol = 3L and one sentence in Plotting the Trend); REFACTOR 8ebf3f6e7 (headingLines(), placeLines() and sectionOf() to helper-pageText.R, two copies each to one). Full suite 486 files 4,547 tests 0 failed 0 errors (223 skipped) at GREEN and REFACTOR; devtools::check() 0/0/0 at GREEN; lint_package() 0. No help or NEWS change; no GitHub issue.
+next_steps: The owner picks at the next Phase 0. Owed: a CHANGELOG.md trim (196,758 B at the claim, past its 196,608 B warn line; python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --budget-bytes 65536 --check, then --write; S1048 is the model). READY: BACKLOG.md compression (L). Not filed: S1084's five tapply()-over-id sites (Learning 1050; rareAlleleCounts.R is now :131, not :85); the Dates not built table's failed-date reasons in script words. The next a2interactive.Rmd inventory pass compares against 0e65b544e (Learning 1053). After the next push read CI (S1073 OpenBLAS; S1075/S1081/S1082 Rprofmem; S1076 CPU drawing). Not pushed: master is 127 ahead after this close-out.
+key_files: vignettes/a2interactive.Rmd:608-643 (Kinship of Identical Twins), :1042-1064 (Plotting the Trend, ncol); tests/testthat/test_inventoryTutorialSections.R:72-79 (the twinKinship place), :264 (its result test); tests/testthat/test_snapshotTutorialSection.R:184, :279 (ncol tests); tests/testthat/helper-pageText.R:177-207 (headingLines(), placeLines(), sectionOf())
+gotchas: The tutorial's hidden get-file-name chunk reads ../inst/extdata/examples/ExamplePedigree.csv, so render the real file with knit_root_dir = <repo>/vignettes and output_dir/intermediates_dir in scratch, after a scratch install first on R_LIBS (about 11 s). The S1043 no-literal-number rule bans ids with digits in tutorial prose; give values as inline R and call animals by role. ggplot2::ggplot_build() outside pdf(NULL) writes Rplots.pdf into the working folder. placeLines() now takes the tutorial's lines as a required argument (tutorialLines() in the inventory test).
+runtime_smoke: The tutorial rendered from the GREEN tree installed in a scratch library (11 s, no errors); chromote pictures of "Kinship of Identical Twins" (the two matrices and the sentence reading 0.25 to 0.5 and 0.125 to 0.25) and "Plotting the Trend" (the call with ncol = 3L, the chart one row of three panels) opened for the owner; devtools::check() built the vignette 0/0/0.
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 590acb8402d0 · manifest 7e3e82ab3ae0 (run at 8ebf3f6e7, load about 8)
+changelog_ref: 0e65b544e
+commit: 8ebf3f6e7
 ```
-Session claimed; work beginning.
+Self 8/10. + all three decisions measured before the question (exports, formals, kinship cells, the chart on its own data); scope, wording and all three gates answered first try; pictures opened before the long runs; REFACTOR proved on the pre-GREEN tutorial. - a needless --no-verify on the RED commit (S1085's slip again); a probe left Rplots.pdf in the repo root (found and deleted); the first render failed on a relative path; the first ncol probe used a stand-in history. S1086's handoff 9/10: it named the item, both trims with exact bytes and the scratch-install gotcha; its forecast that the claim would cross the notes ceiling missed (the claim's condensing shrank the file).
 
 ```handoff
 session: S1086
