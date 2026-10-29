@@ -13,6 +13,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
       released 3.0.0.
 
+- [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
+      S1091, DRAFT; READY for its Phase 2, then Phase 1; DECISION NEEDED on D1-D6 for the rest;
+      Effort L, about 10-12 sessions) -- as the tree stands CRAN's 10-minute incoming check would
+      reject 3.0.0: in CRAN mode the tests take 309 s here against `v2.0.0`'s 66 s on the same
+      machine, about 1,430 s on win-builder against a 600 s limit (an estimate). CRAN's linux-arm64
+      check also fails 2.0.0's `test_modInput_incomplete_final_line.R`, `R/modSummaryStats.R` calls
+      the Suggests package `shinyBS` with no guard, and one help-page DOI is wrong. The plan's
+      section 7 orders the phases; the item above is its Phase 6.
+
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
       `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
