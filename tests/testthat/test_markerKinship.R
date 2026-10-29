@@ -133,6 +133,7 @@ test_that("markerKinship's output is byte-identical to its pre-D5-rewrite implem
 })
 
 test_that("markerKinship completes well under its pre-D5-rewrite runtime on the committed sequence-scale fixture (issue #152 Slice 2 benchmark)", {
+  skip_on_cran() # a wall-clock benchmark; see slowTestFiles.txt
   ## No skip_if() guard: system.file() returns "" when the fixture doesn't
   ## exist, and read.csv("") errors -- matches
   ## test_checkSequenceGenotypeFile.R's own committed-fixture test pattern.

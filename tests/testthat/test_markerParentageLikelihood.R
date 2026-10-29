@@ -595,6 +595,7 @@ test_that("markerParentageLikelihood's output is byte-identical to its pre-D5-re
 })
 
 test_that("markerParentageLikelihood completes well under its pre-D5-rewrite runtime on the committed sequence-scale fixture (issue #152 Slice 2 benchmark)", {
+  skip_on_cran() # a wall-clock benchmark; see slowTestFiles.txt
   ## No skip_if() guard -- same rationale as
   ## test_markerKinship.R's own benchmark test. Threshold (0.5s) is
   ## deliberately tighter than the pre-rewrite implementation's measured

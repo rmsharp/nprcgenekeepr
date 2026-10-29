@@ -85,6 +85,7 @@ test_that("convertRelationships() names number and factor ids as their text", {
 })
 
 test_that("convertRelationships() takes the example's number and factor ids as text", {
+  skip_on_cran() # the full example studbook; see slowTestFiles.txt
   ex <- exampleIdVariants()
   ids <- ex$text$id[ex$text$population][1L:60L]
   expected <- convertRelationships(ex$kmat, ex$text, ids = ids)
@@ -97,6 +98,7 @@ test_that("convertRelationships() takes the example's number and factor ids as t
 
 test_that(paste("markerRealizedRelatednessVariance() gives number and factor",
                 "ids the text's rows, without the table of every pair"), {
+  skip_on_cran() # the full example studbook; see slowTestFiles.txt
   ped <- numberStudbook()
   text <- toCharacter(ped)
   kmat <- pedigreeKinship(text)
@@ -130,6 +132,7 @@ test_that(paste("markerRealizedRelatednessVariance() gives number and factor",
 })
 
 test_that("groupAddAssign() fills groups from number and factor ids as from text", {
+  skip_on_cran() # the full example studbook; see slowTestFiles.txt
   ex <- exampleIdVariants()
   candidates <- ex$text$id[isLivingAnimal(ex$text)][1L:120L]
   fill <- function(candidates, ped, sexRatio, currentGroups) {
@@ -260,6 +263,7 @@ test_that("calcNeVariance() gives factor ids their text's value", {
 })
 
 test_that("reportGV() counts the example's offspring for factor ids as for text", {
+  skip_on_cran() # the full example studbook; see slowTestFiles.txt
   ex <- exampleIdVariants()
   counts <- function(ped) {
     gv <- withr::with_seed(1L, reportGV(ped, guIter = 50L))
