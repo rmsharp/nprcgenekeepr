@@ -100,10 +100,9 @@ animal.</p></dd>
 
 
 <dt id="arg-sparse">sparse<a class="anchor" aria-label="anchor" href="#arg-sparse"></a></dt>
-<dd><p>logical flag. If <code>TRUE</code>, <code><a href="https://rdrr.io/pkg/Matrix/man/Diagonal.html" class="external-link">Matrix::Diagonal()</a></code> is
-used to make the starting diagonal matrix (one half of the identity matrix,
-the founders' self-kinship) and the result is a sparse
-<code>dgCMatrix</code>. If <code>FALSE</code>, <code><a href="https://rdrr.io/r/base/diag.html" class="external-link">base::diag()</a></code> is used and the
+<dd><p>logical flag. If <code>TRUE</code>, the result is a sparse matrix
+of the Matrix package with the same values: a <code>ddiMatrix</code> when no two
+animals have a kinship, otherwise a <code>dgCMatrix</code>. If <code>FALSE</code>, the
 result is a base matrix.</p></dd>
 
 

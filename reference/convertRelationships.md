@@ -41,6 +41,11 @@ included for each pair. IDs that are not in `kmat` are ignored. One ID
 gives that animal's own `Self` row, and no ID in `kmat` (or an empty
 `ids`) gives a table with no rows.
 
+## Details
+
+Ids given as numbers or as a factor, in the pedigree's `id`, `sire` and
+`dam` or in `ids`, are taken as their text.
+
 ## Examples
 
 ``` r

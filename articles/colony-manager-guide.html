@@ -759,7 +759,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </section><section class="level3"><h3 id="mate-pair-analysis">Mate Pair Analysis<a class="anchor" aria-label="anchor" href="#mate-pair-analysis"></a>
 </h3>
 <p>The <strong>Mate Pair Analysis</strong> tab (issue <a href="https://github.com/rmsharp/nprcgenekeepr/issues/151">#151</a>) is new since the original tutorial-era documentation. It answers a different question than the Breeding Groups tab: not “what multi-animal groups should be formed,” but “for a given, deliberately scoped population, which individual male/female pairs are even eligible to consider, and what do we know about each pair” – a curator-facing worksheet, kept structurally and file-wise separate from group formation.</p>
-<p><strong>Choosing a candidate population.</strong> Unlike group formation, this tab requires an explicit population scope before it will compute anything – <strong>All alive</strong> (every animal with no recorded exit date), <strong>Top ranked by genetic value</strong> (the highest-ranked animals from a completed Genetic Value Analysis run), or a <strong>Custom list</strong> of pasted IDs. This is a deliberate, evidence-based design choice, not an arbitrary restriction: minimum age alone does not bound the candidate table on real colony data, because a missing recorded age <em>passes</em> the age screen rather than being excluded by it, and a large fraction of animals in a typical studbook have no recorded age at all. Scoping the population first keeps the resulting table both meaningful and responsive.</p>
+<p><strong>Choosing a candidate population.</strong> Unlike group formation, this tab requires an explicit population scope before it will compute anything – <strong>All alive</strong> (every animal whose status is ALIVE; in a file with no status column, every animal with no recorded exit date), <strong>Top ranked by genetic value</strong> (the highest-ranked animals from a completed Genetic Value Analysis run), or a <strong>Custom list</strong> of pasted IDs. This is a deliberate, evidence-based design choice, not an arbitrary restriction: minimum age alone does not bound the candidate table on real colony data, because a missing recorded age <em>passes</em> the age screen rather than being excluded by it, and a large fraction of animals in a typical studbook have no recorded age at all. Scoping the population first keeps the resulting table both meaningful and responsive.</p>
 <p>Set the <strong>Minimum breeding age</strong> floor and, optionally, check <strong>Exclude specific animals</strong> to open a text area for animals that should never appear in a pair regardless of any other eligibility screen. Click <strong>Find Eligible Pairs</strong> to compute the result.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/mate_pair_analysis_eligible_pairs.png" alt="Mate Pair Analysis tab showing the configuration panel (candidate population, minimum age, exclude list, Find Eligible Pairs button) alongside a sortable Eligible Pairs table with columns for sire ID, dam ID, pedigree kinship, marker kinship, and per-parent genetic-value columns."></p>
@@ -825,7 +825,7 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 <figure><p><img src="shiny_app_use/marker_genetics_linkage_coverage.png" alt="Marker Genetics Linkage and LD Block Metrics tab showing a coverage summary reading '8 full, 2 partial, 2 none' above a per-locus table with locus, chrom, pos, cM, and coverage columns."></p>
 <figcaption>The Linkage and LD Block Metrics tab’s locus metadata coverage report for a 12-locus example STR panel: 8 loci have full chromosome+position information, 2 have partial (chromosome only), and 2 have neither.</figcaption></figure>
 </div>
-<p>Below the coverage report, two complementary metrics are computed. The <strong>Realized Relatedness Variance</strong> table is the tab’s primary, genuinely pedigree-valid metric (Hill &amp; Weir 2011): pedigree-based kinship is only an <em>average</em> expected relatedness – the actual proportion of genome shared identical-by-descent between two relatives varies around that average because of Mendelian sampling and linkage, and this table estimates that variance for Parent-Offspring, Full-Sibling, and Half-Sibling pairs given a curator-supplied chromosome count and total genetic-map length (pre-filled with rhesus macaque defaults, adjustable for other species or datasets). It needs no genotype file at all – only the pedigree already loaded elsewhere in the app.</p>
+<p>Below the coverage report, two complementary metrics are computed. The <strong>Realized Relatedness Variance</strong> table is the tab’s primary, genuinely pedigree-valid metric (Hill &amp; Weir 2011): pedigree-based kinship is only an <em>average</em> expected relatedness – the actual proportion of genome shared identical-by-descent between two relatives varies around that average because of Mendelian sampling and linkage, and this table lists the Parent-Offspring, Full-Sibling, and Half-Sibling pairs and estimates that variance for each, given a curator-supplied chromosome count and total genetic-map length (pre-filled with rhesus macaque defaults, adjustable for other species or datasets). It needs no genotype file at all – only the pedigree already loaded elsewhere in the app.</p>
 <p>The <strong>LD Block Statistic</strong> table is a secondary, explicitly-caveated descriptive measure (D’ and r², computed pairwise for same-chromosome loci from the multiallelic genotype upload): classical linkage-disequilibrium theory assumes a randomly-mating population, which a pedigreed colony violates by construction, and no rigorous method that is both pedigree-aware and tolerant of multiallelic data currently exists as a CRAN package. A persistent, non-dismissable banner states this caveat directly above the table – it always accompanies the statistic, since this is a genuine, documented limitation rather than an oversight. An optional checkbox restricts the computation to founder animals only, which reduces (but does not eliminate) the effect of related individuals in the sample.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="shiny_app_use/marker_genetics_linkage_ldblock.png" alt="Marker Genetics Linkage and LD Block Metrics tab showing the LD Block Statistic section: an orange caveat banner reading that the statistic is descriptive only and not pedigree-aware, a founders-only checkbox, and a table with two rows of Dprime/r2/nUsed values for locus pairs on chromosomes 1 and 2."></p>
@@ -901,13 +901,114 @@ Table 1: Function groups, the app tabs that expose them, and the companion arti
 </ol>
 <p>A rebuilt snapshot looks back with today’s records: a parent identified later counts as known earlier, today’s genotypes are used for every date, and only animals with a birth date, or with an offspring that has one, are placed. The sex-ratio effective size reads low in years when few sires were recorded, and two close dates can differ only by the random sampling every snapshot has, so read each point beside the counts on the <strong>Earlier Snapshots</strong> tab.</p>
 <p>An animal the studbook lists as neither alive nor departed is left out of the count of animals, but the effective sizes still treat it as living when it is a recorded parent, as they do for the snapshot recorded today.</p>
+<section class="level4"><h4 id="reading-the-trend">Reading the trend<a class="anchor" aria-label="anchor" href="#reading-the-trend"></a>
+</h4>
+<div class="cell">
+<div class="cell-output-display">
+<p>
+    Each panel is one measure, titled with its column name in the snapshot
+    history. Each color is one membership rule; the dashed line is snapshots
+    rebuilt from studbook dates.
+</p>
+
+<p>
+    <b>Which way each panel moves</b>
+</p>
+<ul>
+<li>
+        <b>fe, fg and neGD</b> (founder equivalents, founder genome equivalents
+        and gene diversity): higher means more of the founders' diversity is
+        still in the colony. fe falls when the founders' contributions grow more
+        unequal; fg and neGD also fall when founder alleles are lost by chance.
+        neGD is a share between 0 and 1, not a number of animals.
+    </li>
+    <li>
+        <b>nFounders, nMaleFounders and nFemaleFounders</b>: the known founders
+        (animals with no recorded parents) among the analyzed animals and their
+        ancestors. They rise when such an animal joins, an import for example;
+        in a series of living animals they also fall when a founder and all its
+        descendants have left.
+    </li>
+    <li>
+        <b>neSexRatio and neVariance</b> (the sex-ratio and variance effective
+        sizes, counted over the living breeders): higher means less diversity is
+        lost each generation. neSexRatio falls when breeding relies on few
+        animals of one sex; neVariance falls when a few breeders produce most of
+        the offspring. Read each as an index, not a head count.
+    </li>
+    <li>
+        <b>meanIndivMeanKin and medianIndivMeanKin</b>: the colony's average and
+        median of each animal's mean kinship. A rise means the animals are, on
+        average, more closely related to the rest of the colony.
+    </li>
+    <li>
+        <b>meanGu and medianGu</b> (genome uniqueness): neither direction is
+        better. They fall when a rare founder allele is lost, and also when
+        breeding spreads it into more animals, so a fall alone is not a loss; fg
+        and neGD show loss.
+    </li>
+    <li>
+        <b>The skewness and kurtosis panels</b>: the shape of the spread across
+        animals, not a measure of health. Positive skewness means a few animals
+        with unusually high values stretch the upper tail.
+    </li>
+    <li>
+        <b>fgSE and meanGuSE</b>: how precise fg and meanGu are, not how healthy
+        the colony is. They shrink when more gene-drop iterations are run.
+    </li>
+</ul>
+<p>
+    <b>When a change is real</b>
+</p>
+<ul>
+<li>
+        The grey band around fg and meanGu spans one standard error on each side
+        of each point. A change smaller than the bands can come from the random
+        sampling alone.
+    </li>
+    <li>
+        fe, the founder counts, the effective sizes and the mean-kinship panels
+        have no band because they are calculated without random sampling: a
+        change in them is a change in the records. The other genome-uniqueness
+        panels have no band but come from the same sampling as meanGu.
+    </li>
+    <li>
+        A point drawn with a different shape was taken with different settings
+        (the number of gene-drop iterations, the rare-allele threshold or the
+        package version) than the point before it, and the caption names the
+        change; a jump there may come from the settings, not the colony.
+    </li>
+</ul>
+<p>
+    <b>What a past trend can answer</b>
+</p>
+<ul>
+<li>
+        How fast founder diversity is being lost: the slope of fg and neGD
+        across the years.
+    </li>
+    <li>
+        Whether an import or a change in breeding shows: an unrelated import
+        with no recorded parents lowers mean kinship and raises the founder
+        counts as soon as it is in the population, and raises fe and fg once it
+        has offspring there. A change in breeding practice shows as a change of
+        slope from that year on, for example a fall in neSexRatio when fewer
+        sires are used.
+    </li>
+    <li>
+        A baseline: rebuilt years let today's snapshot of the living animals be
+        read against the colony's past instead of alone.
+    </li>
+</ul>
+</div>
+</div>
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
 <p>This section is text-only, matching the established precedent for a straightforward new-tab addition (see the Cross-Center Identity section above); the tab’s behavior is fully covered by the package’s automated tests and a live end-to-end run, not only by this description.</p>
 </blockquote>
 </div>
-</section></section><section class="level2"><h2 id="sec-conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#sec-conclusion"></a>
+</section></section></section><section class="level2"><h2 id="sec-conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#sec-conclusion"></a>
 </h2>
 <p>This article covered why <code>nprcgenekeepr</code> exists, how its five function groups map onto the Shiny application’s tabs and onto a scriptable R API, and what it looks like to actually use every tab of that application against the package’s own example data. For more depth on any one capability, see the feature articles in <a href="#tbl-function-groups" class="quarto-xref">Table 1</a>; for the story of how the current modular application came to be, see <a href="engineering-the-2.0.0-release.html">“Engineering nprcgenekeepr 2.0.0”</a>. This article’s own preparation surfaced and fixed three production issues along the way – an Excel-upload sire/dam corruption defect, a non-functional “Custom” breeding-group sex ratio, and a shipped example pedigree missing the column the Potential Parents tab needs to demonstrate populated results – each described where it arose in Section 3. Please report any further questions, comments, or bugs through the <a href="https://github.com/rmsharp/nprcgenekeepr/issues">GitHub issue tracker</a>.</p>
 <p>Work on this package up to and including version 1.0 was supported in part by NIH grants P51 RR13986 to the Southwest National Primate Research Center and P51 OD011092 to the Oregon National Primate Research Center.</p>

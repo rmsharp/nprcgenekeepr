@@ -41,13 +41,10 @@ kinship(
 
 - sparse:
 
-  logical flag. If `TRUE`,
-  [`Matrix::Diagonal()`](https://rdrr.io/pkg/Matrix/man/Diagonal.html)
-  is used to make the starting diagonal matrix (one half of the identity
-  matrix, the founders' self-kinship) and the result is a sparse
-  `dgCMatrix`. If `FALSE`,
-  [`base::diag()`](https://rdrr.io/r/base/diag.html) is used and the
-  result is a base matrix.
+  logical flag. If `TRUE`, the result is a sparse matrix of the Matrix
+  package with the same values: a `ddiMatrix` when no two animals have a
+  kinship, otherwise a `dgCMatrix`. If `FALSE`, the result is a base
+  matrix.
 
 - twinRelations:
 

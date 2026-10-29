@@ -851,7 +851,8 @@ structurally and file-wise separate from group formation.
 
 **Choosing a candidate population.** Unlike group formation, this tab
 requires an explicit population scope before it will compute anything –
-**All alive** (every animal with no recorded exit date), **Top ranked by
+**All alive** (every animal whose status is ALIVE; in a file with no
+status column, every animal with no recorded exit date), **Top ranked by
 genetic value** (the highest-ranked animals from a completed Genetic
 Value Analysis run), or a **Custom list** of pasted IDs. This is a
 deliberate, evidence-based design choice, not an arbitrary restriction:
@@ -1180,12 +1181,12 @@ Below the coverage report, two complementary metrics are computed. The
 pedigree-valid metric (Hill & Weir 2011): pedigree-based kinship is only
 an *average* expected relatedness – the actual proportion of genome
 shared identical-by-descent between two relatives varies around that
-average because of Mendelian sampling and linkage, and this table
-estimates that variance for Parent-Offspring, Full-Sibling, and
-Half-Sibling pairs given a curator-supplied chromosome count and total
-genetic-map length (pre-filled with rhesus macaque defaults, adjustable
-for other species or datasets). It needs no genotype file at all – only
-the pedigree already loaded elsewhere in the app.
+average because of Mendelian sampling and linkage, and this table lists
+the Parent-Offspring, Full-Sibling, and Half-Sibling pairs and estimates
+that variance for each, given a curator-supplied chromosome count and
+total genetic-map length (pre-filled with rhesus macaque defaults,
+adjustable for other species or datasets). It needs no genotype file at
+all – only the pedigree already loaded elsewhere in the app.
 
 The **LD Block Statistic** table is a secondary, explicitly-caveated
 descriptive measure (D’ and r², computed pairwise for same-chromosome
@@ -1507,6 +1508,70 @@ An animal the studbook lists as neither alive nor departed is left out
 of the count of animals, but the effective sizes still treat it as
 living when it is a recorded parent, as they do for the snapshot
 recorded today.
+
+#### Reading the trend
+
+Each panel is one measure, titled with its column name in the snapshot
+history. Each color is one membership rule; the dashed line is snapshots
+rebuilt from studbook dates.
+
+**Which way each panel moves**
+
+- **fe, fg and neGD** (founder equivalents, founder genome equivalents
+  and gene diversity): higher means more of the founders' diversity is
+  still in the colony. fe falls when the founders' contributions grow
+  more unequal; fg and neGD also fall when founder alleles are lost by
+  chance. neGD is a share between 0 and 1, not a number of animals.
+- **nFounders, nMaleFounders and nFemaleFounders**: the known founders
+  (animals with no recorded parents) among the analyzed animals and
+  their ancestors. They rise when such an animal joins, an import for
+  example; in a series of living animals they also fall when a founder
+  and all its descendants have left.
+- **neSexRatio and neVariance** (the sex-ratio and variance effective
+  sizes, counted over the living breeders): higher means less diversity
+  is lost each generation. neSexRatio falls when breeding relies on few
+  animals of one sex; neVariance falls when a few breeders produce most
+  of the offspring. Read each as an index, not a head count.
+- **meanIndivMeanKin and medianIndivMeanKin**: the colony's average and
+  median of each animal's mean kinship. A rise means the animals are, on
+  average, more closely related to the rest of the colony.
+- **meanGu and medianGu** (genome uniqueness): neither direction is
+  better. They fall when a rare founder allele is lost, and also when
+  breeding spreads it into more animals, so a fall alone is not a loss;
+  fg and neGD show loss.
+- **The skewness and kurtosis panels**: the shape of the spread across
+  animals, not a measure of health. Positive skewness means a few
+  animals with unusually high values stretch the upper tail.
+- **fgSE and meanGuSE**: how precise fg and meanGu are, not how healthy
+  the colony is. They shrink when more gene-drop iterations are run.
+
+**When a change is real**
+
+- The grey band around fg and meanGu spans one standard error on each
+  side of each point. A change smaller than the bands can come from the
+  random sampling alone.
+- fe, the founder counts, the effective sizes and the mean-kinship
+  panels have no band because they are calculated without random
+  sampling: a change in them is a change in the records. The other
+  genome-uniqueness panels have no band but come from the same sampling
+  as meanGu.
+- A point drawn with a different shape was taken with different settings
+  (the number of gene-drop iterations, the rare-allele threshold or the
+  package version) than the point before it, and the caption names the
+  change; a jump there may come from the settings, not the colony.
+
+**What a past trend can answer**
+
+- How fast founder diversity is being lost: the slope of fg and neGD
+  across the years.
+- Whether an import or a change in breeding shows: an unrelated import
+  with no recorded parents lowers mean kinship and raises the founder
+  counts as soon as it is in the population, and raises fe and fg once
+  it has offspring there. A change in breeding practice shows as a
+  change of slope from that year on, for example a fall in neSexRatio
+  when fewer sires are used.
+- A baseline: rebuilt years let today's snapshot of the living animals
+  be read against the colony's past instead of alone.
 
 > **Note**
 >

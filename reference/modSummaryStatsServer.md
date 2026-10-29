@@ -85,12 +85,13 @@ modSummaryStatsServer(
 
   optional function of a character vector of animal IDs that returns
   those animals' kinship matrix; with no IDs it returns every animal's.
-  The kinship CSV download asks it for every animal at each click, and
-  the two relationship downloads ask it once for the relationship table
-  they share, so no kinship matrix is kept between clicks. `appServer`
-  passes one that applies the twins and overrides. A provided
-  `kinshipMatrix` is used first; with neither, the module calculates
-  kinship from the pedigree. `NULL` (the default) is not used.
+  The kinship CSV download and the relationships download ask it for
+  every animal at each click, and the relationship classes download asks
+  once and keeps only its class counts, so no kinship matrix or
+  relationship table is kept between clicks. `appServer` passes one that
+  applies the twins and overrides. A provided `kinshipMatrix` is used
+  first; with neither, the module calculates kinship from the pedigree.
+  `NULL` (the default) is not used.
 
 ## Value
 

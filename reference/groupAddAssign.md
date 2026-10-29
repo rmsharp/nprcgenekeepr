@@ -33,7 +33,9 @@ groupAddAssign(
 
   Character vector of IDs of the animals available for use in forming
   the groups. The animals that may be present in `currentGroups` are not
-  included within `candidates`.
+  included within `candidates`. Ids given as numbers or as a factor,
+  here, in `currentGroups` and in the pedigree's `id`, `sire` and `dam`,
+  are taken as their text.
 
 - kmat:
 

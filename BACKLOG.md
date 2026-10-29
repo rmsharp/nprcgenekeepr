@@ -39,66 +39,18 @@ checklist in `CLAUDE.md` applies; take the commands from its “Build /
 Test / Verify” section and re-check them rather than copying them from
 here.
 
-**Earlier-snapshots follow-ups after \#170 (two threads left, extracted
+**Earlier-snapshots follow-ups after \#170 (one thread left, extracted
 S1040 when the \#170 block came off; \#170 is closed; the tutorial
 thread was done S1042, the trend chart’s console notice and the notice’s
-200-character cut S1049)** – design and what was built:
+200-character cut S1049, the failed-dates notice’s wording S1085, the
+Dates not built table’s words S1086)** – design and what was built:
 `docs/planning/retrospective-snapshot-backfill-plan.md` sections
-5.3-5.4. (1) **Build cost on a larger colony** (BLOCKED – needs a
-studbook above 3,694 rows from the owner, Effort S): the cost line’s
-quarter of a second a date per 1,000 iterations
-(`describeBackfillCost()`, `R/modSnapshotTrends.R`; S1065) is measured
-on the 2,590-animal jmac studbook (53 dates, 12.6 s) and the 3,694-row
-example (49 dates, 9.4 s), so a bigger colony is unmeasured. (2) **A
-script word in the panel’s notice** (DECISION NEEDED, Effort S): the
-function’s failed-dates warning says “listed in ‘skipped’” and the panel
-shows it as is, while its table is headed “Dates not built”; reword the
-message for both readers, or leave it.
-
-**Tutorial leftovers after the S1043 inventory pass: twin-corrected
-kinship, and a guard for omitted exports** (DECISION NEEDED, Effort S;
-found S1043) – the pass named the six functions and the two parameters
-it had left (the next pass compares against this pass’s commit
-`649389386`, not S541): 170 of the 236 exports are still never named,
-which is not a gap (the tutorial is a walkthrough, not a reference).
-Three things are open. (1) **`twinRelations`** is used in a call only on
-[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
-the
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-argument list names it and points to
-[`?reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
-and the “Passing a Kinship Matrix You Already Have” section says
-[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
-takes it, but no output shows a twin-corrected kinship matrix
-([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
-[`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
-and
-[`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
-accept it).
-[`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
-wants a same-sex pair for an MZ call and the tutorial’s pair is a
-mixed-sex UZ pair, so a demo needs its own pair; whether one belongs is
-a decision. (2) **No guard notices a new exported function the tutorial
-omits**; one would need an allow-list of the never-named set (170
-today), so whether it is worth the upkeep is a decision. **Method for
-the next inventory:** formals at the old commit from a scratch
-`git worktree` through
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
-run in the main checkout (renv), against today’s; search each name with
-a boundary that ignores `_` (the tutorial writes `__fn__`, and `\b`
-treats `_` as a word character, so it misses them: S1043’s first total
-of 182 was 176) and confirm every “unnamed” claim with `grep -F` on the
-committed text. Pattern for a section:
-`tests/testthat/test_inventoryTutorialSections.R` (the shared readers
-`insideChunk()`, `sectionProse()` and `chunkOptionText()` are in
-`helper-pageText.R`). (3) **A new parameter since the pass** (S1045,
-`3ba3fd51b`):
-[`plotSnapshotTrends()`](https://github.com/rmsharp/nprcgenekeepr/reference/plotSnapshotTrends.md)
-takes `ncol`, the number of panel columns. The tutorial’s chart has 3
-panels, where the default grid is right, so whether the tutorial shows
-`ncol` is a decision.
+5.3-5.4. **Build cost on a larger colony** (BLOCKED – needs a studbook
+above 3,694 rows from the owner, Effort S): the cost line’s quarter of a
+second a date per 1,000 iterations (`describeBackfillCost()`,
+`R/modSnapshotTrends.R`; S1065) is measured on the 2,590-animal jmac
+studbook (53 dates, 12.6 s) and the 3,694-row example (49 dates, 9.4 s),
+so a bigger colony is unmeasured.
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
@@ -276,183 +228,6 @@ owner’s call): `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`.
 `docs/conventions/CLOSEOUT_CHECKLISTS.md`) and, before keeping the
 script, print a report from a ledger whose newest receipt is complete;
 `bin/status` lists these three files until then.
-
-**Breeding Groups: groupings with equal scores are not listed in the
-order they were found (DECISION NEEDED, Effort S; found S1057)** –
-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
-lists its retained groupings best first and breaks a tie by the slot
-each one holds (`R/groupAddAssign.R:330-334`,
-`order(-retainedScores, seq_along(retained))`), while the comment there
-says “by discovery order”: a later grouping that replaces a worse one
-takes that one’s slot. Measured S1057 (the example’s top 20 ranked
-living animals, 3 groups, kinship limit 0.25, seed 5, 1,000 trials): all
-five kept groupings score 6, the first was found at trial 7, and the one
-listed first (the tab selects candidate 1,
-`R/modBreedingGroups.R:865-867`) was found at trial 18 (the five in
-listed order: trials 18, 7, 8, 23, 26). No score is wrong. To decide:
-correct the comment only, or list ties in the order found (that changes
-which grouping the tab shows first for the same seed, so tests that pin
-a result would be re-checked).
-
-**Two `@inheritParams` lines with nothing to inherit (READY, Effort S;
-owner-reported S1060)** – RStudio’s Build -\> Document (roxygen2 8.0.0)
-prints “In topic ‘addParents’: @inheritParams failed. All parameters are
-already documented; none remain to be inherited.” and the same for
-‘removeUninformativeFounders’: each function takes only `ped`, which its
-own `@param` documents. Delete `R/addParents.R:13`
-(`@inheritParams reportGV`) and `R/removeUninformativeFounders.R:11`
-(`@inheritParams trimPedigree`); `devtools::document()` should leave
-`man/` unchanged and print neither message (check both). The same run’s
-pandoc line, “Deprecated: –mathjax”, is not this item: pandoc 3.12.1
-deprecates the flag rmarkdown 2.31’s `html_vignette` passes, it only
-shows because the project’s roxygen options include the vignette roclet
-(`nprcgenekeepr.Rproj:25`), and `devtools::check()` gives 0 warnings.
-
-**Mate Pair’s default run uses about 1 GB of app memory (DECISION
-NEEDED, Effort M; found S1062)** – on the example the default
-population, “All alive (no recorded exit)” (`R/modMatePair.R:39-45`), is
-1,704 animals (332 by `isLivingAnimal()`), and Find Eligible Pairs
-raised the app’s resident memory from 867.2 to 1,946.3 MB in 11.3 s:
-[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
-builds the long form of every pair among them
-(`R/reportMatePairs.R:207`) before its sex, age and exclusion screens.
-The kinship block itself is 22.4 MB. Measured in the running app
-(`docs/planning/app-kinship-memory-design.md` sections 2.1 and 9, F2).
-Two levers, not measured apart: build only the pairs that pass the
-screens (the same report; it needs its own exactness tests), or the
-default population’s rule (that changes what the tab shows). To decide:
-either, both, or leave it.
-
-**Marker Genetics’ Realized Relatedness table holds every pair (DECISION
-NEEDED, Effort M; found S1062)** – opening the “Linkage and LD Block
-Metrics” tab (`R/modMarkerGenetics.R:227`) runs
-[`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
-on the whole kinship matrix (`:735-751`;
-`R/markerRealizedRelatednessVariance.R:119`), with no genotype file
-needed: 6,824,665 rows on the example, built in 8.31 s with a 707.6 MB
-peak, a 390.9 MB table kept while the tab shows it; the app’s memory
-rose 716 MB in 13.5 s (design sections 2.1 and 9, F3). D5’s change
-leaves it as it is, because the table itself needs every pair. To
-decide: related pairs only (as the plan’s D8 asks of the relationship
-download), a chosen set of animals, a button that builds it, or leave
-it.
-
-**Summary Statistics keeps the whole relationship table after a download
-(DECISION NEEDED, Effort S; found S1062)** – `relationshipData()` is a
-cached `reactive()` (`R/modSummaryStats.R:436-443`) that serves both
-relationship downloads (`:891-907`): 6,824,665 rows and 234.7 MB on the
-example (built in 3.21 s, peak 693.5 MB), kept until the pedigree
-changes (design section 9, F4). To decide: build it inside each
-download, so nothing is kept and a second download rebuilds it (3.21 s),
-or keep it, so the two downloads share one build.
-
-**The Build Earlier Snapshots box’s “filed under their own rule” reads
-like a folder (READY, Effort S; owner-reported S1065)** –
-`R/modSnapshotTrends.R:69-72` says “They are filed under their own rule,
-reconstructedLiving, and never mix with recorded snapshots.” The owner
-asked whether that means a separate folder. It does not: the rebuilt
-rows join the same history table (History, “Download Updated History”)
-with `membershipRule` `"reconstructedLiving"`
-(`R/backfillColonySnapshots.R:220`); the Trends chart draws them as
-their own dashed line (`R/plotSnapshotTrends.R:88`), and Compare
-Snapshots compares within one rule. Proposed S1065, not yet approved
-(the owner chose to file it for its own session): “They are added to the
-same history, marked reconstructedLiving in its Membership rule column,
-and drawn as their own dashed line, apart from recorded snapshots.” No
-test pins the sentence (`git grep -n "never mix" -- tests/`). Change it
-test-first in the owner’s final words, and check the guide’s matching
-step (`vignettes/articles/colony-manager-guide.qmd:1294`).
-
-**Breeding Groups: harem trials redo their set-up work every trial
-(READY, Effort M; owner-raised S1056, filed S1066 at the performance
-campaign’s close)** – 1,000 harem trials on the tutorial’s 280
-candidates take 10.69 s (9.78-11.16) against 5.54 s for 6 plain groups
-(`Rscript tools/perf/run.R groupAddAssign-harem-1000` and
-`groupAddAssign-1000`, S1066; 27.19 s before the campaign). The extra is
-the harem’s age and sire work repeated each trial:
-[`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md)
-(`R/getPotentialSires.R:20`),
-[`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md)
-(`R/getCurrentAge.R:16`), `groupsWithoutSire()`
-(`R/groupsWithoutSire.R:33`), `initializeHaremGroups()`
-(`R/initializeHaremGroups.R:20`). The campaign’s rules still bind: the
-same groups for the same seed
-([`identical()`](https://rdrr.io/r/base/identical.html) against
-`groupAddAssignReference()`,
-`tests/testthat/test_groupAddAssignEquivalence.R`) and
-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
-arguments unchanged; add a gate for the harem scenario (the S1052 rule).
-Report: `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md` section 11.
-
-**Pedigree Diagram: about 1.7 s of the 708-animal layout is outside its
-solver (READY, Effort M; found S1060, filed S1066)** –
-`diagram-example-direct` takes 5.10 s (4.80-5.22, S1066; 12.81 s before
-the campaign). About 1.7 s is outside `.solveSeparationQP()`
-(`R/makePedigreeDiagramData.R:1606`), 1.0 s of it
-`Dmat <- t(pmat) %*% pmat` (`:1576`), kept at S1060 because
-`crossprod(pmat)` calls another BLAS routine and could give other bits,
-so other positions, on another platform. First step: profile the other
-0.7 s; [`crossprod()`](https://rdrr.io/r/base/crossprod.html) only with
-identical positions on CI’s three platforms (the pinned positions of the
-four layout test files, and
-`tests/testthat/test_diagramSolverEquivalence.R`). Gate:
-`perf_diagram_example_direct_seconds` (5.9 s).
-
-**Founder statistics: their memory peak rose a little on larger inputs
-while their time fell (READY, Effort S; found S1058, filed S1066)** –
-from Phase 0 to S1066,
-[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)’s
-peak went 225.6 to 253.6 MB on the generated 10,000-animal colony and
-236.5 to 257.5 MB on all 3,694 example animals, and
-[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)’s
-233.2 to 247.7 MB on all 3,694 (`Rscript tools/perf/run.R gvStages-all`
-and `gvStages-synthetic10000`), while their time fell about tenfold
-([`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
-1.07 to 0.12 s on the synthetic colony). S1058 saw the rise (225.5 to
-254.1 MB) and recorded no cause. First step: find the step that peaks
-(`R/calcFounderContributions.R`, `R/calcRetention.R`), then decide
-whether lowering it is worth a change.
-
-**The performance campaign’s nine fallbacks: move their input types onto
-the fast paths? (DECISION NEEDED, Effort M; owner-raised S1054, filed
-S1066)** – each phase kept the pre-campaign code for inputs its new code
-does not take (a factor where text is expected, for example):
-`rareAlleleCountsGeneral()`, `geneDropGeneral()`,
-`convertRelationshipsGeneral()`, `fillGroupMembersGeneral()`,
-`fillGroupMembersWithSexRatioGeneral()`,
-`founderContributionMatrixGeneral()`, `retainedFounderAllelesGeneral()`,
-`kinshipGeneral()` and `kinMatrix2LongFormGeneral()`. A probe (S1066)
-traced all nine through nine harness scenarios and a sex-ratio
-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md):
-none was called on the shipped data (the tracer does count a call: a
-sparse
-[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
-registered one). S1054 found 14 of `geneDropGeneral()`’s 19 test inputs
-end in an error today. To decide: fold some input types in, one test
-each (the same results,
-[`identical()`](https://rdrr.io/r/base/identical.html)), or leave the
-fallbacks as the old code’s home for unusual input.
-
-**Local browser tests: run the Diagram’s pixel checks with both GPU and
-CPU drawing (READY, Effort S; owner ruling S1067)** – the local browser
-tier (`NPRC_RUN_E2E=true`) starts Chrome with its default drawing, which
-on this Mac paints the Diagram’s canvas on the GPU, while the CI runner
-paints it on the CPU (software). The deceased-slash test
-(`tests/testthat/test-e2e-pedigree-module.R`) passed here and failed on
-CI for five days because of that difference (S1067: run `40286217416`,
-fixed in the test’s pixel reader). Owner (S1067): local runs test with
-both the CPU and the GPU. The app needs nothing for its side of that
-ruling: vis-network asks for a plain `getContext("2d")`, so the viewer’s
-browser paints on the GPU when it has one and on the CPU otherwise.
-S1067 ran the file both ways by hand:
-`chromote::set_chrome_args(c(chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))`
-before
-[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
-gives CPU drawing to every Chrome started after it (22 blocks, 111
-expectations, 0 failed each way, about 3.5 minutes each). First step:
-choose how the second pass runs (a runner or helper that repeats the
-file, or only the blocks that read pixels through `diagram_pixel_js()`,
-under the flag) and keep it opt-in like the rest of the tier.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 

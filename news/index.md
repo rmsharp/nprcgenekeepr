@@ -50,8 +50,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
   styles.
 - A pedigree above the display limit shows a message instead of a
   diagram: 400 animals with the default “Rectilinear” style, 750 with
-  “Direct”. Trim to fewer focal animals to bring it back under the
-  limit.
+  “Direct”. Between the two limits the message keeps the style buttons,
+  so one click on Direct draws it; above both, trim to fewer focal
+  animals.
 - [`drawPedigreeDiagram()`](https://github.com/rmsharp/nprcgenekeepr/reference/drawPedigreeDiagram.md)
   draws the Diagram from a script, from a
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
@@ -197,7 +198,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
   microsatellites.
 - [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
   estimates how far DNA-based relatedness can vary around the pedigree
-  prediction.
+  prediction for parent-offspring, full-sibling and half-sibling pairs,
+  the only pairs it lists.
   [`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
   and
   [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
@@ -453,6 +455,8 @@ export workflows, and longitudinal monitoring of colony genetic health.
   page says how many animals of any other sex it left out, and
   [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
   leaves them out of both tables.
+- **All alive** takes the same animals as Breeding Groups: status ALIVE,
+  or, in a file with no status column, no recorded exit date.
 
 ### De-Identified Export
 
@@ -487,7 +491,9 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - New **Genetic-Health Trends** tab: upload or start a history, record a
   snapshot from the genetic value analysis you just ran, view trend
   plots, and compare two dates. Histories and comparisons can be
-  downloaded.
+  downloaded. A box under the trend chart, also in the guide, says which
+  way each measure should move, when a change is more than chance, and
+  what a past trend can show.
 - Snapshots recorded under different settings or software versions are
   flagged, so a jump is not mistaken for a real change in the colony.
 - **Build Earlier Snapshots** on the Genetic-Health Trends tab rebuilds
@@ -522,10 +528,15 @@ export workflows, and longitudinal monitoring of colony genetic health.
   iterations) takes about 0.2 seconds instead of about 3, the Summary
   Statistics relationship downloads of the whole example finish in under
   10 seconds instead of not finishing, and 1,000 Breeding Groups trials
-  take about 6 seconds instead of about 23. The app no longer keeps a
-  kinship matrix of the whole pedigree, so it holds about 180 MB less
-  once the example is loaded. Results are the same as before for the
-  same random seed.
+  take about 6 seconds instead of about 23 (about 5 instead of about 27
+  when forming harems). The app no longer keeps a kinship matrix of the
+  whole pedigree, so it holds about 180 MB less once the example is
+  loaded, and Summary Statistics no longer keeps the table of every pair
+  after a relationship download (about 235 MB for the example). Results
+  are the same as before for the same random seed.
+
+- `kinship(sparse = TRUE)` takes about half a second for the whole
+  shipped example (3,694 animals) instead of about 43 seconds.
 
 ### General Fixes
 
@@ -746,6 +757,26 @@ export workflows, and longitudinal monitoring of colony genetic health.
   [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
   make one group when called with no number, as their help said they
   would.
+  [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md),
+  [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md),
+  [`makeCEPH()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeCEPH.md),
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  and
+  [`fillGroupMembersWithSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/fillGroupMembersWithSexRatio.md)
+  take ids given as numbers (as
+  [`read.csv()`](https://rdrr.io/r/utils/read.table.html) reads a
+  studbook with number ids) or as a factor as their text: such a
+  studbook got wrong relationship names, and
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  stopped with “subscript out of bounds”.
+  [`findOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/findOffspring.md)
+  takes a factor’s sire and dam ids as their text, so
+  [`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md),
+  [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
+  and
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  no longer give an offspring count or `neVariance` as `NA` for a
+  studbook whose ids are a factor.
 
 - Fixed (configuration file): A line starting with `#` is a comment
   wherever the file is read, so a site that copies the example file

@@ -641,6 +641,57 @@ connecting *S1* directly to *S2* (dashed, labeled `"?"` for the
 undetermined zygosity code) – that row exists only because a validated
 *twinRelations* table was supplied.
 
+### Kinship of Identical Twins
+
+Of the three zygosity codes, only *MZ twin* changes a kinship value: a
+*DZ twin* or *UZ twin* row leaves **kinship**’s result as it is.
+Identical twins carry the same genes, so **kinship**, given a
+*twinRelations* table, sets each declared *MZ twin* pair’s kinship to
+the kinship an animal has with itself, and carries the change on to the
+twins’ relatives. The pair above is a female and a male and cannot be an
+*MZ twin* pair, so this small pedigree has two full sisters declared
+identical twins and a daughter of the first of them:
+
+``` r
+
+mzPed <- data.frame(
+  id = c("F1", "F2", "T1", "T2", "M3", "D1"),
+  sire = c(NA, NA, "F1", "F1", NA, "M3"),
+  dam = c(NA, NA, "F2", "F2", NA, "T1"),
+  sex = c("M", "F", "F", "F", "M", "F"),
+  stringsAsFactors = FALSE
+)
+mzPed$gen <- findGeneration(mzPed$id, mzPed$sire, mzPed$dam)
+mzTwins <- checkTwinRelations(mzPed, data.frame(
+  id1 = "T1", id2 = "T2", code = "MZ twin", stringsAsFactors = FALSE
+))
+plainKmat <- kinship(mzPed$id, mzPed$sire, mzPed$dam, mzPed$gen)
+twinKmat <- kinship(mzPed$id, mzPed$sire, mzPed$dam, mzPed$gen,
+                    twinRelations = mzTwins)
+plainKmat[c("T1", "T2", "D1"), c("T1", "T2", "D1")]
+```
+
+    ##      T1    T2    D1
+    ## T1 0.50 0.250 0.250
+    ## T2 0.25 0.500 0.125
+    ## D1 0.25 0.125 0.500
+
+``` r
+
+twinKmat[c("T1", "T2", "D1"), c("T1", "T2", "D1")]
+```
+
+    ##      T1   T2   D1
+    ## T1 0.50 0.50 0.25
+    ## T2 0.50 0.50 0.25
+    ## D1 0.25 0.25 0.50
+
+The twins’ kinship rises from 0.25, that of full sisters, to 0.5, and
+the daughter’s kinship with her mother’s twin rises from 0.125, that of
+a niece and her aunt, to 0.25, the same as with her own mother. A matrix
+built this way is the one to pass on as *kinshipMatrix*, as the next
+section explains.
+
 ### Passing a Kinship Matrix You Already Have
 
 **makePedigreeMatingLayout** marks a mating unit as consanguineous when
@@ -1207,11 +1258,14 @@ sampling uncertainty of the gene drop. A snapshot made with different
 settings from the previous one of its series is drawn with a different
 point shape and named in the caption. A trend needs at least two
 snapshots, and *metrics* chooses the panels (the default draws every
-metric column).
+metric column). *ncol* sets how many columns of panels to draw: three
+keeps these three panels side by side, and a narrow figure needs fewer,
+so that each panel stays wide enough for its title.
 
 ``` r
 
-trendPlot <- plotSnapshotTrends(checkedHistory, metrics = c("fe", "fg", "meanGu"))
+trendPlot <- plotSnapshotTrends(checkedHistory,
+                                metrics = c("fe", "fg", "meanGu"), ncol = 3L)
 trendPlot
 ```
 
@@ -1957,7 +2011,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpOLuf3b/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpwo65Ob/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2669,13 +2723,10 @@ actual IBD sharing between two relatives varies around that expectation
 because of Mendelian sampling and linkage.
 **markerRealizedRelatednessVariance** computes a closed-form estimate of
 that variance (Hill & Weir 2011) for Parent-Offspring, Full-Sibling, and
-Half-Sibling pairs – every other relationship category (grandparent,
-cousin, unrelated, self, and so on) legitimately returns `NA`, not an
-error, since a pedigree-wide call includes many such pairs as a matter
-of course. Despite the “marker” name shared with the rest of this
-section, it needs no genotype data at all – only a kinship matrix, the
-pedigree, and the species’ chromosome count and total autosomal genetic
-map length (in Morgans).
+Half-Sibling pairs, and lists only those pairs. Despite the “marker”
+name shared with the rest of this section, it needs no genotype data at
+all – only a kinship matrix, the pedigree, and the species’ chromosome
+count and total autosomal genetic map length (in Morgans).
 
 ``` r
 
@@ -2687,7 +2738,7 @@ smallPedKmat <- kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen,
 ## example scale -- supply values appropriate to your own species.
 rrv <- markerRealizedRelatednessVariance(smallPedKmat, smallPed, nChr = 20L,
                                           mapLength = 28)
-rrv[rrv$relation %in% c("Parent-Offspring", "Full-Siblings", "Half-Siblings"), ]
+rrv
 ```
 
     ##     id1 id2 kinship         relation    R         varR        sdR
@@ -2996,8 +3047,8 @@ document.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-26 19:57:25.604584. The processing
-time for this document was 24 seconds..
+The current date and time is 2026-10-29 05:19:45.167121. The processing
+time for this document was 25 seconds..
 
 ``` r
 

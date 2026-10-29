@@ -1,12 +1,14 @@
 # Report eligible individual mate pairs with kinship and genetic-value context
 
-Issue \#151 Slice 1: composes the existing pair-eligibility pipeline
-([`kinMatrix2LongForm`](https://github.com/rmsharp/nprcgenekeepr/reference/kinMatrix2LongForm.md),
-[`filterPairs`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md),
-`filterAge()`,
+Issue \#151 Slice 1: a report of opposite-sex, minimum-age-eligible
+mate-pair candidates. Its pairs are those
+[`kinMatrix2LongForm`](https://github.com/rmsharp/nprcgenekeepr/reference/kinMatrix2LongForm.md)
+followed by
+[`filterPairs`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)
+give, in the same order, built directly, so the table of every pair
+(same-sex pairs included) is never made;
 [`filterKinMatrix`](https://github.com/rmsharp/nprcgenekeepr/reference/filterKinMatrix.md)
-– all unmodified) into a report of opposite-sex, minimum-age-eligible
-mate-pair candidates, each row optionally enriched with marker-based
+scopes the population. Each row is optionally enriched with marker-based
 kinship
 ([`markerKinship`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md))
 and per-parent genetic-value context

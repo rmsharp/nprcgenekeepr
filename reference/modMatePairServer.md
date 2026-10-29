@@ -4,9 +4,11 @@ Reports eligible individual mate-pair candidates via
 [`reportMatePairs`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
 (issue \#151 Slice 1), wrapped in a curator-facing configuration panel
 for the D4-ratified population scope (`populationSource`: `"allAlive"` –
-ids with no recorded `ped$exit` date, or every id when the pedigree has
-no `exit` column; `"topRanked"` – the top `nTopAnimals` ids in
-`geneticValues`' own report order, mirroring
+the animals that are alive: a `status` of `ALIVE` when the pedigree has
+a `status` column, otherwise no recorded `exit` date, and every id when
+it has neither column (the rule Breeding Groups uses); `"topRanked"` –
+the top `nTopAnimals` ids in `geneticValues`' own report order,
+mirroring
 [`modBreedingGroupsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)'s
 own `topRanked` reading; `"custom"` – a pasted, delimiter-separated id
 list), the D2 minimum- age floor, and the D5-ratified exclude-list

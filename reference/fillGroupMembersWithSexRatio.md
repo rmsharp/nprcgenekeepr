@@ -25,6 +25,8 @@ fillGroupMembersWithSexRatio(
 - candidates:
 
   character vector of IDs of the animals available for use in the group.
+  Ids given as numbers or as a factor, here and in the pedigree's `id`,
+  `sire` and `dam`, are taken as their text.
 
 - groupMembers:
 

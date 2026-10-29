@@ -18,7 +18,8 @@ offspringCounts(probands, ped, considerPop = FALSE)
 
   the pedigree information in datatable format. Pedigree (req. fields:
   id, sire, dam; `population` is also read when `considerPop` is
-  `TRUE`). This is the complete pedigree.
+  `TRUE`). This is the complete pedigree. Ids given as numbers or as a
+  factor in `sire` and `dam` are taken as their text.
 
 - considerPop:
 

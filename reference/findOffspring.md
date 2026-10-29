@@ -18,7 +18,8 @@ findOffspring(probands, ped)
 - ped:
 
   the pedigree information in datatable format. Pedigree (req. fields:
-  id, sire, dam). This requires complete pedigree information.
+  id, sire, dam). This requires complete pedigree information. Ids given
+  as numbers or as a factor in `sire` and `dam` are taken as their text.
 
 ## Value
 

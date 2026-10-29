@@ -8,10 +8,10 @@ nearby loci). This function estimates that variance for
 Parent-Offspring, Full-Siblings, and Half-Siblings pairs (issue #153,
 D3a) – the closed-form solution of Hill &amp;amp; Weir (2011), extending the
 pedigree kinship this package already computes rather than requiring a
-new population-genetics framework. Every other pedigree-relationship
-category (grandparent, cousin, avuncular, more distant, unrelated, self)
-returns NA for the variance, not an error – a pedigree-wide call
-will legitimately include many such pairs as a matter of course."><meta property="og:description" content="Pedigree-expected relatedness (this package's existing kinship
+new population-genetics framework. It lists only those three kinds of
+pairs; every other pair (grandparent, cousin, avuncular, more distant,
+unrelated, self) is left out, and convertRelationships lists
+every pair."><meta property="og:description" content="Pedigree-expected relatedness (this package's existing kinship
 output, doubled) is only an average – the actual proportion of
 genome shared identical-by-descent (IBD) between two relatives varies
 around that expectation because of Mendelian sampling and linkage (finite
@@ -20,10 +20,10 @@ nearby loci). This function estimates that variance for
 Parent-Offspring, Full-Siblings, and Half-Siblings pairs (issue #153,
 D3a) – the closed-form solution of Hill &amp;amp; Weir (2011), extending the
 pedigree kinship this package already computes rather than requiring a
-new population-genetics framework. Every other pedigree-relationship
-category (grandparent, cousin, avuncular, more distant, unrelated, self)
-returns NA for the variance, not an error – a pedigree-wide call
-will legitimately include many such pairs as a matter of course."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+new population-genetics framework. It lists only those three kinds of
+pairs; every other pair (grandparent, cousin, avuncular, more distant,
+unrelated, self) is left out, and convertRelationships lists
+every pair."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -83,10 +83,10 @@ nearby loci). This function estimates that variance for
 Parent-Offspring, Full-Siblings, and Half-Siblings pairs (issue #153,
 D3a) – the closed-form solution of Hill &amp; Weir (2011), extending the
 pedigree kinship this package already computes rather than requiring a
-new population-genetics framework. Every other pedigree-relationship
-category (grandparent, cousin, avuncular, more distant, unrelated, self)
-returns <code>NA</code> for the variance, not an error – a pedigree-wide call
-will legitimately include many such pairs as a matter of course.</p>
+new population-genetics framework. It lists only those three kinds of
+pairs; every other pair (grandparent, cousin, avuncular, more distant,
+unrelated, self) is left out, and <code><a href="convertRelationships.html">convertRelationships</a></code> lists
+every pair.</p>
     </div>
 
     <div class="section level2">
@@ -104,7 +104,9 @@ will legitimately include many such pairs as a matter of course.</p>
 
 <dt id="arg-ped">ped<a class="anchor" aria-label="anchor" href="#arg-ped"></a></dt>
 <dd><p>dataframe with (at least) <code>id</code>, <code>sire</code>, and
-<code>dam</code> columns, as used by <code><a href="convertRelationships.html">convertRelationships</a></code>.</p></dd>
+<code>dam</code> columns, as used by <code><a href="convertRelationships.html">convertRelationships</a></code>. Ids
+given as numbers or as a factor, here or in <code>ids</code>, are taken as their
+text.</p></dd>
 
 
 <dt id="arg-nchr">nChr<a class="anchor" aria-label="anchor" href="#arg-nchr"></a></dt>
@@ -125,17 +127,18 @@ should be restricted, as in <code><a href="convertRelationships.html">convertRel
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A dataframe with columns <code>id1</code>, <code>id2</code>, <code>kinship</code>,
-<code>relation</code>, <code>R</code> (pedigree relationship, <code>2 * kinship</code>),
-<code>varR</code> (the realized-relatedness variance estimate), and
-<code>sdR</code> (its square root). <code>varR</code>/<code>sdR</code> are <code>NA</code> for
-every <code>relation</code> other than <code>"Parent-Offspring"</code>,
-<code>"Full-Siblings"</code>, or <code>"Half-Siblings"</code>.</p>
+    <p>A dataframe with one row for each <code>"Parent-Offspring"</code>,
+<code>"Full-Siblings"</code> or <code>"Half-Siblings"</code> pair and columns
+<code>id1</code>, <code>id2</code>, <code>kinship</code>, <code>relation</code>, <code>R</code>
+(pedigree relationship, <code>2 * kinship</code>), <code>varR</code> (the
+realized-relatedness variance estimate), and <code>sdR</code> (its square root).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Relationship pairs are classified from the pedigree structure via the
-existing <code><a href="convertRelationships.html">convertRelationships</a></code> (not re-derived). The
+    <p>Pairs are named by the rules of <code><a href="convertRelationships.html">convertRelationships</a></code> and
+listed in its order, but only an animal with each of its parents and two
+animals sharing a parent are looked at, so the table of every pair is
+never built. The
 variance combines <code>nChr</code> chromosomes, each approximated as the
 average length <code>mapLength / nChr</code> – Hill &amp; Weir (2011) give an
 exact weighted-sum combination rule (their equation 5) only for lineal
@@ -164,160 +167,37 @@ a consequence of Mendelian sampling and linkage. Genetics Research
 <span class="r-in"><span><span class="co">## Rhesus macaque autosome count/map length are used only as an example</span></span></span>
 <span class="r-in"><span><span class="co">## scale -- callers should supply values appropriate to their own species.</span></span></span>
 <span class="r-in"><span><span class="fu">markerRealizedRelatednessVariance</span><span class="op">(</span><span class="va">kmat</span>, <span class="va">ped</span>, nChr <span class="op">=</span> <span class="fl">20L</span>, mapLength <span class="op">=</span> <span class="fl">28</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     id1 id2 kinship               relation      R         varR        sdR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     A   A 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     A   B 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     A   C 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     A   D 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     A   E 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     A   F 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     A   G 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     A   H 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     A   I 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    A   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11    A   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12    A   L 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    A   M 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    A   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    A   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    A   P 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17    A   Q 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19    B   B 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20    B   C 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21    B   D 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22    B   E 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    B   F 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24    B   G 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25    B   H 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26    B   I 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27    B   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28    B   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29    B   L 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30    B   M 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31    B   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32    B   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33    B   P 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34    B   Q 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37    C   C 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38    C   D 0.25000          Full-Siblings 0.5000 0.0018350199 0.04283713</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39    C   E 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40    C   F 0.12500         Full-Avuncular 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41    C   G 0.12500         Full-Avuncular 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42    C   H 0.25000          Full-Siblings 0.5000 0.0018350199 0.04283713</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43    C   I 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44    C   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45    C   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46    C   L 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47    C   M 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48    C   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49    C   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50    C   P 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51    C   Q 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55    D   D 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56    D   E 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57    D   F 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58    D   G 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59    D   H 0.25000          Full-Siblings 0.5000 0.0018350199 0.04283713</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60    D   I 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61    D   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62    D   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63    D   L 0.12500         Full-Avuncular 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64    D   M 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65    D   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66    D   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67    D   P 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68    D   Q 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73    E   E 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 74    E   F 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75    E   G 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76    E   H 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77    E   I 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78    E   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79    E   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80    E   L 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81    E   M 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82    E   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83    E   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84    E   P 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85    E   Q 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91    F   F 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92    F   G 0.25000          Full-Siblings 0.5000 0.0018350199 0.04283713</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93    F   H 0.12500         Full-Avuncular 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94    F   I 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95    F   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96    F   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97    F   L 0.06250           Full-Cousins 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98    F   M 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99    F   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 100   F   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 101   F   P 0.03125         Cousin - Other 0.0625           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 102   F   Q 0.06250                  Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 109   G   G 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 110   G   H 0.12500         Full-Avuncular 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 111   G   I 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 112   G   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 113   G   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 114   G   L 0.06250           Full-Cousins 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 115   G   M 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 116   G   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 117   G   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 118   G   P 0.03125         Cousin - Other 0.0625           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 119   G   Q 0.06250                  Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 127   H   H 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 128   H   I 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 129   H   J 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 130   H   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 131   H   L 0.12500         Full-Avuncular 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 132   H   M 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 133   H   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 134   H   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 135   H   P 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 136   H   Q 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 145   I   I 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 146   I   J 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 147   I   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 148   I   L 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 149   I   M 0.12500          Half-Siblings 0.2500 0.0009175099 0.03029043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 150   I   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 151   I   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 152   I   P 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 153   I   Q 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 163   J   J 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 164   J   K 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 165   J   L 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 166   J   M 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 167   J   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 168   J   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 169   J   P 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 170   J   Q 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 181   K   K 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 182   K   L 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 183   K   M 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 184   K   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 185   K   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 186   K   P 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 187   K   Q 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 199   L   L 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 200   L   M 0.06250      Avuncular - Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 201   L   N 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 202   L   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 203   L   P 0.03125         Cousin - Other 0.0625           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 204   L   Q 0.06250                  Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 217   M   M 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 218   M   N 0.00000       Parent-Offspring 0.0000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 219   M   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 220   M   P 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 221   M   Q 0.12500 Grandparent-Grandchild 0.2500           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 235   N   N 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 236   N   O 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 237   N   P 0.00000 Grandparent-Grandchild 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 238   N   Q 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 253   O   O 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 254   O   P 0.25000       Parent-Offspring 0.5000 0.0000000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 255   O   Q 0.00000            No Relation 0.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 271   P   P 0.50000                   Self 1.0000           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 272   P   Q 0.06250                  Other 0.1250           NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 289   Q   Q 0.50000                   Self 1.0000           NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     id1 id2 kinship         relation    R         varR        sdR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     A   C   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     A   D   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     A   H   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     A   I   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13    A   M   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17    A   Q   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20    B   C   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21    B   D   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25    B   H   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38    C   D   0.250    Full-Siblings 0.50 0.0018350199 0.04283713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42    C   H   0.250    Full-Siblings 0.50 0.0018350199 0.04283713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43    C   I   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46    C   L   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47    C   M   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57    D   F   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58    D   G   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59    D   H   0.250    Full-Siblings 0.50 0.0018350199 0.04283713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60    D   I   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64    D   M   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74    E   F   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75    E   G   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92    F   G   0.250    Full-Siblings 0.50 0.0018350199 0.04283713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128   H   I   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132   H   M   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 146   I   J   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 149   I   M   0.125    Half-Siblings 0.25 0.0009175099 0.03029043</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 182   K   L   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 218   M   N   0.000 Parent-Offspring 0.00 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 220   M   P   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 254   O   P   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

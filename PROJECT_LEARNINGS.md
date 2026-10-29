@@ -20271,3 +20271,889 @@ file’s 3.5. **(7) A reader that numbers lines shifts them:**
 `BACKLOG.md:247` in my Phase 0 report and claim was `:246`, because the
 tool output I read had `wc -l`’s line on top. Take line numbers from
 `grep -n` on the file itself.
+
+#### Learning 1034
+
+**S1068 (2026-10-26), the two `@inheritParams` lines with nothing to
+inherit (`R/addParents.R`, `R/removeUninformativeFounders.R`; a
+package-wide test `test_roxygenInheritParams.R` with its reader in
+`helper-roxygenBlocks.R`): when a test stands in for a dev tool’s
+warning, read the tool’s own rule, check every synthetic case against
+the tool itself, and find out whether the tool exists where CI runs the
+tests.** **(1) Read the rule, not the message.**
+`roxygen2:::inherit_params` (8.0.0) warns “@inheritParams failed. All
+parameters are already documented; none remain to be inherited.” when a
+page’s own `@param` names (split on `,`, `\dots` read as `...`) cover
+every name in its formals; it checks per help page, so blocks joined by
+`@rdname` count together, and an `@noRd` block makes no page and is
+never checked. A function with no arguments and `@inheritParams` warns
+too. **(2) The tool is the oracle for the test’s cases.**
+`roxygen2::roc_proc_text(roxygen2::rd_roclet(), text)` runs roxygen on a
+string, with the source page in the same string, and touches no `man/`;
+all eleven synthetic cases were run through it before the test was
+written (catch the message with
+[`withCallingHandlers()`](https://rdrr.io/r/base/conditions.html)).
+**(3) roxygen2 is not on CI’s test machines.** It is dev-only
+(`Config/Needs/dev`, the renv dev profile), not in `Suggests`, and no
+package dependency reaches it
+(`tools::package_dependencies(..., recursive = TRUE)`), so a test that
+calls roxygen would only `skip` on CI; the reader is plain R
+(`parse(keep.source = TRUE)` and each expression’s `srcref` give the
+`#'` lines above each function). **(4) Observe before and after in a
+scratch worktree.** A `git worktree add --detach <scratch>/wt HEAD`
+roxygen run printed exactly the two topics and changed no file, so “only
+these two” was measured, not taken from the report; after the fix
+`devtools::document()` in the real tree printed nothing and `git status`
+showed only the two `R/` files. **(5) The owner took REFACTOR again with
+one user:** moving a single-user test reader into a helper file, over my
+“skip” recommendation (S1068); see the consolidation memory.
+
+#### Learning 1035
+
+**S1069 (2026-10-26), the Build Earlier Snapshots box’s “filed under
+their own rule” sentence (`R/modSnapshotTrends.R:69-72`; a test in
+`test_modSnapshotTrends.R` pins the new sentence): a sentence an earlier
+session drafted and stored in a BACKLOG item is a claim to measure, not
+approved words; measure each label it names in the running app before it
+goes into option text.** **(1) The stored draft named a header the table
+does not show.** S1065’s proposed sentence said “marked
+reconstructedLiving in its Membership rule column”; the History tab
+renders the history with `DT::renderDT({ req(history()) })`, so its
+header is the raw column name `membershipRule` (“Membership rule:” is
+only the Compare Snapshots selector’s label). Measured on a real rebuilt
+history: `DT::datatable(h)$x$container`’s `<th>` cells (28, one
+`membershipRule`). The owner approved the corrected sentence first try.
+**(2) shinytest2 needs `NOT_CRAN=true`.** `AppDriver$new()` stops with
+“Reason: On CRAN” without it; S1067’s gotcha listed it, and S1068’s
+condensed copy of that gotcha dropped it, which cost one rerun. When
+condensing a gotcha that is a list of environment variables, keep the
+whole list. **(3) An element picture of a sidebar box:** set an id on
+the `.well` that holds the box’s `h5` with `app$get_js()`, then
+`app$get_screenshot(file, selector = "#<id>")`, from a scratch
+`R CMD INSTALL --library=<scratch>` of the tree. **(4) “Is it
+documented?” is answered by reading each place and grepping for the
+missing idea before saying “not written anywhere”:** the guide’s only
+sentence about what the trend shows is `colony-manager-guide.qmd:1270`,
+and no `ui_guidance` page covers the tab; filed as a BACKLOG item at the
+owner’s word, next in line. **(5) One writer per tree, readers too:**
+the REFACTOR edit and the BACKLOG edit waited for the background full
+suite, because tests read both files.
+
+#### Learning 1036
+
+**S1070 (2026-10-26), guidance on reading the Genetic-Health trend
+(`inst/extdata/ui_guidance/snapshot_trends.html`, shown under the chart
+by `R/modSnapshotTrends.R` and in `colony-manager-guide.qmd` by a
+[`shiny::includeHTML()`](https://rstudio.github.io/htmltools/reference/include.html)
+chunk; `test_snapshotTrendsGuidance.R`): before a sentence says how a
+measure responds to an event, run the event on a toy pedigree; and
+answer a question the owner sends mid-turn first, plainly, on its own.**
+**(1) A one-line probe changed a sentence.** The obvious draft said an
+import raises founder equivalents; on `lacy1989Ped` an unrelated animal
+with both parents unknown left `fe` at 2.909
+([`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
+counts founders through their contributions to descendants) and raised
+it to 3.390 (`fg` 2.181 to 2.502) only once it had one offspring, while
+the founder counts
+([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+`total`, known founders in the pedigree trimmed to the population and
+its ancestors by `trimToAnalysisPopulation()`,
+`removeUninformative = FALSE`) count it at once. **(2) Read each
+measure’s definition for direction, not a tab’s label.** `neGD` is gene
+diversity (`1 - 1/(2*fg)`, a 0-1 share), not an effective size; the
+colony’s mean genome uniqueness falls both when a rare founder allele is
+lost and when breeding spreads it, so the Genetic Value tab’s “Genome
+Uniqueness: Higher is better” (an animal-ranking rule) does not carry
+over to the trend. **(3) One help text for the app and the guide:** a
+`ui_guidance` HTML fragment read by `includeHTML(system.file(...))` in
+the module and by a guide chunk
+(`shiny::includeHTML(system.file(..., mustWork = TRUE))`, echo off by
+the setup chunk) renders the same markup in both, so no copy can drift;
+a test pins the sentences in the file and checks neither the guide nor
+the module holds a copy. **(4) A picture of the shipped example can
+expose a data defect.** With `example_snapshot_history.csv` uploaded,
+the `neGD` panel read 30 to 45 against the box’s “a share between 0 and
+1”; the file’s values were hand-made (S757) and never matched the S310
+definition; filed (`BACKLOG.md`) at the owner’s word, not fixed
+in-session. **(5) Pictures:** an AppDriver element picture crops inside
+a box’s padding, so read `getComputedStyle()` before saying a background
+is missing; a chromote element picture stops at the session’s height
+(`ChromoteSession$new(height = 1500)` for a tall section). **(6) The
+owner asked “where is memory speed report” mid-Phase 0; my answer sat
+inside status narration and the owner asked twice more (“you did not
+answer the 1st time; you said you found it”).** Lead the next text with
+the answer (path in bold), before any status. **(7) The owner took
+REFACTOR again:** one internal style constant (`helpBoxStyle`) for the
+three exact copies among ten grey help boxes; the seven that differ were
+left alone because sharing would change how those tabs look;
+byte-identical UI proved with random tab ids masked.
+
+#### Learning 1037
+
+**S1071 (2026-10-26), the shipped example snapshot history corrected
+(`inst/extdata/examples/example_snapshot_history.csv`;
+`test_exampleSnapshotHistoryValues.R`, `helper-snapshotHistory.R`):
+check a hand-made example against what the package really produces, not
+only against the one formula a backlog item names; and never truncate an
+inventory grep.** **(1) Compare every column with a real run.** The item
+named only `neGD` (42.5 where `1 - 1/(2*fg)` gives 0.942); building a
+[`createColonySnapshot()`](https://github.com/rmsharp/nprcgenekeepr/reference/createColonySnapshot.md)
+row from `qcPed` and from the example colony’s 332 living animals showed
+two more scale errors no formula exposes: genome uniqueness written as
+shares (about 0.21) where
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
+writes percentages (22.8), and kurtosis about 3 where
+[`calcKurtosis()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcKurtosis.md)
+gives excess kurtosis (a bell curve is 0). A relationship that looks
+like a definition was measured before it became a test:
+`1/(2*meanIndivMeanKin)` is not `fg` in this package (69.1 against 52.8
+on `qcPed`), so nothing tests it. **(2) A per-file `| head -15` hid a
+reader.** The RED inventory grep printed at most 15 lines per test file,
+so `test_plotSnapshotTrends.R`’s hand-copied `meanGu` band (line 260)
+never showed; two gate texts then told the owner “the one test that
+copies” the values, the first GREEN run failed there, and the owner
+ruled “Back to RED”: restore the data from a saved copy, change the
+test, see it fail, commit, re-apply. Print an inventory grep whole (or
+count its hits first) before its result goes into option text. **(3)
+Correct a hand-made example by its author’s evident intent when the
+scale is wrong:** x100 and -3 kept every panel’s direction, so the
+example still shows the trend it was written to show. **(4) The owner
+took REFACTOR again:** one test helper for four identical copies of the
+example reader; the inline fifth copy and eight path-only uses were left
+out to stay within five files.
+
+#### Learning 1038
+
+**S1072 (2026-10-27), harem trials build their set-up once per
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+call (`R/makeHaremSetUp.R`, `R/fillGroupMembers.R`,
+`R/groupAddAssign.R`; `test_haremSetUp.R`; gate
+`perf_groupAddAssign_harem_1000_seconds`): profile before designing,
+freeze a copy of any function a phase changes even when its reference
+only mocked around it, and prove inside the app process which code an
+app timing ran.** **(1) The profile named the cost the backlog did
+not.** The item listed four functions doing “age and sire work”; `Rprof`
+on 200 trials put 70% of the run in
+[`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md)
+and 60% in one call beneath it, lubridate’s `today()` checking the time
+zone (`timechange:::C_valid_tz`), about 9 calls a trial. Everything but
+the [`sample()`](https://rdrr.io/r/base/sample.html) of the sires was
+the same every trial, so the fix was to build it once, not to make the
+age function faster. **(2) A reference that mocks around the function
+under change is not an oracle.** `groupAddAssignReference()` was the
+live
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+with `fillGroupMembers()` mocked to its frozen copy; the prototype
+changed
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+itself (a ninth argument), so the “reference” errored, and in any case
+it would have shared every new line. RED made it a verbatim copy from
+`520bd5dc8` (with `initializeHaremGroups()` and
+[`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md)),
+which also kept the oracle independent when REFACTOR reduced
+`initializeHaremGroups()` to a call of the new helpers. **(3) A
+3x-headroom time budget cannot fail on today’s code when the gain is
+2.1x** (13 s against today’s 9.03 s in one process): the RED test that
+failed was deterministic,
+[`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md)
+calls at 50 trials against 2 (458 against 26, now equal), and the tight
+speed check is the ratchet gate (5.9 s; today’s code 9.7 s). **(4) An
+app timing proves nothing until the app process logs
+[`find.package()`](https://rdrr.io/r/base/find.package.html).** Driven
+from the repo folder, a shinytest2 app loaded
+`/Users/rmsharp/Development/nprcgenekeepr` (the source tree) although
+`R_LIBS` put a scratch install first, so the “old” and “new” runs were
+both the new code (5.7 s each, which contradicted a direct call’s 9.0
+against 4.2 s). Driven from the scratch folder, with a scratch `app.R`
+that loads [`library(lib.loc =)`](https://rdrr.io/r/base/library.html),
+logs [`find.package()`](https://rdrr.io/r/base/find.package.html) and
+traces
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md),
+the tab took 10.9 s before and 5.7 s after (the call itself 10.25 and
+5.00 s). **(5) The `reportGV-example` gate reads the folder as well as
+the code:** `tools/perf/run.R` gives 0.31 to 0.41 s from the repo folder
+and 0.22 s from a scratch worktree of the same commit and of the commit
+before, so the ratchet run’s one fail (0.31 against 0.3) is not this
+session’s code; the cause was not found (no `src/`, no ignored file
+under `R/`). The owner took REFACTOR again: a 45-line copy and a
+two-copy test builder.
+
+#### Learning 1039
+
+**S1073 (2026-10-27), the diagram’s penalty product by blocks where
+exact (`R/penaltyCrossprod.R`; `test_diagramSolverEquivalence.R`; gate
+`perf_diagram_example_direct_seconds` 4.6 s): before claiming “the same
+bits on every platform”, read which math library each CI leg loads, and
+let a run-time check decide where a rearranged product may run.** **(1)
+CI’s three Ubuntu legs load OpenBLAS** (rig installs it; the job log’s
+`update-alternatives: using .../openblas-pthread/libblas.so.3` lines,
+run `40390720074`), while Windows and macOS use R’s own reference BLAS
+(`extSoftVersion()[["BLAS"]]` names `libRblas` here). OpenBLAS adds a
+long product in chunks, so a product that skips the zero rows cannot
+promise its bits there; the owner ruled “only where exact”:
+`.blockProductIsExact()` multiplies a fixed 4,096 x 96 probe whole and
+by blocks once a session and the shortcut runs only if the two are
+identical. **(2) Plain R arithmetic is not R’s own BLAS:** a row-order
+sum in R differed from `t(pmat) %*% pmat` by 1 ulp in up to 6 entries on
+4 of 18 grid solves (the arm64 library likely fuses each multiply-add),
+and the solver turned that into positions up to 1.1e-7 units apart;
+multiplying blocks with the library itself matched 18 of 18. **(3) A
+recorder wrapped around a function also counts the calls a cached check
+makes through it:** the RED block that counted `.blockCrossprod()` calls
+saw the check’s own probe product; settle the check first (`d2c20a8dd`,
+a GREEN-\>RED round trip). **(4) A check that compares the fast path
+with the slow one turns a wrong fast path into a lost speed-up, not
+wrong positions:** two of ten mutants (block rows reversed, a plain-R
+sum) were caught only by “with R’s own math library the check passes”.
+**(5) The +25% gate rule cannot fail the old code when the gain is under
+25%** (21% here: 4.58 to 3.61 s), so the deterministic “built by blocks”
+test guards the route. **(6) The Diagram tab draws no edge-style buttons
+beside its over-limit message** (400 animals in “Rectilinear”), so an
+app timing of the 708-animal trim needs `Shiny.setInputValue()`; three
+driver attempts failed before reading the render branch
+(`R/modPedigree.R:555-565`, `:624-631`); filed with a second finding,
+the first drawing computes the layout twice (`BACKLOG.md:237`, `:245`).
+
+#### Learning 1040
+
+**S1074 (2026-10-27), the Diagram tab’s first drawing builds its layout
+once (`.heldSetting()`, `R/modPedigree.R:478`;
+`test_modPedigree_diagramLayoutOnce.R`): a control drawn by the same
+`renderUI()` that first reads its input reports the value it shows when
+the browser binds it, and Shiny passes that report on as a change, so
+everything that read the input runs again; hold such a setting in a
+`reactiveVal` that `observeEvent()` sets from the input.** **(1) Name
+the invalidating input with the reactive log before writing a fix:** a
+scratch `app.R` that sets `options(shiny.reactlog = TRUE)`, traces the
+builder with each input’s value, and saves
+[`shiny::reactlog()`](https://rdrr.io/pkg/shiny/man/reactlog.html) from
+an observer of a JavaScript-set input
+(`Shiny.setInputValue('probeDump', 1, {priority: 'event'})`) showed
+`pedigreeEdgeStyle` NULL -\> “rectilinear” (default style) and
+`pedigreeShowNames`/`pedigreeShowTwinConnectors` NULL -\> FALSE (Direct
+chosen first) invalidating `diagramLayout()` and the tab’s `renderUI()`;
+the BACKLOG item’s “likely cause” named the two check boxes and missed
+the style input. The 708-animal Direct drawing went from 2 builds and
+8.12 s to 1 build and 4.03 s, every drawn node, edge and position
+identical. **(2) Shiny’s input store never drops an identical value**
+(`ReactiveValues$new(dedupe = FALSE, label = "input")` in both
+`ShinySession` and `MockShinySession`); only the browser’s no-resend
+stops a repeat. A `testServer()` re-send of an unchanged value therefore
+rebuilds on today’s code, and the block I first commented “a guard,
+passes today” failed on HEAD; it was split into a true guard and a
+new-behavior block before the RED commit. A `reactiveVal` does drop an
+identical value. **(3) An observer’s priority can be observable:** with
+the held settings’ `observeEvent()` at priority 0, a pedigree-view
+change and a setting change in one update (the view change first) built
+the layout twice; the priority-removed mutant survived 7 kills until a
+pin (`d65ed89ed`). Probe a survivor before calling it dead code. **(4)
+The Pedigree Browser shows the whole upload:** `ExamplePedigree.csv`
+uploads as 3,694 animals there; S1073’s 708 is the `appAnalysisPed()`
+trim (`tools/perf/harness.R:118`) written to a CSV. **(5) Compare HEAD
+before blaming the change:** after
+`app$click(selector = "input[name='pedigree-pedigreeEdgeStyle'][value='direct']")`,
+`app$click("pedigree-pedigreeShowNames")` changed nothing and waited out
+the 120 s timeout on HEAD and the fix alike, a probe artifact;
+`app$run_js("document.getElementById('pedigree-pedigreeShowNames').click()")`
+toggled it. **(6) Pass a block’s code into
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+from a wrapper with rlang’s `{{ code }}`** inside the braced expression
+(`withDiagramTrio()`), and prove a refactored test file kept its power
+by running it and the pre-refactor file against the old code (identical
+failures per block, 1 3 1 0 5 0).
+
+#### Learning 1041
+
+**S1075 (2026-10-27), the founder statistics build their contribution
+table once (`initialContributions()`, `R/calcFounderContributions.R`;
+`test_calcFounderContributions_tableOnce.R`): the harness’s peak is
+[`gc()`](https://rdrr.io/r/base/gc.html)’s “max used”, which counts
+garbage not yet collected, so it cannot rank two designs; count the
+copies of the large object with
+[`Rprofmem()`](https://rdrr.io/r/utils/Rprofmem.html) at its exact size,
+and read live memory with a full
+[`gc()`](https://rdrr.io/r/base/gc.html) probe, before an option says a
+design removes a copy.** **(1) Compare old and new code after the same
+earlier stages, in one fresh process each:** BACKLOG’s “+14 to 21 MB
+from Phase 0” mixed the founder code’s rise with the drop the campaign’s
+faster earlier stages gave every later call; run with today’s kinship,
+gene drop and uniqueness stages first, the pre-campaign founder code
+peaked at 180.5 / 183.3 MB
+([`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)
+/
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
+all 3,694 example animals) and today’s at 247.7 / 257.6 MB. **(2) “Max
+used” is a high-water mark of live memory plus garbage:** 200
+short-lived 0.8 MB vectors read as a 64.3 MB peak; on the synthetic
+colony today’s code made 1 collection during
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+against the old code’s 7 (`gcinfo(TRUE)`), allocated 262 against 1,339
+MB, and still read higher (253.6 against 224.8 MB). A prototype that
+kept the copy (P2) read 182.9 / 192.0 MB and the one that removed it
+(P4) 185.5 / 209.7 MB, so the decision question first sent to the owner
+said P2 removed the copy, and was corrected at the PRE-RED gate. **(3)
+The deterministic yardsticks:** an `Rprofmem(threshold = bytes - 1)` log
+counted in `[bytes, bytes + 128)` (R adds a 48-byte header on a 64-bit
+build) gave 2 tables today and 1 with P4, on both fills; a `probe()`
+that runs [`gc()`](https://rdrr.io/r/base/gc.html) after each generation
+gave live memory 94.1 to 47.1 MB (table 47.0 MB). `gctorture(TRUE)` on a
+300 MB heap ran over 10 minutes and was stopped. **(4) Where R copies a
+matrix:** passed to a function while the caller still holds it, or
+arriving as an argument that is read (`rownames(d)`, `d[rows$sire, ]`)
+before the first write, the table was copied whole at the first write in
+every shape measured; built as a local variable in the function that
+fills it, it was not. **(5) A mutation-probe script needs a control run,
+and a missing result must read “did not run”:** the first run reported 7
+“kills” in under a minute because a scratch `git worktree` has no renv
+library (`there is no package called 'pkgload'`); run `Rscript` from the
+main repo with `pkgload::load_all(<worktree>)`. **(6) Count sizes the
+window misses:** a whole-number table (`0L`, `1L`) survived every block,
+because it is half the size and the first fill makes one double table
+from it; the pin counts allocations of the half size and expects 0.
+
+#### Learning 1042
+
+**S1076 (2026-10-27), the Diagram’s pixel tests run with GPU and CPU
+drawing (`pixel_test_that()`, `local_cpu_canvas_chrome()`,
+`chrome_canvas_drawing()` and `run_declared()` in
+`tests/testthat/helper-shinytest2.R`; `test_pixelTestsBothDrawings.R`,
+`test-e2e-pedigree-canvas-drawing.R`): to run a browser test in a second
+Chrome, make that Chrome chromote’s default object for the test and
+prove its drawing from Chrome’s own report; and a test-harness probe (a
+mutation script, a filter, a “RED-time” rerun) is valid only after a
+control run shows it can tell the two cases apart.** **(1) Chrome says
+how it draws a canvas:**
+`<Chromote>$SystemInfo$getInfo()$gpu$featureStatus[["2d_canvas"]]` read
+`"enabled"` on this Mac’s default headless Chrome and
+`"disabled_software"` with `--disable-accelerated-2d-canvas`; a CPU pass
+checked that way cannot silently run on the GPU (mutants M1 and M5, a
+pass that never swapped Chrome and a probe stuck on “CPU”, survived
+every test until a block read that status in each declared test). **(2)
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+has no Chrome argument, but uses
+[`chromote::default_chromote_object()`](https://rstudio.github.io/chromote/reference/default_chromote_object.html):**
+`chromote::set_default_chromote_object(cpu)` before `AppDriver$new()`
+put the app in the CPU Chrome, and setting the old object back restored
+it;
+[`chromote::set_chrome_args()`](https://rstudio.github.io/chromote/reference/default_chrome_args.html)
+instead only reaches a Chrome not yet started, so it needs a fresh R
+process. **(3) Exit-handler order inside `test_that()`:** a cleanup
+registered with `withr::defer(envir = <the test's frame>)` before the
+test’s own `on.exit(app$stop(), add = TRUE)` runs first, so the CPU
+Chrome would close before the app stops; evaluating the test’s code
+inside [`local()`](https://rdrr.io/r/base/eval.html) runs its
+[`on.exit()`](https://rdrr.io/r/base/on.exit.html) when
+[`local()`](https://rdrr.io/r/base/eval.html) ends. Measured, the wrong
+order gave no warning, no failure and no extra process (M2 survives and
+was left). **(4) Three harness traps, each caught only by a control:**
+`testthat::test_file(desc =)` finds tests by reading the file, so it
+cannot select a test a wrapper such as `pixel_test_that()` generates
+(“Failed to find test with description”; run a scratch file holding the
+block and the file’s definitions);
+[`on.exit()`](https://rdrr.io/r/base/on.exit.html) at the top level of
+an `Rscript` script never runs, so a mutation script that restores its
+target that way leaves every mutant stacked on the last (copy
+`tests/testthat` to a scratch folder per mutant instead);
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+sources the repo’s own `tests/testthat/helper-*.R` (its `helpers = TRUE`
+default), so a “does it fail on the RED-time helpers” rerun must pass
+`helpers = FALSE`. **(5) Time a new pass, not the sum of the old one’s
+parts:** the four pixel blocks took 20.6 s of the file’s 171.6 s, and
+the option text said the CPU pass adds “about 21 s”; with a Chrome
+started per CPU test it added 42 s (214.0 s).
+
+#### Learning 1043
+
+**S1077 (2026-10-27), the Diagram tab offers Direct beside its
+over-limit message for 401 to 750 animals (`.edgeStyleButtons()` in
+`R/modPedigree.R`; `test_modPedigree_directReachable.R`,
+`helper-pedigreeOfSize.R`): build mutants as scratch package copies
+loaded with `pkgload::load_all(<copy>, helpers = FALSE)`, so the repo’s
+`R/` is never edited and the mutants can run beside the full suite; and
+an order check made with [`regexpr()`](https://rdrr.io/r/base/grep.html)
+passes when the first item is missing.** **(1) Mutants without touching
+the repo:** each copy holds `DESCRIPTION`, `NAMESPACE`, `R/` and `inst/`
+with one edit; a fresh `Rscript` per copy runs the repo’s test files
+with
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+after `load_all(<copy>)` and first confirms
+`getNamespaceInfo("nprcgenekeepr", "path")` names the copy. A `control`
+copy byte-identical to the working file must pass, every copy must
+[`parse()`](https://rdrr.io/r/base/parse.html) (the first message-first
+mutant had one `)` too many), and a “red” copy built from
+`git show <RED sha>:R/<file>` for every file `git ls-tree` lists under
+`R/` proves the refactored tests on the RED-time code (9 failures, as at
+RED; `test_modPedigree.R` with the shared builder 90 of 90). **(2) An
+equivalent mutant is not a test gap:** dropping `style == "rectilinear"`
+from `n > cap && style == "rectilinear" && n <= pedigreeDiagramMaxNodes`
+survived because under Direct the cap is 750, so the other two clauses
+never both hold; it stays because it says in code what the message says
+in words, and the REFACTOR commit names it. **(3)
+[`regexpr()`](https://rdrr.io/r/base/grep.html) gives -1 for no match,**
+so `expect_lt(regexpr(<buttons>), regexpr(<message>))` passed with no
+buttons at all; require both positions above 0 (caught before the RED
+commit by reading each failure’s reason, not the count). **(4)
+`test_file(desc =)` runs every top-level call before the matching
+test,** so the file’s earlier `pixel_test_that()` blocks, which are not
+`test_that()` calls, ran too (two extra tests, about 20 s). **(5) Read
+`uptime` before reading a draw time:** the 708-animal Direct drawing
+took 38.2 s in the app at load average 55 (a VM, vitest, Next.js and
+Playwright Chromes outside this repo), and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+alone, unchanged this session, 37.1 then 15.0 s against S1074’s 4.17 s.
+**(6) A `selector = "viewport"` picture missed the drawn diagram below
+the fold again (S1040’s lesson);** an element picture
+(`selector = "#pedigree-pedigreeDiagramUI"`) showed it, and only that
+one went to the owner.
+
+#### Learning 1044
+
+**S1078 (2026-10-27), the reportGV speed gate times the middle of 5 runs
+(`Rscript tools/perf/run.R <scenario> --runs N`, `runsArg()` in
+`tools/perf/harness.R`; `perf_reportGV_example_seconds` runs it with
+`--runs 5`): a short wall-clock gate in a process with a large live heap
+reads one full garbage collection or none, and trivial allocation
+differences before the timed call decide which; measure that without
+moving it, and gate a median of runs.** **(1) The knife edge:** after
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+the live heap is about 210 MB (85 namespaces), so one full collection
+costs 0.094-0.116 s against a 0.21 s
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+call. One run read 0.30-0.33 s from the repo folder and 0.21-0.23 s from
+a `git archive` copy, from a full copy without `.git`, and from the repo
+folder with one `invisible(NULL)` line added before the run; a copy with
+`.git` linked in read slow from its `run.R` and fast from a script at
+another path. Collection counts read after the run (33+5+9 against
+36+5+8, 3 of 3 pairs) showed one extra full collection. Folder contents,
+`.git` and the library were not the cause (nothing in `pkgload`’s stack
+reads `.git`; skipping the test helpers moves the heap 4 MB), so S1072’s
+and S1077’s “the repo folder reads slower” was this. **(2) Measuring
+without moving it:** every probe placed before the timed call
+([`gc()`](https://rdrr.io/r/base/gc.html), `gcinfo(TRUE)`,
+[`message()`](https://rdrr.io/r/base/message.html) markers, one extra
+top-level line) moved the run to the fast side. Rscript reads a script
+one top-level expression at a time, so code appended after the run
+cannot change it: `gcinfo(TRUE); x <- numeric(3e8)` after the run forces
+an automatic collection that prints the running per-level counts (an
+explicit [`gc()`](https://rdrr.io/r/base/gc.html) prints none, and
+[`gc.time()`](https://rdrr.io/r/base/gc.time.html) is off by default).
+**(3) The fix:** 5 runs in one process, median: runs 1 and 2 usually
+take a collection (0.35-0.46 s), runs 3-5 read 0.17-0.20 s; the median
+read 0.17-0.20 s in four folders and 0.17 s in the ratchet at load
+14-17, while a median of 3 still sits on the cold first run. **(4) Other
+gates:** `perf_convertRelationships_300_seconds` reads 0.08 s against
+0.1 s, a margin smaller than one full collection; if it fails near 0.18
+s with no code change, `--runs 5` on its command is the same fix
+(offered S1078, not chosen). **(5) A `git archive` copy cannot run on
+its own here:** its `.Rprofile` sources `renv/activate.R`, which
+bootstraps an empty project library under
+`~/Library/Caches/org.R-project.R/R/renv/library/<folder>-<hash>` (no
+`pkgload`); time a copy with `Rscript <copy>/tools/perf/run.R` run from
+the repo folder, and delete the cache entry a bootstrap made.
+
+#### Learning 1045
+
+**S1079 (2026-10-27), the Breeding Groups tie-order decision
+(`BACKLOG.md:203`; ruling “Correct the comment”): before offering
+“change the code” against “correct the comment”, count the tests the
+code change would break by running the files that exercise it on a
+patched scratch copy beside an unpatched control, and rebuild a stored
+measurement from the app’s own steps rather than quoting it.** **(1) The
+test count.** `git grep -l` on `groupAddAssign` and
+`modBreedingGroupsServer` named 48 test files (helpers left out); two
+`git archive HEAD` copies in scratch, one patched to list ties in the
+order found (each kept grouping records its trial `k`, ties sort by it),
+each run from the repo folder with `pkgload::load_all(<copy>)` and
+[`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+per file in two processes. The control read 644 tests 0 failed; the
+patched copy 36 failed expectations, all in 2 tests of
+`test_groupAddAssignEquivalence.R` (the
+[`identical()`](https://rdrr.io/r/base/identical.html) comparison with
+the frozen `groupAddAssignReference()`), so the option text could say
+exactly what the code option costs and that the tie order is pinned
+nowhere else; no browser test or guide script sets `NPRC_BG_SEED`. **(2)
+The effect, measured on the default path.** The tab’s pool built by its
+own steps
+([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+1,000 iterations, threshold 4, the combined rank with “Undetermined”
+last, living animals, the first 20), every trial traced (Learning 1023’s
+[`trace()`](https://rdrr.io/r/base/trace.html)): every one of 20 seeds
+keeps ties, and the grouping shown first would change in 5, 13 and 13 of
+20 seeds at 10, 100 and 1,000 trials. S1057’s seed-5 found trials (18,
+7, 8, 23, 26) read 20, 7, 8, 22, 29 on this pool: the shape held, the
+numbers did not, so the option text quoted this session’s run. **(3)
+Drift.** The block’s `R/groupAddAssign.R:330-334` was `:340-344` (S1072
+added the harem set-up above it); re-grep a backlog cite before quoting
+it. **(4) A comment-only ruling.** The option said “no RED or GREEN
+phase: one commit, then the full suite and lint”, so the owner’s pick
+covered the phase question too; the owner answered the one question
+first try, with the recommended option first and a preview table per
+option.
+
+#### Learning 1046
+
+**S1080 (2026-10-27), Summary Statistics’ kept relationship table
+(`BACKLOG.md:221`; ruling “Build in each download”): to decide whether
+the app should keep a large object, measure the app process’s live R
+heap after each step, not only its resident memory, and measure the “let
+it go” option in the app too, because its costs (rebuild time, a higher
+momentary peak) show only there.** **(1) The probe.** A scratch `app.R`
+that
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)s
+a package copy and whose server calls
+`appServer(input, output, session)` and adds
+`observeEvent(input$perfGc, { g <- gc(full = TRUE); cat(label, sum(g[, 2L]), file = log, append = TRUE) })`;
+the driver (`tools/perf/appSession.R`’s `appSessionPid()`,
+`appSessionRssMb()` and steps) fires it with
+`app$run_js("Shiny.setInputValue('perfGc', {label: ..., n: Math.random()}, {priority: 'event'})")`
+and waits for the log line; downloads are fetched from their `href` with
+[`download.file()`](https://rdrr.io/r/utils/download.file.html), timed.
+**(2) What it showed.** Resident memory rose in both versions
+(1,314-1,325 MB after the first download) and fell only later, so it
+alone could not show the kept table; the live heap read 472.8 MB kept
+against 238.5 MB let go, two runs each within 0.1 MB. The let-go
+version’s second build (the class download) peaked about 440 MB higher
+in resident memory, because `kinshipFor()` with no ids recomputes the
+whole colony’s kinship at each ask (`R/appServer.R:356-361`); that cost
+went into the option text and the owner still took it. **(3) Readers
+first.**
+[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+discards
+[`modSummaryStatsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md)’s
+return (`R/appServer.R:378`), so the module’s
+`relationships`/`relationClasses` return values are read only by tests;
+grep a module’s return before assuming a reactive has app readers beyond
+its own outputs. **(4) REFACTOR proof.** For a handler-wiring refactor,
+read every affected download’s file name and bytes through
+`testServer()` on two inputs before and after (12 of 12 identical) and
+rerun the opt-in E2E test on a fresh scratch install.
+
+#### Learning 1047
+
+**S1081 (2026-10-28), Mate Pair’s default run (`BACKLOG.md:203`; ruling
+“Both”): before offering a backlog item’s levers, attribute the
+allocations to functions and count what the population’s members are;
+here one helper made 84% of the cost and 92% of the default pairs had a
+placeholder in them.** **(1) Attribution.** `Rprofmem(threshold = 1e6)`
+around
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md),
+each block credited to the frame just under it:
+[`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)
+made 1,526 of 1,810 MB (it
+[`merge()`](https://rdrr.io/r/base/merge.html)s the 1,452,660-row table
+of every pair with the whole pedigree twice, only to read each animal’s
+sex). Building only the male-female cells of the lower triangle gave
+[`identical()`](https://rdrr.io/r/base/identical.html) reports on five
+inputs in 0.08 s against 8.2 s; in the app the click fell from 9.5 to
+0.5 s and the peak from 1,567 to 714 MB with the same 315,023 pairs.
+**(2) The population.** The 1,704 “no recorded exit” animals were 332
+with status ALIVE and 1,372 placeholders (status UNKNOWN, `placeholder`
+TRUE, no birth date, no parents, one offspring each), so an exit-date
+rule alone admits stand-ins for unknown parents; `isLivingAnimal()`
+reads `status` and is Breeding Groups’ rule. Both together: 25,707
+pairs, 0.1 s, peak 503 MB, 2.8 MB kept. **(3) An allocation test must
+leave out result-sized allocations.** Counting allocations from 8 bytes
+a pair of every pair up to the matrix’s size caught
+[`unique()`](https://rdrr.io/r/base/unique.html)’s hash table over the
+result’s ids on balanced colonies (its size rounds to a power of two),
+so the RED test uses lopsided colonies (50 and 350, both ways), the
+example’s shape. **(4) Gotchas.** A scratch script’s relative
+[`saveRDS()`](https://rdrr.io/r/base/readRDS.html) and
+[`Rprofmem()`](https://rdrr.io/r/utils/Rprofmem.html) paths wrote into
+the repo root (moved out before any commit): give every scratch output
+an absolute scratch path. The Mac slept about 9 hours mid-run and the
+first guide-picture run failed at its first `wait_for_idle()`: read
+`uptime` before diagnosing a background failure. The guide’s picture
+script loads the repo’s own source (shinytest2 overrides
+[`library()`](https://rdrr.io/r/base/library.html) for a local package),
+so pictures need no install. `devtools::check()` of a `git archive` copy
+must be started from the repo folder: R started inside the copy
+bootstraps an empty renv.
+
+#### Learning 1048
+
+**S1082 (2026-10-28), Marker Genetics’ Realized Relatedness table
+(`BACKLOG.md:203`; rulings “Only the 3 kinds”, “Same rows as the app”,
+“Hide it”): before offering levers on a big table, count which of its
+rows carry the value the table exists for; here 13,286 of 6,824,665
+did.** **(1) The count.**
+[`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
+gives a variance only to Parent-Offspring, Full-Siblings and
+Half-Siblings pairs, and each kind has one value per `nChr`/`mapLength`
+(0, 0.00092, 0.00184), so 6,811,379 rows carried a blank variance and
+its per-row [`vapply()`](https://rdrr.io/r/base/lapply.html) spent 5.3
+of the 8.3 s repeating three numbers. Three prototypes, each
+[`identical()`](https://rdrr.io/r/base/identical.html) to today’s
+matching rows (all pairs with the variance looked up 2.8 s; kinship
+above 0, 500,010 rows, 0.27 s; the three kinds from parent links, 13,286
+rows, 0.08 s), and an app run of the recommended one (the tab 13-18 s to
+0.6-0.9 s, kept 422.5 to 1.9 MB, peak 1,972 to 606 MB) put measured
+numbers in each option’s preview; answered first try. **(2) A build from
+candidates must cover every way today’s rules can match.**
+`relationClasses()`’s half-sibling rule compares parents across roles
+(`s1 == d2`), so grouping children by sire and by dam separately misses
+a pair whose shared parent is one’s sire and the other’s dam; group by
+parent name over both columns. Running today’s function, kept to the
+three kinds, as the oracle on 12 inputs before RED (a parent in two
+roles, a `""` sire, an id outside the pedigree that today calls a full
+sibling of everyone, factor columns, an integer matrix, missing
+kinships, 1 x 1) found it; inputs the build is not made for run today’s
+[`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
+and keep the three kinds. **(3) A subset keeps its row names.** The
+every-pair long form’s row names are lower-triangle cell positions, so
+its first page read 1-10 and a subset’s reads 9063, 9158, …; DT shows
+row names as an unlabeled first column. Only the real-app element
+picture
+(`get_screenshot(selector = "#markerGenetics-realizedRelatednessTable")`)
+showed it; fixed with `DT::datatable(rownames = FALSE)` and pinned with
+`dtHeadings()` (`tests/testthat/helper-pageText.R`). **(4) Gotchas.**
+Measure a count on the test’s own pedigree before it goes into a test
+(`exampleLivingPed()` is `qcStudbook(minSireAge = 2)`, not the upload
+path; both gave 13,286 here). zsh does not split `set -- $run`; write
+the arguments out. Another project’s vitest drove the load to 180: read
+`uptime` and wait before a full suite or check.
+
+#### Learning 1049
+
+**S1083 (2026-10-28), the performance campaign’s fallbacks
+(`BACKLOG.md:203`; rulings “Text at the start”, “Use the fast code”,
+“Keep them”): a fallback kept “so it gives today’s result by
+construction” can be giving a wrong result; before ruling on one, run
+the inputs a script user really has through the exported function and
+compare with the text answer.** **(1) The finding.** The item framed the
+eleven `*General()` paths as the old code’s home for unusual input.
+Probing realistic input (number ids as
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) reads them,
+factor ids, `sparse = TRUE`) through each exported function, with every
+fallback traced, showed `convertRelationshipsGeneral()` gives wrong
+names:
+[`makeCEPH()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeCEPH.md)
+builds a data frame keyed by id and looks a parent’s row up with
+`ped[sire, ]`, which a factor indexes by its internal code and a number
+by position. On a 12-animal studbook with ids 101-112, 64 of 78 pairs
+read “Full-Siblings”; with factor ids every grandparent-based kind read
+“Other” (78 of 1,830 pairs on 60 example animals, 36.5 s against 0.06
+s);
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+stopped with “subscript out of bounds”. The equivalence test had pinned
+`numeric ids and parents` as correct only because its ids 1-5 were their
+row numbers. One cause (ids not text) covered four functions, so the fix
+was one helper pair (`idsAsText()`/`pedIdsAsText()`, `R/toCharacter.R`)
+at five entrances, not a fix per fallback; a prototype proved each
+answer [`identical()`](https://rdrr.io/r/base/identical.html) to the
+text’s before the question (answered first try). **(2) `Matrix` details
+for an [`identical()`](https://rdrr.io/r/base/identical.html) sparse
+result.** `kinshipGeneral(sparse = TRUE)` fills a `Diagonal()` of n + 1
+rows: it stays a `ddiMatrix` while no two rows have a kinship (the
+missing parent’s row counts: an X animal of unknown sex writes `NA`
+there), else a `dgCMatrix`. `Diagonal(x = 1)` of n rows stores a unit
+diagonal (`diag = "U"`, no `x`), so cut an n + 1 diagonal to n x n as
+the old code did; and
+[`methods::new()`](https://rdrr.io/r/methods/new.html)/`as()` give a
+`devtools::check()` NOTE here (methods is not in Imports), so build with
+`Diagonal()` and `sparseMatrix()`. 70 cases, then the whole example:
+[`identical()`](https://rdrr.io/r/base/identical.html), 42.6 s to 0.6 s.
+**(3) Gotchas.** Time an old-code case on a small input first: the first
+probe sat 9 minutes on 300 factor-id animals. zsh: quote
+`--include='*.R'`, and `echo =====` fails (again). Commit help edits a
+pair at a time: twelve files were open at once before the three help
+commits.
+
+#### Learning 1050
+
+**S1084 (2026-10-28),
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+given factor ids reporting `livingOffspring` as `NA` (`BACKLOG.md:203`;
+ruling “Fix the counting”):
+[`tapply()`](https://rdrr.io/r/base/tapply.html) over a factor returns
+one cell per level, and a subset keeps every level, so a level with no
+rows gives `NA`, not 0; and factor ids come in two kinds, so measure
+both before the question.** **(1) The finding.**
+[`findOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/findOffspring.md)
+counted with `tapply(ped$id, as.factor(ped$sire), length)`;
+[`as.factor()`](https://rdrr.io/r/base/factor.html) hands a factor back
+unchanged. `offspringCounts(considerPop = TRUE)` counts again in
+`ped[ped$population, ]`, where the example’s 332 living animals keep all
+1,485 sire levels, 1,337 with no row: 33 `NA`s, exactly the animals the
+text gives 0. S1083’s probe built factors per column
+([`factor()`](https://rdrr.io/r/base/factor.html) on each, what
+`read.csv(stringsAsFactors = TRUE)` gives); one level set for `id`,
+`sire` and `dam` (every animal) made it worse: 297 `totalOffspring` and
+301 `livingOffspring` `NA`, `neVariance` `NA` (a female breeder is
+matched first among the sire levels, as an empty one). One `idsAsText()`
+before [`tapply()`](https://rdrr.io/r/base/tapply.html) (S1083’s helper)
+gives the text’s counts for both kinds, number ids unchanged, the four
+callers fixed at once; a prototype was
+[`identical()`](https://rdrr.io/r/base/identical.html) before the
+question (answered first try). **(2) Swapping old code in under
+`load_all()`.** To check that refactored tests still catch the bug, the
+pre-fix function must replace the binding in both
+`asNamespace("nprcgenekeepr")` and
+`as.environment("package:nprcgenekeepr")`: a test’s direct call reaches
+the attached export, so a namespace-only swap showed 5 failures where
+RED had 8. **(3) Gotchas.**
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+report is ordered by rank, not by proband, so compare a script’s counts
+with
+[`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md),
+not with report rows; `isLivingAnimal()` is internal (`nprcgenekeepr:::`
+against an installed tree); give a scratch script absolute paths when it
+runs from the repo folder (again). The other
+[`tapply()`](https://rdrr.io/r/base/tapply.html)-over-id sites in `R/`
+(`backfillColonyFacts.R:33`, `calcRetention.R:77`,
+`getAnimalsWithHighKinship.R:68`, `alleleFreq.R:28`,
+`rareAlleleCounts.R:85`) were not probed with shared-level factor ids.
+
+#### Learning 1051
+
+**S1085 (2026-10-28), Build Earlier Snapshots’ failed-dates notice
+(`BACKLOG.md:41`; ruling “App uses its own words”): to show one function
+warning in the app’s words, give the warning a kind and its numbers
+(`warningCondition(msg, class = "backfillFailedDates", nFailed =, nDates =)`)
+and let the module’s handler write its own sentence for that kind; never
+match the warning’s words.** **(1) Measure who sees it first.** The app
+offers only start years from
+[`previewBackfillSupport()`](https://github.com/rmsharp/nprcgenekeepr/reference/previewBackfillSupport.md)’s
+default series, each with at least `minAnimals` living animals, so on
+both shipped studbooks every date built (example 49 of 49, jmac 53 of
+53) and the warning never reached the panel; only a script asking for
+1963-1966 got “3 of 4 dates could not be rebuilt and are listed in
+‘skipped’.” Putting that in the question let the owner weigh a rare case
+(answered first try). To see the app’s sentence at runtime, a studbook
+that dies out mid-series works: six animals, none alive from mid-2003 to
+mid-2005, run through the real function and the real
+[`modSnapshotTrendsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md)
+in `testServer()` with `showNotification` mocked, gave “2 of 8 dates
+could not be built and are listed under Dates not built.” **(2) Feed
+module tests the real condition.** `failedDatesWarningOf()`
+(`tests/testthat/helper-backfillColony.R`) catches the warning the real
+function raises on the hand-built colony, and `mockBuildWithNotes()`
+re-raises a condition note as it is, so the panel tests cannot drift
+from the function. Moving `runBackfill()` beside it and filtering by
+kind made two older `expect_warning()` tests require the kind too: a
+pre-GREEN swap failed 6 tests where RED had 4 (a tightening, not a
+behavior change). **(3) Gotchas.** In `testServer()`, a
+[`DT::renderDT()`](https://rdrr.io/pkg/DT/man/dataTableOutput.html)
+output holds no table rows (DT sends them to the browser separately), so
+check what a table shows through its data, not the output. A second
+click on Build lists all 49 dates under Dates not built with “already in
+existingHistory under the reconstructedLiving rule” (script words; filed
+as `BACKLOG.md` thread (2) of the earlier-snapshots item). The installed
+pre-commit hook is only the context-budget check; do not commit with
+`--no-verify` when only test files change (the RED commit did,
+needlessly).
+
+#### Learning 1052
+
+**S1086 (2026-10-28), the Dates not built table’s words
+(`BACKLOG.md:42`; ruling “App uses its own words”): to say some rows of
+a function’s returned table in the app’s words, tell those rows apart by
+the input the module passed (here the dates its history held under
+`reconstructedLiving`, `rebuiltSnapshotDates()`, one internal helper the
+function and the module share), never by the row’s text; every other row
+(a failed date’s error message) passes through.** **(1) Read a module’s
+table through its `reactiveVal`.** Inside
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+the test runs in the server’s own environment, so `skippedDates()` is
+the table’s data, whereas `output$backfillSkippedTable` holds no rows
+(Learning 1051). **(2) One fixture shows both kinds of row.** The
+hand-built colony (`helper-backfillColony.R`) built from 1999 in the
+panel gives 13 snapshots and one failed date (nobody alive on
+1999-01-01); a second click lists 1999 with its error and the 13 as
+already there, so one test pins that the rewrite touches only the right
+rows. A history row of another rule on a failing date (the example
+history’s first row moved to 1999-01-01, uploaded) guards the rule
+boundary. **(3) A real-app picture of an uncommitted change.**
+`inst/shinytest/app.R` runs
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) in
+a child process, so install the tree first (`git archive HEAD` plus the
+changed file,
+`install.packages(dir, repos = NULL, type = "source", lib = scratch)`),
+put that library first in
+[`.libPaths()`](https://rdrr.io/r/base/libPaths.html) (the child
+inherits it), set `NPRC_RUN_E2E` and `NOT_CRAN` to `"true"` before
+sourcing `helper-shinytest2.R` (it skips “On CRAN” otherwise), and use
+`file.path(scratch, "nprcgenekeepr", "shinytest")` as the app folder.
+For an element picture of a heading and its table, `run_js()` can move
+both into one new `div` with an id, then
+`get_screenshot(path, selector = "#id")`; the driver’s
+`screenshot_args = FALSE` only draws a warning.
+
+#### Learning 1053
+
+**S1087 (2026-10-28), the tutorial leftovers after S1043
+(`BACKLOG.md:43`; scope “Twins + ncol”): measure a stored “looks right”
+claim about a tutorial figure on the chunk’s own data, not on a
+stand-in; and the next tutorial inventory pass compares against
+`0e65b544e`.** **(1) The stand-in nearly gave a false option.** BACKLOG
+said the tutorial’s three-panel trend chart is right by default. A first
+probe drew the shipped example history (`example_snapshot_history.csv`)
+at 7 by 4 inches and the date labels of neighbouring panels touched
+(“Jan 2026” into “Jan 2025”), which would have made “show `ncol = 1`”
+look like a fix; the chunk’s own history (qcPed, 2005-2018, labels
+2005/2010/2015) reads well in the default one row of three, and one
+column at that height flattens the panels. Run the section’s own chunks
+(they need only `qcPed`) and draw at the chunk’s `fig.height` and the
+document’s `fig_width`. **(2) The S1043 no-literal-number rule meets ids
+with digits.** `sectionProse()` drops inline R, so values go in as
+inline R, but an id like T1 in the prose is a digit: call the animals by
+role (the twins, the daughter) and keep the ids in the chunk. **(3)
+Rendering the tutorial for a picture.** A hidden chunk sets
+`pedigreeFile <- "../inst/extdata/examples/ExamplePedigree.csv"`, so
+render the real file with `knit_root_dir = <repo>/vignettes` and
+`output_dir`/`intermediates_dir` in scratch (a copy rendered elsewhere
+stops at `read-in-example-pedigree`), from a scratch install first on
+`R_LIBS`; about 11 s. A section picture: `chromote`
+`Page$captureScreenshot(clip = ...)` from the heading’s
+`getBoundingClientRect()` to the next heading’s. **(4) The next
+inventory pass** (the `a2interactive.Rmd` checklist) compares exports
+and formals against `0e65b544e`: formals at that commit from a scratch
+`git worktree` through
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+run in the main checkout, names searched with a boundary that ignores
+`_`, each unnamed name confirmed with a fixed-string search (S1087: 236
+exports, 66 named, 170 never; since `649389386` only
+`plotSnapshotTrends(ncol)` and five module-server `kinshipFor`
+arguments). **(5) Two small slips.**
+[`ggplot2::ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+outside `pdf(NULL)` opens the default device and writes `Rplots.pdf`
+into the working folder (the repo root, for a probe);
+`git commit --no-verify` skipped only the context-budget hook here and
+was not needed (S1085 noted the same).
+
+#### Learning 1054
+
+**S1088 (2026-10-29), trimming `CHANGELOG.md` a second time:
+`methodology_trim.py`’s `SRF_RED` fires once a ledger regrows past its
+size just before the last trim, so a trim made a few KB past the warn
+line leaves the next one almost no margin; read the tool’s `--check` at
+Phase 0 and put the `--force` choice into the picker option, because the
+claim entry alone can cross it.** **(1) The margin was 29 B.** SRF is
+regrowth since the last archive over the bytes that archive removed.
+S1048 took the file from 200,357 B to 23,778 B (176,579 B removed); at
+Phase 0 the file was 200,328 B (176,550 B regrown), so `--check` read
+SRF 0.9998, and my picker option said only “it moves older entries into
+a frozen archive file”. The claim entry (697 B) made it 201,025 B and
+the plain run was refused at 1.0038. The owner’s `--force` question then
+had to be asked separately; it was answered first try, but it belonged
+in the picker. **(2) Not the Learning 549/550 artifact.** The other
+reading (0.1911 against the largest-drop boundary `8aa6369`) is the
+small-denominator shape those learnings warn about only when the most
+recent archive is small; S1048’s archive was the full warn-line amount,
+so the RED was a real regrowth rate: 168,694 B for 2026-10-23 to
+2026-10-27, about 34 KB a day (S1048 measured 22). **(3) Four free dry
+runs priced the choices** (each writes nothing; `--cut` must reach the
+tool as two words, a loop that quoted `"--cut <date>"` as one got a
+usage error): `--force` with the default cut archived 86 of 101 and left
+one 10-27 record live under a “through-2026-10-27” name
+(`CUT_STRADDLES_DAY`, 33,788 B); `--cut 2026-10-27` 87 records, 32,331
+B, a clean day seam (chosen, as at S1048); `--cut 2026-10-28` 100
+records, 4,104 B; no trim meant the 262,144 B hard limit in about 2
+days. **(4) The next trim:** the threshold is now 201,025 B, only 4,417
+B past the 196,608 B warn line, and at about 34 KB a day the warn line
+returns around 2026-11-03, so expect `SRF_RED` again unless entries get
+shorter (the open lever, `BACKLOG.md:105`). **(5) Tests:** by the S1051
+rule only two test files read the ledger’s text
+(`test_archivePointersResolve.R`, `test_contextBudgetLedgers.R`);
+`test_workflowPathsIgnore.R` and `test_rbuildignore.R` only list path
+names.
