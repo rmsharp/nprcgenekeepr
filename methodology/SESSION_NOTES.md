@@ -99,13 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1086 Did
-**Deliverable:** settle the words of the "Dates not built" table's reason for a date already built: a second Build click lists
-every built date with "already in existingHistory under the reconstructedLiving rule", a script's argument names
-(`BACKLOG.md:42`, DECISION NEEDED, Effort S; found S1085; owner pick at the Phase 0 picker, item 1 of 3, "Dates not built
-wording"; strict TDD if reworded). (IN PROGRESS)
-**Started:** 2026-10-28
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 3, "Dates not built wording"; ruling "App uses its own words"; strict TDD, every
+gate "Yes"):** the panel's Dates not built table lists a date already built as "Already in the history; not built again."
+(`R/modSnapshotTrends.R:397-434`); a failed date keeps its error, a script keeps "already in existingHistory under the
+reconstructedLiving rule". One internal rule for both: `rebuiltSnapshotDates()` (`R/backfillColonySnapshots.R:286`).
+Claim `677a33f15`, RED `2932ed5ce`, GREEN `99c0c9566`, REFACTOR `4373bfff2`. Thread (2) of the earlier-snapshots block off.
+**Measured first:** a second build lists 49 of 49 example dates in the script's words; in the panel qcPed from 2012 lists 6 of 6,
+the hand-built colony from 1999 lists 13 already built plus 1999 failed ("needs at least 2 animals").
+**Verified:** full suite 486 files 4,544 tests 0 failed (GREEN, REFACTOR); check 0/0/0 at `99c0c9566`; `lint_package()` 0; real
+app (scratch install, example, Build from 2012 twice): 3 of 3 rows in the new words, picture opened for the owner; a pre-GREEN
+swap fails the same 2 tests; ratchet 11/11 (`b867aa0eab54`, at `4373bfff2`; a run at load 64 failed 4 timing gates, not cited).
+**Handoff evaluation of S1085: 9/10.** Helped: Next named `:42` with the exact words and the kind-based route; the DT gotcha
+sent me to `skippedDates()`; 49 of 49 and 117 ahead right. Missing: the table's failed-date reasons are script words too. ROI: high.
+**Self: 8/10.** + three cases measured before the question; ruling and gates first try; RED failed only on the words; picture
+before the long runs. - the picture script first stopped "On CRAN" (`NOT_CRAN` unset); a ratchet run under another project's load.
+**Gotchas:** `buildTwice()`/`handBuiltServerArgs()` at `test_modSnapshotTrends.R:1048-1058`; the hand-built colony from 1999 gives
+both kinds of reason; a picture of uncommitted code needs a scratch install (Learning 1052); check `uptime` before a ratchet.
+**Next:** the owner picks. `BACKLOG.md:43` tutorial leftovers (DECISION NEEDED, S); `:148` BACKLOG compression (READY, L). Not
+filed: the table's failed-date reasons (`reportGV()` errors, never reached in the app on the shipped studbooks); S1084's five
+`tapply()` sites (Learning 1050). After a push read CI (S1073 OpenBLAS; S1075/S1081/S1082 `Rprofmem`; S1076 CPU drawing).
+Not pushed (122 ahead). Trims owed soon: `CHANGELOG.md` 196,319 B (warn 196,608 B) and this file, 294 B under
+its 25,000-token ceiling; the next claim likely crosses both (`methodology_trim.py --budget-bytes 65536`, each file).
 
 ### Sessions 947-1085 (condensed S950 to S1086; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1085: `backfillColonySnapshots()` warns of failed dates as kind `backfillFailedDates` (`nFailed`, `nDates`; script sentence
