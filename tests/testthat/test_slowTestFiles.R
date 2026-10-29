@@ -12,11 +12,15 @@
 ## runs, so every test still runs there (owner ruling S1092: one list in one
 ## place, not a skip line in each file).
 
+## Write `lines` as the slowTestFiles.txt in `dir`.
+writeSlowList <- function(dir, lines) {
+  writeLines(lines, file.path(dir, "slowTestFiles.txt"))
+}
+
 test_that("slowTestFiles() reads one file name a line, without comments or blank lines", {
   dir <- withr::local_tempdir()
-  writeLines(c("## Test files CRAN leaves out", "", "test_alpha.R",
-               "  test_beta.R  ", "test-gamma.R  # 3.1 s", "   "),
-             file.path(dir, "slowTestFiles.txt"))
+  writeSlowList(dir, c("## Test files CRAN leaves out", "", "test_alpha.R",
+                       "  test_beta.R  ", "test-gamma.R  # 3.1 s", "   "))
   expect_identical(slowTestFiles(dir),
                    c("test_alpha.R", "test_beta.R", "test-gamma.R"))
 })
@@ -24,13 +28,13 @@ test_that("slowTestFiles() reads one file name a line, without comments or blank
 test_that("slowTestFiles() names no file when the list is missing or holds only comments", {
   dir <- withr::local_tempdir()
   expect_identical(slowTestFiles(dir), character(0))
-  writeLines(c("## nothing listed", ""), file.path(dir, "slowTestFiles.txt"))
+  writeSlowList(dir, c("## nothing listed", ""))
   expect_identical(slowTestFiles(dir), character(0))
 })
 
 test_that("cranTestFilter() leaves every file in when NOT_CRAN is \"true\"", {
   dir <- withr::local_tempdir()
-  writeLines("test_beta.R", file.path(dir, "slowTestFiles.txt"))
+  writeSlowList(dir, "test_beta.R")
   expect_null(cranTestFilter(dir, notCran = "true"))
   expect_null(cranTestFilter(dir, notCran = "TRUE"))
   withr::local_envvar(NOT_CRAN = "true")
@@ -40,7 +44,7 @@ test_that("cranTestFilter() leaves every file in when NOT_CRAN is \"true\"", {
 test_that("cranTestFilter() leaves every file in when the list names none", {
   dir <- withr::local_tempdir()
   expect_null(cranTestFilter(dir, notCran = ""))
-  writeLines("## none listed", file.path(dir, "slowTestFiles.txt"))
+  writeSlowList(dir, "## none listed")
   expect_null(cranTestFilter(dir, notCran = "false"))
 })
 
@@ -50,8 +54,7 @@ test_that("cranTestFilter() leaves out exactly the listed files when NOT_CRAN is
               "test-gamma.R")) {
     writeLines("test_that('runs', expect_true(TRUE))", file.path(dir, f))
   }
-  writeLines(c("test_beta.R", "test-gamma.R"),
-             file.path(dir, "slowTestFiles.txt"))
+  writeSlowList(dir, c("test_beta.R", "test-gamma.R"))
   runFiles <- function(filter) {
     res <- as.data.frame(testthat::test_dir(dir, filter = filter,
                                             invert = TRUE, reporter = "silent",
