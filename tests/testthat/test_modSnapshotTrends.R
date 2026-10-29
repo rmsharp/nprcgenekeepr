@@ -349,14 +349,19 @@ notificationsOfType <- function(seen, type) {
 }
 
 ## A backfillColonySnapshots() that raises each of `notes` as a warning and
-## returns a complete history, for the rest of the calling test. A complete
-## history keeps the trend plot from raising a warning of its own.
+## returns a complete history, for the rest of the calling test. A note is a
+## string or a warning condition, which is raised as it is, kind and all. A
+## complete history keeps the trend plot from raising a warning of its own.
 mockBuildWithNotes <- function(notes, .env = parent.frame()) {
   complete <- checkSnapshotHistory(readSnapshotHistory(exampleHistoryPath))
   testthat::local_mocked_bindings(
     backfillColonySnapshots = function(...) {
       for (note in notes) {
-        warning(note, call. = FALSE)
+        if (inherits(note, "condition")) {
+          warning(note)
+        } else {
+          warning(note, call. = FALSE)
+        }
       }
       list(history = complete, support = data.frame(),
            skipped = data.frame(snapshotDate = as.Date(character(0L)),
@@ -960,6 +965,41 @@ test_that("each note is cut on its own, before the notes are joined", {
       paste(strrep("a", 200L), strrep("b", 200L), sep = " | ")
     )
   )
+})
+
+## -- The failed-dates note in the app's words (S1085) -------------------------
+## The function's failed-dates warning names 'skipped', the list element a
+## script gets back; the panel's table is headed Dates not built, so the panel
+## says it in its own words (owner ruling S1085, "App uses its own words").
+## Each test is fed the warning the real function raises on the hand-built
+## colony (1 of 3 dates fails: nobody was alive on 1999-01-01).
+
+appFailedDatesNote <-
+  "1 of 3 dates could not be built and are listed under Dates not built."
+
+test_that("the failed-dates note is in the app's words and names Dates not built", {
+  skip_if_not_installed("shiny")
+  failedDates <- failedDatesWarningOf()
+  expect_identical(
+    noticesOfBuildWith(list(failedDates)),
+    oneNoteNotice(appFailedDatesNote)
+  )
+})
+
+test_that("beside another note the app's failed-dates sentence keeps its place", {
+  skip_if_not_installed("shiny")
+  failedDates <- failedDatesWarningOf()
+  expect_identical(
+    noticesOfBuildWith(list("note A", failedDates)),
+    severalNotesNotice(paste("note A", appFailedDatesNote, sep = " | "))
+  )
+})
+
+test_that("a plain note in the script's words passes through as written", {
+  skip_if_not_installed("shiny")
+  ## the panel goes by the warning's kind, not by its words
+  note <- "1 of 3 dates could not be rebuilt and are listed in 'skipped'."
+  expect_identical(noticesOfBuildWith(note), oneNoteNotice(note))
 })
 
 ## -- Dates not built ---------------------------------------------------------------

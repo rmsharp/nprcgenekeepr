@@ -544,6 +544,41 @@ test_that("a failing date beside one already there still returns the history", {
   expect_identical(result$skipped$snapshotDate, both)
 })
 
+## S1085 (owner ruling "App uses its own words"): the failed-dates warning is
+## its own kind, backfillFailedDates, and carries its two counts, so the
+## Genetic-Health Trends panel can say it in the app's words (its table is
+## headed Dates not built) while a script keeps the sentence naming 'skipped'.
+
+test_that("the failed-dates warning is its own kind and carries its two counts", {
+  w <- failedDatesWarningOf()
+  expect_s3_class(w, "backfillFailedDates")
+  expect_s3_class(w, "warning")
+  expect_identical(w$nFailed, 1L)
+  expect_identical(w$nDates, 3L)
+  ## a script still gets today's sentence, word for word, with no call
+  expect_identical(
+    conditionMessage(w),
+    "1 of 3 dates could not be rebuilt and are listed in 'skipped'."
+  )
+  expect_null(conditionCall(w))
+})
+
+test_that("a date already there counts among the dates tried, not the failed", {
+  ped <- handBuiltColony()
+  existing <- runBackfill(ped, dates = handDates[[1L]])$history
+  w <- failedDatesWarningOf(ped,
+    dates = as.Date(c("1999-01-01", "2007-01-01")),
+    existingHistory = existing
+  )
+  expect_s3_class(w, "backfillFailedDates")
+  expect_identical(w$nFailed, 1L)
+  expect_identical(w$nDates, 2L)
+  expect_identical(
+    conditionMessage(w),
+    "1 of 2 dates could not be rebuilt and are listed in 'skipped'."
+  )
+})
+
 test_that("updateProgress is called once per date with the date's place in the run", {
   calls <- list()
   recorder <- function(n = 1L, detail = NULL, value = 0L, reset = FALSE) {

@@ -129,3 +129,30 @@ expectSameRows <- function(actual, expected) {
   rownames(expected) <- NULL
   expect_equal(actual, expected)
 }
+
+## The failed-dates warning backfillColonySnapshots() raises, caught whole: on
+## the hand-built colony nobody was alive on 1999-01-01, so 1 of the 3 default
+## dates fails. Every other warning (reportGV()'s own) is let pass, so only the
+## failed-dates one is caught. Used by test_backfillColonySnapshots.R and by
+## test_modSnapshotTrends.R, whose panel tests are fed what the real function
+## raises (S1085, owner ruling "App uses its own words").
+failedDatesWarningOf <- function(ped = handBuiltColony(),
+                                 dates = as.Date(c(
+                                   "1999-01-01", "2007-01-01", "2011-01-01"
+                                 )),
+                                 ...) {
+  set.seed(1L)
+  tryCatch(
+    withCallingHandlers(
+      backfillColonySnapshots(ped,
+        guIter = 20L, guThresh = 1L, dates = dates, ...
+      ),
+      warning = function(w) {
+        if (!grepl("could not be rebuilt", conditionMessage(w), fixed = TRUE)) {
+          invokeRestart("muffleWarning")
+        }
+      }
+    ),
+    warning = function(w) w
+  )
+}
