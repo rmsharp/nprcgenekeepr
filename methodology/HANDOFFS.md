@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1091
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- write a plan to finish the preparations for submitting version 3.0.0 to CRAN (owner-directed at Phase 0; planning session, no code).
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md:8 (the 3.0.0 item); DESCRIPTION; NEWS.Rmd; docs/planning/ (the plan)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- a plan to finish the preparations for submitting version 3.0.0 to CRAN (owner-directed at Phase 0; planning session, no code, no TDD gates).
+what_was_done: Claim 801d1e4fc; plan 555a995fd: docs/planning/cran-3.0.0-submission-plan.md (DRAFT: CRAN's record, a CRAN-mode check of HEAD and v2.0.0 on one machine, the version-bump inventory, 10 phases each with DONE, verify, surface and session boundary, decisions D1-D6, dragons) and BACKLOG.md:16 "Prepare the 3.0.0 CRAN submission". Measured: CRAN-mode tests 309 s against v2.0.0's 66 s (4.7x), about 1,430 s estimated on win-builder against the 600 s incoming limit; CRAN's linux-arm64 job fails 2.0.0's test_modInput_incomplete_final_line.R; R/modSummaryStats.R:17,356,365,374 call the Suggests package shinyBS unguarded; the DOI at R/markerParentageLikelihood.R:131 is wrong. Learning 1057.
+next_steps: The owner rules D1-D6 (plan section 6) or starts Phase 2, the critical path (READY; ask D4 first: an early win-builder r-devel run by the owner is recommended), then Phase 1 (linux-arm64, READY; Docker here runs linux/arm64). Phase 6, the version bump (BACKLOG.md:8), waits for Phases 1-5. 4 local commits, notes and docs only, ride with the next real push.
+key_files: docs/planning/cran-3.0.0-submission-plan.md (sections 3, 5, 6, 7); BACKLOG.md:8 (version item), :16 (plan item); tests/testthat/test_modInput_incomplete_final_line.R:62-82; R/modSummaryStats.R:17,356,365,374; R/markerParentageLikelihood.R:131; tests/testthat/test_docsAuditSixRulings.R:80 (the bump trap); cran-comments.md; docs/planning/cran-2.0.0-phase5-runbook.md
+gotchas: Under renv, devtools::check(incoming = TRUE) halts at "checking CRAN incoming feasibility" (PPM has no Meta/current.rds) yet prints 0/0/0: set options(repos = c(CRAN = "https://cloud.r-project.org")) first and read 00check.log's Status: line. CRAN-mode timing needs env_vars = c(NOT_CRAN = "false"). A source-tree test_dir() ranking overstates tests that read repository files (they skip under R CMD check). Removing BACKLOG.md:8 trips test_docsAuditSixRulings.R:80. The load (10-14) came from other projects' node and vitest processes.
+runtime_smoke: n/a — docs and BACKLOG.md only (no R/, tests/, man/ or vignettes/ change)
+changelog_ref: 801d1e4fc (claim); the close-out commit (DONE entry)
+commit: 555a995fd
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 9eddede5290b · manifest 7e3e82ab3ae0 (run at 555a995fd, load about 12)
 ```
 
 ```handoff

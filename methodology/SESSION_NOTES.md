@@ -99,36 +99,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1091 Did
-**Deliverable:** a plan to finish the preparations for submitting version 3.0.0 to CRAN, written to
-`docs/planning/` (owner-directed at Phase 0; planning session, no code) (IN PROGRESS)
-**Started:** 2026-10-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner-directed at Phase 0 after closing the picker to clarify: "This session make a plan to complete preparations
+to submit version 3.0.0 to CRAN"; planning session, no code, no TDD gates):** `docs/planning/cran-3.0.0-submission-plan.md` (DRAFT) and
+one `BACKLOG.md` item pointing at it ("Prepare the 3.0.0 CRAN submission", `BACKLOG.md:16`). Claim `801d1e4fc`, plan `555a995fd`.
+**Measured (plan section 3):** as the tree stands CRAN's 10-minute incoming check would reject 3.0.0: CRAN-mode tests take 309 s here
+against `v2.0.0`'s 66 s, same machine and command (4.7x), so about 1,430 s on win-builder against 600 s (an estimate); the top 10
+test files hold 52% of it, and skipping the 57 files of 1 s or more leaves about 39 s. Also: CRAN's linux-arm64 job fails 2.0.0's
+`test_modInput_incomplete_final_line.R` (`:68,70,79,81`); `R/modSummaryStats.R:17,356,365,374` call the Suggests package `shinyBS`
+with no guard (so did 2.0.0); `R/markerParentageLikelihood.R:131`'s DOI should be `10.1016/0040-5809(86)90006-7`. The owner's
+mid-session suggestion (old cover notes to `cran/archive/` or deleted) is decision D1.
+**Handoff evaluation of S1090: 9/10.** Helped: the covr-layout recipe (now the plan's Phase 2 step 2) and "never pass an unset
+variable as `check_dir`". Missing: nothing this owner-directed task needed. Wrong: nothing found.
+**Self: 8/10.** + both trees checked on one machine before any timing claim; four real defects found and sourced. - two counts from
+coarse greps (the `shinyBS` guard, a `| head`-cut "10" that is 4) were drafted wrong and caught only at the re-read (Learning 1057).
+**Gotchas:** under renv an incoming check halts on PPM's missing `Meta/current.rds` yet devtools prints 0/0/0: set the CRAN repo first
+and read `00check.log`'s `Status:`; CRAN timing needs `env_vars = c(NOT_CRAN = "false")`; Docker here runs linux/arm64.
+**Next:** the owner rules D1-D6 (plan section 6) or starts Phase 2, the critical path (READY; D4 is asked at its start), then Phase 1
+(arm64). Not pushed: 4 local commits, all notes or `docs/`, ride with the next real push. Ratchet 11/11
+(`9eddede5290b`, at `555a995fd`, load about 12).
 
-### What Session 1090 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Fix red coverage check"; scope "Share one check"; strict TDD, every gate the
-recommended option):** the red `test-coverage.yaml` run is fixed in the tests only. `test_roxygenInheritParams.R` skipped only on a
-missing `R/`; under covr `R/` holds only `.rdb`/`.rdx` files, so the scan read nothing and failed `:78`, `:80`. The shared
-`rSourceAvailable()` (`tests/testthat/helper-rSource.R`, S893's rule) now gates both whole-`R/` scans (`test_roxygenInheritParams.R:60-63`,
-`test_sexCodes.R:97-99,113-115`); its tests are `test_rSourceAvailable.R`, and `test_sexCodes.R` lost its own copy. Claim `8e8fc19c7`,
-RED `98a683ca6`, GREEN `665f4cf9b`, REFACTOR `3d5270b4f`; pushed `6d12f6061..3d5270b4f` at the owner's word; `BACKLOG.md:8` removed.
-**Verified:** a covr-layout scratch install (Gotchas) failed 2 before, 0 after; full suite 487 files, 4,547 blocks, 0 errors, 2 failed
-(the two wall-clock benchmarks at load 24, both pass alone); `lint_package()` 0; `devtools::check()` 0/0/0; ratchet 11/11
-(`2fbfdc211408`, at `3d5270b4f`, load about 9). CI: test-coverage `40828629186` green, `[ FAIL 0 | WARN 10 | SKIP 654 | PASS 16623 ]` (was FAIL 2, SKIP 653);
-lint and pkgdown green, R-CMD-check `40828629069` running at close-out; the earlier R-CMD-check `40822189344` finished with all 5 legs green.
-**Handoff evaluation of S1089: 9/10.** Helped: the cause, the lines (`:61`, `:78`, `:80`), S893's guard and "RED is the red run" were
-exact, and `gh run view --log` found the failures at once. Missing: how to reproduce covr's layout (S893 kept the result, not the recipe).
-**Self: 8/10.** + the class scanned before scoping (only `R/` collides); the failure reproduced before the question; one commit per
-phase. - `devtools::check(check_dir = Sys.getenv("CHKDIR"))` with the variable unset halted at the check step and cost a 10-minute rerun.
-**Gotchas:** covr layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then, outside the repo with
-`R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`, `testthat::test_file()` on
-`<scratch>/nprcgenekeepr/tests/testthat/<f>` with `package = "nprcgenekeepr", load_package = "installed"`; a new scan of the whole
-`R/` folder skips on `rSourceAvailable()`, not `dir.exists()`; never pass an unset variable as `check_dir`.
-**Next:** the owner picks. READY: #138 scoping (M, `BACKLOG.md:157`). DECISION NEEDED: shorter ledger entries (`:103`). BLOCKED:
-larger-colony cost (studbook, `:33`); held-back sync (`:143`; upstream `main` has no `close_out_report.py` fix, checked S1090). Owed:
-tonight's nightly `shinytest2` and the R-CMD-check logs for the S1073/S1075/S1076/S1081/S1082 checks (S1090 read only conclusions).
-
-### Sessions 947-1089 (condensed S950 to S1090; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1090 (condensed S950 to S1091; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1090: the red `test-coverage.yaml` run fixed in the tests only: the shared `rSourceAvailable()` (`tests/testthat/helper-rSource.R`)
+gates both whole-`R/` scans (claim `8e8fc19c7`, RED `98a683ca6`, GREEN `665f4cf9b`, REFACTOR `3d5270b4f`, pushed); S1089 9/10, self
+8/10 (Learning 1056). **Gotchas kept:** covr's layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then outside
+the repo `test_file(<f>, package = "nprcgenekeepr", load_package = "installed")`; skip a whole-`R/` scan on `rSourceAvailable()`.
 S1089: `BACKLOG.md` compression pass, 234 to 208 lines (claim `3340e9064`, pass `ad8597cc9`): the resolved kinship2-audit section
 deleted and a #138 item added; the red test-coverage run filed (fixed S1090); S1088 8/10, self 7/10 (Learning 1055). **Gotchas kept:**
 write a file's own size figure last; #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
