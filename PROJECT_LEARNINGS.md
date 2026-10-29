@@ -21189,3 +21189,67 @@ for the scope question’s preview tables; it was answered first try.
 entries held 86% of 24,094 B (claims 439-766 B, DONE 2,393-4,668 B), so
 a shorter DONE entry, not fewer entries, is what would slow the
 regrowth.
+
+#### Learning 1056
+
+**S1090 (2026-10-29), the red `test-coverage.yaml` run: a guard written
+inside one test file is invisible to the next test that needs it, so
+S1068’s new `R/` scan repeated the bug S893 had fixed; a source-tree
+guard belongs in a `helper-*.R` file from the start.** **(1) The
+cause.** covr (`.github/workflows/test-coverage.yaml:90-94`) runs the
+tests from `<install_path>/nprcgenekeepr/nprcgenekeepr-tests/testthat`,
+so `test_path("..", "..", "R")` is the installed `R/`, which exists and
+holds only `nprcgenekeepr.rdb`/`.rdx`; a
+[`dir.exists()`](https://rdrr.io/r/base/files2.html) skip lets a
+whole-folder scan read nothing. S893 fixed `test_sexCodes.R` with a
+check local to that file; S1068 wrote `test_roxygenInheritParams.R` with
+the old [`dir.exists()`](https://rdrr.io/r/base/files2.html) skip. The
+shared `rSourceAvailable()` (`tests/testthat/helper-rSource.R`) is now
+the one check (owner scope “Share one check”). **(2) Only `R/`
+collides:** a scan of every `test_path("..", "..", ...)` use found
+`man/`, `vignettes/`, `NEWS.Rmd`, `BACKLOG.md` and the picture folders
+absent from an installed copy (their skips work), and single
+`R/<file>.R` reads guarded by
+[`file.exists()`](https://rdrr.io/r/base/files.html); only the two
+whole-`R/` scans needed the check. A guard test that every whole-`R/`
+scan calls it was not built. **(3) Reproduce covr’s layout locally**
+(S893 recorded the result, not the recipe):
+`R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then
+outside the repo, with `R_LIBS=<scratch>:<renv lib>`,
+`RENV_CONFIG_AUTOLOADER_ENABLED=false` and `NOT_CRAN=true`,
+`testthat::test_file("<scratch>/nprcgenekeepr/tests/testthat/<f>", package = "nprcgenekeepr", load_package = "installed")`:
+2 failed before the fix, 0 after. **(4)**
+`devtools::check(check_dir = Sys.getenv("X"))` with `X` unset builds the
+tarball, then halts at “zero-length ‘path’ argument”; leave the argument
+out.
+
+#### Learning 1057
+
+**S1091 (2026-10-29), the CRAN 3.0.0 plan: a CRAN-mode timing needs
+three settings, and without the first a halted check reads clean.**
+**(1) The repository.** With renv active, `getOption("repos")` is Posit
+Package Manager, which has no `src/contrib/Meta/current.rds`;
+`devtools::check(remote = TRUE, incoming = TRUE)` stopped at “checking
+CRAN incoming feasibility” with `Execution halted` and still printed
+`0 errors ✔ | 0 warnings ✔ | 0 notes ✔` after 33 s. Set
+`options(repos = c(CRAN = "https://cloud.r-project.org"))` first, and
+count a check only when `00check.log` ends with a `Status:` line. **(2)
+`NOT_CRAN`.** `devtools::check()` sets `NOT_CRAN = "true"` unless
+`env_vars = c(NOT_CRAN = "false")` is passed; without it every
+`skip_on_cran()` test runs and the time is not CRAN’s. **(3) The
+comparison.** A stored local figure (2.0.0’s cover note: tests 59 s)
+comes from another machine-day; checking `git archive v2.0.0` with the
+same command on the same machine gave a like-for-like ratio (tests 66 s
+against 309 s, 4.7x), which scales 2.0.0’s accepted win-builder time
+(588 s) to about 1,430 s for 3.0.0 against a 600 s limit
+(`docs/planning/cran-3.0.0-submission-plan.md` section 3). A source-tree
+`test_dir()` ranks files but overstates tests that read repository
+files, which skip under `R CMD check`. **(4) Two counts nearly went into
+the plan wrong, both from coarse greps:** a file-level
+[`requireNamespace("shinyBS")`](https://github.com/federicomarini/shinyBS/)
+count credited `R/zzz.R:5`’s guard (a resource path in `.onLoad()`) to
+the unguarded `shinyBS::` calls in `R/modSummaryStats.R:17,356,365,374`,
+and `git grep -l ... | head` gave “10 test files read `.Rbuildignore`”
+where the uncut grep with comment lines dropped gives 4. Both were
+caught at the end-to-end re-read: read the guarded call itself, and
+print an inventory grep whole (S1071’s lesson again).

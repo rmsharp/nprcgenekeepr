@@ -6,20 +6,6 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Fix the red `test-coverage.yaml` run: `test_roxygenInheritParams.R`
-scans no source under covr (found S1089, 2026-10-29; READY, Effort S)**
-– run `40822189540` on `6d12f6061`, the first CI run to include S1068’s
-test, failed 2 tests (16,623 passed): `test_roxygenInheritParams.R:78`
-(`0 < 30` pages) and `:80` (`NULL`, not `character(0)`). Cause: the test
-reads `R/*.R` from `test_path("..", "..", "R")` and skips only when that
-folder is missing (`:61`), but covr runs the tests from the installed
-package, whose `R/` holds only `.rdb`/`.rdx` files, so the scan reads
-nothing. S893 fixed the same shape in `test_sexCodes.R:92-100`
-(`sexCodeSourceAvailable()`: any `.R` file in the folder); use that
-check here, likely as one shared test helper. RED is the red run, as at
-S1018 and S1061. R-CMD-check (`40822189344`) was still running at
-S1089’s close-out.
-
 **Move the version to 3.0.0 just before release (READY at release time,
 Effort S)** – the owner decided (S855) the next release is **3.0.0**.
 Until then `DESCRIPTION`, the `NEWS.Rmd`/`NEWS.md` heading, `README.md`
@@ -28,6 +14,18 @@ and `ROADMAP.md` stay at 2.0.0.9000 on purpose. At release prep: set
 re-knit `NEWS.md`, reinstall the package and re-render `README`
 (Learning 376), and update the 2.0.0.9000 cites in `ROADMAP.md`. The
 paper-dependency item below also waits on a released 3.0.0.
+
+**Prepare the 3.0.0 CRAN submission** (plan
+`docs/planning/cran-3.0.0-submission-plan.md`, S1091, DRAFT; READY for
+its Phase 2, then Phase 1; DECISION NEEDED on D1-D6 for the rest; Effort
+L, about 10-12 sessions) – as the tree stands CRAN’s 10-minute incoming
+check would reject 3.0.0: in CRAN mode the tests take 309 s here against
+`v2.0.0`’s 66 s on the same machine, about 1,430 s on win-builder
+against a 600 s limit (an estimate). CRAN’s linux-arm64 check also fails
+2.0.0’s `test_modInput_incomplete_final_line.R`, `R/modSummaryStats.R`
+calls the Suggests package `shinyBS` with no guard, and one help-page
+DOI is wrong. The plan’s section 7 orders the phases; the item above is
+its Phase 6.
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
