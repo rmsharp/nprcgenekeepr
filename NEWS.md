@@ -527,14 +527,18 @@ export workflows, and longitudinal monitoring of colony genetic health.
   spaces are ignored and an unreadable sex is read as unknown. An empty
   cell in an uploaded CSV or text file is read as missing, as in Excel
   uploads, so files with blank founder sire and dam cells load and a
-  blank ancestry no longer counts as OTHER instead of UNKNOWN. A
-  stand-in id never repeats an id a real animal already has, even one
-  that appears only as a sire or dam (`addUIds()` skips it). Potential
-  Parents leaves out as dam a female who gave birth too close in time to
-  have carried the animal, also when no nearby female was a proven
-  breeder. The quality-control summary printed in the console spells
-  "suspicious" correctly, and `get_elapsed_time_str()` rounds before it
-  writes minutes and seconds.
+  blank ancestry no longer counts as OTHER instead of UNKNOWN. On Linux
+  computers with ARM processors, a small CSV or text file whose last
+  value is in quotes and that has no final line break no longer loads
+  with 0 records and 1 error: R itself added a stray character to that
+  value, and the Input tab, `getPedigree()`, `getGenotypes()` and the
+  package's other file readers now avoid it. A stand-in id never repeats
+  an id a real animal already has, even one that appears only as a sire
+  or dam (`addUIds()` skips it). Potential Parents leaves out as dam a
+  female who gave birth too close in time to have carried the animal,
+  also when no nearby female was a proven breeder. The quality-control
+  summary printed in the console spells "suspicious" correctly, and
+  `get_elapsed_time_str()` rounds before it writes minutes and seconds.
 
 - Fixed (Breeding Groups and Genetic Diversity): A valid ancestry rules
   table with no rules no longer stops Download Audit Manifest on the
