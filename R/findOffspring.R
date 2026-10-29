@@ -10,6 +10,8 @@
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam).
 #' This requires complete pedigree information.
+#' Ids given as numbers or as a factor in \code{sire} and \code{dam} are taken
+#' as their text.
 #' @return A named integer vector containing the offspring counts for each
 #' animal in \code{probands}. The names are set to the IDs from
 #' \code{probands}, and an ID that is not a parent in \code{ped} gets 0.

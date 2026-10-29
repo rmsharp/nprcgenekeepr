@@ -12,7 +12,9 @@ counted and returned.}
 
 \item{ped}{the pedigree information in datatable format.  Pedigree
 (req. fields: id, sire, dam).
-This requires complete pedigree information.}
+This requires complete pedigree information.
+Ids given as numbers or as a factor in \code{sire} and \code{dam} are taken
+as their text.}
 }
 \value{
 A named integer vector containing the offspring counts for each

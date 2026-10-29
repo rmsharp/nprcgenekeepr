@@ -13,7 +13,9 @@ counted.}
 \item{ped}{the pedigree information in datatable format.  Pedigree
 (req. fields: id, sire, dam; \code{population} is also read when
 \code{considerPop} is \code{TRUE}).
-This is the complete pedigree.}
+This is the complete pedigree.
+Ids given as numbers or as a factor in \code{sire} and \code{dam} are taken
+as their text.}
 
 \item{considerPop}{logical value indication whether or not the number of
 offspring that are part of the focal population are to be counted?
