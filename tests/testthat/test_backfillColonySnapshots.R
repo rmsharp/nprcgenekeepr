@@ -275,19 +275,7 @@ test_that("the example colony in 1990, 2000 and 2010 gives the measured sizes", 
 ## Slice 2 (S1038)
 ## ---------------------------------------------------------------------------
 
-## Runs the function with a seed and lets through only the warning this slice
-## adds, so reportGV()'s own warnings can neither hide it nor stand in for it.
-runBackfill <- function(ped, ..., seed = 1L) {
-  set.seed(seed)
-  withCallingHandlers(
-    backfillColonySnapshots(ped, guIter = 20L, guThresh = 1L, ...),
-    warning = function(w) {
-      if (!grepl("could not be rebuilt", conditionMessage(w), fixed = TRUE)) {
-        invokeRestart("muffleWarning")
-      }
-    }
-  )
-}
+## runBackfill() is in helper-backfillColony.R (moved there S1085).
 
 test_that("an undated parent counts from its first dated offspring until it leaves", {
   history <- runBackfill(undatedColony(), dates = undatedDates)$history

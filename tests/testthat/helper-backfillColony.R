@@ -130,29 +130,32 @@ expectSameRows <- function(actual, expected) {
   expect_equal(actual, expected)
 }
 
-## The failed-dates warning backfillColonySnapshots() raises, caught whole: on
-## the hand-built colony nobody was alive on 1999-01-01, so 1 of the 3 default
-## dates fails. Every other warning (reportGV()'s own) is let pass, so only the
-## failed-dates one is caught. Used by test_backfillColonySnapshots.R and by
-## test_modSnapshotTrends.R, whose panel tests are fed what the real function
-## raises (S1085, owner ruling "App uses its own words").
+## Runs backfillColonySnapshots() with a seed and lets through only its
+## failed-dates warning (kind "backfillFailedDates"), so reportGV()'s own
+## warnings can neither hide it nor stand in for it. Moved here from
+## test_backfillColonySnapshots.R in S1085 (REFACTOR), where it matched the
+## warning's words; it now goes by the warning's kind.
+runBackfill <- function(ped, ..., seed = 1L) {
+  set.seed(seed)
+  withCallingHandlers(
+    backfillColonySnapshots(ped, guIter = 20L, guThresh = 1L, ...),
+    warning = function(w) {
+      if (!inherits(w, "backfillFailedDates")) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+}
+
+## The failed-dates warning a run raises, caught whole: on the hand-built
+## colony nobody was alive on 1999-01-01, so 1 of the 3 default dates fails.
+## Used by test_backfillColonySnapshots.R and by test_modSnapshotTrends.R,
+## whose panel tests are fed what the real function raises (S1085, owner
+## ruling "App uses its own words").
 failedDatesWarningOf <- function(ped = handBuiltColony(),
                                  dates = as.Date(c(
                                    "1999-01-01", "2007-01-01", "2011-01-01"
                                  )),
                                  ...) {
-  set.seed(1L)
-  tryCatch(
-    withCallingHandlers(
-      backfillColonySnapshots(ped,
-        guIter = 20L, guThresh = 1L, dates = dates, ...
-      ),
-      warning = function(w) {
-        if (!grepl("could not be rebuilt", conditionMessage(w), fixed = TRUE)) {
-          invokeRestart("muffleWarning")
-        }
-      }
-    ),
-    warning = function(w) w
-  )
+  tryCatch(runBackfill(ped, dates = dates, ...), warning = function(w) w)
 }
