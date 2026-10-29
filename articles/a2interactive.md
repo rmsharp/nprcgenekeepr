@@ -2011,7 +2011,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpXXwyVC/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpnUqaM5/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -3047,15 +3047,15 @@ document.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-29 17:28:25.698898. The processing
-time for this document was 26 seconds..
+The current date and time is 2026-10-29 23:51:20.554553. The processing
+time for this document was 20 seconds..
 
 ``` r
 
 sessionInfo()
 ```
 
-    ## R version 4.6.1 (2026-06-24)
+    ## R version 4.6.2 (2026-10-29)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.5 LTS
     ## 
@@ -3086,17 +3086,17 @@ sessionInfo()
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.62            bslib_0.12.0        
-    ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       quadprog_1.5-8      
-    ##  [9] vctrs_0.7.3          tools_4.6.1          generics_0.1.4       tibble_3.3.1        
-    ## [13] pkgconfig_2.0.3      Matrix_1.7-5         data.table_1.18.6.1  checkmate_2.3.4     
+    ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.23-1       quadprog_1.5-8      
+    ##  [9] vctrs_0.7.3          tools_4.6.2          generics_0.1.4       tibble_3.3.1        
+    ## [13] pkgconfig_2.0.3      Matrix_1.7-6         data.table_1.18.6.1  checkmate_2.3.4     
     ## [17] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3           readxl_1.6.0        
-    ## [21] lifecycle_1.0.5      compiler_4.6.1       farver_2.1.2         stringr_1.6.0       
+    ## [21] lifecycle_1.0.5      compiler_4.6.2       farver_2.1.2         stringr_1.6.0       
     ## [25] textshaping_1.0.5    Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9     
     ## [29] sass_0.4.10          yaml_2.3.12          htmlTable_2.5.0      later_1.4.8         
     ## [33] pillar_1.11.1        pkgdown_2.2.1        jquerylib_0.1.4      DT_0.34.0           
     ## [37] cachem_1.1.0         sessioninfo_1.2.4    mime_0.13            tidyselect_1.2.1    
     ## [41] zip_3.0.2            digest_0.6.39        dplyr_1.2.1          labeling_0.4.3      
-    ## [45] fastmap_1.2.0        grid_4.6.1           cli_3.6.6            magrittr_2.0.5      
+    ## [45] fastmap_1.2.0        grid_4.6.2           cli_3.6.6            magrittr_2.0.5      
     ## [49] withr_3.0.3          shinyBS_0.65.0       scales_1.4.0         promises_1.5.0      
     ## [53] backports_1.5.1      plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0    
     ## [57] rmarkdown_2.32       lambda.r_1.2.6       httr_1.4.9           otel_0.2.0          

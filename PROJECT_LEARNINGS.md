@@ -21253,3 +21253,85 @@ and `git grep -l ... | head` gave “10 test files read `.Rbuildignore`”
 where the uncut grep with comment lines dropped gives 4. Both were
 caught at the end-to-end re-read: read the guarded call itself, and
 print an inventory grep whole (S1071’s lesson again).
+
+#### Learning 1058
+
+**S1092 (2026-10-29), CRAN plan Phase 2: rank and check a CRAN cut in
+the check’s own folder, and treat a win-builder FTP upload as
+unconfirmed.** **(1) Per-file times in the check’s layout.** After a
+CRAN-mode `devtools::check(..., env_vars = c(NOT_CRAN = "false"))`, run
+`testthat::test_dir("testthat", package = "nprcgenekeepr", load_package = "installed")`
+from `<check_dir>/nprcgenekeepr.Rcheck/tests` with
+`R_LIBS=<that .Rcheck>:<renv library>`,
+`RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=false` and
+`R --vanilla`, through a small R6
+[`testthat::Reporter`](https://testthat.r-lib.org/reference/Reporter.html)
+whose `start_file()`/`end_file()` record elapsed time (it counts code
+outside `test_that()` too; classify results by
+[`class()`](https://rdrr.io/r/base/class.html), since
+`expectation_success()` is not exported in testthat 3.3.2). It
+reproduced the check exactly (`PASS 14895`, `SKIP 706`, 304 s summed
+against the check’s 296 s), where S1091’s source-tree ranking had put
+`test_perfHarness.R` (it reads `tools/`, so it skips in a built package)
+second. **(2) Export coverage of any cut from one run.**
+[`trace()`](https://rdrr.io/r/base/trace.html) every exported function
+in `asNamespace("nprcgenekeepr")` with a tracer that records the current
+file (set in the reporter’s `start_file()`): one run gives
+file-to-export pairs, so each candidate cut is checked offline. All 236
+exports were called in CRAN mode; files of 0.5 s or more was the deepest
+cut that kept all 236 once three files skipped only their slow blocks
+(0.3 s lost 14, mostly Shiny UI functions). **(3) win-builder.** An FTP
+upload (`devtools:::submit_winbuilder_ftp()`, what `check_win_devel()`
+does) returns no receipt. The web form
+(`devtools:::upload_webform(file, "R-devel")`) answers “File name: …
+File Size: …” on acceptance, and “Access to the path … is denied.
+(perhaps you uploaded already and the file has not been processed yet?)”
+while a same-named file waits, which makes it a queue probe. On
+2026-10-29 R-devel held the upload more than 2 h 20 min with no email.
+Read the reply in its own step: an R error in the parsing line after the
+call sent a copy whose reply was never seen (11:44:17). **(4)** The
+ratchet’s `perf_convertRelationships_300_seconds` read 0.13 s against
+0.10 s at load 5-11 with no `R/` change; alone it took 0.09 s three
+times. Re-run a perf gate that fails on a tests-only change before
+citing it. **(5)** Claude Code refuses `rm -rf $VAR/...`; copy into a
+fresh folder instead of clearing one.
+
+#### Learning 1059
+
+**S1093 (2026-10-29), CRAN plan Phase 1: reproduce a CRAN special check
+with its own artifact and image, then probe each stage before
+guessing.** **(1) The artifact and the image.**
+`r-devel/linux-arm64-checks` keeps each run’s `<pkg>.Rcheck/tests` (with
+`testthat.Rout.fail`) as a 90-day artifact
+(`gh run download <run> -R r-devel/linux-arm64-checks -n output-arm64`)
+and runs in `ghcr.io/r-devel/rcheckserver/ubuntu:latest` (18.2 GB; R
+4.6.1, Ubuntu 26.04, P3M arm64 binaries preset), so the Imports install
+in minutes, not the plan’s hour of source builds in `r-base`. The
+failure reproduced on the first run there (container `ngk-arm64-s1093`,
+kept). **(2) Probe the intermediates.** One script printing each stage
+on both platforms ([`str()`](https://rdrr.io/r/utils/str.html) of the
+read, QC’s error list, the date steps) found it in one diff:
+`"SHIPPED\xff"`. The plan’s guess (unsigned `char`, a compiled
+dependency’s date parsing) had the mechanism right and the place wrong:
+base R, utils `readtablehead()` (`src/library/utils/src/io.c:910`,
+`char c2 = (char) scanchar(...)` after a closing quote), the same line
+in R 4.4, 4.5, 4.6 and trunk. Minimal case:
+`writeChar('a,b\n1,"x"', f, eos = NULL); read.csv(f)$b` gives `x\xff` on
+Linux ARM64. **(3) A newline workaround must skip compressed files:**
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) opens gzip,
+bzip2, xz and zstd as text; a newline appended to bzip2 or xz data
+breaks the read (gzip survives), so `lacksFinalNewline()` checks
+[`file()`](https://rdrr.io/r/base/connections.html)’s signatures first.
+**(4) Compare check counts from one command.** S1092 recorded
+`SKIP 629`; `devtools::check()` on S1092’s own tree (`git archive` to a
+scratch folder, `devtools::check(pkg = <it>)` run from this repo so renv
+supplies the library) gave 628, so today’s 629 is 628 plus the new
+guard’s installed-copy skip. **(5) Confirm an install before an opt-in
+browser test:** `devtools::install(upgrade = "never")` errors in this
+devtools (`upgrade` must be TRUE, FALSE or NA) and the E2E test then
+passed against the old installed code; check
+`exists("<new function>", envir = asNamespace(...))` first. **(6)
+win-builder’s queues are listable:**
+`curl ftp://win-builder.r-project.org/R-devel/` (read-only) showed
+S1092’s tarball still queued behind 32 others, while it had left
+R-release.
