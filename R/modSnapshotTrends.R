@@ -394,6 +394,7 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
       warningsSeen <- character(0L)
       tryCatch(
         {
+          existing <- history()
           result <- withProgress(
             message = "Building earlier snapshots", value = 0L,
             {
@@ -404,7 +405,7 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
                 do.call(backfillColonySnapshots, c(
                   list(fullPedigree(),
                        guIter = src$guIter, guThresh = src$guThresh,
-                       from = startDate(), existingHistory = history(),
+                       from = startDate(), existingHistory = existing,
                        updateProgress = updateProgress),
                   src$reportArgs
                 )),
@@ -424,7 +425,15 @@ modSnapshotTrendsServer <- function(id, snapshotSource,
             }
           )
           history(result$history)
-          skippedDates(result$skipped)
+          # The function's reason for a date already rebuilt names the
+          # script's existingHistory; here it says so in this panel's words
+          skipped <- result$skipped
+          rebuilt <- existing$snapshotDate[
+            existing$membershipRule == "reconstructedLiving"
+          ]
+          skipped$reason[skipped$snapshotDate %in% rebuilt] <-
+            "Already in the history; not built again."
+          skippedDates(skipped)
           signalReady()
         },
         error = function(e) {
