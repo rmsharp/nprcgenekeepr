@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1094 Did
+**Deliverable (IN PROGRESS, claimed 15:15 CDT):** CRAN plan Phase 2's DONE, win-builder's check time of the current tree.
+**Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1093 Did
 **Deliverable, DONE (owner pick, item 2 of 4, "Fix the Linux ARM64 failure"; strict TDD, every gate the recommended option): CRAN plan
 Phase 1.** Claim `5169a31f1`, RED `c1e3395fd` and `06b6c277e`, GREEN `29e070626`, `3c64589b4` and `39aaf742c`, REFACTOR `e98c39fcc`,
