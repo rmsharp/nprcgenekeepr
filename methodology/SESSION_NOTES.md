@@ -98,31 +98,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 1084 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "reportGV() factor-id NA"; ruling "Fix the counting"; strict TDD, every gate
-"Yes"; the three help and NEWS sentences approved as written):** `findOffspring()` reads `sire` and `dam` as their text
-(`idsAsText()`, `R/findOffspring.R:37-38`), so `findOffspring()`, `offspringCounts()`, `calcNeVariance()` and `reportGV()` give a
-factor-id studbook the text's counts. Claim `1b95eac90`, RED `acf2bebdd`, GREEN `16ff21a5b`, help `12c851cf1`, NEWS `69b8843bf`,
-REFACTOR `c68dd1cfc`. Block off BACKLOG; no issue.
-**Measured first:** `tapply()` over a factor keeps every level, so the living subset's 1,337 empty sire levels gave 33 of 332
-`livingOffspring` `NA`; with one level set for id, sire and dam, 297 `totalOffspring`, 301 `livingOffspring` and `neVariance` `NA`.
-**Verified:** full suite 486 files 4,535 tests 0 failed (GREEN and REFACTOR); check 0/0/0 at `16ff21a5b`; `lint_package()` 0;
-the installed tree gives both factor kinds and a `read.csv(stringsAsFactors = TRUE)` studbook the text's counts; REFACTOR 10 tests
-38 expectations before and after, and the pre-fix code fails the same 8; ratchet 11/11 (`dec95c9839d3`, at `c68dd1cfc`).
-**Handoff evaluation of S1083: 9/10.** Helped: the item gave the exact probe (`qcStudbook(minSireAge = 2)`, living animals, `guIter`
-50, seed 1) and "find the line first", so the 33 reproduced at once; `exampleIdVariants()` and `pedIdsAsFactors()` reused. Missing:
-the item named one kind of factor ids; the shared-level kind (297/301 `NA`) was in no record. Wrong: nothing. ROI: high.
-**Self: 7/10.** + cause found in two probes; both factor kinds measured and a prototype `identical()` before the question (all four
-answered first try); RED failed for the intended reason; a pre-fix swap proved the refactored tests. - three "haven't heard from
-you" nudges (Phase 0, claim reads, research); four probe reruns (parse span, relative path, `:::`, rank-ordered rows).
-**Gotchas:** a pre-fix swap under `load_all()` must replace both `asNamespace()` and `package:nprcgenekeepr` (5 vs 8 failures);
-`reportGV()`'s report is ordered by rank, so compare counts with `offspringCounts()`; `isLivingAnimal()` is internal.
-**Next:** the owner picks. `BACKLOG.md:41` snapshot notice wording (DECISION NEEDED, S); `:45` tutorial leftovers (DECISION
-NEEDED, S); `:150` BACKLOG compression (READY, L). Not probed: other `tapply()`-over-id sites with shared-level factors (Learning
-1050). After a push read CI (S1073 OpenBLAS; S1075/S1081/S1082 `Rprofmem`; S1076 CPU drawing). Not pushed (112 ahead).
-`CHANGELOG.md` is 189,814 B, warn at 196,608 B: a trim (`--budget-bytes 65536`) is likely owed within a session or two (estimate).
+### What Session 1085 Did
+**Deliverable:** settle the wording of Build Earlier Snapshots' notice for dates it could not build: the warning says
+"listed in 'skipped'" while the panel's table is headed "Dates not built" (`BACKLOG.md:41`, DECISION NEEDED, Effort S;
+owner pick at the Phase 0 picker, item 1 of 4, "Snapshot notice wording"; strict TDD if reworded). (IN PROGRESS)
+**Started:** 2026-10-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
 
-### Sessions 947-1083 (condensed S950 to S1084; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1084 (condensed S950 to S1085; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1084: `findOffspring()` reads `sire` and `dam` as their text (`idsAsText()`, `R/findOffspring.R:37-38`), so `offspringCounts()`,
+`calcNeVariance()` and `reportGV()` give a factor-id studbook the text's counts. Claim `1b95eac90`, close-out `886db8ab5`, not pushed;
+S1083 9/10, self 7/10 (Learning 1050). **Gotchas kept:** a pre-fix swap under `load_all()` replaces both `asNamespace()` and
+`package:nprcgenekeepr`; `reportGV()`'s report is ordered by rank; five other `tapply()`-over-id sites not probed (Learning 1050).
 S1083: number and factor ids are taken as their text where `convertRelationships()`, `markerRealizedRelatednessVariance()`,
 `makeCEPH()`, `groupAddAssign()` and `fillGroupMembersWithSexRatio()` start (`idsAsText()`/`pedIdsAsText()`, `R/toCharacter.R:33-63`);
 `kinship(sparse = TRUE)` is the fast fill made sparse (`sparseKinship()`, `R/kinship.R`). Claim `bf551cb51`, close-out `19430142b`, not

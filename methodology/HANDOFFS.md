@@ -208,6 +208,17 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1085
+date: 2026-10-28
+status: pending
+active_task: IN PROGRESS -- settle the wording of Build Earlier Snapshots' notice for dates it could not build: the warning says "listed in 'skipped'" while the panel's table is headed "Dates not built" (BACKLOG.md:41, DECISION NEEDED, Effort S; owner pick at the Phase 0 picker, item 1 of 4, "Snapshot notice wording"); strict TDD if reworded.
+what_was_done: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; work beginning.
+
+```handoff
 session: S1084
 date: 2026-10-28
 status: complete
