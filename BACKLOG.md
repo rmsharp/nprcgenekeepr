@@ -30,15 +30,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Earlier-snapshots follow-ups after #170 (one thread left, extracted S1040 when the
-      #170 block came off; #170 is closed; the tutorial thread was done S1042, the trend chart's
-      console notice and the notice's 200-character cut S1049, the failed-dates notice's wording
-      S1085, the Dates not built table's words S1086)** -- design and what was built:
-      `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4.
-      **Build cost on a larger colony** (BLOCKED --
-      needs a studbook above 3,694 rows from the owner, Effort S): the cost line's quarter of a second a date per
-      1,000 iterations (`describeBackfillCost()`, `R/modSnapshotTrends.R`; S1065) is measured on the 2,590-animal jmac
-      studbook (53 dates, 12.6 s) and the 3,694-row example (49 dates, 9.4 s), so a bigger colony is unmeasured.
+- [ ] **Earlier-snapshots follow-up after #170: build cost on a larger colony** (BLOCKED --
+      needs a studbook above 3,694 rows from the owner, Effort S; #170 is closed and its other
+      follow-ups shipped S1042, S1049, S1085 and S1086, see `CHANGELOG.md`) -- the cost line's
+      quarter of a second a date per 1,000 iterations (`describeBackfillCost()`,
+      `R/modSnapshotTrends.R`; S1065) is measured on the 2,590-animal jmac studbook (53 dates,
+      12.6 s) and the 3,694-row example (49 dates, 9.4 s), so a bigger colony is unmeasured.
+      Design: `docs/planning/retrospective-snapshot-backfill-plan.md` sections 5.3-5.4.
 
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
@@ -102,63 +100,45 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       core test files), so the planning session must re-run the grep and decide where that test
       lives. (The owner accepted S667's recommendation NOT to split the layout core, recorded S738;
       the prep steps stand whether or not a split ever happens.)
-- [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
-      reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
-      already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
-      2026-08-12, Effort unknown, not investigated) -- incidental to the `SRF_RED`
-      investigation: the tagged region regrew ~105,000 B in roughly a day during an active
-      multi-session stretch (S536-S542), and a `grep -c '^### 2026-08-12'` on the pre-trim
-      file showed a large share of that region was same-day, multiple-entries-per-session
-      housekeeping (claim/reconcile/close-out entries) rather than deliverable-content
-      entries. Not confirmed as causal, and not investigated further this session (out of
-      the `SRF_RED` decision's own scope, per `PROJECT_LEARNINGS.md` Learning 382's "report,
-      don't fix mid-session" precedent). A future session could measure the actual
-      housekeeping-vs-deliverable entry-byte split and decide whether a norm analogous to
-      the canonical design's own deferred H4 remedy (recorded as `docs/planning/ledger-trimmer-design.md`
-      §10.2, a file that is not in this repo; "the lever is receipt size, and the mechanism would be a norm plus a check, not
-      an archiver") is worth adopting for `CHANGELOG.md` specifically. **Measured S897
-      (2026-10-04):** `CHANGELOG.md` went from 37,593 B (its 2026-09-27 trim) to 258,724 B in 7
-      days, which is what raised the trimmer's `SRF_RED` (7.9455); the owner-approved `--force`
-      trim left it at 25,172 B. The owner's choice of lever (shorter claim/close-out entries and
-      receipts) is still open.
+- [ ] **`CHANGELOG.md` regrows faster than it is trimmed: shorter entries are the open lever**
+      (found S543, 2026-08-12; DECISION NEEDED -- the owner's choice of lever, Effort S) -- every
+      session writes a claim entry and a DONE entry, often a trim or push entry too, and the file
+      outgrows its trims: 258,724 B seven days after its 2026-09-27 trim (S897: `SRF_RED` 7.9455,
+      the owner took a `--force` trim to 25,172 B), and 201,025 B at S1088's `--force` trim, which
+      archived the 87 records of 2026-10-23 to 2026-10-27. Measured S1089 on the six sessions of
+      2026-10-28: claim entries 439-766 B, DONE entries 2,393-4,668 B (24,094 B in all, 86% in the
+      DONE entries), so the length of the DONE entries, not their number, carries most of the
+      bytes. The lever, open since S897: shorter DONE and claim entries (and receipts); the
+      canonical design's remedy for the same problem in `HANDOFFS.md` ("Receipt Inflation", H4)
+      is "a norm plus a check, not an archiver" (`docs/planning/ledger-trimmer-design.md` §10.2,
+      not in this repo).
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
-      last pass S896, 2026-10-04) -- `BACKLOG.md` is one of the dashboard's HIGH-risk
-      ledger-size items but does not fit `methodology_trim.py`'s chronological-record model:
-      its `##` sections are standing *topical* categories that accumulate resolved-item
-      narrative indefinitely, not dated newest-on-top records. The file's own header states the
-      remedy ("Open, actionable work only... for history see `CHANGELOG.md`"). Sections
-      **regrow** as later sessions append their own progress narrative (S606 found the S531
-      "fully RESOLVED" claim was only a snapshot), so this is a recurring maintenance pass,
-      never a one-time fix.
-      **Pass history** (each pass has its own `CHANGELOG.md` entry; S890 checked the figures
-      quoted here against those entries): S529 Housekeeping section (652 -> 389 lines; its
-      inventory found 2 items with no ledger entry, a real FM #27 gap, backfilled before
-      compressing); S530 "Pedigree diagram vs kinship2" (896 -> 286); S531 "Genetic-metrics PDF
-      audit follow-ups" (753 -> 267); S606 re-compressed Genetic-metrics after regrowth (304 ->
-      80); S752 (2026-09-21) again (91 -> 62), condensed this history, found "Pedigree diagram vs
-      kinship2" NOT regrown (286 -> 156); **2026-09-24** (ad hoc, owner-picked): removed 2
-      completed items, fixed 4 stale statements, compressed the LabKey item (44 -> 15) and the
-      kinship2 DONE narrative (84 -> 20), deleted the 3 resolved sections (55 lines; file 432 ->
-      378; the NEW-53 ledger gap found there was backfilled); **S890** (2026-10-03): condensed the
-      docs-audit item (55 -> 48) and this history (50 -> 38); file 552 -> 533 lines (58,228 ->
-      46,731 B); **S896** (2026-10-04): compressed the four S890 candidates (PED_GV 20 -> 13 lines,
-      standalone-package 37 -> 34, chromote 23 -> 17, kinship2 preamble 20 -> 13); its checks
-      corrected a stale `:1661` line reference and a drifted D-2 claim, and recomputed the PED_GV
-      count of 9 from the triage table; file 533 -> 514 lines (46,731 -> 43,766 B).
+      last pass S1089, 2026-10-29) -- its `##` sections are standing *topical* categories, not
+      dated newest-on-top records, so `methodology_trim.py` cannot archive them; the file's own
+      header states the remedy ("Open, actionable work only... for history see `CHANGELOG.md`").
+      Items **regrow** as later sessions append progress narrative (Learning 626), so this is a
+      recurring pass, never a one-time fix.
+      **Pass history** (each pass's figures are in its own `CHANGELOG.md` entry, live or under
+      `methodology/archive/`): S529, S530, S531, S606, S752, 2026-09-24 (ad hoc), S890, S896,
+      S1089. File size: 378 lines on 2026-09-24, 599 at S853, 514 after S896, 234 before S1089
+      and 208 after it, with the new #138 item (most of the fall since S896 is finished items
+      coming off, not passes).
       **Method (every pass, all steps):** before compressing anything to a pointer, (1) verify
-      `CHANGELOG.md` + `docs/archive/CHANGELOG-*.md` carry an entry heading for every session
+      `CHANGELOG.md` + `methodology/archive/CHANGELOG-*.md` (pre-S325:
+      `docs/archive/CHANGELOG-legacy-pre-S325.md`) carry an entry heading for every session
       number cited AND that the load-bearing facts are inside those entries (a heading alone proves
       little); (2) confirm every cited Learning / doc path resolves and every issue state via
       `gh issue view`, not prose; (3) extract any buried open thread as its own item first; (4)
       replace whole line ranges mechanically (Learning 537: a partial `old_string` leaves later
       paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
       re-read the compressed result end to end.
-      **Candidates for the next pass (measured S896, line counts after this pass; re-grep, sizes
-      not anchors):** this item's own history (41 lines) and the paper item (24). The
-      standalone-package item is still 34 lines but is nearly all ratified-scope open text;
-      leave it. Regrowth, for scale: 378 lines on 2026-09-24, 599 at S853, 552 before S890,
-      514 after S896.
+      **Candidates for the next pass (measured S1089; re-grep, sizes not anchors):** the
+      finished-work narrative in three of the six items the owner delayed on 2026-10-22, left
+      alone at S1089 at the owner's word: the LabKey research item's list of what Recs #1-#5
+      shipped, the standalone-package item's disposition history (its
+      `test_newsReleaseState.R:234,248` cite is stale: the calls are now at `:202` and `:216`),
+      and the outreach item's list of the plan's contents.
 
 - [ ] **Take the methodology files the S1032 sync held back (BLOCKED -- on a fix to `close_out_report.py` in the
       methodology repo, Effort S once it ships)** (found S1032, 2026-10-22) -- the sync copied 7 of 10 files and, at the
@@ -174,19 +154,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
       until then.
 
-## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
-*S435's capability comparison of the issue #129 pedigree diagram against kinship2's drawing
-feature set (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`) produced 8
-recommendations, filed S436 as GitHub issues #131-#138. **All are shipped and closed except
-#138** (full-colony rendering beyond the 1,500-node cap: `low priority` label, needs its own
-scoping session first; tracked on GitHub, not here). The order they shipped in is the sequencing
-audit's status line (`docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`). None
-reopens issue #129 or the visNetwork-vs-kinship2 technology decision (D2), which stands as
-ratified; the
-`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` refresh (S484) has since gone
-stale again and carries a status note. Session-by-session record: `CHANGELOG.md`; technical
-findings: `PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. No live item remains here: S921 shipped
-the last one (the legend row for the dashed repeat-appearance link; see `CHANGELOG.md`).*
+- [ ] **Draw the full colony beyond the Diagram tab's cap (issue #138, low priority; READY -- the
+      pickup is a scoping session, not a build; Effort M for that session)** -- the tab draws at
+      most 750 animals (400 with Rectilinear edges), about 1,500 drawn nodes
+      (`R/modPedigree.R:453,465`; the issue's title still says "1,500-node cap"). Its source audit
+      (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`, Finding #7) advised no
+      action; the issue says a real need warrants a design session (for example a colony summary
+      view), not a higher cap.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
