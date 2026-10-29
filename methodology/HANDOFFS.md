@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1088
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- trim methodology/CHANGELOG.md (200,328 B, past its 196,608 B context-budget warn line) with methodology_trim.py --budget-bytes 65536 (owner pick at the Phase 0 picker, item 1 of 4, "CHANGELOG trim"; housekeeping, no code, so no TDD gates).
-what_was_done: pending
-next_steps: pending
-key_files: methodology/CHANGELOG.md:21 (the archive pointer blocks the trim adds to)
-gotchas: pending
-runtime_smoke: n/a — docs-only
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- methodology/CHANGELOG.md trimmed from 201,025 B to 32,331 B (owner pick at the Phase 0 picker, item 1 of 4, "CHANGELOG trim"; housekeeping, no code, so no TDD gates). The plain run was refused with SRF_RED; the owner took "Force, cut at end of 10-27".
+what_was_done: Claim cb71bb6db; trim 87bc10428: 87 of 101 records (2026-10-23 to 2026-10-27) archived to methodology/archive/CHANGELOG-through-2026-10-27.md with methodology_trim.py v1.8.1 --budget-bytes 65536 --force --cut 2026-10-27 --write. The plain run gave SRF_RED 1.0038 against S1048's archive 4c54afa (0.1911 against the largest-drop boundary 8aa6369); Phase 0's --check read 0.9998 (29 B of margin) and the 697 B claim entry crossed it; a real regrowth rate (168,694 B in 5 days, about 34 KB a day), not the Learning 549/550 artifact. Four dry runs priced the choices before one owner question: the default --force cut (86 records, 33,788 B, one 10-27 record live under a through-10-27 name), --cut 2026-10-27 (87, 32,331 B, chosen), --cut 2026-10-28 (100, 4,104 B), no trim (the 262,144 B hard limit in about 2 days). L1, L2, L3 OK and P1A_OK (14 to 15) in the dry run and the write; the shard's verify script passes before and after the commit; test_archivePointersResolve.R 12 and test_contextBudgetLedgers.R 4 tests 0 failed; context budget CHANGELOG.md ok. Learning 1054. No BACKLOG item completed; no issue filed.
+next_steps: The owner picks at the next Phase 0. READY: BACKLOG.md compression (BACKLOG.md:124, Effort L; measured S1088 at 234 lines, 20,009 B, down from 361 on 2026-10-26, so a pass may find little beyond its own 38-line history). BLOCKED: build cost on a larger colony (BACKLOG.md:38, needs a studbook above 3,694 rows from the owner); the held-back methodology sync (BACKLOG.md:163, upstream starter-kit/close_out_report.py last changed 2026-10-07 on rmsharp/methodology, still unfixed; the draft report in docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md is unposted). Next CHANGELOG trim: the warn line returns about 2026-11-03 (an estimate at 34 KB a day) and SRF_RED fires past 201,025 B, so put the --force choice in that picker option (Learning 1054). Open lever, the owner's: shorter claim and close-out entries (BACKLOG.md:105). Not filed: S1084's five tapply()-over-id sites (Learning 1050); the Dates not built failed-date reasons in script words. Not pushed: master is 130 ahead after this close-out.
+key_files: methodology/CHANGELOG.md:31 (the new archive pointer), :35 (S1088 DONE entry), :45 (claim); methodology/archive/CHANGELOG-through-2026-10-27.md:1 and its .verify.sh:1; PROJECT_LEARNINGS.md:3054 (Learning 1054); BACKLOG.md:105 (the shorter-entries lever)
+gotchas: SRF_RED fires once the ledger regrows past its size just before the last trim (now 201,025 B, only 4,417 B past the 196,608 B warn line), so a claim entry alone (about 700 B) can tip a borderline --check into a refusal: read --check at Phase 0 and compute the margin as (bytes the last archive removed) minus (current size minus its post-trim size). --cut and its date must be two shell words (a loop that quoted "--cut <date>" got a usage error). Dry runs write nothing; the tool never commits. By the S1051 rule only test_archivePointersResolve.R and test_contextBudgetLedgers.R read the ledger's text.
+runtime_smoke: n/a — docs-only (ledger files only; no package code or app behavior changed)
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 248d8225b7ee · manifest 7e3e82ab3ae0 (run at 87bc10428, load about 4)
+changelog_ref: 87bc10428
+commit: 87bc10428
 ```
 
 ```handoff

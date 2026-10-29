@@ -99,33 +99,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1088 Did
-**Deliverable:** trim `methodology/CHANGELOG.md` (200,328 B, past its 196,608 B warn line) with `methodology_trim.py
---budget-bytes 65536` (owner pick, item 1 of 4, "CHANGELOG trim"; no code, no TDD gates) (IN PROGRESS)
-**Started:** 2026-10-29
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (owner pick, item 1 of 4, "CHANGELOG trim"; housekeeping, no code, no TDD gates):** `methodology/CHANGELOG.md`
+201,025 B to 32,331 B, 87 of 101 records (2026-10-23 to 2026-10-27) archived to `methodology/archive/CHANGELOG-through-2026-10-27.md`
+with `methodology_trim.py --budget-bytes 65536 --force --cut 2026-10-27`. Claim `cb71bb6db`, trim `87bc10428`.
+**Refused, then ruled:** the plain run gave `SRF_RED` (1.0038 against S1048's archive `4c54afa`; 0.1911 against `8aa6369`). Phase 0's
+`--check` read 0.9998 (29 B of margin); the claim entry crossed it. The owner took "Force, cut at end of 10-27" over the default
+cut (one 10-27 record left live), keeping only today (4,104 B) and no trim. Real regrowth, not the Learning 549 artifact.
+**Verified:** L1, L2, L3 and `P1A_OK` (14 to 15) in the dry run and the write; the shard's verify script passes before and after the
+commit; the 2 tests whose code reads the ledger (`test_archivePointersResolve.R` 12, `test_contextBudgetLedgers.R` 4) 0 failed;
+budget CHANGELOG.md ok; ratchet 11/11 (`248d8225b7ee`, at `87bc10428`).
+**Handoff evaluation of S1087: 9/10.** Helped: "Owed: a CHANGELOG.md trim" with the exact command and "S1048 is the model". Missing:
+the tool's SRF reading (0.9998 at its close-out), the one figure that showed the trim would need `--force`. ROI: high.
+**Self: 8/10.** + four dry runs priced every cut before the one question (answered first try); the RED read checked against
+Learnings 549/550; tests chosen by the S1051 rule. - the picker said "it moves older entries" without the 0.9998; a loop quoted
+`--cut <date>` as one argument (one wasted call).
+**Gotchas:** `SRF_RED` fires once the file regrows past its size just before the last trim: now 201,025 B, only 4,417 B past the
+196,608 B warn line, so the next trim is likely refused too; read `--check` at Phase 0 and put the `--force` choice in the picker.
+Regrowth 168,694 B in 5 days (about 34 KB a day; S1048 saw 22): the warn line returns about 2026-11-03.
+**Next:** the owner picks. READY: BACKLOG compression (L; 234 lines, little to find). BLOCKED: larger-colony build cost (needs a
+studbook); the held-back methodology sync (upstream `close_out_report.py` unfixed since 2026-10-07). Open lever: shorter entries
+(`BACKLOG.md:105`). Not filed: S1084's five `tapply()` sites; Dates not built failed-date reasons. Not pushed (130 ahead after this close-out).
 
-### What Session 1087 Did
-**Deliverable, DONE (owner pick, item 1 of 4, "Tutorial leftovers"; scope "Twins + ncol"; strict TDD, every gate "Yes"):** the
-tutorial gains "### Kinship of Identical Twins" (`vignettes/a2interactive.Rmd:608-643`: six animals, two full sisters declared MZ
-twins, `kinship()` without and with `twinRelations`) and Plotting the Trend's call takes `ncol = 3L` with one sentence (`:1042-1064`).
-No guard for omitted exports (ruled). Claim `85593510b`, RED `de7417098`, GREEN `0e65b544e`, REFACTOR `8ebf3f6e7`. BACKLOG item off.
-**Measured first:** 236 exports at `649389386` and now, 170 never named; one new reader-facing parameter (`ncol`); MZ twins 0.25 to
-0.5, the daughter with her aunt 0.125 to 0.25; the tutorial's own chart reads well by default (a stand-in history did not).
-**Verified:** full suite 486 files 4,547 tests 0 failed (GREEN, REFACTOR); check 0/0/0 at GREEN; `lint_package()` 0; the tutorial
-rendered from a scratch install, pictures opened for the owner; REFACTOR counts unchanged; ratchet 11/11 (`590acb8402d0`).
-**Handoff evaluation of S1086: 9/10.** Helped: Next named `:43`; both trims with exact bytes; the scratch-install gotcha. Wrong:
-"the next claim likely crosses" the notes ceiling (the claim's condensing shrank the file). ROI: high.
-**Self: 8/10.** + all three measured before the question; scope, wording and gates first try; pictures before the long runs.
-- a needless `--no-verify` again; a probe left `Rplots.pdf` in the repo root (deleted); the first render failed on a relative path.
-**Gotchas:** render the tutorial with `knit_root_dir` in `vignettes/` (its hidden chunk reads `../inst/extdata/...`) and output in
-scratch; no digits in inventoried prose (ids too: inline R, animals by role); `placeLines(title, lines)`, `headingLines(lines,
-deepest)` and `sectionOf()` are in `helper-pageText.R`; `ggplot_build()` outside `pdf(NULL)` writes `Rplots.pdf`.
-**Next:** the owner picks. Owed: a `CHANGELOG.md` trim (past its warn line since this claim; `methodology_trim.py --budget-bytes
-65536`). READY: BACKLOG compression (L). Not filed: S1084's five `tapply()` sites (`rareAlleleCounts.R:131`, not `:85`); the Dates
-not built failed-date reasons. The next tutorial inventory compares against `0e65b544e` (Learning 1053). Not pushed (127 ahead).
-
-### Sessions 947-1086 (condensed S950 to S1088; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1087 (condensed S950 to S1088; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1087: the tutorial gains "### Kinship of Identical Twins" (`vignettes/a2interactive.Rmd:608-643`; MZ twins 0.25 to 0.5, the
+daughter with her aunt 0.125 to 0.25) and `plotSnapshotTrends(ncol = 3L)` (`:1042-1064`); no guard for omitted exports (ruled).
+Claim `85593510b`, close-out `3731cf313`, not pushed; S1086 9/10, self 8/10 (Learning 1053). **Gotchas kept:** render the tutorial
+with `knit_root_dir` in `vignettes/`; no digits in inventoried prose; `headingLines()`/`placeLines()`/`sectionOf()` in `helper-pageText.R`.
 S1086: the Dates not built table lists a date already built as "Already in the history; not built again."
 (`R/modSnapshotTrends.R:397-434`); a failed date keeps its error, a script keeps the function's sentence; one rule,
 `rebuiltSnapshotDates()` (`R/backfillColonySnapshots.R:286`). Claim `677a33f15`, close-out `9ae663a38`, not pushed; S1085 9/10,
