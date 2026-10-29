@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1093 Did
+**Deliverable:** CRAN 3.0.0 plan Phase 1, the linux-arm64 failure of `test_modInput_incomplete_final_line.R`: reproduce, name the
+cause, fix (owner pick, item 2 of 4, "Fix the Linux ARM64 failure"; strict TDD) (IN PROGRESS)
+**Started:** 2026-10-29 12:40 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1092 Did
 **Deliverable (owner pick, item 1 of 4, "Speed up CRAN's tests"; strict TDD, every gate the recommended option): CRAN plan Phase 2's
 cut, landed; its DONE is owed:** win-builder's measured check time for the cut tree (D4 = A, ruled this session). Claim `2d3dc2f26`,
