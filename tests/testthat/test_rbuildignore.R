@@ -9,16 +9,6 @@
 ## a future re-typo of this pattern is caught by the test suite instead of
 ## only by a NOTE someone has to notice and trace back.
 
-pkg_root <- testthat::test_path("..", "..")
-rbuildignore_path <- file.path(pkg_root, ".Rbuildignore")
-no_rbuildignore_msg <- ".Rbuildignore absent; guard not applicable"
-
-readRbuildignorePatterns <- function() {
-  lines <- readLines(rbuildignore_path, warn = FALSE)
-  ## Comments start a line with "#"; blank lines carry no pattern.
-  lines[nzchar(lines) & !grepl("^#", lines)]
-}
-
 anyPatternMatches <- function(patterns, path) {
   any(vapply(patterns, function(p) {
     isTRUE(tryCatch(grepl(p, path, perl = TRUE), error = function(e) FALSE))
@@ -26,8 +16,6 @@ anyPatternMatches <- function(patterns, path) {
 }
 
 test_that(".Rbuildignore covers the real methodology_trim.py at the repo root", {
-  skip_if_not(file.exists(rbuildignore_path), no_rbuildignore_msg)
-
   patterns <- readRbuildignorePatterns()
   expect_true(
     anyPatternMatches(patterns, "methodology_trim.py"),
@@ -44,8 +32,6 @@ test_that(".Rbuildignore covers the real methodology_trim.py at the repo root", 
 ## so it stays out of the tarball, as .gitignore does; the pattern must not be
 ## so broad that it drops the example file it protects.
 test_that(".Rbuildignore keeps the repo-root .gitattributes out of the tarball", {
-  skip_if_not(file.exists(rbuildignore_path), no_rbuildignore_msg)
-
   patterns <- readRbuildignorePatterns()
   expect_true(
     anyPatternMatches(patterns, ".gitattributes"),
@@ -59,7 +45,5 @@ test_that(".Rbuildignore keeps the repo-root .gitattributes out of the tarball",
 ## The methodology files live under methodology/ (bin/migrate-layout). R CMD build
 ## reads the filesystem, so a directory no pattern covers ships whole.
 test_that(".Rbuildignore keeps the methodology/ directory out of the tarball", {
-  skip_if_not(file.exists(rbuildignore_path), no_rbuildignore_msg)
-
   expect_true(anyPatternMatches(readRbuildignorePatterns(), "methodology"))
 })

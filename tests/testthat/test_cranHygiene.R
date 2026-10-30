@@ -27,8 +27,7 @@ test_that("the markerParentageLikelihood() help cites the paper's real DOI", {
 ## -- The old cover notes ----------------------------------------------------
 
 test_that("the old cover notes live in cran/archive/, out of the tarball", {
-  ignorePath <- file.path(pkgRoot, ".Rbuildignore")
-  skip_if_not(file.exists(ignorePath), ".Rbuildignore not present")
+  ignored <- readRbuildignorePatterns()
   oldNotes <- paste0(
     c(
       "20200415", "20200510", "20200517", "20201107", "20210324", "20210330",
@@ -40,17 +39,15 @@ test_that("the old cover notes live in cran/archive/, out of the tarball", {
   expect_length(
     list.files(pkgRoot, pattern = "^[0-9]+_cran-comments\\.md$"), 0L
   )
-  ignored <- readLines(ignorePath, warn = FALSE)
   expect_true("^cran$" %in% ignored)
   ## A dated note left at the root by mistake still never ships.
   expect_true("^[0-9]+_cran-comments\\.md$" %in% ignored)
 })
 
 test_that("the live cover note stays at the root, where submit_cran() reads it", {
-  ignorePath <- file.path(pkgRoot, ".Rbuildignore")
-  skip_if_not(file.exists(ignorePath), ".Rbuildignore not present")
+  ignored <- readRbuildignorePatterns()
   expect_true(file.exists(file.path(pkgRoot, "cran-comments.md")))
-  expect_true("^cran-comments\\.md$" %in% readLines(ignorePath, warn = FALSE))
+  expect_true("^cran-comments\\.md$" %in% ignored)
 })
 
 test_that(".gitignore has no regex line for the live cover note", {

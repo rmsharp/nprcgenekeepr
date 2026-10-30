@@ -25,7 +25,6 @@
 
 pkg_root <- testthat::test_path("..", "..")
 workflow_dir <- file.path(pkg_root, ".github", "workflows")
-rbuildignore_path <- file.path(pkg_root, ".Rbuildignore")
 
 ## The four workflows that run on every push to the default branch.
 push_workflows <- c(
@@ -121,11 +120,6 @@ globMatches <- function(glob, path) {
 
 anyGlobMatches <- function(globs, path) {
   any(vapply(globs, globMatches, logical(1), path = path))
-}
-
-readRbuildignorePatterns <- function() {
-  lines <- readLines(rbuildignore_path, warn = FALSE)
-  lines[nzchar(lines) & !grepl("^#", lines)]
 }
 
 ## R CMD build drops a path when any pattern matches the path itself or one of
@@ -233,12 +227,11 @@ test_that("the four push workflows carry one identical paths-ignore list", {
 test_that("every paths-ignore entry names only files .Rbuildignore excludes", {
   paths <- file.path(workflow_dir, push_workflows)
   skip_if_not(all(file.exists(paths)), "workflow files not present in this build")
-  skip_if_not(file.exists(rbuildignore_path), ".Rbuildignore not present in this build")
+  patterns <- readRbuildignorePatterns()
 
   entries <- sort(unique(unlist(lapply(paths, pathsIgnoreEntries))))
   expect_gt(length(entries), 0L, label = "distinct paths-ignore entries")
 
-  patterns <- readRbuildignorePatterns()
   for (entry in entries) {
     ## One concrete path the entry would match, e.g. "docs/**" -> "docs/x/y.txt".
     probe <- gsub("\\?", "x", gsub("\\*", "x", sub("\\*\\*", "x/y.txt", entry)))
