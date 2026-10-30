@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 and 2 are DONE (S1093; S1092 to S1096). The owner's rulings on D1 to D6 (section 6) shape
+**Status:** DRAFT. Phases 1, 2 and 3 are DONE (S1093; S1092 to S1096; S1097). The owner's rulings on D1 to D6 (section 6) shape
 Phase 2's measurement (D4), Phases 3 to 5, and Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
 3.0.0 to CRAN"; mid-session: "Consider removing all old cran-comments.md files or storing them in
@@ -558,7 +558,7 @@ These are grep counts, not a measured failure.
 app), `readKinshipOverrides` (`man/readKinshipOverrides.Rd:42`) and `readTwinRelations`
 (`man/readTwinRelations.Rd:38`). The last two are the ones to review. CRAN reviewers ask for
 `\donttest{}` or a runnable example when code can run in under 5 s. 2.0.0 was accepted with all
-eight, so this is a should-do, not a blocker.
+eight, so this is a should-do, not a blocker. **S1097:** those last two now run, so 6 of 270 remain.
 
 ### 4.6 The built tarball (measured S1091 from the section 3.1 build)
 
@@ -688,6 +688,15 @@ clean regression read both set `NOT_CRAN = "true"` and run `load_all()` first.
   check finds gaps that need new fast tests. **Effort L.**
 
 ### Phase 3. Static hygiene (one session; metadata and help text)
+
+**DONE (S1097, D1 = A; strict TDD, `tests/testthat/test_cranHygiene.R`).** The DOI is now
+`10.1016/0040-5809(86)90006-7`, and the local CRAN-mode check's incoming NOTE no longer lists it. The eight dated notes
+are in `cran/archive/`, kept out of the tarball by `^cran$`. The `readKinshipOverrides()` and `readTwinRelations()`
+examples run on a temporary file; a CRAN check still runs 216 examples, since pages with `\dontrun{}` were already
+counted, so they add 0.001 to 0.002 s each. The tarball's top level is exactly section 4.6's 12 entries. That
+check's NOTE now holds the version and `api.reuse.software` ("Could not resolve host", a one-time lookup failure; the
+address returned HTTP 200 when tried again the same hour). **Run `devtools::run_examples()` after a check, or delete its `Rplots.pdf`
+first:** a check that follows it NOTEs that file at the top level (found S1097; relevant to Phase 7).
 
 - **Why:** each item below is a NOTE, a reviewer request or the owner's request.
 - **DONE:** these items, each verified:
@@ -868,7 +877,7 @@ clean regression read both set `NOT_CRAN = "true"` and run `load_all()` first.
 
 ## 6. Decisions for the owner (recommendation first)
 
-**D1. The old cover notes.**
+**D1. The old cover notes.** Ruled A (S1097).
 - **(A, recommended)** Move the eight dated files to `cran/archive/` and add `^cran$` to
   `.Rbuildignore`. In Phase 8, save the 2.0.0 note there as `20260717_cran-comments.md` before
   rewriting it. This is the owner's own suggestion. It keeps every past note one folder away,
@@ -907,8 +916,9 @@ must).
 - **(A, recommended)** Move it from Suggests to Imports. The app needs it on every run of the
   Summary Statistics tab, so Imports is where it belongs, and the change is one DESCRIPTION line.
   Imports would then hold 20 packages that are not part of base R. `--as-cran` notes "excessive
-  imports" above a threshold of 20 (`_R_CHECK_EXCESSIVE_IMPORTS_`); before taking A, check
-  whether exactly 20 draws that NOTE.
+  imports" above a threshold of 20 (`_R_CHECK_EXCESSIVE_IMPORTS_`). Exactly 20 draws no NOTE
+  (measured S1097 on R 4.6.1: the test is `length(imps) > lim`, and
+  `tools:::.check_package_depends()` on a scratch copy with `shinyBS` added reports nothing).
 - **(B)** Keep it in Suggests and guard the four calls. The tab then shows plain Export buttons
   and boxplots with no hover help when `shinyBS` is missing.
 
@@ -920,7 +930,7 @@ must).
 |---|---|---|---|---|
 | 2 | cut the CRAN-mode test time (do first) | DONE (S1096, owner ruling): 520 s on R-devel (`6tYpEEb12W8l`); the same tarball also read 617 s (section 3.6) | nothing | |
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
-| 3 | static hygiene | after D1 | D1 | S |
+| 3 | static hygiene | DONE (S1097; D1 = A) | nothing | |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | after D6 (4a), D2 (4b) | D6; D2 = A for 4b | S-M |
 | 5 | NEWS release pass | after D3 | D3 = B | M |
 | 6 | version bump | after 1-5 | Phases 1-5 landed | S |

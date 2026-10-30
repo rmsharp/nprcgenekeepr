@@ -14,8 +14,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       released 3.0.0.
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
-      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; DECISION NEEDED on D1-D3, D5 and D6
-      (D4 ruled A, S1092); Effort L, about 7-9 sessions left) -- **Phase 1 (S1093):** the
+      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; DECISION NEEDED on
+      D2, D3, D5 and D6 (D1 ruled A, S1097; D4 ruled A, S1092); Effort L, about 6-8 sessions left) --
+      **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
       ARM64 `read.csv()`/`read.table()` of a file whose last value is quoted and that has no final
@@ -31,11 +32,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S1095), two slow examples are cheaper (S1095), and loading the package no longer loads
       Matrix or ggplot2, which made R's per-example memory sweep slow (S1096). win-builder R-devel
       read 652, 564, then 617 and 520 s for one S1096 tarball: about 100 s of run-to-run
-      noise, so Phase 8 uploads again before cutting (plan sections 3.4-3.6). Still open after Phase 2:
-      `R/modSummaryStats.R` calls the Suggests package `shinyBS` with no guard (Phase 4a), and one
-      help-page DOI is wrong (Phase 3); the incoming
-      NOTE also flags "de" (`DESCRIPTION:37`) and the thoughtco.com URL (status 402, explained in
-      2.0.0's note). The plan's section 7 orders the phases; the item above is its Phase 6.
+      noise, so Phase 8 uploads again before cutting (plan sections 3.4-3.6). **Phase 3 (DONE
+      S1097):** the DOI is right, past cover notes are in `cran/archive/`, and two help examples
+      run. Still open: `R/modSummaryStats.R` calls the Suggests package `shinyBS` with no guard
+      (Phase 4a; moving it to Imports makes 20 non-base packages, which draws no NOTE, measured
+      S1097); win-builder's incoming NOTE also flags "de" (`DESCRIPTION:37`) and the thoughtco.com
+      URL (status 402, explained in 2.0.0's note). The plan's section 7 orders the phases; the item
+      above is its Phase 6.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
