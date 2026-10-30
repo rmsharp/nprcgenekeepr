@@ -68,12 +68,10 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' ped <- qcStudbook(nprcgenekeepr::examplePedigree,
-#'   minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
-#'   reportErrors = FALSE
-#' )
+#' ped <- nprcgenekeepr::qcPed
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
-#' geneticValues <- reportGV(ped, guIter = 10L)$report
+#' ## The genetic value report of qcPed, stored with the package
+#' geneticValues <- nprcgenekeepr::qcPedGvReport$report
 #' ## Three groups of living animals that have a genetic value
 #' living <- geneticValues$id[geneticValues$id %in% ped$id[is.na(ped$exit)]]
 #' groups <- list(
