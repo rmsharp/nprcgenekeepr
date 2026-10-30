@@ -21519,3 +21519,32 @@ network-dependent: `api.reuse.software` failed a lookup once and
 returned 200 the same hour, and thoughtco.com stayed out of this local
 NOTE while win-builder has flagged it, so a URL line needs a second try
 before it counts as a finding.
+
+#### Learning 1064
+
+**S1098 (2026-10-30), CRAN plan Phase 4: a check that removes packages
+is only as faithful as the library it cannot remove them from.** **(1)
+`_R_CHECK_DEPENDS_ONLY_` hides nothing in R’s own library.**
+`tools:::setRlibs()` links the dependencies into a temporary library,
+but `.Library` stays on the path, and this Mac’s holds 226 non-base
+packages, 16 of the 17 Suggests. The planned command would have hidden
+only `kinship2`. The first sign was a probe that still found `shinyBS`
+after I removed it from a scratch library. Before any run that removes a
+package, ask R where it would find that package. A scratch R home
+(symlinks, a `library` of the 29 standard packages, a copy of `bin/R`
+with `R_HOME_DIR` changed) fixes it with no change to the installed R;
+recipe in the plan’s Phase 4 DONE paragraph. **(2) The grep over-counted
+the risk and missed the real failures.** The plan’s table counted 47
+`withr` and 20 `mockery` test files with no guard. testthat turned the
+missing packages into skips (`{mockery} is not installed (22)`, 0
+failed), and `withr` comes in through testthat’s own imports. The
+failures were one example and two vignettes that the table never
+counted. **(3) A plan’s “whether the app or only the tab fails” is worth
+asking of the released version too.** The same probe on the `v2.0.0` tag
+showed that a default install of the CRAN release cannot start the app,
+which turned a tidy-up into a user-facing NEWS line. **(4) A guard
+written with a parser needs its own small cases first.** Parse data
+leaves `text` empty on non-terminal nodes, so reading a condition takes
+[`getParseText()`](https://rdrr.io/r/utils/getParseData.html); the small
+cases (negated condition, `else` branch, a different package, a call
+inside the condition) pin what “guarded” means.

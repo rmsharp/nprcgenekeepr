@@ -31,7 +31,6 @@ table has its two columns and no rows.
 
 ``` r
 library(nprcgenekeepr)
-suppressMessages(library(dplyr))
 
 qcPed <- nprcgenekeepr::qcPed
 qcPed <- qcPed[1:50, ] # Comment out for full example
@@ -42,12 +41,8 @@ kin <- convertRelationships(bkmat, qcPed)
 relClasses <- makeRelationClassesTable(kin)
 relClasses$`Relationship Class` <-
   as.character(relClasses$`Relationship Class`)
-relClassTbl <- kin[!kin$relation == "Self", ] |>
-  group_by(relation) |>
-  summarise(count = n())
+relClassTbl <- as.data.frame(table(kin$relation[kin$relation != "Self"]))
 relClassTbl
-#> # A tibble: 1 × 2
-#>   relation    count
-#>   <chr>       <int>
-#> 1 No Relation  1225
+#>          Var1 Freq
+#> 1 No Relation 1225
 ```

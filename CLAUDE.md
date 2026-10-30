@@ -202,8 +202,8 @@ always needs `dev = TRUE` in this project.** `renv/settings.json` sets
 [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
 only scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
 dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`,
-`mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools
-`roxygen2`, `devtools` and `quarto`, and their transitive deps like
+`mockery`, `shinytest2`, plus the dev-profile tools `roxygen2`,
+`devtools` and `quarto`, and their transitive deps like
 `pkgload`/`chromote`) is silently dropped from `renv.lock` on an
 ordinary snapshot, only to resurface as a missing-package crash the next
 time someone hits

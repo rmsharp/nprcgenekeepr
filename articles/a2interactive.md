@@ -2011,7 +2011,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpy521jP/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmppt2vuV/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -3047,8 +3047,8 @@ document.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-30 18:09:46.992758. The processing
-time for this document was 19 seconds..
+The current date and time is 2026-10-30 20:09:38.594917. The processing
+time for this document was 22 seconds..
 
 ``` r
 
@@ -3097,13 +3097,13 @@ sessionInfo()
     ## [37] mime_0.13            tidyselect_1.2.1     zip_3.0.2            digest_0.6.39       
     ## [41] dplyr_1.2.1          labeling_0.4.3       fastmap_1.2.0        grid_4.6.2          
     ## [45] cli_3.6.6            magrittr_2.0.5       withr_3.0.3          scales_1.4.0        
-    ## [49] promises_1.5.0       backports_1.5.1      shinyBS_0.65.0       plotrix_3.8-14      
-    ## [53] lubridate_1.9.5      timechange_0.4.0     rmarkdown_2.32       lambda.r_1.2.6      
-    ## [57] httr_1.4.9           otel_0.2.0           futile.logger_1.4.9  cellranger_1.1.0    
-    ## [61] ragg_1.5.2           openxlsx_4.2.9       shiny_1.14.0         evaluate_1.0.5      
-    ## [65] rlang_1.3.0          futile.options_1.0.1 Rcpp_1.1.2           xtable_1.8-8        
-    ## [69] glue_1.8.1           formatR_1.14         renv_1.2.3           rstudioapi_0.19.0   
-    ## [73] jsonlite_2.0.0       R6_2.6.1             systemfonts_1.3.2    fs_2.1.0
+    ## [49] promises_1.5.0       backports_1.5.1      plotrix_3.8-14       lubridate_1.9.5     
+    ## [53] timechange_0.4.0     rmarkdown_2.32       lambda.r_1.2.6       httr_1.4.9          
+    ## [57] otel_0.2.0           futile.logger_1.4.9  cellranger_1.1.0     ragg_1.5.2          
+    ## [61] openxlsx_4.2.9       shiny_1.14.0         evaluate_1.0.5       rlang_1.3.0         
+    ## [65] futile.options_1.0.1 Rcpp_1.1.2           xtable_1.8-8         glue_1.8.1          
+    ## [69] formatR_1.14         renv_1.2.3           rstudioapi_0.19.0    jsonlite_2.0.0      
+    ## [73] R6_2.6.1             systemfonts_1.3.2    fs_2.1.0
 
 [^1]: Setting *minDamAge* to 3.5 and above will cause an error along
     with the creation of a file *lowParentAge.csv* in the session’s
