@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1099
 date: 2026-10-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 5, D3 = B: condense General Fixes, Breeding Group Formation and Pedigree Diagram in NEWS.Rmd, the owner approving the text (owner pick at the Phase 0 picker, "CRAN Phase 5: NEWS").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:786 (Phase 5); NEWS.Rmd:22 (Pedigree Diagram), NEWS.Rmd:253 (Breeding Group Formation), NEWS.Rmd:442 (General Fixes)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: CRAN 3.0.0 plan Phase 5 half done: NEWS follows the app and General Fixes is condensed; Breeding Group Formation and Pedigree Diagram are left. Not pushed.
+what_was_done: Owner picks "CRAN Phase 5: NEWS", "Move into feature sections", "Give each tab a section", every TDD gate "Yes". NEWS opens with where its tabs are explained and how to reach the guide; 17 sections in R/appUI.R's tab order, five new; General Fixes 183 to 54 lines, three nested groups; block 611 to 574 lines; fixes to things absent at v2.0.0 get no line (S1022). Claim 813ec8738, RED 0207f4762 24df2febb, GREEN dc0861d16, REFACTOR a12fde393 (newsSectionLines(), breedingGroupSection() replace seven copies).
+next_steps: Plan Phase 5's S1099 paragraph, docs/planning/cran-3.0.0-submission-plan.md:801: condense Breeding Group Formation (NEWS.Rmd:221) then Pedigree Diagram (NEWS.Rmd:73), one fix per bullet, the owner approving text with only that text in the review file; add each section's rule to test_newsGeneralFixesGrouped.R first. An estimate: one session. Then Phase 6, the version bump.
+key_files: NEWS.Rmd:22 (opening), NEWS.Rmd:30 (Input), NEWS.Rmd:534 (General Fixes); tests/testthat/test_newsGeneralFixesGrouped.R:29 (appOrder), :73 (factsByHome); tests/testthat/helper-newsBlocks.R:24 (newsSectionSpan), :36 (newsSectionLines); R/appUI.R:171 (tab order); vignettes/articles/colony-manager-guide.qmd:170-1266 (the walkthrough)
+gotchas: 16 test files besides the guards read NEWS, three word for word in Breeding Group Formation, so grep before calling a section prose. A review file holds only proposed text. A section's bullets in test_newsReleaseState.R's Diagram checks: the display limits must stay in one entry. The guide is website-only; its "Articles" menu label was inferred from the dropdown-articles id. "Large files detected" on the dashboard names an ignored RStudio cache file, a false alarm: it reads a top-10 rank and skips no gitignored folder, and removing the file moves the flag to a generated jQuery copy.
+runtime_smoke: n/a -- release notes and test code only; no R/ change. Verified: clean read 495 files 4,593 blocks 0 failed 0 errors, lint_package() 0, devtools::check() 0/0/0, 12 of 12 guard mutants killed. Not on CI: nothing pushed this session.
+changelog_ref: 813ec8738 (claim); the close-out commit (DONE entry)
+commit: a12fde393
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 6a9c1a3a57f9 · manifest 7e3e82ab3ae0
 ```
 
 ```handoff

@@ -99,32 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1099 Did
-**Deliverable (IN PROGRESS, claimed 15:47 CDT):** CRAN plan Phase 5, D3 = B: condense three `NEWS.Rmd` sections, the owner approving the text.
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "CRAN Phase 5: NEWS", "Move into feature sections", "Give each tab a section", every TDD gate "Yes"; strict TDD):
+CRAN plan Phase 5, first half.** Claim `813ec8738`, RED `0207f4762` `24df2febb`, GREEN `dc0861d16`, REFACTOR `a12fde393`; **not pushed**.
+**What changed:** `NEWS.Rmd:22` opens with where the tabs are explained and how to reach the guide; 17 sections run in `R/appUI.R:171`'s order,
+five new; General Fixes 183 to 54 lines (`NEWS.Rmd:534`); the block 611 to 574; fixes to things absent at `v2.0.0` get no line.
+`test_newsGeneralFixesGrouped.R` rewritten (`appOrder` `:29`, `factsByHome` `:73`); `helper-newsBlocks.R:24,36` is the one section reader.
+**Verified:** clean read 495 files 4,593 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0; 12 of 12 guard mutants; ratchet 11/11
+(`6a9c1a3a57f9`). No runtime change. Not on CI. Not measured: that each remaining "no longer" bug reproduces at `v2.0.0`.
+**Handoff evaluation of S1098: 8/10.** Helped: the plan line, D3 = B, "re-measure the sizes" (General Fixes had grown 175 to 183). Wrong: the plan's
+"two NEWS guards" (S1091's, carried; 16 more files read NEWS). Missing: 55,357 B read as 25,131 tokens, past the Read tool's cap, so this file's limit is below that.
+**Self: 7/10.** + `v2.0.0` check of each item; pins mapped before text; 12 mutants, one survivor traced to my mutant. - a note in the review file; a wrong
+dashboard prediction, retracted; three boxes bounced with text not yet settled; the plan's "prose" phase needed gates (Learning 1065).
+**Gotchas:** grep every NEWS reader first; only proposed text in a review file; `news-proposed.md` was scratch; a `\s+` anchor can eat a line break; "Large
+files detected" names a gitignored RStudio cache file (a false alarm; removing it moves the flag to a jQuery copy, the rule reads a top-10 rank).
+**Next:** plan Phase 5's S1099 paragraph (`docs/planning/cran-3.0.0-submission-plan.md:801`): Breeding Group Formation (`NEWS.Rmd:221`), then Pedigree Diagram (`NEWS.Rmd:73`).
 
-### What Session 1098 Did
-**Deliverable (owner picks "CRAN Phase 4", "Style if it is there", every TDD gate "Yes", "Push and wait for CI"; strict TDD): CRAN
-plan Phase 4 DONE.** Claim `72caa5080`, RED `477320bc2`, GREEN `c363f2ddd` (`shinyBS`) `07aeaf740` (example, vignettes), REFACTOR
-`bb3153d51`, docs `1778d738f`; pushed `0890874dc..1778d738f`.
-**What changed:** `shinyBS` is in Imports (`DESCRIPTION:60`), because without it the whole app fails to start, in released 2.0.0 too
-(`appUI()`: "there is no package called 'shinyBS'"), with a NEWS line. The `makeRelationClassesTable()` example uses base R; two
-vignettes style their 7 tables only when `kableExtra` is installed. `tests/testthat/test_packageCallsDeclared.R` and
-`helper-packageCalls.R` guard `pkg::` calls in `R/`. `R/zzz.R`'s check and 8 test skip lines went (REFACTOR).
-**Verified:** with Suggests absent `Status: OK` (was 2 ERRORs); clean read 495 files 4,587 blocks 0 failed 0 errors; `lint_package()` 0;
-`devtools::check()` OK 0/0/0 `PASS 16822`; CRAN-mode 0/0/1 (version only: 20 Imports draws no NOTE); CI R-CMD-check `41120457035`
-5 legs, test-coverage, lint, pkgdown green; ratchet 11/11 (`914dcf7785e7`). Runtime: `runGeneKeepR()` with only Imports and their
-dependencies visible: page 200, `/sbs/shinyBS.js` 200. Plan Phase 4 DONE paragraph, sections 4.4, 7, dragon 9; `BACKLOG.md:16`; Learning 1064.
-**Handoff evaluation of S1097: 9/10.** Helped: the next step named the files and lines and "no decision owed"; "a new test file runs
-on CRAN until named". Wrong: nothing S1097 wrote; the plan's 4b command (S1091) is not faithful on this Mac. Missing: nothing it could know.
-**Self: 8/10.** + measured the app, then 2.0.0, before asking; caught `.Library` before reading a false pass; every question answered
-first try. - one status nudge in REFACTOR's edits; two bugs in my first helper, caught before running it; one plan edit missed on a line break.
-**Gotchas:** R's own library holds 16 of the 17 Suggests, so hide it (plan Phase 4 DONE paragraph, dragon 9); testthat skips a test on a
-missing package, so a test failure there means something else; `dplyr` stays in Suggests for `test_makeRelationsClasses.R:4` (slow list),
-`kableExtra` for the vignettes; not measured: whether `.onLoad` no longer loading `shinyBS` moves win-builder's time (Phase 8 uploads anyway).
-**Next:** CRAN plan Phase 5 (`docs/planning/cran-3.0.0-submission-plan.md:786`), one or two sessions, D3 = B: condense General Fixes,
-Breeding Group Formation and Pedigree Diagram in `NEWS.Rmd`, one section at a time; the owner approves the text. Re-measure the section sizes first.
-
-### Sessions 947-1097 (condensed S950 to S1098; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1098 (condensed S950 to S1099; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1098 (CRAN plan Phase 4 DONE; Learning 1064; hashes in `CHANGELOG.md`): `shinyBS` in Imports, the app failed to start without it, in 2.0.0 too; a check with
+Suggests absent reads `Status: OK`. **Gotchas kept:** R's own library holds 16 of the 17 Suggests, so hide it (plan Phase 4 DONE paragraph, dragon 9); testthat skips a
+test on a missing package; `dplyr` stays in Suggests for `test_makeRelationsClasses.R:4`, `kableExtra` for the vignettes.
 S1097 (CRAN plan Phase 3 DONE; D1 = A and the owner's other rulings; Learning 1063; hashes in `CHANGELOG.md`): the DOI, `cran/archive/`, two
 examples that run, `test_cranHygiene.R`, `helper-rbuildignore.R`. **Gotchas kept:** run `run_examples()` after a check or delete its
 `Rplots.pdf`; `manText()` holds a `\doi{}` twice; `test_perfHarness.R` still reads `.Rbuildignore` itself.
@@ -262,18 +255,8 @@ S1035: the three long guides (`a2interactive`, `gvaConvergence`, `simulatedKValu
 `a737202c4`, close-out `9e1829356`; evaluation of S1034 9/10, self 7/10 (Learning 1001). **Gotchas kept:** the light template draws figures 3 x 3 in, so set `fig_width`/`fig_height` on any
 vignette moved to it; `df_print: paged` is accepted under it but draws nothing; pkgdown ignores a vignette's YAML format; `wc -c`, not `stat -f%z` (GNU stat here); `quality_ratchet.py
 --run` overwrites the results file.
-S1034: the owner ruled A on the ten red archive-proof scripts (owner pick, "Ten red proof scripts"; a decision session, text only, no code): leave the ten files and remove
-the item. The `BACKLOG.md` block (18 lines) is gone and the compression item's candidate list no longer names it (file 286 to 266 lines, 12 open items); the record, with the
-S901 and S1033 findings, is the DONE entry in `CHANGELOG.md`. The ten files stay red and unedited, nothing in `methodology/` changed, nothing posted upstream. Claim `a03bca0f7`,
-deliverable `666790db5`, close-out `f7d03436c`; evaluation of S1033 9/10, self 8/10 (Learning 1000). **Gotchas kept:** `BACKLOG.md` lines after a removed block move up (grep
-a removed item's older nickname in its siblings too); a pick on a decision item is the item, not the ruling; zsh: `printf -- '---\n'`, never `echo "==="`; `quality_ratchet.py
---run` overwrites `methodology/.quality-gates-results.json`.
-S1033: the ten red archive-proof scripts re-derived with the v1.8.1 trimmer's read-only `--reverify` (owner pick, "Re-check 10 red proofs"; housekeeping, no code): the same
-10 of 60 are red and none is a loss (2 hold, 1 is a named stub finalize, 7 `SESSION_NOTES.md` shards fail because the local ledger spec declares no stub marker); `--reverify`
-refuses 57 of 60 in place (their proofs name `docs/archive/`, the shards moved in `0e2663642`); the `BACKLOG.md` item (`BACKLOG.md:136`) is now DECISION NEEDED, A leave and
-remove recommended (`docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md`). Claim `d6214eb51`, deliverable `5d713689f`, close-out `77e4b6761`; evaluation of S1032 8/10, self 8/10
-(Learning 999). **Gotchas kept:** `--reverify` needs a file at the path the proof names (a scratch `git clone` with copies in `docs/archive/`); exit 4 is still red; macOS
-`git grep -E` has no `\b`; `bin/status` is not in this repo; nothing runs the trim verify scripts.
+S1033-S1034 (hashes in `CHANGELOG.md`; Learnings 999-1000): the ten red archive-proof scripts re-derived, none a loss, and the owner ruled "leave them"
+(`docs/audits/SHARD_VERIFY_REVERIFY_2026-10-22.md`). **Gotchas kept:** a pick on a decision item is the item, not the ruling; zsh: `printf -- '---\n'`, never `echo "==="`.
 S1032: methodology sync, 7 of 10 synced files updated from the methodology checkout `515b3a7e` (dashboard 2.23.0, trimmer 1.8.1 with this project's `SESSION_NOTES.md` patch re-applied,
 `quality_ratchet.py` 1.5.1, four docs); `SESSION_RUNNER.md`, `SAFEGUARDS.md` and `close_out_report.py` held back at the owner's word, because the script reads the `HANDOFFS.md`
 front-matter example box as the newest receipt and refuses (write-up and a tested 4-line fix, posted nowhere: `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`;

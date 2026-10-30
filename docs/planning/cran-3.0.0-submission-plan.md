@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1, 2, 3 and 4 are DONE (S1093; S1092 to S1096; S1097; S1098). The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1, 2, 3 and 4 are DONE (S1093; S1092 to S1096; S1097; S1098); Phase 5 is half done (S1099). The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -441,7 +441,9 @@ records:
 
 ### 4.2 `NEWS.Rmd` (for Phases 5 and 6)
 
-The development block is `NEWS.Rmd:14-612`, 599 lines. The whole 2.0.0 block is 185 lines
+S1099 re-sorted this block into the app's tab order, so the table below is the S1091 measurement, kept as the
+record; the block is now `NEWS.Rmd:14-587`, 574 lines, and Phase 5's S1099 paragraph lists what is left. The
+development block is `NEWS.Rmd:14-612`, 599 lines. The whole 2.0.0 block is 185 lines
 (`:613-797`). The development block's sections:
 
 | Lines | Count | Section |
@@ -796,6 +798,16 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
   tail with HEAD.
 - **TDD:** prose. The two NEWS guards and `test_wordlist_coverage.R` hold it.
 - **Session boundary:** one session; if it runs long, two (one per two sections).
+- **S1099 (General Fixes and the order DONE; owner rulings at the review):** the block opens with where its tabs are
+  explained and how to get there; its 17 sections run in `R/appUI.R`'s tab order, with new Input, Age-Sex Pyramid,
+  Summary Statistics, Genetic Diversity and Potential Parents sections; General Fixes is 183 to 54 lines
+  (`NEWS.Rmd:534`), three nested groups. A fix to something absent at `v2.0.0` gets no line (S1022). This phase was not
+  prose only: 16 test files besides the two guards read NEWS, and the guard was rewritten (RED `0207f4762` `24df2febb`,
+  GREEN `dc0861d16`, REFACTOR `a12fde393`). **Left:** condense Breeding Group Formation (`NEWS.Rmd:221`, 92 lines) and
+  Pedigree Diagram (`NEWS.Rmd:73`, 74 lines), one fix per bullet, in the same way. Pinned word for word there:
+  `test_haremSexRatioStopWording.R:28`, `test_breedingGroupsSourceChoices.R`, `test_unusedAnimalsHeatMapWording.R:90`;
+  the Diagram section's style rules are in `test_newsReleaseState.R:441-626`. **Not measured:** that each remaining
+  "no longer" bug reproduces at `v2.0.0`; only that its code exists there.
 
 ### Phase 6. The version bump (`BACKLOG.md:8`; "just before release")
 
@@ -951,7 +963,7 @@ must).
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | DONE (S1097; D1 = A) | nothing | |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | DONE (S1098; D6 = A, D2 = A) | nothing | |
-| 5 | NEWS release pass | next (D3 = B) | nothing | M |
+| 5 | NEWS release pass | half done (S1099): General Fixes and the app order; Breeding Group Formation and Pedigree Diagram next | nothing | M |
 | 6 | version bump | after 1-5 | Phases 1-5 landed | S |
 | 7 | full local gate | after 6 | Phase 6 pushed, CI green | S |
 | 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |
