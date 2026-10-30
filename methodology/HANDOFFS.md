@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1095
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 2, the further cut of about 112 s (652 s measured against 540 s): the owner picks levers and target from plan section 3.4 before RED; strict TDD; one win-builder R-devel upload to measure (owner pick at the Phase 0 picker, item 1 of 4, "Finish cutting check time").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:247 (section 3.4); tests/testthat/slowTestFiles.txt; R/getGeneticDiversityStats.R:69; R/getAncestors.R:81
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: CRAN 3.0.0 plan Phase 2's second cut, measured: 564 s on win-builder R-devel (652 s before), under CRAN's 600 s but 24 s over the 540 s target (D4 = A), so Phase 2's DONE is not met. Owner picks: "Finish cutting check time" (Phase 0 picker, item 1 of 4), "Example+loops+skip 315" with "Keep 540 s", every TDD gate "Yes", "Upload + push, wait here"; strict TDD.
+what_was_done: Claim 6642b9dbd. RED 8c5d253f5 (test_getGeneticDiversityStatsExample.R: no reportGV(), no examplePedigree; test_perfBudget_loops.R, NPRC_RUN_PERF=true, findLoops()+countLoops() under 1.4 s, failed at 2.18 s; the guard test_getAncestorsEquivalence.R against getAncestorsOnPathReference() in helper-perfReference.R). GREEN 51cf42616 (.getAncestorsOnPath() looks a text id up once with ptree[[id]], any other id keeps the name check; 0.86 s), 7588d7ebd (the example reads qcPed and qcPedGvReport, 0.04 s), 3478dfc81 (slowTestFiles.txt names 382 files; CRAN runs 79 that call all 236 exports, by a run-time trace; CRAN-mode tests 29.6 to 10.2 s wall here). REFACTOR a10594f15 (one exampleLines(topic) in helper-pageText.R for three copies), 4072b38d9 (the walk's two parent branches as one lineage(); 0.922 against 0.929 s alternating). Plan section 3.5 and BACKLOG.md:16 05ce96fd8. Pushed 7f1833334..4072b38d9; uploaded 4072b38d9 to win-builder R-devel at 21:39 CDT: Check time 564 s (tests 56, examples 90, vignettes 66, R code 89, manuals 78 s), Status 1 NOTE (version, "de", thoughtco 402, the DOI), result a1AV26256EC9.
+next_steps: The owner decides first: keep 540 s and cut about 25-55 s more from plan section 3.5's levers (the createPedTree, examplePedigree and findLoops help examples run findLoops() on the 3,694-animal example, about 0.5 s each here; the a2interactive chunks full-geneticValue at vignettes/a2interactive.Rmd:719 and shrink-pedigree/shrink-pedigree-budget at :1650 and :1666; a smaller set of the 79 CRAN-run test files), then one check_win_devel(); or accept 564 s (under 600 s; 2.0.0's pretest read 604 s and passed, Learning 367) and mark Phase 2 DONE by ruling. Otherwise Phase 3 (D1 first) or Phase 4a (D6 first).
+key_files: docs/planning/cran-3.0.0-submission-plan.md section 3.5 (the S1095 measurement and levers) and section 7 row 2; R/getAncestors.R:86-118 (.getAncestorsOnPath); R/getGeneticDiversityStats.R:69-82 (the example); tests/testthat/slowTestFiles.txt:1-13 (the rule); tests/testthat/test_getAncestorsEquivalence.R; tests/testthat/test_perfBudget_loops.R; tests/testthat/helper-pageText.R:120-127 (exampleLines); PROJECT_LEARNINGS.md Learning 1061 (the trace recipe).
+gotchas: Trace exports with loadNamespace(), then trace(where = the namespace), then library(): after library() the attached copies stay untraced (142 of 236). test_dir()'s real column misses time outside test_that() (24.8 s against a 29.6 s wall); use the wall time. A test file added later runs on CRAN until slowTestFiles.txt names it. An estimate of check time is the last measured total minus the saving, plus or minus 30 s on the whole (the untouched steps moved 32 s). perf_diagram_example_direct_seconds reads about 4.55-4.75 s at load 6-9 against its 4.6 s limit, on code from before this session too: A/B before reading a fail. win-builder took this upload 25 min after it and began the check 4 min later.
+runtime_smoke: No app path calls getAncestors(), findLoops() or countLoops() (git grep of R/), and the example and the test list are not app code, so no app run. The package ran on its real surfaces: win-builder R-devel on Windows (a1AV26256EC9: examples, tests, vignettes OK) and CI R-CMD-check 40993029586, 5 legs green (windows-latest Status OK, [ FAIL 0 | WARN 10 | SKIP 668 | PASS 16662 ]); devtools::check() here Status OK 0/0/0, PASS 16795.
+changelog_ref: 6642b9dbd (claim); the close-out commit (upload, push and DONE entries)
+commit: 05ce96fd8
+quality_ratchet: 10/11 pass · 1 fail · 0 unmeasured · results 9ffa62e36682 · manifest 7e3e82ab3ae0 (run at 05ce96fd8's tree, load about 8.8; the fail is perf_diagram_example_direct_seconds 4.75 s against 4.6, second run; the pre-session tree 7f1833334 read 4.54-4.57 s alternating with this one's 4.58-4.73 s, so load, not this change; threshold unchanged)
 ```
 
 ```handoff

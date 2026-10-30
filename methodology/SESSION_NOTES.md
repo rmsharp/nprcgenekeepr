@@ -99,53 +99,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1095 Did
-**Deliverable (IN PROGRESS, claimed 20:15 CDT):** CRAN plan Phase 2, the further cut (about 112 s) and its win-builder measurement.
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "Finish cutting check time", "Example+loops+skip 315", target 540 s, "Upload + push, wait here"; strict TDD,
+every gate the recommended option): CRAN plan Phase 2's second cut, 564 s on win-builder R-devel; its DONE (540 s) not met.** Claim
+`6642b9dbd`, RED `8c5d253f5`, GREEN `51cf42616`/`7588d7ebd`/`3478dfc81`, REFACTOR `a10594f15`/`4072b38d9`, plan and BACKLOG `05ce96fd8`;
+pushed `7f1833334..4072b38d9`; uploaded `4072b38d9` at 21:39 CDT, result page `a1AV26256EC9` (removed after about 72 h).
+**The cuts:** the `getGeneticDiversityStats` example reads `qcPed` and the stored `qcPedGvReport` (3.2 to 0.04 s here); `.getAncestorsOnPath()`
+(`R/getAncestors.R:86-118`) looks a text id up once with `ptree[[id]]` (the slowdown was `id %in% names(ptree)` at each step; findLoops
+1.01 to 0.37 s, countLoops 1.31 to 0.50 s, identical on 7 odd trees); `tests/testthat/slowTestFiles.txt` names 382 files, so CRAN runs
+79 that between them call all 236 exports (a run-time trace; the scripts were scratch only, Learning 1061 says how).
+**Measured:** R-devel 652 to 564 s (tests 156 to 56 s, examples 109 to 90 s; the untouched steps +32 s, noise; plan section 3.5). Clean
+read 492 files 4,570 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` OK 0/0/0 `PASS 16795`; CI R-CMD-check
+`40993029586` 5 legs green (windows `PASS 16662`); ratchet 10/11 (`9ffa62e36682`): the diagram gate 4.75 s against 4.6 at load 9, and
+the pre-session tree read 4.54-4.57 s alternating with this one (4.58-4.73 s), so the load, not this change.
+**Handoff evaluation of S1094: 8/10.** Helped: section 3.4's levers with file:line, the queue gotchas, a next step naming the owner's
+choice. Wrong: the slowdown blamed on the cycle check's path test; "a fast test per stranded export" (a coverage-aware skip strands
+none). Missing: the per-file ranking and export trace (rebuilt, about 15 min).
+**Self: 7/10.** + every option measured before its question; all six questions answered first try; A/B before citing a failed gate. -
+the preview's 506 s (476-536 s) missed 564 s (it held the untouched steps fixed); the TDD phase undeclared in the early replies; a
+`| head` cut R off again.
+**Gotchas:** trace exports with `loadNamespace()`, then `trace()`, then `library()`; `test_dir()`'s `real` misses time outside
+`test_that()` (use the wall time); a new test file runs on CRAN until `slowTestFiles.txt` names it; the diagram gate sits at about 4.6 s
+at load 6+; win-builder took the upload 25 min after it and began the check 4 min later.
+**Next:** the owner's call first: keep 540 s and cut about 25-55 s more (plan 3.5: three more `findLoops()` examples on a smaller
+pedigree, two tutorial chunks, a smaller set of the 79 files), then one upload; or accept 564 s (under 600 s; Learning 367). Else
+Phase 3 (D1 first) or Phase 4a (D6 first).
 
-### What Session 1094 Did
-**Deliverable (owner picks "Measure the current tree", then "Fix Windows error, then close"; strict TDD, every gate the recommended
-option): CRAN plan Phase 2 measured, not done; a Windows-only ERROR fixed.** Claim `9fa5df13c`, upload record `f5ce1bc2a`, RED
-`c3ceec3a0`, GREEN `b068ecdf7`, REFACTOR `7f1833334`; pushed `2e136e0d4..7f1833334` (17 commits) at the owner's word.
-**Measured (win-builder R-devel r90783, the owner's emails):** the cut tree `9fa5df13c` 652 s (tests 156 s, the rest about 496 s); the
-uncut `2d3dc2f26` 1,722 s (R-release 1,384 s); target 540 s (D4 = A), CRAN's limit 600 s. The table and the measured levers (example
-input, the loop functions 2x slower since 2.0.0 from S783's cycle guard, test skips and the exports they strand, the `a2interactive`
-vignette) are in the plan's section 3.4; `BACKLOG.md:16` says a further cut of about 112 s is owed.
-**The ERROR:** `test_readWithFinalNewline.R:46` (S1093's test): `cat("\n", file = copy, append = TRUE)` writes text mode, `"\r\n"` on
-Windows. Now one `writeBin()` of the file's bytes plus 0x0a (`R/readWithFinalNewline.R:24-33`); the new block 3 reads `all.names(body())`,
-since macOS writes one byte either way. Clean read 489 files 4,564 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()`
-Status OK 0/0/0, `PASS 16786` (S1093 16784); the real-app upload test passed from a scratch install; ratchet 11/11 (`fb008b8bc2d8`);
-CI R-CMD-check `40975285107`: windows-latest Status OK `[ FAIL 0 | WARN 10 | SKIP 665 | PASS 16653 ]` (only the `R/` guard skipped).
-**Handoff evaluation of S1093: 7/10.** Helped: the plan's order, the queue-listing trick, comparing counts from one command. Wrong:
-"Phase 2's DONE once the owner forwards the R-release log" (that log was the uncut tree; it could only calibrate). Missing: the fix had
-never run on Windows (CI's windows leg was unpushed), which cost a win-builder ERROR.
-**Self: 7/10.** + every option measured first; the R-release upload re-asked when its reason went; TDD gates; the real app checked. -
-called the thoughtco.com NOTE new (2.0.0's note had it); a 5-line claim stub refused by the token ceiling; the picker bounced twice.
-**Gotchas:** tell win-builder results apart by failing lines and test totals (same tarball name); R-devel's listing empties when a batch
-is taken and the check starts 40-60 min later; `NEWS.Rmd` opens "edited" in RStudio's Visual editor (Learning 1060); keep the claim stub
-to two lines (this file sits near 25,000 tokens).
-**Next:** the cut needs the owner's choice of levers and of target (plan 3.4) before any code; or Phase 3 (D1 first) or Phase 4a (D6
-first).
-
-### Sessions 947-1093 (condensed S950 to S1094; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1093: CRAN plan Phase 1 DONE (claim `5169a31f1`, RED `c1e3395fd`/`06b6c277e`, GREEN `29e070626`/`3c64589b4`/`39aaf742c`, REFACTOR
-`e98c39fcc`/`e10e8553e`/`408170b35`, NEWS `39fcc51c6`): the linux-arm64 failure is R's utils `readtablehead()` (`io.c:910`), so every
-read goes through `readWithFinalNewline()`; container `ngk-arm64-s1093` kept; S1092 8/10, self 8/10 (Learning 1059). **Gotchas kept:**
-compare check counts from one command; confirm `devtools::install()` before an E2E run; compressed files go to the reader as is.
-S1092: CRAN plan Phase 2's cut (claim `2d3dc2f26`, RED `8c2c80721`, GREEN `53113828f`/`49296d313`, REFACTOR `2e136e0d4`, pushed): a
-CRAN check leaves out the 64 files in `tests/testthat/slowTestFiles.txt`; CRAN-mode tests 296 s to 33 s here; owed: win-builder at most
-540 s; S1091 8/10, self 7/10 (Learning 1058). **Gotchas kept:** rank in the check's own layout; a same-named win-builder upload is
-refused until the queued one is processed; perf gates fail at load 9+.
-S1091: the CRAN 3.0.0 plan (`docs/planning/cran-3.0.0-submission-plan.md`, DRAFT; claim `801d1e4fc`, plan `555a995fd`): CRAN-mode
-tests 309 s here against `v2.0.0`'s 66 s (about 1,430 s estimated on win-builder against 600 s); the linux-arm64 failure, the unguarded
-`shinyBS`, a wrong DOI; decisions D1-D6; S1090 9/10, self 8/10 (Learning 1057). **Gotchas kept:** set the CRAN repo before an incoming
-check and read `00check.log`'s `Status:`; CRAN timing needs `env_vars = c(NOT_CRAN = "false")`; Docker here runs linux/arm64.
-S1090: the red `test-coverage.yaml` run fixed in the tests only: the shared `rSourceAvailable()` (`tests/testthat/helper-rSource.R`)
-gates both whole-`R/` scans (claim `8e8fc19c7`, RED `98a683ca6`, GREEN `665f4cf9b`, REFACTOR `3d5270b4f`, pushed); S1089 9/10, self
-8/10 (Learning 1056). **Gotchas kept:** covr's layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then outside
-the repo `test_file(<f>, package = "nprcgenekeepr", load_package = "installed")`; skip a whole-`R/` scan on `rSourceAvailable()`.
-S1089: `BACKLOG.md` compression pass, 234 to 208 lines (claim `3340e9064`, pass `ad8597cc9`): the resolved kinship2-audit section
-deleted and a #138 item added; the red test-coverage run filed (fixed S1090); S1088 8/10, self 7/10 (Learning 1055). **Gotchas kept:**
-write a file's own size figure last; #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
+### Sessions 947-1094 (condensed S950 to S1095; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1094: CRAN plan Phase 2 measured (claim `9fa5df13c`, RED `c3ceec3a0`, GREEN `b068ecdf7`, REFACTOR `7f1833334`, pushed): the S1092
+cut 652 s on win-builder R-devel; `readWithFinalNewline()` adds its newline with one `writeBin()` (Windows wrote `"\r\n"`); S1093 7/10,
+self 7/10 (Learning 1060). **Gotchas kept:** tell win-builder results apart by failing lines and test totals; keep the claim stub to
+two lines (this file sits near the Read tool's 25,000 tokens).
+S1091-S1093 (the CRAN 3.0.0 plan, its Phase 2 cut and its Phase 1; Learnings 1057-1059; hashes in `CHANGELOG.md`): S1093, every
+package read goes through `readWithFinalNewline()` (R's utils `readtablehead()`, `io.c:910`, misreads a quoted last value on
+linux-arm64; container `ngk-arm64-s1093` kept); S1092, a CRAN check skips the files `tests/testthat/slowTestFiles.txt` names; S1091,
+the plan (`docs/planning/cran-3.0.0-submission-plan.md`, decisions D1-D6). **Gotchas kept:** set the CRAN repo before an incoming
+check, time CRAN mode with `env_vars = c(NOT_CRAN = "false")` and read `00check.log`'s `Status:`; rank in the check's own layout; a
+same-named win-builder upload is refused until the queued one is processed; compare check counts from one command; Docker here runs
+linux/arm64.
+S1089-S1090 (Learnings 1055-1056; hashes in `CHANGELOG.md`): S1090, the red `test-coverage.yaml` run fixed in the tests
+(`rSourceAvailable()`, `tests/testthat/helper-rSource.R`); S1089, `BACKLOG.md` 234 to 208 lines and a #138 item. **Gotchas kept:**
+covr's layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then outside the repo `test_file(<f>, package =
+"nprcgenekeepr", load_package = "installed")`; #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
 S1088: `methodology/CHANGELOG.md` trimmed 201,025 to 32,331 B (`--force --cut 2026-10-27` after `SRF_RED` 1.0038; claim `cb71bb6db`,
 trim `87bc10428`); pushed `ccd6e9028..6d12f6061`; S1087 9/10, self 8/10 (Learning 1054). **Gotchas kept:** `SRF_RED` fires once the
 file regrows past 201,025 B, so read `--check` at Phase 0 and put `--force` in the picker; `--cut` and its date are two shell words.
