@@ -195,7 +195,7 @@ test_that("DA5: the button the help names is on the Summary Statistics tab
 test_that("DA6: NEWS.Rmd and NEWS.md say the two functions make one group", {
   for (file in c("NEWS.Rmd", "NEWS.md")) {
     entries <- newsEntries(newsTopBlock(sourceLines(file)))
-    scripts <- entries$text[startsWith(entries$text, "Fixed (scripts):")]
+    scripts <- entries$text[startsWith(entries$text, "Script functions")]
     expect_length(scripts, 1L)
     expect_equal(
       occurrences(plainText(scripts),

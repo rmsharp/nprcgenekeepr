@@ -254,6 +254,21 @@ test_that("newsEntries() joins wrapped lines and reports the start line", {
                      "Second entry.", "Third."))
 })
 
+## A nested bullet's wrapped line is indented four spaces. Stopping at it would
+## hide the rest of that bullet from every check that reads entries (S1099).
+test_that("newsEntries() keeps a nested bullet's wrapped lines in its entry", {
+  block <- list(start = 1L,
+                lines = c("- Parent", "  - Child that wraps",
+                          "    onto a second line.", "  - Another child.",
+                          "- Next."))
+  entries <- newsEntries(block)
+  expect_identical(entries$line, c(1L, 5L))
+  expect_identical(entries$text,
+                   c(paste("Parent - Child that wraps onto a second line.",
+                           "- Another child."),
+                     "Next."))
+})
+
 test_that("the detector fires on every in-progress milestone phrase", {
   positives <- c(
     "continued)" = paste("Ancestry rules are now enforced (issue #168,",
