@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1, 2 and 3 are DONE (S1093; S1092 to S1096; S1097). The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1, 2, 3 and 4 are DONE (S1093; S1092 to S1096; S1097; S1098). The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -544,8 +544,8 @@ These are grep counts, not a measured failure.
     `.onLoad()`, not these calls. `runGeneKeepR()` checks for nothing.
   - `v2.0.0` had the same unguarded calls (`R/modSummaryStats.R:55-98` there) with `shinyBS` in
     Suggests. `shinyBS` was added to Imports in 2019 (`0e89fe35f`) and is in Suggests today.
-  - **Unverified:** whether the whole app fails to start without `shinyBS`, or only that tab.
-    Phase 4a measures it.
+  - **Measured S1098:** the whole app fails to start without `shinyBS`, in today's code and in
+    released 2.0.0. `appUI()` stops with "there is no package called 'shinyBS'".
 - **Some guards live in helpers.** `helper-comparePedigreeStructure.R:45` guards `kinship2`, and
   `helper-shinytest2.R:738` guards `chromote`. The in-file count above misses those.
 - **2.0.0 already shipped unguarded tests.** It had 10 `mockery` and 16 `withr` test files (25
@@ -764,6 +764,22 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
 - **Surface:** local is faithful for "which code needs which package". It cannot show CRAN's
   exact noSuggests machine.
 - **Session boundary:** one session for 4a and 4b together; 4a alone if D2 = B.
+- **DONE (S1098; D6 = A, D2 = A).** Measured first: without `shinyBS` the whole app fails to start,
+  in today's code and in 2.0.0 (section 4.4). `shinyBS` moved from Suggests to Imports, which is now
+  20 non-base packages and draws no NOTE. `test_packageCallsDeclared.R` is the guard
+  (`helper-packageCalls.R` reads `R/` with R's parser; base packages and this package are exempt, as
+  R's check exempts them). With Suggests absent, the check went from 2 ERRORs to `Status: OK`,
+  `[ FAIL 0 | WARN 0 | SKIP 76 | PASS 1863 ]` at GREEN. The fixes differ from step 2 above: the
+  `makeRelationClassesTable()` example now uses base R, and the two vignettes style their 7 tables
+  only when `kableExtra` is installed (owner pick; a normal build's tables are unchanged, plain
+  otherwise). No `skip_if_not_installed()` was owed, because testthat already skips a test on a
+  missing package (`{mockery} is not installed (22)`).
+  **The step 1 command is not faithful on this Mac** (dragon 9): run it under a scratch R home whose
+  `library` holds only the 29 base and recommended packages. Build it from symlinks to
+  `R.home()`'s entries, except a copy of `bin/R` with `R_HOME_DIR` pointed at the scratch folder.
+  Build the tarball with the normal R, then check it with `R_LIBS` naming the renv library. That
+  surface shows which code needs which package on macOS with R 4.6.1, in about 2 minutes. It cannot
+  show CRAN's noSuggests machine, whose result comes after publication (Phase 10).
 
 ### Phase 5. NEWS release pass (per D3)
 
@@ -932,8 +948,8 @@ must).
 | 2 | cut the CRAN-mode test time (do first) | DONE (S1096, owner ruling): 520 s on R-devel (`6tYpEEb12W8l`); the same tarball also read 617 s (section 3.6) | nothing | |
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | DONE (S1097; D1 = A) | nothing | |
-| 4 | 4a `shinyBS` (always); 4b noSuggests | next (D6 = A, D2 = A; one session) | nothing | S-M |
-| 5 | NEWS release pass | after 4 (D3 = B) | nothing | M |
+| 4 | 4a `shinyBS` (always); 4b noSuggests | DONE (S1098; D6 = A, D2 = A) | nothing | |
+| 5 | NEWS release pass | next (D3 = B) | nothing | M |
 | 6 | version bump | after 1-5 | Phases 1-5 landed | S |
 | 7 | full local gate | after 6 | Phase 6 pushed, CI green | S |
 | 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |
@@ -975,6 +991,11 @@ New this cycle (S1091):
 8. **`skip_on_cran()` hides a test from CRAN, not from us.** CI and the clean regression read
    set `NOT_CRAN=true`, so every skipped file still runs there. Without Phase 2 step 3's export
    check, though, an export could end up with no test on CRAN at all.
+9. **`_R_CHECK_DEPENDS_ONLY_` cannot hide what is in R's own library (S1098).** `tools:::setRlibs()`
+   links only the dependencies into a temporary library, but `.Library` stays visible. This Mac's
+   holds 226 non-base packages, including 16 of the 17 Suggests, so the plain command would have
+   hidden only `kinship2` and passed for the wrong reason. Check `installed.packages(lib.loc =
+   .Library)` first; Phase 4's DONE paragraph has the scratch R home that fixes it.
 
 Carried from 2.0.0 (numbers are that plan's §5):
 
