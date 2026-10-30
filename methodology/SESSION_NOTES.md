@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1099 Did
+**Deliverable (IN PROGRESS, claimed 15:47 CDT):** CRAN plan Phase 5, D3 = B: condense three `NEWS.Rmd` sections, the owner approving the text.
+**Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1098 Did
 **Deliverable (owner picks "CRAN Phase 4", "Style if it is there", every TDD gate "Yes", "Push and wait for CI"; strict TDD): CRAN
 plan Phase 4 DONE.** Claim `72caa5080`, RED `477320bc2`, GREEN `c363f2ddd` (`shinyBS`) `07aeaf740` (example, vignettes), REFACTOR

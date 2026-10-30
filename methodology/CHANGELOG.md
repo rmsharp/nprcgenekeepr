@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-30 · [ad hoc] S1099 claim (in progress): CRAN 3.0.0 plan Phase 5 (owner pick at the Phase 0 picker, item 1 of 4, "CRAN Phase 5: NEWS"): condense General Fixes, Breeding Group Formation and Pedigree Diagram in `NEWS.Rmd`, D3 = B.
+
 ### 2026-10-30 · [ad hoc] S1098 DONE: CRAN 3.0.0 plan Phase 4 DONE (owner picks "CRAN Phase 4", "Style if it is there", every TDD gate "Yes"; claim `72caa5080`, RED `477320bc2`, GREEN `c363f2ddd` `07aeaf740`, REFACTOR `bb3153d51`, docs `1778d738f`). `shinyBS` moved to Imports, because without it the whole app fails to start, in 2.0.0 too; the `makeRelationClassesTable()` example uses base R; two vignettes style their tables only when `kableExtra` is installed; `test_packageCallsDeclared.R` guards `pkg::` calls in `R/`. With Suggests absent, under a scratch R home (this Mac's R library holds 16 of the 17 Suggests), the check went from 2 ERRORs to `Status: OK`. Clean read 495 files 4,587 blocks 0 failed 0 errors; lint 0; `devtools::check()` 0/0/0; CRAN-mode 0/0/1 (version only); ratchet 11/11 `914dcf7785e7`. Learning 1064. S1097 scored 9/10, self 8/10. Phase 5 is next.
 
 ### 2026-10-30 · [ad hoc] S1098 push (the owner's pick "Push and wait for CI"): `git push origin master`, `0890874dc..1778d738f`. CI R-CMD-check `41120457035` all 5 legs, test-coverage `41120457282`, lint `41120457034`, pkgdown `41120456956` green.
