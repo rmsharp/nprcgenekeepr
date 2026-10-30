@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1095 Did
+**Deliverable (IN PROGRESS, claimed 20:15 CDT):** CRAN plan Phase 2, the further cut (about 112 s) and its win-builder measurement.
+**Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1094 Did
 **Deliverable (owner picks "Measure the current tree", then "Fix Windows error, then close"; strict TDD, every gate the recommended
 option): CRAN plan Phase 2 measured, not done; a Windows-only ERROR fixed.** Claim `9fa5df13c`, upload record `f5ce1bc2a`, RED

@@ -208,6 +208,22 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1095
+date: 2026-10-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 2, the further cut of about 112 s (652 s measured against 540 s): the owner picks levers and target from plan section 3.4 before RED; strict TDD; one win-builder R-devel upload to measure (owner pick at the Phase 0 picker, item 1 of 4, "Finish cutting check time").
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/cran-3.0.0-submission-plan.md:247 (section 3.4); tests/testthat/slowTestFiles.txt; R/getGeneticDiversityStats.R:69; R/getAncestors.R:81
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S1094
 date: 2026-10-29
 status: complete
