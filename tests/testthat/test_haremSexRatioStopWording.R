@@ -37,13 +37,6 @@ articleSentence <- paste(
   "passing both to groupAddAssign() stops with a message."
 )
 
-breedingGroupFormationSection <- function(text) {
-  begin <- regexpr("## Breeding Group Formation", text, fixed = TRUE)
-  end <- regexpr("## Mate Pair Analysis", text, fixed = TRUE)
-  expect_true(begin > 0L && end > begin)
-  substr(text, begin, end - 1L)
-}
-
 groupAddAssignHelp <- helpPlaces("groupAddAssign", "groupAddAssign.R")
 
 test_that("the readers find the help, the NEWS section and the article", {
@@ -53,7 +46,7 @@ test_that("the readers find the help, the NEWS section and the article", {
                  info = place)
   }
   for (page in c("NEWS.Rmd", "NEWS.md")) {
-    expect_match(breedingGroupFormationSection(plainSource(page)), "harem",
+    expect_match(breedingGroupSection(plainSource(page)), "harem",
                  fixed = TRUE, info = page)
   }
   expect_match(
@@ -76,7 +69,7 @@ test_that("the groupAddAssign help says a harem cannot take a sex ratio", {
 
 test_that("NEWS says a script that passes harem and a sex ratio now stops", {
   for (page in c("NEWS.Rmd", "NEWS.md")) {
-    section <- breedingGroupFormationSection(plainSource(page))
+    section <- breedingGroupSection(plainSource(page))
     expect_equal(occurrences(section, newsSentence), 1L, info = page)
   }
 })

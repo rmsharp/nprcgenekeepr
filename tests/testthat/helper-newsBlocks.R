@@ -3,7 +3,9 @@
 ##
 ## Shared by the tests that read the newest version block of NEWS.Rmd or
 ## NEWS.md (test_newsReleaseState.R, test_newsGeneralFixesGrouped.R,
-## test_oneFileGenotypesWording.R): find that block and read its bullets.
+## test_oneFileGenotypesWording.R, test_earlierSnapshotsDocs.R,
+## test_drawPedigreeDiagramDocs.R, the test_harem*Wording.R files): find that
+## block, read one of its sections and read its bullets.
 
 ## The newest version block: from the first "# nprcgenekeepr" heading up to
 ## (not including) the second one. Returns the heading's 1-based line number
@@ -15,6 +17,31 @@ newsTopBlock <- function(lines) {
   }
   end <- if (length(heads) > 1L) heads[2L] - 1L else length(lines)
   list(start = heads[1L], lines = lines[heads[1L]:end])
+}
+
+## The positions in `blockLines` of the lines under one "## <heading>": after
+## the heading, up to (not including) the next "## ". Empty if it is absent.
+newsSectionSpan <- function(blockLines, heading) {
+  from <- which(trimws(blockLines) == paste("##", heading))
+  if (length(from) == 0L) {
+    return(integer(0L))
+  }
+  later <- grep("^## ", blockLines)
+  later <- later[later > from[1L]]
+  to <- if (length(later) > 0L) later[1L] - 1L else length(blockLines)
+  if (to > from[1L]) seq(from[1L] + 1L, to) else integer(0L)
+}
+
+## The lines of one section of the newest version block of a NEWS file.
+newsSectionLines <- function(lines, heading) {
+  block <- newsTopBlock(lines)$lines
+  block[newsSectionSpan(block, heading)]
+}
+
+## The Breeding Group Formation part of a NEWS file read as one string (see
+## sectionOf() in helper-pageText.R).
+breedingGroupSection <- function(text) {
+  sectionOf(text, "## Breeding Group Formation", "## Mate Pair Analysis")
 }
 
 ## The bullet entries of a block. An entry starts at a line beginning "- " and

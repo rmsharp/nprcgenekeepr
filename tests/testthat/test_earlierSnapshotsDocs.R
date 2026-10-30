@@ -20,7 +20,7 @@
 ## an installed package, so each block skips outside the source tree.
 ## guideSectionParagraphs() is in helper-guideSections.R; sourceLines(),
 ## plainText(), expectNames(), helpPlaces() and skipUnlessHelpInSourceTree() are
-## in helper-pageText.R; newsTopBlock() and newsEntries() are in
+## in helper-pageText.R; newsSectionLines() and newsEntries() are in
 ## helper-newsBlocks.R. The release-state guard (test_newsReleaseState.R) reads
 ## the new NEWS entries without a line of its own here.
 
@@ -136,15 +136,8 @@ test_that("the guide names the box and the tab as the app does", {
 ## the backslash NEWS.md puts before a "#" too. One string per bullet; none when
 ## the part is missing, so a block fails on its words.
 longitudinalEntries <- function(file) {
-  block <- newsTopBlock(sourceLines(file))
-  start <- grep("^## Longitudinal Monitoring\\s*$", block$lines)
-  if (length(start) != 1L) {
-    return(character(0L))
-  }
-  heads <- grep("^## ", block$lines)
-  end <- min(c(heads[heads > start], length(block$lines) + 1L)) - 1L
-  part <- list(start = block$start + start - 1L, lines = block$lines[start:end])
-  entries <- newsEntries(part)
+  part <- newsSectionLines(sourceLines(file), "Longitudinal Monitoring")
+  entries <- newsEntries(list(start = 1L, lines = part))
   gsub("\\\\", "", vapply(entries$text, plainText, character(1L),
                           USE.NAMES = FALSE))
 }

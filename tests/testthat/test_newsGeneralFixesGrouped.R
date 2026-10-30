@@ -16,7 +16,7 @@
 ## file pins what a section must carry, not its prose. NEWS.Rmd and NEWS.md are
 ## build-ignored, so every block that reads them skips inside an R CMD check
 ## tarball. sourceLines(), plainText() and expectNames() are in
-## helper-pageText.R; newsTopBlock() and newsEntries() are in
+## helper-pageText.R; newsTopBlock(), newsSectionLines() and newsEntries() are in
 ## helper-newsBlocks.R.
 
 library(testthat)
@@ -147,21 +147,6 @@ neverShipped <- c(
 newsSectionNames <- function(lines) {
   block <- newsTopBlock(lines)$lines
   trimws(sub("^## ", "", grep("^## ", block, value = TRUE)))
-}
-
-## The lines of one section of the newest version block, up to the next "## ".
-newsSectionLines <- function(lines, heading) {
-  block <- newsTopBlock(lines)$lines
-  start <- which(trimws(block) == paste("##", heading))
-  if (length(start) == 0L) {
-    return(character(0L))
-  }
-  rest <- block[-seq_len(start[1L])]
-  nextHead <- grep("^## ", rest)
-  if (length(nextHead) > 0L) {
-    rest <- rest[seq_len(nextHead[1L] - 1L)]
-  }
-  rest
 }
 
 ## The first line of each top-level bullet of some lines, without its "- ".

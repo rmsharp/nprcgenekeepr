@@ -118,16 +118,9 @@ asEntry <- function(text, line = 1L) {
 ## to (not including) the next "## " heading, with file line numbers as in
 ## newsEntries(). An empty data frame if the heading is absent.
 newsSectionEntries <- function(block, heading) {
-  ls <- block$lines
-  from <- which(ls == paste0("## ", heading))
-  if (length(from) == 0L) {
-    return(newsEntries(list(start = 0L, lines = character(0L))))
-  }
-  from <- from[1L]
-  later <- grep("^## ", ls)
-  later <- later[later > from]
-  to <- if (length(later) > 0L) later[1L] - 1L else length(ls)
-  newsEntries(list(start = block$start + from - 1L, lines = ls[from:to]))
+  span <- newsSectionSpan(block$lines, heading)
+  newsEntries(list(start = block$start + span[1L] - 1L,
+                   lines = block$lines[span]))
 }
 
 ## The connector style ("Rectilinear" or "Direct") that each sentence with the

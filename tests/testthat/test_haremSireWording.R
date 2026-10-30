@@ -56,13 +56,6 @@ test_that("the sire-rule reader accepts what it must and no other", {
   )))
 })
 
-breedingGroupSection <- function(text) {
-  begin <- regexpr("## Breeding Group Formation", text, fixed = TRUE)
-  end <- regexpr("## Mate Pair Analysis", text, fixed = TRUE)
-  expect_true(begin > 0L && end > begin)
-  substr(text, begin, end - 1L)
-}
-
 helpReaders <- helpPlaces("groupAddAssign", "groupAddAssign.R")
 
 test_that("the readers find the help and the Breeding Group Formation notes", {

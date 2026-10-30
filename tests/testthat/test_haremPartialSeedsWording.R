@@ -49,13 +49,6 @@ test_that("the partial-seed reader accepts what it must and no other", {
   )))
 })
 
-breedingGroupFormationSection <- function(text) {
-  begin <- regexpr("## Breeding Group Formation", text, fixed = TRUE)
-  end <- regexpr("## Mate Pair Analysis", text, fixed = TRUE)
-  expect_true(begin > 0L && end > begin)
-  substr(text, begin, end - 1L)
-}
-
 groupAddAssignHelp <- helpPlaces("groupAddAssign", "groupAddAssign.R")
 makeGroupMembersHelp <- helpPlaces("makeGroupMembers", "makeGroupMembers.R")
 
@@ -71,7 +64,7 @@ test_that("the readers find the help, the NEWS section, the guide and the manual
                  info = paste("makeGroupMembers", place))
   }
   for (page in c("NEWS.Rmd", "NEWS.md")) {
-    expect_match(breedingGroupFormationSection(plainSource(page)), "harem",
+    expect_match(breedingGroupSection(plainSource(page)), "harem",
                  fixed = TRUE, info = page)
   }
   expect_match(
@@ -107,7 +100,7 @@ test_that("NEWS says a group with no seeded male gets one with Harem", {
   for (page in c("NEWS.Rmd", "NEWS.md")) {
     expect_true(
       sayingThePartialSeedRule(
-        breedingGroupFormationSection(plainSource(page))
+        breedingGroupSection(plainSource(page))
       ),
       info = page
     )
