@@ -72,6 +72,11 @@ getAncestors <- function(id, ptree) {
 #' still returned once per route (the documented repeats), and only an id that
 #' reappears on its own route is a cycle.
 #'
+#' A text id is looked up once, with \code{ptree[[id]]}: matching it against
+#' \code{names(ptree)} at every step made the walk twice as slow as in 2.0.0
+#' (S1095). Any other id, and a text id with no entry, keeps that name check,
+#' since \code{[[} reads a number or a factor as a position.
+#'
 #' @param id character vector of length 1 having the ID of interest
 #' @param ptree a list of lists forming a pedigree tree as constructed by
 #' \code{createPedTree(ped)}.
@@ -79,8 +84,15 @@ getAncestors <- function(id, ptree) {
 #' @return A character vector of ancestors for an individual ID.
 #' @noRd
 .getAncestorsOnPath <- function(id, ptree, path) {
-  if (is.na(id) || !id %in% names(ptree)) {
+  if (is.na(id)) {
     return(character(0L))
+  }
+  node <- if (is.character(id)) ptree[[id]] else NULL
+  if (is.null(node)) {
+    if (!id %in% names(ptree)) {
+      return(character(0L))
+    }
+    node <- ptree[[id]]
   }
 
   if (id %in% path) {
@@ -95,8 +107,8 @@ getAncestors <- function(id, ptree) {
   }
   path <- c(path, id)
 
-  sire <- ptree[[id]]$sire
-  dam <- ptree[[id]]$dam
+  sire <- node$sire
+  dam <- node$dam
 
   if (!is.na(sire)) {
     sAnc <- .getAncestorsOnPath(sire, ptree, path)
