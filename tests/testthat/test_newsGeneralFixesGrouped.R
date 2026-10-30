@@ -255,6 +255,24 @@ test_that("the newest NEWS block's sections run in the app's tab order", {
   }
 })
 
+## The owner's request (S1099): the block opens by saying where its tabs are
+## explained and how to get there. The guide is website-only (.Rbuildignore), so
+## the installed tutorial is named too.
+test_that("the block opens by saying where the tabs are explained", {
+  for (file in newsFiles) {
+    lines <- newsTopBlock(sourceLines(file))$lines
+    firstSection <- grep("^## ", lines)[1L]
+    opening <- plainText(lines[seq_len(firstSection - 1L)])
+    expectNames(opening, c(
+      "https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html",
+      "Help tab",
+      "Online Documentation",
+      "Purpose, Approach, and a Colony Manager's Guide to Practice",
+      "vignette(\"a2interactive\", package = \"nprcgenekeepr\")"
+    ), where = file)
+  }
+})
+
 test_that("General Fixes holds the three groups that belong to no tab", {
   for (file in newsFiles) {
     section <- newsSectionLines(sourceLines(file), "General Fixes")
