@@ -11,21 +11,16 @@
 ## runs clean and returns the group table is test_docsAuditLeftoverWording.R's
 ## DA3 block.
 
-## The example's code lines from the source tree's man page.
-exampleCode <- function() {
-  rd <- testthat::test_path("..", "..", "man", "getGeneticDiversityStats.Rd")
-  skip_if_not(file.exists(rd), "man/*.Rd not available (installed package)")
-  exampleLinesOf(rd)
-}
+## exampleLines() reads the source tree's man page (helper-pageText.R).
 
 test_that("the getGeneticDiversityStats() example builds no genetic-value report", {
-  code <- exampleCode()
+  code <- exampleLines("getGeneticDiversityStats")
   expect_gt(length(code), 0L)
   expect_false(any(grepl("reportGV(", code, fixed = TRUE)))
 })
 
 test_that("the getGeneticDiversityStats() example does not read the 3,694-animal example pedigree", {
-  code <- exampleCode()
+  code <- exampleLines("getGeneticDiversityStats")
   expect_gt(length(code), 0L)
   expect_false(any(grepl("examplePedigree", code, fixed = TRUE)))
 })

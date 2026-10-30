@@ -9,8 +9,9 @@
 ## and which it no longer holds, pull a code chunk out of a .qmd or .Rmd, and
 ## read a function's help in the two places it lives (manText(), roxygenText(),
 ## helpPlaces(), skipUnlessHelpInSourceTree()), and read the example of a man
-## page (exampleLinesOf(); test_examples_invoke_documented_fn.R and
-## test_docsAuditLeftoverWording.R), and tell a section of a tutorial's code
+## page (exampleLinesOf(), and exampleLines() by topic;
+## test_examples_invoke_documented_fn.R, test_docsAuditLeftoverWording.R and
+## test_getGeneticDiversityStatsExample.R), and tell a section of a tutorial's code
 ## chunks from its prose and read a chunk's option lines (insideChunk(),
 ## sectionProse(), chunkOptionText(); test_snapshotTutorialSection.R and
 ## test_inventoryTutorialSections.R), and find a tutorial's headings and the
@@ -115,6 +116,14 @@ exampleLinesOf <- function(rd) {
   on.exit(unlink(out), add = TRUE)
   suppressMessages(tools::Rd2ex(rd, out))
   if (file.exists(out)) readLines(out, warn = FALSE) else character(0L)
+}
+
+## The example code of the man page of `topic`, as exampleLinesOf() gives it;
+## skips where man/ is absent (an installed package).
+exampleLines <- function(topic) {
+  rd <- testthat::test_path("..", "..", "man", paste0(topic, ".Rd"))
+  skip_if_not(file.exists(rd), "man/*.Rd not available (installed package)")
+  exampleLinesOf(rd)
 }
 
 ## Every roxygen line of R/<file>.R with the `#'` prefix and the \code{}

@@ -24,17 +24,9 @@
 ## Blocks marked "(green at HEAD)" pass before the fix; they pin what stays.
 
 ## sourceLines(), plainText(), expectNames(), occurrences(), manText(),
-## roxygenText(), exampleLinesOf(), helpPlaces() and
+## roxygenText(), exampleLinesOf(), exampleLines(), helpPlaces() and
 ## skipUnlessHelpInSourceTree() are in helper-pageText.R; newsTopBlock() and
 ## newsEntries() are in helper-newsBlocks.R.
-
-## The example code of the man page of `topic` (exampleLinesOf() in
-## helper-pageText.R); skips where man/ is absent (an installed package).
-exampleLines <- function(topic) {
-  rd <- testthat::test_path("..", "..", "man", paste0(topic, ".Rd"))
-  skip_if_not(file.exists(rd), "man/*.Rd not available (installed package)")
-  exampleLinesOf(rd)
-}
 
 ## Runs the lines in a fresh child of the global environment and gives the
 ## value of the last one.
