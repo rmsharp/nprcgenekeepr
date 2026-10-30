@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1096 Did
+**Deliverable (IN PROGRESS, claimed 22:39 CDT):** finish CRAN plan Phase 2: the owner's call on 564 s, then any cut and its upload.
+**Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1095 Did
 **Deliverable (owner picks "Finish cutting check time", "Example+loops+skip 315", target 540 s, "Upload + push, wait here"; strict TDD,
 every gate the recommended option): CRAN plan Phase 2's second cut, 564 s on win-builder R-devel; its DONE (540 s) not met.** Claim
