@@ -128,7 +128,7 @@
 #' @references Meagher, T. R., & Thompson, E. (1986). The relationship
 #' between single parent and parent pair genetic likelihoods in genealogy
 #' reconstruction. \emph{Theoretical Population Biology}, 29(1), 87-106.
-#' \doi{10.1016/0040-5809(86)90007-1}
+#' \doi{10.1016/0040-5809(86)90006-7}
 #'
 #' Marshall, T. C., Slate, J., Kruuk, L. E. B., & Pemberton, J. M. (1998).
 #' Statistical confidence for likelihood-based paternity inference in
