@@ -16,7 +16,9 @@ test_that("the markerParentageLikelihood() help cites the paper's real DOI", {
   gone <- "10.1016/0040-5809(86)90007-1"
   man <- manText("markerParentageLikelihood")
   skip_if(is.na(man), "man/ not available (installed package)")
-  expectWording(man, now, gone)
+  ## tools::parse_Rd() expands \doi{} into text that holds the DOI twice.
+  expect_gt(occurrences(man, now), 0L)
+  expect_identical(occurrences(man, gone), 0L)
   roxygen <- roxygenText("markerParentageLikelihood.R")
   skip_if(is.na(roxygen), "R/ not available (installed package)")
   expectWording(roxygen, now, gone)
