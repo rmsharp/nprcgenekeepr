@@ -2,7 +2,5 @@
 ## This file is part of nprcgenekeepr
 
 .onLoad <- function(libname, pkgname) {
-  if (requireNamespace("shinyBS", quietly = TRUE)) {
-    shiny::addResourcePath("sbs", system.file("www", package = "shinyBS"))
-  }
+  shiny::addResourcePath("sbs", system.file("www", package = "shinyBS"))
 }

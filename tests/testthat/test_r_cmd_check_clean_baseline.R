@@ -22,19 +22,6 @@ pkg_root <- testthat::test_path("..", "..")
 description_path <- file.path(pkg_root, "DESCRIPTION")
 no_description_msg <- "DESCRIPTION absent; guard not applicable"
 
-## Reads a comma-separated DESCRIPTION dependency field (Imports/Suggests/
-## Depends/...) and returns the bare package names, with any parenthetical
-## version constraint (e.g. "Rlabkey (>= 3.2.0)") stripped off.
-readDescriptionField <- function(field) {
-  raw <- read.dcf(description_path, fields = field)[1, field]
-  if (is.na(raw)) {
-    return(character(0))
-  }
-  pkgs <- strsplit(raw, ",")[[1]]
-  pkgs <- trimws(gsub("\\s*\\([^)]*\\)\\s*$", "", trimws(pkgs)))
-  pkgs[nzchar(pkgs)]
-}
-
 test_that("DESCRIPTION declares kinship2 as a Suggests dependency", {
   skip_if_not(file.exists(description_path), no_description_msg)
 

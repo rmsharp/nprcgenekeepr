@@ -7,7 +7,6 @@
 
 test_that("modSummaryStatsUI uses shinyBS for popovers", {
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   ui <- modSummaryStatsUI("test")
   ui_html <- as.character(ui)
@@ -22,7 +21,6 @@ test_that("modSummaryStatsUI uses shinyBS for popovers", {
 
 test_that("download buttons have popover descriptions", {
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   ui <- modSummaryStatsUI("test")
   ui_html <- as.character(ui)
@@ -108,7 +106,6 @@ test_that("boxplot popovers explain interquartile range", {
 
 test_that("kinship matrix export popover describes CSV export", {
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   # Verify the popover content is descriptive
   # We're testing that the UI contains proper descriptions
@@ -123,7 +120,6 @@ test_that("kinship matrix export popover describes CSV export", {
 
 test_that("histogram export popovers describe PNG export", {
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   ui <- modSummaryStatsUI("test")
   ui_html <- as.character(ui)
@@ -136,7 +132,6 @@ test_that("histogram export popovers describe PNG export", {
 
 test_that("boxplot export popovers describe PNG export", {
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   ui <- modSummaryStatsUI("test")
   ui_html <- as.character(ui)
@@ -186,7 +181,6 @@ test_that("getBoxWhiskerDescription returns expected content", {
 test_that("popover content is not empty", {
 
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   # Verify popover content strings exist and are non-empty
   # This is tested through the existence of descriptive text in the source
@@ -218,7 +212,6 @@ test_that("popover content is not empty", {
 
 test_that("modSummaryStatsServer sets up popovers for boxplots", {
   skip_if_not_installed("shiny")
-  skip_if_not_installed("shinyBS")
 
   # This tests that the server calls addPopover for the boxplot outputs
   server_source <- deparse(modSummaryStatsServer)
@@ -240,8 +233,6 @@ test_that("modSummaryStatsServer sets up popovers for boxplots", {
 # =============================================================================
 
 test_that("loading the package registers shinyBS's 'sbs' resource path", {
-  skip_if_not_installed("shinyBS")
-
   expect_true(
     "sbs" %in% names(shiny::resourcePaths()),
     info = paste(
@@ -254,18 +245,6 @@ test_that("loading the package registers shinyBS's 'sbs' resource path", {
       "throw 'shinyBS is not defined' in the browser console."
     )
   )
-})
-
-test_that(".onLoad does not error when shinyBS is unavailable", {
-  # .onLoad is a dot-prefixed package hook, not exported even under
-  # pkgload::load_all()'s export_all default, so it is accessed via :::
-  # and copied to a local binding before mockery::stub() can replace calls
-  # inside it (mockery re-assigns by deparsed name, which must be a plain
-  # identifier -- a `:::`-qualified expression is not one).
-  onLoadFn <- nprcgenekeepr:::.onLoad
-  mockery::stub(onLoadFn, "requireNamespace", FALSE)
-
-  expect_no_error(onLoadFn(libname = "x", pkgname = "nprcgenekeepr"))
 })
 
 # =============================================================================

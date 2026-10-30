@@ -79,10 +79,7 @@ test_that("undeclaredPackageCalls() leaves out declared, base, guarded and self"
 test_that("every package R/ calls is in Imports, or the call is guarded", {
   rDir <- file.path(pkgRoot, "R")
   skip_if_not(rSourceAvailable(rDir), "R/ not available (installed package)")
-  fields <- read.dcf(file.path(pkgRoot, "DESCRIPTION"),
-    fields = c("Depends", "Imports")
-  )
-  declared <- trimws(sub("\\(.*$", "", unlist(strsplit(fields, ","))))
+  declared <- c(readDescriptionField("Depends"), readDescriptionField("Imports"))
   files <- list.files(rDir, pattern = "\\.[Rr]$", full.names = TRUE)
   found <- unlist(lapply(files, function(path) {
     bad <- undeclaredPackageCalls(packageCallsIn(path), declared)

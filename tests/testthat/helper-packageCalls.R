@@ -52,6 +52,20 @@ callIsGuarded <- function(parsed, id, pkg) {
   FALSE
 }
 
+## Reads a comma-separated DESCRIPTION dependency field (Imports/Suggests/
+## Depends/...) and returns the bare package names, with any parenthetical
+## version constraint (e.g. "Rlabkey (>= 3.2.0)") stripped off.
+readDescriptionField <- function(field) {
+  path <- testthat::test_path("..", "..", "DESCRIPTION")
+  raw <- read.dcf(path, fields = field)[1L, field]
+  if (is.na(raw)) {
+    return(character(0L))
+  }
+  pkgs <- strsplit(raw, ",")[[1L]]
+  pkgs <- trimws(gsub("\\s*\\([^)]*\\)\\s*$", "", trimws(pkgs)))
+  pkgs[nzchar(pkgs)]
+}
+
 ## The rows of packageCallsIn() that a check would object to: not guarded, not a
 ## package listed in `declared`, not a base package, and not this package.
 undeclaredPackageCalls <- function(calls, declared, self = "nprcgenekeepr") {
