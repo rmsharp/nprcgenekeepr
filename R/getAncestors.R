@@ -107,22 +107,12 @@ getAncestors <- function(id, ptree) {
   }
   path <- c(path, id)
 
-  sire <- node$sire
-  dam <- node$dam
-
-  if (!is.na(sire)) {
-    sAnc <- .getAncestorsOnPath(sire, ptree, path)
-    sireLineage <- c(sire, sAnc)
-  } else {
-    sireLineage <- character(0L)
+  ## A parent and then that parent's ancestors; the sire's side comes first.
+  lineage <- function(parent) {
+    if (is.na(parent)) {
+      return(character(0L))
+    }
+    c(parent, .getAncestorsOnPath(parent, ptree, path))
   }
-
-  if (!is.na(dam)) {
-    dAnc <- .getAncestorsOnPath(dam, ptree, path)
-    damLineage <- c(dam, dAnc)
-  } else {
-    damLineage <- character(0L)
-  }
-
-  c(sireLineage, damLineage)
+  c(lineage(node$sire), lineage(node$dam))
 }
