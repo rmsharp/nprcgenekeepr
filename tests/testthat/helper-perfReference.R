@@ -999,7 +999,9 @@ calcFGReference <- function(ped, alleles) {
 ## R/getAnimalsWithHighKinship.R at 520bd5dc8, getAnimalsWithHighKinship()'s
 ## kinMatrix2LongForm() call pointed at kinMatrix2LongFormReference(). They
 ## call the live sexCodes, filterThreshold(), filterPairs() and filterAge(),
-## which Phase 6 does not change.
+## which Phase 6 does not change. Diagonal() and the twin step's diag() are
+## named Matrix::, which the package's import(Matrix) resolved them to until
+## S1096 stopped importing it.
 kinshipReference <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # nolint: object_name_linter
                               twinRelations = NULL, chrtype = "autosome", sex = NULL) {
   # Returns: Matrix (row and col names are 'id')
@@ -1025,7 +1027,7 @@ kinshipReference <- function(id, father.id, mother.id, pdepth, sparse = FALSE, #
     sexNum <- c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))] # nolint: object_name_linter
     founderDiag <- ifelse(is.na(sexNum), NA_real_, (3L - sexNum) / 2L) # nolint: object_name_linter
     if (sparse) {
-      kmat <- Diagonal(x = c(founderDiag, 0.0))
+      kmat <- Matrix::Diagonal(x = c(founderDiag, 0.0))
     } else {
       kmat <- diag(c(founderDiag, 0.0))
     }
@@ -1034,7 +1036,7 @@ kinshipReference <- function(id, father.id, mother.id, pdepth, sparse = FALSE, #
     ## starts as one-half of the identity matrix (each founder's self-kinship
     ## is 0.5).
     if (sparse) {
-      kmat <- Diagonal(n + 1L) / 2L
+      kmat <- Matrix::Diagonal(n + 1L) / 2L
     } else {
       kmat <- diag(n + 1L) / 2L
     }
@@ -1117,7 +1119,7 @@ kinshipReference <- function(id, father.id, mother.id, pdepth, sparse = FALSE, #
       }
     }
     if (havemz) {
-      kmat[mzindex] <- (diag(kmat))[mzindex[, 1L]]
+      kmat[mzindex] <- (Matrix::diag(kmat))[mzindex[, 1L]]
     }
   }
 

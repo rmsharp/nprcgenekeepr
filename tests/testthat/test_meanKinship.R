@@ -11,3 +11,14 @@ test_that("meanKinship averages column correctly", {
   expect_identical(kmat[[2L]], mean(kmat[[2L]]))
   expect_identical(kmat[[5L]], mean(kmat[[5L]]))
 })
+
+## kinship(sparse = TRUE) returns a Matrix package matrix; meanKinship() takes
+## it as it takes the dense one (S1096: base colMeans() refuses it, so the
+## package no longer importing Matrix must not change this).
+test_that("meanKinship() gives a sparse kinship matrix the dense matrix's means", {
+  ped <- nprcgenekeepr::qcPed
+  dense <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+  sparse <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = TRUE)
+  expect_s4_class(sparse, "dgCMatrix")
+  expect_identical(meanKinship(sparse), meanKinship(dense))
+})

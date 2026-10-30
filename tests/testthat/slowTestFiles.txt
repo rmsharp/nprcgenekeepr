@@ -393,3 +393,4 @@ test-e2e-twin-relations-cross-tab.R
 test-e2e-workflow-integration.R
 test-set_seed.R
 test-shinytest2-debug.R
+test_packageLoadLight.R

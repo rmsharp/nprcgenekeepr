@@ -214,3 +214,22 @@ test_that("kinship() with chrtype = 'x' returns a 1 x 1 matrix for a single
   expect_equal(female[["A", "A"]], 0.5)
   expect_true(is.na(unknown[["A", "A"]]))
 })
+
+## kinship() runs today's code, kinshipGeneral(), for an input its n x n fill
+## was not built for (a pdepth of the wrong length, for one). Its twin step
+## reads the diagonal of a Matrix package matrix when sparse = TRUE; base
+## diag() takes that matrix for a vector of n^2 values (S1096: the package no
+## longer importing Matrix must not change this).
+test_that("kinshipGeneral() with sparse = TRUE and MZ twins gives the dense result", {
+  id <- c("s", "d", "t1", "t2")
+  sire <- c(NA, NA, "s", "s")
+  dam <- c(NA, NA, "d", "d")
+  twins <- data.frame(id1 = "t1", id2 = "t2", code = "MZ twin")
+  pdepth <- c(0L, 0L, 1L, 1L)
+  dense <- kinshipGeneral(id, sire, dam, pdepth, twinRelations = twins)
+  sparse <- kinshipGeneral(id, sire, dam, pdepth, sparse = TRUE,
+                           twinRelations = twins)
+  expect_s4_class(sparse, "Matrix")
+  expect_identical(as.matrix(sparse), dense)
+  expect_identical(dense[["t1", "t2"]], 0.5)
+})
