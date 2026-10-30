@@ -1527,3 +1527,45 @@ markerRealizedRelatednessVarianceReference <- function(kmat, ped, nChr,
   rel$sdR <- sqrt(rel$varR)
   rel[c("id1", "id2", "kinship", "relation", "R", "varR", "sdR")]
 }
+
+## CRAN plan Phase 2 (S1095, BACKLOG.md:16): .getAncestorsOnPath() from
+## R/getAncestors.R at 520bd5dc8 (unchanged until S1095). S1095 makes the walk
+## look each animal up once, where the copy searches every id of the tree at
+## each step (findLoops() and countLoops() on the example take about 1.0 and
+## 1.3 s with it). Only the copy's name and its two recursive calls differ.
+getAncestorsOnPathReference <- function(id, ptree, path) {
+  if (is.na(id) || !id %in% names(ptree)) {
+    return(character(0L))
+  }
+
+  if (id %in% path) {
+    cycle <- c(path[match(id, path):length(path)], id)
+    stop(
+      "getAncestors: the pedigree contains a cycle (an animal is its own ",
+      "ancestor): ", paste(cycle, collapse = " -> "), ". Each id is a sire ",
+      "or dam of the one before it; correct the sire and dam entries for ",
+      "these ids.",
+      call. = FALSE
+    )
+  }
+  path <- c(path, id)
+
+  sire <- ptree[[id]]$sire
+  dam <- ptree[[id]]$dam
+
+  if (!is.na(sire)) {
+    sAnc <- getAncestorsOnPathReference(sire, ptree, path)
+    sireLineage <- c(sire, sAnc)
+  } else {
+    sireLineage <- character(0L)
+  }
+
+  if (!is.na(dam)) {
+    dAnc <- getAncestorsOnPathReference(dam, ptree, path)
+    damLineage <- c(dam, dAnc)
+  } else {
+    damLineage <- character(0L)
+  }
+
+  c(sireLineage, damLineage)
+}
