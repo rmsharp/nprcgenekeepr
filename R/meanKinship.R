@@ -28,5 +28,10 @@
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' head(meanKinship(kmat))
 meanKinship <- function(kmat) {
+  ## kinship(sparse = TRUE) returns a Matrix package matrix, which base
+  ## colMeans() refuses; a dense matrix never loads Matrix (S1096).
+  if (inherits(kmat, "Matrix")) {
+    return(Matrix::colMeans(kmat, na.rm = TRUE))
+  }
   colMeans(kmat, na.rm = TRUE)
 }

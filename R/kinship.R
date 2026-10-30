@@ -96,7 +96,6 @@
 #'
 #' @author as modified by M Raboin, 2014-09-08 14:44:26
 #'
-#' @import Matrix
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -286,15 +285,15 @@ denseKinshipFits <- function(n, sires, dams, pdepth, sparse) {
 #' @noRd
 sparseKinship <- function(kmat, missingParentRow) {
   n <- nrow(kmat)
-  if (isDiagonal(kmat) && !anyNA(missingParentRow) &&
+  if (Matrix::isDiagonal(kmat) && !anyNA(missingParentRow) &&
         all(missingParentRow == 0.0)) {
-    sparse <- Diagonal(x = c(diag(kmat, names = FALSE), 0.0))
+    sparse <- Matrix::Diagonal(x = c(diag(kmat, names = FALSE), 0.0))
     sparse <- sparse[seq_len(n), seq_len(n), drop = FALSE]
   } else {
     cells <- which(kmat != 0.0 | is.na(kmat))
-    sparse <- sparseMatrix(i = (cells - 1L) %% n + 1L,
-                           j = (cells - 1L) %/% n + 1L, x = kmat[cells],
-                           dims = dim(kmat))
+    sparse <- Matrix::sparseMatrix(i = (cells - 1L) %% n + 1L,
+                                   j = (cells - 1L) %/% n + 1L,
+                                   x = kmat[cells], dims = dim(kmat))
   }
   dimnames(sparse) <- dimnames(kmat)
   sparse
@@ -337,7 +336,7 @@ kinshipGeneral <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # n
     sexNum <- c(1L, 2L)[match(sex, c(sexCodes[["male"]], sexCodes[["female"]]))] # nolint: object_name_linter
     founderDiag <- ifelse(is.na(sexNum), NA_real_, (3L - sexNum) / 2L) # nolint: object_name_linter
     if (sparse) {
-      kmat <- Diagonal(x = c(founderDiag, 0.0))
+      kmat <- Matrix::Diagonal(x = c(founderDiag, 0.0))
     } else {
       kmat <- diag(c(founderDiag, 0.0))
     }
@@ -346,7 +345,7 @@ kinshipGeneral <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # n
     ## starts as one-half of the identity matrix (each founder's self-kinship
     ## is 0.5).
     if (sparse) {
-      kmat <- Diagonal(n + 1L) / 2L
+      kmat <- Matrix::Diagonal(n + 1L) / 2L
     } else {
       kmat <- diag(n + 1L) / 2L
     }
@@ -429,7 +428,9 @@ kinshipGeneral <- function(id, father.id, mother.id, pdepth, sparse = FALSE, # n
       }
     }
     if (havemz) {
-      kmat[mzindex] <- (diag(kmat))[mzindex[, 1L]]
+      ## Matrix::diag(), which import(Matrix) resolved diag() to before S1096:
+      ## with sparse = TRUE, kmat is a Matrix package matrix.
+      kmat[mzindex] <- (Matrix::diag(kmat))[mzindex[, 1L]]
     }
   }
 
