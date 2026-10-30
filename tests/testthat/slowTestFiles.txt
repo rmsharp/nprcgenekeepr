@@ -78,6 +78,7 @@ test_convertStatusCodes.R
 test_correctParentSex.R
 test_correctUnknownParentMeanKinship.R
 test_countKinshipValues.R
+test_cranHygiene.R
 test_create_test_app.R
 test_create_wkbk.R
 test_createColonySnapshot.R
