@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1098 Did
+**Deliverable (IN PROGRESS, claimed 13:50 CDT):** CRAN plan Phase 4: 4a `shinyBS` to Imports (D6 = A) with a guard test; 4b the check with Suggests absent (D2 = A).
+**Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1097 Did
 **Deliverable (owner picks "CRAN Phase 3: cleanup", "Move to cran/archive/", "Make both run", every TDD gate "Yes", "one shared
 reader", "Push and wait for CI"; strict TDD): CRAN plan Phase 3 DONE.** Claim `664aec4b5`, RED `13f92faad`, GREEN `448eecdc5`
