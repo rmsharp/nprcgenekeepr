@@ -33,9 +33,6 @@
 #' )
 #' p <- makeGeneticDiversityHeatmap(stats)
 #'
-#' @importFrom ggplot2 ggplot aes geom_tile scale_fill_manual
-#' @importFrom ggplot2 scale_x_discrete labs theme_minimal theme
-#' @importFrom ggplot2 element_text .data
 #' @export
 makeGeneticDiversityHeatmap <- function(stats) {
   if (!is.data.frame(stats)) {

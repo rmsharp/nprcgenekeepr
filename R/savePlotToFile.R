@@ -25,7 +25,6 @@
 #' @return Logical. TRUE if the file was saved successfully, FALSE otherwise.
 #'
 #' @seealso \code{\link[ggplot2]{ggsave}} for the underlying save function
-#' @importFrom ggplot2 ggsave
 #' @export
 #' @examples
 #' library(ggplot2)

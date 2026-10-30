@@ -3,8 +3,10 @@
 
 # Summary Statistics Shiny Module
 
-# Global variables used in ggplot2 aes() calls
-utils::globalVariables(c("x", "y"))
+# Global variables used in ggplot2 aes() calls; `.data` is the pronoun
+# makeGeneticDiversityHeatmap() and plotSnapshotTrends() read, no longer
+# imported from ggplot2, so loading the package does not load it (S1096).
+utils::globalVariables(c("x", "y", ".data"))
 
 # The tail of each export popover on the Summary Statistics tab: a
 # downloadButton does not choose a directory, the browser does.
@@ -336,9 +338,6 @@ modSummaryStatsUI <- function(id) {
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics hist boxplot par plot.new text
 #' @importFrom stats median
-#' @importFrom ggplot2 ggplot aes geom_histogram geom_boxplot geom_jitter
-#' @importFrom ggplot2 geom_vline theme_classic xlab ylab ggtitle coord_flip
-#' @importFrom ggplot2 ggsave
 #' @family Shiny modules
 #' @export
 modSummaryStatsServer <- function(id, geneticValues, pedigree,

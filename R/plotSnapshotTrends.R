@@ -49,11 +49,6 @@
 #' )))
 #' p <- plotSnapshotTrends(history, metrics = c("fe", "fg", "meanGu"))
 #'
-#' @importFrom ggplot2 ggplot aes geom_line geom_point geom_ribbon
-#' @importFrom ggplot2 facet_wrap labs scale_shape_manual theme_minimal
-#' @importFrom ggplot2 scale_linetype_manual theme element_text
-#' @importFrom ggplot2 guides guide_axis
-#' @importFrom ggplot2 .data
 plotSnapshotTrends <- function(history, metrics = NULL, ncol = NULL) {
   history <- checkSnapshotHistory(history)
   if (nrow(history) < 2L) {
