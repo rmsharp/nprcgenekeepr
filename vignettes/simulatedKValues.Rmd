@@ -78,9 +78,15 @@ Animals \code{E}, \code{J}, and \code{N}
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-library(kableExtra) # nolint: undesirable_function_linter
+library(knitr) # nolint: undesirable_function_linter
 library(nprcgenekeepr) # nolint: undesirable_function_linter
 library(stringi) # nolint: undesirable_function_linter
+## kableExtra is optional: it styles the tables when it is installed.
+kable_styling <- if (requireNamespace("kableExtra", quietly = TRUE)) { # nolint: object_name_linter
+  kableExtra::kable_styling
+} else {
+  function(kable_input, ...) kable_input
+}
 
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list( # nolint: object_name_linter

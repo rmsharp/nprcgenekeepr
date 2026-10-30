@@ -17,7 +17,12 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(nprcgenekeepr)
 library(knitr)
-library(kableExtra)
+## kableExtra is optional: it styles the tables when it is installed.
+kable_styling <- if (requireNamespace("kableExtra", quietly = TRUE)) { # nolint: object_name_linter
+  kableExtra::kable_styling
+} else {
+  function(kable_input, ...) kable_input
+}
 ```
 
 ## How many gene-drop iterations does a pedigree need?

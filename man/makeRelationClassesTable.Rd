@@ -26,7 +26,6 @@ kinship table.
 }
 \examples{
 library(nprcgenekeepr)
-suppressMessages(library(dplyr))
 
 qcPed <- nprcgenekeepr::qcPed
 qcPed <- qcPed[1:50, ] # Comment out for full example
@@ -37,8 +36,6 @@ kin <- convertRelationships(bkmat, qcPed)
 relClasses <- makeRelationClassesTable(kin)
 relClasses$`Relationship Class` <-
   as.character(relClasses$`Relationship Class`)
-relClassTbl <- kin[!kin$relation == "Self", ] |>
-  group_by(relation) |>
-  summarise(count = n())
+relClassTbl <- as.data.frame(table(kin$relation[kin$relation != "Self"]))
 relClassTbl
 }
