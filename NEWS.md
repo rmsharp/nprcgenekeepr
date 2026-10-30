@@ -457,6 +457,10 @@ export workflows, and longitudinal monitoring of colony genetic health.
 - `kinship(sparse = TRUE)` takes about half a second for the whole
   shipped example (3,694 animals) instead of about 43 seconds.
 
+- Loading the package takes about 0.4 seconds instead of about 0.9: it
+  no longer loads Matrix and ggplot2, which a sparse kinship matrix or a
+  plot loads when first needed.
+
 ## General Fixes
 
 - New: the Input tab now warns when animals in the uploaded pedigree
