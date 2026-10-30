@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1098
 date: 2026-10-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 4: 4a shinyBS to Imports (D6 = A) with a guard test; 4b the check with Suggests absent (D2 = A) (owner pick at the Phase 0 picker, "CRAN Phase 4").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:733 (Phase 4), :511 (section 4.4); R/modSummaryStats.R:19,355,364,373; DESCRIPTION:76; R/zzz.R:5
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: CRAN 3.0.0 plan Phase 4 DONE (4a shinyBS to Imports, D6 = A; 4b the check with Suggests absent, D2 = A). Owner picks: "CRAN Phase 4" (Phase 0 picker, item 1 of 4), "Style if it is there", every TDD gate "Yes", "Push and wait for CI". The BACKLOG item stays open; Phase 5 is next.
+what_was_done: Claim 72caa5080. RED 477320bc2 (test_packageCallsDeclared.R failed on exactly R/modSummaryStats.R:19,355,364,373). GREEN c363f2ddd (shinyBS to Imports, NEWS, WORDLIST), 07aeaf740 (the makeRelationClassesTable() example in base R; two vignettes style their 7 tables only when kableExtra is installed). REFACTOR bb3153d51 (R/zzz.R's check and its test, 8 skip lines, one readDescriptionField()). Docs 1778d738f. Pushed 0890874dc..1778d738f. Measured first: without shinyBS the whole app fails to start, today and in released 2.0.0.
+next_steps: CRAN plan Phase 5, docs/planning/cran-3.0.0-submission-plan.md:786, one or two sessions (an estimate), D3 = B: condense General Fixes, Breeding Group Formation and Pedigree Diagram in NEWS.Rmd, one section at a time, re-knit, compare NEWS.md's head and tail with HEAD; the owner approves the text section by section. Re-measure the section sizes first, since this session added a line to a Fixed bullet. Then Phase 6, the version bump.
+key_files: DESCRIPTION:60; R/zzz.R:4-6; R/makeRelationClassesTable.R:21-34; vignettes/gvaConvergence.Rmd:20-25; vignettes/simulatedKValues.Rmd:84-89; tests/testthat/helper-packageCalls.R:9; tests/testthat/test_packageCallsDeclared.R:79; docs/planning/cran-3.0.0-submission-plan.md:735
+gotchas: _R_CHECK_DEPENDS_ONLY_ cannot hide what is in R's own library, and this Mac's holds 226 non-base packages, 16 of the 17 Suggests: use the scratch R home (plan Phase 4 DONE paragraph, dragon 9). testthat turns a missing package into a skip, so no skip_if_not_installed() was owed. dplyr stays in Suggests for test_makeRelationsClasses.R:4 and kableExtra for the vignettes. The guard exempts base packages and this package, as R's check does, and does not treat an early `if (!requireNamespace()) stop()` as a guard. Not measured: whether .onLoad no longer loading shinyBS moves win-builder's time; Phase 8 uploads anyway. CRAN's own noSuggests result comes only after publication.
+runtime_smoke: runGeneKeepR(port = 7913) from an install with only Imports and their dependencies visible: page 200 with Summary Statistics, /sbs/shinyBS.js 200. Verified: with Suggests absent Status OK (was 2 ERRORs); clean read 495 files 4,587 blocks 0 failed 0 errors; lint_package() 0; devtools::check() 0/0/0 PASS 16822; CRAN-mode 0/0/1 (version only, 20 Imports draws no NOTE); CI R-CMD-check 41120457035 5 legs, test-coverage, lint, pkgdown green.
+changelog_ref: 72caa5080 (claim); the close-out commit (push and DONE entries)
+commit: 1778d738f
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 914dcf7785e7 · manifest 7e3e82ab3ae0
 ```
 
 ```handoff

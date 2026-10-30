@@ -550,7 +550,9 @@ These are grep counts, not a measured failure.
   `helper-shinytest2.R:738` guards `chromote`. The in-file count above misses those.
 - **2.0.0 already shipped unguarded tests.** It had 10 `mockery` and 16 `withr` test files (25
   files; one uses both) with no guard, and CRAN lists no noSuggests issue for it. So the new exposure is mainly `kinship2`
-  and `htmltools`. The faithful measurement is Phase 4b's check run, not this grep.
+  and `htmltools`. The faithful measurement is Phase 4b's check run, not this grep. **S1098's run:**
+  testthat turned a missing package into a skip, so these files caused no failure; the failures
+  were one example (`dplyr`) and two vignettes (`kableExtra`), which this grep never counted.
 
 ### 4.5 Help pages with `\dontrun{}` (for Phase 3)
 

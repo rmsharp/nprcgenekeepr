@@ -99,35 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1098 Did
-**Deliverable (IN PROGRESS, claimed 13:50 CDT):** CRAN plan Phase 4: 4a `shinyBS` to Imports (D6 = A) with a guard test; 4b the check with Suggests absent (D2 = A).
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "CRAN Phase 4", "Style if it is there", every TDD gate "Yes", "Push and wait for CI"; strict TDD): CRAN
+plan Phase 4 DONE.** Claim `72caa5080`, RED `477320bc2`, GREEN `c363f2ddd` (`shinyBS`) `07aeaf740` (example, vignettes), REFACTOR
+`bb3153d51`, docs `1778d738f`; pushed `0890874dc..1778d738f`.
+**What changed:** `shinyBS` is in Imports (`DESCRIPTION:60`), because without it the whole app fails to start, in released 2.0.0 too
+(`appUI()`: "there is no package called 'shinyBS'"), with a NEWS line. The `makeRelationClassesTable()` example uses base R; two
+vignettes style their 7 tables only when `kableExtra` is installed. `tests/testthat/test_packageCallsDeclared.R` and
+`helper-packageCalls.R` guard `pkg::` calls in `R/`. `R/zzz.R`'s check and 8 test skip lines went (REFACTOR).
+**Verified:** with Suggests absent `Status: OK` (was 2 ERRORs); clean read 495 files 4,587 blocks 0 failed 0 errors; `lint_package()` 0;
+`devtools::check()` OK 0/0/0 `PASS 16822`; CRAN-mode 0/0/1 (version only: 20 Imports draws no NOTE); CI R-CMD-check `41120457035`
+5 legs, test-coverage, lint, pkgdown green; ratchet 11/11 (`914dcf7785e7`). Runtime: `runGeneKeepR()` with only Imports and their
+dependencies visible: page 200, `/sbs/shinyBS.js` 200. Plan Phase 4 DONE paragraph, sections 4.4, 7, dragon 9; `BACKLOG.md:16`; Learning 1064.
+**Handoff evaluation of S1097: 9/10.** Helped: the next step named the files and lines and "no decision owed"; "a new test file runs
+on CRAN until named". Wrong: nothing S1097 wrote; the plan's 4b command (S1091) is not faithful on this Mac. Missing: nothing it could know.
+**Self: 8/10.** + measured the app, then 2.0.0, before asking; caught `.Library` before reading a false pass; every question answered
+first try. - one status nudge in REFACTOR's edits; two bugs in my first helper, caught before running it; one plan edit missed on a line break.
+**Gotchas:** R's own library holds 16 of the 17 Suggests, so hide it (plan Phase 4 DONE paragraph, dragon 9); testthat skips a test on a
+missing package, so a test failure there means something else; `dplyr` stays in Suggests for `test_makeRelationsClasses.R:4` (slow list),
+`kableExtra` for the vignettes; not measured: whether `.onLoad` no longer loading `shinyBS` moves win-builder's time (Phase 8 uploads anyway).
+**Next:** CRAN plan Phase 5 (`docs/planning/cran-3.0.0-submission-plan.md:786`), one or two sessions, D3 = B: condense General Fixes,
+Breeding Group Formation and Pedigree Diagram in `NEWS.Rmd`, one section at a time; the owner approves the text. Re-measure the section sizes first.
 
-### What Session 1097 Did
-**Deliverable (owner picks "CRAN Phase 3: cleanup", "Move to cran/archive/", "Make both run", every TDD gate "Yes", "one shared
-reader", "Push and wait for CI"; strict TDD): CRAN plan Phase 3 DONE.** Claim `664aec4b5`, RED `13f92faad`, GREEN `448eecdc5`
-(DOI) `4d7eafcc2` (examples) `673711063` (ignores) `104dd93af` `df40bf06d` (moves) `dd622dc42` (my test's bug), REFACTOR
-`669f8cd83`, docs `0890874dc`; pushed `c10391571..0890874dc`. Mid-close-out the owner also ruled D6, D2, D5 = A and D3 = B
-("Accept recommendations"): `c127334cd`, local, rides with the next real push.
-**What changed:** the `markerParentageLikelihood()` help cites DOI `10.1016/0040-5809(86)90006-7`; eight dated notes moved to
-`cran/archive/` (`^cran$` in `.Rbuildignore`, dated-note regex kept, dead `.gitignore` line gone); the `readKinshipOverrides()`
-and `readTwinRelations()` examples run on a temporary file; `tests/testthat/test_cranHygiene.R` guards all of it;
-`tests/testthat/helper-rbuildignore.R` is the one reader of `.Rbuildignore`'s patterns. The `R/` diff is comment lines only.
-**Verified:** clean read 494 files 4,580 blocks 0 failed 0 errors; `lint_package()` 0; `run_examples()` ok; `devtools::check()` OK
-0/0/0 `PASS 16803`; CRAN-mode check 0/0/1 (version, a one-time `api.reuse.software` lookup failure; no DOI); tarball top level is the
-plan's 12 entries; 216 examples before and after; CI R-CMD-check `41103783392` 5 legs, test-coverage, lint, pkgdown green; ratchet
-11/11 (`06dbfa1864fb`). No app run: no code the app runs changed. Plan's Phase 3 paragraph, sections 4.5, 6, 7; `BACKLOG.md:16`; Learning 1063.
-**Handoff evaluation of S1096: 9/10.** Helped: the next step named D1, D6 and the file:line for each; section 3.1's command; "a new
-test file runs on CRAN until named". Wrong: nothing material. Missing: only the D6 count's answer, two calls away.
-**Self: 7/10.** + measured D6 before asking; RED named each gap; every question answered first try; reran the check rather than
-explain a NOTE away. - my option text said each example would pay R's sweep (it did not), and I committed before the measurement
-I had promised; my own exactly-once DOI test could not pass; `run_examples()` before the check cost a 10-minute rerun; two status nudges.
-**Gotchas:** run `run_examples()` after a check or delete its `Rplots.pdf`; `manText()` holds a `\doi{}` twice; `test_cranHygiene.R`
-asks for the eight notes by name, so Phase 8's ninth (`cran/archive/20260717_cran-comments.md`) passes; `test_perfHarness.R` still
-reads `.Rbuildignore` itself (left alone).
-**Next:** CRAN plan Phase 4, one session, no decision owed: 4a guard test, then `shinyBS` from Suggests (`DESCRIPTION:76`) to Imports
-for the calls at `R/modSummaryStats.R:19,355,364,373`; 4b the check with Suggests absent, plan section 5. Then Phase 5 (D3 = B).
-
-### Sessions 947-1096 (condensed S950 to S1097; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1097 (condensed S950 to S1098; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1097 (CRAN plan Phase 3 DONE; D1 = A and the owner's other rulings; Learning 1063; hashes in `CHANGELOG.md`): the DOI, `cran/archive/`, two
+examples that run, `test_cranHygiene.R`, `helper-rbuildignore.R`. **Gotchas kept:** run `run_examples()` after a check or delete its
+`Rplots.pdf`; `manText()` holds a `\doi{}` twice; `test_perfHarness.R` still reads `.Rbuildignore` itself.
 S1096 (CRAN plan Phase 2 DONE by owner ruling on 520 s, one tarball also read 617 s; Learning 1062; hashes in `CHANGELOG.md`): R's
 `cleanEx()` swept memory before each of 216 examples, slowed by Matrix and ggplot2 loading with the package; both now load on first
 use. **Gotchas kept:** fetch win-builder's `examples_and_tests/` and compare CPU, not the total; upload twice before cutting;
