@@ -2,8 +2,9 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1, 2 and 3 are DONE (S1093; S1092 to S1096; S1097). The owner's rulings on D1 to D6 (section 6) shape
-Phase 2's measurement (D4), Phases 3 to 5, and Phase 8 (D5).
+**Status:** DRAFT. Phases 1, 2 and 3 are DONE (S1093; S1092 to S1096; S1097). The owner has ruled on all of D1 to D6 (section 6;
+D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
+Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
 3.0.0 to CRAN"; mid-session: "Consider removing all old cran-comments.md files or storing them in
 /cran/archive (not yet created)."
@@ -885,13 +886,13 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
 - **(B)** Delete the eight files. Git keeps them (`git log --all -- 20200415_cran-comments.md`),
   and nothing reads them (section 4.3).
 
-**D2. noSuggests before release.**
+**D2. noSuggests before release.** Ruled A (S1097).
 - **(A, recommended)** Run Phase 4b: one check run, then guards where it fails. This retires the
   new `kinship2` exposure before CRAN finds it.
 - **(B)** Skip it. 2.0.0 shipped with 25 unguarded test files and no noSuggests issue is listed
   (section 4.4). Phase 4a (`shinyBS`) happens either way.
 
-**D3. NEWS before release.**
+**D3. NEWS before release.** Ruled B (S1097).
 - **(B, recommended)** Phase 5 condenses the three largest sections. The owner approves the
   text, and has already asked for the Pedigree Diagram section to be condensed in stages.
 - **(A)** Retitle only (Phase 6). This is fastest, and 599 lines stay as they are.
@@ -906,13 +907,13 @@ must).
   estimate), and learn the real number at Phase 8. A miss there sends the work back to Phase 2
   after the version bump.
 
-**D5. Who runs the cross-platform checks (Phase 8).**
+**D5. Who runs the cross-platform checks (Phase 8).** Ruled A (S1097).
 - **(A, recommended)** The owner, following the runbook, as for 2.0.0. The results email the
   maintainer, and R-hub needs the owner's GitHub token.
 - **(B)** An agent runs `devtools::check_win_*()` and `rhub::rhub_check()` after the owner says
   go in that session. The emails still go to the owner.
 
-**D6. `shinyBS` (Phase 4a).**
+**D6. `shinyBS` (Phase 4a).** Ruled A (S1097).
 - **(A, recommended)** Move it from Suggests to Imports. The app needs it on every run of the
   Summary Statistics tab, so Imports is where it belongs, and the change is one DESCRIPTION line.
   Imports would then hold 20 packages that are not part of base R. `--as-cran` notes "excessive
@@ -931,11 +932,11 @@ must).
 | 2 | cut the CRAN-mode test time (do first) | DONE (S1096, owner ruling): 520 s on R-devel (`6tYpEEb12W8l`); the same tarball also read 617 s (section 3.6) | nothing | |
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | DONE (S1097; D1 = A) | nothing | |
-| 4 | 4a `shinyBS` (always); 4b noSuggests | after D6 (4a), D2 (4b) | D6; D2 = A for 4b | S-M |
-| 5 | NEWS release pass | after D3 | D3 = B | M |
+| 4 | 4a `shinyBS` (always); 4b noSuggests | next (D6 = A, D2 = A; one session) | nothing | S-M |
+| 5 | NEWS release pass | after 4 (D3 = B) | nothing | M |
 | 6 | version bump | after 1-5 | Phases 1-5 landed | S |
 | 7 | full local gate | after 6 | Phase 6 pushed, CI green | S |
-| 8 | cover note + cross-platform runs | after 7 | D5; the owner's runs | S + owner time |
+| 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |
 | 9 | submission | after 8 | the owner | owner |
 | 10 | after acceptance | after CRAN accepts | the acceptance email | S |
 

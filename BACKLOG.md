@@ -14,8 +14,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       released 3.0.0.
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
-      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; DECISION NEEDED on
-      D2, D3, D5 and D6 (D1 ruled A, S1097; D4 ruled A, S1092); Effort L, about 6-8 sessions left) --
+      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; READY: Phase 4 next;
+      all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and D3 = B, S1097; D4 = A,
+      S1092); Effort L, about 6-8 sessions left) --
       **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
