@@ -742,7 +742,7 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
      and the error text.
   2. **RED.** Add a guard test: every package that `R/` code calls with `pkg::`, outside
      comments, is in Imports, or the call sits under `requireNamespace("pkg")`. It fails on
-     `R/modSummaryStats.R:17,356,365,374`. Skip it with `rSourceAvailable()`
+     `R/modSummaryStats.R:19,355,364,373`. Skip it with `rSourceAvailable()`
      (`tests/testthat/helper-rSource.R`), as every whole-`R/` scan does since S1090.
   3. **GREEN per D6:**
      - **(A)** move `shinyBS` from Suggests to Imports;

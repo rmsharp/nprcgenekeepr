@@ -99,35 +99,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1097 Did
-**Deliverable (IN PROGRESS, claimed 11:45 CDT):** CRAN plan Phase 3, static hygiene: the DOI, the old cover notes (D1), two `\dontrun{}` pages, the tarball listing.
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "CRAN Phase 3: cleanup", "Move to cran/archive/", "Make both run", every TDD gate "Yes", "one shared
+reader", "Push and wait for CI"; strict TDD): CRAN plan Phase 3 DONE.** Claim `664aec4b5`, RED `13f92faad`, GREEN `448eecdc5`
+(DOI) `4d7eafcc2` (examples) `673711063` (ignores) `104dd93af` `df40bf06d` (moves) `dd622dc42` (my test's bug), REFACTOR
+`669f8cd83`, docs `0890874dc`; pushed `c10391571..0890874dc`. Mid-close-out the owner also ruled D6, D2, D5 = A and D3 = B
+("Accept recommendations"): `c127334cd`, local, rides with the next real push.
+**What changed:** the `markerParentageLikelihood()` help cites DOI `10.1016/0040-5809(86)90006-7`; eight dated notes moved to
+`cran/archive/` (`^cran$` in `.Rbuildignore`, dated-note regex kept, dead `.gitignore` line gone); the `readKinshipOverrides()`
+and `readTwinRelations()` examples run on a temporary file; `tests/testthat/test_cranHygiene.R` guards all of it;
+`tests/testthat/helper-rbuildignore.R` is the one reader of `.Rbuildignore`'s patterns. The `R/` diff is comment lines only.
+**Verified:** clean read 494 files 4,580 blocks 0 failed 0 errors; `lint_package()` 0; `run_examples()` ok; `devtools::check()` OK
+0/0/0 `PASS 16803`; CRAN-mode check 0/0/1 (version, a one-time `api.reuse.software` lookup failure; no DOI); tarball top level is the
+plan's 12 entries; 216 examples before and after; CI R-CMD-check `41103783392` 5 legs, test-coverage, lint, pkgdown green; ratchet
+11/11 (`06dbfa1864fb`). No app run: no code the app runs changed. Plan's Phase 3 paragraph, sections 4.5, 6, 7; `BACKLOG.md:16`; Learning 1063.
+**Handoff evaluation of S1096: 9/10.** Helped: the next step named D1, D6 and the file:line for each; section 3.1's command; "a new
+test file runs on CRAN until named". Wrong: nothing material. Missing: only the D6 count's answer, two calls away.
+**Self: 7/10.** + measured D6 before asking; RED named each gap; every question answered first try; reran the check rather than
+explain a NOTE away. - my option text said each example would pay R's sweep (it did not), and I committed before the measurement
+I had promised; my own exactly-once DOI test could not pass; `run_examples()` before the check cost a 10-minute rerun; two status nudges.
+**Gotchas:** run `run_examples()` after a check or delete its `Rplots.pdf`; `manText()` holds a `\doi{}` twice; `test_cranHygiene.R`
+asks for the eight notes by name, so Phase 8's ninth (`cran/archive/20260717_cran-comments.md`) passes; `test_perfHarness.R` still
+reads `.Rbuildignore` itself (left alone).
+**Next:** CRAN plan Phase 4, one session, no decision owed: 4a guard test, then `shinyBS` from Suggests (`DESCRIPTION:76`) to Imports
+for the calls at `R/modSummaryStats.R:19,355,364,373`; 4b the check with Suggests absent, plan section 5. Then Phase 5 (D3 = B).
 
-### What Session 1096 Did
-**Deliverable (owner picks "Finish Phase 2 check time", "Load 2 packages later", every TDD gate "Yes", "Upload + push, wait
-here", "Upload the same tree again", "Done: 520 s measured"; strict TDD): CRAN plan Phase 2 DONE.** Claim `b6646dba7`, RED
-`005369eba`, GREEN `2383292f2` (Matrix) `8b1b8fd90` (ggplot2), REFACTOR `20b38f346`, NEWS `c10391571`; pushed
-`4072b38d9..c10391571`; one tarball uploaded twice: `nTbGkc6hP4VM` 617 s, `6tYpEEb12W8l` 520 s (pages gone after about 72 h).
-**The cause:** 63 s of win-builder's 90 s examples step was R's `cleanEx()` before each of 216 examples (`showConnections()`
-calls `gc()` under `--as-cran`); Matrix and ggplot2, loaded with the package, made each sweep about 2.5 times slower. Now
-`kinship(sparse = TRUE)` loads Matrix and a plot loads ggplot2 (`R/kinship.R:288,290,294,339,348,433`, `R/meanKinship.R:30-37`,
-`.data` at `R/modSummaryStats.R:9`). Examples run here 25.9 to 17.1 s, `library()` 0.92 to 0.39 s, Windows CI examples 57 to 38 s.
-**Verified:** clean read 493 files 4,574 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` OK 0/0/0 `PASS 16803`;
-CI R-CMD-check `41012406472` 5 legs green (windows `PASS 16670`: the fresh-R block ran); the real app from a scratch install drew
-all six Summary Statistics plots; ratchet 11/11 (`77d8e8d089b3`). Plan section 3.6 and section 7; `BACKLOG.md:16`; Learning 1062.
-**Handoff evaluation of S1095: 8/10.** Helped: the next step as the owner's call with measured levers and file:line; the
-trace-order and "a new test file runs on CRAN until named" gotchas (both used); the 25-min queue. Wrong: "about 30 s" of noise (one
-tarball read 520 and 617 s). Missing: the result page's `examples_and_tests/` (per-example times, the CPU lines) held the cause.
-**Self: 7/10.** + measured the step's own script to the cause before any option; a prototype, full suite and sparse probes before
-RED, so RED named both real regressions; every question answered first try; real-app smoke. - carried the 30 s noise into the
-option text; an env var after `-e` twice; an empty-line bug in my own RED test; a BACKLOG splice on stale offsets (restored).
-**Gotchas:** fetch `examples_and_tests/` (`-Ex.timings`, `-Ex.Rout`, `tests/testthat.Rout`) with the log and compare CPU, not
-the total; upload twice before cutting; `load_all()` loads every Imports package, so `test_packageLoadLight.R`'s fresh-R block runs
-only from an install (`R CMD INSTALL --install-tests`, then `test_file(load_package = "installed")`); R code reading a sparse
-Matrix now names `Matrix::` (base `which()`, `diag()`, `colMeans()` and the rest do not take one); shell env vars go before `Rscript`.
-**Next:** Phase 3 (D1 first: move the eight old cover notes to `cran/archive/` or delete them) or Phase 4a (D6 first: `shinyBS` to
-Imports, which makes 20, or guard its four calls); plan section 7 orders them.
-
-### Sessions 947-1095 (condensed S950 to S1096; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1096 (condensed S950 to S1097; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1096 (CRAN plan Phase 2 DONE by owner ruling on 520 s, one tarball also read 617 s; Learning 1062; hashes in `CHANGELOG.md`): R's
+`cleanEx()` swept memory before each of 216 examples, slowed by Matrix and ggplot2 loading with the package; both now load on first
+use. **Gotchas kept:** fetch win-builder's `examples_and_tests/` and compare CPU, not the total; upload twice before cutting;
+`load_all()` loads every Imports package, so `test_packageLoadLight.R`'s fresh-R block runs only from an install; R code reading a
+sparse Matrix names `Matrix::`; shell env vars go before `Rscript`.
 S1094-S1095 (CRAN plan Phase 2; Learnings 1060-1061; hashes in `CHANGELOG.md`): S1095, 652 to 564 s (the `getGeneticDiversityStats`
 example reads `qcPedGvReport`; `.getAncestorsOnPath()` looks an id up once; CRAN runs 79 test files that call all 236 exports);
 S1094, the S1092 cut measured at 652 s and `readWithFinalNewline()`'s newline one `writeBin()` byte. **Gotchas kept:** trace exports

@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1097
 date: 2026-10-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 3, static hygiene: the wrong DOI, the old cover notes per D1 (the owner decides first), the two \dontrun help pages, the tarball listing (owner pick at the Phase 0 picker, item 1 of 4, "CRAN Phase 3: cleanup").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:690 (Phase 3), :470 (section 4.3), :554 (section 4.5); R/markerParentageLikelihood.R:131; .Rbuildignore:10-13; .gitignore:5; man/readKinshipOverrides.Rd:42; man/readTwinRelations.Rd:38
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: CRAN 3.0.0 plan Phase 3 DONE (static hygiene). Owner picks: "CRAN Phase 3: cleanup" (Phase 0 picker, item 1 of 4), "Move to cran/archive/" (D1 = A), "Make both run", every TDD gate "Yes", "Yes, one shared reader", "Push and wait for CI"; mid-close-out "Accept recommendations for D6, D2, D3, and D5"; strict TDD.
+what_was_done: Claim 664aec4b5. RED 13f92faad (test_cranHygiene.R, named in slowTestFiles.txt, 18 failed 9 passed). GREEN 448eecdc5 (the markerParentageLikelihood() help cites 10.1016/0040-5809(86)90006-7, Crossref's record; doi.org answered "handle not found" for ...90007-1), 4d7eafcc2 (readKinshipOverrides() and readTwinRelations() examples run on a temporary file), 673711063 (^cran$ in .Rbuildignore, dated-note regex kept, .gitignore's dead line gone), 104dd93af and df40bf06d (eight dated notes to cran/archive/, four per commit for the 5-file cap), dd622dc42 (my test's bug: tools::parse_Rd() holds a \doi{} twice). REFACTOR 669f8cd83 (helper-rbuildignore.R, one reader for three test files). Docs 0890874dc; pushed c10391571..0890874dc; rulings c127334cd (D6, D2, D5 = A; D3 = B; all of D1-D6 now ruled). Measured: exactly 20 non-base Imports draws no NOTE (R 4.6.1, length(imps) > lim); 216 examples before and after, so the two add 0.001-0.002 s each.
+next_steps: CRAN plan Phase 4, one session with no decision owed (plan section 5): 4a measure the app without shinyBS, RED a guard that every pkg:: call in R/ is in Imports or under requireNamespace(), GREEN shinyBS from Suggests (DESCRIPTION:76) to Imports for R/modSummaryStats.R:19,355,364,373; 4b the section 3.1 check with _R_CHECK_DEPENDS_ONLY_ = "true", guarding each failing test file with skip_if_not_installed(). Then Phase 5 (D3 = B: condense the three largest NEWS sections, owner approves the text), Phase 6 (version bump), Phase 7, Phase 8 (D5 = A: the owner's runs).
+key_files: tests/testthat/test_cranHygiene.R; tests/testthat/helper-rbuildignore.R; tests/testthat/slowTestFiles.txt:81; R/markerParentageLikelihood.R:131; R/readKinshipOverrides.R:35-41; R/readTwinRelations.R:31-44; .Rbuildignore:10-13; cran/archive/; docs/planning/cran-3.0.0-submission-plan.md (Phase 3 paragraph, sections 4.5, 6, 7); BACKLOG.md:16; PROJECT_LEARNINGS.md Learning 1063; R/modSummaryStats.R:19,355,364,373 and DESCRIPTION:76 (Phase 4).
+gotchas: devtools::run_examples() leaves Rplots.pdf at the root and a check after it NOTEs that file: run it after the check or delete the file. manText() holds a \doi{} twice, so expectWording()'s exactly-once count cannot pass on a man page. A URL line in the incoming NOTE needs a second try: api.reuse.software failed one lookup and returned 200 the same hour; thoughtco.com stayed out of the local NOTE while win-builder has flagged it. test_cranHygiene.R asks for the eight notes by name, so Phase 8's ninth file passes. test_perfHarness.R still reads .Rbuildignore itself (left alone). The plan's shinyBS line numbers had drifted; corrected in this close-out.
+runtime_smoke: No app run: the R/ diff is comment lines only (0 non-comment lines against 94c2daa5b), so nothing the app runs changed. Verified: clean read 494 files 4,580 blocks 0 failed 0 errors; lint_package() 0; run_examples() ok; devtools::check() Status OK 0/0/0 PASS 16803; CRAN-mode check 0/0/1 with no DOI line; tarball top level exactly the plan's 12 entries; CI R-CMD-check 41103783392 5 legs green, test-coverage 41103783306, lint 41103783397, pkgdown 41103783335 green.
+changelog_ref: 664aec4b5 (claim); the close-out commit (push, rulings and DONE entries)
+commit: 0890874dc
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 06dbfa1864fb · manifest 7e3e82ab3ae0
 ```
 
 ```handoff
