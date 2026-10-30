@@ -45,8 +45,19 @@ job.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-twinRelations <- readTwinRelations(fileName = "twin_relations.csv")
+ped <- data.frame(
+  id = c("F1", "F2", "S1", "S2"),
+  sire = c(NA, NA, "F1", "F1"),
+  dam = c(NA, NA, "F2", "F2"),
+  sex = c("M", "F", "F", "F"),
+  stringsAsFactors = FALSE
+)
+csvFile <- tempfile(fileext = ".csv")
+writeLines(c("id1,id2,code", "S1,S2,MZ twin"), csvFile)
+twinRelations <- readTwinRelations(fileName = csvFile)
 twinRelations <- checkTwinRelations(ped, twinRelations)
-} # }
+twinRelations
+#>   id1 id2    code
+#> 1  S1  S2 MZ twin
+unlink(csvFile)
 ```

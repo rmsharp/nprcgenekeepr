@@ -54,8 +54,13 @@ of relatedness *r* (= 2*f* for non-inbred animals).
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-overrides <- readKinshipOverrides(fileName = "kinship_overrides.csv")
+csvFile <- tempfile(fileext = ".csv")
+writeLines(c("id1,id2,kinship", "A1,A2,0.25", "A3,A4,0.125"), csvFile)
+overrides <- readKinshipOverrides(fileName = csvFile)
 overrides <- checkKinshipOverrides(overrides)
-} # }
+overrides
+#>   id1 id2 kinship
+#> 1  A1  A2   0.250
+#> 2  A3  A4   0.125
+unlink(csvFile)
 ```
