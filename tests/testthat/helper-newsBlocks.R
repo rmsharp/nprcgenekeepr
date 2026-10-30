@@ -25,7 +25,7 @@ newsEntries <- function(block) {
   starts <- grep("^- ", ls)
   entries <- lapply(starts, function(i) {
     j <- i
-    while (j < length(ls) && grepl("^  \\S", ls[j + 1L])) {
+    while (j < length(ls) && grepl("^ {2,}\\S", ls[j + 1L])) {
       j <- j + 1L
     }
     text <- paste(trimws(ls[i:j]), collapse = " ")

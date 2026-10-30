@@ -19,6 +19,57 @@ analysis, MHC haplotype reporting, cross-center identity matching,
 ancestry-aware breeding safeguards, de-identified export workflows, and
 longitudinal monitoring of colony genetic health.
 
+Each app tab in these notes is explained in the [Colony Manager's
+Guide](https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html).
+To reach it from the app, open the **Help** tab, follow **Online
+Documentation**, and under **Articles** choose "Purpose, Approach, and a
+Colony Manager's Guide to Practice". The guide is on the website only; for
+working from a script, the installed tutorial is `vignette("a2interactive",
+package = "nprcgenekeepr")`.
+
+## Input
+
+- New: the Input tab now warns when animals in the uploaded pedigree have no
+  birth date. The Warnings tab counts them and says that age-based checks and
+  counts cannot use them. The pedigree can still be used.
+- New: the Input tab now warns when an animal's death or departure date is
+  earlier than its birth date, and names the first five such animals. The
+  pedigree can still be used. `runQcStudbook(reportChanges = TRUE)` returns
+  this warning and the one above.
+- New `placeholder` column: the pedigree check records which animals are
+  stand-ins. Enter `FALSE` for a real animal whose id looks like one (such as
+  `U1234`) and it is kept as real throughout.
+  - A `placeholder` value other than TRUE, FALSE, 1, 0 or blank stops the
+    check and names the rows.
+- New: with "Pedigree(s) and genotypes in one file", the Input tab now reads
+  genotypes from columns named `allele_1` and `allele_2` or `first_name` and
+  `second_name` as well as `first` and `second`, accepts text labels as well
+  as whole numbers, and says under the QC Summary which columns it read or why
+  it read none. A file with text in `first` and `second` now has its genotypes
+  used, so its Genetic Value results can change.
+- Fixed: The Input tab lists every invalid date by row.
+- Fixed: A `fromCenter` value that is not a whole yes or no stops the load and
+  names its rows, in `convertFromCenter()` and `qcStudbook()` too.
+- Fixed: The Changed Columns tab reports only real renames, including a
+  lowercase `geographicorigin`, `recordstatus` or `fromcenter` header, and a
+  column named `NA` no longer stops `checkRequiredCols()` or
+  `fixColumnNames()`.
+- Fixed: The count boxes of the QC Summary (Records Processed, Errors and
+  Warnings) are colored by what the check found.
+- Fixed: An id that merely starts with a capital U is no longer taken for a
+  stand-in, so "Display Unknown IDs" hides only ids shaped like `U0001`, and a
+  generated stand-in id never repeats a real one (`addUIds()`).
+- Fixed: A sire or dam with an unreadable sex is no longer reported as a
+  "female sire" or "male dam".
+- Fixed: An empty cell in a CSV or text file is read as missing, so a blank
+  ancestry no longer counts as OTHER instead of UNKNOWN.
+- Fixed: On Linux computers with ARM processors, a small file whose last value
+  is in quotes and that has no final line break now loads.
+- Fixed: With "Pedigree(s) and genotypes in separate files", a genotype file
+  the app cannot use is reported on the QC Summary ("The genotype file was not
+  used, so no genotypes are used.", with the reason) and the app keeps
+  running.
+
 ## Pedigree Diagram
 
 **Major**
@@ -119,6 +170,190 @@ longitudinal monitoring of colony genetic health.
 - `kinship()` computes X-chromosome relatedness with `chrtype = "x"` (needs
   `sex`); the default is unchanged. Script only.
 
+## Age-Sex Pyramid
+
+- Fixed: Download Plot saves nothing until a pedigree is loaded.
+
+## Genetic Value Analysis
+
+**Major**
+
+- With no focal animals entered, the Pedigree Browser now takes the living
+  animals as the population instead of every animal ever recorded, so the
+  default Genetic Value rankings and founder measures describe the living
+  colony. A pedigree with no living animal still uses every animal. Script
+  users: `setPopulation()` still flags every animal when given no IDs.
+- Fixed: unchecking "Display Unknown IDs" in the Pedigree Browser no longer
+  stops the Genetic Value Analysis with a "logic error". The box hides rows
+  only in the Pedigree Browser table; every other tab uses the full pedigree
+  ("Trim pedigree based on focal animals" still narrows it).
+- Configurable **Ranking Scheme**: a priority-tier ranking alongside the
+  combined kinship/uniqueness score (issue #125).
+- Script users: `reportGV()` takes `guCutoff`, `zScoreCutoff` and
+  `axisPriority`.
+
+**Minor**
+
+- The rankings table gained a **flagged** column for animals whose ranking
+  correction could not be applied for lack of a comparable peer group (issue
+  #127).
+- The rankings table starts with the animal ID. It used to start with an
+  unlabeled column of leftover row numbers (such as 4, 5, 6, 9, 10) that were
+  not the rank; the **rank** column, last in the table, still gives each
+  animal's rank.
+- The Genetic Value Analysis tab no longer shows the "Calculate Genome
+  Uniqueness" and "Calculate Mean Kinship" check boxes. They did nothing: the
+  analysis works out both numbers whether or not they were ticked.
+- Fixed: Founder genome equivalents, their standard error and gene diversity
+  are worked out from the pedigree alone, so genotypes no longer make them NA.
+- Fixed: An Excel file of kinship overrides works as a CSV of the same table
+  does, in the app and in `readKinshipOverrides()`.
+- Fixed: Genetic Value tiers and the pedigree and group tables sort the same
+  way whatever the server's regional settings.
+
+## Summary Statistics
+
+- New: **Skewness** and **Kurtosis** (issue #126; script: `calcSkewness()`,
+  `calcKurtosis()`).
+- Fixed: The twelve Export pop-ups show only their sentence, with no
+  `character(0)` title bar.
+
+## Breeding Group Formation
+
+**Major**
+
+- Groups are formed from living animals only, whatever the **Source**, so the
+  default **Top ranked** 20 are animals that can breed. An animal counts as
+  alive when its Status is ALIVE (or, in a pedigree with no Status column,
+  when it has no exit date). If none is alive, the tab says so and forms no
+  groups.
+- Several candidate groupings are shown per run, with a selector and
+  comparison table (issue #125). **Candidates to retain** sets how many are
+  kept (default 5, 1 to 50). Script users: `groupAddAssign()` returns a
+  `candidates` field and takes `maxCandidates` (issue #146).
+- Formation can follow your center's ancestry rules (issue #168). Upload a
+  rules file in the new **Ancestry Guardrails** section; each line names two
+  ancestry groups (for example Indian-origin and Chinese-origin rhesus) and
+  says whether mixing them is blocked or only flagged. Blocked pairs never
+  share a group, in every formation mode; flagged pairs form freely and are
+  pointed out afterward. Without a rules file, formation is unchanged.
+- A block rule can be overridden for your session through a confirmation step
+  that requires a written reason. Overridden pairings stay in the violations
+  list, marked "overridden". A downloadable audit record lists the rules in
+  effect, overrides with reasons, and the warning shown.
+- A harem's automatically chosen sire is now kept apart from his relatives
+  like every other animal. Before, nothing stopped his mother, daughter or
+  sister from joining his harem (on the example pedigree with the default
+  settings, most runs put at least one such relative in a harem). An animal at
+  or above the Max kinship threshold to him, or one an ancestry block rule
+  bars from him, now stays out of his harem, and if that leaves no one the
+  harem is the sire alone. Results for a given random seed differ from earlier
+  versions.
+- With **Harem** selected, seeding a male in some groups but not all no longer
+  stops the run with "subscript out of bounds" or forms harems with no male. A
+  group with a seeded male keeps him as its sire; a group with no seeded male
+  is given a sire chosen at random.
+- A script that passes `harem = TRUE` and a non-zero `sexRatio` to
+  `groupAddAssign()` now stops with a message naming both settings, instead of
+  returning groups of one or two animals; use one or the other. The Breeding
+  Groups tab was never affected, since its radio takes **Harem** or **Custom**,
+  not both.
+- With a **Custom** sex ratio, a male under the **Minimum breeding age**, or
+  with no birth date, is left out of the groups and listed under **Unused
+  animals**. Before, such a male could be placed as if he were female while
+  the group's sex ratio still counted him as a male, so a group's males could
+  include animals not known to be of breeding age, and with few females the
+  ratio could come out well below the one asked for. A group stops filling
+  when no breeding-age male is left for it, so it can end with fewer females
+  than the ratio asks for. Script users: `groupAddAssign()` and
+  `fillGroupMembersWithSexRatio()` follow the same rule. On a pedigree with
+  such males, results for a given random seed differ from earlier versions.
+
+**Minor**
+
+- The last box on the **Groups** tab, which holds the animals that fit no
+  group, is headed **Unused animals** instead of the next group number. The
+  **Statistics** table, the **Group Detail** list and the **Genetic Diversity**
+  heat map use the same name.
+- A box that holds exactly one animal is headed "(1 animal)" on the
+  **Groups** tab, not "(1 animals)".
+- New **Include animals by** control: a genetic-value floor as an alternative
+  to the top-N cutoff (issue #128).
+- New **Exhaustive enumeration mode**: lists every maximal group that can be
+  housed together, for the simplest case only (one group, no harem, no custom
+  sex ratio). It stops with a message above 20 eligible animals and returns
+  what it has found after 10 seconds. Script users: `exhaustive`,
+  `maxExhaustiveCandidates` and `exhaustiveTimeLimit` (issue #146).
+- A status line shows the loaded rules (for example "2 block, 2 flag rule(s)")
+  and how many animals no rule reaches; a file problem is reported and
+  ignored, and a pedigree without ancestry information leaves the guardrails
+  inactive. A new **Ancestry** results tab lists matched pairings with a
+  coverage summary.
+- Script users: `readAncestryRules()`, `checkAncestryRules()`, the
+  `ancestryRules` argument of `groupAddAssign()`, and
+  `reportAncestryViolations()` for existing groups. An example rules file and
+  pedigree ship with the package.
+- The **Source** choice "Upload list", which had no place to give it a list, is
+  now "My own list". Paste the animal IDs into the box that appears. Groups are
+  formed from those that are alive; an ID that is not in the pedigree stops the
+  run and is named, and an animal that is not alive is left out and named.
+- Forming groups and then reading a different pedigree, or trimming the
+  pedigree on the Pedigree Browser, no longer leaves the **Groups**,
+  **Statistics** and **Group Detail** pages showing the old group sizes over
+  empty tables, counts of zero males and zero females, and a red error. When a
+  group holds an animal the pedigree now loaded does not have, each page says
+  so in one sentence and asks you to form the groups again or bring back the
+  earlier pedigree. On **Group Detail** the sentence takes the place of both
+  tables and the two **Export** buttons, so an old group cannot be exported by
+  mistake. The groups are kept, so bringing that pedigree back shows them
+  again.
+- Fixed: Forming groups that include animals with no birth date no longer ends
+  the session after a genetic value analysis.
+
+## Mate Pair Analysis
+
+**Major**
+
+- New **Mate Pair Analysis** tab: a curator view built on the report below,
+  separate from Breeding Group Formation (issue #151).
+- Mate pair reports can follow your ancestry rules (issue #169). Rules loaded
+  on the Breeding Groups tab apply here: a "block" pair moves to Excluded with
+  the reason "ancestry rule", and a "flag" pair stays in Eligible Pairs with
+  its rule shown, in the export too.
+- **Override rule...** with a written reason keeps a rule's pairs in Eligible
+  Pairs, marked "overridden".
+- The **Ancestry** tab shows coverage, and **Download Audit Manifest** saves
+  the rules, overrides with reasons, pair counts and the confirmation warning.
+- The **Excluded** tab has an **Export Excluded Pairs** button that saves the
+  blocked pairs, with their reasons, as a CSV file. Like the Eligible Pairs
+  export, it holds exactly the rows left after any search or filter.
+- Script users: `reportMatePairs()` takes `ancestryRules` and
+  `overriddenRules`. Without rules or an ancestry column, nothing changes.
+
+**Minor**
+
+- `reportMatePairs()` reports mate-pair candidates with relatedness and
+  genetic-value context. Report only (issue #151).
+- Mate pairs are made only from animals recorded as male or female. The page
+  says how many animals of any other sex it left out, and `reportMatePairs()`
+  leaves them out of both tables.
+- **All alive** takes the same animals as Breeding Groups: status ALIVE, or,
+  in a file with no status column, no recorded exit date.
+
+## Genetic Diversity
+
+- Fixed: A breeding group with no breeding-age females has a gray Production
+  cell, because Production cannot be calculated for it.
+- Fixed: An undefined Inbreeding cell is red.
+- Fixed: A female with no birth date and no offspring is left out of the
+  Production and Inbreeding cells, and a note under the heat map gives the
+  counts.
+- Fixed: The heat map's column and group names are written level, bold and
+  whole, at 2.5 times the old size.
+- Fixed: After focal animals are chosen, the tab scores every group with the
+  whole pedigree's kinship instead of stopping with "kmat is missing kinship
+  for group member(s)".
+
 ## Marker Genetics
 
 **Major**
@@ -217,159 +452,6 @@ longitudinal monitoring of colony genetic health.
   gives to a different first-center animal (the merged file would hold that id
   twice).
 
-## Genetic Value Analysis
-
-**Major**
-
-- With no focal animals entered, the Pedigree Browser now takes the living
-  animals as the population instead of every animal ever recorded, so the
-  default Genetic Value rankings and founder measures describe the living
-  colony. A pedigree with no living animal still uses every animal. Script
-  users: `setPopulation()` still flags every animal when given no IDs.
-- Fixed: unchecking "Display Unknown IDs" in the Pedigree Browser no longer
-  stops the Genetic Value Analysis with a "logic error". The box hides rows
-  only in the Pedigree Browser table; every other tab uses the full pedigree
-  ("Trim pedigree based on focal animals" still narrows it).
-- Configurable **Ranking Scheme**: a priority-tier ranking alongside the
-  combined kinship/uniqueness score (issue #125).
-- Script users: `reportGV()` takes `guCutoff`, `zScoreCutoff` and
-  `axisPriority`.
-
-**Minor**
-
-- Summary Statistics gained **Skewness** and **Kurtosis** (issue #126; script:
-  `calcSkewness()`, `calcKurtosis()`).
-- The rankings table gained a **flagged** column for animals whose ranking
-  correction could not be applied for lack of a comparable peer group (issue
-  #127).
-- The rankings table starts with the animal ID. It used to start with an
-  unlabeled column of leftover row numbers (such as 4, 5, 6, 9, 10) that were
-  not the rank; the **rank** column, last in the table, still gives each
-  animal's rank.
-- The Genetic Value Analysis tab no longer shows the "Calculate Genome
-  Uniqueness" and "Calculate Mean Kinship" check boxes. They did nothing: the
-  analysis works out both numbers whether or not they were ticked.
-
-## Breeding Group Formation
-
-**Major**
-
-- Groups are formed from living animals only, whatever the **Source**, so the
-  default **Top ranked** 20 are animals that can breed. An animal counts as
-  alive when its Status is ALIVE (or, in a pedigree with no Status column,
-  when it has no exit date). If none is alive, the tab says so and forms no
-  groups.
-- Several candidate groupings are shown per run, with a selector and
-  comparison table (issue #125). **Candidates to retain** sets how many are
-  kept (default 5, 1 to 50). Script users: `groupAddAssign()` returns a
-  `candidates` field and takes `maxCandidates` (issue #146).
-- Formation can follow your center's ancestry rules (issue #168). Upload a
-  rules file in the new **Ancestry Guardrails** section; each line names two
-  ancestry groups (for example Indian-origin and Chinese-origin rhesus) and
-  says whether mixing them is blocked or only flagged. Blocked pairs never
-  share a group, in every formation mode; flagged pairs form freely and are
-  pointed out afterward. Without a rules file, formation is unchanged.
-- A block rule can be overridden for your session through a confirmation step
-  that requires a written reason. Overridden pairings stay in the violations
-  list, marked "overridden". A downloadable audit record lists the rules in
-  effect, overrides with reasons, and the warning shown.
-- A harem's automatically chosen sire is now kept apart from his relatives
-  like every other animal. Before, nothing stopped his mother, daughter or
-  sister from joining his harem (on the example pedigree with the default
-  settings, most runs put at least one such relative in a harem). An animal at
-  or above the Max kinship threshold to him, or one an ancestry block rule
-  bars from him, now stays out of his harem, and if that leaves no one the
-  harem is the sire alone. Results for a given random seed differ from earlier
-  versions.
-- With **Harem** selected, seeding a male in some groups but not all no longer
-  stops the run with "subscript out of bounds" or forms harems with no male. A
-  group with a seeded male keeps him as its sire; a group with no seeded male
-  is given a sire chosen at random.
-- A script that passes `harem = TRUE` and a non-zero `sexRatio` to
-  `groupAddAssign()` now stops with a message naming both settings, instead of
-  returning groups of one or two animals; use one or the other. The Breeding
-  Groups tab was never affected, since its radio takes **Harem** or **Custom**,
-  not both.
-- With a **Custom** sex ratio, a male under the **Minimum breeding age**, or
-  with no birth date, is left out of the groups and listed under **Unused
-  animals**. Before, such a male could be placed as if he were female while
-  the group's sex ratio still counted him as a male, so a group's males could
-  include animals not known to be of breeding age, and with few females the
-  ratio could come out well below the one asked for. A group stops filling
-  when no breeding-age male is left for it, so it can end with fewer females
-  than the ratio asks for. Script users: `groupAddAssign()` and
-  `fillGroupMembersWithSexRatio()` follow the same rule. On a pedigree with
-  such males, results for a given random seed differ from earlier versions.
-
-**Minor**
-
-- The last box on the **Groups** tab, which holds the animals that fit no
-  group, is headed **Unused animals** instead of the next group number. The
-  **Statistics** table, the **Group Detail** list and the **Genetic Diversity**
-  heat map use the same name.
-- A box that holds exactly one animal is headed "(1 animal)" on the
-  **Groups** tab, not "(1 animals)".
-- New **Include animals by** control: a genetic-value floor as an alternative
-  to the top-N cutoff (issue #128).
-- New **Exhaustive enumeration mode**: lists every maximal group that can be
-  housed together, for the simplest case only (one group, no harem, no custom
-  sex ratio). It stops with a message above 20 eligible animals and returns
-  what it has found after 10 seconds. Script users: `exhaustive`,
-  `maxExhaustiveCandidates` and `exhaustiveTimeLimit` (issue #146).
-- A status line shows the loaded rules (for example "2 block, 2 flag rule(s)")
-  and how many animals no rule reaches; a file problem is reported and
-  ignored, and a pedigree without ancestry information leaves the guardrails
-  inactive. A new **Ancestry** results tab lists matched pairings with a
-  coverage summary.
-- Script users: `readAncestryRules()`, `checkAncestryRules()`, the
-  `ancestryRules` argument of `groupAddAssign()`, and
-  `reportAncestryViolations()` for existing groups. An example rules file and
-  pedigree ship with the package.
-- The **Source** choice "Upload list", which had no place to give it a list, is
-  now "My own list". Paste the animal IDs into the box that appears. Groups are
-  formed from those that are alive; an ID that is not in the pedigree stops the
-  run and is named, and an animal that is not alive is left out and named.
-- Forming groups and then reading a different pedigree, or trimming the
-  pedigree on the Pedigree Browser, no longer leaves the **Groups**,
-  **Statistics** and **Group Detail** pages showing the old group sizes over
-  empty tables, counts of zero males and zero females, and a red error. When a
-  group holds an animal the pedigree now loaded does not have, each page says
-  so in one sentence and asks you to form the groups again or bring back the
-  earlier pedigree. On **Group Detail** the sentence takes the place of both
-  tables and the two **Export** buttons, so an old group cannot be exported by
-  mistake. The groups are kept, so bringing that pedigree back shows them
-  again.
-
-## Mate Pair Analysis
-
-**Major**
-
-- New **Mate Pair Analysis** tab: a curator view built on the report below,
-  separate from Breeding Group Formation (issue #151).
-- Mate pair reports can follow your ancestry rules (issue #169). Rules loaded
-  on the Breeding Groups tab apply here: a "block" pair moves to Excluded with
-  the reason "ancestry rule", and a "flag" pair stays in Eligible Pairs with
-  its rule shown, in the export too.
-- **Override rule...** with a written reason keeps a rule's pairs in Eligible
-  Pairs, marked "overridden".
-- The **Ancestry** tab shows coverage, and **Download Audit Manifest** saves
-  the rules, overrides with reasons, pair counts and the confirmation warning.
-- The **Excluded** tab has an **Export Excluded Pairs** button that saves the
-  blocked pairs, with their reasons, as a CSV file. Like the Eligible Pairs
-  export, it holds exactly the rows left after any search or filter.
-- Script users: `reportMatePairs()` takes `ancestryRules` and
-  `overriddenRules`. Without rules or an ancestry column, nothing changes.
-
-**Minor**
-
-- `reportMatePairs()` reports mate-pair candidates with relatedness and
-  genetic-value context. Report only (issue #151).
-- Mate pairs are made only from animals recorded as male or female. The page
-  says how many animals of any other sex it left out, and `reportMatePairs()`
-  leaves them out of both tables.
-- **All alive** takes the same animals as Breeding Groups: status ALIVE, or,
-  in a file with no status column, no recorded exit date.
-
 ## De-Identified Export
 
 **Major**
@@ -383,6 +465,16 @@ longitudinal monitoring of colony genetic health.
 - `obfuscatePed()` gained **linkedDateShift** (default `TRUE`): all of one
   animal's dates move by the same offset, so the gaps between them stay
   realistic (issue #150).
+
+## Potential Parents
+
+- Changed: Potential Parents (`getPotentialParents()`) lists candidates only
+  for the missing parent: an animal with a recorded dam and no sire gets
+  candidate sires, and the reverse.
+- New: each Potential Parents result (`getPotentialParents()`) now says where
+  its dam list came from, in `damBasis`.
+- Fixed: A female who gave birth too close in time to have carried the animal
+  is left out as dam.
 
 ## Longitudinal Monitoring
 
@@ -441,186 +533,57 @@ longitudinal monitoring of colony genetic health.
 
 ## General Fixes
 
-- New: the Input tab now warns when animals in the uploaded pedigree have no
-  birth date. The app shows its yellow warning notice and opens the Warnings
-  tab, which says how many animals have none (1,432 of 3,694 in the shipped
-  example pedigree) and that their age is unknown, so age-based checks and
-  counts, such as the parent-age check, the Age-Sex Pyramid and the breeding-age
-  counts, cannot use them. It is only a warning: the pedigree can still be
-  used. `runQcStudbook(reportChanges = TRUE)` returns the same warning.
-
-- New: the Input tab now warns when an animal's death or departure date is
-  earlier than its birth date. The Warnings tab says how many animals and names
-  the first five; their age comes out zero or negative, so the dates need a look
-  in the file. A death or departure on the birth day is not flagged, and the
-  pedigree can still be used. `runQcStudbook(reportChanges = TRUE)` returns the
-  same warning.
-
-- New `placeholder` column: the pedigree check records which animals are
-  stand-ins. Enter `FALSE` for a real animal whose id looks like one (such as
-  `U1234`) and it is kept as real throughout, including Potential Parents,
-  founder counts and the breeder counts behind effective population size.
-
-- A `placeholder` value other than TRUE, FALSE, 1, 0 or blank stops the check
-  and names the rows. The column survives download and re-upload,
-  de-identified export and cross-center linking.
-
-- Changed: Potential Parents (`getPotentialParents()`) lists candidates only
-  for the missing parent: an animal with a recorded dam and no sire gets
-  candidate sires, and the reverse. Before, a recorded dam was ruled out of
-  her own animal's list, so those dam lists were never useful.
-
-- New: each Potential Parents result (`getPotentialParents()`) now says where
-  its dam list came from: `damBasis` is `"provenBreeder"` for females who gave
-  birth near the animal's birth, `"eligibleFemale"` when there were none and
-  every female old enough and present is listed instead, and blank when no dam
-  is listed. The sire and dam lists themselves are unchanged.
-
-- New: with "Pedigree(s) and genotypes in one file", the Input tab now reads
-  genotypes from columns named `allele_1` and `allele_2` or `first_name` and
-  `second_name` as well as `first` and `second`, accepts text labels such as A,
-  B, C as well as whole numbers, and shows a line under the QC Summary saying
-  which columns it read or why it read none. A file with text in `first` and
-  `second`, whose genotypes were not used before, now uses them, so its Genetic
-  Value results can change.
-
-- Fixed (pedigree checks and Potential Parents): The Input tab lists every
-  invalid date by row, in every date column, instead of stopping without a row
-  number. A `fromCenter` value that is not a whole yes or no (`y`, `yes`, `t`,
-  `true`, `n`, `no`, `f`, `false`) stops the load and names its rows instead of
-  being guessed; `convertFromCenter()` and `qcStudbook()` behave the same way. A
-  header that is already spelled right is not reported as changed, and a
-  lowercase `geographicorigin`, `recordstatus` or `fromcenter` header is counted
-  and listed on the Changed Columns tab like every other rename. A column named
-  `NA` is read as a blank name, so `checkRequiredCols()` and `fixColumnNames()`
-  no longer stop with "missing value where TRUE/FALSE needed". The three count
-  boxes of the QC Summary (Records Processed, Errors and Warnings) are colored
-  by what the check found. A real animal whose id starts with a capital U (such
-  as `U1` or `Uma`) is no longer taken for a stand-in: only an id shaped like
-  `U0001` is, and "Display Unknown IDs" hides only those. A sire or dam whose
-  sex is blank, misspelled or space-padded is no longer reported as a "female
-  sire" or "male dam"; spaces are ignored and an unreadable sex is read as
-  unknown. An empty cell in an uploaded CSV or text file is read as missing, as
-  in Excel uploads, so files with blank founder sire and dam cells load and a
-  blank ancestry no longer counts as OTHER instead of UNKNOWN. On Linux
-  computers with ARM processors, a small CSV or text file whose last value is
-  in quotes and that has no final line break no longer loads with 0 records and
-  1 error: R itself added a stray character to that value, and the Input tab,
-  `getPedigree()`, `getGenotypes()` and the package's other file readers now
-  avoid it. A stand-in id
-  never repeats an id a real animal already has, even one that appears only as a
-  sire or dam (`addUIds()` skips it). Potential Parents leaves out as dam a
-  female who gave birth too close in time to have carried the animal, also when
-  no nearby female was a proven breeder. The quality-control summary printed in
-  the console spells "suspicious" correctly, and `get_elapsed_time_str()` rounds
-  before it writes minutes and seconds.
-
-- Fixed (Breeding Groups and Genetic Diversity): A valid ancestry rules table
-  with no rules no longer stops Download Audit Manifest on the Mate Pair and
-  Breeding Groups tabs; the download works and its single row says that no rules
-  were in effect. A breeding group with no breeding-age females has a gray
-  Production cell, not a green one, because Production cannot be calculated for
-  it. An undefined Inbreeding cell is red. Forming breeding groups that include
-  animals with no birth date no longer ends the session after a genetic value
-  analysis (the shipped example pedigree does this with the default settings). A
-  female with no birth date counts as a breeding-age female in the Production
-  and Inbreeding cells only when the pedigree lists an offspring for her; a
-  female with no birth date and no offspring is left out of both, and a note
-  under the heat map says how many animals have no birth date and how many of
-  those females were counted or left out. A group whose only female is left out
-  has a gray Production cell. The column names and group names of the heat map
-  are written level, bold and whole, at 2.5 times the old size. After focal
-  animals are chosen on the Pedigree Browser, the Genetic Diversity tab scores
-  every group with the kinship of the whole pedigree instead of stopping with
-  "kmat is missing kinship for group member(s)", and a group made only of
-  animals with no genetic value report row has no assessed value and a red Value
-  cell. Forming groups and then reading a different pedigree, or trimming it on
-  the Pedigree Browser, shows one sentence that some animals in the groups are
-  not in the pedigree now loaded and asks you to form the groups again.
-
-- Fixed (Genetic Value): Founder genome equivalents, their standard error and
-  gene diversity are worked out from the pedigree alone, so genotypes no longer
-  make them NA. An Excel file of kinship overrides works as a CSV of the same
-  table does, in the app and in `readKinshipOverrides()`. The Genetic Value
-  Analysis tiers, the main pedigree table and the Breeding Group member table
-  sort the same way whatever the server's regional settings.
-
-- Fixed (genotype files): With "Pedigree(s) and genotypes in separate files", a
-  genotype file the app cannot use is reported on the QC Summary ("The genotype
-  file was not used, so no genotypes are used.", with the reason) and the app
-  keeps running. On the Marker Genetics tab, building the de-identified export
-  preview no longer ends the session when the genotype file has an animal
-  missing from the pedigree or failed its format check; the app skips the
-  preview and says why. The module's `isReady` answers FALSE, not an error, for
-  a genotype file it cannot use.
-
-- Fixed (scripts): `removeUnknownAnimals()`, `convertDate()`,
-  `removeDuplicates()` and `correctParentSex()` treat only animals recorded as
-  added as stand-ins, whatever a blank or unrecognized record of being added
-  holds. `getAncestors()`, `findLoops()` and `countLoops()` stop with a message
-  naming the animals instead of an "infinite recursion" error when an animal is
-  its own ancestor, and no longer stop with "argument is of length zero" when a
-  parent has no row of its own (it is treated as an animal with unknown
-  parents). `getLkDirectAncestors()` and `getPedDirectRelatives()` stop and
-  return what they found instead of running without end on a pedigree with an
-  animal as its own ancestor or a row with no animal id.
-  `convertRelationships()` returns the animal's own "Self" row for a single
-  animal and an empty table for ids that match no animal;
-  `makeRelationClassesTable()` returns an empty table when there are no pairs of
-  different animals; `filterKinMatrix()` always returns a matrix, so
-  `reportMatePairs()` given one animal's id returns its usual empty result.
-  `reportGV()` stops before any calculation, naming every missing column, when
-  the pedigree lacks `id`, `sire`, `dam`, `gen` or `sex`, and `reportGV()` and
-  `gvaConvergence()` stop with the number of animals when the population of
-  interest has fewer than 2. `calcGU()`, `calcGUSE()`, `calcA()` and `kinship()`
-  work for a single animal, `calcFE()`, `calcFG()`, `calcFEFG()` and
-  `calcFGSE()` for a population with one living descendant, and `calcGU()`,
-  `calcGUSE()` and `alleleFreq()` return an empty table for no animals or no
-  alleles. `create_wkbk()` stops and names a folder that does not exist;
-  `saveDataframesAsFiles()` and `makeExamplePedigreeFile()` say which of "txt",
-  "csv" and "excel" are allowed, and `makeExamplePedigreeFile()` names its
-  default file by type (`examplePedigree.csv`, `.txt` or `.xlsx`);
-  `withinIntegerRange()` gives the maximum for a number too large for an
-  integer. `obfuscateDate()` stops with a message giving the position of the
-  date when its earliest allowed date cannot be reached, and a missing earliest
-  date means no limit; `obfuscateId()` and `obfuscatePed()` say that an id must
-  not contain `NA` and give its position. `setExit()` finds a death or departure
-  column in any letter case, `makeGeneticDiversityHeatmap()` stops and names a
-  label shared by two groups, and the help of `focalAnimals` says that its `id`
-  column is a factor. `makeGroupNum()` and `makeGrpNum()` make one group when
-  called with no number, as their help said they would.
-  `convertRelationships()`, `markerRealizedRelatednessVariance()`,
-  `makeCEPH()`, `groupAddAssign()` and `fillGroupMembersWithSexRatio()` take
-  ids given as numbers (as `read.csv()` reads a studbook with number ids) or as
-  a factor as their text: such a studbook got wrong relationship names, and
-  `groupAddAssign()` stopped with "subscript out of bounds".
-  `findOffspring()` takes a factor's sire and dam ids as their text, so
-  `offspringCounts()`, `calcNeVariance()` and `reportGV()` no longer give an
-  offspring count or `neVariance` as `NA` for a studbook whose ids are a factor.
-
-- Fixed (configuration file): A line starting with `#` is a comment wherever the
-  file is read, so a site that copies the example file unedited no longer gets
-  the API key `paste-your-labkey-api-key-here` in place of its `.netrc` file. A
-  setting written with different capitals, such as `Center`, is read instead of
-  stopping with "subscript out of bounds". A value in double quotes is one value
-  even when it holds a blank, a comma, an equals sign or round brackets, so a
-  path such as `"/My Folder/EHR"` is not split. A setting with nothing after its
-  `=` is empty and no longer takes the next setting's value, so an empty
-  `apiKey` is no key. The notes at the top of the example file describe how the
-  file is read, and `data("exampleNprcgenekeeprConfig")` is the shipped example
-  file.
-
-- Fixed (other tabs and the example file): The app starts after a default
-  install, because `shinyBS` now installs with the package; 2.0.0 stopped with
-  "there is no package called 'shinyBS'" until it was installed by hand. On the
-  Age-Sex Pyramid tab, Download Plot saves nothing until a pedigree is loaded.
-  The twelve Export pop-ups of the Summary Statistics tab show only their
-  sentence, with no `character(0)` title bar. The Japanese macaque example file
-  `deidentified_jmac_ped.csv` is
-  rebuilt from a 2018 studbook (2,590 animals, de-identified, 819 with a
-  recorded sire) and loads once Minimum Dam Age is 3.3 or lower and Minimum Sire
-  Age is 4.3 or lower, because Japanese macaque mothers and fathers must by
-  default be at least 4 and 5 years old at a birth.
+- Configuration file
+  - Fixed: A line starting with `#` is a comment wherever the file is read, so
+    a site that copies the example file unedited no longer gets the API key
+    `paste-your-labkey-api-key-here` in place of its `.netrc` file.
+  - Fixed: A setting written with different capitals, such as `Center`, is
+    read instead of stopping with "subscript out of bounds".
+  - Fixed: A value in double quotes is one value, so a path such as `"/My
+    Folder/EHR"` is not split.
+  - Fixed: A setting with nothing after its `=` is empty, so an empty `apiKey`
+    is no key.
+  - Fixed: `data("exampleNprcgenekeeprConfig")` is the shipped example file.
+- Installation and example files
+  - Fixed: The app starts after a default install, because `shinyBS` now
+    installs with the package; 2.0.0 stopped with "there is no package called
+    'shinyBS'" until it was installed by hand.
+  - Fixed: The Japanese macaque example file `deidentified_jmac_ped.csv` is
+    rebuilt from a 2018 studbook (2,590 animals, 819 with a recorded sire) and
+    loads once Minimum Dam Age is 3.3 or lower and Minimum Sire Age is 4.3 or
+    lower.
+- Script functions
+  - `removeUnknownAnimals()`, `convertDate()`, `removeDuplicates()` and
+    `correctParentSex()` treat only animals recorded as added as stand-ins.
+  - `getAncestors()`, `findLoops()` and `countLoops()` stop with a message
+    naming the animals instead of an "infinite recursion" error when an animal
+    is its own ancestor, and no longer stop with "argument is of length zero"
+    when a parent has no row of its own.
+  - `getLkDirectAncestors()` and `getPedDirectRelatives()` no longer run
+    without end on a pedigree with an animal as its own ancestor or a row with
+    no id.
+  - `reportGV()` stops before any calculation, naming every missing column,
+    when the pedigree lacks `id`, `sire`, `dam`, `gen` or `sex`, and
+    `reportGV()` and `gvaConvergence()` stop with the number of animals when
+    the population has fewer than 2.
+  - `convertRelationships()`, `makeRelationClassesTable()`,
+    `filterKinMatrix()`, `calcGU()`, `calcGUSE()`, `calcA()`, `kinship()`,
+    `calcFE()`, `calcFG()`, `calcFEFG()` and `calcFGSE()` work for a single
+    animal.
+  - `calcGU()`, `calcGUSE()` and `alleleFreq()` return an empty table for no
+    animals or no alleles.
+  - `create_wkbk()`, `saveDataframesAsFiles()`, `makeExamplePedigreeFile()`,
+    `obfuscateDate()`, `obfuscateId()`, `obfuscatePed()`,
+    `withinIntegerRange()` and `makeGeneticDiversityHeatmap()` say what is
+    wrong in their messages.
+  - `setExit()` finds a death or departure column in any letter case.
+  - `makeGroupNum()` and `makeGrpNum()` make one group when called with no
+    number, as their help said they would.
+  - `convertRelationships()`, `makeCEPH()`, `groupAddAssign()`,
+    `fillGroupMembersWithSexRatio()` and `findOffspring()` take ids given as
+    numbers or as a factor as their text; such a studbook got wrong
+    relationship names, `NA` offspring counts or a stopped run.
+  - `get_elapsed_time_str()` rounds before it writes minutes and seconds.
 
 # nprcgenekeepr 2.0.0 (20260721)
 - Major changes
