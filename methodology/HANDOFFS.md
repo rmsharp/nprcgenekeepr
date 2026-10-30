@@ -209,18 +209,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
 session: S1096
-date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- finish CRAN 3.0.0 plan Phase 2 (564 s measured against 540 s): the owner decides first between cutting about 25-55 s more from plan section 3.5's levers (then strict TDD and one win-builder R-devel upload) and accepting 564 s (owner pick at the Phase 0 picker, item 1 of 4, "Finish Phase 2 check time").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:285 (section 3.5); tests/testthat/slowTestFiles.txt; vignettes/a2interactive.Rmd:719,1650,1666
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-10-30
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: CRAN 3.0.0 plan Phase 2 DONE by owner ruling on a measured 520 s (win-builder R-devel 6tYpEEb12W8l) against the 540 s target; the same tarball also read 617 s (nTbGkc6hP4VM). Owner picks: "Finish Phase 2 check time" (Phase 0 picker, item 1 of 4), "Load 2 packages later", every TDD gate "Yes", "Upload + push, wait here" with "Add that line" (NEWS), "Upload the same tree again", "Done: 520 s measured"; strict TDD.
+what_was_done: Claim b6646dba7. Found the cause by running win-builder's own -Ex.R: 63 s of the 90 s examples step was cleanEx() before each of 216 examples (showConnections() calls gc() under --as-cran's _R_CHECK_CONNECTIONS_LEFT_OPEN_), and Matrix and ggplot2, loaded with the package, made each sweep about 2.5 times slower (81 ms, 32 ms without both). RED 005369eba (test_packageLoadLight.R: NAMESPACE imports neither, a fresh R loading the installed package leaves both unloaded; guards for meanKinship() and kinshipGeneral() on sparse input; helper-perfReference.R names Matrix::). GREEN 2383292f2 (R/kinship.R Matrix:: and the twin step's Matrix::diag; R/meanKinship.R Matrix::colMeans for a Matrix), 8b1b8fd90 (11 @importFrom ggplot2 lines off; .data in modSummaryStats.R's globalVariables). REFACTOR 20b38f346. NEWS c10391571 (load 0.92 to 0.39 s). Pushed 4072b38d9..c10391571. Examples run here 25.9 to 17.1 s; win-builder examples 90 to 65 and 60 s; checks 617 s then 520 s on one tarball. Plan section 3.6 and section 7 row 2, Phase 8 note; BACKLOG.md:16; Learning 1062.
+next_steps: CRAN plan Phase 3 (D1 first: move the eight dated cover notes to cran/archive/ with ^cran$ in .Rbuildignore, or delete them; then the DOI at R/markerParentageLikelihood.R:131, the two \dontrun pages, the tarball listing) or Phase 4a (D6 first: shinyBS to Imports, which makes 20 non-base Imports, check whether 20 draws the excessive-imports NOTE; or guard R/modSummaryStats.R's four calls). Plan section 7 orders them. In Phase 8, a win-builder reading over 540 s is uploaded again before anything is cut (section 3.6's levers: loop examples about 8 s, tutorial chunks about 20 s).
+key_files: R/kinship.R:288,290,294,339,348,431-433; R/meanKinship.R:30-37; R/modSummaryStats.R:6-9; NAMESPACE; tests/testthat/test_packageLoadLight.R; tests/testthat/test_meanKinship.R; tests/testthat/test_kinship.R (last block); tests/testthat/helper-perfReference.R:1001-1003,1030,1039,1122; docs/planning/cran-3.0.0-submission-plan.md:332 (section 3.6), :917 (section 7); PROJECT_LEARNINGS.md Learning 1062.
+gotchas: win-builder's result page keeps examples_and_tests/ (nprcgenekeepr-Ex.timings, -Ex.Rout's Time elapsed, tests/testthat.Rout's proc.time()): compare those CPU lines, not one Check time; one tarball read 617 and 520 s. pkgload::load_all() loads every Imports package, so test_packageLoadLight.R's fresh-R block skips there and runs only from an install (R CMD INSTALL --install-tests --library=<scratch> ., then test_file(load_package = "installed") with R_LIBS=<scratch>:<renv lib>). Since S1096 unqualified which(), unname(), mean(), t(), diag(), rowSums(), colMeans() in R/ are base R's: code that reads a sparse Matrix must name Matrix:: (7 of 11 kinship-matrix exports already fail on one). In a shell, env vars go before Rscript, not after -e. cat(x, character(0), sep = "\n") prints an empty line.
+runtime_smoke: The installed GREEN app (scratch library, shinytest2 AppDriver, obfuscated_rhesus_mhc_ped.csv, Genetic Value Analysis at 100 iterations) drew all six Summary Statistics plots as 400x400 PNGs with ggplot2 loaded on demand, 0 errors in the app log; the mean-kinship histogram picture checked. win-builder R-devel ran examples, tests and vignettes OK twice; CI R-CMD-check 41012406472 5 legs green (windows PASS 16670, the fresh-R block ran); devtools::check() here Status OK 0/0/0 PASS 16803.
+changelog_ref: b6646dba7 (claim); the close-out commit (push, two uploads, ruling and DONE entries)
+commit: c10391571
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 77d8e8d089b3 · manifest 7e3e82ab3ae0
 ```
 
 ```handoff

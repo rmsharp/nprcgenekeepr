@@ -99,40 +99,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1096 Did
-**Deliverable (IN PROGRESS, claimed 22:39 CDT):** finish CRAN plan Phase 2: the owner's call on 564 s, then any cut and its upload.
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "Finish Phase 2 check time", "Load 2 packages later", every TDD gate "Yes", "Upload + push, wait
+here", "Upload the same tree again", "Done: 520 s measured"; strict TDD): CRAN plan Phase 2 DONE.** Claim `b6646dba7`, RED
+`005369eba`, GREEN `2383292f2` (Matrix) `8b1b8fd90` (ggplot2), REFACTOR `20b38f346`, NEWS `c10391571`; pushed
+`4072b38d9..c10391571`; one tarball uploaded twice: `nTbGkc6hP4VM` 617 s, `6tYpEEb12W8l` 520 s (pages gone after about 72 h).
+**The cause:** 63 s of win-builder's 90 s examples step was R's `cleanEx()` before each of 216 examples (`showConnections()`
+calls `gc()` under `--as-cran`); Matrix and ggplot2, loaded with the package, made each sweep about 2.5 times slower. Now
+`kinship(sparse = TRUE)` loads Matrix and a plot loads ggplot2 (`R/kinship.R:288,290,294,339,348,433`, `R/meanKinship.R:30-37`,
+`.data` at `R/modSummaryStats.R:9`). Examples run here 25.9 to 17.1 s, `library()` 0.92 to 0.39 s, Windows CI examples 57 to 38 s.
+**Verified:** clean read 493 files 4,574 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` OK 0/0/0 `PASS 16803`;
+CI R-CMD-check `41012406472` 5 legs green (windows `PASS 16670`: the fresh-R block ran); the real app from a scratch install drew
+all six Summary Statistics plots; ratchet 11/11 (`77d8e8d089b3`). Plan section 3.6 and section 7; `BACKLOG.md:16`; Learning 1062.
+**Handoff evaluation of S1095: 8/10.** Helped: the next step as the owner's call with measured levers and file:line; the
+trace-order and "a new test file runs on CRAN until named" gotchas (both used); the 25-min queue. Wrong: "about 30 s" of noise (one
+tarball read 520 and 617 s). Missing: the result page's `examples_and_tests/` (per-example times, the CPU lines) held the cause.
+**Self: 7/10.** + measured the step's own script to the cause before any option; a prototype, full suite and sparse probes before
+RED, so RED named both real regressions; every question answered first try; real-app smoke. - carried the 30 s noise into the
+option text; an env var after `-e` twice; an empty-line bug in my own RED test; a BACKLOG splice on stale offsets (restored).
+**Gotchas:** fetch `examples_and_tests/` (`-Ex.timings`, `-Ex.Rout`, `tests/testthat.Rout`) with the log and compare CPU, not
+the total; upload twice before cutting; `load_all()` loads every Imports package, so `test_packageLoadLight.R`'s fresh-R block runs
+only from an install (`R CMD INSTALL --install-tests`, then `test_file(load_package = "installed")`); R code reading a sparse
+Matrix now names `Matrix::` (base `which()`, `diag()`, `colMeans()` and the rest do not take one); shell env vars go before `Rscript`.
+**Next:** Phase 3 (D1 first: move the eight old cover notes to `cran/archive/` or delete them) or Phase 4a (D6 first: `shinyBS` to
+Imports, which makes 20, or guard its four calls); plan section 7 orders them.
 
-### What Session 1095 Did
-**Deliverable (owner picks "Finish cutting check time", "Example+loops+skip 315", target 540 s, "Upload + push, wait here"; strict TDD,
-every gate the recommended option): CRAN plan Phase 2's second cut, 564 s on win-builder R-devel; its DONE (540 s) not met.** Claim
-`6642b9dbd`, RED `8c5d253f5`, GREEN `51cf42616`/`7588d7ebd`/`3478dfc81`, REFACTOR `a10594f15`/`4072b38d9`, plan and BACKLOG `05ce96fd8`;
-pushed `7f1833334..4072b38d9`; uploaded `4072b38d9` at 21:39 CDT, result page `a1AV26256EC9` (removed after about 72 h).
-**The cuts:** the `getGeneticDiversityStats` example reads `qcPed` and the stored `qcPedGvReport` (3.2 to 0.04 s here); `.getAncestorsOnPath()`
-(`R/getAncestors.R:86-118`) looks a text id up once with `ptree[[id]]` (the slowdown was `id %in% names(ptree)` at each step; findLoops
-1.01 to 0.37 s, countLoops 1.31 to 0.50 s, identical on 7 odd trees); `tests/testthat/slowTestFiles.txt` names 382 files, so CRAN runs
-79 that between them call all 236 exports (a run-time trace; the scripts were scratch only, Learning 1061 says how).
-**Measured:** R-devel 652 to 564 s (tests 156 to 56 s, examples 109 to 90 s; the untouched steps +32 s, noise; plan section 3.5). Clean
-read 492 files 4,570 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` OK 0/0/0 `PASS 16795`; CI R-CMD-check
-`40993029586` 5 legs green (windows `PASS 16662`); ratchet 10/11 (`9ffa62e36682`): the diagram gate 4.75 s against 4.6 at load 9, and
-the pre-session tree read 4.54-4.57 s alternating with this one (4.58-4.73 s), so the load, not this change.
-**Handoff evaluation of S1094: 8/10.** Helped: section 3.4's levers with file:line, the queue gotchas, a next step naming the owner's
-choice. Wrong: the slowdown blamed on the cycle check's path test; "a fast test per stranded export" (a coverage-aware skip strands
-none). Missing: the per-file ranking and export trace (rebuilt, about 15 min).
-**Self: 7/10.** + every option measured before its question; all six questions answered first try; A/B before citing a failed gate. -
-the preview's 506 s (476-536 s) missed 564 s (it held the untouched steps fixed); the TDD phase undeclared in the early replies; a
-`| head` cut R off again.
-**Gotchas:** trace exports with `loadNamespace()`, then `trace()`, then `library()`; `test_dir()`'s `real` misses time outside
-`test_that()` (use the wall time); a new test file runs on CRAN until `slowTestFiles.txt` names it; the diagram gate sits at about 4.6 s
-at load 6+; win-builder took the upload 25 min after it and began the check 4 min later.
-**Next:** the owner's call first: keep 540 s and cut about 25-55 s more (plan 3.5: three more `findLoops()` examples on a smaller
-pedigree, two tutorial chunks, a smaller set of the 79 files), then one upload; or accept 564 s (under 600 s; Learning 367). Else
-Phase 3 (D1 first) or Phase 4a (D6 first).
-
-### Sessions 947-1094 (condensed S950 to S1095; full record in `CHANGELOG.md` and `HANDOFFS.md`)
-S1094: CRAN plan Phase 2 measured (claim `9fa5df13c`, RED `c3ceec3a0`, GREEN `b068ecdf7`, REFACTOR `7f1833334`, pushed): the S1092
-cut 652 s on win-builder R-devel; `readWithFinalNewline()` adds its newline with one `writeBin()` (Windows wrote `"\r\n"`); S1093 7/10,
-self 7/10 (Learning 1060). **Gotchas kept:** tell win-builder results apart by failing lines and test totals; keep the claim stub to
-two lines (this file sits near the Read tool's 25,000 tokens).
+### Sessions 947-1095 (condensed S950 to S1096; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1094-S1095 (CRAN plan Phase 2; Learnings 1060-1061; hashes in `CHANGELOG.md`): S1095, 652 to 564 s (the `getGeneticDiversityStats`
+example reads `qcPedGvReport`; `.getAncestorsOnPath()` looks an id up once; CRAN runs 79 test files that call all 236 exports);
+S1094, the S1092 cut measured at 652 s and `readWithFinalNewline()`'s newline one `writeBin()` byte. **Gotchas kept:** trace exports
+with `loadNamespace()`, `trace()`, then `library()`; `test_dir()`'s `real` misses time outside `test_that()`; a new test file runs on
+CRAN until `slowTestFiles.txt` names it; tell win-builder results apart by failing lines and test totals; keep the claim stub to two
+lines (this file sits near the Read tool's 25,000 tokens).
 S1091-S1093 (the CRAN 3.0.0 plan, its Phase 2 cut and its Phase 1; Learnings 1057-1059; hashes in `CHANGELOG.md`): S1093, every
 package read goes through `readWithFinalNewline()` (R's utils `readtablehead()`, `io.c:910`, misreads a quoted last value on
 linux-arm64; container `ngk-arm64-s1093` kept); S1092, a CRAN check skips the files `tests/testthat/slowTestFiles.txt` names; S1091,
@@ -162,23 +159,14 @@ lists only parent-offspring and sibling pairs (`varianceKindPairs()`; 13-18 s to
 pairs, "All alive" by `isLivingAnimal()` (9.5 s to 0.1 s). **Gotchas kept:** a pre-fix swap under `load_all()` replaces both
 `asNamespace()` and `package:nprcgenekeepr`; test ids that are not row numbers; no `methods::`; a long-form subset keeps
 cell-position row names; an allocation-window test needs lopsided colonies; give `saveRDS()`/`Rprofmem()` absolute paths.
-S1077-S1080 (evaluations 9/10, self 8/10; Learnings 1043-1046; hashes in `CHANGELOG.md`): S1080, Summary Statistics builds the
-relationship table inside each download and keeps nothing of it (`relationshipData()`, `R/modSummaryStats.R:432-447`); S1079,
-`groupAddAssign()`'s tie-order comment says what the code does; S1078, the `reportGV` speed gate times the middle of 5 runs (`--runs N`);
-S1077, from 401 to 750 animals in Rectilinear the Diagram tab keeps the edge-style buttons above its over-limit message (`R/modPedigree.R:569-597`).
-**Gotchas kept:** read the live heap with an injected `gc()` observer; `test_file(desc =)` cannot match a `paste()` title and also runs
-earlier `pixel_test_that()` blocks; the tie order is pinned only by `groupAddAssignReference()` (`helper-perfReference.R:672`); a probe
-before a timed call moves it; run an archive copy's `run.R` from the repo folder; read `uptime` before timing.
-S1072-S1076 (evaluations 8-9/10, self 7-8/10; Learnings 1038-1042; condensed S1079, hashes in `CHANGELOG.md`): S1076, every browser
-test that reads the Diagram's canvas pixels runs twice, "[default drawing]" and "[CPU drawing]" (`pixel_test_that()`,
-`tests/testthat/helper-shinytest2.R:732`); S1075, founder statistics build their contribution table once (`initialContributions()`,
-`R/calcFounderContributions.R:74`); S1074, the Diagram tab's first drawing builds its layout once (`.heldSetting()`, `R/modPedigree.R:478`);
-S1073, the diagram's penalty table squared by blocks where a once-a-session check finds it exact (`R/penaltyCrossprod.R`); S1072, harem
-trials build their set-up once per call (`R/makeHaremSetUp.R:31,76`). **Gotchas kept:** `test_file(desc =)` cannot select a generated
-test; `load_all(helpers = FALSE)` for a RED-time rerun; read CI's "2d_canvas" skips; the harness peak counts uncollected garbage and
-cannot rank two designs (count copies with `Rprofmem`); a scratch git worktree has no renv library; click the Direct radio with
-`app$run_js(".click()")`; on OpenBLAS (CI's Ubuntu legs) the block check fails and the whole product runs; for an app before/after, drive
-from outside the repo and log `find.package()`; zsh needs `${=F}` to split a list.
+S1077-S1080 (Learnings 1043-1046; condensed S1096, hashes and file lines in `CHANGELOG.md`): Summary Statistics builds the
+relationship table inside each download (S1080); the `reportGV` gate times the middle of 5 runs (S1078); Rectilinear edge buttons stay
+above the over-limit message (S1077). **Gotchas kept:** the tie order is pinned only by `groupAddAssignReference()`
+(`helper-perfReference.R:672`); a probe before a timed call moves it; read `uptime` before timing.
+S1072-S1076 (Learnings 1038-1042; condensed S1079 and S1096, hashes and file lines in `CHANGELOG.md`): pixel tests run twice,
+default and CPU drawing (S1076); founder contributions, the first Diagram layout, the penalty table and harem set-ups built once
+(S1072-S1075). **Gotchas kept:** `test_file(desc =)` cannot select a generated test; the harness peak cannot rank two designs (count
+copies with `Rprofmem`); a scratch git worktree has no renv library; on OpenBLAS the block check fails and the whole product runs.
 S1068-S1071 (evaluations 9/10, self 7-8/10; Learnings 1034-1037; condensed S1078, hashes in `CHANGELOG.md`): S1071, the shipped example
 snapshot history holds values the package makes (`neGD` = `1 - 1/(2*fg)`, GU x100, kurtosis -3; `validatedSnapshotHistory()` in
 `tests/testthat/helper-snapshotHistory.R`); S1070, one text on reading the Genetic-Health trend (`inst/extdata/ui_guidance/snapshot_trends.html`,
