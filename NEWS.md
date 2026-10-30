@@ -649,10 +649,13 @@ export workflows, and longitudinal monitoring of colony genetic health.
   file describe how the file is read, and
   `data("exampleNprcgenekeeprConfig")` is the shipped example file.
 
-- Fixed (other tabs and the example file): On the Age-Sex Pyramid tab,
-  Download Plot saves nothing until a pedigree is loaded. The twelve
-  Export pop-ups of the Summary Statistics tab show only their sentence,
-  with no `character(0)` title bar. The Japanese macaque example file
+- Fixed (other tabs and the example file): The app starts after a
+  default install, because `shinyBS` now installs with the package;
+  2.0.0 stopped with "there is no package called 'shinyBS'" until it was
+  installed by hand. On the Age-Sex Pyramid tab, Download Plot saves
+  nothing until a pedigree is loaded. The twelve Export pop-ups of the
+  Summary Statistics tab show only their sentence, with no
+  `character(0)` title bar. The Japanese macaque example file
   `deidentified_jmac_ped.csv` is rebuilt from a 2018 studbook (2,590
   animals, de-identified, 819 with a recorded sire) and loads once
   Minimum Dam Age is 3.3 or lower and Minimum Sire Age is 4.3 or lower,

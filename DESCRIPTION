@@ -57,6 +57,7 @@ Imports:
     Rlabkey (>= 3.2.0),
     sessioninfo,
     shiny,
+    shinyBS,
     stringi,
     utils,
     visNetwork
@@ -73,7 +74,6 @@ Suggests:
     mockery,
     pkgdown,
     rmarkdown,
-    shinyBS,
     spelling,
     testthat,
     withr,
