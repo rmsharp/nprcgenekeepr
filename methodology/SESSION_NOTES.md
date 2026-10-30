@@ -98,6 +98,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1097 Did
+**Deliverable (IN PROGRESS, claimed 11:45 CDT):** CRAN plan Phase 3, static hygiene: the DOI, the old cover notes (D1), two `\dontrun{}` pages, the tarball listing.
+**Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1096 Did
 **Deliverable (owner picks "Finish Phase 2 check time", "Load 2 packages later", every TDD gate "Yes", "Upload + push, wait
 here", "Upload the same tree again", "Done: 520 s measured"; strict TDD): CRAN plan Phase 2 DONE.** Claim `b6646dba7`, RED

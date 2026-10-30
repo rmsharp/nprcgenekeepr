@@ -208,6 +208,22 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1097
+date: 2026-10-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 3, static hygiene: the wrong DOI, the old cover notes per D1 (the owner decides first), the two \dontrun help pages, the tarball listing (owner pick at the Phase 0 picker, item 1 of 4, "CRAN Phase 3: cleanup").
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/cran-3.0.0-submission-plan.md:690 (Phase 3), :470 (section 4.3), :554 (section 4.5); R/markerParentageLikelihood.R:131; .Rbuildignore:10-13; .gitignore:5; man/readKinshipOverrides.Rd:42; man/readTwinRelations.Rd:38
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S1096
 date: 2026-10-30
 status: complete
