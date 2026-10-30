@@ -36,8 +36,8 @@ test_that("a fresh R loading the installed package leaves Matrix and ggplot2 unl
   script <- withr::local_tempfile(fileext = ".R")
   writeLines(c(
     "invisible(loadNamespace(\"nprcgenekeepr\"))",
-    paste0("writeLines(c(\"loaded\", intersect(c(\"Matrix\", \"ggplot2\"), ",
-           "loadedNamespaces())))")
+    sprintf("writeLines(c(\"loaded\", intersect(%s, loadedNamespaces())))",
+            deparse(lateLoaded))
   ), script)
   withr::local_envvar(R_LIBS = paste(.libPaths(),
                                      collapse = .Platform$path.sep))
