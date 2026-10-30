@@ -8,8 +8,8 @@
 ^\.httr-oauth$
 ^\.Rprofile$
 ^cran-comments\.md$
-# All dated CRAN-submission comment files YYYYMMDD_cran-comments.md -- one regex
-# covers every dated file incl. future ones, so a new one never silently ships.
+^cran$
+# Past cover notes live in cran/archive/; this catches one left at the root.
 ^[0-9]+_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
