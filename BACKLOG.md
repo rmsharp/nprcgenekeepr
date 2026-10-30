@@ -14,9 +14,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       released 3.0.0.
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
-      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 IN PROGRESS, 564 s measured S1095 against 540 s;
-      DECISION NEEDED on D1-D3, D5 and D6 (D4 ruled A, S1092); Effort L, about 8-10 sessions
-      left) -- **Phase 1 (S1093):** the linux-arm64 failure is a bug in R itself (utils
+      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; DECISION NEEDED on D1-D3, D5 and D6
+      (D4 ruled A, S1092); Effort L, about 7-9 sessions left) -- **Phase 1 (S1093):** the
+      linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
       ARM64 `read.csv()`/`read.table()` of a file whose last value is quoted and that has no final
       newline read that value with a stray 0xFF byte. Every package read now goes through
@@ -26,16 +26,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Phase 8's cover note must say so, and that CRAN's arm64 job confirms it only after release.
       Whether to report the R bug upstream (one-line case: `writeChar('a,b\n1,"x"', f, eos =
       NULL); read.csv(f)$b` gives `x\xff`) is the owner's call; nothing has been posted.
-      **Phase 2 so far:** a CRAN check runs 79 test files that between them call all 236 exports
-      (`tests/testthat/slowTestFiles.txt` names the other 382; S1092, S1095), the
-      `getGeneticDiversityStats` example reads the stored `qcPedGvReport`, and the loop functions'
-      ancestor walk looks each animal up once (S1095). **Measured on win-builder R-devel: 652 s**
-      (S1094), **then 564 s** (S1095, `4072b38d9`: tests 156 to 56 s, examples 109 to 90 s; the
-      steps nothing changed 32 s slower, run-to-run noise). **Owed to finish Phase 2, the owner's
-      call first:** keep 540 s (D4 = A) and cut about 25-55 s more from the plan's section 3.5
-      levers (three more `findLoops()` examples, two tutorial chunks, a smaller set of the 79
-      files), then one R-devel upload; or accept 564 s, which is under CRAN's 600 s (2.0.0's
-      pretest read 604 s and passed, Learning 367). Still open after Phase 2:
+      **Phase 2 (DONE S1096, owner ruling on a measured 520 s against 540 s):** a CRAN check runs
+      79 test files that call all 236 exports (`tests/testthat/slowTestFiles.txt`; S1092,
+      S1095), two slow examples are cheaper (S1095), and loading the package no longer loads
+      Matrix or ggplot2, which made R's per-example memory sweep slow (S1096). win-builder R-devel
+      read 652, 564, then 617 and 520 s for one S1096 tarball: about 100 s of run-to-run
+      noise, so Phase 8 uploads again before cutting (plan sections 3.4-3.6). Still open after Phase 2:
       `R/modSummaryStats.R` calls the Suggests package `shinyBS` with no guard (Phase 4a), and one
       help-page DOI is wrong (Phase 3); the incoming
       NOTE also flags "de" (`DESCRIPTION:37`) and the thoughtco.com URL (status 402, explained in

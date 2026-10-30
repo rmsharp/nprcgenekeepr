@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 and 2 are READY. The owner's rulings on D1 to D6 (section 6) shape
+**Status:** DRAFT. Phases 1 and 2 are DONE (S1093; S1092 to S1096). The owner's rulings on D1 to D6 (section 6) shape
 Phase 2's measurement (D4), Phases 3 to 5, and Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
 3.0.0 to CRAN"; mid-session: "Consider removing all old cran-comments.md files or storing them in
@@ -328,6 +328,71 @@ The owner picked "Example+loops+skip 315" and kept the 540 s target. Strict TDD:
     third trim, so this is a rewrite);
   - a smaller set of the 79 test files that still calls every export (chosen by time rather
     than the greedy order; not measured).
+
+### 3.6 The third cut: two packages loaded when first needed (S1096)
+
+The owner picked "Load 2 packages later" over accepting 564 s or also cutting the loop
+examples. Strict TDD: RED `005369eba`; GREEN `2383292f2` (Matrix), `8b1b8fd90` (ggplot2);
+REFACTOR `20b38f346`; NEWS `c10391571`.
+
+- **Where the examples step's time went.** On win-builder (`a1AV26256EC9`) the 215 examples
+  add up to 26.2 s of the 90 s step (`nprcgenekeepr-Ex.timings`), and the examples process
+  ran 89.4 s (`-Ex.Rout`). The other 63 s is `cleanEx()`, which R runs before each example:
+  under `--as-cran` (`_R_CHECK_CONNECTIONS_LEFT_OPEN_`) it calls `showConnections()`, which
+  calls `gc()`. A full collection here took 81 ms with the package loaded and 8 ms in bare R.
+  Nearly all of it was the packages loaded with it: Matrix 30 ms, ggplot2 20 ms, the six app
+  packages 5 ms, the package's own code about 1 ms.
+- **The change.** No example uses Matrix, and the first that uses ggplot2 is the 140th of 215
+  (a trace of their entry points). Neither is loaded with the package now:
+  `kinship(sparse = TRUE)` loads Matrix and a plot loads ggplot2 when first needed.
+  `import(Matrix)` had also routed 94 functions' calls of `which()`, `unname()`, `mean()`,
+  `t()`, `diag()`, `rowSums()` and others through Matrix's generics. For a dense matrix base R
+  gives the same answer. Two places read a sparse matrix and now name Matrix's version:
+  `meanKinship()` (`Matrix::colMeans()`) and `kinshipGeneral()`'s twin step
+  (`Matrix::diag()`). The 11 kinship-matrix exports, probed with a dense and a sparse matrix
+  on both builds, behave as before (7 fail on a sparse one, before and after).
+- **Gates.** `test_packageLoadLight.R`: the NAMESPACE imports nothing from either, and a
+  fresh R loading the installed package leaves both unloaded. It skips under `load_all()`,
+  which loads every Imports package, and under covr; CRAN skips the file. Guards:
+  `meanKinship()` of a sparse matrix (`test_meanKinship.R`) and `kinshipGeneral()` with
+  `sparse = TRUE` and MZ twins (`test_kinship.R`).
+
+| `--as-cran` examples run, this Mac, alternating | before | after |
+|---|---:|---:|
+| the examples process | 25.9 s | 17.1 s |
+| `cleanEx()`, 216 calls | 18.9 s | 10.6 s |
+| the examples themselves | 5.8 s | 6.1 s |
+| `library(nprcgenekeepr)`, fresh session | 0.92 s | 0.39 s |
+
+**Measured on win-builder R-devel, the same tarball (`c10391571`) twice:**
+
+| Step | S1095 `a1AV26256EC9` | S1096 `nTbGkc6hP4VM` (01:34 CDT) | S1096 `6tYpEEb12W8l` (09:49 CDT) |
+|---|---:|---:|---:|
+| Check time | 564 s | 617 s | **520 s** |
+| examples | 90 s | 65 s | 60 s |
+| tests | 56 s | 86 s | 51 s |
+| R code check | 89 s | 94 s | 81 s |
+| re-building vignettes | 66 s | 71 s | 64 s |
+| PDF + HTML manuals | 78 s | 75 s | 70 s |
+| incoming feasibility | 21 s | 22 s | 55 s |
+| steps with no time shown | 164 s | 204 s | 139 s |
+| examples process, elapsed / CPU | 89.4 / 84.5 s | 64.2 / 59.4 s | 59.8 / 59.0 s |
+| tests process, elapsed / CPU | 54.4 / 50.0 s | 83.6 / 54.2 s | 49.6 / 48.9 s |
+
+- **The cut is steady; the total is not.** Both readings show the examples process using about
+  59 s of CPU against 84.5 s before, as the scaled estimate said (about 27 s). The same tarball
+  read 617 s and then 520 s: in the first, the tests did 4 s more work and took 29 s longer
+  (1.54 s of elapsed time per CPU second against 1.09), and the steps with no time shown took
+  40 s more, so win-builder was busier. Run-to-run noise on one tarball is about 100 s, not the
+  30 s section 3.4 assumed.
+- **Owner ruling (S1096): Phase 2 is DONE on the 520 s reading.** The NOTE is unchanged: the
+  version, "de", the thoughtco.com URL (status 402) and the DOI (Phase 3).
+- **Windows on CI:** R-CMD-check's windows-latest leg read the examples step at 57 s (S1095,
+  run `40993029586`) and 38 s (S1096, run `41012406472`), and its tests ran the new fresh-R
+  block (`PASS 16670` = 16,662 + 8).
+- **Levers left, if Phase 8's reading is high:** the three `findLoops()` help examples and
+  `countLoops` (8.6 s of examples on win-builder), and the tutorial's `full-geneticValue` and
+  two `shrinkPedigree()` chunks (about 20 s there; their printed numbers change).
 
 ---
 
@@ -772,6 +837,8 @@ clean regression read both set `NOT_CRAN = "true"` and run `load_all()` first.
   - `devtools::check_mac_release()`;
   - optionally, the ARM64 container or arm runner from Phase 1.
   - The win-builder r-devel result's "Check time in seconds" must be 540 s or less (D4).
+    One tarball read 617 s and 520 s (section 3.6), so a reading over 540 s is uploaded again
+    before anything is cut; the levers left are at the end of section 3.6.
 - **Who:** per D5.
 - **Surface:** win-builder r-devel is the same class of machine as CRAN's incoming pretest.
 - **Session boundary:** one session prepares the note and runbook; the owner runs; one session
@@ -851,7 +918,7 @@ must).
 
 | # | Phase | State now | Needs first | Effort |
 |---|---|---|---|---|
-| 2 | cut the CRAN-mode test time (do first) | IN PROGRESS: 564 s on R-devel after S1095's cut (652 s before, S1094): under 600 s, 24 s over the 540 s target | the owner's call: keep 540 s and cut about 25-55 s more from section 3.5's levers, or accept 564 s | S-M (1 session) |
+| 2 | cut the CRAN-mode test time (do first) | DONE (S1096, owner ruling): 520 s on R-devel (`6tYpEEb12W8l`); the same tarball also read 617 s (section 3.6) | nothing | |
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | after D1 | D1 | S |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | after D6 (4a), D2 (4b) | D6; D2 = A for 4b | S-M |
