@@ -282,6 +282,53 @@ The 10-file skip strands `appServer`, seven module servers (`modGvAndBgDescServe
 `backfillColonySnapshots` and `previewBackfillSupport` (S1094 traced every export over the
 CRAN-run files; all 236 are called today).
 
+### 3.5 The second cut, measured on win-builder (S1095)
+
+The owner picked "Example+loops+skip 315" and kept the 540 s target. Strict TDD: RED
+`8c5d253f5`; GREEN `51cf42616`, `7588d7ebd`, `3478dfc81`; REFACTOR `a10594f15`, `4072b38d9`.
+
+- **The `getGeneticDiversityStats` example** reads `qcPed`, its `kinship()` and the stored
+  `qcPedGvReport$report`: 3.2 s to 0.04 s here (gate `test_getGeneticDiversityStatsExample.R`).
+- **The ancestor walk** (`.getAncestorsOnPath()`, `R/getAncestors.R`) looks a text id up once
+  with `ptree[[id]]`. The twofold slowdown since 2.0.0 was `id %in% names(ptree)` at every
+  step, not the cycle check's path test. `findLoops()` went 1.01 to 0.37 s and `countLoops()`
+  1.31 to 0.50 s on the example, with identical results (guard
+  `test_getAncestorsEquivalence.R`; opt-in budget `test_perfBudget_loops.R`).
+- **The skip list** names 382 files, so a CRAN check runs 79 test files that between them call
+  all 236 exports. A run-time trace of every export over the CRAN-run files of the installed
+  package chose them: slowest first, a file is skipped only while every export is still reached.
+  Skipping the slowest files without that rule strands exports (the slowest 10 / 20 / 26 / 40
+  strand 10 / 12 / 13 / 26), because the slowest file is the only CRAN-run test that starts the
+  app.
+
+| Step | `9fa5df13c`, R-devel (S1094) | `4072b38d9`, R-devel (S1095) | this Mac, CRAN mode, S1094 / S1095 |
+|---|---:|---:|---:|
+| Check time | 652 s | **564 s** | |
+| tests | 156 s | 56 s | 36 s / 12 s |
+| examples | 109 s | 90 s | 33 s / 28 s |
+| re-building vignettes | 67 s | 66 s | 19 s / 17 s |
+| R code check | 81 s | 89 s | 16 s / 17 s |
+| PDF + HTML manuals | 70 s | 78 s | |
+
+- **The tests and examples saved what the scaled estimate said** (119 s against about 121 s).
+  The steps nothing changed came in about 32 s slower than in S1094's run (R code +8 s, manuals
+  +8 s, the rest +16 s), which is the run-to-run noise. Hence 564 s, not the 506 s of the
+  picker's preview, which held those steps fixed.
+- **NOTEs:** the version, "de", the thoughtco.com URL (status 402) and the DOI, as before. The
+  example NOTE is gone.
+- **Against CRAN's limit:** 564 s is 36 s under 600 s. 2.0.0's own CRAN pretest read 604 s and
+  was not rejected; the gate fires on the log's "Overall checktime ... > 10 min" (Learning 367).
+  The 540 s target (D4 = A) is the owner's 10% margin, missed by 24 s.
+- **Levers left** (measured here; the R-devel savings are scaled estimates):
+  - three more help examples run `findLoops()` on the 3,694-animal example (`createPedTree`,
+    `examplePedigree`, `findLoops`; about 0.5 s each here): a smaller pedigree, about 5 s;
+  - the tutorial's `full-geneticValue` chunk (2.3 s here, about 8 s there; fewer iterations
+    change its printed numbers);
+  - its two `shrinkPedigree()` chunks (2.5 s here, about 9 s there; 98% of the time is the
+    third trim, so this is a rewrite);
+  - a smaller set of the 79 test files that still calls every export (chosen by time rather
+    than the greedy order; not measured).
+
 ---
 
 ## 4. Evidence-based inventory
@@ -804,7 +851,7 @@ must).
 
 | # | Phase | State now | Needs first | Effort |
 |---|---|---|---|---|
-| 2 | cut the CRAN-mode test time (do first) | IN PROGRESS: the S1092 cut measured 652 s on R-devel (S1094) | a further cut of about 112 s from section 3.4's levers; whether 540 s stays the target | L (1-2 sessions) |
+| 2 | cut the CRAN-mode test time (do first) | IN PROGRESS: 564 s on R-devel after S1095's cut (652 s before, S1094): under 600 s, 24 s over the 540 s target | the owner's call: keep 540 s and cut about 25-55 s more from section 3.5's levers, or accept 564 s | S-M (1 session) |
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | after D1 | D1 | S |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | after D6 (4a), D2 (4b) | D6; D2 = A for 4b | S-M |
