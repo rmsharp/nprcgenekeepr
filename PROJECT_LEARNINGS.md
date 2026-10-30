@@ -21385,3 +21385,50 @@ to Source. **(7)** I first called the thoughtco.com URL NOTE new;
 2.0.0’s cover note (`cran-comments.md:47-49`) already explained it (only
 “de” is new). Read the last release’s cover note before calling a NOTE
 new.
+
+#### Learning 1061
+
+**S1095 (2026-10-29), CRAN plan Phase 2’s further cut: count stranded
+exports by tracing calls, choose skips that keep every export, and
+prototype before naming a slowdown’s cause.** **(1) A name in a test
+file is not a call.** Counting each export’s name in the CRAN-run files
+said skipping the slowest 10/20/26/40 files strands 3/5/7/14 exports; a
+run-time trace said 10/12/13/26, S1094’s figures
+(`test_moduleContract.R` names module servers inside strings). **(2)
+Trace before attaching.** `trace(f, where = asNamespace(pkg))` after
+[`library(pkg)`](https://rdrr.io/r/base/library.html) leaves the
+attached copy untraced (142 of 236 exports reached);
+[`loadNamespace()`](https://rdrr.io/r/base/ns-load.html), trace every
+export, then [`library()`](https://rdrr.io/r/base/library.html) (236 of
+236). **(3) Choose the skips, not a count.** Slowest first, skipping a
+file only when every export is still reached by the files left, skipped
+315 of 394 files with no export stranded and no new test; “the slowest
+40” stranded 26, because the top file (`test_appServer_logging.R`, the
+only CRAN-run test that starts the app) reaches `appServer` and seven
+module servers. CRAN-mode wall time of the installed tests went 29.6 to
+10.2 s here. **(4) Prototype before naming a cause.** S1094 put
+[`findLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/findLoops.md)’s
+2x slowdown on the cycle guard’s path check (Learning 1060 (4)); the
+cost was the other `%in%`, `id %in% names(ptree)` at every step (a hash
+of every id per call): looking the animal up once with `ptree[[id]]`
+took 1.01/1.31 s to 0.37/0.50 s, faster than 2.0.0. `[[` reads a number
+or a factor as a position, so a non-text id keeps the name check (0
+differences on 7 odd trees). **(5) `test_dir()`’s `real` counts only
+time inside `test_that()`** (24.8 s against a 29.6 s wall); use the wall
+time for a total. **(6)** A `| head` on an `Rscript` cut R off before
+its [`writeLines()`](https://rdrr.io/r/base/writeLines.html) (the memory
+rule, broken again); write results to a file and read the file. **(7)
+Put the noise on the whole estimate.** The picker’s preview said about
+506 s (476-536 s) holding the untouched steps at S1094’s times;
+win-builder read 564 s: the tests and examples saved 119 s against about
+121 s scaled, and R code, the manuals and the rest came in 32 s slower.
+A check-time estimate is the last measured total minus the saving, with
+the ±30 s on that total, and the option text should say so. **(8) A/B a
+failed timing gate before citing it.**
+`perf_diagram_example_direct_seconds` failed twice (4.65, 4.75 s against
+4.6) on a change the diagram never calls;
+`git worktree add --detach <scratch>/pre <sha>` and, from the repo
+folder (renv active),
+`Rscript <scratch>/pre/tools/perf/run.R diagram-example-direct`
+alternating with today’s, both orders, read 4.54-4.57 s against
+4.58-4.73 s at load 6.5-9: the load.

@@ -217,6 +217,7 @@
 <h3 id="speed-and-memory-2-0-0-9000">Speed and Memory<a class="anchor" aria-label="anchor" href="#speed-and-memory-2-0-0-9000"></a></h3>
 <ul><li><p>The Genetic Value analysis of the shipped example (708 animals, 1,000 iterations) takes about 0.2 seconds instead of about 3, the Summary Statistics relationship downloads of the whole example finish in under 10 seconds instead of not finishing, and 1,000 Breeding Groups trials take about 6 seconds instead of about 23 (about 5 instead of about 27 when forming harems). The app no longer keeps a kinship matrix of the whole pedigree, so it holds about 180 MB less once the example is loaded, and Summary Statistics no longer keeps the table of every pair after a relationship download (about 235 MB for the example). Results are the same as before for the same random seed.</p></li>
 <li><p><code>kinship(sparse = TRUE)</code> takes about half a second for the whole shipped example (3,694 animals) instead of about 43 seconds.</p></li>
+<li><p>Loading the package takes about 0.4 seconds instead of about 0.9: it no longer loads Matrix and ggplot2, which a sparse kinship matrix or a plot loads when first needed.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="general-fixes-2-0-0-9000">General Fixes<a class="anchor" aria-label="anchor" href="#general-fixes-2-0-0-9000"></a></h3>
