@@ -99,42 +99,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1094 Did
-**Deliverable (IN PROGRESS, claimed 15:15 CDT):** CRAN plan Phase 2's DONE, win-builder's check time of the current tree.
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "Measure the current tree", then "Fix Windows error, then close"; strict TDD, every gate the recommended
+option): CRAN plan Phase 2 measured, not done; a Windows-only ERROR fixed.** Claim `9fa5df13c`, upload record `f5ce1bc2a`, RED
+`c3ceec3a0`, GREEN `b068ecdf7`, REFACTOR `7f1833334`; pushed `2e136e0d4..7f1833334` (17 commits) at the owner's word.
+**Measured (win-builder R-devel r90783, the owner's emails):** the cut tree `9fa5df13c` 652 s (tests 156 s, the rest about 496 s); the
+uncut `2d3dc2f26` 1,722 s (R-release 1,384 s); target 540 s (D4 = A), CRAN's limit 600 s. The table and the measured levers (example
+input, the loop functions 2x slower since 2.0.0 from S783's cycle guard, test skips and the exports they strand, the `a2interactive`
+vignette) are in the plan's section 3.4; `BACKLOG.md:16` says a further cut of about 112 s is owed.
+**The ERROR:** `test_readWithFinalNewline.R:46` (S1093's test): `cat("\n", file = copy, append = TRUE)` writes text mode, `"\r\n"` on
+Windows. Now one `writeBin()` of the file's bytes plus 0x0a (`R/readWithFinalNewline.R:24-33`); the new block 3 reads `all.names(body())`,
+since macOS writes one byte either way. Clean read 489 files 4,564 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()`
+Status OK 0/0/0, `PASS 16786` (S1093 16784); the real-app upload test passed from a scratch install; ratchet 11/11 (`fb008b8bc2d8`);
+CI R-CMD-check `40975285107`: windows-latest Status OK `[ FAIL 0 | WARN 10 | SKIP 665 | PASS 16653 ]` (only the `R/` guard skipped).
+**Handoff evaluation of S1093: 7/10.** Helped: the plan's order, the queue-listing trick, comparing counts from one command. Wrong:
+"Phase 2's DONE once the owner forwards the R-release log" (that log was the uncut tree; it could only calibrate). Missing: the fix had
+never run on Windows (CI's windows leg was unpushed), which cost a win-builder ERROR.
+**Self: 7/10.** + every option measured first; the R-release upload re-asked when its reason went; TDD gates; the real app checked. -
+called the thoughtco.com NOTE new (2.0.0's note had it); a 5-line claim stub refused by the token ceiling; the picker bounced twice.
+**Gotchas:** tell win-builder results apart by failing lines and test totals (same tarball name); R-devel's listing empties when a batch
+is taken and the check starts 40-60 min later; `NEWS.Rmd` opens "edited" in RStudio's Visual editor (Learning 1060); keep the claim stub
+to two lines (this file sits near 25,000 tokens).
+**Next:** the cut needs the owner's choice of levers and of target (plan 3.4) before any code; or Phase 3 (D1 first) or Phase 4a (D6
+first).
 
-### What Session 1093 Did
-**Deliverable, DONE (owner pick, item 2 of 4, "Fix the Linux ARM64 failure"; strict TDD, every gate the recommended option): CRAN plan
-Phase 1.** Claim `5169a31f1`, RED `c1e3395fd` and `06b6c277e`, GREEN `29e070626`, `3c64589b4` and `39aaf742c`, REFACTOR `e98c39fcc`,
-`e10e8553e` and `408170b35`, NEWS `39fcc51c6`; not pushed (11 local commits with S1092's close-out).
-**Cause, in R itself:** utils `readtablehead()` (`src/library/utils/src/io.c:910`, `char c2 = (char) scanchar(...)` after a closing
-quote; the same line in R 4.4, 4.5, 4.6 and trunk). Where `char` is unsigned (Linux ARM64) end-of-file becomes 0xFF, so `read.csv()`
-and `read.table()` of a short file (the header scan must reach its end) whose last value is quoted and that has no final newline read
-`"SHIPPED\xff"`; QC then stops ("invalid multibyte string 3"): 0 records, 1 error. Minimal case: Learning 1059.
-**Fix (owner ruling: every file reader):** internal `readWithFinalNewline(fileName, reader, ...)` (`R/readWithFinalNewline.R`) reads a
-file with no final newline through a temporary copy with one added, removed on exit; missing, empty and gzip/bzip2/xz/zstd files go as
-is. All 12 reads in 11 `R/` files use it; the six identical readers share `readDelimitedFile(fileName, sep)` (same file). Tests:
-`tests/testthat/test_readWithFinalNewline.R` (9 blocks, the last a guard over `R/`); `writeExactly()` in `helper-exactFile.R`.
-**Measured:** in CRAN's image (container `ngk-arm64-s1093`, kept; `docker start` it) the failing file went FAIL 4 to 0 with `NOT_CRAN`
-false and true, and `getPedigree()`/`getGenotypes()` read "M"/"b", not "M\xff"/"b\xff". macOS: clean read 489 files 4,563 blocks 0
-failed 0 errors (GREEN and REFACTOR); `lint_package()` 0; `devtools::check()` Status OK 0/0/0 at `39aaf742c` and `408170b35`, `[ FAIL 0
-| WARN 10 | SKIP 629 | PASS 16784 ]` against 628/16757 for S1092's tree by the same command (+27 PASS, +1 guard skip); the real app in
-Chrome (`test-e2e-input-incomplete-final-line.R`, `NPRC_RUN_E2E=true`) keeps 3,694 rows in both branches; ratchet 11/11 (`c96e69be647a`).
-**CI and win-builder:** S1092's four runs green, and each R-CMD-check leg's PASS rose by exactly 19 from S1090's run (S1092's ask). At
-12:40 win-builder's R-release queue had processed S1092's tarball (its email is due); R-devel still held it, behind 32 others.
-**Handoff evaluation of S1092: 8/10.** Helped: the check-layout and `00check.log` `Status:` habits, Phase 1 named as next, the CI run
-ids to read. Missing: nothing this session needed. Wrong: `SKIP 629` "unchanged" in the check layout; the same `devtools::check()` on
-S1092's own tree gives 628 (a 9-minute run to settle).
-**Self: 8/10.** + reproduced on the first try in CRAN's own image from CRAN's own artifact; the cause pinned to one line of R; the
-exported readers measured before the scope question; the compressed-file hazard caught, with RED reopened before any code; counts
-compared like for like. - a probe died on a regex escape; the first browser run passed against old installed code (a bad `upgrade`
-argument), caught and re-run; one 9-minute check spent on the predecessor's skip count.
-**Gotchas:** compare check counts only from one command on both trees; confirm `devtools::install()` worked before an E2E run; the bug
-needs a quoted last value, no final newline and a file short enough for the header scan (about 6 lines).
-**Next:** the plan's section 7 order: Phase 2's win-builder confirmation once the owner forwards the R-release log, or Phase 3 (D1
-first) or Phase 4a (D6 first). Phase 8's cover note must describe Phase 1 (`BACKLOG.md:16`). Reporting the R bug upstream is the
-owner's call; nothing is posted.
-
-### Sessions 947-1092 (condensed S950 to S1093; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1093 (condensed S950 to S1094; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1093: CRAN plan Phase 1 DONE (claim `5169a31f1`, RED `c1e3395fd`/`06b6c277e`, GREEN `29e070626`/`3c64589b4`/`39aaf742c`, REFACTOR
+`e98c39fcc`/`e10e8553e`/`408170b35`, NEWS `39fcc51c6`): the linux-arm64 failure is R's utils `readtablehead()` (`io.c:910`), so every
+read goes through `readWithFinalNewline()`; container `ngk-arm64-s1093` kept; S1092 8/10, self 8/10 (Learning 1059). **Gotchas kept:**
+compare check counts from one command; confirm `devtools::install()` before an E2E run; compressed files go to the reader as is.
 S1092: CRAN plan Phase 2's cut (claim `2d3dc2f26`, RED `8c2c80721`, GREEN `53113828f`/`49296d313`, REFACTOR `2e136e0d4`, pushed): a
 CRAN check leaves out the 64 files in `tests/testthat/slowTestFiles.txt`; CRAN-mode tests 296 s to 33 s here; owed: win-builder at most
 540 s; S1091 8/10, self 7/10 (Learning 1058). **Gotchas kept:** rank in the check's own layout; a same-named win-builder upload is

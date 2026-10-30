@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1094
 date: 2026-10-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 2's DONE: upload the current tree to win-builder once and read its check time against 540 s; if over, cut further (owner pick at the Phase 0 picker, item 1 of 4, "Measure the current tree"; strict TDD for any cut).
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md (sections 3, 5 Phase 2); tests/testthat/slowTestFiles.txt; tests/testthat/helper-slowTestFiles.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 7
+active_task: CRAN 3.0.0 plan Phase 2's DONE: measured, NOT met -- the cut tree took 652 s on win-builder R-devel against the 540 s target (D4 = A) and CRAN's 600 s; and a Windows-only ERROR the run found in S1093's test, fixed. Owner picks at the Phase 0 picker "Measure the current tree" (item 1 of 4), then "Prepare the cut now", "Skip" the R-release upload, "Fix Windows error, then close"; strict TDD, every gate the recommended option; pushed at the owner's word.
+what_was_done: Claim 9fa5df13c; upload record f5ce1bc2a (check_win_devel() of HEAD 9fa5df13c at 15:12 CDT); RED c3ceec3a0 (test_readWithFinalNewline.R block 3: all.names(body(readWithFinalNewline)) has writeBin and no cat/writeLines/write); GREEN b068ecdf7 (binary append in place of cat("\n", file = copy, append = TRUE), which wrote "\r\n" on Windows: win-builder KDh79Uhh8AsO, :46, 17 bytes not 16); REFACTOR 7f1833334 (one writeBin() of the file's bytes plus 0x0a). Pushed 2e136e0d4..7f1833334 (17 commits). Measured: win-builder R-devel r90783 cut tree 652 s (tests 156 s, rest about 496 s), uncut 2d3dc2f26 1,722 s, R-release 4.6.2 uncut 1,384 s; locally v2.0.0 against HEAD back to back (2 m 55 s against 2 m 49 s, every step timed); every example and vignette chunk timed; findLoops()/countLoops() 2x slower than v2.0.0 (88% of findLoops() in .getAncestorsOnPath(), S783's cycle guard); all 236 exports called by CRAN-run tests, and skipping 10/20/26/40 more files strands 10/12/13/26. Plan section 3.4 and section 7 rows 1-2, BACKLOG.md:16 updated, Learning 1060. Verified: clean read 489 files 4,564 blocks 0 failed 0 errors; lint_package() 0; devtools::check() Status OK 0/0/0, PASS 16786, SKIP 629 (S1093: 16784, 629).
+next_steps: Phase 2's cut needs the owner first: which of the plan's section 3.4 levers (the getGeneticDiversityStats example's input, R/getGeneticDiversityStats.R:69-84, about 14 s on R-devel; the loop functions' cycle check, R/makesLoop.R:28-34 and .getAncestorsOnPath() at R/getAncestors.R:81, about 14 s; 10/26/40 more test skips with a fast test per stranded export, about 40/75/90 s; the a2interactive vignette) and whether 540 s stays the target (about 112 s to cut) or 600 s (about 52 s); then one R-devel upload (check_win_devel()) to measure. Otherwise Phase 3 (D1 first) or Phase 4a (D6 first). Estimates are scaled from measured R-devel steps, not measured savings.
+key_files: docs/planning/cran-3.0.0-submission-plan.md section 3.4 (the measurements and levers); R/readWithFinalNewline.R:24-33; tests/testthat/test_readWithFinalNewline.R:49-59 (the binary-write block); tests/testthat/slowTestFiles.txt; R/getGeneticDiversityStats.R:69-84 (the slow example); R/makesLoop.R:28-34; R/getAncestors.R:81 (.getAncestorsOnPath); PROJECT_LEARNINGS.md Learning 1060.
+gotchas: Two win-builder emails can name the same tarball: tell them apart by the failing lines and the testthat totals. R-devel's queue listing empties when a batch is taken; the check starts 40-60 min later. win-builder's steps other than tests vary about 30 s run to run. SESSION_NOTES.md is about 56 KB, near its 25,000-token ceiling: keep the claim stub to two lines. NEWS.Rmd opens "edited" in RStudio because the Visual editor rewrites the Markdown; nothing on disk changes.
+runtime_smoke: Real app in Chrome on macOS from a scratch install of 7f1833334 (R_LIBS, find.package() logged): test-e2e-input-incomplete-final-line.R, NPRC_RUN_E2E=true, both upload branches (read.table, read.csv) passed, 0 skipped. Windows: CI R-CMD-check 40975285107's windows-latest leg (NOT_CRAN true) Status OK, [ FAIL 0 | WARN 10 | SKIP 665 | PASS 16653 ], test_readWithFinalNewline.R's only skip the R/ guard (:146); lint, pkgdown and test-coverage green, and the macOS and two ubuntu legs green at 19:11 (ubuntu-devel still running). win-builder confirms it in CRAN mode on the next upload.
+changelog_ref: 9fa5df13c (claim); f5ce1bc2a (upload); the close-out commit (DONE and push entries)
+commit: 7f1833334
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results fb008b8bc2d8 · manifest 7e3e82ab3ae0 (run at 7f1833334, load about 5-7, first run; two other projects' ratchets ran at the same time)
 ```
 
 ```handoff
