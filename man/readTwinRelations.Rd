@@ -35,8 +35,17 @@ This reader does not validate structure or domain -- that is
 \code{\link{checkTwinRelations}}'s job.
 }
 \examples{
-\dontrun{
-twinRelations <- readTwinRelations(fileName = "twin_relations.csv")
+ped <- data.frame(
+  id = c("F1", "F2", "S1", "S2"),
+  sire = c(NA, NA, "F1", "F1"),
+  dam = c(NA, NA, "F2", "F2"),
+  sex = c("M", "F", "F", "F"),
+  stringsAsFactors = FALSE
+)
+csvFile <- tempfile(fileext = ".csv")
+writeLines(c("id1,id2,code", "S1,S2,MZ twin"), csvFile)
+twinRelations <- readTwinRelations(fileName = csvFile)
 twinRelations <- checkTwinRelations(ped, twinRelations)
-}
+twinRelations
+unlink(csvFile)
 }

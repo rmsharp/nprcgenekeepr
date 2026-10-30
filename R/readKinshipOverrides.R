@@ -33,10 +33,12 @@
 #' @importFrom utils read.table
 #' @export
 #' @examples
-#' \dontrun{
-#' overrides <- readKinshipOverrides(fileName = "kinship_overrides.csv")
+#' csvFile <- tempfile(fileext = ".csv")
+#' writeLines(c("id1,id2,kinship", "A1,A2,0.25", "A3,A4,0.125"), csvFile)
+#' overrides <- readKinshipOverrides(fileName = csvFile)
 #' overrides <- checkKinshipOverrides(overrides)
-#' }
+#' overrides
+#' unlink(csvFile)
 readKinshipOverrides <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     overrides <- convertExcelNumericColumns(
