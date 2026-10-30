@@ -105,12 +105,10 @@ counted as a potential mate.
 
 ``` r
 library(nprcgenekeepr)
-ped <- qcStudbook(nprcgenekeepr::examplePedigree,
-  minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
-  reportErrors = FALSE
-)
+ped <- nprcgenekeepr::qcPed
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
-geneticValues <- reportGV(ped, guIter = 10L)$report
+## The genetic value report of qcPed, stored with the package
+geneticValues <- nprcgenekeepr::qcPedGvReport$report
 ## Three groups of living animals that have a genetic value
 living <- geneticValues$id[geneticValues$id %in% ped$id[is.na(ped$exit)]]
 groups <- list(
@@ -119,8 +117,8 @@ groups <- list(
   "Group 3" = living[31L:45L]
 )
 getGeneticDiversityStats(groups, ped, geneticValues, kmat)
-#>     group Value Origin Production Inbreeding
-#> 1 Group 1     3      3          1          3
-#> 2 Group 2     1      3          1          3
-#> 3 Group 3     1      3          1          3
+#>     group Value Production Inbreeding
+#> 1 Group 1     2          1          1
+#> 2 Group 2     1          1          3
+#> 3 Group 3     1          1          3
 ```

@@ -153,12 +153,10 @@ potential mate.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span>,</span></span>
-<span class="r-in"><span>  minSireAge <span class="op">=</span> <span class="fl">2</span>, minDamAge <span class="op">=</span> <span class="fl">2</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcPed.html">qcPed</a></span></span></span>
 <span class="r-in"><span><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">geneticValues</span> <span class="op">&lt;-</span> <span class="fu"><a href="reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">ped</span>, guIter <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span><span class="op">$</span><span class="va">report</span></span></span>
+<span class="r-in"><span><span class="co">## The genetic value report of qcPed, stored with the package</span></span></span>
+<span class="r-in"><span><span class="va">geneticValues</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcPedGvReport.html">qcPedGvReport</a></span><span class="op">$</span><span class="va">report</span></span></span>
 <span class="r-in"><span><span class="co">## Three groups of living animals that have a genetic value</span></span></span>
 <span class="r-in"><span><span class="va">living</span> <span class="op">&lt;-</span> <span class="va">geneticValues</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">geneticValues</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
@@ -167,10 +165,10 @@ potential mate.</p>
 <span class="r-in"><span>  <span class="st">"Group 3"</span> <span class="op">=</span> <span class="va">living</span><span class="op">[</span><span class="fl">31L</span><span class="op">:</span><span class="fl">45L</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">getGeneticDiversityStats</span><span class="op">(</span><span class="va">groups</span>, <span class="va">ped</span>, <span class="va">geneticValues</span>, <span class="va">kmat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     group Value Origin Production Inbreeding</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Group 1     3      3          1          3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Group 2     1      3          1          3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Group 3     1      3          1          3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     group Value Production Inbreeding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Group 1     2          1          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Group 2     1          1          3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Group 3     1          1          3</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

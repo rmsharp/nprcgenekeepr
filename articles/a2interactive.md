@@ -2011,7 +2011,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpnUqaM5/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpLWWxGF/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2048,7 +2048,7 @@ ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
     ##   id sire  dam sex gen      birth exit  age recordStatus placeholder
     ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.5     original       FALSE
     ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.4     original       FALSE
-    ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original       FALSE
+    ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.6     original       FALSE
     ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.1     original       FALSE
 
 However, the preferred method of creating the standardized studbook
@@ -3047,8 +3047,8 @@ document.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-29 23:51:20.554553. The processing
-time for this document was 20 seconds..
+The current date and time is 2026-10-30 02:43:24.213559. The processing
+time for this document was 13 seconds..
 
 ``` r
 
