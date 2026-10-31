@@ -15,19 +15,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       first. `cran-comments.md` holds the check results and explains the one NOTE. CRAN's arm64 job
       confirms the Phase 1 fix only after release. The plan's section 7 orders the phases.
 
-- [ ] **Report the `read.csv()` bug on Linux ARM64 to R's developers** (found S1093; DECISION
-      NEEDED -- whether to report it is the owner's call; nothing has been posted; Effort S) -- R's
-      utils `readtablehead()` (`src/library/utils/src/io.c:910`, the same in R 4.6.2 and trunk, read S1108) reads a
-      quoted last value with a stray 0xFF byte when the file has no final newline. One-line case:
-      `writeChar('a,b\n1,"x"', f, eos = NULL); read.csv(f)$b` gives `x\xff`. The package works around
-      it with `readWithFinalNewline()` (`R/readWithFinalNewline.R`), so this is not a release blocker.
-      Mark named this for the session after S1108. First run the case on Linux ARM64 under R 4.6.2:
-      S1108 ran it only on macOS arm64, where the value reads correctly (`x`), and that proves
-      nothing, since the Mac's `char` is signed and the Linux one is not (`(char) scanchar()` makes
-      end-of-file 0xFF there). The saved container `ngk-arm64-s1093` predates 4.6.2.
+- [ ] **Post the `read.csv()` bug report to R's developers** (found S1093; READY -- Mark's action,
+      nothing has been posted; Effort S) -- Mark ruled S1109: report it, with the fix tested. The
+      text is ready to read and post: `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`. It
+      reproduces on Linux ARM64 under R 4.6.2, and the one-word fix at `io.c:910` passes on ARM64
+      and x86-64, including `make check`; it was not run on R-devel. R's Bugzilla takes reports only
+      from members; a new member emails `bug-report-request@r-project.org`. The package works around
+      the bug with `readWithFinalNewline()` (`R/readWithFinalNewline.R`), so no release waits on this.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
-      NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
+      NEEDED, Effort M; Mark named it for the session after S1109) -- there is no contributor guide today: measured 2026-09-26, no
       `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
       `workflows/`). Candidate contents, from what this project's own docs already say: getting set
       up (clone, `renv::restore()`, `pkgload::load_all()`); where things live (`R/` functions, the
