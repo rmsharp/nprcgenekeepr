@@ -134,11 +134,19 @@ test_that("the commands a contributor runs are all there", {
   expectInSection <- function(heading, command) {
     expect_match(articleSection(heading), command, fixed = TRUE)
   }
-  ## Not renv::restore(): from an empty package cache it failed on S1110's Mac
-  ## under R 4.6.2. This route installed everything from a fresh clone.
-  expectInSection(
-    "Set up a copy of the package",
-    'renv::install(dependencies = "most", exclude = "Matrix")'
+  ## From an empty cache, tools/test_renvRestore.R runs this restore for real.
+  expectInSection("Set up a copy of the package", "renv::restore()")
+  expect_no_match(
+    articleSection("Set up a copy of the package"),
+    "exclude = ",
+    fixed = TRUE
+  )
+  ## Loading in the session that installed failed with an R_decompress1 error;
+  ## a fresh session loaded and tested normally (S1111).
+  expect_match(
+    articleSection("Set up a copy of the package"),
+    "restart R",
+    ignore.case = TRUE
   )
   expectInSection(
     "Set up a copy of the package",
