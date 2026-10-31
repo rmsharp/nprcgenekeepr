@@ -922,7 +922,7 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
   folds in the results. **HARD STOP before the upload.**
 - **First half DONE (S1104, owner pick "CRAN Phase 8"; no shipped path changed, so Phase 7 stands):**
   - `cran/archive/20260717_cran-comments.md` holds the 2.0.0 note, byte for byte. `cran-comments.md` is an
-    update with the Phase 7 results, and six "-- to be run before submission" lines mark what the runs
+    update with the Phase 7 results, and seven "to be run before submission" lines mark what the runs
     fill in; the fold-in session greps them to 0.
   - **The runbook is `docs/planning/cran-3.0.0-phase8-runbook.md`;** the 2.0.0 runbook now points to it.
   - **Tried here, not copied:** `rhub` 2.0.1 installed into a scratch library and `rhub_doctor()` passed

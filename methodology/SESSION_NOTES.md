@@ -99,25 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1104 Did
-**Deliverable (owner pick "CRAN Phase 8"): the 3.0.0 cover note and the runbook (IN PROGRESS).** Started 2026-10-31 01:03. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner pick "CRAN Phase 8"): the 3.0.0 cover note and the runbook, plan Phase 8's first half.** Claim `839d75eac`, note and runbook `01e6613c8`, record `fce171a03`; **not
+pushed** (no shipped path changed, GitHub's copy of the frozen paths equals `74715d95b`, so Phase 7 stands).
+**Written:** `cran/archive/20260717_cran-comments.md` (2.0.0's note); `cran-comments.md` (an update; seven "to be run before submission" lines); `docs/planning/cran-3.0.0-phase8-runbook.md`.
+**Tried, not copied:** `rhub` 2.0.1 in a scratch library, `rhub_doctor()` passed; the arm64 case reads `78 ff` in CRAN's image, `78` on macOS; 236 of 236 exports called by about 80 CRAN-run files.
+**Handoff evaluation of S1103: 9/10.** Helped: "Next" with the plan's line and the saved note's name, the freeze list, the NOTE list. Missing: nothing costly. Wrong: "nears its 65,536 B
+trim budget" for `CHANGELOG.md` reads as urgent; a trim is owed at the WARN, 196,608 B, and I repeated it in the picker (Learning 1069).
+**Self: 8/10.** + every claim in the note measured, the runbook's calls read in source, no owner correction. - a `git grep` word-boundary trap these notes name, "email" written for the macOS
+builder before reading its source, two text slips caught after the record commit; the owner has not yet read the note's wording.
+**Gotchas:** the tree stays frozen (S1103's list); `grep -c 'to be run before submission' cran-comments.md` must reach 0 at fold-in; correct the NOTE list to win-builder's; a reading over 540 s
+is uploaded again before anything is cut; `slowTestFiles.txt`'s header says 79, so a change there waits for acceptance. `HANDOFFS.md` is about one receipt from its 196,608 B warn line.
+**Next:** the owner runs `docs/planning/cran-3.0.0-phase8-runbook.md`. Then a session folds the results into `cran-comments.md` (plan `docs/planning/cran-3.0.0-submission-plan.md`, Phase 8;
+`BACKLOG.md:8`). HARD STOP before the upload: Phase 9 is the owner's.
 
-### What Session 1103 Did
-**Deliverable (owner pick "CRAN Phase 7"; verification only, no code): CRAN plan Phase 7 DONE.** Claim `0a3b12a1b`, record `c0cf01bd7`; **not pushed** (notes only).
-**Verified at `0a3b12a1b`** (frozen paths equal `74715d95b`, CI green): check with `manual = TRUE` `Status: 1 NOTE` (`V8` unavailable, formulas skipped), `Status: OK` with `V8` in
-a scratch library (2 m 15 s; `FAIL 0 | WARN 0 | SKIP 54 | PASS 1923`); clean read 495 files 4,592 blocks 0 failed 0 errors 225 skipped; `lint_package()` 0; 20 URLs and spelling
-clean; tarball 3,507,687 B, 12 top-level entries; ratchet 11/11. CRAN's arm64 image: `R CMD check` `Status: OK`, same counts; whole suite 0 failed, 7 errors, all missing tools
-(`quarto` 4, Chrome 3; `BACKLOG.md:195`, for after acceptance). No Windows, R-devel or 10-minute reading here; that is Phase 8.
-**Handoff evaluation of S1102: 9/10.** Helped: "Next" with the plan's line, the freeze gotcha, the container's state. Missing: that the container lacked 9 packages (S1098
-added `shinyBS`) and that its bind mount names a deleted folder, neither costly. Wrong: nothing found; "one session" held.
-**Self: 8/10.** + every Phase 7 step in one pass, no owner correction, the NOTE run away rather than explained, each of the 7 errors read. - two commands stopped on `echo =====`, a
-trap these notes name; my first container package list came from renv's empty library; my claim stub guessed its time (00:30; `date` said 00:24) (Learning 1068).
-**Gotchas:** the tree is frozen: a change to `R/`, `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7 (`cran-comments.md`, `docs/`, `methodology/`
-and `BACKLOG.md` do not ship). V8 recipe: plan dragon 10; container `ngk-arm64-s1093` (stopped; 163 packages; `/root/s1103`): dragon 11. win-builder's incoming NOTE may flag "de"
-(`DESCRIPTION:37`) and thoughtco.com (402), though `url_check()` passed here. `HANDOFFS.md` nears its 196,608 B warn line and `CHANGELOG.md` its 65,536 B trim budget.
-**Next:** plan Phase 8 (`docs/planning/cran-3.0.0-submission-plan.md:895`, `BACKLOG.md:8`): save the 2.0.0 note to `cran/archive/20260717_cran-comments.md`, rewrite
-`cran-comments.md` as an update with these results, adapt `docs/planning/cran-2.0.0-phase5-runbook.md`; the owner runs the checks (D5 = A). HARD STOP before upload.
-
-### Sessions 947-1102 (condensed S950 to S1103; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1103 (condensed S950 to S1104; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1103 (CRAN plan Phase 7 DONE; Learning 1068; hashes in `CHANGELOG.md`): `Status: OK` on macOS (with `V8` in a scratch library) and in CRAN's arm64 image; clean read 0 failed, 0 errors.
+**Gotchas kept:** V8 recipe: plan dragon 10; container `ngk-arm64-s1093` (stopped; 163 packages; `/root/s1103`): dragon 11; `docker start` works, though its bind mount names a deleted folder.
 S1102 (CRAN plan Phase 6 DONE; Learning 1067; hashes in `CHANGELOG.md`): every version line reads 3.0.0 (`DESCRIPTION:4`, `NEWS.Rmd:14`, `CITATION.cff:11`, `README.md:4,8`); pushed
 `1778d738f..74715d95b`, CI green. **Gotchas kept:** `runGeneKeepR(port = <p>, launch.browser = FALSE)`, `options()` do nothing; `README.md:8` shows the install's UTC build date;
 v2.0.0's NEWS date moved after its tag (20260708 to 20260721).
@@ -155,8 +152,7 @@ S1089-S1090 (Learnings 1055-1056; hashes in `CHANGELOG.md`): S1090, the red `tes
 (`rSourceAvailable()`, `tests/testthat/helper-rSource.R`); S1089, `BACKLOG.md` 234 to 208 lines and a #138 item. **Gotchas kept:**
 covr's layout: `R CMD INSTALL --no-docs --install-tests --library=<scratch> .`, then outside the repo `test_file(<f>, package =
 "nprcgenekeepr", load_package = "installed")`; #138's title says 1,500 nodes, the cap is 750 animals (`R/modPedigree.R:453,465`).
-S1088: `methodology/CHANGELOG.md` trimmed 201,025 to 32,331 B (`--force --cut 2026-10-27` after `SRF_RED` 1.0038; claim `cb71bb6db`,
-trim `87bc10428`); pushed `ccd6e9028..6d12f6061`; S1087 9/10, self 8/10 (Learning 1054). **Gotchas kept:** `SRF_RED` fires once the
+S1088: `methodology/CHANGELOG.md` trimmed 201,025 to 32,331 B (`--force --cut 2026-10-27` after `SRF_RED` 1.0038) (Learning 1054). **Gotchas kept:** `SRF_RED` fires once the
 file regrows past 201,025 B, so read `--check` at Phase 0 and put `--force` in the picker; `--cut` and its date are two shell words.
 S1085-S1087 (evaluations 9/10, self 8/10; Learnings 1051-1053; hashes in `CHANGELOG.md`): S1087, the tutorial's "### Kinship of
 Identical Twins" (`vignettes/a2interactive.Rmd:608-643`) and `plotSnapshotTrends(ncol = 3L)` (`:1042-1064`), no guard for omitted
@@ -260,8 +256,7 @@ so); S1039 the app's "Build Earlier Snapshots" box and tab (`R/modSnapshotTrends
 file; the cost line's 4 s per 1,000 iterations is unmeasured above 3,694 rows; a background launcher's "completed" means the launcher exited, not the job (use `pgrep`).
 S1035: the three long guides (`a2interactive`, `gvaConvergence`, `simulatedKValues`) moved from `html_document` (`df_print: paged`) to `rmarkdown::html_vignette` with `df_print: kable`
 (owner pick, "Slim inst/doc/", scope "Light template only"; strict TDD, REFACTOR skipped at the owner's word): the clean-export tarball went 3,971,754 to 3,222,746 B (-749,008 B);
-`a2interactive` also `fig_width: 7`, `fig_height: 5` (`vignettes/a2interactive.Rmd:4-9`; gate `tests/testthat/test_vignetteLightTemplate.R`). Claim `c64774804`, RED `069294279`, GREEN
-`a737202c4`, close-out `9e1829356`; evaluation of S1034 9/10, self 7/10 (Learning 1001). **Gotchas kept:** the light template draws figures 3 x 3 in, so set `fig_width`/`fig_height` on any
+`a2interactive` also `fig_width: 7`, `fig_height: 5` (`vignettes/a2interactive.Rmd:4-9`; gate `tests/testthat/test_vignetteLightTemplate.R`). (Learning 1001). **Gotchas kept:** the light template draws figures 3 x 3 in, so set `fig_width`/`fig_height` on any
 vignette moved to it; `df_print: paged` is accepted under it but draws nothing; pkgdown ignores a vignette's YAML format; `wc -c`, not `stat -f%z` (GNU stat here); `quality_ratchet.py
 --run` overwrites the results file.
 S1033-S1034 (hashes in `CHANGELOG.md`; Learnings 999-1000): the ten red archive-proof scripts re-derived, none a loss, and the owner ruled "leave them"

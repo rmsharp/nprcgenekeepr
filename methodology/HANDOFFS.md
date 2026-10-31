@@ -210,10 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1104
 date: 2026-10-31
-status: pending
-active_task: CRAN 3.0.0 plan Phase 8, the cover note and the runbook (owner pick "CRAN Phase 8").
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: CRAN 3.0.0 plan Phase 8, first half DONE: the cover note and the runbook are written. BLOCKED on the owner's five checks; then a session folds in the results. Not pushed; no shipped path changed.
+what_was_done: Owner pick "CRAN Phase 8". Claim 839d75eac, note and runbook 01e6613c8, record fce171a03. cran/archive/20260717_cran-comments.md holds the 2.0.0 note; cran-comments.md is a 3.0.0 update with the Phase 7 results and seven "to be run before submission" lines; docs/planning/cran-3.0.0-phase8-runbook.md is new and the 2.0.0 runbook points to it. Tried: rhub 2.0.1 in a scratch library, rhub_doctor() passed. Measured: arm64 case 78 ff in CRAN's image, 78 on macOS; every read.csv()/read.table() through readWithFinalNewline(); about 80 CRAN-run test files call 236 of 236 exports; 54 exports added, none removed; no reverse dependencies.
+next_steps: The owner runs docs/planning/cran-3.0.0-phase8-runbook.md (win-builder x3, R-hub, macOS builder). Then one session, "fold in the CRAN Phase 8 results": replace the seven marked lines in cran-comments.md, correct the NOTE list to win-builder's, grep the marker to 0, record it in the plan and BACKLOG.md:8. HARD STOP: Phase 9's upload is the owner's. An estimate: one session to fold in, one after acceptance.
+key_files: cran-comments.md:1; docs/planning/cran-3.0.0-phase8-runbook.md:1; docs/planning/cran-3.0.0-submission-plan.md:895 (Phase 8 and its first-half paragraph); BACKLOG.md:8; PROJECT_LEARNINGS.md Learning 1069; tests/testthat/slowTestFiles.txt:5.
+gotchas: The tree stays frozen: a change to R/, tests/, man/, vignettes/, inst/, data/ or DESCRIPTION repeats Phase 7. A win-builder upload returns no receipt, and a same-named file waiting blocks a second copy. A reading over 540 s is uploaded again before anything is cut. The macOS builder prints a link and sends no email. slowTestFiles.txt's header says 79 where this run found 80 files. HANDOFFS.md is about one receipt from its 196,608 B warn line; CHANGELOG.md's trim is owed at the same WARN, not at 65,536 B. rhub went into a scratch library here; the owner's copy goes to ~/R/nprcgenekeepr-rhub. The owner has not yet read the note's wording; changes go in at fold-in.
+runtime_smoke: n/a -- docs only; no shipped path changed, and S1102 ran the real app on these frozen paths. The cover note's outside results are not run yet: win-builder, R-hub and the macOS builder are the owner's (D5 = A), so Windows, R-devel and the 10-minute limit stay unverified for this tree until then.
+changelog_ref: 839d75eac (claim); the close-out commit (DONE entry)
+commit: 01e6613c8
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 4a788c9c967e · manifest 7e3e82ab3ae0
 ```
 
 ```handoff
