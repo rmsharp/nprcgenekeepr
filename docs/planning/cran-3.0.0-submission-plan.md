@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1, 2, 3 and 4 are DONE (S1093; S1092 to S1096; S1097; S1098); Phase 5 is half done (S1099). The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1 to 5 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101). The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -442,7 +442,7 @@ records:
 ### 4.2 `NEWS.Rmd` (for Phases 5 and 6)
 
 S1099 re-sorted this block into the app's tab order, so the table below is the S1091 measurement, kept as the
-record; the block is now `NEWS.Rmd:14-587`, 574 lines, and Phase 5's S1099 paragraph lists what is left. The
+record; S1101 then cut the block to `NEWS.Rmd:14-404`, 391 lines (Phase 5's S1101 paragraph). The
 development block is `NEWS.Rmd:14-612`, 599 lines. The whole 2.0.0 block is 185 lines
 (`:613-797`). The development block's sections:
 
@@ -808,6 +808,14 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
   `test_haremSexRatioStopWording.R:28`, `test_breedingGroupsSourceChoices.R`, `test_unusedAnimalsHeatMapWording.R:90`;
   the Diagram section's style rules are in `test_newsReleaseState.R:441-626`. **Not measured:** that each remaining
   "no longer" bug reproduces at `v2.0.0`; only that its code exists there.
+- **S1101 (Phase 5 DONE; owner ruling):** "If the items are about new features, we only need to generally describe the
+  features and not provide help-page detail." Eight sections fell, the block 574 to 391 lines: Pedigree Diagram 74 to 19,
+  Kinship 26 to 20, Breeding Group Formation 92 to 65, Mate Pair 30 to 11, Marker Genetics 55 to 24, MHC 25 to 8,
+  Cross-Center 18 to 8, Longitudinal Monitoring 35 to 19. `test_newsReleaseState.R`'s `newFeatureDetail` holds the rule.
+  Changes to things 2.0.0 had keep their detail. Every function the block named stays named. **Checked in the tree:** 20
+  of 22 facts leaving NEWS are in a help page or article; the "113 individuals" count is nowhere else, and the trend box's
+  words were not found in the guide by search. **Not measured:** the "Speed and Memory" figures against `v2.0.0`, except
+  loading (about 1.0 s against 0.4 s; NEWS says 0.9).
 
 ### Phase 6. The version bump (`BACKLOG.md:8`; "just before release")
 
@@ -963,7 +971,7 @@ must).
 | 1 | linux-arm64 failure | DONE (S1093; its Windows byte fixed S1094) | nothing | |
 | 3 | static hygiene | DONE (S1097; D1 = A) | nothing | |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | DONE (S1098; D6 = A, D2 = A) | nothing | |
-| 5 | NEWS release pass | half done (S1099): General Fixes and the app order; Breeding Group Formation and Pedigree Diagram next | nothing | M |
+| 5 | NEWS release pass | DONE (S1099 General Fixes and the app order; S1101 new features described in general terms) | nothing | |
 | 6 | version bump | after 1-5 | Phases 1-5 landed | S |
 | 7 | full local gate | after 6 | Phase 6 pushed, CI green | S |
 | 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |

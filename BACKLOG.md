@@ -15,8 +15,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-      READY: Phase 5 half done S1099, two sections left; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
-      D3 = B, S1097; D4 = A, S1092); Effort L, about 5-7 sessions left) --
+      Phase 5 DONE S1101; READY: Phase 6, the version bump, is next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
+      D3 = B, S1097; D4 = A, S1092); Effort L, about 4-6 sessions left) --
       **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
@@ -40,10 +40,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       reads `Status: OK`, run under a scratch R home because this Mac's R library holds 16 of the 17
       Suggests (plan dragon 9). Still open: win-builder's incoming NOTE also flags "de"
       (`DESCRIPTION:37`) and the thoughtco.com URL (status 402, explained in 2.0.0's note).
-      **Phase 5 (half done S1099):** NEWS opens with where its tabs are explained, its sections run in
-      the app's tab order, and General Fixes is 54 lines. Left: Breeding Group Formation and Pedigree
-      Diagram (plan Phase 5's S1099 paragraph). The plan's section 7 orders the phases; the item above
-      is its Phase 6.
+      **Phase 5 (DONE S1101):** NEWS opens with where its tabs are explained, its sections run in the
+      app's tab order, General Fixes is 54 lines, and a new feature gets a general description with no
+      help-page detail (owner ruling S1101; the block 574 to 391 lines). The plan's section 7 orders the
+      phases; the item above is its Phase 6.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
