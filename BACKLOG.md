@@ -6,46 +6,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 ## Up Next
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
-      S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-      Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; Phase 8 DONE S1105; Phase 9 DONE, the owner submitted 2026-10-31 from `fa1f2849e`; BLOCKED -- on CRAN's answer; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
-      D3 = B, S1097; D4 = A, S1092); Effort S, one session left, after acceptance) --
-      **Phase 1 (S1093):** the
-      linux-arm64 failure is a bug in R itself (utils
-      `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
-      ARM64 `read.csv()`/`read.table()` of a file whose last value is quoted and that has no final
-      newline read that value with a stray 0xFF byte. Every package read now goes through
-      `readWithFinalNewline()` (`R/readWithFinalNewline.R`), and the failing test passes in CRAN's
-      own arm64 image (container `ngk-arm64-s1093`, kept, stopped). S1094 made its added
-      newline one byte on Windows too (it was `\r\n` from `cat()`, an ERROR on win-builder).
-      `cran-comments.md` says so, and that CRAN's arm64 job confirms it only after release (S1104).
-      Whether to report the R bug upstream (one-line case: `writeChar('a,b\n1,"x"', f, eos =
-      NULL); read.csv(f)$b` gives `x\xff`) is the owner's call; nothing has been posted.
-      **Phase 2 (DONE S1096, owner ruling on a measured 520 s against 540 s):** a CRAN check runs
-      79 test files that call all 236 exports (`tests/testthat/slowTestFiles.txt`; S1092,
-      S1095), two slow examples are cheaper (S1095), and loading the package no longer loads
-      Matrix or ggplot2, which made R's per-example memory sweep slow (S1096). win-builder R-devel
-      read 652, 564, then 617 and 520 s for one S1096 tarball: about 100 s of run-to-run
-      noise, so Phase 8 uploads again before cutting (plan sections 3.4-3.6). **Phase 3 (DONE
-      S1097):** the DOI is right, past cover notes are in `cran/archive/`, and two help examples
-      run. **Phase 4 (DONE S1098):** `shinyBS` is in Imports, because without it the whole app fails
-      to start, in 2.0.0 too (20 non-base packages draws no NOTE), and a check with Suggests absent
-      reads `Status: OK`, run under a scratch R home because this Mac's R library holds 16 of the 17
-      Suggests (plan dragon 9). win-builder's incoming NOTE flags "de"
-      (`DESCRIPTION:37`) and the thoughtco.com URL (status 402); `cran-comments.md` explains both.
-      **Phase 5 (DONE S1101):** NEWS opens with where its tabs are explained, its sections run in the
-      app's tab order, General Fixes is 54 lines, and a new feature gets a general description with no
-      help-page detail (owner ruling S1101; the block 574 to 391 lines). **Phase 6 (DONE S1102):**
-      `DESCRIPTION`, NEWS, `CITATION.cff`, `README.md` and the roadmap read 3.0.0, CI green on
-      `74715d95b`; the public pkgdown site already shows 3.0.0. The owner decided (S855) the release is
-      3.0.0. **Phase 7 (DONE S1103):** the check reads `Status: OK` on macOS (with `V8` in a scratch
-      library; 1 local-only NOTE without it) and in CRAN's arm64 image; clean read 0 failed, 0 errors;
-      lint, URLs, spelling and the tarball listing clean. **The tree is frozen:** a change to `R/`,
-      `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. **Phase 8
-      (DONE S1105):** `cran-comments.md` holds the results: win-builder 1 NOTE on all three R versions
-      (R-devel 284 s), R-hub `Status: OK` on three platforms; the macOS builder was down (502) all
-      day and its line dropped by owner ruling. **Before Phase 10:** `use_github_release()` tags the
-      `CRAN-SUBMISSION` SHA, and local notes commits sit ahead of `origin/master`, so push first. The
-      plan's section 7 orders the phases.
+      S1091, DRAFT; Phases 1-8 DONE S1093-S1105, recorded in the plan's sections 3.4-3.6 and 5 and
+      in `CHANGELOG.md`; Phase 9 DONE, the owner submitted 2026-10-31 from `fa1f2849e`; BLOCKED --
+      on CRAN's answer; all of D1-D6 ruled, the recommended option each; Effort S, one session left,
+      after acceptance) -- **The tree is frozen:** a change to `R/`, `tests/`, `man/`, `vignettes/`,
+      `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. **Before Phase 10:** `use_github_release()`
+      tags the `CRAN-SUBMISSION` SHA, and local notes commits sit ahead of `origin/master`, so push
+      first. `cran-comments.md` holds the check results and explains the one NOTE. CRAN's arm64 job
+      confirms the Phase 1 fix only after release. The plan's section 7 orders the phases.
+
+- [ ] **Report the `read.csv()` bug on Linux ARM64 to R's developers** (found S1093; DECISION
+      NEEDED -- whether to report it is the owner's call; nothing has been posted; Effort S) -- R's
+      utils `readtablehead()` (`src/library/utils/src/io.c:910`, unfixed through R-devel) reads a
+      quoted last value with a stray 0xFF byte when the file has no final newline. One-line case:
+      `writeChar('a,b\n1,"x"', f, eos = NULL); read.csv(f)$b` gives `x\xff`. The package works around
+      it with `readWithFinalNewline()` (`R/readWithFinalNewline.R`), so this is not a release blocker.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
@@ -75,18 +50,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143); Recs #1-#5 all DONE,
-      S144-S152 (S155 added richer file-read errors), see `CHANGELOG.md`: `setLabKeyDefaults()`
-      (optional API-key auth), `Rlabkey (>= 3.2.0)`, `defaultSiteParams()`, the internal
-      `getPedigreeSource()` (`labkey`/`dataframe`/`file`), `getLkDirectRelatives()` delegating its
-      walk to `getPedDirectRelatives()` (a deliberate, owner-accepted behavior change: it now
-      returns the full connected component), and the exported `getFileDirectRelatives()` and
-      `getFocalAnimalPedFromFile()` (the Shiny focal-animal workflow now runs offline). The live
+      S144-S152 (S155 added richer file-read errors), see `CHANGELOG.md`. The live
       ONPRC/SNPRC server version (doc §8.1) is still unobserved. **Still deferred:** a
       non-LabKey other-EHR provider on the same seam; server-side filtering / `executeSql` /
       consuming the centers' `study.Pedigree`/`ehr.kinship` (the research doc defers this until
       pull size is measured and per-center query availability/permissions are confirmed; it needs
       a live LabKey server to test/observe, and a naive focal-id server filter is incompatible
       with the client-side connected-component walk).
+
 - [ ] **Work with LabKey (Josh Eckels) to update the LabKey integration** (owner-requested
       2026-09-26; BLOCKED -- needs the owner to make contact, and the deferred technical work also
       needs a live LabKey server; Effort M, not a coding task until scoped) -- companion to
@@ -102,12 +73,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Build a kinship2-similar standalone pedigree package from this repository's code —
       committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- prep steps ALL DONE
-      (D-1 S744, D-2 S745, D-3 S746); the remaining blocker is the S738 revisit conditions
-      only, scoping doc §6: engine churn calms + an
-      accepted CRAN release; Effort L, its own planning session first when unblocked) --
-      owner disposition closing the S739 two-step discussion item (step 1: gap analysis
-      DONE S741, `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, 15 EQ /
-      8 PARTIAL / 2 ABSENT; step 2: this decision — full record in `CHANGELOG.md` S742).
+      (S744-S746, `CHANGELOG.md`); the remaining blocker is the S738 revisit conditions
+      only, scoping doc §6: engine churn calms + an accepted CRAN release; Effort L, its own
+      planning session first when unblocked) -- gap analysis:
+      `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`.
       **The package WILL be built; only the timing is deferred ("gates stand").
       Purpose (owner-stated): a standalone near-equivalent of kinship2 carrying
       nprcgenekeepr's enhanced features — particularly the pedigree drawing, annotation
@@ -124,28 +93,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       matrices are current practice); API shape (data-frame-as-is vs kinship2-compat layer)
       DELIBERATELY OPEN — decide at plan time with a prototype in hand.
       When unblocked, the pickup is a planning session (package boundary/plan doc in
-      `docs/planning/`, evidence-based inventory). **Prep is done** (D-1 S744, D-2 S745, D-3 S746;
-      each is in `CHANGELOG.md`): `makePedigreeMatingLayout(kinshipMatrix = )`
-      (`R/makePedigreeDiagramData.R`) is the injectable boundary the package needs, and the 13
-      `R/positionTreeApportion.R` functions carry `@noRd` roxygen. **One prep claim has drifted
-      (found S896):** D-2 took every test outside the layout core's own files off
-      `.buildMatingUnitForest()`, but `tests/testthat/test_newsReleaseState.R:234,248` has called it
-      directly since S790-S791 (NEWS release-state counts; it is not one of the scoping doc's 9
-      core test files), so the planning session must re-run the grep and decide where that test
-      lives. (The owner accepted S667's recommendation NOT to split the layout core, recorded S738;
-      the prep steps stand whether or not a split ever happens.)
+      `docs/planning/`, evidence-based inventory). **One prep claim has drifted (found S896):**
+      D-2 took every test outside the layout core's own files off `.buildMatingUnitForest()`, but
+      `tests/testthat/test_newsReleaseState.R:198,212` calls it directly (NEWS release-state counts;
+      it is not one of the scoping doc's 9 core test files), so the planning session must re-run
+      the grep and decide where that test lives.
+
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
-      last pass S1089, 2026-10-29) -- its `##` sections are standing *topical* categories, not
+      last pass S1108, 2026-10-31) -- its `##` sections are standing *topical* categories, not
       dated newest-on-top records, so `methodology_trim.py` cannot archive them; the file's own
       header states the remedy ("Open, actionable work only... for history see `CHANGELOG.md`").
       Items **regrow** as later sessions append progress narrative (Learning 626), so this is a
-      recurring pass, never a one-time fix.
-      **Pass history** (each pass's figures are in its own `CHANGELOG.md` entry, live or under
-      `methodology/archive/`): S529, S530, S531, S606, S752, 2026-09-24 (ad hoc), S890, S896,
-      S1089. File size: 378 lines on 2026-09-24, 599 at S853, 514 after S896, 234 before S1089
-      and 208 after it, with the new #138 item (most of the fall since S896 is finished items
-      coming off, not passes).
+      recurring pass, never a one-time fix. Each pass's figures are in its own `CHANGELOG.md`
+      entry, live or under `methodology/archive/`.
       **Method (every pass, all steps):** before compressing anything to a pointer, (1) verify
       `CHANGELOG.md` + `methodology/archive/CHANGELOG-*.md` (pre-S325:
       `docs/archive/CHANGELOG-legacy-pre-S325.md`) carry an entry heading for every session
@@ -153,28 +114,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       little); (2) confirm every cited Learning / doc path resolves and every issue state via
       `gh issue view`, not prose; (3) extract any buried open thread as its own item first; (4)
       replace whole line ranges mechanically (Learning 537: a partial `old_string` leaves later
-      paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
-      re-read the compressed result end to end.
-      **Candidates for the next pass (measured S1089; re-grep, sizes not anchors):** the
-      finished-work narrative in three of the six items the owner delayed on 2026-10-22, left
-      alone at S1089 at the owner's word: the LabKey research item's list of what Recs #1-#5
-      shipped, the standalone-package item's disposition history (its
-      `test_newsReleaseState.R:234,248` cite is stale: the calls are now at `:202` and `:216`),
-      and the outreach item's list of the plan's contents.
+      paragraphs duplicated beside the new bullet); (5) cut only finished-work narrative, and leave
+      what is still open in an item as written; (6) re-read the compressed result end to end.
 
 - [ ] **Take the methodology files the S1032 sync held back (BLOCKED -- on a fix to `close_out_report.py` in the
       methodology repo, Effort S once it ships)** (found S1032, 2026-10-22) -- the sync copied 7 of 10 files and, at the
-      owner's word, held back `SESSION_RUNNER.md` (2 versions behind), `SAFEGUARDS.md` (1 behind) and the new
-      `close_out_report.py` (not installed). The newest runner (commit `8f63492b`) makes section 3G run
-      `python3 close_out_report.py` and print its output as the last message; v1.2.0 reads the example box in
-      `HANDOFFS.md`'s front matter as the newest receipt and refuses (`refused: newest receipt (S<N>) is <pending |
-      complete>`), here and on the blank seed. The runner's Oct 12 commit `95005e87` (its subject: a gate run that reads
-      unmeasured gates is repaired and repeated, or each gate is named) is held with it. Evidence, a tested 4-line fix and
-      the draft upstream report, **not posted anywhere** (where to post it is the owner's call):
+      owner's word, held back `SESSION_RUNNER.md`, `SAFEGUARDS.md` and the new `close_out_report.py`. The newest runner
+      (commit `8f63492b`) makes section 3G print that script's output as the last message; v1.2.0 reads the example box in
+      `HANDOFFS.md`'s front matter as the newest receipt and refuses, here and on the blank seed (the fork's copy still
+      did on S1108's test). The runner's Oct 12 commit `95005e87` is held with it. Evidence, a tested 4-line fix and the
+      draft upstream report, **not posted anywhere** (where to post it is the owner's call):
       `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`. **What is left:** when the script reads this ledger, sync
       again (`bin/sync --force`, then the trimmer patch per `docs/conventions/CLOSEOUT_CHECKLISTS.md`) and, before keeping
-      the script, print a report from a ledger whose newest receipt is complete; `bin/status` lists these three files
-      until then.
+      the script, print a report from a ledger whose newest receipt is complete.
 
 - [ ] **Draw the full colony beyond the Diagram tab's cap (issue #138, low priority; READY -- the
       pickup is a scoping session, not a build; Effort M for that session)** -- the tab draws at
@@ -195,14 +147,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
-      drafts + send timing; Effort N/A, not a coding task) -- plan complete:
-      `docs/planning/nprc-outreach-announcement-plan.md` (S413, owner-directed, not
-      from this backlog). Covers audiences (the NPRC Genetics and Genomics Working
-      Group, plus each of the 7 centers' colony-manager/veterinarian contacts), tailored
-      messaging, channels, a sourced 7-center contact roster (director + colony-manager/
-      head-veterinarian-equivalent + genetics contact per center, each with a source),
-      a generic timeline, 5 named risks, and ready-to-edit draft materials (WG email,
-      colony-manager/vet email, one-page feature summary, presentation outline). Two
+      drafts + send timing; Effort N/A, not a coding task) -- plan complete, with ready-to-edit
+      drafts: `docs/planning/nprc-outreach-announcement-plan.md` (S413). Two
       items remain genuinely unresolved after dedicated research, not just undone: the
       Working Group's current (2026) chair could not be confirmed (recommended action:
       ask `support@nhprc.org` directly, see the plan's §3/§8); and a colony-manager
@@ -211,7 +157,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       owner-executed, real-world actions** (review/edit the drafts, confirm exact
       recipients, send) per the plan's own §7 -- pick this up in a future session only
       if the owner wants help drafting a specific follow-up, not as a general "send the
-      emails" coding task. See `CHANGELOG.md`.
+      emails" coding task.
 
 - [ ] **Develop paper(s) for peer-reviewed journals** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort L, its own scoping session first; multi-session) -- the owner supplied a
