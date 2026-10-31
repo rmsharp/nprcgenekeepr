@@ -135,7 +135,8 @@ test_that("the commands a contributor runs are all there", {
     expect_match(articleSection(heading), command, fixed = TRUE)
   }
   ## From an empty cache, tools/test_renvRestore.R runs this restore for real.
-  expectInSection("Set up a copy of the package", "renv::restore()")
+  ## As a command in the code block: the sentence after it names the function too.
+  expectInSection("Set up a copy of the package", "```r\nrenv::restore()\n")
   expect_no_match(
     articleSection("Set up a copy of the package"),
     "exclude = ",
