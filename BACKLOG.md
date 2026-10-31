@@ -134,18 +134,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       core test files), so the planning session must re-run the grep and decide where that test
       lives. (The owner accepted S667's recommendation NOT to split the layout core, recorded S738;
       the prep steps stand whether or not a split ever happens.)
-- [ ] **`CHANGELOG.md` regrows faster than it is trimmed: shorter entries are the open lever**
-      (found S543, 2026-08-12; DECISION NEEDED -- the owner's choice of lever, Effort S) -- every
-      session writes a claim entry and a DONE entry, often a trim or push entry too, and the file
-      outgrows its trims: 258,724 B seven days after its 2026-09-27 trim (S897: `SRF_RED` 7.9455,
-      the owner took a `--force` trim to 25,172 B), and 201,025 B at S1088's `--force` trim, which
-      archived the 87 records of 2026-10-23 to 2026-10-27. Measured S1089 on the six sessions of
-      2026-10-28: claim entries 439-766 B, DONE entries 2,393-4,668 B (24,094 B in all, 86% in the
-      DONE entries), so the length of the DONE entries, not their number, carries most of the
-      bytes. The lever, open since S897: shorter DONE and claim entries (and receipts); the
-      canonical design's remedy for the same problem in `HANDOFFS.md` ("Receipt Inflation", H4)
-      is "a norm plus a check, not an archiver" (`docs/planning/ledger-trimmer-design.md` §10.2,
-      not in this repo).
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
       last pass S1089, 2026-10-29) -- its `##` sections are standing *topical* categories, not

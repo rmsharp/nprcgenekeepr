@@ -99,19 +99,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1107 Did
-**Deliverable (owner pick "CHANGELOG entry length"): settle entry length in `methodology/CHANGELOG.md`** (IN PROGRESS). **Started:** 2026-10-31 15:15 CDT. **Status:** Session claimed. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner pick "CHANGELOG entry length", then "Limit plus check"): new `CHANGELOG.md` entries are limited to 1,000 B, and a gate holds it.** Claim `98d6f59a1`, RED `f273ace07`,
+GREEN `c16cafbdb`, REFACTOR `22a025135`; not pushed (no frozen path changed). `tools/changelog_entry_limit.py`, 18 tests in `tools/test_changelog_entry_limit.py`, gate
+`changelog_entries_over_limit` (the 12th), rule in `docs/conventions/CLOSEOUT_CHECKLISTS.md:33` and `CLAUDE.md:255`; the BACKLOG item is off. Median bytes per session had already fallen, 4,754 (S1060-S1080) to 837 (S1099-S1106).
+**CRAN email (Mark pasted it mid-session):** auto-check: 3.0.0 passed pretest with the known 1 NOTE on Windows and Debian (check 315 s). A recheck follows for the arm64 issue on 2.0.0; the email says reply only if it would fail, and
+S1103 read `Status: OK` in that image on the same files, so Claude advised no reply. **Not an acceptance;** the CRAN site still reads 2.0.0.
+**Handoff evaluation of S1106: 9/10.** Helped: "tree frozen" (it moved the tests to `tools/`), the zsh loop gotcha, the two CRAN branches. Missing: nothing costly. Wrong: nothing found.
+**Self: 8/10.** + measured before the question, gate seen pass, fail and unmeasured, no owner correction, the email answered at once. - my placeholder edit to the manifest then joined two lines (caught by the diff); one RED test was too weak (caught on reread).
+**Gotchas:** write each entry at or under 1,000 B; fuller detail goes in the receipt. The gate covers entries from the S1107 claim up, and every entry once a trim archives that claim.
+Receipts now cite 12 gates. `tests/` stays frozen, so the tests are not in `testthat` (no CI runs them).
+**Next:** wait for CRAN's final email (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again.
 
-### What Session 1106 Did
-**Deliverable (owner pick "Trim HANDOFFS.md"): `methodology/HANDOFFS.md` trimmed, 197,992 to 32,259 B.** Backfill `b3433354e`, claim `be549811b`, trim `ed1e53f3b`; not pushed (notes only).
-37 of 44 receipts went to `methodology/archive/HANDOFFS-through-2026-10-30.md`; its `.verify.sh` reads `OK`; `test_archivePointersResolve.R`, `test_contextBudgetLedgers.R` and
-`test_handoffsReceiptPlacement.R` pass (23 tests). Nothing shipped changed: `methodology/` is in `.Rbuildignore`.
-**Handoff evaluation of S1105: 9/10.** Helped: the exact trim commands, "tree frozen", and what each CRAN answer leads to. Missing: nothing costly. Wrong: nothing found; its last commit (`37f0d1f73`) had no ledger line, so Phase 0 backfilled one.
-**Self: 8/10.** + the option's figures came from a dry run, the tool's commit order was kept, no owner correction. - Phase 0 step 6's gate-citation check ran only at close-out (it matched); "37 of 43" in the option became "37 of 44" with the claim stub.
-**Gotchas:** the next plain `HANDOFFS.md` trim is refused past 197,992 B, only 1,384 B above the warn line and less than one receipt (derived from `SRF`, Learning 1071), so dry-run before offering it and expect `--force`.
-**Next:** read Mark's email for CRAN's answer: at 14:56 CDT the tarball was in no `incoming/` folder and not in `src/contrib/` (still 2.0.0), outcome unknown here. Tree frozen (`BACKLOG.md:8`).
-Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again.
-
-### Sessions 947-1105 (condensed S950 to S1106; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1106 (condensed S950 to S1107; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1106 (`HANDOFFS.md` trimmed 197,992 to 32,259 B; Learning 1071; hashes in `CHANGELOG.md`). **Gotchas kept:** the next plain trim of it is refused past 197,992 B, only 1,384 B above the warn line, so dry-run before offering it and expect `--force`.
 S1105 (CRAN plan Phase 8 DONE; Learning 1070; hashes in `CHANGELOG.md`): `cran-comments.md` holds the results (win-builder 1 NOTE on three R versions, R-devel 284 s; R-hub `Status: OK`; the macOS builder
 down, its line dropped); the owner submitted from `fa1f2849e`. **Gotchas kept:** `use_github_release()` tags the `CRAN-SUBMISSION` SHA, so push before Phase 10 (derived, not run); name "Claude" and "Mark" in option text.
 S1104 (CRAN plan Phase 8 first half; Learning 1069; hashes in `CHANGELOG.md`): the cover note and `docs/planning/cran-3.0.0-phase8-runbook.md`. **Gotchas kept:** an upload gives no receipt; `slowTestFiles.txt`'s header says 79 where a trace finds 80.

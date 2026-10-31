@@ -32,6 +32,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1107 DONE: new `CHANGELOG.md` entries limited to 1,000 B, owner picks "CHANGELOG entry length" and "Limit plus check" (RED `f273ace07`, GREEN `c16cafbdb`, REFACTOR `22a025135`). `tools/changelog_entry_limit.py`, 18 tests beside it (`tests/` is frozen), gate `changelog_entries_over_limit`, rule in `docs/conventions/CLOSEOUT_CHECKLISTS.md`; BACKLOG item removed. Ratchet 12/12. Evaluation of S1106 9/10, self 8/10 (Learning 1072). Not pushed.
+
+### 2026-10-31 · [ad hoc] S1107, CRAN auto-check email (Mark pasted it; no action sent): 3.0.0 passed pretest, 1 NOTE on Windows and Debian, the one `cran-comments.md` explains; check 315 s; a recheck follows for the arm64 issue on 2.0.0. The email asks for a reply only if the recheck would fail; S1103 read `Status: OK` in that image on the same files, so Claude advised no reply. Not an acceptance.
+
 ### 2026-10-31 · [ad hoc] S1107 claim (in progress): settle entry length in `methodology/CHANGELOG.md`, owner pick "CHANGELOG entry length" (BACKLOG item, open since S897).
 
 ### 2026-10-31 · [ad hoc] S1106 DONE: `methodology/HANDOFFS.md` trimmed 197,992 to 32,259 B, owner pick "Trim HANDOFFS.md" (claim `be549811b`, trim `ed1e53f3b`, Phase 0 backfill `b3433354e`). Proof `OK`; three reader tests, 23 tests, 0 failed; ratchet 11/11. No shipped path changed. Observed, no action: at 14:56 CDT the CRAN tarball was in none of the 17 `incoming/` folders and not in `src/contrib/`, outcome unknown here. Evaluation of S1105 9/10, self 8/10 (Learning 1071). Not pushed.

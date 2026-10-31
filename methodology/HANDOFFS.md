@@ -214,10 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1107
 date: 2026-10-31
-status: pending
-active_task: CHANGELOG.md entry length (owner pick "CHANGELOG entry length"). In progress.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: New CHANGELOG.md entries limited to 1,000 B and held by a gate; deliverable done. CRAN 3.0.0 stays BLOCKED on CRAN's final answer; the tree stays frozen. Not pushed; no frozen path changed.
+what_was_done: Owner picks "CHANGELOG entry length" and "Limit plus check". Claim 98d6f59a1, RED f273ace07 (18 failing tests), GREEN c16cafbdb (script, gate, rule, CLAUDE.md line), REFACTOR 22a025135 (two helpers). Measured first: median bytes per session 4,754 (S1060-S1080) to 837 (S1099-S1106); 0 of the 22 entries of S1099-S1106 over 1,000 B, the largest 835 B. Gate seen pass, fail and unmeasured through measure_gate() on a scratch tree. test_perfHarness.R (24), test_workflowPathsIgnore.R (11) and test_originFundingWording.R (17) read the changed files: 0 failed, 0 errors. Also read Mark's pasted CRAN auto-check email: pretest 1 NOTE on Windows and Debian, the known one; recheck follows for the arm64 issue on 2.0.0; Claude advised no reply because S1103 read Status: OK in that image on the same files. Learning 1072.
+next_steps: Wait for CRAN's final email; at 15:21 CDT src/contrib/ still reads 2.0.0. Accepted: push the local commits, then one session runs plan Phase 10. Rejected: read the reason; a fix goes through its own RED-first session and repeats Phase 7 and Phase 8.
+key_files: tools/changelog_entry_limit.py:12 (limit), tools/test_changelog_entry_limit.py:1; methodology/.quality-gates.json:117 (gate); docs/conventions/CLOSEOUT_CHECKLISTS.md:33 (rule); CLAUDE.md:255 (pointer); BACKLOG.md:8 (CRAN item).
+gotchas: Write every new CHANGELOG entry at or under 1,000 B; fuller detail goes in the receipt. The gate covers entries from the S1107 claim up, and every entry once a trim archives that claim. Receipts cite 12 gates now, not 11. The tests live in tools/ because tests/ is frozen, so no CI runs them; run python3 tools/test_changelog_entry_limit.py after changing the script. Tool-written Ledger trim entries measured 807-826 B, so a much longer archive path could approach the limit (estimate, not seen). An Edit deleting a line can join two lines: read the diff (Learning 1072).
+runtime_smoke: n/a -- no package code changed; tools/ is in .Rbuildignore (line 57) and no frozen path moved. Stand-in: the gate read pass, fail, unmeasured, unmeasured on four scratch ledgers, and the full ratchet run below.
+changelog_ref: 98d6f59a1 (claim); the close-out commit (DONE and CRAN email entries)
+commit: 22a025135
+quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 5f077ee76a9a · manifest d26a8cecc699 (run at 22a025135, load about 4)
 ```
 
 ```handoff
