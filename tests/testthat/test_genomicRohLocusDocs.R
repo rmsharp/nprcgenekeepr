@@ -10,19 +10,19 @@
 ## a notice above its table (test_computeGenomicROH.R and
 ## test_modMarkerGenetics.R pin both).
 ##
-## The rule is stated in four places, read here: the generated man page, its
-## roxygen block in R/, the guide's Genomic ROH paragraph and NEWS.Rmd's
-## Genomic ROH bullet. The sentences are the owner's to approve (at the RED to
+## The rule is stated in three places, read here: the generated man page, its
+## roxygen block in R/ and the guide's Genomic ROH paragraph (NEWS.Rmd's Genomic
+## ROH bullet stopped carrying it at S1101: a new feature gets a general
+## description there). The sentences are the owner's to approve (at the RED to
 ## GREEN gate, as at S971 and S977), so these blocks pin what the help may no
 ## longer say and one short phrase per place that states the rule, not prose:
 ## "not columns of genotypeMatrix" in the two help places (they speak of the
-## matrix) and "not in the genotype file" in the guide and NEWS (they speak of
-## the file). All four sources sit outside a built package, so the blocks skip
+## matrix) and "not in the genotype file" in the guide (it speaks of the
+## file). All three sources sit outside a built package, so the blocks skip
 ## there (sourceLines() in helper-pageText.R) and run from the source tree.
 
 ## The text from the first `from` to just before the next `to` after it, or
-## NA (`to` may also stand earlier in the page, as "Script users:" does in
-## NEWS.Rmd).
+## NA (`to` may also stand earlier in the page).
 between <- function(text, from, to) {
   start <- regexpr(from, text, fixed = TRUE)[[1L]]
   if (start < 0L) {
@@ -45,15 +45,10 @@ guideParagraph <- function() {
           "A seventh Genomic ROH (F_ROH) tab",
           "Like the Linkage and LD Block Metrics tab, any export")
 }
-newsBullet <- function() {
-  between(plainSource("NEWS.Rmd"),
-          "Genomic ROH (F_ROH) shows the sequence-based",
-          "Script users:")
-}
 
-## Sanity checks on the four readers (green at HEAD): each finds the text the
+## Sanity checks on the three readers (green at HEAD): each finds the text the
 ## RED tests below are about, so a reader that finds nothing cannot pass them.
-test_that("the readers find the Genomic ROH help, guide paragraph and NEWS bullet", {
+test_that("the readers find the Genomic ROH help and guide paragraph", {
   skipUnlessHelpInSourceTree(rohPlaces)
   ## A sentence both help places keep before and after the change.
   keeps <- "comparable across a cohort only when the same loci are used"
@@ -61,7 +56,6 @@ test_that("the readers find the Genomic ROH help, guide paragraph and NEWS bulle
   expect_match(roxygenBlock(), keeps, fixed = TRUE)
   expect_match(guideParagraph(), "F_ROH is the proportion of the genome",
                fixed = TRUE)
-  expect_match(newsBullet(), "de-identified export", fixed = TRUE)
 })
 
 ## The failing tests (RED at HEAD).
@@ -79,6 +73,3 @@ test_that("the guide's Genomic ROH paragraph says the tab names locus-file loci 
   expect_match(guideParagraph(), "not in the genotype file", fixed = TRUE)
 })
 
-test_that("NEWS.Rmd's Genomic ROH bullet says the tab names locus-file loci that are not in the genotype file", {
-  expect_match(newsBullet(), "not in the genotype file", fixed = TRUE)
-})

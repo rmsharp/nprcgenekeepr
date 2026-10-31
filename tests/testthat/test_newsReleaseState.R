@@ -446,7 +446,11 @@ test_that("matingUnitDuplicateCount() counts distinct multi-anchor
   expect_identical(matingUnitDuplicateCount(ped), 1L)
 })
 
-test_that("the Pedigree Diagram section states the display limits once", {
+## The Diagram's description is general (owner ruling S1101: a new feature gets
+## no help-page detail), so the five tests below check what the section says
+## rather than require it to say it.
+test_that("the Pedigree Diagram section states the display limits at most once,
+           each with its style", {
   caps <- diagramCaps()
   ## The constants were found in the source (a check that read nothing would
   ## otherwise pass for the wrong reason).
@@ -455,9 +459,7 @@ test_that("the Pedigree Diagram section states the display limits once", {
   expect_gt(nrow(entries), 0L)
   named <- grepl(paste0("\\b(", caps[["direct"]], "|", caps[["rectilinear"]],
                         ")\\b"), entries$text)
-  expect_equal(sum(named), 1L,
-               info = paste("entries naming a limit start at lines:",
-                            paste(entries$line[named], collapse = ", ")))
+  expect_lte(sum(named), 1L)
   ## Each limit is followed by the style it belongs to.
   for (i in which(named)) {
     expect_true(
@@ -473,14 +475,13 @@ test_that("the Pedigree Diagram section states the display limits once", {
   }
 })
 
-test_that("the Pedigree Diagram section names the code's default style", {
+test_that("the Pedigree Diagram section makes no other style the default", {
+  ## The reader finds a default statement when there is one.
+  expect_identical(defaultStyles("The Direct style is the default."), "Direct")
   entries <- diagramSectionEntries()
   expect_gt(nrow(entries), 0L)
   codeDefault <- eval(formals(makePedigreeMatingLayout)$edgeStyle)[1L]
   attached <- lapply(entries$text, defaultStyles)
-  ## A check that found no default statement at all would pass for the wrong
-  ## reason.
-  expect_gt(length(unlist(attached)), 0L)
   wrong <- vapply(attached, function(a) {
     any(tolower(a) != codeDefault)
   }, logical(1L))
@@ -512,7 +513,7 @@ test_that("the Pedigree Diagram section does not overstate male-left", {
   expect_gt(nrow(entries), 0L)
   maleLeft <- grepl("male parent on the left", entries$text,
                     ignore.case = TRUE)
-  expect_equal(sum(maleLeft), 1L)
+  expect_lte(sum(maleLeft), 1L)
   ## The layout has no setting for it (the parameter was removed), so the
   ## entry must not offer one ("by default").
   expect_false("orderBySex" %in% names(formals(makePedigreeMatingLayout)))
@@ -529,17 +530,15 @@ test_that("the Pedigree Diagram section does not overstate male-left", {
   }
 })
 
-test_that("the Pedigree Diagram section cites the CURRENT mating-symbol
-           duplicate-node count for the bundled 375-animal example, not a
+test_that("a mating-symbol duplicate-node count the Pedigree Diagram section
+           cites for the bundled 375-animal example is the CURRENT one, not a
            stale historical measurement", {
   entries <- diagramSectionEntries()
   expect_gt(nrow(entries), 0L)
   hits <- grepl("duplicate node", entries$text, ignore.case = TRUE) &
     grepl("bundled", entries$text, ignore.case = TRUE)
-  expect_equal(sum(hits), 1L,
-               info = paste("entries citing a bundled-example duplicate-node",
-                            "count start at lines:",
-                            paste(entries$line[hits], collapse = ", ")))
+  expect_lte(sum(hits), 1L)
+  if (!any(hits)) return(invisible(NULL))
   src <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                      package = "nprcgenekeepr")
   skip_if_not(nzchar(src), "obfuscated_rhesus_mhc_ped.csv not present in this build")
@@ -564,7 +563,6 @@ test_that("the Pedigree Diagram section does not overstate mating-symbol
   expect_gt(nrow(entries), 0L)
   placement <- grepl("mating (symbol|dot)", entries$text, ignore.case = TRUE) |
     grepl("drawn on the side of the family", entries$text, ignore.case = TRUE)
-  expect_gt(sum(placement), 0L)
   for (i in which(placement)) {
     expect_false(promisesEveryPair(entries$text[i]),
                  info = sprintf("line %d promises every pair: %s",
@@ -630,6 +628,66 @@ test_that("the Pedigree Diagram section's piece (d) entries (crash fixes,
   for (phrase in pieceDNarrationPhrases) {
     expect_false(grepl(phrase, text, fixed = TRUE),
                  info = sprintf("still present: %s", phrase))
+  }
+})
+
+## A new feature gets a general description; its detail belongs on the help
+## pages and in the guide (owner ruling S1101: "If the items are about new
+## features, we only need to generally describe the features and not provide
+## help-page detail."). Each phrase is copied from its section's text before
+## the S1101 cut, so the test failed on real text at RED and cannot match
+## nothing by a typo. Detail about a change to something 2.0.0 had stays.
+newFeatureDetail <- list(
+  "Input" = "A placeholder value other than",
+  "Pedigree Diagram" = c(
+    "orderBySex", "kinshipMatrix", "regional settings", "400 animals",
+    "affected2", "up to four", "113 individuals", "male parent on the left",
+    "shortens the curved connectors", "no row of their own", "11-14 animals",
+    "brother-sister"
+  ),
+  "Kinship & Pedigree Calculations" = c(
+    "whichever tab is opened first", "must share both recorded parents",
+    "columns id1, id2, code"
+  ),
+  "Breeding Group Formation" = c(
+    "Candidates to retain", "2 block, 2 flag", "without ancestry information",
+    "maxExhaustiveCandidates", "above 20 eligible animals"
+  ),
+  "Mate Pair Analysis" = c(
+    "overriddenRules", "Download Audit Manifest", "any other sex",
+    "nothing changes"
+  ),
+  "Marker Genetics" = c(
+    "maxExclusions", "allele1", "A blank allele", "chromosome name left blank",
+    "the only pairs it lists", "more than two alleles",
+    "optimized for large panels", "same words as the Potential Parents",
+    "the common case where", "Hudson's Fst", "not in the genotype file"
+  ),
+  "MHC Haplotype Reporting" = c(
+    "frequency 0.01", "four decimal places", "a trailing ?",
+    "stops on an id"
+  ),
+  "Cross-Center Identity Matching" = c(
+    "uses an id the table already", "only one of the two centers"
+  ),
+  "Longitudinal Monitoring" = c(
+    "how many animals each date rests on", "stated animal-membership rule",
+    "says which way each measure"
+  )
+)
+
+test_that("new features keep their help-page detail out of the newest block", {
+  for (file in c("NEWS.Rmd", "NEWS.md")) {
+    lines <- sourceLines(file)
+    for (home in names(newFeatureDetail)) {
+      text <- plainText(newsSectionLines(lines, home))
+      ## A section the reader cannot find would pass for the wrong reason.
+      expect_gt(nchar(text), 0L, label = paste(file, home))
+      for (phrase in newFeatureDetail[[home]]) {
+        expect_false(grepl(phrase, text, fixed = TRUE),
+                     info = paste(file, home, "still says:", phrase))
+      }
+    }
   }
 })
 

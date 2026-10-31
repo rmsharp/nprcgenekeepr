@@ -180,12 +180,7 @@ for (file in c("NEWS.Rmd", "NEWS.md")) {
       expect_length(hit, 1L)
       text <- paste(hit, collapse = " ")
       expect_true(startsWith(text, "Script users:"), info = newsFile)
-      expectNames(text, c(
-        "previewBackfillSupport()",
-        "does the same from a script",
-        "how many animals each date rests on",
-        "without the long calculation"
-      ), where = newsFile)
+      expectNames(text, "previewBackfillSupport()", where = newsFile)
     })
   })
 }

@@ -28,9 +28,7 @@ sexRatioHelpSentence <- paste(
 newsSentence <- paste(
   "A script that passes harem = TRUE and a non-zero sexRatio to",
   "groupAddAssign() now stops with a message naming both settings, instead",
-  "of returning groups of one or two animals; use one or the other. The",
-  "Breeding Groups tab was never affected, since its radio takes Harem or",
-  "Custom, not both."
+  "of returning groups of one or two animals; use one or the other."
 )
 articleSentence <- paste(
   "harem and sexRatio are alternative strategies -- use one or the other;",

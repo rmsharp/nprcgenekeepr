@@ -314,18 +314,6 @@ test_that("the kept bullets open once each, in their sections", {
   }
 })
 
-test_that("the placeholder value rule is nested under the placeholder column", {
-  for (file in newsFiles) {
-    section <- newsSectionLines(sourceLines(file), "Input")
-    at <- grep("^- New `placeholder` column:", section)
-    expect_length(at, 1L)
-    nested <- groupLines(section, sub("^- ", "", section[at]))
-    expect_equal(sum(startsWith(nestedBullets(nested),
-                                "A `placeholder` value other than")),
-                 1L, info = file)
-  }
-})
-
 test_that("each fact stands in its section or group", {
   for (file in newsFiles) {
     lines <- sourceLines(file)
