@@ -208,19 +208,19 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
-session: S1100
+session: S1100 (reconciled by S1101's Phase 0)
 date: 2026-10-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 5, second half: condense Breeding Group Formation and Pedigree Diagram in NEWS.Rmd, the owner approving the text (owner pick at the Phase 0 picker, "CRAN Phase 5: finish NEWS").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:801 (Phase 5's S1099 paragraph); NEWS.Rmd:221 (Breeding Group Formation), NEWS.Rmd:73 (Pedigree Diagram)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: reconciled
+self_score: n/a -- reconstructed, not self-scored
+predecessor_score: n/a -- S1100 wrote no evaluation of S1099
+active_task: CRAN 3.0.0 plan Phase 5, second half: not landed. NEWS.Rmd is unchanged; a draft of both sections awaited the owner's reading and no reply came.
+what_was_done: Claim 3a8080491 only. From its transcript: a v2.0.0 install in scratch, probes of the "Fixed:" claims, and a draft of Pedigree Diagram (74 to 63 lines) and Breeding Group Formation (92 to 78 lines), tried in a throwaway worktree (23 NEWS-reading test files, 323 blocks, the one failure is the pinned harem sentence, in NEWS.Rmd and NEWS.md). No TDD gate was reached.
+next_steps: The owner reads the draft or asks for changes; then RED for the pinned sentence in test_haremSexRatioStopWording.R, GREEN for the text in NEWS.Rmd. The picker decides.
+key_files: docs/planning/cran-3.0.0-submission-plan.md:801 (Phase 5's S1099 paragraph); NEWS.Rmd:221 (Breeding Group Formation), NEWS.Rmd:73 (Pedigree Diagram); tests/testthat/test_haremSexRatioStopWording.R:28
+gotchas: The draft existed only in a scratch folder that is gone; its text survives in the local transcript 9ec2e412-5d9e-4c6d-88f9-654ec62e4371.jsonl (the Bash calls at 22:28:25Z and 22:29:32Z). The throwaway worktree left a prunable entry in `git worktree list`.
+runtime_smoke: n/a -- nothing landed.
+changelog_ref: 3a8080491 (claim); the backfill entry in S1101's reconcile commit
+commit: 3a8080491
 ```
 
 ```handoff

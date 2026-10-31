@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-30 · [ad hoc] Backfilled (reconcile-on-read): S1100 ended after its claim `3a8080491` with no later commit and no owner reply to its draft of the two NEWS sections; `NEWS.Rmd` is unchanged. Receipt marked `reconciled` by S1101's Phase 0.
+
 ### 2026-10-30 · [ad hoc] S1100 claim (in progress): CRAN 3.0.0 plan Phase 5, second half (owner pick at the Phase 0 picker, item 1 of 4, "CRAN Phase 5: finish NEWS"): condense Breeding Group Formation and Pedigree Diagram in `NEWS.Rmd`.
 
 ### 2026-10-30 · [ad hoc] S1099 DONE: CRAN 3.0.0 plan Phase 5, first half (owner picks "CRAN Phase 5: NEWS", "Move into feature sections", "Give each tab a section", every TDD gate "Yes"; claim `813ec8738`, RED `0207f4762` `24df2febb`, GREEN `dc0861d16`, REFACTOR `a12fde393`). NEWS opens with where its tabs are explained, 17 sections run in `R/appUI.R`'s tab order, General Fixes 183 to 54 lines, the block 611 to 574; fixes to things absent at `v2.0.0` get no line. Verified: clean read 495 files 4,593 blocks 0 failed 0 errors, `lint_package()` 0, `devtools::check()` 0/0/0, 12 of 12 guard mutants, ratchet 11/11 (`6a9c1a3a57f9`). Left: Breeding Group Formation and Pedigree Diagram. Not pushed. Learning 1065.
