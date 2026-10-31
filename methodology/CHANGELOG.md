@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1107 claim (in progress): settle entry length in `methodology/CHANGELOG.md`, owner pick "CHANGELOG entry length" (BACKLOG item, open since S897).
+
 ### 2026-10-31 · [ad hoc] S1106 DONE: `methodology/HANDOFFS.md` trimmed 197,992 to 32,259 B, owner pick "Trim HANDOFFS.md" (claim `be549811b`, trim `ed1e53f3b`, Phase 0 backfill `b3433354e`). Proof `OK`; three reader tests, 23 tests, 0 failed; ratchet 11/11. No shipped path changed. Observed, no action: at 14:56 CDT the CRAN tarball was in none of the 17 `incoming/` folders and not in `src/contrib/`, outcome unknown here. Evaluation of S1105 9/10, self 8/10 (Learning 1071). Not pushed.
 
 ### 2026-10-31 · [ad hoc] Ledger trim: `methodology/HANDOFFS.md` → `methodology/archive/HANDOFFS-through-2026-10-30.md` (37 record(s), 197,992 B → 32,259 B)

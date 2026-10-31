@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1107 Did
+**Deliverable (owner pick "CHANGELOG entry length"): settle entry length in `methodology/CHANGELOG.md`** (IN PROGRESS). **Started:** 2026-10-31 15:15 CDT. **Status:** Session claimed. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1106 Did
 **Deliverable (owner pick "Trim HANDOFFS.md"): `methodology/HANDOFFS.md` trimmed, 197,992 to 32,259 B.** Backfill `b3433354e`, claim `be549811b`, trim `ed1e53f3b`; not pushed (notes only).
 37 of 44 receipts went to `methodology/archive/HANDOFFS-through-2026-10-30.md`; its `.verify.sh` reads `OK`; `test_archivePointersResolve.R`, `test_contextBudgetLedgers.R` and

@@ -212,6 +212,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-30.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1107
+date: 2026-10-31
+status: pending
+active_task: CHANGELOG.md entry length (owner pick "CHANGELOG entry length"). In progress.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1106
 date: 2026-10-31
 status: complete
