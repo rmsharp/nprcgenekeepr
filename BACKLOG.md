@@ -6,24 +6,15 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Move the version to 3.0.0 just before release (READY at release time,
-Effort S)** – the owner decided (S855) the next release is **3.0.0**.
-Until then `DESCRIPTION`, the `NEWS.Rmd`/`NEWS.md` heading, `README.md`
-and `ROADMAP.md` stay at 2.0.0.9000 on purpose. At release prep: set
-`DESCRIPTION` to 3.0.0, retitle the `NEWS.Rmd` dev block to 3.0.0 and
-re-knit `NEWS.md`, reinstall the package and re-render `README`
-(Learning 376), and update the 2.0.0.9000 cites in `ROADMAP.md`. The
-paper-dependency item below also waits on a released 3.0.0.
-
 **Prepare the 3.0.0 CRAN submission** (plan
 `docs/planning/cran-3.0.0-submission-plan.md`, S1091, DRAFT; Phase 1
 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-READY: Phase 5 next; all of D1-D6 ruled, the recommended option each
-(D1, D2, D5, D6 = A and D3 = B, S1097; D4 = A, S1092); Effort L, about
-5-7 sessions left) – **Phase 1 (S1093):** the linux-arm64 failure is a
-bug in R itself (utils `readtablehead()`,
-`src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
-ARM64
+Phase 5 DONE S1101; READY: Phase 6, the version bump, is next; all of
+D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and D3 = B,
+S1097; D4 = A, S1092); Effort L, about 4-6 sessions left) – **Phase 1
+(S1093):** the linux-arm64 failure is a bug in R itself (utils
+`readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through
+R-devel): on Linux ARM64
 [`read.csv()`](https://rdrr.io/r/utils/read.table.html)/[`read.table()`](https://rdrr.io/r/utils/read.table.html)
 of a file whose last value is quoted and that has no final newline read
 that value with a stray 0xFF byte. Every package read now goes through
@@ -50,8 +41,11 @@ packages draws no NOTE), and a check with Suggests absent reads
 `Status: OK`, run under a scratch R home because this Mac’s R library
 holds 16 of the 17 Suggests (plan dragon 9). Still open: win-builder’s
 incoming NOTE also flags “de” (`DESCRIPTION:37`) and the thoughtco.com
-URL (status 402, explained in 2.0.0’s note). The plan’s section 7 orders
-the phases; the item above is its Phase 6.
+URL (status 402, explained in 2.0.0’s note). **Phase 5 (DONE S1101):**
+NEWS opens with where its tabs are explained, its sections run in the
+app’s tab order, General Fixes is 54 lines, and a new feature gets a
+general description with no help-page detail (owner ruling S1101; the
+block 574 to 391 lines). The plan’s section 7 orders the phases.
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
@@ -303,6 +297,6 @@ which papers, authorship, and what is new in 3.0 relative to the
 published reference (Vinson & Raboin 2015, *JAALAS* 54(6):700-707, the
 package’s key reference in `CLAUDE.md`, whose Project Overview also
 holds the NIH grant acknowledgment). Natural dependency, the owner’s
-call: a released 3.0.0 to cite (`DESCRIPTION` reads 2.0.0.9000 today);
-the documentation audit is finished (S1027, `CHANGELOG.md`), so the
-papers’ figures match the software.
+call: a released 3.0.0 to cite (`DESCRIPTION` reads 3.0.0, not yet on
+CRAN); the documentation audit is finished (S1027, `CHANGELOG.md`), so
+the papers’ figures match the software.

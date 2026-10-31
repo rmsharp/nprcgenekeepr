@@ -21548,3 +21548,56 @@ leaves `text` empty on non-terminal nodes, so reading a condition takes
 [`getParseText()`](https://rdrr.io/r/utils/getParseData.html); the small
 cases (negated condition, `else` branch, a different package, a call
 inside the condition) pin what “guarded” means.
+
+#### Learning 1065
+
+**S1099 (2026-10-30), CRAN plan Phase 5’s first half: release notes are
+read by someone walking through the app, and a review file holds only
+what will ship.** **(1) “Group by area” answered the wrong question.**
+S1024’s seven paragraph-long “Fixed (area):” bullets passed their guard
+and still could not be read; the owner asked for each change under the
+feature it belongs to, sorted as the app flows. Sort a user-facing list
+by the reader’s path (`R/appUI.R`’s tab order), not by how the work was
+filed. **(2) A sentence split from its subject loses its meaning.** “A
+`placeholder` value other than…” read alone said nothing; the owner’s
+fix was one level of nesting, cheaper than my merged rewrite. Read each
+bullet as if it stood alone before offering it. **(3) A note to the
+owner in the review file reads as proposed text.** A “Removed because…”
+paragraph above a `---` line drew “Why would that be included?” Put
+notes in the message and only the shipping text in the file. **(4) A
+plan’s “two guards” was a floor.** 16 more test files read NEWS, some
+word for word, and `newsEntries()` silently stopped at a nested bullet’s
+wrapped line, hiding it from the milestone check. Grep every reader
+before calling a phase prose, and a structural change to a read file
+needs gates. **(5) Mutation anchors that tolerate wraps can eat the line
+break.** A `\s+`-for-space anchor starting with indentation matched the
+previous newline and merged two bullets, so a “survivor” was my mutant,
+not a guard gap: rerun a survivor with a tighter anchor before believing
+either. **(6) A rule’s effect depends on its window.** I said removing
+the flagged cache file would move the dashboard’s “Large files” flag to
+a 3,209-line R file; `largest_files` is a top-10 rank, so it would move
+to a generated jQuery copy. Read the selection before predicting it.
+
+#### Learning 1066
+
+**S1101 (2026-10-30), CRAN plan Phase 5’s second half: a release note
+compares with the last release, so detail about a new feature answers a
+question no reader has.** **(1) The owner’s question found what two
+guards missed.** `makePedigreeMatingLayout() has no orderBySex argument`
+passed every NEWS guard for months: S620 wrote “lost its `orderBySex`
+argument”, S628 made it “has no”. “Why is this information provided?”
+led to eight more such lines and the ruling (new features: a general
+description, no help-page detail), held by `newFeatureDetail` in
+`test_newsReleaseState.R`. **(2) Check a list of cuts against the
+text.** S1100’s list to the owner omitted 13 of them; comparing phrases
+showed it. **(3) A pin that requires a statement can usually become one
+that checks it.** Five Diagram tests demanded limits, male-left and a
+count; as “if the section says this, it must be right” they caught 8 of
+8 wrong sentences. **(4) Look for a recorded measurement before calling
+a claim unconfirmed.** S1100’s check of “most runs” used another
+pedigree and threshold; Learning 949 had 29 of 40 on the right input.
+**(5) An audit stays on its class.** Timing 2.0.0 was another question
+(“What is the timing for?”). **(6)** A draft awaiting a reply lives only
+in scratch; a session’s transcript `.jsonl` can restore it.
+`git grep -E '\b'` matched nothing on this Mac, so a zero needs plain
+`grep` before it is reported.

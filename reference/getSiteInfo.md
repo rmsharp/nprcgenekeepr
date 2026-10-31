@@ -103,10 +103,10 @@ suppressWarnings(getSiteInfo())
 #> [1] "7.0.0-1017-azure"
 #> 
 #> $version
-#> [1] "#17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026"
+#> [1] "#17-Ubuntu SMP PREEMPT Thu Sep 24 15:54:51 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm48cm3"
+#> [1] "runnervmnwato"
 #> 
 #> $machine
 #> [1] "x86_64"
@@ -171,10 +171,10 @@ getSiteInfo(expectConfigFile = FALSE)
 #> [1] "7.0.0-1017-azure"
 #> 
 #> $version
-#> [1] "#17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026"
+#> [1] "#17-Ubuntu SMP PREEMPT Thu Sep 24 15:54:51 UTC 2026"
 #> 
 #> $nodename
-#> [1] "runnervm48cm3"
+#> [1] "runnervmnwato"
 #> 
 #> $machine
 #> [1] "x86_64"
