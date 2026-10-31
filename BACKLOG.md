@@ -143,6 +143,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       package for the `.qmd` articles. A CRAN check skips both files
       (`tests/testthat/slowTestFiles.txt`). Add a skip for the missing tool in each.
 
+- [ ] **Take the finished tutorial's pin out of `test_docsAuditSixRulings.R`** (found S1110; BLOCKED
+      -- wait for CRAN's acceptance, because a change under `tests/` repeats CRAN plan Phase 7;
+      Effort S) -- SR3 (`tests/testthat/test_docsAuditSixRulings.R:92` area) requires each open
+      item's phrase once in this file, and one of them is the item S1110 finished: Create a tutorial for prospective contributors. This item holds that phrase, so the test stays green
+      until then. Remove it from SR3's list and this item together.
+
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
       drafts + send timing; Effort N/A, not a coding task) -- plan complete, with ready-to-edit

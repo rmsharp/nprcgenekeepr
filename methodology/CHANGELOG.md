@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1110 addendum: close-out commit `156916ecb` removed the tutorial block, and `test_docsAuditSixRulings.R` SR3 pins its phrase, so that test failed; the commit went in because the run and the commit were chained. Fixed with a BLOCKED `BACKLOG.md` item holding the phrase until the pin can leave `tests/` after CRAN's acceptance. No frozen path changed.
+
 ### 2026-10-31 · [ad hoc] S1110 DONE: the contributor guide, `.github/CONTRIBUTING.md` and `vignettes/articles/contributing.qmd`, in `_pkgdown.yml`'s menu (Mark's rulings: short file plus article; tests required, internal protocol not described; R developers, Issues section first). Commits `099cff8e0`, `8d847443f`, `3627c43d6`, `107ecbcbe`, `06d2e0a29`. Guard `tools/test_contributingGuide.R` 12 of 12, 16 of 16 breakages caught. Fresh clone, empty cache: check 0/0/0, suite 19,384 checks with the one failure since fixed. Tutorial item off `BACKLOG.md`; new item, `renv::restore()` fails from an empty cache. At Mark's word, restored uncommitted edits to `inst/WORDLIST`, `renv.lock` and `renv/activate.R`. Tarball unchanged. Not pushed.
 
 ### 2026-10-31 · [ad hoc] S1110 claim (in progress): the tutorial for prospective contributors (owner pick at the Phase 0 picker, "Contributor tutorial"; `BACKLOG.md:26`); Mark rules on form and home, discipline asked of outsiders, and audience before writing. Frozen CRAN paths stay untouched.

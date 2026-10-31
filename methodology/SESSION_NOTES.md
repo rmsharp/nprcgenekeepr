@@ -107,7 +107,7 @@ Guard `tools/test_contributingGuide.R` (in `tools/`, `tests/` is frozen): 12 of 
 **Handoff evaluation of S1109: 9/10.** Helped: the named next item and its three decisions, the freeze list. Missing: nothing it could know. Wrong: nothing of its own; the BACKLOG's older "no `CODE_OF_CONDUCT`" was wrong (it dates from 2018).
 **Self: 7/10.** + the fresh clone found four setup errors before a reader did; every owner question answered first try.
 - a guide commit failed the spelling test, a wrong file name passed my first guard, a wrong `devtools::install()` argument, "14" breakages were 16, nudged twice.
-**Gotchas:** setup measured on this Mac only; CI does not run the guard until Phase 10 moves it (plan line added); the library holds renv 1.3.1 while `activate.R` asks 1.2.3; Mark's RStudio may rewrite those files, so stage by name.
+**Gotchas:** setup measured on this Mac only; CI does not run the guard until Phase 10 moves it (plan line added); the library holds renv 1.3.1 (`activate.R` asks 1.2.3) and 17 of 136 packages differ from the lock; Mark's RStudio may rewrite those files, so stage by name.
 One browser run gave 2 untraced errors, the rerun none.
 **Next:** nothing named. Mark's own: post the report (`BACKLOG.md:18`). CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10; rejected, RED first. READY: `BACKLOG.md:26`.
 
