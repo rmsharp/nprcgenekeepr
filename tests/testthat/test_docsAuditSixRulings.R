@@ -77,8 +77,7 @@ test_that("SR3 (green at HEAD): the other open items stay", {
   text <- plainSource("BACKLOG.md")
   expectWording(
     text,
-    now = c("Move the version to 3.0.0 just before release",
-            "Create a tutorial for prospective contributors",
+    now = c("Create a tutorial for prospective contributors",
             "Work with LabKey (Josh Eckels)",
             "NPRC outreach & announcement plan",
             "Develop paper(s) for peer-reviewed journals"),
@@ -88,6 +87,8 @@ test_that("SR3 (green at HEAD): the other open items stay", {
     ## (#170) shipped and #170 closed, so its item came off BACKLOG.md as the
     ## completed-item checklist requires; found stale by S1042's full suite
     ## (S1040 ran its suite before that BACKLOG edit, S1041 ran none).
+    ## S1102: the version moved to 3.0.0, so that item is off too.
     gone = c("A kinship2 drawing feature the Diagram tab still lacks",
-             "Retrospective colony-snapshot backfill"))
+             "Retrospective colony-snapshot backfill",
+             "Move the version to 3.0.0 just before release"))
 })
