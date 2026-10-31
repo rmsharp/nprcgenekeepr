@@ -214,8 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1110
 date: 2026-10-31
-status: pending
-active_task: The tutorial for prospective contributors; Mark rules on form and home, discipline asked of outsiders, and audience first. Frozen CRAN paths stay untouched.
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: The tutorial for prospective contributors is DONE and off BACKLOG.md. CRAN 3.0.0 stays BLOCKED on CRAN's final answer (in incoming/inspect/ at 17:34 CDT, CRAN page still 2.0.0); the tree stays as submitted. Not pushed, so the guide's site link 404s until a push and site build.
+what_was_done: Owner pick "Contributor tutorial"; rulings: short file plus article; tests required, internal protocol not described; written for R developers, with an Issues section first (Mark's addition, by question). Claim 099cff8e0, RED 8d847443f (11 of 11 failed), GREEN 3627c43d6 and 107ecbcbe (.github/CONTRIBUTING.md, vignettes/articles/contributing.qmd, _pkgdown.yml), REFACTOR 06d2e0a29 (guideLines()). Guard tools/test_contributingGuide.R 12 of 12, 67 expectations, 16 of 16 deliberate breakages caught. Commands run from a fresh clone at 3627c43d6 with an empty cache: setup about 80 s, lint 0, document and NEWS change no file, devtools::test() 19,384 checks 1 failed (the guide's words, fixed in 107ecbcbe, spelling test and guard re-run, full suite not re-run), devtools::check() 0/0/0. Site pages built on a clone; sidebar shows Contributing guide. Tarball holds none of the guide. Also, at Mark's word, restored uncommitted edits to inst/WORDLIST, renv.lock and renv/activate.R that this session did not make.
+next_steps: No item is named for the next session. Mark's own: post the read.csv report (BACKLOG.md:18). Waiting on CRAN's email (BACKLOG.md:8): accepted, push the local commits, then one session runs plan Phase 10, which now also moves the guard to tests/testthat/; rejected, read the reason and start a RED-first session, then Phases 7-8 again. READY and not frozen: renv::restore() fails from an empty cache (BACKLOG.md:26).
+key_files: .github/CONTRIBUTING.md:1 (short file); vignettes/articles/contributing.qmd:41 (setup section); tools/test_contributingGuide.R:34 (guard, Rscript -e 'testthat::test_file("tools/test_contributingGuide.R")'); _pkgdown.yml:64 (menu line); BACKLOG.md:26 (renv item); docs/planning/cran-3.0.0-submission-plan.md:969 (guard move).
+gotchas: The guide's Mac setup was measured here only, not on Windows or Linux, and the Rtools mention is unmeasured. CI does not run the guard until it moves. The project library holds renv 1.3.1 while renv/activate.R asks for 1.2.3, left by the restored edit. Mark's RStudio may write those files again, so read git status before staging, and stage by name. Browser tests read the installed package, so devtools::install(upgrade = FALSE) comes first; one run of test-e2e-pedigree-module.R under load gave 2 errors in the saved-page blocks and the rerun gave none, cause not traced. The guide states no contribution-license line; that is Mark's call if wanted. The restored edits' patch sat in this session's scratchpad, so it goes when the scratchpad does.
+runtime_smoke: runGeneKeepR(port = 6019L, launch.browser = FALSE) under load_all() on a fresh clone answered HTTP 200 with the app's title and tabs. No package code changed.
+changelog_ref: 06d2e0a29
+commit: 06d2e0a29
+quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 7415420b26d6 · manifest d26a8cecc699 (run at 06d2e0a29, load about 4 to 8)
 ```
 
 ```handoff

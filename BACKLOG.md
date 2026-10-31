@@ -23,22 +23,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       from members; a new member emails `bug-report-request@r-project.org`. The package works around
       the bug with `readWithFinalNewline()` (`R/readWithFinalNewline.R`), so no release waits on this.
 
-- [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
-      NEEDED, Effort M; Mark named it for the session after S1109) -- there is no contributor guide today: measured 2026-09-26, no
-      `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
-      `workflows/`). Candidate contents, from what this project's own docs already say: getting set
-      up (clone, `renv::restore()`, `pkgload::load_all()`); where things live (`R/` functions, the
-      modular Shiny app `appUI.R` + `appServer.R` + `mod*.R`, `tests/testthat/`, the Quarto
-      articles under `vignettes/articles/`, `inst/extdata/`); running tests (the fast single-file
-      command, the full suite, `devtools::check()`); the write-tests-first workflow; lint;
-      roxygen / `man/` / `_pkgdown.yml` and `NEWS.Rmd` expectations; and how to propose a change.
-      **Decisions the pickup needs from the owner first:** (a) form and home -- a
-      `CONTRIBUTING.md` plus a pkgdown article, or a Quarto article alone; (b) how much of this
-      project's internal discipline (strict RED/GREEN/REFACTOR phase gates, the session protocol)
-      is asked of outside contributors versus kept internal; (c) audience -- R developers,
-      colony managers who script, or both. The tutorial/article documentation checklist in
-      `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
-      them rather than copying them from here.
+- [ ] **`renv::restore()` fails from an empty package cache** (found S1110; READY, Effort S;
+      `renv.lock` is outside the CRAN build, so the freeze does not block it) -- measured on this
+      Mac under R 4.6.2 with `RENV_PATHS_ROOT` on an empty folder: `Matrix` 1.7-5 builds from source
+      and stops on a missing `libintl.h` (R 4.6.2 ships 1.7-6). With
+      `exclude = c("Matrix", "lattice")`, `Rlabkey`, `chromote`, `curl`, `httr`, `httr2`, `pkgdown`
+      and `shinytest2` still fail, reported as a dependency loop (`curl` 7.1.0 is pinned; 8.1.0 is
+      current); the cause of the loop is not traced. `devtools`, `lintr` and `roxygen2` are not in
+      the lock at all. The contributor guide installs current versions instead, so it does not wait
+      on this. Refresh with `renv::snapshot(dev = TRUE)`, not a plain snapshot: an uncommitted plain
+      one found mid-S1110 dropped 39 of the 136 packages, and Mark had it dropped. Then re-test from
+      an empty cache. The project library also holds renv 1.3.1 while `renv/activate.R` asks for
+      1.2.3 (left by that edit). If restore then works, decide whether
+      `vignettes/articles/contributing.qmd` should use it.
 
 - [ ] **Earlier-snapshots follow-up after #170: build cost on a larger colony** (BLOCKED --
       needs a studbook above 3,694 rows from the owner, Effort S; #170 is closed and its other

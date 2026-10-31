@@ -99,23 +99,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1110 Did
-**Deliverable (owner pick "Contributor tutorial"): the tutorial for prospective contributors (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner pick "Contributor tutorial"): `.github/CONTRIBUTING.md` and `vignettes/articles/contributing.qmd`, in `_pkgdown.yml`'s menu.** Not pushed, so the site link 404s until a push.
+Mark's rulings: short file plus article; tests required, internal protocol not described; R developers, Issues section first. Claim `099cff8e0`, RED `8d847443f`, GREEN `3627c43d6` `107ecbcbe`, REFACTOR `06d2e0a29`.
+Guard `tools/test_contributingGuide.R` (in `tools/`, `tests/` is frozen): 12 of 12, 16 of 16 breakages caught. Fresh clone, empty cache: lint 0, check 0/0/0, suite 1 failure (the guide's words, fixed; spelling test re-run, suite not).
+**Measured on the clone, unlike the BACKLOG's list:** `renv::restore()` fails (new item, `BACKLOG.md:26`); `document()` under `roxygen2` 8.1.1 changes 27 files, 8.0.0 none; a new clone fails `test_getVersion.R` until installed; browser tests need the install.
+**At Mark's word**, restored uncommitted edits this session did not make: `inst/WORDLIST`, `renv.lock`, `renv/activate.R` (the lock had lost 39 of 136 packages). CRAN at 17:34 CDT: `incoming/inspect/`, page 2.0.0. Tree stays as submitted.
+**Handoff evaluation of S1109: 9/10.** Helped: the named next item and its three decisions, the freeze list. Missing: nothing it could know. Wrong: nothing of its own; the BACKLOG's older "no `CODE_OF_CONDUCT`" was wrong (it dates from 2018).
+**Self: 7/10.** + the fresh clone found four setup errors before a reader did; every owner question answered first try.
+- a guide commit failed the spelling test, a wrong file name passed my first guard, a wrong `devtools::install()` argument, "14" breakages were 16, nudged twice.
+**Gotchas:** setup measured on this Mac only; CI does not run the guard until Phase 10 moves it (plan line added); the library holds renv 1.3.1 while `activate.R` asks 1.2.3; Mark's RStudio may rewrite those files, so stage by name.
+One browser run gave 2 untraced errors, the rerun none.
+**Next:** nothing named. Mark's own: post the report (`BACKLOG.md:18`). CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10; rejected, RED first. READY: `BACKLOG.md:26`.
 
-### What Session 1109 Did
-**Deliverable (owner picks "Report the read.csv bug", then "Claude tests the fix, drafts"): `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`, for Mark to read and post.** Commit `7ed790411`; claim `ee9b12355`; nothing posted, not pushed.
-The bug reproduces on Linux ARM64 under R 4.6.2 (Ubuntu and Debian); x86-64 and this Mac read `x`. New: only files of up to 5 lines are affected; a quoted number stops the read; signed-`char` machines lose a real 0xFF after a closing quote.
-`int c2` at `io.c:910` fixes all of it on ARM64 and x86-64 source builds of R 4.6.2; `make check` passes on both. The tag and trunk have the same file, but it was not run on R-devel.
-**CRAN:** at 15:40 CDT `src/contrib` read 2.0.0 and no `incoming` top-level folder listed 3.0.0; that shows no rejection, and not where it is. The tree stays frozen.
-**Handoff evaluation of S1108: 9/10.** Helped: "run on Linux ARM64 under 4.6.2 first", the signed-`char` reasoning, the line number. Missing: nothing needed. Wrong: nothing found; the 5-line limit was unknown, not misstated.
-**Self: 7/10.** + one result per machine before and after one changed word, two new facts for the report, the owner's pick answered first try.
-- S1108's zsh gotcha repeated, so the first run started no container; three more failed runs (Debian `libcurl`, no `tzdata`, emulated `tar`); "no existing report" from an open-only search; a cause and "older `tar`" stated as fact (Mark asked).
-**Gotchas:** Bugzilla `quicksearch` needs a leading `ALL`, or it skips closed reports. An x86-64 emulated source build needs `ubuntu:24.04` (26.04's `tar` fails there; cause probably `openat2`, unproven). `ubuntu` images need `tzdata`, and `LC_ALL=C.UTF-8`.
-The whole run, with `make check`, took about 3.5 minutes on ARM64 and 12 emulated.
-Build and case scripts sat in the session's scratchpad, so are gone; the report's Testing section gives the recipe. Images kept locally: `r-base:4.6.2`, `rocker/r-ver:4.6.2`, `ubuntu:26.04`, `ubuntu:24.04`.
-**Next, Mark's word (mid-S1109, "next session"): the contributor tutorial, `BACKLOG.md:26`,** which needs three decisions from Mark first: form and home, how much internal discipline outsiders are asked for, and audience.
-Mark's own: post the report (`BACKLOG.md:18`; Bugzilla takes members only, email `bug-report-request@r-project.org`). Also waiting on CRAN's final email (`BACKLOG.md:8`): accepted, push and plan Phase 10; rejected, a RED-first session, then Phases 7-8 again.
-
-### Sessions 947-1108 (condensed S950 to S1109; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1109 (condensed S950 to S1110; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1109 (the `read.csv()` bug report, `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`; Learning 1074; hashes in `CHANGELOG.md`). **Gotchas kept:** Bugzilla `quicksearch` needs a leading `ALL`; an x86-64 emulated source build
+needs `ubuntu:24.04`; `ubuntu` images need `tzdata` and `LC_ALL=C.UTF-8`.
 S1108 (`BACKLOG.md` compression pass, 239 to 185 lines; Learning 1073; hashes in `CHANGELOG.md`). **Gotchas kept:** zsh does not split `$A`, so count across ledgers in Python; delayed items stay off the numbered picker though their text was cut;
 the fork's `starter-kit/close_out_report.py` still refuses on our `HANDOFFS.md` (run on a copy).
 S1107 (`CHANGELOG.md` entries limited to 1,000 B, gate `changelog_entries_over_limit`, `tools/changelog_entry_limit.py`; Learning 1072; hashes in `CHANGELOG.md`). **Gotchas kept:** fuller detail goes in the receipt; receipts cite 12 gates;

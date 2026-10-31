@@ -966,6 +966,10 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
   linux-arm64 job, which is Phase 1's real surface.
 - This unblocks the papers item (`BACKLOG.md`, "a released 3.0.0 to cite") and the outreach
   item.
+- Move `tools/test_contributingGuide.R` (S1110) to `tests/testthat/`, so CI runs it. `.github/`,
+  `_pkgdown.yml` and the article are build-ignored, so it needs a skip when they are absent, and
+  a line in `tests/testthat/slowTestFiles.txt`. Then add `Xcode`, `Rtools` and `renv` to
+  `inst/WORDLIST` only if the article should stop marking them as code.
 - **Session boundary:** one session, after the acceptance email.
 
 ---
