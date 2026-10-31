@@ -214,8 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1108
 date: 2026-10-31
-status: pending
-active_task: One compression pass on BACKLOG.md, owner pick "Compress BACKLOG.md" (IN PROGRESS).
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: One BACKLOG.md compression pass; deliverable done. CRAN 3.0.0 stays BLOCKED on CRAN's final answer; the tree stays frozen. Not pushed; no frozen path changed.
+what_was_done: Owner picks "Compress BACKLOG.md" and "Cut it too". Claim 7ddb9c237, pass 713451757: 239 to 185 lines, 20,569 to 15,425 B. CRAN item 42 to 10 lines, its phase narrative already in the plan and ledger (each fact counted across 22 ledger files and the receipts first). Extracted the buried open decision as its own item: report R's read.csv ARM64 bug. Housekeeping item 28 to 18 lines; method step 5 changed from "leave open items byte-untouched" to "cut only finished-work narrative, and leave what is still open as written", since every pass already edits inside open items. Held-back sync item 14 to 11 lines, adding that the fork's copy still refuses. Delayed items LabKey research 15 to 11, kinship2 package 34 to 28, outreach 19 to 13 (they stay delayed); test_newsReleaseState.R line cite corrected to :198,212. Close-out also condensed S1028-S1029 in SESSION_NOTES.md (Read hit its cap at 25,007 tokens).
+next_steps: Wait for CRAN's final email; at 15:24 CDT src/contrib/ read 2.0.0 and 3.0.0 was in no incoming top-level folder read, which shows no rejection and not where it is. Accepted: push the local commits, then one session runs plan Phase 10. Rejected: read the reason; a fix goes through its own RED-first session and repeats Phase 7 and Phase 8. Next session, by Mark's word mid-S1108: the R-bug report (BACKLOG.md:18). Mark updated local R to 4.6.2 and asked if the error remains. io.c is byte-identical in the 4.6.2 tag and trunk on the wch/r-source mirror (last changed 2025-03-05), and line 910 still casts scanchar() to char, so it very likely remains; not yet run on Linux ARM64 under 4.6.2. Local macOS arm64 reads x correctly, which proves nothing, because char is signed there. Ready otherwise: issue #138 scoping (BACKLOG.md:131).
+key_files: BACKLOG.md:8 (CRAN item), :18 (R-bug item), :102 (compression item and method); docs/planning/cran-3.0.0-submission-plan.md (the phase records); tests/testthat/test_docsAuditSixRulings.R:63-93 and test_docsAuditLooseEnds.R:41 (the only tests that read BACKLOG.md text).
+gotchas: zsh does not split a variable holding several paths, and the cat errors show up as counts of 0; count across ledgers in Python. The commit message of 713451757 says 15,414 B, measured before two wording edits; the file is 15,425 B. Delayed items stay off the numbered picker though their text was cut, and S1089's "leave alone" was for that pass, so ask again at the next one. 95005e87 is recorded only in BACKLOG.md's held-back item; keep it there. Run the fork's close_out_report.py on a copy of HANDOFFS.md, from a scratch folder.
+runtime_smoke: n/a -- only BACKLOG.md and notes changed; no package code. Stand-in: the two tests that read BACKLOG.md text pass (15 expectations blocks, 0 failed, 0 error) and the full ratchet below.
+changelog_ref: 7ddb9c237 (claim); the close-out commit (DONE entry)
+commit: 713451757
+quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 7738ef266c55 · manifest d26a8cecc699 (run at 713451757, load about 3.5)
 ```
 
 ```handoff

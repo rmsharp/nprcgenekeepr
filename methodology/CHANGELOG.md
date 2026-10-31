@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1108 DONE: `BACKLOG.md` compression pass, owner picks "Compress BACKLOG.md" and "Cut it too" (claim `7ddb9c237`, pass `713451757`): 239 to 185 lines, 20,569 to 15,425 B (the commit message's 15,414 B predates two wording edits). CRAN item 42 to 10 lines; the buried R-bug report is now its own item; finished-work text cut from three delayed items, which stay delayed. Ratchet 12/12. Evaluation of S1107 9/10, self 8/10 (Learning 1073). Not pushed.
+
 ### 2026-10-31 · [ad hoc] S1108 claim (in progress): one compression pass on `BACKLOG.md` (239 lines), owner pick "Compress BACKLOG.md" at the Phase 0 picker. Docs only, no TDD gates. Phase 0 reconcile: nothing to backfill.
 
 ### 2026-10-31 · [ad hoc] S1107 DONE: new `CHANGELOG.md` entries limited to 1,000 B, owner picks "CHANGELOG entry length" and "Limit plus check" (RED `f273ace07`, GREEN `c16cafbdb`, REFACTOR `22a025135`). `tools/changelog_entry_limit.py`, 18 tests beside it (`tests/` is frozen), gate `changelog_entries_over_limit`, rule in `docs/conventions/CLOSEOUT_CHECKLISTS.md`; BACKLOG item removed. Ratchet 12/12. Evaluation of S1106 9/10, self 8/10 (Learning 1072). Not pushed.

@@ -17,10 +17,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Report the `read.csv()` bug on Linux ARM64 to R's developers** (found S1093; DECISION
       NEEDED -- whether to report it is the owner's call; nothing has been posted; Effort S) -- R's
-      utils `readtablehead()` (`src/library/utils/src/io.c:910`, unfixed through R-devel) reads a
+      utils `readtablehead()` (`src/library/utils/src/io.c:910`, the same in R 4.6.2 and trunk, read S1108) reads a
       quoted last value with a stray 0xFF byte when the file has no final newline. One-line case:
       `writeChar('a,b\n1,"x"', f, eos = NULL); read.csv(f)$b` gives `x\xff`. The package works around
       it with `readWithFinalNewline()` (`R/readWithFinalNewline.R`), so this is not a release blocker.
+      Mark named this for the session after S1108. First run the case on Linux ARM64 under R 4.6.2:
+      S1108 ran it only on macOS arm64, where the value reads correctly (`x`), and that proves
+      nothing, since the Mac's `char` is signed and the Linux one is not (`(char) scanchar()` makes
+      end-of-file 0xFF there). The saved container `ngk-arm64-s1093` predates 4.6.2.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

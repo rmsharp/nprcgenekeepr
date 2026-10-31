@@ -99,21 +99,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1108 Did
-**Deliverable (owner pick "Compress BACKLOG.md"): one compression pass on `BACKLOG.md`** (IN PROGRESS). **Started:** 2026-10-31 15:26 CDT. **Status:** Session claimed. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner pick "Compress BACKLOG.md"): one compression pass on `BACKLOG.md`, 239 to 185 lines, 20,569 to 15,425 B.** Claim `7ddb9c237`, pass `713451757`; not pushed (no frozen path changed).
+The CRAN item went 42 to 10 lines; "report the R bug" was buried in it and is now its own item (`BACKLOG.md:18`, DECISION NEEDED). Owner pick "Cut it too": finished-work text left the LabKey research,
+kinship2-package and outreach items (all stay delayed). Method step 5 now reads "cut only finished-work narrative". Close-out also condensed S1028-S1029 here, because Read hit its cap on this file.
+**CRAN:** at 15:24 CDT `src/contrib` read 2.0.0 and 3.0.0 was in no `incoming` top-level folder read (`archive`, `inspect`, `newbies`, `pending`, `pretest`, `publish`, `recheck`, `waiting`). That shows no rejection, and not where it is.
+**Handoff evaluation of S1107: 9/10.** Helped: "tree stays frozen", the 1,000 B entry limit, the CRAN branches. Missing: this file sat at the Read cap (25,007 tokens on first read). Wrong: nothing found.
+**Self: 8/10.** + facts checked before any cut, one open decision extracted, both gates answered first try, no owner correction.
+- a zsh variable of paths gave invalid ledger counts (noticed, rerun in Python); "own DONE paragraph" overstated (caught on reread); the pass's commit message says 15,414 B, the file is 15,425 B.
+**Gotchas:** zsh does not split `$A`; count across ledgers in Python. Delayed items stay off the numbered picker though their text was cut. The fork's `starter-kit/close_out_report.py` still refuses on our `HANDOFFS.md` (run on a copy).
+**Next:** wait for CRAN's final email (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again. **Next, Mark's word (mid-S1108, "for next session"): the R-bug item, `BACKLOG.md:18`.** After updating to R 4.6.2 Mark asked if the error remains. Line 910 is byte-identical in 4.6.2 and trunk, so it very likely does;
+macOS arm64 reads `x`, which proves nothing (signed `char`). Run the case on Linux ARM64 under 4.6.2 first; the saved container predates 4.6.2.
 
-### What Session 1107 Did
-**Deliverable (owner pick "CHANGELOG entry length", then "Limit plus check"): new `CHANGELOG.md` entries are limited to 1,000 B, and a gate holds it.** Claim `98d6f59a1`, RED `f273ace07`,
-GREEN `c16cafbdb`, REFACTOR `22a025135`; not pushed (no frozen path changed). `tools/changelog_entry_limit.py`, 18 tests in `tools/test_changelog_entry_limit.py`, gate
-`changelog_entries_over_limit` (the 12th), rule in `docs/conventions/CLOSEOUT_CHECKLISTS.md:33` and `CLAUDE.md:255`; the BACKLOG item is off. Median bytes per session had already fallen, 4,754 (S1060-S1080) to 837 (S1099-S1106).
-**CRAN email (Mark pasted it mid-session):** auto-check: 3.0.0 passed pretest with the known 1 NOTE on Windows and Debian (check 315 s). A recheck follows for the arm64 issue on 2.0.0; the email says reply only if it would fail, and
-S1103 read `Status: OK` in that image on the same files, so Claude advised no reply. **Not an acceptance;** the CRAN site still reads 2.0.0.
-**Handoff evaluation of S1106: 9/10.** Helped: "tree frozen" (it moved the tests to `tools/`), the zsh loop gotcha, the two CRAN branches. Missing: nothing costly. Wrong: nothing found.
-**Self: 8/10.** + measured before the question, gate seen pass, fail and unmeasured, no owner correction, the email answered at once. - my placeholder edit to the manifest then joined two lines (caught by the diff); one RED test was too weak (caught on reread).
-**Gotchas:** write each entry at or under 1,000 B; fuller detail goes in the receipt. The gate covers entries from the S1107 claim up, and every entry once a trim archives that claim.
-Receipts now cite 12 gates. `tests/` stays frozen, so the tests are not in `testthat` (no CI runs them).
-**Next:** wait for CRAN's final email (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again.
-
-### Sessions 947-1106 (condensed S950 to S1107; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1107 (condensed S950 to S1108; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1107 (`CHANGELOG.md` entries limited to 1,000 B, gate `changelog_entries_over_limit`, `tools/changelog_entry_limit.py`; Learning 1072; hashes in `CHANGELOG.md`). **Gotchas kept:** fuller detail goes in the receipt; receipts cite 12 gates;
+its 18 tests are in `tools/`, because `tests/` is frozen, so no CI runs them.
 S1106 (`HANDOFFS.md` trimmed 197,992 to 32,259 B; Learning 1071; hashes in `CHANGELOG.md`). **Gotchas kept:** the next plain trim of it is refused past 197,992 B, only 1,384 B above the warn line, so dry-run before offering it and expect `--force`.
 S1105 (CRAN plan Phase 8 DONE; Learning 1070; hashes in `CHANGELOG.md`): `cran-comments.md` holds the results (win-builder 1 NOTE on three R versions, R-devel 284 s; R-hub `Status: OK`; the macOS builder
 down, its line dropped); the owner submitted from `fa1f2849e`. **Gotchas kept:** `use_github_release()` tags the `CRAN-SUBMISSION` SHA, so push before Phase 10 (derived, not run); name "Claude" and "Mark" in option text.
@@ -284,20 +283,10 @@ call to it (`R/modPedigree.R:715-727`); owner ruling at the scope question, the 
 evaluation of S1029 8/10, self 7/10 (Learning 996). **Gotchas kept:** an E2E-tier file calls exports as `nprcgenekeepr::f()` (`test_e2e_package_qualification.R`: the nightly
 job does not attach the package); read a list element whose name starts a longer sibling's with `[[ ]]`; `visExport()` keeps ".png" in `x$export$name`; a page saved with
 `htmlwidgets::saveWidget()` is 960 px wide (take pictures at 1,400); never pipe a long `Rscript` into `head`.
-S1029: the Diagram tab draws more than one affected condition per animal (owner rulings, the recommended option: every pedigree column starting "affected" is a condition, in file
-order, the first four drawn; sections counter-clockwise from the top in `#CC79A7 #E69F00 #56B4E9 #009E73`, a legend row each, a 500 px canvas plus 45 per row past 11, a note for columns
-past four; one `afterDrawing` handler paints the sections, then the S1028 slash: `R/affectedConditions.R:25,65,91,199`). Strict TDD; claim `f8e3651f2`, RED `6a6e9646a`, GREEN `079907fc4`,
-docs `9953771d9`, mutation pins `9f7bbaf59` (24 of 24 killed), REFACTOR `ca963f006`; evaluation of S1028 8/10, self 7/10 (Learning 995); the optional Chrome-for-Testing BACKLOG item
-removed at the owner's word (`7934dcc24`). **Gotchas kept:** QC rewrites a header first (`affected_2` is `affected2`) and turns sex `H`, `X` and `O` into `U` (a script draws a star or a
-diamond, the app never does); a pixel test of a painted shape needs a probe outside the outline and one on each boundary; a harness must print `ANCHOR PROBLEM` and stop; one NEWS check
-allows a single Diagram entry to use "shaded" or "filled"; the sections and the slash are painted by the app's own script, so `visNetwork()` alone draws neither (`BACKLOG.md:224`).
-S1028: the Diagram tab draws a diagonal slash through an animal whose `status` reads DECEASED and through no other (owner rulings: the deceased marker first; `status` alone decides,
-because the exit date is filled for a shipment too: 1,625 DECEASED + 365 SHIPPED = 1,990 exit dates in the 3,694-animal example), with a "Deceased" legend row, a 500 px canvas, legend
-symbols size 14 and rows 60 apart; the slash overhangs every shape's outline by the legend's amount (`R/deceasedSlash.R:28`). Strict TDD; claim `15298a7d9`, RED `ec2f53511` `84ccc9b52`
-`3cee37d28`, GREEN `3a57aa4cf`, mutation pins `99ade901e`, REFACTOR `da4cf93c4`; mutants 16 of 16; browser tier 19 of 19; evaluation of S1027 8/10, self 7/10 (Learning 994).
-**Gotchas kept:** a legend row takes 2 x size + 25 world units; the legend is `HTMLWidgets.find(...).legend` and a label's bottom is `labelModule.size.top + height`, not
-`getBoundingBox()`; the browser tier needs `R CMD INSTALL --no-docs --library=<scratch> .`, `R_LIBS=<scratch>:<renv lib>`, `RENV_CONFIG_AUTOLOADER_ENABLED=false`, `NOT_CRAN=true`,
-`NPRC_RUN_E2E=true`; `getImageData` off the canvas is black; a leading `sleep` is blocked; the five retaken Diagram pictures use fixtures with no `status`, so none shows a slash.
+S1028-S1029 (strict TDD; Learnings 994-995; condensed S1108, hashes in `CHANGELOG.md`): S1029, the Diagram tab draws up to four affected conditions per animal (`R/affectedConditions.R`); S1028, a slash through
+an animal whose `status` reads DECEASED and no other (`R/deceasedSlash.R:28`). **Gotchas kept:** QC rewrites a header first (`affected_2` is `affected2`) and turns sex `H`, `X` and `O` into `U`; a pixel test of a painted
+shape needs a probe outside the outline and one on each boundary; a harness must print `ANCHOR PROBLEM` and stop; the app's own script paints sections and slash, so `visNetwork()` alone draws neither; a legend row takes
+2 x size + 25 world units, and the legend is `HTMLWidgets.find(...).legend`; `getImageData` off the canvas is black; the browser tier needs a scratch install plus `R_LIBS`, `NOT_CRAN=true`, `NPRC_RUN_E2E=true`.
 S1026-S1027 (strict TDD each; evaluations 8/10, self 7-8/10; Learnings 992-993): S1027, the last six docs-audit rulings taken and the docs-audit item (143 lines) off `BACKLOG.md` (455 to 311 lines): CC5
 Export Demographics = leave the code and say in the manual what it saves (`vignettes/manual_components/_orip_reporting.Rmd:31-32`), CB3, CB4, CC2, CC3, CD3 = leave all five
 (`docs/audits/DOCS_AUDIT_PART2_SLICE_6D_RECHECK_2026-10-14.md:225`); claim `0d24cb8e1`, REFACTOR `01d259f5b` (`expectWording()`). S1026, the docs-audit loose ends settled (the stale CL9 line, the "(3) Left
