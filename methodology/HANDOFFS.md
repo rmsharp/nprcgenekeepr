@@ -212,6 +212,13 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-30.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1108
+date: 2026-10-31
+status: pending
+active_task: One compression pass on BACKLOG.md, owner pick "Compress BACKLOG.md" (IN PROGRESS).
+```
+
+```handoff
 session: S1107
 date: 2026-10-31
 status: complete

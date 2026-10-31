@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1108 Did
+**Deliverable (owner pick "Compress BACKLOG.md"): one compression pass on `BACKLOG.md`** (IN PROGRESS). **Started:** 2026-10-31 15:26 CDT. **Status:** Session claimed. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1107 Did
 **Deliverable (owner pick "CHANGELOG entry length", then "Limit plus check"): new `CHANGELOG.md` entries are limited to 1,000 B, and a gate holds it.** Claim `98d6f59a1`, RED `f273ace07`,
 GREEN `c16cafbdb`, REFACTOR `22a025135`; not pushed (no frozen path changed). `tools/changelog_entry_limit.py`, 18 tests in `tools/test_changelog_entry_limit.py`, gate
