@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1106 claim (in progress): trim `methodology/HANDOFFS.md`, owner pick "Trim HANDOFFS.md"; 197,801 B, past the 196,608 B warn line.
+
 ### 2026-10-31 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `37f0d1f73` -- S1105 addendum, the `HANDOFFS.md` receipt's `next_steps` and `SESSION_NOTES.md` updated for the submission; notes only, no shipped path, not pushed.
 
 ### 2026-10-31 · [ad hoc] S1105 addendum, the owner's CRAN submission (outward, the owner's action, recorded here): `devtools::submit_cran()` of 3.0.0 at 18:04 UTC; `CRAN-SUBMISSION` reads SHA `fa1f2849e` (frozen paths equal `74715d95b`; not yet on GitHub, 13 local commits ahead). CRAN's upload email pasted by the owner; its cover note equals `cran-comments.md`. At 13:06 CDT `ftp://cran.r-project.org/incoming/pretest/` listed `nprcgenekeepr_3.0.0.tar.gz`, 3,507,689 B. `CRAN-SUBMISSION` committed, as for 2.0.0 (S397). Waiting on CRAN's answer.
