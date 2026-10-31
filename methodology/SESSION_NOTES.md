@@ -107,7 +107,8 @@ kinship2-package and outreach items (all stay delayed). Method step 5 now reads 
 **Self: 8/10.** + facts checked before any cut, one open decision extracted, both gates answered first try, no owner correction.
 - a zsh variable of paths gave invalid ledger counts (noticed, rerun in Python); "own DONE paragraph" overstated (caught on reread); the pass's commit message says 15,414 B, the file is 15,425 B.
 **Gotchas:** zsh does not split `$A`; count across ledgers in Python. Delayed items stay off the numbered picker though their text was cut. The fork's `starter-kit/close_out_report.py` still refuses on our `HANDOFFS.md` (run on a copy).
-**Next:** wait for CRAN's final email (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again. **Next, Mark's word (mid-S1108, "for next session"): the R-bug item, `BACKLOG.md:18`.** After updating to R 4.6.2 Mark asked if the error remains. Line 910 is byte-identical in 4.6.2 and trunk, so it very likely does;
+**Next:** wait for CRAN's final email (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again. **Next, Mark's word (mid-S1108, "for next session"): the R-bug item, `BACKLOG.md:18`.**
+After updating to R 4.6.2 Mark asked if the error remains. Line 910 is byte-identical in 4.6.2 and trunk, so it very likely does;
 macOS arm64 reads `x`, which proves nothing (signed `char`). Run the case on Linux ARM64 under 4.6.2 first; the saved container predates 4.6.2.
 
 ### Sessions 947-1107 (condensed S950 to S1108; full record in `CHANGELOG.md` and `HANDOFFS.md`)
