@@ -106,7 +106,8 @@ macOS builder down, 502 from 01:37 to 12:41 CDT, no upload, its line dropped by 
 **Handoff evaluation of S1104: 9/10.** Helped: the runbook's exact calls, the marker grep, "correct the NOTE list to win-builder's". Missing: nothing costly; it could not foresee the outage. Wrong: nothing found.
 **Self: 7/10.** + every result read from its log, 284 s checked rather than credited, ruling asked at the promised point. - option labels with "I" and "You" reversed (owner bounce), a browser User-Agent on `curl` (refused), a self-matching `pgrep -f`.
 **Gotchas:** the tree stays frozen until CRAN accepts; `use_github_release()` tags the `CRAN-SUBMISSION` SHA, so push before Phase 10 (derived, not run); name "Claude" and "Mark" in option text; `HANDOFFS.md` is past its warn line, a trim is owed.
-**Next:** the owner runs `devtools::submit_cran()` and clicks CRAN's link (plan Phase 9, `docs/planning/cran-3.0.0-submission-plan.md`; `BACKLOG.md:8`). Then a session records it; Phase 10 after acceptance.
+**Addendum:** the owner submitted 2026-10-31 from `fa1f2849e` (`CRAN-SUBMISSION`); it reached CRAN's pretest queue.
+**Next:** wait for CRAN's answer, tree frozen (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again.
 
 ### Sessions 947-1104 (condensed S950 to S1105; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1104 (CRAN plan Phase 8 first half; Learning 1069; hashes in `CHANGELOG.md`): the cover note and `docs/planning/cran-3.0.0-phase8-runbook.md`. **Gotchas kept:** an upload gives no receipt; `slowTestFiles.txt`'s header says 79 where a trace finds 80.
