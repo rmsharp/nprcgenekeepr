@@ -53,22 +53,24 @@ R
 
 The project uses [`renv`](https://rstudio.github.io/renv/), which starts by itself
 when R opens in this folder and keeps what you install here apart from your other
-R libraries. Install what the package needs, then the development tools, and
-answer yes when asked:
+R libraries. Install the package versions the project records, then the development
+tools and your copy of the package, and answer yes when asked:
 
 ```r
-renv::install(dependencies = "most", exclude = "Matrix")
+renv::restore()
 renv::install(c("devtools", "lintr", "roxygen2@8.0.0"))
 devtools::install(upgrade = FALSE)
 ```
 
-`Matrix` is left out because it comes with R. These commands install current
-versions of each package, as the automatic checks on a pull request do, with one
-exception: `roxygen2` is the version the package's help pages were generated with,
-because another version rewrites many of them. The last command installs your copy
-of the package itself, which one of the tests needs.
+`renv::restore()` installs the versions recorded in `renv.lock`. The automatic checks
+on a pull request install current versions instead, so a package that has changed
+since can make a check fail there and not on your machine. `roxygen2` is the version
+the package's help pages were generated with, because another version rewrites many
+of them. The last command installs your copy of the package itself, which one of the
+tests needs.
 
-To confirm it worked, load the package from your copy:
+Then restart R, because loading a package in the session that just replaced it can
+fail. To confirm it worked, load the package from your copy:
 
 ```r
 pkgload::load_all()
