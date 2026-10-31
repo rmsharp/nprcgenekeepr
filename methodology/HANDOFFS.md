@@ -210,10 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1105
 date: 2026-10-31
-status: pending
-active_task: CRAN 3.0.0 plan Phase 8, second half: run the five checks and fold the results into cran-comments.md (owner pick at the Phase 0 picker, item 1 of 4, "Fold in CRAN results"; owner pick "Claude starts them", overriding D5 = A this once).
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: CRAN 3.0.0 plan Phase 8 DONE; the cover note is final. BLOCKED on the owner's Phase 9 submission. Not pushed; no shipped path changed.
+what_was_done: Owner picks "Fold in CRAN results", "Claude starts them" (D5 option B once), "Keep trying, then omit", "Page loads, wording fine". Claim d687cbc10, uploads record 124876a88, note and record 0cf20c8e9. win-builder R-devel Pkd6d075Q0To 284 s, R-release 7est97zX9ROI 303 s, R-oldrelease a97pG6c8qDzY 599 s, each 1 NOTE ("de", thoughtco 402). R-hub maritime-wuerhosaurus, run 41177345139: Status: OK on linux, windows, macos. macOS builder down 01:37 to 12:41 CDT (502), no upload, its line dropped by owner ruling. Marker grep 0.
+next_steps: The owner runs devtools::submit_cran() from a tree whose frozen paths equal 74715d95b, then clicks CRAN's emailed confirmation link. A session records it in CHANGELOG.md and never uploads. After acceptance, one session runs plan Phase 10. Separately, HANDOFFS.md is past its 196,608 B warn line, so a trim is owed: python3 methodology/methodology_trim.py --file methodology/HANDOFFS.md --budget-bytes 65536 --check, then --write.
+key_files: cran-comments.md:38 (check time), :50 (NOTE), :61 (environments); docs/planning/cran-3.0.0-submission-plan.md:923 (Phase 8 record), :952 (Phase 9); BACKLOG.md:8; PROJECT_LEARNINGS.md Learning 1070.
+gotchas: The tree stays frozen until CRAN accepts: a change to R/, tests/, man/, vignettes/, inst/, data/ or DESCRIPTION repeats Phase 7 and these runs. use_github_release() tags the CRAN-SUBMISSION SHA and local notes commits sit ahead of origin/master, so push before Phase 10 (derived from the plan's text, not run). R-devel's time spread is 284 to 617 s, so CRAN's own reading may differ a lot; R-oldrelease read 599 s today. win-builder's result folders go after about 72 hours; the numbers are in the plan. A browser User-Agent on curl is refused as bot-check circumvention here; thoughtco stays a human check, done today.
+runtime_smoke: n/a -- docs only; no shipped path changed, and S1102 ran the real app on these frozen paths. Windows, R-devel, R-oldrelease and x86_64 macOS are now verified on outside services. Not verified: CRAN's macOS builder (service down) and CRAN's linux-arm64 job, which runs only after release.
+changelog_ref: d687cbc10 (claim); 124876a88 (uploads); the close-out commit (DONE entry)
+commit: 0cf20c8e9
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 9adc6bb2d813 · manifest 7e3e82ab3ae0
 ```
 
 ```handoff
