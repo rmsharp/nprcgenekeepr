@@ -32,6 +32,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] Ledger trim: `methodology/HANDOFFS.md` → `methodology/archive/HANDOFFS-through-2026-10-30.md` (37 record(s), 197,992 B → 32,259 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **37** record(s) (2026-10-25 → 2026-10-30) out of [`methodology/HANDOFFS.md`](HANDOFFS.md) into
+[`methodology/archive/HANDOFFS-through-2026-10-30.md`](archive/HANDOFFS-through-2026-10-30.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`methodology/archive/HANDOFFS-through-2026-10-30.md.verify.sh`](archive/HANDOFFS-through-2026-10-30.md.verify.sh)
+rather than trusting a digest printed here. Live file 197,992 B → 32,259 B (−83.7%).
+
 ### 2026-10-31 · [ad hoc] S1106 claim (in progress): trim `methodology/HANDOFFS.md`, owner pick "Trim HANDOFFS.md"; 197,801 B, past the 196,608 B warn line.
 
 ### 2026-10-31 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `37f0d1f73` -- S1105 addendum, the `HANDOFFS.md` receipt's `next_steps` and `SESSION_NOTES.md` updated for the submission; notes only, no shipped path, not pushed.
