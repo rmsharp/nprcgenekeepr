@@ -99,20 +99,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1106 Did
-**Deliverable (owner pick "Trim HANDOFFS.md"): trim `methodology/HANDOFFS.md`** (IN PROGRESS). **Started:** 2026-10-31 14:53 CDT. **Status:** Session claimed. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner pick "Trim HANDOFFS.md"): `methodology/HANDOFFS.md` trimmed, 197,992 to 32,259 B.** Backfill `b3433354e`, claim `be549811b`, trim `ed1e53f3b`; not pushed (notes only).
+37 of 44 receipts went to `methodology/archive/HANDOFFS-through-2026-10-30.md`; its `.verify.sh` reads `OK`; `test_archivePointersResolve.R`, `test_contextBudgetLedgers.R` and
+`test_handoffsReceiptPlacement.R` pass (23 tests). Nothing shipped changed: `methodology/` is in `.Rbuildignore`.
+**Handoff evaluation of S1105: 9/10.** Helped: the exact trim commands, "tree frozen", and what each CRAN answer leads to. Missing: nothing costly. Wrong: nothing found; its last commit (`37f0d1f73`) had no ledger line, so Phase 0 backfilled one.
+**Self: 8/10.** + the option's figures came from a dry run, the tool's commit order was kept, no owner correction. - Phase 0 step 6's gate-citation check ran only at close-out (it matched); "37 of 43" in the option became "37 of 44" with the claim stub.
+**Gotchas:** the next plain `HANDOFFS.md` trim is refused past 197,992 B, only 1,384 B above the warn line and less than one receipt (derived from `SRF`, Learning 1071), so dry-run before offering it and expect `--force`.
+**Next:** read Mark's email for CRAN's answer: at 14:56 CDT the tarball was in no `incoming/` folder and not in `src/contrib/` (still 2.0.0), outcome unknown here. Tree frozen (`BACKLOG.md:8`).
+Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again.
 
-### What Session 1105 Did
-**Deliverable (owner pick "Fold in CRAN results"; "Claude starts them", D5 option B once): CRAN plan Phase 8 DONE.** Claim `d687cbc10`, uploads record `124876a88`, note and record `0cf20c8e9`; **not
-pushed** (no shipped path changed, GitHub's frozen paths equal `74715d95b`).
-**Results:** win-builder R-devel 284 s, R-release 303 s, R-oldrelease 599 s, each 1 NOTE ("de", thoughtco 402; the owner opened the page, it loads); R-hub `maritime-wuerhosaurus` `Status: OK` on three platforms;
-macOS builder down, 502 from 01:37 to 12:41 CDT, no upload, its line dropped by owner ruling ("Keep trying, then omit").
-**Handoff evaluation of S1104: 9/10.** Helped: the runbook's exact calls, the marker grep, "correct the NOTE list to win-builder's". Missing: nothing costly; it could not foresee the outage. Wrong: nothing found.
-**Self: 7/10.** + every result read from its log, 284 s checked rather than credited, ruling asked at the promised point. - option labels with "I" and "You" reversed (owner bounce), a browser User-Agent on `curl` (refused), a self-matching `pgrep -f`.
-**Gotchas:** the tree stays frozen until CRAN accepts; `use_github_release()` tags the `CRAN-SUBMISSION` SHA, so push before Phase 10 (derived, not run); name "Claude" and "Mark" in option text; `HANDOFFS.md` is past its warn line, a trim is owed.
-**Addendum:** the owner submitted 2026-10-31 from `fa1f2849e` (`CRAN-SUBMISSION`); it reached CRAN's pretest queue.
-**Next:** wait for CRAN's answer, tree frozen (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again.
-
-### Sessions 947-1104 (condensed S950 to S1105; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1105 (condensed S950 to S1106; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1105 (CRAN plan Phase 8 DONE; Learning 1070; hashes in `CHANGELOG.md`): `cran-comments.md` holds the results (win-builder 1 NOTE on three R versions, R-devel 284 s; R-hub `Status: OK`; the macOS builder
+down, its line dropped); the owner submitted from `fa1f2849e`. **Gotchas kept:** `use_github_release()` tags the `CRAN-SUBMISSION` SHA, so push before Phase 10 (derived, not run); name "Claude" and "Mark" in option text.
 S1104 (CRAN plan Phase 8 first half; Learning 1069; hashes in `CHANGELOG.md`): the cover note and `docs/planning/cran-3.0.0-phase8-runbook.md`. **Gotchas kept:** an upload gives no receipt; `slowTestFiles.txt`'s header says 79 where a trace finds 80.
 S1103 (CRAN plan Phase 7 DONE; Learning 1068; hashes in `CHANGELOG.md`): `Status: OK` on macOS (with `V8` in a scratch library) and in CRAN's arm64 image; clean read 0 failed, 0 errors.
 **Gotchas kept:** V8 recipe: plan dragon 10; container `ngk-arm64-s1093` (stopped; 163 packages; `/root/s1103`): dragon 11; `docker start` works, though its bind mount names a deleted folder.
