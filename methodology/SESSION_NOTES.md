@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1109 Did
+**Deliverable (owner pick "Report the read.csv bug"): run the case on Linux ARM64 under R 4.6.2, show Mark (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1108 Did
 **Deliverable (owner pick "Compress BACKLOG.md"): one compression pass on `BACKLOG.md`, 239 to 185 lines, 20,569 to 15,425 B.** Claim `7ddb9c237`, pass `713451757`; not pushed (no frozen path changed).
 The CRAN item went 42 to 10 lines; "report the R bug" was buried in it and is now its own item (`BACKLOG.md:18`, DECISION NEEDED). Owner pick "Cut it too": finished-work text left the LabKey research,

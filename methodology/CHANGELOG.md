@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1109 claim (in progress): run the `read.csv()` case on Linux ARM64 under R 4.6.2 and show Mark the result (owner pick at the Phase 0 picker, "Report the read.csv bug"); Mark then decides whether to report it. No package file changes, nothing posted without Mark, no TDD gates. Phase 0 reconcile: `6d84ec635` backfilled in `67514f5bc`.
+
 ### 2026-10-31 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `6d84ec635` -- S1108 addendum after its close-out, over-long `SESSION_NOTES.md` lines wrapped to the 280 B ceiling; no content change, no shipped path, not pushed.
 
 ### 2026-10-31 · [ad hoc] S1108 DONE: `BACKLOG.md` compression pass, owner picks "Compress BACKLOG.md" and "Cut it too" (claim `7ddb9c237`, pass `713451757`): 239 to 185 lines, 20,569 to 15,425 B (the commit message's 15,414 B predates two wording edits). CRAN item 42 to 10 lines; the buried R-bug report is now its own item; finished-work text cut from three delayed items, which stay delayed. Ratchet 12/12. Evaluation of S1107 9/10, self 8/10 (Learning 1073). Not pushed.
