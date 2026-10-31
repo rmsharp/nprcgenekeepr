@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 to 8 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103; S1104 and S1105); Phase 9, the owner's submission, is next. The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1 to 8 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103; S1104 and S1105); the owner submitted on 2026-10-31 (Phase 9, `fa1f2849e`), and CRAN's answer is next. The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -1031,7 +1031,7 @@ must).
 | 6 | version bump | DONE (S1102; CI green on `74715d95b`) | nothing | |
 | 7 | full local gate | DONE (S1103; `Status: OK` on macOS and in CRAN's arm64 image) | nothing | |
 | 8 | cover note + cross-platform runs | DONE (S1104, S1105; macOS builder down, its line dropped by owner ruling) | nothing | |
-| 9 | submission | after 8 | the owner | owner |
+| 9 | submission | DONE (2026-10-31, the owner; recorded S1105) | nothing | |
 | 10 | after acceptance | after CRAN accepts | the acceptance email | S |
 
 Phases 1 to 5 change the tree and come first. Phase 6 is "just before release", as the owner set
