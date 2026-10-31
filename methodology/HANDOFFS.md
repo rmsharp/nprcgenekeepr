@@ -214,8 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1109
 date: 2026-10-31
-status: pending
-active_task: Run the read.csv case on Linux ARM64 under R 4.6.2 and show Mark the result; Mark decides whether to report it. Nothing posted without Mark; no package file changes.
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: The read.csv() bug report for R's developers; deliverable done, Mark posts it. CRAN 3.0.0 stays BLOCKED on CRAN's final answer; the tree stays frozen. Not pushed; no frozen path changed.
+what_was_done: Owner picks "Report the read.csv bug" and "Claude tests the fix, drafts". Claim ee9b12355, report 7ed790411 (docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md), Phase 0 backfill 67514f5bc. Reproduced under --vanilla on Linux ARM64 in r-base:4.6.2 (Debian) and rocker/r-ver:4.6.2 (Ubuntu); x86-64 and macOS read x. New: only files of up to 5 lines are affected (4 data rows plus header gives 78 ff, 5 gives 78); a quoted number stops the read in a UTF-8 locale; read.delim and read.csv2 are affected, read.table's default sep is not; signed-char machines lose a real 0xFF after a closing quote. Source builds of R 4.6.2, each run unchanged then with int c2 at io.c:910 and only utils rebuilt: Ubuntu 26.04 ARM64 and Ubuntu 24.04 x86-64 under emulation; after the change both give the same bytes in every case and make check passes on both. Not run on R-devel; io.c is identical in the R-4-6-2 tag and trunk. Bugzilla searched across all statuses, titles read, none match. Nothing posted.
+next_steps: Next session, by Mark's word mid-S1109: the contributor tutorial (BACKLOG.md:26), which needs three decisions from Mark first: form and home, how much internal discipline outsiders are asked for, and audience. Give it a numbered picker option. Mark's own action: post the report (BACKLOG.md:18); R's Bugzilla takes members only, and a new member emails bug-report-request@r-project.org. Still waiting on CRAN's final email (BACKLOG.md:8); at 15:40 CDT src/contrib read 2.0.0 and no incoming top-level folder listed 3.0.0, which shows no rejection and not where it is. Accepted: push the local commits, then one session runs plan Phase 10. Rejected: read the reason; a fix goes through its own RED-first session and repeats Phases 7 and 8.
+key_files: docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md (the report and its results table); BACKLOG.md:18 (post it), :26 (tutorial), :8 (CRAN); R's src/library/utils/src/io.c:910 (the line); R/readWithFinalNewline.R (the package's workaround, unchanged).
+gotchas: Bugzilla quicksearch skips closed reports unless the query starts with ALL. zsh does not split a variable holding arguments (S1108 noted it, and my first run still hit it), so write docker arguments out. r-base follows Debian unstable and had a libcurl conflict, so build on ubuntu with tzdata and LC_ALL=C.UTF-8. An emulated x86-64 source build works on ubuntu:24.04; on 26.04 tar fails with "Function not implemented", probably openat2, unproven, no report found for Docker Desktop on Apple Silicon. The whole run, with make check, took about 3.5 minutes on ARM64 and 12 emulated. The build scripts stayed in the session scratchpad; the report's Testing section gives the recipe. Four images stay local: r-base:4.6.2, rocker/r-ver:4.6.2, ubuntu:26.04, ubuntu:24.04.
+runtime_smoke: n/a -- no package code changed. The R source builds above were the runtime test of the patch, on R and not on this package. Stand-in for this repo: the two tests that read BACKLOG.md text pass (15 blocks, 0 failed, 0 error) and the full ratchet below.
+changelog_ref: ee9b12355 (claim); the close-out commit (DONE entry)
+commit: 7ed790411
+quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 8b48a5990497 · manifest d26a8cecc699 (run at 7ed790411, load about 5.5)
 ```
 
 ```handoff

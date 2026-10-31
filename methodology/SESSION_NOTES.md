@@ -99,22 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1109 Did
-**Deliverable (owner pick "Report the read.csv bug"): run the case on Linux ARM64 under R 4.6.2, show Mark (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "Report the read.csv bug", then "Claude tests the fix, drafts"): `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`, for Mark to read and post.** Commit `7ed790411`; claim `ee9b12355`; nothing posted, not pushed.
+The bug reproduces on Linux ARM64 under R 4.6.2 (Ubuntu and Debian); x86-64 and this Mac read `x`. New: only files of up to 5 lines are affected; a quoted number stops the read; signed-`char` machines lose a real 0xFF after a closing quote.
+`int c2` at `io.c:910` fixes all of it on ARM64 and x86-64 source builds of R 4.6.2; `make check` passes on both. The tag and trunk have the same file, but it was not run on R-devel.
+**CRAN:** at 15:40 CDT `src/contrib` read 2.0.0 and no `incoming` top-level folder listed 3.0.0; that shows no rejection, and not where it is. The tree stays frozen.
+**Handoff evaluation of S1108: 9/10.** Helped: "run on Linux ARM64 under 4.6.2 first", the signed-`char` reasoning, the line number. Missing: nothing needed. Wrong: nothing found; the 5-line limit was unknown, not misstated.
+**Self: 7/10.** + one result per machine before and after one changed word, two new facts for the report, the owner's pick answered first try.
+- S1108's zsh gotcha repeated, so the first run started no container; three more failed runs (Debian `libcurl`, no `tzdata`, emulated `tar`); "no existing report" from an open-only search; a cause and "older `tar`" stated as fact (Mark asked).
+**Gotchas:** Bugzilla `quicksearch` needs a leading `ALL`, or it skips closed reports. An x86-64 emulated source build needs `ubuntu:24.04` (26.04's `tar` fails there; cause probably `openat2`, unproven). `ubuntu` images need `tzdata`, and `LC_ALL=C.UTF-8`.
+The whole run, with `make check`, took about 3.5 minutes on ARM64 and 12 emulated.
+Build and case scripts sat in the session's scratchpad, so are gone; the report's Testing section gives the recipe. Images kept locally: `r-base:4.6.2`, `rocker/r-ver:4.6.2`, `ubuntu:26.04`, `ubuntu:24.04`.
+**Next, Mark's word (mid-S1109, "next session"): the contributor tutorial, `BACKLOG.md:26`,** which needs three decisions from Mark first: form and home, how much internal discipline outsiders are asked for, and audience.
+Mark's own: post the report (`BACKLOG.md:18`; Bugzilla takes members only, email `bug-report-request@r-project.org`). Also waiting on CRAN's final email (`BACKLOG.md:8`): accepted, push and plan Phase 10; rejected, a RED-first session, then Phases 7-8 again.
 
-### What Session 1108 Did
-**Deliverable (owner pick "Compress BACKLOG.md"): one compression pass on `BACKLOG.md`, 239 to 185 lines, 20,569 to 15,425 B.** Claim `7ddb9c237`, pass `713451757`; not pushed (no frozen path changed).
-The CRAN item went 42 to 10 lines; "report the R bug" was buried in it and is now its own item (`BACKLOG.md:18`, DECISION NEEDED). Owner pick "Cut it too": finished-work text left the LabKey research,
-kinship2-package and outreach items (all stay delayed). Method step 5 now reads "cut only finished-work narrative". Close-out also condensed S1028-S1029 here, because Read hit its cap on this file.
-**CRAN:** at 15:24 CDT `src/contrib` read 2.0.0 and 3.0.0 was in no `incoming` top-level folder read (`archive`, `inspect`, `newbies`, `pending`, `pretest`, `publish`, `recheck`, `waiting`). That shows no rejection, and not where it is.
-**Handoff evaluation of S1107: 9/10.** Helped: "tree stays frozen", the 1,000 B entry limit, the CRAN branches. Missing: this file sat at the Read cap (25,007 tokens on first read). Wrong: nothing found.
-**Self: 8/10.** + facts checked before any cut, one open decision extracted, both gates answered first try, no owner correction.
-- a zsh variable of paths gave invalid ledger counts (noticed, rerun in Python); "own DONE paragraph" overstated (caught on reread); the pass's commit message says 15,414 B, the file is 15,425 B.
-**Gotchas:** zsh does not split `$A`; count across ledgers in Python. Delayed items stay off the numbered picker though their text was cut. The fork's `starter-kit/close_out_report.py` still refuses on our `HANDOFFS.md` (run on a copy).
-**Next:** wait for CRAN's final email (`BACKLOG.md:8`). Accepted: push, then plan Phase 10. Rejected: its own RED-first session, then Phases 7-8 again. **Next, Mark's word (mid-S1108, "for next session"): the R-bug item, `BACKLOG.md:18`.**
-After updating to R 4.6.2 Mark asked if the error remains. Line 910 is byte-identical in 4.6.2 and trunk, so it very likely does;
-macOS arm64 reads `x`, which proves nothing (signed `char`). Run the case on Linux ARM64 under 4.6.2 first; the saved container predates 4.6.2.
-
-### Sessions 947-1107 (condensed S950 to S1108; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1108 (condensed S950 to S1109; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1108 (`BACKLOG.md` compression pass, 239 to 185 lines; Learning 1073; hashes in `CHANGELOG.md`). **Gotchas kept:** zsh does not split `$A`, so count across ledgers in Python; delayed items stay off the numbered picker though their text was cut;
+the fork's `starter-kit/close_out_report.py` still refuses on our `HANDOFFS.md` (run on a copy).
 S1107 (`CHANGELOG.md` entries limited to 1,000 B, gate `changelog_entries_over_limit`, `tools/changelog_entry_limit.py`; Learning 1072; hashes in `CHANGELOG.md`). **Gotchas kept:** fuller detail goes in the receipt; receipts cite 12 gates;
 its 18 tests are in `tools/`, because `tests/` is frozen, so no CI runs them.
 S1106 (`HANDOFFS.md` trimmed 197,992 to 32,259 B; Learning 1071; hashes in `CHANGELOG.md`). **Gotchas kept:** the next plain trim of it is refused past 197,992 B, only 1,384 B above the warn line, so dry-run before offering it and expect `--force`.
