@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1111 Did
+**Deliverable (owner pick "Fix renv restore"): `renv::restore()` works from an empty cache (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1110 Did
 **Deliverable (owner pick "Contributor tutorial"): `.github/CONTRIBUTING.md` and `vignettes/articles/contributing.qmd`, in `_pkgdown.yml`'s menu.** Not pushed, so the site link 404s until a push.
 Mark's rulings: short file plus article; tests required, internal protocol not described; R developers, Issues section first. Claim `099cff8e0`, RED `8d847443f`, GREEN `3627c43d6` `107ecbcbe`, REFACTOR `06d2e0a29`.

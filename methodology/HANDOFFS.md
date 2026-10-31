@@ -212,6 +212,13 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-30.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1111
+date: 2026-10-31
+status: pending
+active_task: Make renv::restore() work from an empty package cache (owner pick "Fix renv restore"). Frozen CRAN paths stay untouched.
+```
+
+```handoff
 session: S1110
 date: 2026-10-31
 status: complete

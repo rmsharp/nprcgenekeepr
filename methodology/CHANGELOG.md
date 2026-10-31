@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1111 claim (in progress): make `renv::restore()` work from an empty package cache (owner pick "Fix renv restore", `BACKLOG.md:18`). Frozen CRAN paths stay untouched.
+
 ### 2026-10-31 · [ad hoc] S1110 addendum: Mark posted the `read.csv()` bug report to R's developers (Mark's word, 17:48 CDT; text in `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`; no report number or link given here). Item off `BACKLOG.md`. `readWithFinalNewline()` stays, because R 4.6.2 still has the bug.
 
 ### 2026-10-31 · [ad hoc] S1110 addendum: close-out commit `156916ecb` removed the tutorial block, and `test_docsAuditSixRulings.R` SR3 pins its phrase, so that test failed; the commit went in because the run and the commit were chained. Fixed with a BLOCKED `BACKLOG.md` item holding the phrase until the pin can leave `tests/` after CRAN's acceptance. No frozen path changed.
