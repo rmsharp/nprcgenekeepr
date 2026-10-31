@@ -94,6 +94,8 @@ runRestore <- function() {
   )) {
     file.copy(file.path(repoRoot, file), file.path(project, file))
   }
+  activate <- file.path(project, "renv", "activate.R")
+  activateBefore <- readLines(activate, warn = FALSE)
   folders <- file.path(home, c("root", "libroot", "user", "sandbox"))
   for (folder in folders) {
     dir.create(folder)
@@ -133,12 +135,14 @@ runRestore <- function() {
       )
     ))
   )
+  activateAfter <- readLines(activate, warn = FALSE)
   ## renv makes its sandbox read-only.
   system2("chmod", c("-R", "u+w", shQuote(home)))
   unlink(home, recursive = TRUE)
   list(
     text = paste(output, collapse = "\n"),
-    status = attr(output, "status") %||% 0L
+    status = attr(output, "status") %||% 0L,
+    activateUnchanged = identical(activateBefore, activateAfter)
   )
 }
 
@@ -152,6 +156,8 @@ test_that("restore works from an empty package cache", {
   expect_no_match(result$text, "NOT-LOADED", fixed = TRUE)
   expect_identical(result$status, 0L, info = result$text)
   expect_match(result$text, "MISSING: *\\n?$")
+  ## A rewritten activate script leaves every contributor a changed file.
+  expect_true(result$activateUnchanged)
   ## A dated repository serves every version ready-built on a Mac. A source build
   ## is the first sign that the lock has stopped matching it.
   if (identical(Sys.info()[["sysname"]], "Darwin")) {
