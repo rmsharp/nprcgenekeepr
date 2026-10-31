@@ -40,7 +40,7 @@ help you make, and how you do it today.
 
 ## Set up a copy of the package
 
-You need R, git and a C/C++ compiler (Xcode Command Line Tools on a Mac, Rtools
+You need R, git and a C/C++ compiler (`Xcode` Command Line Tools on a Mac, `Rtools`
 on Windows), because some packages may need building.
 
 Fork the repository on GitHub, then clone your fork and open R in its folder:
@@ -51,7 +51,7 @@ cd nprcgenekeepr
 R
 ```
 
-The project uses [renv](https://rstudio.github.io/renv/), which starts by itself
+The project uses [`renv`](https://rstudio.github.io/renv/), which starts by itself
 when R opens in this folder and keeps what you install here apart from your other
 R libraries. Install what the package needs, then the development tools, and
 answer yes when asked:
@@ -92,8 +92,7 @@ After that, every function in `R/` is available, including ones not exported.
 | `NEWS.Rmd` | The release notes. `NEWS.md` is generated from it. |
 | `_pkgdown.yml` | The website's menus and its function reference. |
 
-The other top-level files and folders hold the maintainer's working notes and
-release records. A pull request does not need to touch them.
+The other top-level files and folders hold working notes and release records. A pull request does not need to touch them.
 
 ## Run the tests
 
