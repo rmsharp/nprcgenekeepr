@@ -39,8 +39,6 @@ package = "nprcgenekeepr")`.
 - New `placeholder` column: the pedigree check records which animals are
   stand-ins. Enter `FALSE` for a real animal whose id looks like one (such as
   `U1234`) and it is kept as real throughout.
-  - A `placeholder` value other than TRUE, FALSE, 1, 0 or blank stops the
-    check and names the rows.
 - New: with "Pedigree(s) and genotypes in one file", the Input tab now reads
   genotypes from columns named `allele_1` and `allele_2` or `first_name` and
   `second_name` as well as `first` and `second`, accepts text labels as well
@@ -72,77 +70,22 @@ package = "nprcgenekeepr")`.
 
 ## Pedigree Diagram
 
-**Major**
-
-- The Pedigree Browser has a new interactive **Diagram** view. It follows most
-  kinship2 drawing conventions: sex symbols, mate lines with children
-  descending from the midpoint, dashed links between repeated individuals,
-  separate blocks for unrelated families, shaded affected individuals, twin
-  connectors, and a thicker colored mate line for consanguineous matings. The
-  comparison article checks by code that the same individuals and the same
-  parent-child and mate relationships appear as in kinship2; the layouts
-  themselves are not identical.
-- Click an animal to re-center the diagram. You can also pan and zoom, hover
-  for details, and search for an id to highlight it. A legend explains the sex
-  symbols, and **Export Diagram (PNG)** saves an image.
-- **Diagram Edge Style** switches between "Rectilinear (kinship2-style)"
-  right-angle connectors (the default) and "Direct" straight lines.
-  Rectilinear connectors are routed around unrelated animals. On crowded
-  pedigrees some still cross a symbol, and the layout warning says how many.
-- An optional `affected` column shades affected individuals. Unaffected and
-  unknown-status individuals, and everyone when the column is absent, are drawn
-  open. Further columns whose names start with `affected` (`affected2`,
-  `affecteddiabetes`) are more conditions, up to four in file order: each
-  symbol is split into equal sections, one per condition, and a section takes
-  its condition's own color where the animal is affected. The
-  legend has a row for each condition, and a file with more than four such
-  columns draws the first four and says which it left out.
-- An animal whose `status` is DECEASED is drawn with a diagonal slash through
-  its symbol, as in kinship2, and the legend shows it. Shipped animals, animals
-  of unknown status, and everyone when the pedigree has no `status` column are
-  drawn plain.
-- An optional `name` column shows names beside ids, with a **Show Names on
-  Diagram** toggle. De-identified exports remove names. Twin connectors
-  (identical, fraternal or unknown zygosity) follow kinship2's twin codes.
-- Consanguineous matings are detected automatically, with no extra column, and
-  drawn with a thicker, distinct-colored mate line in both styles.
-- A pedigree above the display limit shows a message instead of a diagram: 400
-  animals with the default "Rectilinear" style, 750 with "Direct". Between the
-  two limits the message keeps the style buttons, so one click on Direct draws
-  it; above both, trim to fewer focal animals.
-- `drawPedigreeDiagram()` draws the Diagram from a script, from a
-  `makePedigreeMatingLayout()` layout, as the app does: the same legend,
-  deceased slash, condition sections, **Export Diagram (PNG)** button and id
-  search. Save it as a web page or put it in an R Markdown report.
-
-**Minor**
-
-- Animals with no recorded parents, mates or offspring are left out, as in
-  kinship2. The diagram names them, and shows a message when none of the loaded
-  animals have relationships.
-- The diagram puts the male parent on the left of a mated pair in most cases.
-  A parent with several mates is placed to fit the family layout, so those
-  pairs can appear either way round. A mating symbol sits centered between its parents with
-  clear gaps, so symbols do not overlap even in large pedigrees (diagrams are
-  correspondingly wide; pan and zoom). Placement does not depend on regional
-  settings.
-- A parent who anchors matings at more than one generation appears as a
-  duplicate node (113 individuals in the bundled 375-animal example pedigree).
-  A mate who also belongs to another family appears as a duplicate marker
-  beside their partner, as in kinship2, so the pair and their children stay
-  directly above and below one another.
-- Branches from different founders are ordered so that branches sharing
-  animals sit near each other, which shortens the curved connectors between an
-  animal's repeated appearances. A parent with recorded children but no row of
-  their own is drawn normally, including in trimmed pedigrees.
-- `makePedigreeMatingLayout()` has no `orderBySex` argument and accepts an
-  optional `kinshipMatrix`, an already-computed kinship table to reuse when
-  flagging consanguineous matings.
-- Five small example pedigrees (`example_pedigree_*.csv` in
-  `extdata/examples`) show classic mating structures: brother-sister,
-  linebreeding, a daughter bred to her sire, first cousins, and half-siblings
-  sharing a sire. Each has 11-14 animals and one consanguineous mating; the
-  Pedigree Diagram article walks through them.
+- The Pedigree Browser has a new interactive **Diagram** view that follows most
+  kinship2 drawing conventions. The comparison article checks by code that the
+  same individuals and relationships appear as in kinship2; the layouts are not
+  identical.
+- Click an animal to re-center the diagram. You can also pan and zoom, hover for
+  details, search for an id, and save an image. Connectors can be right-angle,
+  as in kinship2, or straight.
+- Optional pedigree columns shade affected animals and show names. Deceased
+  animals, twins and consanguineous matings are marked in the drawing, and a
+  legend explains the symbols.
+- A pedigree too large to draw shows a message instead, saying what to do.
+- Script users: `makePedigreeDiagramData()`, `makePedigreeMatingLayout()` and
+  `drawPedigreeDiagram()` draw the Diagram from a script. Save it as a web page
+  or put it in an R Markdown report.
+- Five small example pedigrees show classic mating structures; the Pedigree
+  Diagram article walks through them.
 
 ## Kinship & Pedigree Calculations
 
@@ -151,19 +94,13 @@ package = "nprcgenekeepr")`.
 - Animals declared as identical (MZ) twins now have their relatedness corrected
   to genetic identity, and the correction passes to relatives of either twin.
 - A twin/zygosity file uploaded on the Diagram tab applies this throughout the
-  app, whichever tab is opened first. Fraternal and identical pairs must share
-  both recorded parents, and identical pairs must be the same sex. With a
-  focal-animal trim on, a pair with an animal outside the trim is left out
-  while the trim is on and the other pairs still apply; an id that is not in
-  the pedigree at all still rejects the file.
+  app.
 - Script users: `kinship()`, `reportGV()`, `gvaConvergence()`,
   `createSimKinships()` and `cumulateSimKinships()` take `twinRelations`.
   `readTwinRelations()`, `checkTwinRelations()` and `obfuscateTwinRelations()`
-  read, validate and de-identify the file (columns `id1`, `id2`, `code`).
+  read, validate and de-identify the file.
 - New `shrinkPedigree()` trims a large pedigree to the animals needed to stay
-  informative within a genotyping budget, optionally keeping affected animals.
-  Results repeat from run to run, unlike kinship2's equivalent, which breaks
-  ties randomly. Script only.
+  informative within a genotyping budget. Script only.
 
 **Minor**
 
@@ -228,117 +165,71 @@ package = "nprcgenekeepr")`.
   when it has no exit date). If none is alive, the tab says so and forms no
   groups.
 - Several candidate groupings are shown per run, with a selector and
-  comparison table (issue #125). **Candidates to retain** sets how many are
-  kept (default 5, 1 to 50). Script users: `groupAddAssign()` returns a
+  comparison table (issue #125). Script users: `groupAddAssign()` returns a
   `candidates` field and takes `maxCandidates` (issue #146).
 - Formation can follow your center's ancestry rules (issue #168). Upload a
-  rules file in the new **Ancestry Guardrails** section; each line names two
-  ancestry groups (for example Indian-origin and Chinese-origin rhesus) and
-  says whether mixing them is blocked or only flagged. Blocked pairs never
-  share a group, in every formation mode; flagged pairs form freely and are
-  pointed out afterward. Without a rules file, formation is unchanged.
-- A block rule can be overridden for your session through a confirmation step
-  that requires a written reason. Overridden pairings stay in the violations
-  list, marked "overridden". A downloadable audit record lists the rules in
-  effect, overrides with reasons, and the warning shown.
-- A harem's automatically chosen sire is now kept apart from his relatives
-  like every other animal. Before, nothing stopped his mother, daughter or
-  sister from joining his harem (on the example pedigree with the default
-  settings, most runs put at least one such relative in a harem). An animal at
-  or above the Max kinship threshold to him, or one an ancestry block rule
-  bars from him, now stays out of his harem, and if that leaves no one the
-  harem is the sire alone. Results for a given random seed differ from earlier
-  versions.
-- With **Harem** selected, seeding a male in some groups but not all no longer
-  stops the run with "subscript out of bounds" or forms harems with no male. A
-  group with a seeded male keeps him as its sire; a group with no seeded male
-  is given a sire chosen at random.
-- A script that passes `harem = TRUE` and a non-zero `sexRatio` to
-  `groupAddAssign()` now stops with a message naming both settings, instead of
-  returning groups of one or two animals; use one or the other. The Breeding
-  Groups tab was never affected, since its radio takes **Harem** or **Custom**,
-  not both.
+  rules file in the new **Ancestry Guardrails** section to block or flag
+  mixing of ancestry groups. A block rule can be overridden with a written
+  reason, and an audit record can be downloaded. Without a rules file,
+  formation is unchanged. Script users: `readAncestryRules()`,
+  `checkAncestryRules()`, the `ancestryRules` argument of `groupAddAssign()`,
+  and `reportAncestryViolations()`.
+- A harem's automatically chosen sire is now kept apart from his relatives like
+  every other animal. An animal at or above the Max kinship threshold to him,
+  or one an ancestry block rule bars from him, stays out of his harem; if that
+  leaves no one, the harem is the sire alone. Results for a given random seed
+  differ from earlier versions.
 - With a **Custom** sex ratio, a male under the **Minimum breeding age**, or
   with no birth date, is left out of the groups and listed under **Unused
-  animals**. Before, such a male could be placed as if he were female while
-  the group's sex ratio still counted him as a male, so a group's males could
-  include animals not known to be of breeding age, and with few females the
-  ratio could come out well below the one asked for. A group stops filling
-  when no breeding-age male is left for it, so it can end with fewer females
-  than the ratio asks for. Script users: `groupAddAssign()` and
+  animals**. A group stops filling when no breeding-age male is left for it, so
+  it can end with fewer females than the ratio asks for. `groupAddAssign()` and
   `fillGroupMembersWithSexRatio()` follow the same rule. On a pedigree with
   such males, results for a given random seed differ from earlier versions.
 
 **Minor**
 
-- The last box on the **Groups** tab, which holds the animals that fit no
-  group, is headed **Unused animals** instead of the next group number. The
-  **Statistics** table, the **Group Detail** list and the **Genetic Diversity**
-  heat map use the same name.
-- A box that holds exactly one animal is headed "(1 animal)" on the
-  **Groups** tab, not "(1 animals)".
 - New **Include animals by** control: a genetic-value floor as an alternative
   to the top-N cutoff (issue #128).
 - New **Exhaustive enumeration mode**: lists every maximal group that can be
-  housed together, for the simplest case only (one group, no harem, no custom
-  sex ratio). It stops with a message above 20 eligible animals and returns
-  what it has found after 10 seconds. Script users: `exhaustive`,
-  `maxExhaustiveCandidates` and `exhaustiveTimeLimit` (issue #146).
-- A status line shows the loaded rules (for example "2 block, 2 flag rule(s)")
-  and how many animals no rule reaches; a file problem is reported and
-  ignored, and a pedigree without ancestry information leaves the guardrails
-  inactive. A new **Ancestry** results tab lists matched pairings with a
-  coverage summary.
-- Script users: `readAncestryRules()`, `checkAncestryRules()`, the
-  `ancestryRules` argument of `groupAddAssign()`, and
-  `reportAncestryViolations()` for existing groups. An example rules file and
-  pedigree ship with the package.
+  housed together, for the simplest case only. Script users: the `exhaustive`
+  argument of `groupAddAssign()` (issue #146).
 - The **Source** choice "Upload list", which had no place to give it a list, is
   now "My own list". Paste the animal IDs into the box that appears. Groups are
   formed from those that are alive; an ID that is not in the pedigree stops the
   run and is named, and an animal that is not alive is left out and named.
-- Forming groups and then reading a different pedigree, or trimming the
-  pedigree on the Pedigree Browser, no longer leaves the **Groups**,
-  **Statistics** and **Group Detail** pages showing the old group sizes over
-  empty tables, counts of zero males and zero females, and a red error. When a
-  group holds an animal the pedigree now loaded does not have, each page says
-  so in one sentence and asks you to form the groups again or bring back the
-  earlier pedigree. On **Group Detail** the sentence takes the place of both
-  tables and the two **Export** buttons, so an old group cannot be exported by
-  mistake. The groups are kept, so bringing that pedigree back shows them
-  again.
+- The last box on the **Groups** tab, which holds the animals that fit no
+  group, is headed **Unused animals** instead of the next group number. The
+  **Statistics** table, the **Group Detail** list and the **Genetic Diversity**
+  heat map use the same name.
+- Fixed: With **Harem** selected, seeding a male in some groups but not all no
+  longer stops the run with "subscript out of bounds". A group with a seeded
+  male keeps him as its sire; a group with no seeded male is given a sire
+  chosen at random.
+- Fixed: A script that passes `harem = TRUE` and a non-zero `sexRatio` to
+  `groupAddAssign()` now stops with a message naming both settings, instead of
+  returning groups of one or two animals; use one or the other.
+- Fixed: A box that holds exactly one animal is headed "(1 animal)" on the
+  **Groups** tab, not "(1 animals)".
+- Fixed: After you read a different pedigree or trim it on the Pedigree
+  Browser, a group holding an animal that is not loaded no longer shows old
+  group sizes over empty tables and a red error. The **Groups**, **Statistics**
+  and **Group Detail** pages say so in one sentence and ask you to form the
+  groups again or bring back the earlier pedigree. **Group Detail** shows no
+  tables or **Export** buttons until then. The groups are kept, so bringing
+  that pedigree back shows them again.
 - Fixed: Forming groups that include animals with no birth date no longer ends
   the session after a genetic value analysis.
 
 ## Mate Pair Analysis
 
-**Major**
-
-- New **Mate Pair Analysis** tab: a curator view built on the report below,
-  separate from Breeding Group Formation (issue #151).
+- New **Mate Pair Analysis** tab: a curator view of possible mate pairs with
+  relatedness and genetic-value context, separate from Breeding Group Formation.
+  Report only (issue #151).
 - Mate pair reports can follow your ancestry rules (issue #169). Rules loaded
-  on the Breeding Groups tab apply here: a "block" pair moves to Excluded with
-  the reason "ancestry rule", and a "flag" pair stays in Eligible Pairs with
-  its rule shown, in the export too.
-- **Override rule...** with a written reason keeps a rule's pairs in Eligible
-  Pairs, marked "overridden".
-- The **Ancestry** tab shows coverage, and **Download Audit Manifest** saves
-  the rules, overrides with reasons, pair counts and the confirmation warning.
-- The **Excluded** tab has an **Export Excluded Pairs** button that saves the
-  blocked pairs, with their reasons, as a CSV file. Like the Eligible Pairs
-  export, it holds exactly the rows left after any search or filter.
-- Script users: `reportMatePairs()` takes `ancestryRules` and
-  `overriddenRules`. Without rules or an ancestry column, nothing changes.
-
-**Minor**
-
-- `reportMatePairs()` reports mate-pair candidates with relatedness and
-  genetic-value context. Report only (issue #151).
-- Mate pairs are made only from animals recorded as male or female. The page
-  says how many animals of any other sex it left out, and `reportMatePairs()`
-  leaves them out of both tables.
-- **All alive** takes the same animals as Breeding Groups: status ALIVE, or,
-  in a file with no status column, no recorded exit date.
+  on the Breeding Groups tab apply here, and a rule can be overridden with a
+  written reason.
+- Eligible and excluded pairs can be exported.
+- Script users: `reportMatePairs()`.
 
 ## Genetic Diversity
 
@@ -356,101 +247,43 @@ package = "nprcgenekeepr")`.
 
 ## Marker Genetics
 
-**Major**
-
-- New **Marker Genetics** tab (issue #130). **Kinship Comparison** compares
-  DNA-based with pedigree-based relatedness.
-- **Heterozygosity** compares each animal's diversity with the population
-  expectation.
-- **Parentage Exclusion** flags a recorded parent that the DNA contradicts.
-- **Candidate Parent Assignment** ranks genotyped animals that could be a
-  flagged animal's real parent. Report only (issue #147).
-- **Cross-Center** compares diversity between two centers. It is not the
-  **Cross-Center Identity** tab below, which merges individual records.
-- **Linkage and LD Block Metrics** combines the locus-coverage,
-  relatedness-variance and linkage-block reports below, with de-identified
-  export (issue #153).
-- **Genomic ROH (F_ROH)** shows the sequence-based inbreeding calculation
-  below, with de-identified export via `obfuscateGenomicROH()` (issue #152).
-  Loci that are in the locus file but not in the genotype file are named in a
-  notice above the table (and in a warning from `computeGenomicROH()`),
-  because F_ROH is calculated without them.
-- Script users: `markerObservedHeterozygosity()` and
-  `markerExpectedHeterozygosity()`; `markerParentageExclusion()`, which flags
-  a parent when more than `maxExclusions` loci (default 2) conflict;
-  `markerFst()`, Hudson's Fst per locus and pooled; and
-  `markerParentageLikelihood()`.
-
-**Minor**
-
-- `checkMarkerGenotypeFile()` checks a genotype file with one row per animal
-  and locus (`id`, `locus`, `allele1`, `allele2`) and rejects a locus with
-  more than two alleles; `buildMarkerGenotypeMatrix()` turns it into the
-  animal-by-locus table the marker functions use. A blank allele counts as
-  not typed: a record with one or both alleles blank is treated like a missing
-  record, and a locus nobody is typed at shows `NA` for expected
-  heterozygosity and stays out of the mean.
-- The Candidate Parent Assignment suggestion covers the common case where a
-  flagged animal's recorded parent is present but wrong (issue #155).
-- The Candidate Parent Assignment tab says why its table is blank when the
-  pedigree has no `fromCenter` column, which it needs to find any candidate.
-  It uses the same words as the Potential Parents tab.
-- `checkLocusMetadata()` reports each locus's chromosome and position data as
-  complete, partial or missing; a chromosome name left blank counts as
-  missing. `checkLinkageMarkerGenotypeFile()` accepts
-  panels with more than two alleles per locus, such as microsatellites.
-- `markerRealizedRelatednessVariance()` estimates how far DNA-based relatedness
-  can vary around the pedigree prediction for parent-offspring, full-sibling
-  and half-sibling pairs, the only pairs it lists. `markerLdBlock()` and
-  `obfuscateLdBlocks()` report and de-identify linked marker blocks (issue
-  #153).
-- `checkSequenceGenotypeFile()`, `computeGenomicROH()` (inbreeding from runs
-  of homozygosity) and `obfuscateGenotypeMatrix()` support sequence-scale
-  genotype files, and `markerKinship()` and `markerParentageLikelihood()` are
-  optimized for large panels (issue #152).
+- New **Marker Genetics** tab (issue #130):
+  - **Kinship Comparison** compares DNA-based with pedigree-based relatedness.
+  - **Heterozygosity** compares each animal's diversity with the population
+    expectation.
+  - **Parentage Exclusion** flags a recorded parent that the DNA contradicts.
+  - **Candidate Parent Assignment** ranks genotyped animals that could be a
+    flagged animal's real parent. Report only (issue #147).
+  - **Cross-Center** compares diversity between two centers. It is not the
+    **Cross-Center Identity** tab below, which merges individual records.
+  - **Linkage and LD Block Metrics** reports locus coverage, relatedness
+    variance and linked marker blocks (issue #153).
+  - **Genomic ROH (F_ROH)** shows the sequence-based inbreeding calculation,
+    from runs of homozygosity, with de-identified export (issue #152).
+- Script users: `checkMarkerGenotypeFile()`, `buildMarkerGenotypeMatrix()`,
+  `markerKinship()`, `markerObservedHeterozygosity()`,
+  `markerExpectedHeterozygosity()`, `markerParentageExclusion()`,
+  `markerParentageLikelihood()`, `markerFst()`, `checkLocusMetadata()`,
+  `checkLinkageMarkerGenotypeFile()`, `markerRealizedRelatednessVariance()`,
+  `markerLdBlock()`, `obfuscateLdBlocks()`, `checkSequenceGenotypeFile()`,
+  `computeGenomicROH()`, `obfuscateGenomicROH()` and
+  `obfuscateGenotypeMatrix()`.
 
 ## MHC Haplotype Reporting
 
-**Major**
-
 - New **MHC Haplotype Reporting** tab: upload haplotype designations to see how
-  common each haplotype is, which are rare, and which animals carry them. Every
-  animal in the file must be in the loaded pedigree (issue #148).
-- Rarity thresholds are adjustable next to the tables. After you confirm, you
-  can download a de-identified summary, carrier list and settings record.
-- `mhcHaplotypeFrequency()` gives copies, carriers and frequency per
-  haplotype, and discloses missing and provisional calls. A haplotype is rare
-  at frequency 0.01 or lower, or with 2 or fewer carriers; both thresholds are
-  adjustable.
-- `mhcHaplotypeCarriers()` lists the animals carrying each rare (or every)
-  haplotype, including provisional carriers.
-
-**Minor**
-
-- `checkMhcHaplotypeFile()` validates a file with two named haplotypes per
-  animal (a trailing `?` marks a provisional call); `obfuscateMhcHaplotypes()`
-  replaces carrier-list ids with the pedigree's de-identification aliases and
-  stops on an id it never covered.
-- The frequency column shows four decimal places on screen; downloads keep the
-  exact values.
+  common each haplotype is, which are rare, and which animals carry them, with
+  de-identified downloads (issue #148).
+- Script users: `checkMhcHaplotypeFile()`, `mhcHaplotypeFrequency()`,
+  `mhcHaplotypeCarriers()` and `obfuscateMhcHaplotypes()`.
 
 ## Cross-Center Identity Matching
-
-**Major**
 
 - New **Cross-Center Identity** tab: walks a curator through matching and
   merging records from two centers, with a preview and downloadable results
   behind a confirmation step (issue #149).
-- `resolveCrossCenterIds()` merges records for the same animals using a
-  curator-confirmed id-matching table, preserving each animal's own data
-  columns, including a column only one of the two centers recorded.
-
-**Minor**
-
-- `checkCrossCenterMapping()` reports every problem in an id-matching table at
-  once, including a second-center animal that uses an id the table already
-  gives to a different first-center animal (the merged file would hold that id
-  twice).
+- Script users: `checkCrossCenterMapping()` checks an id-matching table and
+  `resolveCrossCenterIds()` merges the records.
 
 ## De-Identified Export
 
@@ -478,38 +311,22 @@ package = "nprcgenekeepr")`.
 
 ## Longitudinal Monitoring
 
-**Major**
-
 - Colony managers can keep a history file of dated colony snapshots, one row of
   colony-level genetic-health values per date, to see whether genetic health is
   improving or eroding (issue #167).
-- Script users: `readSnapshotHistory()`, `checkSnapshotHistory()` and
-  `appendColonySnapshot()`; an example history ships.
 - New **Genetic-Health Trends** tab: upload or start a history, record a
   snapshot from the genetic value analysis you just ran, view trend plots, and
-  compare two dates. Histories and comparisons can be downloaded. A box under
-  the trend chart, also in the guide, says which way each measure should move,
-  when a change is more than chance, and what a past trend can show.
-- Snapshots recorded under different settings or software versions are
-  flagged, so a jump is not mistaken for a real change in the colony.
+  compare two dates. Snapshots recorded under different settings or software
+  versions are flagged, so a jump is not mistaken for a real change in the
+  colony.
 - **Build Earlier Snapshots** on the Genetic-Health Trends tab rebuilds a yearly
   history from the birth and exit dates in the studbook, so a trend shows
   without waiting for new snapshots; rebuilt points are drawn dashed and kept
   apart from recorded ones (issue #170).
-- Script users: `backfillColonySnapshots()` does the same from a script, and
-  `previewBackfillSupport()` shows how many animals each date rests on without
-  the long calculation.
-
-**Minor**
-
-- `createColonySnapshot()` records a finished analysis's results, population
-  make-up and settings in one dated row, and refuses a snapshot whose stated
-  animal-membership rule (whole pedigree or focal population) does not match
-  the animals analyzed.
-- `plotSnapshotTrends()` draws each value over time, with uncertainty for
-  values from repeated random sampling, and `calcSnapshotDeltas()` lists
-  changes between two dates; both flag differing settings or software
-  versions.
+- Script users: `readSnapshotHistory()`, `checkSnapshotHistory()`,
+  `createColonySnapshot()`, `appendColonySnapshot()`, `plotSnapshotTrends()`,
+  `calcSnapshotDeltas()`, `backfillColonySnapshots()` and
+  `previewBackfillSupport()`.
 
 ## Speed and Memory
 
