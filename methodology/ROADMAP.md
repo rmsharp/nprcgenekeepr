@@ -8,8 +8,9 @@ The modular architecture — `modInput`, `modPedigree`, `modPyramid`, `modGeneti
 files), with `appServer`/`appUI` orchestrating module communication — is now
 canonical, and the legacy monolith has been retired: `inst/application/` is deleted and
 `runModularApp()` is a deprecated alias for `runGeneKeepR()`. Version 2.0.0 is tagged
-(`v2.0.0`); the package is now at 2.0.0.9000. Remaining work is integration testing
-(see Planned) and any CRAN follow-up.
+(`v2.0.0`); the package now reads 3.0.0, the version being prepared for CRAN
+(`docs/planning/cran-3.0.0-submission-plan.md`) and not yet submitted. Remaining work is
+integration testing (see Planned) and the submission.
 
 ## Planned
 *(Scoped but not started. The active task list is in `BACKLOG.md`.)*

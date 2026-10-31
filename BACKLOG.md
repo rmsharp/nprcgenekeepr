@@ -5,14 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Move the version to 3.0.0 just before release (READY at release time, Effort S)** --
-      the owner decided (S855) the next release is **3.0.0**. Until then `DESCRIPTION`, the
-      `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.
-      At release prep: set `DESCRIPTION` to 3.0.0, retitle the `NEWS.Rmd` dev block to 3.0.0 and
-      re-knit `NEWS.md`, reinstall the package and re-render `README` (Learning 376), and update
-      the 2.0.0.9000 cites in `ROADMAP.md`. The paper-dependency item below also waits on a
-      released 3.0.0.
-
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
       Phase 5 DONE S1101; READY: Phase 6, the version bump, is next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
@@ -43,7 +35,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Phase 5 (DONE S1101):** NEWS opens with where its tabs are explained, its sections run in the
       app's tab order, General Fixes is 54 lines, and a new feature gets a general description with no
       help-page detail (owner ruling S1101; the block 574 to 391 lines). The plan's section 7 orders the
-      phases; the item above is its Phase 6.
+      phases.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
@@ -236,5 +228,5 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       and what is new in 3.0 relative to the published reference (Vinson & Raboin 2015, *JAALAS*
       54(6):700-707, the package's key reference in `CLAUDE.md`, whose Project Overview also holds
       the NIH grant acknowledgment). Natural dependency, the owner's call: a released 3.0.0 to
-      cite (`DESCRIPTION` reads 2.0.0.9000 today); the documentation audit is finished (S1027,
+      cite (`DESCRIPTION` reads 3.0.0, not yet on CRAN); the documentation audit is finished (S1027,
       `CHANGELOG.md`), so the papers' figures match the software.
