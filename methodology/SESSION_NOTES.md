@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1110 Did
+**Deliverable (owner pick "Contributor tutorial"): the tutorial for prospective contributors (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1109 Did
 **Deliverable (owner picks "Report the read.csv bug", then "Claude tests the fix, drafts"): `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`, for Mark to read and post.** Commit `7ed790411`; claim `ee9b12355`; nothing posted, not pushed.
 The bug reproduces on Linux ARM64 under R 4.6.2 (Ubuntu and Debian); x86-64 and this Mac read `x`. New: only files of up to 5 lines are affected; a quoted number stops the read; signed-`char` machines lose a real 0xFF after a closing quote.
