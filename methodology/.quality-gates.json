@@ -112,6 +112,15 @@
       "command": "Rscript tools/perf/run.R gvStages-synthetic10000",
       "extract": "kinship \\(analysis pedigree\\) +[0-9.]+ s  peak +([0-9.]+) MB",
       "why": "Declared S1059 (2026-10-25) for Phase 6 (kinship memory), at the owner's S1059 scope question (\"Tighten it, add kinship()\"): kinship() of the analysis pedigree, the first row of gvStages-synthetic10000 (a generated 10,000-animal colony, 6,090 rows after the app's trim; not a real studbook), peaked at 569.8 MB with today's code (kinshipGeneral() swapped into the harness, 2 fresh runs) and 455.6 MB with Phase 6's n x n fill (2 fresh runs after REFACTOR 1c4b4d421; result 283.7 MB); threshold = the peak plus 10%, rounded up to a whole MB (owner-approved S1052 rule: 455.6 x 1.1 = 501.2, so 502). It shares its command with perf_calcFEFG_synthetic10000_seconds, so the ratchet runs the scenario once for both. Re-measured S1066 (2026-10-26, Phase 11, consolidation; 3 fresh runs, load average 4.8 in the first pass and 8 to 22 in the other two, from other work): 455.7 MB in all 3 runs, so the rule gives 502 MB again (455.7 MB plus 10%, rounded up); unchanged. Report: docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md."
+    },
+    {
+      "name": "changelog_entries_over_limit",
+      "direction": "max",
+      "threshold": 0,
+      "unit": "entries in methodology/CHANGELOG.md over 1,000 B",
+      "command": "python3 tools/changelog_entry_limit.py",
+      "extract": "entries over the limit: (\\d+)",
+      "why": "Declared S1107 (2026-10-31), owner pick \"Limit plus check\": entries from the S1107 claim upward stay at or under 1,000 B, older ones as written. Median bytes per session fell from 4,754 (S1060-S1080) to 837 (S1099-S1106) with no rule holding it; 0 of the 22 entries of S1099-S1106 exceed 1,000 B, the largest is 835 B. The tests are tools/test_changelog_entry_limit.py."
     }
   ]
 }

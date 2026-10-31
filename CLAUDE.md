@@ -252,6 +252,7 @@ matches what the session shipped.** One line per checklist (full text in that fi
 - **`methodology/CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
 - **`methodology/methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `methodology/SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
 - **`methodology/CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
+- **`methodology/CHANGELOG.md` entry limit** — every new entry stays at or under 1,000 B; fuller detail goes in the `methodology/HANDOFFS.md` receipt (gate `changelog_entries_over_limit`).
 - **`methodology/SESSION_NOTES.md` archive fence-scanner defect** — resolved S527/S528; historical note only.
 
 ### Development Process Contract override
