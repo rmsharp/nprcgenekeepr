@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 to 5 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101). The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1 to 6 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102). The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -844,6 +844,13 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
 - **Surface:** local plus GitHub CI. Neither runs CRAN's incoming check; that is Phase 7.
 - **Session boundary:** one session. Note: the pkgdown site shows 3.0.0 from this push on,
   before CRAN does. The 2.0.0 cycle did the same.
+- **DONE (S1102, owner picks "No new test", every gate "Yes", "Yes, push now"):** RED `87cdedde3`,
+  GREEN `7e0b96305` and `74715d95b` (two commits, not one: the bump is 7 files and
+  `methodology/SAFEGUARDS.md` caps a commit at 5). Clean read 495 files, 4,592 blocks, 0 failed, 0
+  errors; `lint_package()` 0; `devtools::check()` 0/0/0. CI on `74715d95b`: R-CMD-check's five legs,
+  test-coverage, lint and pkgdown all succeeded. The real app's title bar and About tab read 3.0.0.
+  No version-agreement guard, at the owner's word. `README.md:8` reads `3.0.0 (2026-10-31)` beside its
+  `2026-10-30` date line because `getVersion()` shows the install's UTC build date.
 
 ### Phase 7. The full local gate
 
@@ -908,7 +915,7 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
   `methodology/ROADMAP.md`.
 - After a few days, read CRAN's check page: 13 flavors plus additional issues, including the
   linux-arm64 job, which is Phase 1's real surface.
-- This unblocks the papers item (`BACKLOG.md:185`, "a released 3.0.0 to cite") and the outreach
+- This unblocks the papers item (`BACKLOG.md`, "a released 3.0.0 to cite") and the outreach
   item.
 - **Session boundary:** one session, after the acceptance email.
 
@@ -972,7 +979,7 @@ must).
 | 3 | static hygiene | DONE (S1097; D1 = A) | nothing | |
 | 4 | 4a `shinyBS` (always); 4b noSuggests | DONE (S1098; D6 = A, D2 = A) | nothing | |
 | 5 | NEWS release pass | DONE (S1099 General Fixes and the app order; S1101 new features described in general terms) | nothing | |
-| 6 | version bump | after 1-5 | Phases 1-5 landed | S |
+| 6 | version bump | DONE (S1102; CI green on `74715d95b`) | nothing | |
 | 7 | full local gate | after 6 | Phase 6 pushed, CI green | S |
 | 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |
 | 9 | submission | after 8 | the owner | owner |
@@ -1037,7 +1044,7 @@ Carried from 2.0.0 (numbers are that plan's §5):
 - New features. The owner's delayed items (contributor tutorial, both LabKey items, the
   kinship2-like package, outreach, papers) stay delayed; papers and outreach wait on Phase 9.
 - Issue #138 and the other open issues.
-- The held-back methodology sync (`BACKLOG.md:143`).
+- The held-back methodology sync (`BACKLOG.md`, "Take the methodology files").
 - `revdep/` (section 4.3, FYI).
 - The DESCRIPTION Description text: it already names every tab (`DESCRIPTION:20-37`), and
   Crossref has no DOI for Vinson and Raboin (2015), so the PMC link stays.

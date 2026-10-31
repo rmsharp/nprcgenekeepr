@@ -7,8 +7,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-      Phase 5 DONE S1101; READY: Phase 6, the version bump, is next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
-      D3 = B, S1097; D4 = A, S1092); Effort L, about 4-6 sessions left) --
+      Phase 5 DONE S1101; Phase 6 DONE S1102; READY: Phase 7, the full local gate, is next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
+      D3 = B, S1097; D4 = A, S1092); Effort M, an estimate of 3 sessions left plus the owner's runs and submission) --
       **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
@@ -34,8 +34,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`DESCRIPTION:37`) and the thoughtco.com URL (status 402, explained in 2.0.0's note).
       **Phase 5 (DONE S1101):** NEWS opens with where its tabs are explained, its sections run in the
       app's tab order, General Fixes is 54 lines, and a new feature gets a general description with no
-      help-page detail (owner ruling S1101; the block 574 to 391 lines). The plan's section 7 orders the
-      phases.
+      help-page detail (owner ruling S1101; the block 574 to 391 lines). **Phase 6 (DONE S1102):**
+      `DESCRIPTION`, NEWS, `CITATION.cff`, `README.md` and the roadmap read 3.0.0, CI green on
+      `74715d95b`; the public pkgdown site already shows 3.0.0. The owner decided (S855) the release is
+      3.0.0. After this the tree freezes at Phase 7. The plan's section 7 orders the phases.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
