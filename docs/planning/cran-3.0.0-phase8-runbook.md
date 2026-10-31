@@ -3,6 +3,9 @@
 **Companion to** `docs/planning/cran-3.0.0-submission-plan.md` Phase 8 and `cran-comments.md`. Written
 S1104, 2026-10-31, from the 2.0.0 runbook (`docs/planning/cran-2.0.0-phase5-runbook.md`).
 
+**Already run, S1105, 2026-10-31:** an agent started these at the owner's word and the results are in
+`cran-comments.md`, so run them again only if a frozen path changes. The macOS builder was down all day (HTTP 502).
+
 **Why you run these (D5 = A):** each one sends the package to an outside service, and the results reach
 you by email or through your GitHub token. Nothing here submits to CRAN. **Do not run
 `devtools::submit_cran()` from this runbook; that is Phase 9.**

@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 to 7 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103); Phase 8's note and runbook are written (S1104) and the owner's runs are next. The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1 to 8 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103; S1104 and S1105); Phase 9, the owner's submission, is next. The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -936,6 +936,17 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
     called. `slowTestFiles.txt`'s header says 79, and this run passed 1,924 against the check's 1,923, so the
     note says "about 80". 54 exports added since `v2.0.0`, none removed; no reverse dependencies; CRAN's page
     unchanged on 2026-10-31.
+- **Second half DONE (S1105, owner picks "Fold in CRAN results", "Claude starts them", D5 option B this once):**
+  - **Results, frozen paths equal to `74715d95b`:** win-builder R-devel (r90805) `Pkd6d075Q0To`, 284 s, R-release (4.6.2)
+    `7est97zX9ROI`, 303 s, R-oldrelease (4.5.3) `a97pG6c8qDzY`, 599 s: each 0 errors, 0 warnings, 1 NOTE ("de" and the
+    thoughtco URL, status 402; the owner opened the page, it loads). R-hub `maritime-wuerhosaurus`, Actions run
+    `41177345139`, R-devel 4.7.0 on linux, windows and macos: `Status: OK`, `[ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]`.
+  - **Check time:** 284 s meets D4's 540 s, and its log holds the same test totals, so nothing was skipped. The spread
+    for nearly this code is now 284 to 617 s on R-devel, wider than section 3.6's "about 100 s".
+  - **macOS builder: no result (owner ruling "Keep trying, then omit").** `https://mac.r-project.org/macbuilder/v1/submit`
+    answered 502 from 01:37 to 12:41 CDT, to a plain GET too, while the page itself answered 200. `cran-comments.md`
+    drops the line and lists the macOS runs that passed.
+  - `grep -c 'to be run before submission' cran-comments.md` prints 0. No shipped path changed, so Phase 7 stands.
 
 ### Phase 9. Submission (owner action)
 
@@ -990,7 +1001,7 @@ must).
   estimate), and learn the real number at Phase 8. A miss there sends the work back to Phase 2
   after the version bump.
 
-**D5. Who runs the cross-platform checks (Phase 8).** Ruled A (S1097).
+**D5. Who runs the cross-platform checks (Phase 8).** Ruled A (S1097); at S1105 the owner took (B) once.
 - **(A, recommended)** The owner, following the runbook, as for 2.0.0. The results email the
   maintainer, and R-hub needs the owner's GitHub token.
 - **(B)** An agent runs `devtools::check_win_*()` and `rhub::rhub_check()` after the owner says
@@ -1019,7 +1030,7 @@ must).
 | 5 | NEWS release pass | DONE (S1099 General Fixes and the app order; S1101 new features described in general terms) | nothing | |
 | 6 | version bump | DONE (S1102; CI green on `74715d95b`) | nothing | |
 | 7 | full local gate | DONE (S1103; `Status: OK` on macOS and in CRAN's arm64 image) | nothing | |
-| 8 | cover note + cross-platform runs | note and runbook written (S1104); fold-in next | the owner's runs (`docs/planning/cran-3.0.0-phase8-runbook.md`) | S + owner time |
+| 8 | cover note + cross-platform runs | DONE (S1104, S1105; macOS builder down, its line dropped by owner ruling) | nothing | |
 | 9 | submission | after 8 | the owner | owner |
 | 10 | after acceptance | after CRAN accepts | the acceptance email | S |
 

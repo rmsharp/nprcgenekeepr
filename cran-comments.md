@@ -35,7 +35,9 @@ and the package has grown since. A CRAN check therefore runs about 80 of the 496
 test files, chosen by a run-time trace so that each of the 236 exported functions
 is still called by a test it runs. Continuous integration runs every test file.
 
-* win-builder R-devel, "Check time in seconds": -- to be run before submission
+* win-builder "Check time in seconds" for 3.0.0: R-devel 284, R-release 303,
+  R-oldrelease 599. One earlier tarball read 617 and 520 on R-devel, so the
+  figure varies from run to run.
 
 ## R CMD check results
 
@@ -45,7 +47,7 @@ Local `R CMD check --as-cran` (macOS arm64, R 4.6.1) of the built 3.0.0 tarball:
 
     [ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]
 
-Incoming feasibility on win-builder -- to be run before submission:
+win-builder gives 1 NOTE on all three R versions, from incoming feasibility:
 
 * Possibly misspelled in DESCRIPTION: "de", from "de-identified", which is
   correct.
@@ -61,11 +63,11 @@ Incoming feasibility on win-builder -- to be run before submission:
   `[ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]`.
 * GitHub Actions, the same code: windows-latest (release), macos-latest
   (release), ubuntu-latest (devel, release, oldrel-1): all passed.
-* win-builder R-devel: -- to be run before submission
-* win-builder R-release: -- to be run before submission
-* win-builder R-oldrelease: -- to be run before submission
-* R-hub v2 (linux, windows, macos): -- to be run before submission
-* macOS builder (R-release): -- to be run before submission
+* win-builder R-devel (2026-10-30 r90805): 0 errors, 0 warnings, 1 NOTE (above).
+* win-builder R-release (4.6.2): 0 errors, 0 warnings, 1 NOTE (above).
+* win-builder R-oldrelease (4.5.3): 0 errors, 0 warnings, 1 NOTE (above).
+* R-hub v2 (linux, windows, macos; R-devel 4.7.0): `Status: OK` on each,
+  `[ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]`.
 
 ## Downstream dependencies
 

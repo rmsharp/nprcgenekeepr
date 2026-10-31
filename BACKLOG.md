@@ -7,8 +7,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-      Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; Phase 8's note and runbook written S1104; BLOCKED -- on the owner's five checks (`docs/planning/cran-3.0.0-phase8-runbook.md`), then a session folds in the results; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
-      D3 = B, S1097; D4 = A, S1092); Effort M, an estimate of 2 sessions left, folding in the results and after acceptance, plus the owner's runs and submission) --
+      Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; Phase 8 DONE S1105; BLOCKED -- on the owner's Phase 9 submission (`devtools::submit_cran()`, which no session runs), then on CRAN's answer; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
+      D3 = B, S1097; D4 = A, S1092); Effort S, one session left, after acceptance, plus the owner's submission) --
       **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
@@ -30,8 +30,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       run. **Phase 4 (DONE S1098):** `shinyBS` is in Imports, because without it the whole app fails
       to start, in 2.0.0 too (20 non-base packages draws no NOTE), and a check with Suggests absent
       reads `Status: OK`, run under a scratch R home because this Mac's R library holds 16 of the 17
-      Suggests (plan dragon 9). Still open: win-builder's incoming NOTE also flags "de"
-      (`DESCRIPTION:37`) and the thoughtco.com URL (status 402, explained in 2.0.0's note).
+      Suggests (plan dragon 9). win-builder's incoming NOTE flags "de"
+      (`DESCRIPTION:37`) and the thoughtco.com URL (status 402); `cran-comments.md` explains both.
       **Phase 5 (DONE S1101):** NEWS opens with where its tabs are explained, its sections run in the
       app's tab order, General Fixes is 54 lines, and a new feature gets a general description with no
       help-page detail (owner ruling S1101; the block 574 to 391 lines). **Phase 6 (DONE S1102):**
@@ -40,8 +40,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       3.0.0. **Phase 7 (DONE S1103):** the check reads `Status: OK` on macOS (with `V8` in a scratch
       library; 1 local-only NOTE without it) and in CRAN's arm64 image; clean read 0 failed, 0 errors;
       lint, URLs, spelling and the tarball listing clean. **The tree is frozen:** a change to `R/`,
-      `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. The plan's
-      section 7 orders the phases.
+      `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. **Phase 8
+      (DONE S1105):** `cran-comments.md` holds the results: win-builder 1 NOTE on all three R versions
+      (R-devel 284 s), R-hub `Status: OK` on three platforms; the macOS builder was down (502) all
+      day and its line dropped by owner ruling. **Before Phase 10:** `use_github_release()` tags the
+      `CRAN-SUBMISSION` SHA, and local notes commits sit ahead of `origin/master`, so push first. The
+      plan's section 7 orders the phases.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
