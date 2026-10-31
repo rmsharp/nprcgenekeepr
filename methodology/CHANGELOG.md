@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1105 claim (in progress): CRAN 3.0.0 plan Phase 8, second half: run the five checks and fold the results into cran-comments.md (owner pick at the Phase 0 picker, item 1 of 4, "Fold in CRAN results"; owner pick "Claude starts them", overriding D5 = A this once).
+
 ### 2026-10-31 · [ad hoc] S1104 DONE: CRAN 3.0.0 plan Phase 8, first half (owner pick "CRAN Phase 8"; note and runbook `01e6613c8`, record `fce171a03`). The 2.0.0 note saved to `cran/archive/20260717_cran-comments.md`; `cran-comments.md` is a 3.0.0 update with seven marked lines for the results to come; new `docs/planning/cran-3.0.0-phase8-runbook.md`, its calls tried or read in source (`rhub_doctor()` passed). No shipped path changed; `test_cranHygiene.R` passes; ratchet 11/11. Blocked on the owner's five checks. Evaluation of S1103 9/10, self 8/10 (Learning 1069). Not pushed.
 
 ### 2026-10-31 · [ad hoc] S1104 claim (in progress): CRAN 3.0.0 plan Phase 8, the cover note and the runbook (owner pick at the Phase 0 picker, item 1 of 4, "CRAN Phase 8").
