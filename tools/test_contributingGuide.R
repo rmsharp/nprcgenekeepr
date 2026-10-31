@@ -46,12 +46,14 @@ articleSection <- function(heading) {
 ## Backticked tokens shaped like a path in this repository. A token with a
 ## placeholder such as `test_<name>.R` names no one file, so it is left out.
 namedPaths <- function(text) {
-  tokens <- regmatches(text, gregexpr("`[^`\n]+`", text))[[1L]]
-  tokens <- gsub("`", "", tokens, fixed = TRUE)
+  ticked <- regmatches(text, gregexpr("`[^`\n]+`", text))[[1L]]
+  ## A path the reader is told to pass to a command, inside a code block.
+  quoted <- regmatches(text, gregexpr("\"[^\"\n]+\\.[A-Za-z]+\"", text))[[1L]]
+  tokens <- gsub("[`\"]", "", c(ticked, quoted))
   isPath <- grepl(
     paste0(
       "^[.A-Za-z0-9_-]+/[.A-Za-z0-9_/-]*$",
-      "|^[.A-Za-z0-9_/-]+\\.(R|Rmd|md|qmd|yml|yaml|lock|csv)$",
+      "|^[.A-Za-z0-9_/-]+\\.(R|Rmd|md|qmd|yml|yaml|lock|csv|txt)$",
       "|^(DESCRIPTION|NAMESPACE)$"
     ),
     tokens
@@ -129,7 +131,21 @@ test_that("the commands a contributor runs are all there", {
   expectInSection <- function(heading, command) {
     expect_match(articleSection(heading), command, fixed = TRUE)
   }
-  expectInSection("Set up a copy of the package", "renv::restore()")
+  ## Not renv::restore(): from an empty package cache it failed on S1110's Mac
+  ## under R 4.6.2. This route installed everything from a fresh clone.
+  expectInSection(
+    "Set up a copy of the package",
+    'renv::install(dependencies = "most", exclude = "Matrix")'
+  )
+  expectInSection(
+    "Set up a copy of the package",
+    'renv::install(c("devtools", "lintr", "roxygen2@'
+  )
+  ## A fresh clone fails test_getVersion.R until the package has been installed.
+  expectInSection(
+    "Set up a copy of the package",
+    "devtools::install(upgrade = FALSE)"
+  )
   expectInSection("Set up a copy of the package", "pkgload::load_all(")
   expectInSection("Run the tests", "testthat::test_file(")
   expectInSection("Run the tests", "NOT_CRAN")
@@ -139,6 +155,21 @@ test_that("the commands a contributor runs are all there", {
   expectInSection("Update the documentation", "devtools::document()")
   expectInSection("Update the documentation", "NEWS.Rmd")
   expectInSection("Update the documentation", "_pkgdown.yml")
+})
+
+test_that("the guide installs the roxygen2 version the package records", {
+  ## Any other version rewrites DESCRIPTION, NAMESPACE and many help pages when
+  ## a contributor runs devtools::document(); 8.1.1 changed 27 files (S1110).
+  recorded <- read.dcf(
+    file.path(repoRoot, "DESCRIPTION"),
+    fields = "Config/roxygen2/version"
+  )[[1L]]
+  expect_false(is.na(recorded))
+  expect_match(
+    guideText(articlePath),
+    paste0("roxygen2@", recorded),
+    fixed = TRUE
+  )
 })
 
 test_that("tests are required with a change, and test-first is explained", {
