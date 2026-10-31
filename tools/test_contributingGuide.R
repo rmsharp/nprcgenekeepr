@@ -12,13 +12,7 @@
 
 library(testthat)
 
-repoRoot <- local({
-  dir <- getwd()
-  while (!file.exists(file.path(dir, "DESCRIPTION")) && dirname(dir) != dir) {
-    dir <- dirname(dir)
-  }
-  dir
-})
+repoRoot <- findRepoRoot()
 shortPath <- file.path(repoRoot, ".github", "CONTRIBUTING.md")
 articlePath <- file.path(repoRoot, "vignettes", "articles", "contributing.qmd")
 

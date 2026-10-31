@@ -3,25 +3,19 @@
 ## What it holds. From an empty cache, restore failed on two counts: renv.lock
 ## pinned Matrix older than R's own copy, so renv downgraded it and the source
 ## build stopped on a missing libintl.h; and curl, once behind the current
-## release, had to build from source and then could not load. Mark's rulings: the
-## lock names a dated repository, so its versions stay available as ready-built
-## packages, and contributors use restore.
+## release, had to build from source and then could not load. Mark's rulings:
+## the lock names a dated repository, so its versions stay available as
+## ready-built packages, and contributors use restore.
 ##
-## It lives in tools/ because tests/ is frozen until CRAN answers on 3.0.0, so CI
-## does not run it. Run the file checks with:
+## It lives in tools/ because tests/ is frozen until CRAN answers on 3.0.0, so
+## CI does not run it. Run the file checks with:
 ##   Rscript -e 'testthat::test_file("tools/test_renvRestore.R")'
-## Add the real restore, about 20 seconds and network access, with:
-##   NPRC_RUN_RESTORE=true Rscript -e 'testthat::test_file("tools/test_renvRestore.R")'
+## Add the real restore, about 20 seconds and network access, by setting
+## NPRC_RUN_RESTORE=true in front of that command.
 
-library(testthat)
+library(testthat) # nolint: undesirable_function_linter.
 
-repoRoot <- local({
-  dir <- getwd()
-  while (!file.exists(file.path(dir, "DESCRIPTION")) && dirname(dir) != dir) {
-    dir <- dirname(dir)
-  }
-  dir
-})
+repoRoot <- findRepoRoot()
 lock <- jsonlite::fromJSON(
   file.path(repoRoot, "renv.lock"),
   simplifyVector = FALSE
@@ -54,7 +48,10 @@ test_that("the lock does not hold R's own packages back", {
   ## cannot build on a Mac without libintl.h.
   for (package in c("Matrix", "lattice", "codetools")) {
     description <- file.path(R.home("library"), package, "DESCRIPTION")
-    skip_if_not(file.exists(description), paste(package, "is not in R's library"))
+    skip_if_not(
+      file.exists(description),
+      paste(package, "is not in R's library")
+    )
     own <- read.dcf(description, fields = "Version")[[1L]]
     expect_true(
       package_version(lockVersions[[package]]) >= package_version(own),
@@ -69,7 +66,7 @@ test_that("the lock holds everything the package needs", {
     file.path(repoRoot, "DESCRIPTION"),
     fields = c("Imports", "Suggests")
   )
-  declared <- packageNames(strsplit(fields, ","))
+  declared <- packageNames(strsplit(fields, ",", fixed = TRUE))
   needed <- unique(c(
     declared,
     packageNames(lapply(lock$Packages, function(p) {
@@ -77,7 +74,8 @@ test_that("the lock holds everything the package needs", {
     }))
   ))
   standard <- c("R", tools::standard_package_names()$base)
-  expect_setequal(setdiff(needed, c(standard, names(lockVersions))), character())
+  missing <- setdiff(needed, c(standard, names(lockVersions)))
+  expect_setequal(missing, character())
 })
 
 ## Restores this repository's lock from empty folders in a child R process. The
@@ -101,19 +99,19 @@ runRestore <- function() {
     dir.create(folder)
   }
   script <- file.path(home, "restore.R")
-  writeLines(c(
-    'options(renv.consent = TRUE)',
-    'first <- normalizePath(.libPaths()[1L])',
-    'root <- normalizePath(Sys.getenv("RENV_PATHS_LIBRARY_ROOT"))',
-    'if (!startsWith(first, root)) {',
-    '  cat("NOT-LOADED", first, "\\n")',
-    '  quit(status = 3L)',
-    '}',
-    'cat("LOADED\\n")',
-    'renv::restore(prompt = FALSE)',
-    'needed <- names(renv::lockfile_read("renv.lock")$Packages)',
-    'cat("MISSING:", setdiff(needed, rownames(installed.packages())), "\\n")'
-  ), script)
+  writeLines(r"(
+    options(renv.consent = TRUE)
+    first <- normalizePath(.libPaths()[1L])
+    root <- normalizePath(Sys.getenv("RENV_PATHS_LIBRARY_ROOT"))
+    if (!startsWith(first, root)) {
+      cat("NOT-LOADED", first, "\n")
+      quit(status = 3L)
+    }
+    cat("LOADED\n")
+    renv::restore(prompt = FALSE)
+    needed <- names(renv::lockfile_read("renv.lock")$Packages)
+    cat("MISSING:", setdiff(needed, rownames(installed.packages())), "\n")
+  )", script)
   output <- withr::with_dir(
     project,
     suppressWarnings(system2(
@@ -158,8 +156,8 @@ test_that("restore works from an empty package cache", {
   expect_match(result$text, "MISSING: *\\n?$")
   ## A rewritten activate script leaves every contributor a changed file.
   expect_true(result$activateUnchanged)
-  ## A dated repository serves every version ready-built on a Mac. A source build
-  ## is the first sign that the lock has stopped matching it.
+  ## A dated repository serves every version ready-built on a Mac. A source
+  ## build is the first sign that the lock has stopped matching it.
   if (identical(Sys.info()[["sysname"]], "Darwin")) {
     expect_no_match(result$text, "built from source", fixed = TRUE)
   }
