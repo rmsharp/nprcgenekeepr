@@ -208,6 +208,15 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-25.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1104
+date: 2026-10-31
+status: pending
+active_task: CRAN 3.0.0 plan Phase 8, the cover note and the runbook (owner pick "CRAN Phase 8").
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S1103
 date: 2026-10-31
 status: complete

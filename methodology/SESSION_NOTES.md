@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1104 Did
+**Deliverable (owner pick "CRAN Phase 8"): the 3.0.0 cover note and the runbook (IN PROGRESS).** Started 2026-10-31 01:03. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1103 Did
 **Deliverable (owner pick "CRAN Phase 7"; verification only, no code): CRAN plan Phase 7 DONE.** Claim `0a3b12a1b`, record `c0cf01bd7`; **not pushed** (notes only).
 **Verified at `0a3b12a1b`** (frozen paths equal `74715d95b`, CI green): check with `manual = TRUE` `Status: 1 NOTE` (`V8` unavailable, formulas skipped), `Status: OK` with `V8` in
