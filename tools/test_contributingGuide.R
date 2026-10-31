@@ -151,7 +151,7 @@ test_that("the commands a contributor runs are all there", {
   )
   expectInSection(
     "Set up a copy of the package",
-    'renv::install(c("devtools", "lintr", "roxygen2@'
+    'renv::install(c("devtools", "lintr", "quarto", "roxygen2@'
   )
   ## A fresh clone fails test_getVersion.R until the package has been installed.
   expectInSection(

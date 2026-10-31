@@ -58,7 +58,7 @@ tools and your copy of the package, and answer yes when asked:
 
 ```r
 renv::restore()
-renv::install(c("devtools", "lintr", "roxygen2@8.0.0"))
+renv::install(c("devtools", "lintr", "quarto", "roxygen2@8.0.0"))
 devtools::install(upgrade = FALSE)
 ```
 
