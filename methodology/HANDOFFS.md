@@ -210,17 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1101
 date: 2026-10-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- CRAN 3.0.0 plan Phase 5, second half, from S1100's draft: condense Pedigree Diagram and Breeding Group Formation in NEWS.Rmd, the owner approving the text (owner pick at the Phase 0 picker, "CRAN Phase 5: finish NEWS").
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/cran-3.0.0-submission-plan.md:801 (Phase 5's S1099 paragraph); NEWS.Rmd:73 (Pedigree Diagram), NEWS.Rmd:221 (Breeding Group Formation); tests/testthat/test_haremSexRatioStopWording.R:28
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 4
+active_task: CRAN 3.0.0 plan Phase 5 DONE. Phase 6, the version bump, is next. Not pushed.
+what_was_done: Owner ruling: "If the items are about new features, we only need to generally describe the features and not provide help-page detail." Owner picks "CRAN Phase 5: finish NEWS" and every gate "Yes". Eight NEWS sections fell, the block 574 to 391 lines; every function it named stays named and makePedigreeDiagramData() is named for the first time. Reconcile cd2046589, claim 897ad786d, RED 5b548621c, GREEN e7bb0bd89, REFACTOR 26001d3e7.
+next_steps: Plan Phase 6, docs/planning/cran-3.0.0-submission-plan.md section "Phase 6", BACKLOG.md:8: DESCRIPTION to 3.0.0, the NEWS heading, re-knit, reinstall, re-render README, ROADMAP cites. An estimate: one session. Pushing is the owner's word.
+key_files: NEWS.Rmd:14-404 (the block); tests/testthat/test_newsReleaseState.R:182 (newestNewsBlock); test_newsReleaseState.R newFeatureDetail (the rule, above the #168 test); docs/planning/cran-3.0.0-submission-plan.md:788 (Phase 5, S1101 paragraph); BACKLOG.md:8 (the bump)
+gotchas: A new feature's detail goes to help pages and the guide, never NEWS; detail about changes to things 2.0.0 had stays. 2 of 22 facts leaving NEWS: the "113 individuals" count is nowhere else, and the trend box's words were not found in the guide by search. "Speed and Memory" figures were not checked against v2.0.0 except loading (about 1.0 s against 0.4 s; NEWS says 0.9). git grep -E with a word boundary found nothing here; use plain grep. S1100's stale entry stays in git worktree list, harmless. The owner did not ask for a harem-specific relatives option; none is recorded.
+runtime_smoke: n/a -- release notes and test code only; no R/ change. Verified: clean read 495 files 4,592 blocks 0 failed 0 errors, lint_package() 0, devtools::check() 0/0/0, 8 of 8 wrong sentences caught. Not on CI: nothing pushed this session.
+changelog_ref: 897ad786d (claim); cd2046589 (S1100 backfill); the close-out commit (DONE entry)
+commit: 26001d3e7
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 0a07a5025a1c · manifest 7e3e82ab3ae0
 ```
 
 ```handoff

@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-30 · [ad hoc] S1101 DONE: CRAN 3.0.0 plan Phase 5 DONE (owner ruling: a new feature gets a general description, no help-page detail; every TDD gate "Yes"; RED `5b548621c`, GREEN `e7bb0bd89`, REFACTOR `26001d3e7`). The newest NEWS block 574 to 391 lines; `newFeatureDetail` in `test_newsReleaseState.R` holds the rule. Clean read 495 files, 4,592 blocks, 0 failed, 0 errors; lint 0; check 0/0/0; ratchet 11/11 (`0a07a5025a1c`). Learning 1066. Not pushed.
+
 ### 2026-10-30 · [ad hoc] S1101 claim (in progress): CRAN 3.0.0 plan Phase 5, second half (owner pick at the Phase 0 picker, item 1 of 4, "CRAN Phase 5: finish NEWS"): condense Pedigree Diagram and Breeding Group Formation in `NEWS.Rmd`, from S1100's draft.
 
 ### 2026-10-30 · [ad hoc] Backfilled (reconcile-on-read): S1100 ended after its claim `3a8080491` with no later commit and no owner reply to its draft of the two NEWS sections; `NEWS.Rmd` is unchanged. Receipt marked `reconciled` by S1101's Phase 0.

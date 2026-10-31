@@ -99,29 +99,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1101 Did
-**Deliverable (IN PROGRESS, claimed 21:35 CDT):** CRAN plan Phase 5, second half, from S1100's draft: condense Pedigree Diagram and Breeding Group Formation in `NEWS.Rmd`, the owner approving the text.
-**Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "CRAN Phase 5: finish NEWS", every TDD gate "Yes"; strict TDD): CRAN plan Phase 5 DONE.**
+Claim `897ad786d`, RED `5b548621c`, GREEN `e7bb0bd89`, REFACTOR `26001d3e7`, reconcile `cd2046589`; **not pushed**.
+**What changed:** owner ruling: a new feature gets a general description, no help-page detail. Eight sections fell, the block
+574 to 391 lines (`NEWS.Rmd:14-404`). `test_newsReleaseState.R`'s `newFeatureDetail` holds the rule (45 phrases, both NEWS
+files); five Diagram tests now check what the section says rather than require it; `newestNewsBlock()` is its one reader.
+**Verified:** clean read 495 files 4,592 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0; 8 of 8 wrong
+sentences caught. No runtime change. Not on CI. 20 of 22 facts leaving NEWS were found in a help page or article.
+**Handoff evaluation of S1100: 4/10.** Helped: the claim stub; the draft survived in its transcript. Missing: its text only in
+scratch, gone by the next session. Wrong: its list of cuts omitted 13, and "most runs" was called unconfirmed against Learning 949's 29 of 40.
+S1099's notes earned their 8: the plan line and the pins were right.
+**Self: 7/10.** + every gate first try; the wrong-sentence check; the ruling recorded before redrafting. - four calls timing speed
+figures nobody asked about, the owner stopped it; repeated S1100's weak reason; one silence nudge (Learning 1066).
+**Gotchas:** an audit stays on the named class; `git grep -E '\b'` found nothing here, use plain `grep`; S1100's stale worktree
+entry is still in `git worktree list`, harmless; "Speed and Memory" figures unchecked against `v2.0.0` except loading.
+**Next:** plan Phase 6, the version bump (`BACKLOG.md:8`, `docs/planning/cran-3.0.0-submission-plan.md`).
 
-### What Session 1100 Did
-Claim `3a8080491` only: a draft of the two NEWS sections, no owner reply, `NEWS.Rmd` unchanged. Receipt `reconciled` by S1101 (`cd2046589`).
-
-### What Session 1099 Did
-**Deliverable (owner picks "CRAN Phase 5: NEWS", "Move into feature sections", "Give each tab a section", every TDD gate "Yes"; strict TDD):
-CRAN plan Phase 5, first half.** Claim `813ec8738`, RED `0207f4762` `24df2febb`, GREEN `dc0861d16`, REFACTOR `a12fde393`; **not pushed**.
-**What changed:** `NEWS.Rmd:22` opens with where the tabs are explained and how to reach the guide; 17 sections run in `R/appUI.R:171`'s order,
-five new; General Fixes 183 to 54 lines (`NEWS.Rmd:534`); the block 611 to 574; fixes to things absent at `v2.0.0` get no line.
-`test_newsGeneralFixesGrouped.R` rewritten (`appOrder` `:29`, `factsByHome` `:73`); `helper-newsBlocks.R:24,36` is the one section reader.
-**Verified:** clean read 495 files 4,593 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0; 12 of 12 guard mutants; ratchet 11/11
-(`6a9c1a3a57f9`). No runtime change. Not on CI. Not measured: that each remaining "no longer" bug reproduces at `v2.0.0`.
-**Handoff evaluation of S1098: 8/10.** Helped: the plan line, D3 = B, "re-measure the sizes" (General Fixes had grown 175 to 183). Wrong: the plan's
-"two NEWS guards" (S1091's, carried; 16 more files read NEWS). Missing: 55,357 B read as 25,131 tokens, past the Read tool's cap, so this file's limit is below that.
-**Self: 7/10.** + `v2.0.0` check of each item; pins mapped before text; 12 mutants, one survivor traced to my mutant. - a note in the review file; a wrong
-dashboard prediction, retracted; three boxes bounced with text not yet settled; the plan's "prose" phase needed gates (Learning 1065).
-**Gotchas:** grep every NEWS reader first; only proposed text in a review file; `news-proposed.md` was scratch; a `\s+` anchor can eat a line break; "Large
-files detected" names a gitignored RStudio cache file (a false alarm; removing it moves the flag to a jQuery copy, the rule reads a top-10 rank).
-**Next:** plan Phase 5's S1099 paragraph (`docs/planning/cran-3.0.0-submission-plan.md:801`): Breeding Group Formation (`NEWS.Rmd:221`), then Pedigree Diagram (`NEWS.Rmd:73`).
-
-### Sessions 947-1098 (condensed S950 to S1099; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1100 (condensed S950 to S1101; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1100: claim `3a8080491` only, its receipt `reconciled` by S1101; a draft, no owner reply.
+S1099 (CRAN plan Phase 5 first half; Learning 1065; hashes in `CHANGELOG.md`): NEWS opens with where its tabs are explained, 17
+sections in `R/appUI.R`'s order, General Fixes 183 to 54 lines. **Gotchas kept:** grep every NEWS reader first; only proposed
+text in a review file; "Large files detected" is a false alarm (it reads a top-10 rank).
 S1098 (CRAN plan Phase 4 DONE; Learning 1064; hashes in `CHANGELOG.md`): `shinyBS` in Imports, the app failed to start without it, in 2.0.0 too; a check with
 Suggests absent reads `Status: OK`. **Gotchas kept:** R's own library holds 16 of the 17 Suggests, so hide it (plan Phase 4 DONE paragraph, dragon 9); testthat skips a
 test on a missing package; `dplyr` stays in Suggests for `test_makeRelationsClasses.R:4`, `kableExtra` for the vignettes.
