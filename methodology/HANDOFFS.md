@@ -210,8 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1103
 date: 2026-10-31
-status: pending
-active_task: CRAN 3.0.0 plan Phase 7, the full local gate (owner pick "CRAN Phase 7").
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: CRAN 3.0.0 plan Phase 7 DONE; the tree is frozen. Phase 8, the cover note and the runbook for the owner's cross-platform runs, is next. Not pushed: notes only.
+what_was_done: Owner pick "CRAN Phase 7"; verification only, no code. Claim 0a3b12a1b, record c0cf01bd7. At 0a3b12a1b (frozen paths equal 74715d95b, CI green): the section 3.1 check plus manual = TRUE read Status: 1 NOTE (V8 unavailable, formulas skipped) and Status: OK with V8 in a scratch library, [ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]; clean read 495 files, 4,592 blocks, 0 failed, 0 errors, 225 skipped; lint_package() 0; url_check() 20 URLs correct; spell_check_package() nothing; tarball 3,507,687 B, 12 top-level entries. CRAN's arm64 image: R CMD check of that tarball Status: OK, same counts; whole suite 0 failed, 7 errors, each message read, all missing tools (quarto 4, Chrome 3), filed BACKLOG.md:195 for after acceptance.
+next_steps: Plan Phase 8, docs/planning/cran-3.0.0-submission-plan.md:895: save the 2.0.0 note as cran/archive/20260717_cran-comments.md, rewrite cran-comments.md as an update with the Phase 7 results and the linux-arm64 fix, adapt docs/planning/cran-2.0.0-phase5-runbook.md, install rhub. The owner runs the cross-platform checks (D5 = A). HARD STOP before the upload. An estimate: one session for the note and runbook, one to fold in the results. Pushing is the owner's word.
+key_files: docs/planning/cran-3.0.0-submission-plan.md:855 (Phase 7 and its DONE paragraph), :895 (Phase 8), section 8 dragons 10-11; BACKLOG.md:8, :195; PROJECT_LEARNINGS.md Learning 1068; tests/testthat/slowTestFiles.txt:296,301.
+gotchas: A change to R/, tests/, man/, vignettes/, inst/, data/ or DESCRIPTION repeats Phase 7; cran-comments.md, docs/, methodology/ and BACKLOG.md do not ship. V8 is in neither DESCRIPTION nor renv.lock (recipe: dragon 10). Container ngk-arm64-s1093 is stopped, holds 163 packages and /root/s1103, and needs RENV_CONFIG_AUTOLOADER_ENABLED=false (dragon 11). win-builder's incoming NOTE may flag "de" and thoughtco.com (402) though url_check() passed here. HANDOFFS.md nears its 196,608 B warn line and CHANGELOG.md its 65,536 B trim budget.
+runtime_smoke: n/a -- no code changed; S1102 ran the real app on these same frozen paths. R CMD check ran on macOS and Linux ARM64. Not on CI: nothing pushed. These surfaces cannot enforce Windows, R-devel or the 10-minute limit; that is Phase 8.
+changelog_ref: 0a3b12a1b (claim); the close-out commit (DONE entry)
+commit: c0cf01bd7
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 22d33a355f47 · manifest 7e3e82ab3ae0
 ```
 
 ```handoff

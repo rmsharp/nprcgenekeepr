@@ -99,30 +99,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1103 Did
-**Deliverable (IN PROGRESS, claimed 00:30 CDT):** CRAN plan Phase 7, the full local gate. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner pick "CRAN Phase 7"; verification only, no code): CRAN plan Phase 7 DONE.** Claim `0a3b12a1b`, record `c0cf01bd7`; **not pushed** (notes only).
+**Verified at `0a3b12a1b`** (frozen paths equal `74715d95b`, CI green): check with `manual = TRUE` `Status: 1 NOTE` (`V8` unavailable, formulas skipped), `Status: OK` with `V8` in
+a scratch library (2 m 15 s; `FAIL 0 | WARN 0 | SKIP 54 | PASS 1923`); clean read 495 files 4,592 blocks 0 failed 0 errors 225 skipped; `lint_package()` 0; 20 URLs and spelling
+clean; tarball 3,507,687 B, 12 top-level entries; ratchet 11/11. CRAN's arm64 image: `R CMD check` `Status: OK`, same counts; whole suite 0 failed, 7 errors, all missing tools
+(`quarto` 4, Chrome 3; `BACKLOG.md:195`, for after acceptance). No Windows, R-devel or 10-minute reading here; that is Phase 8.
+**Handoff evaluation of S1102: 9/10.** Helped: "Next" with the plan's line, the freeze gotcha, the container's state. Missing: that the container lacked 9 packages (S1098
+added `shinyBS`) and that its bind mount names a deleted folder, neither costly. Wrong: nothing found; "one session" held.
+**Self: 8/10.** + every Phase 7 step in one pass, no owner correction, the NOTE run away rather than explained, each of the 7 errors read. - two commands stopped on `echo =====`, a
+trap these notes name; my first container package list came from renv's empty library; my claim stub guessed its time (00:30; `date` said 00:24) (Learning 1068).
+**Gotchas:** the tree is frozen: a change to `R/`, `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7 (`cran-comments.md`, `docs/`, `methodology/`
+and `BACKLOG.md` do not ship). V8 recipe: plan dragon 10; container `ngk-arm64-s1093` (stopped; 163 packages; `/root/s1103`): dragon 11. win-builder's incoming NOTE may flag "de"
+(`DESCRIPTION:37`) and thoughtco.com (402), though `url_check()` passed here. `HANDOFFS.md` nears its 196,608 B warn line and `CHANGELOG.md` its 65,536 B trim budget.
+**Next:** plan Phase 8 (`docs/planning/cran-3.0.0-submission-plan.md:895`, `BACKLOG.md:8`): save the 2.0.0 note to `cran/archive/20260717_cran-comments.md`, rewrite
+`cran-comments.md` as an update with these results, adapt `docs/planning/cran-2.0.0-phase5-runbook.md`; the owner runs the checks (D5 = A). HARD STOP before upload.
 
-### What Session 1102 Did
-**Deliverable (owner picks "CRAN Phase 6: bump", "No new test", every TDD gate "Yes", "Yes, push now"; strict TDD): CRAN plan Phase 6 DONE.**
-Claim `a0df353ef`, RED `87cdedde3`, GREEN `7e0b96305` `74715d95b`, REFACTOR found nothing; pushed `1778d738f..74715d95b`, 19 commits.
-**What changed:** `DESCRIPTION:4`, `NEWS.Rmd:14` and `NEWS.md:5` ("3.0.0 (20261030)"), `CITATION.cff:11`, `README.md:4,8`,
-`methodology/ROADMAP.md:11-13` read 3.0.0; the version item left `BACKLOG.md`, guard `test_docsAuditSixRulings.R:91-93`.
-**Verified:** clean read 495 files 4,592 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0; ratchet 11/11; CI green
-on `74715d95b` (R-CMD-check's five legs, test-coverage, lint, pkgdown); the real app's title bar and About tab read 3.0.0.
-**Handoff evaluation of S1101: 9/10.** Helped: "Next" named the phase and its plan section, and pushing as the owner's word. Missing:
-nothing it could know; the plan's own one-commit step and stale `BACKLOG.md:207` date from S1091. Wrong: nothing found.
-**Self: 7/10.** + every gate first try, the version anchors read before editing, CI read leg by leg. - the gate said one commit and the
-5-file cap made two; "all 3 tagged releases" overstated the tags, corrected after the answer; my first app launch probably opened a
-browser tab; one silence nudge (Learning 1067).
-**Gotchas:** after Phase 7 any change to `R/`, `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats it;
-`runGeneKeepR(port = <p>, launch.browser = FALSE)`, `options()` do nothing; `README.md:8` shows the install's UTC build date; v2.0.0's
-NEWS date moved after its tag (20260708 to 20260721); container `ngk-arm64-s1093` is stopped, not removed.
-**Next:** plan Phase 7, the full local gate (`docs/planning/cran-3.0.0-submission-plan.md:855`, `BACKLOG.md:8`). The notes commit is unpushed.
-
-### Sessions 947-1101 (condensed S950 to S1102; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1102 (condensed S950 to S1103; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1102 (CRAN plan Phase 6 DONE; Learning 1067; hashes in `CHANGELOG.md`): every version line reads 3.0.0 (`DESCRIPTION:4`, `NEWS.Rmd:14`, `CITATION.cff:11`, `README.md:4,8`); pushed
+`1778d738f..74715d95b`, CI green. **Gotchas kept:** `runGeneKeepR(port = <p>, launch.browser = FALSE)`, `options()` do nothing; `README.md:8` shows the install's UTC build date;
+v2.0.0's NEWS date moved after its tag (20260708 to 20260721).
 S1101 (CRAN plan Phase 5 DONE; Learning 1066; hashes in `CHANGELOG.md`): a new feature gets a general description in NEWS, the block
 574 to 391 lines; `newFeatureDetail` in `test_newsReleaseState.R` holds the rule. **Gotchas kept:** an audit stays on the named class;
 `git grep -E '\b'` found nothing here, use plain `grep`; "Speed and Memory" figures unchecked against `v2.0.0` except loading.
-S1100: claim `3a8080491` only, its receipt `reconciled` by S1101; a draft, no owner reply.
 S1099 (CRAN plan Phase 5 first half; Learning 1065; hashes in `CHANGELOG.md`): NEWS opens with where its tabs are explained, 17
 sections in `R/appUI.R`'s order, General Fixes 183 to 54 lines. **Gotchas kept:** grep every NEWS reader first; only proposed
 text in a review file; "Large files detected" is a false alarm (it reads a top-10 rank).
@@ -191,15 +189,13 @@ added to `trendDefaultMetrics` fails `test_snapshotTrendsGuidance.R` until the p
 `app$get_screenshot(file, selector = "#<id>")`; roxygen2 is not on CI's test machines; a `helper-*.R` loads for every test file.
 S1067: the nightly `shinytest2` deceased-slash failure (run `40286217416`), test code only: CI's Chrome paints the canvas on the CPU and
 `diagram_pixel_js()` counted a partly see-through outline pixel as white; the reader now blends onto white, outline cutoff 194, 25
-sub-pixel shifts, one `overhang_js`. Owner ruling: local runs test CPU and GPU (`BACKLOG.md:282`). Claim `bb8c3a8ba`, close-out `ccd6e9028`,
-pushed `779d24724..ccd6e9028`; S1066 8/10, self 8/10 (Learning 1033). **Gotchas kept:** run pixel tests also under
+sub-pixel shifts, one `overhang_js`. Owner ruling: local runs test CPU and GPU (`BACKLOG.md:282`). (Learning 1033) **Gotchas kept:** run pixel tests also under
 `chromote::set_chrome_args(c(chromote::default_chrome_args(), "--disable-accelerated-2d-canvas"))`; `net.redraw()` paints at once;
 `R_LIBS=<scratch>:` the renv path `.libPaths()` prints; `test_file(desc =)` runs one block.
 S1066: Phase 11 of the campaign, consolidation (no code; the campaign is complete): `docs/audits/PERF_CAMPAIGN_REPORT_2026-10-26.md`, 20
 scenarios x 3 at `c4fb07453` against Phase 0 (the example's analysis 3.28 to 0.23 s, 1,000 trials 23.04 to 5.54 s, the app's upload + QC
 696.6 to 516.0 MB); NEWS "Speed and Memory"; gates `reportGV` 0.3 s, relationships 0.1 s, backfill 1.3 s; `helper-perfReference.R` kept, D2
-plain R; four leftovers filed (`BACKLOG.md:270`, `:280`, `:287`, `:294`). Claim `c4fb07453`, close-out `25fb3aade`; S1065 8/10, self 8/10
-(Learning 1032). **Gotchas kept:** at load 8 to 22 the harness reads up to 10% slow; old code runs from `git worktree add --detach
+plain R; four leftovers filed (`BACKLOG.md:270`, `:280`, `:287`, `:294`). (Learning 1032) **Gotchas kept:** at load 8 to 22 the harness reads up to 10% slow; old code runs from `git worktree add --detach
 <scratch>/pre <sha>` with today's `tools/perf/` copied in.
 S1062-S1065 (the campaign's Phases 8-10; strict TDD where code changed; evaluations 8-9/10, self 8/10; Learnings 1028-1031; hashes in
 `CHANGELOG.md`): S1062 the app's memory design (`docs/planning/app-kinship-memory-design.md`, D5 ruled (c)); S1063 Breeding Groups,
@@ -231,8 +227,7 @@ kept:** frozen copies live in `helper-perfReference.R` and shared inputs in `hel
 `lint_package()` never reads `tools/`; R 4.6's `gc()` has a "limit (Mb)" column (find "max used" by name); `test_file()` changes the
 working directory; to find the tests an edit can reach, drop `#` lines from `git grep -n '<file>' -- tests/testthat` and open each hit.
 S1049: the trend chart drops a blank metric value without a console warning (`na.rm = TRUE`, `R/plotSnapshotTrends.R:125,131,134`) and three
-tests pin the panel notice's 200-character cut (`R/modSnapshotTrends.R:427`); strict TDD; claim `16ddb997f`, close-out `520bd5dc8`; S1048 9/10,
-self 8/10 (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws
+tests pin the panel notice's 200-character cut (`R/modSnapshotTrends.R:427`); strict TDD (Learning 1015). **Gotchas kept:** wrap the whole `testServer()` call to catch a warning raised while a plot renders; a "draws
 quietly" test must draw (`plotGrob()`).
 S1048: `methodology/CHANGELOG.md` trimmed 200,357 to 23,778 B (`--cut 2026-10-22`; Learning 1014). **Gotchas kept:** `--cut <date>` keeps records
 dated after the date; the trimmer's own entry sits under the pointer block, so the DONE entry goes above it.
@@ -271,16 +266,14 @@ S1033-S1034 (hashes in `CHANGELOG.md`; Learnings 999-1000): the ten red archive-
 S1032: methodology sync, 7 of 10 synced files updated from the methodology checkout `515b3a7e` (dashboard 2.23.0, trimmer 1.8.1 with this project's `SESSION_NOTES.md` patch re-applied,
 `quality_ratchet.py` 1.5.1, four docs); `SESSION_RUNNER.md`, `SAFEGUARDS.md` and `close_out_report.py` held back at the owner's word, because the script reads the `HANDOFFS.md`
 front-matter example box as the newest receipt and refuses (write-up and a tested 4-line fix, posted nowhere: `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`;
-`BACKLOG.md:215`). Claim `65cd20de8`, sync `3bc8a1e8c`, patch `e90a9b997`; evaluation of S1031 7/10, self 7/10 (Learning 998). Still open from its Next list: the issue #36 check,
-the `inst/doc/` and snapshot-backfill decisions, where to post the write-up. **Gotchas kept:** a held-back file is restored with `git checkout -- <file>` (a new one deleted)
+`BACKLOG.md:215`). Patch `e90a9b997` (Learning 998). **Gotchas kept:** a held-back file is restored with `git checkout -- <file>` (a new one deleted)
 before the sync commit; the checklist's trimmer `--cut 1` dry run needs two or more trimmable records (a borrowed copy in a scratch worktree); zsh `path` is `PATH` and `$c:name`
 is a modifier; run background work directly, not in a nested `( ... ) &`; `.quality-gates-results.json` is gitignored (it sits in `methodology/`) and `--run` overwrites it.
 S1031: `methodology/HANDOFFS.md` trimmed from 207,726 B to 28,615 B, 41 of 44 receipts archived to `methodology/archive/HANDOFFS-through-2026-10-21.md` (owner pick, "Trim
-HANDOFFS.md"; the plain run was refused with `SRF_RED`, 1.0638, 178,760 B regrown in 8 days, and the owner took `--force`; housekeeping, no code). Claim `42f534d85`, trim `52085b223`;
-evaluation of S1030 8/10, self 7/10 (Learning 997). **Gotchas kept:** the plain trim run is refused while the regrowth exceeds the last trim's drop; `--force` without `--write` is a
+HANDOFFS.md"; the plain run was refused with `SRF_RED`, 1.0638, 178,760 B regrown in 8 days, and the owner took `--force`; housekeeping, no code).
+(Learning 997) **Gotchas kept:** the plain trim run is refused while the regrowth exceeds the last trim's drop; `--force` without `--write` is a
 free preview; trim only with the claim in git and commit the trim alone; the trimmer adds a `## 2026-10` heading and its own entry at the top of `CHANGELOG.md`, so the DONE entry goes
-above it; the ratchet gate builds from `git archive HEAD` and its results file is gitignored. **Watch:** `HANDOFFS.md` is back over 196,608 B in about a week at this rate (the
-lever is shorter receipts, `BACKLOG.md:155`, not chosen by the owner).
+above it; the ratchet gate builds from `git archive HEAD` and its results file is gitignored.
 S1030: a script draws the Diagram tab's picture: `drawPedigreeDiagram(layout, edgeStyle, onClick)` is exported (`R/drawPedigreeDiagram.R:46`) and the app's render is one
 call to it (`R/modPedigree.R:715-727`); owner ruling at the scope question, the recommended option ("One function draws it all"); both walkthrough chunks are one call
 (`vignettes/a2interactive.Rmd:485,549`) and the "exactly" claims name the function (`vignettes/articles/pedigree-diagram.qmd:29,232,319,328`). Strict TDD; claim
