@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 to 6 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102). The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1 to 7 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103). The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -869,6 +869,28 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
   limit; that is Phase 8.
 - **Session boundary:** one session. **Freeze:** after this gate, any change to `R/`, `tests/`,
   `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats this phase.
+- **DONE (S1103, owner pick "CRAN Phase 7"; no code changed):** run at `0a3b12a1b`, whose `R/`, `tests/`,
+  `man/`, `vignettes/`, `inst/`, `data/` and `DESCRIPTION` match `74715d95b`, where CI is green.
+  - **The section 3.1 command plus `manual = TRUE`:** `Status: 1 NOTE`, 2 m 15 s at load about 5. The
+    one NOTE is "checking HTML version of manual ... Skipping checking math rendering: package 'V8'
+    unavailable" (dragon 10). The same command with `V8` in a scratch library reads `Status: OK`,
+    2 m 12 s, so the 28 math lines in 10 help pages render. Steps: examples 17 s, tests 11 s, vignette
+    re-build 16 s, PDF manual 10 s. Tests: `[ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]`.
+  - **The clean regression read:** 495 files, 4,592 blocks, 0 failed, 0 errors, 225 skipped, 8.4 min at
+    load 5 to 6. The 8 warnings are in `test_modGeneticValue_snapshotSource.R` (6) and
+    `test_makePedigreeMatingLayout.R` (2); CRAN mode shows none.
+  - **The rest:** `lint_package()` 0; `url_check()` all 20 URLs correct (win-builder flagged thoughtco.com
+    with status 402 before, so Phase 8 may still see it); `spell_check_package()` nothing; the tarball is
+    3,507,687 B and its top level is exactly section 4.6's 12 entries; the installed package is 7.5 MB;
+    `quality_ratchet.py --run` 11/11.
+  - **ARM64, CRAN's image** (`ngk-arm64-s1093`, R 4.6.1): `R CMD check --as-cran --no-manual` of the same
+    tarball reads `Status: OK`, `[ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]`. The whole suite with
+    `NOT_CRAN=true`: 495 files, 4,592 blocks, 0 failed, 7 errors, 265 skipped. All 7 are tools the image
+    lacks, each message read: 4 in `test_pkgdown_reference_config.R` (`pkgdown::as_pkgdown()` needs the
+    `quarto` package for the `.qmd` articles) and 3 in `test_positionMatingUnitForest.R:2012,2589,2627`
+    ("Invalid path to Chrome"). A CRAN check skips both files (`tests/testthat/slowTestFiles.txt`), and
+    both pass in the Mac read. Giving them a skip changes `tests/` and would repeat this phase, so
+    that is a `BACKLOG.md` item for after acceptance.
 
 ### Phase 8. `cran-comments.md` for 3.0.0, and the cross-platform runs (owner-run)
 
@@ -980,7 +1002,7 @@ must).
 | 4 | 4a `shinyBS` (always); 4b noSuggests | DONE (S1098; D6 = A, D2 = A) | nothing | |
 | 5 | NEWS release pass | DONE (S1099 General Fixes and the app order; S1101 new features described in general terms) | nothing | |
 | 6 | version bump | DONE (S1102; CI green on `74715d95b`) | nothing | |
-| 7 | full local gate | after 6 | Phase 6 pushed, CI green | S |
+| 7 | full local gate | DONE (S1103; `Status: OK` on macOS and in CRAN's arm64 image) | nothing | |
 | 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |
 | 9 | submission | after 8 | the owner | owner |
 | 10 | after acceptance | after CRAN accepts | the acceptance email | S |
@@ -1025,6 +1047,15 @@ New this cycle (S1091):
    holds 226 non-base packages, including 16 of the 17 Suggests, so the plain command would have
    hidden only `kinship2` and passed for the wrong reason. Check `installed.packages(lib.loc =
    .Library)` first; Phase 4's DONE paragraph has the scratch R home that fixes it.
+10. **`manual = TRUE` adds the HTML-manual check, and without `V8` it skips the formulas (S1103).** It
+    NOTEs "Skipping checking math rendering: package 'V8' unavailable"; `V8` is in neither `DESCRIPTION`
+    nor `renv.lock`. To check them, run `utils::install.packages("V8", lib = <scratch>, type = "binary",
+    dependencies = FALSE)` and `.libPaths(c(<scratch>, .libPaths()))` before `devtools::check()`.
+11. **A copied tree runs its own `.Rprofile` in a container (S1103).** Without
+    `RENV_CONFIG_AUTOLOADER_ENABLED=false`, renv bootstraps from `/root/<tree>` and R sees an empty
+    library, so nearly every package reads as missing. Copy with `git archive HEAD | docker exec -i
+    <container> ...`. `ngk-arm64-s1093` now holds 163 packages and `/root/s1103`; it is stopped, and
+    `docker start` works although its bind mount names a deleted scratch folder.
 
 Carried from 2.0.0 (numbers are that plan's §5):
 

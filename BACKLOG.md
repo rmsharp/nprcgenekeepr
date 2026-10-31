@@ -7,15 +7,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-      Phase 5 DONE S1101; Phase 6 DONE S1102; READY: Phase 7, the full local gate, is next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
-      D3 = B, S1097; D4 = A, S1092); Effort M, an estimate of 3 sessions left plus the owner's runs and submission) --
+      Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; READY: Phase 8's cover note and runbook for the owner's cross-platform runs are next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
+      D3 = B, S1097; D4 = A, S1092); Effort M, an estimate of 3 sessions left, the note and runbook, folding in the results, after acceptance, plus the owner's runs and submission) --
       **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
       ARM64 `read.csv()`/`read.table()` of a file whose last value is quoted and that has no final
       newline read that value with a stray 0xFF byte. Every package read now goes through
       `readWithFinalNewline()` (`R/readWithFinalNewline.R`), and the failing test passes in CRAN's
-      own arm64 image (container `ngk-arm64-s1093`, kept for Phase 7). S1094 made its added
+      own arm64 image (container `ngk-arm64-s1093`, kept, stopped). S1094 made its added
       newline one byte on Windows too (it was `\r\n` from `cat()`, an ERROR on win-builder).
       Phase 8's cover note must say so, and that CRAN's arm64 job confirms it only after release.
       Whether to report the R bug upstream (one-line case: `writeChar('a,b\n1,"x"', f, eos =
@@ -37,7 +37,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       help-page detail (owner ruling S1101; the block 574 to 391 lines). **Phase 6 (DONE S1102):**
       `DESCRIPTION`, NEWS, `CITATION.cff`, `README.md` and the roadmap read 3.0.0, CI green on
       `74715d95b`; the public pkgdown site already shows 3.0.0. The owner decided (S855) the release is
-      3.0.0. After this the tree freezes at Phase 7. The plan's section 7 orders the phases.
+      3.0.0. **Phase 7 (DONE S1103):** the check reads `Status: OK` on macOS (with `V8` in a scratch
+      library; 1 local-only NOTE without it) and in CRAN's arm64 image; clean read 0 failed, 0 errors;
+      lint, URLs, spelling and the tarball listing clean. **The tree is frozen:** a change to `R/`,
+      `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. The plan's
+      section 7 orders the phases.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
@@ -187,6 +191,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`, Finding #7) advised no
       action; the issue says a real need warrants a design session (for example a colony summary
       view), not a higher cap.
+
+- [ ] **Two test files error instead of skipping when Chrome or Quarto is missing** (found S1103;
+      BLOCKED -- wait for CRAN's acceptance, because a change under `tests/` repeats CRAN plan Phase 7;
+      Effort S) -- with `NOT_CRAN=true` on a machine that has neither, such as CRAN's arm64 image:
+      `test_positionMatingUnitForest.R:2012,2589,2627` stop with "Invalid path to Chrome" (their
+      guards check for the `chromote` package, not a browser), and all four
+      `test_pkgdown_reference_config.R` blocks stop because `pkgdown::as_pkgdown()` needs the `quarto`
+      package for the `.qmd` articles. A CRAN check skips both files
+      (`tests/testthat/slowTestFiles.txt`). Add a skip for the missing tool in each.
 
 ## Outreach
 - [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
