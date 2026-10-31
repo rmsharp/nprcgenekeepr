@@ -31,9 +31,13 @@ guideText <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n")
 }
 
+guideLines <- function(path) {
+  strsplit(guideText(path), "\n", fixed = TRUE)[[1L]]
+}
+
 ## The body of one "## Heading" section of the article, "" when it is absent.
 articleSection <- function(heading) {
-  lines <- strsplit(guideText(articlePath), "\n", fixed = TRUE)[[1L]]
+  lines <- guideLines(articlePath)
   start <- which(lines == paste("##", heading))
   if (length(start) != 1L) {
     return("")
@@ -80,7 +84,7 @@ test_that("both guide files exist", {
 test_that("the short file stays short and leaves the commands to the article", {
   text <- guideText(shortPath)
   expect_gt(nchar(text), 0L)
-  expect_lte(length(strsplit(text, "\n", fixed = TRUE)[[1L]]), 40L)
+  expect_lte(length(guideLines(shortPath)), 40L)
   ## A command held in two places goes stale in one of them.
   expect_false(grepl("::", text, fixed = TRUE))
 })
@@ -107,8 +111,7 @@ test_that("the article is listed in the site's Articles menu", {
 })
 
 test_that("the article has its sections, Issues first", {
-  text <- guideText(articlePath)
-  lines <- strsplit(text, "\n", fixed = TRUE)[[1L]]
+  lines <- guideLines(articlePath)
   found <- sub("^## ", "", lines[grepl("^## ", lines)])
   expect_identical(found, articleHeadings)
 })
