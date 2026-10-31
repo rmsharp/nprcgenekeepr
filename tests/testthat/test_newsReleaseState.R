@@ -177,13 +177,16 @@ diagramCaps <- function() {
     rectilinear = readCap(lines, "pedigreeDiagramMaxNodesRectilinear"))
 }
 
+## The newest version block of NEWS.Rmd; skips when NEWS.Rmd is not present in
+## this build (sourceLines() in helper-pageText.R).
+newestNewsBlock <- function() {
+  newsTopBlock(sourceLines("NEWS.Rmd"))
+}
+
 ## The bullet entries of the newest NEWS.Rmd block's "## Pedigree Diagram"
-## section; skips when NEWS.Rmd is not present in this build.
+## section.
 diagramSectionEntries <- function() {
-  path <- testthat::test_path("..", "..", "NEWS.Rmd")
-  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
-  newsSectionEntries(newsTopBlock(readLines(path, warn = FALSE)),
-                     "Pedigree Diagram")
+  newsSectionEntries(newestNewsBlock(), "Pedigree Diagram")
 }
 
 ## The number of individuals whose mating symbol anchors more than one mating
@@ -320,9 +323,7 @@ test_that("findMilestones() reports each entry's line and every phrase", {
 })
 
 test_that("the newest NEWS.Rmd block has no in-progress milestone phrases", {
-  path <- testthat::test_path("..", "..", "NEWS.Rmd")
-  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
-  block <- newsTopBlock(readLines(path, warn = FALSE))
+  block <- newestNewsBlock()
   entries <- newsEntries(block)
   ## A guard that scanned nothing would pass for the wrong reason.
   expect_gt(nrow(entries), 0L)
@@ -692,9 +693,7 @@ test_that("new features keep their help-page detail out of the newest block", {
 })
 
 test_that("NEWS.Rmd describes issue #168 (ancestry guardrails) in one entry", {
-  path <- testthat::test_path("..", "..", "NEWS.Rmd")
-  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
-  entries <- newsEntries(newsTopBlock(readLines(path, warn = FALSE)))
+  entries <- newsEntries(newestNewsBlock())
   mentions <- entries$line[grepl("#168", entries$text, fixed = TRUE)]
   expect_equal(length(mentions), 1L,
                info = paste("entries mentioning #168 start at lines:",
@@ -773,9 +772,7 @@ test_that("the Inbreeding-colour checkers stay silent on other wording", {
 })
 
 test_that("NEWS.Rmd never calls the Inbreeding cell gray", {
-  path <- testthat::test_path("..", "..", "NEWS.Rmd")
-  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
-  entries <- newsEntries(newsTopBlock(readLines(path, warn = FALSE)))
+  entries <- newsEntries(newestNewsBlock())
   expect_gt(nrow(entries), 0L)
   for (i in seq_len(nrow(entries))) {
     expect_equal(length(grayInbreedingSentences(entries$text[i])), 0L,
@@ -786,9 +783,7 @@ test_that("NEWS.Rmd never calls the Inbreeding cell gray", {
 })
 
 test_that("NEWS.Rmd says an undefined Inbreeding cell is red", {
-  path <- testthat::test_path("..", "..", "NEWS.Rmd")
-  skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
-  entries <- newsEntries(newsTopBlock(readLines(path, warn = FALSE)))
+  entries <- newsEntries(newestNewsBlock())
   expect_gt(nrow(entries), 0L)
   said <- vapply(entries$text, function(x) {
     length(redUndefinedInbreedingSentences(x))
