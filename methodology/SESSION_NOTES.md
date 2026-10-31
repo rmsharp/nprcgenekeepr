@@ -99,26 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1102 Did
-**Deliverable (IN PROGRESS, claimed 22:57 CDT):** CRAN plan Phase 6, the version bump. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (owner picks "CRAN Phase 6: bump", "No new test", every TDD gate "Yes", "Yes, push now"; strict TDD): CRAN plan Phase 6 DONE.**
+Claim `a0df353ef`, RED `87cdedde3`, GREEN `7e0b96305` `74715d95b`, REFACTOR found nothing; pushed `1778d738f..74715d95b`, 19 commits.
+**What changed:** `DESCRIPTION:4`, `NEWS.Rmd:14` and `NEWS.md:5` ("3.0.0 (20261030)"), `CITATION.cff:11`, `README.md:4,8`,
+`methodology/ROADMAP.md:11-13` read 3.0.0; the version item left `BACKLOG.md`, guard `test_docsAuditSixRulings.R:91-93`.
+**Verified:** clean read 495 files 4,592 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0; ratchet 11/11; CI green
+on `74715d95b` (R-CMD-check's five legs, test-coverage, lint, pkgdown); the real app's title bar and About tab read 3.0.0.
+**Handoff evaluation of S1101: 9/10.** Helped: "Next" named the phase and its plan section, and pushing as the owner's word. Missing:
+nothing it could know; the plan's own one-commit step and stale `BACKLOG.md:207` date from S1091. Wrong: nothing found.
+**Self: 7/10.** + every gate first try, the version anchors read before editing, CI read leg by leg. - the gate said one commit and the
+5-file cap made two; "all 3 tagged releases" overstated the tags, corrected after the answer; my first app launch probably opened a
+browser tab; one silence nudge (Learning 1067).
+**Gotchas:** after Phase 7 any change to `R/`, `tests/`, `man/`, `vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats it;
+`runGeneKeepR(port = <p>, launch.browser = FALSE)`, `options()` do nothing; `README.md:8` shows the install's UTC build date; v2.0.0's
+NEWS date moved after its tag (20260708 to 20260721); container `ngk-arm64-s1093` is stopped, not removed.
+**Next:** plan Phase 7, the full local gate (`docs/planning/cran-3.0.0-submission-plan.md:855`, `BACKLOG.md:8`). The notes commit is unpushed.
 
-### What Session 1101 Did
-**Deliverable (owner picks "CRAN Phase 5: finish NEWS", every TDD gate "Yes"; strict TDD): CRAN plan Phase 5 DONE.**
-Claim `897ad786d`, RED `5b548621c`, GREEN `e7bb0bd89`, REFACTOR `26001d3e7`, reconcile `cd2046589`; **not pushed**.
-**What changed:** owner ruling: a new feature gets a general description, no help-page detail. Eight sections fell, the block
-574 to 391 lines (`NEWS.Rmd:14-404`). `test_newsReleaseState.R`'s `newFeatureDetail` holds the rule (45 phrases, both NEWS
-files); five Diagram tests now check what the section says rather than require it; `newestNewsBlock()` is its one reader.
-**Verified:** clean read 495 files 4,592 blocks 0 failed 0 errors; `lint_package()` 0; `devtools::check()` 0/0/0; 8 of 8 wrong
-sentences caught. No runtime change. Not on CI. 20 of 22 facts leaving NEWS were found in a help page or article.
-**Handoff evaluation of S1100: 4/10.** Helped: the claim stub; the draft survived in its transcript. Missing: its text only in
-scratch, gone by the next session. Wrong: its list of cuts omitted 13, and "most runs" was called unconfirmed against Learning 949's 29 of 40.
-S1099's notes earned their 8: the plan line and the pins were right.
-**Self: 7/10.** + every gate first try; the wrong-sentence check; the ruling recorded before redrafting. - four calls timing speed
-figures nobody asked about, the owner stopped it; repeated S1100's weak reason; one silence nudge (Learning 1066).
-**Gotchas:** an audit stays on the named class; `git grep -E '\b'` found nothing here, use plain `grep`; S1100's stale worktree
-entry is still in `git worktree list`, harmless; "Speed and Memory" figures unchecked against `v2.0.0` except loading.
-**Next:** plan Phase 6, the version bump (`BACKLOG.md:8`, `docs/planning/cran-3.0.0-submission-plan.md`).
-
-### Sessions 947-1100 (condensed S950 to S1101; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1101 (condensed S950 to S1102; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1101 (CRAN plan Phase 5 DONE; Learning 1066; hashes in `CHANGELOG.md`): a new feature gets a general description in NEWS, the block
+574 to 391 lines; `newFeatureDetail` in `test_newsReleaseState.R` holds the rule. **Gotchas kept:** an audit stays on the named class;
+`git grep -E '\b'` found nothing here, use plain `grep`; "Speed and Memory" figures unchecked against `v2.0.0` except loading.
 S1100: claim `3a8080491` only, its receipt `reconciled` by S1101; a draft, no owner reply.
 S1099 (CRAN plan Phase 5 first half; Learning 1065; hashes in `CHANGELOG.md`): NEWS opens with where its tabs are explained, 17
 sections in `R/appUI.R`'s order, General Fixes 183 to 54 lines. **Gotchas kept:** grep every NEWS reader first; only proposed

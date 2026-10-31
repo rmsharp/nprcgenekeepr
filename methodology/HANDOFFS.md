@@ -210,8 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1102
 date: 2026-10-30
-status: pending
-active_task: CRAN 3.0.0 plan Phase 6, the version bump (owner pick "CRAN Phase 6: bump").
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: CRAN 3.0.0 plan Phase 6 DONE and pushed, CI green. Phase 7, the full local gate, is next.
+what_was_done: Owner picks "CRAN Phase 6: bump", "No new test", every gate "Yes", "Yes, push now". Claim a0df353ef, RED 87cdedde3, GREEN 7e0b96305 and 74715d95b (two commits for the 5-file cap, though the gate said one), REFACTOR found nothing. DESCRIPTION, NEWS heading "3.0.0 (20261030)", CITATION.cff, README.md and ROADMAP read 3.0.0; the version item left BACKLOG.md. Pushed 1778d738f..74715d95b, 19 commits.
+next_steps: Plan Phase 7, docs/planning/cran-3.0.0-submission-plan.md section "Phase 7": the section 3.1 check plus manual = TRUE, clean read, lint_package(), urlchecker::url_check(), spelling::spell_check_package(), the tarball listing and the ARM64 container run. An estimate: one session. A defect found goes back to RED in its own session.
+key_files: DESCRIPTION:4; NEWS.Rmd:14; CITATION.cff:11; README.md:4,8; methodology/ROADMAP.md:11-13; BACKLOG.md:8 (CRAN item); tests/testthat/test_docsAuditSixRulings.R:91-93; docs/planning/cran-3.0.0-submission-plan.md:855 (Phase 7)
+gotchas: After Phase 7 any change to R/, tests/, man/, vignettes/, inst/, data/ or DESCRIPTION repeats it. runGeneKeepR() sets port 6013 and opens a browser unless passed port = and launch.browser = FALSE; options() do nothing. README.md's version date is the install's UTC build date, so it reads 2026-10-31 beside 2026-10-30. v2.0.0's NEWS heading date moved after its tag (20260708 to 20260721), so 3.0.0's may too; the owner's call. Container ngk-arm64-s1093 is stopped (exited 137), not removed. urlchecker and spelling load here.
+runtime_smoke: Real app from a scratch install of this tree on port 7791: title bar "Version 3.0.0 (2026-10-31)", About tab "Version 3.0.0", no 2.0.0 in the page, no error in the log. My first launch used options(), which runGeneKeepR() ignores; it probably opened a tab in the owner's browser. Verified: clean read 495 files 4,592 blocks 0 failed 0 errors, lint_package() 0, devtools::check() 0/0/0, CI all green on 74715d95b.
+changelog_ref: a0df353ef (claim); the close-out commit (DONE and push entries)
+commit: 74715d95b
+quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results bf3f107bc455 · manifest 7e3e82ab3ae0
 ```
 
 ```handoff
