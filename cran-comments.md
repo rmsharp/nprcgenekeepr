@@ -1,69 +1,73 @@
-## Resubmission
+## Update
 
-This is a resubmission of an archived package as a new major version, 2.0.0.
+This is an update from 2.0.0 (on CRAN since 2026-07-26) to 3.0.0, a major
+release. It adds interactive pedigree diagrams, marker-based genetic analysis,
+MHC haplotype reporting, cross-center identity matching, ancestry-aware
+breeding safeguards, de-identified export workflows and longitudinal monitoring
+of colony genetic health. It adds 54 exported functions and removes none. See
+`NEWS.md`.
 
-`nprcgenekeepr` was archived on CRAN on 2025-07-29 ("Archived ... as issues
-were not corrected in time"). It had been accepted and published as 1.0.8 on
-2025-07-26; the issue was "Tested elapsed times" (CRAN example/test/vignette
-timing limits).
+## The linux-arm64 additional issue on 2.0.0
 
-A submission attempt on 2026-07-16 was rejected by CRAN's incoming
-automatic check for Windows r-devel with the same failure class: "Overall
-checktime 12 min > 10 min". Fixed by:
+CRAN's check page for 2.0.0 lists an additional issue on linux-arm64: failed
+expectations in `test_modInput_incomplete_final_line.R`. The cause is in R's
+own file reader, not in this package. On Linux ARM64, `read.csv()` and
+`read.table()` add a stray 0xFF byte to a quoted last value in a file that has
+no final newline (utils `readtablehead()`, `src/library/utils/src/io.c`):
 
-* Gating 10 true gene-drop convergence-stress tests behind `skip_on_cran()`
-  (`test_gvaConvergence.R`, `test_gvaConvergence_kinshipOverrides.R`).
-* Reducing `guIter` from 100L to 20L at ~23 `test_reportGV.R` call sites
-  whose assertions don't depend on gu magnitude.
-* Reducing `nMax` from 3000L to 1600L in `vignettes/gvaConvergence.Rmd`.
-* Reducing `n` from 1000L to 500L in `vignettes/simulatedKValues.Rmd`.
-* Removing redundant fixture computation and stubbing un-stubbed child
-  modules in the Shiny `testServer()` tests (`test_appServer_*.R`,
-  `test_reportGV.R`).
-* Shrinking the fixture in `test_addAnimalsWithNoRelative.R` from the full
-  3694-row colony to the smaller `qcPed` fixture already used in that
-  function's own `@examples`.
+    f <- tempfile()
+    writeChar('a,b\n1,"x"', f, eos = NULL)
+    charToRaw(read.csv(f)$b)
+    ## 78 ff on Linux ARM64, R 4.6.1
+    ## 78    on macOS arm64, R 4.6.1
 
-A previously undeclared test-time dependency (`withr`) was also declared in
-Suggests, fixing a check WARNING.
+3.0.0 works around this: every `read.csv()` and `read.table()` in the package
+now reads through a copy that ends in a newline when the file does not. In that
+job's own container image (`ghcr.io/r-devel/rcheckserver/ubuntu:latest`,
+R 4.6.1), `R CMD check --as-cran --no-manual` of the 3.0.0 tarball reads
+`Status: OK`. That job checks published versions only, so CRAN's own run can
+confirm the fix only after this release.
 
-2.0.0 is a major release. See `NEWS.md` for the user-facing Major/Minor
-changes, including breaking changes: rejection of a period in `id`, `sire`,
-or `dam` values; removed exports; and `runGeneKeepR()` remaining the primary
-Shiny entry point, with `runModularApp()` as a soft-deprecated alias.
+## Check time
+
+The first 2.0.0 submission was rejected for "Overall checktime 12 min > 10 min",
+and the package has grown since. A CRAN check therefore runs about 80 of the 496
+test files, chosen by a run-time trace so that each of the 236 exported functions
+is still called by a test it runs. Continuous integration runs every test file.
+
+* win-builder R-devel, "Check time in seconds": -- to be run before submission
 
 ## R CMD check results
 
-Local `R CMD check --as-cran --timings` (macOS, R 4.6.1) on the built 2.0.0
-tarball: `examples` 22s, `tests` 59s, `re-building of vignette outputs` 17s.
+Local `R CMD check --as-cran` (macOS arm64, R 4.6.1) of the built 3.0.0 tarball:
 
-    0 errors | 0 warnings | 1 note
+    0 errors | 0 warnings | 0 notes
 
-* NOTE -- checking CRAN incoming feasibility: "New submission" and "Package
-  was archived on CRAN" / "Archived on 2025-07-29 as issues were not
-  corrected in time." Expected for the resubmission.
-* Words identified as possible misspellings in DESCRIPTION: EHR, Raboin,
-  and kinships are all correctly spelled.
-* One reference URL,
-  <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>,
-  returns a 400 to automated checkers but is reachable in a browser.
+    [ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]
+
+Incoming feasibility on win-builder -- to be run before submission:
+
+* Possibly misspelled in DESCRIPTION: "de", from "de-identified", which is
+  correct.
+* The reference URL
+  <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>
+  returns an error status to automated checkers (402 on win-builder) but is
+  reachable in a browser.
 
 ## Test environments
 
-* Local: macOS, R 4.6.1 -- `R CMD check --as-cran --timings` (results above)
-* win-builder R-devel (R Under development (unstable), 2026-07-16 r90264):
-  0 errors | 0 warnings | 1 note (incoming feasibility, as above);
-  `checking tests` 200s, `checking examples` 80s, `checking re-building of
-  vignette outputs` 65s. Installation time in seconds: 30. Check time in
-  seconds: 588 -- under CRAN's 10-minute (600s) mark.
-* win-builder R-release (R 4.6.1): 0 errors | 0 warnings | 1 note (incoming
-  feasibility, as above).
-* win-builder R-oldrelease (R 4.5.3): 0 errors | 0 warnings | 1 note
-  (incoming feasibility, as above).
-* R-hub v2 (R-devel; linux, windows, macos): all three platforms
-  `Status: OK` (0 notes), `[ FAIL 0 | WARN 0 | SKIP 221 | PASS 3140 ]`.
+* Local: macOS arm64, R 4.6.1: `Status: OK` (results above).
+* Linux ARM64, the image named above, R 4.6.1: `Status: OK`,
+  `[ FAIL 0 | WARN 0 | SKIP 54 | PASS 1923 ]`.
+* GitHub Actions, the same code: windows-latest (release), macos-latest
+  (release), ubuntu-latest (devel, release, oldrel-1): all passed.
+* win-builder R-devel: -- to be run before submission
+* win-builder R-release: -- to be run before submission
+* win-builder R-oldrelease: -- to be run before submission
+* R-hub v2 (linux, windows, macos): -- to be run before submission
+* macOS builder (R-release): -- to be run before submission
 
 ## Downstream dependencies
 
-There are currently no reverse/downstream dependencies for this package on
-CRAN (the `revdep/README.md` Revdeps section is empty).
+There are no reverse dependencies on CRAN
+(`tools::package_dependencies(reverse = TRUE, which = "all")` returns none).

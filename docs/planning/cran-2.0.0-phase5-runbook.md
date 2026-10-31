@@ -1,5 +1,7 @@
 # CRAN 2.0.0 — Phase 5 cross-platform-check runbook (owner-run)
 
+> **For the 3.0.0 runs use `docs/planning/cran-3.0.0-phase8-runbook.md` (S1104).** This file is the 2.0.0 record.
+>
 > **Status banner (S861, 2026-10-02).** This runbook was written for the 2.0.0 submission, which CRAN
 > **accepted on 2026-07-26** (tag and GitHub release `v2.0.0` done 2026-07-28). Treat sections 1-4 as the
 > reusable checklist for the **3.0.0** release: read every `2.0.0` below as the version being released, and
