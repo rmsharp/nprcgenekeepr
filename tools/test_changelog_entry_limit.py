@@ -63,7 +63,7 @@ class TestLimit(LedgerCase):
     def test_size_is_bytes_not_characters(self):
         # 600 two-byte characters: 600 characters long but over 1,200 bytes.
         code, output = self.check(
-            FRONT_MATTER + entry(1300, fill="x") .replace("x" * 1200, "·" * 600)
+            FRONT_MATTER + entry(1300).replace("x" * 1200, "·" * 600)
             + entry(100, MARKER_HEADING)
         )
         self.assertEqual(over_count(output), 1)

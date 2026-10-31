@@ -18,11 +18,18 @@ ENTRY_START = re.compile(r"(?m)^(?=### \d{4}-\d{2}-\d{2})")
 NOTHING_TO_MEASURE = 3
 
 
+def entry_bytes(entry):
+    return len(entry.encode("utf-8"))
+
+
+def heading_of(entry):
+    return entry.split("\n", 1)[0]
+
+
 def covered_entries(text):
     """The entries the limit applies to, newest first, without their trailing blank lines."""
     entries = [e.rstrip() for e in ENTRY_START.split(text)[1:]]
-    headings = [e.split("\n", 1)[0] for e in entries]
-    marked = [i for i, heading in enumerate(headings) if FIRST_COVERED in heading]
+    marked = [i for i, e in enumerate(entries) if FIRST_COVERED in heading_of(e)]
     return entries[: marked[-1] + 1] if marked else entries
 
 
@@ -37,10 +44,10 @@ def main(argv):
     if not entries:
         print(f"no dated entries in {path}")
         return NOTHING_TO_MEASURE
-    over = [e for e in entries if len(e.encode("utf-8")) > LIMIT_BYTES]
+    over = [e for e in entries if entry_bytes(e) > LIMIT_BYTES]
     print(f"entries over the limit: {len(over)} (limit {LIMIT_BYTES} B, {len(entries)} covered)")
     for e in over:
-        print(f"  {len(e.encode('utf-8'))} B: {e.split(chr(10), 1)[0][:100]}")
+        print(f"  {entry_bytes(e)} B: {heading_of(e)[:100]}")
     return 1 if over else 0
 
 
