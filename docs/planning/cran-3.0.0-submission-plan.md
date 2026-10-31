@@ -2,7 +2,7 @@
 
 **Session:** S1091, 2026-10-29. A planning session: nothing under `R/`, `tests/`, `man/`, `vignettes/`,
 `inst/` or `data/` changed.
-**Status:** DRAFT. Phases 1 to 7 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103). The owner has ruled on all of D1 to D6 (section 6;
+**Status:** DRAFT. Phases 1 to 7 are DONE (S1093; S1092 to S1096; S1097; S1098; S1099 and S1101; S1102; S1103); Phase 8's note and runbook are written (S1104) and the owner's runs are next. The owner has ruled on all of D1 to D6 (section 6;
 D4 at S1092, the rest at S1097), each the recommended option. They shape Phase 2's measurement (D4), Phases 3 to 5, and
 Phase 8 (D5).
 **Owner's direction (S1091):** "This session make a plan to complete preparations to submit version
@@ -920,6 +920,22 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
 - **Surface:** win-builder r-devel is the same class of machine as CRAN's incoming pretest.
 - **Session boundary:** one session prepares the note and runbook; the owner runs; one session
   folds in the results. **HARD STOP before the upload.**
+- **First half DONE (S1104, owner pick "CRAN Phase 8"; no shipped path changed, so Phase 7 stands):**
+  - `cran/archive/20260717_cran-comments.md` holds the 2.0.0 note, byte for byte. `cran-comments.md` is an
+    update with the Phase 7 results, and six "-- to be run before submission" lines mark what the runs
+    fill in; the fold-in session greps them to 0.
+  - **The runbook is `docs/planning/cran-3.0.0-phase8-runbook.md`;** the 2.0.0 runbook now points to it.
+  - **Tried here, not copied:** `rhub` 2.0.1 installed into a scratch library and `rhub_doctor()` passed
+    (token, scopes, workflow active). `devtools` 2.5.2 has all five check calls. Its source shows the
+    macOS builder prints a link and sends no email, each win-builder call asks to confirm the address, and
+    `rhub_check()` takes the current branch.
+  - **Measured for the note:** the case `writeChar('a,b\n1,"x"', f, eos = NULL)` reads bytes `78 ff` in
+    `ghcr.io/r-devel/rcheckserver/ubuntu:latest` and `78` on macOS, both R 4.6.1. Every `read.csv()` and
+    `read.table()` under `R/` goes through `readWithFinalNewline()`. A trace of a scratch install with
+    `cranTestFilter()` and `NOT_CRAN=false`: 80 test files gave results, 0 failed, and 236 of 236 exports
+    called. `slowTestFiles.txt`'s header says 79, and this run passed 1,924 against the check's 1,923, so the
+    note says "about 80". 54 exports added since `v2.0.0`, none removed; no reverse dependencies; CRAN's page
+    unchanged on 2026-10-31.
 
 ### Phase 9. Submission (owner action)
 
@@ -1003,7 +1019,7 @@ must).
 | 5 | NEWS release pass | DONE (S1099 General Fixes and the app order; S1101 new features described in general terms) | nothing | |
 | 6 | version bump | DONE (S1102; CI green on `74715d95b`) | nothing | |
 | 7 | full local gate | DONE (S1103; `Status: OK` on macOS and in CRAN's arm64 image) | nothing | |
-| 8 | cover note + cross-platform runs | after 7 (D5 = A) | the owner's runs | S + owner time |
+| 8 | cover note + cross-platform runs | note and runbook written (S1104); fold-in next | the owner's runs (`docs/planning/cran-3.0.0-phase8-runbook.md`) | S + owner time |
 | 9 | submission | after 8 | the owner | owner |
 | 10 | after acceptance | after CRAN accepts | the acceptance email | S |
 

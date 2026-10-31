@@ -7,8 +7,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phase 1 DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-      Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; READY: Phase 8's cover note and runbook for the owner's cross-platform runs are next; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
-      D3 = B, S1097; D4 = A, S1092); Effort M, an estimate of 3 sessions left, the note and runbook, folding in the results, after acceptance, plus the owner's runs and submission) --
+      Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; Phase 8's note and runbook written S1104; BLOCKED -- on the owner's five checks (`docs/planning/cran-3.0.0-phase8-runbook.md`), then a session folds in the results; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6 = A and
+      D3 = B, S1097; D4 = A, S1092); Effort M, an estimate of 2 sessions left, folding in the results and after acceptance, plus the owner's runs and submission) --
       **Phase 1 (S1093):** the
       linux-arm64 failure is a bug in R itself (utils
       `readtablehead()`, `src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
@@ -17,7 +17,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `readWithFinalNewline()` (`R/readWithFinalNewline.R`), and the failing test passes in CRAN's
       own arm64 image (container `ngk-arm64-s1093`, kept, stopped). S1094 made its added
       newline one byte on Windows too (it was `\r\n` from `cat()`, an ERROR on win-builder).
-      Phase 8's cover note must say so, and that CRAN's arm64 job confirms it only after release.
+      `cran-comments.md` says so, and that CRAN's arm64 job confirms it only after release (S1104).
       Whether to report the R bug upstream (one-line case: `writeChar('a,b\n1,"x"', f, eos =
       NULL); read.csv(f)$b` gives `x\xff`) is the owner's call; nothing has been posted.
       **Phase 2 (DONE S1096, owner ruling on a measured 520 s against 540 s):** a CRAN check runs
