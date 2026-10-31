@@ -102,14 +102,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Deliverable (owner pick "Contributor tutorial"): `.github/CONTRIBUTING.md` and `vignettes/articles/contributing.qmd`, in `_pkgdown.yml`'s menu.** Not pushed, so the site link 404s until a push.
 Mark's rulings: short file plus article; tests required, internal protocol not described; R developers, Issues section first. Claim `099cff8e0`, RED `8d847443f`, GREEN `3627c43d6` `107ecbcbe`, REFACTOR `06d2e0a29`.
 Guard `tools/test_contributingGuide.R` (in `tools/`, `tests/` is frozen): 12 of 12, 16 of 16 breakages caught. Fresh clone, empty cache: lint 0, check 0/0/0, suite 1 failure (the guide's words, fixed; spelling test re-run, suite not).
-**Measured on the clone, unlike the BACKLOG's list:** `renv::restore()` fails (new item, `BACKLOG.md:26`); `document()` under `roxygen2` 8.1.1 changes 27 files, 8.0.0 none; a new clone fails `test_getVersion.R` until installed; browser tests need the install.
+**Measured on the clone, unlike the BACKLOG's list:** `renv::restore()` fails (new item, `BACKLOG.md:18`); `document()` under `roxygen2` 8.1.1 changes 27 files, 8.0.0 none; a new clone fails `test_getVersion.R` until installed; browser tests need the install.
 **At Mark's word**, restored uncommitted edits this session did not make: `inst/WORDLIST`, `renv.lock`, `renv/activate.R` (the lock had lost 39 of 136 packages). CRAN at 17:34 CDT: `incoming/inspect/`, page 2.0.0. Tree stays as submitted.
 **Handoff evaluation of S1109: 9/10.** Helped: the named next item and its three decisions, the freeze list. Missing: nothing it could know. Wrong: nothing of its own; the BACKLOG's older "no `CODE_OF_CONDUCT`" was wrong (it dates from 2018).
 **Self: 7/10.** + the fresh clone found four setup errors before a reader did; every owner question answered first try.
 - a guide commit failed the spelling test, a wrong file name passed my first guard, a wrong `devtools::install()` argument, "14" breakages were 16, nudged twice.
 **Gotchas:** setup measured on this Mac only; CI does not run the guard until Phase 10 moves it (plan line added); the library holds renv 1.3.1 (`activate.R` asks 1.2.3) and 17 of 136 packages differ from the lock; Mark's RStudio may rewrite those files, so stage by name.
 One browser run gave 2 untraced errors, the rerun none.
-**Next:** nothing named. Mark's own: post the report (`BACKLOG.md:18`). CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10; rejected, RED first. READY: `BACKLOG.md:26`.
+**Next:** nothing named. Mark posted the `read.csv()` report after close-out. CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10; rejected, RED first. READY: `BACKLOG.md:18`.
 
 ### Sessions 947-1109 (condensed S950 to S1110; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1109 (the `read.csv()` bug report, `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`; Learning 1074; hashes in `CHANGELOG.md`). **Gotchas kept:** Bugzilla `quicksearch` needs a leading `ALL`; an x86-64 emulated source build

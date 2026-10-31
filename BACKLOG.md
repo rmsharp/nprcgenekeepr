@@ -15,14 +15,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       first. `cran-comments.md` holds the check results and explains the one NOTE. CRAN's arm64 job
       confirms the Phase 1 fix only after release. The plan's section 7 orders the phases.
 
-- [ ] **Post the `read.csv()` bug report to R's developers** (found S1093; READY -- Mark's action,
-      nothing has been posted; Effort S) -- Mark ruled S1109: report it, with the fix tested. The
-      text is ready to read and post: `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`. It
-      reproduces on Linux ARM64 under R 4.6.2, and the one-word fix at `io.c:910` passes on ARM64
-      and x86-64, including `make check`; it was not run on R-devel. R's Bugzilla takes reports only
-      from members; a new member emails `bug-report-request@r-project.org`. The package works around
-      the bug with `readWithFinalNewline()` (`R/readWithFinalNewline.R`), so no release waits on this.
-
 - [ ] **`renv::restore()` fails from an empty package cache** (found S1110; READY, Effort S;
       `renv.lock` is outside the CRAN build, so the freeze does not block it) -- measured on this
       Mac under R 4.6.2 with `RENV_PATHS_ROOT` on an empty folder: `Matrix` 1.7-5 builds from source
