@@ -15,20 +15,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       first. `cran-comments.md` holds the check results and explains the one NOTE. CRAN's arm64 job
       confirms the Phase 1 fix only after release. The plan's section 7 orders the phases.
 
-- [ ] **`renv::restore()` fails from an empty package cache** (found S1110; READY, Effort S;
-      `renv.lock` is outside the CRAN build, so the freeze does not block it) -- measured on this
-      Mac under R 4.6.2 with `RENV_PATHS_ROOT` on an empty folder: `Matrix` 1.7-5 builds from source
-      and stops on a missing `libintl.h` (R 4.6.2 ships 1.7-6). With
-      `exclude = c("Matrix", "lattice")`, `Rlabkey`, `chromote`, `curl`, `httr`, `httr2`, `pkgdown`
-      and `shinytest2` still fail, reported as a dependency loop (`curl` 7.1.0 is pinned; 8.1.0 is
-      current); the cause of the loop is not traced. `devtools`, `lintr` and `roxygen2` are not in
-      the lock at all. The contributor guide installs current versions instead, so it does not wait
-      on this. Refresh with `renv::snapshot(dev = TRUE)`, not a plain snapshot: an uncommitted plain
-      one found mid-S1110 dropped 39 of the 136 packages, and Mark had it dropped. Then re-test from
-      an empty cache. The project library also holds renv 1.3.1 while `renv/activate.R` asks for
-      1.2.3 (left by that edit). If restore then works, decide whether
-      `vignettes/articles/contributing.qmd` should use it.
-
 - [ ] **Earlier-snapshots follow-up after #170: build cost on a larger colony** (BLOCKED --
       needs a studbook above 3,694 rows from the owner, Effort S; #170 is closed and its other
       follow-ups shipped S1042, S1049, S1085 and S1086, see `CHANGELOG.md`) -- the cost line's

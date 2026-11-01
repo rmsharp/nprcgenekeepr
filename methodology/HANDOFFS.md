@@ -214,8 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 ```handoff
 session: S1111
 date: 2026-10-31
-status: pending
-active_task: Make renv::restore() work from an empty package cache (owner pick "Fix renv restore"). Frozen CRAN paths stay untouched.
+status: complete
+self_score: 6
+predecessor_score: 9
+active_task: renv::restore() from an empty cache is DONE and off BACKLOG.md. CRAN 3.0.0 stays BLOCKED on CRAN's final answer (in incoming/inspect/ at 18:58 CDT); the CRAN tarball's files are unchanged. Not pushed.
+what_was_done: Owner picks "Fix renv restore", "Dated repository", "Guide uses restore", then proceed at each gate and the REFACTOR option. renv.lock refreshed from the project library (19 versions, R 4.6.2, 136 packages) on repository cran/2026-10-31; renv 1.3.1; guide setup is restore, dev tools with quarto, install, restart R. Claim c7af2b702, RED 69ef4c7b7, GREEN 7e9690504 6cf068b44 caf6edadf 7b1b1f7e9, REFACTOR 2ed1968ef. Cause: Matrix pinned older than R's copy, plus a renv 1.2.3 bug that read the project's DESCRIPTION for a stale, uninstalled curl. Six-week-old lock: fails on latest, works on a dated repository. Non-commit action: a scratch restore wrote 9 packages to Mark's personal R library; undone at Mark's word (CHANGELOG entry).
+next_steps: No item is named for the next session. Waiting on CRAN's email (BACKLOG.md:8): accepted, push the local commits, then one session runs plan Phase 10; rejected, RED first. READY items left are the BACKLOG.md compression pass (last done S1108) and the #138 scoping session (low priority).
+key_files: renv.lock:7 (dated repository); renv/activate.R:5-6 (version, checksum); tools/test_renvRestore.R (guard; NPRC_RUN_RESTORE=true adds the real restore); tools/helper-repoRoot.R:4 (findRepoRoot); tools/test_contributingGuide.R (requires the code-block command, quarto, restart); vignettes/articles/contributing.qmd:59 (setup commands); CLAUDE.md:125 (moving the date); docs/planning/cran-3.0.0-submission-plan.md:969 (Phase 10 note).
+gotchas: Measured on this Mac only, not Windows or Linux. Inside the project renv::install() now gets versions as of the lock's date. renv::upgrade() writes an activate.R checksum that a bootstrap rewrites (f0bf... against b232...), so run the real restore after any renv change. A failed bootstrap makes renv::restore() run in a plain session and write to the personal library; any scratch run needs the guard in tools/test_renvRestore.R. A new R minor version will probably need a refresh (unmeasured). Mark's personal openxlsx 4.2.8.1 is a fresh build; the moved-aside copies are in this session's scratch folder, which is temporary. The CLAUDE.md snapshot paragraph still lists roxygen2, devtools and quarto as dropped dev-profile tools, while snapshot(dev = TRUE) does not record them either; left as written.
+runtime_smoke: From an empty cache at caf6edadf, following the guide's commands: runGeneKeepR(port = 6111L, launch.browser = FALSE) under load_all() answered HTTP 200 with the app's title and tabs; full suite 19,384 checks, 0 failed, 0 errors, 225 skipped. After 7b1b1f7e9 the guide's commands left 0 changed files. No package code changed.
+changelog_ref: 2ed1968ef
+commit: 2ed1968ef
+quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 979109225492 · manifest d26a8cecc699 (run at 2ed1968ef, load about 3.4 to 5.5)
 ```
 
 ```handoff
