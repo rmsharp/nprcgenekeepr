@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1113 Did
+**Deliverable (owner's word at S1112; S1113 picker): scope the journal papers, one document, no paper text (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1112 Did
 **Deliverable (Mark's word, "assuming CRAN eventually accepts"; pick "Text now, contacts later"): the NPRC outreach plan's text pitches 3.0.0.** Nothing sent. Not pushed.
 `docs/planning/nprc-outreach-announcement-plan.md`: banner (do not send until CRAN lists 3.0.0), section 1, 2, 4, 5, timeline Phase 0, risk 6, checklist, Appendices A, A2 (the two draft emails, lines 436 and 497), B, C. Section 6 unchanged (checksum).

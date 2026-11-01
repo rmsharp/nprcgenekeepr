@@ -212,6 +212,13 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-30.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1113
+date: 2026-10-31
+status: pending
+active_task: Scope the journal papers (owner's word at S1112: "look at possible paper preparation"; picked at the S1113 picker). One scoping document; no paper text. Frozen CRAN paths stay untouched.
+```
+
+```handoff
 session: S1112
 date: 2026-10-31
 status: complete
