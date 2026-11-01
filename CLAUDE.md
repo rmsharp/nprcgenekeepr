@@ -122,6 +122,8 @@ The build-equivalent for this R package (relocated here from `methodology/SAFEGU
 
 **`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: "explicit"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` — every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.
 
+**`renv.lock` names a dated repository (owner ruling, S1111).** A lock on `cran/latest` fails from an empty cache once `curl` or `Matrix` moves; on a date it keeps serving ready-built packages (Learning 1076). A plain refresh keeps the date. To move it, run `options(repos = c(CRAN = "https://packagemanager.posit.co/cran/<date>"))` before `renv::snapshot(dev = TRUE)`. A new R minor version will probably need a refresh too (unmeasured). After any lock or renv change, run `NPRC_RUN_RESTORE=true Rscript -e 'testthat::test_file("tools/test_renvRestore.R")'` (empty cache, about 20 s).
+
 ---
 
 ## Project-Specific Methodology Adaptations

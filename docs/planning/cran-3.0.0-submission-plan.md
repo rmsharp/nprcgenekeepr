@@ -969,7 +969,10 @@ first:** a check that follows it NOTEs that file at the top level (found S1097; 
 - Move `tools/test_contributingGuide.R` (S1110) to `tests/testthat/`, so CI runs it. `.github/`,
   `_pkgdown.yml` and the article are build-ignored, so it needs a skip when they are absent, and
   a line in `tests/testthat/slowTestFiles.txt`. Then add `Xcode`, `Rtools` and `renv` to
-  `inst/WORDLIST` only if the article should stop marking them as code.
+  `inst/WORDLIST` only if the article should stop marking them as code. It finds the repository
+  with `findRepoRoot()` from `tools/helper-repoRoot.R` (S1111), so give it its own way there.
+  `tools/test_renvRestore.R` stays in `tools/`: it reads `renv.lock`, which is build-ignored, and
+  its real restore needs a network.
 - **Session boundary:** one session, after the acceptance email.
 
 ---
