@@ -128,9 +128,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       until then. Remove it from SR3's list and this item together.
 
 ## Outreach
-- [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- owner review/edit of
-      drafts + send timing; Effort N/A, not a coding task) -- plan complete, with ready-to-edit
-      drafts: `docs/planning/nprc-outreach-announcement-plan.md` (S413). Two
+- [ ] **NPRC outreach & announcement plan** (BLOCKED -- on CRAN listing 3.0.0, then DECISION
+      NEEDED -- owner review/edit of drafts + send timing; Effort N/A, not a coding task) -- plan
+      complete, with ready-to-edit drafts: `docs/planning/nprc-outreach-announcement-plan.md`
+      (S413; text moved to 3.0.0 S1112, drafts at Appendices A and A2, "fine for now", not signed
+      off). **At send time:** fill the CRAN date, check the drafts against the version CRAN
+      published, and re-check the contact list, still as of 2026-07-28 (owner's ruling S1112). Two
       items remain genuinely unresolved after dedicated research, not just undone: the
       Working Group's current (2026) chair could not be confirmed (recommended action:
       ask `support@nhprc.org` directly, see the plan's §3/§8); and a colony-manager

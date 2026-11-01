@@ -99,20 +99,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1112 Did
-**Deliverable (owner's word): work on the NPRC outreach & announcement plan, assuming CRAN accepts 3.0.0 (IN PROGRESS).** Nothing is sent. **Ledger:** `CHANGELOG: pending`.
+**Deliverable (Mark's word, "assuming CRAN eventually accepts"; pick "Text now, contacts later"): the NPRC outreach plan's text pitches 3.0.0.** Nothing sent. Not pushed.
+`docs/planning/nprc-outreach-announcement-plan.md`: banner (do not send until CRAN lists 3.0.0), section 1, 2, 4, 5, timeline Phase 0, risk 6, checklist, Appendices A, A2 (the two draft emails, lines 436 and 497), B, C. Section 6 unchanged (checksum).
+Claim `475f61536`, plan `5d54af58f`. `test_originFundingWording.R` passes, 38 checks. Facts from `NEWS.Rmd`; `speciesGestation` has 14 rows; 3 draft links returned 200. `BACKLOG.md` outreach tag now BLOCKED on CRAN, then the owner's review.
+**Mark's answer on the drafts: "fine for now". That is not the plan's Phase 2 sign-off.** Delayed since S1031; named this session, so back in play.
+**Handoff evaluation of S1111: 8/10.** Helped: the frozen-tree note and the `incoming/inspect` reading, which I repeated at 19:01. Missing: nothing it could know. Wrong: nothing. Its next-step list did not reach this task, which was off the picker by the owner's own delay.
+**Self: 7/10.** + measured every claim, kept pinned sentences, proved section 6 untouched. - asked for edits to "these emails" with no path and no word that they were never-sent drafts; Mark had to ask where they were. Should have sent the whole text too.
+**Gotchas:** CRAN has not answered; a rejection may change the version or a feature in the drafts (plan risk 6). `articles/contributing` returns 404 until the local commits are pushed, so the drafts do not link it. Phase 10 stays first after acceptance; outreach follows.
+**Next:** CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10, then Mark reviews the outreach drafts and a session re-checks contacts. Rejected, RED first. READY otherwise: #138 scoping (low priority); `BACKLOG.md` pass not owed.
 
-### What Session 1111 Did
-**Deliverable (owner picks "Fix renv restore", "Dated repository", "Guide uses restore"): `renv::restore()` works from an empty cache.** Not pushed.
-`renv.lock`: 19 versions, R 4.6.2, 136 packages, repository `cran/2026-10-31`; renv 1.3.1. Guide: restore, tools (with `quarto`), install, restart R. Guard `tools/test_renvRestore.R` (`NPRC_RUN_RESTORE=true` adds the real restore).
-Claim `c7af2b702`, RED `69ef4c7b7`, GREEN `7e9690504` `6cf068b44` `caf6edadf` `7b1b1f7e9`, REFACTOR `2ed1968ef`. Guards pass; 10 of 10 breakages caught, control clean.
-From an empty cache at `caf6edadf`: guide commands 50 s, app HTTP 200, 19,384 checks, 0 failed, 0 errors, 225 skipped. Later commits changed `tools/` and one checksum line only. Tarballs from `fa1f2849e` and HEAD: 1,256 files, only `Packaged:` differs.
-**Outside the project (my error):** a scratch restore wrote 9 packages to `~/Library/R/arm64/4.6/library`. Undone at Mark's word; copies moved aside; `openxlsx` 4.2.8.1 is a fresh build, not the original files.
-**Handoff evaluation of S1110: 9/10.** Helped: the item's measured failures and the empty-cache recipe. Missing: nothing it could know. Wrong: nothing; its "cause of the loop is not traced" was honest, and the cause was a renv 1.2.3 bug.
-**Self: 6/10.** + root cause found, ageing measured, faithful guard; the last pass found `quarto` and the checksum. - wrote outside scratch after saying I would not; the personal-library change is the session's main defect; nudged once.
-**Gotchas:** measured on this Mac only. `renv::upgrade()` writes an `activate.R` checksum that a bootstrap rewrites, so run the real restore after any renv change. To move the date: `CLAUDE.md`. A new R minor will probably need a refresh (unmeasured).
-**Next:** nothing named. CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10; rejected, RED first. No READY item is small; the rest of `BACKLOG.md` is blocked or low priority.
-
-### Sessions 947-1110 (condensed S950 to S1111; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1111 (condensed S950 to S1112; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1111 (`renv::restore()` from an empty cache; Learning 1076; hashes in `CHANGELOG.md`). **Gotchas kept:** measured on this Mac only; `renv::upgrade()` writes an `activate.R` checksum a bootstrap rewrites, so run the real restore after any renv change;
+moving the date is in `CLAUDE.md`; a new R minor will probably need a refresh (unmeasured); `openxlsx` 4.2.8.1 in the personal library is a fresh build, the original copies moved aside.
 S1110 (the contributor guide; Learning 1075; hashes in `CHANGELOG.md`). **Gotchas kept:** CI does not run its guard until plan Phase 10 moves it; Mark's RStudio may rewrite `renv` files, so stage by name; one browser run gave 2 untraced errors, the rerun none.
 S1109 (the `read.csv()` bug report, `docs/audits/READ_CSV_ARM64_R_BUG_REPORT_2026-10-31.md`; Learning 1074; hashes in `CHANGELOG.md`). **Gotchas kept:** Bugzilla `quicksearch` needs a leading `ALL`; an x86-64 emulated source build
 needs `ubuntu:24.04`; `ubuntu` images need `tzdata` and `LC_ALL=C.UTF-8`.
