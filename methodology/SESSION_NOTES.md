@@ -106,7 +106,8 @@ Claim `475f61536`, plan `5d54af58f`. `test_originFundingWording.R` passes, 38 ch
 **Handoff evaluation of S1111: 8/10.** Helped: the frozen-tree note and the `incoming/inspect` reading, which I repeated at 19:01. Missing: nothing it could know. Wrong: nothing. Its next-step list did not reach this task, which was off the picker by the owner's own delay.
 **Self: 7/10.** + measured every claim, kept pinned sentences, proved section 6 untouched. - asked for edits to "these emails" with no path and no word that they were never-sent drafts; Mark had to ask where they were. Should have sent the whole text too.
 **Gotchas:** CRAN has not answered; a rejection may change the version or a feature in the drafts (plan risk 6). `articles/contributing` returns 404 until the local commits are pushed, so the drafts do not link it. Phase 10 stays first after acceptance; outreach follows.
-**Next:** CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10, then Mark reviews the outreach drafts and a session re-checks contacts. Rejected, RED first. READY otherwise: #138 scoping (low priority); `BACKLOG.md` pass not owed.
+**Next (Mark, after close-out): "next session look at possible paper preparation"** (`BACKLOG.md`, "Develop paper(s) for peer-reviewed journals"; its scoping session; the journal list must come from Mark). CRAN's email outranks it only if it has arrived.
+CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10, then Mark reviews the outreach drafts and a session re-checks contacts. Rejected, RED first. Otherwise: #138 scoping (low priority); `BACKLOG.md` pass not owed.
 
 ### Sessions 947-1111 (condensed S950 to S1112; full record in `CHANGELOG.md` and `HANDOFFS.md`)
 S1111 (`renv::restore()` from an empty cache; Learning 1076; hashes in `CHANGELOG.md`). **Gotchas kept:** measured on this Mac only; `renv::upgrade()` writes an `activate.R` checksum a bootstrap rewrites, so run the real restore after any renv change;

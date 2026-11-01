@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1112 after close-out: Mark named the next session's task, "look at possible paper preparation"; recorded in `SESSION_NOTES.md` and the receipt's `next_steps`. No work started on it.
+
 ### 2026-10-31 · [ad hoc] S1112 DONE: the NPRC outreach plan's text pitches 3.0.0, assuming CRAN accepts it, Mark's word and pick "Text now, contacts later" (claim `475f61536`, plan `5d54af58f`): do-not-send banner, both draft emails, key messages, one-page summary, demo outline, timeline Phase 0, a new risk. Contact list unchanged, re-check at send time. Mark on the drafts: "fine for now", not the plan's sign-off. Nothing sent; item stays open, now BLOCKED on CRAN. `test_originFundingWording.R` passes. Learning 1077; receipt holds the rest.
 
 ### 2026-10-31 · [ad hoc] S1112 claim (in progress): work on the NPRC outreach & announcement plan, assuming CRAN accepts 3.0.0 (owner's word). Nothing is sent. Frozen CRAN paths stay untouched.
