@@ -98,6 +98,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1112 Did
+**Deliverable (owner's word): work on the NPRC outreach & announcement plan, assuming CRAN accepts 3.0.0 (IN PROGRESS).** Nothing is sent. **Ledger:** `CHANGELOG: pending`.
+
 ### What Session 1111 Did
 **Deliverable (owner picks "Fix renv restore", "Dated repository", "Guide uses restore"): `renv::restore()` works from an empty cache.** Not pushed.
 `renv.lock`: 19 versions, R 4.6.2, 136 packages, repository `cran/2026-10-31`; renv 1.3.1. Guide: restore, tools (with `quarto`), install, restart R. Guard `tools/test_renvRestore.R` (`NPRC_RUN_RESTORE=true` adds the real restore).

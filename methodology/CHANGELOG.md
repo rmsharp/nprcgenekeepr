@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-10-31 · [ad hoc] S1112 claim (in progress): work on the NPRC outreach & announcement plan, assuming CRAN accepts 3.0.0 (owner's word). Nothing is sent. Frozen CRAN paths stay untouched.
+
 ### 2026-10-31 · [ad hoc] S1111 DONE: `renv::restore()` works from an empty package cache, owner picks "Fix renv restore", "Dated repository", "Guide uses restore" (RED `69ef4c7b7`, GREEN `7e9690504` `6cf068b44` `caf6edadf` `7b1b1f7e9`, REFACTOR `2ed1968ef`). Lock: 19 versions, R 4.6.2, 136 packages, repository `cran/2026-10-31`; renv 1.3.1. Guide uses restore; `tools/test_renvRestore.R` guards it. From an empty cache: app HTTP 200, 19,384 checks, 0 failed, 0 errors. Item off `BACKLOG.md`. CRAN tarball files unchanged. Learning 1076; receipt holds the rest.
 
 ### 2026-10-31 · [ad hoc] S1111 action outside the repository: a scratch `renv::restore()` ran after a failed bootstrap and changed 9 packages in Mark's `~/Library/R/arm64/4.6/library` (8 added, `openxlsx` overwritten). Reported at once; Mark chose "Claude undoes it": 9 moved aside to the session's scratch folder, `openxlsx` 4.2.8.1 rebuilt in place, empty `.renv` removed. Plain R sessions read the earlier versions again.
