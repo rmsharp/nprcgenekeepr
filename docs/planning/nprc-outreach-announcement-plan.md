@@ -1,17 +1,17 @@
-# NPRC Outreach & Announcement Plan — nprcgenekeepr 2.0.0
+# NPRC Outreach & Announcement Plan — nprcgenekeepr 3.0.0
 
-> **Status banner (S861, 2026-10-02).** Still a live DRAFT, nothing in it has been sent. Before any send: (1) the
-> text and the Appendix B feature table pitch **2.0.0** ("reached a major release"), which CRAN published on
-> 2026-07-26; the next release is **3.0.0** (`BACKLOG.md:93`; `DESCRIPTION` is `2.0.0.9000`), so refresh the
-> version and the feature list; (2) the contact roster is "as of 2026-07-28" and roles change, so re-verify it as the
-> plan's own section 8.2 requires (not re-checked this session: it needs outside research); (3) the CHANGELOG
-> session-number cites near the top are not in the ledger's current format and were not re-checked. The two article
-> URLs were confirmed to return 200 in the S860 audit.
+> **Status banner (S1112, 2026-10-31).** Still a live DRAFT, nothing in it has been sent. It is written for
+> **3.0.0, on the assumption that CRAN accepts it** (the owner's direction, S1112). On 2026-10-31 CRAN's package page
+> still listed 2.0.0 and `nprcgenekeepr_3.0.0.tar.gz` sat in CRAN's `incoming/inspect` folder.
+> **Do not send anything until CRAN's page lists 3.0.0.** Then: (1) fill each `[date CRAN published 3.0.0]`, and if the
+> accepted version is not 3.0.0, change the number throughout; (2) re-check the contact list, which is still "as of
+> 2026-07-28" (owner's ruling, S1112: re-check at send time, section 8 item 2); (3) confirm the links in Appendices A
+> and A2 still load (all returned 200 on 2026-10-31).
 
-**Status:** DRAFT — Phase 1 (contact roster) complete; awaiting owner review & sign-off
-(Phase 2) before any correspondence is sent
+**Status:** DRAFT — Phase 1 (contact roster) complete, text updated for 3.0.0; awaiting CRAN's
+acceptance and owner review & sign-off (Phase 2) before any correspondence is sent
 **Owner:** R. Mark Sharp, Ph.D. (package maintainer)
-**Session:** S413 (2026-07-28)
+**Sessions:** S413 (2026-07-28, the plan and roster); S1112 (2026-10-31, the text for 3.0.0)
 **Deliverable type:** Planning session per `SESSION_RUNNER.md` §Planning Sessions — this
 document is the deliverable; sending any correspondence is a separate, owner-executed
 action outside this session (see §8, item 5).
@@ -20,7 +20,7 @@ action outside this session (see §8, item 5).
 
 ## 1. Purpose
 
-Announce, advertise, and correspond about **nprcgenekeepr 2.0.0** — free, open-source
+Announce, advertise, and correspond about **nprcgenekeepr 3.0.0** — free, open-source
 genetic tools for primate colony management — to the national primate research center
 (NPRC) network, and specifically to the **Nonhuman Primate Genetics and Genomics
 Working Group** (the Consortium-level forum for NPRC faculty/staff doing genetic
@@ -31,19 +31,26 @@ This plan covers: who to contact, what to say to each audience, which channels a
 realistically available, a contact roster with sourcing, a generic timeline (no known
 target event as of this writing), and ready-to-edit draft materials.
 
+No send is recorded in this repository, so 3.0.0 is likely to be this audience's first
+announcement from the package. The drafts therefore introduce the package as a whole and
+then say what 3.0.0 adds, rather than only listing changes since 2.0.0.
+
 ## 2. Why now
 
-- **CRAN 2.0.0 was accepted and published 2026-07-26** — the freshest this release will
-  ever be, and a natural news hook (`CHANGELOG.md`, Session 410).
-- **Both companion public documentation articles are live and audited:**
-  - *"Engineering nprcgenekeepr 2.0.0"* — the technical/process write-up
-    (<https://rmsharp.github.io/nprcgenekeepr/articles/engineering-the-2.0.0-release.html>)
-  - *"Colony Manager's Guide"* — the practical how-to-use walkthrough
+- **CRAN's acceptance of 3.0.0 is the news hook** (assumed; submitted 2026-10-31, see the
+  status banner). The release adds marker-based analysis, MHC haplotype reporting,
+  interactive pedigree diagrams, cross-center identity matching, ancestry rules,
+  de-identified export and longitudinal monitoring (`NEWS.Rmd`).
+- **Companion public documentation is live.** The documentation audit finished in S1027
+  (`methodology/archive/CHANGELOG-through-2026-10-22.md`), and these are the "read deeper"
+  links in the drafts:
+  - *Colony Manager's Guide* — the practical how-to-use walkthrough
     (<https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html>)
-
-  Both went through independent adversarial review and a full live-link sweep before
-  this session (see `CHANGELOG.md` Sessions 342–343, 398, 404–408). They are ready to be
-  the "read deeper" links in any outreach.
+  - *Release notes* — what changed in 3.0.0, by app tab
+    (<https://rmsharp.github.io/nprcgenekeepr/news/index.html>)
+  - *kinship2 comparison* — checks by code that the Diagram shows the same individuals
+    and relationships as kinship2
+    (<https://rmsharp.github.io/nprcgenekeepr/articles/kinship2-fidelity-validation.html>)
 - **The tool already has NPRC pedigree**, literally: version 1.0 was built at ONPRC with
   support in part from NIH grants P51 RR13986 (Southwest NPRC) and P51 OD011092 (Oregon
   NPRC), and it operationalizes a peer-reviewed method already known to this exact
@@ -119,28 +126,38 @@ use for the tool.
 - Both a Shiny GUI and a fully exposed R API — usable interactively by non-programmers
   or scripted into an existing analysis pipeline.
 - Optional LabKey EHR integration for centers already on LabKey.
+- **New in 3.0.0:** marker genetics (DNA-based against pedigree-based relatedness,
+  parentage exclusion, candidate-parent ranking, heterozygosity, linkage and LD blocks,
+  between-center diversity, genomic ROH), MHC haplotype reporting, and cross-center
+  identity matching for merging two centers' records.
 
 **For colony managers / veterinarians (Tier 3):**
 - Automated studbook QC catches parent-record errors, sex-validation problems
   (no male dams / female sires), duplicates, bad dates, and under-age parents before
   they propagate into breeding decisions.
-- New **Potential Parents** tab surfaces candidate sires/dams for animals with an
+- The **Potential Parents** tab surfaces candidate sires/dams for animals with an
   unknown parent, screened by estimated conception date and species-specific
   gestation window — directly supports closing pedigree gaps.
 - Age-sex pyramid plots give an at-a-glance demographic view of the living colony.
 - Breeding-group formation respects sex-ratio and harem constraints while maximizing
   genetic diversity — a direct decision-support tool for breeding-plan meetings.
+- **New in 3.0.0:** an interactive pedigree diagram; a Genetic-Health Trends tab showing
+  from dated colony snapshots whether genetic health is improving or eroding, which can
+  also rebuild a yearly history from the studbook's birth and exit dates; and optional
+  ancestry rules that block or flag mixing of ancestry groups in breeding groups.
 
 **For center directors / leadership (Tier 2):**
 - A free, no-license-cost tool built by and for the NPRC network (NIH P51-funded
-  origin at ONPRC/SNPRC), now CRAN-published, independently documented, and
-  actively maintained — reduces duplicated in-house tool-building effort across
-  centers.
+  origin at ONPRC/SNPRC), CRAN-published, documented, and actively maintained —
+  reduces duplicated in-house tool-building effort across centers.
+- **New in 3.0.0:** de-identified export (a de-identified pedigree, a record of changes,
+  and a private re-identification key) and cross-center identity matching, both of which
+  support sharing data between centers.
 
 ## 5. Channels & tactics
 
 1. **Direct correspondence to the Working Group** (Tier 1) — an email introducing the
-   release, linking CRAN, GitHub, and the two pkgdown articles, and offering to present
+   release, linking CRAN, GitHub, the Colony Manager's Guide and the release notes, and offering to present
    or demo the tool at an upcoming Working Group call. See Appendix A.
 2. **Direct correspondence to each center's Tier 2/3 contacts** — a practitioner-focused
    variant of the same email (Appendix A2), sent once named Tier 3 contacts are
@@ -347,7 +364,8 @@ one is known (e.g. a confirmed Working Group call).
 
 | Phase | What DONE looks like | Notes |
 |---|---|---|
-| **1. Confirm the roster** | Working Group chair confirmed (or a documented best-available fallback), and a named colony-manager and/or head-veterinarian contact identified for all 7 centers, each with a source. | **DONE this session.** WG chair: no confirmable name — documented fallback (`support@nhprc.org`) in place. Head-veterinarian-equivalent found for all 7 centers; colony-manager found for 4/7, honestly reported not-found for the other 3 (§6). |
+| **0. CRAN lists 3.0.0** | CRAN's package page shows 3.0.0, and the date and version in the drafts are filled in. | Not in the owner's or the plan's control; everything below waits on it. |
+| **1. Confirm the roster** | Working Group chair confirmed (or a documented best-available fallback), and a named colony-manager and/or head-veterinarian contact identified for all 7 centers, each with a source. | **DONE in S413; re-check owed at send time** (§8 item 2). WG chair: no confirmable name — documented fallback (`support@nhprc.org`) in place. Head-veterinarian-equivalent found for all 7 centers; colony-manager found for 4/7, honestly reported not-found for the other 3 (§6). |
 | **2. Owner review & sign-off** | Owner has read and edited the draft correspondence (Appendices A/A2), confirmed exact recipients, and approved send order (Working Group first, per §5). | Owner-only step — cannot be delegated. |
 | **3. Initial outreach — Working Group** | Email sent to the confirmed Working Group contact; either a reply received or a 2–3 week follow-up date reached with no reply. | First send, per §5 item 1. |
 | **4. Per-center outreach** | Practitioner email (Appendix A2) sent to Tier 2/3 contacts at all 7 centers; replies/no-replies logged. | Per §5 item 2; can run in parallel with Phase 3 follow-up waiting, not necessarily strictly sequential. |
@@ -389,6 +407,9 @@ where the owner wants help drafting a specific follow-up.
    Every send is a deliberate, explicit action taken by the owner — consistent with
    this project's general rule that actions visible to external parties require
    explicit confirmation, not standing authorization from having asked for a plan.
+6. **The text assumes CRAN's acceptance.** If CRAN asks for changes, the accepted version
+   may not be 3.0.0, and a feature changed in response would change the text here. Check
+   the drafts against the release notes of the version CRAN actually publishes.
 
 ## 9. Planning Session Checklist (`SESSION_RUNNER.md`)
 
@@ -404,8 +425,11 @@ where the owner wants help drafting a specific follow-up.
       owner to resolve before sending.
 - [x] Each phase in §7 has explicit completion criteria (see the table) and is marked
       as an owner-executed action beyond Phase 1, not a further coding session.
-- [ ] Close-out: evaluate S412's handoff, self-assess, write the `HANDOFFS.md` receipt,
-      record the `CHANGELOG.md` ledger entry, commit, STOP.
+- [x] Close-out: evaluate S412's handoff, self-assess, write the `HANDOFFS.md` receipt,
+      record the `CHANGELOG.md` ledger entry, commit, STOP (S413).
+- [x] S1112: text updated for 3.0.0 against `NEWS.Rmd`, the `speciesGestation` table (14
+      rows) and the live links. The roster in §6 was deliberately not re-checked (owner's
+      ruling; see the status banner).
 
 ---
 
@@ -414,14 +438,14 @@ where the owner wants help drafting a specific follow-up.
 > **Before sending:** confirm the actual recipient (§8 item 1), and personalize the
 > greeting. This is a draft for the owner to edit, not a final send-ready text.
 
-**Subject:** nprcgenekeepr 2.0.0 now on CRAN — open-source pedigree QC & breeding-group
-tools for NPRC colonies
+**Subject:** nprcgenekeepr 3.0.0 now on CRAN — open-source pedigree QC, breeding-group
+and marker-genetics tools for NPRC colonies
 
 > Dear [Working Group chair / colleagues],
 >
 > I wanted to let the Genetics and Genomics Working Group know that **nprcgenekeepr**,
 > an R package I maintain for genetic colony management, reached a major release
-> (2.0.0) and was accepted onto CRAN on July 26, 2026.
+> (3.0.0) and was accepted onto CRAN on [date CRAN published 3.0.0].
 >
 > The package grew out of work at the Oregon National Primate Research Center. Work on
 > it up to and including version 1.0 was supported in part by NIH grants P51 RR13986
@@ -435,19 +459,33 @@ tools for NPRC colonies
 >   checks, minimum parent age)
 > - Genetic Value Analysis ranking animals by mean kinship and genome uniqueness
 > - Breeding-group formation honoring sex-ratio and harem constraints
-> - A new Potential Parents tool for matching animals with an unknown parent
-> - Species-aware gestation length and minimum breeding ages now covering 14 common
+> - A Potential Parents tool for matching animals with an unknown parent
+> - Species-aware gestation length and minimum breeding ages covering 14 common
 >   colony NHP species (not just rhesus macaque)
 > - Both a Shiny application and a fully exposed R API, plus optional LabKey EHR
 >   integration
 >
+> Version 3.0.0 adds:
+>
+> - Marker genetics: DNA-based against pedigree-based relatedness, flags for recorded
+>   parents the DNA contradicts, ranked candidate parents, heterozygosity, linkage and
+>   LD blocks, between-center diversity and genomic ROH
+> - MHC haplotype reporting: how common each haplotype is, which are rare, and which
+>   animals carry them
+> - Interactive pedigree diagrams that follow most kinship2 drawing conventions
+> - Cross-center identity matching for merging records from two centers
+> - Optional ancestry rules that block or flag mixing of ancestry groups in breeding
+>   groups and mate pair reports
+> - De-identified export, with a private re-identification key
+> - Genetic-Health Trends: dated colony snapshots showing whether genetic health is
+>   improving or eroding
+>
 > It's free to install (`install.packages("nprcgenekeepr")`), documented at
 > <https://rmsharp.github.io/nprcgenekeepr/>, and the source is on GitHub at
-> <https://github.com/rmsharp/nprcgenekeepr>. Two articles there may be of particular
+> <https://github.com/rmsharp/nprcgenekeepr>. Two pages there may be of particular
 > interest: a practical [Colony Manager's
 > Guide](https://rmsharp.github.io/nprcgenekeepr/articles/colony-manager-guide.html) and
-> a technical [write-up of the 2.0.0
-> engineering](https://rmsharp.github.io/nprcgenekeepr/articles/engineering-the-2.0.0-release.html).
+> the [3.0.0 release notes](https://rmsharp.github.io/nprcgenekeepr/news/index.html).
 >
 > I'd be glad to give a short demo at an upcoming Working Group call if that would be
 > useful — happy to tailor it to whatever would be most relevant to the group.
@@ -461,7 +499,7 @@ tools for NPRC colonies
 > **Before sending:** confirm the actual recipient (§6/§8 item 2) and personalize.
 
 **Subject:** Free open-source tool for studbook QC & breeding-group planning —
-nprcgenekeepr 2.0.0
+nprcgenekeepr 3.0.0
 
 > Dear [colony manager / veterinarian name],
 >
@@ -471,10 +509,16 @@ nprcgenekeepr 2.0.0
 >
 > In practice, it: (1) catches studbook errors automatically — bad parent records,
 > impossible sexes, duplicates, bad dates, under-age parents; (2) suggests candidate
-> sires/dams for animals with a missing parent (a new feature in this release,
-> screened by species-specific gestation windows); (3) plots an age-by-sex pyramid of
+> sires/dams for animals with a missing parent (screened by species-specific gestation
+> windows); (3) plots an age-by-sex pyramid of
 > the living colony for a quick demographic check; and (4) proposes breeding groups
 > that respect sex-ratio/harem constraints while maximizing genetic diversity.
+>
+> Version 3.0.0, new on CRAN, adds an interactive pedigree diagram and a Genetic-Health
+> Trends tab that shows from dated colony snapshots whether genetic health is improving
+> or eroding. It can rebuild a yearly history from your studbook's birth and exit dates,
+> so you don't have to wait for new snapshots to see a trend. If your center has marker
+> or MHC haplotype data, there are reports for those too.
 >
 > It runs either as a point-and-click Shiny app or from the R console, needs no
 > license fee (MIT license, free on CRAN), and can optionally read directly from a
@@ -501,10 +545,16 @@ Raboin (2015, *JAALAS*).
 |---|---|
 | **Quality control** | Validates studbooks from text/Excel files or LabKey EHR pedigrees: parent-record checks, sex validation, duplicate detection, date validation, minimum parent age (species-aware, sex-specific). |
 | **Pedigree creation** | Builds pedigrees from an animal list via LabKey EHR integration. |
-| **Potential Parents** *(new in 2.0.0)* | Suggests candidate sires/dams for animals with an unknown parent, using species-specific gestation windows across 14 NHP species. |
+| **Potential Parents** | Suggests candidate sires/dams for animals with an unknown parent, using species-specific gestation windows across 14 NHP species. |
 | **Age-sex pyramid plots** | Visual demographic snapshot of the living colony by age and sex. |
 | **Genetic Value Analysis** | Ranks animals by mean kinship (relatedness to the colony) and genome uniqueness (rare-allele presence) — lower kinship / higher uniqueness ranks higher. |
-| **Breeding group formation** | Proposes breeding groups that avoid mating close relatives, support optional sex-ratio constraints and harem configurations, and maximize genetic diversity. |
+| **Breeding group formation** | Proposes breeding groups that avoid mating close relatives, support optional sex-ratio constraints and harem configurations, and maximize genetic diversity. Optional ancestry rules block or flag mixing of ancestry groups *(new in 3.0.0)*. |
+| **Pedigree Diagram** *(new in 3.0.0)* | Interactive diagram following most kinship2 drawing conventions: re-center on an animal, pan and zoom, search for an id, save an image. |
+| **Marker Genetics** *(new in 3.0.0)* | Compares DNA-based with pedigree-based relatedness, flags recorded parents the DNA contradicts, ranks candidate parents, and reports heterozygosity, linkage and LD blocks, between-center diversity and genomic ROH. |
+| **MHC Haplotype Reporting** *(new in 3.0.0)* | Shows how common each haplotype is, which are rare, and which animals carry them. |
+| **Cross-Center Identity** *(new in 3.0.0)* | Walks a curator through matching and merging records from two centers, with a preview and a confirmation step. |
+| **De-Identified Export** *(new in 3.0.0)* | Downloads a de-identified pedigree, a record of changes, and a private re-identification key. |
+| **Genetic-Health Trends** *(new in 3.0.0)* | Keeps dated colony snapshots to show whether genetic health is improving or eroding; can rebuild a yearly history from the studbook's birth and exit dates. |
 
 Available as a Shiny application (`runGeneKeepR()`) or a scriptable R API — use it
 interactively or embed it in an existing pipeline.
@@ -521,9 +571,12 @@ Source: github.com/rmsharp/nprcgenekeepr · Contact: R. Mark Sharp (rmsharp@me.c
    spreadsheets, one-off breeding-group brainstorming.
 3. **Live demo (8–10 min):**
    - Load a sample studbook, show the QC error report.
+   - Show the new interactive pedigree diagram.
    - Show the Genetic Value Analysis ranking.
-   - Show the new Potential Parents tab finding a candidate parent match.
+   - Show the Potential Parents tab finding a candidate parent match.
    - Show breeding-group formation with a sex-ratio constraint.
+   - Show the new Genetic-Health Trends tab rebuilding a colony's history. For a
+     geneticist audience, swap in the Marker Genetics tab.
 4. **How to get it / how it fits your workflow (3 min):** CRAN install, Shiny app vs.
    R API, optional LabKey EHR integration, where the docs live.
 5. **Ask (2 min):** feedback, feature requests (GitHub issues), and whether other
@@ -536,5 +589,5 @@ Source: github.com/rmsharp/nprcgenekeepr · Contact: R. Mark Sharp (rmsharp@me.c
 NPRC Genetics & Genomics resource page (nprc.org), Jeffrey Rogers' Baylor College of
 Medicine faculty page, and facts supplied directly by the package owner during this
 session (Dr. Martha Lyke, Jon Hennebold, Jessica Phillips contacts). Package facts
-sourced from this repository's own `DESCRIPTION`, `NEWS.md`, `README.md`, and
+sourced from this repository's own `DESCRIPTION`, `NEWS.md`, `NEWS.Rmd`, `README.md`, and
 `CHANGELOG.md`.*
