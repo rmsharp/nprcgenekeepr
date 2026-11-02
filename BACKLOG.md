@@ -7,87 +7,17 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 ## Up Next
 
 **Prepare the 3.0.0 CRAN submission** (plan
-`docs/planning/cran-3.0.0-submission-plan.md`, S1091, DRAFT; Phase 1
-DONE S1093; Phase 2 DONE S1096; Phase 3 DONE S1097; Phase 4 DONE S1098;
-Phase 5 DONE S1101; Phase 6 DONE S1102; Phase 7 DONE S1103; Phase 8 DONE
-S1105; BLOCKED – on the owner’s Phase 9 submission
-(`devtools::submit_cran()`, which no session runs), then on CRAN’s
-answer; all of D1-D6 ruled, the recommended option each (D1, D2, D5, D6
-= A and D3 = B, S1097; D4 = A, S1092); Effort S, one session left, after
-acceptance, plus the owner’s submission) – **Phase 1 (S1093):** the
-linux-arm64 failure is a bug in R itself (utils `readtablehead()`,
-`src/library/utils/src/io.c:910`, unfixed through R-devel): on Linux
-ARM64
-[`read.csv()`](https://rdrr.io/r/utils/read.table.html)/[`read.table()`](https://rdrr.io/r/utils/read.table.html)
-of a file whose last value is quoted and that has no final newline read
-that value with a stray 0xFF byte. Every package read now goes through
-`readWithFinalNewline()` (`R/readWithFinalNewline.R`), and the failing
-test passes in CRAN’s own arm64 image (container `ngk-arm64-s1093`,
-kept, stopped). S1094 made its added newline one byte on Windows too (it
-was `\r\n` from [`cat()`](https://rdrr.io/r/base/cat.html), an ERROR on
-win-builder). `cran-comments.md` says so, and that CRAN’s arm64 job
-confirms it only after release (S1104). Whether to report the R bug
-upstream (one-line case:
-`writeChar('a,b\n1,"x"', f, eos = NULL); read.csv(f)$b` gives `x\xff`)
-is the owner’s call; nothing has been posted. **Phase 2 (DONE S1096,
-owner ruling on a measured 520 s against 540 s):** a CRAN check runs 79
-test files that call all 236 exports
-(`tests/testthat/slowTestFiles.txt`; S1092, S1095), two slow examples
-are cheaper (S1095), and loading the package no longer loads Matrix or
-ggplot2, which made R’s per-example memory sweep slow (S1096).
-win-builder R-devel read 652, 564, then 617 and 520 s for one S1096
-tarball: about 100 s of run-to-run noise, so Phase 8 uploads again
-before cutting (plan sections 3.4-3.6). **Phase 3 (DONE S1097):** the
-DOI is right, past cover notes are in `cran/archive/`, and two help
-examples run. **Phase 4 (DONE S1098):** `shinyBS` is in Imports, because
-without it the whole app fails to start, in 2.0.0 too (20 non-base
-packages draws no NOTE), and a check with Suggests absent reads
-`Status: OK`, run under a scratch R home because this Mac’s R library
-holds 16 of the 17 Suggests (plan dragon 9). win-builder’s incoming NOTE
-flags “de” (`DESCRIPTION:37`) and the thoughtco.com URL (status 402);
-`cran-comments.md` explains both. **Phase 5 (DONE S1101):** NEWS opens
-with where its tabs are explained, its sections run in the app’s tab
-order, General Fixes is 54 lines, and a new feature gets a general
-description with no help-page detail (owner ruling S1101; the block 574
-to 391 lines). **Phase 6 (DONE S1102):** `DESCRIPTION`, NEWS,
-`CITATION.cff`, `README.md` and the roadmap read 3.0.0, CI green on
-`74715d95b`; the public pkgdown site already shows 3.0.0. The owner
-decided (S855) the release is 3.0.0. **Phase 7 (DONE S1103):** the check
-reads `Status: OK` on macOS (with `V8` in a scratch library; 1
-local-only NOTE without it) and in CRAN’s arm64 image; clean read 0
-failed, 0 errors; lint, URLs, spelling and the tarball listing clean.
-**The tree is frozen:** a change to `R/`, `tests/`, `man/`,
-`vignettes/`, `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. **Phase
-8 (DONE S1105):** `cran-comments.md` holds the results: win-builder 1
-NOTE on all three R versions (R-devel 284 s), R-hub `Status: OK` on
-three platforms; the macOS builder was down (502) all day and its line
-dropped by owner ruling. **Before Phase 10:** `use_github_release()`
-tags the `CRAN-SUBMISSION` SHA, and local notes commits sit ahead of
-`origin/master`, so push first. The plan’s section 7 orders the phases.
-
-**Create a tutorial for prospective contributors** (owner-requested
-2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
-today: measured 2026-09-26, no `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at
-the repo root or in `.github/` (which holds only `workflows/`).
-Candidate contents, from what this project’s own docs already say:
-getting set up (clone,
-[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html),
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html));
-where things live (`R/` functions, the modular Shiny app `appUI.R` +
-`appServer.R` + `mod*.R`, `tests/testthat/`, the Quarto articles under
-`vignettes/articles/`, `inst/extdata/`); running tests (the fast
-single-file command, the full suite, `devtools::check()`); the
-write-tests-first workflow; lint; roxygen / `man/` / `_pkgdown.yml` and
-`NEWS.Rmd` expectations; and how to propose a change. **Decisions the
-pickup needs from the owner first:** (a) form and home – a
-`CONTRIBUTING.md` plus a pkgdown article, or a Quarto article alone; (b)
-how much of this project’s internal discipline (strict
-RED/GREEN/REFACTOR phase gates, the session protocol) is asked of
-outside contributors versus kept internal; (c) audience – R developers,
-colony managers who script, or both. The tutorial/article documentation
-checklist in `CLAUDE.md` applies; take the commands from its “Build /
-Test / Verify” section and re-check them rather than copying them from
-here.
+`docs/planning/cran-3.0.0-submission-plan.md`, S1091, DRAFT; Phases 1-8
+DONE S1093-S1105, recorded in the plan’s sections 3.4-3.6 and 5 and in
+`CHANGELOG.md`; Phase 9 DONE, the owner submitted 2026-10-31 from
+`fa1f2849e`; **CRAN accepted, its page shows 3.0.0 published
+2026-11-01**; READY, Phase 10 is the one session left, Effort S; all of
+D1-D6 ruled, the recommended option each) – **The tree stays frozen
+until Phase 10 starts.** `use_github_release()` tags the
+`CRAN-SUBMISSION` SHA, and 55 or more local notes commits sit ahead of
+`origin/master`, so push first. CRAN’s arm64 job confirms the Phase 1
+fix only on its check page, a few days after publication. The plan’s
+section 7 orders the phases; its Phase 10 lists the steps.
 
 **Earlier-snapshots follow-up after \#170: build cost on a larger
 colony** (BLOCKED – needs a studbook above 3,694 rows from the owner,
@@ -105,26 +35,14 @@ remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE
 (`docs/research/labkey-integration-options-2026-06-19.md`, S143); Recs
 \#1-#5 all DONE, S144-S152 (S155 added richer file-read errors), see
-`CHANGELOG.md`:
-[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
-(optional API-key auth), `Rlabkey (>= 3.2.0)`, `defaultSiteParams()`,
-the internal `getPedigreeSource()` (`labkey`/`dataframe`/`file`),
-[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-delegating its walk to
-[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
-(a deliberate, owner-accepted behavior change: it now returns the full
-connected component), and the exported
-[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
-and
-[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
-(the Shiny focal-animal workflow now runs offline). The live ONPRC/SNPRC
-server version (doc §8.1) is still unobserved. **Still deferred:** a
-non-LabKey other-EHR provider on the same seam; server-side filtering /
-`executeSql` / consuming the centers’ `study.Pedigree`/`ehr.kinship`
-(the research doc defers this until pull size is measured and per-center
-query availability/permissions are confirmed; it needs a live LabKey
-server to test/observe, and a naive focal-id server filter is
-incompatible with the client-side connected-component walk).
+`CHANGELOG.md`. The live ONPRC/SNPRC server version (doc §8.1) is still
+unobserved. **Still deferred:** a non-LabKey other-EHR provider on the
+same seam; server-side filtering / `executeSql` / consuming the centers’
+`study.Pedigree`/`ehr.kinship` (the research doc defers this until pull
+size is measured and per-center query availability/permissions are
+confirmed; it needs a live LabKey server to test/observe, and a naive
+focal-id server filter is incompatible with the client-side
+connected-component walk).
 
 **Work with LabKey (Josh Eckels) to update the LabKey integration**
 (owner-requested 2026-09-26; BLOCKED – needs the owner to make contact,
@@ -144,78 +62,49 @@ base: `docs/research/labkey-integration-options-2026-06-19.md`.
 
 **Build a kinship2-similar standalone pedigree package from this
 repository’s code — committed, deferred** (disposition S742, 2026-09-20;
-BLOCKED – prep steps ALL DONE (D-1 S744, D-2 S745, D-3 S746); the
-remaining blocker is the S738 revisit conditions only, scoping doc §6:
-engine churn calms + an accepted CRAN release; Effort L, its own
-planning session first when unblocked) – owner disposition closing the
-S739 two-step discussion item (step 1: gap analysis DONE S741,
-`docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, 15 EQ / 8
-PARTIAL / 2 ABSENT; step 2: this decision — full record in
-`CHANGELOG.md` S742). **The package WILL be built; only the timing is
-deferred (“gates stand”). Purpose (owner-stated): a standalone
-near-equivalent of kinship2 carrying nprcgenekeepr’s enhanced features —
-particularly the pedigree drawing, annotation ability, and
-interactivity; nprcgenekeepr may eventually consume it, but that is NOT
-the primary goal** (i.e. plan a sibling product first, not an extraction
-nprcgenekeepr must immediately depend on). **Ratified scope (S742, so
-the plan session doesn’t re-derive):** drawing surface IN — lift the
-module-bound decorations (`R/modPedigree.R`, about `:689-890`: legend,
-image export, tooltips) into a script-callable visNetwork renderer (the
-unique value per the gap doc’s ecosystem observation; the one
-substantive new-work item); parity closers IN — export the shrink
-helpers + `bitSize` (tested internals in `R/shrinkPedigree.R`:
-`.bitSizeOf`, `.findUnavailable`, `.findAvailAffected`), port
-`familycheck` + `ibdMatrix` (the two full absences), and user-suppliable
-layout hints (autohint’s override half — real engine-surface design);
-OUT — block-sparse `makekinship` (dense whole-colony matrices are
-current practice); API shape (data-frame-as-is vs kinship2-compat layer)
-DELIBERATELY OPEN — decide at plan time with a prototype in hand. When
-unblocked, the pickup is a planning session (package boundary/plan doc
-in `docs/planning/`, evidence-based inventory). **Prep is done** (D-1
-S744, D-2 S745, D-3 S746; each is in `CHANGELOG.md`):
-`makePedigreeMatingLayout(kinshipMatrix = )`
-(`R/makePedigreeDiagramData.R`) is the injectable boundary the package
-needs, and the 13 `R/positionTreeApportion.R` functions carry `@noRd`
-roxygen. **One prep claim has drifted (found S896):** D-2 took every
+BLOCKED – prep steps ALL DONE (S744-S746, `CHANGELOG.md`); the remaining
+blocker is the S738 revisit conditions only, scoping doc §6: engine
+churn calms + an accepted CRAN release; Effort L, its own planning
+session first when unblocked) – gap analysis:
+`docs/research/kinship2-feature-gap-analysis-2026-09-20.md`. **The
+package WILL be built; only the timing is deferred (“gates stand”).
+Purpose (owner-stated): a standalone near-equivalent of kinship2
+carrying nprcgenekeepr’s enhanced features — particularly the pedigree
+drawing, annotation ability, and interactivity; nprcgenekeepr may
+eventually consume it, but that is NOT the primary goal** (i.e. plan a
+sibling product first, not an extraction nprcgenekeepr must immediately
+depend on). **Ratified scope (S742, so the plan session doesn’t
+re-derive):** drawing surface IN — lift the module-bound decorations
+(`R/modPedigree.R`, about `:689-890`: legend, image export, tooltips)
+into a script-callable visNetwork renderer (the unique value per the gap
+doc’s ecosystem observation; the one substantive new-work item); parity
+closers IN — export the shrink helpers + `bitSize` (tested internals in
+`R/shrinkPedigree.R`: `.bitSizeOf`, `.findUnavailable`,
+`.findAvailAffected`), port `familycheck` + `ibdMatrix` (the two full
+absences), and user-suppliable layout hints (autohint’s override half —
+real engine-surface design); OUT — block-sparse `makekinship` (dense
+whole-colony matrices are current practice); API shape (data-frame-as-is
+vs kinship2-compat layer) DELIBERATELY OPEN — decide at plan time with a
+prototype in hand. When unblocked, the pickup is a planning session
+(package boundary/plan doc in `docs/planning/`, evidence-based
+inventory). **One prep claim has drifted (found S896):** D-2 took every
 test outside the layout core’s own files off `.buildMatingUnitForest()`,
-but `tests/testthat/test_newsReleaseState.R:234,248` has called it
-directly since S790-S791 (NEWS release-state counts; it is not one of
-the scoping doc’s 9 core test files), so the planning session must
-re-run the grep and decide where that test lives. (The owner accepted
-S667’s recommendation NOT to split the layout core, recorded S738; the
-prep steps stand whether or not a split ever happens.)
-
-**`CHANGELOG.md` regrows faster than it is trimmed: shorter entries are
-the open lever** (found S543, 2026-08-12; DECISION NEEDED – the owner’s
-choice of lever, Effort S) – every session writes a claim entry and a
-DONE entry, often a trim or push entry too, and the file outgrows its
-trims: 258,724 B seven days after its 2026-09-27 trim (S897: `SRF_RED`
-7.9455, the owner took a `--force` trim to 25,172 B), and 201,025 B at
-S1088’s `--force` trim, which archived the 87 records of 2026-10-23 to
-2026-10-27. Measured S1089 on the six sessions of 2026-10-28: claim
-entries 439-766 B, DONE entries 2,393-4,668 B (24,094 B in all, 86% in
-the DONE entries), so the length of the DONE entries, not their number,
-carries most of the bytes. The lever, open since S897: shorter DONE and
-claim entries (and receipts); the canonical design’s remedy for the same
-problem in `HANDOFFS.md` (“Receipt Inflation”, H4) is “a norm plus a
-check, not an archiver” (`docs/planning/ledger-trimmer-design.md` §10.2,
-not in this repo).
+but `tests/testthat/test_newsReleaseState.R:198,212` calls it directly
+(NEWS release-state counts; it is not one of the scoping doc’s 9 core
+test files), so the planning session must re-run the grep and decide
+where that test lives.
 
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
-Effort L; RECURRING – last pass S1089, 2026-10-29) – its `##` sections
+Effort L; RECURRING – last pass S1108, 2026-10-31) – its `##` sections
 are standing *topical* categories, not dated newest-on-top records, so
 `methodology_trim.py` cannot archive them; the file’s own header states
 the remedy (“Open, actionable work only… for history see
 `CHANGELOG.md`”). Items **regrow** as later sessions append progress
 narrative (Learning 626), so this is a recurring pass, never a one-time
-fix. **Pass history** (each pass’s figures are in its own `CHANGELOG.md`
-entry, live or under `methodology/archive/`): S529, S530, S531, S606,
-S752, 2026-09-24 (ad hoc), S890, S896, S1089. File size: 378 lines on
-2026-09-24, 599 at S853, 514 after S896, 234 before S1089 and 208 after
-it, with the new \#138 item (most of the fall since S896 is finished
-items coming off, not passes). **Method (every pass, all steps):**
-before compressing anything to a pointer, (1) verify `CHANGELOG.md` +
+fix. Each pass’s figures are in its own `CHANGELOG.md` entry, live or
+under `methodology/archive/`. **Method (every pass, all steps):** before
+compressing anything to a pointer, (1) verify `CHANGELOG.md` +
 `methodology/archive/CHANGELOG-*.md` (pre-S325:
 `docs/archive/CHANGELOG-legacy-pre-S325.md`) carry an entry heading for
 every session number cited AND that the load-bearing facts are inside
@@ -224,35 +113,25 @@ Learning / doc path resolves and every issue state via `gh issue view`,
 not prose; (3) extract any buried open thread as its own item first; (4)
 replace whole line ranges mechanically (Learning 537: a partial
 `old_string` leaves later paragraphs duplicated beside the new bullet);
-(5) leave open items byte-untouched; (6) re-read the compressed result
-end to end. **Candidates for the next pass (measured S1089; re-grep,
-sizes not anchors):** the finished-work narrative in three of the six
-items the owner delayed on 2026-10-22, left alone at S1089 at the
-owner’s word: the LabKey research item’s list of what Recs \#1-#5
-shipped, the standalone-package item’s disposition history (its
-`test_newsReleaseState.R:234,248` cite is stale: the calls are now at
-`:202` and `:216`), and the outreach item’s list of the plan’s contents.
+(5) cut only finished-work narrative, and leave what is still open in an
+item as written; (6) re-read the compressed result end to end.
 
 **Take the methodology files the S1032 sync held back (BLOCKED – on a
 fix to `close_out_report.py` in the methodology repo, Effort S once it
 ships)** (found S1032, 2026-10-22) – the sync copied 7 of 10 files and,
-at the owner’s word, held back `SESSION_RUNNER.md` (2 versions behind),
-`SAFEGUARDS.md` (1 behind) and the new `close_out_report.py` (not
-installed). The newest runner (commit `8f63492b`) makes section 3G run
-`python3 close_out_report.py` and print its output as the last message;
-v1.2.0 reads the example box in `HANDOFFS.md`’s front matter as the
-newest receipt and refuses
-(`refused: newest receipt (S<N>) is <pending | complete>`), here and on
-the blank seed. The runner’s Oct 12 commit `95005e87` (its subject: a
-gate run that reads unmeasured gates is repaired and repeated, or each
-gate is named) is held with it. Evidence, a tested 4-line fix and the
-draft upstream report, **not posted anywhere** (where to post it is the
-owner’s call): `docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`.
-**What is left:** when the script reads this ledger, sync again
+at the owner’s word, held back `SESSION_RUNNER.md`, `SAFEGUARDS.md` and
+the new `close_out_report.py`. The newest runner (commit `8f63492b`)
+makes section 3G print that script’s output as the last message; v1.2.0
+reads the example box in `HANDOFFS.md`’s front matter as the newest
+receipt and refuses, here and on the blank seed (the fork’s copy still
+did on S1108’s test). The runner’s Oct 12 commit `95005e87` is held with
+it. Evidence, a tested 4-line fix and the draft upstream report, **not
+posted anywhere** (where to post it is the owner’s call):
+`docs/audits/CLOSE_OUT_REPORT_EXAMPLE_BOX_2026-10-22.md`. **What is
+left:** when the script reads this ledger, sync again
 (`bin/sync --force`, then the trimmer patch per
 `docs/conventions/CLOSEOUT_CHECKLISTS.md`) and, before keeping the
-script, print a report from a ledger whose newest receipt is complete;
-`bin/status` lists these three files until then.
+script, print a report from a ledger whose newest receipt is complete.
 
 **Draw the full colony beyond the Diagram tab’s cap (issue \#138, low
 priority; READY – the pickup is a scoping session, not a build; Effort M
@@ -264,70 +143,60 @@ Finding \#7) advised no action; the issue says a real need warrants a
 design session (for example a colony summary view), not a higher cap.
 
 **Two test files error instead of skipping when Chrome or Quarto is
-missing** (found S1103; BLOCKED – wait for CRAN’s acceptance, because a
-change under `tests/` repeats CRAN plan Phase 7; Effort S) – with
-`NOT_CRAN=true` on a machine that has neither, such as CRAN’s arm64
-image: `test_positionMatingUnitForest.R:2012,2589,2627` stop with
-“Invalid path to Chrome” (their guards check for the `chromote` package,
-not a browser), and all four `test_pkgdown_reference_config.R` blocks
-stop because
+missing** (found S1103; READY once CRAN plan Phase 10 has run, CRAN
+having accepted 3.0.0; Effort S) – with `NOT_CRAN=true` on a machine
+that has neither, such as CRAN’s arm64 image:
+`test_positionMatingUnitForest.R:2012,2589,2627` stop with “Invalid path
+to Chrome” (their guards check for the `chromote` package, not a
+browser), and all four `test_pkgdown_reference_config.R` blocks stop
+because
 [`pkgdown::as_pkgdown()`](https://pkgdown.r-lib.org/reference/as_pkgdown.html)
 needs the `quarto` package for the `.qmd` articles. A CRAN check skips
 both files (`tests/testthat/slowTestFiles.txt`). Add a skip for the
 missing tool in each.
 
+**Take the finished tutorial’s pin out of `test_docsAuditSixRulings.R`**
+(found S1110; READY once CRAN plan Phase 10 has run, CRAN having
+accepted 3.0.0; Effort S) – SR3
+(`tests/testthat/test_docsAuditSixRulings.R:92` area) requires each open
+item’s phrase once in this file, and one of them is the item S1110
+finished: Create a tutorial for prospective contributors. This item
+holds that phrase, so the test stays green until then. Remove it from
+SR3’s list and this item together.
+
 ## Outreach
 
-**NPRC outreach & announcement plan** (DECISION NEEDED – owner
-review/edit of drafts + send timing; Effort N/A, not a coding task) –
-plan complete: `docs/planning/nprc-outreach-announcement-plan.md` (S413,
-owner-directed, not from this backlog). Covers audiences (the NPRC
-Genetics and Genomics Working Group, plus each of the 7 centers’
-colony-manager/veterinarian contacts), tailored messaging, channels, a
-sourced 7-center contact roster (director + colony-manager/
-head-veterinarian-equivalent + genetics contact per center, each with a
-source), a generic timeline, 5 named risks, and ready-to-edit draft
-materials (WG email, colony-manager/vet email, one-page feature summary,
-presentation outline). Two items remain genuinely unresolved after
-dedicated research, not just undone: the Working Group’s current (2026)
-chair could not be confirmed (recommended action: ask
-`support@nhprc.org` directly, see the plan’s §3/§8); and a
-colony-manager contact could not be named at 3 of 7 centers (Southwest,
-Tulane, Washington – the role is undocumented by name on each center’s
-own site). **Next steps are owner-executed, real-world actions**
-(review/edit the drafts, confirm exact recipients, send) per the plan’s
-own §7 – pick this up in a future session only if the owner wants help
-drafting a specific follow-up, not as a general “send the emails” coding
-task. See `CHANGELOG.md`.
+**NPRC outreach & announcement plan** (DECISION NEEDED – CRAN listed
+3.0.0 on 2026-11-01; owner review/edit of drafts + send timing; Effort
+N/A, not a coding task) – plan complete, with ready-to-edit drafts:
+`docs/planning/nprc-outreach-announcement-plan.md` (S413; text moved to
+3.0.0 S1112, drafts at Appendices A and A2, “fine for now”, not signed
+off). **At send time:** fill the CRAN date, check the drafts against the
+version CRAN published, and re-check the contact list, still as of
+2026-07-28 (owner’s ruling S1112). The emails could also ask whether
+each center uses the package, which the papers need
+(`docs/planning/journal-papers-scoping.md` section 5; plan not changed).
+Two items remain genuinely unresolved after dedicated research, not just
+undone: the Working Group’s current (2026) chair could not be confirmed
+(recommended action: ask `support@nhprc.org` directly, see the plan’s
+§3/§8); and a colony-manager contact could not be named at 3 of 7
+centers (Southwest, Tulane, Washington – the role is undocumented by
+name on each center’s own site). **Next steps are owner-executed,
+real-world actions** (review/edit the drafts, confirm exact recipients,
+send) per the plan’s own §7 – pick this up in a future session only if
+the owner wants help drafting a specific follow-up, not as a general
+“send the emails” coding task.
 
 **Develop paper(s) for peer-reviewed journals** (owner-requested
-2026-09-26; DECISION NEEDED, Effort L, its own scoping session first;
-multi-session) – the owner supplied a venue-fit summary (from an
-AI-assisted conversation) to start from. **Treat its journal assessments
-as unverified leads:** check each journal’s current scope, article types
-and fees before committing. Its recommendation, in short: version 3.0 is
-more than an incremental update, so write **two complementary papers**
-that cite each other – (1) a **software paper** for *The R Journal* or
-the *Journal of Open Source Software* (package architecture, workflows,
-reproducibility, new features; the canonical citation for the package;
-per the summary, JOSS is very short and citation-like, while *The R
-Journal* allows longer technical descriptions with code examples) and
-(2) an **applied genetics paper** for the *American Journal of
-Primatology* or the *Journal of Medical Primatology* (how the software
-improves genetic management of captive primate colonies, with realistic
-examples and best practices) – and optionally (3) a **retrospective
-paper** on the evolution of computerized genetic management in NPRC
-colonies over past decades (historical and methodological, for readers
-interested in colony-management practice). The summary also grouped
-further candidates into tiers (computational-biology software,
-conservation genetics, statistical computing, and
-animal-colony-management journals), but **the journal names in those
-tiers were lost when it was pasted** – only the four above survive – so
-the pickup must get the original list from the owner. Open decisions:
-which papers, authorship, and what is new in 3.0 relative to the
-published reference (Vinson & Raboin 2015, *JAALAS* 54(6):700-707, the
-package’s key reference in `CLAUDE.md`, whose Project Overview also
-holds the NIH grant acknowledgment). Natural dependency, the owner’s
-call: a released 3.0.0 to cite (`DESCRIPTION` reads 3.0.0, not yet on
-CRAN); the documentation audit is finished (S1027, `CHANGELOG.md`), so
-the papers’ figures match the software.
+2026-09-26; scoping DONE S1113; BLOCKED – on Mark finding out whether
+any center uses the package; Effort L, multi-session) –
+`docs/planning/journal-papers-scoping.md` holds the rulings, the journal
+rules as read and the next steps. Mark ruled: the software paper first,
+in *The R Journal*; Mark drafts, Claude helps; no co-author named so
+far, of the four other package authors. Open before any draft: evidence
+of use (its section 5), *The R Journal*’s AI and fee position, and a
+comparator scan (one Claude session, section 6). An applied colony paper
+and a retrospective are later and optional. The tiered journal names
+never arrived; section 7 lists inferences. Also, the documentation audit
+is finished (S1027, `CHANGELOG.md`), so the papers’ figures match the
+software.

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="articles/a3manual.html">Genetic Management Tools Manual</a></li>
     <li><a class="dropdown-item" href="articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
+    <li><a class="dropdown-item" href="articles/contributing.html">Contributing to nprcgenekeepr</a></li>
     <li><a class="dropdown-item" href="articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -45,7 +46,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="logo.png" class="logo" alt=""><h1>nprcgenekeepr</h1>
-      <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/v3.0.0/CLAUDE.md"><code>CLAUDE.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/CLAUDE.md"><code>CLAUDE.md</code></a></small>
     </div>
 
 
@@ -164,6 +165,7 @@
 </tr></tbody></table><p><strong>Fast single-file test:</strong> <code>Rscript -e 'Sys.setenv(NOT_CRAN = "true"); suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'</code> (sets <code>NOT_CRAN</code> first — without it, a file with a top-level <code>skip_on_cran()</code> silently bare-skips instead of running; see <code>PROJECT_LEARNINGS.md</code> Learning 417.)</p>
 <p><strong>Clean regression read:</strong> <code>Sys.setenv(NOT_CRAN = "true"); pkgload::load_all(".", quiet=TRUE); as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))</code>, then check <code>sum(failed)</code> <strong>and</strong> <code>sum(error)</code> directly, unfiltered. (<code>load_all()</code> must run first — without it this command produces mass-spurious failures unrelated to anything actually broken; see Learning 377. <code>NOT_CRAN</code> must be set too — without it, any file with a top-level <code>skip_on_cran()</code> [e.g. <code>test_wordlist_coverage.R</code>] silently bare-skips and its failure vanishes from <code>sum(failed)</code> instead of counting; see Learning 417 and Learning 594, which hit exactly this omission in this command.) <strong>No <code>test-app-*</code>/<code>test-e2e-*</code> exclusion filter — removed S624 (2026-08-23).</strong> Learning #2/#4 (Sessions 3-4) once documented those files as pre-existing baseline noise because <code>create_test_app()</code> was undefined at the time, so every such file errored or was skipped as a structural artifact rather than a real failure; <code>create_test_app()</code> has been defined (<code>tests/testthat/helper-shinytest2.R:200</code>) for a long time, and unfiltered runs report 0 failed/0 error across those files for weeks (S622/S623). A blanket <code>!grepl("test-app-|test-e2e-", file)</code> exclusion is now a live risk, not a convenience — it would silently hide a real regression landing in exactly those files, which issue #163 (S623) nearly demonstrated. Do not reintroduce the pattern; if a specific file ever develops a genuine, currently-true reason for exclusion, name that file and the reason explicitly in a fresh entry rather than reviving a permanent file-name-pattern amnesty. (Learning #2/#4 themselves are left unedited as the frozen historical record of what was true in Sessions 3-4.)</p>
 <p><strong><code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code> always needs <code>dev = TRUE</code> in this project.</strong> <code>renv/settings.json</code> sets <code>snapshot.type: "explicit"</code>, under which a <strong>plain</strong> <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code> only scans <code>DESCRIPTION</code>’s <code>Imports</code>/<code>Depends</code>/<code>LinkingTo</code> — every dev-only package (<code>Suggests</code> in <code>DESCRIPTION</code>, e.g. <code>testthat</code>, <code>dplyr</code>, <code>mockery</code>, <code>shinytest2</code>, plus the dev-profile tools <code>roxygen2</code>, <code>devtools</code> and <code>quarto</code>, and their transitive deps like <code>pkgload</code>/<code>chromote</code>) is silently dropped from <code>renv.lock</code> on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits <code><a href="https://rstudio.github.io/renv/reference/restore.html" class="external-link">renv::restore()</a></code> (a fresh clone, an R-version bump). Always run <code>renv::snapshot(dev = TRUE)</code> (and <code>renv::status(dev = TRUE)</code> to check consistency) instead of the bare form. See <code>PROJECT_LEARNINGS.md</code> Learning 473/476 for the root-cause diagnosis.</p>
+<p><strong><code>renv.lock</code> names a dated repository (owner ruling, S1111).</strong> A lock on <code>cran/latest</code> fails from an empty cache once <code>curl</code> or <code>Matrix</code> moves; on a date it keeps serving ready-built packages (Learning 1076). A plain refresh keeps the date. To move it, run <code>options(repos = c(CRAN = "https://packagemanager.posit.co/cran/&lt;date&gt;"))</code> before <code>renv::snapshot(dev = TRUE)</code>. A new R minor version will probably need a refresh too (unmeasured). After any lock or renv change, run <code>NPRC_RUN_RESTORE=true Rscript -e 'testthat::test_file("tools/test_renvRestore.R")'</code> (empty cache, about 20 s).</p>
 <hr></div>
 <div class="section level2">
 <h2 id="project-specific-methodology-adaptations">Project-Specific Methodology Adaptations<a class="anchor" aria-label="anchor" href="#project-specific-methodology-adaptations"></a></h2>
@@ -231,6 +233,8 @@
 <strong><code>methodology/methodology_trim.py</code> local customization</strong> — after any sync from the fork’s <code>main</code>, re-apply the <code>methodology/SESSION_NOTES.md</code> ledger patch; pass <code>--budget-bytes 65536</code> on every run.</li>
 <li>
 <strong><code>methodology/CHANGELOG.md</code> legacy forms</strong> — bare <code>[BL]</code> headings stay as written; new entries use <code>[issue #&lt;N&gt;]</code>, <code>[BL-&lt;id&gt;]</code> or <code>[ad hoc]</code>.</li>
+<li>
+<strong><code>methodology/CHANGELOG.md</code> entry limit</strong> — every new entry stays at or under 1,000 B; fuller detail goes in the <code>methodology/HANDOFFS.md</code> receipt (gate <code>changelog_entries_over_limit</code>).</li>
 <li>
 <strong><code>methodology/SESSION_NOTES.md</code> archive fence-scanner defect</strong> — resolved S527/S528; historical note only.</li>
 </ul></div>

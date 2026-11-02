@@ -56,5 +56,5 @@ for error-safe execution with logging
 logModuleEvent("modInput", "File uploaded successfully")
 logModuleEvent("modPedigree", "Processing %d animals", level = "DEBUG", 100)
 logModuleEvent("modGeneticValue", "Calculation failed", level = "ERROR")
-#> [2026-11-02 02:52:24] [ERROR] [modGeneticValue] Calculation failed
+#> [2026-11-02 03:06:04] [ERROR] [modGeneticValue] Calculation failed
 ```

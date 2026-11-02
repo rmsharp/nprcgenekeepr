@@ -1,5 +1,7 @@
 # Changelog
 
+## nprcgenekeepr 3.0.0.9000 (development version)
+
 ## nprcgenekeepr 3.0.0 (20261030)
 
 CRAN release: 2026-11-01
