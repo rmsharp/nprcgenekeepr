@@ -238,6 +238,53 @@ test_that("newsTopBlock() copes with one heading and with none", {
   expect_identical(nrow(newsEntries(none)), 0L)
 })
 
+## S1114: after a release NEWS opens with a development block that has only its
+## heading until its first entry is written.
+test_that("newsTopBlock() passes over a block that has only its heading", {
+  lines <- c("# nprcgenekeepr 3.0.0.9000 (development version)", "",
+             "# nprcgenekeepr 3.0.0 (20260101)", "- Released.",
+             "# nprcgenekeepr 2.0.0 (20250101)", "- Oldest.")
+  block <- newsTopBlock(lines)
+  expect_identical(block$start, 3L)
+  expect_identical(block$lines, lines[3:4])
+  expect_identical(nrow(newsEntries(block)), 1L)
+})
+
+test_that("newsTopBlock() returns the first block when none has a body", {
+  lines <- c("# nprcgenekeepr 9.9 (development version)", "",
+             "# nprcgenekeepr 9.8", "")
+  block <- newsTopBlock(lines)
+  expect_identical(block$start, 1L)
+  expect_identical(block$lines, lines[1:2])
+})
+
+test_that("newsFromVersion() makes the named version's block the newest", {
+  lines <- c("intro",
+             "# nprcgenekeepr 3.0.0.9000 (development version)", "- New.",
+             "# nprcgenekeepr 3.0.0 (20260101)", "## Alpha", "- Released.",
+             "# nprcgenekeepr 2.0.0 (20250101)", "- Oldest.")
+  released <- newsFromVersion(lines, "3.0.0")
+  ## The file's own line numbers stay right, for a failure's message.
+  expect_identical(newsTopBlock(released)$start, 4L)
+  expect_identical(newsTopBlock(released)$lines, lines[4:6])
+  expect_identical(newsSectionLines(released, "Alpha"), "- Released.")
+  expect_identical(newsTopBlock(newsFromVersion(lines, "3.0.0.9000"))$start, 2L)
+})
+
+test_that("newsFromVersion() matches the whole version, with or without a date", {
+  lines <- c("# nprcgenekeepr 3.0.0.9000", "- New.", "# nprcgenekeepr 3.0.0", "- Old.")
+  expect_identical(newsTopBlock(newsFromVersion(lines, "3.0.0"))$start, 3L)
+  expect_error(newsFromVersion(lines, "3.0"), "3.0", fixed = TRUE)
+})
+
+## A test that read nothing would pass for the wrong reason.
+test_that("newsFromVersion() stops when the version has no one heading", {
+  expect_error(newsFromVersion(c("# nprcgenekeepr 1.0", "- A."), "9.9"),
+               "9.9", fixed = TRUE)
+  expect_error(newsFromVersion(rep("# nprcgenekeepr 1.0", 2L), "1.0"),
+               "1.0", fixed = TRUE)
+})
+
 test_that("newsEntries() joins wrapped lines and reports the start line", {
   block <- list(start = 10L,
                 lines = c("## Section", "- One entry that wraps",
