@@ -212,6 +212,13 @@ Losslessness is proved by [`methodology/archive/HANDOFFS-through-2026-10-30.md.v
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
+session: S1114
+date: 2026-11-01
+status: pending
+active_task: CRAN plan Phase 10, after acceptance (picked at the S1114 picker; the pick is Mark's word to push the local commits): push, tag v3.0.0 at fa1f2849e, move to 3.0.0.9000 with a new NEWS block, README, roadmap, move the contributor guide's test.
+```
+
+```handoff
 session: S1113
 date: 2026-11-01
 status: complete

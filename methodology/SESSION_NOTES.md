@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 1114 Did
+**Deliverable:** CRAN plan Phase 10, after acceptance (IN PROGRESS). The S1114 picker pick is Mark's word to push the local commits.
+**Started:** 2026-11-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 1113 Did
 **Deliverable (Mark's word at S1112, S1113 picker): the journal papers scoped, `docs/planning/journal-papers-scoping.md`. No paper text.** Not pushed.
 **Mark's rulings:** software paper first, in *The R Journal*; Mark drafts, Claude helps; use by centers "Not sure yet"; co-authors "None of the above" of Vinson, Raboin, Schultz, Therneau.

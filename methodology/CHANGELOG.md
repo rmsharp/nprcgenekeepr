@@ -32,6 +32,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 Losslessness is proved by [`methodology/archive/CHANGELOG-through-2026-10-27.md.verify.sh`](archive/CHANGELOG-through-2026-10-27.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
+### 2026-11-01 · [ad hoc] S1114 claim (in progress): CRAN plan Phase 10, after acceptance (picked at the S1114 picker, which is Mark's word to push the local commits).
+
 ### 2026-11-01 · [ad hoc] S1113 DONE: journal papers scoped, `docs/planning/journal-papers-scoping.md` (`1f97bb6ee`), no paper text. Mark's rulings: software paper first in *The R Journal*; Mark drafts, Claude helps; use by centers "Not sure yet"; no co-author named so far. Mid-session Mark pasted CRAN's acceptance of 3.0.0; CRAN's page shows it published 2026-11-01. `BACKLOG.md`: Phase 10 READY, outreach DECISION NEEDED, papers BLOCKED on use evidence, two test items READY after Phase 10. Phase 10 not started. Nothing pushed, tagged or sent.
 
 ### 2026-10-31 · [ad hoc] S1113 claim (in progress): Scope the journal papers (owner's word at S1112: "look at possible paper preparation"; picked at the S1113 picker). One scoping document; no paper text. Frozen CRAN paths stay untouched.
