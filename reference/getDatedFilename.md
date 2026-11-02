@@ -27,5 +27,5 @@ fractional seconds, for example `2026-10-01_15_39_25.959408_testName`.
 ``` r
 library(nprcgenekeepr)
 getDatedFilename("testName")
-#> [1] "2026-11-02_02_47_09.42043_testName"
+#> [1] "2026-11-02_02_52_12.951045_testName"
 ```

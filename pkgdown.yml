@@ -7,7 +7,6 @@ articles:
   articles/age-sex-pyramid: age-sex-pyramid.html
   articles/breeding-group-formation: breeding-group-formation.html
   articles/colony-manager-guide: colony-manager-guide.html
-  articles/contributing: contributing.html
   articles/engineering-the-2.0.0-release: engineering-the-2.0.0-release.html
   articles/fg-se-validation: fg-se-validation.html
   articles/genetic-value-analysis: genetic-value-analysis.html
@@ -17,7 +16,7 @@ articles:
   articles/pedigree-diagram: pedigree-diagram.html
   simulatedKValues: simulatedKValues.html
   articles/studbook-quality-control: studbook-quality-control.html
-last_built: 2026-11-02T02:46Z
+last_built: 2026-11-02T02:51Z
 urls:
   reference: https://github.com/rmsharp/nprcgenekeepr/reference
   article: https://github.com/rmsharp/nprcgenekeepr/articles

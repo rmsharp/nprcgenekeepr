@@ -12,8 +12,6 @@
   Plots](https://github.com/rmsharp/nprcgenekeepr/articles/age-sex-pyramid.md):
 - [Forming Breeding
   Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md):
-- [Contributing to
-  nprcgenekeepr](https://github.com/rmsharp/nprcgenekeepr/articles/contributing.md):
 - [Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded
   Capability, and an AI-Assisted Development
   Process](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md):

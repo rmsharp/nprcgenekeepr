@@ -213,16 +213,6 @@ time someone hits
 consistency) instead of the bare form. See `PROJECT_LEARNINGS.md`
 Learning 473/476 for the root-cause diagnosis.
 
-**`renv.lock` names a dated repository (owner ruling, S1111).** A lock
-on `cran/latest` fails from an empty cache once `curl` or `Matrix`
-moves; on a date it keeps serving ready-built packages (Learning 1076).
-A plain refresh keeps the date. To move it, run
-`options(repos = c(CRAN = "https://packagemanager.posit.co/cran/<date>"))`
-before `renv::snapshot(dev = TRUE)`. A new R minor version will probably
-need a refresh too (unmeasured). After any lock or renv change, run
-`NPRC_RUN_RESTORE=true Rscript -e 'testthat::test_file("tools/test_renvRestore.R")'`
-(empty cache, about 20 s).
-
 ------------------------------------------------------------------------
 
 ## Project-Specific Methodology Adaptations
@@ -397,9 +387,6 @@ shipped.** One line per checklist (full text in that file):
 - **`methodology/CHANGELOG.md` legacy forms** — bare `[BL]` headings
   stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or
   `[ad hoc]`.
-- **`methodology/CHANGELOG.md` entry limit** — every new entry stays at
-  or under 1,000 B; fuller detail goes in the `methodology/HANDOFFS.md`
-  receipt (gate `changelog_entries_over_limit`).
 - **`methodology/SESSION_NOTES.md` archive fence-scanner defect** —
   resolved S527/S528; historical note only.
 
