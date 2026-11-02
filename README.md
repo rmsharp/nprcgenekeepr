@@ -1,11 +1,11 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2026-10-30
+2026-11-01
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 3.0.0 (2026-10-31)
+Version 3.0.0.9000 (2026-11-02)
 
 <!-- badges: start -->
 
