@@ -98,7 +98,7 @@ ped
 #> 5 o1   s1   d1   F   1 2015-02-04 <NA> 11.7     original       FALSE
 #> 6 o2   s1   d2   F   1 2009-03-17 <NA> 17.6     original       FALSE
 #> 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.6     original       FALSE
-#> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.5     original       FALSE
+#> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.6     original       FALSE
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus placeholder
 #> 1 GR1AT5   <NA>   <NA>   F   0 2003-05-10 <NA> 23.5     original       FALSE

@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@
     <li><a class="dropdown-item" href="../articles/a3manual.html">Genetic Management Tools Manual</a></li>
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
+    <li><a class="dropdown-item" href="../articles/contributing.html">Contributing to nprcgenekeepr</a></li>
     <li><a class="dropdown-item" href="../articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
@@ -2158,7 +2159,7 @@ that have generated the errors.</p>
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minSireAge <span class="op">=</span> <span class="fl">0.0</span>, minDamAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `qcStudbook()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpWjytME/lowParentAge.csv.</span></span></code></pre>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpyUIVFE/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -3094,8 +3095,8 @@ a real id cannot slip through.</p>
 document.</p>
 <div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2026-10-31 04:26:31.41117. The
-processing time for this document was 20 seconds..</p>
+<p>The current date and time is 2026-11-02 02:47:49.499314. The
+processing time for this document was 14 seconds..</p>
 <div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.2 (2026-10-29)</span></span>
@@ -3124,7 +3125,8 @@ processing time for this document was 20 seconds..</p>
 <span><span class="co">## [1] stats     graphics  grDevices datasets  utils     methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] nprcgenekeepr_3.0.0 knitr_1.52          ggplot2_4.0.3       stringi_1.8.9      </span></span>
+<span><span class="co">## [1] nprcgenekeepr_3.0.0.9000 knitr_1.52               ggplot2_4.0.3           </span></span>
+<span><span class="co">## [4] stringi_1.8.9           </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.62            bslib_0.12.0        </span></span>
@@ -3144,7 +3146,7 @@ processing time for this document was 20 seconds..</p>
 <span><span class="co">## [57] otel_0.2.0           futile.logger_1.4.9  cellranger_1.1.0     ragg_1.5.2          </span></span>
 <span><span class="co">## [61] openxlsx_4.2.9       shiny_1.14.0         evaluate_1.0.5       rlang_1.3.0         </span></span>
 <span><span class="co">## [65] futile.options_1.0.1 Rcpp_1.1.2           xtable_1.8-8         glue_1.8.1          </span></span>
-<span><span class="co">## [69] formatR_1.14         renv_1.2.3           rstudioapi_0.19.0    jsonlite_2.0.0      </span></span>
+<span><span class="co">## [69] formatR_1.14         renv_1.3.1           rstudioapi_0.19.0    jsonlite_2.0.0      </span></span>
 <span><span class="co">## [73] R6_2.6.1             systemfonts_1.3.2    fs_2.1.0</span></span></code></pre>
 </div>
 

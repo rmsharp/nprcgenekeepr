@@ -2011,7 +2011,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpWjytME/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpyUIVFE/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -3047,8 +3047,8 @@ document.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-31 04:26:31.41117. The processing
-time for this document was 20 seconds..
+The current date and time is 2026-11-02 02:47:49.499314. The processing
+time for this document was 14 seconds..
 
 ``` r
 
@@ -3081,7 +3081,8 @@ sessionInfo()
     ## [1] stats     graphics  grDevices datasets  utils     methods   base     
     ## 
     ## other attached packages:
-    ## [1] nprcgenekeepr_3.0.0 knitr_1.52          ggplot2_4.0.3       stringi_1.8.9      
+    ## [1] nprcgenekeepr_3.0.0.9000 knitr_1.52               ggplot2_4.0.3           
+    ## [4] stringi_1.8.9           
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.62            bslib_0.12.0        
@@ -3101,7 +3102,7 @@ sessionInfo()
     ## [57] otel_0.2.0           futile.logger_1.4.9  cellranger_1.1.0     ragg_1.5.2          
     ## [61] openxlsx_4.2.9       shiny_1.14.0         evaluate_1.0.5       rlang_1.3.0         
     ## [65] futile.options_1.0.1 Rcpp_1.1.2           xtable_1.8-8         glue_1.8.1          
-    ## [69] formatR_1.14         renv_1.2.3           rstudioapi_0.19.0    jsonlite_2.0.0      
+    ## [69] formatR_1.14         renv_1.3.1           rstudioapi_0.19.0    jsonlite_2.0.0      
     ## [73] R6_2.6.1             systemfonts_1.3.2    fs_2.1.0
 
 [^1]: Setting *minDamAge* to 3.5 and above will cause an error along
