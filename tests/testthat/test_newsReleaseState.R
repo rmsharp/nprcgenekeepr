@@ -7,7 +7,7 @@
 ## NEWS.Rmd states the package's finished state at release, relative to the
 ## PRIOR release -- never an in-progress milestone ("first step", "continued",
 ## "final step", "groundwork", "arrives in a later step"). These tests scan the
-## newest version block of NEWS.Rmd (the development block while one exists)
+## newest version block of NEWS.Rmd (the development block once it has an entry)
 ## for those markers, and check the detector itself on synthetic text so a
 ## guard that scans nothing, or misses a phrase, cannot pass silently.
 ##
@@ -183,10 +183,16 @@ newestNewsBlock <- function() {
   newsTopBlock(sourceLines("NEWS.Rmd"))
 }
 
-## The bullet entries of the newest NEWS.Rmd block's "## Pedigree Diagram"
+## The 3.0.0 block of NEWS.Rmd, for the checks on that release's own notes
+## (news300Lines() in helper-newsBlocks.R).
+news300Block <- function() {
+  newsTopBlock(news300Lines("NEWS.Rmd"))
+}
+
+## The bullet entries of the 3.0.0 NEWS.Rmd block's "## Pedigree Diagram"
 ## section.
 diagramSectionEntries <- function() {
-  newsSectionEntries(newestNewsBlock(), "Pedigree Diagram")
+  newsSectionEntries(news300Block(), "Pedigree Diagram")
 }
 
 ## The number of individuals whose mating symbol anchors more than one mating
@@ -724,9 +730,9 @@ newFeatureDetail <- list(
   )
 )
 
-test_that("new features keep their help-page detail out of the newest block", {
+test_that("new features keep their help-page detail out of the 3.0.0 block", {
   for (file in c("NEWS.Rmd", "NEWS.md")) {
-    lines <- sourceLines(file)
+    lines <- news300Lines(file)
     for (home in names(newFeatureDetail)) {
       text <- plainText(newsSectionLines(lines, home))
       ## A section the reader cannot find would pass for the wrong reason.
@@ -740,7 +746,7 @@ test_that("new features keep their help-page detail out of the newest block", {
 })
 
 test_that("NEWS.Rmd describes issue #168 (ancestry guardrails) in one entry", {
-  entries <- newsEntries(newestNewsBlock())
+  entries <- newsEntries(news300Block())
   mentions <- entries$line[grepl("#168", entries$text, fixed = TRUE)]
   expect_equal(length(mentions), 1L,
                info = paste("entries mentioning #168 start at lines:",
@@ -819,7 +825,7 @@ test_that("the Inbreeding-colour checkers stay silent on other wording", {
 })
 
 test_that("NEWS.Rmd never calls the Inbreeding cell gray", {
-  entries <- newsEntries(newestNewsBlock())
+  entries <- newsEntries(news300Block())
   expect_gt(nrow(entries), 0L)
   for (i in seq_len(nrow(entries))) {
     expect_equal(length(grayInbreedingSentences(entries$text[i])), 0L,
@@ -830,7 +836,7 @@ test_that("NEWS.Rmd never calls the Inbreeding cell gray", {
 })
 
 test_that("NEWS.Rmd says an undefined Inbreeding cell is red", {
-  entries <- newsEntries(newestNewsBlock())
+  entries <- newsEntries(news300Block())
   expect_gt(nrow(entries), 0L)
   said <- vapply(entries$text, function(x) {
     length(redUndefinedInbreedingSentences(x))

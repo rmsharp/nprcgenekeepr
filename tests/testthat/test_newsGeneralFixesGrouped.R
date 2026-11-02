@@ -232,11 +232,11 @@ test_that("the fact table names only sections and groups, each fact once", {
   expect_false(any(neverShipped %in% allFacts))
 })
 
-## The real files -----------------------------------------------------------
+## The real files: the 3.0.0 notes as CRAN published them --------------------
 
-test_that("the newest NEWS block's sections run in the app's tab order", {
+test_that("the 3.0.0 NEWS block's sections run in the app's tab order", {
   for (file in newsFiles) {
-    expect_identical(newsSectionNames(sourceLines(file)), appOrder, info = file)
+    expect_identical(newsSectionNames(news300Lines(file)), appOrder, info = file)
   }
 })
 
@@ -245,7 +245,7 @@ test_that("the newest NEWS block's sections run in the app's tab order", {
 ## the installed tutorial is named too.
 test_that("the block opens by saying where the tabs are explained", {
   for (file in newsFiles) {
-    lines <- newsTopBlock(sourceLines(file))$lines
+    lines <- newsTopBlock(news300Lines(file))$lines
     firstSection <- grep("^## ", lines)[1L]
     opening <- plainText(lines[seq_len(firstSection - 1L)])
     expectNames(opening, c(
@@ -260,14 +260,14 @@ test_that("the block opens by saying where the tabs are explained", {
 
 test_that("General Fixes holds the three groups that belong to no tab", {
   for (file in newsFiles) {
-    section <- newsSectionLines(sourceLines(file), "General Fixes")
+    section <- newsSectionLines(news300Lines(file), "General Fixes")
     expect_identical(topBullets(section), fixGroups, info = file)
   }
 })
 
 test_that("no bullet of the block uses the old 'Fixed (area):' opening", {
   for (file in newsFiles) {
-    block <- newsTopBlock(sourceLines(file))$lines
+    block <- newsTopBlock(news300Lines(file))$lines
     expect_identical(grep("^\\s*- Fixed \\(", block, value = TRUE),
                      character(0L), info = file)
   }
@@ -276,7 +276,7 @@ test_that("no bullet of the block uses the old 'Fixed (area):' opening", {
 test_that("each new tab section's bullets open New, Changed or Fixed", {
   for (file in newsFiles) {
     for (tab in newTabSections) {
-      bullets <- topBullets(newsSectionLines(sourceLines(file), tab))
+      bullets <- topBullets(newsSectionLines(news300Lines(file), tab))
       expect_gt(length(bullets), 0L, label = paste(file, tab))
       expect_true(all(grepl("^(New|Changed|Fixed)\\b", bullets)),
                   info = paste(file, tab))
@@ -286,7 +286,7 @@ test_that("each new tab section's bullets open New, Changed or Fixed", {
 
 test_that("General Fixes' nested bullets say Fixed, or lead with a function", {
   for (file in newsFiles) {
-    section <- newsSectionLines(sourceLines(file), "General Fixes")
+    section <- newsSectionLines(news300Lines(file), "General Fixes")
     for (group in c("Configuration file", "Installation and example files")) {
       bullets <- nestedBullets(groupLines(section, group))
       expect_gt(length(bullets), 0L, label = paste(file, group))
@@ -302,7 +302,7 @@ test_that("the kept bullets open once each, in their sections", {
   for (file in newsFiles) {
     for (home in names(keptOpenings)) {
       entries <- newsEntries(list(
-        start = 1L, lines = newsSectionLines(sourceLines(file), home)
+        start = 1L, lines = newsSectionLines(news300Lines(file), home)
       ))
       bullets <- vapply(entries$text, plainText, character(1L),
                         USE.NAMES = FALSE)
@@ -316,7 +316,7 @@ test_that("the kept bullets open once each, in their sections", {
 
 test_that("each fact stands in its section or group", {
   for (file in newsFiles) {
-    lines <- sourceLines(file)
+    lines <- news300Lines(file)
     for (home in names(factsByHome)) {
       text <- plainText(homeLines(lines, home))
       expectNames(text, factsByHome[[home]], where = paste(file, home))
@@ -326,7 +326,7 @@ test_that("each fact stands in its section or group", {
 
 test_that("fixes to things 2.0.0 never had are not listed", {
   for (file in newsFiles) {
-    lines <- sourceLines(file)
+    lines <- news300Lines(file)
     for (home in c("Input", "Genetic Value Analysis", "Summary Statistics",
                    "Breeding Group Formation", "Genetic Diversity",
                    "General Fixes")) {

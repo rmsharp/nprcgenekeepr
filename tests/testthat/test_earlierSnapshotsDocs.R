@@ -132,11 +132,11 @@ test_that("the guide names the box and the tab as the app does", {
 # ---- NEWS.Rmd and NEWS.md ----------------------------------------------------
 
 ## The plain text of each bullet of the "## Longitudinal Monitoring" part of the
-## newest version block of one NEWS file: backticks and asterisks dropped, and
+## 3.0.0 block of one NEWS file: backticks and asterisks dropped, and
 ## the backslash NEWS.md puts before a "#" too. One string per bullet; none when
 ## the part is missing, so a block fails on its words.
 longitudinalEntries <- function(file) {
-  part <- newsSectionLines(sourceLines(file), "Longitudinal Monitoring")
+  part <- newsSectionLines(news300Lines(file), "Longitudinal Monitoring")
   entries <- newsEntries(list(start = 1L, lines = part))
   gsub("\\\\", "", vapply(entries$text, plainText, character(1L),
                           USE.NAMES = FALSE))

@@ -151,16 +151,14 @@ test_that("the shipped one-file example is the rhesus MHC pedigree with its geno
   }
 })
 
-## The development-version section of a NEWS file, as one string.
-newsDevSection <- function(file) {
-  path <- file.path(pkgRoot, file)
-  skip_if_not(file.exists(path), paste(file, "not present"))
-  paste(newsTopBlock(readLines(path, warn = FALSE))$lines, collapse = " ")
+## The 3.0.0 block of a NEWS file, as one string.
+news300Section <- function(file) {
+  paste(newsTopBlock(news300Lines(file))$lines, collapse = " ")
 }
 
-test_that("the development-version NEWS entry says the one-file mode reads these columns, in NEWS.Rmd and in the knitted NEWS.md", {
+test_that("the 3.0.0 NEWS entry says the one-file mode reads these columns, in NEWS.Rmd and in the knitted NEWS.md", {
   for (file in c("NEWS.Rmd", "NEWS.md")) {
-    section <- gsub("\\s+", " ", newsDevSection(file))
+    section <- gsub("\\s+", " ", news300Section(file))
     expect_match(section, "allele\\\\?_1", info = file)
     expect_match(section, "genotypes in one file", fixed = TRUE, info = file)
   }
@@ -168,9 +166,9 @@ test_that("the development-version NEWS entry says the one-file mode reads these
 
 ## S972: the line has a third form, so "or that it found none" no longer says
 ## what the Input tab does.
-test_that("the development-version NEWS entry says the line tells why the app read no genotypes, in NEWS.Rmd and in the knitted NEWS.md", {
+test_that("the 3.0.0 NEWS entry says the line tells why the app read no genotypes, in NEWS.Rmd and in the knitted NEWS.md", {
   for (file in c("NEWS.Rmd", "NEWS.md")) {
-    section <- gsub("\\s+", " ", newsDevSection(file))
+    section <- gsub("\\s+", " ", news300Section(file))
     expect_match(section, "or why it read none", fixed = TRUE, info = file)
     expect_false(grepl("or that it found none", section, fixed = TRUE),
                  info = file)

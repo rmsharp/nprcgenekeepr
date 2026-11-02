@@ -110,6 +110,6 @@ test_that("_pkgdown.yml lists drawPedigreeDiagram in its reference index", {
 })
 
 test_that("NEWS.Rmd names drawPedigreeDiagram() in its Pedigree Diagram part", {
-  part <- newsSectionLines(sourceLines("NEWS.Rmd"), "Pedigree Diagram")
+  part <- newsSectionLines(news300Lines("NEWS.Rmd"), "Pedigree Diagram")
   expect_true(any(grepl("drawPedigreeDiagram()", part, fixed = TRUE)))
 })
