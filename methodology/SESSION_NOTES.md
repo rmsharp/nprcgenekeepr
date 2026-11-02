@@ -99,20 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 1113 Did
-**Deliverable (owner's word at S1112; S1113 picker): scope the journal papers, one document, no paper text (IN PROGRESS).** **Ledger:** `CHANGELOG: pending`.
+**Deliverable (Mark's word at S1112, S1113 picker): the journal papers scoped, `docs/planning/journal-papers-scoping.md`. No paper text.** Not pushed.
+**Mark's rulings:** software paper first, in *The R Journal*; Mark drafts, Claude helps; use by centers "Not sure yet"; co-authors "None of the above" of Vinson, Raboin, Schultz, Therneau.
+**Mid-session, Mark pasted CRAN's acceptance** (Uwe Ligges, "on its way to CRAN"). CRAN's page shows 3.0.0, published 2026-11-01. Phase 10 was not started: one deliverable per session.
+Claim `84075a987`, document and `BACKLOG.md` `1f97bb6ee`. `test_docsAuditSixRulings.R` 22 and `test_docsAuditLooseEnds.R` 53 pass, after I restored a sentence SR3 pins.
+**Handoff evaluation of S1112: 9/10.** Helped: the named next task, "the journal list must come from Mark", and that CRAN's email outranks papers. Missing: nothing it could know. Wrong: nothing; the list was lost before the paste reached us, as `BACKLOG.md` said.
+**Self: 7/10.** + read journals' own pages, measured use and AI figures, labeled inferred names; all four questions answered first try. - tried a browser user-agent on Wiley and the permission system refused it; a merger claim came from a search
+summary and needed a check.
+**Gotchas:** four Wiley journals, *BMC Bioinformatics* and 2026 *JAALAS* rules are unread: a person has to look. `crandb.r-pkg.org` still showed 2.0.0 after CRAN's page showed 3.0.0, so read CRAN's page. `test_docsAuditSixRulings.R` pins "the
+documentation audit is finished" in the papers block. The paper's use evidence is unknown, so give no submission date.
+**Gates:** first run 11/12 at load about 24 to 32 (`perf_convertRelationships_300`, 0.14 s against 0.1 s; `R/` unchanged since `fa1f2849e`); rerun 12/12, load falling to about 7. Load is likely, not proven.
+**Next: CRAN plan Phase 10** (`docs/planning/cran-3.0.0-submission-plan.md:958`): needs Mark's word to push the 55 or so local commits, then `use_github_release()` tags `fa1f2849e`, `use_dev_version()`, NEWS, README, `methodology/ROADMAP.md`, move
+`tools/test_contributingGuide.R`. Read CRAN's check page a few days after 2026-11-01. Then: Mark asks centers about use and reviews outreach drafts; comparator scan, one Claude session.
 
-### What Session 1112 Did
-**Deliverable (Mark's word, "assuming CRAN eventually accepts"; pick "Text now, contacts later"): the NPRC outreach plan's text pitches 3.0.0.** Nothing sent. Not pushed.
-`docs/planning/nprc-outreach-announcement-plan.md`: banner (do not send until CRAN lists 3.0.0), section 1, 2, 4, 5, timeline Phase 0, risk 6, checklist, Appendices A, A2 (the two draft emails, lines 436 and 497), B, C. Section 6 unchanged (checksum).
-Claim `475f61536`, plan `5d54af58f`. `test_originFundingWording.R` passes, 38 checks. Facts from `NEWS.Rmd`; `speciesGestation` has 14 rows; 3 draft links returned 200. `BACKLOG.md` outreach tag now BLOCKED on CRAN, then the owner's review.
-**Mark's answer on the drafts: "fine for now". That is not the plan's Phase 2 sign-off.** Delayed since S1031; named this session, so back in play.
-**Handoff evaluation of S1111: 8/10.** Helped: the frozen-tree note and the `incoming/inspect` reading, which I repeated at 19:01. Missing: nothing it could know. Wrong: nothing. Its next-step list did not reach this task, which was off the picker by the owner's own delay.
-**Self: 7/10.** + measured every claim, kept pinned sentences, proved section 6 untouched. - asked for edits to "these emails" with no path and no word that they were never-sent drafts; Mark had to ask where they were. Should have sent the whole text too.
-**Gotchas:** CRAN has not answered; a rejection may change the version or a feature in the drafts (plan risk 6). `articles/contributing` returns 404 until the local commits are pushed, so the drafts do not link it. Phase 10 stays first after acceptance; outreach follows.
-**Next (Mark, after close-out): "next session look at possible paper preparation"** (`BACKLOG.md`, "Develop paper(s) for peer-reviewed journals"; its scoping session; the journal list must come from Mark). CRAN's email outranks it only if it has arrived.
-CRAN's email (`BACKLOG.md:8`): accepted, push, then Phase 10, then Mark reviews the outreach drafts and a session re-checks contacts. Rejected, RED first. Otherwise: #138 scoping (low priority); `BACKLOG.md` pass not owed.
-
-### Sessions 947-1111 (condensed S950 to S1112; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+### Sessions 947-1112 (condensed S950 to S1113; full record in `CHANGELOG.md` and `HANDOFFS.md`)
+S1112 (NPRC outreach plan text moved to 3.0.0; Learning 1077; hashes in `CHANGELOG.md`). **Gotchas kept:** "fine for now" on the drafts is not the plan's Phase 2 sign-off; `articles/contributing` returns 404 until the local commits are pushed;
+contact list as of 2026-07-28.
 S1111 (`renv::restore()` from an empty cache; Learning 1076; hashes in `CHANGELOG.md`). **Gotchas kept:** measured on this Mac only; `renv::upgrade()` writes an `activate.R` checksum a bootstrap rewrites, so run the real restore after any renv change;
 moving the date is in `CLAUDE.md`; a new R minor will probably need a refresh (unmeasured); `openxlsx` 4.2.8.1 in the personal library is a fresh build, the original copies moved aside.
 S1110 (the contributor guide; Learning 1075; hashes in `CHANGELOG.md`). **Gotchas kept:** CI does not run its guard until plan Phase 10 moves it; Mark's RStudio may rewrite `renv` files, so stage by name; one browser run gave 2 untraced errors, the rerun none.

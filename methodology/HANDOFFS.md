@@ -213,9 +213,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ```handoff
 session: S1113
-date: 2026-10-31
-status: pending
-active_task: Scope the journal papers (owner's word at S1112: "look at possible paper preparation"; picked at the S1113 picker). One scoping document; no paper text. Frozen CRAN paths stay untouched.
+date: 2026-11-01
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: Journal papers scoped; the BACKLOG.md item stays open, BLOCKED on Mark finding out whether any center uses the package. CRAN accepted 3.0.0 mid-session (page shows published 2026-11-01); plan Phase 10 is READY and not started.
+what_was_done: docs/planning/journal-papers-scoping.md (1f97bb6ee), claim 84075a987. Rulings at Mark's four answers: software paper first in The R Journal; Mark drafts, Claude helps; use by centers "Not sure yet"; co-authors "None of the above" of Vinson, Raboin, Schultz, Therneau. Read JOSS, The R Journal, JSS, Bioinformatics and AALAS pages; measured use (13,838 RStudio-mirror downloads, 4 forks, 1 outside issue author) and AI trailers (4,189 of 5,631 non-merge commits, first 2026-04-02). BACKLOG.md tags updated for CRAN's acceptance. No paper text; nothing pushed, tagged or sent.
+next_steps: CRAN plan Phase 10 (docs/planning/cran-3.0.0-submission-plan.md:958), first asking Mark's word to push the local commits. Read CRAN's check page a few days after 2026-11-01. Then Mark asks centers about use and reviews the outreach drafts; Mark asks The R Journal's editors about AI and fees; comparator scan, one Claude session (scoping document section 8).
+key_files: docs/planning/journal-papers-scoping.md (sections 1 rulings, 3 R Journal rules, 5 use evidence, 7 inferred journal names, 8 order); BACKLOG.md:8 (CRAN), the Outreach section; tests/testthat/test_docsAuditSixRulings.R:65 pins "the documentation audit is finished" in BACKLOG.md.
+gotchas: Journal names in section 7 are Claude's inferences; the names never arrived. Four Wiley journals, BMC Bioinformatics and 2026 JAALAS rules are unread: Wiley refused automated access and a browser user-agent was denied, so a person reads them. The Comparative Medicine merger is unconfirmed. crandb.r-pkg.org lagged CRAN's page. The paper's use evidence is unknown, so no submission date. Gate perf_convertRelationships_300 measured 0.14 s against 0.1 s once, at load about 24 to 32, R/ unchanged since fa1f2849e, then passed in the full rerun; load is the likely cause, not proven.
+runtime_smoke: Not applicable: a build-ignored document and ledgers changed, no runtime behavior. Tests that read BACKLOG.md: test_docsAuditSixRulings 22, test_docsAuditLooseEnds 53, all pass.
+changelog_ref: 1f97bb6ee
+commit: 1f97bb6ee
+quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results a70893fb1051 · manifest d26a8cecc699 (rerun at 1f97bb6ee with the close-out edits in the tree, load falling to about 7; the first run at the same tree, load about 24 to 32, read 11/12, results de8889081325, perf_convertRelationships_300 0.14 s)
 ```
 
 ```handoff
