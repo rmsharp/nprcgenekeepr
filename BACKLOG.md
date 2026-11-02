@@ -7,13 +7,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Prepare the 3.0.0 CRAN submission** (plan `docs/planning/cran-3.0.0-submission-plan.md`,
       S1091, DRAFT; Phases 1-8 DONE S1093-S1105, recorded in the plan's sections 3.4-3.6 and 5 and
-      in `CHANGELOG.md`; Phase 9 DONE, the owner submitted 2026-10-31 from `fa1f2849e`; BLOCKED --
-      on CRAN's answer; all of D1-D6 ruled, the recommended option each; Effort S, one session left,
-      after acceptance) -- **The tree is frozen:** a change to `R/`, `tests/`, `man/`, `vignettes/`,
-      `inst/`, `data/` or `DESCRIPTION` repeats Phase 7. **Before Phase 10:** `use_github_release()`
-      tags the `CRAN-SUBMISSION` SHA, and local notes commits sit ahead of `origin/master`, so push
-      first. `cran-comments.md` holds the check results and explains the one NOTE. CRAN's arm64 job
-      confirms the Phase 1 fix only after release. The plan's section 7 orders the phases.
+      in `CHANGELOG.md`; Phase 9 DONE, the owner submitted 2026-10-31 from `fa1f2849e`; **CRAN
+      accepted, its page shows 3.0.0 published 2026-11-01**; READY, Phase 10 is the one session
+      left, Effort S; all of D1-D6 ruled, the recommended option each) -- **The tree stays frozen
+      until Phase 10 starts.** `use_github_release()` tags the `CRAN-SUBMISSION` SHA, and 55 or more
+      local notes commits sit ahead of `origin/master`, so push first. CRAN's arm64 job confirms the
+      Phase 1 fix only on its check page, a few days after publication. The plan's section 7 orders
+      the phases; its Phase 10 lists the steps.
 
 - [ ] **Earlier-snapshots follow-up after #170: build cost on a larger colony** (BLOCKED --
       needs a studbook above 3,694 rows from the owner, Effort S; #170 is closed and its other
@@ -113,27 +113,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       view), not a higher cap.
 
 - [ ] **Two test files error instead of skipping when Chrome or Quarto is missing** (found S1103;
-      BLOCKED -- wait for CRAN's acceptance, because a change under `tests/` repeats CRAN plan Phase 7;
-      Effort S) -- with `NOT_CRAN=true` on a machine that has neither, such as CRAN's arm64 image:
+      READY once CRAN plan Phase 10 has run, CRAN having accepted 3.0.0; Effort S) -- with `NOT_CRAN=true` on a machine that has neither, such as CRAN's arm64 image:
       `test_positionMatingUnitForest.R:2012,2589,2627` stop with "Invalid path to Chrome" (their
       guards check for the `chromote` package, not a browser), and all four
       `test_pkgdown_reference_config.R` blocks stop because `pkgdown::as_pkgdown()` needs the `quarto`
       package for the `.qmd` articles. A CRAN check skips both files
       (`tests/testthat/slowTestFiles.txt`). Add a skip for the missing tool in each.
 
-- [ ] **Take the finished tutorial's pin out of `test_docsAuditSixRulings.R`** (found S1110; BLOCKED
-      -- wait for CRAN's acceptance, because a change under `tests/` repeats CRAN plan Phase 7;
-      Effort S) -- SR3 (`tests/testthat/test_docsAuditSixRulings.R:92` area) requires each open
+- [ ] **Take the finished tutorial's pin out of `test_docsAuditSixRulings.R`** (found S1110; READY
+      once CRAN plan Phase 10 has run, CRAN having accepted 3.0.0; Effort S) -- SR3 (`tests/testthat/test_docsAuditSixRulings.R:92` area) requires each open
       item's phrase once in this file, and one of them is the item S1110 finished: Create a tutorial for prospective contributors. This item holds that phrase, so the test stays green
       until then. Remove it from SR3's list and this item together.
 
 ## Outreach
-- [ ] **NPRC outreach & announcement plan** (BLOCKED -- on CRAN listing 3.0.0, then DECISION
-      NEEDED -- owner review/edit of drafts + send timing; Effort N/A, not a coding task) -- plan
+- [ ] **NPRC outreach & announcement plan** (DECISION NEEDED -- CRAN listed 3.0.0 on 2026-11-01;
+      owner review/edit of drafts + send timing; Effort N/A, not a coding task) -- plan
       complete, with ready-to-edit drafts: `docs/planning/nprc-outreach-announcement-plan.md`
       (S413; text moved to 3.0.0 S1112, drafts at Appendices A and A2, "fine for now", not signed
       off). **At send time:** fill the CRAN date, check the drafts against the version CRAN
-      published, and re-check the contact list, still as of 2026-07-28 (owner's ruling S1112). Two
+      published, and re-check the contact list, still as of 2026-07-28 (owner's ruling S1112). The emails could also ask whether
+      each center uses the package, which the papers need (`docs/planning/journal-papers-scoping.md`
+      section 5; plan not changed). Two
       items remain genuinely unresolved after dedicated research, not just undone: the
       Working Group's current (2026) chair could not be confirmed (recommended action:
       ask `support@nhprc.org` directly, see the plan's §3/§8); and a colony-manager
@@ -144,27 +144,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       if the owner wants help drafting a specific follow-up, not as a general "send the
       emails" coding task.
 
-- [ ] **Develop paper(s) for peer-reviewed journals** (owner-requested 2026-09-26; DECISION
-      NEEDED, Effort L, its own scoping session first; multi-session) -- the owner supplied a
-      venue-fit summary (from an AI-assisted conversation) to start from. **Treat its journal
-      assessments as unverified leads:** check each journal's current scope, article types and
-      fees before committing. Its recommendation, in short: version 3.0 is more than an
-      incremental update, so write **two complementary papers** that cite each other -- (1) a
-      **software paper** for *The R Journal* or the *Journal of Open Source Software* (package
-      architecture, workflows, reproducibility, new features; the canonical citation for the
-      package; per the summary, JOSS is very short and citation-like, while *The R Journal* allows
-      longer technical descriptions with code examples) and (2) an **applied genetics paper** for
-      the *American Journal of Primatology* or the *Journal of Medical Primatology* (how the
-      software improves genetic management of captive primate colonies, with realistic examples and
-      best practices) -- and optionally (3) a **retrospective paper** on the evolution of
-      computerized genetic management in NPRC colonies over past decades (historical and
-      methodological, for readers interested in colony-management practice). The summary also
-      grouped further candidates into tiers (computational-biology software, conservation
-      genetics, statistical computing, and animal-colony-management journals), but **the journal
-      names in those tiers were lost when it was pasted** -- only the four above survive -- so the
-      pickup must get the original list from the owner. Open decisions: which papers, authorship,
-      and what is new in 3.0 relative to the published reference (Vinson & Raboin 2015, *JAALAS*
-      54(6):700-707, the package's key reference in `CLAUDE.md`, whose Project Overview also holds
-      the NIH grant acknowledgment). Natural dependency, the owner's call: a released 3.0.0 to
-      cite (`DESCRIPTION` reads 3.0.0, not yet on CRAN); the documentation audit is finished (S1027,
-      `CHANGELOG.md`), so the papers' figures match the software.
+- [ ] **Develop paper(s) for peer-reviewed journals** (owner-requested 2026-09-26; scoping DONE
+      S1113; BLOCKED -- on Mark finding out whether any center uses the package; Effort L,
+      multi-session) -- `docs/planning/journal-papers-scoping.md` holds the rulings, the journal
+      rules as read and the next steps. Mark ruled: the software paper first, in *The R Journal*;
+      Mark drafts, Claude helps; no co-author named so far, of the four other package authors. Open
+      before any draft: evidence of use (its section 5), *The R Journal*'s AI and fee position, and
+      a comparator scan (one Claude session, section 6). An applied colony paper and a retrospective
+      are later and optional. The tiered journal names never arrived; section 7 lists inferences.
+      Also, the documentation audit is finished (S1027, `CHANGELOG.md`), so the papers' figures match
+      the software.
