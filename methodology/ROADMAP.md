@@ -7,16 +7,14 @@ The modular architecture — `modInput`, `modPedigree`, `modPyramid`, `modGeneti
 `modSummaryStats`, `modBreedingGroups`, `modORIPReporting` and others (see the `R/mod*.R`
 files), with `appServer`/`appUI` orchestrating module communication — is now
 canonical, and the legacy monolith has been retired: `inst/application/` is deleted and
-`runModularApp()` is a deprecated alias for `runGeneKeepR()`. Version 2.0.0 is tagged
-(`v2.0.0`); the package now reads 3.0.0, the version being prepared for CRAN
-(`docs/planning/cran-3.0.0-submission-plan.md`) and not yet submitted. Remaining work is
-integration testing (see Planned) and the submission.
+`runModularApp()` is a deprecated alias for `runGeneKeepR()`. Version 3.0.0 is on CRAN
+(published 2026-11-01; `docs/planning/cran-3.0.0-submission-plan.md`) and tagged (`v3.0.0`);
+the package now reads 3.0.0.9000, the development version. Remaining work is integration
+testing (see Planned).
 
 ## Planned
 *(Scoped but not started. The active task list is in `BACKLOG.md`.)*
 - Integration testing for the modularized Shiny app (target >80% coverage).
-- CRAN follow-up for 2.0.0 (the plan and runbook are in `docs/planning/`; acceptance on CRAN
-  is not recorded here).
 - **Documentation engine: Hybrid (Quarto + R Markdown)** — adopted 2026-06-17, Option B of
   `docs/planning/quarto-documentation-future-proofing-analysis.md`. The four CRAN vignettes
   stay on `knitr`/`rmarkdown` (zero CRAN risk); new and non-CRAN documentation moves to Quarto
