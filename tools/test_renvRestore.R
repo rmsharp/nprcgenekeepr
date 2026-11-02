@@ -7,8 +7,8 @@
 ## the lock names a dated repository, so its versions stay available as
 ## ready-built packages, and contributors use restore.
 ##
-## It lives in tools/ because tests/ is frozen until CRAN answers on 3.0.0, so
-## CI does not run it. Run the file checks with:
+## It lives in tools/ because it reads renv.lock, which a built package leaves
+## out, and its real restore needs a network. Run the file checks with:
 ##   Rscript -e 'testthat::test_file("tools/test_renvRestore.R")'
 ## Add the real restore, about 20 seconds and network access, by setting
 ## NPRC_RUN_RESTORE=true in front of that command.

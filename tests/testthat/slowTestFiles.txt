@@ -67,6 +67,7 @@ test_classifyParentage.R
 test_comparePedigreeStructure.R
 test_configFileNotes.R
 test_contextBudgetLedgers.R
+test_contributingGuide.R
 test_convertAncestry.R
 test_convertDate.R
 test_convertFromCenter.R

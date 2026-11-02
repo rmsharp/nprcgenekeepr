@@ -6,17 +6,48 @@
 ## test_oneFileGenotypesWording.R, test_earlierSnapshotsDocs.R,
 ## test_drawPedigreeDiagramDocs.R, the test_harem*Wording.R files): find that
 ## block, read one of its sections and read its bullets.
+##
+## S1114: the checks on 3.0.0's own notes read news300Lines(), because the notes
+## CRAN published stopped being the newest block once development moved on.
 
-## The newest version block: from the first "# nprcgenekeepr" heading up to
-## (not including) the second one. Returns the heading's 1-based line number
-## in the file and the block's lines; an empty block if no heading exists.
+## The newest version block with something in it: from that "# nprcgenekeepr"
+## heading up to (not including) the next one. A development block that has only
+## its heading is passed over; if no block has a body, the first is returned.
+## Returns the heading's 1-based line number in the file and the block's lines;
+## an empty block if no heading exists.
 newsTopBlock <- function(lines) {
   heads <- grep("^# nprcgenekeepr", lines)
   if (length(heads) == 0L) {
     return(list(start = 0L, lines = character(0L)))
   }
-  end <- if (length(heads) > 1L) heads[2L] - 1L else length(lines)
-  list(start = heads[1L], lines = lines[heads[1L]:end])
+  ends <- c(heads[-1L] - 1L, length(lines))
+  hasBody <- vapply(seq_along(heads), function(i) {
+    any(nzchar(trimws(lines[seq(heads[i], ends[i])][-1L])))
+  }, logical(1L))
+  pick <- if (any(hasBody)) which(hasBody)[1L] else 1L
+  list(start = heads[pick], lines = lines[heads[pick]:ends[pick]])
+}
+
+## `lines` with everything above one version's heading blanked, so that
+## newsTopBlock() and newsSectionLines() read that version's block and the file's
+## line numbers stay right. Stops unless the version has exactly one heading: a
+## check that read nothing would pass for the wrong reason.
+newsFromVersion <- function(lines, version) {
+  heading <- paste("# nprcgenekeepr", version)
+  from <- which(lines == heading | startsWith(lines, paste0(heading, " ")))
+  if (length(from) != 1L) {
+    stop("NEWS needs one heading for version ", version, "; found ",
+         length(from), call. = FALSE)
+  }
+  lines[seq_len(from - 1L)] <- ""
+  lines
+}
+
+## A NEWS file's lines for the checks on the notes of 3.0.0, the release CRAN
+## published on 2026-11-01. Skips when the file is not present in this build
+## (sourceLines() in helper-pageText.R).
+news300Lines <- function(file) {
+  newsFromVersion(sourceLines(file), "3.0.0")
 }
 
 ## The positions in `blockLines` of the lines under one "## <heading>": after

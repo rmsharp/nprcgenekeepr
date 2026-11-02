@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+##
 ## Guard for the contributor guide: `.github/CONTRIBUTING.md` (the short file
 ## GitHub links to) and `vignettes/articles/contributing.qmd` (the full article).
 ##
@@ -6,13 +9,15 @@
 ## session protocol is neither asked for nor described; written for R developers,
 ## with an opening section for anyone filing an Issue.
 ##
-## It lives in tools/ because tests/ is frozen until CRAN answers on 3.0.0, so
-## CI does not run it. Run it with:
-##   Rscript -e 'testthat::test_file("tools/test_contributingGuide.R")'
+## Moved from tools/ at S1114 (CRAN plan Phase 10). `.github/`, `_pkgdown.yml` and
+## the article are left out of a built package (.Rbuildignore), so this runs in a
+## full local test run and skips on CI's R CMD check and coverage jobs. It skips
+## on `.github/` as a whole, so a guide file deleted from a source tree still
+## fails its own test below.
 
-library(testthat)
-
-repoRoot <- findRepoRoot()
+repoRoot <- testthat::test_path("..", "..")
+skip_if_not(dir.exists(file.path(repoRoot, ".github")),
+            "the contributor guide is not in a built package")
 shortPath <- file.path(repoRoot, ".github", "CONTRIBUTING.md")
 articlePath <- file.path(repoRoot, "vignettes", "articles", "contributing.qmd")
 
@@ -99,6 +104,7 @@ test_that("the short file links to the article, Issues and the code of conduct",
 })
 
 test_that("the article is listed in the site's Articles menu", {
+  skip_if_not_installed("yaml")
   config <- yaml::read_yaml(file.path(repoRoot, "_pkgdown.yml"))
   menu <- unlist(lapply(config$articles, `[[`, "contents"))
   expect_true("articles/contributing" %in% menu)
